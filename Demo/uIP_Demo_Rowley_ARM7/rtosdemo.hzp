@@ -1,0 +1,55 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution version="1" Name="rtosdemo" >
+  <project Name="rtosdemo" >
+    <configuration Target="LPC2124" property_groups_file_path="$(StudioDir)/targets/Philips_LPC210X/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC2124_MemoryMap.xml" c_preprocessor_definitions="OSCILLATOR_CLOCK_FREQUENCY=14745600;THUMB_INTERWORK;SUPERVISOR_START;VECTORED_IRQ_INTERRUPTS;GCC_ARM7" c_user_include_directories="../../Source/include;../../Demo/uIP_Demo_Rowley_ARM7;../../Demo/Common/Include;uip;." project_directory="" link_include_startup_code="No" project_type="Executable" c_additional_options="" Name="Common" />
+    <configuration target_reset_script="SRAMReset()" Name="RAM" />
+    <configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/Philips_LPC210X/Release/Loader.exe" target_reset_script="FLASHReset()" Name="Flash" />
+    <folder Name="uIP Source" >
+      <configuration filter="c;cpp;cxx;cc;h;s;asm;inc" Name="Common" />
+      <file file_name="uip/cgi.c" Name="cgi.c" />
+      <file file_name="uip/cs8900a.c" Name="cs8900a.c" />
+      <file file_name="uip/fs.c" Name="fs.c" />
+      <file file_name="uip/httpd.c" Name="httpd.c" />
+      <file file_name="uip/uip.c" Name="uip.c" />
+      <file file_name="uip/uip_arch.c" Name="uip_arch.c" />
+      <file file_name="uip/uip_arp.c" Name="uip_arp.c" />
+      <file file_name="uip/uIP_Task.c" Name="uIP_Task.c" >
+        <configuration c_preprocessor_definitions="GCC_ARM7" Name="Common" />
+      </file>
+    </folder>
+    <folder Name="System Files" >
+      <configuration filter="" Name="Common" />
+      <file file_name="$(StudioDir)/source/crt0.s" Name="crt0.s" />
+      <file file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Startup.s" Name="Philips_LPC210X_Startup.s" />
+      <file file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Target.js" Name="Philips_LPC210X_Target.js" >
+        <configuration Name="Common" file_type="Reset Script" />
+      </file>
+      <file file_name="flash_placement.xml" Name="flash_placement.xml" />
+    </folder>
+    <folder Name="FreeRTOS Source" >
+      <configuration filter="" Name="Common" />
+      <file file_name="../../Source/tasks.c" Name="tasks.c" />
+      <file file_name="../../Source/queue.c" Name="queue.c" />
+      <file file_name="../../Source/list.c" Name="list.c" />
+      <file file_name="../../Source/portable/MemMang/heap_2.c" Name="heap_2.c" />
+      <file file_name="../../Source/portable/GCC/ARM7_LPC2000/port.c" Name="port.c" />
+      <file file_name="../../Source/portable/GCC/ARM7_LPC2000/portISR.c" Name="portISR.c" >
+        <configuration arm_instruction_set="ARM" Name="THUMB Flash Debug" />
+      </file>
+    </folder>
+    <folder Name="Demo App Source" >
+      <configuration filter="" Name="Common" />
+      <file file_name="../Common/Minimal/dynamic.c" Name="dynamic.c" />
+      <file file_name="../Common/Minimal/semtest.c" Name="semtest.c" />
+      <file file_name="main.c" Name="main.c" />
+      <file file_name="../Common/Minimal/PollQ.c" Name="PollQ.c" />
+    </folder>
+    <configuration c_preprocessor_definitions="" c_user_include_directories="" Name="Debug" />
+  </project>
+  <configuration inherited_configurations="THUMB;Flash;Debug" Name="THUMB Flash Debug" />
+  <configuration arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB" arm_instruction_set="THUMB" hidden="Yes" Name="THUMB" />
+  <configuration c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes" Name="Flash" />
+  <configuration c_preprocessor_definitions="DEBUG" link_include_startup_code="No" gcc_optimization_level="None" build_debug_information="Yes" Name="Debug" />
+  <configuration c_preprocessor_definitions="NDEBUG" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" Name="Release" />
+  <configuration c_preprocessor_definitions="" Name="Common" />
+</solution>

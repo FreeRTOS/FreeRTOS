@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\..\Common\Minimal\comtest.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\tasks.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\serial.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\71x_lib.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\wdg.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\semtest.r79</file>
+      <file>$TOOLKIT_DIR$\inc\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\ysizet.h</file>
+      <file>$PROJ_DIR$\..\Common\include\comtest.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\BlockQ.pbi</file>
+      <file>$PROJ_DIR$\..\Common\include\dynamic.h</file>
+      <file>$PROJ_DIR$\Library\include\71x_map.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\list.r79</file>
+      <file>$PROJ_DIR$\Library\include\eic.h</file>
+      <file>$TOOLKIT_DIR$\inc\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\list.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ParTest.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\BlockQ.r79</file>
+      <file>$TOOLKIT_DIR$\inc\yvals.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r79</file>
+      <file>$PROJ_DIR$\..\Common\include\partest.h</file>
+      <file>$PROJ_DIR$\Library\include\rccu.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\portasm.r79</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\ISR_Support.h</file>
+      <file>$PROJ_DIR$\..\Common\include\PollQ.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\cstartup.r79</file>
+      <file>$TOOLKIT_DIR$\inc\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\FreeRTOSConfig.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\dynamic.pbi</file>
+      <file>$PROJ_DIR$\..\..\Source\include\FreeRTOS.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\heap_2.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\queue.r79</file>
+      <file>$PROJ_DIR$\..\..\Source\include\queue.h</file>
+      <file>$TOOLKIT_DIR$\inc\stdlib.h</file>
+      <file>$PROJ_DIR$\Library\include\wdg.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\serialISR.r79</file>
+      <file>$TOOLKIT_DIR$\lib\dl4tptinl8n.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\heap_2.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\integer.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\rccu.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\uart.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\port.pbi</file>
+      <file>$PROJ_DIR$\..\..\Source\include\croutine.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\queue.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\DLib_Defaults.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\port.r79</file>
+      <file>$TOOLKIT_DIR$\inc\stddef.h</file>
+      <file>$PROJ_DIR$\..\Common\include\comtest2.h</file>
+      <file>$PROJ_DIR$\Library\include\71x_conf.h</file>
+      <file>$TOOLKIT_DIR$\inc\stdio.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\serial.r79</file>
+      <file>$PROJ_DIR$\..\Common\include\BlockQ.h</file>
+      <file>$PROJ_DIR$\..\Common\include\integer.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\comtest.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\71x_lib.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\dynamic.r79</file>
+      <file>$PROJ_DIR$\Library\include\gpio.h</file>
+      <file>$TOOLKIT_DIR$\inc\DLib_Product.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\tasks.r79</file>
+      <file>$PROJ_DIR$\..\..\Source\include\semphr.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsic.h</file>
+      <file>$PROJ_DIR$\Library\include\uart.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\RTOSDemo.sim</file>
+      <file>$PROJ_DIR$\Debug\Obj\flash.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\integer.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\PollQ.r79</file>
+      <file>$PROJ_DIR$\Debug\Exe\RTOSDemo.d79</file>
+      <file>$TOOLKIT_DIR$\lib\dl4tptinl8n.r79</file>
+      <file>$PROJ_DIR$\..\..\Source\include\task.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\uart.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\gpio.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\flash.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\vect.r79</file>
+      <file>$PROJ_DIR$\..\Common\include\serial.h</file>
+      <file>$PROJ_DIR$\..\Common\include\flash.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\rccu.r79</file>
+      <file>$PROJ_DIR$\Debug\Obj\ParTest.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\PollQ.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\semtest.pbi</file>
+      <file>$PROJ_DIR$\..\..\Source\include\projdefs.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\list.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\comtest.pbi</file>
+      <file>$PROJ_DIR$\Library\include\71x_type.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\gpio.r79</file>
+      <file>$PROJ_DIR$\..\..\Source\include\portable.h</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\portmacro.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\wdg.r79</file>
+      <file>$PROJ_DIR$\..\Common\include\semtest.h</file>
+      <file>$PROJ_DIR$\cstartup.s79</file>
+      <file>$PROJ_DIR$\lnkarm.xcl</file>
+      <file>$PROJ_DIR$\vect.s79</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</file>
+      <file>$PROJ_DIR$\serial\serialISR.s79</file>
+      <file>$PROJ_DIR$\Library\rccu.c</file>
+      <file>$PROJ_DIR$\Library\uart.c</file>
+      <file>$PROJ_DIR$\Library\wdg.c</file>
+      <file>$PROJ_DIR$\..\..\Source\list.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\port.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\portasm.s79</file>
+      <file>$PROJ_DIR$\..\..\Source\queue.c</file>
+      <file>$PROJ_DIR$\..\..\Source\tasks.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\flash.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\dynamic.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\integer.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\ParTest\ParTest.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\PollQ.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\semtest.c</file>
+      <file>$PROJ_DIR$\serial\serial.c</file>
+      <file>$PROJ_DIR$\Library\gpio.c</file>
+      <file>$PROJ_DIR$\Library\71x_lib.c</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 82</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 74 8 20</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 67 63</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\RTOSDemo.d79</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 63</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 90 54 17 16 66 53 25 56 64 84 30 65 12 19 45 22 31 76 5 50 35 59 40 73 87 68</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\cstartup.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 25</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\vect.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 73</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>AARM</name>
+          <file> 27</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 17</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 32 51</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serialISR.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 35</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>AARM</name>
+          <file> 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\rccu.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 76</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 21 11 48 83</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\uart.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 40</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 70</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 62 11 48 83 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\wdg.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 87</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 34 11 48 83 21</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\list.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 81</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\port.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 45</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 41</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 34 11 48 83 21 13 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\portasm.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 22</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>AARM</name>
+          <file> 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 31</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 6 29 46 80 27 85 86 61 69 81 42</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 59</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 49 18 44 36 58 14 26 7 33 6 29 46 80 27 85 86 61 69 81</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\flash.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 64</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 72</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 20 75</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 37</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 56</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 28</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 60 32 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 65</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 38</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 52</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 55</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 21 11 48 83 34 29 46 18 44 36 58 14 26 7 80 27 85 86 61 69 81 75 52 24 51 88 10 20 47</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ParTest\ParTest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 77</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 57 11 48 83 29 46 18 44 36 58 14 26 7 80 27 85 86 61 20</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 66</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 78</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 32 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 5</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 79</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 33 18 44 36 58 14 26 7 29 46 80 27 85 86 61 69 81 60 32 88</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serial.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 50</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 62 11 48 83 21 57 13 29 46 18 44 36 58 14 26 7 80 27 85 86 61 32 74</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\gpio.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 84</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 57 11 48 83</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\71x_lib.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 54</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 3</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 11 48 83</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs>
+      <file>$PROJ_DIR$\Release\Obj\dynamic.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\list.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\wdg.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\ParTest.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\71x_lib.r79</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\comtest.c</file>
+      <file>$PROJ_DIR$\Release\Obj\cstartup.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\uart.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\vect.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\portasm.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\heap_2.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\tasks.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\BlockQ.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\integer.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\rccu.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\PollQ.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\flash.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\main.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\gpio.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\semtest.r79</file>
+      <file>$PROJ_DIR$\Release\Exe\RTOSDemo.d79</file>
+      <file>$PROJ_DIR$\Release\Obj\serialISR.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\port.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\comtest.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\serial.r79</file>
+      <file>$PROJ_DIR$\Release\Obj\queue.r79</file>
+      <file>$PROJ_DIR$\cstartup.s79</file>
+      <file>$PROJ_DIR$\vect.s79</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</file>
+      <file>$PROJ_DIR$\serial\serialISR.s79</file>
+      <file>$PROJ_DIR$\Library\rccu.c</file>
+      <file>$PROJ_DIR$\Library\uart.c</file>
+      <file>$PROJ_DIR$\Library\wdg.c</file>
+      <file>$PROJ_DIR$\..\..\Source\list.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\port.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\portasm.s79</file>
+      <file>$PROJ_DIR$\..\..\Source\queue.c</file>
+      <file>$PROJ_DIR$\..\..\Source\tasks.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\flash.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\dynamic.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\integer.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\ParTest\ParTest.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\PollQ.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\semtest.c</file>
+      <file>$PROJ_DIR$\serial\serial.c</file>
+      <file>$PROJ_DIR$\Library\gpio.c</file>
+      <file>$PROJ_DIR$\Library\71x_lib.c</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 23</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 20</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\cstartup.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 6</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\vect.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 8</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 12</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serialISR.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 21</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\rccu.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 14</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\uart.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 7</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\wdg.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\list.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 1</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\port.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 22</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\STR71x\portasm.s79</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 25</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 11</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\flash.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 16</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 10</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 0</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 17</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ParTest\ParTest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 3</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 15</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 19</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serial.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 24</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\gpio.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 18</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Library\71x_lib.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 4</file>
+        </tool>
+      </outputs>
+    </file>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

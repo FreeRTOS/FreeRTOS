@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+        <Column0>220</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+        
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><MixedMode>1</MixedMode><CodeCovEnabled>0</CodeCovEnabled><CodeCovShow>0</CodeCovShow></Disassembly>
+      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows></Debug-Log>
+      <Build><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window></Windows></PreferedWindows></Build>
+      <Register>
+        <PreferedWindows>
+          
+          
+          
+          
+        <Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows>
+      </Register>
+    <QWatch><Column0>161</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></QWatch><Memory><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><ZoneNumber>0</ZoneNumber><FindDirection>1</FindDirection><FindAsHex>0</FindAsHex></Memory><Breakpoints/><Watch><Format><struct_types/><watch_formats><Fmt><Key>{W}Watch-0:TxBuffIndex</Key><Value>4</Value></Fmt></watch_formats></Format><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><Column0>185</Column0><Column1>316</Column1><Column2>100</Column2><Column3>195</Column3></Watch><QuickWatch><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><Column0>140</Column0><Column1>104</Column1><Column2>100</Column2><Column3>100</Column3></QuickWatch></Static>
+    <Windows>
+      
+      
+      
+    <Wnd4>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-22256-14845</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/Demo Source</ExpandedNode><ExpandedNode>rtosdemo/Demo Source/EMAClISR.s79</ExpandedNode><ExpandedNode>rtosdemo/FreeRTOS Source</ExpandedNode><ExpandedNode>rtosdemo/FreeRTOS Source/portasm.s79</ExpandedNode><ExpandedNode>rtosdemo/USBSample.c</ExpandedNode><ExpandedNode>rtosdemo/uIP Source</ExpandedNode><ExpandedNode>rtosdemo/uIP Source/Atmel Code</ExpandedNode><ExpandedNode>rtosdemo/uIP Source/fs.c</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-25021-10902</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5><Wnd7><Tabs><Tab><Identity>TabID-29748-16361</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd7></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\uIP_Demo_IAR_ARM7\uip\uip.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>32</SelStart><SelEnd>32</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\uIP_Demo_IAR_ARM7\uip\uip_arch.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>2</SelStart><SelEnd>2</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\uIP_Demo_IAR_ARM7\uip\uip_arp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>3</SelStart><SelEnd>3</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\uIP_Demo_IAR_ARM7\EMAC\SAM7_EMAC.c</Filename><XPos>0</XPos><YPos>54</YPos><SelStart>2498</SelStart><SelEnd>2498</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\uIP_Demo_IAR_ARM7\uip\uipopt.h</Filename><XPos>0</XPos><YPos>118</YPos><SelStart>3945</SelStart><SelEnd>3945</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\uIP_Demo_IAR_ARM7\SrcIAR\Cstartup.s79</Filename><XPos>0</XPos><YPos>37</YPos><SelStart>2226</SelStart><SelEnd>2226</SelEnd></Tab><ActiveTab>5</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0084c368><key>iaridepm1</key></Toolbar-0084c368></Sizes></Row0><Row1><Sizes><Toolbar-02615910><key>debuggergui1</key></Toolbar-02615910></Sizes></Row1></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>660</Bottom><Right>314</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>197500</sizeVertCX><sizeVertCY>591599</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>191</Bottom><Right>1602</Right><x>-2</x><y>-2</y><xscreen>1604</xscreen><yscreen>193</yscreen><sizeHorzCX>1002500</sizeHorzCX><sizeHorzCY>172475</sizeHorzCY><sizeVertCX>0</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd5></Sizes></Row0><Row1><Sizes><Wnd7><Rect><Top>189</Top><Left>-2</Left><Bottom>388</Bottom><Right>1602</Right><x>-2</x><y>189</y><xscreen>1604</xscreen><yscreen>199</yscreen><sizeHorzCX>1002500</sizeHorzCX><sizeHorzCY>177837</sizeHorzCY><sizeVertCX>124375</sizeVertCX><sizeVertCY>177837</sizeVertCY></Rect></Wnd7></Sizes></Row1></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

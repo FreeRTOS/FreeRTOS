@@ -1,0 +1,60 @@
+<!DOCTYPE CrossStudio_for_ARM_Session_File>
+<session>
+ <Breakpoints/>
+ <ExecutionCountWindow/>
+ <Memory1>
+  <MemoryWindow autoEvaluate="0" addressText="0x102248" numColumns="8" sizeText="128" dataSize="1" radix="16" addressSpace="" />
+ </Memory1>
+ <Memory2>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory2>
+ <Memory3>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory3>
+ <Memory4>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory4>
+ <Project>
+  <ProjectSessionItem path="rtosdemo" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo;Source Files" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo;Source Files;Demo App" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo;Source Files;FreeRTOS kernel" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo;Source Files;lwIP" name="unnamed" />
+ </Project>
+ <Register1>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="CPU - Current Mode" decimalDisplays="" binaryDisplays="" />
+ </Register1>
+ <Register2>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register2>
+ <Register3>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register3>
+ <Register4>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register4>
+ <SourceNavigatorWindow/>
+ <TraceWindow>
+  <Trace wrap="Yes" type="1" enabled="Yes" />
+ </TraceWindow>
+ <Watch1>
+  <Watches active="1" >
+   <Watchpoint linenumber="0" radix="1" name="(char)pcString" expression="(char)pcString" filename="" />
+   <Watchpoint evalMode="3" linenumber="220" evalType="1" radix="16" name="pcString" expression="pcString" filename="E:\Dev\FreeRTOS\Demo\lwIP_Demo_Rowley_ARM7\USB\USB-CDC.c" />
+   <Watchpoint linenumber="0" radix="-1" name="*((char*)pvItemToQueue)" expression="*((char*)pvItemToQueue)" filename="" />
+   <Watchpoint linenumber="0" radix="-1" name="pcString[i]" expression="pcString[i]" filename="" />
+  </Watches>
+ </Watch1>
+ <Watch2>
+  <Watches active="0" />
+ </Watch2>
+ <Watch3>
+  <Watches active="0" />
+ </Watch3>
+ <Watch4>
+  <Watches active="0" />
+ </Watch4>
+ <Files/>
+ <ARMCrossStudioWindow activeProject="rtosdemo" ignoreExceptions="IRQ;FIQ;SWI" autoConnectTarget="" debugSearchFileMap="" fileDialogInitialDirectory="E:\Dev\FreeRTOS\Demo\Common\Minimal" fileDialogDefaultFilter="*.cpp;*.cxx;*.cc;*.c;*.h" debugSearchPath="" buildConfiguration="THUMB Flash Release" />
+</session>

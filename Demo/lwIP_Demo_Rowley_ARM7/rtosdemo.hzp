@@ -1,0 +1,84 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution version="1" Name="rtosdemo" >
+  <project file_name="" Name="rtosdemo" >
+    <configuration Target="AT91SAM7S256" property_groups_file_path="$(StudioDir)/targets/ATMEL_AT91SAM7/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/ATMEL_AT91SAM7/AT91SAM7S256_MemoryMap.xml" project_directory="" link_include_startup_code="No" project_type="Executable" linker_printf_width_precision_supported="Yes" Name="Common" linker_output_format="bin" />
+    <configuration target_reset_script="RAMReset()" Name="RAM" />
+    <configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/ATMEL_AT91SAM7/Release/Loader.exe" target_reset_script="FLASHReset()" Name="Flash" />
+    <folder Name="Source Files" >
+      <configuration filter="c;cpp;cxx;cc;h;s;asm;inc" Name="Common" />
+      <folder Name="FreeRTOS kernel" >
+        <file file_name="../../Source/tasks.c" Name="tasks.c" />
+        <file file_name="../../Source/queue.c" Name="queue.c" />
+        <file file_name="../../Source/list.c" Name="list.c" />
+        <file file_name="../../Source/portable/GCC/ARM7_AT91SAM7S/portISR.c" Name="portISR.c" >
+          <configuration arm_instruction_set="ARM" Name="Common" />
+        </file>
+        <file file_name="../../Source/portable/GCC/ARM7_AT91SAM7S/port.c" Name="port.c" />
+      </folder>
+      <folder Name="Demo App" >
+        <file file_name="../../Source/portable/MemMang/heap_2.c" Name="heap_2.c" />
+        <file file_name="ParTest/ParTest.c" Name="ParTest.c" />
+        <file file_name="main.c" Name="main.c" />
+        <file file_name="../Common/Minimal/flash.c" Name="flash.c" />
+        <file file_name="../Common/Minimal/BlockQ.c" Name="BlockQ.c" />
+        <file file_name="../Common/Minimal/integer.c" Name="integer.c" />
+        <file file_name="../Common/Minimal/PollQ.c" Name="PollQ.c" />
+        <file file_name="../Common/Minimal/semtest.c" Name="semtest.c" />
+        <file file_name="BasicWEB.c" Name="BasicWEB.c" />
+        <file file_name="USB/USBIsr.c" Name="USBIsr.c" >
+          <configuration arm_instruction_set="ARM" Name="THUMB Flash Release" />
+          <configuration arm_instruction_set="ARM" Name="Common" />
+        </file>
+        <file file_name="USB/USB-CDC.c" Name="USB-CDC.c" />
+      </folder>
+      <folder Name="lwIP" >
+        <file file_name="lwip-1.1.0/src/core/tcp_out.c" Name="tcp_out.c" />
+        <file file_name="lwip-1.1.0/src/core/inet.c" Name="inet.c" />
+        <file file_name="lwip-1.1.0/src/core/mem.c" Name="mem.c" />
+        <file file_name="lwip-1.1.0/src/core/memp.c" Name="memp.c" />
+        <file file_name="lwip-1.1.0/src/core/netif.c" Name="netif.c" />
+        <file file_name="lwip-1.1.0/src/core/pbuf.c" Name="pbuf.c" />
+        <file file_name="lwip-1.1.0/src/core/raw.c" Name="raw.c" />
+        <file file_name="lwip-1.1.0/src/core/stats.c" Name="stats.c" />
+        <file file_name="lwip-1.1.0/src/core/sys.c" Name="sys.c" />
+        <file file_name="lwip-1.1.0/src/core/tcp.c" Name="tcp.c" />
+        <file file_name="lwip-1.1.0/src/core/tcp_in.c" Name="tcp_in.c" />
+        <file file_name="lwip-1.1.0/src/core/ipv4/ip.c" Name="ip.c" />
+        <file file_name="lwip-1.1.0/src/core/ipv4/ip_addr.c" Name="ip_addr.c" />
+        <file file_name="lwip-1.1.0/src/core/ipv4/icmp.c" Name="icmp.c" />
+        <file file_name="lwip-1.1.0/src/api/tcpip.c" Name="tcpip.c" />
+        <file file_name="lwip-1.1.0/src/api/api_msg.c" Name="api_msg.c" />
+        <file file_name="lwip-1.1.0/src/api/err.c" Name="err.c" />
+        <file file_name="lwip-1.1.0/src/api/api_lib.c" Name="api_lib.c" />
+        <file file_name="lwip-1.1.0/src/netif/etharp.c" Name="etharp.c" />
+        <file file_name="lwip-1.1.0/contrib/port/FreeRTOS/AT91SAM7X/sys_arch.c" Name="sys_arch.c" />
+        <file file_name="lwip-1.1.0/src/netif/ethernetif.c" Name="ethernetif.c" />
+        <file file_name="EMAC/SAM7_EMAC.c" Name="SAM7_EMAC.c" />
+        <file file_name="EMAC/SAM7_EMAC_ISR.c" Name="SAM7_EMAC_ISR.c" >
+          <configuration arm_instruction_set="ARM" Name="Common" />
+        </file>
+        <file file_name="lwip-1.1.0/src/core/udp.c" Name="udp.c" />
+        <file file_name="lwip-1.1.0/src/core/ipv4/ip_frag.c" Name="ip_frag.c" />
+      </folder>
+    </folder>
+    <folder Name="System Files" >
+      <file file_name="flash_placement.xml" Name="flash_placement.xml" />
+      <file file_name="crt0.s" Name="crt0.s" />
+      <file file_name="AT91SAM7_Startup.s" Name="AT91SAM7_Startup.s" >
+        <configuration asm_additional_options="" arm_instruction_set="ARM" Name="Common" />
+      </file>
+      <file file_name="AT91SAM7S256_MemoryMap.xml" Name="AT91SAM7S256_MemoryMap.xml" />
+      <file file_name="AT91SAM7_Target.js" Name="AT91SAM7_Target.js" >
+        <configuration Name="Common" file_type="Reset Script" />
+      </file>
+    </folder>
+    <configuration arm_target_loader_reset_after_download="Yes" target_reset_script="FLASHReset()" arm_target_flash_loader_type="Comms Channel Loader" Name="THUMB Flash Debug" />
+  </project>
+  <configuration build_quietly="Yes" inherited_configurations="THUMB;Flash;Debug" Name="THUMB Flash Debug" />
+  <configuration arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB" arm_instruction_set="THUMB" hidden="Yes" Name="THUMB" />
+  <configuration c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes" Name="Flash" />
+  <configuration c_preprocessor_definitions="DEBUG" link_include_startup_code="No" gcc_optimization_level="None" build_debug_information="Yes" Name="Debug" />
+  <configuration inherited_configurations="THUMB;Flash;Release" gcc_optimization_level="Level 2" Name="THUMB Flash Release" />
+  <configuration c_preprocessor_definitions="NDEBUG" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" Name="Release" />
+  <configuration arm_library_instruction_set="THUMB" gcc_entry_point="0x100000" build_quietly="Yes" c_preprocessor_definitions="SAM7_GCC;THUMB_INTERWORK;SUPERVISOR_START" c_user_include_directories=".;$(ProjectDir)/EMAC;$(ProjectDir)/../common/include;$(ProjectDir)/USB" link_include_startup_code="Yes" arm_instruction_set="THUMB" c_preprocessor_undefinitions="" c_additional_options="-Wall ;-Wextra;-Wstrict-prototypes ;-Wmissing-prototypes ;-Wmissing-declarations;-Wno-strict-aliasing" arm_linker_stack_size="0" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/lwip-1.1.0/src/include;$(ProjectDir)/lwip-1.1.0/contrib/port/FreeRTOS/AT91SAM7X;$(ProjectDir);$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/GCC/ARM7_AT91SAM7S;$(ProjectDir)/lwip-1.1.0\\src\\include\\ipv4" arm_linker_heap_size="0" />
+</solution>

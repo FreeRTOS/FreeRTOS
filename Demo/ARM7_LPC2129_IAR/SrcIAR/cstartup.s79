@@ -1,0 +1,173 @@
+;-----------------------------------------------------------------------------
+; This file contains the startup code used by the ICCARM C compiler.
+;
+; The modules in this file are included in the libraries, and may be replaced
+; by any user-defined modules that define the PUBLIC symbol _program_start or
+; a user defined start symbol.
+; To override the cstartup defined in the library, simply add your modified
+; version to the workbench project.
+;
+; All code in the modules (except ?RESET) will be placed in the ICODE segment.
+;
+; $Revision: 1.56 $
+;
+;-----------------------------------------------------------------------------
+	
+;
+; Naming covention of labels in this file:
+;
+;  ?xxx	  - External labels only accessed from assembler.
+;  __xxx  - External labels accessed from or defined in C.
+;  xxx	  - Labels local to one module (note: this file contains
+;           several modules).
+;  main	  - The starting point of the user program.
+;
+
+;---------------------------------------------------------------
+; Macros and definitions for the whole file
+;---------------------------------------------------------------
+
+; Mode, correspords to bits 0-5 in CPSR
+MODE_BITS	DEFINE	0x1F		; Bit mask for mode bits in CPSR
+USR_MODE	DEFINE	0x10		; User mode
+FIQ_MODE	DEFINE	0x11		; Fast Interrupt Request mode
+IRQ_MODE	DEFINE	0x12		; Interrupt Request mode
+SVC_MODE	DEFINE	0x13		; Supervisor mode
+ABT_MODE	DEFINE	0x17		; Abort mode
+UND_MODE	DEFINE	0x1B		; Undefined Instruction mode
+SYS_MODE	DEFINE	0x1F		; System mode
+	
+I_Bit       DEFINE  0x80        ; IRQ Disable Bit
+F_Bit       DEFINE  0x40        ; FIQ Disable Bit
+
+;---------------------------------------------------------------
+; ?RESET
+; Reset Vector.
+; Normally, segment INTVEC is linked at address 0.
+; For debugging purposes, INTVEC may be placed at other
+; addresses.
+; A debugger that honors the entry point will start the
+; program in a normal way even if INTVEC is not at address 0.
+;---------------------------------------------------------------
+
+		MODULE	?RESET
+		COMMON	INTVEC:CODE:NOROOT(2)
+		PUBLIC  __program_start
+		EXTERN	?cstartup
+		EXTERN	undef_handler, swi_handler, prefetch_handler
+		EXTERN	data_handler, irq_handler, fiq_handler
+   		EXTERN	vPortYieldProcessor
+
+		CODE32	; Always ARM mode after reset	
+
+__program_start
+
+		org	0x00
+
+						B           InitReset           ; 0x00 Reset handler
+		undefvec:
+						B           undefvec            ; 0x04 Undefined Instruction
+		swivec:
+						B           vPortYieldProcessor ; 0x08 Software Interrupt
+		pabtvec:
+						B           pabtvec             ; 0x0C Prefetch Abort
+		dabtvec:
+						B           dabtvec             ; 0x10 Data Abort
+		rsvdvec:
+						B           rsvdvec             ; 0x14 reserved
+		irqvec:
+						LDR			PC, [PC, #-0xFF0]	; Jump directly to the address given by the AIC
+		
+		fiqvec:               							; 0x1c FIQ
+
+
+;---------------------------------------------------------------
+; ?CSTARTUP
+;---------------------------------------------------------------
+
+		RSEG	IRQ_STACK:DATA(2)
+		RSEG	SVC_STACK:DATA:NOROOT(2)
+		RSEG	CSTACK:DATA(2)
+		RSEG	ICODE:CODE:NOROOT(2)
+		EXTERN	?main
+
+; Execution starts here.
+; After a reset, the mode is ARM, Supervisor, interrupts disabled.
+
+
+		CODE32
+
+InitReset
+
+; Add initialization needed before setup of stackpointers here
+
+
+; Initialize the stack pointers.
+; The pattern below can be used for any of the exception stacks:
+; FIQ, IRQ, SVC, ABT, UND, SYS.
+; The USR mode uses the same stack as SYS.
+; The stack segments must be defined in the linker command file,
+; and be declared above.
+                mrs     r0,cpsr                             ; Original PSR value
+                bic     r0,r0,#MODE_BITS                    ; Clear the mode bits
+                orr     r0,r0,#IRQ_MODE                     ; Set IRQ mode bits
+                msr     cpsr_c,r0                           ; Change the mode
+                ldr     sp,=SFE(IRQ_STACK) & 0xFFFFFFF8     ; End of IRQ_STACK
+
+                bic     r0,r0,#MODE_BITS                    ; Clear the mode bits
+                orr     r0,r0,#SYS_MODE                     ; Set System mode bits
+                msr     cpsr_c,r0                           ; Change the mode
+                ldr     sp,=SFE(CSTACK) & 0xFFFFFFF8        ; End of CSTACK
+
+                bic     r0,r0,#MODE_BITS                    ; Clear the mode bits
+                orr     r0,r0,#SVC_MODE                     ; Set System mode bits
+                msr     cpsr_c,r0                           ; Change the mode
+                ldr     sp,=SFE(SVC_STACK) & 0xFFFFFFF8     ; End of CSTACK
+
+; Must start in supervisor mode.
+                MSR     CPSR_c, #SVC_MODE|I_Bit|F_Bit
+
+
+; Add more initialization here
+
+
+; Continue to ?main for more IAR specific system startup
+
+                ldr     r0,=?main
+                bx      r0
+
+
+
+
+;---------------------------------------------------------------
+; ?EXEPTION_VECTOR
+; This module is only linked if needed for closing files.
+;---------------------------------------------------------------
+		PUBLIC	AT91F_Default_FIQ_handler
+		PUBLIC	AT91F_Default_IRQ_handler
+		PUBLIC	AT91F_Spurious_handler
+
+		CODE32	; Always ARM mode after exeption	
+
+AT91F_Default_FIQ_handler
+            b     AT91F_Default_FIQ_handler
+
+AT91F_Default_IRQ_handler
+            b     AT91F_Default_IRQ_handler
+
+AT91F_Spurious_handler
+            b     AT91F_Spurious_handler
+
+	ENDMOD
+
+	END
+
+
+
+
+                ENDMOD
+                END
+
+
+
+

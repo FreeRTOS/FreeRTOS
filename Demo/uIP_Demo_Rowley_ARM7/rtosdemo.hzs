@@ -1,0 +1,55 @@
+<!DOCTYPE CrossStudio_for_ARM_Session_File>
+<session>
+ <Breakpoints/>
+ <ExecutionCountWindow/>
+ <Memory1>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="128" dataSize="1" radix="16" addressSpace="" />
+ </Memory1>
+ <Memory2>
+  <MemoryWindow autoEvaluate="0" addressText="0xE01FC040" numColumns="8" sizeText="4" dataSize="4" radix="16" addressSpace="" />
+ </Memory2>
+ <Memory3>
+  <MemoryWindow autoEvaluate="0" addressText="0xE01FC080" numColumns="8" sizeText="12" dataSize="4" radix="16" addressSpace="" />
+ </Memory3>
+ <Memory4>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory4>
+ <Project>
+  <ProjectSessionItem path="rtosdemo" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo;FreeRTOS Source" name="unnamed" />
+  <ProjectSessionItem path="rtosdemo;rtosdemo;uIP Source" name="unnamed" />
+ </Project>
+ <Register1>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="CPU - Current Mode" visibleGroups="CPU - Current Mode" decimalDisplays="" binaryDisplays="" />
+ </Register1>
+ <Register2>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register2>
+ <Register3>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register3>
+ <Register4>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register4>
+ <SourceNavigatorWindow/>
+ <TraceWindow>
+  <Trace wrap="Yes" type="1" enabled="Yes" />
+ </TraceWindow>
+ <Watch1>
+  <Watches active="1" />
+ </Watch1>
+ <Watch2>
+  <Watches active="0" />
+ </Watch2>
+ <Watch3>
+  <Watches active="0" />
+ </Watch3>
+ <Watch4>
+  <Watches active="0" />
+ </Watch4>
+ <Files>
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="E:\Dev\FreeRTOS\Source\portable\GCC\ARM7_LPC2000\port.c" y="0" useHTMLEdit="0" path="E:\Dev\FreeRTOS\Source\portable\GCC\ARM7_LPC2000\port.c" left="0" selected="0" name="unnamed" top="0" />
+ </Files>
+ <ARMCrossStudioWindow activeProject="rtosdemo" ignoreExceptions="IRQ;FIQ;SWI" autoConnectTarget="/ARM Simulators/Simulator, LPC22xx" debugSearchFileMap="" fileDialogInitialDirectory="D:\FreeRTOS\Demo\uIP_Demo_Rowley_ARM7\uip" fileDialogDefaultFilter="*" autoConnectCapabilities="4543" debugSearchPath="" buildConfiguration="Release" />
+</session>

@@ -1,0 +1,86 @@
+/*
+	FreeRTOS V4.0.1 - copyright (C) 2003-2006 Richard Barry.
+
+	This file is part of the FreeRTOS distribution.
+
+	FreeRTOS is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	FreeRTOS is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with FreeRTOS; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+	A special exception to the GPL can be applied should you wish to distribute
+	a combined work that includes FreeRTOS, without being obliged to provide
+	the source code for any proprietary components.  See the licensing section
+	of http://www.FreeRTOS.org for full details of how and when the exception
+	can be applied.
+
+	***************************************************************************
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
+	port sections of the online documentation.
+	***************************************************************************
+*/
+
+#ifndef USB_CDC_H
+#define USB_CDC_H
+
+#include "usb.h"
+
+#define USB_CDC_QUEUE_SIZE    200
+
+/* Structure used to take a snapshot of the USB status from within the ISR. */
+typedef struct X_ISR_STATUS
+{
+	unsigned portLONG ulISR;
+	unsigned portLONG ulCSR0;
+	unsigned portCHAR ucFifoData[ 8 ];
+} xISRStatus;
+
+/* Structure used to hold the received requests. */
+typedef struct 
+{
+	unsigned portCHAR ucReqType;
+	unsigned portCHAR ucRequest;
+	unsigned portSHORT usValue;
+	unsigned portSHORT usIndex;
+	unsigned portSHORT usLength;
+} xUSB_REQUEST;
+
+typedef enum
+{
+	eNOTHING,
+	eJUST_RESET,
+	eJUST_GOT_CONFIG,
+	eJUST_GOT_ADDRESS,
+	eSENDING_EVEN_DESCRIPTOR,
+	eREADY_TO_SEND
+} eDRIVER_STATE;
+
+/* Structure used to control the data being sent to the host. */
+typedef struct
+{
+	unsigned portCHAR ucBuffer[ usbMAX_CONTROL_MESSAGE_SIZE ];
+	unsigned portLONG ulNextCharIndex;
+	unsigned portLONG ulTotalDataLength;
+} xCONTROL_MESSAGE;
+
+/*-----------------------------------------------------------*/
+void vUSBCDCTask( void *pvParameters );
+
+/* Send cByte down the USB port.  Characters are simply buffered and not
+sent unless the port is connected. */
+void vUSBSendByte( portCHAR cByte );
+
+
+#endif
+
+

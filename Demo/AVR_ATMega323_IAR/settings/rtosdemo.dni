@@ -1,0 +1,38 @@
+[DisAssemblyWindow]
+NumStates=_ 1
+State 1=_ 1
+[Watch]
+Watch 1=_ 1 "usCurrentNumberOfTasks"
+Watch 2=
+Watch 3=
+[CodeCoverage]
+State=_ 0
+[Profiling]
+State=_ 0
+[TermIOSettings]
+Filename=_ ""
+InputMode=_ 1
+[QWatch]
+WindowContent=_ 100 100 100 100
+[Desktop-Debug]
+Wnd0=_ "Watch" "open" 44 0 1 -1 -1 -1 -1 1139 276 1595 524 100 100 100 100
+Wnd1=_ "Memory" "open" 44 0 1 -1 -1 -1 -1 1139 217 1591 939 1 1872 0 1872 0 1 0 1 0
+Wnd2=_ "CallStack" "open" 44 0 1 -1 -1 -1 -1 30 699 277 1037 1
+Wnd3=_ "Register" "open" 44 0 1 -1 -1 -1 -1 1237 0 1569 1019 0 0 0 0
+Wnd4=_ "Register" "open" 44 0 1 -1 -1 -1 -1 40 264 1312 986 0 0 0 0
+Wnd5=_ "Editor-DebugSource" "open" 44 0 1 -1 -1 -1 -1 169 991 1062 2036 "E:\Dev\FreeRTOS\Source\portable\IAR\ATMega323\portmacro.s90" 1 1 0 206 6825 6825
+Wnd6=_ "Disassembly" "open" 44 0 1 -1 -1 -4 -28 586 28 1196 854
+Wnd7=_ "Log" "closed" 44 0 1 -1 -1 -4 -28 872 845 1595 1069
+Wnd8=_ "Locals" "closed" 44 0 1 -1 -1 -1 -1 1139 0 1595 276 100 100 100 100
+Wnd9=_ "Terminal I/O" "closed" 44 0 1 -1 -1 -1 -1 1138 522 1595 826
+Maximized=_ 0
+Count=_ 10
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Breakpoints]
+Count=0

@@ -1,0 +1,101 @@
+<!DOCTYPE CrossStudio_for_ARM_Session_File>
+<session>
+ <Autos>
+  <Watches active="0" />
+ </Autos>
+ <Bookmarks/>
+ <Breakpoints>
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="D_Abort" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="FIQ" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="IRQ" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="P_Abort" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="Reset" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="SWI" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="ARM Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="Undef" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="BusFault" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="ExceptionEntryReturnFault" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="HardFault" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="MemManage" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="Reset" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="UsageFault_CheckingError" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="UsageFault_Coprocessor" filename="" />
+  <BreakpointListItem actiontype="0" chainFrom="" line="-1" length="0" triggertype="0" useHWbreakpoint="false" group="Cortex-M3 Exceptions" breakdatatype="5" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="UsageFault_StateError" filename="" />
+ </Breakpoints>
+ <ExecutionCountWindow/>
+ <Memory1>
+  <MemoryWindow autoEvaluate="0" addressText="0xe000e014" numColumns="8" sizeText="4" dataSize="1" radix="16" addressSpace="" />
+ </Memory1>
+ <Memory2>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory2>
+ <Memory3>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory3>
+ <Memory4>
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+ </Memory4>
+ <Project>
+  <ProjectSessionItem path="RTOSDemo" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo1" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo1;Source Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo1;Source Files;RTOS Source" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo3" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo3;Source Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo3;Source Files;Demo Source" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo3;System Files" name="unnamed" />
+ </Project>
+ <Register1>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="CPU - Current Mode" visibleGroups="CPU - Current Mode" decimalDisplays="" binaryDisplays="" />
+ </Register1>
+ <Register2>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register2>
+ <Register3>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register3>
+ <Register4>
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+ </Register4>
+ <SourceNavigatorWindow/>
+ <TraceWindow>
+  <Trace wrap="Yes" type="1" enabled="Yes" />
+ </TraceWindow>
+ <Watch1>
+  <Watches active="1" >
+   <Watchpoint evalMode="0" linenumber="0" evalType="1" radix="-1" name="pxTopOfStack" expression="pxTopOfStack" filename="" />
+   <Watchpoint linenumber="0" radix="-1" name="uxCriticalNesting" expression="uxCriticalNesting" filename="" />
+   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="xHandle" expression="xHandle" filename="" />
+   <Watchpoint linenumber="0" radix="-1" name="xTickCount" expression="xTickCount" filename="" />
+  </Watches>
+ </Watch1>
+ <Watch2>
+  <Watches active="0" />
+ </Watch2>
+ <Watch3>
+  <Watches active="0" />
+ </Watch3>
+ <Watch4>
+  <Watches active="0" />
+ </Watch4>
+ <Files>
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="1" debugPath="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" y="102" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" left="0" selected="1" name="unnamed" top="257" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\main.c" y="117" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\main.c" left="0" selected="0" name="unnamed" top="82" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Source\croutine.c" y="275" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\croutine.c" left="0" selected="0" name="unnamed" top="258" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\vectors.s" y="79" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\vectors.s" left="0" selected="0" name="unnamed" top="44" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Source\tasks.c" y="1181" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\tasks.c" left="0" selected="0" name="unnamed" top="1166" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="51" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\demo3\FreeRTOSConfig.h" y="49" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\demo3\FreeRTOSConfig.h" left="0" selected="0" name="unnamed" top="24" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="24" debugPath="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" y="66" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" left="0" selected="0" name="unnamed" top="56" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="13" debugPath="C:\E\Dev\FreeRTOS\source\include\croutine.h" y="294" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\source\include\croutine.h" left="0" selected="0" name="unnamed" top="271" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="35" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\ParTest.c" y="49" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\ParTest.c" left="0" selected="0" name="unnamed" top="28" />
+ </Files>
+ <ARMCrossStudioWindow activeProject="Demo3" autoConnectTarget="/CrossFire LM3S102" debugSearchFileMap="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\gpio.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\gpio.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\interrupt.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\interrupt.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\ssi.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\ssi.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\sysctl.c
+
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\uart.c
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\uart.c" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3" fileDialogDefaultFilter="*.asm;*.s;*.inc" autoConnectCapabilities="1919" debugSearchPath="" buildConfiguration="Flash Release" />
+</session>

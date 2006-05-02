@@ -1,0 +1,127 @@
+#include "FreeRTOSConfig.h"
+
+IVR_ADDR		 DEFINE    0xFFFFF818
+
+;*******************************************************************************
+;              Import  the Reset_Handler address from 71x_init.s
+;*******************************************************************************
+
+        IMPORT __program_start
+
+;*******************************************************************************
+;                      Import exception handlers
+;*******************************************************************************
+
+        IMPORT  vPortYieldProcessor		; FreeRTOS SWI handler
+
+;*******************************************************************************
+;                   Import IRQ handlers from 71x_it.c
+;*******************************************************************************
+
+        IMPORT  vPortNonPreemptiveTick	; Cooperative FreeRTOS tick handler
+		IMPORT	vPortPreemptiveTickISR	; Preemptive FreeRTOS tick handler
+		IMPORT	vSerialISREntry			; Demo serial port handler
+
+;*******************************************************************************
+;            Export Peripherals IRQ handlers table address
+;*******************************************************************************
+
+        CODE32
+
+
+        LDR     PC, Reset_Addr
+        LDR     PC, Undefined_Addr
+        LDR     PC, SWI_Addr
+        LDR     PC, Prefetch_Addr
+        LDR     PC, Abort_Addr
+        NOP                             ; Reserved vector
+        LDR     PC, =IVR_ADDR
+        LDR     PC, FIQ_Addr
+
+
+
+;*******************************************************************************
+;               Exception handlers address table
+;*******************************************************************************
+
+Reset_Addr      DCD     __program_start
+Undefined_Addr  DCD     UndefinedHandler
+SWI_Addr        DCD     vPortYieldProcessor
+Prefetch_Addr   DCD     PrefetchAbortHandler
+Abort_Addr      DCD     DataAbortHandler
+                DCD     0               ; Reserved vector
+IRQ_Addr        DCD     IRQHandler
+FIQ_Addr        DCD     FIQHandler
+
+;*******************************************************************************
+;              Peripherals IRQ handlers address table
+;*******************************************************************************
+
+				EXPORT  T0TIMI_Addr
+
+T0TIMI_Addr     DCD  DefaultISR
+FLASH_Addr      DCD  DefaultISR
+RCCU_Addr       DCD  DefaultISR
+RTC_Addr        DCD  DefaultISR
+#if configUSE_PREEMPTION == 0
+WDG_Addr        DCD  vPortNonPreemptiveTick	; Tick ISR if the cooperative scheduler is used.
+#else
+WDG_Addr		DCD  vPortPreemptiveTickISR	; Tick ISR if the preemptive scheduler is used.
+#endif
+XTI_Addr        DCD  DefaultISR
+USBHP_Addr      DCD  DefaultISR
+I2C0ITERR_Addr  DCD  DefaultISR
+I2C1ITERR_ADDR  DCD  DefaultISR
+UART0_Addr      DCD  vSerialISREntry
+UART1_Addr      DCD  DefaultISR
+UART2_ADDR      DCD  DefaultISR
+UART3_ADDR      DCD  DefaultISR
+BSPI0_ADDR      DCD  DefaultISR
+BSPI1_Addr      DCD  DefaultISR
+I2C0_Addr       DCD  DefaultISR
+I2C1_Addr       DCD  DefaultISR
+CAN_Addr        DCD  DefaultISR
+ADC12_Addr      DCD  DefaultISR
+T1TIMI_Addr     DCD  DefaultISR
+T2TIMI_Addr     DCD  DefaultISR
+T3TIMI_Addr     DCD  DefaultISR
+                DCD  0                  ; reserved
+                DCD  0                  ; reserved
+                DCD  0                  ; reserved
+HDLC_Addr       DCD  DefaultISR
+USBLP_Addr      DCD  DefaultISR
+                DCD  0                  ; reserved
+                DCD  0                  ; reserved
+T0TOI_Addr      DCD  DefaultISR
+T0OC1_Addr      DCD  DefaultISR
+T0OC2_Addr      DCD  DefaultISR
+
+
+;*******************************************************************************
+;                         Exception Handlers
+;*******************************************************************************
+
+
+UndefinedHandler
+		b	UndefinedHandler
+
+PrefetchAbortHandler
+		b	PrefetchAbortHandler
+
+DataAbortHandler
+		b	DataAbortHandler
+
+IRQHandler
+		b	DefaultISR
+
+FIQHandler
+		b	FIQHandler
+
+DefaultISR
+		b	DefaultISR
+
+
+
+       LTORG
+
+       END

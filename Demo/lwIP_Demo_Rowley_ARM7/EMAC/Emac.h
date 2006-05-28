@@ -19,7 +19,7 @@
 
 
 /* Number of receive buffers */
-#define NB_RX_BUFFERS			50		
+#define NB_RX_BUFFERS			20
 
 /* Size of each receive buffer - DO NOT CHANGE. */
 #define ETH_RX_BUFFER_SIZE		128         

@@ -1,24 +1,24 @@
 /*
-	FreeRTOS V4.0.1 - copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.2 - copyright (C) 2003-2006 Richard Barry.
 
-	This file is part of the FreeRTOS distribution.
+	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify
+	FreeRTOS.org is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	FreeRTOS is distributed in the hope that it will be useful,
+	FreeRTOS.org is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with FreeRTOS; if not, write to the Free Software
+	along with FreeRTOS.org; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	A special exception to the GPL can be applied should you wish to distribute
-	a combined work that includes FreeRTOS, without being obliged to provide
+	a combined work that includes FreeRTOS.org, without being obliged to provide
 	the source code for any proprietary components.  See the licensing section 
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
@@ -49,7 +49,7 @@ const portCHAR * const cSamplePageFirstPart =
 "<small><b><a href=\"http://www.freertos.org\" target=\"_top\">FreeRTOS Homepage</a></b></small><p>"
 "<H1>Embedded WEB Server<br><small>On the FreeRTOS real time kernel</small></h1>\r\n"
 "<p>\r\n"
-"<b>This demo is now using FreeRTOS V4.x.x!</b><p>"
+"<b>This demo is now using FreeRTOS.org V4.x.x!</b><p>"
 "This page is being served by the FreeRTOS embedded WEB server running on an ARM7 microcontroller.\r\n<pre>";
 
 const portCHAR * const cSamplePageSecondPart =

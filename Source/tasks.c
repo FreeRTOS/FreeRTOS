@@ -1,24 +1,24 @@
 /*
-	FreeRTOS V4.0.1 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.2 - Copyright (C) 2003-2006 Richard Barry.
 
-	This file is part of the FreeRTOS distribution.
+	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify
+	FreeRTOS.org is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	FreeRTOS is distributed in the hope that it will be useful,
+	FreeRTOS.org is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with FreeRTOS; if not, write to the Free Software
+	along with FreeRTOS.org; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	A special exception to the GPL can be applied should you wish to distribute
-	a combined work that includes FreeRTOS, without being obliged to provide
+	a combined work that includes FreeRTOS.org, without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
@@ -149,6 +149,16 @@ Changes from V3.2.4
 Changes from V4.0.0
 
 	+ Added the xMissedYield handling.
+
+Changes from V4.0.1
+
+	+ The function vTaskList() now suspends the scheduler rather than disabling
+	  interrups during the creation of the task list.  
+	+ Allow a task to delete itself by passing in its own handle.  Previously 
+	  this could only be done by passing in NULL.
+	+ The tick hook function is now called only within a tick isr.  Previously
+	  it was also called when the tick function was called during the scheduler
+	  unlocking process.
 */
 
 #include <stdio.h>
@@ -568,6 +578,13 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 		taskENTER_CRITICAL();
 		{
+			/* Ensure a yield is performed if the current task is being 
+			deleted. */
+			if( pxTaskToDelete == pxCurrentTCB )
+			{
+				pxTaskToDelete = NULL;
+			}
+
 			/* If null is passed in here then we are deleting ourselves. */
 			pxTCB = prvGetTCBFromHandle( pxTaskToDelete );
 
@@ -830,6 +847,13 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 		taskENTER_CRITICAL();
 		{
+			/* Ensure a yield is performed if the current task is being 
+			suspended. */
+			if( pxTaskToSuspend == pxCurrentTCB )
+			{
+				pxTaskToSuspend = NULL;
+			}
+
 			/* If null is passed in here then we are suspending ourselves. */
 			pxTCB = prvGetTCBFromHandle( pxTaskToSuspend );
 
@@ -1080,7 +1104,7 @@ unsigned portBASE_TYPE uxNumberOfTasks;
 		/* This is a VERY costly function that should be used for debug only.
 		It leaves interrupts disabled for a LONG time. */
 
-		taskENTER_CRITICAL();
+        vTaskSuspendAll();
 		{
 			/* Run through all the lists that could potentially contain a TCB and
 			report the task name, state and stack high water mark. */
@@ -1120,7 +1144,7 @@ unsigned portBASE_TYPE uxNumberOfTasks;
 				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xSuspendedTaskList, tskSUSPENDED_CHAR );
 			}
 		}
-		taskEXIT_CRITICAL();
+        xTaskResumeAll();
 	}
 
 #endif
@@ -1180,8 +1204,9 @@ inline void vTaskIncrementTick( void )
 		{
 			xList *pxTemp;
 
-			/* Tick count has overflowed so we need to swap the delay lists.  If there are
-			any items in pxDelayedTaskList here then there is an error! */
+			/* Tick count has overflowed so we need to swap the delay lists.  
+			If there are any items in pxDelayedTaskList here then there is 
+			an error! */
 			pxTemp = pxDelayedTaskList;
 			pxDelayedTaskList = pxOverflowDelayedTaskList;
 			pxOverflowDelayedTaskList = pxTemp;
@@ -1193,13 +1218,28 @@ inline void vTaskIncrementTick( void )
 	else
 	{
 		++uxMissedTicks;
+
+		/* The tick hook gets called at regular intervals, even if the 
+		scheduler is locked. */
+		#if ( configUSE_TICK_HOOK == 1 )
+		{
+			extern void vApplicationTickHook( void );
+
+			vApplicationTickHook();
+		}
+		#endif
 	}
 
 	#if ( configUSE_TICK_HOOK == 1 )
 	{
 		extern void vApplicationTickHook( void );
 
-		vApplicationTickHook();
+		/* Guard against the tick hook being called when the missed tick
+		count is being unwound (when the scheduler is being unlocked. */
+		if( uxMissedTicks == 0 )
+		{
+			vApplicationTickHook();
+		}
 	}
 	#endif
 }

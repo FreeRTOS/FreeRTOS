@@ -1,24 +1,24 @@
 /*
-	FreeRTOS V4.0.1 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.2 - Copyright (C) 2003-2006 Richard Barry.
 
-	This file is part of the FreeRTOS distribution.
+	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify
+	FreeRTOS.org is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	FreeRTOS is distributed in the hope that it will be useful,
+	FreeRTOS.org is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with FreeRTOS; if not, write to the Free Software
+	along with FreeRTOS.org; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	A special exception to the GPL can be applied should you wish to distribute
-	a combined work that includes FreeRTOS, without being obliged to provide
+	a combined work that includes FreeRTOS.org, without being obliged to provide
 	the source code for any proprietary components.  See the licensing section 
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
@@ -35,6 +35,11 @@ Changes from V2.6.1
 
 	+ Replaced the sUsingPreemption variable with the configUSE_PREEMPTION
 	  macro to be consistent with the later ports.
+
+Changes from V4.0.1
+	
+	+ Add function prvSetTickFrequencyDefault() to set the DOS tick back to
+	  its proper value when the scheduler exits. 
 */
 
 #include <stdlib.h>
@@ -79,6 +84,10 @@ scheduler is being used. */
 
 /* Trap routine used by taskYIELD() to manually cause a context switch. */
 static void __interrupt __far prvYieldProcessor( void );
+
+/* Set the tick frequency back so the floppy drive works correctly when the
+scheduler exits. */
+static void prvSetTickFrequencyDefault( void );
 
 /*lint -e956 File scopes necessary here. */
 
@@ -237,10 +246,7 @@ void ( __interrupt __far *pxOriginalTickISR )();
 		/* Set the DOS tick back onto the timer ticker. */
 		pxOriginalTickISR = _dos_getvect( portSWITCH_INT_NUMBER + 1 );
 		_dos_setvect( portTIMER_INT_NUMBER, pxOriginalTickISR );
-		/* This won't set the frequency quite the same as it was,
-		but using an integer value removes the need for any floating
-		point in the scheduler code. */
-		prvSetTickFrequency( ( unsigned portLONG ) portDOS_TICK_RATE );
+		prvSetTickFrequencyDefault();
 
 		/* Put back the switch interrupt routines that was in place
 		before the scheduler started. */
@@ -272,6 +278,18 @@ unsigned portLONG ulOutput;
 	portOUTPUT_BYTE( usPIT0, ( unsigned portSHORT )( ulOutput & ( unsigned portLONG ) 0xff ) );
 	ulOutput >>= 8;
 	portOUTPUT_BYTE( usPIT0, ( unsigned portSHORT ) ( ulOutput & ( unsigned portLONG ) 0xff ) );
+}
+/*-----------------------------------------------------------*/
+
+static void prvSetTickFrequencyDefault( void )
+{
+const unsigned portSHORT usPIT_MODE = ( unsigned portSHORT ) 0x43;
+const unsigned portSHORT usPIT0 = ( unsigned portSHORT ) 0x40;
+const unsigned portSHORT us8254_CTR0_MODE3 = ( unsigned portSHORT ) 0x36;
+
+	portOUTPUT_BYTE( usPIT_MODE, us8254_CTR0_MODE3 );
+	portOUTPUT_BYTE( usPIT0,0 );
+	portOUTPUT_BYTE( usPIT0,0 );
 }
 
 

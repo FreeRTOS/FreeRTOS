@@ -70,6 +70,7 @@ echo.
 :RESET_READONLY
   echo.
   echo   Removing ReadOnly attributes
+  attrib -R "%FEDLIBSUSER%\libFreeRTOS\Modules\Croutine.c"     >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Modules\Port.c"         >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Modules\List.c"         >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Modules\Queue.c"        >nul
@@ -77,6 +78,7 @@ echo.
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Drivers\Tick\Tick.c"    >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Drivers\Tick\isrTick.c" >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Include\Portmacro.h"    >nul
+  attrib -R "%FEDLIBSUSER%\libFreeRTOS\Include\Croutine.h"     >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Include\List.h"         >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Include\Portable.h"     >nul
   attrib -R "%FEDLIBSUSER%\libFreeRTOS\Include\Projdefs.h"     >nul
@@ -103,6 +105,7 @@ echo.
 :COPY_MODULES
   echo     Modules...
   copy /V /Y "Port.c"                      "%FEDLIBSUSER%\libFreeRTOS\Modules\Port.c"         >nul
+  copy /V /Y "..\..\..\Croutine.c"         "%FEDLIBSUSER%\libFreeRTOS\Modules\Croutine.c"     >nul
   copy /V /Y "..\..\..\List.c"             "%FEDLIBSUSER%\libFreeRTOS\Modules\List.c"         >nul
   copy /V /Y "..\..\..\Queue.c"            "%FEDLIBSUSER%\libFreeRTOS\Modules\Queue.c"        >nul
   copy /V /Y "..\..\..\Tasks.c"            "%FEDLIBSUSER%\libFreeRTOS\Modules\Tasks.c"        >nul
@@ -115,6 +118,7 @@ echo.
 :COPY_HEADERS
   echo     Headers...
   copy /V /Y "portmacro.h"                 "%FEDLIBSUSER%\libFreeRTOS\Include\Portmacro.h"    >nul
+  copy /V /Y "..\..\..\include\Croutine.h" "%FEDLIBSUSER%\libFreeRTOS\Include\Croutine.h"     >nul
   copy /V /Y "..\..\..\include\List.h"     "%FEDLIBSUSER%\libFreeRTOS\Include\List.h"         >nul
   copy /V /Y "..\..\..\include\Portable.h" "%FEDLIBSUSER%\libFreeRTOS\Include\Portable.h"     >nul
   copy /V /Y "..\..\..\include\Projdefs.h" "%FEDLIBSUSER%\libFreeRTOS\Include\Projdefs.h"     >nul
@@ -131,12 +135,14 @@ echo.
   echo.
   echo   Setting files to ReadOnly
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Modules\Port.c"         >nul
+  attrib +R "%FEDLIBSUSER%\libFreeRTOS\Modules\Croutine.c"     >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Modules\List.c"         >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Modules\Queue.c"        >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Modules\Tasks.c"        >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Drivers\Tick\Tick.c"    >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Drivers\Tick\isrTick.c" >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Include\Portmacro.h"    >nul
+  attrib +R "%FEDLIBSUSER%\libFreeRTOS\Include\Croutine.h"     >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Include\List.h"         >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Include\Portable.h"     >nul
   attrib +R "%FEDLIBSUSER%\libFreeRTOS\Include\Projdefs.h"     >nul
@@ -151,8 +157,9 @@ echo.
   echo.
   echo The installation of %PACKAGENAME% is completed.
   echo.
-  echo Please review the installation instructions as additional libraries and
-  echo fedC/wizC configuration settings are needed for FreeRTOS to function correctly.
+  echo Please review the installation instructions as additional libraries
+  echo  and fedC/wizC configuration settings may be needed for FreeRTOS
+  echo  to function correctly.
 
   goto ENDIT
 

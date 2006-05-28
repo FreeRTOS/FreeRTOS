@@ -90,10 +90,10 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
-#define PBUF_POOL_SIZE          16
+#define PBUF_POOL_SIZE          4
 
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
-#define PBUF_POOL_BUFSIZE       512
+#define PBUF_POOL_BUFSIZE       1500
 
 /* PBUF_LINK_HLEN: the number of bytes that should be allocated for a
    link level header. */
@@ -108,17 +108,17 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_QUEUE_OOSEQ         1
 
 /* TCP Maximum segment size. */
-#define TCP_MSS                 512
+#define TCP_MSS                 1500
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF             512
+#define TCP_SND_BUF             1500
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 *
    TCP_SND_BUF/TCP_MSS for things to work. */
 #define TCP_SND_QUEUELEN        6 * TCP_SND_BUF/TCP_MSS
 
 /* TCP receive window. */
-#define TCP_WND                 512
+#define TCP_WND                 1500
 
 /* Maximum number of retransmissions of data segments. */
 #define TCP_MAXRTX              12

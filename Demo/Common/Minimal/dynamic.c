@@ -1,24 +1,24 @@
 /*
-	FreeRTOS V4.0.1 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.2 - Copyright (C) 2003-2006 Richard Barry.
 
-	This file is part of the FreeRTOS distribution.
+	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify
+	FreeRTOS.org is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	FreeRTOS is distributed in the hope that it will be useful,
+	FreeRTOS.org is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with FreeRTOS; if not, write to the Free Software
+	along with FreeRTOS.org; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	A special exception to the GPL can be applied should you wish to distribute
-	a combined work that includes FreeRTOS, without being obliged to provide
+	a combined work that includes FreeRTOS.org, without being obliged to provide
 	the source code for any proprietary components.  See the licensing section 
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
@@ -111,7 +111,7 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
 #define priSTACK_SIZE				( ( unsigned portSHORT ) 128 )
-#define priSLEEP_TIME				( ( portTickType ) 50 )
+#define priSLEEP_TIME				( ( portTickType ) 75 )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( unsigned portLONG ) 0xff )
 #define priNO_BLOCK					( ( portTickType ) 0 )

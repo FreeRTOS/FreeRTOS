@@ -1,7 +1,7 @@
-The FreeRTOS source code is licensed by the modified GNU General Public 
+The FreeRTOS.org source code is licensed by the modified GNU General Public 
 License (GPL) text provided below.  The FreeRTOS download also includes 
 demo application source code, some of which is provided by third parties 
-AND IS LICENSED SEPARATELY FROM FREERTOS.  
+AND IS LICENSED SEPARATELY FROM FREERTOS.ORG.  
 
 For the avoidance of any doubt refer to the comment included at the top
 of each source and header file for license and copyright information.
@@ -33,6 +33,9 @@ and are NOT COVERED BY THE GPL.
    conditions stated at the top of the human readable files are understood 
    and adhered at all times for all files in that directory.
 
+5) The files contained within FreeRTOS\Demo\WizNET_DEMO_TERN_186\tern_code,
+   which are slightly modified versions of code provided by and copyright to
+   Tern Inc.
 
 Errors and omissions should be reported to Richard Barry, contact details for
 whom can be obtained from http://www.FreeRTOS.org.

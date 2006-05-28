@@ -1508,7 +1508,6 @@ if (len == SSIZE[s])
       	break;
       }
   	  I2CHIP_POLL_ISR(in4_isr_i2chip);
-      vTaskDelay( 1 );
   }
   }
 }

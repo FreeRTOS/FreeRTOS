@@ -1,24 +1,24 @@
 /*
-	FreeRTOS V4.0.1 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.2 - Copyright (C) 2003-2006 Richard Barry.
 
-	This file is part of the FreeRTOS distribution.
+	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify
+	FreeRTOS.org is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	FreeRTOS is distributed in the hope that it will be useful,
+	FreeRTOS.org is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with FreeRTOS; if not, write to the Free Software
+	along with FreeRTOS.org; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	A special exception to the GPL can be applied should you wish to distribute
-	a combined work that includes FreeRTOS, without being obliged to provide
+	a combined work that includes FreeRTOS.org, without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
@@ -72,7 +72,8 @@ Changes from V2.0.0
 
 #define pollqSTACK_SIZE			configMINIMAL_STACK_SIZE
 #define pollqQUEUE_SIZE			( 10 )
-#define pollqDELAY				( ( portTickType ) 200 / portTICK_RATE_MS )
+#define pollqPRODUCER_DELAY		( ( portTickType ) 200 / portTICK_RATE_MS )
+#define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( portTickType ) 20 )
 #define pollqNO_DELAY			( ( portTickType ) 0 )
 #define pollqVALUES_TO_PRODUCE	( ( signed portBASE_TYPE ) 3 )
 #define pollqINITIAL_VALUE		( ( signed portBASE_TYPE ) 0 )
@@ -136,7 +137,7 @@ signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 		/* Wait before we start posting again to ensure the consumer runs and
 		empties the queue. */
-		vTaskDelay( pollqDELAY );
+		vTaskDelay( pollqPRODUCER_DELAY );
 	}
 }  /*lint !e818 Function prototype must conform to API. */
 /*-----------------------------------------------------------*/
@@ -182,7 +183,7 @@ signed portBASE_TYPE xError = pdFALSE;
 
 		/* Now the queue is empty we block, allowing the producer to place more
 		items in the queue. */
-		vTaskDelay( pollqDELAY );
+		vTaskDelay( pollqCONSUMER_DELAY );
 	}
 } /*lint !e818 Function prototype must conform to API. */
 /*-----------------------------------------------------------*/

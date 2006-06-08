@@ -1,4 +1,4 @@
-#	FreeRTOS.org V4.0.2 - Copyright (C) 2003-2006 Richard Barry.
+#	FreeRTOS.org V4.0.3 - Copyright (C) 2003-2006 Richard Barry.
 #
 #	This file is part of the FreeRTOS.org distribution.
 #
@@ -32,8 +32,8 @@ CC=arm-elf-gcc
 OBJCOPY=arm-elf-objcopy
 ARCH=arm-elf-ar
 CRT0=boot.s
-DEBUG=
-OPTIM=-Os
+DEBUG=-g
+OPTIM=-O0
 LDSCRIPT=atmel-rom.ld
 
 #

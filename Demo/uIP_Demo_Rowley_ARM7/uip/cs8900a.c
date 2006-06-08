@@ -1,6 +1,6 @@
 // cs8900a.c: device driver for the CS8900a chip in 8-bit mode.
 
-#include <targets/LPC210x.h>
+#include <LPC210x.h>
 
 #include "cs8900a.h"
 #include "uip.h"
@@ -270,25 +270,31 @@ const TInitSeq InitSeq[] =
 void
 cs8900a_write(unsigned addr, unsigned int data)
 {
-  IODIR |= 0xff << 16;                           // Data port to output
+  GPIO_IODIR |= 0xff << 16;                           // Data port to output
 
-  IOCLR = 0xf << 4;                              // Put address on bus
-  IOSET = addr << 4;
+  GPIO_IOCLR = 0xf << 4;                              // Put address on bus
+  GPIO_IOSET = addr << 4;
   
-  IOCLR = 0xff << 16;                            // Write low order byte to data bus
-  IOSET = data << 16;
+  GPIO_IOCLR = 0xff << 16;                            // Write low order byte to data bus
+  GPIO_IOSET = data << 16;
 
-  IOCLR = IOW;                                   // Toggle IOW-signal
-  IOSET = IOW;
+  asm volatile ( "NOP" );
+  GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
+  asm volatile ( "NOP" );
+  GPIO_IOSET = IOW;
+  asm volatile ( "NOP" );
 
-  IOCLR = 0xf << 4;
-  IOSET = ((addr | 1) << 4);                     // And put next address on bus
+  GPIO_IOCLR = 0xf << 4;
+  GPIO_IOSET = ((addr | 1) << 4);                     // And put next address on bus
 
-  IOCLR = 0xff << 16;                            // Write high order byte to data bus
-  IOSET = data >> 8 << 16;
+  GPIO_IOCLR = 0xff << 16;                            // Write high order byte to data bus
+  GPIO_IOSET = data >> 8 << 16;
 
-  IOCLR = IOW;                                   // Toggle IOW-signal
-  IOSET = IOW;
+  asm volatile ( "NOP" );
+  GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
+  asm volatile ( "NOP" );
+  GPIO_IOSET = IOW;
+  asm volatile ( "NOP" );
 }
 
 // Reads a word in little-endian byte order from a specified port-address
@@ -297,20 +303,24 @@ cs8900a_read(unsigned addr)
 {
   unsigned int value;
 
-  IODIR &= ~(0xff << 16);                        // Data port to input
+  GPIO_IODIR &= ~(0xff << 16);                        // Data port to input
 
-  IOCLR = 0xf << 4;                              // Put address on bus
-  IOSET = addr << 4;
+  GPIO_IOCLR = 0xf << 4;                              // Put address on bus
+  GPIO_IOSET = addr << 4;
 
-  IOCLR = IOR;                                   // IOR-signal low
-  value = (IOPIN >> 16) & 0xff;                  // get low order byte from data bus
-  IOSET = IOR;
+  asm volatile ( "NOP" );
+  GPIO_IOCLR = IOR;                                   // IOR-signal low
+  asm volatile ( "NOP" );
+  value = (GPIO_IOPIN >> 16) & 0xff;                  // get low order byte from data bus
+  GPIO_IOSET = IOR;
 
-  IOSET = 1 << 4;                                // IOR high and put next address on bus
+  GPIO_IOSET = 1 << 4;                                // IOR high and put next address on bus
 
-  IOCLR = IOR;                                   // IOR-signal low
-  value |= ((IOPIN >> 8) & 0xff00);              // get high order byte from data bus
-  IOSET = IOR;                                   // IOR-signal low
+  asm volatile ( "NOP" );
+  GPIO_IOCLR = IOR;                                   // IOR-signal low
+  asm volatile ( "NOP" );
+  value |= ((GPIO_IOPIN >> 8) & 0xff00);              // get high order byte from data bus
+  GPIO_IOSET = IOR;                                   // IOR-signal low
   
   return value;
 }
@@ -321,20 +331,24 @@ cs8900a_read_addr_high_first(unsigned addr)
 {
   unsigned int value;
 
-  IODIR &= ~(0xff << 16);                        // Data port to input
+  GPIO_IODIR &= ~(0xff << 16);                        // Data port to input
 
-  IOCLR = 0xf << 4;                              // Put address on bus
-  IOSET = (addr+1) << 4;
+  GPIO_IOCLR = 0xf << 4;                              // Put address on bus
+  GPIO_IOSET = (addr+1) << 4;
 
-  IOCLR = IOR;                                   // IOR-signal low
-  value = ((IOPIN >> 8) & 0xff00);               // get high order byte from data bus
-  IOSET = IOR;                                   // IOR-signal high
+  asm volatile ( "NOP" );
+  GPIO_IOCLR = IOR;                                   // IOR-signal low
+  asm volatile ( "NOP" );
+  value = ((GPIO_IOPIN >> 8) & 0xff00);               // get high order byte from data bus
+  GPIO_IOSET = IOR;                                   // IOR-signal high
 
-  IOCLR = 1 << 4;                                // Put low address on bus
+  GPIO_IOCLR = 1 << 4;                                // Put low address on bus
 
-  IOCLR = IOR;                                   // IOR-signal low
-  value |= (IOPIN >> 16) & 0xff;                 // get low order byte from data bus
-  IOSET = IOR;
+  asm volatile ( "NOP" );
+  GPIO_IOCLR = IOR;                                   // IOR-signal low
+  asm volatile ( "NOP" );
+  value |= (GPIO_IOPIN >> 16) & 0xff;                 // get low order byte from data bus
+  GPIO_IOSET = IOR;
 
   return value;
 }
@@ -345,16 +359,16 @@ cs8900a_init(void)
   int i;
 
   // Reset outputs, control lines high
-  IOSET = IOR | IOW;
+  GPIO_IOSET = IOR | IOW;
 
   // No LEDs on.
-  IOSET = LED_RED | LED_YELLOW | LED_GREEN;
+  GPIO_IOSET = LED_RED | LED_YELLOW | LED_GREEN;
 
   // Port 3 as output (all pins but RS232)
-  IODIR = ~0U; // everything to output.
+  GPIO_IODIR = ~0U; // everything to output.
 
   // Reset outputs
-  IOCLR = 0xff << 16;  // clear data outputs
+  GPIO_IOCLR = 0xff << 16;  // clear data outputs
 
   // Reset the CS8900A
   cs8900a_write(ADD_PORT, PP_SelfCTL);
@@ -378,7 +392,7 @@ cs8900a_send(void)
 {
   unsigned u;
 
-  IOCLR = LED_RED;  // Light RED LED when frame starting
+  GPIO_IOCLR = LED_RED;  // Light RED LED when frame starting
 
   // Transmit command
   cs8900a_write(TX_CMD_PORT, TX_START_ALL_BYTES);
@@ -394,7 +408,7 @@ cs8900a_send(void)
         break;
       if (u -- == 0)
         {
-          IOSET = LED_RED;  // Extinguish RED LED on end of frame
+          GPIO_IOSET = LED_RED;  // Extinguish RED LED on end of frame
           return;
         }
 
@@ -402,33 +416,37 @@ cs8900a_send(void)
       skip_frame();
     }
 
-  IODIR |= 0xff << 16;                           // Data port to output
+  GPIO_IODIR |= 0xff << 16;                           // Data port to output
 
   // Send 40+14=54 bytes of header
   for (u = 0; u < 54; u += 2)
     {
-      IOCLR = 0xf << 4;                              // Put address on bus
-      IOSET = TX_FRAME_PORT << 4;
+      GPIO_IOCLR = 0xf << 4;                              // Put address on bus
+      GPIO_IOSET = TX_FRAME_PORT << 4;
 
-      IOCLR = 0xff << 16;                            // Write low order byte to data bus
-      IOSET = uip_buf[u] << 16;                      // write low order byte to data bus
+      GPIO_IOCLR = 0xff << 16;                            // Write low order byte to data bus
+      GPIO_IOSET = uip_buf[u] << 16;                      // write low order byte to data bus
 
-      IOCLR = IOW;                                   // Toggle IOW-signal
-      IOSET = IOW;
+      asm volatile ( "NOP" );
+      GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
+      asm volatile ( "NOP" );
+      GPIO_IOSET = IOW;
 
-      IOCLR = 0xf << 4;                              // Put address on bus
-      IOSET = (TX_FRAME_PORT | 1) << 4;              // and put next address on bus
+      GPIO_IOCLR = 0xf << 4;                              // Put address on bus
+      GPIO_IOSET = (TX_FRAME_PORT | 1) << 4;              // and put next address on bus
 
-      IOCLR = 0xff << 16;                            // Write low order byte to data bus
-      IOSET = uip_buf[u+1] << 16;                    // write low order byte to data bus
+      GPIO_IOCLR = 0xff << 16;                            // Write low order byte to data bus
+      GPIO_IOSET = uip_buf[u+1] << 16;                    // write low order byte to data bus
 
-      IOCLR = IOW;                                   // Toggle IOW-signal
-      IOSET = IOW;
+      asm volatile ( "NOP" );
+	  GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
+      asm volatile ( "NOP" );
+      GPIO_IOSET = IOW;
     }
 
   if (uip_len <= 54)
     {
-      IOSET = LED_RED;  // Extinguish RED LED on end of frame
+      GPIO_IOSET = LED_RED;  // Extinguish RED LED on end of frame
       return;
     }
 
@@ -437,26 +455,30 @@ cs8900a_send(void)
   for (u = 0; u < uip_len; u += 2)
     {
 
-      IOCLR = 0xf << 4;                          // Put address on bus
-      IOSET = TX_FRAME_PORT << 4;
+      GPIO_IOCLR = 0xf << 4;                          // Put address on bus
+      GPIO_IOSET = TX_FRAME_PORT << 4;
 
-      IOCLR = 0xff << 16;                        // Write low order byte to data bus
-      IOSET = uip_appdata[u] << 16;              // write low order byte to data bus
+      GPIO_IOCLR = 0xff << 16;                        // Write low order byte to data bus
+      GPIO_IOSET = uip_appdata[u] << 16;              // write low order byte to data bus
 
-      IOCLR = IOW;                               // Toggle IOW-signal
-      IOSET = IOW;
+      asm volatile ( "NOP" );
+	  GPIO_IOCLR = IOW;                               // Toggle IOW-signal
+      asm volatile ( "NOP" );
+      GPIO_IOSET = IOW;
 
-      IOCLR = 0xf << 4;                          // Put address on bus
-      IOSET = (TX_FRAME_PORT | 1) << 4;          // and put next address on bus
+      GPIO_IOCLR = 0xf << 4;                          // Put address on bus
+      GPIO_IOSET = (TX_FRAME_PORT | 1) << 4;          // and put next address on bus
 
-      IOCLR = 0xff << 16;                        // Write low order byte to data bus
-      IOSET = uip_appdata[u+1] << 16;            // write low order byte to data bus
+      GPIO_IOCLR = 0xff << 16;                        // Write low order byte to data bus
+      GPIO_IOSET = uip_appdata[u+1] << 16;            // write low order byte to data bus
 
-      IOCLR = IOW;                               // Toggle IOW-signal
-      IOSET = IOW;
+      asm volatile ( "NOP" );
+	  GPIO_IOCLR = IOW;                               // Toggle IOW-signal
+      asm volatile ( "NOP" );
+      GPIO_IOSET = IOW;
     }
 
-  IOSET = LED_RED;  // Extinguish RED LED on end of frame
+  GPIO_IOSET = LED_RED;  // Extinguish RED LED on end of frame
 }
 
 static void
@@ -477,7 +499,7 @@ cs8900a_poll(void)
   if ((cs8900a_read(DATA_PORT) & 0xd00) == 0)
     return 0;
 
-  IOCLR = LED_GREEN;  // Light GREED LED when frame coming in.
+  GPIO_IOCLR = LED_GREEN;  // Light GREED LED when frame coming in.
 
   // Read receiver status and discard it.
   cs8900a_read_addr_high_first(RX_FRAME_PORT);
@@ -493,30 +515,32 @@ cs8900a_poll(void)
     }
 
   // Data port to input
-  IODIR &= ~(0xff << 16);
+  GPIO_IODIR &= ~(0xff << 16);
 
-  IOCLR = 0xf << 4;                          // put address on bus
-  IOSET = RX_FRAME_PORT << 4; 
+  GPIO_IOCLR = 0xf << 4;                          // put address on bus
+  GPIO_IOSET = RX_FRAME_PORT << 4; 
 
   // Read bytes into uip_buf
   u = 0;
   while (u < len)
     {
-      IOCLR = 1 << 4;                            // put address on bus
+      GPIO_IOCLR = 1 << 4;                            // put address on bus
 
-      IOCLR = IOR;                               // IOR-signal low
-      uip_buf[u] = IOPIN >> 16;                // get high order byte from data bus
-      IOSET = IOR;                               // IOR-signal high
+      GPIO_IOCLR = IOR;                               // IOR-signal low
+      uip_buf[u] = GPIO_IOPIN >> 16;                // get high order byte from data bus
+      asm volatile ( "NOP" );
+      GPIO_IOSET = IOR;                               // IOR-signal high
 
-      IOSET = 1 << 4;                            // put address on bus
+      GPIO_IOSET = 1 << 4;                            // put address on bus
 
-      IOCLR = IOR;                               // IOR-signal low
-      uip_buf[u+1] = IOPIN >> 16;                  // get high order byte from data bus
-      IOSET = IOR;                               // IOR-signal high
+      GPIO_IOCLR = IOR;                               // IOR-signal low
+      asm volatile ( "NOP" );
+      uip_buf[u+1] = GPIO_IOPIN >> 16;                  // get high order byte from data bus
+      GPIO_IOSET = IOR;                               // IOR-signal high
       u += 2;
     }
 
-  IOSET = LED_GREEN;  // Extinguish GREED LED when frame finished.
+  GPIO_IOSET = LED_GREEN;  // Extinguish GREED LED when frame finished.
   return len;
 }
 

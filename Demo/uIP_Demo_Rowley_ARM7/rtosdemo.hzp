@@ -1,7 +1,7 @@
 <!DOCTYPE CrossStudio_Project_File>
 <solution version="1" Name="rtosdemo" >
   <project Name="rtosdemo" >
-    <configuration Target="LPC2124" property_groups_file_path="$(StudioDir)/targets/Philips_LPC210X/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC2124_MemoryMap.xml" c_preprocessor_definitions="OSCILLATOR_CLOCK_FREQUENCY=14745600;THUMB_INTERWORK;SUPERVISOR_START;VECTORED_IRQ_INTERRUPTS;GCC_ARM7" c_user_include_directories="../../Source/include;../../Demo/uIP_Demo_Rowley_ARM7;../../Demo/Common/Include;uip;." project_directory="" link_include_startup_code="No" project_type="Executable" c_additional_options="" Name="Common" />
+    <configuration arm_target_loader_parameter="14745600" Target="LPC2124" property_groups_file_path="$(StudioDir)/targets/Philips_LPC210X/propertyGroups.xml" oscillator_frequency="14.7456MHz" linker_memory_map_file="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC2124_MemoryMap.xml" gcc_entry_point="_start" c_preprocessor_definitions="THUMB_INTERWORK;SUPERVISOR_START;VECTORED_IRQ_INTERRUPTS;GCC_ARM7" c_user_include_directories="../../Source/include;../../Demo/uIP_Demo_Rowley_ARM7;../../Demo/Common/Include;uip;." project_directory="" link_include_startup_code="No" project_type="Executable" c_additional_options="" Name="Common" />
     <configuration target_reset_script="SRAMReset()" Name="RAM" />
     <configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/Philips_LPC210X/Release/Loader.exe" target_reset_script="FLASHReset()" Name="Flash" />
     <folder Name="uIP Source" >
@@ -20,11 +20,11 @@
     <folder Name="System Files" >
       <configuration filter="" Name="Common" />
       <file file_name="$(StudioDir)/source/crt0.s" Name="crt0.s" />
-      <file file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Startup.s" Name="Philips_LPC210X_Startup.s" />
       <file file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Target.js" Name="Philips_LPC210X_Target.js" >
         <configuration Name="Common" file_type="Reset Script" />
       </file>
       <file file_name="flash_placement.xml" Name="flash_placement.xml" />
+      <file file_name="Philips_LPC210X_Startup.s" Name="Philips_LPC210X_Startup.s" />
     </folder>
     <folder Name="FreeRTOS Source" >
       <configuration filter="" Name="Common" />
@@ -45,6 +45,7 @@
       <file file_name="../Common/Minimal/PollQ.c" Name="PollQ.c" />
     </folder>
     <configuration c_preprocessor_definitions="" c_user_include_directories="" Name="Debug" />
+    <configuration arm_target_loader_parameter="14745600" oscillator_frequency="14.7456MHz" Name="THUMB Flash Debug" linker_output_format="hex" />
   </project>
   <configuration inherited_configurations="THUMB;Flash;Debug" Name="THUMB Flash Debug" />
   <configuration arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB" arm_instruction_set="THUMB" hidden="Yes" Name="THUMB" />

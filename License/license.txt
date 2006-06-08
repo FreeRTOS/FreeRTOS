@@ -27,11 +27,12 @@ and are NOT COVERED BY THE GPL.
    adhered to.
 
 4) All files contained within the FreeRTOS\Demo\CORTEX_LM3S102_GCC\hw_include
-   directory.  The copyright of these files is owned by Luminary Micro.
-   Permission has been granted by Luminary Micro for these files to be 
-   included in the FreeRTOS download.  Users must ensure the license 
-   conditions stated at the top of the human readable files are understood 
-   and adhered at all times for all files in that directory.
+   and FreeRTOS\Demo\CORTEX_LM3S316_IAR\hw_include directories.  The 
+   copyright of these files is owned by Luminary Micro.  Permission has been 
+   granted by Luminary Micro for these files to be included in the FreeRTOS 
+   download.  Users must ensure the license conditions stated in the EULA.txt
+   file located in the same directories is understood and adhered at all 
+   times for all files in those directories.
 
 5) The files contained within FreeRTOS\Demo\WizNET_DEMO_TERN_186\tern_code,
    which are slightly modified versions of code provided by and copyright to

@@ -23,7 +23,7 @@
  </Breakpoints>
  <ExecutionCountWindow/>
  <Memory1>
-  <MemoryWindow autoEvaluate="0" addressText="0xe000e014" numColumns="8" sizeText="4" dataSize="1" radix="16" addressSpace="" />
+  <MemoryWindow autoEvaluate="0" addressText="0x20000000" numColumns="8" sizeText="2048" dataSize="1" radix="16" addressSpace="" />
  </Memory1>
  <Memory2>
   <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
@@ -38,11 +38,10 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;Demo1" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;Demo1;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;Demo1;Source Files;RTOS Source" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo1;Source Files;Demo Source" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo1;System Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;Demo2" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;Demo3" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;Demo3;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;Demo3;Source Files;Demo Source" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;Demo3;System Files" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="CPU - Current Mode" visibleGroups="CPU - Current Mode" decimalDisplays="" binaryDisplays="" />
@@ -62,10 +61,10 @@
  </TraceWindow>
  <Watch1>
   <Watches active="1" >
-   <Watchpoint evalMode="0" linenumber="0" evalType="1" radix="-1" name="pxTopOfStack" expression="pxTopOfStack" filename="" />
+   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="ulglob" expression="ulglob" filename="" />
    <Watchpoint linenumber="0" radix="-1" name="uxCriticalNesting" expression="uxCriticalNesting" filename="" />
-   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="xHandle" expression="xHandle" filename="" />
-   <Watchpoint linenumber="0" radix="-1" name="xTickCount" expression="xTickCount" filename="" />
+   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="pxCurrentTCB" expression="pxCurrentTCB" filename="" />
+   <Watchpoint linenumber="0" radix="16" name="ul" expression="ul" filename="" />
   </Watches>
  </Watch1>
  <Watch2>
@@ -77,18 +76,8 @@
  <Watch4>
   <Watches active="0" />
  </Watch4>
- <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="1" debugPath="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" y="102" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" left="0" selected="1" name="unnamed" top="257" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\main.c" y="117" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\main.c" left="0" selected="0" name="unnamed" top="82" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Source\croutine.c" y="275" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\croutine.c" left="0" selected="0" name="unnamed" top="258" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\vectors.s" y="79" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\vectors.s" left="0" selected="0" name="unnamed" top="44" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="C:\E\Dev\FreeRTOS\Source\tasks.c" y="1181" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\tasks.c" left="0" selected="0" name="unnamed" top="1166" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="51" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\demo3\FreeRTOSConfig.h" y="49" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\demo3\FreeRTOSConfig.h" left="0" selected="0" name="unnamed" top="24" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="24" debugPath="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" y="66" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" left="0" selected="0" name="unnamed" top="56" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="13" debugPath="C:\E\Dev\FreeRTOS\source\include\croutine.h" y="294" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\source\include\croutine.h" left="0" selected="0" name="unnamed" top="271" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="35" debugPath="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\ParTest.c" y="49" useHTMLEdit="0" path="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3\ParTest.c" left="0" selected="0" name="unnamed" top="28" />
- </Files>
- <ARMCrossStudioWindow activeProject="Demo3" autoConnectTarget="/CrossFire LM3S102" debugSearchFileMap="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\gpio.c
+ <Files/>
+ <ARMCrossStudioWindow activeProject="Demo1" autoConnectTarget="/USB CrossConnect for ARM" debugSearchFileMap="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\gpio.c
 C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\gpio.c
 C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\interrupt.c
 C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\interrupt.c
@@ -97,5 +86,5 @@ C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\ssi.c
 C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\sysctl.c
 
 C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\hw_include\src\uart.c
-C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\uart.c" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3" fileDialogDefaultFilter="*.asm;*.s;*.inc" autoConnectCapabilities="1919" debugSearchPath="" buildConfiguration="Flash Release" />
+C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley_\hw_include\src\uart.c" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S102_Rowley\Demo3" fileDialogDefaultFilter="*.asm;*.s;*.inc" autoConnectCapabilities="1919" debugSearchPath="" buildConfiguration="Flash Debug" />
 </session>

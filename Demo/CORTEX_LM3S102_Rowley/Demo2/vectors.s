@@ -25,7 +25,11 @@
 
 _vectors:
   .word __stack_end__
-  .word reset_handler
+#ifdef STARTUP_FROM_RESET
+  .word _start
+#else
+  .word reset_wait
+#endif /* STARTUP_FROM_RESET */
   .word NmiISR
   .word FaultISR
   .word 0 // Populate if using MemManage (MPU)
@@ -110,6 +114,6 @@ DEFAULT_ISR_HANDLER Analog_Comparator_2_ISR
 DEFAULT_ISR_HANDLER System_Control_ISR
 DEFAULT_ISR_HANDLER FLASH_Control_ISR
 
-
-
-
+#ifndef STARTUP_FROM_RESET
+DEFAULT_ISR_HANDLER reset_wait
+#endif /* STARTUP_FROM_RESET */

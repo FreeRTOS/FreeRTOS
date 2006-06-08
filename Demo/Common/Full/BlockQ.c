@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.0.2 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.3 - Copyright (C) 2003-2006 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -67,6 +67,11 @@ Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
 	  portTickType rather than unsigned portLONG.
+
+Changes from V4.0.2
+
+	+ The second set of tasks were created the wrong way around.  This has been
+	  corrected.
 */
 
 

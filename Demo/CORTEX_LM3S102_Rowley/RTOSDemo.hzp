@@ -1,7 +1,7 @@
 <!DOCTYPE CrossStudio_Project_File>
 <solution version="1" Name="RTOSDemo" >
   <project Name="Demo1" >
-    <configuration arm_library_instruction_set="Thumb" Target="LM3S101" property_groups_file_path="$(StudioDir)/targets/Luminary_LM3S/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/Luminary_LM3S/LM3S101_MemoryMap.xml" gcc_entry_point="reset_handler" build_remove_unused_symbols="Yes" arm_linker_fiq_stack_size="0" arm_architecture="v7M" project_directory="" arm_linker_irq_stack_size="0" link_include_startup_code="No" arm_target_flash_loader_type="LIBMEM RPC Loader" arm_instruction_set="Thumb" project_type="Executable" linker_printf_width_precision_supported="No" arm_linker_stack_size="128" Name="Common" arm_target_debug_interface_type="ADIv5" arm_linker_heap_size="128" />
+    <configuration arm_library_instruction_set="Thumb" Target="LM3S101" property_groups_file_path="$(StudioDir)/targets/Luminary_LM3S/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/Luminary_LM3S/LM3S101_MemoryMap.xml" gcc_entry_point="_start" build_remove_unused_symbols="Yes" arm_linker_fiq_stack_size="0" arm_architecture="v7M" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" project_directory="" arm_linker_irq_stack_size="0" link_include_startup_code="No" arm_target_flash_loader_type="LIBMEM RPC Loader" arm_instruction_set="Thumb" project_type="Executable" linker_printf_width_precision_supported="No" arm_linker_stack_size="200" Name="Common" arm_target_debug_interface_type="ADIv5" arm_linker_heap_size="128" />
     <configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/Luminary_LM3S/Release/Loader.elf" linker_section_placement_file="$(StudioDir)/targets/flash_placement.xml" target_reset_script="FLASHReset()" Name="Flash" Placement="Flash" />
     <configuration linker_section_placement_file="$(StudioDir)/targets/sram_placement.xml" Name="RAM" Placement="RAM" />
     <folder Name="Source Files" >
@@ -17,7 +17,7 @@
         <file file_name="../../Source/list.c" Name="list.c" />
         <file file_name="../../Source/queue.c" Name="queue.c" />
         <file file_name="../../Source/portable/GCC/ARM_CM3/port.c" Name="port.c" >
-          <configuration gcc_optimization_level="Level 2" Name="Flash Release" />
+          <configuration gcc_optimization_level="Level 1" Name="Flash Release" />
         </file>
         <file file_name="../../Source/portable/MemMang/heap_1.c" Name="heap_1.c" />
       </folder>
@@ -32,11 +32,12 @@
       </file>
       <file file_name="Demo1/vectors.s" Name="vectors.s" />
     </folder>
-    <configuration build_remove_unused_symbols="Yes" build_quietly="No" c_preprocessor_definitions="GCC_ARMCM3_LM3S102" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="$(ProjectDir)/demo1;$(ProjectDir)/../common/include;$(ProjectDir)/hw_include" link_include_standard_libraries="Yes" gcc_optimization_level="Level 2" build_debug_information="Yes" arm_linker_stack_size="200" Name="Flash Release" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/gcc/ARM_CM3" arm_use_gcc_libraries="No" linker_output_format="None" arm_linker_heap_size="0" />
+    <configuration linker_memory_map_file="$(StudioDir)/targets/Luminary_LM3S/LM3S101_MemoryMap.xml" gcc_entry_point="_start" build_remove_unused_symbols="Yes" build_quietly="No" c_preprocessor_definitions="" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="" link_include_standard_libraries="Yes" gcc_optimization_level="Level 2" build_debug_information="Yes" arm_linker_stack_size="200" Name="Flash Release" c_system_include_directories="" arm_use_gcc_libraries="No" arm_core_type="Cortex-M3" linker_output_format="None" arm_linker_heap_size="0" />
+    <configuration linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" Name="Flash Debug" arm_linker_heap_size="0" />
   </project>
-  <configuration inherited_configurations="Flash;Release" Name="Flash Release" />
+  <configuration inherited_configurations="Flash;Release" c_preprocessor_definitions="" Name="Flash Release" />
   <configuration c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes" Name="Flash" />
-  <configuration c_preprocessor_definitions="NDEBUG" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" hidden="Yes" Name="Release" />
+  <configuration c_preprocessor_definitions="NDEBUG;STARTUP_FROM_RESET" arm_architecture="v7M" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" linker_printf_width_precision_supported="No" hidden="Yes" Name="Release" arm_core_type="Cortex-M3" />
   <project Name="Demo2" >
     <configuration arm_library_instruction_set="Thumb" Target="LM3S101" property_groups_file_path="$(StudioDir)/targets/Luminary_LM3S/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/Luminary_LM3S/LM3S101_MemoryMap.xml" gcc_entry_point="reset_handler" build_remove_unused_symbols="Yes" arm_linker_fiq_stack_size="0" arm_architecture="v7M" project_directory="" arm_linker_irq_stack_size="0" link_include_startup_code="No" arm_target_flash_loader_type="LIBMEM RPC Loader" arm_instruction_set="Thumb" project_type="Executable" linker_printf_width_precision_supported="No" arm_linker_stack_size="128" Name="Common" arm_target_debug_interface_type="ADIv5" arm_linker_heap_size="128" />
     <configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/Luminary_LM3S/Release/Loader.elf" linker_section_placement_file="$(StudioDir)/targets/flash_placement.xml" target_reset_script="FLASHReset()" Name="Flash" Placement="Flash" />
@@ -54,7 +55,7 @@
         <file file_name="../../Source/list.c" Name="list.c" />
         <file file_name="../../Source/queue.c" Name="queue.c" />
         <file file_name="../../Source/portable/GCC/ARM_CM3/port.c" Name="port.c" >
-          <configuration gcc_optimization_level="Level 2" Name="Flash Release" />
+          <configuration gcc_optimization_level="Level 1" Name="Flash Release" />
         </file>
         <file file_name="../../Source/portable/MemMang/heap_1.c" Name="heap_1.c" />
       </folder>
@@ -69,7 +70,8 @@
       </file>
       <file file_name="Demo2/vectors.s" Name="vectors.s" />
     </folder>
-    <configuration build_remove_unused_symbols="Yes" build_quietly="No" c_preprocessor_definitions="GCC_ARMCM3_LM3S102" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="$(ProjectDir)/demo2;$(ProjectDir)/../common/include;$(ProjectDir)/hw_include" link_include_standard_libraries="Yes" gcc_optimization_level="Level 2" build_debug_information="Yes" arm_linker_stack_size="200" Name="Flash Release" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/gcc/ARM_CM3" arm_use_gcc_libraries="No" linker_output_format="None" arm_linker_heap_size="0" />
+    <configuration gcc_entry_point="_start" build_remove_unused_symbols="Yes" build_quietly="No" c_preprocessor_definitions="GCC_ARMCM3_LM3S102" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="$(ProjectDir)/demo2;$(ProjectDir)/../common/include;$(ProjectDir)/hw_include" link_include_standard_libraries="Yes" gcc_optimization_level="Level 2" build_debug_information="Yes" arm_linker_stack_size="200" Name="Flash Release" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/gcc/ARM_CM3" arm_use_gcc_libraries="No" linker_output_format="None" arm_linker_heap_size="0" />
+    <configuration gcc_entry_point="_start" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" arm_linker_stack_size="200" Name="Flash Debug" arm_linker_heap_size="0" />
   </project>
   <project Name="Demo3" >
     <configuration arm_library_instruction_set="Thumb" Target="LM3S101" property_groups_file_path="$(StudioDir)/targets/Luminary_LM3S/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/Luminary_LM3S/LM3S101_MemoryMap.xml" gcc_entry_point="reset_handler" build_remove_unused_symbols="Yes" arm_linker_fiq_stack_size="0" arm_architecture="v7M" project_directory="" arm_linker_irq_stack_size="0" link_include_startup_code="No" arm_target_flash_loader_type="LIBMEM RPC Loader" arm_instruction_set="Thumb" project_type="Executable" linker_printf_width_precision_supported="No" arm_linker_stack_size="128" Name="Common" arm_target_debug_interface_type="ADIv5" arm_linker_heap_size="128" />
@@ -99,6 +101,10 @@
       </file>
       <file file_name="Demo3/vectors.s" Name="vectors.s" />
     </folder>
-    <configuration build_remove_unused_symbols="Yes" build_quietly="No" c_preprocessor_definitions="GCC_ARMCM3_LM3S102" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="$(ProjectDir)/demo3;$(ProjectDir)/../common/include;$(ProjectDir)/hw_include" link_include_standard_libraries="Yes" gcc_optimization_level="Level 1" build_debug_information="Yes" arm_linker_stack_size="200" Name="Flash Release" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/gcc/ARM_CM3" arm_use_gcc_libraries="No" linker_output_format="None" arm_linker_heap_size="0" />
+    <configuration gcc_entry_point="_start" build_remove_unused_symbols="Yes" build_quietly="No" c_preprocessor_definitions="GCC_ARMCM3_LM3S102" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="$(ProjectDir)/demo3;$(ProjectDir)/../common/include;$(ProjectDir)/hw_include" link_include_standard_libraries="Yes" gcc_optimization_level="Level 2" build_debug_information="Yes" arm_linker_stack_size="200" Name="Flash Release" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/gcc/ARM_CM3" arm_use_gcc_libraries="No" linker_output_format="None" arm_linker_heap_size="0" />
+    <configuration gcc_entry_point="_start" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" arm_linker_stack_size="200" Name="Flash Debug" arm_linker_heap_size="0" />
   </project>
+  <configuration build_remove_unused_symbols="Yes" arm_architecture="v7M" linker_printf_width_precision_supported="No" hidden="Yes" Name="debug" arm_core_type="Cortex-M3" />
+  <configuration inherited_configurations="debug;Flash" gcc_optimization_level="Level 1" Name="Flash Debug" />
+  <configuration linker_memory_map_file="$(StudioDir)/targets/Luminary_LM3S/LM3S101_MemoryMap.xml" c_preprocessor_definitions="GCC_ARMCM3_LM3S102" arm_linker_fiq_stack_size="0" linker_section_placement_file="$(StudioDir)/targets/Luminary_LM3S/flash_placement.xml" linker_additional_files="$(ProjectDir)/hw_include/libdriver.a" c_user_include_directories="$(ProjectDir)/demo1;$(ProjectDir)/../common/include;$(ProjectDir)/hw_include" arm_linker_irq_stack_size="0" link_symbol_definitions="" arm_linker_stack_size="200" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/gcc/ARM_CM3" />
 </solution>

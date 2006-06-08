@@ -71,8 +71,10 @@
       <file file_name="AT91SAM7_Target.js" Name="AT91SAM7_Target.js" >
         <configuration Name="Common" file_type="Reset Script" />
       </file>
+      <file file_name="threads.js" Name="threads.js" />
     </folder>
     <configuration arm_target_loader_reset_after_download="Yes" target_reset_script="FLASHReset()" arm_target_flash_loader_type="Comms Channel Loader" Name="THUMB Flash Debug" />
+    <configuration gcc_optimization_level="Level 1" build_debug_information="Yes" Name="THUMB Flash Release" />
   </project>
   <configuration build_quietly="Yes" inherited_configurations="THUMB;Flash;Debug" Name="THUMB Flash Debug" />
   <configuration arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB" arm_instruction_set="THUMB" hidden="Yes" Name="THUMB" />
@@ -80,5 +82,5 @@
   <configuration c_preprocessor_definitions="DEBUG" link_include_startup_code="No" gcc_optimization_level="None" build_debug_information="Yes" Name="Debug" />
   <configuration inherited_configurations="THUMB;Flash;Release" gcc_optimization_level="Level 2" Name="THUMB Flash Release" />
   <configuration c_preprocessor_definitions="NDEBUG" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" Name="Release" />
-  <configuration arm_library_instruction_set="THUMB" gcc_entry_point="0x100000" build_quietly="Yes" c_preprocessor_definitions="SAM7_GCC;THUMB_INTERWORK;SUPERVISOR_START" c_user_include_directories=".;$(ProjectDir)/EMAC;$(ProjectDir)/../common/include;$(ProjectDir)/USB" link_include_startup_code="Yes" arm_instruction_set="THUMB" c_preprocessor_undefinitions="" c_additional_options="-Wall ;-Wextra;-Wstrict-prototypes ;-Wmissing-prototypes ;-Wmissing-declarations;-Wno-strict-aliasing" arm_linker_stack_size="0" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/lwip-1.1.0/src/include;$(ProjectDir)/lwip-1.1.0/contrib/port/FreeRTOS/AT91SAM7X;$(ProjectDir);$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/GCC/ARM7_AT91SAM7S;$(ProjectDir)/lwip-1.1.0\\src\\include\\ipv4" arm_linker_heap_size="0" />
+  <configuration arm_library_instruction_set="THUMB" gcc_entry_point="0x100000" build_quietly="Yes" c_preprocessor_definitions="SAM7_GCC;THUMB_INTERWORK;SUPERVISOR_START" c_user_include_directories=".;$(ProjectDir)/EMAC;$(ProjectDir)/../common/include;$(ProjectDir)/USB" link_include_startup_code="Yes" arm_instruction_set="THUMB" c_preprocessor_undefinitions="" c_additional_options="-Wall;-Wextra;-Wstrict-prototypes;-Wmissing-prototypes;-Wmissing-declarations;-Wno-strict-aliasing" arm_linker_stack_size="0" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/lwip-1.1.0/src/include;$(ProjectDir)/lwip-1.1.0/contrib/port/FreeRTOS/AT91SAM7X;$(ProjectDir);$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/GCC/ARM7_AT91SAM7S;$(ProjectDir)/lwip-1.1.0\\src\\include\\ipv4" arm_linker_heap_size="0" />
 </solution>

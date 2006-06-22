@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.0.3 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.4 - Copyright (C) 2003-2006 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -159,6 +159,11 @@ Changes from V4.0.1
 	+ The tick hook function is now called only within a tick isr.  Previously
 	  it was also called when the tick function was called during the scheduler
 	  unlocking process.
+
+Changes from V4.0.4
+
+	+ Extra checks have been placed in vTaskPrioritySet() to avoid unnecessary
+	  yields.
 */
 
 #include <stdio.h>
@@ -788,7 +793,7 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 	void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority )
 	{
 	tskTCB *pxTCB;
-	unsigned portBASE_TYPE uxCurrentPriority;
+	unsigned portBASE_TYPE uxCurrentPriority, xYieldRequired = pdFALSE;
 
 		/* Ensure the new priority is valid. */
 		if( uxNewPriority >= configMAX_PRIORITIES )
@@ -805,6 +810,26 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 			if( uxCurrentPriority != uxNewPriority )
 			{
+				/* The priority change may have readied a task of higher
+				priority than the calling task. */
+				if( uxNewPriority > pxCurrentTCB->uxPriority ) 
+				{
+					if( pxTask != NULL )
+					{
+						/* The priority of another task is being raised.  If we
+						were raising the priority of the currently running task
+						there would be no need to switch as it must have already
+						been the highest priority task. */
+						xYieldRequired = pdTRUE;
+					}
+				}
+				else if( pxTask == NULL )
+				{
+					/* Setting our own priority down means there may now be another
+					task of higher priority that is ready to execute. */
+					xYieldRequired = pdTRUE;
+				}
+			
 				pxTCB->uxPriority = uxNewPriority;
 
 				/* If the task is in the blocked or suspended list we need do
@@ -827,13 +852,14 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 						vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
 					}
 				}			
+				
+				if( xYieldRequired == pdTRUE )
+				{
+					taskYIELD();
+				}				
 			}
 		}
 		taskEXIT_CRITICAL();
-
-		/* The priority change may have readied a task of higher
-		priority than the calling task. */
-		taskYIELD();
 	}
 
 #endif

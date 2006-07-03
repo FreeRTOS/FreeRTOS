@@ -971,10 +971,15 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 			else
 			{
 				/* We cannot access the delayed or ready lists, so will hold this
-				task pending until the scheduler is resumed. */
+				task pending until the scheduler is resumed, at which point a 
+				yield will be preformed if necessary. */
 				xYieldRequired = pdFALSE;
 				vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxTaskToResume->xEventListItem ) );
 			}
+		}
+		else
+		{
+			xYieldRequired = pdFALSE;
 		}
 
 		return xYieldRequired;

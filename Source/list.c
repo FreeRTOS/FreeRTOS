@@ -71,6 +71,11 @@ Changes from V3.2.4
 
 	+ Changed the volatile definitions of some structure members to clean up
 	  the code where the list structures are used.
+
+Changes from V4.0.4
+
+	+ Optimised vListInsert() in the case when the wake time is the maximum 
+	  tick count value.
 */
 
 #include <stdlib.h>
@@ -148,11 +153,7 @@ portTickType xValueOfInsertion;
 	algorithm slightly if necessary. */
 	if( xValueOfInsertion == portMAX_DELAY )
 	{
-		for( pxIterator = ( xListItem * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue < xValueOfInsertion; pxIterator = pxIterator->pxNext )
-		{
-			/* There is nothing to do here, we are just iterating to the
-			wanted insertion position. */
-		}
+		pxIterator = pxList->xListEnd.pxPrevious;
 	}
 	else
 	{

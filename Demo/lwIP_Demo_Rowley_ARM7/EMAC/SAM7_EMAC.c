@@ -54,6 +54,11 @@ Changes from V4.0.1
 	+ Made the function vClearEMACTxBuffer() more robust by moving the index
 	  manipulation into the if() statement.  This allows the tx interrupt to
 	  execute even when there is no data to handle.
+
+Changes from V4.0.4
+
+	+ Corrected the Rx frame length mask when obtaining the length from the
+	  rx descriptor.
 */
 
 
@@ -127,6 +132,9 @@ one not be immediately available when trying to transmit a frame. */
 #define emacPHY_INIT_DELAY			( 5000 / portTICK_RATE_MS )
 #define emacRESET_KEY				( ( unsigned portLONG ) 0xA5000000 )
 #define emacRESET_LENGTH			( ( unsigned portLONG ) ( 0x01 << 8 ) )
+
+/* The Atmel header file only defines the TX frame length mask. */
+#define emacRX_LENGTH_FRAME			( 0xfff )
 
 /*-----------------------------------------------------------*/
 
@@ -323,7 +331,7 @@ register unsigned portLONG ulIndex, ulLength = 0;
 	frame.  The last buffer will give us the length of the entire frame. */
 	while( ( xRxDescriptors[ ulIndex ].addr & AT91C_OWNERSHIP_BIT ) && !ulLength )
 	{
-		ulLength = xRxDescriptors[ ulIndex ].U_Status.status & AT91C_LENGTH_FRAME;
+		ulLength = xRxDescriptors[ ulIndex ].U_Status.status & emacRX_LENGTH_FRAME;
 
 		/* Increment to the next buffer, wrapping if necessary. */
 		ulIndex++;

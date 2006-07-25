@@ -57,6 +57,12 @@ Changes from V3.2.4
 	+ Also read the EMAC_RSR register in the EMAC ISR as a work around the 
 	  the EMAC bug that can reset the RX bit in EMAC_ISR register before the
 	  bit has been read.
+
+Changes from V4.0.4
+
+	+ Corrected the Rx frame length mask when obtaining the length from the
+	  rx descriptor.
+
 */
 
 /* Standard includes. */
@@ -104,6 +110,9 @@ one not be immediately available when trying to transmit a frame. */
 #define emacPHY_INIT_DELAY			( 5000 / portTICK_RATE_MS )
 #define emacRESET_KEY				( ( unsigned portLONG ) 0xA5000000 )
 #define emacRESET_LENGTH			( ( unsigned portLONG ) ( 0x01 << 8 ) )
+
+/* The Atmel header file only defines the TX frame length mask. */
+#define emacRX_LENGTH_FRAME			( 0xfff )
 
 /*-----------------------------------------------------------*/
 
@@ -344,7 +353,7 @@ portCHAR *pcSource;
 	while( ( xRxDescriptors[ ulNextRxBuffer ].addr & AT91C_OWNERSHIP_BIT ) && !ulSectionLength )
 	{
 		pcSource = ( portCHAR * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
-		ulSectionLength = xRxDescriptors[ ulNextRxBuffer ].U_Status.status & AT91C_LENGTH_FRAME;
+		ulSectionLength = xRxDescriptors[ ulNextRxBuffer ].U_Status.status & emacRX_LENGTH_FRAME;
 
 		if( ulSectionLength == 0 )
 		{

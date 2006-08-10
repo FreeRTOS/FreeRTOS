@@ -228,7 +228,8 @@ static void prvSetupHardware( void )
 	/* FMI Waite States */
 	FMI_Config( FMI_READ_WAIT_STATE_2, FMI_WRITE_WAIT_STATE_0, FMI_PWD_ENABLE, FMI_LVD_ENABLE, FMI_FREQ_HIGH ); 
 
-	/* Configure the FPLL = 96MHz */
+	/* Configure the FPLL = 96MHz, and APB to 48MHz. */
+	SCU_PCLKDivisorConfig( SCU_PCLK_Div2 );
 	SCU_PLLFactorsConfig( 192, 25, 2 ); 
 	SCU_PLLCmd( ENABLE );
 	SCU_MCLKSourceConfig( SCU_MCLK_PLL );

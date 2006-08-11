@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.0.4 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.0.5 - Copyright (C) 2003-2006 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -40,7 +40,7 @@
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V4.0.4"
+#define tskKERNEL_VERSION_NUMBER "V4.0.5"
 
 /**
  * task. h

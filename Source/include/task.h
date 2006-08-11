@@ -533,6 +533,26 @@ void vTaskSuspend( xTaskHandle pxTaskToSuspend );
  */
 void vTaskResume( xTaskHandle pxTaskToResume );
 
+/**
+ * task. h
+ * <pre>void xTaskResumeFromISR( xTaskHandle pxTaskToResume );</pre>
+ *
+ * INCLUDE_xTaskResumeFromISR must be defined as 1 for this function to be 
+ * available.  See the configuration section for more information.
+ *
+ * An implementation of vTaskResume() that can be called from within an ISR.
+ *
+ * A task that has been suspended by one of more calls to vTaskSuspend ()
+ * will be made available for running again by a single call to
+ * xTaskResumeFromISR ().
+ *
+ * @param pxTaskToResume Handle to the task being readied.
+ *
+ * \defgroup vTaskResumeFromISR vTaskResumeFromISR
+ * \ingroup TaskCtrl
+ */
+portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume );
+
 /*-----------------------------------------------------------
  * SCHEDULER CONTROL
  *----------------------------------------------------------*/

@@ -175,6 +175,7 @@ Changed from V4.0.4
 	+ vTaskPrioritySet() and vTaskResume() no longer use the event list item.
 	  This has not been necessary since V4.0.1 when the xMissedYield handling
 	  was added.
+	+ Implement xTaskResumeFromISR().
 */
 
 #include <stdio.h>
@@ -211,6 +212,9 @@ Changed from V4.0.4
 	#define configMAX_TASK_NAME_LEN 1
 #endif
 
+#ifndef INCLUDE_xTaskResumeFromISR
+	#define INCLUDE_xTaskResumeFromISR 1
+#endif 
 
 /*
  * Task control block.  A task control block (TCB) is allocated to each task,
@@ -931,17 +935,21 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 				/* Is the task we are attempting to resume actually suspended? */
 				if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
 				{
-					/* As we are in a critical section we can access the ready 
-					lists even if the scheduler is suspended. */
-					vListRemove(  &( pxTCB->xGenericListItem ) );
-					prvAddTaskToReadyQueue( pxTCB );
+					/* Has the task already been resumed from within an ISR? */
+					if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) != pdTRUE )
+					{			
+						/* As we are in a critical section we can access the ready 
+						lists even if the scheduler is suspended. */
+						vListRemove(  &( pxTCB->xGenericListItem ) );
+						prvAddTaskToReadyQueue( pxTCB );
 
-					/* We may have just resumed a higher priority task. */
-					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
-					{
-						/* This yield may not cause the task just resumed to run, but
-						will leave the lists in the correct state for the next yield. */
-						taskYIELD();
+						/* We may have just resumed a higher priority task. */
+						if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
+						{
+							/* This yield may not cause the task just resumed to run, but
+							will leave the lists in the correct state for the next yield. */
+							taskYIELD();
+						}
 					}
 				}
 			}
@@ -953,33 +961,35 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_vTaskResumeFromISR == 1 )
+#if ( INCLUDE_xTaskResumeFromISR == 1 )
 
 	portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume )
 	{
-	portBASE_TYPE xYieldRequired;
+	portBASE_TYPE xYieldRequired = pdFALSE;
+	tskTCB *pxTCB;
+
+		pxTCB = ( tskTCB * ) pxTaskToResume;
 
 		/* Is the task we are attempting to resume actually suspended? */
-		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTaskToResume->xGenericListItem ) ) != pdFALSE )
+		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
 		{
-			if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
+			/* Has the task already been resumed from within an ISR? */
+			if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) != pdTRUE )
 			{
-				xYieldRequired = ( pxTaskToResume->uxPriority >= pxCurrentTCB->uxPriority );
-				vListRemove(  &( pxTaskToResume->xGenericListItem ) );
-				prvAddTaskToReadyQueue( pxTaskToResume );
+				if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
+				{
+					xYieldRequired = ( pxTCB->uxPriority >= pxCurrentTCB->uxPriority );
+					vListRemove(  &( pxTCB->xGenericListItem ) );	
+					prvAddTaskToReadyQueue( pxTCB );
+				}
+				else
+				{
+					/* We cannot access the delayed or ready lists, so will hold this
+					task pending until the scheduler is resumed, at which point a 
+					yield will be preformed if necessary. */
+					vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
+				}
 			}
-			else
-			{
-				/* We cannot access the delayed or ready lists, so will hold this
-				task pending until the scheduler is resumed, at which point a 
-				yield will be preformed if necessary. */
-				xYieldRequired = pdFALSE;
-				vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxTaskToResume->xEventListItem ) );
-			}
-		}
-		else
-		{
-			xYieldRequired = pdFALSE;
 		}
 
 		return xYieldRequired;

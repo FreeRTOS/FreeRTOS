@@ -961,7 +961,7 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskResumeFromISR == 1 )
+#if ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) )
 
 	portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume )
 	{

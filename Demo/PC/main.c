@@ -149,7 +149,7 @@ being used. */
 #endif
 
 /* Constant definition used to turn on/off the pre-emptive scheduler. */
-static const portSHORT sUsingPreemption = pdTRUE;
+static const portSHORT sUsingPreemption = configUSE_PREEMPTION;
 
 /* Start the math tasks appropriate to the build.  The Borland port does
 not yet support floating point so uses the integer equivalent. */

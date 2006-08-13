@@ -231,7 +231,6 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 	
 #else
 
-	#define portDISABLE_INTERRUPTS()																\
 	#define portDISABLE_INTERRUPTS()											\
 		asm volatile (															\
 			"STMDB	SP!, {R0}		\n\t"	/* Push R0.						*/	\

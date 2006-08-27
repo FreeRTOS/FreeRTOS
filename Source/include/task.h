@@ -55,6 +55,15 @@
 typedef void * xTaskHandle;
 
 /*
+ * Used internally only.
+ */
+typedef struct xTIME_OUT
+{
+    portBASE_TYPE xOverflowCount;
+    portTickType  xTimeOnEntering;
+} xTimeOutType;
+
+/*
  * Defines the priority used by the idle task.  This must not be modified.
  *
  * \ingroup TaskUtils
@@ -919,6 +928,22 @@ inline void vTaskSwitchContext( void );
  */
 xTaskHandle xTaskGetCurrentTaskHandle( void );
 
+/*
+ * Capture the current time status for future reference.
+ */
+void vTaskSetTimeOutState( xTimeOutType *pxTimeOut );
+
+/*
+ * Compare the time status now with that previously captured to see if the
+ * timeout has expired.
+ */
+portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType *pxTicksToWait );
+
+/*
+ * Shortcut used by the queue implementation to prevent unnecessary call to
+ * taskYIELD();
+ */
+void vTaskMissedYield( void );
 
 #endif /* TASK_H */
 

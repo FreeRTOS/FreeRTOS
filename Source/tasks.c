@@ -176,6 +176,11 @@ Changed from V4.0.4
 	  This has not been necessary since V4.0.1 when the xMissedYield handling
 	  was added.
 	+ Implement xTaskResumeFromISR().
+
+Changes from V4.0.5
+
+	+ Added utility functions and xOverflowCount variable to facilitate the
+	  queue.c changes.
 */
 
 #include <stdio.h>
@@ -261,13 +266,13 @@ static xList xPendingReadyList;							/*< Tasks that have been readied while the
 /* File private variables. --------------------------------*/
 static volatile unsigned portBASE_TYPE uxCurrentNumberOfTasks	= ( unsigned portBASE_TYPE ) 0;
 static volatile portTickType xTickCount							= ( portTickType ) 0;
-static unsigned portBASE_TYPE uxTopUsedPriority				= tskIDLE_PRIORITY;
+static unsigned portBASE_TYPE uxTopUsedPriority					= tskIDLE_PRIORITY;
 static volatile unsigned portBASE_TYPE uxTopReadyPriority		= tskIDLE_PRIORITY;
 static volatile signed portBASE_TYPE xSchedulerRunning			= pdFALSE;
 static volatile unsigned portBASE_TYPE uxSchedulerSuspended		= ( unsigned portBASE_TYPE ) pdFALSE;
 static volatile unsigned portBASE_TYPE uxMissedTicks			= ( unsigned portBASE_TYPE ) 0;
 static volatile portBASE_TYPE xMissedYield						= ( portBASE_TYPE ) pdFALSE;
-
+static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
 /* Debugging and trace facilities private variables and macros. ------------*/
 
 /*
@@ -1281,6 +1286,7 @@ inline void vTaskIncrementTick( void )
 			pxTemp = pxDelayedTaskList;
 			pxDelayedTaskList = pxOverflowDelayedTaskList;
 			pxOverflowDelayedTaskList = pxTemp;
+            xNumOfOverflows++;
 		}
 
 		/* See if this tick has made a timeout expire. */
@@ -1481,10 +1487,47 @@ portBASE_TYPE xReturn;
 
 	return xReturn;
 }
+/*-----------------------------------------------------------*/
 
+void vTaskSetTimeOutState( xTimeOutType *pxTimeOut )
+{
+    pxTimeOut->xOverflowCount = xNumOfOverflows;
+    pxTimeOut->xTimeOnEntering = xTickCount;
+}
+/*-----------------------------------------------------------*/
 
+portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType *pxTicksToWait )
+{
+portBASE_TYPE xReturn;
 
+    if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount > pxTimeOut->xTimeOnEntering ) )
+    {
+        /* The tick count is greater than the time at which vTaskSetTimeout() 
+		was called, but has also overflowed since vTaskSetTimeOut() was called.
+        It must have wrapped all the way around and gone past us again. This
+        passed since vTaskSetTimeout() was called. */
+        xReturn = pdTRUE;
+    }
+    else if( ( xTickCount - pxTimeOut->xTimeOnEntering ) < *pxTicksToWait )
+    {
+        /* Not a genuine timeout. Adjust parameters for time remaining. */
+        *pxTicksToWait -= ( xTickCount - pxTimeOut->xTimeOnEntering );
+        vTaskSetTimeOutState( pxTimeOut );
+        xReturn = pdFALSE;
+    }
+    else
+    {
+        xReturn = pdTRUE;
+    }
 
+    return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+void vTaskMissedYield( void )
+{
+	xMissedYield = pdTRUE;
+}
 
 /*
  * -----------------------------------------------------------

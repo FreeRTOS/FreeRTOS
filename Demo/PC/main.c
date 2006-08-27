@@ -115,6 +115,7 @@ Changes from V3.2.4
 #include "dynamic.h"
 #include "mevents.h"
 #include "crhook.h"
+#include "blocktim.h"
 
 /* Priority definitions for the tasks in the demo application. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -171,6 +172,7 @@ portSHORT main( void )
 	vStartComTestTasks( mainCOM_TEST_PRIORITY, serCOM1, ser115200 );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
+	vCreateBlockTimeTasks();
 	
 	vStartSemaphoreTasks( mainSEMAPHORE_TASK_PRIORITY );
 	vStartDynamicPriorityTasks();
@@ -377,6 +379,12 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 	if( xAreHookCoRoutinesStillRunning() != pdTRUE )
 	{
 		vDisplayMessage( "Error in tick hook to co-routine communications!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+
+	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in block time test tasks!\r\n" );
 		sErrorHasOccurred = pdTRUE;
 	}
 

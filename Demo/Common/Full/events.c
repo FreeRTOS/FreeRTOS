@@ -39,7 +39,7 @@
  * the same queue.  The controlling task writes data to the queue, then checks
  * to see which of the event tasks read the data from the queue.  The
  * controlling task has the lowest priority of all the tasks so is guaranteed
- * to always get preempted immediately upon writhing to the queue.
+ * to always get preempted immediately upon writing to the queue.
  *
  * By selectively suspending and resuming the event tasks the controlling task
  * can check that the highest priority task that is blocked on the queue is the
@@ -171,6 +171,10 @@ const portCHAR * const pcTaskStartMsg = "Multi event task started.\r\n";
 			/* We unblocked by reading the queue - so simply increment
 			the counter specific to this task instance. */
 			( *pxCounter )++;
+		}
+		else
+		{
+			xHealthStatus = pdFAIL;
 		}
 	}
 }

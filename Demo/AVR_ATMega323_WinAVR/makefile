@@ -53,12 +53,14 @@ SRC	= \
 main.c \
 ParTest/ParTest.c \
 serial/serial.c \
+regtest.c \
 $(SOURCE_DIR)/tasks.c \
 $(SOURCE_DIR)/queue.c \
 $(SOURCE_DIR)/list.c \
+$(SOURCE_DIR)/croutine.c \
 $(SOURCE_DIR)/portable/MemMang/heap_1.c \
 $(PORT_DIR)/port.c \
-$(DEMO_DIR)/flash.c \
+$(DEMO_DIR)/crflash.c \
 $(DEMO_DIR)/integer.c \
 $(DEMO_DIR)/PollQ.c \
 $(DEMO_DIR)/comtest.c

@@ -27,12 +27,15 @@ Wnd8=_ "Locals" "closed" 44 0 1 -1 -1 -1 -1 1139 0 1595 276 100 100 100 100
 Wnd9=_ "Terminal I/O" "closed" 44 0 1 -1 -1 -1 -1 1138 522 1595 826
 Maximized=_ 0
 Count=_ 10
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Breakpoints]
 Count=0
+[TraceHelper]
+Enabled=0
+ShowSource=1

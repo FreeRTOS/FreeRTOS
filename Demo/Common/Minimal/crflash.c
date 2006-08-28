@@ -19,39 +19,39 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 	***************************************************************************
 */
 
-/* 
+/*
  * This demo application file demonstrates the use of queues to pass data
  * between co-routines.
  *
  * N represents the number of 'fixed delay' co-routines that are created and
  * is set during initialisation.
  *
- * N 'fixed delay' co-routines are created that just block for a fixed 
+ * N 'fixed delay' co-routines are created that just block for a fixed
  * period then post the number of an LED onto a queue.  Each such co-routine
- * uses a different block period.  A single 'flash' co-routine is also created 
- * that blocks on the same queue, waiting for the number of the next LED it 
- * should flash.  Upon receiving a number it simply toggle the instructed LED 
- * then blocks on the queue once more.  In this manner each LED from LED 0 to 
+ * uses a different block period.  A single 'flash' co-routine is also created
+ * that blocks on the same queue, waiting for the number of the next LED it
+ * should flash.  Upon receiving a number it simply toggle the instructed LED
+ * then blocks on the queue once more.  In this manner each LED from LED 0 to
  * LED N-1 is caused to flash at a different rate.
  *
  * The 'fixed delay' co-routines are created with co-routine priority 0.  The
  * flash co-routine is created with co-routine priority 1.  This means that
  * the queue should never contain more than a single item.  This is because
  * posting to the queue will unblock the 'flash' co-routine, and as this has
- * a priority greater than the tasks posting to the queue it is guaranteed to 
+ * a priority greater than the tasks posting to the queue it is guaranteed to
  * have emptied the queue and blocked once again before the queue can contain
- * any more date.  An error is indicated if an attempt to post data to the 
+ * any more date.  An error is indicated if an attempt to post data to the
  * queue fails - indicating that the queue is already full.
  *
  */
@@ -82,7 +82,7 @@ created. */
 /* We don't want to block when posting to the queue. */
 #define crfPOSTING_BLOCK_TIME		0
 
-/* 
+/*
  * The 'fixed delay' co-routine as described at the top of the file.
  */
 static void prvFixedDelayCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
@@ -134,16 +134,16 @@ static void prvFixedDelayCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_
 {
 /* Even though this is a co-routine the xResult variable does not need to be
 static as we do not need it to maintain its state between blocks. */
-portBASE_TYPE xResult;
-/* The uxIndex parameter of the co-routine function is used as an index into 
+signed portBASE_TYPE xResult;
+/* The uxIndex parameter of the co-routine function is used as an index into
 the xFlashRates array to obtain the delay period to use. */
-static const portTickType xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_RATE_MS, 
-																200 / portTICK_RATE_MS, 
-																250 / portTICK_RATE_MS, 
-																300 / portTICK_RATE_MS, 
+static const portTickType xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_RATE_MS,
+																200 / portTICK_RATE_MS,
+																250 / portTICK_RATE_MS,
+																300 / portTICK_RATE_MS,
 																350 / portTICK_RATE_MS,
-																400 / portTICK_RATE_MS, 
-																450 / portTICK_RATE_MS, 
+																400 / portTICK_RATE_MS,
+																450 / portTICK_RATE_MS,
 																500  / portTICK_RATE_MS };
 
 	/* Co-routines MUST start with a call to crSTART. */
@@ -151,7 +151,7 @@ static const portTickType xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_R
 
 	for( ;; )
 	{
-		/* Post our uxIndex value onto the queue.  This is used as the LED to 
+		/* Post our uxIndex value onto the queue.  This is used as the LED to
 		flash. */
 		crQUEUE_SEND( xHandle, xFlashQueue, ( void * ) &uxIndex, crfPOSTING_BLOCK_TIME, &xResult );
 
@@ -175,12 +175,13 @@ static void prvFlashCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE 
 {
 /* Even though this is a co-routine the variable do not need to be
 static as we do not need it to maintain their state between blocks. */
-portBASE_TYPE xResult;
+signed portBASE_TYPE xResult;
 unsigned portBASE_TYPE uxLEDToFlash;
 
 	/* Co-routines MUST start with a call to crSTART. */
 	crSTART( xHandle );
-
+	( void ) uxIndex;
+	
 	for( ;; )
 	{
 		/* Block to wait for the number of the LED to flash. */

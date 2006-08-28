@@ -1,96 +1,130 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-  <fileVersion>1</fileVersion>
+  <fileVersion>2</fileVersion>
   <configuration>
     <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\..\Common\Minimal\flash.c</file>
+      <file>$PROJ_DIR$\Output\Obj\flash.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
+      <file>$PROJ_DIR$\Output\Obj\regtest.pbi</file>
+      <file>$PROJ_DIR$\..\..\Source\include\FreeRTOS.h</file>
+      <file>$PROJ_DIR$\..\Common\include\PollQ.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stddef.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$PROJ_DIR$\Output\List\PollQ.lst</file>
+      <file>$PROJ_DIR$\..\Common\include\partest.h</file>
+      <file>$PROJ_DIR$\Output\Obj\queue.pbi</file>
+      <file>$PROJ_DIR$\..\Common\include\flash.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdlib.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\queue.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\croutine.h</file>
+      <file>$PROJ_DIR$\..\Common\include\print.h</file>
+      <file>$PROJ_DIR$\Output\Obj\ParTest.r90</file>
+      <file>$PROJ_DIR$\..\Common\include\serial.h</file>
+      <file>$PROJ_DIR$\Output\Obj\main.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\PollQ.r90</file>
+      <file>$PROJ_DIR$\FreeRTOSConfig.h</file>
+      <file>$PROJ_DIR$\Output\Obj\heap_1.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\integer.r90</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\Output\List\tasks.s90</file>
+      <file>$PROJ_DIR$\Output\List\queue.lst</file>
+      <file>$PROJ_DIR$\..\Common\include\integer.h</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm323.xcl</file>
+      <file>$PROJ_DIR$\Output\List\ParTest.lst</file>
+      <file>$PROJ_DIR$\Output\List\comtest.lst</file>
+      <file>$PROJ_DIR$\Output\List\tasks.lst</file>
+      <file>$TOOLKIT_DIR$\inc\iom323.h</file>
+      <file>$PROJ_DIR$\Output\Obj\comtest.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\list.pbi</file>
+      <file>$PROJ_DIR$\Output\Obj\serial.r90</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\portmacro.h</file>
+      <file>$PROJ_DIR$\regtest.c</file>
+      <file>$PROJ_DIR$\Output\Obj\crflash.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\rtosdemo.pbd</file>
+      <file>$PROJ_DIR$\Output\Obj\heap_1.pbi</file>
+      <file>$PROJ_DIR$\Output\Exe\rtosdemo.d90</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec-sf.r90</file>
+      <file>$PROJ_DIR$\Output\List\integer.s90</file>
+      <file>$PROJ_DIR$\Output\List\serial.lst</file>
+      <file>$PROJ_DIR$\Output\Obj\integer.pbi</file>
+      <file>$PROJ_DIR$\Output\Exe\rtosdemo.a90</file>
+      <file>$PROJ_DIR$\Output\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\..\..\Source\include\projdefs.h</file>
+      <file>$PROJ_DIR$\Output\List\regtest.lst</file>
+      <file>$PROJ_DIR$\Output\Obj\flash.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\list.r90</file>
+      <file>$PROJ_DIR$\..\..\Source\include\list.h</file>
+      <file>$PROJ_DIR$\Output\Obj\tasks.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\ParTest.pbi</file>
+      <file>$PROJ_DIR$\..\Common\include\comtest.h</file>
+      <file>$PROJ_DIR$\Output\List\main.s90</file>
+      <file>$PROJ_DIR$\Output\List\serial.s90</file>
+      <file>$PROJ_DIR$\Output\List\port.s90</file>
+      <file>$PROJ_DIR$\Output\List\heap_1.lst</file>
+      <file>$PROJ_DIR$\Output\Exe\rtosdemo.cof</file>
+      <file>$PROJ_DIR$\Output\List\queue.s90</file>
+      <file>$PROJ_DIR$\Output\List\PollQ.s90</file>
+      <file>$PROJ_DIR$\Output\Obj\port.pbi</file>
+      <file>$PROJ_DIR$\Output\List\ParTest.s90</file>
+      <file>$PROJ_DIR$\Output\List\integer.lst</file>
+      <file>$PROJ_DIR$\Output\Obj\port.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\comtest.pbi</file>
+      <file>$PROJ_DIR$\..\..\Source\include\task.h</file>
+      <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
+      <file>$PROJ_DIR$\Output\List\comtest.s90</file>
+      <file>$PROJ_DIR$\Output\List\main.lst</file>
+      <file>$PROJ_DIR$\Output\List\flash.lst</file>
+      <file>$PROJ_DIR$\Output\List\flash.s90</file>
+      <file>$PROJ_DIR$\Output\List\port.lst</file>
+      <file>$PROJ_DIR$\Output\List\heap_1.s90</file>
+      <file>$PROJ_DIR$\Output\List\list.lst</file>
+      <file>$PROJ_DIR$\Output\List\rtosdemo.map</file>
+      <file>$PROJ_DIR$\Output\Obj\tasks.pbi</file>
+      <file>$PROJ_DIR$\Output\Obj\serial.pbi</file>
+      <file>$PROJ_DIR$\Output\List\list.s90</file>
+      <file>$PROJ_DIR$\Output\Obj\PollQ.pbi</file>
+      <file>$PROJ_DIR$\Output\List\regtest.s90</file>
+      <file>$PROJ_DIR$\Output\List\crflash.s90</file>
+      <file>$PROJ_DIR$\..\..\Source\list.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\portmacro.s90</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\PollQ.c</file>
+      <file>$PROJ_DIR$\ParTest\ParTest.c</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\port.c</file>
+      <file>$PROJ_DIR$\..\..\Source\queue.c</file>
+      <file>$PROJ_DIR$\Output\Obj\portmacro.r90</file>
+      <file>$PROJ_DIR$\..\..\Source\tasks.c</file>
+      <file>$PROJ_DIR$\serial\serial.c</file>
+      <file>$PROJ_DIR$\..\..\Source\include\portable.h</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\Output\Exe\rtosdemo.elf</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\comtest.c</file>
+      <file>$PROJ_DIR$\Output\Exe\rtosdemo.dbg</file>
+      <file>$PROJ_DIR$\..\Common\include\crflash.h</file>
+      <file>$PROJ_DIR$\Output\Obj\queue.r90</file>
+      <file>$PROJ_DIR$\Output\List\croutine.lst</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\integer.c</file>
+      <file>$PROJ_DIR$\Output\Obj\croutine.r90</file>
+      <file>$PROJ_DIR$\Output\List\croutine.s90</file>
+      <file>$PROJ_DIR$\regtest.h</file>
+      <file>$PROJ_DIR$\..\..\Source\croutine.c</file>
+      <file>$PROJ_DIR$\Output\List\crflash.lst</file>
+      <file>$PROJ_DIR$\Output\Obj\croutine.pbi</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\crflash.c</file>
+      <file>$PROJ_DIR$\Output\Obj\regtest.r90</file>
+      <file>$PROJ_DIR$\Output\Obj\crflash.pbi</file>
+    </outputs>
     <file>
-      <name>$PROJ_DIR$\ParTest\ParTest.c</name>
+      <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\ParTest.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\serial\serial.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\serial.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\portmacro.s90</name>
-      <outputs>
-        <tool>
-          <name>AAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\portmacro.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\comtest.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\tasks.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\integer.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\heap_1.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\port.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\port.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\PollQ.r90</file>
-        </tool>
-      </outputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\queue.r90</file>
+          <name>XLINK</name>
+          <file> 47 78</file>
         </tool>
       </outputs>
     </file>
@@ -99,42 +133,421 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\flash.r90</file>
+          <file> 51 74 73</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 1</file>
         </tool>
       </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 10 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 10 12</file>
+        </tool>
+      </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\main.c</name>
+      <name>$PROJ_DIR$\regtest.c</name>
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\main.r90</file>
+          <file> 111 83 50</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4</file>
         </tool>
       </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 5 7 2 49 22 33 8 94 37 69 53 106</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5 7 2 49 22 33 8 94 37 69 53 106</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Output\Obj\rtosdemo.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 55 82 68 112 109 41 46 35 48 64 11 4 80 79</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Output\Exe\rtosdemo.d90</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 29 70 18 21 34 51 23 24 52 20 67 91 101 36 54 43</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Output\Exe\rtosdemo.a90</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 78</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 29 70 18 21 34 39 104 23 24 52 20 67 91 101 111 36 54 43</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Output\Exe\rtosdemo.cof</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 29 70 18 21 34 51 23 24 52 20 67 91 101 36 54 43</file>
+        </tool>
+      </inputs>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\list.c</name>
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file>$PROJ_DIR$\Output\Obj\list.r90</file>
+          <file> 52 81 77</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 35</file>
         </tool>
       </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 53</file>
+        </tool>
+      </inputs>
     </file>
     <file>
-      <name>[ROOT_NODE]</name>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\portmacro.s90</name>
       <outputs>
         <tool>
-          <name>XLINK</name>
-          <file>$PROJ_DIR$\Output\Exe\rtosdemo.a90</file>
-          <file>$PROJ_DIR$\Output\Exe\rtosdemo.d90</file>
+          <name>AAVR</name>
+          <file> 91</file>
         </tool>
       </outputs>
+      <inputs>
+        <tool>
+          <name>AAVR</name>
+          <file> 33 8</file>
+        </tool>
+      </inputs>
     </file>
-    <forcedrebuild>
-      <name>[MULTI_TOOL]</name>
-      <tool>XLINK</tool>
-    </forcedrebuild>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 21 63 9</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 82</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 15 6</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 15 6</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ParTest\ParTest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 18 65 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 55</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 5 7 2 49 22 33 8 94 37 69 53 10</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5 7 2 49 22 33 8 94 37 69 53 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\port.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 67 59 75</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 64</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 101 62 27</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 11</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 13 5 7 49 22 33 8 94 37 69 53 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 13 5 7 49 22 33 8 94 37 69 53 16</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 54 26 32</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 79</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 25 3 2 14 13 5 7 49 22 33 8 94 37 69 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 25 3 2 14 13 5 7 49 22 33 8 94 37 69 53</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serial.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 36 58 45</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 80</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 15 69 53 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 15 69 53 19</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 23 76 60</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 41</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 20 57 72</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 48</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 13 5 7 49 22 33 8 94 37 69 53 16 6 28 19 56 100 17 10 106</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 13 5 7 49 22 33 8 94 37 69 53 16 6 28 19 56 100 17 10 106</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Output\Exe\rtosdemo.elf</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 29 70 18 21 34 51 23 24 52 20 67 91 101 36 54 43</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 34 71 31</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 68</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 19 56 10</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 19 56 10</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Output\Exe\rtosdemo.dbg</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 29 70 18 21 34 39 104 23 24 52 20 67 91 101 36 54 43</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 24 44 66</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 46</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 28</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 14 2 5 7 49 22 33 8 94 37 69 53 28</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 104 105 102</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 109</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 5 7 2 49 22 33 8 94 37 69 53 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5 7 2 49 22 33 8 94 37 69 53 16</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\crflash.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 39 84 108</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 112</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 5 7 2 49 22 33 8 94 37 16 53 15 10 100</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5 7 2 49 22 33 8 94 37 16 53 15 10 100</file>
+        </tool>
+      </inputs>
+    </file>
   </configuration>
 </project>
 

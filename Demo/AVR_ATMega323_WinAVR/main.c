@@ -86,15 +86,17 @@ Changes from V2.6.1
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "croutine.h"
 
 /* Demo file headers. */
 #include "PollQ.h"
 #include "integer.h"
 #include "serial.h"
 #include "comtest.h"
-#include "flash.h"
+#include "crflash.h"
 #include "print.h"
 #include "partest.h"
+#include "regtest.h"
 
 /* Priority definitions for most of the tasks in the demo application.  Some
 tasks just use the idle priority. */
@@ -123,6 +125,9 @@ again. */
 the demo application is not unexpectedly resetting. */
 #define mainRESET_COUNT_ADDRESS			( ( void * ) 0x50 )
 
+/* The number of coroutines to create. */
+#define mainNUM_FLASH_COROUTINES		( 3 )
+
 /*
  * The task function for the "Check" task.
  */
@@ -140,6 +145,13 @@ static void prvCheckOtherTasksAreStillRunning( void );
  */
 static void prvIncrementResetCount( void );
 
+/*
+ * The idle hook is used to scheduler co-routines.
+ */
+void vApplicationIdleHook( void );
+
+/*-----------------------------------------------------------*/
+
 portSHORT main( void )
 {
 	prvIncrementResetCount();
@@ -147,13 +159,18 @@ portSHORT main( void )
 	/* Setup the LED's for output. */
 	vParTestInitialise();
 
+	/* Create the standard demo tasks. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-
+	vStartRegTestTasks();
+	
+	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
+	/* Create the co-routines that flash the LED's. */
+	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
+	
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION 
 	as 1 in portmacro.h.  To use the cooperative scheduler define 
 	configUSE_PREEMPTION as 0. */
@@ -205,6 +222,11 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 		xErrorHasOccurred = pdTRUE;
 	}
 
+	if( xAreRegTestTasksStillRunning() != pdTRUE )
+	{
+		xErrorHasOccurred = pdTRUE;
+	}
+	
 	if( xErrorHasOccurred == pdFALSE )
 	{
 		/* Toggle the LED if everything is okay so we know if an error occurs even if not
@@ -221,5 +243,11 @@ unsigned portCHAR ucCount;
 	eeprom_read_block( &ucCount, mainRESET_COUNT_ADDRESS, sizeof( ucCount ) );
 	ucCount++;
 	eeprom_write_byte( mainRESET_COUNT_ADDRESS, ucCount );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+	vCoRoutineSchedule();
 }
 

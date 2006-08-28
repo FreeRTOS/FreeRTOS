@@ -10,9 +10,9 @@
     <debug>1</debug>
     <settings>
       <name>C-SPY</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>11</version>
+        <version>12</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -74,6 +74,10 @@
         <option>
           <name>CDynDriver</name>
           <state>SIMAVR</state>
+        </option>
+        <option>
+          <name>DebuggerUseUbrofResetVector</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -255,9 +259,9 @@
     </settings>
     <settings>
       <name>JTAGICEAVR</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -384,13 +388,25 @@
           <name>OJTAGICEAVRJtagIcedownloadToData</name>
           <state>0</state>
         </option>
+        <option>
+          <name>ExitBreakpointP7</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>PutcharBreakpointP7</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GetcharBreakpointP7</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>JTAGICEMKIIAVR</name>
-      <archiveVersion>1</archiveVersion>
+      <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -525,6 +541,18 @@
           <name>OJTAGICEMKIIAVRJtagSoftwareBreak</name>
           <state>0</state>
         </option>
+        <option>
+          <name>ExitBreakpointP7</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>PutcharBreakpointP7</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GetcharBreakpointP7</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -595,16 +623,16 @@
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$EW_DIR$\common\plugins\Profiling\Profiling.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Trace\Trace.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Stack\stack.ewplugin</file>
         <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Orti\Orti.ewplugin</file>
-        <loadFlag>0</loadFlag>
       </plugin>
     </debuggerPlugins>
   </configuration>

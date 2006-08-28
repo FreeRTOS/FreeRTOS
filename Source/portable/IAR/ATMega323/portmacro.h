@@ -70,15 +70,13 @@ Changes from V1.2.3
 /*-----------------------------------------------------------*/	
 
 /* Critical section management. */
-#define portENTER_CRITICAL()	asm( "in r15, 3fh" );		\
-								asm( "cli" );				\
-								asm( "st -y, r15" )
+extern void vPortEnterCritical( void );
+extern void vPortExitCritical( void );
+#define portENTER_CRITICAL()	vPortEnterCritical()
+#define portEXIT_CRITICAL()		vPortExitCritical()
 
-#define portEXIT_CRITICAL()		asm( "ld r15, y+" );		\
-								asm( "out 3fh, r15" )
-
-#define portDISABLE_INTERRUPTS()	asm( "cli" );
-#define portENABLE_INTERRUPTS()		asm( "sti" );
+#define portDISABLE_INTERRUPTS()	asm( "cli" )
+#define portENABLE_INTERRUPTS()		asm( "sei" )
 /*-----------------------------------------------------------*/
 
 /* Architecture specifics. */

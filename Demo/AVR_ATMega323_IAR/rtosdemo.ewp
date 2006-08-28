@@ -127,8 +127,8 @@
         </option>
         <option>
           <name>New Variant Processor</name>
-          <version>13</version>
-          <state>41</state>
+          <version>15</version>
+          <state>47</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -682,7 +682,7 @@
       <name>XLINK</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>12</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -691,16 +691,16 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>rtosdemo.d90</state>
+          <state>rtosdemo.a90</state>
         </option>
         <option>
           <name>OutputFormat</name>
-          <version>10</version>
+          <version>11</version>
           <state>23</state>
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>6</version>
+          <version>7</version>
           <state>2</state>
         </option>
         <option>
@@ -849,7 +849,7 @@
         </option>
         <option>
           <name>DebugInformation</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>RuntimeControl</name>
@@ -873,16 +873,16 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>rtosdemo.a90</state>
+          <state>rtosdemo.elf</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
-          <version>10</version>
-          <state>25</state>
+          <version>11</version>
+          <state>16</state>
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>6</version>
+          <version>7</version>
           <state>2</state>
         </option>
         <option>
@@ -933,6 +933,14 @@
           <name>RawBinaryAlign</name>
           <state></state>
         </option>
+        <option>
+          <name>CrcAlign</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcInitialValue</name>
+          <state>0x00</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -962,45 +970,57 @@
       <data/>
     </settings>
   </configuration>
-  <file>
-    <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\Common\Minimal\flash.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\list.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\main.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\ParTest\ParTest.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\port.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\portmacro.s90</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\queue.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\serial\serial.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
-  </file>
+  <group>
+    <name>Demo Source</name>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\crflash.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ParTest\ParTest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\regtest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serial.c</name>
+    </file>
+  </group>
+  <group>
+    <name>Kernel Source</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\list.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\port.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\ATMega323\portmacro.s90</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+    </file>
+  </group>
 </project>
 
 

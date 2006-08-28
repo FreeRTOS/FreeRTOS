@@ -51,8 +51,8 @@ static portTickType xCoRoutineTickCount = 0;
 #define corINITIAL_STATE	( 0 )
 
 /*
- * Place the co-routine represented by pxCRCB into the appropriate ready queue 
- * for the priority.  It is inserted at the end of the list.  
+ * Place the co-routine represented by pxCRCB into the appropriate ready queue
+ * for the priority.  It is inserted at the end of the list.
  *
  * This macro accesses the co-routine ready lists and therefore must not be
  * used from within an ISR.
@@ -81,20 +81,20 @@ static void prvInitialiseCoRoutineLists( void );
 static inline void prvCheckPendingReadyList( void );
 
 /*
- * Macro that looks at the list of co-routines that are currently delayed to 
+ * Macro that looks at the list of co-routines that are currently delayed to
  * see if any require waking.
  *
- * Co-routines are stored in the queue in the order of their wake time - 
- * meaning once one co-routine has been found whose timer has not expired 
+ * Co-routines are stored in the queue in the order of their wake time -
+ * meaning once one co-routine has been found whose timer has not expired
  * we need not look any further down the list.
  */
 static inline void prvCheckDelayedList( void );
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xCoRoutineCreate( crCOROUTINE_CODE pxCoRoutineCode, unsigned portBASE_TYPE uxPriority, unsigned portBASE_TYPE uxIndex )
+signed portBASE_TYPE xCoRoutineCreate( crCOROUTINE_CODE pxCoRoutineCode, unsigned portBASE_TYPE uxPriority, unsigned portBASE_TYPE uxIndex )
 {
-portBASE_TYPE xReturn;
+signed portBASE_TYPE xReturn;
 corCRCB *pxCoRoutine;
 
 	/* Allocate the memory that will store the co-routine control block. */
@@ -125,8 +125,8 @@ corCRCB *pxCoRoutine;
 		vListInitialiseItem( &( pxCoRoutine->xGenericListItem ) );
 		vListInitialiseItem( &( pxCoRoutine->xEventListItem ) );
 
-		/* Set the co-routine control block as a link back from the xListItem.  
-		This is so we can get back to the containing CRCB from a generic item 
+		/* Set the co-routine control block as a link back from the xListItem.
+		This is so we can get back to the containing CRCB from a generic item
 		in a list. */
 		listSET_LIST_ITEM_OWNER( &( pxCoRoutine->xGenericListItem ), pxCoRoutine );
 		listSET_LIST_ITEM_OWNER( &( pxCoRoutine->xEventListItem ), pxCoRoutine );
@@ -190,7 +190,7 @@ portTickType xTimeToWake;
 static inline void prvCheckPendingReadyList( void )
 {
 	/* Are there any co-routines waiting to get moved to the ready list?  These
-	are co-routines that have been readied by an ISR.  The ISR cannot access 
+	are co-routines that have been readied by an ISR.  The ISR cannot access
 	the	ready lists itself. */
 	while( !listLIST_IS_EMPTY( &xPendingReadyList ) )
 	{
@@ -244,9 +244,9 @@ corCRCB *pxCRCB;
 
 			portDISABLE_INTERRUPTS();
 			{
-				/* The event could have occurred just before this critical 
+				/* The event could have occurred just before this critical
 				section.  If this is the case then the generic list item will
-				have been moved to the pending ready list and the following 
+				have been moved to the pending ready list and the following
 				line is still valid.  Also the pvContainer parameter will have
 				been set to NULL so the following lines are also valid. */
 				vListRemove( &( pxCRCB->xGenericListItem ) );											
@@ -310,17 +310,17 @@ unsigned portBASE_TYPE uxPriority;
 	vListInitialise( ( xList * ) &xDelayedCoRoutineList2 );
 	vListInitialise( ( xList * ) &xPendingReadyList );
 
-	/* Start with pxDelayedCoRoutineList using list1 and the 
+	/* Start with pxDelayedCoRoutineList using list1 and the
 	pxOverflowDelayedCoRoutineList using list2. */
 	pxDelayedCoRoutineList = &xDelayedCoRoutineList1;
 	pxOverflowDelayedCoRoutineList = &xDelayedCoRoutineList2;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xCoRoutineRemoveFromEventList( const xList *pxEventList )
+signed portBASE_TYPE xCoRoutineRemoveFromEventList( const xList *pxEventList )
 {
 corCRCB *pxUnblockedCRCB;
-portBASE_TYPE xReturn;
+signed portBASE_TYPE xReturn;
 
 	/* This function is called from within an interrupt.  It can only access
 	event lists and the pending ready list. */

@@ -12,12 +12,12 @@
           
           
           
-        <Column0>109</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>246</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
-    <Build><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1153</ColumnWidth1><ColumnWidth2>307</ColumnWidth2><ColumnWidth3>76</ColumnWidth3></Build></Static>
+    <Build><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1153</ColumnWidth1><ColumnWidth2>307</ColumnWidth2><ColumnWidth3>76</ColumnWidth3></Build><Debug-Log/></Static>
     <Windows>
       
-    <Wnd0>
+    <Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-12388-19520</Identity>
@@ -25,24 +25,24 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/portheap.c</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/Demo Source</ExpandedNode><ExpandedNode>rtosdemo/Kernel Source</ExpandedNode><ExpandedNode>rtosdemo/portheap.c</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-19172-8303</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-19172-8303</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-954-28216</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\AVR_ATMega323_IAR\regtest.c</Filename><XPos>0</XPos><YPos>190</YPos><SelStart>6619</SelStart><SelEnd>6619</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\AVR_ATMega323_IAR\main.c</Filename><XPos>0</XPos><YPos>123</YPos><SelStart>5500</SelStart><SelEnd>5500</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\Common\Minimal\crflash.c</Filename><XPos>0</XPos><YPos>170</YPos><SelStart>6807</SelStart><SelEnd>6807</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0084f828><key>iaridepm1</key></Toolbar-0084f828></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>718</Bottom><Right>183</Right><x>-2</x><y>-2</y><xscreen>185</xscreen><yscreen>185</yscreen><sizeHorzCX>115625</sizeHorzCX><sizeHorzCY>165326</sizeHorzCY><sizeVertCX>115625</sizeVertCX><sizeVertCY>643431</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>354</Bottom><Right>1602</Right><x>-2</x><y>-2</y><xscreen>1604</xscreen><yscreen>356</yscreen><sizeHorzCX>1002500</sizeHorzCX><sizeHorzCY>318141</sizeHorzCY><sizeVertCX>116250</sizeVertCX><sizeVertCY>166219</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00a0bb70><key>iaridepm1</key></Toolbar-00a0bb70></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>619</Bottom><Right>320</Right><x>-2</x><y>-2</y><xscreen>162</xscreen><yscreen>161</yscreen><sizeHorzCX>115714</sizeHorzCX><sizeHorzCY>165638</sizeHorzCY><sizeVertCX>230000</sizeVertCX><sizeVertCY>638889</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>307</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>309</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>317901</sizeHorzCY><sizeVertCX>116429</sizeVertCX><sizeVertCY>166667</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

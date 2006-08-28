@@ -18,13 +18,13 @@
 ;
 ;	A special exception to the GPL can be applied should you wish to distribute
 ;	a combined work that includes FreeRTOS.org, without being obliged to provide
-;	the source code for any proprietary components.  See the licensing section 
+;	the source code for any proprietary components.  See the licensing section
 ;	of http://www.FreeRTOS.org for full details of how and when the exception
 ;	can be applied.
 ;
 ;	***************************************************************************
-;	See http://www.FreeRTOS.org for documentation, latest information, license 
-;	and contact details.  Please ensure to read the configuration and relevant 
+;	See http://www.FreeRTOS.org for documentation, latest information, license
+;	and contact details.  Please ensure to read the configuration and relevant
 ;	port sections of the online documentation.
 ;	***************************************************************************
 
@@ -45,6 +45,7 @@ EXTERN SIG_UART_DATA
 EXTERN vTaskSwitchContext
 EXTERN pxCurrentTCB
 EXTERN vTaskIncrementTick
+EXTERN uxCriticalNesting
 
 ; Functions implemented in this file
 ; ----------------------------------
@@ -88,15 +89,15 @@ PUBLIC vPortStart
 ; ------------------------------------------------------
 ;
 ; The IAR compiler does not fully support inline assembler, so saving and
-; restoring a task context has to be written in an asm file.  
+; restoring a task context has to be written in an asm file.
 ;
 ; vPortYield() and vPortYieldFromTick() are usually written in C.  Doing
 ; so in this case would required calls to be made to portSAVE_CONTEXT() and
-; portRESTORE_CONTEXT().  This is dis-advantageous as the context switch 
-; function would require two extra jump and return instructions over the 
-; WinAVR equivalent.  
+; portRESTORE_CONTEXT().  This is dis-advantageous as the context switch
+; function would require two extra jump and return instructions over the
+; WinAVR equivalent.
 ;
-; To avoid this I have opted to implement both vPortYield() and 
+; To avoid this I have opted to implement both vPortYield() and
 ; vPortYieldFromTick() in this assembly file.  For convenience
 ; portSAVE_CONTEXT and portRESTORE_CONTEXT are implemented as macros.
 
@@ -140,6 +141,8 @@ portSAVE_CONTEXT MACRO
 	st	-y, r27
 	st	-y, r30
 	st	-y, r31
+	lds r0, uxCriticalNesting
+	st	-y, r0					; Store the critical nesting counter.
 
 	lds	r26, pxCurrentTCB		; Finally save the software stack pointer (Y ...
 	lds	r27, pxCurrentTCB + 1	; ... register) into the TCB.
@@ -155,10 +158,12 @@ portRESTORE_CONTEXT MACRO
 	ld	r28, x+					; the TCB into the software stack pointer (...
 	ld	r29, x+					; ... the Y register).
 
+	ld	r0, y+
+	sts	uxCriticalNesting, r0
 	ld	r31, y+					; Restore the registers down to R0.  The Y
 	ld	r30, y+					; register is missing from this list as it
 	ld	r27, y+					; has already been restored.
-	ld	r26, y+ 
+	ld	r26, y+
 	ld	r25, y+
 	ld	r24, y+
 	ld	r23, y+
@@ -202,9 +207,9 @@ portRESTORE_CONTEXT MACRO
 ; vPortYield() and vPortYieldFromTick()
 ; -------------------------------------
 ;
-; Manual and preemptive context switch functions respectively.  
-; The IAR compiler does not fully support inline assembler, 
-; so these are implemented here rather than the more usually 
+; Manual and preemptive context switch functions respectively.
+; The IAR compiler does not fully support inline assembler,
+; so these are implemented here rather than the more usually
 ; place of within port.c.
 
 vPortYield:

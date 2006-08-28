@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.0.5 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.1.0 - Copyright (C) 2003-2006 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -73,6 +73,11 @@ Changes from V2.0.0
 Changes from V2.6.1
 
 	+ The IAR and WinAVR AVR ports are now maintained separately.
+
+Changes from V4.0.5
+
+	+ Modified to demonstrate the use of co-routines.
+
 */
 
 #include <stdlib.h>

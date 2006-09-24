@@ -110,6 +110,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 __asm void prvSetPSP( unsigned long ulValue )
 {
+	PRESERVE8
 	msr psp, r0
 	bx lr;
 }
@@ -117,6 +118,7 @@ __asm void prvSetPSP( unsigned long ulValue )
 
 __asm void prvSetMSP( unsigned long ulValue )
 {
+	PRESERVE8
 	msr msp, r0
 	bx lr;
 }
@@ -166,6 +168,7 @@ void vPortYieldFromISR( void )
 
 __asm void vPortDisableInterrupts( void )
 {
+	PRESERVE8
 	cpsid i;
 	bx lr;
 }
@@ -173,6 +176,7 @@ __asm void vPortDisableInterrupts( void )
 
 __asm void vPortEnableInterrupts( void )
 {
+	PRESERVE8
 	cpsie i;
 	bx lr;
 }
@@ -200,6 +204,8 @@ __asm void xPortPendSVHandler( void )
 	extern uxCriticalNesting;
 	extern pxCurrentTCB;
 	extern vTaskSwitchContext;
+
+	PRESERVE8
 
 	/* Start first task if the stack has not yet been setup. */
 	mrs r0, psp
@@ -252,6 +258,7 @@ sv_disable_interrupts;
 __asm void xPortSysTickHandler( void )
 {
 	extern vTaskIncrementTick
+	PRESERVE8
 
 	/* Call the scheduler tick function. */
 	ldr r0, =vTaskIncrementTick

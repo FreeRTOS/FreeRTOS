@@ -100,7 +100,7 @@ portSHORT sTask;
 
 	for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
 	{
-		xTaskCreate( vCompeteingIntMathTask, ( const signed portCHAR * const ) "IntMath", intgSTACK_SIZE, ( void * ) &( xTaskCheck[ sTask ] ), uxPriority, ( xTaskHandle * ) NULL );
+		xTaskCreate( vCompeteingIntMathTask, ( signed portCHAR * ) "IntMath", intgSTACK_SIZE, ( void * ) &( xTaskCheck[ sTask ] ), uxPriority, ( xTaskHandle * ) NULL );
 	}
 }
 /*-----------------------------------------------------------*/

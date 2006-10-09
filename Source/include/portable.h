@@ -57,6 +57,14 @@
 	#include "../portable/IAR/ATMega323/portmacro.h"
 #endif
 
+#ifdef MPLAB_PIC24_PORT
+	#include "..\..\Source\portable\MPLAB\PIC24_dsPIC\portmacro.h"
+#endif
+
+#ifdef MPLAB_DSPIC_PORT
+	#include "..\..\Source\portable\MPLAB\PIC24_dsPIC\portmacro.h"
+#endif
+
 #ifdef MPLAB_PIC18F_PORT
 	#include "..\..\source\portable\MPLAB\PIC18F\portmacro.h"
 #endif
@@ -141,6 +149,9 @@
 	#include "../../Source/portable/GCC/HCS12/portmacro.h"
 #endif
 
+#ifdef GCC_MCF5235
+    #include "../../Source/portable/GCC/MCF5235/portmacro.h"
+#endif
 
 #ifdef BCC_INDUSTRIAL_PC_PORT
 	/* A short file name has to be used in place of the normal

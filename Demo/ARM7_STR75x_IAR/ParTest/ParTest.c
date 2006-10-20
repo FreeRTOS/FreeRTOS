@@ -41,29 +41,8 @@
 #include "partest.h"
 
 /*-----------------------------------------------------------
- * Simple parallel port IO routines for the LED's - which are
- * connected to the second nibble of GPIO port 1.
+ * Simple parallel port IO routines for the LED's 
  *-----------------------------------------------------------*/
-
-#define partstLED_3		0x0080
-#define partstLED_2		0x0040
-#define partstLED_1		0x0020
-#define partstLED_0		0x0010
-#define partstON_BOARD	0x0100	/* The LED built onto the KickStart board. */
-
-#define partstALL_LEDs	( partstLED_0 | partstLED_1 | partstLED_2 | partstLED_3 | partstON_BOARD )
-
-#define partstFIRST_LED_BIT 4
-
-/* This demo application uses files that are common to all port demo
-applications.  These files assume 6 LED's are available, whereas I have
-only 5 (including the LED built onto the development board).  To prevent
-two tasks trying to use the same LED a bit of remapping is performed.
-The ComTest tasks will try and use LED's 6 and 7.  LED 6 is ignored and
-has no effect, LED 7 is mapped to LED3.   The LED usage is described in
-the port documentation available from the FreeRTOS.org WEB site. */
-#define partstCOM_TEST_LED	7
-#define partstRX_CHAR_LED	3
 
 #define partstNUM_LEDS	4
 
@@ -79,26 +58,29 @@ static GPIO_MAP xLEDMap[ partstNUM_LEDS ] =
 	{ ( GPIO_TypeDef	* )GPIO1_BASE, GPIO_Pin_1, 0UL },
 	{ ( GPIO_TypeDef	* )GPIO0_BASE, GPIO_Pin_16, 0UL },
 	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_18, 0UL },	
-	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_19, 0UL }
-	
+	{ ( GPIO_TypeDef	* )GPIO2_BASE, GPIO_Pin_19, 0UL }	
 };
 
 /*-----------------------------------------------------------*/
-GPIO_InitTypeDef    GPIO_InitStructure ;
 
 void vParTestInitialise( void )
 {	
+GPIO_InitTypeDef GPIO_InitStructure ;
+
     /* Configure the bits used to flash LED's on port 1 as output. */
-  /* Configure LED3 */
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_16;
-  GPIO_Init(GPIO0,&GPIO_InitStructure);
-  /* Configure LED2 */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-  GPIO_Init(GPIO1, &GPIO_InitStructure);
-  /* Configure LED4 and LED5 */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_18 | GPIO_Pin_19;
-  GPIO_Init(GPIO2, &GPIO_InitStructure);
+
+	/* Configure LED3 */
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_16;
+	GPIO_Init(GPIO0,&GPIO_InitStructure);
+
+	/* Configure LED2 */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_Init(GPIO1, &GPIO_InitStructure);
+
+	/* Configure LED4 and LED5 */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_18 | GPIO_Pin_19;
+	GPIO_Init(GPIO2, &GPIO_InitStructure);
 
 	vParTestSetLED( 0, 0 );
 	vParTestSetLED( 1, 0 );
@@ -111,16 +93,20 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
 	if( uxLED < partstNUM_LEDS )
 	{
-		if( xValue )
+		portENTER_CRITICAL();
 		{
-			GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_RESET );
-			xLEDMap[ uxLED ].ulValue = 0;
+			if( xValue )
+			{
+				GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_RESET );
+				xLEDMap[ uxLED ].ulValue = 0;
+			}
+			else
+			{
+				GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_SET );
+				xLEDMap[ uxLED ].ulValue = 1;			
+			}
 		}
-		else
-		{
-			GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_SET );
-			xLEDMap[ uxLED ].ulValue = 1;			
-		}
+		portEXIT_CRITICAL();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -129,16 +115,20 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	if( uxLED < partstNUM_LEDS )
 	{
-		if( xLEDMap[ uxLED ].ulValue == 1 )
+		portENTER_CRITICAL();
 		{
-			GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_RESET );
-			xLEDMap[ uxLED ].ulValue = 0;
+			if( xLEDMap[ uxLED ].ulValue == 1 )
+			{
+				GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_RESET );
+				xLEDMap[ uxLED ].ulValue = 0;
+			}
+			else
+			{
+				GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_SET );
+				xLEDMap[ uxLED ].ulValue = 1;			
+			}
 		}
-		else
-		{
-			GPIO_WriteBit( xLEDMap[ uxLED ].pxPort, xLEDMap[ uxLED ].ulPin, Bit_SET );
-			xLEDMap[ uxLED ].ulValue = 1;			
-		}
+		portEXIT_CRITICAL();
 	}
 }
 

@@ -1649,9 +1649,6 @@
   <group>
     <name>Demo Source</name>
     <file>
-      <name>$PROJ_DIR$\Demo\source\75x_it.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
     </file>
     <file>
@@ -1673,7 +1670,7 @@
       <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\Demo\source\lcd.c</name>
+      <name>$PROJ_DIR$\STLibrary\src\lcd.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\main.c</name>
@@ -1695,6 +1692,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\STLibrary\src\75x_gpio.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\STLibrary\src\75x_it.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\STLibrary\src\75x_lib.c</name>

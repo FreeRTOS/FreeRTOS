@@ -3,7 +3,7 @@
 <Workspace>
   <ConfigDictionary>
     
-  <CurrentConfigs><Project>RTOSDemo/Release</Project></CurrentConfigs></ConfigDictionary>
+  <CurrentConfigs><Project>RTOSDemo/Debug</Project></CurrentConfigs></ConfigDictionary>
   <Desktop>
     <Static>
       <Workspace>
@@ -40,7 +40,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode><ExpandedNode>RTOSDemo/source</ExpandedNode><ExpandedNode>RTOSDemo/startup</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode><ExpandedNode>RTOSDemo/source</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -50,14 +50,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_STR75x_IAR\main.c</Filename><XPos>0</XPos><YPos>119</YPos><SelStart>5333</SelStart><SelEnd>5333</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_STR75x_IAR\main.c</Filename><XPos>0</XPos><YPos>119</YPos><SelStart>5333</SelStart><SelEnd>5333</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\2\V4.1.2rc1\Demo\ARM7_STR75x_IAR\STLibrary\inc\75x_map.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1345</SelStart><SelEnd>1345</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\2\V4.1.2rc1\Demo\ARM7_STR75x_IAR\STLibrary\src\75x_it.c</Filename><XPos>0</XPos><YPos>21</YPos><SelStart>1939</SelStart><SelEnd>1939</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\2\V4.1.2rc1\Demo\ARM7_STR75x_IAR\STLibrary\src\lcd.c</Filename><XPos>0</XPos><YPos>212</YPos><SelStart>16221</SelStart><SelEnd>16239</SelEnd></Tab><ActiveTab>3</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00a0bb80><key>iaridepm1</key></Toolbar-00a0bb80></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>705</Bottom><Right>298</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>214286</sizeVertCX><sizeVertCY>727366</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>221</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>223</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>229424</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>205761</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00a0bb80><key>iaridepm1</key></Toolbar-00a0bb80></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>705</Bottom><Right>298</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>214286</sizeVertCX><sizeVertCY>727366</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>221</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>223</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>229424</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>205761</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

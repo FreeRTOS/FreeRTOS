@@ -158,7 +158,9 @@ static const unsigned char g_pucFont[95][5] =
 
 //*****************************************************************************
 //
-// The sequence of commands used to initialize the SSD0303 controller.
+// The sequence of commands used to initialize the SSD0303 controller.  Each
+// command is described as follows:  there is a byte specifying the number of
+// bytes in the I2C transfer, followed by that many bytes of command data.
 //
 //*****************************************************************************
 static const unsigned char g_pucOSRAMInit[] =
@@ -166,97 +168,97 @@ static const unsigned char g_pucOSRAMInit[] =
     //
     // Turn off the panel
     //
-    0x80, 0xae,
+    0x02, 0x80, 0xae,
 
     //
     // Set lower column address
     //
-    0x80, 0x04,
+    0x02, 0x80, 0x04,
 
     //
     // Set higher column address
     //
-    0x80, 0x12,
+    0x02, 0x80, 0x12,
 
     //
     // Set contrast control register
     //
-    0x80, 0x81, 0x80, 0x2b,
+    0x04, 0x80, 0x81, 0x80, 0x2b,
 
     //
     // Set segment re-map
     //
-    0x80, 0xa1,
+    0x02, 0x80, 0xa1,
 
     //
     // Set display start line
     //
-    0x80, 0x40,
+    0x02, 0x80, 0x40,
 
     //
     // Set display offset
     //
-    0x80, 0xd3, 0x80, 0x00,
+    0x04, 0x80, 0xd3, 0x80, 0x00,
 
     //
     // Set multiplex ratio
     //
-    0x80, 0xa8, 0x80, 0x0f,
+    0x04, 0x80, 0xa8, 0x80, 0x0f,
 
     //
     // Set the display to normal mode
     //
-    0x80, 0xa4,
+    0x02, 0x80, 0xa4,
 
     //
     // Non-inverted display
     //
-    0x80, 0xa6,
+    0x02, 0x80, 0xa6,
 
     //
     // Set the page address
     //
-    0x80, 0xb0,
+    0x02, 0x80, 0xb0,
 
     //
     // Set COM output scan direction
     //
-    0x80, 0xc8,
+    0x02, 0x80, 0xc8,
 
     //
     // Set display clock divide ratio/oscillator frequency
     //
-    0x80, 0xd5, 0x80, 0x72,
+    0x04, 0x80, 0xd5, 0x80, 0x72,
 
     //
     // Enable mono mode
     //
-    0x80, 0xd8, 0x80, 0x00,
+    0x04, 0x80, 0xd8, 0x80, 0x00,
 
     //
     // Set pre-charge period
     //
-    0x80, 0xd9, 0x80, 0x22,
+    0x04, 0x80, 0xd9, 0x80, 0x22,
 
     //
     // Set COM pins hardware configuration
     //
-    0x80, 0xda, 0x80, 0x12,
+    0x04, 0x80, 0xda, 0x80, 0x12,
 
     //
     // Set VCOM deslect level
     //
-    0x80, 0xdb, 0x80, 0x0f,
+    0x04, 0x80, 0xdb, 0x80, 0x0f,
 
     //
     // Set DC-DC on
     //
-    0x80, 0xad, 0x80, 0x8b,
+    0x04, 0x80, 0xad, 0x80, 0x8b,
 
     //
     // Turn on the panel
     //
-    0x80, 0xaf,
+    0x02, 0x80, 0xaf,
 };
 
 //*****************************************************************************
@@ -501,10 +503,6 @@ OSRAMWriteFinal(unsigned char ucChar)
 //! This function will clear the display.  All pixels in the display will be
 //! turned off.
 //!
-//! This function is contained in <tt>osram96x16.c</tt>, with
-//! <tt>osram96x16.h</tt> containing the API definition for use by
-//! applications.
-//!
 //! \return None.
 //
 //*****************************************************************************
@@ -573,10 +571,6 @@ OSRAMClear(void)
 //! If the drawing of the string reaches the right edge of the display, no more
 //! characters will be drawn.  Therefore, special care is not required to avoid
 //! supplying a string that is "too long" to display.
-//!
-//! This function is contained in <tt>osram96x16.c</tt>, with
-//! <tt>osram96x16.h</tt> containing the API definition for use by
-//! applications.
 //!
 //! \return None.
 //
@@ -692,7 +686,7 @@ OSRAMStringDraw(const char *pcStr, unsigned long ulX, unsigned long ulY)
 //! to right, followed immediately by the second row of image data.  Each byte
 //! contains the data for the eight scan lines of the column, with the top scan
 //! line being in the least significant bit of the byte and the bottom scan
-//! line being in the most significat bit of the byte.
+//! line being in the most significant bit of the byte.
 //!
 //! For example, an image four columns wide and sixteen scan lines tall would
 //! be arranged as follows (showing how the eight bytes of the image would
@@ -721,10 +715,6 @@ OSRAMStringDraw(const char *pcStr, unsigned long ulX, unsigned long ulY)
 //!     |   | 7 |  |   | 7 |  |   | 7 |  |   | 7 |
 //!     +-------+  +-------+  +-------+  +-------+
 //! \endverbatim
-//!
-//! This function is contained in <tt>osram96x16.c</tt>, with
-//! <tt>osram96x16.h</tt> containing the API definition for use by
-//! applications.
 //!
 //! \return None.
 //
@@ -789,16 +779,14 @@ OSRAMImageDraw(const unsigned char *pucImage, unsigned long ulX,
 //! This function initializes the I2C interface to the OLED display and
 //! configures the SSD0303 controller on the panel.
 //!
-//! This function is contained in <tt>osram96x16.c</tt>, with
-//! <tt>osram96x16.h</tt> containing the API definition for use by
-//! applications.
-//!
 //! \return None.
 //
 //*****************************************************************************
 void
 OSRAMInit(tBoolean bFast)
 {
+    unsigned long ulIdx;
+
     //
     // Enable the I2C and GPIO port B blocks as they are needed by this driver.
     //
@@ -821,7 +809,7 @@ OSRAMInit(tBoolean bFast)
     // the delay required.
     //
     // The derivation of this formula is based on a measured delay of
-    // OSRAMDelay(1640) for a 100 kHz I2C bus with the CPU running at 50 MHz
+    // OSRAMDelay(1700) for a 100 kHz I2C bus with the CPU running at 50 MHz
     // (referred to as C).  To scale this to the delay for a different CPU
     // speed (since this is just a CPU-based delay loop) is:
     //
@@ -869,20 +857,36 @@ OSRAMInit(tBoolean bFast)
     // Reducing the constants gives:
     //
     //         TPR              TPR             TPR
-    //     C * ---   =   1640 * ---   =   328 * ---
+    //     C * ---   =   1700 * ---   =   340 * ---
     //         25               25               5
     //
     // Note that the constant C is actually a bit larger than it needs to be in
     // order to provide some safety margin.
     //
-    g_ulDelay = (328 * (HWREG(I2C_MASTER_BASE + I2C_MASTER_O_TPR) + 1)) / 5;
+    // When the panel is being initialized, the value of C actually needs to be
+    // a bit longer (3200 instead of 1700).  So, set the larger value for now.
+    //
+    g_ulDelay = (640 * (HWREG(I2C_MASTER_BASE + I2C_MASTER_O_TPR) + 1)) / 5;
 
     //
-    // Initialize the SSD0303 controller.
+    // Initialize the SSD0303 controller.  Loop through the initialization
+    // sequence doing a single I2C transfer for each command.
     //
-    OSRAMWriteFirst(g_pucOSRAMInit[0]);
-    OSRAMWriteArray(g_pucOSRAMInit + 1, sizeof(g_pucOSRAMInit) - 2);
-    OSRAMWriteFinal(g_pucOSRAMInit[sizeof(g_pucOSRAMInit) - 1]);
+    for(ulIdx = 0; ulIdx < sizeof(g_pucOSRAMInit);
+        ulIdx += g_pucOSRAMInit[ulIdx] + 1)
+    {
+        //
+        // Send this command.
+        //
+        OSRAMWriteFirst(g_pucOSRAMInit[ulIdx + 1]);
+        OSRAMWriteArray(g_pucOSRAMInit + ulIdx + 2, g_pucOSRAMInit[ulIdx] - 2);
+        OSRAMWriteFinal(g_pucOSRAMInit[ulIdx + g_pucOSRAMInit[ulIdx]]);
+    }
+
+    //
+    // Now, switch to the actual value of C.
+    //
+    g_ulDelay = (340 * (HWREG(I2C_MASTER_BASE + I2C_MASTER_O_TPR) + 1)) / 5;
 
     //
     // Clear the frame buffer.
@@ -896,10 +900,6 @@ OSRAMInit(tBoolean bFast)
 //!
 //! This function will turn on the OLED display, causing it to display the
 //! contents of its internal frame buffer.
-//!
-//! This function is contained in <tt>osram96x16.c</tt>, with
-//! <tt>osram96x16.h</tt> containing the API definition for use by
-//! applications.
 //!
 //! \return None.
 //
@@ -926,10 +926,6 @@ OSRAMDisplayOn(void)
 //! of the panel and turn off the on-chip DC-DC converter, preventing damage to
 //! the panel due to burn-in (it has similar characters to a CRT in this
 //! respect).
-//!
-//! This function is contained in <tt>osram96x16.c</tt>, with
-//! <tt>osram96x16.h</tt> containing the API definition for use by
-//! applications.
 //!
 //! \return None.
 //

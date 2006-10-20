@@ -56,7 +56,7 @@
 
 /* 
 
-Changes from V4.0.2
+Changes from V4.1.1
 
 	+ The second set of tasks were created the wrong way around.  This has been
 	  corrected.
@@ -162,8 +162,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters4->xBlockTime = xBlockTime;
 	pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
 
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
 
 
 

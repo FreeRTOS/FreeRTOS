@@ -181,6 +181,12 @@ Changes from V4.0.5
 
 	+ Added utility functions and xOverflowCount variable to facilitate the
 	  queue.c changes.
+
+Changes from V4.1.2
+	
+	+ Tasks that block with a timeout of portMAX_DELAY are now blocked 
+	  indefinitely.  Previously portMAX_DELAY was just the longest block time
+	  possible.
 */
 
 #include <stdio.h>
@@ -1418,26 +1424,36 @@ portTickType xTimeToWake;
 	is the first to be woken by the event. */
 	vListInsert( ( xList * ) pxEventList, ( xListItem * ) &( pxCurrentTCB->xEventListItem ) );
 
-	/* Calculate the time at which the task should be woken if the event does
-	not occur.  This may overflow but this doesn't matter. */
-	xTimeToWake = xTickCount + xTicksToWait;
-
 	/* We must remove ourselves from the ready list before adding ourselves
 	to the blocked list as the same list item is used for both lists.  We have
 	exclusive access to the ready lists as the scheduler is locked. */
 	vListRemove( ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
 
-	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
-
-	if( xTimeToWake < xTickCount )
+	if( xTicksToWait == portMAX_DELAY )
 	{
-		/* Wake time has overflowed.  Place this item in the overflow list. */
-		vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+		/* Add ourselves to the suspended task list instead of a delayed task
+		list to ensure we are not woken by a timing event.  We will block
+		indefinitely. */
+		vListInsertEnd( ( xList * ) &xSuspendedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
 	}
 	else
 	{
-		/* The wake time has not overflowed, so we can use the current block list. */
-		vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+		/* Calculate the time at which the task should be woken if the event does
+		not occur.  This may overflow but this doesn't matter. */
+		xTimeToWake = xTickCount + xTicksToWait;
+	
+		listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
+	
+		if( xTimeToWake < xTickCount )
+		{
+			/* Wake time has overflowed.  Place this item in the overflow list. */
+			vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+		}
+		else
+		{
+			/* The wake time has not overflowed, so we can use the current block list. */
+			vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+		}
 	}
 }
 /*-----------------------------------------------------------*/

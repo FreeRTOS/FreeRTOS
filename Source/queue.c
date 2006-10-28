@@ -60,6 +60,10 @@ Changes from V4.0.5
 	  functions exiting when a block time remains and the function has
 	  not completed.
 
+Changes from V4.1.2:
+
+	+ BUG FIX:  Removed the call to prvIsQueueEmpty from within xQueueCRReceive
+	  as it exited with interrupts enabled.  Thanks Paul Katz.
 */
 
 #include <stdlib.h>
@@ -746,7 +750,7 @@ signed portBASE_TYPE xReturn;
 	between the check to see if the queue is empty and blocking on the queue. */
 	portDISABLE_INTERRUPTS();
 	{
-		if( prvIsQueueEmpty( pxQueue ) )
+		if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 )
 		{
 			/* There are no messages in the queue, do we want to block or just
 			leave with nothing? */			

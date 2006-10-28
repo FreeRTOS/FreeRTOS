@@ -217,6 +217,19 @@ __user_initial_stackheap
 ;******************************************************************************
         ALIGN
 
+; Note: 
+; Using READWRITE places Section .RTOSHeap in Region ER_RW.
+; Using NOINIT places Section .RTOSHeap in Region ER_ZI,which means
+; "ZEROINITIALIZE" (sic), and which is the last region in memory. Then
+; we need to make this section the last section, which is somewhat tricky,
+; because we cannot use the sectionname, but need to use a defined symbol:
+; Linker option: "--last xHeap"
+
+		EXPORT xHeap
+
+                AREA    RTOSHeap, DATA, NOINIT
+xHeap
+
 ;******************************************************************************
 ;
 ; Tell the assembler that we're done.

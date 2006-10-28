@@ -13,7 +13,7 @@
 Target (FreeRTOS_Demo), 0x0004 // Tools: 'ARM-ADS'
 GRPOPT 1,(Demo_Source),1,0,0
 GRPOPT 2,(Libraries),1,0,0
-GRPOPT 3,(RTOS_Source),0,0,0
+GRPOPT 3,(RTOS_Source),1,0,0
 GRPOPT 4,(Documentation),1,0,0
 
 OPTFFF 1,1,2,0,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S> 
@@ -23,9 +23,9 @@ OPTFFF 1,4,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c>
 OPTFFF 1,5,1,989855744,0,0,0,0,<..\Common\Minimal\integer.c><integer.c> 
 OPTFFF 1,6,1,939524096,0,0,0,0,<..\Common\Minimal\PollQ.c><PollQ.c> 
 OPTFFF 1,7,1,201326592,0,0,0,0,<..\Common\Minimal\BlockQ.c><BlockQ.c> 
-OPTFFF 1,8,1,0,0,0,0,0,<..\..\Source\portable\MemMang\heap_2.c><heap_2.c> 
+OPTFFF 1,8,1,0,0,0,0,0,<.\heap\heap_1.c><heap_1.c> 
 OPTFFF 2,9,4,0,0,0,0,0,<C:\Devtools\Keil\ARM\RV30\LIB\Luminary\driverlib.lib><driverlib.lib> 
-OPTFFF 3,10,1,503316481,0,0,0,0,<..\..\Source\tasks.c><tasks.c> 
+OPTFFF 3,10,1,0,0,0,0,0,<..\..\Source\tasks.c><tasks.c> 
 OPTFFF 3,11,1,0,0,0,0,0,<..\..\Source\list.c><list.c> 
 OPTFFF 3,12,1,0,0,0,0,0,<..\..\Source\queue.c><queue.c> 
 OPTFFF 3,13,1,0,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 
@@ -47,7 +47,6 @@ TARGOPT 1, (FreeRTOS_Demo)
   OPTKEY 0,(DLGTARM)()
   OPTKEY 0,(ARMDBGFLAGS)(-T5F)
   OPTKEY 0,(LMIDK-AGDI)(-B0 -O1792)
-  OPTBB 0,0,106,1,3002,0,0,0,0,1,<main.c>()()
   OPTDF 0x84
   OPTLE <>
   OPTLC <>

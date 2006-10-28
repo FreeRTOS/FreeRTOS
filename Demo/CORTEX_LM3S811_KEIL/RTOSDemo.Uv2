@@ -8,19 +8,19 @@ Group (Libraries)
 Group (RTOS_Source)
 Group (Documentation)
 
-File 1,2,<.\startup_rvmdk.S><startup_rvmdk.S> 0x44FB12E0 
-File 1,1,<.\LuminaryCode\osram96x16.c><osram96x16.c> 0x44F9AFC1 
-File 1,1,<.\main.c><main.c> 0x44FC00B0 
-File 1,1,<..\Common\Minimal\semtest.c><semtest.c> 0x44F30401 
-File 1,1,<..\Common\Minimal\integer.c><integer.c> 0x44F30401 
-File 1,1,<..\Common\Minimal\PollQ.c><PollQ.c> 0x44F30401 
-File 1,1,<..\Common\Minimal\BlockQ.c><BlockQ.c> 0x44F30403 
-File 1,1,<..\..\Source\portable\MemMang\heap_2.c><heap_2.c> 0x44F30418 
+File 1,2,<.\startup_rvmdk.S><startup_rvmdk.S> 0x45431C95 
+File 1,1,<.\LuminaryCode\osram96x16.c><osram96x16.c> 0x452BAD20 
+File 1,1,<.\main.c><main.c> 0x452A35C1 
+File 1,1,<..\Common\Minimal\semtest.c><semtest.c> 0x452A35D8 
+File 1,1,<..\Common\Minimal\integer.c><integer.c> 0x452A35D8 
+File 1,1,<..\Common\Minimal\PollQ.c><PollQ.c> 0x452A35D8 
+File 1,1,<..\Common\Minimal\BlockQ.c><BlockQ.c> 0x4538ECC1 
+File 1,1,<.\heap\heap_1.c><heap_1.c> 0x45431CD6 
 File 2,4,<C:\Devtools\Keil\ARM\RV30\LIB\Luminary\driverlib.lib><driverlib.lib> 0x44F892D1 
-File 3,1,<..\..\Source\tasks.c><tasks.c> 0x44F303D7 
-File 3,1,<..\..\Source\list.c><list.c> 0x44F303E1 
-File 3,1,<..\..\Source\queue.c><queue.c> 0x44F303E0 
-File 3,1,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 0x44F30423 
+File 3,1,<..\..\Source\tasks.c><tasks.c> 0x452A35A8 
+File 3,1,<..\..\Source\list.c><list.c> 0x452A35BA 
+File 3,1,<..\..\Source\queue.c><queue.c> 0x452A35BA 
+File 3,1,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 0x452A35FB 
 File 4,5,<.\readme.txt><readme.txt> 0x44FC00DA 
 
 
@@ -66,7 +66,7 @@ Options 1,0,0  // Target 'FreeRTOS_Demo'
  BrunUsr 1 0 <>
  SVCSID <>
  GLFLAGS=1790
- ADSFLGA { 16,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSFLGA { 176,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
  ACPUTYP (Cortex-M3)
  ADSTFLGA { 0,12,0,0,99,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
  OCMADSOCM { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
@@ -100,7 +100,7 @@ Options 1,0,0  // Target 'FreeRTOS_Demo'
  ADSLDSC ()
  ADSLDIB ()
  ADSLDIC ()
- ADSLDMC (--entry Reset_Handler)
+ ADSLDMC (--entry Reset_Handler --last xHeap)
  ADSLDIF ()
  ADSLDDW ()
   OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S811)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S811)

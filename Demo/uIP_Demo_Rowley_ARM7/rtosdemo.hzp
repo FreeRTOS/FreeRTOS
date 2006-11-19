@@ -52,5 +52,5 @@
   <configuration c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes" Name="Flash" />
   <configuration c_preprocessor_definitions="DEBUG" link_include_startup_code="No" gcc_optimization_level="None" build_debug_information="Yes" Name="Debug" />
   <configuration c_preprocessor_definitions="NDEBUG" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" Name="Release" />
-  <configuration c_preprocessor_definitions="" Name="Common" />
+  <configuration c_preprocessor_definitions="" c_additional_options="-fomit-frame-pointer" Name="Common" />
 </solution>

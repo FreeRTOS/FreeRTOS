@@ -73,7 +73,7 @@ Changes from V2.0.0
 #define pollqSTACK_SIZE			configMINIMAL_STACK_SIZE
 #define pollqQUEUE_SIZE			( 10 )
 #define pollqPRODUCER_DELAY		( ( portTickType ) 200 / portTICK_RATE_MS )
-#define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( portTickType ) 20 )
+#define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( portTickType ) ( 20 / portTICK_RATE_MS ) )
 #define pollqNO_DELAY			( ( portTickType ) 0 )
 #define pollqVALUES_TO_PRODUCE	( ( signed portBASE_TYPE ) 3 )
 #define pollqINITIAL_VALUE		( ( signed portBASE_TYPE ) 0 )

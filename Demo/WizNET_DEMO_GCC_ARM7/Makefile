@@ -45,7 +45,7 @@ LDSCRIPT=lpc2106-rom.ld
 #
 CFLAGS=-Wall -D $(RUN_MODE) -D GCC_ARM7 -I. -I../../Source/include \
 		-I../Common/include $(DEBUG) -mcpu=arm7tdmi -T$(LDSCRIPT) \
-		-Wcast-align $(OPTIM)
+		-Wcast-align $(OPTIM) -fomit-frame-pointer
 
 ifeq ($(USE_THUMB_MODE),YES)
 	CFLAGS += -mthumb-interwork -D THUMB_INTERWORK

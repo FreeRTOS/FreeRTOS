@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.1.2 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.1.3 - Copyright (C) 2003-2006 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -184,9 +184,9 @@ Changes from V4.0.5
 
 Changes from V4.1.2
 	
-	+ Tasks that block with a timeout of portMAX_DELAY are now blocked 
-	  indefinitely.  Previously portMAX_DELAY was just the longest block time
-	  possible.
+	+ Tasks that block on events with a timeout of portMAX_DELAY are now
+	  blocked indefinitely if configINCLUDE_vTaskSuspend is defined. 
+	  Previously portMAX_DELAY was just the longest block time possible.
 */
 
 #include <stdio.h>

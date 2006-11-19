@@ -57,9 +57,8 @@
 
 /*-----------------------------------------------------------*/
 
-/* Setup the watchdog to generate the tick interrupts. */
+/* Setup the TB to generate the tick interrupts. */
 static void prvSetupTimerInterrupt( void );
-
 
 /*-----------------------------------------------------------*/
 

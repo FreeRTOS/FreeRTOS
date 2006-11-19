@@ -30,6 +30,14 @@
 	***************************************************************************
 */
 
+/*-----------------------------------------------------------
+ * Components that can be compiled to either ARM or THUMB mode are
+ * contained in serial.c  The ISR routines, which can only be compiled
+ * to ARM mode, are contained in this file.
+ *----------------------------------------------------------*/
+
+
+
 /* Library includes. */
 #include "75x_uart.h"
 

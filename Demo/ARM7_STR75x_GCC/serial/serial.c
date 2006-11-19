@@ -34,6 +34,15 @@
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
 */
 
+
+/*-----------------------------------------------------------
+ * Components that can be compiled to either ARM or THUMB mode are
+ * contained in this file.c  The ISR routines, which can only be compiled
+ * to ARM mode, are contained in serialISR.c.
+ *----------------------------------------------------------*/
+
+
+
 /* Library includes. */
 #include "75x_uart.h"
 #include "75x_gpio.h"

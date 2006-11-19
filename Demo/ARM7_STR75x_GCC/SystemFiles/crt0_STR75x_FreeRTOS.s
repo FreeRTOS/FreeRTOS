@@ -1,7 +1,8 @@
 /*
 This is the default Startup for STR75x devices for the GNU toolchain
 
-It has been designed by ST Microelectronics and modified by Raisonance.
+It has been designed by ST Microelectronics and modified by Raisonance
+and FreeRTOS.org.
 
 You can use it, modify it, distribute it freely but without any waranty.
 

@@ -1540,7 +1540,7 @@ portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType *pxTic
 {
 portBASE_TYPE xReturn;
 
-    if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount > pxTimeOut->xTimeOnEntering ) )
+    if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount >= pxTimeOut->xTimeOnEntering ) )
     {
         /* The tick count is greater than the time at which vTaskSetTimeout() 
 		was called, but has also overflowed since vTaskSetTimeOut() was called.

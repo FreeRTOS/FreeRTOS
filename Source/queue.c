@@ -240,7 +240,7 @@ size_t xQueueSizeInBytes;
 
 signed portBASE_TYPE xQueueSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xTicksToWait )
 {
-signed portBASE_TYPE xReturn = pdFAIL;
+signed portBASE_TYPE xReturn = pdPASS;
 xTimeOutType xTimeOut;
 
 	/* Make sure other tasks do not access the queue. */
@@ -459,7 +459,7 @@ signed portBASE_TYPE xQueueSendFromISR( xQueueHandle pxQueue, const void *pvItem
 
 signed portBASE_TYPE xQueueReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait )
 {
-signed portBASE_TYPE xReturn = pdFAIL;
+signed portBASE_TYPE xReturn = pdTRUE;
 xTimeOutType xTimeOut;
 
 	/* This function is very similar to xQueueSend().  See comments within

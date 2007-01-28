@@ -240,7 +240,7 @@ size_t xQueueSizeInBytes;
 
 signed portBASE_TYPE xQueueSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xTicksToWait )
 {
-signed portBASE_TYPE xReturn;
+signed portBASE_TYPE xReturn = pdFAIL;
 xTimeOutType xTimeOut;
 
 	/* Make sure other tasks do not access the queue. */
@@ -337,6 +337,20 @@ xTimeOutType xTimeOut;
 					{
 						taskYIELD();
 					}
+
+					/* We want to check to see if the queue is still full
+					before leaving the critical section.  This is to prevent
+					this task placing an item into the queue due to an
+					interrupt making space on the queue between critical
+					sections (when there might be a higher priority task
+					blocked on the queue that cannot run yet because the
+					scheduler gets suspended). */
+					if( pxQueue->uxMessagesWaiting == pxQueue->uxLength )
+					{
+						/* We unblocked but there is no space in the queue,
+						we probably timed out. */
+						xReturn = errQUEUE_FULL;
+					}
 	
 					/* Before leaving the critical section we have to ensure
 					exclusive access again. */
@@ -347,29 +361,39 @@ xTimeOutType xTimeOut;
 			}
 		}
 			
-		/* When we are here it is possible that we unblocked as space became
-		available on the queue.  It is also possible that an ISR posted to the
-		queue since we left the critical section, so it may be that again there
-		is no space.  This would only happen if a task and ISR post onto the
-		same queue. */
-		taskENTER_CRITICAL();
+		/* If xReturn is errQUEUE_FULL then we unblocked when the queue
+		was still full.  Don't check it again now as it is possible that
+		an interrupt has removed an item from the queue since we left the
+		critical section and we don't want to write to the queue in case
+		there is a task of higher priority blocked waiting for space to
+		be available on the queue.  If this is the case the higher priority
+		task will execute when the scheduler is unsupended. */
+		if( xReturn != errQUEUE_FULL )
 		{
-			if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+			/* When we are here it is possible that we unblocked as space became
+			available on the queue.  It is also possible that an ISR posted to the
+			queue since we left the critical section, so it may be that again there
+			is no space.  This would only happen if a task and ISR post onto the
+			same queue. */
+			taskENTER_CRITICAL();
 			{
-				/* There is room in the queue, copy the data into the queue. */			
-				prvCopyQueueData( pxQueue, pvItemToQueue );		
-				xReturn = pdPASS;
-	
-				/* Update the TxLock count so prvUnlockQueue knows to check for
-				tasks waiting for data to become available in the queue. */
-				++( pxQueue->xTxLock );
+				if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+				{
+					/* There is room in the queue, copy the data into the queue. */			
+					prvCopyQueueData( pxQueue, pvItemToQueue );		
+					xReturn = pdPASS;
+		
+					/* Update the TxLock count so prvUnlockQueue knows to check for
+					tasks waiting for data to become available in the queue. */
+					++( pxQueue->xTxLock );
+				}
+				else
+				{
+					xReturn = errQUEUE_FULL;
+				}
 			}
-			else
-			{
-				xReturn = errQUEUE_FULL;
-			}
+			taskEXIT_CRITICAL();
 		}
-		taskEXIT_CRITICAL();
 
 		if( xReturn == errQUEUE_FULL )
 		{
@@ -435,7 +459,7 @@ signed portBASE_TYPE xQueueSendFromISR( xQueueHandle pxQueue, const void *pvItem
 
 signed portBASE_TYPE xQueueReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait )
 {
-signed portBASE_TYPE xReturn;
+signed portBASE_TYPE xReturn = pdFAIL;
 xTimeOutType xTimeOut;
 
 	/* This function is very similar to xQueueSend().  See comments within
@@ -467,6 +491,13 @@ xTimeOutType xTimeOut;
 					{
 						taskYIELD();
 					}
+
+					if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 )
+					{
+						/* We unblocked but the queue is empty.  We probably
+						timed out. */
+						xReturn = errQUEUE_EMPTY;
+					}
 	
 					vTaskSuspendAll();
 					prvLockQueue( pxQueue );
@@ -475,29 +506,32 @@ xTimeOutType xTimeOut;
 			}
 		}
 	
-		taskENTER_CRITICAL();
+		if( xReturn != errQUEUE_EMPTY )
 		{
-			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+			taskENTER_CRITICAL();
 			{
-				pxQueue->pcReadFrom += pxQueue->uxItemSize;
-				if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+				if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 				{
-					pxQueue->pcReadFrom = pxQueue->pcHead;
+					pxQueue->pcReadFrom += pxQueue->uxItemSize;
+					if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+					{
+						pxQueue->pcReadFrom = pxQueue->pcHead;
+					}
+					--( pxQueue->uxMessagesWaiting );
+					memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+		
+					/* Increment the lock count so prvUnlockQueue knows to check for
+					tasks waiting for space to become available on the queue. */
+					++( pxQueue->xRxLock );
+					xReturn = pdPASS;
 				}
-				--( pxQueue->uxMessagesWaiting );
-				memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
-	
-				/* Increment the lock count so prvUnlockQueue knows to check for
-				tasks waiting for space to become available on the queue. */
-				++( pxQueue->xRxLock );
-				xReturn = pdPASS;
+				else
+				{
+					xReturn = errQUEUE_EMPTY;
+				}
 			}
-			else
-			{
-				xReturn = errQUEUE_EMPTY;
-			}
+			taskEXIT_CRITICAL();
 		}
-		taskEXIT_CRITICAL();
 
 		if( xReturn == errQUEUE_EMPTY )
 		{

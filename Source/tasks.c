@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.1.3 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.2.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -187,6 +187,12 @@ Changes from V4.1.2
 	+ Tasks that block on events with a timeout of portMAX_DELAY are now
 	  blocked indefinitely if configINCLUDE_vTaskSuspend is defined. 
 	  Previously portMAX_DELAY was just the longest block time possible.
+
+Changes from V4.1.3
+
+	+ Very small change made to xTaskCheckForTimeout() as a result of the 
+	SafeRTOS testing.  This corrects the case where the function can return an
+	invalid value - but only in an extremely unlikely scenario.
 */
 
 #include <stdio.h>

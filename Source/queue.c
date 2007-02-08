@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.1.3 - Copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.2.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -64,6 +64,13 @@ Changes from V4.1.2:
 
 	+ BUG FIX:  Removed the call to prvIsQueueEmpty from within xQueueCRReceive
 	  as it exited with interrupts enabled.  Thanks Paul Katz.
+
+Changes from V4.1.3:
+
+	+ Modified xQueueSend() and xQueueReceive() to handle the (very unlikely) 
+	case whereby a task unblocking due to a temporal event can remove/send an 
+	item from/to a queue when a higher priority task is	still blocked on the 
+	queue.  This modification is a result of the SafeRTOS testing.
 */
 
 #include <stdlib.h>

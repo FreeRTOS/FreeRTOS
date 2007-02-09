@@ -62,7 +62,8 @@ CFLAGS= \
 -mcpu=arm7tdmi  \
 -T$(LDSCRIPT) \
 $(DEBUG)  \
-$(OPTIM)
+$(OPTIM) \
+-fomit-frame-pointer
 
 THUMB_FLAGS=-mthumb
 LINKER_FLAGS=-Xlinker -ortosdemo.elf -Xlinker -M -Xlinker -Map=rtosdemo.map

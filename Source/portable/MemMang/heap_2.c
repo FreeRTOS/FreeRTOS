@@ -44,6 +44,11 @@
 #include "task.h"
 
 /* Setup the correct byte alignment mask for the defined byte alignment. */
+
+#if portBYTE_ALIGNMENT == 8
+	#define heapBYTE_ALIGNMENT_MASK ( ( size_t ) 0x0007 )
+#endif
+
 #if portBYTE_ALIGNMENT == 4
 	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0003 )
 #endif

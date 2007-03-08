@@ -250,7 +250,6 @@ static void prvSetupHardware( void )
 	SCU_AHBPeriphReset(__VIC, DISABLE);
 
 	/* Peripheral initialisation. */
-	LCD_Init();
 	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
@@ -396,6 +395,8 @@ portCHAR *pcString;
 	received is passed in as a parameter even though it is available as a file
 	scope variable anyway. */
 	pxLCDQueue = ( xQueueHandle * ) pvParameters;
+
+	LCD_Init();
 
 	for( ;; )    
 	{

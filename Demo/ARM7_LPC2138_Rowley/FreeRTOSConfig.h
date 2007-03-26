@@ -33,7 +33,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include <LPC2138.h>
+#include <LPC21xx.h>
 #define vPortYieldProcessor swi_handler
 
 /* For compatability with the LPC2106 header. */

@@ -81,6 +81,10 @@
 	#include "../../Source/portable/GCC/ARM7_LPC2000/portmacro.h"
 #endif
 
+#ifdef ROWLEY_LPC23xx
+	#include "../../Source/portable/GCC/ARM7_LPC23xx/portmacro.h"
+#endif
+
 #ifdef GCC_MSP430
 	#include "../../Source/portable/GCC/MSP430F449/portmacro.h"
 #endif
@@ -176,6 +180,23 @@
 	#include "..\portable\BCC\16BitDOS\flsh186\prtmacro.h"
     typedef void ( __interrupt __far *pxISR )();
 #endif
+
+#if __GNUC__ && (__AVR32_UC3A0256__ || \
+                 __AVR32_UC3A0512__ || \
+                 __AVR32_UC3A1128__ || \
+                 __AVR32_UC3A1256__ || \
+                 __AVR32_UC3A1512__)
+	#include "portmacro.h"
+#endif
+
+#if __ICCAVR32__ && (__AT32UC3A0256__ || \
+                     __AT32UC3A0512__ || \
+                     __AT32UC3A1128__ || \
+                     __AT32UC3A1256__ || \
+                     __AT32UC3A1512__)
+	#include "portmacro.h"
+#endif
+
 /*
  * Setup the stack of a new task so it is ready to be placed under the
  * scheduler control.  The registers have to be placed on the stack in

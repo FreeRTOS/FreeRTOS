@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -56,140 +54,170 @@
 #endif
 
 
-/*! \name General GPIO API defines
- * These values are returned by the GPIO API:
+/*! \name Return Values of the GPIO API
  */
 //! @{
-#define GPIO_SUCCESS            0 //!< Function successfully completed
-#define GPIO_FAILURE           -1 //!< Function did not successfully complete for some unspecified reason
-#define GPIO_INVALID_ARGUMENT   1 //!< Input paramters are out of range
+#define GPIO_SUCCESS            0 //!< Function successfully completed.
+#define GPIO_INVALID_ARGUMENT   1 //!< Input parameters are out of range.
 //! @}
 
 
-/*! \name Interrupt configuration defines
- * Configure the method used to trigger the interrupt:
+/*! \name Interrupt Trigger Modes
  */
 //! @{
-#define GPIO_RISING_EDGE      1 //!< configure IT upon Rising Edge
-#define GPIO_FALLING_EDGE     2 //!< configure IT upon Falling Edge
-#define GPIO_INPUT_CHANGE     3 //!< configure IT upon Pin Change
+#define GPIO_PIN_CHANGE         0 //!< Interrupt triggered upon pin change.
+#define GPIO_RISING_EDGE        1 //!< Interrupt triggered upon rising edge.
+#define GPIO_FALLING_EDGE       2 //!< Interrupt triggered upon falling edge.
 //! @}
 
 
-/*!
- * A type definitions of pins and module connectivity.
- * First column is the pin number, the second is gpio connectivity.
- */
-typedef char avr32_gpiomap_t[][2];
+//! A type definition of pins and modules connectivity.
+typedef struct
+{
+  unsigned char pin;              //!< Module pin.
+  unsigned char function;         //!< Module function.
+} gpio_map_t[];
 
 
-/*!
- * \brief Enable a module pin for a given set of pins and respective modules.
+/*! \brief Enables specific module modes for a set of pins.
  *
- * \param gpiomap A list of pins and pio connectivity
- * \param size The number of pins in \a gpiomap
- * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT
+ * \param gpiomap The pin map.
+ * \param size The number of pins in \a gpiomap.
+ *
+ * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT.
  */
-extern int gpio_enable_module(avr32_gpiomap_t gpiomap, int size);
+extern int gpio_enable_module(const gpio_map_t gpiomap, unsigned int size);
 
-/*!
- * \brief Enable a special module (function) for a pin (pin number).
+/*! \brief Enables a specific module mode for a pin.
  *
- * \param pin The pin number
- * \param function The pin function
- * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT
+ * \param pin The pin number.
+ * \param function The pin function.
+ *
+ * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT.
  */
-extern int gpio_enable_module_pin(int pin, int function);
+extern int gpio_enable_module_pin(unsigned int pin, unsigned int function);
 
-/*!
- * \brief Enable pins of a module according gpiomap.
+/*! \brief Enables the GPIO mode of a set of pins.
  *
- * \param gpiomap The pin map
- * \param size The number of pins in \a gpiomap
+ * \param gpiomap The pin map.
+ * \param size The number of pins in \a gpiomap.
  */
-extern void gpio_enable_gpio(avr32_gpiomap_t gpiomap, int size);
+extern void gpio_enable_gpio(const gpio_map_t gpiomap, unsigned int size);
 
-/*!
- * \brief Enable the GPIO module to control the pin.
+/*! \brief Enables the GPIO mode of a pin.
  *
- * \param pin The pin number
+ * \param pin The pin number.
  */
-extern void gpio_enable_gpio_pin(int pin);
+extern void gpio_enable_gpio_pin(unsigned int pin);
 
-/*!
- * \brief Enable the GPIO glitch filter.
+/*! \brief Enables the open-drain mode of a pin.
  *
- * When the glitch filter is enabled, a
- * glitch with duration of less than 1 clock cycle is automatically rejected, while a pulse with duration
- * of 2 clock cycles or more is accepted. For pulse durations between 1 clock cycle and 2 clock
- * cycles, the pulse may or may not be taken into account, depending on the precise timing of its
- * occurrence. Thus for a pulse to be guaranteed visible it must exceed 2 clock cycles, whereas for
- * a glitch to be reliably filtered out, its duration must not exceed 1 clock cycle. The filter introduces
- * 2 clock cycles latency.
- *
- * \param pin The pin number
- * \return \ref GPIO_SUCCESS
+ * \param pin The pin number.
  */
-extern void gpio_enable_gpio_glitch_filter(int pin);
+extern void gpio_enable_pin_open_drain(unsigned int pin);
 
-/*!
- * \brief Disable the GPIO glitch filter.
+/*! \brief Disables the open-drain mode of a pin.
  *
- * \param pin The pin number
+ * \param pin The pin number.
  */
-extern void gpio_disable_gpio_glitch_filter(int pin);
+extern void gpio_disable_pin_open_drain(unsigned int pin);
 
-/*!
- * \brief Return the pin value
+/*! \brief Enables the pull-up resistor of a pin.
  *
- * \param pin The pin number
- * \return pin value
+ * \param pin The pin number.
  */
-extern int gpio_pin_value(int pin);
+extern void gpio_enable_pin_pull_up(unsigned int pin);
 
-/*!
- * \brief Disable the GPIO module to control a set of pins according to gpiomap.
+/*! \brief Disables the pull-up resistor of a pin.
  *
- * \param gpiomap The pin map
- * \param size The number of pins in \a gpiomap
+ * \param pin The pin number.
  */
-extern void gpio_disable_module(avr32_gpiomap_t gpiomap, int size);
+extern void gpio_disable_pin_pull_up(unsigned int pin);
 
-/*!
- * \brief Disable the GPIO module to control the pin.
+/*! \brief Returns the value of a pin.
  *
- * \param pin The pin number
+ * \param pin The pin number.
+ *
+ * \return The pin value.
  */
-extern void gpio_disable_gpio_pin(int pin);
+extern int gpio_get_pin_value(unsigned int pin);
 
-/*!
- * \brief Configure a pin to generate IT
+/*! \brief Returns the output value set for a GPIO pin.
  *
- * \param pin   GPIO pin number to configure.
- * \param level level to configure (\ref GPIO_RISING_EDGE, \ref GPIO_FALLING_EDGE, \ref GPIO_INPUT_CHANGE).
+ * \param pin The pin number.
+ *
+ * \return The pin output value.
  */
-extern void gpio_cfg_int_gpio_pin(int pin, int level);
+extern int gpio_get_gpio_pin_output_value(unsigned int pin);
 
-/*!
- * \brief Drive a gpio pin value to 1.
+/*! \brief Drives a GPIO pin to 1.
  *
- * \param pin The pin number
+ * \param pin The pin number.
  */
-extern void gpio_set_gpio_pin(int pin);
+extern void gpio_set_gpio_pin(unsigned int pin);
 
-/*!
- * \brief Drive a gpio pin value to 0.
+/*! \brief Drives a GPIO pin to 0.
  *
- * \param pin The pin number
+ * \param pin The pin number.
  */
-extern void gpio_clr_gpio_pin(int pin);
+extern void gpio_clr_gpio_pin(unsigned int pin);
 
-/*!
- * \brief This function toggle a gpio pin value.
+/*! \brief Toggles a GPIO pin.
  *
- * \param pin The pin number
+ * \param pin The pin number.
  */
-extern void gpio_tgl_gpio_pin(int pin);
+extern void gpio_tgl_gpio_pin(unsigned int pin);
+
+/*! \brief Enables the glitch filter of a pin.
+ *
+ * When the glitch filter is enabled, a glitch with duration of less than 1
+ * clock cycle is automatically rejected, while a pulse with duration of 2 clock
+ * cycles or more is accepted. For pulse durations between 1 clock cycle and 2
+ * clock cycles, the pulse may or may not be taken into account, depending on
+ * the precise timing of its occurrence. Thus for a pulse to be guaranteed
+ * visible it must exceed 2 clock cycles, whereas for a glitch to be reliably
+ * filtered out, its duration must not exceed 1 clock cycle. The filter
+ * introduces 2 clock cycles latency.
+ *
+ * \param pin The pin number.
+ */
+extern void gpio_enable_pin_glitch_filter(unsigned int pin);
+
+/*! \brief Disables the glitch filter of a pin.
+ *
+ * \param pin The pin number.
+ */
+extern void gpio_disable_pin_glitch_filter(unsigned int pin);
+
+/*! \brief Enables the interrupt of a pin with the specified settings.
+ *
+ * \param pin The pin number.
+ * \param mode The trigger mode (\ref GPIO_PIN_CHANGE, \ref GPIO_RISING_EDGE or
+ *             \ref GPIO_FALLING_EDGE).
+ *
+ * \return \ref GPIO_SUCCESS or \ref GPIO_INVALID_ARGUMENT.
+ */
+extern int gpio_enable_pin_interrupt(unsigned int pin, unsigned int mode);
+
+/*! \brief Disables the interrupt of a pin.
+ *
+ * \param pin The pin number.
+ */
+extern void gpio_disable_pin_interrupt(unsigned int pin);
+
+/*! \brief Gets the interrupt flag of a pin.
+ *
+ * \param pin The pin number.
+ *
+ * \return The pin interrupt flag.
+ */
+extern int gpio_get_pin_interrupt_flag(unsigned int pin);
+
+/*! \brief Clears the interrupt flag of a pin.
+ *
+ * \param pin The pin number.
+ */
+extern void gpio_clear_pin_interrupt_flag(unsigned int pin);
 
 
 #endif  // _GPIO_H_

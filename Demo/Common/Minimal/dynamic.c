@@ -110,8 +110,8 @@ static portTASK_FUNCTION_PROTO( vQueueReceiveWhenSuspendedTask, pvParameters );
 static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
-#define priSTACK_SIZE				( ( unsigned portSHORT ) 128 )
-#define priSLEEP_TIME				( ( portTickType ) 100 )
+#define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
+#define priSLEEP_TIME				( ( portTickType ) 128 )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( unsigned portLONG ) 0xff )
 #define priNO_BLOCK					( ( portTickType ) 0 )

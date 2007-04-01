@@ -110,7 +110,7 @@ unsigned portBASE_TYPE *puxPriority;
 	puxPriority = ( unsigned portBASE_TYPE * ) pvPortMalloc( sizeof( unsigned portBASE_TYPE ) );
 	*puxPriority = uxPriority;
 
-	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
+	xTaskCreate( vCreateTasks, ( signed portCHAR * ) "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
 
 	/* Record the number of tasks that are running now so we know if any of the
 	suicidal tasks have failed to be killed. */
@@ -177,11 +177,11 @@ unsigned portBASE_TYPE uxPriority;
 		/* Just loop round, delaying then creating the four suicidal tasks. */
 		vTaskDelay( xDelay );
 
-		xTaskCreate( vSuicidalTask, "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask1 );
-		xTaskCreate( vSuicidalTask, "SUICID2", deathSTACK_SIZE, &xCreatedTask1, uxPriority, NULL );
+		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask1 );
+		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID2", deathSTACK_SIZE, &xCreatedTask1, uxPriority, NULL );
 
-		xTaskCreate( vSuicidalTask, "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask2 );
-		xTaskCreate( vSuicidalTask, "SUICID2", deathSTACK_SIZE, &xCreatedTask2, uxPriority, NULL );
+		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask2 );
+		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID2", deathSTACK_SIZE, &xCreatedTask2, uxPriority, NULL );
 
 		++usCreationCount;
 	}

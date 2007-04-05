@@ -74,7 +74,7 @@ struct arp_hdr {
   u16_t sipaddr[2];
   struct uip_eth_addr dhwaddr;
   u16_t dipaddr[2];
-};
+} PACK_STRUCT_END;
 
 struct ethip_hdr {
   struct uip_eth_hdr ethhdr;
@@ -89,7 +89,7 @@ struct ethip_hdr {
   u16_t ipchksum;
   u16_t srcipaddr[2],
     destipaddr[2];
-};
+} PACK_STRUCT_END;
 
 #define ARP_REQUEST 1
 #define ARP_REPLY   2
@@ -230,7 +230,7 @@ uip_arp_update(u16_t *ipaddr, struct uip_eth_addr *ethaddr)
  * variable uip_len.
  */
 /*-----------------------------------------------------------------------------------*/
-#if 0
+#if 1
 void
 uip_arp_ipin(void)
 {

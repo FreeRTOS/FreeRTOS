@@ -107,7 +107,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>4.40A</state>
+          <state>4.41A</state>
         </option>
         <option>
           <name>GeneralMisraRules</name>
@@ -132,7 +132,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -140,6 +140,8 @@
           <state>STR91X_IAR</state>
           <state>DEBUG</state>
           <state>DONT_RUN_TASK_IN_ARM_MODE_</state>
+          <state>PACK_STRUCT_END=</state>
+          <state>ALIGN_STRUCT_END=</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -350,6 +352,11 @@
         <option>
           <name>CCStdIncludePath</name>
           <state>$TOOLKIT_DIR$\INC\</state>
+        </option>
+        <option>
+          <name>CCInlineThreshold</name>
+          <version>0</version>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -921,7 +928,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tptinl8n.h</state>
+          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
@@ -958,7 +965,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>13</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -966,6 +973,8 @@
           <state>STR91X_IAR</state>
           <state>DEBUG</state>
           <state>_RUN_TASK_IN_ARM_MODE_</state>
+          <state>PACK_STRUCT_END=</state>
+          <state>ALIGN_STRUCT_END=</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1176,6 +1185,11 @@
         <option>
           <name>CCStdIncludePath</name>
           <state>$TOOLKIT_DIR$\INC\</state>
+        </option>
+        <option>
+          <name>CCInlineThreshold</name>
+          <version>0</version>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -1711,7 +1725,7 @@
         <settings>
           <name>ICCARM</name>
           <data>
-            <version>13</version>
+            <version>14</version>
             <wantNonLocal>1</wantNonLocal>
             <debug>1</debug>
             <option>
@@ -1932,6 +1946,11 @@
             <option>
               <name>CCStdIncludePath</name>
               <state>$TOOLKIT_DIR$\INC\</state>
+            </option>
+            <option>
+              <name>CCInlineThreshold</name>
+              <version>0</version>
+              <state>1</state>
             </option>
           </data>
         </settings>
@@ -1941,7 +1960,7 @@
         <settings>
           <name>ICCARM</name>
           <data>
-            <version>13</version>
+            <version>14</version>
             <wantNonLocal>1</wantNonLocal>
             <debug>1</debug>
             <option>
@@ -2162,6 +2181,11 @@
             <option>
               <name>CCStdIncludePath</name>
               <state>$TOOLKIT_DIR$\INC\</state>
+            </option>
+            <option>
+              <name>CCInlineThreshold</name>
+              <version>0</version>
+              <state>1</state>
             </option>
           </data>
         </settings>

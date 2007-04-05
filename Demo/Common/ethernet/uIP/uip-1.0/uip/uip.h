@@ -1417,7 +1417,7 @@ struct uip_tcpip_hdr {
   u16_t tcpchksum;
   u8_t urgp[2];
   u8_t optdata[4];
-};
+} PACK_STRUCT_END;
 
 /* The ICMP and IP headers. */
 struct uip_icmpip_hdr {
@@ -1453,7 +1453,7 @@ struct uip_icmpip_hdr {
   u8_t icmp6data[16];
   u8_t options[1];
 #endif /* !UIP_CONF_IPV6 */
-};
+} PACK_STRUCT_END;
 
 
 /* The UDP and IP headers. */
@@ -1485,7 +1485,7 @@ struct uip_udpip_hdr {
     destport;
   u16_t udplen;
   u16_t udpchksum;
-};
+} PACK_STRUCT_END;
 
 
 
@@ -1541,7 +1541,7 @@ extern uip_ipaddr_t uip_hostaddr, uip_netmask, uip_draddr;
  */
 struct uip_eth_addr {
   u8_t addr[6];
-};
+} PACK_STRUCT_END;
 
 /**
  * Calculate the Internet checksum over a buffer.

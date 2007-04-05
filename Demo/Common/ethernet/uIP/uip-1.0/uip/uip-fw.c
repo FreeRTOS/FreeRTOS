@@ -93,7 +93,7 @@ struct tcpip_hdr {
   u16_t tcpchksum;
   u8_t urgp[2];
   u8_t optdata[4];
-};
+} PACK_STRUCT_END;
 
 struct icmpip_hdr {
   /* IP header. */
@@ -112,7 +112,7 @@ struct icmpip_hdr {
   u16_t icmpchksum;
   u16_t id, seqno;
   u8_t payload[1];
-};
+} PACK_STRUCT_END;
 
 /* ICMP ECHO. */
 #define ICMP_ECHO 8

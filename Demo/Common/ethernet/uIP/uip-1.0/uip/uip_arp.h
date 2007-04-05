@@ -64,7 +64,7 @@ struct uip_eth_hdr {
   struct uip_eth_addr dest;
   struct uip_eth_addr src;
   u16_t type;
-};
+}PACK_STRUCT_END;
 
 #define UIP_ETHTYPE_ARP 0x0806
 #define UIP_ETHTYPE_IP  0x0800
@@ -80,8 +80,8 @@ void uip_arp_init(void);
    inserts a new mapping if none exists. The function assumes that an
    IP packet with an Ethernet header is present in the uip_buf buffer
    and that the length of the packet is in the uip_len variable. */
-/*void uip_arp_ipin(void);*/
-#define uip_arp_ipin()
+void uip_arp_ipin(void);
+//#define uip_arp_ipin()
 
 /* The uip_arp_arpin() should be called when an ARP packet is received
    by the Ethernet driver. This function also assumes that the

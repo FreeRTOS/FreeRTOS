@@ -209,6 +209,7 @@ extern unsigned portSHORT usCalcMinStackSize;
 		portDISABLE_INTERRUPTS();									\
 																	\
 		_Pragma("asm")												\
+			dupmodoff												\
 			;														\
 			; Push the relevant SFR's onto the task's stack			\
 			;														\
@@ -282,6 +283,7 @@ extern unsigned portSHORT usCalcMinStackSize;
 			movff	pxCurrentTCB+1,FSR0H							\
 			movff	FSR2L,POSTINC0									\
 			movff	FSR2H,POSTINC0									\
+			dupmodon												\
 		_Pragma("asmend")											\
 	} while(0)
 
@@ -294,6 +296,7 @@ extern unsigned portSHORT usCalcMinStackSize;
 	do																\
 	{																\
 		_Pragma("asm")												\
+			dupmodoff												\
 			;														\
 			; Set FSR0 to point to pxCurrentTCB->pxTopOfStack.		\
 			;														\
@@ -393,6 +396,7 @@ extern unsigned portSHORT usCalcMinStackSize;
 			movff	PREINC2,WREG									\
 			movff	PREINC2,STATUS									\
 			return	0		; Return without affecting interrupts	\
+			dupmodon												\
 		_Pragma("asmend")											\
 	} while(0)
 
@@ -406,7 +410,9 @@ extern void vPortYield( void );
 #define portYIELD()				vPortYield()
 
 #define portNOP()	_Pragma("asm")									\
+						dupmodoff									\
 						nop											\
+						dupmodon									\
 					_Pragma("asmend")
 
 /*-----------------------------------------------------------*/

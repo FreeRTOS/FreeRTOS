@@ -34,6 +34,10 @@
 */
 
 /*
+Changes from V4.2.1
+	+ CallReturn Depth increased from 10 to 12 levels to accomodate wizC/fedC V14.
+	+CodeOptions added to disable the wizC/fedC optimiser within asm
+
 Changes from V3.2.1
 	+ CallReturn Depth increased from 8 to 10 levels to accomodate wizC/fedC V12.
 	
@@ -92,7 +96,7 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 	#define portSTACK_CALLRETURN_ENTRY_SIZE	(  2 )
 #endif
 
-#define portSTACK_MINIMAL_CALLRETURN_DEPTH	( 10 )
+#define portSTACK_MINIMAL_CALLRETURN_DEPTH	( 12 )
 #define portSTACK_OTHER_BYTES				( 20 )
 
 unsigned portSHORT usCalcMinStackSize		= 0;
@@ -121,8 +125,10 @@ unsigned portCHAR ucScratch;
 	 * We do this here already to avoid W-register conflicts.
 	 */
 	_Pragma("asm")
+		dupmodoff
 		movlw	OVERHEADPAGE0-LOCOPTSIZE+MAXLOCOPTSIZE
 		movwf	PRODL,ACCESS		; PRODL is used as temp register
+		dupmodon
 	_Pragma("asmend")
 	ucScratch = PRODL;
 
@@ -214,9 +220,11 @@ unsigned portSHORT usPortCALCULATE_MINIMAL_STACK_SIZE( void )
 	 * Fetch the size of compiler's scratchspace.
 	 */
 	_Pragma("asm")
+		dupmodoff
 		movlw	OVERHEADPAGE0-LOCOPTSIZE+MAXLOCOPTSIZE
 		movlb	usCalcMinStackSize>>8
 		movwf	usCalcMinStackSize,BANKED
+		dupmodon
 	_Pragma("asmend")
 
 	/*

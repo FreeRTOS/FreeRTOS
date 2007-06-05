@@ -1,0 +1,55 @@
+### uVision2 Project, (C) Keil Software
+### Do not modify !
+
+ cExt (*.c)
+ aExt (*.s*; *.src; *.a*)
+ oExt (*.obj)
+ lExt (*.lib)
+ tExt (*.txt; *.h; *.inc)
+ pExt (*.plm)
+ CppX (*.cpp)
+ DaveTm { 0,0,0,0,0,0,0,0 }
+
+Target (FreeRTOS_Demo), 0x0004 // Tools: 'ARM-ADS'
+GRPOPT 1,(Demo_Source),0,0,0
+GRPOPT 2,(Libraries),0,0,0
+GRPOPT 3,(RTOS_Source),0,0,0
+
+OPTFFF 1,1,1,0,0,0,0,0,<..\Common\Minimal\BlockQ.c><BlockQ.c> 
+OPTFFF 1,2,1,0,0,0,0,0,<..\Common\Minimal\blocktim.c><blocktim.c> 
+OPTFFF 1,3,1,0,0,0,0,0,<..\Common\Minimal\death.c><death.c> 
+OPTFFF 1,4,1,0,0,0,0,0,<..\Common\Minimal\integer.c><integer.c> 
+OPTFFF 1,5,1,0,0,0,0,0,<.\main.c><main.c> 
+OPTFFF 1,6,1,0,0,0,0,0,<.\ParTest\ParTest.c><ParTest.c> 
+OPTFFF 1,7,1,0,0,0,0,0,<..\Common\Minimal\PollQ.c><PollQ.c> 
+OPTFFF 1,8,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c> 
+OPTFFF 1,9,2,570425344,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S> 
+OPTFFF 1,10,1,0,0,0,0,0,<.\timertest.c><timertest.c> 
+OPTFFF 1,11,5,0,0,0,0,0,<.\FreeRTOSConfig.h><FreeRTOSConfig.h> 
+OPTFFF 2,12,4,0,0,0,0,0,<.\LuminaryDrivers\driverlib.lib><driverlib.lib> 
+OPTFFF 2,13,1,0,0,0,0,0,<.\LuminaryDrivers\osram128x64x4.c><osram128x64x4.c> 
+OPTFFF 3,14,1,0,0,0,0,0,<..\..\Source\tasks.c><tasks.c> 
+OPTFFF 3,15,1,0,0,0,0,0,<..\..\Source\list.c><list.c> 
+OPTFFF 3,16,1,0,0,0,0,0,<..\..\Source\queue.c><queue.c> 
+OPTFFF 3,17,1,0,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 
+OPTFFF 3,18,1,0,0,0,0,0,<..\..\Source\portable\MemMang\heap_2.c><heap_2.c> 
+
+
+TARGOPT 1, (FreeRTOS_Demo)
+ ADSCLK=6000000
+  OPTTT 1,1,1,0
+  OPTHX 1,65535,0,0,0
+  OPTLX 79,66,8,<.\rvmdk\>
+  OPTOX 16
+  OPTLT 1,1,1,0,1,1,0,1,0,0,0,0
+  OPTXL 1,1,1,1,1,1,1,0,0
+  OPTFL 1,0,1
+  OPTAX 255
+  OPTBL 0,(Data Sheet)<DATASHTS\Luminary\LM3S2965.PDF>
+  OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S2965)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S2965)
+  OPTDBG 48126,3,()()()()()()()()()() (BIN\lmidk-agdi.dll)()()()
+  OPTDF 0x0
+  OPTLE <>
+  OPTLC <>
+EndOpt
+

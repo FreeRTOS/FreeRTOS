@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -298,9 +298,7 @@ portCHAR *pcBuffer;
 		/* Copy the headers into the Tx buffer.  These will be in the uIP buffer. */
 		pcBuffer = ( portCHAR * ) xTxDescriptors[ uxTxBufferIndex ].addr;
 		memcpy( ( void * ) pcBuffer, ( void * ) uip_buf, emacTOTAL_FRAME_HEADER_SIZE );
-
-		/* If there is room, also copy in the application data if any. */
-		if( ( uip_len > emacTOTAL_FRAME_HEADER_SIZE ) && ( uip_len <= ( ETH_TX_BUFFER_SIZE - emacTOTAL_FRAME_HEADER_SIZE ) ) )
+		if( uip_len > emacTOTAL_FRAME_HEADER_SIZE )
 		{
 			memcpy( ( void * ) &( pcBuffer[ emacTOTAL_FRAME_HEADER_SIZE ] ), ( void * ) uip_appdata, ( uip_len - emacTOTAL_FRAME_HEADER_SIZE ) );
 		}

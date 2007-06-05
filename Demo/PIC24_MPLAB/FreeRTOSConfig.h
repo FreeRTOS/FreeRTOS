@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -76,5 +76,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
+
+#define configKERNEL_INTERRUPT_PRIORITY	0x01
 
 #endif /* FREERTOS_CONFIG_H */

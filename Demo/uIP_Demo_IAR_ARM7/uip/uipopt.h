@@ -140,7 +140,7 @@ typedef unsigned short uip_stats_t;
 #define UIP_IPADDR2     218U   /**< The third octet of the IP address of
 			       this uIP node, if UIP_FIXEDADDR is
 			       1. \hideinitializer */
-#define UIP_IPADDR3     204U  /**< The fourth octet of the IP address of
+#define UIP_IPADDR3     11U  /**< The fourth octet of the IP address of
 			       this uIP node, if UIP_FIXEDADDR is
 			       1. \hideinitializer */
 
@@ -426,7 +426,7 @@ typedef unsigned short uip_stats_t;
  *
  * \hideinitializer
  */
-#define UIP_BUFSIZE     2048
+#define UIP_BUFSIZE     1480
 
 
 /**

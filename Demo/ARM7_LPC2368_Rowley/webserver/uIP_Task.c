@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -62,7 +62,7 @@
 #define uipIP_ADDR0		172
 #define uipIP_ADDR1		25
 #define uipIP_ADDR2		218
-#define uipIP_ADDR3		9	
+#define uipIP_ADDR3		10	
 
 /* How long to wait before attempting to connect the MAC again. */
 #define uipINIT_WAIT    100
@@ -224,9 +224,7 @@ static void prvENET_Send(void)
 
     /* Copy the header into the Tx buffer. */
     CopyToFrame_EMAC( uip_buf, uipTOTAL_FRAME_HEADER_SIZE );
-
-    /* If there is room, also copy in the application data if any. */
-    if( ( uip_len > uipTOTAL_FRAME_HEADER_SIZE ) && ( uip_len <= ( ETH_FRAG_SIZE - uipTOTAL_FRAME_HEADER_SIZE - 1 ) ) )
+    if( uip_len > uipTOTAL_FRAME_HEADER_SIZE )
     {
         CopyToFrame_EMAC( uip_appdata, ( uip_len - uipTOTAL_FRAME_HEADER_SIZE ) );
     }

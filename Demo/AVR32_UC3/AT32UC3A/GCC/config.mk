@@ -127,7 +127,7 @@ OPTIMIZATION = -O0 -ffunction-sections -fdata-sections
 CPP_EXTRA_FLAGS =
 
 # Extra flags to use when compiling
-C_EXTRA_FLAGS =
+C_EXTRA_FLAGS = -DGCC_AVR32_PORT
 
 # Extra flags to use when assembling
 AS_EXTRA_FLAGS =

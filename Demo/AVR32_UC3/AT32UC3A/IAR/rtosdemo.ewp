@@ -157,6 +157,7 @@
         <option>
           <name>CCDefines</name>
           <state>BOARD=EVK1100</state>
+          <state>IAR_AVR32_PORT</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -980,6 +981,7 @@
         <option>
           <name>CCDefines</name>
           <state>BOARD=EVK1100</state>
+          <state>IAR_AVR32_PORT</state>
         </option>
         <option>
           <name>CCPreprocFile</name>

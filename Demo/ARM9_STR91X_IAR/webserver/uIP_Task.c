@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -255,9 +255,7 @@ static unsigned portCHAR *pcTxData;
 	{
 		/* Copy the header into the Tx buffer. */
 		memcpy( ( void * ) pcTxData, ( void * ) uip_buf, uipTOTAL_FRAME_HEADER_SIZE );
-
-		/* If there is room, also copy in the application data if any. */
-		if( ( uip_len > uipTOTAL_FRAME_HEADER_SIZE ) && ( uip_len <= ( ENET_BUFFER_SIZE - uipTOTAL_FRAME_HEADER_SIZE ) ) )
+		if( uip_len > uipTOTAL_FRAME_HEADER_SIZE )
 		{
 			memcpy( ( void * ) &( pcTxData[ uipTOTAL_FRAME_HEADER_SIZE ] ), ( void * ) uip_appdata, ( uip_len - uipTOTAL_FRAME_HEADER_SIZE ) );
 		}

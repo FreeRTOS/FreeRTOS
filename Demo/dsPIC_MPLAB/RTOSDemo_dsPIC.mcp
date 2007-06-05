@@ -36,6 +36,8 @@ file_016=no
 file_017=no
 file_018=no
 file_019=no
+file_020=no
+file_021=no
 [FILE_INFO]
 file_000=main.c
 file_001=..\..\source\list.c
@@ -51,12 +53,14 @@ file_010=..\Common\Minimal\blocktim.c
 file_011=..\Common\Minimal\integer.c
 file_012=..\Common\Minimal\comtest.c
 file_013=serial\serial.c
-file_014=..\..\source\include\semphr.h
-file_015=..\..\source\include\task.h
-file_016=..\..\source\include\croutine.h
-file_017=..\..\source\include\queue.h
-file_018=FreeRTOSConfig.h
-file_019=p33FJ256GP710.gld
+file_014=timertest.c
+file_015=lcd.c
+file_016=..\..\source\include\semphr.h
+file_017=..\..\source\include\task.h
+file_018=..\..\source\include\croutine.h
+file_019=..\..\source\include\queue.h
+file_020=FreeRTOSConfig.h
+file_021=p33FJ256GP710.gld
 [SUITE_INFO]
 suite_guid={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 suite_state=
@@ -65,3 +69,7 @@ TS{7D9C6ECE-785D-44CB-BA22-17BF2E119622}=-g
 TS{25AC22BD-2378-4FDB-BFB6-7345A15512D3}=-g -Wall -DMPLAB_DSPIC_PORT -O2 -fomit-frame-pointer -fno-schedule-insns -fno-schedule-insns2
 TS{7DAC9A1D-4C45-45D6-B25A-D117C74E8F5A}=--defsym=__ICD2RAM=1 -Map="$(TARGETBASE).map" -o"$(TARGETBASE).$(TARGETSUFFIX)"
 TS{509E5861-1E2A-483B-8B6B-CA8DB7F2DD78}=
+[INSTRUMENTED_TRACE]
+enable=0
+transport=0
+format=0

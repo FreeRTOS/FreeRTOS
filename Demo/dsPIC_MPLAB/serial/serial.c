@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -116,8 +116,8 @@ portCHAR cChar;
 
 	IFS1bits.U2RXIF = serCLEAR_FLAG;
 	IFS1bits.U2TXIF = serCLEAR_FLAG;
-	IPC7bits.U2RXIP = portKERNEL_INTERRUPT_PRIORITY;
-	IPC7bits.U2TXIP = portKERNEL_INTERRUPT_PRIORITY;
+	IPC7bits.U2RXIP = configKERNEL_INTERRUPT_PRIORITY;
+	IPC7bits.U2TXIP = configKERNEL_INTERRUPT_PRIORITY;
 	IEC1bits.U2TXIE = serINTERRUPT_ENABLE;
 	IEC1bits.U2RXIE = serINTERRUPT_ENABLE;
 
@@ -179,10 +179,7 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
-volatile short s = 0;
-char c[80] = {0};
-
-void __attribute__((__interrupt__)) _U2RXInterrupt( void )
+void __attribute__((__interrupt__, auto_psv)) _U2RXInterrupt( void )
 {
 portCHAR cChar;
 portBASE_TYPE xYieldRequired = pdFALSE;
@@ -204,7 +201,7 @@ portBASE_TYPE xYieldRequired = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void __attribute__((__interrupt__)) _U2TXInterrupt( void )
+void __attribute__((__interrupt__, auto_psv)) _U2TXInterrupt( void )
 {
 signed portCHAR cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;

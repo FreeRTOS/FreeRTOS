@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -36,40 +36,42 @@
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the standard demo application tasks.
- * In addition to the standard demo tasks, the following tasks are defined
- * within this file:
- * 
- * "Register test" tasks - These tasks first set all the general purpose 
- * registers to a known value (with each register containing a different value)
- * then test each general purpose register to ensure it still contains the
- * set value.  There are two register test tasks, with different values being
- * used by each.  The register test tasks will be preempted frequently due to
- * their low priority.  Setting then testing the value of each register in this
- * manner ensures the context of the tasks is being correctly saved and then
- * restored as the preemptive context switches occur.  An error is flagged
- * should any register be found to contain an unexpected value.  In addition
- * the register test tasks maintain a count of the number of times they cycle, 
- * so an error can also be flagged should the cycle count not increment as
- * expected (indicating the the tasks are not executing at all).
+ * In addition to the standard demo tasks, the following tasks and tests are
+ * defined and/or created within this file:
  *
+ * "Fast Interrupt Test" - A high frequency periodic interrupt is generated
+ * using a free running timer to demonstrate the use of the 
+ * configKERNEL_INTERRUPT_PRIORITY configuration constant.  The interrupt 
+ * service routine measures the number of processor clocks that occur between
+ * each interrupt - and in so doing measures the jitter in the interrupt 
+ * timing.  The maximum measured jitter time is latched in the usMaxJitter 
+ * variable, and displayed on the LCD by the 'Check' as described below.  
+ * The fast interrupt is configured and handled in the timer_test.c source 
+ * file.
+ *
+ * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
+ * is permitted to access the LCD directly.  Other tasks wishing to write a
+ * message to the LCD send the message on a queue to the LCD task instead of 
+ * accessing the LCD themselves.  The LCD task just blocks on the queue waiting 
+ * for messages - waking and displaying the messages as they arrive.  The LCD
+ * task is defined in lcd.c.  
+ * 
  * "Check" task -  This only executes every three seconds but has the highest 
  * priority so is guaranteed to get processor time.  Its main function is to 
- * check that all the other tasks are still operational.  Each task maintains a 
- * unique count that is incremented each time the task successfully completes 
- * its function.  Should any error occur within such a task the count is 
- * permanently halted.  The check task inspects the count of each task to 
- * ensure it has changed since the last time the check task executed.  If all 
- * the count variables have changed all the tasks are still executing error 
- * free, and the check task toggles the onboard LED.  Should any task contain 
- * an error at any time check task cycle frequency is increased to 500ms, 
- * causing the LED toggle rate to increase from 3 seconds to 500ms and in so
- * doing providing visual feedback that an error has occurred.
- *
+ * check that all the standard demo tasks are still operational.  Should any
+ * unexpected behaviour within a demo task be discovered the 'check' task will
+ * write "FAIL #n" to the LCD (via the LCD task).  If all the demo tasks are 
+ * executing with their expected behaviour then the check task writes the max
+ * jitter time to the LCD (again via the LCD task), as described above.
  */
+
+/* Standard includes. */
+#include <stdio.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 #include "croutine.h"
 
 /* Demo application includes. */
@@ -79,36 +81,45 @@
 #include "integer.h"
 #include "comtest2.h"
 #include "partest.h"
+#include "lcd.h"
+#include "timertest.h"
 
 /* Demo task priorities. */
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY				( 2 )
 
-/* Delay between check task cycles when an error has/has not been detected. */
-#define mainNO_ERROR_DELAY					( ( portTickType ) 3000 / portTICK_RATE_MS )
-#define mainERROR_DELAY						( ( portTickType ) 500 / portTICK_RATE_MS )
+/* The check task may require a bit more stack as it calls sprintf(). */
+#define mainCHECK_TAKS_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
+
+/* The execution period of the check task. */
+#define mainCHECK_TASK_PERIOD				( ( portTickType ) 3000 / portTICK_RATE_MS )
 
 /* The number of flash co-routines to create. */
-#define mainNUM_FLASH_COROUTINES			( 3 )
+#define mainNUM_FLASH_COROUTINES			( 5 )
 
 /* Baud rate used by the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE				( 19200 )
 
 /* The LED used by the comtest tasks.  mainCOM_TEST_LED + 1 is also used.
 See the comtest.c file for more information. */
-#define mainCOM_TEST_LED					( 4 )
+#define mainCOM_TEST_LED					( 6 )
 
-/* The LED used by the check task. */
-#define mainCHECK_LED						( 7 )
+/* The frequency at which the "fast interrupt test" interrupt will occur. */
+#define mainTEST_INTERRUPT_FREQUENCY		( 20000 )
+
+/* The number of processor clocks we expect to occur between each "fast
+interrupt test" interrupt. */
+#define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ( configCPU_CLOCK_HZ / mainTEST_INTERRUPT_FREQUENCY )
+
+/* The number of nano seconds between each processor clock. */
+#define mainNS_PER_CLOCK ( ( unsigned portSHORT ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+
+/* Dimension the buffer used to hold the value of the maximum jitter time when
+it is converted to a string. */
+#define mainMAX_STRING_LENGTH				( 20 )
 
 /*-----------------------------------------------------------*/
-
-/*
- * The register test tasks as described at the top of this file. 
- */ 
-void xRegisterTest1( void *pvParameters );
-void xRegisterTest2( void *pvParameters );
 
 /*
  * The check task as described at the top of this file.
@@ -122,13 +133,8 @@ static void prvSetupHardware( void );
 
 /*-----------------------------------------------------------*/
 
-/* Variables used to detect errors within the register test tasks. */
-static volatile unsigned portSHORT usTest1CycleCounter = 0, usTest2CycleCounter = 0;
-static unsigned portSHORT usPreviousTest1Count = 0, usPreviousTest2Count = 0;
-
-/* Set to pdTRUE should an error be detected in any of the standard demo tasks
-or tasks defined within this file. */
-static unsigned portSHORT usErrorDetected = pdFALSE;
+/* The queue used to send messages to the LCD task. */
+static xQueueHandle xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -148,9 +154,14 @@ int main( void )
 	vCreateBlockTimeTasks();
 
 	/* Create the test tasks defined within this file. */
-	xTaskCreate( xRegisterTest1, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &usTest1CycleCounter, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( xRegisterTest2, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &usTest2CycleCounter, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vCheckTask, ( signed portCHAR * ) "Check", mainCHECK_TAKS_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+	/* Start the task that will control the LCD.  This returns the handle
+	to the queue used to write text out to the task. */
+	xLCDQueue = xStartLCDTask();
+
+	/* Start the high frequency interrupt test. */
+	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 
 	/* Finally start the scheduler. */
 	vTaskStartScheduler();
@@ -169,11 +180,23 @@ static void prvSetupHardware( void )
 
 static void vCheckTask( void *pvParameters )
 {
-portTickType xLastExecutionTime;
+/* Used to wake the task at the correct frequency. */
+portTickType xLastExecutionTime; 
 
-/* Start with the no error delay.  The long delay will cause the LED to flash
-slowly. */
-portTickType xDelay = mainNO_ERROR_DELAY;
+/* The maximum jitter time measured by the fast interrupt test. */
+extern unsigned portSHORT usMaxJitter ;
+
+/* Buffer into which the maximum jitter time is written as a string. */
+static portCHAR cStringBuffer[ mainMAX_STRING_LENGTH ];
+
+/* The message that is sent on the queue to the LCD task.  The first
+parameter is the minimum time (in ticks) that the message should be
+left on the LCD without being overwritten.  The second parameter is a pointer
+to the message to display itself. */
+xLCDMessage xMessage = { 0, cStringBuffer };
+
+/* Set to pdTRUE should an error be detected in any of the standard demo tasks. */
+unsigned portSHORT usErrorDetected = pdFALSE;
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -182,235 +205,43 @@ portTickType xDelay = mainNO_ERROR_DELAY;
 	for( ;; )
 	{
 		/* Wait until it is time for the next cycle. */
-		vTaskDelayUntil( &xLastExecutionTime, xDelay );
+		vTaskDelayUntil( &xLastExecutionTime, mainCHECK_TASK_PERIOD );
 
 		/* Has an error been found in any of the standard demo tasks? */
 
 		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 		{
 			usErrorDetected = pdTRUE;
+			sprintf( cStringBuffer, "FAIL #1" );
 		}
 	
 		if( xAreComTestTasksStillRunning() != pdTRUE )
 		{
 			usErrorDetected = pdTRUE;
+			sprintf( cStringBuffer, "FAIL #2" );
 		}
 
 		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			usErrorDetected = pdTRUE;
+			sprintf( cStringBuffer, "FAIL #3" );
 		}
 
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			usErrorDetected = pdTRUE;
+			sprintf( cStringBuffer, "FAIL #4" );
 		}
 
-
-		/* Are the register test tasks still cycling? */
-
-		if( usTest1CycleCounter == usPreviousTest1Count )
+		if( usErrorDetected == pdFALSE )
 		{
-			usErrorDetected = pdTRUE;
+			/* No errors have been discovered, so display the maximum jitter
+			timer discovered by the "fast interrupt test". */
+			sprintf( cStringBuffer, "%dns max jitter", ( portSHORT ) ( usMaxJitter - mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ) * mainNS_PER_CLOCK );
 		}
 
-		if( usTest2CycleCounter == usPreviousTest2Count )
-		{
-			usErrorDetected = pdTRUE;
-		}
-
-		usPreviousTest2Count = usTest2CycleCounter;
-		usPreviousTest1Count = usTest1CycleCounter;
-
-		
-		/* If an error has been detected in any task then the delay will be
-		reduced to increase the cycle rate of this task.  This has the effect
-		of causing the LED to flash much faster giving a visual indication of
-		the error condition. */
-		if( usErrorDetected != pdFALSE )
-		{
-			xDelay = mainERROR_DELAY;
-		}
-
-		/* Finally, toggle the LED before returning to delay to wait for the
-		next cycle. */
-		vParTestToggleLED( mainCHECK_LED );
-	}
-}
-/*-----------------------------------------------------------*/
-
-void xRegisterTest1( void *pvParameters )
-{
-/* This static so as not to use the frame pointer.   They are volatile
-also to avoid it being stored in a register that we clobber during the test. */
-static unsigned portSHORT * volatile pusParameter;
-
-	/* The variable incremented by this task is passed in as the parameter
-	even though it is defined within this file.  This is just to test the
-	parameter passing mechanism. */
-	pusParameter = pvParameters;
-
-	for( ;; )
-	{
-		/* Increment the variable to show this task is still cycling. */
-		( *pusParameter )++;
-
-		/* Set the w registers to known values, then check that each register
-		contains the expected value.  See the explanation at the top of this
-		file for more information. */
-		asm volatile( 	"mov.w	#0x0101, W0		\n"		\
-						"mov.w	#0x0102, W1		\n"		\
-						"mov.w	#0x0103, W2		\n"		\
-						"mov.w	#0x0104, W3		\n"		\
-						"mov.w	#0x0105, W4		\n"		\
-						"mov.w	#0x0106, W5		\n"		\
-						"mov.w	#0x0107, W6		\n"		\
-						"mov.w	#0x0108, W7		\n"		\
-						"mov.w	#0x0109, W8		\n"		\
-						"mov.w	#0x010a, W9		\n"		\
-						"mov.w	#0x010b, W10	\n"		\
-						"mov.w	#0x010c, W11	\n"		\
-						"mov.w	#0x010d, W12	\n"		\
-						"mov.w	#0x010e, W13	\n"		\
-						"mov.w	#0x010f, W14	\n"		\
-						"sub	#0x0101, W0		\n"		\
-						"cp0.w	W0				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0102, W1		\n"		\
-						"cp0.w	W1				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0103, W2		\n"		\
-						"cp0.w	W2				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0104, W3		\n"		\
-						"cp0.w	W3				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0105, W4		\n"		\
-						"cp0.w	W4				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0106, W5		\n"		\
-						"cp0.w	W5				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0107, W6		\n"		\
-						"cp0.w	W6				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0108, W7		\n"		\
-						"cp0.w	W7				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x0109, W8		\n"		\
-						"cp0.w	W8				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x010a, W9		\n"		\
-						"cp0.w	W9				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x010b, W10	\n"		\
-						"cp0.w	W10				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x010c, W11	\n"		\
-						"cp0.w	W11				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x010d, W12	\n"		\
-						"cp0.w	W12				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x010e, W13	\n"		\
-						"cp0.w	W13				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"sub	#0x010f, W14	\n"		\
-						"cp0.w	W14				\n" 	\
-						"bra	NZ, ERROR_TEST1 \n"		\
-						"bra	NO_ERROR1		\n" 	\
-						"ERROR_TEST1:			\n"		\
-						"mov.w	#1, W0			\n"		\
-						"mov.w	W0, _usErrorDetected\n"	\
-						"NO_ERROR1:				\n" );
-	}
-}
-/*-----------------------------------------------------------*/
-
-void xRegisterTest2( void *pvParameters )
-{
-/* This static so as not to use the frame pointer.   They are volatile
-also to avoid it being stored in a register that we clobber during the test. */
-static unsigned portSHORT * volatile pusParameter;
-
-	/* The variable incremented by this task is passed in as the parameter
-	even though it is defined within this file.  This is just to test the
-	parameter passing mechanism. */
-	pusParameter = pvParameters;
-
-	for( ;; )
-	{
-		/* Increment the variable to show this task is still cycling. */
-		( *pusParameter )++;
-
-		/* Set the w registers to known values, then check that each register
-		contains the expected value.  See the explanation at the top of this
-		file for more information. */
-		asm volatile( 	"mov.w	#0x0100, W0		\n"		\
-						"mov.w	#0x0101, W1		\n"		\
-						"mov.w	#0x0102, W2		\n"		\
-						"mov.w	#0x0103, W3		\n"		\
-						"mov.w	#0x0104, W4		\n"		\
-						"mov.w	#0x0105, W5		\n"		\
-						"mov.w	#0x0106, W6		\n"		\
-						"mov.w	#0x0107, W7		\n"		\
-						"mov.w	#0x0108, W8		\n"		\
-						"mov.w	#0x0109, W9		\n"		\
-						"mov.w	#0x010a, W10	\n"		\
-						"mov.w	#0x010b, W11	\n"		\
-						"mov.w	#0x010c, W12	\n"		\
-						"mov.w	#0x010d, W13	\n"		\
-						"mov.w	#0x010e, W14	\n"		\
-						"sub	#0x0100, W0		\n"		\
-						"cp0.w	W0				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0101, W1		\n"		\
-						"cp0.w	W1				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0102, W2		\n"		\
-						"cp0.w	W2				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0103, W3		\n"		\
-						"cp0.w	W3				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0104, W4		\n"		\
-						"cp0.w	W4				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0105, W5		\n"		\
-						"cp0.w	W5				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0106, W6		\n"		\
-						"cp0.w	W6				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0107, W7		\n"		\
-						"cp0.w	W7				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0108, W8		\n"		\
-						"cp0.w	W8				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x0109, W9		\n"		\
-						"cp0.w	W9				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x010a, W10	\n"		\
-						"cp0.w	W10				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x010b, W11	\n"		\
-						"cp0.w	W11				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x010c, W12	\n"		\
-						"cp0.w	W12				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x010d, W13	\n"		\
-						"cp0.w	W13				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"sub	#0x010e, W14	\n"		\
-						"cp0.w	W14				\n" 	\
-						"bra	NZ, ERROR_TEST2 \n"		\
-						"bra	NO_ERROR2		\n" 	\
-						"ERROR_TEST2:			\n"		\
-						"mov.w	#1, W0			\n"		\
-						"mov.w	W0, _usErrorDetected\n"	\
-						"NO_ERROR2:				\n" );
+		/* Send the message to the LCD gatekeeper for display. */
+		xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -421,3 +252,4 @@ void vApplicationIdleHook( void )
 	vCoRoutineSchedule();
 }
 /*-----------------------------------------------------------*/
+

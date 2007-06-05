@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -68,12 +68,12 @@
 #define portBYTE_ALIGNMENT			2
 #define portSTACK_GROWTH			1
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
-#define portKERNEL_INTERRUPT_PRIORITY	0x01
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
-#define portINTERRUPT_BITS			( 0x00e0 )
-#define portDISABLE_INTERRUPTS()	SR |= portINTERRUPT_BITS
+#define portINTERRUPT_BITS			( ( unsigned portSHORT ) configKERNEL_INTERRUPT_PRIORITY << ( unsigned portSHORT ) 5 )
+
+#define portDISABLE_INTERRUPTS()	SR |= portINTERRUPT_BITS                    
 #define portENABLE_INTERRUPTS()		SR &= ~portINTERRUPT_BITS
 
 /* Note that exiting a critical sectino will set the IPL bits to 0, nomatter

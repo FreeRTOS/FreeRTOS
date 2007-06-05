@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -19,13 +19,13 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
 	Also see http://www.SafeRTOS.com for an IEC 61508 compliant version along
@@ -33,12 +33,19 @@
 	***************************************************************************
 */
 
+/*
+	Change from V4.2.1:
+
+	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
+	  interrupt priority used by the kernel.
+*/
+
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -86,9 +93,11 @@ extern void vPortYieldFromISR( void );
 extern void vPortEnableInterrupts( void );
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
+extern void vPortSetInterruptMask( void );
+extern void vPortClearInterruptMask( void );
 
-#define portDISABLE_INTERRUPTS()	__asm ( "cpsid i" )
-#define portENABLE_INTERRUPTS()		__asm ( "cpsie i" )
+#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask();
+#define portENABLE_INTERRUPTS()		vPortClearInterruptMask();
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 /*-----------------------------------------------------------*/
@@ -99,6 +108,7 @@ extern void vPortExitCritical( void );
 
 #define inline
 #define portNOP()
+
 
 #endif /* PORTMACRO_H */
 

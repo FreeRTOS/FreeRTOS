@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -19,13 +19,13 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
 	Also see http://www.SafeRTOS.com for an IEC 61508 compliant version along
@@ -33,6 +33,12 @@
 	***************************************************************************
 */
 
+/*
+	Change from V4.2.1:
+
+	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
+	  interrupt priority used by the kernel.
+*/
 
 /*-----------------------------------------------------------
  * Implementation of functions defined in portable.h for the ARM CM3 port.
@@ -52,18 +58,24 @@
 #define portNVIC_SYSTICK_INT		0x00000002
 #define portNVIC_SYSTICK_ENABLE		0x00000001
 #define portNVIC_PENDSVSET			0x10000000
-#define portNVIC_PENDSV_PRI			0x00ff0000
-#define portNVIC_SVCALL_PRI			0xff000000
-#define portNVIC_SYSTICK_PRI		0xff000000
+#define portNVIC_PENDSV_PRI			( ( ( unsigned portLONG ) configKERNEL_INTERRUPT_PRIORITY ) << 16 )
+#define portNVIC_SYSTICK_PRI		( ( ( unsigned portLONG ) configKERNEL_INTERRUPT_PRIORITY ) << 24 )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
+
+/* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is 
+defined.  The value zero should also ensure backward compatibility.  
+FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
+#ifndef configKERNEL_INTERRUPT_PRIORITY
+	#define configKERNEL_INTERRUPT_PRIORITY 255
+#endif
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
 unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 
-/* 
+/*
  * Setup the timer to generate the tick interrupts.
  */
 static void prvSetupTimerInterrupt( void );
@@ -76,8 +88,8 @@ extern void vSetPSP( unsigned long ulValue );
 
 /*-----------------------------------------------------------*/
 
-/* 
- * See header file for description. 
+/*
+ * See header file for description.
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
@@ -97,12 +109,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 }
 /*-----------------------------------------------------------*/
 
-/* 
- * See header file for description. 
+/*
+ * See header file for description.
  */
 portBASE_TYPE xPortStartScheduler( void )
 {
-	/* Make PendSV, CallSV and SysTick the lowest priority interrupts. */
+	/* Make PendSV and SysTick the lowest priority interrupts. */
 	*(portNVIC_SYSPRI2) |= portNVIC_PENDSV_PRI;
 	*(portNVIC_SYSPRI2) |= portNVIC_SYSTICK_PRI;
 
@@ -168,6 +180,22 @@ void prvSetupTimerInterrupt( void )
 	/* Configure SysTick to interrupt at the requested rate. */
 	*(portNVIC_SYSTICK_LOAD) = configCPU_CLOCK_HZ / configTICK_RATE_HZ;
 	*(portNVIC_SYSTICK_CTRL) = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
+}
+/*-----------------------------------------------------------*/
+
+void vPortSwitchContext( void )
+{
+	vPortSetInterruptMask();
+	vTaskSwitchContext();
+	vPortClearInterruptMask();
+}
+/*-----------------------------------------------------------*/
+
+void vPortIncrementTick( void )
+{
+	vPortSetInterruptMask();
+	vTaskIncrementTick();
+	vPortClearInterruptMask();
 }
 
 

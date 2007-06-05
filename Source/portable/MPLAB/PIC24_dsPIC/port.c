@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -33,6 +33,12 @@
 	***************************************************************************
 */
 
+/*
+	Changes from V4.2.1
+
+	+ Introduced the configKERNEL_INTERRUPT_PRIORITY definition.
+*/
+
 /*-----------------------------------------------------------
  * Implementation of functions defined in portable.h for the PIC24 port.
  *----------------------------------------------------------*/
@@ -46,11 +52,21 @@
 #define portTIMER_PRESCALE 8
 #define portINITIAL_SR	0
 
+/* Defined for backward compatability with project created prior to 
+FreeRTOS.org V4.3.0. */
+#ifndef configKERNEL_INTERRUPT_PRIORITY
+	#define configKERNEL_INTERRUPT_PRIORITY 1
+#endif
+
 /* The program counter is only 23 bits. */
 #define portUNUSED_PR_BITS	0x7f
 
 /* Records the nesting depth of calls to portENTER_CRITICAL(). */
 unsigned portBASE_TYPE uxCriticalNesting = 0xef;
+
+#if configKERNEL_INTERRUPT_PRIORITY != 1
+	#error If configKERNEL_INTERRUPT_PRIORITY is not 1 then the #32 in the following macros needs changing to equal the portINTERRUPT_BITS value, which is ( configKERNEL_INTERRUPT_PRIORITY << 5 )
+#endif
 
 #ifdef MPLAB_PIC24_PORT
 
@@ -77,7 +93,7 @@ unsigned portBASE_TYPE uxCriticalNesting = 0xef;
 	#define portSAVE_CONTEXT()																							\
 		asm volatile(	"PUSH	SR						\n"	/* Save the SR used by the task.... */						\
 						"PUSH	W0						\n"	/* ....then disable interrupts. */							\
-						"MOV	#224, W0				\n"																\
+						"MOV	#32, W0				\n"																\
 						"MOV	W0, SR					\n"																\
 						"PUSH	W1						\n"	/* Save registers to the stack. */							\
 						"PUSH.D	W2						\n"																\
@@ -134,7 +150,7 @@ unsigned portBASE_TYPE uxCriticalNesting = 0xef;
 	#define portSAVE_CONTEXT()																							\
 		asm volatile(	"PUSH	SR						\n"	/* Save the SR used by the task.... */						\
 						"PUSH	W0						\n"	/* ....then disable interrupts. */							\
-						"MOV	#224, W0				\n"																\
+						"MOV	#32, W0				\n"																\
 						"MOV	W0, SR					\n"																\
 						"PUSH	W1						\n"	/* Save registers to the stack. */							\
 						"PUSH.D	W2						\n"																\
@@ -305,7 +321,7 @@ const unsigned portLONG ulCompareMatch = ( configCPU_CLOCK_HZ / portTIMER_PRESCA
 	PR1 = ( unsigned portSHORT ) ulCompareMatch;
 
 	/* Setup timer 1 interrupt priority. */
-	IPC0bits.T1IP = portKERNEL_INTERRUPT_PRIORITY;
+	IPC0bits.T1IP = configKERNEL_INTERRUPT_PRIORITY;
 
 	/* Clear the interrupt as a starting condition. */
 	IFS0bits.T1IF = 0;
@@ -339,7 +355,7 @@ void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-void __attribute__((__interrupt__)) _T1Interrupt( void )
+void __attribute__((__interrupt__, auto_psv)) _T1Interrupt( void )
 {
 	vTaskIncrementTick();
 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.2.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -184,19 +184,11 @@
     typedef void ( __interrupt __far *pxISR )();
 #endif
 
-#if __GNUC__ && (__AVR32_UC3A0256__ || \
-                 __AVR32_UC3A0512__ || \
-                 __AVR32_UC3A1128__ || \
-                 __AVR32_UC3A1256__ || \
-                 __AVR32_UC3A1512__)
+#ifdef GCC_AVR32_PORT
 	#include "portmacro.h"
 #endif
 
-#if __ICCAVR32__ && (__AT32UC3A0256__ || \
-                     __AT32UC3A0512__ || \
-                     __AT32UC3A1128__ || \
-                     __AT32UC3A1256__ || \
-                     __AT32UC3A1512__)
+#ifdef IAR_AVR32_PORT
 	#include "portmacro.h"
 #endif
 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -19,13 +19,13 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
 	Also see http://www.SafeRTOS.com for an IEC 61508 compliant version along
@@ -35,7 +35,7 @@
 
 /*
  * This file contains some test scenarios that ensure tasks do not exit queue
- * send or receive functions prematurely.  A description of the tests is 
+ * send or receive functions prematurely.  A description of the tests is
  * included within the code.
  */
 
@@ -43,6 +43,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+
+/* Demo includes. */
+#include "blocktim.h"
 
 /* Task priorities. */
 #define bktPRIMARY_PRIORITY			( 3 )
@@ -68,7 +71,7 @@ static xTaskHandle xSecondary;
 static portBASE_TYPE xPrimaryCycles = 0, xSecondaryCycles = 0;
 static portBASE_TYPE xErrorOccurred = pdFALSE;
 
-/* Provides a simple mechanism for the primary task to know when the 
+/* Provides a simple mechanism for the primary task to know when the
 secondary task has executed. */
 static volatile unsigned portBASE_TYPE xRunIndicator;
 
@@ -125,7 +128,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 			portEXIT_CRITICAL();
 
-			if( xBlockedTime < xTimeToBlock ) 
+			if( xBlockedTime < xTimeToBlock )
 			{
 				/* Should not have blocked for less than we requested. */
 				xErrorOccurred = pdTRUE;
@@ -134,7 +137,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			if( xBlockedTime > ( xTimeToBlock + bktALLOWABLE_MARGIN ) )
 			{
 				/* Should not have blocked for longer than we requested,
-				although we would not necessarily run as soon as we were 
+				although we would not necessarily run as soon as we were
 				unblocked so a margin is allowed. */
 				xErrorOccurred = pdTRUE;
 			}
@@ -176,7 +179,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 			portEXIT_CRITICAL();
 
-			if( xBlockedTime < xTimeToBlock ) 
+			if( xBlockedTime < xTimeToBlock )
 			{
 				/* Should not have blocked for less than we requested. */
 				xErrorOccurred = pdTRUE;
@@ -185,7 +188,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			if( xBlockedTime > ( xTimeToBlock + bktALLOWABLE_MARGIN ) )
 			{
 				/* Should not have blocked for longer than we requested,
-				although we would not necessarily run as soon as we were 
+				although we would not necessarily run as soon as we were
 				unblocked so a margin is allowed. */
 				xErrorOccurred = pdTRUE;
 			}
@@ -227,7 +230,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 
 			/* Now fill the queue again before the other task gets a chance to
-			execute.  If the other task had executed we would find the queue 
+			execute.  If the other task had executed we would find the queue
 			full ourselves, and the other task have set xRunIndicator. */
 			if( xQueueSend( xTestQueue, &xItem, bktDONT_BLOCK ) != pdPASS )
 			{
@@ -270,7 +273,7 @@ portTickType xTimeToBlock, xBlockedTime;
 		/*********************************************************************
         Test 4
 
-		As per test 3 - but with the send and receive the other way around.  
+		As per test 3 - but with the send and receive the other way around.
 		The other task blocks attempting to read from the queue.
 
 		Empty the queue.  We should find that it is full. */
@@ -282,7 +285,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 		}
 		
-		/* Wake the other task so it blocks attempting to read from  the 
+		/* Wake the other task so it blocks attempting to read from  the
 		already	empty queue. */
 		vTaskResume( xSecondary );
 
@@ -296,7 +299,7 @@ portTickType xTimeToBlock, xBlockedTime;
 
 		for( xItem = 0; xItem < bktQUEUE_LENGTH; xItem++ )
 		{
-			/* Now when we place an item on the queue the other task should 
+			/* Now when we place an item on the queue the other task should
 			wake but not execute as this task has higher priority. */				
 			if( xQueueSend( xTestQueue, &xItem, bktDONT_BLOCK ) != pdPASS )
 			{
@@ -304,7 +307,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 
 			/* Now empty the queue again before the other task gets a chance to
-			execute.  If the other task had executed we would find the queue 
+			execute.  If the other task had executed we would find the queue
 			empty ourselves, and the other task would be suspended. */
 			if( xQueueReceive( xTestQueue, &xData, bktDONT_BLOCK ) != pdPASS )
 			{
@@ -321,7 +324,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			on the queue again. */
 			vTaskPrioritySet( xSecondary, bktPRIMARY_PRIORITY + 2 );
 
-			/* The other task should now have re-blocked without exiting the 
+			/* The other task should now have re-blocked without exiting the
 			queue function. */
 			if( xRunIndicator == bktRUN_INDICATOR )
 			{
@@ -388,7 +391,7 @@ portBASE_TYPE xData;
 			xErrorOccurred = pdTRUE;
 		}
 
-		/* We should of not blocked for much longer than bktALLOWABLE_MARGIN 
+		/* We should of not blocked for much longer than bktALLOWABLE_MARGIN
 		either.  A margin is permitted as we would not necessarily run as
 		soon as we unblocked. */
 		if( xBlockedTime > ( bktTIME_TO_BLOCK + bktALLOWABLE_MARGIN ) )
@@ -426,7 +429,7 @@ portBASE_TYPE xData;
 			xErrorOccurred = pdTRUE;
 		}
 
-		/* We should of not blocked for much longer than bktALLOWABLE_MARGIN 
+		/* We should of not blocked for much longer than bktALLOWABLE_MARGIN
 		either.  A margin is permitted as we would not necessarily run as soon
 		as we unblocked. */
 		if( xBlockedTime > ( bktTIME_TO_BLOCK + bktALLOWABLE_MARGIN ) )

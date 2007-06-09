@@ -44,15 +44,16 @@ static const char * const g_pcHex = "0123456789abcdef";
 
 //*****************************************************************************
 //
-//! A simple sprintf function supporting \%c, \%d, \%s, \%u, \%x, and \%X.
+//! A simple vsnprintf function supporting \%c, \%d, \%s, \%u, \%x, and \%X.
 //!
-//! \param pcBuf is the buffer where the converted string is stored.
+//! \param pcBuf points to the buffer where the converted string is stored.
+//! \param ulSize is the size of the buffer.
 //! \param pcString is the format string.
-//! \param ... are the optional arguments, which depend on the contents of the
-//! format string.
+//! \param vaArgP is the list of optional arguments, which depend on the
+//! contents of the format string.
 //!
-//! This function is very similar to the C library <tt>sprintf()</tt> function.
-//! Only the following formatting characters are supported:
+//! This function is very similar to the C library <tt>vsnprintf()</tt>
+//! function. Only the following formatting characters are supported:
 //!
 //! - \%c to print a character
 //! - \%d to print a decimal value
@@ -75,18 +76,29 @@ static const char * const g_pcHex = "0123456789abcdef";
 //! the format string.  For example, if an integer was passed where a string
 //! was expected, an error of some kind will most likely occur.
 //!
-//! The caller must ensure that the buffer pcBuf is large enough to hold the
-//! entire converted string, including the null termination character.
+//! The \b ulSize parameter limits the number of characters that will be
+//! stored in the buffer pointed to by \b pcBuf to prevent the possibility
+//! of a buffer overflow.  The buffer size should be large enough to hold
+//! the expected converted output string, including the null termination
+//! character.
 //!
-//! \return None.
+//! The function will return the number of characters that would be
+//! converted as if there were no limit on the buffer size.  Therefore
+//! it is possible for the function to return a count that is greater than
+//! the specified buffer size.  If this happens, it means that the output
+//! was truncated.
+//!
+//! \return the number of characters that were to be stored, not including
+//! the NULL termination character, regardless of space in the buffer.
 //
 //*****************************************************************************
 int
 uvsnprintf(char *pcBuf, unsigned long ulSize, const char *pcString,
            va_list vaArgP)
 {
-    unsigned long ulIdx, ulValue, ulPos, ulCount, ulBase;
-    char *pcStr, cFill, *pcOriginalBuf = pcBuf;
+    unsigned long ulIdx, ulValue, ulCount, ulBase;
+    char *pcStr, cFill;
+    int iConvertCount = 0;
 
     //
     // Check the arguments.
@@ -104,10 +116,14 @@ uvsnprintf(char *pcBuf, unsigned long ulSize, const char *pcString,
     }
 
     //
-    // Loop while there are more characters in the string, and
-    // there is more room in the destination buffer.
+    // Initialize the count of characters converted.
     //
-    while(*pcString && ulSize)
+    iConvertCount = 0;
+
+    //
+    // Loop while there are more characters in the format string.
+    //
+    while(*pcString)
     {
         //
         // Find the first non-% character, or the end of the string.
@@ -118,32 +134,32 @@ uvsnprintf(char *pcBuf, unsigned long ulSize, const char *pcString,
         }
 
         //
-        // Limit the number of characters that can be copied to the
-        // space remaining in the buffer.
+        // Write this portion of the string to the output buffer.  If
+        // there are more characters to write than there is space in the
+        // buffer, then only write as much as will fit in the buffer.
         //
         if(ulIdx > ulSize)
         {
-            ulIdx = ulSize;
+            strncpy(pcBuf, pcString, ulSize);
+            pcBuf += ulSize;
+            ulSize = 0;
         }
-
-        //
-        // Write this portion of the string and update the buffer pointer.
-        //
-        strncpy(pcBuf, pcString, ulIdx);
-        pcBuf += ulIdx;
-
-        //
-        // Update the size limit, and check to see if the buffer
-        // limit is reached.
-        //
-        ulSize -= ulIdx;
-        if(ulSize == 0)
+        else
         {
-            break;
+            strncpy(pcBuf, pcString, ulIdx);
+            pcBuf += ulIdx;
+            ulSize -= ulIdx;
         }
 
         //
-        // Skip the portion of the string that was written.
+        // Update the conversion count.  This will be the number of
+        // characters that should have been written, even if there was
+        // not room in the buffer.
+        //
+        iConvertCount += ulIdx;
+
+        //
+        // Skip the portion of the format string that was written.
         //
         pcString += ulIdx;
 
@@ -222,14 +238,19 @@ again:
                     ulValue = va_arg(vaArgP, unsigned long);
 
                     //
-                    // Print out the character.
+                    // Copy the character to the output buffer, if
+                    // there is room.  Update the buffer size remaining.
                     //
-                    *pcBuf++ = (char)ulValue;
+                    if(ulSize != 0)
+                    {
+                        *pcBuf++ = (char)ulValue;
+                        ulSize--;
+                    }
 
                     //
-                    // Decrement the buffer limit.
+                    // Update the conversion count.
                     //
-                    ulSize--;
+                    iConvertCount++;
 
                     //
                     // This command has been handled.
@@ -248,29 +269,23 @@ again:
                     ulValue = va_arg(vaArgP, unsigned long);
 
                     //
-                    // Reset the buffer position.
-                    //
-                    ulPos = 0;
-
-                    //
                     // If the value is negative, make it positive and stick a
                     // minus sign in the beginning of the buffer.
                     //
                     if((long)ulValue < 0)
                     {
-                        *pcBuf++ = '-';
-                        ulPos++;
                         ulValue = -(long)ulValue;
 
-                        //
-                        // Decrement the buffer size limit and check
-                        // if the limit is reached.
-                        //
-                        ulSize--;
-                        if(ulSize == 0)
+                        if(ulSize != 0)
                         {
-                            break;
+                            *pcBuf++ = '-';
+                            ulSize--;
                         }
+
+                        //
+                        // Update the conversion count.
+                        //
+                        iConvertCount++;
                     }
 
                     //
@@ -302,24 +317,29 @@ again:
                     }
 
                     //
-                    // Limit the number of characters that can be copied to the
-                    // space remaining in the buffer.
+                    // Copy the string to the output buffer.  Only copy
+                    // as much as will fit in the buffer.  Update the
+                    // output buffer pointer and the space remaining.
                     //
                     if(ulIdx > ulSize)
                     {
-                        ulIdx = ulSize;
+                        strncpy(pcBuf, pcStr, ulSize);
+                        pcBuf += ulSize;
+                        ulSize = 0;
+                    }
+                    else
+                    {
+                        strncpy(pcBuf, pcStr, ulIdx);
+                        pcBuf += ulIdx;
+                        ulSize -= ulIdx;
                     }
 
                     //
-                    // Write the string and update the buffer pointer.
+                    // Update the conversion count.  This will be the number of
+                    // characters that should have been written, even if there
+                    // was not room in the buffer.
                     //
-                    strncpy(pcBuf, pcStr, ulIdx);
-                    pcBuf += ulIdx;
-
-                    //
-                    // Decrement the buffer size limit.
-                    //
-                    ulSize -= ulIdx;
+                    iConvertCount += ulIdx;
 
                     //
                     //
@@ -337,11 +357,6 @@ again:
                     // Get the value from the varargs.
                     //
                     ulValue = va_arg(vaArgP, unsigned long);
-
-                    //
-                    // Reset the buffer position.
-                    //
-                    ulPos = 0;
 
                     //
                     // Set the base to 10.
@@ -368,11 +383,6 @@ again:
                     ulValue = va_arg(vaArgP, unsigned long);
 
                     //
-                    // Reset the buffer position.
-                    //
-                    ulPos = 0;
-
-                    //
                     // Set the base to 16.
                     //
                     ulBase = 16;
@@ -397,18 +407,20 @@ convert:
                     {
                         for(ulCount--; ulCount; ulCount--)
                         {
-                            *pcBuf++ = cFill;
-                            ulPos++;
+                            //
+                            // Copy the character to the output buffer if
+                            // there is room.
+                            //
+                            if(ulSize != 0)
+                            {
+                                *pcBuf++ = cFill;
+                                ulSize--;
+                            }
 
                             //
-                            // Decrement buffer size and check to see if
-                            // buffer limit is reached.
+                            // Update the conversion count.
                             //
-                            ulSize--;
-                            if(ulSize == 0)
-                            {
-                                break;
-                            }
+                            iConvertCount++;
                         }
                     }
 
@@ -417,18 +429,20 @@ convert:
                     //
                     for(; ulIdx; ulIdx /= ulBase)
                     {
-                        *pcBuf++ = g_pcHex[(ulValue / ulIdx) % ulBase];
-                        ulPos++;
+                        //
+                        // Copy the character to the output buffer if
+                        // there is room.
+                        //
+                        if(ulSize != 0)
+                        {
+                            *pcBuf++ = g_pcHex[(ulValue / ulIdx) % ulBase];
+                            ulSize--;
+                        }
 
                         //
-                        // Decrement buffer size and check to see if
-                        // buffer limit is reached.
+                        // Update the conversion count.
                         //
-                        ulSize--;
-                        if(ulSize == 0)
-                        {
-                            break;
-                        }
+                        iConvertCount++;
                     }
 
                     //
@@ -445,8 +459,16 @@ convert:
                     //
                     // Simply write a single %.
                     //
-                    *pcBuf++ = pcString[-1];
-                    ulSize--;
+                    if(ulSize != 0)
+                    {
+                        *pcBuf++ = pcString[-1];
+                        ulSize--;
+                    }
+
+                    //
+                    // Update the conversion count.
+                    //
+                    iConvertCount++;
 
                     //
                     // This command has been handled.
@@ -462,12 +484,23 @@ convert:
                     //
                     // Indicate an error.
                     //
-                    if(ulSize > 5)
+                    if(ulSize >= 5)
                     {
                         strncpy(pcBuf, "ERROR", 5);
                         pcBuf += 5;
                         ulSize -= 5;
                     }
+                    else
+                    {
+                        strncpy(pcBuf, "ERROR", ulSize);
+                        pcBuf += ulSize;
+                        ulSize = 0;
+                    }
+
+                    //
+                    // Update the conversion count.
+                    //
+                    iConvertCount += 5;
 
                     //
                     // This command has been handled.
@@ -482,7 +515,7 @@ convert:
     // Null terminate the string in the buffer.
     //
     *pcBuf = 0;
-	return ( int ) pcBuf - ( int ) pcOriginalBuf;
+    return(iConvertCount);
 }
 
 //*****************************************************************************
@@ -521,13 +554,15 @@ convert:
 //! The caller must ensure that the buffer pcBuf is large enough to hold the
 //! entire converted string, including the null termination character.
 //!
-//! \return None.
+//! \return The count of characters that were written to the output buffer,
+//! not including the NULL termination character.
 //
 //*****************************************************************************
-void
+int
 usprintf(char *pcBuf, const char *pcString, ...)
 {
     va_list vaArgP;
+    int iRet;
 
     //
     // Start the varargs processing.
@@ -538,12 +573,17 @@ usprintf(char *pcBuf, const char *pcString, ...)
     // Call vsnprintf to perform the conversion.  Use a
     // large number for the buffer size.
     //
-    uvsnprintf(pcBuf, 0xffff, pcString, vaArgP);
+    iRet = uvsnprintf(pcBuf, 0xffff, pcString, vaArgP);
 
     //
     // End the varargs processing.
     //
     va_end(vaArgP);
+
+    //
+    // Return the conversion count.
+    //
+    return(iRet);
 }
 
 //*****************************************************************************
@@ -584,13 +624,20 @@ usprintf(char *pcBuf, const char *pcString, ...)
 //! buffer \b pcBuf.  One space is reserved in the buffer for the null
 //! termination character.
 //!
-//! \return None.
+//! The function will return the number of characters that would be
+//! converted as if there were no limit on the buffer size.  Therefore
+//! it is possible for the function to return a count that is greater than
+//! the specified buffer size.  If this happens, it means that the output
+//! was truncated.
+//!
+//! \return the number of characters that were to be stored, not including
+//! the NULL termination character, regardless of space in the buffer.
 //
 //*****************************************************************************
 int
 usnprintf(char *pcBuf, unsigned long ulSize, const char *pcString, ...)
 {
-int iReturn;
+int iRet;
 
     va_list vaArgP;
 
@@ -602,14 +649,17 @@ int iReturn;
     //
     // Call vsnprintf to perform the conversion.
     //
-    iReturn = uvsnprintf(pcBuf, ulSize, pcString, vaArgP);
+    iRet = uvsnprintf(pcBuf, ulSize, pcString, vaArgP);
 
     //
     // End the varargs processing.
     //
     va_end(vaArgP);
 
-	return iReturn;
+    //
+    // Return the conversion count.
+    //
+    return(iRet);
 }
 
 //*****************************************************************************

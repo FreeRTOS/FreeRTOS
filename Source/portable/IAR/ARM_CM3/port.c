@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -64,8 +64,8 @@
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
 
-/* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is 
-defined.  The value zero should also ensure backward compatibility.  
+/* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is
+defined.  The value zero should also ensure backward compatibility.
 FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 #ifndef configKERNEL_INTERRUPT_PRIORITY
 	#define configKERNEL_INTERRUPT_PRIORITY 255
@@ -85,6 +85,12 @@ static void prvSetupTimerInterrupt( void );
  */
 extern void vSetMSP( unsigned long ulValue );
 extern void vSetPSP( unsigned long ulValue );
+
+/*
+ * Utilities called from the assembler code.
+ */
+void vPortSwitchContext( void );
+void vPortIncrementTick( void );
 
 /*-----------------------------------------------------------*/
 

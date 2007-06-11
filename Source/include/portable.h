@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.3.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -142,6 +142,10 @@
 
 #ifdef GCC_ARMCM3_LM3S102
 	#include "../../Source/portable/GCC/ARM_CM3/portmacro.h"
+#endif
+
+#ifdef IAR_ARM_CM3
+	#include "../../Source/portable/IAR/ARM_CM3/portmacro.h"
 #endif
 
 #ifdef IAR_ARMCM3_LM

@@ -42,11 +42,14 @@ UTIL_PATH = $(PRJ_PATH)/UTILS
 # CPU architecture: {ap|uc}
 ARCH = uc
 
-# Part: {none|ap7000|ap7010|ap7020|uc3a0256|uc3a0512|uc3a1128|uc3a1256|uc3a1512}
+# Part: {none|ap7xxx|uc3xxxxx}
 PART = uc3a0512
 
-# Flash memories: [type@address,size]...
+# Flash memories: [{cfi|internal}@address,size]...
 FLASH = internal@0x80000000,512Kb
+
+# Clock source to use when programming: [{xtal|extclk|int}]
+PROG_CLOCK = xtal
 
 # Device/Platform/Board include path
 PLATFORM_INC_PATH = \
@@ -57,13 +60,15 @@ TARGET = rtosdemo.elf
 
 # Definitions: [-D name[=definition]...] [-U name...]
 # Things that might be added to DEFS:
-#   BOARD             Board used: {EVK1100}
+#   BOARD             Board used: {EVKxxxx}
+#   EXT_BOARD         Extension board used (if any): {EXTxxxx}
 DEFS = -D BOARD=EVK1100
 
 # Include path
 INC_PATH = \
   $(UTIL_PATH)/ \
   $(UTIL_PATH)/PREPROCESSOR/ \
+  $(SERV_PATH)/USB/CLASS/DFU/EXAMPLES/ISP/BOOT/ \
   $(DRVR_PATH)/INTC/ \
   $(DRVR_PATH)/PM/ \
   $(DRVR_PATH)/GPIO/ \
@@ -81,7 +86,7 @@ CSRCS = \
   $(DRVR_PATH)/GPIO/gpio.c \
   $(DRVR_PATH)/TC/tc.c \
   ../../../../Source/portable/GCC/AVR32_UC3/port.c \
-  ../../../../Source/portable/MemMang/heap_3.c \
+  ../../../../Source/portable/MemMang/heap_2.c \
   ../../../../Source/list.c \
   ../../../../Source/queue.c \
   ../../../../Source/tasks.c \
@@ -100,6 +105,7 @@ CSRCS = \
 
 # Assembler source files
 ASSRCS = \
+  $(SERV_PATH)/USB/CLASS/DFU/EXAMPLES/ISP/BOOT/trampoline.S \
   ../../../../Source/portable/GCC/AVR32_UC3/exception.S
 
 # Library path
@@ -109,7 +115,7 @@ LIB_PATH =
 LIBS =
 
 # Linker script file if any
-LINKER_SCRIPT =
+LINKER_SCRIPT = $(UTIL_PATH)/LINKER_SCRIPTS/AT32UC3A/0512/GCC/link_uc3a0512.lds
 
 # Options to request or suppress warnings: [-fsyntax-only] [-pedantic[-errors]] [-w] [-Wwarning...]
 # For further details, refer to the chapter "GCC Command Options" of the GCC manual.
@@ -127,13 +133,13 @@ OPTIMIZATION = -O0 -ffunction-sections -fdata-sections
 CPP_EXTRA_FLAGS =
 
 # Extra flags to use when compiling
-C_EXTRA_FLAGS = -DGCC_AVR32_PORT
+C_EXTRA_FLAGS =
 
 # Extra flags to use when assembling
 AS_EXTRA_FLAGS =
 
 # Extra flags to use when linking
-LD_EXTRA_FLAGS = -Wl,--gc-sections
+LD_EXTRA_FLAGS = -Wl,--gc-sections -Wl,-e,_trampoline
 
 # Documentation path
 DOC_PATH = \
@@ -141,4 +147,4 @@ DOC_PATH = \
 
 # Documentation configuration file
 DOC_CFG = \
-  ../../doxyfile.doxygen
+  ../doxyfile.doxygen

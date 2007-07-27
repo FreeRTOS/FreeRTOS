@@ -13,12 +13,17 @@
 # elf       file.elf      Link: create ELF output file from object files.
 # lss       file.lss      Create extended listing from target output file.
 # sym       file.sym      Create symbol table from target output file.
+# hex       file.hex      Create Intel HEX image from ELF output file.
 # bin       file.bin      Create binary image from ELF output file.
 # sizes                   Display target size information.
+# isp                     Use ISP instead of JTAGICE mkII when programming.
 # cpuinfo                 Get CPU information.
 # halt                    Stop CPU execution.
+# chiperase               Perform a JTAG Chip Erase command.
+# erase                   Perform a flash chip erase.
 # program                 Program MCU memory from ELF output file.
-# reset                   Reset CPU.
+# secureflash             Protect chip by setting security bit.
+# reset                   Reset MCU.
 # debug                   Open a debug connection with the MCU.
 # run                     Start CPU execution.
 # readregs                Read CPU registers.
@@ -78,11 +83,13 @@ DPNDFILES = $(CSRCS:.c=.d) $(ASSRCS:.S=.d)
 CPPFILES  = $(CSRCS:.c=.i)
 
 CC        = avr32-gcc
-CFLAGS    = $(DEBUG) $(OPTIMIZATION) $(C_EXTRA_FLAGS)
+CFLAGS    = $(DEBUG) $(OPTIMIZATION) $(C_EXTRA_FLAGS) \
+            $(PLATFORM_INC_PATH:%=-Wa,-I%) $(INC_PATH:%=-Wa,-I%) $(AS_EXTRA_FLAGS)
 ASFILES   = $(CSRCS:.c=.x) $(ASSRCS:.S=.x)
 
 AS        = avr32-as
-ASFLAGS   = $(DEBUG) $(AS_EXTRA_FLAGS)
+ASFLAGS   = $(DEBUG) \
+            $(PLATFORM_INC_PATH:%=-Wa,-I%) $(INC_PATH:%=-Wa,-I%) $(AS_EXTRA_FLAGS)
 OBJFILES  = $(CSRCS:.c=.o) $(ASSRCS:.S=.o)
 
 LD        = avr32-ld
@@ -98,18 +105,20 @@ NM        = avr32-nm
 SYM       = $(TGTFILE:$(TGTTYPE)=.sym)
 
 OBJCOPY   = avr32-objcopy
+HEX       = $(TGTFILE:$(TGTTYPE)=.hex)
 BIN       = $(TGTFILE:$(TGTTYPE)=.bin)
 
 SIZE      = avr32-size
-
-SUDO      = $(shell if [ -x /usr/bin/sudo ]; then echo sudo; fi)
 
 SLEEP     = sleep
 SLEEPUSB  = 9
 
 PROGRAM   = avr32program
 
-DBGPROXY  = avr32gdbproxy 
+ISP       = batchisp
+ISPFLAGS  = -device at32$(PART) -hardware usb -operation
+
+DBGPROXY  = avr32gdbproxy
 
 DOCGEN    = doxygen
 
@@ -127,11 +136,15 @@ MSG_ARCHIVING         = Archiving to \`$@\'.
 MSG_LINKING           = Linking to \`$@\'.
 MSG_EXTENDED_LISTING  = Creating extended listing to \`$@\'.
 MSG_SYMBOL_TABLE      = Creating symbol table to \`$@\'.
+MSG_IHEX_IMAGE        = Creating Intel HEX image to \`$@\'.
 MSG_BINARY_IMAGE      = Creating binary image to \`$@\'.
 MSG_GETTING_CPU_INFO  = Getting CPU information.
 MSG_HALTING           = Stopping CPU execution.
-MSG_PROGRAMMING       = Programming MCU memory from \`$<\'.
-MSG_RESETTING         = Resetting CPU.
+MSG_ERASING_CHIP      = Performing a JTAG Chip Erase command.
+MSG_ERASING           = Performing a flash chip erase.
+MSG_PROGRAMMING       = Programming MCU memory from \`$(TGTFILE)\'.
+MSG_SECURING_FLASH    = Protecting chip by setting security bit.
+MSG_RESETTING         = Resetting MCU.
 MSG_DEBUGGING         = Opening debug connection with MCU.
 MSG_RUNNING           = Starting CPU execution.
 MSG_READING_CPU_REGS  = Reading CPU registers.
@@ -151,11 +164,11 @@ include $(MAKECFG)
 # Default goal: build the project.
 ifeq ($(TGTTYPE),.a)
 .PHONY: all
-all: ccversion a lss sym
+all: ccversion a lss sym sizes
 else
 ifeq ($(TGTTYPE),.elf)
 .PHONY: all
-all: ccversion elf lss sym bin sizes
+all: ccversion elf lss sym hex bin sizes
 else
 $(error $(ERR_TARGET_TYPE))
 endif
@@ -166,6 +179,7 @@ endif
 clean:
 	@echo $(MSG_CLEANING)
 	-$(VERBOSE_CMD)$(RM) $(BIN)
+	-$(VERBOSE_CMD)$(RM) $(HEX)
 	-$(VERBOSE_CMD)$(RM) $(SYM)
 	-$(VERBOSE_CMD)$(RM) $(LSS)
 	-$(VERBOSE_CMD)$(RM) $(TGTFILE)
@@ -219,9 +233,15 @@ lss: $(LSS)
 sym: $(SYM)
 
 ifeq ($(TGTTYPE),.elf)
+
+# Create Intel HEX image from ELF output file.
+.PHONY: hex
+hex: $(HEX)
+
 # Create binary image from ELF output file.
 .PHONY: bin
 bin: $(BIN)
+
 endif
 
 # Display target size information.
@@ -229,17 +249,37 @@ endif
 sizes: $(TGTFILE)
 	@echo
 	@echo
+ifeq ($(TGTTYPE),.a)
+	@$(SIZE) -Bxt $<
+else
+ifeq ($(TGTTYPE),.elf)
 	@$(SIZE) -Ax $<
+	@$(SIZE) -Bx $<
+endif
+endif
+	@echo
+	@echo
 
 ifeq ($(TGTTYPE),.elf)
+
+# Use ISP instead of JTAGICE mkII when programming.
+.PHONY: isp
+ifeq ($(filter-out isp verbose,$(MAKECMDGOALS)),)
+isp: all
+else
+isp:
+	@:
+endif
+
+ifeq ($(findstring isp,$(MAKECMDGOALS)),)
 
 # Get CPU information.
 .PHONY: cpuinfo
 cpuinfo:
 	@echo
 	@echo $(MSG_GETTING_CPU_INFO)
-	$(VERBOSE_CMD)$(SUDO) $(PROGRAM) -cUSB cpuinfo
-ifneq ($(call LastWord,$(filter cpuinfo program reset debug run readregs,$(MAKECMDGOALS))),cpuinfo)
+	$(VERBOSE_CMD)$(PROGRAM) cpuinfo
+ifneq ($(call LastWord,$(filter cpuinfo chiperase erase program secureflash reset debug run readregs,$(MAKECMDGOALS))),cpuinfo)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
@@ -248,45 +288,85 @@ endif
 # Stop CPU execution.
 .PHONY: halt
 halt:
-ifeq ($(filter cpuinfo program reset run readregs,$(MAKECMDGOALS)),)
+ifeq ($(filter cpuinfo chiperase erase program secureflash reset run readregs,$(MAKECMDGOALS)),)
 	@echo
 	@echo $(MSG_HALTING)
-	$(VERBOSE_CMD)$(SUDO) $(PROGRAM) -cUSB halt
+	$(VERBOSE_CMD)$(PROGRAM) halt
 ifneq ($(call LastWord,$(filter halt debug,$(MAKECMDGOALS))),halt)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
 endif
 else
-	@echo > /dev/null
+	@:
 endif
 
-# Program MCU memory from ELF output file.
-.PHONY: program
-program: $(TGTFILE)
+# Perform a JTAG Chip Erase command.
+.PHONY: chiperase
+chiperase:
 	@echo
-	@echo $(MSG_PROGRAMMING)
-	$(VERBOSE_CMD)$(SUDO) $(PROGRAM) -cUSB program $(FLASH:%=-f%) -e -v -R $(if $(findstring run,$(MAKECMDGOALS)),-r) $<
-ifneq ($(call LastWord,$(filter cpuinfo program debug readregs,$(MAKECMDGOALS))),program)
+	@echo $(MSG_ERASING_CHIP)
+	$(VERBOSE_CMD)$(PROGRAM) chiperase
+ifneq ($(call LastWord,$(filter cpuinfo chiperase program secureflash reset debug run readregs,$(MAKECMDGOALS))),chiperase)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
 endif
 
-# Reset CPU.
+# Perform a flash chip erase.
+.PHONY: erase
+erase:
+ifeq ($(filter chiperase program,$(MAKECMDGOALS)),)
+	@echo
+	@echo $(MSG_ERASING)
+	$(VERBOSE_CMD)$(PROGRAM) erase $(FLASH:%=-f%)
+ifneq ($(call LastWord,$(filter cpuinfo erase secureflash reset debug run readregs,$(MAKECMDGOALS))),erase)
+	@$(SLEEP) $(SLEEPUSB)
+else
+	@echo
+endif
+else
+	@:
+endif
+
+# Program MCU memory from ELF output file.
+.PHONY: program
+program: all
+	@echo
+	@echo $(MSG_PROGRAMMING)
+	$(VERBOSE_CMD)$(PROGRAM) program $(FLASH:%=-f%) $(PROG_CLOCK:%=-c%) -e -v -R $(if $(findstring run,$(MAKECMDGOALS)),-r) $(TGTFILE)
+ifneq ($(call LastWord,$(filter cpuinfo chiperase program secureflash debug readregs,$(MAKECMDGOALS))),program)
+	@$(SLEEP) $(SLEEPUSB)
+else
+	@echo
+endif
+
+# Protect chip by setting security bit.
+.PHONY: secureflash
+secureflash:
+	@echo
+	@echo $(MSG_SECURING_FLASH)
+	$(VERBOSE_CMD)$(PROGRAM) secureflash
+ifneq ($(call LastWord,$(filter cpuinfo chiperase erase program secureflash reset debug run readregs,$(MAKECMDGOALS))),secureflash)
+	@$(SLEEP) $(SLEEPUSB)
+else
+	@echo
+endif
+
+# Reset MCU.
 .PHONY: reset
 reset:
 ifeq ($(filter program run,$(MAKECMDGOALS)),)
 	@echo
 	@echo $(MSG_RESETTING)
-	$(VERBOSE_CMD)$(SUDO) $(PROGRAM) -cUSB reset
-ifneq ($(call LastWord,$(filter cpuinfo reset debug readregs,$(MAKECMDGOALS))),reset)
+	$(VERBOSE_CMD)$(PROGRAM) reset
+ifneq ($(call LastWord,$(filter cpuinfo chiperase erase secureflash reset debug readregs,$(MAKECMDGOALS))),reset)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
 endif
 else
-	@echo > /dev/null
+	@:
 endif
 
 # Open a debug connection with the MCU.
@@ -294,8 +374,8 @@ endif
 debug:
 	@echo
 	@echo $(MSG_DEBUGGING)
-	$(VERBOSE_CMD)$(SUDO) $(DBGPROXY) -cUSB $(patsubst cfi@%,-f%,$(FLASH:internal@%=-f%))
-ifneq ($(call LastWord,$(filter cpuinfo halt program reset debug run readregs,$(MAKECMDGOALS))),debug)
+	$(VERBOSE_CMD)$(DBGPROXY) $(FLASH:%=-f%)
+ifneq ($(call LastWord,$(filter cpuinfo halt chiperase erase program secureflash reset debug run readregs,$(MAKECMDGOALS))),debug)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
@@ -307,14 +387,14 @@ run:
 ifeq ($(findstring program,$(MAKECMDGOALS)),)
 	@echo
 	@echo $(MSG_RUNNING)
-	$(VERBOSE_CMD)$(SUDO) $(PROGRAM) -cUSB run $(if $(findstring reset,$(MAKECMDGOALS)),-R)
-ifneq ($(call LastWord,$(filter cpuinfo debug run readregs,$(MAKECMDGOALS))),run)
+	$(VERBOSE_CMD)$(PROGRAM) run $(if $(findstring reset,$(MAKECMDGOALS)),-R)
+ifneq ($(call LastWord,$(filter cpuinfo chiperase erase secureflash debug run readregs,$(MAKECMDGOALS))),run)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
 endif
 else
-	@echo > /dev/null
+	@:
 endif
 
 # Read CPU registers.
@@ -322,11 +402,78 @@ endif
 readregs:
 	@echo
 	@echo $(MSG_READING_CPU_REGS)
-	$(VERBOSE_CMD)$(SUDO) $(PROGRAM) -cUSB readregs
-ifneq ($(call LastWord,$(filter cpuinfo program reset debug run readregs,$(MAKECMDGOALS))),readregs)
+	$(VERBOSE_CMD)$(PROGRAM) readregs
+ifneq ($(call LastWord,$(filter cpuinfo chiperase erase program secureflash reset debug run readregs,$(MAKECMDGOALS))),readregs)
 	@$(SLEEP) $(SLEEPUSB)
 else
 	@echo
+endif
+
+else
+
+# Perform a flash chip erase.
+.PHONY: erase
+erase:
+ifeq ($(findstring program,$(MAKECMDGOALS)),)
+	@echo
+	@echo $(MSG_ERASING)
+	$(VERBOSE_CMD)$(ISP) $(ISPFLAGS) erase f memory flash blankcheck
+ifeq ($(call LastWord,$(filter erase secureflash debug run,$(MAKECMDGOALS))),erase)
+	@echo
+endif
+else
+	@:
+endif
+
+# Program MCU memory from ELF output file.
+.PHONY: program
+program: all
+	@echo
+	@echo $(MSG_PROGRAMMING)
+	$(VERBOSE_CMD)$(ISP) $(ISPFLAGS) erase f memory flash blankcheck loadbuffer $(TGTFILE) program verify $(if $(findstring run,$(MAKECMDGOALS)),$(if $(findstring secureflash,$(MAKECMDGOALS)),,start $(if $(findstring reset,$(MAKECMDGOALS)),,no)reset 0))
+ifeq ($(call LastWord,$(filter program secureflash debug,$(MAKECMDGOALS))),program)
+	@echo
+endif
+
+# Protect chip by setting security bit.
+.PHONY: secureflash
+secureflash:
+	@echo
+	@echo $(MSG_SECURING_FLASH)
+	$(VERBOSE_CMD)$(ISP) $(ISPFLAGS) memory security addrange 0x0 0x0 fillbuffer 0x01 program $(if $(findstring run,$(MAKECMDGOALS)),start $(if $(findstring reset,$(MAKECMDGOALS)),,no)reset 0)
+ifeq ($(call LastWord,$(filter erase program secureflash debug,$(MAKECMDGOALS))),secureflash)
+	@echo
+endif
+
+# Reset MCU.
+.PHONY: reset
+reset:
+	@:
+
+# Open a debug connection with the MCU.
+.PHONY: debug
+debug:
+	@echo
+	@echo $(MSG_DEBUGGING)
+	$(VERBOSE_CMD)$(DBGPROXY) $(FLASH:%=-f%)
+ifeq ($(call LastWord,$(filter erase program secureflash debug run,$(MAKECMDGOALS))),debug)
+	@echo
+endif
+
+# Start CPU execution.
+.PHONY: run
+run:
+ifeq ($(filter program secureflash,$(MAKECMDGOALS)),)
+	@echo
+	@echo $(MSG_RUNNING)
+	$(VERBOSE_CMD)$(ISP) $(ISPFLAGS) start $(if $(findstring reset,$(MAKECMDGOALS)),,no)reset 0
+ifeq ($(call LastWord,$(filter erase debug run,$(MAKECMDGOALS))),run)
+	@echo
+endif
+else
+	@:
+endif
+
 endif
 
 endif
@@ -352,11 +499,11 @@ rebuilddoc: cleandoc doc
 
 # Display main executed commands.
 .PHONY: verbose
-ifeq ($(MAKECMDGOALS),verbose)
+ifeq ($(filter-out isp verbose,$(MAKECMDGOALS)),)
 verbose: all
 else
 verbose:
-	@echo > /dev/null
+	@:
 endif
 ifneq ($(findstring verbose,$(MAKECMDGOALS)),)
 # Prefix displaying the following command if and only if verbose is a goal.
@@ -456,9 +603,17 @@ $(SYM): $(TGTFILE)
 	$(VERBOSE_NL)
 
 ifeq ($(TGTTYPE),.elf)
+
+# Create Intel HEX image from ELF output file.
+$(HEX): $(TGTFILE)
+	@echo $(MSG_IHEX_IMAGE)
+	$(VERBOSE_CMD)$(OBJCOPY) -O ihex $< $@
+	$(VERBOSE_NL)
+
 # Create binary image from ELF output file.
 $(BIN): $(TGTFILE)
 	@echo $(MSG_BINARY_IMAGE)
 	$(VERBOSE_CMD)$(OBJCOPY) -O binary $< $@
 	$(VERBOSE_NL)
+
 endif

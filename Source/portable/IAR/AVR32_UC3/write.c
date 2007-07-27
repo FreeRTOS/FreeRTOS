@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -11,7 +9,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -44,7 +42,7 @@
 
 
 #include <yfuns.h>
-#include <avr32/iouc3a0512.h>
+#include <avr32/io.h>
 #include "usart.h"
 
 

@@ -10,7 +10,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 

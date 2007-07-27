@@ -10,7 +10,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -45,17 +45,11 @@
 #ifndef _TC_H_
 #define _TC_H_
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
+#include <avr32/io.h>
 
 
 //! TC driver functions return value in case of invalid argument(s).
-#define TC_INVALID_ARGUMENT                     -1
+#define TC_INVALID_ARGUMENT                     (-1)
 
 //! Number of timer/counter channels.
 #define TC_NUMBER_OF_CHANNELS                   (sizeof(((avr32_tc_t *)0)->channel) / sizeof(avr32_tc_channel_t))

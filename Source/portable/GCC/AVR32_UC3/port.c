@@ -8,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -83,7 +83,8 @@ static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
 /*
- * Low-level initialization routine called during Newlib's startup.
+ * Low-level initialization routine called during startup, before the main
+ * function.
  * This version comes in replacement to the default one provided by Newlib.
  * Newlib's _init_startup only calls init_exceptions, but Newlib's exception
  * vectors are not compatible with the SCALL management in the current FreeRTOS
@@ -124,13 +125,19 @@ void _init_startup(void)
 
 	/* Code section present if and only if the debug trace is activated. */
 	#if configDBG
+	{
+		static const gpio_map_t DBG_USART_GPIO_MAP =
+		{
+			{ configDBG_USART_RX_PIN, configDBG_USART_RX_FUNCTION },
+			{ configDBG_USART_TX_PIN, configDBG_USART_TX_FUNCTION }
+		};
 
 		/* Initialize the USART used for the debug trace with the configured parameters. */
 		set_usart_base( ( void * ) configDBG_USART );
-		gpio_enable_module_pin( configDBG_USART_RX_PIN, configDBG_USART_RX_FUNCTION );
-		gpio_enable_module_pin( configDBG_USART_TX_PIN, configDBG_USART_TX_FUNCTION );
+		gpio_enable_module( DBG_USART_GPIO_MAP,
+		                    sizeof( DBG_USART_GPIO_MAP ) / sizeof( DBG_USART_GPIO_MAP[0] ) );
 		usart_init( configDBG_USART_BAUDRATE );
-
+	}
 	#endif
 }
 /*-----------------------------------------------------------*/
@@ -194,15 +201,15 @@ __attribute__((__naked__)) static void vTick( void )
 	/* Save the context of the interrupted task. */
 	portSAVE_CONTEXT_OS_INT();
 
-	/* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
-	clock cycles from now. */
 	#if( configTICK_USE_TC==1 )
 		/* Clear the interrupt flag. */
 		AVR32_TC.channel[configTICK_TC_CHANNEL].sr;
 	#else
+		/* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
+		clock cycles from now. */
 		prvScheduleNextTick();
 	#endif
-	
+
 	/* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
 	calls in a critical section . */
 	portENTER_CRITICAL();
@@ -252,7 +259,6 @@ void vPortExitCritical( void )
 	}
 }
 /*-----------------------------------------------------------*/
-
 
 /*
  * Initialise the stack of a task to look exactly as if a call to
@@ -313,13 +319,39 @@ void vPortEndScheduler( void )
 /* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
 clock cycles from now. */
 #if( configTICK_USE_TC==0 )
+	static void prvScheduleFirstTick(void)
+	{
+		unsigned long lCycles;
+
+		lCycles = Get_system_register(AVR32_COUNT);
+		lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+		// If lCycles ends up to be 0, make it 1 so that the COMPARE and exception
+		// generation feature does not get disabled.
+		if(0 == lCycles)
+		{
+			lCycles++;
+		}
+		Set_system_register(AVR32_COMPARE, lCycles);
+	}
+	
 	static void prvScheduleNextTick(void)
 	{
-		unsigned long lCountVal, lCompareVal;
+		unsigned long lCycles, lCount;
 
-		lCountVal = Get_system_register(AVR32_COUNT);
-		lCompareVal = lCountVal + (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
-		Set_system_register(AVR32_COMPARE, lCompareVal);
+		lCycles = Get_system_register(AVR32_COMPARE);
+		lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+		// If lCycles ends up to be 0, make it 1 so that the COMPARE and exception
+		// generation feature does not get disabled.
+		if(0 == lCycles)
+		{
+			lCycles++;
+		}
+		lCount = Get_system_register(AVR32_COUNT);
+		if( lCycles < lCount )
+		{		// We missed a tick, recover for the next.
+			lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+		}
+		Set_system_register(AVR32_COMPARE, lCycles);
 	}
 #endif
 /*-----------------------------------------------------------*/
@@ -383,12 +415,12 @@ static void prvSetupTimerInterrupt(void)
 		INTC_register_interrupt(&vTick, configTICK_TC_IRQ, INT0);
 
 		/* Initialize the timer/counter. */
-		tc_init_waveform(tc, &waveform_opt);         
+		tc_init_waveform(tc, &waveform_opt);
 
 		/* Set the compare triggers.
 		Remember TC counter is 16-bits, so counting second is not possible!
 		That's why we configure it to count ms. */
-		tc_write_rc( tc, configTICK_TC_CHANNEL, ( configPBA_CLOCK_HZ/ 4) / 1000 );
+		tc_write_rc( tc, configTICK_TC_CHANNEL, ( configPBA_CLOCK_HZ / 4) / configTICK_RATE_HZ );
 
 		tc_configure_interrupts( tc, configTICK_TC_CHANNEL, &tc_interrupt );
 
@@ -398,7 +430,7 @@ static void prvSetupTimerInterrupt(void)
 	#else
 	{
 		INTC_register_interrupt(&vTick, AVR32_CORE_COMPARE_IRQ, INT0);
-		prvScheduleNextTick();
+		prvScheduleFirstTick();
 	}
 	#endif
 }

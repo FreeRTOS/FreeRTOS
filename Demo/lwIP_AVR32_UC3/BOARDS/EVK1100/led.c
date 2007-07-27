@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -13,7 +11,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -45,14 +43,7 @@
  */
 
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
-
+#include <avr32/io.h>
 #include "preprocessor.h"
 #include "compiler.h"
 #include "evk1100.h"
@@ -89,7 +80,7 @@ static tLED_DESCRIPTOR LED_DESCRIPTOR[LED_COUNT] =
 
 
 //! Saved state of all LEDs.
-static U32 LED_State = (1 << LED_COUNT) - 1;
+static volatile U32 LED_State = (1 << LED_COUNT) - 1;
 
 
 U32 LED_Read_Display(void)

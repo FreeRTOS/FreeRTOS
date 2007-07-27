@@ -138,7 +138,7 @@
 //! @{
 #define mainMEM_CHECK_SIZE_1      ( ( size_t ) 51 )
 #define mainMEM_CHECK_SIZE_2      ( ( size_t ) 52 )
-#define mainMEM_CHECK_SIZE_3      ( ( size_t ) 151 )
+#define mainMEM_CHECK_SIZE_3      ( ( size_t ) 15 )
 //! @}
 
 

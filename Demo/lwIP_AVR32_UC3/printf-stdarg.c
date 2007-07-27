@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 

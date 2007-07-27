@@ -10,7 +10,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -42,14 +42,7 @@
  */
 
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
-
+#include <avr32/io.h>
 #include "compiler.h"
 #include "tc.h"
 

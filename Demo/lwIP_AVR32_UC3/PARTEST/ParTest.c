@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -42,14 +40,7 @@
  */
 
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
-
+#include <avr32/io.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "partest.h"

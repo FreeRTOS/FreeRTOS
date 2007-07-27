@@ -61,6 +61,12 @@
  * \ingroup FreeRTOSIntro
  */
 
+/*
+	Changes from V4.3.1
+
+	+ Included local const within listGET_OWNER_OF_NEXT_ENTRY() to assist
+	  compiler with optimisation.  Thanks B.R.
+*/
 
 #ifndef LIST_H
 #define LIST_H
@@ -158,14 +164,17 @@ typedef struct xLIST
  * \ingroup LinkedList
  */
 #define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )									\
+{																						\
+xList * const pxConstList = pxList;														\
 	/* Increment the index to the next item and return the item, ensuring */			\
 	/* we don't return the marker used at the end of the list.  */						\
-	( pxList )->pxIndex = ( pxList )->pxIndex->pxNext;									\
-	if( ( pxList )->pxIndex == ( xListItem * ) &( ( pxList )->xListEnd ) )				\
+	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;						\
+	if( ( pxConstList )->pxIndex == ( xListItem * ) &( ( pxConstList )->xListEnd ) )	\
 	{																					\
-		( pxList )->pxIndex = ( pxList )->pxIndex->pxNext;								\
+		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;					\
 	}																					\
-	pxTCB = ( pxList )->pxIndex->pvOwner
+	pxTCB = ( pxConstList )->pxIndex->pvOwner;											\
+}
 
 
 /*

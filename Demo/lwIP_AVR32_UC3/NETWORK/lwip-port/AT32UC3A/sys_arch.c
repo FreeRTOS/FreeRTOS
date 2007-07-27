@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -102,7 +100,7 @@ sys_mbox_free(sys_mbox_t mbox)
   if( uxQueueMessagesWaiting( mbox ) )
   {
     /* Line for breakpoint.  Should never break here! */
-    __asm volatile ( "NOP" );
+    __asm__ __volatile__ ( "nop" );
   }
 
   vQueueDelete( mbox );
@@ -377,9 +375,9 @@ static int iCall = 0;
   }
 #endif
 #if (SMTP_USED == 1)
-  else if (thread == vBasicSMTPHost)
+  else if (thread == vBasicSMTPClient)
   {
-    result = xTaskCreate( thread, ( signed portCHAR * ) "SMTP", lwipBASIC_SMTP_HOST_STACK_SIZE, arg, prio, &CreatedTask );
+    result = xTaskCreate( thread, ( signed portCHAR * ) "SMTP", lwipBASIC_SMTP_CLIENT_STACK_SIZE, arg, prio, &CreatedTask );
   }
 #endif
 

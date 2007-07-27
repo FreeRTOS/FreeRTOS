@@ -149,15 +149,14 @@
     </settings>
     <settings>
       <name>ICCAVR32</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>4</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
           <state>BOARD=EVK1100</state>
-          <state>IAR_AVR32_PORT</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -248,15 +247,6 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>1</state>
-        </option>
-        <option>
           <name>CCAllowList</name>
           <version>0</version>
           <state>0000000</state>
@@ -288,15 +278,6 @@
         <option>
           <name>CCLangSelect</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>1</state>
         </option>
         <option>
           <name>CCLibConfigHeader</name>
@@ -353,6 +334,19 @@
         <option>
           <name>CCModuleType</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -503,15 +497,7 @@
     <settings>
       <name>JAVATOC</name>
       <archiveVersion>0</archiveVersion>
-      <data>
-        <version>0</version>
-        <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
-        <option>
-          <name>JavaToCDummy</name>
-          <state>1</state>
-        </option>
-      </data>
+      <data/>
     </settings>
     <settings>
       <name>CUSTOM</name>
@@ -556,7 +542,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
@@ -609,11 +595,11 @@
         </option>
         <option>
           <name>XclOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\config\lnkuc3a0512.xcl</state>
+          <state>$PROJ_DIR$\..\..\UTILS\LINKER_SCRIPTS\AT32UC3A\0512\IAR\lnkuc3a0512.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -697,7 +683,7 @@
         </option>
         <option>
           <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
+          <state>__trampoline</state>
         </option>
         <option>
           <name>DebugInformation</name>
@@ -713,19 +699,19 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>rtosdemo.a82</state>
+          <state>rtosdemo.hex</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -734,12 +720,12 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
           <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>xcProgramEntryLabelSelect</name>
@@ -973,15 +959,14 @@
     </settings>
     <settings>
       <name>ICCAVR32</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>4</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
           <name>CCDefines</name>
           <state>BOARD=EVK1100</state>
-          <state>IAR_AVR32_PORT</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1072,15 +1057,6 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>3</state>
-        </option>
-        <option>
           <name>CCAllowList</name>
           <version>0</version>
           <state>1111111</state>
@@ -1112,15 +1088,6 @@
         <option>
           <name>CCLangSelect</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>3</state>
         </option>
         <option>
           <name>CCLibConfigHeader</name>
@@ -1177,6 +1144,19 @@
         <option>
           <name>CCModuleType</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>3</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>2</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>3</state>
         </option>
       </data>
     </settings>
@@ -1327,15 +1307,7 @@
     <settings>
       <name>JAVATOC</name>
       <archiveVersion>0</archiveVersion>
-      <data>
-        <version>0</version>
-        <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
-        <option>
-          <name>JavaToCDummy</name>
-          <state>1</state>
-        </option>
-      </data>
+      <data/>
     </settings>
     <settings>
       <name>CUSTOM</name>
@@ -1380,7 +1352,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
@@ -1433,11 +1405,11 @@
         </option>
         <option>
           <name>XclOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\config\lnkuc3a0512.xcl</state>
+          <state>$PROJ_DIR$\..\..\UTILS\LINKER_SCRIPTS\AT32UC3A\0512\IAR\lnkuc3a0512.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -1521,7 +1493,7 @@
         </option>
         <option>
           <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
+          <state>__trampoline</state>
         </option>
         <option>
           <name>DebugInformation</name>
@@ -1537,19 +1509,19 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>rtosdemo.a82</state>
+          <state>rtosdemo.hex</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -1558,12 +1530,12 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
           <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>xcProgramEntryLabelSelect</name>
@@ -1654,6 +1626,9 @@
     <name>DLIB</name>
     <file>
       <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\AVR32_UC3\read.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\SERVICES\USB\CLASS\DFU\EXAMPLES\ISP\BOOT\trampoline.s82</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\..\Source\portable\IAR\AVR32_UC3\write.c</name>

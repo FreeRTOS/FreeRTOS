@@ -8,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -50,12 +50,10 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-
-/* Get rid of inline in task.h. */
 #include "task.h"
 
 /* AVR32 UC3 includes. */
-#include <avr32/iouc3a0512.h>
+#include <avr32/io.h>
 #include <intrinsics.h>
 #include "gpio.h"
 
@@ -79,6 +77,10 @@ volatile unsigned portLONG ulCriticalNesting = 9999UL;
 #if( configTICK_USE_TC==0 )
 	static void prvScheduleNextTick( void );
 #endif
+
+/* Setup the timer to generate the tick interrupts. */
+static void prvSetupTimerInterrupt( void );
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -111,21 +113,27 @@ int __low_level_init(void)
 	/* Code section present if and only if the debug trace is activated. */
 	#if configDBG
 	{
-		static const usart_options_t usart_opt =
+		static const gpio_map_t DBG_USART_GPIO_MAP =
 		{
-		  .baudrate = configDBG_USART_BAUDRATE,
-		  .charlength = 8,
-		  .paritytype = USART_NO_PARITY,
-		  .stopbits = USART_1_STOPBIT,
-		  .channelmode = USART_MODE_NORMAL
+			{ configDBG_USART_RX_PIN, configDBG_USART_RX_FUNCTION },
+			{ configDBG_USART_TX_PIN, configDBG_USART_TX_FUNCTION }
+		};
+
+		static const usart_options_t DBG_USART_OPTIONS =
+		{
+			.baudrate = configDBG_USART_BAUDRATE,
+			.charlength = 8,
+			.paritytype = USART_NO_PARITY,
+			.stopbits = USART_1_STOPBIT,
+			.channelmode = USART_NORMAL_CHMODE
 		};
 
 		/* Initialize the USART used for the debug trace with the configured parameters. */
 		extern volatile avr32_usart_t *volatile stdio_usart_base;
 		stdio_usart_base = configDBG_USART;
-		gpio_enable_module_pin(configDBG_USART_RX_PIN, configDBG_USART_RX_FUNCTION);
-		gpio_enable_module_pin(configDBG_USART_TX_PIN, configDBG_USART_TX_FUNCTION);
-		usart_init_rs232(configDBG_USART, &usart_opt, configCPU_CLOCK_HZ);
+		gpio_enable_module( DBG_USART_GPIO_MAP,
+		                    sizeof( DBG_USART_GPIO_MAP ) / sizeof( DBG_USART_GPIO_MAP[0] ) );
+		usart_init_rs232(configDBG_USART, &DBG_USART_OPTIONS, configCPU_CLOCK_HZ);
 	}
 	#endif
 
@@ -159,15 +167,15 @@ static void vTick( void )
 	/* Save the context of the interrupted task. */
 	portSAVE_CONTEXT_OS_INT();
 
-	/* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
-	clock cycles from now. */
 	#if( configTICK_USE_TC==1 )
 		/* Clear the interrupt flag. */
 		AVR32_TC.channel[configTICK_TC_CHANNEL].sr;
 	#else
+		/* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
+		clock cycles from now. */
 		prvScheduleNextTick();
 	#endif
-	
+
 	/* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
 	calls in a critical section . */
 	portENTER_CRITICAL();
@@ -217,10 +225,6 @@ void vPortExitCritical( void )
 		}
 	}
 }
-/*-----------------------------------------------------------*/
-
-/* Setup the timer to generate the tick interrupts. */
-static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
 /*
@@ -282,13 +286,39 @@ void vPortEndScheduler( void )
 /* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
 clock cycles from now. */
 #if( configTICK_USE_TC==0 )
+	static void prvScheduleFirstTick(void)
+	{
+		unsigned long lCycles;
+
+		lCycles = Get_system_register(AVR32_COUNT);
+		lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+		// If lCycles ends up to be 0, make it 1 so that the COMPARE and exception
+		// generation feature does not get disabled.
+		if(0 == lCycles)
+		{
+			lCycles++;
+		}
+		Set_system_register(AVR32_COMPARE, lCycles);
+	}
+	
 	static void prvScheduleNextTick(void)
 	{
-		unsigned long lCountVal, lCompareVal;
+		unsigned long lCycles, lCount;
 
-		lCountVal = Get_system_register(AVR32_COUNT);
-		lCompareVal = lCountVal + (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
-		Set_system_register(AVR32_COMPARE, lCompareVal);
+		lCycles = Get_system_register(AVR32_COMPARE);
+		lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+		// If lCycles ends up to be 0, make it 1 so that the COMPARE and exception
+		// generation feature does not get disabled.
+		if(0 == lCycles)
+		{
+			lCycles++;
+		}
+		lCount = Get_system_register(AVR32_COUNT);
+		if( lCycles < lCount )
+		{		// We missed a tick, recover for the next.
+			lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
+		}
+		Set_system_register(AVR32_COMPARE, lCycles);
 	}
 #endif
 /*-----------------------------------------------------------*/
@@ -357,7 +387,7 @@ static void prvSetupTimerInterrupt(void)
 		/* Set the compare triggers.
 		Remember TC counter is 16-bits, so counting second is not possible!
 		That's why we configure it to count ms. */
-		tc_write_rc( tc, configTICK_TC_CHANNEL, ( configPBA_CLOCK_HZ / 4) / 1000 );
+		tc_write_rc( tc, configTICK_TC_CHANNEL, ( configPBA_CLOCK_HZ / 4) / configTICK_RATE_HZ );
 
 		tc_configure_interrupts( tc, configTICK_TC_CHANNEL, &tc_interrupt );
 
@@ -367,7 +397,7 @@ static void prvSetupTimerInterrupt(void)
 	#else
 	{
 		INTC_register_interrupt((__int_handler)&vTick, AVR32_CORE_COMPARE_IRQ, INT0);
-		prvScheduleNextTick();
+		prvScheduleFirstTick();
 	}
 	#endif
 }

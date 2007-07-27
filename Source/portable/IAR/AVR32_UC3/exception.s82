@@ -1,15 +1,16 @@
-/******************************************************************************
- * Exception and interrupt vectors.
+/*This file is prepared for Doxygen automatic documentation generation.*/
+/*! \file *********************************************************************
  *
- * This file has been built from the Newlib exception.S. It maps all events
- * supported by a UC3.
+ * \brief Exception and interrupt vectors.
+ *
+ * This file maps all events supported by an AVR32UC.
  *
  * - Compiler:           IAR EWAVR32
- * - Supported devices:  All AVR32A devices with an INTC module can be used.
+ * - Supported devices:  All AVR32UC devices with an INTC module can be used.
  * - AppNote:
  *
- * - author              Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ * \author               Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -41,9 +42,12 @@
  */
 
 
-#include <avr32/iouc3a0512.h>
-#include <avr32/uc3a0512.h>
+#include <avr32/io.h>
 #include "intc.h"
+
+
+//! @{
+//! \verbatim
 
 
 // Start of Exception Vector Table.
@@ -66,107 +70,107 @@ _evba:
         ORG 0x000
         // Unrecoverable Exception.
 _handle_Unrecoverable_Exception:
-        rjmp $
+        rjmp _handle_Unrecoverable_Exception
 
         ORG 0x004
-        // TLB Multiple Hit: UNUSED IN AVR32A.
+        // TLB Multiple Hit: UNUSED IN AVR32UC.
 _handle_TLB_Multiple_Hit:
-        rjmp $
+        rjmp _handle_TLB_Multiple_Hit
 
         ORG 0x008
         // Bus Error Data Fetch.
 _handle_Bus_Error_Data_Fetch:
-        rjmp $
+        rjmp _handle_Bus_Error_Data_Fetch
 
         ORG 0x00C
          // Bus Error Instruction Fetch.
 _handle_Bus_Error_Instruction_Fetch:
-        rjmp $
+        rjmp _handle_Bus_Error_Instruction_Fetch
 
         ORG 0x010
         // NMI.
 _handle_NMI:
-        rjmp $
+        rjmp _handle_NMI
 
         ORG 0x014
         // Instruction Address.
 _handle_Instruction_Address:
-        rjmp $
+        rjmp _handle_Instruction_Address
 
         ORG 0x018
         // ITLB Protection.
 _handle_ITLB_Protection:
-        rjmp $
+        rjmp _handle_ITLB_Protection
 
         ORG 0x01C
         // Breakpoint.
 _handle_Breakpoint:
-        rjmp $
+        rjmp _handle_Breakpoint
 
         ORG 0x020
         // Illegal Opcode.
 _handle_Illegal_Opcode:
-        rjmp $
+        rjmp _handle_Illegal_Opcode
 
         ORG 0x024
         // Unimplemented Instruction.
 _handle_Unimplemented_Instruction:
-        rjmp $
+        rjmp _handle_Unimplemented_Instruction
 
         ORG 0x028
         // Privilege Violation.
 _handle_Privilege_Violation:
-        rjmp $
+        rjmp _handle_Privilege_Violation
 
         ORG 0x02C
-        // Floating-Point: UNUSED IN AVR32A.
+        // Floating-Point: UNUSED IN AVR32UC.
 _handle_Floating_Point:
-        rjmp $
+        rjmp _handle_Floating_Point
 
         ORG 0x030
-        // Coprocessor Absent: UNUSED IN AVR32A.
+        // Coprocessor Absent: UNUSED IN AVR32UC.
 _handle_Coprocessor_Absent:
-        rjmp $
+        rjmp _handle_Coprocessor_Absent
 
         ORG 0x034
         // Data Address (Read).
 _handle_Data_Address_Read:
-        rjmp $
+        rjmp _handle_Data_Address_Read
 
         ORG 0x038
         // Data Address (Write).
 _handle_Data_Address_Write:
-        rjmp $
+        rjmp _handle_Data_Address_Write
 
         ORG 0x03C
         // DTLB Protection (Read).
 _handle_DTLB_Protection_Read:
-        rjmp $
+        rjmp _handle_DTLB_Protection_Read
 
         ORG 0x040
         // DTLB Protection (Write).
 _handle_DTLB_Protection_Write:
-        rjmp $
+        rjmp _handle_DTLB_Protection_Write
 
         ORG 0x044
-        // DTLB Modified: UNUSED IN AVR32A.
+        // DTLB Modified: UNUSED IN AVR32UC.
 _handle_DTLB_Modified:
-        rjmp $
+        rjmp _handle_DTLB_Modified
 
         ORG 0x050
-        // ITLB Miss: UNUSED IN AVR32A.
+        // ITLB Miss: UNUSED IN AVR32UC.
 _handle_ITLB_Miss:
-        rjmp $
+        rjmp _handle_ITLB_Miss
 
         ORG 0x060
-        // DTLB Miss (Read): UNUSED IN AVR32A.
+        // DTLB Miss (Read): UNUSED IN AVR32UC.
 _handle_DTLB_Miss_Read:
-        rjmp $
+        rjmp _handle_DTLB_Miss_Read
 
         ORG 0x070
-        // DTLB Miss (Write): UNUSED IN AVR32A.
+        // DTLB Miss (Write): UNUSED IN AVR32UC.
 _handle_DTLB_Miss_Write:
-        rjmp $
+        rjmp _handle_DTLB_Miss_Write
 
         ORG 0x100
         // Supervisor Call.
@@ -300,3 +304,7 @@ ipr_val:
 
 
   END
+
+
+//! \endverbatim
+//! @}

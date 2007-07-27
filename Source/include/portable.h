@@ -188,12 +188,18 @@
     typedef void ( __interrupt __far *pxISR )();
 #endif
 
-#ifdef GCC_AVR32_PORT
-	#include "portmacro.h"
+#ifdef __GNUC__
+   #ifdef __AVR32_AVR32A__
+	   #include "portmacro.h"
+   #endif
 #endif
 
-#ifdef IAR_AVR32_PORT
-	#include "portmacro.h"
+#ifdef __ICCAVR32__
+   #ifdef __CORE__
+      #if __CORE__ == __AVR32A__
+	      #include "portmacro.h"
+      #endif
+   #endif
 #endif
 
 /*

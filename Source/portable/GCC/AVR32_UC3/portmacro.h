@@ -8,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -117,7 +117,7 @@
  * The current source file name and line number are output with a colon before
  * the formatted string.
  * A carriage return and a linefeed are appended to the output.
- * stdout is redirected by Newlib to the USART configured by configDBG_USART.
+ * stdout is redirected to the USART configured by configDBG_USART.
  * The parameters are the same as for the standard printf function.
  * There is no return value.
  * SHALL NOT BE CALLED FROM WITHIN AN INTERRUPT as fputs and printf use malloc,

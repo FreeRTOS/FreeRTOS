@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
  * All rights reserved. 
@@ -52,8 +50,7 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "AVR32_EMAC.h"
-#include "AVR32_CONF_EMAC.h"
+#include "macb.h"
 
 #define netifMTU              ( 1500 )
 #define netifGUARD_BLOCK_TIME       ( 250 )
@@ -90,20 +87,20 @@ low_level_init(struct netif *netif)
   /* Do whatever else is needed to initialize interface. */  
   xNetIf = netif;
 
-  /* Initialise the EMAC.  This routine contains code that polls status bits.
+  /* Initialise the MACB.  This routine contains code that polls status bits.
   If the Ethernet cable is not plugged in then this can take a considerable
   time.  To prevent this starving lower priority tasks of processing time we
   lower our priority prior to the call, then raise it back again once the
   initialisation is complete. */
   uxPriority = uxTaskPriorityGet( NULL );
   vTaskPrioritySet( NULL, tskIDLE_PRIORITY );
-  while( xEMACInit() == NULL )
+  while( xMACBInit(&AVR32_MACB) == FALSE )
   {
-    __asm( "NOP" );
+    __asm__ __volatile__ ( "nop" );
   }
   vTaskPrioritySet( NULL, uxPriority );
 
-  /* Create the task that handles the EMAC. */
+  /* Create the task that handles the MACB. */
   // xTaskCreate( ethernetif_input, ( signed portCHAR * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
   sys_thread_new( ethernetif_input, NULL, netifINTERFACE_TASK_PRIORITY );
 }
@@ -136,7 +133,7 @@ err_t xReturn = ERR_OK;
     pbuf_header( p, -ETH_PAD_SIZE );    /* drop the padding word */
   #endif
 
-  /* Access to the EMAC is guarded using a semaphore. */
+  /* Access to the MACB is guarded using a semaphore. */
   if( xSemaphoreTake( xTxSemaphore, netifGUARD_BLOCK_TIME ) )
   {
     for( q = p; q != NULL; q = q->next )
@@ -145,13 +142,12 @@ err_t xReturn = ERR_OK;
       time. The size of the data in each pbuf is kept in the ->len
       variable.  if q->next == NULL then this is the last pbuf in the
       chain. */
-      if( !lEMACSend( q->payload, q->len, ( q->next == NULL ) ) )
+      if( !lMACBSend(&AVR32_MACB, q->payload, q->len, ( q->next == NULL ) ) )
       {
         xReturn = ~ERR_OK;
       }
     }
-
-        xSemaphoreGive( xTxSemaphore );
+    xSemaphoreGive( xTxSemaphore );
   }
   
 
@@ -193,7 +189,7 @@ static xSemaphoreHandle xRxSemaphore = NULL;
   if( xSemaphoreTake( xRxSemaphore, netifGUARD_BLOCK_TIME ) )
   {
     /* Obtain the size of the packet. */
-    len = ulEMACInputLength();
+    len = ulMACBInputLength();
 
     if( len )
     {
@@ -211,7 +207,7 @@ static xSemaphoreHandle xRxSemaphore = NULL;
         #endif
   
         /* Let the driver know we are going to read a new packet. */
-        vEMACRead( NULL, 0, len );
+        vMACBRead( NULL, 0, len );
   
         /* We iterate over the pbuf chain until we have read the entire
         packet into the pbuf. */
@@ -219,7 +215,7 @@ static xSemaphoreHandle xRxSemaphore = NULL;
         {
           /* Read enough bytes to fill this pbuf in the chain. The
           available data in the pbuf is given by the q->len variable. */
-          vEMACRead( q->payload, q->len, len );
+          vMACBRead( q->payload, q->len, len );
         }
   
         #if ETH_PAD_SIZE
@@ -294,7 +290,7 @@ struct pbuf         *p;
       {
         /* No packet could be read.  Wait a for an interrupt to tell us
         there is more data available. */
-        vEMACWaitForInput();
+        vMACBWaitForInput(100);
       }
 
     } while( p == NULL );
@@ -350,7 +346,7 @@ arp_timer(void *arg)
  * actual setup of the hardware.
  *
  */
-extern struct netif EMAC_if;
+extern struct netif MACB_if;
 err_t
 ethernetif_init(struct netif *netif)
 {
@@ -371,7 +367,7 @@ ethernetif_init(struct netif *netif)
   netif->output = ethernetif_output;
   netif->linkoutput = low_level_output;
   
-  for(i = 0; i < 6; i++) netif->hwaddr[i] = EMAC_if.hwaddr[i];
+  for(i = 0; i < 6; i++) netif->hwaddr[i] = MACB_if.hwaddr[i];
   
   low_level_init(netif);
 

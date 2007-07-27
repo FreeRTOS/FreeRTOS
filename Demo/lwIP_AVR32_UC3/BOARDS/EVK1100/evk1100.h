@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -13,7 +11,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -64,7 +62,7 @@
 // part.
 //#define FRCOSC          115200    //!< RCOsc frequency: Hz.
 
-#define FOSC32          32000     //!< Osc32 frequency: Hz.
+#define FOSC32          32768     //!< Osc32 frequency: Hz.
 #define OSC32_STARTUP   3         //!< Osc32 startup time: RCOsc periods.
 
 #define FOSC0           12000000  //!< Osc0 frequency: Hz.
@@ -115,6 +113,13 @@
 #  define USB_VBOF_ACTIVE_LEVEL       HIGH
 #else
 #  define USB_VBOF_ACTIVE_LEVEL       LOW
+#endif
+
+//! USB overcurrent detection pin.
+#ifdef EVK1100_REVA
+#  define USB_OVERCURRENT_DETECT_PIN  AVR32_PIN_PB18
+#else
+#  define USB_OVERCURRENT_DETECT_PIN  AVR32_PIN_PX33
 #endif
 
 //! @}
@@ -278,7 +283,7 @@
  */
 //! @{
 #define DIP204_BACKLIGHT_PIN        AVR32_PIN_PB18
-#define DIP204_PWM_CHANNEL          AVR32_PWM_CHID6
+#define DIP204_PWM_CHANNEL          6
 #define DIP204_PWM_PIN              AVR32_PWM_PWM_6_PIN
 #define DIP204_PWM_FUNCTION         AVR32_PWM_PWM_6_FUNCTION
 //! @}
@@ -299,9 +304,11 @@
 //! @}
 
 
-/*! \name SPI Connections of the SD/MMC Connector
+/*! \name GPIO and SPI Connections of the SD/MMC Connector
  */
 //! @{
+#define SD_MMC_CARD_DETECT_PIN      AVR32_PIN_PA02
+#define SD_MMC_WRITE_PROTECT_PIN    AVR32_PIN_PA07
 #define SD_MMC_SPI                  (&AVR32_SPI1)
 #define SD_MMC_SPI_CS               1
 #define SD_MMC_SPI_SCK_PIN          AVR32_SPI1_SCK_0_PIN

@@ -8,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -68,5 +68,5 @@
  * For further information, visit
  * <A href="http://www.atmel.com/products/AVR32/" >Atmel AVR32</A>. and
  * <A href="http://www.freertos.org/" >FreeRTOS home page</A>.\n
- * Support e-mail address: avr32@atmel.com.
+ * Support and FAQ: http://support.atmel.no/
  */

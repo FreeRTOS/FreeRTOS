@@ -1,15 +1,16 @@
-/******************************************************************************
- * Exception and interrupt vectors.
+/*This file is prepared for Doxygen automatic documentation generation.*/
+/*! \file *********************************************************************
  *
- * This file has been built from the Newlib exception.S. It maps all events
- * supported by a UC3.
+ * \brief Exception and interrupt vectors.
+ *
+ * This file maps all events supported by an AVR32UC.
  *
  * - Compiler:           GNU GCC for AVR32
- * - Supported devices:  All AVR32A devices with an INTC module can be used.
+ * - Supported devices:  All AVR32UC devices with an INTC module can be used.
  * - AppNote:
  *
- * - author              Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ * \author               Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -45,7 +46,11 @@
 #include "intc.h"
 
 
-  .section  .exception, "ax"
+//! @{
+//! \verbatim
+
+
+  .section  .exception, "ax", @progbits
 
 
 // Start of Exception Vector Table.
@@ -56,6 +61,7 @@
 
   // Export symbol.
   .global _evba
+  .type _evba, @function
 _evba:
 
         .org  0x000
@@ -64,7 +70,7 @@ _handle_Unrecoverable_Exception:
         rjmp $
 
         .org  0x004
-        // TLB Multiple Hit: UNUSED IN AVR32A.
+        // TLB Multiple Hit: UNUSED IN AVR32UC.
 _handle_TLB_Multiple_Hit:
         rjmp $
 
@@ -114,12 +120,12 @@ _handle_Privilege_Violation:
         rjmp $
 
         .org  0x02C
-        // Floating-Point: UNUSED IN AVR32A.
+        // Floating-Point: UNUSED IN AVR32UC.
 _handle_Floating_Point:
         rjmp $
 
         .org  0x030
-        // Coprocessor Absent: UNUSED IN AVR32A.
+        // Coprocessor Absent: UNUSED IN AVR32UC.
 _handle_Coprocessor_Absent:
         rjmp $
 
@@ -144,22 +150,22 @@ _handle_DTLB_Protection_Write:
         rjmp $
 
         .org  0x044
-        // DTLB Modified: UNUSED IN AVR32A.
+        // DTLB Modified: UNUSED IN AVR32UC.
 _handle_DTLB_Modified:
         rjmp $
 
         .org  0x050
-        // ITLB Miss: UNUSED IN AVR32A.
+        // ITLB Miss: UNUSED IN AVR32UC.
 _handle_ITLB_Miss:
         rjmp $
 
         .org  0x060
-        // DTLB Miss (Read): UNUSED IN AVR32A.
+        // DTLB Miss (Read): UNUSED IN AVR32UC.
 _handle_DTLB_Miss_Read:
         rjmp $
 
         .org  0x070
-        // DTLB Miss (Write): UNUSED IN AVR32A.
+        // DTLB Miss (Write): UNUSED IN AVR32UC.
 _handle_DTLB_Miss_Write:
         rjmp $
 
@@ -279,8 +285,13 @@ _int3_normal:
   // The interrupt priority registers contain the interrupt priority level and
   // the EVBA-relative interrupt vector offset.
   .global ipr_val
+  .type ipr_val, @object
 ipr_val:
   .word (INT0 << AVR32_INTC_IPR0_INTLEV_OFFSET) | (_int0 - _evba),\
         (INT1 << AVR32_INTC_IPR0_INTLEV_OFFSET) | (_int1 - _evba),\
         (INT2 << AVR32_INTC_IPR0_INTLEV_OFFSET) | (_int2 - _evba),\
         (INT3 << AVR32_INTC_IPR0_INTLEV_OFFSET) | (_int3 - _evba)
+
+
+//! \endverbatim
+//! @}

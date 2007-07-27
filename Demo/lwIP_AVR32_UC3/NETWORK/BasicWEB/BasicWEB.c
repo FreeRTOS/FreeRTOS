@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -44,7 +42,7 @@
 
 /*
   Implements a simplistic WEB server.  Every time a connection is made and
-  data is received a dynamic page that shows the current FreeRTOS.org kernel 
+  data is received a dynamic page that shows the current FreeRTOS.org kernel
   statistics is generated and returned.  The connection is then closed.
 
   This file was adapted from a FreeRTOS lwIP slip demo supplied by a third
@@ -57,7 +55,6 @@
 /* Standard includes. */
 #include <stdio.h>
 #include <string.h>
-#include <fcntl.h>
 
 #include "conf_eth.h"
 
@@ -70,13 +67,12 @@
 
 /* Demo includes. */
 /* Demo app includes. */
-#include "AVR32_EMAC.h"
 #include "portmacro.h"
 
 /* lwIP includes. */
-#include "lwip/api.h" 
+#include "lwip/api.h"
 #include "lwip/tcpip.h"
-#include "lwip/memp.h" 
+#include "lwip/memp.h"
 #include "lwip/stats.h"
 #include "netif/loopif.h"
 

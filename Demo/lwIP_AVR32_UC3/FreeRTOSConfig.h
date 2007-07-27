@@ -1,4 +1,4 @@
-/*This file has been prepared for Doxygen automatic documentation generation.*/
+/*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
  * \brief FreeRTOS and lwIP example for AVR32 UC3.
@@ -8,9 +8,9 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
- *****************************************************************************/
+ ******************************************************************************/
 
 /* Copyright (c) 2007, Atmel Corporation All rights reserved.
  *
@@ -45,6 +45,7 @@
 
 #include "board.h"
 
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -76,20 +77,25 @@
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet        1
-#define INCLUDE_uxTaskPriorityGet       1
-#define INCLUDE_vTaskDelete             1
-#define INCLUDE_vTaskCleanUpResources   0
-#define INCLUDE_vTaskSuspend            1
-#define INCLUDE_vTaskDelayUntil         1
-#define INCLUDE_vTaskDelay              1
+#define INCLUDE_vTaskPrioritySet            1
+#define INCLUDE_uxTaskPriorityGet           1
+#define INCLUDE_vTaskDelete                 1
+#define INCLUDE_vTaskCleanUpResources       0
+#define INCLUDE_vTaskSuspend                1
+#define INCLUDE_vTaskDelayUntil             1
+#define INCLUDE_vTaskDelay                  1
 #define INCLUDE_xTaskGetCurrentTaskHandle   1
 
 /* configTICK_USE_TC is a boolean indicating whether to use a Timer Counter
    for the tick generation. Timer Counter will generate an accurate Tick;
-   otherwise the CPU will generate a tick but with time drift
-   configTICK_TC_CHANNEL is the TC channel.*/
+   otherwise the CPU will generate a tick but with time drift.
+   configTICK_TC_CHANNEL is the TC channel. */
 #define configTICK_USE_TC             1
 #define configTICK_TC_CHANNEL         2
+
+/* configHEAP_INIT is a boolean indicating whether to initialize the heap with
+   0xA5 in order to be able to determine the maximal heap consumption. */
+#define configHEAP_INIT               0
+
 
 #endif /* FREERTOS_CONFIG_H */

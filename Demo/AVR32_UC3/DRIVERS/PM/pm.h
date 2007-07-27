@@ -9,7 +9,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -44,15 +44,7 @@
 #ifndef _PM_H_
 #define _PM_H_
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#  include <avr32/uc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
-
+#include <avr32/io.h>
 #include "compiler.h"
 #include "preprocessor.h"
 
@@ -68,6 +60,22 @@
  *   \arg \c AVR32_PM_SMODE_STATIC: Static.
  */
 #define SLEEP(mode)   {__asm__ __volatile__ ("sleep "STRINGZ(mode));}
+
+
+/*! \brief Gets the MCU reset cause.
+ *
+ * \param pm Base address of the Power Manager instance (i.e. &AVR32_PM).
+ *
+ * \return The MCU reset cause which can be masked with the
+ *         \c AVR32_PM_RCAUSE_x_MASK bit-masks to isolate specific causes.
+ */
+#if __GNUC__
+__attribute__((__always_inline__))
+#endif
+extern __inline__ unsigned int pm_get_reset_cause(volatile avr32_pm_t *pm)
+{
+  return pm->rcause;
+}
 
 
 /*!

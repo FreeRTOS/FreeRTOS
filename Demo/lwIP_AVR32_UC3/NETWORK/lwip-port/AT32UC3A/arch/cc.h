@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -67,9 +65,24 @@ typedef int sys_prot_t;
 #define LWIP_PLATFORM_ASSERT(x)   
 
 /* */
+#if __GNUC__
 #define PACK_STRUCT_BEGIN
+#elif __ICCAVR32__
+#define PACK_STRUCT_BEGIN _Pragma("pack(1)")
+#endif
+
+#if __GNUC__
 #define PACK_STRUCT_STRUCT __attribute__ ((__packed__))
+#elif __ICCAVR32__
+#define PACK_STRUCT_STRUCT
+#endif
+
+#if __GNUC__
 #define PACK_STRUCT_END
+#elif __ICCAVR32__
+#define PACK_STRUCT_END _Pragma("pack()")
+#endif
+
 #define PACK_STRUCT_FIELD(x) x
 
 #endif /* __CC_H__ */

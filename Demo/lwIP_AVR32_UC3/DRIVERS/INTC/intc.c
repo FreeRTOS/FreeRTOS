@@ -10,7 +10,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -42,14 +42,7 @@
  */
 
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
-
+#include <avr32/io.h>
 #include "compiler.h"
 #include "preprocessor.h"
 #include "intc.h"
@@ -61,7 +54,7 @@ extern const unsigned int ipr_val[AVR32_INTC_NUM_INT_LEVELS];
 //! Creates a table of interrupt line handlers per interrupt group in order to optimize RAM space.
 //! Each line handler table contains a set of pointers to interrupt handlers.
 #define DECL_INT_LINE_HANDLER_TABLE(GRP, unused) \
-static volatile __int_handler _int_line_handler_table_##GRP[AVR32_INTC_NUM_IRQS_PER_GRP##GRP];
+static volatile __int_handler _int_line_handler_table_##GRP[Max(AVR32_INTC_NUM_IRQS_PER_GRP##GRP, 1)];
 MREPEAT(AVR32_INTC_NUM_INT_GRPS, DECL_INT_LINE_HANDLER_TABLE, ~);
 #undef DECL_INT_LINE_HANDLER_TABLE
 
@@ -186,6 +179,7 @@ void INTC_init_interrupts(void)
 
 void INTC_register_interrupt(__int_handler handler, unsigned int irq, unsigned int int_lev)
 {
+  // Determine the group of the IRQ.
   unsigned int int_grp = irq / AVR32_INTC_MAX_NUM_IRQS_PER_GRP;
 
   // Store in _int_line_handler_table_x the pointer to the interrupt handler, so

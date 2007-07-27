@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -9,7 +7,7 @@
  * - Supported devices:  All AVR32 devices can be used.
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -47,12 +45,12 @@
 
 /*! \name Token Paste
  *
- * Paste N preprocessing tokens together, these tokens being allowed to be #defined.
+ * Paste N preprocessing tokens together, these tokens being allowed to be \#defined.
  *
- * May be used only within macros with the tokens passed as arguments if the tokens are #defined.
+ * May be used only within macros with the tokens passed as arguments if the tokens are \#defined.
  *
- * For example, writing TPASTE2(U, WIDTH) within a macro #defined by
- * UTYPE(WIDTH) and invoked as UTYPE(UL_WIDTH) with UL_WIDTH #defined as 32 is
+ * For example, writing TPASTE2(U, WIDTH) within a macro \#defined by
+ * UTYPE(WIDTH) and invoked as UTYPE(UL_WIDTH) with UL_WIDTH \#defined as 32 is
  * equivalent to writing U32.
  */
 //! @{
@@ -69,11 +67,11 @@
 
 /*! \name Absolute Token Paste
  *
- * Paste N preprocessing tokens together, these tokens being allowed to be #defined.
+ * Paste N preprocessing tokens together, these tokens being allowed to be \#defined.
  *
- * No restriction of use if the tokens are #defined.
+ * No restriction of use if the tokens are \#defined.
  *
- * For example, writing ATPASTE2(U, UL_WIDTH) anywhere with UL_WIDTH #defined
+ * For example, writing ATPASTE2(U, UL_WIDTH) anywhere with UL_WIDTH \#defined
  * as 32 is equivalent to writing U32.
  */
 //! @{

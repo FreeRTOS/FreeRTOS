@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -12,7 +10,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -47,18 +45,10 @@
 #ifndef _COMPILER_H_
 #define _COMPILER_H_
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__ || __AAVR32__
-#  include <avr32/iouc3a0512.h>
-#  include <avr32/uc3a0512.h>
-#  if __ICCAVR32__
-#    include <intrinsics.h>
-#  endif
-#else
-#  error Unknown compiler
+#include <avr32/io.h>
+#if __ICCAVR32__
+#  include <intrinsics.h>
 #endif
-
 #include "preprocessor.h"
 
 
@@ -68,6 +58,22 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+
+
+#if __ICCAVR32__
+
+/*! \name Compiler Keywords
+ *
+ * Port of some keywords from GNU GCC for AVR32 to IAR Embedded Workbench for Atmel AVR32.
+ */
+//! @{
+#define __asm__             asm
+#define __inline__          inline
+#define __volatile__
+//! @}
+
+#endif
+
 
 /*! \name Usual Types
  */
@@ -85,6 +91,7 @@ typedef float                   F32;  //!< 32-bit floating-point number.
 typedef double                  F64;  //!< 64-bit floating-point number.
 //! @}
 
+
 /*! \name Status Types
  */
 //! @{
@@ -92,19 +99,6 @@ typedef Bool                Status_bool_t;  //!< Boolean status.
 typedef U8                  Status_t;       //!< 8-bit-coded status.
 //! @}
 
-#if __ICCAVR32__
-
-/*! \name Compiler Keywords
- *
- * Translation of some keywords from GNU GCC for AVR32 to IAR Embedded Workbench for Atmel AVR32.
- */
-//! @{
-#define __asm__             asm
-#define __inline__          inline
-#define __volatile__
-//! @}
-
-#endif
 
 /*! \name Aliasing Aggregate Types
  */
@@ -210,6 +204,7 @@ typedef struct
 
 #endif  // __AVR32_ABI_COMPILER__
 
+
 //_____ M A C R O S ________________________________________________________
 
 /*! \name Usual Constants
@@ -233,9 +228,10 @@ typedef struct
 #define SET       1
 //! @}
 
+
 #ifdef __AVR32_ABI_COMPILER__ // Automatically defined when compiling for AVR32, not when assembling.
 
-/*! \name Bit-Field Handling Macros
+/*! \name Bit-Field Handling
  */
 //! @{
 
@@ -316,6 +312,7 @@ typedef struct
 
 //! @}
 
+
 /*! \brief This macro is used to test fatal errors.
  *
  * The macro tests if the expression is FALSE. If it is, a fatal error is
@@ -332,7 +329,8 @@ typedef struct
   #define Assert(expr)
 #endif
 
-/*! \name Zero-Bit Counting Macros
+
+/*! \name Zero-Bit Counting
  *
  * Under AVR32-GCC, __builtin_clz and __builtin_ctz behave like macros when
  * applied to constant expressions (values known at compile time), so they are
@@ -372,7 +370,8 @@ typedef struct
 
 //! @}
 
-/*! \name Alignment Macros
+
+/*! \name Alignment
  */
 //! @{
 
@@ -424,7 +423,8 @@ typedef struct
 
 //! @}
 
-/*! \name Mathematics Macros
+
+/*! \name Mathematics
  *
  * The same considerations as for clz and ctz apply here but AVR32-GCC does not
  * provide built-in functions to access the assembly instructions abs, min and
@@ -536,6 +536,7 @@ typedef struct
 
 //! @}
 
+
 /*! \brief Calls the routine at address \a addr.
  *
  * It generates a long call opcode.
@@ -558,18 +559,39 @@ typedef struct
   (\
     {\
       __asm__ __volatile__ (\
-        "lda.w   r8, _start\n\t"\
-        "lddpc   r9, 1f\n\t"\
-        "stm     --sp, r8-r9\n\t"\
+        "lddpc   r9, 3f\n\t"\
         "mfsr    r8, %[SR]\n\t"\
         "bfextu  r8, r8, %[SR_MX_OFFSET], %[SR_MX_SIZE]\n\t"\
         "cp.w    r8, 0b001\n\t"\
         "breq    0f\n\t"\
+        "sub     r8, pc, $ - 1f\n\t"\
+        "pushm   r8-r9\n\t"\
         "rete\n"\
         "0:\n\t"\
-        "rets\n\t"\
-        ".balign 4\n"\
+        "mtsr    %[SR], r9\n"\
         "1:\n\t"\
+        "mov     r0, 0\n\t"\
+        "mov     r1, 0\n\t"\
+        "mov     r2, 0\n\t"\
+        "mov     r3, 0\n\t"\
+        "mov     r4, 0\n\t"\
+        "mov     r5, 0\n\t"\
+        "mov     r6, 0\n\t"\
+        "mov     r7, 0\n\t"\
+        "mov     r8, 0\n\t"\
+        "mov     r9, 0\n\t"\
+        "mov     r10, 0\n\t"\
+        "mov     r11, 0\n\t"\
+        "mov     r12, 0\n\t"\
+        "mov     sp, 0\n\t"\
+        "stdsp   sp[0], sp\n\t"\
+        "ldmts   sp, sp\n\t"\
+        "mov     lr, 0\n\t"\
+        "lddpc   pc, 2f\n\t"\
+        ".balign 4\n"\
+        "2:\n\t"\
+        ".word   _start\n"\
+        "3:\n\t"\
         ".word   %[RESET_SR]"\
         :\
         : [SR] "i" (AVR32_SR),\
@@ -584,81 +606,44 @@ typedef struct
   {\
     extern void *volatile __program_start;\
     __asm__ __volatile__ (\
-      "mov     r8, LWRD(__program_start)\n\t"\
-      "orh     r8, HWRD(__program_start)\n\t"\
+      "mov     r7, LWRD(__program_start)\n\t"\
+      "orh     r7, HWRD(__program_start)\n\t"\
       "mov     r9, LWRD("ASTRINGZ(AVR32_SR_GM_MASK | AVR32_SR_EM_MASK | AVR32_SR_M0_MASK)")\n\t"\
       "orh     r9, HWRD("ASTRINGZ(AVR32_SR_GM_MASK | AVR32_SR_EM_MASK | AVR32_SR_M0_MASK)")\n\t"\
-      "stm     --sp, r8-r9\n\t"\
       "mfsr    r8, "ASTRINGZ(AVR32_SR)"\n\t"\
       "bfextu  r8, r8, "ASTRINGZ(AVR32_SR_M0_OFFSET)", "ASTRINGZ(AVR32_SR_M0_SIZE + AVR32_SR_M1_SIZE + AVR32_SR_M2_SIZE)"\n\t"\
       "cp.w    r8, 001b\n\t"\
-      "breq    $ + 4\n\t"\
+      "breq    $ + 10\n\t"\
+      "sub     r8, pc, -12\n\t"\
+      "pushm   r8-r9\n\t"\
       "rete\n\t"\
-      "rets"\
+      "mtsr    "ASTRINGZ(AVR32_SR)", r9\n\t"\
+      "mov     r0, 0\n\t"\
+      "mov     r1, 0\n\t"\
+      "mov     r2, 0\n\t"\
+      "mov     r3, 0\n\t"\
+      "mov     r4, 0\n\t"\
+      "mov     r5, 0\n\t"\
+      "mov     r6, 0\n\t"\
+      "st.w    r0[4], r7\n\t"\
+      "mov     r7, 0\n\t"\
+      "mov     r8, 0\n\t"\
+      "mov     r9, 0\n\t"\
+      "mov     r10, 0\n\t"\
+      "mov     r11, 0\n\t"\
+      "mov     r12, 0\n\t"\
+      "mov     sp, 0\n\t"\
+      "stdsp   sp[0], sp\n\t"\
+      "ldmts   sp, sp\n\t"\
+      "mov     lr, 0\n\t"\
+      "ld.w    pc, lr[4]"\
     );\
     __program_start;\
-}
+  }
 #endif
 
-/*! \name CPU Status Register Macros
- */
-//! @{
 
-/*! \brief Disables all exceptions.
- */
-#if __GNUC__
-  #define Disable_global_exception()        ({__asm__ __volatile__ ("ssrf\t%0" :  : "i" (AVR32_SR_EM_OFFSET));})
-#elif __ICCAVR32__
-  #define Disable_global_exception()        (__set_status_flag(AVR32_SR_EM_OFFSET))
-#endif
-
-/*! \brief Enables all exceptions.
- */
-#if __GNUC__
-  #define Enable_global_exception()         ({__asm__ __volatile__ ("csrf\t%0" :  : "i" (AVR32_SR_EM_OFFSET));})
-#elif __ICCAVR32__
-  #define Enable_global_exception()         (__clear_status_flag(AVR32_SR_EM_OFFSET))
-#endif
-
-/*! \brief Disables all interrupts.
- */
-#if __GNUC__
-  #define Disable_global_interrupt()        ({__asm__ __volatile__ ("ssrf\t%0\n\tnop\n\tnop" :  : "i" (AVR32_SR_GM_OFFSET));})
-#elif __ICCAVR32__
-  #define Disable_global_interrupt()        {__asm__ __volatile__ ("ssrf\t"ASTRINGZ(AVR32_SR_GM_OFFSET)"\n\tnop\n\tnop");}
-#endif
-
-/*! \brief Enables all interrupts.
- */
-#if __GNUC__
-  #define Enable_global_interrupt()         ({__asm__ __volatile__ ("csrf\t%0" :  : "i" (AVR32_SR_GM_OFFSET));})
-#elif __ICCAVR32__
-  #define Enable_global_interrupt()         (__enable_interrupt())
-#endif
-
-/*! \brief Disables interrupt level \a int_lev.
- *
- * \param int_lev Interrupt level to disable (0 to 3).
- */
-#if __GNUC__
-  #define Disable_interrupt_level(int_lev)  ({__asm__ __volatile__ ("ssrf\t%0\n\tnop\n\tnop" :  : "i" (TPASTE3(AVR32_SR_I, int_lev, M_OFFSET)));})
-#elif __ICCAVR32__
-  #define Disable_interrupt_level(int_lev)  {__asm__ __volatile__ ("ssrf\t"ASTRINGZ(TPASTE3(AVR32_SR_I, int_lev, M_OFFSET))"\n\tnop\n\tnop");}
-#endif
-
-/*! \brief Enables interrupt level \a int_lev.
- *
- * \param int_lev Interrupt level to enable (0 to 3).
- */
-#if __GNUC__
-  #define Enable_interrupt_level(int_lev)   ({__asm__ __volatile__ ("csrf\t%0" :  : "i" (TPASTE3(AVR32_SR_I, int_lev, M_OFFSET)));})
-#elif __ICCAVR32__
-  #define Enable_interrupt_level(int_lev)   (__clear_status_flag(TPASTE3(AVR32_SR_I, int_lev, M_OFFSET)))
-#endif
-
-//! @}
-
-/*! \name System Register Access Macros
+/*! \name System Register Access
  */
 //! @{
 
@@ -687,7 +672,87 @@ typedef struct
 
 //! @}
 
+
+/*! \name CPU Status Register Access
+ */
+//! @{
+
+/*! \brief Tells whether exceptions are globally enabled.
+ *
+ * \return \c 1 if exceptions are globally enabled, else \c 0.
+ */
+#define Is_global_exception_enabled()       (!Tst_bits(Get_system_register(AVR32_SR), AVR32_SR_EM_MASK))
+
+/*! \brief Disables exceptions globally.
+ */
+#if __GNUC__
+  #define Disable_global_exception()        ({__asm__ __volatile__ ("ssrf\t%0" :  : "i" (AVR32_SR_EM_OFFSET));})
+#elif __ICCAVR32__
+  #define Disable_global_exception()        (__set_status_flag(AVR32_SR_EM_OFFSET))
+#endif
+
+/*! \brief Enables exceptions globally.
+ */
+#if __GNUC__
+  #define Enable_global_exception()         ({__asm__ __volatile__ ("csrf\t%0" :  : "i" (AVR32_SR_EM_OFFSET));})
+#elif __ICCAVR32__
+  #define Enable_global_exception()         (__clear_status_flag(AVR32_SR_EM_OFFSET))
+#endif
+
+/*! \brief Tells whether interrupts are globally enabled.
+ *
+ * \return \c 1 if interrupts are globally enabled, else \c 0.
+ */
+#define Is_global_interrupt_enabled()       (!Tst_bits(Get_system_register(AVR32_SR), AVR32_SR_GM_MASK))
+
+/*! \brief Disables interrupts globally.
+ */
+#if __GNUC__
+  #define Disable_global_interrupt()        ({__asm__ __volatile__ ("ssrf\t%0\n\tnop\n\tnop" :  : "i" (AVR32_SR_GM_OFFSET));})
+#elif __ICCAVR32__
+  #define Disable_global_interrupt()        {__asm__ __volatile__ ("ssrf\t"ASTRINGZ(AVR32_SR_GM_OFFSET)"\n\tnop\n\tnop");}
+#endif
+
+/*! \brief Enables interrupts globally.
+ */
+#if __GNUC__
+  #define Enable_global_interrupt()         ({__asm__ __volatile__ ("csrf\t%0" :  : "i" (AVR32_SR_GM_OFFSET));})
+#elif __ICCAVR32__
+  #define Enable_global_interrupt()         (__enable_interrupt())
+#endif
+
+/*! \brief Tells whether interrupt level \a int_lev is enabled.
+ *
+ * \param int_lev Interrupt level (0 to 3).
+ *
+ * \return \c 1 if interrupt level \a int_lev is enabled, else \c 0.
+ */
+#define Is_interrupt_level_enabled(int_lev) (!Tst_bits(Get_system_register(AVR32_SR), TPASTE3(AVR32_SR_I, int_lev, M_MASK)))
+
+/*! \brief Disables interrupt level \a int_lev.
+ *
+ * \param int_lev Interrupt level to disable (0 to 3).
+ */
+#if __GNUC__
+  #define Disable_interrupt_level(int_lev)  ({__asm__ __volatile__ ("ssrf\t%0\n\tnop\n\tnop" :  : "i" (TPASTE3(AVR32_SR_I, int_lev, M_OFFSET)));})
+#elif __ICCAVR32__
+  #define Disable_interrupt_level(int_lev)  {__asm__ __volatile__ ("ssrf\t"ASTRINGZ(TPASTE3(AVR32_SR_I, int_lev, M_OFFSET))"\n\tnop\n\tnop");}
+#endif
+
+/*! \brief Enables interrupt level \a int_lev.
+ *
+ * \param int_lev Interrupt level to enable (0 to 3).
+ */
+#if __GNUC__
+  #define Enable_interrupt_level(int_lev)   ({__asm__ __volatile__ ("csrf\t%0" :  : "i" (TPASTE3(AVR32_SR_I, int_lev, M_OFFSET)));})
+#elif __ICCAVR32__
+  #define Enable_interrupt_level(int_lev)   (__clear_status_flag(TPASTE3(AVR32_SR_I, int_lev, M_OFFSET)))
+#endif
+
+//! @}
+
 #endif  // __AVR32_ABI_COMPILER__
+
 
 //! Boolean evaluating MCU little endianism.
 #if (__GNUC__ && __AVR32__) || (__ICCAVR32__ || __AAVR32__)
@@ -702,34 +767,39 @@ typedef struct
 //! Boolean evaluating MCU big endianism.
 #define BIG_ENDIAN_MCU        (!LITTLE_ENDIAN_MCU)
 
+
 #ifdef __AVR32_ABI_COMPILER__ // Automatically defined when compiling for AVR32, not when assembling.
 
-/*! \name U16/U32/U64 MCU Endianism Handling Macros
+/*! \name MCU Endianism Handling
  */
 //! @{
+
 #if LITTLE_ENDIAN_MCU
+
   #define LSB(u16)        (((U8  *)&(u16))[0])  //!< Least significant byte of \a u16.
   #define MSB(u16)        (((U8  *)&(u16))[1])  //!< Most significant byte of \a u16.
+
   #define LSH(u32)        (((U16 *)&(u32))[0])  //!< Least significant half-word of \a u32.
   #define MSH(u32)        (((U16 *)&(u32))[1])  //!< Most significant half-word of \a u32.
   #define LSB0W(u32)      (((U8  *)&(u32))[0])  //!< Least significant byte of 1st rank of \a u32.
   #define LSB1W(u32)      (((U8  *)&(u32))[1])  //!< Least significant byte of 2nd rank of \a u32.
   #define LSB2W(u32)      (((U8  *)&(u32))[2])  //!< Least significant byte of 3rd rank of \a u32.
   #define LSB3W(u32)      (((U8  *)&(u32))[3])  //!< Least significant byte of 4th rank of \a u32.
-  #define MSB3W(u32)      LSB0W(u32)            //!< Most significant byte of 1st rank of \a u32.
-  #define MSB2W(u32)      LSB1W(u32)            //!< Most significant byte of 2nd rank of \a u32.
-  #define MSB1W(u32)      LSB2W(u32)            //!< Most significant byte of 3rd rank of \a u32.
-  #define MSB0W(u32)      LSB3W(u32)            //!< Most significant byte of 4th rank of \a u32.
+  #define MSB3W(u32)      LSB0W(u32)            //!< Most significant byte of 4th rank of \a u32.
+  #define MSB2W(u32)      LSB1W(u32)            //!< Most significant byte of 3rd rank of \a u32.
+  #define MSB1W(u32)      LSB2W(u32)            //!< Most significant byte of 2nd rank of \a u32.
+  #define MSB0W(u32)      LSB3W(u32)            //!< Most significant byte of 1st rank of \a u32.
+
   #define LSW(u64)        (((U32 *)&(u64))[0])  //!< Least significant word of \a u64.
   #define MSW(u64)        (((U32 *)&(u64))[1])  //!< Most significant word of \a u64.
   #define LSH0(u64)       (((U16 *)&(u64))[0])  //!< Least significant half-word of 1st rank of \a u64.
   #define LSH1(u64)       (((U16 *)&(u64))[1])  //!< Least significant half-word of 2nd rank of \a u64.
   #define LSH2(u64)       (((U16 *)&(u64))[2])  //!< Least significant half-word of 3rd rank of \a u64.
   #define LSH3(u64)       (((U16 *)&(u64))[3])  //!< Least significant half-word of 4th rank of \a u64.
-  #define MSH3(u64)       LSH0(u64)             //!< Most significant half-word of 1st rank of \a u64.
-  #define MSH2(u64)       LSH1(u64)             //!< Most significant half-word of 2nd rank of \a u64.
-  #define MSH1(u64)       LSH2(u64)             //!< Most significant half-word of 3rd rank of \a u64.
-  #define MSH0(u64)       LSH3(u64)             //!< Most significant half-word of 4th rank of \a u64.
+  #define MSH3(u64)       LSH0(u64)             //!< Most significant half-word of 4th rank of \a u64.
+  #define MSH2(u64)       LSH1(u64)             //!< Most significant half-word of 3rd rank of \a u64.
+  #define MSH1(u64)       LSH2(u64)             //!< Most significant half-word of 2nd rank of \a u64.
+  #define MSH0(u64)       LSH3(u64)             //!< Most significant half-word of 1st rank of \a u64.
   #define LSB0D(u64)      (((U8  *)&(u64))[0])  //!< Least significant byte of 1st rank of \a u64.
   #define LSB1D(u64)      (((U8  *)&(u64))[1])  //!< Least significant byte of 2nd rank of \a u64.
   #define LSB2D(u64)      (((U8  *)&(u64))[2])  //!< Least significant byte of 3rd rank of \a u64.
@@ -738,37 +808,41 @@ typedef struct
   #define LSB5D(u64)      (((U8  *)&(u64))[5])  //!< Least significant byte of 6th rank of \a u64.
   #define LSB6D(u64)      (((U8  *)&(u64))[6])  //!< Least significant byte of 7th rank of \a u64.
   #define LSB7D(u64)      (((U8  *)&(u64))[7])  //!< Least significant byte of 8th rank of \a u64.
-  #define MSB7D(u64)      LSB0D(u64)            //!< Most significant byte of 1st rank of \a u64.
-  #define MSB6D(u64)      LSB1D(u64)            //!< Most significant byte of 2nd rank of \a u64.
-  #define MSB5D(u64)      LSB2D(u64)            //!< Most significant byte of 3rd rank of \a u64.
-  #define MSB4D(u64)      LSB3D(u64)            //!< Most significant byte of 4th rank of \a u64.
-  #define MSB3D(u64)      LSB4D(u64)            //!< Most significant byte of 5th rank of \a u64.
-  #define MSB2D(u64)      LSB5D(u64)            //!< Most significant byte of 6th rank of \a u64.
-  #define MSB1D(u64)      LSB6D(u64)            //!< Most significant byte of 7th rank of \a u64.
-  #define MSB0D(u64)      LSB7D(u64)            //!< Most significant byte of 8th rank of \a u64.
+  #define MSB7D(u64)      LSB0D(u64)            //!< Most significant byte of 8th rank of \a u64.
+  #define MSB6D(u64)      LSB1D(u64)            //!< Most significant byte of 7th rank of \a u64.
+  #define MSB5D(u64)      LSB2D(u64)            //!< Most significant byte of 6th rank of \a u64.
+  #define MSB4D(u64)      LSB3D(u64)            //!< Most significant byte of 5th rank of \a u64.
+  #define MSB3D(u64)      LSB4D(u64)            //!< Most significant byte of 4th rank of \a u64.
+  #define MSB2D(u64)      LSB5D(u64)            //!< Most significant byte of 3rd rank of \a u64.
+  #define MSB1D(u64)      LSB6D(u64)            //!< Most significant byte of 2nd rank of \a u64.
+  #define MSB0D(u64)      LSB7D(u64)            //!< Most significant byte of 1st rank of \a u64.
+
 #else // BIG_ENDIAN_MCU
+
   #define MSB(u16)        (((U8  *)&(u16))[0])  //!< Most significant byte of \a u16.
   #define LSB(u16)        (((U8  *)&(u16))[1])  //!< Least significant byte of \a u16.
+
   #define MSH(u32)        (((U16 *)&(u32))[0])  //!< Most significant half-word of \a u32.
   #define LSH(u32)        (((U16 *)&(u32))[1])  //!< Least significant half-word of \a u32.
   #define MSB0W(u32)      (((U8  *)&(u32))[0])  //!< Most significant byte of 1st rank of \a u32.
   #define MSB1W(u32)      (((U8  *)&(u32))[1])  //!< Most significant byte of 2nd rank of \a u32.
   #define MSB2W(u32)      (((U8  *)&(u32))[2])  //!< Most significant byte of 3rd rank of \a u32.
   #define MSB3W(u32)      (((U8  *)&(u32))[3])  //!< Most significant byte of 4th rank of \a u32.
-  #define LSB3W(u32)      MSB0W(u32)            //!< Least significant byte of 1st rank of \a u32.
-  #define LSB2W(u32)      MSB1W(u32)            //!< Least significant byte of 2nd rank of \a u32.
-  #define LSB1W(u32)      MSB2W(u32)            //!< Least significant byte of 3rd rank of \a u32.
-  #define LSB0W(u32)      MSB3W(u32)            //!< Least significant byte of 4th rank of \a u32.
+  #define LSB3W(u32)      MSB0W(u32)            //!< Least significant byte of 4th rank of \a u32.
+  #define LSB2W(u32)      MSB1W(u32)            //!< Least significant byte of 3rd rank of \a u32.
+  #define LSB1W(u32)      MSB2W(u32)            //!< Least significant byte of 2nd rank of \a u32.
+  #define LSB0W(u32)      MSB3W(u32)            //!< Least significant byte of 1st rank of \a u32.
+
   #define MSW(u64)        (((U32 *)&(u64))[0])  //!< Most significant word of \a u64.
   #define LSW(u64)        (((U32 *)&(u64))[1])  //!< Least significant word of \a u64.
   #define MSH0(u64)       (((U16 *)&(u64))[0])  //!< Most significant half-word of 1st rank of \a u64.
   #define MSH1(u64)       (((U16 *)&(u64))[1])  //!< Most significant half-word of 2nd rank of \a u64.
   #define MSH2(u64)       (((U16 *)&(u64))[2])  //!< Most significant half-word of 3rd rank of \a u64.
   #define MSH3(u64)       (((U16 *)&(u64))[3])  //!< Most significant half-word of 4th rank of \a u64.
-  #define LSH3(u64)       MSH0(u64)             //!< Least significant half-word of 1st rank of \a u64.
-  #define LSH2(u64)       MSH1(u64)             //!< Least significant half-word of 2nd rank of \a u64.
-  #define LSH1(u64)       MSH2(u64)             //!< Least significant half-word of 3rd rank of \a u64.
-  #define LSH0(u64)       MSH3(u64)             //!< Least significant half-word of 4th rank of \a u64.
+  #define LSH3(u64)       MSH0(u64)             //!< Least significant half-word of 4th rank of \a u64.
+  #define LSH2(u64)       MSH1(u64)             //!< Least significant half-word of 3rd rank of \a u64.
+  #define LSH1(u64)       MSH2(u64)             //!< Least significant half-word of 2nd rank of \a u64.
+  #define LSH0(u64)       MSH3(u64)             //!< Least significant half-word of 1st rank of \a u64.
   #define MSB0D(u64)      (((U8  *)&(u64))[0])  //!< Most significant byte of 1st rank of \a u64.
   #define MSB1D(u64)      (((U8  *)&(u64))[1])  //!< Most significant byte of 2nd rank of \a u64.
   #define MSB2D(u64)      (((U8  *)&(u64))[2])  //!< Most significant byte of 3rd rank of \a u64.
@@ -777,18 +851,21 @@ typedef struct
   #define MSB5D(u64)      (((U8  *)&(u64))[5])  //!< Most significant byte of 6th rank of \a u64.
   #define MSB6D(u64)      (((U8  *)&(u64))[6])  //!< Most significant byte of 7th rank of \a u64.
   #define MSB7D(u64)      (((U8  *)&(u64))[7])  //!< Most significant byte of 8th rank of \a u64.
-  #define LSB7D(u64)      MSB0D(u64)            //!< Least significant byte of 1st rank of \a u64.
-  #define LSB6D(u64)      MSB1D(u64)            //!< Least significant byte of 2nd rank of \a u64.
-  #define LSB5D(u64)      MSB2D(u64)            //!< Least significant byte of 3rd rank of \a u64.
-  #define LSB4D(u64)      MSB3D(u64)            //!< Least significant byte of 4th rank of \a u64.
-  #define LSB3D(u64)      MSB4D(u64)            //!< Least significant byte of 5th rank of \a u64.
-  #define LSB2D(u64)      MSB5D(u64)            //!< Least significant byte of 6th rank of \a u64.
-  #define LSB1D(u64)      MSB6D(u64)            //!< Least significant byte of 7th rank of \a u64.
-  #define LSB0D(u64)      MSB7D(u64)            //!< Least significant byte of 8th rank of \a u64.
+  #define LSB7D(u64)      MSB0D(u64)            //!< Least significant byte of 8th rank of \a u64.
+  #define LSB6D(u64)      MSB1D(u64)            //!< Least significant byte of 7th rank of \a u64.
+  #define LSB5D(u64)      MSB2D(u64)            //!< Least significant byte of 6th rank of \a u64.
+  #define LSB4D(u64)      MSB3D(u64)            //!< Least significant byte of 5th rank of \a u64.
+  #define LSB3D(u64)      MSB4D(u64)            //!< Least significant byte of 4th rank of \a u64.
+  #define LSB2D(u64)      MSB5D(u64)            //!< Least significant byte of 3rd rank of \a u64.
+  #define LSB1D(u64)      MSB6D(u64)            //!< Least significant byte of 2nd rank of \a u64.
+  #define LSB0D(u64)      MSB7D(u64)            //!< Least significant byte of 1st rank of \a u64.
+
 #endif
+
 //! @}
 
-/*! \name Endianism Conversion Macros
+
+/*! \name Endianism Conversion
  *
  * The same considerations as for clz and ctz apply here but AVR32-GCC's
  * __builtin_bswap_16 and __builtin_bswap_32 do not behave like macros when
@@ -871,6 +948,35 @@ typedef struct
  */
 #define swap64(u64) ((U64)(((U64)swap32((U64)(u64) >> 32)) |\
                            ((U64)swap32((U64)(u64)) << 32)))
+
+//! @}
+
+
+/*! \name Target Abstraction
+ */
+//! @{
+
+#define _GLOBEXT_           extern      //!< extern storage-class specifier.
+#define _CONST_TYPE_        const       //!< const type qualifier.
+#define _MEM_TYPE_SLOW_                 //!< Slow memory type.
+#define _MEM_TYPE_MEDFAST_              //!< Fairly fast memory type.
+#define _MEM_TYPE_FAST_                 //!< Fast memory type.
+
+typedef U8                  Byte;       //!< 8-bit unsigned integer.
+
+#define memcmp_ram2ram      memcmp      //!< Target-specific memcmp of RAM to RAM.
+#define memcmp_code2ram     memcmp      //!< Target-specific memcmp of RAM to NVRAM.
+#define memcpy_ram2ram      memcpy      //!< Target-specific memcpy from RAM to RAM.
+#define memcpy_code2ram     memcpy      //!< Target-specific memcpy from NVRAM to RAM.
+
+#define LSB0(u32)           LSB0W(u32)  //!< Least significant byte of 1st rank of \a u32.
+#define LSB1(u32)           LSB1W(u32)  //!< Least significant byte of 2nd rank of \a u32.
+#define LSB2(u32)           LSB2W(u32)  //!< Least significant byte of 3rd rank of \a u32.
+#define LSB3(u32)           LSB3W(u32)  //!< Least significant byte of 4th rank of \a u32.
+#define MSB3(u32)           MSB3W(u32)  //!< Most significant byte of 4th rank of \a u32.
+#define MSB2(u32)           MSB2W(u32)  //!< Most significant byte of 3rd rank of \a u32.
+#define MSB1(u32)           MSB1W(u32)  //!< Most significant byte of 2nd rank of \a u32.
+#define MSB0(u32)           MSB0W(u32)  //!< Most significant byte of 1st rank of \a u32.
 
 //! @}
 

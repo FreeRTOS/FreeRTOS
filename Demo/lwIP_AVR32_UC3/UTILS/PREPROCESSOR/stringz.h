@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -9,7 +7,7 @@
  * - Supported devices:  All AVR32 devices can be used.
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -47,23 +45,23 @@
 
 /*! \brief Stringize.
  *
- * Stringize a preprocessing token, this token being allowed to be #defined.
+ * Stringize a preprocessing token, this token being allowed to be \#defined.
  *
- * May be used only within macros with the token passed as an argument if the token is #defined.
+ * May be used only within macros with the token passed as an argument if the token is \#defined.
  *
- * For example, writing STRINGZ(PIN) within a macro #defined by PIN_NAME(PIN)
- * and invoked as PIN_NAME(PIN0) with PIN0 #defined as A0 is equivalent to
+ * For example, writing STRINGZ(PIN) within a macro \#defined by PIN_NAME(PIN)
+ * and invoked as PIN_NAME(PIN0) with PIN0 \#defined as A0 is equivalent to
  * writing "A0".
  */
 #define STRINGZ(x)                                #x
 
 /*! \brief Absolute stringize.
  *
- * Stringize a preprocessing token, this token being allowed to be #defined.
+ * Stringize a preprocessing token, this token being allowed to be \#defined.
  *
- * No restriction of use if the token is #defined.
+ * No restriction of use if the token is \#defined.
  *
- * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 #defined as A0 is
+ * For example, writing ASTRINGZ(PIN0) anywhere with PIN0 \#defined as A0 is
  * equivalent to writing "A0".
  */
 #define ASTRINGZ(x)                               STRINGZ(x)

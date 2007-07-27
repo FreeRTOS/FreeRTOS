@@ -1,16 +1,14 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
- * \brief Basic SMTP Host for AVR32 UC3.
+ * \brief Basic SMTP Client for AVR32 UC3.
  *
  * - Compiler:           GNU GCC for AVR32
  * - Supported devices:  All AVR32 devices can be used.
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -48,8 +46,8 @@
 #include "portmacro.h"
 
 
-/* The function that implements the SMTP host task. */
-portTASK_FUNCTION_PROTO( vBasicSMTPHost, pvParameters );
+/* The function that implements the SMTP client task. */
+portTASK_FUNCTION_PROTO( vBasicSMTPClient, pvParameters );
 
 
 

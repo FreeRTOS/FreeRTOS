@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file is prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -13,7 +11,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  ******************************************************************************/
 
@@ -48,20 +46,31 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__ || __AAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
+#include <avr32/io.h>
 
+/*! \name Base Boards
+ */
+//! @{
 #define EVK1100     1 //!< AT32UC3A EVK1100 board.
+#define EVK1101     2 //!< AT32UC3B EVK1101 board.
+//! @}
+
+/*! \name Extension Boards
+ */
+//! @{
+#define EXT1102     1 //!< AT32UC3B EXT1102 board.
+//! @}
 
 #if BOARD == EVK1100
 #  include "EVK1100/evk1100.h"
+#elif BOARD == EVK1101
+#  include "EVK1101/evk1101.h"
 #else
 #  error No known AVR32 board defined
+#endif
+
+#if EXT_BOARD == EXT1102
+#  include "EXT1102/ext1102.h"
 #endif
 
 

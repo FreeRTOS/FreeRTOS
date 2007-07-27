@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -53,13 +51,7 @@
 
 /* Demo application includes. */
 #include "serial.h"
-#if __GNUC__
-#  include <avr32/io.h>
-#elif __ICCAVR32__
-#  include <avr32/iouc3a0512.h>
-#else
-#  error Unknown compiler
-#endif
+#include <avr32/io.h>
 #include "board.h"
 #include "gpio.h"
 
@@ -154,9 +146,7 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
 #if __GNUC__
 __attribute__((__naked__))
 #elif __ICCAVR32__
-#pragma shadow_registers = full  // All registers shadowed
-#pragma handler = AVR32_USART0_IRQ_GROUP, 0
-__interrupt
+#pragma shadow_registers = full   // Naked.
 #endif
 static void vUSART0_ISR( void )
 {
@@ -179,6 +169,12 @@ static void vUSART0_ISR( void )
  */
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
+  static const gpio_map_t USART0_GPIO_MAP =
+  {
+    { AVR32_USART0_RXD_0_PIN, AVR32_USART0_RXD_0_FUNCTION },
+    { AVR32_USART0_TXD_0_PIN, AVR32_USART0_TXD_0_FUNCTION }
+  };
+
   xComPortHandle    xReturn = serHANDLE;
   volatile avr32_usart_t  *usart0 = &AVR32_USART0;
   int                           cd; /* USART0 Clock Divider. */
@@ -221,8 +217,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
        ** Configure USART0.
        **/
       /* Enable USART0 RXD & TXD pins. */
-      gpio_enable_module_pin(AVR32_USART0_RXD_0_PIN, AVR32_USART0_RXD_0_FUNCTION);
-      gpio_enable_module_pin(AVR32_USART0_TXD_0_PIN, AVR32_USART0_TXD_0_FUNCTION);
+      gpio_enable_module( USART0_GPIO_MAP, sizeof( USART0_GPIO_MAP ) / sizeof( USART0_GPIO_MAP[0] ) );
 
       /* Set the USART0 baudrate to be as close as possible to the wanted baudrate. */
       /*
@@ -266,11 +261,9 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
       /* Write the Transmit Timeguard Register */
       usart0->ttgr = 0;
 
-#if __GNUC__
       // Register the USART0 interrupt handler to the interrupt controller and
       // enable the USART0 interrupt.
-      INTC_register_interrupt(&vUSART0_ISR, AVR32_USART0_IRQ, INT1);
-#endif
+      INTC_register_interrupt((__int_handler)&vUSART0_ISR, AVR32_USART0_IRQ, INT1);
 
       /* Enable USART0 interrupt sources (but not Tx for now)... */
       usart0->ier = AVR32_USART_IER_RXRDY_MASK;

@@ -1,5 +1,3 @@
-/* This header file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -123,16 +121,29 @@ char *s_proto; /* protocol to use */
 #define ACK 04      /* acknowledgement */
 #define ERROR 05      /* error code */
 
+#if __ICCAVR32__
+#pragma pack(1)
+#endif
 struct  tftphdr {
   short th_opcode;    /* packet type */
   union {
     unsigned short  tu_block; /* block # */
     short tu_code;  /* error code */
     char  tu_stuff[1];  /* request packet stuff */
-  } __attribute__ ((packed)) th_u;
+  }
+#if __GNUC__
+ __attribute__ ((packed))
+#endif 
+   th_u;
   char  th_data[1];   /* data or error string */
-} __attribute__ ((packed));
-
+}
+#if __GNUC__
+__attribute__ ((packed))
+#endif 
+;
+#if __ICCAVR32__
+#pragma pack()
+#endif
 
 /* The function that implements the TFTP server task. */
 portTASK_FUNCTION_PROTO( vBasicTFTPServer, pvParameters );

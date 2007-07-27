@@ -6,11 +6,11 @@
  * This file defines a useful set of functions for the GPIO.
  *
  * - Compiler:           IAR EWAVR32 and GNU GCC for AVR32
- * - Supported devices:  All AVR32 devices with a PWM module can be used.
+ * - Supported devices:  All AVR32 devices with a GPIO module can be used.
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 

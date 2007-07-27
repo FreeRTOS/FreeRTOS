@@ -71,9 +71,9 @@
     </settings>
     <settings>
       <name>JTAGICEMKIIAVR32</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -143,6 +143,14 @@
           <name>CJtagIceMkIIDaisyChainAfterBits</name>
           <state>0</state>
         </option>
+        <option>
+          <name>FlashLoaders</name>
+          <state></state>
+        </option>
+        <option>
+          <name>UseFlashLoader</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -160,19 +168,19 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Orti\Orti.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>
@@ -246,9 +254,9 @@
     </settings>
     <settings>
       <name>JTAGICEMKIIAVR32</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -318,6 +326,14 @@
           <name>CJtagIceMkIIDaisyChainAfterBits</name>
           <state>0</state>
         </option>
+        <option>
+          <name>FlashLoaders</name>
+          <state></state>
+        </option>
+        <option>
+          <name>UseFlashLoader</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -335,19 +351,19 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Orti\Orti.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>

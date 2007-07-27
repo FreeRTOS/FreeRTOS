@@ -8,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -61,7 +61,7 @@
  * These settings should not be altered.
  *-----------------------------------------------------------
  */
-#include <avr32/iouc3a0512.h>
+#include <avr32/io.h>
 #include "intc.h"
 #include "compiler.h"
 
@@ -118,7 +118,7 @@
  * The current source file name and line number are output with a colon before
  * the formatted string.
  * A carriage return and a linefeed are appended to the output.
- * stdout is redirected by Newlib to the USART configured by configDBG_USART.
+ * stdout is redirected to the USART configured by configDBG_USART.
  * The parameters are the same as for the standard printf function.
  * There is no return value.
  * SHALL NOT BE CALLED FROM WITHIN AN INTERRUPT as fputs and printf use malloc,
@@ -508,11 +508,11 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
 																									\
   /* With the cooperative scheduler, as there is no context switch by interrupt, */					\
   /* there is also no context save. */																\
-}																									
-																									
-/*																									
- * Input parameter: in R12, boolean. Perform a vTaskSwitchContext() if 1							
- */																												
+}
+
+/*
+ * Input parameter: in R12, boolean. Perform a vTaskSwitchContext() if 1
+ */
 #define portEXIT_SWITCHING_ISR()																	\
 {																									\
   __asm__ __volatile__ (																			\
@@ -523,14 +523,14 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
     /* there is also no context restore. */															\
     "rete"																							\
   );																								\
-}																												
-																												
-#else																											
-																												
-/*																												
- * ISR entry and exit macros.  These are only required if a task switch											
- * is required from the ISR.																					
- */																									
+}
+
+#else
+
+/*
+ * ISR entry and exit macros.  These are only required if a task switch
+ * is required from the ISR.
+ */
 #define portENTER_SWITCHING_ISR()																	\
 {																									\
   extern volatile unsigned portLONG ulCriticalNesting;												\

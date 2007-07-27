@@ -4,20 +4,20 @@
       <link rel="stylesheet" type="text/css" href="../../../../.docsrc/AVR32_ns.css">
    </head>
    <body>
-<p align="left" class="whs2"><a href="../../../AVR32_SERVICES_Readme.html"<font color="red"></font>Back to main page</a></p>
-<h1 align="center" class="whs1">AVR&reg;32 AT32UC3 Series Software Library: Basic Web server and TFTP server example.<br>
+<p align="left" class="whs2"><a href="../../../AVR32_SERVICES_Readme.html"<font color="red"></font>Back to the SERVICES main page</a></p>
+<h1 align="center" class="whs1">AVR&reg;32 AT32UC3 Series Software Framework: Basic Web server and TFTP server example.<br>
 </h1>
 
 <p align="center" class="whs2">Copyright &copy; 2007 Atmel Corporation</p>
 
-<a><h2>Introduction</a></h2>
+<h2>Introduction</h2>
     <p>This example implements a basic Web server and a basic TFTP server.
-    It is running on top of the <a href="http://www.sics.se/~adam/lwip"<font color="red"></font>lwIP TCP/IP stack</a> and the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port.</p>
-    <p>This example thus contains a port of the <a href="http://www.sics.se/~adam/lwip"<font color="red"></font>lwIP TCP/IP stack</a>. This port is using both the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port and the AVR32 UC3A MACB interface for the Ethernet access.</p>  
+    It is running on top of the <a href="http://savannah.nongnu.org/projects/lwip"<font color="red"></font>lwIP TCP/IP stack</a> and the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port.</p>
+    <p>This example thus contains a port of the <a href="http://savannah.nongnu.org/projects/lwip"<font color="red"></font>lwIP TCP/IP stack</a>. This port is using both the AVR32 UC3 <a href="http://freertos.org"<font color="red"></font>freeRTOS.org</a> port and the AVR32 UC3A MACB interface for the Ethernet access.</p>  
 
 <p>&nbsp;</p>
 
-<a><h2>lwIP TCP/IP stack</a></h2>
+<h2>lwIP TCP/IP stack</h2>
     <p>lwIP is an implementation of the TCP/IP protocol suite. The focus of the lwIP TCP/IP implementation is to reduce resource usage while still having a full scale TCP.</p>
     <DT><B><u>lwIP features</u>:</B>
     <DD><p class="whs3"><li>IP (Internet Protocol) including packet forwarding over multiple network interfaces</p></li>
@@ -29,18 +29,18 @@
     <DD><p class="whs3"><li>DHCP (Dynamic Host Configuration Protocol)</p></li>
     <DD><p class="whs3"><li>PPP (Point-to-Point Protocol)</p></li>
     <DD><p class="whs3"><li>ARP (Address Resolution Protocol) for Ethernet</p></li>
-
+<p>lwIP is freely available (under a BSD-style license) in C source code format and can be downloaded from the <a href="http://savannah.nongnu.org/projects/lwip"<font color="red"></font>development homepage</a>.</p>
 <p>&nbsp;</p>
 
-<a><h2>The Basic Web server</a></h2>
-    <p>Implements a simplistic WEB server.</p>
+<h2>The Basic Web server</h2>
+    <p>Implements a simplistic WEB server. To use this demo part, define HTTP_USED to 1, else define to 0. (default is 1)</p>
     <B><u>Demo description</u>:</B> Every time a connection is made and data is received, a dynamic page that shows the current FreeRTOS.org kernel statistics is generated and returned. The connection is then closed.</p>
     <B><u>Note</u>:</B> The WEB server is reachable at the IP address 192.168.0.2.
 
 <p>&nbsp;</p>
 
-<a><h2>The Basic TFTP server</a></h2>
-    <p>Implements a simplistic TFTP server.</p>
+<h2>The Basic TFTP server</h2>
+    <p>Implements a simplistic TFTP server. To use this demo part, define TFTP_USED to 1, else define to 0. (default is 1)</p>
     <DT><B><u>Demo description</u>:</B> 
     <DD><p class="whs3"><li>To put a file onto the TFTP server (Supported file size < 2048 bytes), on a PC command line type <i><b>tftp 192.168.0.2 PUT "a_file"</i></b>: this will copy <i>a_file</i> from your hard drive to a RAM buffer of the demo.</p></li>
     <DD><p class="whs3"><li>To get a file from the TFTP server, on a PC command line type <i><b>tftp 192.168.0.2 GET "a_file"</i></b>: this will copy <i>a_file</i> from the RAM buffer of the application to the PC's hard drive.</p></li>
@@ -49,46 +49,25 @@
 
 <p>&nbsp;</p>
 
-<a><h2>Device Info</a></h2>
+<h2>The Basic SMTP client</h2>
+    <p>Implements a simplistic SMTP client. To use this demo part, define SMTP_USED to 1, else define to 0. (default is 0)</p>
+    <DT><B><u>Demo description</u>:</B> 
+    <DD><p class="whs3"><li>Prior to compile and run the SMTP client, you will have to configure the connection settings :
+    <DD><DD><li>Server address : default is <i>192.168.0.1</i>.</li>
+    <DD><DD><li>Server name : used in the EHLO field, default is <i>smtp.domain.com</i>.</li>
+    <DD><DD><li>Mail sender : used in the mailfrom field, default is <i>sender@domain.com</i>.</li>
+    <DD><DD><li>Mail recipient : used in the mailto field, default is <i>receiver@domain.com</i>.</li>
+    <DD><DD><li>Mail content : default is <i>Subject: *** SPAM ***\r\nFROM: \"Your Name here\" <sender@domain.com>\r\nTO: \"Your Contact here\" <receiver@domain.com>\r\n\r\nSay what you want here</i>.</li>
+    </p></li>
+    <DD><p class="whs3"><li>Once all fields are configured, remove the <i>#error</i> lines to allow compilation.</p></li>
+    <DD><p class="whs3"><li>Run the software and press Push Button 0 to send an email.</p></li>
+
+<p>&nbsp;</p>
+
+<h2>Device Info</h2>
     All AVR32 UC3A devices with a MACB module can be used. This example has been tested with the following setup(s):
     <DD><p class="whs3"><li type="disc">AT32UC3A0512 on the EVK1100 evaluation kit.</li></p>
     
-<p>&nbsp;</p>
-
-<a><h2>Contact Info</a></h2>
-For more info about Atmel AVR32 visit <a href="http://www.atmel.com/products/AVR32/">Atmel AVR32</a> <br>
- <a href="http://www.atmel.com/dyn/products/app_notes.asp?family_id=682">AVR32 Application Notes</a><br>
- Support mail: <a href="mailto:avr32@atmel.com">avr32@atmel.com</a>
-
-<p>&nbsp;</p>
-
-<a><h2>License</a></h2>
-
-Copyright (c) 2007, Atmel Corporation All rights reserved.
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-<ol>
-<li>Redistributions of source code must retain the above copyright notice,
-this list of conditions and the following disclaimer.
-<li>Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-<li>The name of ATMEL may not be used to endorse or promote products derived
-from this software without specific prior written permission.
-</ol>
-<p>&nbsp;</p>
-THIS SOFTWARE IS PROVIDED BY ATMEL ``AS IS'' AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY AND
-SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
 <p>&nbsp;</p>
 
 

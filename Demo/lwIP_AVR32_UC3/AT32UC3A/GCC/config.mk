@@ -48,18 +48,20 @@ ETH_PATH = $(DEMO_PATH)/NETWORK
 WEB_PATH = $(ETH_PATH)/BasicWEB
 TFTP_PATH = $(ETH_PATH)/BasicTFTP
 SMTP_PATH = $(ETH_PATH)/BasicSMTP
-EMAC_PATH = $(ETH_PATH)/EMAC
 LWIP_PATH = $(FREERTOS_PATH)/Demo/Common/ethernet/lwIP
 LWIP_PORT_PATH = $(ETH_PATH)/lwip-port/AT32UC3A
 
 # CPU architecture: {ap|uc}
 ARCH = uc
 
-# Part: {none|ap7000|ap7010|ap7020|uc3a0256|uc3a0512|uc3a1128|uc3a1256|uc3a1512}
+# Part: {none|ap7xxx|uc3xxxxx}
 PART = uc3a0512
 
-# Flash memories: [type@address,size]...
+# Flash memories: [{cfi|internal}@address,size]...
 FLASH = internal@0x80000000,512Kb
+
+# Clock source to use when programming: [{xtal|extclk|int}]
+PROG_CLOCK = xtal
 
 # Device/Platform/Board include path
 PLATFORM_INC_PATH = \
@@ -70,25 +72,27 @@ TARGET = lwipdemo.elf
 
 # Definitions: [-D name[=definition]...] [-U name...]
 # Things that might be added to DEFS:
-#   BOARD             Board used: {EVK1100}
+#   BOARD             Board used: {EVKxxxx}
+#   EXT_BOARD         Extension board used (if any): {EXTxxxx}
 DEFS = -D BOARD=EVK1100 -D FREERTOS_USED -D HTTP_USED=1 -D TFTP_USED=1 -D SMTP_USED=0
 
 # Include path
 INC_PATH = \
   $(UTIL_PATH)/ \
   $(UTIL_PATH)/PREPROCESSOR/ \
+  $(SERV_PATH)/USB/CLASS/DFU/EXAMPLES/ISP/BOOT/ \
   $(DRVR_PATH)/INTC/ \
   $(DRVR_PATH)/TC/ \
   $(DRVR_PATH)/PM/ \
   $(DRVR_PATH)/GPIO/ \
   $(DRVR_PATH)/FLASHC/ \
+  $(DRVR_PATH)/MACB/ \
   $(DEMO_PATH)/ \
   $(FREERTOS_PATH)/Source/include/ \
   $(FREERTOS_PATH)/Demo/Common/include/ \
   $(FREERTOS_PORT_PATH)/ \
   $(FREERTOS_MEM_PATH)/ \
   $(ETH_PATH)/ \
-  $(EMAC_PATH)/ \
   $(LWIP_PATH)/include/ \
   $(LWIP_PATH)/include/ipv4/ \
   $(LWIP_PORT_PATH)/ \
@@ -127,6 +131,7 @@ CSRCS = \
   $(DRVR_PATH)/INTC/intc.c \
   $(DRVR_PATH)/TC/tc.c \
   $(DRVR_PATH)/PM/pm.c \
+  $(DRVR_PATH)/MACB/macb.c \
   $(DRVR_PATH)/GPIO/gpio.c \
   $(DRVR_PATH)/FLASHC/flashc.c \
   $(DEMO_PATH)/main.c \
@@ -146,12 +151,11 @@ CSRCS = \
   $(TFTP_PATH)/BasicTFTP.c \
   $(SMTP_PATH)/BasicSMTP.c \
   $(ETH_PATH)/ethernet.c \
-  $(EMAC_PATH)/AVR32_EMAC.c \
-  $(EMAC_PATH)/AVR32_EMAC_ISR.c \
   $(DEMO_PATH)/printf-stdarg.c
 
 # Assembler source files
 ASSRCS = \
+  $(SERV_PATH)/USB/CLASS/DFU/EXAMPLES/ISP/BOOT/trampoline.S \
   $(FREERTOS_PORT_PATH)/exception.S
 
 # Library path
@@ -161,7 +165,7 @@ LIB_PATH =
 LIBS =
 
 # Linker script file if any
-LINKER_SCRIPT =
+LINKER_SCRIPT = $(UTIL_PATH)/LINKER_SCRIPTS/AT32UC3A/0512/GCC/link_uc3a0512.lds
 
 # Options to request or suppress warnings: [-fsyntax-only] [-pedantic[-errors]] [-w] [-Wwarning...]
 # For further details, refer to the chapter "GCC Command Options" of the GCC manual.
@@ -185,7 +189,7 @@ C_EXTRA_FLAGS =
 AS_EXTRA_FLAGS =
 
 # Extra flags to use when linking
-LD_EXTRA_FLAGS = -Wl,--gc-sections
+LD_EXTRA_FLAGS = -Wl,--gc-sections -Wl,-e,_trampoline
 
 # Documentation path
 DOC_PATH = ./DOC/

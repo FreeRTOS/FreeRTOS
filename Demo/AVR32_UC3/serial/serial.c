@@ -1,5 +1,3 @@
-/* This source file is part of the ATMEL FREERTOS-0.9.0 Release */
-
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 /*! \file *********************************************************************
  *
@@ -10,7 +8,7 @@
  * - AppNote:
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support email: avr32@atmel.com
+ *                       Support and FAQ: http://support.atmel.no/
  *
  *****************************************************************************/
 
@@ -43,7 +41,7 @@
 
 
 /*
-  BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART0.
+  BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART.
 */
 
 /* Scheduler includes. */
@@ -53,15 +51,7 @@
 
 /* Demo application includes. */
 #include "serial.h"
-
-#if __GNUC__
-	#include <avr32/io.h>
-#elif __ICCAVR32__
-	#include <avr32/iouc3a0512.h>
-#else
-	#error Unknown compiler
-#endif
-
+#include <avr32/io.h>
 #include "board.h"
 #include "gpio.h"
 
@@ -95,17 +85,17 @@ static void vprvSerialCreateQueues( unsigned portBASE_TYPE uxQueueLength,
 	#pragma optimize = no_inline
 #endif
 
-static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
+static portBASE_TYPE prvUSART_ISR_NonNakedBehaviour( void )
 {
 	/* Now we can declare the local variables. */
 	signed portCHAR     cChar;
 	portBASE_TYPE     xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
 	unsigned portLONG     ulStatus;
-	volatile avr32_usart_t  *usart0 = &AVR32_USART0;
+	volatile avr32_usart_t  *usart = serialPORT_USART;
 	portBASE_TYPE retstatus;
 
 	/* What caused the interrupt? */
-	ulStatus = usart0->csr & usart0->imr;
+	ulStatus = usart->csr & usart->imr;
 
 	if (ulStatus & AVR32_USART_CSR_TXRDY_MASK)
 	{
@@ -121,19 +111,19 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
 		{
 			/* A character was retrieved from the queue so can be sent to the
 			 THR now. */
-			usart0->thr = cChar;
+			usart->thr = cChar;
 		}
 		else
 		{
 			/* Queue empty, nothing to send so turn off the Tx interrupt. */
-			usart0->idr = AVR32_USART_IDR_TXRDY_MASK;
+			usart->idr = AVR32_USART_IDR_TXRDY_MASK;
 		}
 	}
 
 	if (ulStatus & AVR32_USART_CSR_RXRDY_MASK)
 	{
 		/* The interrupt was caused by the receiver getting data. */
-		cChar = usart0->rhr; //TODO
+		cChar = usart->rhr; //TODO
 
 		/* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
 		calls in a critical section . */
@@ -154,7 +144,7 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
 /*-----------------------------------------------------------*/
 
 /*
- * USART0 interrupt service routine.
+ * USART interrupt service routine.
  */
 #if __GNUC__
 	__attribute__((__naked__))
@@ -162,15 +152,15 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
 	#pragma shadow_registers = full   // Naked.
 #endif
 
-static void vUSART0_ISR( void )
+static void vUSART_ISR( void )
 {
 	/* This ISR can cause a context switch, so the first statement must be a
 	call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
 	variable declarations. */
 	portENTER_SWITCHING_ISR();
-	
-	prvUSART0_ISR_NonNakedBehaviour();
-	
+
+	prvUSART_ISR_NonNakedBehaviour();
+
 	/* Exit the ISR.  If a task was woken by either a character being received
 	or transmitted then a context switch will occur. */
 	portEXIT_SWITCHING_ISR();
@@ -183,14 +173,20 @@ static void vUSART0_ISR( void )
  */
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
+static const gpio_map_t USART_GPIO_MAP =
+{
+	{ serialPORT_USART_RX_PIN, serialPORT_USART_RX_FUNCTION },
+	{ serialPORT_USART_TX_PIN, serialPORT_USART_TX_FUNCTION }
+};
+
 xComPortHandle    xReturn = serHANDLE;
-volatile avr32_usart_t  *usart0 = &AVR32_USART0;
-int cd; /* USART0 Clock Divider. */
+volatile avr32_usart_t  *usart = serialPORT_USART;
+int cd; /* USART Clock Divider. */
 
 	/* Create the rx and tx queues. */
 	vprvSerialCreateQueues( uxQueueLength, &xRxedChars, &xCharsForTx );
 
-	/* Configure USART0. */
+	/* Configure USART. */
 	if( ( xRxedChars != serINVALID_QUEUE ) &&
 	  ( xCharsForTx != serINVALID_QUEUE ) &&
 	  ( ulWantedBaud != ( unsigned portLONG ) 0 ) )
@@ -198,20 +194,20 @@ int cd; /* USART0 Clock Divider. */
 		portENTER_CRITICAL();
 		{
 			/**
-			** Reset USART0.
+			** Reset USART.
 			**/
-			/* Disable all USART0 interrupt sources to begin... */
-			usart0->idr = 0xFFFFFFFF;
+			/* Disable all USART interrupt sources to begin... */
+			usart->idr = 0xFFFFFFFF;
 
 			/* Reset mode and other registers that could cause unpredictable
 			 behaviour after reset */
-			usart0->mr = 0; /* Reset Mode register. */
-			usart0->rtor = 0; /* Reset Receiver Time-out register. */
-			usart0->ttgr = 0; /* Reset Transmitter Timeguard register. */
+			usart->mr = 0; /* Reset Mode register. */
+			usart->rtor = 0; /* Reset Receiver Time-out register. */
+			usart->ttgr = 0; /* Reset Transmitter Timeguard register. */
 
 			/* Shutdown RX and TX, reset status bits, reset iterations in CSR, reset NACK
 			 and turn off DTR and RTS */
-			usart0->cr = AVR32_USART_CR_RSTRX_MASK   |
+			usart->cr = AVR32_USART_CR_RSTRX_MASK   |
 					   AVR32_USART_CR_RSTTX_MASK   |
 					   AVR32_USART_CR_RXDIS_MASK   |
 					   AVR32_USART_CR_TXDIS_MASK   |
@@ -222,13 +218,12 @@ int cd; /* USART0 Clock Divider. */
 					   AVR32_USART_CR_RTSDIS_MASK;
 
 			/**
-			** Configure USART0.
+			** Configure USART.
 			**/
-			/* Enable USART0 RXD & TXD pins. */
-			gpio_enable_module_pin(AVR32_USART0_RXD_0_PIN, AVR32_USART0_RXD_0_FUNCTION);
-			gpio_enable_module_pin(AVR32_USART0_TXD_0_PIN, AVR32_USART0_TXD_0_FUNCTION);
+			/* Enable USART RXD & TXD pins. */
+			gpio_enable_module( USART_GPIO_MAP, sizeof( USART_GPIO_MAP ) / sizeof( USART_GPIO_MAP[0] ) );
 
-			/* Set the USART0 baudrate to be as close as possible to the wanted baudrate. */
+			/* Set the USART baudrate to be as close as possible to the wanted baudrate. */
 			/*
 			*             ** BAUDRATE CALCULATION **
 			*
@@ -242,52 +237,52 @@ int cd; /* USART0 Clock Divider. */
 			if( ulWantedBaud < ( configCPU_CLOCK_HZ / 16 ) )
 			{
 				/* Use 8x oversampling */
-				usart0->mr |= (1<<AVR32_USART_MR_OVER_OFFSET);
+				usart->mr |= (1<<AVR32_USART_MR_OVER_OFFSET);
 				cd = configCPU_CLOCK_HZ / (8*ulWantedBaud);
 
-				if( cd < 2 ) 
+				if( cd < 2 )
 				{
 					return serINVALID_COMPORT_HANDLER;
 				}
 
-				usart0->brgr = (cd << AVR32_USART_BRGR_CD_OFFSET);
-			} 
-			else 
+				usart->brgr = (cd << AVR32_USART_BRGR_CD_OFFSET);
+			}
+			else
 			{
 				/* Use 16x oversampling */
-				usart0->mr &= ~(1<<AVR32_USART_MR_OVER_OFFSET);
+				usart->mr &= ~(1<<AVR32_USART_MR_OVER_OFFSET);
 				cd = configCPU_CLOCK_HZ / (16*ulWantedBaud);
 
-				if( cd > 65535 ) 
+				if( cd > 65535 )
 				{
 					/* Baudrate is too low */
 					return serINVALID_COMPORT_HANDLER;
 				}
 			}
 
-			usart0->brgr = (cd << AVR32_USART_BRGR_CD_OFFSET);
+			usart->brgr = (cd << AVR32_USART_BRGR_CD_OFFSET);
 
-			/* Set the USART0 Mode register: Mode=Normal(0), Clk selection=MCK(0),
+			/* Set the USART Mode register: Mode=Normal(0), Clk selection=MCK(0),
 			CHRL=8,  SYNC=0(asynchronous), PAR=None, NBSTOP=1, CHMODE=0, MSBF=0,
 			MODE9=0, CKLO=0, OVER(previously done when setting the baudrate),
 			other fields not used in this mode. */
-			usart0->mr |= ((8-5) << AVR32_USART_MR_CHRL_OFFSET  ) |
+			usart->mr |= ((8-5) << AVR32_USART_MR_CHRL_OFFSET  ) |
 					(   4  << AVR32_USART_MR_PAR_OFFSET   ) |
 					(   1  << AVR32_USART_MR_NBSTOP_OFFSET);
 
 			/* Write the Transmit Timeguard Register */
-			usart0->ttgr = 0;
+			usart->ttgr = 0;
 
-			
-			/* Register the USART0 interrupt handler to the interrupt controller and
-			 enable the USART0 interrupt. */
-			INTC_register_interrupt((__int_handler)&vUSART0_ISR, AVR32_USART0_IRQ, INT1);
 
-			/* Enable USART0 interrupt sources (but not Tx for now)... */
-			usart0->ier = AVR32_USART_IER_RXRDY_MASK;
+			/* Register the USART interrupt handler to the interrupt controller and
+			 enable the USART interrupt. */
+			INTC_register_interrupt((__int_handler)&vUSART_ISR, serialPORT_USART_IRQ, INT1);
+
+			/* Enable USART interrupt sources (but not Tx for now)... */
+			usart->ier = AVR32_USART_IER_RXRDY_MASK;
 
 			/* Enable receiver and transmitter... */
-			usart0->cr |= AVR32_USART_CR_TXEN_MASK | AVR32_USART_CR_RXEN_MASK;
+			usart->cr |= AVR32_USART_CR_TXEN_MASK | AVR32_USART_CR_RXEN_MASK;
 		}
 		portEXIT_CRITICAL();
 	}
@@ -340,7 +335,7 @@ signed portCHAR *pxNext;
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
 {
-volatile avr32_usart_t  *usart0 = &AVR32_USART0;
+volatile avr32_usart_t  *usart = serialPORT_USART;
 
 	/* Place the character in the queue of characters to be transmitted. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
@@ -352,7 +347,7 @@ volatile avr32_usart_t  *usart0 = &AVR32_USART0;
 	queue and send it.   This does not need to be in a critical section as
 	if the interrupt has already removed the character the next interrupt
 	will simply turn off the Tx interrupt again. */
-	usart0->ier = (1 << AVR32_USART_IER_TXRDY_OFFSET);
+	usart->ier = (1 << AVR32_USART_IER_TXRDY_OFFSET);
 
 	return pdPASS;
 }

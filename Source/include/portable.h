@@ -84,6 +84,10 @@
 	#include "../../Source/portable/GCC/ARM7_LPC2000/portmacro.h"
 #endif
 
+#ifdef GCC_ARM7_ECLIPSE
+	#include "portmacro.h"
+#endif
+
 #ifdef ROWLEY_LPC23xx
 	#include "../../Source/portable/GCC/ARM7_LPC23xx/portmacro.h"
 #endif

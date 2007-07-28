@@ -33,6 +33,12 @@
 	***************************************************************************
 */
 
+/*
+Changes since V4.3.1:
+
+	+ Added xTaskGetSchedulerState() function.
+*/
+
 #ifndef TASK_H
 #define TASK_H
 
@@ -131,6 +137,10 @@ typedef struct xTIME_OUT
  */
 #define taskENABLE_INTERRUPTS()		portENABLE_INTERRUPTS()
 
+/* Definitions returned by xTaskGetSchedulerState(). */
+#define taskSCHEDULER_NOT_STARTED	0
+#define taskSCHEDULER_RUNNING		1
+#define taskSCHEDULER_SUSPENDED		2
 
 /*-----------------------------------------------------------
  * TASK CREATION API
@@ -940,13 +950,19 @@ void vTaskSetTimeOutState( xTimeOutType *pxTimeOut );
  * Compare the time status now with that previously captured to see if the
  * timeout has expired.
  */
-portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType *pxTicksToWait );
+portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType * const pxTicksToWait );
 
 /*
  * Shortcut used by the queue implementation to prevent unnecessary call to
  * taskYIELD();
  */
 void vTaskMissedYield( void );
+
+/*
+ * Returns the scheduler state as taskSCHEDULER_RUNNING,
+ * taskSCHEDULER_NOT_STARTED or taskSCHEDULER_SUSPENDED.
+ */
+portBASE_TYPE xTaskGetSchedulerState( void );
 
 #endif /* TASK_H */
 

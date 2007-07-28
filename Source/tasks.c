@@ -196,6 +196,16 @@ Changes from V4.1.3
 	+ Very small change made to xTaskCheckForTimeout() as a result of the 
 	SafeRTOS testing.  This corrects the case where the function can return an
 	invalid value - but only in an extremely unlikely scenario.
+
+Changes since V4.3.1:
+
+	+ Added xTaskGetSchedulerState() function.
+	+ Added prvIsTaskSuspended() to take into account the Occurrence of
+	  vTaskResume() or vTaskResumeFromISR() being called passing in the
+	  handle of a task that appears in the Suspended list only because it
+	  is blocked on an event without a timeout being specified.
+	+ Updated xTaskCheckForTimeout() to take into account that tasks blocked
+	  using the Suspended list should never time out.
 */
 
 #include <stdio.h>
@@ -234,7 +244,11 @@ Changes from V4.1.3
 
 #ifndef INCLUDE_xTaskResumeFromISR
 	#define INCLUDE_xTaskResumeFromISR 1
-#endif 
+#endif
+
+#ifndef INCLUDE_xTaskGetSchedulerState
+	#define INCLUDE_xTaskGetSchedulerState 0
+#endif
 
 /*
  * Task control block.  A task control block (TCB) is allocated to each task,
@@ -483,6 +497,16 @@ static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth );
 #if ( configUSE_TRACE_FACILITY == 1 )
 
 	unsigned portSHORT usTaskCheckFreeStackSpace( const unsigned portCHAR *pucStackByte );
+
+#endif
+
+/*
+ * Checks that a task being resumed (unsuspended) is actually in the Suspended
+ * state.
+ */
+#if ( INCLUDE_vTaskSuspend == 1 )
+
+	static portBASE_TYPE prvIsTaskSuspended( const tskTCB * const pxTCB );	
 
 #endif
 
@@ -938,9 +962,39 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
+	static portBASE_TYPE prvIsTaskSuspended( const tskTCB * const pxTCB )
+	{
+	portBASE_TYPE xReturn = pdFALSE;
+
+		/* Is the task we are attempting to resume actually in the
+		suspended list? */
+		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
+		{
+			/* Has the task already been resumed from within an ISR? */
+			if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) != pdTRUE )
+			{			
+				/* Is it in the suspended list because it is in the
+				Suspended state?  It is possible to be in the suspended
+				list because it is blocked on a task with no timeout
+				specified. */
+				if( listIS_CONTAINED_WITHIN( NULL, &( pxTCB->xEventListItem ) ) != pdTRUE )
+				{
+					xReturn = pdTRUE;
+				}
+			}
+		}
+
+		return xReturn;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( INCLUDE_vTaskSuspend == 1 )
+
 	void vTaskResume( xTaskHandle pxTaskToResume )
 	{
-	tskTCB *pxTCB;
+	const tskTCB *pxTCB;
 
 		/* Remove the task from whichever list it is currently in, and place
 		it in the ready list. */
@@ -952,24 +1006,19 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 		{
 			taskENTER_CRITICAL();
 			{
-				/* Is the task we are attempting to resume actually suspended? */
-				if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
+				if( prvIsTaskSuspended( pxTCB ) == pdTRUE )
 				{
-					/* Has the task already been resumed from within an ISR? */
-					if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) != pdTRUE )
-					{			
-						/* As we are in a critical section we can access the ready 
-						lists even if the scheduler is suspended. */
-						vListRemove(  &( pxTCB->xGenericListItem ) );
-						prvAddTaskToReadyQueue( pxTCB );
+					/* As we are in a critical section we can access the ready
+					lists even if the scheduler is suspended. */
+					vListRemove(  &( pxTCB->xGenericListItem ) );
+					prvAddTaskToReadyQueue( pxTCB );
 
-						/* We may have just resumed a higher priority task. */
-						if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
-						{
-							/* This yield may not cause the task just resumed to run, but
-							will leave the lists in the correct state for the next yield. */
-							taskYIELD();
-						}
+					/* We may have just resumed a higher priority task. */
+					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
+					{
+						/* This yield may not cause the task just resumed to run, but
+						will leave the lists in the correct state for the next yield. */
+						taskYIELD();
 					}
 				}
 			}
@@ -986,29 +1035,24 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 	portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume )
 	{
 	portBASE_TYPE xYieldRequired = pdFALSE;
-	tskTCB *pxTCB;
+	const tskTCB *pxTCB;
 
 		pxTCB = ( tskTCB * ) pxTaskToResume;
 
-		/* Is the task we are attempting to resume actually suspended? */
-		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
+		if( prvIsTaskSuspended( pxTCB ) == pdTRUE )
 		{
-			/* Has the task already been resumed from within an ISR? */
-			if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) != pdTRUE )
+			if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
 			{
-				if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
-				{
-					xYieldRequired = ( pxTCB->uxPriority >= pxCurrentTCB->uxPriority );
-					vListRemove(  &( pxTCB->xGenericListItem ) );	
-					prvAddTaskToReadyQueue( pxTCB );
-				}
-				else
-				{
-					/* We cannot access the delayed or ready lists, so will hold this
-					task pending until the scheduler is resumed, at which point a 
-					yield will be preformed if necessary. */
-					vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
-				}
+				xYieldRequired = ( pxTCB->uxPriority >= pxCurrentTCB->uxPriority );
+				vListRemove(  &( pxTCB->xGenericListItem ) );	
+				prvAddTaskToReadyQueue( pxTCB );
+			}
+			else
+			{
+				/* We cannot access the delayed or ready lists, so will hold this
+				task pending until the scheduler is resumed, at which point a
+				yield will be preformed if necessary. */
+				vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
 			}
 		}
 
@@ -1385,14 +1429,6 @@ inline void vTaskIncrementTick( void )
 
 			prvDeleteTCB( ( tskTCB * ) pxTCB );
 		}		
-
-		while( !listLIST_IS_EMPTY( &xPendingReadyList ) )
-		{
-			listGET_OWNER_OF_NEXT_ENTRY( pxTCB, &xPendingReadyList );
-			vListRemove( ( xListItem * ) &( pxTCB->xGenericListItem ) );
-
-			prvDeleteTCB( ( tskTCB * ) pxTCB );
-		}		
 	}
 
 #endif
@@ -1545,13 +1581,24 @@ void vTaskSetTimeOutState( xTimeOutType *pxTimeOut )
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType *pxTicksToWait )
+portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType * const pxTicksToWait )
 {
 portBASE_TYPE xReturn;
 
+	#if ( INCLUDE_vTaskSuspend == 1 )
+		/* If INCLUDE_vTaskSuspend is set to 1 and the block time specified is
+		the maximum block time then the task should block indefinitely, and
+		therefore never time out. */
+		if( *pxTicksToWait == portMAX_DELAY )
+		{
+			xReturn = pdFALSE;
+		}
+		else /* We are not blocking indefinitely, perform the checks below. */
+	#endif
+
     if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount >= pxTimeOut->xTimeOnEntering ) )
     {
-        /* The tick count is greater than the time at which vTaskSetTimeout() 
+        /* The tick count is greater than the time at which vTaskSetTimeout()
 		was called, but has also overflowed since vTaskSetTimeOut() was called.
         It must have wrapped all the way around and gone past us again. This
         passed since vTaskSetTimeout() was called. */
@@ -1857,7 +1904,33 @@ tskTCB *pxNewTCB;
 
 #endif
 
+/*-----------------------------------------------------------*/
 
+#if ( INCLUDE_xTaskGetSchedulerState == 1 )
 
+	portBASE_TYPE xTaskGetSchedulerState( void )
+	{
+	portBASE_TYPE xReturn;
+	
+		if( xSchedulerRunning == pdFALSE )
+		{
+			xReturn = taskSCHEDULER_NOT_STARTED;
+		}
+		else
+		{
+			if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
+			{
+				xReturn = taskSCHEDULER_RUNNING;
+			}
+			else
+			{
+				xReturn = taskSCHEDULER_SUSPENDED;
+			}
+		}
+		
+		return xReturn;
+	}
+
+#endif
 
 

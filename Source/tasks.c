@@ -994,7 +994,7 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 
 	void vTaskResume( xTaskHandle pxTaskToResume )
 	{
-	const tskTCB *pxTCB;
+	tskTCB *pxTCB;
 
 		/* Remove the task from whichever list it is currently in, and place
 		it in the ready list. */
@@ -1035,7 +1035,7 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 	portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume )
 	{
 	portBASE_TYPE xYieldRequired = pdFALSE;
-	const tskTCB *pxTCB;
+	tskTCB *pxTCB;
 
 		pxTCB = ( tskTCB * ) pxTaskToResume;
 

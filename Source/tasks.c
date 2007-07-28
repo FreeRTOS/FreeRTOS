@@ -977,7 +977,7 @@ static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberat
 				Suspended state?  It is possible to be in the suspended
 				list because it is blocked on a task with no timeout
 				specified. */
-				if( listIS_CONTAINED_WITHIN( NULL, &( pxTCB->xEventListItem ) ) != pdTRUE )
+				if( listIS_CONTAINED_WITHIN( NULL, &( pxTCB->xEventListItem ) ) == pdTRUE )
 				{
 					xReturn = pdTRUE;
 				}

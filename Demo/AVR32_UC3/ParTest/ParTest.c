@@ -52,7 +52,12 @@
  *-----------------------------------------------------------*/
 
 #define partstALL_OUTPUTS_OFF     ( ( unsigned portCHAR ) 0x00 )
-#define partstMAX_OUTPUT_LED      ( ( unsigned portCHAR ) 8 )
+#if( BOARD==EVK1100 )
+#  define partstMAX_OUTPUT_LED    ( ( unsigned portCHAR ) 8 )
+
+#elif( BOARD==EVK1101 )
+#  define partstMAX_OUTPUT_LED    ( ( unsigned portCHAR ) 4 )
+#endif
 
 static volatile unsigned portCHAR ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*lint !e956 File scope parameters okay here. */
 

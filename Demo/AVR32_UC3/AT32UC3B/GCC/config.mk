@@ -86,7 +86,7 @@ CSRCS = \
   $(DRVR_PATH)/GPIO/gpio.c \
   $(DRVR_PATH)/TC/tc.c \
   ../../../../Source/portable/GCC/AVR32_UC3/port.c \
-  ../../../../Source/portable/MemMang/heap_2.c \
+  ../../../../Source/portable/MemMang/heap_3.c \
   ../../../../Source/list.c \
   ../../../../Source/queue.c \
   ../../../../Source/tasks.c \

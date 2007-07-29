@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -39,6 +39,7 @@
 void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned portLONG ulBaudRate, unsigned portBASE_TYPE uxLED );
 void vStartComTestTasks( unsigned portBASE_TYPE uxPriority, eCOMPort ePort, eBaud eBaudRate );
 portBASE_TYPE xAreComTestTasksStillRunning( void );
+void vComTestUnsuspendTask( void );
 
 #endif
 

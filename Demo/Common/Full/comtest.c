@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -138,6 +138,8 @@ const portCHAR * const pcMessageToExchange = 	"Send this message over and over a
 check that both tasks are still executing. */
 volatile portSHORT sTxCount = 0, sRxCount = 0, sSemCount = 0;
 
+/* The handle to the semaphore test task. */
+static xTaskHandle xSemTestTaskHandle = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -149,7 +151,7 @@ const unsigned portBASE_TYPE uxBufferLength = 255;
 	xPort = xSerialPortInit( ePort, eBaudRate, serNO_PARITY, serBITS_8, serSTOP_1, uxBufferLength );
 	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority, NULL );
 	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority + comRX_RELATIVE_PRIORITY, NULL );
-	xTaskCreate( vSemTestTask, "ISRSem", comSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vSemTestTask, "ISRSem", comSTACK_SIZE, NULL, tskIDLE_PRIORITY, &xSemTestTaskHandle );
 }
 /*-----------------------------------------------------------*/
 
@@ -290,6 +292,7 @@ portSHORT sResyncRequired, sConsecutiveErrors, sLatchedError;
 static void vSemTestTask( void * pvParameters )
 {
 const portCHAR * const pcTaskStartMsg = "ISR Semaphore test started.\r\n";
+portBASE_TYPE xError = pdFALSE;
 
  	/* Stop warnings. */
 	( void ) pvParameters;
@@ -301,7 +304,14 @@ const portCHAR * const pcTaskStartMsg = "ISR Semaphore test started.\r\n";
 	{
 		if( xSerialWaitForSemaphore( xPort ) )
 		{
-			sSemCount++;				
+			if( xError == pdFALSE )
+			{
+				sSemCount++;
+			}
+		}
+		else
+		{
+			xError = pdTRUE;
 		}
 	}
 } /*lint !e715 !e830 !e818 pvParameters not used but function prototype must be standard for task function. */
@@ -332,4 +342,13 @@ portBASE_TYPE xReturn;
 
 	return xReturn;
 }
+/*-----------------------------------------------------------*/
 
+void vComTestUnsuspendTask( void )
+{
+	/* The task that is suspended on the semaphore will be referenced from the
+	Suspended list as it is blocking indefinitely.  This call just checks that
+	the kernel correctly detects this and does not attempt to unsuspend the
+	task. */
+	xTaskResumeFromISR( xSemTestTaskHandle );
+}

@@ -64,7 +64,8 @@
 #define configTICK_RATE_HZ        ( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES      ( ( unsigned portBASE_TYPE ) 8 )
 #define configMINIMAL_STACK_SIZE  ( ( unsigned portSHORT ) 128 )
-#define configTOTAL_HEAP_SIZE     ( ( size_t ) ( 1024*25 ) )
+/* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
+#define configTOTAL_HEAP_SIZE     ( ( size_t ) ( 1 ) )
 #define configMAX_TASK_NAME_LEN   ( 16 )
 #define configUSE_TRACE_FACILITY  0
 #define configUSE_16_BIT_TICKS    0
@@ -85,6 +86,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil             1
 #define INCLUDE_vTaskDelay                  1
 #define INCLUDE_xTaskGetCurrentTaskHandle   0
+#define INCLUDE_xTaskGetSchedulerState		1
 
 /* configTICK_USE_TC is a boolean indicating whether to use a Timer Counter
    for the tick generation. Timer Counter will generate an accurate Tick;

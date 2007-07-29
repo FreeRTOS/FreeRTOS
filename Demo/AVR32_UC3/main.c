@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 /*
-	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -162,6 +162,12 @@ static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void );
  */
 static void vMemCheckTask( void *pvParameters );
 
+/*
+ * Called by the check task following the detection of an error to set the
+ * LEDs into a state that shows an error has beeen found.
+ */
+static void prvIndicateError( void );
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -262,11 +268,7 @@ portBASE_TYPE bSuicidalTask = 0;
 			/* Could not create the task - we have probably run out of heap.
 			Don't go any further and flash the LED faster to provide visual
 			feedback of the error. */
-			for(;;)
-			{
-				vParTestToggleLED( mainCHECK_TASK_LED );
-				vTaskDelay( mainERROR_FLASH_RATE );
-			}
+			prvIndicateError();
 		}
 
 		/* Delay until it is time to execute again. */
@@ -291,12 +293,7 @@ portBASE_TYPE bSuicidalTask = 0;
 			/* An error has occurred in one of the tasks.
 			Don't go any further and flash the LED faster to give visual
 			feedback of the error. */
-			vParTestSetLED(mainERROR_LED,pdTRUE);
-			for(;;)
-			{
-				vParTestToggleLED( mainCHECK_TASK_LED );
-				vTaskDelay( mainERROR_FLASH_RATE );
-			}
+			prvIndicateError();
 		}
 		else
 		{
@@ -454,3 +451,26 @@ static portLONG lErrorOccurred = pdFALSE;
 		xTaskResumeAll();
 	}
 }
+/*-----------------------------------------------------------*/
+
+static void prvIndicateError( void )
+{
+	/* The check task has found an error in one of the other tasks.
+	Set the LEDs to a state that indicates this. */
+	vParTestSetLED(mainERROR_LED,pdTRUE);
+
+	for(;;)
+	{
+		#if( BOARD==EVK1100 )
+			vParTestToggleLED( mainCHECK_TASK_LED );
+			vTaskDelay( mainERROR_FLASH_RATE );
+		#endif
+		#if ( BOARD==EVK1101 )
+			vParTestSetLED( 0, pdTRUE );
+			vParTestSetLED( 1, pdTRUE );
+			vParTestSetLED( 2, pdTRUE );
+			vParTestSetLED( 3, pdTRUE );
+		#endif
+	}
+}
+

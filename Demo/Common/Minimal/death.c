@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -159,7 +159,10 @@ const portTickType xDelay = ( portTickType ) 200 / portTICK_RATE_MS;
 			/* Make sure the other task has a go before we delete it. */
 			vTaskDelay( ( portTickType ) 0 );
 			/* Kill the other task that was created by vCreateTasks(). */
-			vTaskDelete( xTaskToKill );
+			if( xTaskToKill != NULL )
+			{
+				vTaskDelete( xTaskToKill );
+			}
 			/* Kill ourselves. */
 			vTaskDelete( NULL );
 		}
@@ -179,6 +182,9 @@ unsigned portBASE_TYPE uxPriority;
 	{
 		/* Just loop round, delaying then creating the four suicidal tasks. */
 		vTaskDelay( xDelay );
+
+		xCreatedTask1 = NULL;
+		xCreatedTask2 = NULL;
 
 		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask1 );
 		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID2", deathSTACK_SIZE, &xCreatedTask1, uxPriority, NULL );

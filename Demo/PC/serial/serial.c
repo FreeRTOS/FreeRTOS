@@ -5,7 +5,7 @@
 	http://dzcomm.sourceforge.net
 
 
-	FreeRTOS.org V4.3.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -523,7 +523,10 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTa
 							cIn = ( portCHAR ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
 							xTaskWokenByPost = xQueueSendFromISR( pxPort->xRxedChars, &cIn, xTaskWokenByPost );
 
-							/* Also release the semaphore - this does nothing interesting and is just a test. */
+							/* Also release the semaphore - this does nothing interesting and is just a test.
+							We first attempt to unsuspend the task to check the scheduler correctely detects
+							this as an invalid call, then give the semaphore for real. */
+							vComTestUnsuspendTask();
 							xAnotherTaskWokenByPost = xSemaphoreGiveFromISR( pxPort->xTestSem, xAnotherTaskWokenByPost );
 
 						} while( portINPUT_BYTE( pxPort->usLineStatusReg ) & 0x01 );
@@ -543,7 +546,10 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTa
 							cIn = ( portCHAR ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
 							xTaskWokenByPost = xQueueSendFromISR( pxPort->xRxedChars, &cIn, xTaskWokenByPost );
 
-							/* Also release the semaphore - this does nothing interesting and is just a test. */
+							/* Also release the semaphore - this does nothing interesting and is just a test.
+							We first attempt to unsuspend the task to check the scheduler correctely detects
+							this as an invalid call, then give the semaphore for real. */
+							vComTestUnsuspendTask();
 							xAnotherTaskWokenByPost = xSemaphoreGiveFromISR( pxPort->xTestSem, xAnotherTaskWokenByPost );
 
 						} while( portINPUT_BYTE( pxPort->usLineStatusReg ) & 0x01 );

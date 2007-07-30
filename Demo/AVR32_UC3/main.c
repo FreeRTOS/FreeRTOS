@@ -274,12 +274,6 @@ portBASE_TYPE bSuicidalTask = 0;
 		/* Delay until it is time to execute again. */
 		vTaskDelay( mainCHECK_PERIOD );
 
-		/* Delete the dynamically created task. */
-		if( xCreatedTask != mainNO_TASK )
-		{
-			vTaskDelete( xCreatedTask );
-		}
-
 		/* Perform a bit of 32bit maths to ensure the registers used by the
 		integer tasks get some exercise. The result here is not important -
 		see the demo application documentation for more info. */
@@ -299,6 +293,12 @@ portBASE_TYPE bSuicidalTask = 0;
 		{
 			/* Toggle the LED if everything is okay. */
 			vParTestToggleLED( mainCHECK_TASK_LED );
+		}
+
+		/* Delete the dynamically created task. */
+		if( xCreatedTask != mainNO_TASK )
+		{
+			vTaskDelete( xCreatedTask );
 		}
 	}
 }

@@ -35,11 +35,11 @@
 
 /**
  * Create a single persistent task which periodically dynamically creates another
- * four tasks.  The original task is called the creator task, the four tasks it
+ * two tasks.  The original task is called the creator task, the two tasks it
  * creates are called suicidal tasks.
  *
- * Two of the created suicidal tasks kill one other suicidal task before killing
- * themselves - leaving just the original task remaining.
+ * One of the created suicidal tasks kill one other suicidal task before killing
+ * itself - leaving just the original task remaining.
  *
  * The creator task must be spawned after all of the other demo application tasks
  * as it keeps a check on the number of tasks under the scheduler control.  The
@@ -75,7 +75,7 @@ Changes from V3.1.0
 /* Demo program include files. */
 #include "death.h"
 
-#define deathSTACK_SIZE		( configMINIMAL_STACK_SIZE + 24 )
+#define deathSTACK_SIZE		( configMINIMAL_STACK_SIZE + 60 )
 
 /* The task originally created which is responsible for periodically dynamically
 creating another four tasks. */
@@ -96,11 +96,11 @@ static volatile unsigned portBASE_TYPE uxTasksRunningAtStart = 0;
 /* Tasks are deleted by the idle task.  Under heavy load the idle task might
 not get much processing time, so it would be legitimate for several tasks to
 remain undeleted for a short period. */
-static const unsigned portBASE_TYPE uxMaxNumberOfExtraTasksRunning = 4;
+static const unsigned portBASE_TYPE uxMaxNumberOfExtraTasksRunning = 2;
 
-/* Used to store a handle to the tasks that should be killed by a suicidal task,
+/* Used to store a handle to the task that should be killed by a suicidal task,
 before it kills itself. */
-xTaskHandle xCreatedTask1, xCreatedTask2;
+xTaskHandle xCreatedTask;
 
 /*-----------------------------------------------------------*/
 
@@ -158,11 +158,10 @@ const portTickType xDelay = ( portTickType ) 200 / portTICK_RATE_MS;
 		{
 			/* Make sure the other task has a go before we delete it. */
 			vTaskDelay( ( portTickType ) 0 );
+
 			/* Kill the other task that was created by vCreateTasks(). */
-			if( xTaskToKill != NULL )
-			{
-				vTaskDelete( xTaskToKill );
-			}
+			vTaskDelete( xTaskToKill );
+
 			/* Kill ourselves. */
 			vTaskDelete( NULL );
 		}
@@ -183,14 +182,10 @@ unsigned portBASE_TYPE uxPriority;
 		/* Just loop round, delaying then creating the four suicidal tasks. */
 		vTaskDelay( xDelay );
 
-		xCreatedTask1 = NULL;
-		xCreatedTask2 = NULL;
+		xCreatedTask = NULL;
 
-		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask1 );
-		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID2", deathSTACK_SIZE, &xCreatedTask1, uxPriority, NULL );
-
-		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID1", deathSTACK_SIZE, NULL, uxPriority, &xCreatedTask2 );
-		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID2", deathSTACK_SIZE, &xCreatedTask2, uxPriority, NULL );
+		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID1", configMINIMAL_STACK_SIZE, NULL, uxPriority, &xCreatedTask );
+		xTaskCreate( vSuicidalTask, ( signed portCHAR * ) "SUICID2", configMINIMAL_STACK_SIZE, &xCreatedTask, uxPriority, NULL );
 
 		++usCreationCount;
 	}

@@ -53,13 +53,14 @@
 #define configUSE_IDLE_HOOK			1
 #define configUSE_TICK_HOOK			1
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 128 ) /* This can be made smaller if required. */
+#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 256 ) /* This can be made smaller if required. */
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 32 * 1024 ) ) 
 #define configMAX_TASK_NAME_LEN		( 16 )
 #define configUSE_TRACE_FACILITY    1
 #define configUSE_16_BIT_TICKS      1
 #define configIDLE_SHOULD_YIELD		1
 #define configUSE_CO_ROUTINES 		1
+#define configUSE_MUTEXES			1
 
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 10 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

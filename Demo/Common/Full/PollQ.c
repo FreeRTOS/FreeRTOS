@@ -78,7 +78,7 @@ Changes from V2.0.0
 /* Demo program include files. */
 #include "PollQ.h"
 
-#define pollqSTACK_SIZE		( ( unsigned portSHORT ) 128 )
+#define pollqSTACK_SIZE		( ( unsigned portSHORT ) configMINIMAL_STACK_SIZE )
 
 /* The task that posts the incrementing number onto the queue. */
 static void vPolledQueueProducer( void *pvParameters );
@@ -125,7 +125,7 @@ portSHORT sError = pdFALSE;
 		for( usLoop = 0; usLoop < usNumToProduce; ++usLoop )
 		{
 			/* Send an incrementing number on the queue without blocking. */
-			if( xQueueSend( *pxQueue, ( void * ) &usValue, ( portTickType ) 0 ) != pdPASS )
+			if( xQueueSendToBack( *pxQueue, ( void * ) &usValue, ( portTickType ) 0 ) != pdPASS )
 			{
 				/* We should never find the queue full - this is an error. */
 				vPrintDisplayMessage( &pcTaskErrorMsg );

@@ -119,6 +119,7 @@ Changes from V3.2.4
 #include "mevents.h"
 #include "crhook.h"
 #include "blocktim.h"
+#include "GenQTest.h"
 
 /* Priority definitions for the tasks in the demo application. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -128,6 +129,7 @@ Changes from V3.2.4
 #define mainQUEUE_BLOCK_PRIORITY	( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainSEMAPHORE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
+#define mainGENERIC_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
 #define mainPRINT_STACK_SIZE		( ( unsigned portSHORT ) 512 )
 #define mainDEBUG_LOG_BUFFER_SIZE	( ( unsigned portSHORT ) 20480 )
@@ -176,7 +178,7 @@ portSHORT main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
 	vCreateBlockTimeTasks();
-	
+	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vStartSemaphoreTasks( mainSEMAPHORE_TASK_PRIORITY );
 	vStartDynamicPriorityTasks();
 	vStartMultiEventTasks();
@@ -389,6 +391,12 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 	{
 		vDisplayMessage( "Error in block time test tasks!\r\n" );
 		sErrorHasOccurred = pdTRUE;
+	}
+
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in generic queue test task!\r\n" );
+		sErrorHasOccurred = pdTRUE;		
 	}
 
 	if( sErrorHasOccurred == pdFALSE )

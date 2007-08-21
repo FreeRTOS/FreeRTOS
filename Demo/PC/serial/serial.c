@@ -500,6 +500,7 @@ static portSHORT sComPortISR( const xComPort * const pxPort )
 portSHORT sInterruptID;
 portCHAR cIn, cOut;
 portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTaskWokenByTx = pdFALSE;
+extern void vComTestUnsuspendTask( void );
 
 	portOUTPUT_BYTE( pxPort->us8259InterruptMaskReg, ( portINPUT_BYTE( pxPort->us8259InterruptMaskReg) | ~pxPort->ucInterruptEnableMast ) );
 

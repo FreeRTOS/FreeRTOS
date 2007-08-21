@@ -68,7 +68,7 @@
 #include "print.h"
 
 /* Demo specific constants. */
-#define evtSTACK_SIZE		( ( unsigned portBASE_TYPE ) 128 )
+#define evtSTACK_SIZE		( ( unsigned portBASE_TYPE ) configMINIMAL_STACK_SIZE )
 #define evtNUM_TASKS		( 4 )
 #define evtQUEUE_LENGTH		( ( unsigned portBASE_TYPE ) 3 )
 #define evtNO_DELAY						0

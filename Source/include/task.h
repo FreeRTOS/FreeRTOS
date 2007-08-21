@@ -364,7 +364,7 @@ void vTaskDelay( portTickType xTicksToDelay );
  * \defgroup vTaskDelayUntil vTaskDelayUntil
  * \ingroup TaskCtrl
  */
-void vTaskDelayUntil( portTickType *pxPreviousWakeTime, portTickType xTimeIncrement );
+void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTimeIncrement );
 
 /**
  * task. h
@@ -894,7 +894,7 @@ inline void vTaskIncrementTick( void );
  * portTICK_RATE_MS can be used to convert kernel ticks into a real time
  * period.
  */
-void vTaskPlaceOnEventList( xList *pxEventList, portTickType xTicksToWait );
+void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicksToWait );
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -911,7 +911,7 @@ void vTaskPlaceOnEventList( xList *pxEventList, portTickType xTicksToWait );
  * @return pdTRUE if the task being removed has a higher priority than the task
  * making the call, otherwise pdFALSE.
  */
-signed portBASE_TYPE xTaskRemoveFromEventList( const xList *pxEventList );
+signed portBASE_TYPE xTaskRemoveFromEventList( const xList * const pxEventList );
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -944,13 +944,13 @@ xTaskHandle xTaskGetCurrentTaskHandle( void );
 /*
  * Capture the current time status for future reference.
  */
-void vTaskSetTimeOutState( xTimeOutType *pxTimeOut );
+void vTaskSetTimeOutState( xTimeOutType * const pxTimeOut );
 
 /*
  * Compare the time status now with that previously captured to see if the
  * timeout has expired.
  */
-portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType *pxTimeOut, portTickType * const pxTicksToWait );
+portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType * const pxTimeOut, portTickType * const pxTicksToWait );
 
 /*
  * Shortcut used by the queue implementation to prevent unnecessary call to
@@ -963,6 +963,18 @@ void vTaskMissedYield( void );
  * taskSCHEDULER_NOT_STARTED or taskSCHEDULER_SUSPENDED.
  */
 portBASE_TYPE xTaskGetSchedulerState( void );
+
+/*
+ * Raises the priority of the mutex holder to that of the calling task should
+ * the mutex holder have a priority less than the calling task.
+ */
+void vTaskPriorityInherit( xTaskHandle * const pxMutexHolder );
+
+/*
+ * Set the priority of a task back to its proper priority in the case that it
+ * inherited a higher priority while it was holding a semaphore.
+ */
+void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder );
 
 #endif /* TASK_H */
 

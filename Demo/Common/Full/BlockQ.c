@@ -89,7 +89,7 @@ Changes from V4.0.2
 #include "BlockQ.h"
 #include "print.h"
 
-#define blckqSTACK_SIZE		( ( unsigned portSHORT ) 128 )
+#define blckqSTACK_SIZE		( ( unsigned portSHORT ) configMINIMAL_STACK_SIZE )
 #define blckqNUM_TASK_SETS	( 3 )
 
 /* Structure used to pass parameters to the blocking queue tasks. */
@@ -215,7 +215,7 @@ portSHORT sErrorEverOccurred = pdFALSE;
 
 	for( ;; )
 	{		
-		if( xQueueSend( pxQueueParameters->xQueue, ( void * ) &usValue, pxQueueParameters->xBlockTime ) != pdPASS )
+		if( xQueueSendToBack( pxQueueParameters->xQueue, ( void * ) &usValue, pxQueueParameters->xBlockTime ) != pdPASS )
 		{
 			vPrintDisplayMessage( &pcTaskErrorMsg );
 			sErrorEverOccurred = pdTRUE;

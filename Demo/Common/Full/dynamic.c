@@ -146,7 +146,7 @@ static void prvChangePriorityHelperTask( void *pvParameters );
 
 
 /* Demo task specific constants. */
-#define priSTACK_SIZE				( ( unsigned portSHORT ) 128 )
+#define priSTACK_SIZE				( ( unsigned portSHORT ) configMINIMAL_STACK_SIZE )
 #define priSLEEP_TIME				( ( portTickType ) 50 )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( unsigned portLONG ) 0xff )
@@ -193,7 +193,7 @@ void vStartDynamicPriorityTasks( void )
 	xTaskCreate( vQueueSendWhenSuspendedTask, "SUSP_SEND", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RECV", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvChangePriorityWhenSuspendedTask, "1st_P_CHANGE", priSTACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
-	xTaskCreate( prvChangePriorityHelperTask, "2nt_P_CHANGE", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, &xChangePriorityWhenSuspendedHandle );
+	xTaskCreate( prvChangePriorityHelperTask, "2nd_P_CHANGE", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, &xChangePriorityWhenSuspendedHandle );
 }
 /*-----------------------------------------------------------*/
 

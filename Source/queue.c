@@ -546,7 +546,7 @@ signed portCHAR *pcOriginalReadPosition;
 					if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 					{
 						portENTER_CRITICAL();
-							vTaskPriorityInherit( ( xTaskHandle * const ) pxQueue->pxMutexHolder );
+							vTaskPriorityInherit( ( void * const ) pxQueue->pxMutexHolder );
 						portEXIT_CRITICAL();
 					}
 				}
@@ -719,7 +719,7 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 			if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
 				/* The mutex is no longer being held. */
-				vTaskPriorityDisinherit( ( xTaskHandle * const ) pxQueue->pxMutexHolder );
+				vTaskPriorityDisinherit( ( void * const ) pxQueue->pxMutexHolder );
 			}
 		}
 		#endif

@@ -821,7 +821,7 @@ void vQueueDelete( xQueueHandle xQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendToFromFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken, queueSEND_TO_FRONT )
+#define xQueueSendToFrontFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken, queueSEND_TO_FRONT )
 
 
 /**

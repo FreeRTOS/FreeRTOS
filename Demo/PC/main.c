@@ -120,6 +120,7 @@ Changes from V3.2.4
 #include "crhook.h"
 #include "blocktim.h"
 #include "GenQTest.h"
+#include "QPeek.h"
 
 /* Priority definitions for the tasks in the demo application. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -182,6 +183,7 @@ portSHORT main( void )
 	vStartSemaphoreTasks( mainSEMAPHORE_TASK_PRIORITY );
 	vStartDynamicPriorityTasks();
 	vStartMultiEventTasks();
+	vStartQueuePeekTasks();
 
 	/* Create the "Print" task as described at the top of the file. */
 	xTaskCreate( vErrorChecks, "Print", mainPRINT_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
@@ -397,6 +399,12 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 	{
 		vDisplayMessage( "Error in generic queue test task!\r\n" );
 		sErrorHasOccurred = pdTRUE;		
+	}
+
+	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in queue peek test task!\r\n" );
+		sErrorHasOccurred = pdTRUE;
 	}
 
 	if( sErrorHasOccurred == pdFALSE )

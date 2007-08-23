@@ -610,7 +610,12 @@ signed portCHAR *pcOriginalReadPosition;
 					{
 						/* We are not removing the data, so reset our read
 						pointer. */
-						pxQueue->pcReadFrom = pcOriginalReadPosition;	
+						pxQueue->pcReadFrom = pcOriginalReadPosition;
+
+						/* The data is being left in the queue, so increment the
+						lock count so prvUnlockQueue knows to check for other
+						tasks waiting for the data to be available. */
+						++( pxQueue->xTxLock );						
 					}
 					
 					xReturn = pdPASS;					

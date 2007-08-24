@@ -742,7 +742,8 @@ uip_process(u8_t flag)
 	 connection's timer and see if it has reached the RTO value
 	 in which case we retransmit. */
       if(uip_outstanding(uip_connr)) {
-	if(uip_connr->timer-- == 0) {
+	  uip_connr->timer = uip_connr->timer - 1;
+	if(uip_connr->timer == 0) {
 	  if(uip_connr->nrtx == UIP_MAXRTX ||
 	     ((uip_connr->tcpstateflags == UIP_SYN_SENT ||
 	       uip_connr->tcpstateflags == UIP_SYN_RCVD) &&
@@ -1128,6 +1129,7 @@ uip_process(u8_t flag)
   goto drop;
 
  udp_found:
+  UIP_STAT(++uip_stat.udp.recv);
   uip_conn = NULL;
   uip_flags = UIP_NEWDATA;
   uip_sappdata = uip_appdata = &uip_buf[UIP_LLH_LEN + UIP_IPUDPH_LEN];
@@ -1161,7 +1163,7 @@ uip_process(u8_t flag)
   uip_ipaddr_copy(BUF->srcipaddr, uip_hostaddr);
   uip_ipaddr_copy(BUF->destipaddr, uip_udp_conn->ripaddr);
 
-  uip_appdata = &uip_buf[UIP_LLH_LEN + UIP_IPTCPH_LEN];
+  uip_appdata = &uip_buf[UIP_LLH_LEN + UIP_IPUDPH_LEN];
 
 #if UIP_UDP_CHECKSUMS
   /* Calculate UDP checksum. */
@@ -1170,7 +1172,7 @@ uip_process(u8_t flag)
     UDPBUF->udpchksum = 0xffff;
   }
 #endif /* UIP_UDP_CHECKSUMS */
-
+  UIP_STAT(++uip_stat.udp.sent);
   goto ip_send_nolen;
 #endif /* UIP_UDP */
 

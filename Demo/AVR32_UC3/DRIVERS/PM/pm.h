@@ -212,7 +212,6 @@ extern void pm_enable_clk32_no_wait(volatile avr32_pm_t *pm, unsigned int startu
 extern void pm_wait_for_clk32_ready(volatile avr32_pm_t *pm);
 
 
-//FIXME update this header -SM
 /*!
  * \brief This function will select all the power manager clocks.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
@@ -254,20 +253,18 @@ extern void pm_gc_enable(volatile avr32_pm_t *pm, unsigned int gc);
 extern void pm_gc_disable(volatile avr32_pm_t *pm, unsigned int gc);
 
 
-//FIXME update this header -SM
 /*!
  * \brief This function will setup a PLL.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
  * \param pll PLL number(0 for PLL0, 1 for PLL1)
- * \param mul
- * \param div
- * \param osc
- * \param lockcount
+ * \param mul PLL MUL in the PLL formula
+ * \param div PLL DIV in the PLL formula
+ * \param osc OSC number (0 for osc0, 1 for osc1)
+ * \param lockcount PLL lockount
  */
 extern void pm_pll_setup(volatile avr32_pm_t *pm, unsigned int pll, unsigned int mul, unsigned int div, unsigned int osc, unsigned int lockcount);
 
 
-//FIXME update this header -SM
 /*!
  * \brief This function will set a PLL option.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)
@@ -279,7 +276,6 @@ extern void pm_pll_setup(volatile avr32_pm_t *pm, unsigned int pll, unsigned int
 extern void pm_pll_set_option(volatile avr32_pm_t *pm, unsigned int pll, unsigned int  pll_freq, unsigned int  pll_div2, unsigned int  pll_wbwdisable);
 
 
-//FIXME update this header -SM
 /*!
  * \brief This function will get a PLL option.
  * \param pm Base address of the Power Manager (i.e. &AVR32_PM)

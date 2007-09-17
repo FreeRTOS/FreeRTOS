@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -65,7 +65,7 @@
 #define portINITIAL_XPSR			( 0x01000000 )
 
 /* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is
-defined.  The value zero should also ensure backward compatibility.
+defined.  The value 255 should also ensure backward compatibility.
 FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 #ifndef configKERNEL_INTERRUPT_PRIORITY
 	#define configKERNEL_INTERRUPT_PRIORITY 255

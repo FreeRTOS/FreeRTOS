@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -211,27 +211,25 @@ __asm void xPortPendSVHandler( void )
 	PRESERVE8
 
 	/* Start first task if the stack has not yet been setup. */
-	mrs r0, psp
-	cbz r0, no_save
+	mrs r0, psp						
+	cbz r0, no_save					
 
 	/* Save the context into the TCB. */
-	sub r0, #0x20
-	stm r0, {r4-r11}
-	sub r0, #0x04
+	stmdb r0!, {r4-r11}				
+	sub r0, r0, #0x04					
 	ldr r1, =uxCriticalNesting
-	ldr r1, [r1]
-	stm r0, {r1}
-	ldr r1, =pxCurrentTCB
-	ldr r1, [r1]
-	str r0, [r1]
+	ldr r2, =pxCurrentTCB		
+	ldr r1, [r1]					
+	ldr r2, [r2]					
+	str r1, [r0]					
+	str r0, [r2]					
 
 no_save;
 	
 	/* Find the task to execute. */
-	ldr r0, =vTaskSwitchContext
 	push {r14}
 	cpsid i
-	blx r0
+	bl vTaskSwitchContext
 	cpsie i
 	pop {r14}	
 
@@ -239,11 +237,10 @@ no_save;
 	ldr r1, =pxCurrentTCB
 	ldr r1, [r1];
 	ldr r0, [r1];
-	ldm r0, {r1, r4-r11}
+	ldmia r0!, {r1, r4-r11}
 	ldr r2, =uxCriticalNesting
 	str r1, [r2]
 	ldr r2, [r2]
-	add r0, #0x24
 	msr psp, r0
 	orr r14, #0xd
 
@@ -264,10 +261,9 @@ __asm void xPortSysTickHandler( void )
 	PRESERVE8
 
 	/* Call the scheduler tick function. */
-	ldr r0, =vTaskIncrementTick
 	push {r14}
 	cpsid i
-	blx r0
+	bl vTaskIncrementTick
 	cpsie i
 	pop {r14}	
 
@@ -275,8 +271,7 @@ __asm void xPortSysTickHandler( void )
 	#if configUSE_PREEMPTION == 1
 	extern vPortYieldFromISR
 		push {r14}
-		ldr r0, =vPortYieldFromISR
-		blx r0
+		bl vPortYieldFromISR
 		pop {r14}
 	#endif
 

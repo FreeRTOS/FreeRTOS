@@ -1,4 +1,4 @@
-/******************** 
+/********************
 * Original work (C) COPYRIGHT 2006 STMicroelectronics **************************
 * Modifications (C) CopyRight 2006 Richard barry
 * File Name          : 91x_enet.c
@@ -54,7 +54,8 @@
 #define ENET_NUM_RX_BUFFERS 8
 
 static ENET_DMADSCRBase  dmaTxDscrBase, dmaRxDscrBase[ ENET_NUM_RX_BUFFERS ];
-static volatile u8 RxBuff[ ENET_NUM_RX_BUFFERS ][ENET_BUFFER_SIZE], TxBuff[ENET_BUFFER_SIZE];
+static u8 RxBuff[ ENET_NUM_RX_BUFFERS ][ENET_BUFFER_SIZE];
+u8 TxBuff[ENET_BUFFER_SIZE];
 
 /* Private function prototypes -----------------------------------------------*/
 extern MEMCOPY_L2S_BY4();
@@ -93,7 +94,7 @@ void ENET_MACControlConfig(ENET_MACConfig *MAC_Config)
   ENET_MAC->MCR |= MAC_Config->AddressFilteringMode;
 
   /* VLAN Filtering Mode */
-  ENET_MAC->MCR = (MAC_Config->VLANFilteringMode)<<15;
+ 	ENET_MAC->MCR |= (MAC_Config->VLANFilteringMode)<<15;
 
   /*Wrong Frame Pass */
   if (MAC_Config->PassWrongFrame == ENABLE) ENET_MAC->MCR |=MAC_MCR_PWF;
@@ -104,8 +105,8 @@ void ENET_MACControlConfig(ENET_MACConfig *MAC_Config)
   else ENET_MAC->MCR &=~MAC_MCR_ELC;
 
   /* Broadcast Frame Reception */
-  if (MAC_Config->BroadcastFrameReception == ENABLE) ENET_MAC->MCR |=MAC_MCR_DBF;
-  else ENET_MAC->MCR &=~MAC_MCR_DBF;
+  if (MAC_Config->BroadcastFrameReception == ENABLE) ENET_MAC->MCR &=~MAC_MCR_DBF;
+  else ENET_MAC->MCR |=MAC_MCR_DBF;
 
   /* PacketRetry */
   if (MAC_Config->PacketRetry == ENABLE) ENET_MAC->MCR &=~MAC_MCR_DPR;
@@ -361,7 +362,6 @@ void ENET_Init ()
   vu32 regValue;
   ENET_MACConfig *MAC_Config;
   ENET_MACConfig config;
-  u32 macAddrLow, macAddrHigh;
 
   /* De-assert the SRESET bit of ENET + MAC devices */
   ENET_DMA->SCR &=~DMA_SCR_SRESET;
@@ -372,6 +372,7 @@ void ENET_Init ()
   MAC_Config->MIIPrescaler = MIIPrescaler_2;
   MAC_Config->LoopbackMode = DISABLE;
   MAC_Config->AddressFilteringMode = MAC_Perfect_Multicast_Perfect;
+	MAC_Config->VLANFilteringMode = VLANfilter_VLTAG;
   MAC_Config->PassWrongFrame = DISABLE;
   MAC_Config->LateCollision = DISABLE;
   MAC_Config->BroadcastFrameReception = ENABLE;
@@ -402,24 +403,26 @@ void ENET_Init ()
   ENET_MIIWriteReg(0x0,MAC_MII_REG_XCR, 0x8000);
 
   /* Delay to assure PHY reset */
-  vTaskDelay( 3000 );
+  vTaskDelay( 3000 / portTICK_RATE_MS );
 
   /* initialize the opearting mode */
   while( ENET_SetOperatingMode() == pdFAIL )
   {
-  	vTaskDelay( 3000 );
+  		vTaskDelay( 3000 / portTICK_RATE_MS );
   }
-
+	
   /*set MAC physical*/
-  macAddrLow  = (MAC_ADDR3<<24) + (MAC_ADDR2<<16) + \
-                (MAC_ADDR1<<8) + MAC_ADDR0;
-
-  // Higher MAC address
-  macAddrHigh = (MAC_ADDR5<<8) + MAC_ADDR4;
-
+	//ENET_MAC->MAH = (MAC_ADDR5<<8) + MAC_ADDR4;
+	//ENET_MAC->MAL = (MAC_ADDR3<<24) + (MAC_ADDR2<<16) + (MAC_ADDR1<<8) + MAC_ADDR0;
+	
   /* Initialize Rx and Tx descriptors in memory */
   ENET_TxDscrInit();
   ENET_RxDscrInit();
+
+	// What's happening ???
+#ifdef DEBUG
+	//int pippo = 1; // Do NOT remove!!!
+#endif
 }
 
 /********************************************************************************

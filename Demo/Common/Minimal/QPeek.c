@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -96,10 +96,10 @@ xQueueHandle xQueue;
 	/* Create the demo tasks and pass it the queue just created.  We are
 	passing the queue handle by value so it does not matter that it is declared
 	on the stack here. */
-	xTaskCreate( prvLowPriorityPeekTask, "PeekLow", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekLOW_PRIORITY, NULL );
-	xTaskCreate( prvMediumPriorityPeekTask, "PeekMed", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekMEDIUM_PRIORITY, &xMediumPriorityTask );
-	xTaskCreate( prvHighPriorityPeekTask, "PeekHigh", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGH_PRIORITY, &xHighPriorityTask );
-	xTaskCreate( prvHighestPriorityPeekTask, "PeekHighest", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGHEST_PRIORITY, &xHighestPriorityTask );
+	xTaskCreate( prvLowPriorityPeekTask, "PeekL", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekLOW_PRIORITY, NULL );
+	xTaskCreate( prvMediumPriorityPeekTask, "PeekM", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekMEDIUM_PRIORITY, &xMediumPriorityTask );
+	xTaskCreate( prvHighPriorityPeekTask, "PeekH1", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGH_PRIORITY, &xHighPriorityTask );
+	xTaskCreate( prvHighestPriorityPeekTask, "PeekH2", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGHEST_PRIORITY, &xHighestPriorityTask );
 }
 /*-----------------------------------------------------------*/
 

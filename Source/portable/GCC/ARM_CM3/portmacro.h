@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -33,6 +33,12 @@
 	***************************************************************************
 */
 
+/*
+	Change from V4.4.0:
+
+	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
+	  interrupt priority used by the kernel.
+*/
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
@@ -83,12 +89,35 @@ extern void vPortYieldFromISR( void );
 
 /* Critical section management. */
 
-extern void vPortEnableInterrupts( void );
+#define vPortSetInterruptMask()							\
+	__asm volatile										\
+	(													\
+		"	push { r0 }								\n"	\
+		"	ldr r0, =ulKernelPriority 				\n"	\
+		"	ldr r0, [r0]							\n"	\
+		"	msr basepri, r0							\n" \
+		"	pop { r0 }								"	\
+	)
+	
+/*-----------------------------------------------------------*/
+
+#define vPortClearInterruptMask()						\
+	__asm volatile										\
+	(													\
+		"	push { r0 }								\n"	\
+		"	mov r0, #0								\n"	\
+		"	msr basepri, r0							\n"	\
+		"	pop	 { r0 }								"	\
+	)
+
+/*-----------------------------------------------------------*/
+
+
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()	__asm volatile( "cpsid i" )
-#define portENABLE_INTERRUPTS()		__asm volatile( "cpsie i" )
+#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask();
+#define portENABLE_INTERRUPTS()		vPortClearInterruptMask();
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 /*-----------------------------------------------------------*/

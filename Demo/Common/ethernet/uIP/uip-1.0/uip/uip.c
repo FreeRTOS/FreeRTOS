@@ -1163,7 +1163,7 @@ uip_process(u8_t flag)
   uip_ipaddr_copy(BUF->srcipaddr, uip_hostaddr);
   uip_ipaddr_copy(BUF->destipaddr, uip_udp_conn->ripaddr);
 
-  uip_appdata = &uip_buf[UIP_LLH_LEN + UIP_IPUDPH_LEN];
+  uip_appdata = &uip_buf[UIP_LLH_LEN + UIP_IPTCPH_LEN];
 
 #if UIP_UDP_CHECKSUMS
   /* Calculate UDP checksum. */

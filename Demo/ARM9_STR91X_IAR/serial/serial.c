@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS distribution.
 
@@ -121,27 +121,27 @@ GPIO_InitTypeDef GPIO_InitStructure;
 		/* Enable the GPIO3 Clock */
 		SCU_APBPeriphClockConfig( __GPIO3, ENABLE );
 		
-		/* Configure UART1_Rx pin GPIO3.2 */ 
-		GPIO_InitStructure.GPIO_Direction = GPIO_PinInput; 
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2; 
-		GPIO_InitStructure.GPIO_Type = GPIO_Type_PushPull ; 
-		GPIO_InitStructure.GPIO_IPConnected = GPIO_IPConnected_Enable; 
-		GPIO_InitStructure.GPIO_Alternate = GPIO_InputAlt1 ; 
-		GPIO_Init( GPIO3, &GPIO_InitStructure ); 
+		/* Configure UART1_Rx pin GPIO3.2 */
+		GPIO_InitStructure.GPIO_Direction = GPIO_PinInput;
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+		GPIO_InitStructure.GPIO_Type = GPIO_Type_PushPull ;
+		GPIO_InitStructure.GPIO_IPConnected = GPIO_IPConnected_Enable;
+		GPIO_InitStructure.GPIO_Alternate = GPIO_InputAlt1 ;
+		GPIO_Init( GPIO3, &GPIO_InitStructure );
 		
-		/* Configure UART1_Tx pin GPIO3.3 */ 
-		GPIO_InitStructure.GPIO_Direction = GPIO_PinOutput; 
-		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3; 
-		GPIO_InitStructure.GPIO_Type = GPIO_Type_PushPull ; 
-		GPIO_InitStructure.GPIO_IPConnected = GPIO_IPConnected_Enable; 
-		GPIO_InitStructure.GPIO_Alternate = GPIO_OutputAlt2 ; 
-		GPIO_Init( GPIO3, &GPIO_InitStructure ); 
+		/* Configure UART1_Tx pin GPIO3.3 */
+		GPIO_InitStructure.GPIO_Direction = GPIO_PinOutput;
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+		GPIO_InitStructure.GPIO_Type = GPIO_Type_PushPull ;
+		GPIO_InitStructure.GPIO_IPConnected = GPIO_IPConnected_Enable;
+		GPIO_InitStructure.GPIO_Alternate = GPIO_OutputAlt2 ;
+		GPIO_Init( GPIO3, &GPIO_InitStructure );
 		
 		
 		portENTER_CRITICAL();
 		{		
 			/* Configure the UART itself. */
-			UART_DeInit( UART1 );		  
+			UART_DeInit( UART1 );		
 			UART_Init( UART1, &xUART1_Init );
 			UART_ITConfig( UART1, UART_IT_Receive | UART_IT_Transmit, ENABLE );
 			UART1->ICR = serCLEAR_ALL_INTERRUPTS;
@@ -220,14 +220,14 @@ portBASE_TYPE xReturn;
 		if( UART1->FR & serTX_FIFO_FULL )
 		{
 			/* Wait for the interrupt letting us know there is space on the
-			FIFO.  It is ok to block in a critical section, interrupts will be 
+			FIFO.  It is ok to block in a critical section, interrupts will be
 			enabled	for other tasks once we force a switch. */
 			lTaskWaiting = pdTRUE;
 			
-			/* Just to be a bit different this driver uses a semaphore to 
+			/* Just to be a bit different this driver uses a semaphore to
 			block the sending task when the FIFO is full.  The standard COMTest
 			task assumes a queue of adequate length exists so does not use
-			a block time.  For this demo the block time is therefore hard 
+			a block time.  For this demo the block time is therefore hard
 			coded. */
 			xReturn = xSemaphoreTake( xTxFIFOSemaphore, serTX_BLOCK_TIME );
 			if( xReturn )

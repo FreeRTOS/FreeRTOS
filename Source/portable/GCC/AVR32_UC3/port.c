@@ -13,7 +13,7 @@
  *****************************************************************************/
 
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -75,6 +75,8 @@ volatile unsigned portLONG ulCriticalNesting = 9999UL;
 
 #if( configTICK_USE_TC==0 )
 	static void prvScheduleNextTick( void );
+#else
+	static void prvClearTcInt( void );
 #endif
 
 /* Setup the timer to generate the tick interrupts. */
@@ -203,7 +205,7 @@ __attribute__((__naked__)) static void vTick( void )
 
 	#if( configTICK_USE_TC==1 )
 		/* Clear the interrupt flag. */
-		AVR32_TC.channel[configTICK_TC_CHANNEL].sr;
+		prvClearTcInt();
 	#else
 		/* Schedule the COUNT&COMPARE match interrupt in (configCPU_CLOCK_HZ/configTICK_RATE_HZ)
 		clock cycles from now. */
@@ -234,7 +236,7 @@ __attribute__((__naked__)) void SCALLYield( void )
 different optimisation levels.  The interrupt flags can therefore not always
 be saved to the stack.  Instead the critical section nesting level is stored
 in a variable, which is then saved as part of the stack context. */
-void vPortEnterCritical( void )
+__attribute__((__noinline__)) void vPortEnterCritical( void )
 {
 	/* Disable interrupts */
 	portDISABLE_INTERRUPTS();
@@ -246,7 +248,7 @@ void vPortEnterCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortExitCritical( void )
+__attribute__((__noinline__)) void vPortExitCritical( void )
 {
 	if(ulCriticalNesting > portNO_CRITICAL_NESTING)
 	{
@@ -334,7 +336,7 @@ clock cycles from now. */
 		Set_system_register(AVR32_COMPARE, lCycles);
 	}
 	
-	static void prvScheduleNextTick(void)
+	__attribute__((__noinline__)) static void prvScheduleNextTick(void)
 	{
 		unsigned long lCycles, lCount;
 
@@ -352,6 +354,11 @@ clock cycles from now. */
 			lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
 		}
 		Set_system_register(AVR32_COMPARE, lCycles);
+	}
+#else
+	__attribute__((__noinline__)) static void prvClearTcInt(void)
+	{
+		AVR32_TC.channel[configTICK_TC_CHANNEL].sr;
 	}
 #endif
 /*-----------------------------------------------------------*/

@@ -69,7 +69,6 @@ LastWord  = $(if $(1),$(word $(words $(1)),$(1)))
 MAKE      = make
 MAKECFG   = config.mk
 TGTTYPE   = $(suffix $(TARGET))
-TGTFILE   = $(PART)-$(TARGET)
 
 RM        = rm -Rf
 
@@ -99,14 +98,14 @@ LOADLIBES =
 LDLIBS    = $(LIBS:%=-l%)
 
 OBJDUMP   = avr32-objdump
-LSS       = $(TGTFILE:$(TGTTYPE)=.lss)
+LSS       = $(TARGET:$(TGTTYPE)=.lss)
 
 NM        = avr32-nm
-SYM       = $(TGTFILE:$(TGTTYPE)=.sym)
+SYM       = $(TARGET:$(TGTTYPE)=.sym)
 
 OBJCOPY   = avr32-objcopy
-HEX       = $(TGTFILE:$(TGTTYPE)=.hex)
-BIN       = $(TGTFILE:$(TGTTYPE)=.bin)
+HEX       = $(TARGET:$(TGTTYPE)=.hex)
+BIN       = $(TARGET:$(TGTTYPE)=.bin)
 
 SIZE      = avr32-size
 
@@ -142,7 +141,7 @@ MSG_GETTING_CPU_INFO  = Getting CPU information.
 MSG_HALTING           = Stopping CPU execution.
 MSG_ERASING_CHIP      = Performing a JTAG Chip Erase command.
 MSG_ERASING           = Performing a flash chip erase.
-MSG_PROGRAMMING       = Programming MCU memory from \`$(TGTFILE)\'.
+MSG_PROGRAMMING       = Programming MCU memory from \`$(TARGET)\'.
 MSG_SECURING_FLASH    = Protecting chip by setting security bit.
 MSG_RESETTING         = Resetting MCU.
 MSG_DEBUGGING         = Opening debug connection with MCU.
@@ -182,7 +181,7 @@ clean:
 	-$(VERBOSE_CMD)$(RM) $(HEX)
 	-$(VERBOSE_CMD)$(RM) $(SYM)
 	-$(VERBOSE_CMD)$(RM) $(LSS)
-	-$(VERBOSE_CMD)$(RM) $(TGTFILE)
+	-$(VERBOSE_CMD)$(RM) $(TARGET)
 	-$(VERBOSE_CMD)$(RM) $(OBJFILES)
 	-$(VERBOSE_CMD)$(RM) $(ASFILES)
 	-$(VERBOSE_CMD)$(RM) $(CPPFILES)
@@ -215,12 +214,12 @@ objfiles: $(OBJFILES)
 ifeq ($(TGTTYPE),.a)
 # Archive: create A output file from object files.
 .PHONY: a
-a: $(TGTFILE)
+a: $(TARGET)
 else
 ifeq ($(TGTTYPE),.elf)
 # Link: create ELF output file from object files.
 .PHONY: elf
-elf: $(TGTFILE)
+elf: $(TARGET)
 endif
 endif
 
@@ -246,7 +245,7 @@ endif
 
 # Display target size information.
 .PHONY: sizes
-sizes: $(TGTFILE)
+sizes: $(TARGET)
 	@echo
 	@echo
 ifeq ($(TGTTYPE),.a)
@@ -334,7 +333,7 @@ endif
 program: all
 	@echo
 	@echo $(MSG_PROGRAMMING)
-	$(VERBOSE_CMD)$(PROGRAM) program $(FLASH:%=-f%) $(PROG_CLOCK:%=-c%) -e -v -R $(if $(findstring run,$(MAKECMDGOALS)),-r) $(TGTFILE)
+	$(VERBOSE_CMD)$(PROGRAM) program $(FLASH:%=-f%) $(PROG_CLOCK:%=-c%) -e -v -R $(if $(findstring run,$(MAKECMDGOALS)),-r) $(TARGET)
 ifneq ($(call LastWord,$(filter cpuinfo chiperase program secureflash debug readregs,$(MAKECMDGOALS))),program)
 	@$(SLEEP) $(SLEEPUSB)
 else
@@ -430,7 +429,7 @@ endif
 program: all
 	@echo
 	@echo $(MSG_PROGRAMMING)
-	$(VERBOSE_CMD)$(ISP) $(ISPFLAGS) erase f memory flash blankcheck loadbuffer $(TGTFILE) program verify $(if $(findstring run,$(MAKECMDGOALS)),$(if $(findstring secureflash,$(MAKECMDGOALS)),,start $(if $(findstring reset,$(MAKECMDGOALS)),,no)reset 0))
+	$(VERBOSE_CMD)$(ISP) $(ISPFLAGS) erase f memory flash blankcheck loadbuffer $(TARGET) program verify $(if $(findstring run,$(MAKECMDGOALS)),$(if $(findstring secureflash,$(MAKECMDGOALS)),,start $(if $(findstring reset,$(MAKECMDGOALS)),,no)reset 0))
 ifeq ($(call LastWord,$(filter program secureflash debug,$(MAKECMDGOALS))),program)
 	@echo
 endif
@@ -528,7 +527,7 @@ $(CPPFILES) $(ASFILES) $(OBJFILES): Makefile $(MAKECFG)
 
 ifeq ($(TGTTYPE),.elf)
 # Files resulting from linking depend on linker script.
-$(TGTFILE): $(LINKER_SCRIPT)
+$(TARGET): $(LINKER_SCRIPT)
 endif
 
 # Preprocess: create preprocessed files from C source files.
@@ -574,16 +573,16 @@ endif
 .PRECIOUS: $(OBJFILES)
 ifeq ($(TGTTYPE),.a)
 # Archive: create A output file from object files.
-.SECONDARY: $(TGTFILE)
-$(TGTFILE): $(OBJFILES)
+.SECONDARY: $(TARGET)
+$(TARGET): $(OBJFILES)
 	@echo $(MSG_ARCHIVING)
 	$(VERBOSE_CMD)$(AR) $(ARFLAGS) $@ $(filter %.o,$+)
 	$(VERBOSE_NL)
 else
 ifeq ($(TGTTYPE),.elf)
 # Link: create ELF output file from object files.
-.SECONDARY: $(TGTFILE)
-$(TGTFILE): $(OBJFILES)
+.SECONDARY: $(TARGET)
+$(TARGET): $(OBJFILES)
 	@echo $(MSG_LINKING)
 	$(VERBOSE_CMD)$(CC) $(LDFLAGS) $(filter %.o,$+) $(LOADLIBES) $(LDLIBS) -o $@
 	$(VERBOSE_NL)
@@ -591,13 +590,13 @@ endif
 endif
 
 # Create extended listing from target output file.
-$(LSS): $(TGTFILE)
+$(LSS): $(TARGET)
 	@echo $(MSG_EXTENDED_LISTING)
 	$(VERBOSE_CMD)$(OBJDUMP) -h -S $< > $@
 	$(VERBOSE_NL)
 
 # Create symbol table from target output file.
-$(SYM): $(TGTFILE)
+$(SYM): $(TARGET)
 	@echo $(MSG_SYMBOL_TABLE)
 	$(VERBOSE_CMD)$(NM) -n $< > $@
 	$(VERBOSE_NL)
@@ -605,13 +604,13 @@ $(SYM): $(TGTFILE)
 ifeq ($(TGTTYPE),.elf)
 
 # Create Intel HEX image from ELF output file.
-$(HEX): $(TGTFILE)
+$(HEX): $(TARGET)
 	@echo $(MSG_IHEX_IMAGE)
 	$(VERBOSE_CMD)$(OBJCOPY) -O ihex $< $@
 	$(VERBOSE_NL)
 
 # Create binary image from ELF output file.
-$(BIN): $(TGTFILE)
+$(BIN): $(TARGET)
 	@echo $(MSG_BINARY_IMAGE)
 	$(VERBOSE_CMD)$(OBJCOPY) -O binary $< $@
 	$(VERBOSE_NL)

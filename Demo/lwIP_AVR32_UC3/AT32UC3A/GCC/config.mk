@@ -68,7 +68,7 @@ PLATFORM_INC_PATH = \
   $(BRDS_PATH)/
 
 # Target name: {*.a|*.elf}
-TARGET = lwipdemo.elf
+TARGET = $(PART)-lwipdemo.elf
 
 # Definitions: [-D name[=definition]...] [-U name...]
 # Things that might be added to DEFS:

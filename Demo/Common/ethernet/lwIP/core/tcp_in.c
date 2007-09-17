@@ -7,7 +7,7 @@
  *
  * These functions are generally called in the order (ip_input() ->)
  * tcp_input() -> * tcp_process() -> tcp_receive() (-> application).
- * 
+ *
  */
 
 /*
@@ -165,7 +165,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
      for an active connection. */
   prev = NULL;
 
-  
+
   for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
     LWIP_ASSERT("tcp_input: active pcb->state != CLOSED", pcb->state != CLOSED);
     LWIP_ASSERT("tcp_input: active pcb->state != TIME-WAIT", pcb->state != TIME_WAIT);
@@ -226,7 +226,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
                 /* put this listening pcb at the head of the listening list */
           tcp_listen_pcbs.listen_pcbs = lpcb;
         }
-      
+
         LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_input: packed for LISTENing connection.\n"));
         tcp_listen_input(lpcb);
         pbuf_free(p);
@@ -288,12 +288,12 @@ tcp_input(struct pbuf *p, struct netif *inp)
         if (pcb->acked > 0) {
           TCP_EVENT_SENT(pcb, pcb->acked, err);
         }
-      
+
         if (recv_data != NULL) {
           /* Notify application that data has been received. */
           TCP_EVENT_RECV(pcb, recv_data, ERR_OK, err);
         }
-      
+
         /* If a FIN segment was received, we call the callback
            function with a NULL buffer to indicate EOF. */
         if (recv_flags & TF_GOT_FIN) {
@@ -318,7 +318,7 @@ tcp_input(struct pbuf *p, struct netif *inp)
     tcp_debug_print_state(pcb->state);
 #endif /* TCP_DEBUG */
 #endif /* TCP_INPUT_DEBUG */
-      
+
   } else {
 
     /* If no matching PCB was found, send a TCP RST (reset) to the
@@ -492,7 +492,7 @@ tcp_process(struct tcp_pcb *pcb)
       pcb->snd_wnd = tcphdr->wnd;
       pcb->snd_wl1 = seqno - 1; /* initialise to seqno - 1 to force window update */
       pcb->state = ESTABLISHED;
-      pcb->cwnd = pcb->mss;
+			pcb->cwnd = ((pcb->cwnd == 1) ? (pcb->mss * 2) : pcb->mss);
       --pcb->snd_queuelen;
       LWIP_DEBUGF(TCP_QLEN_DEBUG, ("tcp_process: SYN-SENT --queuelen %"U16_F"\n", (u16_t)pcb->snd_queuelen));
       rseg = pcb->unacked;
@@ -519,6 +519,7 @@ tcp_process(struct tcp_pcb *pcb)
        !(flags & TCP_RST)) {
       /* expected ACK number? */
       if (TCP_SEQ_BETWEEN(ackno, pcb->lastack+1, pcb->snd_nxt)) {
+				u16_t old_cwnd;
         pcb->state = ESTABLISHED;
         LWIP_DEBUGF(TCP_DEBUG, ("TCP connection established %"U16_F" -> %"U16_F".\n", inseg.tcphdr->src, inseg.tcphdr->dest));
 #if LWIP_CALLBACK_API
@@ -532,10 +533,11 @@ tcp_process(struct tcp_pcb *pcb)
           tcp_abort(pcb);
           return ERR_ABRT;
         }
+				old_cwnd = pcb->cwnd;
         /* If there was any data contained within this ACK,
          * we'd better pass it on to the application as well. */
         tcp_receive(pcb);
-        pcb->cwnd = pcb->mss;
+				pcb->cwnd = ((old_cwnd == 1) ? (pcb->mss * 2) : pcb->mss);
       }
       /* incorrect ACK number */
       else {
@@ -620,7 +622,7 @@ tcp_process(struct tcp_pcb *pcb)
  * If the incoming segment constitutes an ACK for a segment that was used for RTT
  * estimation, the RTT is estimated here as well.
  *
- * @return 1 if 
+ * @return 1 if
  */
 
 static u8_t
@@ -698,7 +700,7 @@ tcp_receive(struct tcp_pcb *pcb)
         TCP_SEQ_LEQ(ackno, pcb->snd_max)) { */
       if (TCP_SEQ_BETWEEN(ackno, pcb->lastack+1, pcb->snd_max)){
       /* We come here when the ACK acknowledges new data. */
-      
+
       /* Reset the "IN Fast Retransmit" flag, since we are no longer
          in fast retransmit. Also reset the congestion window to the
          slow start threshold. */
@@ -871,7 +873,7 @@ tcp_receive(struct tcp_pcb *pcb)
          we do not want to discard the full contents of the pbuf up to
          the new starting point of the data since we have to keep the
          TCP header which is present in the first pbuf in the chain.
-         
+
          What is done is really quite a nasty hack: the first pbuf in
          the pbuf chain is pointed to by inseg.p. Since we need to be
          able to deallocate the whole pbuf, we cannot change this
@@ -881,11 +883,11 @@ tcp_receive(struct tcp_pcb *pcb)
          inseg.data pointer to point to the right place. This way, the
          ->p pointer will still point to the first pbuf, but the
          ->p->payload pointer will point to data in another pbuf.
-         
+
          After we are done with adjusting the pbuf pointers we must
          adjust the ->data pointer in the seg and the segment
          length.*/
-      
+
       off = pcb->rcv_nxt - seqno;
       p = inseg.p;
       LWIP_ASSERT("inseg.p != NULL", inseg.p);
@@ -914,7 +916,7 @@ tcp_receive(struct tcp_pcb *pcb)
       if (TCP_SEQ_LT(seqno, pcb->rcv_nxt)){
         /* the whole segment is < rcv_nxt */
         /* must be a duplicate of a packet that has already been correctly handled */
-        
+
         LWIP_DEBUGF(TCP_INPUT_DEBUG, ("tcp_receive: duplicate seqno %"U32_F"\n", seqno));
         tcp_ack_now(pcb);
       }
@@ -927,7 +929,7 @@ tcp_receive(struct tcp_pcb *pcb)
       TCP_SEQ_LT(seqno, pcb->rcv_nxt + pcb->rcv_wnd)) {*/
     if (TCP_SEQ_BETWEEN(seqno, pcb->rcv_nxt, pcb->rcv_nxt + pcb->rcv_wnd - 1)){
       if (pcb->rcv_nxt == seqno) {
-        accepted_inseq = 1; 
+        accepted_inseq = 1;
         /* The incoming segment is the next in sequence. We check if
            we have to trim the end of the segment and update rcv_nxt
            and pass the data to the application. */
@@ -1008,7 +1010,7 @@ tcp_receive(struct tcp_pcb *pcb)
             recv_flags = TF_GOT_FIN;
             if (pcb->state == ESTABLISHED) { /* force passive close or we can move to active close */
               pcb->state = CLOSE_WAIT;
-            } 
+            }
           }
 
 
@@ -1088,7 +1090,7 @@ tcp_receive(struct tcp_pcb *pcb)
                   }
                   break;
                 }
-              } else 
+              } else
                 /*if (TCP_SEQ_LT(prev->tcphdr->seqno, seqno) &&
                   TCP_SEQ_LT(seqno, next->tcphdr->seqno)) {*/
                 if(TCP_SEQ_BETWEEN(seqno, prev->tcphdr->seqno+1, next->tcphdr->seqno-1)){

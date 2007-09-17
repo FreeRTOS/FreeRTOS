@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -90,7 +90,6 @@ extern void vPortYieldFromISR( void );
 
 /* Critical section management. */
 
-extern void vPortEnableInterrupts( void );
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 extern void vPortSetInterruptMask( void );

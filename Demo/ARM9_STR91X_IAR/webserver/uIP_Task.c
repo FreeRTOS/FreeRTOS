@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -59,13 +59,13 @@
 #define uipMAC_ADDR2	0x13
 #define uipMAC_ADDR3	0x14
 #define uipMAC_ADDR4	0x15
-#define uipMAC_ADDR5	0x16
+#define uipMAC_ADDR5	0x20
 
 /* IP address configuration. */
 #define uipIP_ADDR0		172
 #define uipIP_ADDR1		25
 #define uipIP_ADDR2		218
-#define uipIP_ADDR3		26	
+#define uipIP_ADDR3		11	
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
@@ -85,8 +85,8 @@
 
 /*-----------------------------------------------------------*/
 
-/* 
- * Send the uIP buffer to the MAC. 
+/*
+ * Send the uIP buffer to the MAC.
  */
 static void prvENET_Send(void);
 
@@ -143,7 +143,7 @@ struct timer periodic_timer, arp_timer;
 	httpd_init();
 
 	/* Initialise the MAC. */
-	ENET_InitClocksGPIO();   
+	ENET_InitClocksGPIO();
 	ENET_Init();
 	portENTER_CRITICAL();
 	{
@@ -170,8 +170,8 @@ struct timer periodic_timer, arp_timer;
 				uip_arp_ipin();
 				uip_input();
 
-				/* If the above function invocation resulted in data that 
-				should be sent out on the network, the global variable 
+				/* If the above function invocation resulted in data that
+				should be sent out on the network, the global variable
 				uip_len is set to a value > 0. */
 				if( uip_len > 0 )
 				{
@@ -183,8 +183,8 @@ struct timer periodic_timer, arp_timer;
 			{
 				uip_arp_arpin();
 
-				/* If the above function invocation resulted in data that 
-				should be sent out on the network, the global variable 
+				/* If the above function invocation resulted in data that
+				should be sent out on the network, the global variable
 				uip_len is set to a value > 0. */
 				if( uip_len > 0 )
 				{
@@ -201,8 +201,8 @@ struct timer periodic_timer, arp_timer;
 				{
 					uip_periodic( i );
 	
-					/* If the above function invocation resulted in data that 
-					should be sent out on the network, the global variable 
+					/* If the above function invocation resulted in data that
+					should be sent out on the network, the global variable
 					uip_len is set to a value > 0. */
 					if( uip_len > 0 )
 					{
@@ -250,7 +250,7 @@ static unsigned portCHAR *pcTxData;
 			vTaskDelay( uipBUFFER_WAIT_DELAY );
 		}
 	}
-	 
+	
 	if( pcTxData )
 	{
 		/* Copy the header into the Tx buffer. */

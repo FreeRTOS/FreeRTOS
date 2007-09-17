@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS distribution.
 
@@ -34,7 +34,7 @@
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the ST STR91x ARM7
+ * Implementation of functions defined in portable.h for the ST STR91x ARM9
  * port.
  *----------------------------------------------------------*/
 
@@ -43,10 +43,15 @@
 
 /* Standard includes. */
 #include <stdlib.h>
+#include <assert.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+
+#ifndef configUSE_WATCHDOG_TICK
+	#error configUSE_WATCHDOG_TICK must be set to either 1 or 0 in FreeRTOSConfig.h to use either the Watchdog or timer 2 to generate the tick interrupt respectively.
+#endif
 
 /* Constants required to setup the initial stack. */
 #ifndef _RUN_TASK_IN_ARM_MODE_
@@ -54,10 +59,37 @@
 #else
 	#define portINITIAL_SPSR 			( ( portSTACK_TYPE ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
 #endif
+
 #define portINSTRUCTION_SIZE			( ( portSTACK_TYPE ) 4 )
 
 /* Constants required to handle critical sections. */
 #define portNO_CRITICAL_NESTING 		( ( unsigned portLONG ) 0 )
+
+#ifndef abs
+	#define abs(x) ((x)>0 ? (x) : -(x))
+#endif
+
+/**
+ * Toggle a led using the following algorithm:
+ * if ( GPIO_ReadBit(GPIO9, GPIO_Pin_2) )
+ * {
+ *   GPIO_WriteBit( GPIO9, GPIO_Pin_2, Bit_RESET );
+ * }
+ * else
+ * {
+ *   GPIO_WriteBit( GPIO9, GPIO_Pin_2, Bit_RESET );
+ * }
+ *
+ */
+#define TOGGLE_LED(port,pin) 									\
+	if ( ((((port)->DR[(pin)<<2])) & (pin)) != Bit_RESET ) 		\
+	{															\
+    	(port)->DR[(pin) <<2] = 0x00;							\
+  	}															\
+  	else														\
+	{															\
+    	(port)->DR[(pin) <<2] = (pin);							\
+  	}
 
 
 /*-----------------------------------------------------------*/
@@ -73,11 +105,15 @@ unsigned portLONG ulCriticalNesting = ( unsigned portLONG ) 9999;
 /* Tick interrupt routines for cooperative and preemptive operation
 respectively.  The preemptive version is not defined as __irq as it is called
 from an asm wrapper function. */
-__arm __irq void vPortNonPreemptiveTick( void );
 void WDG_IRQHandler( void );
 
 /* VIC interrupt default handler. */
 static void prvDefaultHandler( void );
+
+#if configUSE_WATCHDOG_TICK == 0
+	/* Used to update the OCR timer register */
+	static u16 s_nPulseLength;
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -174,90 +210,189 @@ void vPortEndScheduler( void )
 
 /* This function is called from an asm wrapper, so does not require the __irq
 keyword. */
-void WDG_IRQHandler( void )
-{
-	/* Increment the tick counter. */
-	vTaskIncrementTick();
+#if configUSE_WATCHDOG_TICK == 1
 
-	#if configUSE_PREEMPTION == 1
-		/* The new tick value might unblock a task.  Ensure the highest task that
-		is ready to execute is the task that will execute when the tick ISR
-		exits. */
-		vTaskSwitchContext();
-	#endif
-		
-	/* Clear the interrupt in the watchdog. */
-	WDG->SR &= ~0x0001;
-}
-/*-----------------------------------------------------------*/
-
-#ifndef abs
-	#define abs(x) ((x)>0 ? (x) : -(x))
-#endif
-
-static void prvFindFactors(u32 n, u16 *a, u32 *b)
-{
-	/* This function is copied from the ST STR7 library and is
-	copyright STMicroelectronics.  Reproduced with permission. */
-
-	u32 b0;
-	u16 a0;
-	long err, err_min=n;
-
-	*a = a0 = ((n-1)/65536ul) + 1;
-	*b = b0 = n / *a;
-
-	for (; *a <= 256; (*a)++)
+	static void prvFindFactors(u32 n, u16 *a, u32 *b)
 	{
-		*b = n / *a;
-		err = (long)*a * (long)*b - (long)n;
-		if (abs(err) > (*a / 2))
+		/* This function is copied from the ST STR7 library and is
+		copyright STMicroelectronics.  Reproduced with permission. */
+	
+		u32 b0;
+		u16 a0;
+		long err, err_min=n;
+	
+		*a = a0 = ((n-1)/65536ul) + 1;
+		*b = b0 = n / *a;
+	
+		for (; *a <= 256; (*a)++)
 		{
-			(*b)++;
+			*b = n / *a;
 			err = (long)*a * (long)*b - (long)n;
+			if (abs(err) > (*a / 2))
+			{
+				(*b)++;
+				err = (long)*a * (long)*b - (long)n;
+			}
+			if (abs(err) < abs(err_min))
+			{
+				err_min = err;
+				a0 = *a;
+				b0 = *b;
+				if (err == 0) break;
+			}
 		}
-		if (abs(err) < abs(err_min))
+	
+		*a = a0;
+		*b = b0;
+	}
+	/*-----------------------------------------------------------*/
+
+	static void prvSetupTimerInterrupt( void )
+	{
+	WDG_InitTypeDef xWdg;
+	unsigned portSHORT a;
+	unsigned portLONG n = configCPU_PERIPH_HZ / configTICK_RATE_HZ, b;
+	
+		/* Configure the watchdog as a free running timer that generates a
+		periodic interrupt. */
+	
+		SCU_APBPeriphClockConfig( __WDG, ENABLE );
+		WDG_DeInit();
+		WDG_StructInit(&xWdg);
+		prvFindFactors( n, &a, &b );
+		xWdg.WDG_Prescaler = a - 1;
+		xWdg.WDG_Preload = b - 1;
+		WDG_Init( &xWdg );
+		WDG_ITConfig(ENABLE);
+		
+		/* Configure the VIC for the WDG interrupt. */
+		VIC_Config( WDG_ITLine, VIC_IRQ, 10 );
+		VIC_ITCmd( WDG_ITLine, ENABLE );
+		
+		/* Install the default handlers for both VIC's. */
+		VIC0->DVAR = ( unsigned portLONG ) prvDefaultHandler;
+		VIC1->DVAR = ( unsigned portLONG ) prvDefaultHandler;
+		
+		WDG_Cmd(ENABLE);
+	}
+	/*-----------------------------------------------------------*/
+
+	void WDG_IRQHandler( void )
+	{
 		{
-			err_min = err;
-			a0 = *a;
-			b0 = *b;
-			if (err == 0) break;
+			/* Increment the tick counter. */
+			vTaskIncrementTick();
+		
+			#if configUSE_PREEMPTION == 1
+			{
+				/* The new tick value might unblock a task.  Ensure the highest task that
+				is ready to execute is the task that will execute when the tick ISR
+				exits. */
+				vTaskSwitchContext();
+			}
+			#endif /* configUSE_PREEMPTION. */
+		
+			/* Clear the interrupt in the watchdog. */
+			WDG->SR &= ~0x0001;
 		}
 	}
 
-	*a = a0;
-	*b = b0;
-}
-/*-----------------------------------------------------------*/
+#else
 
-static void prvSetupTimerInterrupt( void )
-{
-WDG_InitTypeDef xWdg;
-unsigned portSHORT a;
-unsigned portLONG n = configCPU_PERIPH_HZ / configTICK_RATE_HZ, b;
+	static void prvFindFactors(u32 n, u8 *a, u16 *b)
+	{
+		/* This function is copied from the ST STR7 library and is
+		copyright STMicroelectronics.  Reproduced with permission. */
+	
+		u16 b0;
+		u8 a0;
+		long err, err_min=n;
+	
+	
+		*a = a0 = ((n-1)/256) + 1;
+		*b = b0 = n / *a;
+	
+		for (; *a <= 256; (*a)++)
+		{
+			*b = n / *a;
+			err = (long)*a * (long)*b - (long)n;
+			if (abs(err) > (*a / 2))
+			{
+				(*b)++;
+				err = (long)*a * (long)*b - (long)n;
+			}
+			if (abs(err) < abs(err_min))
+			{
+				err_min = err;
+				a0 = *a;
+				b0 = *b;
+				if (err == 0) break;
+			}
+		}
+	
+		*a = a0;
+		*b = b0;
+	}
+	/*-----------------------------------------------------------*/
 
-	/* Configure the watchdog as a free running timer that generates a
-	periodic interrupt. */
+	static void prvSetupTimerInterrupt( void )
+	{
+		unsigned portCHAR a;
+		unsigned portSHORT b;
+		unsigned portLONG n = configCPU_PERIPH_HZ / configTICK_RATE_HZ;
+		
+		TIM_InitTypeDef timer;
+		
+		SCU_APBPeriphClockConfig( __TIM23, ENABLE );
+		TIM_DeInit(TIM2);
+		TIM_StructInit(&timer);
+		prvFindFactors( n, &a, &b );
+		
+		timer.TIM_Mode           = TIM_OCM_CHANNEL_1;
+		timer.TIM_OC1_Modes      = TIM_TIMING;
+		timer.TIM_Clock_Source   = TIM_CLK_APB;
+		timer.TIM_Clock_Edge     = TIM_CLK_EDGE_RISING;
+		timer.TIM_Prescaler      = a-1;
+		timer.TIM_Pulse_Level_1  = TIM_HIGH;
+		timer.TIM_Pulse_Length_1 = s_nPulseLength  = b-1;
+		
+		TIM_Init (TIM2, &timer);
+		TIM_ITConfig(TIM2, TIM_IT_OC1, ENABLE);
+		/* Configure the VIC for the WDG interrupt. */
+		VIC_Config( TIM2_ITLine, VIC_IRQ, 10 );
+		VIC_ITCmd( TIM2_ITLine, ENABLE );
+		
+		/* Install the default handlers for both VIC's. */
+		VIC0->DVAR = ( unsigned portLONG ) prvDefaultHandler;
+		VIC1->DVAR = ( unsigned portLONG ) prvDefaultHandler;
+		
+		TIM_CounterCmd(TIM2, TIM_CLEAR);
+		TIM_CounterCmd(TIM2, TIM_START);
+	}
+	/*-----------------------------------------------------------*/
 
-	SCU_APBPeriphClockConfig( __WDG, ENABLE );
-	WDG_DeInit();
-	WDG_StructInit(&xWdg);
-	prvFindFactors( n, &a, &b );
-	xWdg.WDG_Prescaler = a - 1;
-	xWdg.WDG_Preload = b - 1;
-	WDG_Init( &xWdg );
-	WDG_ITConfig(ENABLE);
-	
-	/* Configure the VIC for the WDG interrupt. */
-	VIC_Config( WDG_ITLine, VIC_IRQ, 10 );
-	VIC_ITCmd( WDG_ITLine, ENABLE );
-	
-	/* Install the default handlers for both VIC's. */
-	VIC0->DVAR = ( unsigned portLONG ) prvDefaultHandler;
-	VIC1->DVAR = ( unsigned portLONG ) prvDefaultHandler;
-	
-	WDG_Cmd(ENABLE);
-}
+	void TIM2_IRQHandler( void )
+	{
+		/* Reset the timer counter to avioid overflow. */
+		TIM2->OC1R += s_nPulseLength;
+		
+		/* Increment the tick counter. */
+		vTaskIncrementTick();
+		
+		#if configUSE_PREEMPTION == 1
+		{
+			/* The new tick value might unblock a task.  Ensure the highest task that
+			is ready to execute is the task that will execute when the tick ISR
+			exits. */
+			vTaskSwitchContext();
+		}
+		#endif
+		
+		/* Clear the interrupt in the watchdog. */
+		TIM2->SR &= ~TIM_FLAG_OC1;
+	}
+
+#endif /* USE_WATCHDOG_TICK */
 
 /*-----------------------------------------------------------*/
 

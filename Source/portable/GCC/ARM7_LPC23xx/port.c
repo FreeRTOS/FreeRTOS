@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -98,7 +98,7 @@ portSTACK_TYPE *pxOriginalTOS;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode + portINSTRUCTION_SIZE;		
 	pxTopOfStack--;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaaaaaa;	/* R14 */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;	/* R14 */
 	pxTopOfStack--;	
 	*pxTopOfStack = ( portSTACK_TYPE ) pxOriginalTOS; /* Stack used when task starts goes in R13. */
 	pxTopOfStack--;
@@ -223,7 +223,7 @@ unsigned portLONG ulCompareMatch;
 	}
 	#endif
 
-	VICVectPriority4 = 1;
+	VICVectCntl4 = 1;
 
 	/* Start the timer - interrupts are disabled when this function is called
 	so it is okay to do this here. */

@@ -364,7 +364,7 @@ void VIC_ITCmd(u16 VIC_Source, FunctionalState VIC_NewState)
 
 /*******************************************************************************
 * Function Name  : VIC_SWITCmd
-* Description    : Generate a software interrupt for the specific source 
+* Description    : Generate a software interrupt for the specific source
 *                  interrupt.
 * Input1         : VIC_Source: specifies the number of the source line.
 *                  This parameter can be one of the following values:
@@ -505,7 +505,7 @@ u32 VIC_GetCurrentISRAdd(VIC_TypeDef* VICx)
 *                     - PFQBC_ITLine : VIC source 31
 * Input2         : VIC_Priority: specifies the priority of the interrupt.
 *                  It can be a value from 0 to 15. 0 is the highest priority.
-* Input3         : void (*VIC_VectAddress)(void): specifies the ISR vector 
+* Input3         : void (*VIC_VectAddress)(void): specifies the ISR vector
 *                  address pointer.
 * Output         : None
 * Return         : None
@@ -675,7 +675,7 @@ static void VIC_ITSourceConfig(u16 VIC_Source, u16 VIC_Priority)
 
 /*******************************************************************************
 * Function Name  : VIC_Config
-* Description    : Configure the ISR, the line, the mode and the priority for 
+* Description    : Configure the ISR, the line, the mode and the priority for
 *                  each interrupt source line.
 * Input1         : VIC_Source: specifies the number of the source line.
 *                  This parameter can be one of the following values:

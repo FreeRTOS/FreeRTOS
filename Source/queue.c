@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -137,11 +137,11 @@ typedef xQUEUE * xQueueHandle;
  */
 xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize );
 signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
-unsigned portBASE_TYPE uxQueueMessagesWaiting( xQueueHandle pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue );
 void vQueueDelete( xQueueHandle xQueue );
 signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE xTaskPreviouslyWoken, portBASE_TYPE xCopyPosition );
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 xQueueHandle xQueueCreateMutex( void );
 
 #if configUSE_CO_ROUTINES == 1
@@ -514,7 +514,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
 {
 signed portBASE_TYPE xReturn = pdTRUE;
 xTimeOutType xTimeOut;
@@ -648,7 +648,7 @@ signed portCHAR *pcOriginalReadPosition;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken )
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken )
 {
 signed portBASE_TYPE xReturn;
 
@@ -696,7 +696,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxQueueMessagesWaiting( xQueueHandle pxQueue )
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue )
 {
 unsigned portBASE_TYPE uxReturn;
 

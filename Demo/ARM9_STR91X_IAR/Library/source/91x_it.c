@@ -22,6 +22,7 @@
 * OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING INFORMATION
 * CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 *******************************************************************************/
+#include "FreeRTOSConfig.h"
 #include "91x_it.h"
 
 /*******************************************************************************
@@ -136,9 +137,9 @@ void TIM1_IRQHandler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void TIM2_IRQHandler(void)
-{
-}
+//void TIM2_IRQHandler(void)
+//{
+//}
 /*******************************************************************************
 * Function Name  : TIM3_IRQHandler
 * Description    : This function handles the TIM3 interrupt request
@@ -370,5 +371,17 @@ void USBWU_IRQHandler(void)
 void PFQBC_IRQHandler(void)
 {
 }
+
+#if configUSE_WATCHDOG_TICK == 0
+	/* The kernel is not using the watchdog interrupt so it can be defined here. */
+	void WDG_IRQHandler( void )
+	{
+	}
+#else
+	/* The kernel is not using the timer 2 interrupt so it can be defined here. */
+	void TIM2_IRQHandler( void )
+	{
+	}
+#endif /* configUSE_WATCHDOG_TICK */
 
 /******************* (C) COPYRIGHT 2006 STMicroelectronics *****END OF FILE****/

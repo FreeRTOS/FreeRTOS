@@ -272,7 +272,7 @@ void LCD_CheckMasterStatus(void)
   /* Wait until BF is cleared */
   while ((MasterStatus & 0x80))
   {
-	vTaskDelay( 2 );  
+	vTaskDelay( 1 );
     LCD_CtrlLinesWrite(GPIO9, CtrlPin_E1, Bit_SET);   /* E1 = 1 */
     MasterStatus = GPIO_Read(GPIO8);
     LCD_CtrlLinesWrite(GPIO9, CtrlPin_E1, Bit_RESET); /* E1 = 0 */
@@ -303,7 +303,7 @@ void LCD_CheckSlaveStatus(void)
   /* Wait until BF is cleared */
   while ((SlaveStatus & 0x80))
   {
-	vTaskDelay( 2 );  
+	vTaskDelay( 1 );
     LCD_CtrlLinesWrite(GPIO9, CtrlPin_E2, Bit_SET);   /* E2 = 1 */
     SlaveStatus = GPIO_Read(GPIO8);
     LCD_CtrlLinesWrite(GPIO9, CtrlPin_E2, Bit_RESET); /* E2 = 0 */
@@ -812,7 +812,7 @@ void LCD_DisplayChar(u8 Line, u8 Column, u8 Ascii, TextColorMode_TypeDef CharMod
 	  }
 	  else
 	  {
-        DotBuffer[i] = ~AsciiDotsTable[Ascii*14+i+1];	  
+        DotBuffer[i] = ~AsciiDotsTable[Ascii*14+i+1];	
 	  }
     }
     /* Character displayed as black Text on white buttom  */
@@ -820,11 +820,11 @@ void LCD_DisplayChar(u8 Line, u8 Column, u8 Ascii, TextColorMode_TypeDef CharMod
     {
 	  if( ( u8 ) i & 0x01 )
       {
-        DotBuffer[i] = AsciiDotsTable[Ascii*14+i-1];		  
+        DotBuffer[i] = AsciiDotsTable[Ascii*14+i-1];		
       }
       else
       {
-        DotBuffer[i] = AsciiDotsTable[Ascii*14+i+1];				  
+        DotBuffer[i] = AsciiDotsTable[Ascii*14+i+1];				
       }
     }
   }
@@ -903,24 +903,9 @@ void LCD_DisplayString(u8 Line, u8 *ptr, TextColorMode_TypeDef CharMode)
   /* Send the string character by character on lCD */
   while ((*ptr!=0)&(i<17))
   {
-	if( *ptr == ' ' )
-	{
-		if( ptr[1] == ' ')
-		{
-			vTaskDelay( 3 );
-		}
-		else
-		{
-			vTaskDelay( 16 );
-		}
-	}
+	vTaskDelay( 1 );
 	
-	if( *ptr == '.' )
-	{
-		vTaskDelay( 16 );
-	}
-  
-  /* Display one character on LCD */
+  	/* Display one character on LCD */
     LCD_DisplayChar(Line, RefColumn, *ptr, CharMode);
 
     /* Increment the column position by 7 */

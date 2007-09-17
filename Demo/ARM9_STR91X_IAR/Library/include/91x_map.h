@@ -271,7 +271,7 @@ typedef struct
 } ENET_MAC_TypeDef;
 
 /* DMA Registers */
-typedef struct 
+typedef struct
 {
   vu32 SCR;           /* DMA Status and Control Register         */
   vu32 IER;           /* DMA Interrupt Sources Enable Register   */
@@ -510,10 +510,10 @@ typedef struct
 #define AHB_DMA_B          (0x68000000) /* DMA Buffered Space   */
 
 #define AHB_ENET_MAC_U     (0x7C000400) /* ENET_MAC  UnBuffered Space */
-#define AHB_ENET_MAC_B     (0x6C000000) /* ENET_MAC  Buffered Space   */
+#define AHB_ENET_MAC_B     (0x6C000400) /* ENET_MAC  Buffered Space   */
 
 #define AHB_ENET_DMA_U     (0x7C000000) /* ENET_DMA  Unbuffered Space */
-#define AHB_ENET_DMA_B     (0x6C000400) /* ENET_DMA  Buffered Space    */
+#define AHB_ENET_DMA_B     (0x6C000000) /* ENET_DMA  Buffered Space    */
 
 #define AHB_VIC1_U         (0xFC000000) /* Secondary VIC1 UnBuffered Space */
 #define AHB_VIC0_U         (0xFFFFF000) /* Primary VIC0 UnBuffered Space   */
@@ -592,7 +592,7 @@ typedef struct
 /*----------------------------- Unbuffered Mode ------------------------------*/
 /*----------------------------------------------------------------------------*/
 
-#ifndef Buffered 
+#ifndef Buffered
 
 /*******************************************************************************
 *                  AHBAPB peripheral Unbuffered Base Address                   *
@@ -618,7 +618,7 @@ typedef struct
 *                  EMI peripheral Unbuffered Base Address                      *
 *******************************************************************************/
 
-#define EMI_BASE           (AHB_EMI_U)    
+#define EMI_BASE           (AHB_EMI_U)
 
 /*******************************************************************************
 *                  FMI peripheral Unbuffered Base Address                      *

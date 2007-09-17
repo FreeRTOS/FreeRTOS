@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -108,9 +108,6 @@ void vPortYieldProcessor( void )
 	void vNonPreemptiveTick( void ) __attribute__ ((interrupt ("IRQ")));
 	void vNonPreemptiveTick( void )
 	{	
-
-		FIO2SET |= (1<<0);
-
 		vTaskIncrementTick();
 		T0IR = 2;
 		VICVectAddr = portCLEAR_VIC_INTERRUPT;
@@ -133,7 +130,7 @@ void vPortYieldProcessor( void )
 
 		/* Ready for the next interrupt. */
 		T0IR = 2;
-		VICAddress = portCLEAR_VIC_INTERRUPT;
+		VICVectAddr = portCLEAR_VIC_INTERRUPT;
 		
 		/* Restore the context of the new task. */
 		portRESTORE_CONTEXT();

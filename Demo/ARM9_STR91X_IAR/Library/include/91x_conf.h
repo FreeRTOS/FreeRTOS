@@ -59,10 +59,10 @@
 /************************* WIU *************************/
 //#define _WIU
 /************************* TIM *************************/
-//#define _TIM
+#define _TIM
 //#define _TIM0
 //#define _TIM1
-//#define _TIM2
+#define _TIM2
 //#define _TIM3
 /************************* GPIO ************************/
 #define _GPIO

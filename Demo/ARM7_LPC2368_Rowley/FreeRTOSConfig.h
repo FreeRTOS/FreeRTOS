@@ -101,7 +101,7 @@ to exclude the API function. */
 
 
 #define VICVectAddr    VICAddress
-
+#define VICVectCntl4 VICVectPriority4
 typedef struct
 {
 	long xColumn;

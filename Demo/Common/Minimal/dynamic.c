@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -114,7 +114,7 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
 #define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
-#define priSLEEP_TIME				( ( portTickType ) 128 )
+#define priSLEEP_TIME				( ( portTickType ) 128 / portTICK_RATE_MS )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( unsigned portLONG ) 0xff )
 #define priNO_BLOCK					( ( portTickType ) 0 )

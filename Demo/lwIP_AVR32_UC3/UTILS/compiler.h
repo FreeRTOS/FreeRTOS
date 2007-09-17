@@ -45,7 +45,9 @@
 #ifndef _COMPILER_H_
 #define _COMPILER_H_
 
-#include <avr32/io.h>
+#if (__GNUC__ && __AVR32__) || (__ICCAVR32__ || __AAVR32__)
+#  include <avr32/io.h>
+#endif
 #if __ICCAVR32__
 #  include <intrinsics.h>
 #endif
@@ -509,7 +511,7 @@ typedef struct
     }\
   )
 #elif __ICCAVR32__
-  #define min(a, b)   Min(a, b)
+  #define min(a, b)   __min(a, b)
 #endif
 
 /*! \brief Takes the maximal value of \a a and \a b.
@@ -531,7 +533,7 @@ typedef struct
     }\
   )
 #elif __ICCAVR32__
-  #define max(a, b)   Max(a, b)
+  #define max(a, b)   __max(a, b)
 #endif
 
 //! @}
@@ -751,6 +753,36 @@ typedef struct
 
 //! @}
 
+
+/*! \name Debug Register Access
+ */
+//! @{
+
+/*! \brief Gets the value of the \a dbgreg debug register.
+ *
+ * \param dbgreg  Address of the debug register of which to get the value.
+ *
+ * \return Value of the \a dbgreg debug register.
+ */
+#if __GNUC__
+  #define Get_debug_register(dbgreg)          __builtin_mfdr(dbgreg)
+#elif __ICCAVR32__
+  #define Get_debug_register(dbgreg)          __get_debug_register(dbgreg)
+#endif
+
+/*! \brief Sets the value of the \a dbgreg debug register to \a value.
+ *
+ * \param dbgreg  Address of the debug register of which to set the value.
+ * \param value   Value to set the \a dbgreg debug register to.
+ */
+#if __GNUC__
+  #define Set_debug_register(dbgreg, value)   __builtin_mtdr(dbgreg, value)
+#elif __ICCAVR32__
+  #define Set_debug_register(dbgreg, value)   __set_debug_register(dbgreg, value)
+#endif
+
+//! @}
+
 #endif  // __AVR32_ABI_COMPILER__
 
 
@@ -919,9 +951,9 @@ typedef struct
  * \note More optimized if only used with values unknown at compile time.
  */
 #if __GNUC__
-  #define swap16(u16) __builtin_bswap_16(u16)
+  #define swap16(u16) ((U16)__builtin_bswap_16((U16)(u16)))
 #elif __ICCAVR32__
-  #define swap16(u16) Swap16(u16)
+  #define swap16(u16) ((U16)__swap_bytes_in_halfwords((U16)(u16)))
 #endif
 
 /*! \brief Toggles the endianism of \a u32 (by swapping its bytes).
@@ -933,9 +965,9 @@ typedef struct
  * \note More optimized if only used with values unknown at compile time.
  */
 #if __GNUC__
-  #define swap32(u32) __builtin_bswap_32(u32)
+  #define swap32(u32) ((U32)__builtin_bswap_32((U32)(u32)))
 #elif __ICCAVR32__
-  #define swap32(u32) Swap32(u32)
+  #define swap32(u32) ((U32)__swap_bytes((U32)(u32)))
 #endif
 
 /*! \brief Toggles the endianism of \a u64 (by swapping its bytes).

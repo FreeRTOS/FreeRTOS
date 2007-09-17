@@ -93,11 +93,12 @@ typedef struct {
 
 /* AddressFilteringMode */
 #define MAC_Perfect_Multicast_Perfect 0x0
-#define MAC_Perfect_Muticast_Hash     0x1<<17
-#define MAC_Hash_Multicast_Hash       0x3<<17
-#define Inverse                       0x4<<17
-#define Promiscuous                   0x5<<17
-#define MAC_Hash_Muticast_All         0x6<<17
+#define MAC_Perfect_Multicast_Hash    0x1<<17
+#define MAC_Hash_Multicast_Hash       0x2<<17
+#define MAC_Inverse                   0x3<<17
+#define MAC_Promiscuous               0x4<<17
+#define MAC_Perfect_Multicast_All     0x5<<17
+#define MAC_Hash_Multicast_All        0x6<<17
 
 /* VLANFilteringMode */
 #define VLANFilter_VLTAG_VLID        1
@@ -109,7 +110,7 @@ typedef struct {
 
 
 /* MAC Address*/
-#define MAC_ADDR0 0x0D
+#define MAC_ADDR0 0x00
 #define MAC_ADDR1 0x0A
 #define MAC_ADDR2 0x08
 #define MAC_ADDR3 0x04

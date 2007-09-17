@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.4.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.5.0 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS distribution.
 
@@ -46,27 +46,27 @@
  * documentation provides more details of the demo application tasks.
  *
  * A few tasks are created that are not part of the standard demo.  These are
- * the 'LCD' task, the 'LCD Message' task, a WEB server task and the 'Check' 
+ * the 'LCD' task, the 'LCD Message' task, a WEB server task and the 'Check'
  * task.
  *
  * The LCD task is the only task that accesses the LCD directly, so mutual
  * exclusion is ensured.  Any task wishing to display text sends the LCD task
  * a message containing a pointer to the string that should be displayed.
- * The LCD task itself just blocks on a queue waiting for such a message to 
+ * The LCD task itself just blocks on a queue waiting for such a message to
  * arrive - processing each in turn.
  *
  * The LCD Message task does nothing other than periodically send messages to
- * the LCD task.  The messages originating from the LCD Message task are 
+ * the LCD task.  The messages originating from the LCD Message task are
  * displayed on the top row of the LCD.
  *
- * The Check task only executes every three seconds but has the highest 
- * priority so is guaranteed to get processor time.  Its main function is to 
- * check that all the other tasks are still operational. Most tasks maintain 
- * a unique count that is incremented each time the task successfully completes 
- * a cycle of its function.  Should any error occur within such a task the 
+ * The Check task only executes every three seconds but has the highest
+ * priority so is guaranteed to get processor time.  Its main function is to
+ * check that all the other tasks are still operational. Most tasks maintain
+ * a unique count that is incremented each time the task successfully completes
+ * a cycle of its function.  Should any error occur within such a task the
  * count is permanently halted.  The check task sets a bit in an error status
  * flag should it find any counter variable at a value that indicates an
- * error has occurred.  The error flag value is converted to a string and sent 
+ * error has occurred.  The error flag value is converted to a string and sent
  * to the LCD task for display on the bottom row on the LCD.
  */
 
@@ -93,6 +93,13 @@
 #include "flop.h"
 #include "comtest2.h"
 #include "serial.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+
+#ifdef STACK_LWIP
+	#include "BasicWEB.h"
+	#include "sys.h"
+#endif
 
 /* Priorities for the demo application tasks. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -103,6 +110,7 @@
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 3 )
 #define mainLCD_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainMSG_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainGENERIC_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
 /* Delays used by the various tasks defined in this file. */
 #define mainCHECK_PERIOD			( ( portTickType ) 3000 / portTICK_RATE_MS  )
@@ -145,11 +153,14 @@ static void prvSetupHardware( void );
  */
 static void prvCheckOtherTasksAreStillRunning( void );
 
-/*
- * The WEB server task prototype.  The task is created in this file but defined
- * elsewhere. 
- */
-extern void vuIP_Task(void *pvParameters);
+#ifdef STACK_UIP
+	/*
+	 * The WEB server task prototype.  The task is created in this file but defined
+	 * elsewhere.  STACK_UIP is defined when the uIP stack is used in preference
+	 * to the lwIP stack.
+	 */
+	extern void vuIP_Task(void *pvParameters);
+#endif
 
 /*
  * The task that displays text on the LCD.
@@ -183,10 +194,9 @@ void main( void )
 	/* Setup any hardware that has not already been configured by the low
 	level init routines. */
 	prvSetupHardware();
-
 	/* Create the queue used to send data to the LCD task. */
 	xLCDQueue = xQueueCreate( mainLCD_QUEUE_LEN, sizeof( xLCDMessage ) );
-
+	
 	/* Start all the standard demo application tasks. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
@@ -196,15 +206,27 @@ void main( void )
 	vStartDynamicPriorityTasks();
 	vStartMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
+	vStartQueuePeekTasks();	
 
 	/* Start the tasks which are defined in this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 	xTaskCreate( prvLCDTask, "LCD", configMINIMAL_STACK_SIZE, ( void * ) &xLCDQueue, mainLCD_TASK_PRIORITY, NULL );
 	xTaskCreate( prvLCDMessageTask, "MSG", configMINIMAL_STACK_SIZE, ( void * ) &xLCDQueue, mainMSG_TASK_PRIORITY, NULL );
 
-	/* Finally, create the WEB server task. */
-	xTaskCreate( vuIP_Task, "uIP", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
-	
+	/* Start either the uIP TCP/IP stack or the lwIP TCP/IP stack. */
+	#ifdef STACK_UIP
+		/* Finally, create the WEB server task. */
+		xTaskCreate( vuIP_Task, "uIP", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+	#endif
+
+	#ifdef STACK_LWIP	
+		/* Create the lwIP task.  This uses the lwIP RTOS abstraction layer.*/
+	  	vlwIPInit();
+		sys_set_state(	( signed portCHAR * ) "httpd", lwipBASIC_SERVER_STACK_SIZE );
+	  	sys_thread_new( vBasicWEBServer, ( void * ) NULL, basicwebWEBSERVER_PRIORITY );
+		sys_set_default_state();
+	#endif
 
 	/* Start the scheduler.
 
@@ -226,14 +248,14 @@ static void prvSetupHardware( void )
 	/* Configuration taken from the ST code.
 
 	Set Flash banks size & address */
-	FMI_BankRemapConfig( 4, 2, 0, 0x80000 ); 
+	FMI_BankRemapConfig( 4, 2, 0, 0x80000 );
 
 	/* FMI Waite States */
-	FMI_Config( FMI_READ_WAIT_STATE_2, FMI_WRITE_WAIT_STATE_0, FMI_PWD_ENABLE, FMI_LVD_ENABLE, FMI_FREQ_HIGH ); 
+	FMI_Config( FMI_READ_WAIT_STATE_2, FMI_WRITE_WAIT_STATE_0, FMI_PWD_ENABLE, FMI_LVD_ENABLE, FMI_FREQ_HIGH );
 
 	/* Configure the FPLL = 96MHz, and APB to 48MHz. */
 	SCU_PCLKDivisorConfig( SCU_PCLK_Div2 );
-	SCU_PLLFactorsConfig( 192, 25, 2 ); 
+	SCU_PLLFactorsConfig( 192, 25, 2 );
 	SCU_PLLCmd( ENABLE );
 	SCU_MCLKSourceConfig( SCU_MCLK_PLL );
 
@@ -269,8 +291,8 @@ portCHAR *pcStringsToDisplay[] = {
 
 	/* The parameters are not used in this task. */
 	( void ) pvParameters;
+	
 	pcFlagString = &cCheckVal[ 0 ];	
-
 
 	/* Initialise xLastWakeTime to ensure the first call to vTaskDelayUntil()
 	functions correctly. */
@@ -278,7 +300,6 @@ portCHAR *pcStringsToDisplay[] = {
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
-
 	for( ;; )
 	{
 		/* Delay until it is time to execute again. */
@@ -339,6 +360,17 @@ static void prvCheckOtherTasksAreStillRunning( void )
 	{
 		ulErrorFlags |= 0x40;
 	}
+	
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+	{
+		ulErrorFlags |= 0x80;
+	}
+
+	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	{
+		ulErrorFlags |= 0x100;
+	}
+	
 }
 /*-----------------------------------------------------------*/
 
@@ -401,7 +433,7 @@ portCHAR *pcString;
 
 	LCD_Init();
 
-	for( ;; )    
+	for( ;; )
 	{
 		/* Wait for a message to arrive. */
 		if( xQueueReceive( *pxLCDQueue, &xReceivedMessage, portMAX_DELAY ) )
@@ -411,11 +443,10 @@ portCHAR *pcString;
   			LCD_DisplayString(xReceivedMessage.xRow, pcString, BlackText);
 
 			/* The delay here is just to ensure the LCD task does not starve
-			out lower priority tasks as writhing to the LCD can take a long
+			out lower priority tasks as writing to the LCD can take a long
 			time. */
 			vTaskDelay( mainLCD_DELAY );
 		}
 	}
 }
 /*-----------------------------------------------------------*/
-

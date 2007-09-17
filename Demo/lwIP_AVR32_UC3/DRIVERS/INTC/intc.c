@@ -53,8 +53,13 @@ extern const unsigned int ipr_val[AVR32_INTC_NUM_INT_LEVELS];
 
 //! Creates a table of interrupt line handlers per interrupt group in order to optimize RAM space.
 //! Each line handler table contains a set of pointers to interrupt handlers.
+#if __GNUC__
 #define DECL_INT_LINE_HANDLER_TABLE(GRP, unused) \
 static volatile __int_handler _int_line_handler_table_##GRP[Max(AVR32_INTC_NUM_IRQS_PER_GRP##GRP, 1)];
+#elif __ICCAVR32__
+#define DECL_INT_LINE_HANDLER_TABLE(GRP, unused) \
+static volatile __no_init __int_handler _int_line_handler_table_##GRP[Max(AVR32_INTC_NUM_IRQS_PER_GRP##GRP, 1)];
+#endif
 MREPEAT(AVR32_INTC_NUM_INT_GRPS, DECL_INT_LINE_HANDLER_TABLE, ~);
 #undef DECL_INT_LINE_HANDLER_TABLE
 

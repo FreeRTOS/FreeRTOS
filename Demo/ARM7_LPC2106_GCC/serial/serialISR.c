@@ -110,9 +110,13 @@ void vUART_ISR( void )
 	variable declarations. */
 	portENTER_SWITCHING_ISR();
 
-	/* Now we can declare the local variables. */
-	signed portCHAR cChar;
-	portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+	/* Now we can declare the local variables.   These must be static. */
+	static signed portCHAR cChar;
+	static portBASE_TYPE xTaskWokenByTx, xTaskWokenByRx;
+
+	/* As these variables are static they must be initialised manually here. */
+	xTaskWokenByTx = pdFALSE;
+	xTaskWokenByRx = pdFALSE;
 
 	/* What caused the interrupt? */
 	switch( UART0_IIR & serINTERRUPT_SOURCE_MASK )

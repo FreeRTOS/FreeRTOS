@@ -10,7 +10,12 @@ void vEMAC_ISR( void )
 {
     portENTER_SWITCHING_ISR();
 
-    portBASE_TYPE xSwitchRequired = pdFALSE;
+
+	/* Variable must be static. */
+    static portBASE_TYPE xSwitchRequired;
+
+	/* As the variable is static it must be manually initialised here. */
+	xSwitchRequired = pdFALSE;
 
     /* Clear the interrupt. */
     IntClear = 0xffff;

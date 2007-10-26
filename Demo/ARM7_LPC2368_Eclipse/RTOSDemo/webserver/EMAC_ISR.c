@@ -10,7 +10,9 @@ void vEMAC_ISR( void )
 {
     portENTER_SWITCHING_ISR();
 
-    portBASE_TYPE xSwitchRequired = pdFALSE;
+    static portBASE_TYPE xSwitchRequired;
+
+	xSwitchRequired = pdFALSE;
 
     /* Clear the interrupt. */
     MAC_INTCLEAR = 0xffff;

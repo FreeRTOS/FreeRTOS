@@ -124,11 +124,16 @@ void vI2C_ISR( void )
 {
 	portENTER_SWITCHING_ISR();
 
+	/* Variables must be static. */
+
 	/* Holds the current transmission state. */							
 	static I2C_STATE eCurrentState = eSentStart;
 	static portLONG lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
-	portBASE_TYPE xTaskWokenByTx = pdFALSE;
-	portLONG lBytesLeft;
+	static portBASE_TYPE xTaskWokenByTx;
+	static portLONG lBytesLeft;
+
+	xTaskWokenByTx = pdFALSE;
+
 
 	/* The action taken for this interrupt depends on our current state. */
 	switch( eCurrentState )

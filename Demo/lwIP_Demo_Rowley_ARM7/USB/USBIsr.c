@@ -71,12 +71,15 @@ void vUSB_ISR( void )
 	stack variable declarations. */
 	portENTER_SWITCHING_ISR();
 
-	/* Now variables can be declared. */
-	portCHAR cTaskWokenByPost = pdFALSE; 
+	/* Now variables can be declared.  These must be static. */
+	static portCHAR cTaskWokenByPost; 
 	static volatile unsigned portLONG ulNextMessage = 0;
-	xISRStatus *pxMessage;
-	unsigned portLONG ulRxBytes;
-	unsigned portCHAR ucFifoIndex;
+	static xISRStatus *pxMessage;
+	static unsigned portLONG ulRxBytes;
+	static unsigned portCHAR ucFifoIndex;
+
+	/* As the variables are static they must be initialised manually here. */
+	cTaskWokenByPost = pdFALSE; 
 
     /* Use the next message from the array. */
 	pxMessage = &( xISRMessages[ ( ulNextMessage & usbQUEUE_LENGTH ) ] );

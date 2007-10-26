@@ -97,10 +97,14 @@ void vUART_ISR( void )
 	variable declarations. */
 	portENTER_SWITCHING_ISR();
 
-	/* Now we can declare the local variables. */
-	signed portCHAR cChar;
-	portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
-	unsigned portLONG ulStatus;
+	/* Now we can declare the local variables.   These must be static. */
+	static signed portCHAR cChar;
+	static portBASE_TYPE xTaskWokenByTx, xTaskWokenByRx;
+	static unsigned portLONG ulStatus;
+
+	/* These variables are static so need initialising manually here. */
+	xTaskWokenByTx = pdFALSE;
+	xTaskWokenByRx = pdFALSE;
 
 	/* What caused the interrupt? */
 	ulStatus = AT91C_BASE_US0->US_CSR & AT91C_BASE_US0->US_IMR;
@@ -133,7 +137,7 @@ void vUART_ISR( void )
 		}
 	}
 
-	// Acknowledge the interrupt at AIC level...
+	/* Acknowledge the interrupt at AIC level... */
 	AT91C_BASE_AIC->AIC_EOICR = serCLEAR_AIC_INTERRUPT;
 
 	/* Exit the ISR.  If a task was woken by either a character being received

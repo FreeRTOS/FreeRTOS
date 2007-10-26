@@ -59,7 +59,12 @@ void vEINT0_ISR( void )
 	portENTER_SWITCHING_ISR();
 
 	extern xQueueHandle xTCPISRQueue;
-	portBASE_TYPE xTaskWoken = pdFALSE;
+
+	/* Must be declared static. */
+	static portBASE_TYPE xTaskWoken;
+
+	/* As the variable is static it must be manually initialised. */
+	xTaskWoken = pdFALSE;
 
 	/* Just wake the TCP task so it knows an ISR has occurred. */
 	xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, xTaskWoken );	

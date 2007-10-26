@@ -71,10 +71,13 @@ void vEMACISR( void )
 	variable declarations. */
 	portENTER_SWITCHING_ISR();
 
-	/* Variable definitions can be made now. */
-	volatile unsigned portLONG ulIntStatus, ulEventStatus;
-	portBASE_TYPE xSwitchRequired = pdFALSE;
+	/* Variable definitions can be made now.   These must be static. */
+	static volatile unsigned portLONG ulIntStatus, ulEventStatus;
+	static portBASE_TYPE xSwitchRequired;
     extern void vClearEMACTxBuffer( void );
+
+	/* As the variable is static it must be initialised manually here. */
+	xSwitchRequired = pdFALSE;
 
 	/* Find the cause of the interrupt. */
 	ulIntStatus = AT91C_BASE_EMAC->EMAC_ISR;

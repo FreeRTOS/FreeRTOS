@@ -44,6 +44,9 @@
 
 	+ The assembler statements are now included in a single asm block rather
 	  than each line having its own asm block.
+
+	+ The macro portENTER_SWITCHING_ISR() no longer attempts to use the frame
+	  pointer.  Variables declared within ISRs must now be declared static.
 */
 
 #ifndef PORTMACRO_H
@@ -187,12 +190,6 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 #define portENTER_SWITCHING_ISR()										\
 	/* Save the context of the interrupted task. */						\
 	portSAVE_CONTEXT();													\
-																		\
-	/* We don't know the stack requirements for the ISR, so the frame */\
-	/* pointer will be set to the top of the task stack, and the stack*/\
-	/* pointer left where it is.  The IRQ stack will get used for any */\
-	/* functions calls made by this ISR. */								\
-	asm volatile ( "SUB		R11, LR, #4" );							\
 	{
 
 #define portEXIT_SWITCHING_ISR( SwitchRequired )						\

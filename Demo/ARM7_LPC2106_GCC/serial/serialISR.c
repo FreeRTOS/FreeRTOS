@@ -80,9 +80,11 @@ static volatile portLONG lTHREEmpty;
  */
 void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx, portLONG volatile **pplTHREEmptyFlag );
 
-/* UART0 interrupt service routine.  This can cause a context switch so MUST
-be declared "naked". */
-void vUART_ISR( void ) __attribute__ ((naked));
+/* UART0 interrupt service routine entry point. */
+void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
+
+/* UART0 interrupt service routine handler. */
+void vUART_ISR_Handler( void );
 
 /*-----------------------------------------------------------*/
 void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, 
@@ -103,20 +105,24 @@ void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, xQueueHandle 
 }
 /*-----------------------------------------------------------*/
 
-void vUART_ISR( void )
+void vUART_ISR_Wrapper( void )
 {
-	/* This ISR can cause a context switch, so the first statement must be a
-	call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
-	variable declarations. */
-	portENTER_SWITCHING_ISR();
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();
 
-	/* Now we can declare the local variables.   These must be static. */
-	static signed portCHAR cChar;
-	static portBASE_TYPE xTaskWokenByTx, xTaskWokenByRx;
+	/* Call the handler.  This must be a separate function from the wrapper
+	to ensure the correct stack frame is set up. */
+	vUART_ISR_Handler();
 
-	/* As these variables are static they must be initialised manually here. */
-	xTaskWokenByTx = pdFALSE;
-	xTaskWokenByRx = pdFALSE;
+	/* Restore the context of whichever task is going to run next. */
+	portRESTORE_CONTEXT();
+}
+/*-----------------------------------------------------------*/
+
+void vUART_ISR_Handler( void )
+{
+signed portCHAR cChar;
+portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
 
 	/* What caused the interrupt? */
 	switch( UART0_IIR & serINTERRUPT_SOURCE_MASK )
@@ -154,14 +160,15 @@ void vUART_ISR( void )
 								break;
 	}
 
+	if( xTaskWokenByTx || xTaskWokenByRx )
+	{
+		portYIELD_FROM_ISR();
+	}
+
 	/* Clear the ISR in the VIC. */
 	VICVectAddr = serCLEAR_VIC_INTERRUPT;
-
-	/* Exit the ISR.  If a task was woken by either a character being received
-	or transmitted then a context switch will occur. */
-	portEXIT_SWITCHING_ISR( ( xTaskWokenByTx || xTaskWokenByRx ) );
 }
-/*-----------------------------------------------------------*/
+
 
 
 

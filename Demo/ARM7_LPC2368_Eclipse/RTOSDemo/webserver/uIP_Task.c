@@ -62,7 +62,7 @@
 #define uipIP_ADDR0		172
 #define uipIP_ADDR1		25
 #define uipIP_ADDR2		218
-#define uipIP_ADDR3		10	
+#define uipIP_ADDR3		16	
 
 /* How long to wait before attempting to connect the MAC again. */
 #define uipINIT_WAIT    100
@@ -115,7 +115,7 @@ void vuIP_Task( void *pvParameters )
 portBASE_TYPE i;
 uip_ipaddr_t xIPAddr;
 struct timer periodic_timer, arp_timer;
-extern void ( vEMAC_ISR )( void );
+extern void ( vEMAC_ISR_Wrapper )( void );
 
 	/* Create the semaphore used by the ISR to wake this task. */
 	vSemaphoreCreateBinary( xEMACSemaphore );
@@ -138,7 +138,7 @@ extern void ( vEMAC_ISR )( void );
 	{
 		MAC_INTENABLE = INT_RX_DONE;
         VICIntEnable |= 0x00200000;
-        VICVectAddr21 = ( portLONG ) vEMAC_ISR;
+        VICVectAddr21 = ( portLONG ) vEMAC_ISR_Wrapper;
 		prvSetMACAddress();
 	}
 	portEXIT_CRITICAL();

@@ -87,7 +87,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
 unsigned portLONG ulSpeed;
 unsigned portLONG ulCD;
 xComPortHandle xReturn = serHANDLE;
-extern void ( vUART_ISR )( void );
+extern void ( vUART_ISR_Wrapper )( void );
 
 	/* The queues are used in the serial ISR routine, so are created from
 	serialISR.c (which is always compiled to ARM mode. */
@@ -139,7 +139,7 @@ extern void ( vUART_ISR )( void );
 			/* Setup the interrupt for USART0.
 
 			Store interrupt handler function address in USART0 vector register... */
-			AT91C_BASE_AIC->AIC_SVR[ portUSART0_AIC_CHANNEL ] = (unsigned long)vUART_ISR;
+			AT91C_BASE_AIC->AIC_SVR[ portUSART0_AIC_CHANNEL ] = (unsigned long)vUART_ISR_Wrapper;
 			
 			/* USART0 interrupt level-sensitive, priority 1... */
 			AT91C_BASE_AIC->AIC_SMR[ portUSART0_AIC_CHANNEL ] = AIC_SRCTYPE_INT_LEVEL_SENSITIVE | 1;

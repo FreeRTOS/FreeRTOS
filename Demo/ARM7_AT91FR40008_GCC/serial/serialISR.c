@@ -74,7 +74,11 @@ static xQueueHandle xCharsForTx;
 
 /* UART0 interrupt service routine.  This can cause a context switch so MUST
 be declared "naked". */
-void vUART_ISR( void ) __attribute__ ((naked));
+void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
+
+/* The ISR function that actually performs the work.  This must be separate 
+from the wrapper to ensure the correct stack frame is set up. */
+void vUART_ISR_Handler( void );
 
 /*-----------------------------------------------------------*/
 void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx )
@@ -90,21 +94,26 @@ void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle 
 }
 /*-----------------------------------------------------------*/
 
-void vUART_ISR( void )
+void vUART_ISR_Wrapper( void )
 {
-	/* This ISR can cause a context switch, so the first statement must be a
-	call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
-	variable declarations. */
-	portENTER_SWITCHING_ISR();
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();
 
-	/* Now we can declare the local variables.   These must be static. */
-	static signed portCHAR cChar;
-	static portBASE_TYPE xTaskWokenByTx, xTaskWokenByRx;
-	static unsigned portLONG ulStatus;
+	/* Call the handler.  This must be a separate function to ensure the 
+	stack frame is correctly set up. */
+	vUART_ISR_Handler();
 
-	/* These variables are static so need initialising manually here. */
-	xTaskWokenByTx = pdFALSE;
-	xTaskWokenByRx = pdFALSE;
+	/* Restore the context of whichever task will run next. */
+	portRESTORE_CONTEXT();
+}
+/*-----------------------------------------------------------*/
+
+void vUART_ISR_Handler( void )
+{
+/* Now we can declare the local variables.   These must be static. */
+signed portCHAR cChar;
+portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+unsigned portLONG ulStatus;
 
 	/* What caused the interrupt? */
 	ulStatus = AT91C_BASE_US0->US_CSR & AT91C_BASE_US0->US_IMR;
@@ -140,9 +149,14 @@ void vUART_ISR( void )
 	/* Acknowledge the interrupt at AIC level... */
 	AT91C_BASE_AIC->AIC_EOICR = serCLEAR_AIC_INTERRUPT;
 
-	/* Exit the ISR.  If a task was woken by either a character being received
-	or transmitted then a context switch will occur. */
-	portEXIT_SWITCHING_ISR( ( xTaskWokenByTx || xTaskWokenByRx ) );
+	/* If an event caused a task to unblock then we call "Yield from ISR" to
+	ensure that the unblocked task is the task that executes when the interrupt
+	completes if the unblocked task has a priority higher than the interrupted
+	task. */
+	if( xTaskWokenByTx || xTaskWokenByRx )
+	{
+		portYIELD_FROM_ISR();
+	}
 }
 /*-----------------------------------------------------------*/
 

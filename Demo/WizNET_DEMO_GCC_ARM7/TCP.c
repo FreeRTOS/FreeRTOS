@@ -300,10 +300,10 @@ void vTCPHardReset( void )
 	/* Install the ISR into the VIC - but don't enable it yet! */
 	portENTER_CRITICAL();
 	{
-		extern void ( vEINT0_ISR )( void );
+		extern void ( vEINT0_ISR_Wrapper )( void );
 
 		VICIntSelect &= ~( tcpEINT0_VIC_CHANNEL_BIT );
-		VICVectAddr3 = ( portLONG ) vEINT0_ISR;
+		VICVectAddr3 = ( portLONG ) vEINT0_ISR_Wrapper;
 
 		VICVectCntl3 = tcpEINT0_VIC_CHANNEL | tcpEINT0_VIC_ENABLE;
 	}

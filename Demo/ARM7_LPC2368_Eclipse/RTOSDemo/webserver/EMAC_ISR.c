@@ -2,17 +2,18 @@
 #include "Semphr.h"
 #include "Task.h"
 
-void vEMAC_ISR( void ) __attribute__((naked));
+/* The interrupt entry point. */
+void vEMAC_ISR_Wrapper( void ) __attribute__((naked));
+
+/* The handler that does the actual work. */
+void vEMAC_ISR_Handler( void );
 
 extern xSemaphoreHandle xEMACSemaphore;
 
-void vEMAC_ISR( void )
+
+void vEMAC_ISR_Handler( void )
 {
-    portENTER_SWITCHING_ISR();
-
-    static portBASE_TYPE xSwitchRequired;
-
-	xSwitchRequired = pdFALSE;
+portBASE_TYPE xSwitchRequired = pdFALSE;
 
     /* Clear the interrupt. */
     MAC_INTCLEAR = 0xffff;
@@ -21,11 +22,22 @@ void vEMAC_ISR( void )
     /* Ensure the uIP task is not blocked as data has arrived. */
     if( xSemaphoreGiveFromISR( xEMACSemaphore, pdFALSE ) )
     {
-        xSwitchRequired = pdTRUE;
+    	/* Giving the semaphore woke a task. */
+        portYIELD_FROM_ISR();
     }
-
-    /* Switch to the uIP task. */
-    portEXIT_SWITCHING_ISR( xSwitchRequired );
 }
+/*-----------------------------------------------------------*/
 
+void vEMAC_ISR_Wrapper( void )
+{
+	/* Save the context of the interrupted task. */
+    portSAVE_CONTEXT();
+    
+    /* Call the handler.  This must be a separate function unless you can
+    guarantee that no stack will be used. */
+    vEMAC_ISR_Handler();
+    
+    /* Restore the context of whichever task is going to run next. */
+    portRESTORE_CONTEXT();
+}
 

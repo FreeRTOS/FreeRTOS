@@ -699,7 +699,7 @@ static void vDetachUSBInterface( void)
 
 static void vInitUSBInterface( void )
 {
-extern void ( vUSB_ISR )( void );
+extern void ( vUSB_ISR_Wrapper )( void );
 
 	/* Create the queue used to communicate between the USB ISR and task. */
 	xUSBInterruptQueue = xQueueCreate( usbQUEUE_LENGTH + 1, sizeof( xISRStatus * ) );
@@ -759,7 +759,7 @@ extern void ( vUSB_ISR )( void );
 
 	/* Enable the USB interrupts - other interrupts get enabled as the 
 	enumeration process progresses. */
-	AT91F_AIC_ConfigureIt( AT91C_ID_UDP, usbINTERRUPT_PRIORITY, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, ( void (*)( void ) ) vUSB_ISR );
+	AT91F_AIC_ConfigureIt( AT91C_ID_UDP, usbINTERRUPT_PRIORITY, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, ( void (*)( void ) ) vUSB_ISR_Wrapper );
 	AT91C_BASE_AIC->AIC_IECR = 0x1 << AT91C_ID_UDP;
 
 

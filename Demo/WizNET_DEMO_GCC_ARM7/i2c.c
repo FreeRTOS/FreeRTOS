@@ -182,7 +182,7 @@ signed portBASE_TYPE xReturn;
 
 void i2cInit( void )
 {
-extern void ( vI2C_ISR )( void );
+extern void ( vI2C_ISR_Wrapper )( void );
 
 	/* Create the queue used to send messages to the ISR. */
 	vI2CISRCreateQueues( i2cQUEUE_LENGTH, &xMessagesForTx, &pulBusFree );
@@ -203,7 +203,7 @@ extern void ( vI2C_ISR )( void );
 		/* Setup the VIC for the i2c interrupt. */
 		VICIntSelect &= ~( i2cI2C_VIC_CHANNEL_BIT );
 		VICIntEnable |= i2cI2C_VIC_CHANNEL_BIT;
-		VICVectAddr2 = ( portLONG ) vI2C_ISR;
+		VICVectAddr2 = ( portLONG ) vI2C_ISR_Wrapper;
 
 		VICVectCntl2 = i2cI2C_VIC_CHANNEL | i2cI2C_VIC_ENABLE;
 	}

@@ -59,27 +59,20 @@ extern xQueueHandle xUSBInterruptQueue;
 /*-----------------------------------------------------------*/
 
 /* The ISR can cause a context switch so is declared naked. */
-void vUSB_ISR( void ) __attribute__ ((naked));
+void vUSB_ISR_Wrapper( void ) __attribute__ ((naked));
 
+/* The function that actually performs the ISR work.  This must be separate
+from the wrapper function to ensure the correct stack frame gets set up. */
+void vUSB_ISR_Handler( void );
 /*-----------------------------------------------------------*/
 
-
-void vUSB_ISR( void )
+void vUSB_ISR_Handler( void )
 {
-	/* This ISR can cause a context switch.  Therefore a call to the 
-	portENTER_SWITCHING_ISR() macro is made.  This must come BEFORE any 
-	stack variable declarations. */
-	portENTER_SWITCHING_ISR();
-
-	/* Now variables can be declared.  These must be static. */
-	static portCHAR cTaskWokenByPost; 
-	static volatile unsigned portLONG ulNextMessage = 0;
-	static xISRStatus *pxMessage;
-	static unsigned portLONG ulRxBytes;
-	static unsigned portCHAR ucFifoIndex;
-
-	/* As the variables are static they must be initialised manually here. */
-	cTaskWokenByPost = pdFALSE; 
+portCHAR cTaskWokenByPost = pdFALSE;
+static volatile unsigned portLONG ulNextMessage = 0;
+xISRStatus *pxMessage;
+unsigned portLONG ulRxBytes;
+unsigned portCHAR ucFifoIndex;
 
     /* Use the next message from the array. */
 	pxMessage = &( xISRMessages[ ( ulNextMessage & usbQUEUE_LENGTH ) ] );
@@ -158,6 +151,27 @@ void vUSB_ISR( void )
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 
 	/* Do a task switch if needed */
-	portEXIT_SWITCHING_ISR( cTaskWokenByPost )
+	if( cTaskWokenByPost )
+	{
+		/* This call will ensure that the unblocked task will be executed
+		immediately upon completion of the ISR if it has a priority higher
+		than the interrupted task. */
+		portYIELD_FROM_ISR();
+	}
 }
+/*-----------------------------------------------------------*/
+
+void vUSB_ISR_Wrapper( void )
+{
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();
+
+	/* Call the handler to do the work.  This must be a separate
+	function to ensure the stack frame is set up correctly. */
+	vUSB_ISR_Handler();
+
+	/* Restore the context of whichever task will execute next. */
+	portRESTORE_CONTEXT();
+}
+
 

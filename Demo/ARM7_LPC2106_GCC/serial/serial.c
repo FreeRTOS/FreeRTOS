@@ -118,7 +118,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
 {
 unsigned portLONG ulDivisor, ulWantedClock;
 xComPortHandle xReturn = serHANDLE;
-extern void ( vUART_ISR )( void );
+extern void ( vUART_ISR_Wrapper )( void );
 
 	/* The queues are used in the serial ISR routine, so are created from
 	serialISR.c (which is always compiled to ARM mode. */
@@ -153,7 +153,7 @@ extern void ( vUART_ISR )( void );
 			/* Setup the VIC for the UART. */
 			VICIntSelect &= ~( serUART0_VIC_CHANNEL_BIT );
 			VICIntEnable |= serUART0_VIC_CHANNEL_BIT;
-			VICVectAddr1 = ( portLONG ) vUART_ISR;
+			VICVectAddr1 = ( portLONG ) vUART_ISR_Wrapper;
 			VICVectCntl1 = serUART0_VIC_CHANNEL | serUART0_VIC_ENABLE;
 
 			/* Enable UART0 interrupts. */

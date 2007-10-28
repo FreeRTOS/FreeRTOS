@@ -96,6 +96,8 @@
 #define mainLED_DELAY						( ( portTickType ) 500 / portTICK_RATE_MS )
 #define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
 #define mainLIST_BUFFER_SIZE				2048
+#define mainNO_DELAY						( 0 )
+#define mainSHORT_DELAY						( 150 / portTICK_RATE_MS )
 
 /* Task priorities. */
 #define mainLED_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -178,7 +180,7 @@ int main( void )
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
-	/* The scheduler should now running, so we will only ever reach here if we
+	/* The scheduler should now be running, so we will only ever reach here if we
 	ran out of heap space. */
 
 	return 0;
@@ -290,7 +292,7 @@ static void vButtonHandlerTask( void *pvParameters )
 static portCHAR cListBuffer[ mainLIST_BUFFER_SIZE ];
 const portCHAR *pcList = &( cListBuffer[ 0 ] );
 const portCHAR * const pcHeader = "\nTask          State  Priority  Stack	#\n************************************************";
-extern void (vButtonISR) ( void );
+extern void (vButtonISRWrapper) ( void );
 
 	/* Configure the interrupt. */
 	portENTER_CRITICAL();	
@@ -303,15 +305,19 @@ extern void (vButtonISR) ( void );
 		/* Setup the VIC for EINT 1. */
 		VICIntSelect &= ~mainEINT_1_VIC_CHANNEL_BIT;
 		VICIntEnable |= mainEINT_1_VIC_CHANNEL_BIT;
-		VICVectAddr1 = ( portLONG ) vButtonISR;
+		VICVectAddr1 = ( portLONG ) vButtonISRWrapper;
 		VICVectCntl1 = mainEINT_1_ENABLE_BIT | mainEINT_1_CHANNEL;
 	}
 	portEXIT_CRITICAL();
 
 	for( ;; )
 	{
+		/* For debouncing, wait a while then clear the semaphore. */
+		vTaskDelay( mainSHORT_DELAY );
+		xSemaphoreTake( xButtonSemaphore, mainNO_DELAY );
+
 		/* Wait for an interrupt. */
-		while( xSemaphoreTake( xButtonSemaphore, portMAX_DELAY ) != pdPASS );
+		xSemaphoreTake( xButtonSemaphore, portMAX_DELAY );
 
 		/* Send the column headers to the print task for display. */
 		xQueueSend( xPrintQueue, &pcHeader, portMAX_DELAY );

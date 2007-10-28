@@ -163,9 +163,9 @@ const unsigned char ucIPAddress[ 4 ]  = { emacIPADDR0, emacIPADDR1, emacIPADDR2,
 /* See the header file for descriptions of public functions. */
 
 /*
- * Prototype for the EMAC interrupt function - called by the asm wrapper.
+ * Prototype for the EMAC interrupt function.
  */
-void vEMACISR( void ) __attribute__ ((naked));
+void vEMACISR_Wrapper( void ) __attribute__ ((naked));
 
 /*
  * Initialise both the Tx and Rx descriptors used by the EMAC.
@@ -666,7 +666,7 @@ static void prvSetupEMACInterrupt( void )
 			AT91C_BASE_EMAC->EMAC_IER = AT91C_EMAC_RCOMP | AT91C_EMAC_TCOMP;
 
 			/* Enable the interrupts in the AIC. */
-			AT91F_AIC_ConfigureIt( AT91C_ID_EMAC, emacINTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, ( void (*)( void ) ) vEMACISR );
+			AT91F_AIC_ConfigureIt( AT91C_ID_EMAC, emacINTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, ( void (*)( void ) ) vEMACISR_Wrapper );
             AT91C_BASE_AIC->AIC_IECR = 0x1 << AT91C_ID_EMAC;
 		}
 		portEXIT_CRITICAL();

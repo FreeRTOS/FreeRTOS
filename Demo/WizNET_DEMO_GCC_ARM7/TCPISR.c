@@ -43,7 +43,10 @@
 #define tcpEINT0_VIC_CHANNEL_BIT	( ( unsigned portLONG ) 0x4000 )
 
 /* EINT0 interrupt handler.  This processes interrupts from the WIZnet device. */
-void vEINT0_ISR( void ) __attribute__((naked));
+void vEINT0_ISR_Wrapper( void ) __attribute__((naked));
+
+/* The handler that goes with the EINT0 wrapper. */
+void vEINT0_ISR_Handler( void );
 
 /* Variable is required for its address, but does not otherwise get used. */
 static portLONG lDummyVariable;
@@ -53,21 +56,16 @@ static portLONG lDummyVariable;
  * the TCP task.  This wakes the task so the interrupt can be processed.  The
  * source of the interrupt has to be ascertained by the TCP task as this 
  * requires an I2C transaction which cannot be performed from this ISR.
+ * Note this code predates the introduction of semaphores, a semaphore should
+ * be used in place of the empty queue message.
  */
-void vEINT0_ISR( void )
+void vEINT0_ISR_Handler( void )
 {
-	portENTER_SWITCHING_ISR();
-
-	extern xQueueHandle xTCPISRQueue;
-
-	/* Must be declared static. */
-	static portBASE_TYPE xTaskWoken;
-
-	/* As the variable is static it must be manually initialised. */
-	xTaskWoken = pdFALSE;
+extern xQueueHandle xTCPISRQueue;
+portBASE_TYPE xTaskWoken = pdFALSE;
 
 	/* Just wake the TCP task so it knows an ISR has occurred. */
-	xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, xTaskWoken );	
+	xTaskWoken = xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, xTaskWoken );	
 
 	/* We cannot carry on processing interrupts until the TCP task has 
 	processed this one - so for now interrupts are disabled.  The TCP task will
@@ -77,10 +75,24 @@ void vEINT0_ISR( void )
 	/* Clear the interrupt bit. */	
 	VICVectAddr = tcpCLEAR_VIC_INTERRUPT;
 
-	/* Switch to the TCP task immediately so the cause of the interrupt can
-	be ascertained.  It is the responsibility of the TCP task to clear the
-	interrupts. */
-	portEXIT_SWITCHING_ISR( ( xTaskWoken ) );
+	if( xTaskWoken )
+	{
+		portYIELD_FROM_ISR();
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vEINT0_ISR_Wrapper( void )
+{
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();
+
+	/* The handler must be a separate function from the wrapper to
+	ensure the correct stack frame is set up. */
+	vEINT0_ISR_Handler();
+
+	/* Restore the context of whichever task is going to run next. */
+	portRESTORE_CONTEXT();
 }
 
 

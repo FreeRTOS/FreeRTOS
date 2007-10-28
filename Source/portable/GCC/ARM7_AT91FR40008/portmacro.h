@@ -50,8 +50,10 @@
 
 	Changes from V4.5.0
 
-	+ The macro portENTER_SWITCHING_ISR() no longer attempts to use the frame
-	  pointer.  Variables declared within ISRs must now be declared static.
+	+ Removed the portENTER_SWITCHING_ISR() and portEXIT_SWITCHING_ISR() macros
+	  and replaced them with portYIELD_FROM_ISR() macro.  Application code 
+	  should now make use of the portSAVE_CONTEXT() and portRESTORE_CONTEXT()
+	  macros as per the V4.5.1 demo code.
 */
 
 #ifndef PORTMACRO_H
@@ -89,8 +91,8 @@
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
 #define portBYTE_ALIGNMENT			4
-#define portYIELD()					asm volatile ( "SWI" );	
-#define portNOP()					asm volatile ( "NOP" );
+#define portYIELD()					asm volatile ( "SWI" )
+#define portNOP()					asm volatile ( "NOP" )
 
 /*
  * These define the timer to use for generating the tick interrupt.
@@ -194,29 +196,7 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 	( void ) pxCurrentTCB;												\
 }
 
-/*-----------------------------------------------------------
- * ISR entry and exit macros.  These are only required if a task switch
- * is required from the ISR.
- *----------------------------------------------------------*/
-
-#define portENTER_SWITCHING_ISR()										\
-	/* Save the context of the interrupted task. */						\
-	portSAVE_CONTEXT();													\
-	{
-
-#define portEXIT_SWITCHING_ISR( SwitchRequired )						\
-		/* If a switch is required then we just need to call */			\
-		/* vTaskSwitchContext() as the context has already been */		\
-		/* saved. */													\
-		if( SwitchRequired )											\
-		{																\
-			vTaskSwitchContext();										\
-		}																\
-	}																	\
-	/* Restore the context of which ever task is now the highest */		\
-	/* priority that is ready to run. */								\
-	portRESTORE_CONTEXT();
-/*-----------------------------------------------------------*/	
+#define portYIELD_FROM_ISR() vTaskSwitchContext()
 
 /* Critical section handling. */
 

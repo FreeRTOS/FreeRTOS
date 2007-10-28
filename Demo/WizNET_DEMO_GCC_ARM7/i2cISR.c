@@ -119,21 +119,36 @@ void vI2CISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *px
 }
 /*-----------------------------------------------------------*/
 
-void vI2C_ISR( void ) __attribute__ (( naked ));
-void vI2C_ISR( void )
+/* The ISR entry point. */
+void vI2C_ISR_Wrapper( void ) __attribute__ (( naked ));
+
+/* The ISR function to perform the actual work.  This must be a separate
+function from the wrapper to ensure the correct stack frame is set up. */
+void vI2C_ISR_Handler( void );
+
+/*-----------------------------------------------------------*/
+
+void vI2C_ISR_Wrapper( void )
 {
-	portENTER_SWITCHING_ISR();
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();
 
-	/* Variables must be static. */
+	/* Call the handler to perform the actual work.  This must be a
+	separate function to ensure the correct stack frame is set up. */
+	vI2C_ISR_Handler();
 
-	/* Holds the current transmission state. */							
-	static I2C_STATE eCurrentState = eSentStart;
-	static portLONG lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
-	static portBASE_TYPE xTaskWokenByTx;
-	static portLONG lBytesLeft;
+	/* Restore the context of whichever task is going to run next. */
+	portRESTORE_CONTEXT();
+}
+/*-----------------------------------------------------------*/
 
-	xTaskWokenByTx = pdFALSE;
-
+void vI2C_ISR_Handler( void )
+{
+/* Holds the current transmission state. */							
+static I2C_STATE eCurrentState = eSentStart;
+static portLONG lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
+portBASE_TYPE xTaskWokenByTx = pdFALSE;
+portLONG lBytesLeft;
 
 	/* The action taken for this interrupt depends on our current state. */
 	switch( eCurrentState )
@@ -342,7 +357,10 @@ void vI2C_ISR( void )
 	I2C_I2CONCLR = i2cSI_BIT;
 	VICVectAddr = i2cCLEAR_VIC_INTERRUPT;
 
-	portEXIT_SWITCHING_ISR( ( xTaskWokenByTx ) );
+	if( xTaskWokenByTx )
+	{
+		portYIELD_FROM_ISR();
+	}
 }
 /*-----------------------------------------------------------*/
 

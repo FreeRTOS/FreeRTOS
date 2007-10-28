@@ -130,9 +130,9 @@
 /* Priorities for the demo application tasks. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 0 )
 #define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 0 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which the on board LED will toggle when there is/is not an 
@@ -247,6 +247,7 @@ xTaskHandle xCreatedTask;
 		parameter. */
 		ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
 		xCreatedTask = mainNO_TASK;
+
 		if( xTaskCreate( vMemCheckTask, ( signed portCHAR * ) "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
 		{
 			/* Could not create the task - we have probably run out of heap. */

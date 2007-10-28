@@ -33,18 +33,6 @@
 	***************************************************************************
 */
 
-/* 
-Changes from V3.2.4
-
-	+ Also read the EMAC_RSR register in the EMAC ISR as a work around the 
-	  the EMAC bug that can reset the RX bit in EMAC_ISR register before the
-	  bit has been read.
-
-Changes from V4.0.1
-
-	+ Only check the interrupt status register to see if an EMAC Tx interrupt
-	  has occurred.  Previously the TSR register was also inspected.
-*/
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -58,26 +46,22 @@ Changes from V4.0.1
 task. */
 static xSemaphoreHandle xSemaphore = NULL;
 
-void vEMACISR( void ) __attribute__((naked));
+/* The interrupt entry point is naked so we can control the context saving. */
+void vEMACISR_Wrapper( void ) __attribute__((naked));
+
+/* The interrupt handler function must be separate from the entry function
+to ensure the correct stack frame is set up. */
+void vEMACISR_Handler( void );
 
 /*-----------------------------------------------------------*/
 /*
  * The EMAC ISR.  Handles both Tx and Rx complete interrupts.
  */
-void vEMACISR( void )
+void vEMACISR_Handler( void )
 {
-	/* This ISR can cause a context switch, so the first statement must be a
-	call to the portENTER_SWITCHING_ISR() macro.  This must be BEFORE any
-	variable declarations. */
-	portENTER_SWITCHING_ISR();
-
-	/* Variable definitions can be made now.   These must be static. */
-	static volatile unsigned portLONG ulIntStatus, ulEventStatus;
-	static portBASE_TYPE xSwitchRequired;
-    extern void vClearEMACTxBuffer( void );
-
-	/* As the variable is static it must be initialised manually here. */
-	xSwitchRequired = pdFALSE;
+volatile unsigned portLONG ulIntStatus, ulEventStatus;
+portBASE_TYPE xSwitchRequired = pdFALSE;
+extern void vClearEMACTxBuffer( void );
 
 	/* Find the cause of the interrupt. */
 	ulIntStatus = AT91C_BASE_EMAC->EMAC_ISR;
@@ -103,8 +87,27 @@ void vEMACISR( void )
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 
 	/* If a task was woken by either a frame being received then we may need to 
-	switch to another task. */
-	portEXIT_SWITCHING_ISR( xSwitchRequired );
+	switch to another task.  If the unblocked task was of higher priority then
+	the interrupted task it will then execute immediately that the ISR
+	completes. */
+	if( xSwitchRequired )
+	{
+		portYIELD_FROM_ISR();
+	}
+}
+/*-----------------------------------------------------------*/
+
+void  vEMACISR_Wrapper( void )
+{
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();
+
+	/* Call the handler to do the work.  This must be a separate
+	function to ensure the stack frame is set up correctly. */
+	vEMACISR_Handler();
+
+	/* Restore the context of whichever task will execute next. */
+	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.6.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.6.1 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -28,8 +28,9 @@
 	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com for an IEC 61508 compliant version along
-	with commercial development and support options.
+	Also see http://www.SafeRTOS.com a version that has been certified for use
+	in safety critical systems, plus commercial licensing, development and
+	support options.
 	***************************************************************************
 */
 
@@ -70,6 +71,10 @@
 
 #ifdef MPLAB_PIC18F_PORT
 	#include "..\..\source\portable\MPLAB\PIC18F\portmacro.h"
+#endif
+
+#ifdef MPLAB_PIC32MX_PORT
+	#include "..\..\Source\portable\MPLAB\PIC32MX\portmacro.h"
 #endif
 
 #ifdef _FEDPICC
@@ -206,6 +211,9 @@
    #endif
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*
  * Setup the stack of a new task so it is ready to be placed under the
  * scheduler control.  The registers have to be placed on the stack in
@@ -233,6 +241,9 @@ portBASE_TYPE xPortStartScheduler( void );
  */
 void vPortEndScheduler( void );
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PORTABLE_H */
 

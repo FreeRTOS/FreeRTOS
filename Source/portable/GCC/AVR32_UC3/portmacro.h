@@ -13,7 +13,7 @@
  *****************************************************************************/
 
 /*
-	FreeRTOS.org V4.6.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.6.1 - Copyright (C) 2003-2007 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -42,8 +42,9 @@
 	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com for an IEC 61508 compliant version along
-	with commercial development and support options.
+	Also see http://www.SafeRTOS.com a version that has been certified for use
+	in safety critical systems, plus commercial licensing, development and
+	support options.
 	***************************************************************************
 */
 
@@ -63,6 +64,10 @@
 #include <avr32/io.h>
 #include "intc.h"
 #include "compiler.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /* Type definitions. */
@@ -660,5 +665,8 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PORTMACRO_H */

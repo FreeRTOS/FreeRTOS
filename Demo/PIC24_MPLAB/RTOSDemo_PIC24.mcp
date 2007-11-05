@@ -6,7 +6,7 @@ dir_src=
 dir_bin=
 dir_tmp=
 dir_sin=
-dir_inc=.;C:\E\Dev\FreeRTOS\Demo\Common\include;C:\E\Dev\FreeRTOS\Demo\PIC24_MPLAB;C:\E\Dev\FreeRTOS\source\include
+dir_inc=.;.\include;..\include;..\..\include;..\..\..\include;..\..\Source\include;..\..\..\Source\include;..\Demo\PIC24_MPLAB;..\..\..\Demo\PIC24_MPLAB;..\..\..\..\Demo\PIC24_MPLAB;.\FileSystem;..\Common\include;..\..\Common\include
 dir_lib=
 dir_lkr=
 [CAT_FILTERS]

@@ -34,49 +34,6 @@
 	***************************************************************************
 */
 
-/*
-Changes from V1.01
-
-	+ More use of 8bit data types.
-	+ Function name prefixes changed where the data type returned has changed.
-
-Changed from V2.0.0
-
-	+ Added the queue locking mechanism and make more use of the scheduler
-	  suspension feature to minimise the time interrupts have to be disabled
-	  when accessing a queue.
-
-Changed from V2.2.0
-
-	+ Explicit use of 'signed' qualifier on portCHAR types added.
-
-Changes from V3.0.0
-
-	+ API changes as described on the FreeRTOS.org WEB site.
-
-Changes from V3.2.3
-
-	+ Added the queue functions that can be used from co-routines.
-
-Changes from V4.0.5
-
-	+ Added a loop within xQueueSend() and xQueueReceive() to prevent the
-	  functions exiting when a block time remains and the function has
-	  not completed.
-
-Changes from V4.1.2:
-
-	+ BUG FIX:  Removed the call to prvIsQueueEmpty from within xQueueCRReceive
-	  as it exited with interrupts enabled.  Thanks Paul Katz.
-
-Changes from V4.1.3:
-
-	+ Modified xQueueSend() and xQueueReceive() to handle the (very unlikely)
-	case whereby a task unblocking due to a temporal event can remove/send an
-	item from/to a queue when a higher priority task is	still blocked on the
-	queue.  This modification is a result of the SafeRTOS testing.
-*/
-
 #include <stdlib.h>
 #include <string.h>
 #include "FreeRTOS.h"
@@ -99,6 +56,11 @@ Changes from V4.1.3:
 #define pxMutexHolder				pcTail
 #define uxQueueType					pcHead
 #define queueQUEUE_IS_MUTEX			NULL
+
+/* Semaphores do not actually store or copy data, so have an items size of
+zero. */
+#define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( 0 )
+#define queueDONT_BLOCK					 ( ( portTickType ) 0 )
 
 /*
  * Definition of the queue used by the scheduler.
@@ -144,6 +106,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 xQueueHandle xQueueCreateMutex( void );
+xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount );
 
 #if configUSE_CO_ROUTINES == 1
 	signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken );
@@ -294,6 +257,25 @@ size_t xQueueSizeInBytes;
 	}
 
 #endif /* configUSE_MUTEXES */
+/*-----------------------------------------------------------*/
+
+#if configUSE_COUNTING_SEMAPHORES == 1
+
+	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount )
+	{
+	xQueueHandle pxHandle;
+	
+		pxHandle = xQueueCreate( ( unsigned portBASE_TYPE ) uxCountValue, queueSEMAPHORE_QUEUE_ITEM_LENGTH );
+
+		if( pxHandle != NULL )
+		{
+			pxHandle->uxMessagesWaiting = uxInitialCount;
+		}
+
+		return pxHandle;
+	}
+
+#endif /* configUSE_COUNTING_SEMAPHORES */
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )

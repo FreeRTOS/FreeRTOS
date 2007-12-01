@@ -65,38 +65,6 @@
  * <HR>
  */
 
-/*
-Changes from V1.00:
-
-	+ Prevent the call to kbhit() for debug builds as the debugger seems to
-	  have problems stepping over the call.
-
-Changes from V1.2.3
-
-	+ The integer and comtest tasks are now used when the cooperative scheduler 
-	  is being used.  Previously they were only used with the preemptive
-	  scheduler.
-
-Changes from V1.2.6
-
-	+ Create new tasks as defined by the new demo application file dynamic.c.
-
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
-
-Changes from V3.1.1
-
-	+ The tasks defined in the new file "events.c" are now created and 
-	  monitored for errors. 
-
-Changes from V3.2.4
-
-	+ Now includes the flash co-routine demo rather than the flash task demo.
-	  This is to demonstrate the co-routine functionality.
-*/
-
 #include <stdlib.h>
 #include <conio.h>
 #include "FreeRTOS.h"
@@ -122,6 +90,7 @@ Changes from V3.2.4
 #include "blocktim.h"
 #include "GenQTest.h"
 #include "QPeek.h"
+#include "countsem.h"
 
 /* Priority definitions for the tasks in the demo application. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -185,6 +154,7 @@ portSHORT main( void )
 	vStartDynamicPriorityTasks();
 	vStartMultiEventTasks();
 	vStartQueuePeekTasks();
+	vStartCountingSemaphoreTasks();
 
 	/* Create the "Print" task as described at the top of the file. */
 	xTaskCreate( vErrorChecks, "Print", mainPRINT_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
@@ -405,6 +375,12 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
 		vDisplayMessage( "Error in queue peek test task!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+
+	if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in counting semaphore demo task!\r\n" );
 		sErrorHasOccurred = pdTRUE;
 	}
 

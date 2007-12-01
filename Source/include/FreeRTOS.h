@@ -116,6 +116,10 @@
 	#define configUSE_MUTEXES 0
 #endif
 
+#ifndef configUSE_COUNTING_SEMAPHORES
+	#define configUSE_COUNTING_SEMAPHORES 0
+#endif
+
 #if ( configUSE_MUTEXES == 1 )
 	/* xTaskGetCurrentTaskHandle is used by the priority inheritance mechanism
 	within the mutex implementation so must be available if mutexes are used. */

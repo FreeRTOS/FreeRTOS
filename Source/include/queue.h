@@ -1175,10 +1175,11 @@ signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQue
 signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait );
 
 /*
- * For internal use only.  Use xSemaphoreCreateMutex() instead of calling
- * this function directly.
+ * For internal use only.  Use xSemaphoreCreateMutex() or
+ * xSemaphoreCreateCounting() instead of calling these functions directly.
  */
 xQueueHandle xQueueCreateMutex( void );
+xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount );
 
 #ifdef __cplusplus
 }

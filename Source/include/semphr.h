@@ -34,10 +34,10 @@
 	***************************************************************************
 */
 
-#include "queue.h"
-
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
+
+#include "queue.h"
 
 typedef xQueueHandle xSemaphoreHandle;
 
@@ -84,12 +84,12 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup vSemaphoreCreateBinary vSemaphoreCreateBinary
  * \ingroup Semaphores
  */
-#define vSemaphoreCreateBinary( xSemaphore )		{																							\
-														xSemaphore = xQueueCreate( ( unsigned portCHAR ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH );	\
-														if( xSemaphore != NULL )																\
-														{																						\
-															xSemaphoreGive( xSemaphore );														\
-														}																						\
+#define vSemaphoreCreateBinary( xSemaphore )		{																								\
+														xSemaphore = xQueueCreate( ( unsigned portBASE_TYPE ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH );	\
+														if( xSemaphore != NULL )																	\
+														{																							\
+															xSemaphoreGive( xSemaphore );															\
+														}																							\
 													}
 
 /**
@@ -341,6 +341,66 @@ typedef xQueueHandle xSemaphoreHandle;
  */
 #define xSemaphoreCreateMutex() xQueueCreateMutex()
 
+/**
+ * semphr. h
+ * <pre>vSemaphoreCreateCounting( xSemaphoreHandle xSemaphore, unsigned portBASE_TYPE uxMaxCount )</pre>
+ *
+ * <i>Macro</i> that creates a counting semaphore by using the existing 
+ * queue mechanism.  The queue length is used as the maximum count.  The data 
+ * size is 0 as we don't want to actually store any data - we just want to 
+ * know if the queue is empty or full.
+ *
+ * Counting semaphores are typically used for two things:
+ *
+ * 1) Counting events.  
+ *
+ *    In this usage scenario an event handler will 'give' a semphore each time
+ *    an event occurs (incrementing the semaphore count value), and a handler 
+ *    task will 'take' a semaphore each time it processes an event 
+ *    (decrementing the semaphore count value).  The count value is therefore 
+ *    the difference between the number of events that have occurred and the 
+ *    number that have been processed.  In this case it is desirable for the 
+ *    initial count value to be zero.
+ *
+ * 2) Resource management.
+ *
+ *    In this usage scenario the count value indicates the number of resources
+ *    available.  To obtain control of a resource a task must first obtain a 
+ *    semphoare - decrementing the semaphore count value.  When the count value
+ *    reaches zero there are no free resources.  When a task finishes with the
+ *    resource it 'gives' the semahore back - incrementing the semaphore count
+ *    value.  In this case it is desirable for the initial count value to be
+ *    equal to the maximum count value, indicating that all resources are free.
+ *
+ * @param uxMaxCount The maximum count value that can be reached.  When the 
+ *        semaphore reaches this value it can nolonger be 'given'.
+ * @param uxInitialCount
+ *
+ * @return Handle to the created semaphore.  Should be of type xSemaphoreHandle.
+ * 
+ * Example usage:
+ <pre>
+ xSemaphoreHandle xSemaphore;
+
+ void vATask( void * pvParameters )
+ {
+ xSemaphoreHandle xSemaphore = NULL;
+
+    // Semaphore cannot be used before a call to vSemaphoreCreateCounting().
+    // This is a macro so pass the variable in directly.
+    vSemaphoreCreateBinary( xSemaphore,  );
+
+    if( xSemaphore != NULL )
+    {
+        // The semaphore was created successfully.
+        // The semaphore can now be used.  
+    }
+ }
+ </pre>
+ * \defgroup xSemaphoreCreateCounting xSemaphoreCreateCounting
+ * \ingroup Semaphores
+ */
+#define xSemaphoreCreateCounting( uxCountValue, uxInitialCount ) xQueueCreateCountingSemaphore( uxCountValue, uxInitialCount )
 
 #endif /* SEMAPHORE_H */
 

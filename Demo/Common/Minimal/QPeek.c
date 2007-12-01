@@ -97,10 +97,10 @@ xQueueHandle xQueue;
 	/* Create the demo tasks and pass it the queue just created.  We are
 	passing the queue handle by value so it does not matter that it is declared
 	on the stack here. */
-	xTaskCreate( prvLowPriorityPeekTask, "PeekL", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekLOW_PRIORITY, NULL );
-	xTaskCreate( prvMediumPriorityPeekTask, "PeekM", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekMEDIUM_PRIORITY, &xMediumPriorityTask );
-	xTaskCreate( prvHighPriorityPeekTask, "PeekH1", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGH_PRIORITY, &xHighPriorityTask );
-	xTaskCreate( prvHighestPriorityPeekTask, "PeekH2", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGHEST_PRIORITY, &xHighestPriorityTask );
+	xTaskCreate( prvLowPriorityPeekTask, ( signed portCHAR * )"PeekL", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekLOW_PRIORITY, NULL );
+	xTaskCreate( prvMediumPriorityPeekTask, ( signed portCHAR * )"PeekM", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekMEDIUM_PRIORITY, &xMediumPriorityTask );
+	xTaskCreate( prvHighPriorityPeekTask, ( signed portCHAR * )"PeekH1", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGH_PRIORITY, &xHighPriorityTask );
+	xTaskCreate( prvHighestPriorityPeekTask, ( signed portCHAR * )"PeekH2", configMINIMAL_STACK_SIZE, ( void * ) xQueue, qpeekHIGHEST_PRIORITY, &xHighestPriorityTask );
 }
 /*-----------------------------------------------------------*/
 

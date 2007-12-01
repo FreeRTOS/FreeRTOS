@@ -99,6 +99,8 @@ portBASE_TYPE xItem, xData;
 portTickType xTimeWhenBlocking;
 portTickType xTimeToBlock, xBlockedTime;
 
+	( void ) pvParameters;
+
 	for( ;; )
 	{
 		/*********************************************************************
@@ -353,6 +355,8 @@ static void vSecondaryBlockTimeTestTask( void *pvParameters )
 {
 portTickType xTimeWhenBlocking, xBlockedTime;
 portBASE_TYPE xData;
+
+	( void ) pvParameters;
 
 	for( ;; )
 	{

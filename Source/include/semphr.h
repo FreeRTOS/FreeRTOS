@@ -154,7 +154,8 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreTake xSemaphoreTake
  * \ingroup Semaphores
  */
-#define xSemaphoreTake( xSemaphore, xBlockTime )	xQueueReceive( ( xQueueHandle ) xSemaphore, NULL, xBlockTime )
+#define xSemaphoreTake( xSemaphore, xBlockTime )		xQueueGenericReceive( ( xQueueHandle ) xSemaphore, NULL, xBlockTime, pdFALSE )
+#define xSemaphoreAltTake( xSemaphore, xBlockTime )		xQueueAltGenericReceive( ( xQueueHandle ) xSemaphore, NULL, xBlockTime, pdFALSE )
 
 /**
  * semphr. h
@@ -213,7 +214,8 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreGive xSemaphoreGive
  * \ingroup Semaphores
  */
-#define xSemaphoreGive( xSemaphore )				xQueueGenericSend( ( xQueueHandle ) xSemaphore, NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
+#define xSemaphoreGive( xSemaphore )		xQueueGenericSend( ( xQueueHandle ) xSemaphore, NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
+#define xSemaphoreAltGive( xSemaphore )		xQueueAltGenericSend( ( xQueueHandle ) xSemaphore, NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
 
 /**
  * semphr. h

@@ -77,6 +77,11 @@ is being used. */
 /* Trap routine used by taskYIELD() to manually cause a context switch. */
 static void __interrupt __far prvYieldProcessor( void );
 
+/* The timer initialisation functions leave interrupts enabled,
+which is not what we want.  This ISR is installed temporarily in case
+the timer fires before we get a change to disable interrupts again. */
+static void __interrupt __far prvDummyISR( void );
+
 /*-----------------------------------------------------------*/
 /* See header file for description. */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
@@ -162,6 +167,15 @@ portBASE_TYPE xPortStartScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
+static void __interrupt __far prvDummyISR( void )
+{
+	/* The timer initialisation functions leave interrupts enabled,
+	which is not what we want.  This ISR is installed temporarily in case
+	the timer fires before we get a change to disable interrupts again. */
+	outport( portEIO_REGISTER, portCLEAR_INTERRUPT );
+}
+/*-----------------------------------------------------------*/
+
 /* The ISR used depends on whether the preemptive or cooperative scheduler
 is being used. */
 #if( configUSE_PREEMPTION == 1 )
@@ -204,15 +218,23 @@ void vPortEndScheduler( void )
 static void prvSetupTimerInterrupt( void )
 {
 const unsigned portSHORT usTimerACompare = portTIMER_COMPARE, usTimerAMode = portENABLE_TIMER_AND_INTERRUPT;
+const unsigned portSHORT usT2_IRQ = 0x13;
+
+	/* Configure the timer, the dummy handler is used here as the init
+	function leaves interrupts enabled. */
+	t2_init( usTimerAMode, usTimerACompare, prvDummyISR );
+
+	/* Disable interrupts again before installing the real handlers. */
+	portDISABLE_INTERRUPTS();
 
 	#if( configUSE_PREEMPTION == 1 )
 		/* Tick service routine used by the scheduler when preemptive scheduling is
 		being used. */
-		t2_init( usTimerAMode, usTimerACompare, prvPreemptiveTick );
+		setvect( usT2_IRQ, prvPreemptiveTick );
 	#else
 		/* Tick service routine used by the scheduler when cooperative scheduling is
 		being used. */
-		t2_init( usTimerAMode, usTimerACompare, prvNonPreemptiveTick );
+		setvect( usT2_IRQ, prvNonPreemptiveTick );
 	#endif
 }
 

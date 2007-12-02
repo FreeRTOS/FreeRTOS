@@ -88,9 +88,13 @@
 #include "mevents.h"
 #include "crhook.h"
 #include "blocktim.h"
+#include "AltBlock.h"
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "countsem.h"
+#include "AltQTest.h"
+#include "AltPollQ.h"
+#include "AltBlckQ.h"
 
 /* Priority definitions for the tasks in the demo application. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -155,7 +159,11 @@ portSHORT main( void )
 	vStartMultiEventTasks();
 	vStartQueuePeekTasks();
 	vStartCountingSemaphoreTasks();
-
+	vStartAltGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
+	vCreateAltBlockTimeTasks();
+	vStartAltBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );	
+	vStartAltPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+		
 	/* Create the "Print" task as described at the top of the file. */
 	xTaskCreate( vErrorChecks, "Print", mainPRINT_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
 
@@ -318,9 +326,21 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 		sErrorHasOccurred = pdTRUE;
 	}
 
+	if( xAreAltBlockingQueuesStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Alt blocking queues count unchanged!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		vDisplayMessage( "Polling queue count unchanged!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+
+	if( xAreAltPollingQueuesStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Alt polling queue count unchanged!\r\n" );
 		sErrorHasOccurred = pdTRUE;
 	}
 
@@ -366,9 +386,21 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 		sErrorHasOccurred = pdTRUE;
 	}
 
+	if( xAreAltBlockTimeTestTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in fast block time test tasks!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
 		vDisplayMessage( "Error in generic queue test task!\r\n" );
+		sErrorHasOccurred = pdTRUE;		
+	}
+
+	if( xAreAltGenericQueueTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in fast generic queue test task!\r\n" );
 		sErrorHasOccurred = pdTRUE;		
 	}
 

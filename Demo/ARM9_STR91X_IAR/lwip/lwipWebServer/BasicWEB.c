@@ -1,6 +1,6 @@
 
 /*
-	FreeRTOS.org V4.6.1 - copyright (C) 2003-2006 Richard Barry.
+	FreeRTOS.org V4.7.0 - copyright (C) 2003-2006 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 

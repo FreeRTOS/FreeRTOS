@@ -345,18 +345,16 @@ typedef xQueueHandle xSemaphoreHandle;
 
 /**
  * semphr. h
- * <pre>vSemaphoreCreateCounting( xSemaphoreHandle xSemaphore, unsigned portBASE_TYPE uxMaxCount )</pre>
+ * <pre>xSemaphoreHandle xSemaphoreCreateCounting( uxCountValue, uxInitialCount )</pre>
  *
  * <i>Macro</i> that creates a counting semaphore by using the existing 
- * queue mechanism.  The queue length is used as the maximum count.  The data 
- * size is 0 as we don't want to actually store any data - we just want to 
- * know if the queue is empty or full.
+ * queue mechanism.  
  *
  * Counting semaphores are typically used for two things:
  *
  * 1) Counting events.  
  *
- *    In this usage scenario an event handler will 'give' a semphore each time
+ *    In this usage scenario an event handler will 'give' a semaphore each time
  *    an event occurs (incrementing the semaphore count value), and a handler 
  *    task will 'take' a semaphore each time it processes an event 
  *    (decrementing the semaphore count value).  The count value is therefore 
@@ -368,17 +366,20 @@ typedef xQueueHandle xSemaphoreHandle;
  *
  *    In this usage scenario the count value indicates the number of resources
  *    available.  To obtain control of a resource a task must first obtain a 
- *    semphoare - decrementing the semaphore count value.  When the count value
+ *    semaphore - decrementing the semaphore count value.  When the count value
  *    reaches zero there are no free resources.  When a task finishes with the
- *    resource it 'gives' the semahore back - incrementing the semaphore count
+ *    resource it 'gives' the semaphore back - incrementing the semaphore count
  *    value.  In this case it is desirable for the initial count value to be
  *    equal to the maximum count value, indicating that all resources are free.
  *
  * @param uxMaxCount The maximum count value that can be reached.  When the 
- *        semaphore reaches this value it can nolonger be 'given'.
- * @param uxInitialCount
+ *        semaphore reaches this value it can no longer be 'given'.
  *
- * @return Handle to the created semaphore.  Should be of type xSemaphoreHandle.
+ * @param uxInitialCount The count value assigned to the semaphore when it is
+ *        created.
+ *
+ * @return Handle to the created semaphore.  Null if the semaphore could not be
+ *         created.
  * 
  * Example usage:
  <pre>
@@ -388,9 +389,10 @@ typedef xQueueHandle xSemaphoreHandle;
  {
  xSemaphoreHandle xSemaphore = NULL;
 
-    // Semaphore cannot be used before a call to vSemaphoreCreateCounting().
-    // This is a macro so pass the variable in directly.
-    vSemaphoreCreateBinary( xSemaphore,  );
+    // Semaphore cannot be used before a call to xSemaphoreCreateCounting().
+    // The max value to which the semaphore can count should be 10, and the
+    // initial value assigned to the count should be 0.
+    xSemaphore = xSemaphoreCreateCounting( 10, 0 );
 
     if( xSemaphore != NULL )
     {

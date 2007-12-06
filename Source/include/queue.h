@@ -1160,25 +1160,21 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 
 /* 
- * xQueueAltGenericSend() is a light weight version of xQueueGenericSend().
- * Likewise xQueueAltGenericReceive() is a light weight version of
+ * xQueueAltGenericSend() is an alternative version of xQueueGenericSend().
+ * Likewise xQueueAltGenericReceive() is an alternative version of
  * xQueueGenericReceive().
  *
- * The source code that implements the light weight (fast) API is much 
+ * The source code that implements the alternative (Alt) API is much 
  * simpler	because it executes everything from within a critical section.  
  * This is	the approach taken by many other RTOSes, but FreeRTOS.org has the 
- * fully featured API as an alternative.  The fully featured API has more 
+ * preferred fully featured API too.  The fully featured API has more 
  * complex	code that takes longer to execute, but makes much less use of 
- * critical sections.  Therefore the light weight API sacrifices interrupt 
+ * critical sections.  Therefore the alternative API sacrifices interrupt 
  * responsiveness to gain execution speed, whereas the fully featured API
  * sacrifices execution speed to ensure better interrupt responsiveness.
  */
 signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-
-/*
- * The light weight versions of the fully featured macros.
- */
 #define xQueueAltSendToFront( xQueue, pvItemToQueue, xTicksToWait ) xQueueAltGenericSend( xQueue, pvItemToQueue, xTicksToWait, queueSEND_TO_FRONT )
 #define xQueueAltSendToBack( xQueue, pvItemToQueue, xTicksToWait ) xQueueAltGenericSend( xQueue, pvItemToQueue, xTicksToWait, queueSEND_TO_BACK )
 #define xQueueAltReceive( xQueue, pvBuffer, xTicksToWait ) xQueueAltGenericReceive( xQueue, pvBuffer, xTicksToWait, pdFALSE )

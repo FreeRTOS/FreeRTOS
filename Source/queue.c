@@ -464,12 +464,12 @@ xTimeOutType xTimeOut;
 	signed portBASE_TYPE xReturn;
 	xTimeOutType xTimeOut;
 
-		/* The source code that implements the light weight (fast) API is much 
+		/* The source code that implements the alternative (Alt) API is much 
 		simpler	because it executes everything from within a critical section.  
 		This is	the approach taken by many other RTOSes, but FreeRTOS.org has the 
-		fully featured API as an alternative.  The fully featured API has more 
+		preferred fully featured API too.  The fully featured API has more 
 		complex	code that takes longer to execute, but makes much less use of 
-		critical sections.  Therefore the light weight API sacrifices interrupt 
+		critical sections.  Therefore the alternative API sacrifices interrupt 
 		responsiveness to gain execution speed, whereas the fully featured API
 		sacrifices execution speed to ensure better interrupt responsiveness.  */
 
@@ -528,10 +528,6 @@ xTimeOutType xTimeOut;
 							xReturn = queueERRONEOUS_UNBLOCK;
 						}
 					}
-					else
-					{
-						
-					}
 				}
 			}
 			while( xReturn == queueERRONEOUS_UNBLOCK );
@@ -552,12 +548,12 @@ xTimeOutType xTimeOut;
 	xTimeOutType xTimeOut;
 	signed portCHAR *pcOriginalReadPosition;
 
-		/* The source code that implements the light weight (fast) API is much 
+		/* The source code that implements the alternative (Alt) API is much 
 		simpler	because it executes everything from within a critical section.  
 		This is	the approach taken by many other RTOSes, but FreeRTOS.org has the 
-		fully featured API as an alternative.  The fully featured API has more 
+		preferred fully featured API too.  The fully featured API has more 
 		complex	code that takes longer to execute, but makes much less use of 
-		critical sections.  Therefore the light weight API sacrifices interrupt 
+		critical sections.  Therefore the alternative API sacrifices interrupt 
 		responsiveness to gain execution speed, whereas the fully featured API
 		sacrifices execution speed to ensure better interrupt responsiveness.  */
 

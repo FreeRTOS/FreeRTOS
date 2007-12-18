@@ -328,7 +328,7 @@ typedef xQueueHandle xSemaphoreHandle;
 
 /**
  * semphr. h
- * <pre>xSemaphoreCreateMutex( xSemaphoreHandle xSemaphore )</pre>
+ * <pre>xSemaphoreHandle xSemaphoreCreateMutex( void )</pre>
  *
  * <i>Macro</i> that implements a mutex semaphore by using the existing queue 
  * mechanism.
@@ -344,7 +344,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * semaphore and another always 'takes' the semaphore) and from within interrupt 
  * service routines.
  *
- * @param xSemaphore Handle to the created mutex semaphore.  Should be of type 
+ * @return xSemaphore Handle to the created mutex semaphore.  Should be of type 
  *		xSemaphoreHandle.
  *
  * Example usage:
@@ -353,9 +353,9 @@ typedef xQueueHandle xSemaphoreHandle;
 
  void vATask( void * pvParameters )
  {
-    // Semaphore cannot be used before a call to vSemaphoreCreateBinary ().
+    // Semaphore cannot be used before a call to xSemaphoreCreateMutex().
     // This is a macro so pass the variable in directly.
-    vSemaphoreCreateMutex( xSemaphore );
+    xSemaphore = xSemaphoreCreateMutex();
 
     if( xSemaphore != NULL )
     {

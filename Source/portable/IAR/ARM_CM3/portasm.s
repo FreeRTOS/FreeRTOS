@@ -51,7 +51,8 @@ FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 #endif
 
 	
-	RSEG ICODE:CODE
+	RSEG    CODE:CODE(2)
+	thumb
 
 	EXTERN vPortYieldFromISR
 	EXTERN vPortSwitchContext

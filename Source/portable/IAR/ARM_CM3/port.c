@@ -69,7 +69,7 @@
 defined.  The value 255 should also ensure backward compatibility.
 FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 #ifndef configKERNEL_INTERRUPT_PRIORITY
-	#define configKERNEL_INTERRUPT_PRIORITY 255
+	#define configKERNEL_INTERRUPT_PRIORITY 0
 #endif
 
 /* Each task maintains its own interrupt status in the critical nesting

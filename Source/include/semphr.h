@@ -304,17 +304,19 @@ typedef xQueueHandle xSemaphoreHandle;
  void vTimerISR( void * pvParameters )
  {
  static unsigned portCHAR ucLocalTickCount = 0;
+ static portBASE_TYPE xTaskWoken;
 
     // A timer tick has occurred.
 
     // ... Do other time functions.
 
     // Is it time for vATask () to run?
+	xTaskWoken = pdFALSE;
     ucLocalTickCount++;
     if( ucLocalTickCount >= TICKS_TO_WAIT )
     {
         // Unblock the task by releasing the semaphore.
-        xSemaphoreGive( xSemaphore );
+        xSemaphoreGiveFromISR( xSemaphore, xTaskWoken );
 
         // Reset the count so we release the semaphore again in 10 ticks time.
         ucLocalTickCount = 0;
@@ -368,10 +370,11 @@ typedef xQueueHandle xSemaphoreHandle;
  * \ingroup Semaphores
  */
 #define xSemaphoreCreateMutex() xQueueCreateMutex()
+#define xSemaphoreCreateRecursiveMutex() xQueueCreateMutex()
 
 /**
  * semphr. h
- * <pre>xSemaphoreHandle xSemaphoreCreateCounting( uxCountValue, uxInitialCount )</pre>
+ * <pre>xSemaphoreHandle xSemaphoreCreateCounting( unsigned portBASE_TYPE uxMaxCount, unsigned portBASE_TYPE uxInitialCount )</pre>
  *
  * <i>Macro</i> that creates a counting semaphore by using the existing 
  * queue mechanism.  
@@ -430,7 +433,10 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreCreateCounting xSemaphoreCreateCounting
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateCounting( uxCountValue, uxInitialCount ) xQueueCreateCountingSemaphore( uxCountValue, uxInitialCount )
+#define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( uxMaxCount, uxInitialCount )
+
+#define xSemaphoreTakeRecursive( xMutex, xBlockTime )	xQueueTakeMutexRecursive( xMutex, xBlockTime )
+#define xSemaphoreGiveRecursive( xMutex )				xQueueGiveMutexRecursive( xMutex )
 
 #endif /* SEMAPHORE_H */
 

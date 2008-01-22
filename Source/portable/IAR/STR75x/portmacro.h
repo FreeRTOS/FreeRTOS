@@ -48,7 +48,7 @@
  *-----------------------------------------------------------
  */
 
-#include <intrinsic.h>
+#include <intrinsics.h>
 
 #ifdef __cplusplus
 extern "C" {

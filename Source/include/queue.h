@@ -1201,6 +1201,13 @@ signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, port
 xQueueHandle xQueueCreateMutex( void );
 xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount );
 
+/*
+ * For internal use only.  Use xSemaphoreTakeMutexRecursive() or
+ * xSemaphoreGiveMutexRecursive() instead of calling these functions directly.
+ */
+portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime );
+portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
+
 #ifdef __cplusplus
 }
 #endif

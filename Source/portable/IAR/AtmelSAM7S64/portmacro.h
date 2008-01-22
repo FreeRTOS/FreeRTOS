@@ -38,8 +38,6 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
-#include <intrinsic.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

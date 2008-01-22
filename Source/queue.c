@@ -55,13 +55,14 @@
 /* Effectively make a union out of the xQUEUE structure. */
 #define pxMutexHolder				pcTail
 #define uxQueueType					pcHead
+#define uxRecursiveCallCount		pcReadFrom
 #define queueQUEUE_IS_MUTEX			NULL
 
 /* Semaphores do not actually store or copy data, so have an items size of
 zero. */
 #define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( 0 )
 #define queueDONT_BLOCK					 ( ( portTickType ) 0 )
-
+#define queueMUTEX_GIVE_BLOCK_TIME		 ( ( portTickType ) 0 )
 /*
  * Definition of the queue used by the scheduler.
  * Items are queued by copy, not reference.
@@ -107,6 +108,8 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * co
 signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 xQueueHandle xQueueCreateMutex( void );
 xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount );
+portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime );
+portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 
@@ -261,9 +264,84 @@ size_t xQueueSizeInBytes;
 #endif /* configUSE_MUTEXES */
 /*-----------------------------------------------------------*/
 
+#if configUSE_RECURSIVE_MUTEXES == 1
+
+	portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex )
+	{
+	portBASE_TYPE xReturn;
+
+		/* If this is the task that holds the mutex then pxMutexHolder will not 
+		change outside of this task.  If this task does not hold the mutex then
+		pxMutexHolder can never coincidentally equal the tasks handle, and as
+		this is the only condition we are interested in it does not matter if
+		pxMutexHolder is accessed simultaneously by another task.  Therefore no
+		mutual exclusion is required to test the pxMutexHolder variable. */
+		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
+		{
+			/* uxRecursiveCallCount cannot be zero if pxMutexHolder is equal to
+			the task handle, therefore no underflow check is required.  Also, 
+			uxRecursiveCallCount is only modified by the mutex holder, and as
+			there can only be one, no mutual exclusion is required to modify the
+			uxRecursiveCallCount member. */
+			( pxMutex->uxRecursiveCallCount )--;
+
+			/* Have we unwound the call count? */
+			if( pxMutex->uxRecursiveCallCount == 0 )
+			{
+				/* Return the mutex.  This will automatically unblock any other
+				task that might be waiting to access the mutex. */
+                xQueueGenericSend( pxMutex, NULL, queueMUTEX_GIVE_BLOCK_TIME, queueSEND_TO_BACK );
+			}
+
+			xReturn = pdPASS;
+		}
+		else
+		{
+			/* We cannot give the mutex because we are not the holder. */
+			xReturn = pdFAIL;
+		}
+
+		return xReturn;
+	}
+
+#endif /* configUSE_RECURSIVE_MUTEXES */
+/*-----------------------------------------------------------*/
+
+#if configUSE_RECURSIVE_MUTEXES == 1
+
+	portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBlockTime )
+	{
+	portBASE_TYPE xReturn;
+
+		/* Comments regarding mutual exclusion as per those within 
+		xQueueGiveMutexRecursive(). */
+
+		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
+		{
+			( pxMutex->uxRecursiveCallCount )++;
+			xReturn = pdPASS;
+		}
+		else
+		{
+            xReturn = xQueueGenericReceive( pxMutex, NULL, xBlockTime, pdFALSE );
+
+			/* pdPASS will only be returned if we successfully obtained the mutex,
+			we may have blocked to reach here. */
+			if( xReturn == pdPASS )
+			{
+				( pxMutex->uxRecursiveCallCount )++;
+			}
+		}
+
+		return xReturn;
+	}
+
+#endif /* configUSE_RECURSIVE_MUTEXES */
+/*-----------------------------------------------------------*/
+
 #if configUSE_COUNTING_SEMAPHORES == 1
 
-	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount )
+	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount, portBASE_TYPE xIsRecursive )
 	{
 	xQueueHandle pxHandle;
 	
@@ -902,6 +980,7 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 			{
 				/* The mutex is no longer being held. */
 				vTaskPriorityDisinherit( ( void * const ) pxQueue->pxMutexHolder );
+                pxQueue->pxMutexHolder = NULL;
 			}
 		}
 		#endif

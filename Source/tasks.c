@@ -1213,7 +1213,11 @@ signed portBASE_TYPE xAlreadyYielded = pdFALSE;
 					/* As we have processed some ticks it is appropriate to yield
 					to ensure the highest priority task that is ready to run is
 					the task actually running. */
-					xYieldRequired = pdTRUE;
+   					#if configUSE_PREEMPTION == 1
+					{
+						xYieldRequired = pdTRUE;
+					}
+					#endif
 				}
 				
 				if( ( xYieldRequired == pdTRUE ) || ( xMissedYield == pdTRUE ) )
@@ -1985,7 +1989,7 @@ tskTCB *pxNewTCB;
 			/* Adjust the mutex holder state to account for its new priority. */
 			listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority );
 
-			/* If the task being modified is in the read state it will need to
+			/* If the task being modified is in the ready state it will need to
 			be moved in to a new list. */
 			if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xGenericListItem ) ) )
 			{

@@ -112,6 +112,10 @@
 	#error Missing definition:  configUSE_16_BIT_TICKS should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
+#ifndef configUSE_RECURSIVE_MUTEXES
+	#define configUSE_RECURSIVE_MUTEXES 0
+#endif
+
 #ifndef configUSE_MUTEXES
 	#define configUSE_MUTEXES 0
 #endif

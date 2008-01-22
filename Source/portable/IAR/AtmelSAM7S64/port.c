@@ -41,7 +41,6 @@
 
 /* Standard includes. */
 #include <stdlib.h>
-#include <intrinsic.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"

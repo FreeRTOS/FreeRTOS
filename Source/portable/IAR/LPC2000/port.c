@@ -41,14 +41,14 @@
 /*
 	Changes from V3.2.2
 
-	+ Bug fix - The prescale value for the timer setup is now written to T0PR 
-	  instead of T0PC.  This bug would have had no effect unless a prescale 
+	+ Bug fix - The prescale value for the timer setup is now written to T0PR
+	  instead of T0PC.  This bug would have had no effect unless a prescale
 	  value was actually used.
 */
 
 /* Standard includes. */
 #include <stdlib.h>
-#include <intrinsic.h>
+#include <intrinsics.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"

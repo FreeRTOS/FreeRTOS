@@ -80,6 +80,10 @@ extern void SSIIntEnable(unsigned long ulBase, unsigned long ulIntFlags);
 extern void SSIIntRegister(unsigned long ulBase, void(*pfnHandler)(void));
 extern unsigned long SSIIntStatus(unsigned long ulBase, tBoolean bMasked);
 extern void SSIIntUnregister(unsigned long ulBase);
+extern void SSIConfigSetExpClk(unsigned long ulBase, unsigned long ulSSIClk,
+                               unsigned long ulProtocol, unsigned long ulMode,
+                               unsigned long ulBitRate,
+                               unsigned long ulDataWidth);
 
 #ifdef __cplusplus
 }

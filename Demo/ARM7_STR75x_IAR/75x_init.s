@@ -88,19 +88,19 @@ SIR0_off_addr    EQU    0x60        ; Source Interrupt Register 0
 ; ?program_start
 ;---------------------------------------------------------------
 		MODULE	?program_start
-		RSEG	IRQ_STACK:DATA(2)
-		RSEG	FIQ_STACK:DATA(2)
-		RSEG	UND_STACK:DATA(2)
-		RSEG	ABT_STACK:DATA(2)		
-		RSEG	SVC_STACK:DATA(2)
-		RSEG	CSTACK:DATA(2)
-		RSEG	ICODE:CODE(2)
-		PUBLIC	__program_start
+		SECTION	IRQ_STACK:DATA:NOROOT(3)
+		SECTION	FIQ_STACK:DATA:NOROOT(3)
+		SECTION	UND_STACK:DATA:NOROOT(3)
+		SECTION	ABT_STACK:DATA:NOROOT(3)	
+		SECTION	SVC_STACK:DATA:NOROOT(3)
+		SECTION	CSTACK:DATA:NOROOT(3)
+		SECTION	.text:CODE(2)
+		PUBLIC	__iar_program_start
 		EXTERN	?main
                 CODE32
 
 
-__program_start:
+__iar_program_start:
         LDR     pc, =NextInst
 
 NextInst
@@ -134,19 +134,19 @@ NextInst
 
 
         MSR     CPSR_c, #Mode_FIQ|I_Bit|F_Bit    ; No interrupts
-        ldr      sp,=SFE(FIQ_STACK) & 0xFFFFFFF8  ; End of FIQ_STACK
+        ldr      sp,=SFE(FIQ_STACK)              ; End of FIQ_STACK
 
         MSR     CPSR_c, #Mode_IRQ|I_Bit|F_Bit    ; No interrupts
-        ldr     sp,=SFE(IRQ_STACK) & 0xFFFFFFF8  ; End of IRQ_STACK
+        ldr     sp,=SFE(IRQ_STACK)               ; End of IRQ_STACK
 
         MSR     CPSR_c, #Mode_ABT|I_Bit|F_Bit    ; No interrupts
-        ldr     sp,=SFE(ABT_STACK) & 0xFFFFFFF8   ; End of ABT_STACK
+        ldr     sp,=SFE(ABT_STACK)               ; End of ABT_STACK
 
         MSR     CPSR_c, #Mode_UND|I_Bit|F_Bit    ; No interrupts
-        ldr     sp,=SFE(UND_STACK) & 0xFFFFFFF8  ; End of UND_STACK
+        ldr     sp,=SFE(UND_STACK)               ; End of UND_STACK
 
         MSR     CPSR_c, #Mode_SVC|I_Bit|F_Bit    ; No interrupts
-        ldr     sp,=SFE(SVC_STACK) & 0xFFFFFFF8  ; End of SVC_STACK
+        ldr     sp,=SFE(SVC_STACK)               ; End of SVC_STACK
 
 ; ------------------------------------------------------------------------------
 ; Description  :  Enable SMI Bank0: enable GPIOs clock in MRCC_PCLKEN register,

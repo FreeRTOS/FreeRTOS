@@ -12,7 +12,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>13</version>
+        <version>15</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\iolm3s811.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\Luminary\iolm3s811.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>4.41A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -103,18 +103,38 @@
           <name>UseFlashLoader</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CLowLevel</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ARMSIM_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
           <name>OCSimDriverInfo</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCSimEnablePSP</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCSimPspOverrideConfig</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCSimPspConfigFile</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -162,6 +182,43 @@
       </data>
     </settings>
     <settings>
+      <name>GDBSERVER_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>TCPIP</name>
+          <state>aaa.bbb.ccc.ddd</state>
+        </option>
+        <option>
+          <name>DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>LogFile</name>
+          <state>$TOOLKIT_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>CCJTagBreakpointRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJTagDoUpdateBreakpoints</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJTagUpdateBreakpoints</name>
+          <state>main</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
       <name>IARROM_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
@@ -200,7 +257,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>6</version>
+        <version>9</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -252,14 +309,6 @@
           <state>aaa.bbb.ccc.ddd</state>
         </option>
         <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>CCJLinkSpeedRadioV2</name>
           <state>0</state>
         </option>
@@ -308,13 +357,26 @@
           <name>CCJLinkUpdateBreakpoints</name>
           <state>main</state>
         </option>
+        <option>
+          <name>CCJLinkInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCJLinkAttachSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>LMIFTDI_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -326,28 +388,12 @@
           <state>500</state>
         </option>
         <option>
-          <name>CCLmiftdiResetRadio</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>CCLmiftdiDoLogfile</name>
           <state>0</state>
         </option>
         <option>
           <name>CCLmiftdiLogFile</name>
           <state>$TOOLKIT_DIR$\cspycomm.log</state>
-        </option>
-        <option>
-          <name>CCLmiftdiBreakpointRadio</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCLmiftdiDoUpdateBreakpoints</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCLmiftdiUpdateBreakpoints</name>
-          <state>main</state>
         </option>
       </data>
     </settings>
@@ -520,27 +566,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Orti\Orti.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CMXArmPlugin.ewplugin</file>
-        <loadFlag>0</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CMXTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -561,6 +591,22 @@
       </plugin>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
     </debuggerPlugins>

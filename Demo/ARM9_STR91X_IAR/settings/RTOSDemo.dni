@@ -19,6 +19,8 @@ LimitSize=0
 ByteLimit=50
 [BreakpointUsageDialog]
 Placement=_ 144 186 919 647
+[CodeCoverage]
+Enabled=_ 0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

@@ -4,16 +4,25 @@ State 1=_ 1
 [JLinkDriver]
 WatchVectorCatch=_ 0
 WatchCond=_ 0
-Watch0=_ 0 "0x00000000" 0 "0x00000000" 0 "0x00000000" 0 "0x00000000" 0 0 0 0
-Watch1=_ 0 "0x00000000" 0 "0x00000000" 0 "0x00000000" 0 "0x00000000" 0 0 0 0
+Watch0=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
+Watch1=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
 [Low Level]
 Pipeline mode=0
 Initialized=0
-[Disassemble mode]
-mode=0
-[Breakpoints]
-Bp0=_ "Code" "{E:\Dev\FreeRTOS\Source\portable\IAR\STR71x\port.c}.240.4@1" 1 0 0 0 "" 0 ""
-Count=1
+[CodeCoverage]
+Enabled=_ 0
+[Profiling]
+Enabled=0
+[StackPlugin]
+Enabled=1
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnHow=0
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -21,3 +30,10 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Count=0
+[TraceHelper]
+Enabled=0
+ShowSource=1

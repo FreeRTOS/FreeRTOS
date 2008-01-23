@@ -22,7 +22,7 @@
       <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1004</ColumnWidth1><ColumnWidth2>267</ColumnWidth2><ColumnWidth3>66</ColumnWidth3></Build>
       <TerminalIO/>
       <Profiling/>
-    <Debug-Log/></Static>
+    <Debug-Log/><Find-in-Files><ColumnWidth0>482</ColumnWidth0><ColumnWidth1>68</ColumnWidth1><ColumnWidth2>826</ColumnWidth2></Find-in-Files></Static>
     <Windows>
       
       
@@ -34,24 +34,24 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode><ExpandedNode>RTOSDemo/Demo Source</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode><ExpandedNode>RTOSDemo/Libraries</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-24894-24921</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-10790-31422</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-24894-24921</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-10790-31422</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-27705-5723</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S316_IAR\main.c</Filename><XPos>0</XPos><YPos>182</YPos><SelStart>7817</SelStart><SelEnd>7817</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S316_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>21</YPos><SelStart>1991</SelStart><SelEnd>1991</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S316_IAR\hw_include\startup.c</Filename><XPos>0</XPos><YPos>254</YPos><SelStart>9644</SelStart><SelEnd>9644</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Source\tasks.c</Filename><XPos>0</XPos><YPos>733</YPos><SelStart>26424</SelStart><SelEnd>26424</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S316_IAR\main.c</Filename><XPos>0</XPos><YPos>189</YPos><SelStart>7972</SelStart><SelEnd>7972</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00a0baa0><key>iaridepm1</key></Toolbar-00a0baa0></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>728</Bottom><Right>260</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>205761</sizeHorzCY><sizeVertCX>187143</sizeVertCX><sizeVertCY>751029</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>200</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>205761</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>205761</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-012843f8><key>iaridepm.enu1</key></Toolbar-012843f8></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>738</Bottom><Right>260</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>202</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>205703</sizeHorzCY><sizeVertCX>187143</sizeVertCX><sizeVertCY>753564</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>200</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>202</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>205703</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>205703</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

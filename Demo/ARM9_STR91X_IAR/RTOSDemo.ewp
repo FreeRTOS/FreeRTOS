@@ -10,15 +10,11 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>9</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
-        <option>
-          <name>GProcessorMode</name>
-          <state>1</state>
-        </option>
         <option>
           <name>ExePath</name>
           <state>THUMB\Exe</state>
@@ -33,19 +29,11 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>5</version>
+          <version>7</version>
           <state>13</state>
         </option>
         <option>
           <name>GEndianMode</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>GInterwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GStackAlign</name>
           <state>0</state>
         </option>
         <option>
@@ -95,11 +83,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tptinl8n.h</state>
-        </option>
-        <option>
-          <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tptinl8n.r79</state>
+          <state>$TOOLKIT_DIR$\INC\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -107,7 +91,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>4.42A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>GeneralMisraRules</name>
@@ -124,7 +108,19 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STR912	ST STR912</state>
+          <state>STR912F	ST STR912F</state>
+        </option>
+        <option>
+          <name>GenLowLevelInterface</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GEndianModeBE</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OGBufferedTerminalOutput</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -132,7 +128,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>19</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -201,33 +197,12 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
           <name>CCAllowList</name>
           <version>1</version>
           <state>1001000</state>
         </option>
         <option>
-          <name>CCObjUseModuleName</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCObjModuleName</name>
-          <state></state>
-        </option>
-        <option>
           <name>CCDebugInfo</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IProcessorMode</name>
           <state>1</state>
         </option>
         <option>
@@ -236,14 +211,6 @@
         </option>
         <option>
           <name>IProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IStackAlign</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IInterwork</name>
           <state>1</state>
         </option>
         <option>
@@ -284,7 +251,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>CCLangSelect</name>
@@ -293,23 +260,6 @@
         <option>
           <name>CCLibConfigHeader</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCCodeFunctions</name>
-          <state>CODE</state>
-        </option>
-        <option>
-          <name>CCData</name>
-          <state>DATA</state>
         </option>
         <option>
           <name>PreInclude</name>
@@ -322,18 +272,6 @@
         </option>
         <option>
           <name>CompilerMisraOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeCmdlineProducer</name>
           <state>0</state>
         </option>
         <option>
@@ -355,9 +293,29 @@
           <state>$TOOLKIT_DIR$\INC\</state>
         </option>
         <option>
-          <name>CCInlineThreshold</name>
-          <version>0</version>
+          <name>CCCodeSection</name>
+          <state>.text</state>
+        </option>
+        <option>
+          <name>IInterwork2</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>IProcessorMode2</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>2</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>2</state>
         </option>
       </data>
     </settings>
@@ -491,7 +449,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -528,6 +486,36 @@
       </data>
     </settings>
     <settings>
+      <name>OBJCOPY</name>
+      <archiveVersion>0</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OOCOutputFormat</name>
+          <version>1</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCOutputOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OOCOutputFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OOCCommandLineProducer</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OOCObjCopyEnable</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
       <name>CUSTOM</name>
       <archiveVersion>3</archiveVersion>
       <data>
@@ -549,89 +537,155 @@
       </data>
     </settings>
     <settings>
-      <name>XLINK</name>
-      <archiveVersion>2</archiveVersion>
+      <name>ILINK</name>
+      <archiveVersion>0</archiveVersion>
       <data>
-        <version>18</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
-          <name>XOutOverride</name>
+          <name>IlinkLibIOConfig</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XLinkMisraHandler</name>
           <state>0</state>
         </option>
         <option>
-          <name>OutputFile</name>
-          <state>RTOSDemo.d79</state>
+          <name>IlinkInputFileSlave</name>
+          <state>0</state>
         </option>
         <option>
-          <name>OutputFormat</name>
-          <version>11</version>
-          <state>57</state>
+          <name>IlinkOutputFile</name>
+          <state>RTOSDemo.out</state>
         </option>
         <option>
-          <name>FormatVariant</name>
-          <version>8</version>
-          <state>2</state>
+          <name>IlinkDebugInfoEnable</name>
+          <state>1</state>
         </option>
         <option>
-          <name>SecondaryOutputFile</name>
-          <state>(None for the selected format)</state>
-        </option>
-        <option>
-          <name>XDefines</name>
+          <name>IlinkKeepSymbols</name>
           <state></state>
         </option>
         <option>
-          <name>AlwaysOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlapWarnings</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>NoGlobalCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XList</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>SegmentMap</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ListSymbols</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>PageLengthCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLength</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>XIncludes</name>
-          <state>$TOOLKIT_DIR$\LIB\</state>
-        </option>
-        <option>
-          <name>ModuleStatus</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XclOverride</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XclFile</name>
-          <state>$PROJ_DIR$\lnkarm_flash.xcl</state>
-        </option>
-        <option>
-          <name>XclFileSlave</name>
+          <name>IlinkRawBinaryFile</name>
           <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySymbol</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySegment</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinaryAlign</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkConfigDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkMapFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogInitialization</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogModule</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogSection</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogVeneer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIcfOverride</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkIcfFile</name>
+          <state>$PROJ_DIR$\STR91x_FLASH.icf</state>
+        </option>
+        <option>
+          <name>IlinkIcfFileSlave</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkEnableRemarks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkSuppressDiags</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsRem</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsWarn</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsErr</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkWarningsAreErrors</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkLowLevelInterfaceSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAutoLibEnable</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAdditionalLibs</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkOverrideProgramEntryLabel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabelSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabel</name>
+          <state>__iar_program_start</state>
+        </option>
+        <option>
+          <name>IlinkNXPLPCChecksum</name>
+          <state>0</state>
         </option>
         <option>
           <name>DoFill</name>
@@ -642,12 +696,20 @@
           <state>0xFF</state>
         </option>
         <option>
-          <name>DoCrc</name>
-          <state>0</state>
+          <name>FillerStart</name>
+          <state>0x0</state>
+        </option>
+        <option>
+          <name>FillerEnd</name>
+          <state>0x0</state>
         </option>
         <option>
           <name>CrcSize</name>
           <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcAlign</name>
           <state>1</state>
         </option>
         <option>
@@ -664,168 +726,45 @@
           <state>0</state>
         </option>
         <option>
-          <name>RangeCheckAlternatives</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressAllWarn</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressDiags</name>
-          <state>w6</state>
-        </option>
-        <option>
-          <name>TreatAsWarn</name>
-          <state></state>
-        </option>
-        <option>
-          <name>TreatAsErr</name>
-          <state></state>
-        </option>
-        <option>
-          <name>ModuleLocalSym</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>CrcBitOrder</name>
           <version>0</version>
           <state>0</state>
         </option>
         <option>
-          <name>XExtraOptionsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XExtraOptions</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IncludeSuppressed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OXLibIOConfig</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ModuleSummary</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
-        </option>
-        <option>
-          <name>DebugInformation</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RuntimeControl</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IoEmulation</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XcRTLibraryFile</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AllowExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GenerateExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XExtraOutOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ExtraOutputFile</name>
-          <state>RTOSDemo.sim</state>
-        </option>
-        <option>
-          <name>ExtraOutputFormat</name>
-          <version>11</version>
-          <state>60</state>
-        </option>
-        <option>
-          <name>ExtraFormatVariant</name>
-          <version>8</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabelSelect</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ListOutputFormat</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>BufferedTermOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlaySystemMap</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RawBinaryFile</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySymbol</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySegment</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinaryAlign</name>
-          <state></state>
-        </option>
-        <option>
-          <name>XLinkMisraHandler</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcAlign</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>CrcInitialValue</name>
           <state>0x0</state>
+        </option>
+        <option>
+          <name>DoCrc</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkBufferedTerminalOutput</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
     <settings>
-      <name>XAR</name>
-      <archiveVersion>2</archiveVersion>
+      <name>IARCHIVE</name>
+      <archiveVersion>0</archiveVersion>
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
-          <name>XARInputs</name>
+          <name>IarchiveInputs</name>
           <state></state>
         </option>
         <option>
-          <name>XAROverride</name>
+          <name>IarchiveOverride</name>
           <state>0</state>
         </option>
         <option>
-          <name>XAROutput</name>
+          <name>IarchiveOutput</name>
           <state>###Unitialized###</state>
         </option>
       </data>
@@ -844,15 +783,11 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>9</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
-        <option>
-          <name>GProcessorMode</name>
-          <state>0</state>
-        </option>
         <option>
           <name>ExePath</name>
           <state>ARM - uIP - D\Exe</state>
@@ -867,19 +802,11 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>5</version>
+          <version>7</version>
           <state>13</state>
         </option>
         <option>
           <name>GEndianMode</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>GInterwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GStackAlign</name>
           <state>0</state>
         </option>
         <option>
@@ -929,11 +856,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.h</state>
-        </option>
-        <option>
-          <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.r79</state>
+          <state>$TOOLKIT_DIR$\INC\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -941,7 +864,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>4.42A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>GeneralMisraRules</name>
@@ -958,7 +881,19 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STR912	ST STR912</state>
+          <state>STR912F	ST STR912F</state>
+        </option>
+        <option>
+          <name>GenLowLevelInterface</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GEndianModeBE</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OGBufferedTerminalOutput</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -966,7 +901,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>19</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1035,33 +970,12 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>CCAllowList</name>
           <version>1</version>
           <state>0000000</state>
         </option>
         <option>
-          <name>CCObjUseModuleName</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCObjModuleName</name>
-          <state></state>
-        </option>
-        <option>
           <name>CCDebugInfo</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IProcessorMode</name>
           <state>1</state>
         </option>
         <option>
@@ -1070,14 +984,6 @@
         </option>
         <option>
           <name>IProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IStackAlign</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IInterwork</name>
           <state>1</state>
         </option>
         <option>
@@ -1118,7 +1024,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>CCLangSelect</name>
@@ -1127,23 +1033,6 @@
         <option>
           <name>CCLibConfigHeader</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCCodeFunctions</name>
-          <state>CODE</state>
-        </option>
-        <option>
-          <name>CCData</name>
-          <state>DATA</state>
         </option>
         <option>
           <name>PreInclude</name>
@@ -1156,18 +1045,6 @@
         </option>
         <option>
           <name>CompilerMisraOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeCmdlineProducer</name>
           <state>0</state>
         </option>
         <option>
@@ -1189,9 +1066,29 @@
           <state>$TOOLKIT_DIR$\INC\</state>
         </option>
         <option>
-          <name>CCInlineThreshold</name>
-          <version>0</version>
+          <name>CCCodeSection</name>
+          <state>.text</state>
+        </option>
+        <option>
+          <name>IInterwork2</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>IProcessorMode2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1326,7 +1223,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -1363,6 +1260,36 @@
       </data>
     </settings>
     <settings>
+      <name>OBJCOPY</name>
+      <archiveVersion>0</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OOCOutputFormat</name>
+          <version>1</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCOutputOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OOCOutputFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OOCCommandLineProducer</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OOCObjCopyEnable</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
       <name>CUSTOM</name>
       <archiveVersion>3</archiveVersion>
       <data>
@@ -1384,89 +1311,155 @@
       </data>
     </settings>
     <settings>
-      <name>XLINK</name>
-      <archiveVersion>2</archiveVersion>
+      <name>ILINK</name>
+      <archiveVersion>0</archiveVersion>
       <data>
-        <version>18</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
-          <name>XOutOverride</name>
+          <name>IlinkLibIOConfig</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XLinkMisraHandler</name>
           <state>0</state>
         </option>
         <option>
-          <name>OutputFile</name>
-          <state>RTOSDemo.d79</state>
+          <name>IlinkInputFileSlave</name>
+          <state>0</state>
         </option>
         <option>
-          <name>OutputFormat</name>
-          <version>11</version>
-          <state>16</state>
+          <name>IlinkOutputFile</name>
+          <state>RTOSDemo.out</state>
         </option>
         <option>
-          <name>FormatVariant</name>
-          <version>8</version>
-          <state>17</state>
+          <name>IlinkDebugInfoEnable</name>
+          <state>1</state>
         </option>
         <option>
-          <name>SecondaryOutputFile</name>
-          <state>(None for the selected format)</state>
-        </option>
-        <option>
-          <name>XDefines</name>
+          <name>IlinkKeepSymbols</name>
           <state></state>
         </option>
         <option>
-          <name>AlwaysOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlapWarnings</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>NoGlobalCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XList</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>SegmentMap</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ListSymbols</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>PageLengthCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLength</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>XIncludes</name>
-          <state>$TOOLKIT_DIR$\LIB\</state>
-        </option>
-        <option>
-          <name>ModuleStatus</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XclOverride</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XclFile</name>
-          <state>$PROJ_DIR$\lnkarm_flash.xcl</state>
-        </option>
-        <option>
-          <name>XclFileSlave</name>
+          <name>IlinkRawBinaryFile</name>
           <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySymbol</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySegment</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinaryAlign</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkConfigDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkMapFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogInitialization</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogModule</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogSection</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogVeneer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIcfOverride</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkIcfFile</name>
+          <state>$PROJ_DIR$\STR91x_FLASH.icf</state>
+        </option>
+        <option>
+          <name>IlinkIcfFileSlave</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkEnableRemarks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkSuppressDiags</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsRem</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsWarn</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsErr</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkWarningsAreErrors</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkLowLevelInterfaceSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAutoLibEnable</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAdditionalLibs</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkOverrideProgramEntryLabel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabelSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabel</name>
+          <state>__iar_program_start</state>
+        </option>
+        <option>
+          <name>IlinkNXPLPCChecksum</name>
+          <state>0</state>
         </option>
         <option>
           <name>DoFill</name>
@@ -1477,12 +1470,20 @@
           <state>0xFF</state>
         </option>
         <option>
-          <name>DoCrc</name>
-          <state>0</state>
+          <name>FillerStart</name>
+          <state>0x0</state>
+        </option>
+        <option>
+          <name>FillerEnd</name>
+          <state>0x0</state>
         </option>
         <option>
           <name>CrcSize</name>
           <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcAlign</name>
           <state>1</state>
         </option>
         <option>
@@ -1499,168 +1500,45 @@
           <state>0</state>
         </option>
         <option>
-          <name>RangeCheckAlternatives</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressAllWarn</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressDiags</name>
-          <state>w6</state>
-        </option>
-        <option>
-          <name>TreatAsWarn</name>
-          <state></state>
-        </option>
-        <option>
-          <name>TreatAsErr</name>
-          <state></state>
-        </option>
-        <option>
-          <name>ModuleLocalSym</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>CrcBitOrder</name>
           <version>0</version>
           <state>0</state>
         </option>
         <option>
-          <name>XExtraOptionsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XExtraOptions</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IncludeSuppressed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OXLibIOConfig</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ModuleSummary</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
-        </option>
-        <option>
-          <name>DebugInformation</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RuntimeControl</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IoEmulation</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XcRTLibraryFile</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AllowExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GenerateExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XExtraOutOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ExtraOutputFile</name>
-          <state>RTOSDemo.sim</state>
-        </option>
-        <option>
-          <name>ExtraOutputFormat</name>
-          <version>11</version>
-          <state>60</state>
-        </option>
-        <option>
-          <name>ExtraFormatVariant</name>
-          <version>8</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabelSelect</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ListOutputFormat</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>BufferedTermOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlaySystemMap</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RawBinaryFile</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySymbol</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySegment</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinaryAlign</name>
-          <state></state>
-        </option>
-        <option>
-          <name>XLinkMisraHandler</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcAlign</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>CrcInitialValue</name>
           <state>0x0</state>
+        </option>
+        <option>
+          <name>DoCrc</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkBufferedTerminalOutput</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
     <settings>
-      <name>XAR</name>
-      <archiveVersion>2</archiveVersion>
+      <name>IARCHIVE</name>
+      <archiveVersion>0</archiveVersion>
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
-          <name>XARInputs</name>
+          <name>IarchiveInputs</name>
           <state></state>
         </option>
         <option>
-          <name>XAROverride</name>
+          <name>IarchiveOverride</name>
           <state>0</state>
         </option>
         <option>
-          <name>XAROutput</name>
+          <name>IarchiveOutput</name>
           <state>###Unitialized###</state>
         </option>
       </data>
@@ -1679,15 +1557,11 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>9</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
-        <option>
-          <name>GProcessorMode</name>
-          <state>0</state>
-        </option>
         <option>
           <name>ExePath</name>
           <state>ARM - lwIP - D\Exe</state>
@@ -1702,19 +1576,11 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>5</version>
+          <version>7</version>
           <state>13</state>
         </option>
         <option>
           <name>GEndianMode</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>GInterwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GStackAlign</name>
           <state>0</state>
         </option>
         <option>
@@ -1764,11 +1630,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.h</state>
-        </option>
-        <option>
-          <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.r79</state>
+          <state>$TOOLKIT_DIR$\INC\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -1776,7 +1638,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>4.40A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>GeneralMisraRules</name>
@@ -1793,7 +1655,19 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STR912	ST STR912</state>
+          <state>STR912F	ST STR912F</state>
+        </option>
+        <option>
+          <name>GenLowLevelInterface</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GEndianModeBE</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OGBufferedTerminalOutput</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1801,7 +1675,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>19</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1868,33 +1742,12 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>CCAllowList</name>
           <version>1</version>
           <state>0000000</state>
         </option>
         <option>
-          <name>CCObjUseModuleName</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCObjModuleName</name>
-          <state></state>
-        </option>
-        <option>
           <name>CCDebugInfo</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IProcessorMode</name>
           <state>1</state>
         </option>
         <option>
@@ -1903,14 +1756,6 @@
         </option>
         <option>
           <name>IProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IStackAlign</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IInterwork</name>
           <state>1</state>
         </option>
         <option>
@@ -1951,7 +1796,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>CCLangSelect</name>
@@ -1960,23 +1805,6 @@
         <option>
           <name>CCLibConfigHeader</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCCodeFunctions</name>
-          <state>CODE</state>
-        </option>
-        <option>
-          <name>CCData</name>
-          <state>DATA</state>
         </option>
         <option>
           <name>PreInclude</name>
@@ -1989,18 +1817,6 @@
         </option>
         <option>
           <name>CompilerMisraOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeCmdlineProducer</name>
           <state>0</state>
         </option>
         <option>
@@ -2027,9 +1843,29 @@
           <state>$TOOLKIT_DIR$\INC\</state>
         </option>
         <option>
-          <name>CCInlineThreshold</name>
-          <version>0</version>
+          <name>CCCodeSection</name>
+          <state>.text</state>
+        </option>
+        <option>
+          <name>IInterwork2</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>IProcessorMode2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -2164,7 +2000,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -2201,838 +2037,32 @@
       </data>
     </settings>
     <settings>
-      <name>CUSTOM</name>
-      <archiveVersion>3</archiveVersion>
-      <data>
-        <extensions></extensions>
-        <cmdline></cmdline>
-      </data>
-    </settings>
-    <settings>
-      <name>BICOMP</name>
+      <name>OBJCOPY</name>
       <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-    <settings>
-      <name>BUILDACTION</name>
-      <archiveVersion>1</archiveVersion>
       <data>
-        <prebuild></prebuild>
-        <postbuild></postbuild>
-      </data>
-    </settings>
-    <settings>
-      <name>XLINK</name>
-      <archiveVersion>2</archiveVersion>
-      <data>
-        <version>18</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
-          <name>XOutOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OutputFile</name>
-          <state>RTOSDemo.d79</state>
-        </option>
-        <option>
-          <name>OutputFormat</name>
-          <version>11</version>
-          <state>16</state>
-        </option>
-        <option>
-          <name>FormatVariant</name>
-          <version>8</version>
-          <state>17</state>
-        </option>
-        <option>
-          <name>SecondaryOutputFile</name>
-          <state>(None for the selected format)</state>
-        </option>
-        <option>
-          <name>XDefines</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AlwaysOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlapWarnings</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>NoGlobalCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XList</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>SegmentMap</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ListSymbols</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>PageLengthCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLength</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>XIncludes</name>
-          <state>$TOOLKIT_DIR$\LIB\</state>
-        </option>
-        <option>
-          <name>ModuleStatus</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XclOverride</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XclFile</name>
-          <state>$PROJ_DIR$\lnkarm_flash.xcl</state>
-        </option>
-        <option>
-          <name>XclFileSlave</name>
-          <state></state>
-        </option>
-        <option>
-          <name>DoFill</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>FillerByte</name>
-          <state>0xFF</state>
-        </option>
-        <option>
-          <name>DoCrc</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcSize</name>
-          <version>0</version>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CrcAlgo</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CrcPoly</name>
-          <state>0x11021</state>
-        </option>
-        <option>
-          <name>CrcCompl</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RangeCheckAlternatives</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressAllWarn</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressDiags</name>
-          <state>w6</state>
-        </option>
-        <option>
-          <name>TreatAsWarn</name>
-          <state></state>
-        </option>
-        <option>
-          <name>TreatAsErr</name>
-          <state></state>
-        </option>
-        <option>
-          <name>ModuleLocalSym</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcBitOrder</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XExtraOptionsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XExtraOptions</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IncludeSuppressed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OXLibIOConfig</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ModuleSummary</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
-        </option>
-        <option>
-          <name>DebugInformation</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RuntimeControl</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IoEmulation</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XcRTLibraryFile</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AllowExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GenerateExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XExtraOutOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ExtraOutputFile</name>
-          <state>RTOSDemo.sim</state>
-        </option>
-        <option>
-          <name>ExtraOutputFormat</name>
-          <version>11</version>
-          <state>60</state>
-        </option>
-        <option>
-          <name>ExtraFormatVariant</name>
-          <version>8</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabelSelect</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ListOutputFormat</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>BufferedTermOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlaySystemMap</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RawBinaryFile</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySymbol</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySegment</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinaryAlign</name>
-          <state></state>
-        </option>
-        <option>
-          <name>XLinkMisraHandler</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcAlign</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CrcInitialValue</name>
-          <state>0x0</state>
-        </option>
-      </data>
-    </settings>
-    <settings>
-      <name>XAR</name>
-      <archiveVersion>2</archiveVersion>
-      <data>
-        <version>0</version>
-        <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
-        <option>
-          <name>XARInputs</name>
-          <state></state>
-        </option>
-        <option>
-          <name>XAROverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XAROutput</name>
-          <state>###Unitialized###</state>
-        </option>
-      </data>
-    </settings>
-    <settings>
-      <name>BILINK</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-  </configuration>
-  <configuration>
-    <name>ARM - lwIP - R</name>
-    <toolchain>
-      <name>ARM</name>
-    </toolchain>
-    <debug>0</debug>
-    <settings>
-      <name>General</name>
-      <archiveVersion>2</archiveVersion>
-      <data>
-        <version>9</version>
-        <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
-        <option>
-          <name>GProcessorMode</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ExePath</name>
-          <state>ARM - lwIP - R\Exe</state>
-        </option>
-        <option>
-          <name>ObjPath</name>
-          <state>ARM - lwIP - R\Obj</state>
-        </option>
-        <option>
-          <name>ListPath</name>
-          <state>ARM - lwIP - R\List</state>
-        </option>
-        <option>
-          <name>Variant</name>
-          <version>5</version>
-          <state>13</state>
-        </option>
-        <option>
-          <name>GEndianMode</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>GInterwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GStackAlign</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>Input variant</name>
+          <name>OOCOutputFormat</name>
           <version>1</version>
-          <state>3</state>
-        </option>
-        <option>
-          <name>Input description</name>
-          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing.</state>
-        </option>
-        <option>
-          <name>Output variant</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long.</state>
-        </option>
-        <option>
-          <name>GOutputBinary</name>
           <state>0</state>
         </option>
         <option>
-          <name>FPU</name>
-          <version>0</version>
+          <name>OCOutputOverride</name>
           <state>0</state>
         </option>
         <option>
-          <name>OGCoreOrChip</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GRuntimeLibSelect</name>
-          <version>0</version>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GRuntimeLibSelectSlave</name>
-          <version>0</version>
-          <state>1</state>
-        </option>
-        <option>
-          <name>RTDescription</name>
-          <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
-        </option>
-        <option>
-          <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.h</state>
-        </option>
-        <option>
-          <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.r79</state>
-        </option>
-        <option>
-          <name>OGProductVersion</name>
-          <state>4.20A</state>
-        </option>
-        <option>
-          <name>OGLastSavedByProductVersion</name>
-          <state>4.42A</state>
-        </option>
-        <option>
-          <name>GeneralMisraRules</name>
-          <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-        </option>
-        <option>
-          <name>GeneralEnableMisra</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>GeneralMisraVerbose</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OGChipSelectEditMenu</name>
-          <state>STR912	ST STR912</state>
-        </option>
-      </data>
-    </settings>
-    <settings>
-      <name>ICCARM</name>
-      <archiveVersion>2</archiveVersion>
-      <data>
-        <version>14</version>
-        <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
-        <option>
-          <name>CCDefines</name>
-          <state>STR91X_IAR</state>
-          <state>_RUN_TASK_IN_ARM_MODE_</state>
-          <state>STACK_LWIP</state>
-        </option>
-        <option>
-          <name>CCPreprocFile</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCPreprocComments</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCPreprocLine</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCListCFile</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCListCMnemonics</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCListCMessages</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCListAssFile</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCListAssSource</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCEnableRemarks</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCDiagSuppress</name>
-          <state>pe191,pa082, pe144, pe550, pe513, pe167, pe177</state>
-        </option>
-        <option>
-          <name>CCDiagRemark</name>
+          <name>OOCOutputFile</name>
           <state></state>
         </option>
         <option>
-          <name>CCDiagWarning</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CCDiagError</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CCObjPrefix</name>
+          <name>OOCCommandLineProducer</name>
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCAllowList</name>
-          <version>1</version>
-          <state>1001000</state>
-        </option>
-        <option>
-          <name>CCObjUseModuleName</name>
+          <name>OOCObjCopyEnable</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>CCObjModuleName</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CCDebugInfo</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>IProcessorMode</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IEndianMode</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IStackAlign</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IInterwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IExtraOptionsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>IExtraOptions</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CCLangConformance</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCSignedPlainChar</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCRequirePrototypes</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCMultibyteSupport</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCDiagWarnAreErr</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCCompilerRuntimeInfo</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>IFpuProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>OutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
-        </option>
-        <option>
-          <name>CCLangSelect</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCLibConfigHeader</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCCodeFunctions</name>
-          <state>CODE</state>
-        </option>
-        <option>
-          <name>CCData</name>
-          <state>DATA</state>
-        </option>
-        <option>
-          <name>PreInclude</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CompilerMisraRules</name>
-          <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-        </option>
-        <option>
-          <name>CompilerMisraOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeCmdlineProducer</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$\</state>
-          <state>$PROJ_DIR$\library\include\</state>
-          <state>$PROJ_DIR$\..\common\include</state>
-          <state>$PROJ_DIR$\..\..\source\include</state>
-          <state>$PROJ_DIR$\STCode</state>
-          <state>$PROJ_DIR$\..\common\ethernet\lwip\include</state>
-          <state>$PROJ_DIR$\..\common\ethernet\lwip\include\ipv4</state>
-          <state>$PROJ_DIR$\..\common\ethernet\lwip\include\lwip</state>
-          <state>$PROJ_DIR$\..\common\ethernet\lwip\include\netif</state>
-          <state>$PROJ_DIR$\..\common\ethernet\lwip\include\ipv4\lwip</state>
-          <state>$PROJ_DIR$\lwip\include\lwIPWebServer</state>
-          <state>$PROJ_DIR$\lwip\include</state>
-        </option>
-        <option>
-          <name>CCStdIncCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCStdIncludePath</name>
-          <state>$TOOLKIT_DIR$\INC\</state>
-        </option>
-        <option>
-          <name>CCInlineThreshold</name>
-          <version>0</version>
-          <state>1</state>
-        </option>
-      </data>
-    </settings>
-    <settings>
-      <name>AARM</name>
-      <archiveVersion>2</archiveVersion>
-      <data>
-        <version>7</version>
-        <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
-        <option>
-          <name>AObjPrefix</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AEndian</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ACaseSensitivity</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>MacroChars</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AWarnEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AWarnWhat</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AWarnOne</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AWarnRange1</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AWarnRange2</name>
-          <state></state>
-        </option>
-        <option>
-          <name>ADebug</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AltRegisterNames</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ADefines</name>
-          <state>STACK_LWIP</state>
-        </option>
-        <option>
-          <name>AList</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AListHeader</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AListing</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>Includes</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>MacDefs</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>MacExps</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>MacExec</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OnlyAssed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>MultiLine</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLengthCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLength</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>TabSpacing</name>
-          <state>8</state>
-        </option>
-        <option>
-          <name>AXRef</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AXRefDefines</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AXRefInternal</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AXRefDual</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AFpuProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AOutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
-        </option>
-        <option>
-          <name>AMultibyteSupport</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ALimitErrorsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ALimitErrorsEdit</name>
-          <state>100</state>
-        </option>
-        <option>
-          <name>AIgnoreStdInclude</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AStdIncludes</name>
-          <state>$TOOLKIT_DIR$\INC\</state>
-        </option>
-        <option>
-          <name>AUserIncludes</name>
-          <state>$PROJ_DIR$\..\..\Source\portable\IAR\STR91x</state>
-        </option>
-        <option>
-          <name>AExtraOptionsCheckV2</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>AExtraOptionsV2</name>
-          <state></state>
         </option>
       </data>
     </settings>
@@ -3058,89 +2088,155 @@
       </data>
     </settings>
     <settings>
-      <name>XLINK</name>
-      <archiveVersion>2</archiveVersion>
+      <name>ILINK</name>
+      <archiveVersion>0</archiveVersion>
       <data>
-        <version>18</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
-          <name>XOutOverride</name>
+          <name>IlinkLibIOConfig</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XLinkMisraHandler</name>
           <state>0</state>
         </option>
         <option>
-          <name>OutputFile</name>
-          <state>RTOSDemo.d79</state>
+          <name>IlinkInputFileSlave</name>
+          <state>0</state>
         </option>
         <option>
-          <name>OutputFormat</name>
-          <version>11</version>
-          <state>16</state>
+          <name>IlinkOutputFile</name>
+          <state>RTOSDemo.out</state>
         </option>
         <option>
-          <name>FormatVariant</name>
-          <version>8</version>
-          <state>17</state>
+          <name>IlinkDebugInfoEnable</name>
+          <state>1</state>
         </option>
         <option>
-          <name>SecondaryOutputFile</name>
-          <state>(None for the selected format)</state>
-        </option>
-        <option>
-          <name>XDefines</name>
+          <name>IlinkKeepSymbols</name>
           <state></state>
         </option>
         <option>
-          <name>AlwaysOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlapWarnings</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>NoGlobalCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XList</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>SegmentMap</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ListSymbols</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>PageLengthCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLength</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>XIncludes</name>
-          <state>$TOOLKIT_DIR$\LIB\</state>
-        </option>
-        <option>
-          <name>ModuleStatus</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XclOverride</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XclFile</name>
-          <state>$PROJ_DIR$\lnkarm_flash.xcl</state>
-        </option>
-        <option>
-          <name>XclFileSlave</name>
+          <name>IlinkRawBinaryFile</name>
           <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySymbol</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySegment</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinaryAlign</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkConfigDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkMapFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogInitialization</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogModule</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogSection</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogVeneer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIcfOverride</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkIcfFile</name>
+          <state>$PROJ_DIR$\STR91x_FLASH.icf</state>
+        </option>
+        <option>
+          <name>IlinkIcfFileSlave</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkEnableRemarks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkSuppressDiags</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsRem</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsWarn</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsErr</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkWarningsAreErrors</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkLowLevelInterfaceSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAutoLibEnable</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAdditionalLibs</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkOverrideProgramEntryLabel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabelSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabel</name>
+          <state>__iar_program_start</state>
+        </option>
+        <option>
+          <name>IlinkNXPLPCChecksum</name>
+          <state>0</state>
         </option>
         <option>
           <name>DoFill</name>
@@ -3151,12 +2247,20 @@
           <state>0xFF</state>
         </option>
         <option>
-          <name>DoCrc</name>
-          <state>0</state>
+          <name>FillerStart</name>
+          <state>0x0</state>
+        </option>
+        <option>
+          <name>FillerEnd</name>
+          <state>0x0</state>
         </option>
         <option>
           <name>CrcSize</name>
           <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcAlign</name>
           <state>1</state>
         </option>
         <option>
@@ -3173,168 +2277,45 @@
           <state>0</state>
         </option>
         <option>
-          <name>RangeCheckAlternatives</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressAllWarn</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressDiags</name>
-          <state>w6</state>
-        </option>
-        <option>
-          <name>TreatAsWarn</name>
-          <state></state>
-        </option>
-        <option>
-          <name>TreatAsErr</name>
-          <state></state>
-        </option>
-        <option>
-          <name>ModuleLocalSym</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>CrcBitOrder</name>
           <version>0</version>
           <state>0</state>
         </option>
         <option>
-          <name>XExtraOptionsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XExtraOptions</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IncludeSuppressed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OXLibIOConfig</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ModuleSummary</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
-        </option>
-        <option>
-          <name>DebugInformation</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RuntimeControl</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IoEmulation</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XcRTLibraryFile</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AllowExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GenerateExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XExtraOutOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ExtraOutputFile</name>
-          <state>RTOSDemo.sim</state>
-        </option>
-        <option>
-          <name>ExtraOutputFormat</name>
-          <version>11</version>
-          <state>60</state>
-        </option>
-        <option>
-          <name>ExtraFormatVariant</name>
-          <version>8</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabelSelect</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ListOutputFormat</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>BufferedTermOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlaySystemMap</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RawBinaryFile</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySymbol</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySegment</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinaryAlign</name>
-          <state></state>
-        </option>
-        <option>
-          <name>XLinkMisraHandler</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcAlign</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>CrcInitialValue</name>
           <state>0x0</state>
+        </option>
+        <option>
+          <name>DoCrc</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkBufferedTerminalOutput</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
     <settings>
-      <name>XAR</name>
-      <archiveVersion>2</archiveVersion>
+      <name>IARCHIVE</name>
+      <archiveVersion>0</archiveVersion>
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
-          <name>XARInputs</name>
+          <name>IarchiveInputs</name>
           <state></state>
         </option>
         <option>
-          <name>XAROverride</name>
+          <name>IarchiveOverride</name>
           <state>0</state>
         </option>
         <option>
-          <name>XAROutput</name>
+          <name>IarchiveOutput</name>
           <state>###Unitialized###</state>
         </option>
       </data>
@@ -3353,15 +2334,11 @@
     <debug>0</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>9</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
-        <option>
-          <name>GProcessorMode</name>
-          <state>0</state>
-        </option>
         <option>
           <name>ExePath</name>
           <state>ARM - uIP - R\Exe</state>
@@ -3376,19 +2353,11 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>5</version>
+          <version>7</version>
           <state>13</state>
         </option>
         <option>
           <name>GEndianMode</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>GInterwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GStackAlign</name>
           <state>0</state>
         </option>
         <option>
@@ -3438,11 +2407,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.h</state>
-        </option>
-        <option>
-          <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl5tpainl8n.r79</state>
+          <state>$TOOLKIT_DIR$\INC\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -3450,7 +2415,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>4.42A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>GeneralMisraRules</name>
@@ -3467,7 +2432,19 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STR912	ST STR912</state>
+          <state>STR912F	ST STR912F</state>
+        </option>
+        <option>
+          <name>GenLowLevelInterface</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GEndianModeBE</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OGBufferedTerminalOutput</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -3475,7 +2452,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>19</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -3543,33 +2520,12 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeed</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
           <name>CCAllowList</name>
           <version>1</version>
           <state>1001000</state>
         </option>
         <option>
-          <name>CCObjUseModuleName</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCObjModuleName</name>
-          <state></state>
-        </option>
-        <option>
           <name>CCDebugInfo</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IProcessorMode</name>
           <state>1</state>
         </option>
         <option>
@@ -3578,14 +2534,6 @@
         </option>
         <option>
           <name>IProcessor</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IStackAlign</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IInterwork</name>
           <state>1</state>
         </option>
         <option>
@@ -3626,7 +2574,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>CCLangSelect</name>
@@ -3635,23 +2583,6 @@
         <option>
           <name>CCLibConfigHeader</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>0</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCCodeFunctions</name>
-          <state>CODE</state>
-        </option>
-        <option>
-          <name>CCData</name>
-          <state>DATA</state>
         </option>
         <option>
           <name>PreInclude</name>
@@ -3664,18 +2595,6 @@
         </option>
         <option>
           <name>CompilerMisraOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCModuleTypeCmdlineProducer</name>
           <state>0</state>
         </option>
         <option>
@@ -3697,9 +2616,29 @@
           <state>$TOOLKIT_DIR$\INC\</state>
         </option>
         <option>
-          <name>CCInlineThreshold</name>
-          <version>0</version>
+          <name>CCCodeSection</name>
+          <state>.text</state>
+        </option>
+        <option>
+          <name>IInterwork2</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>IProcessorMode2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>2</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>2</state>
         </option>
       </data>
     </settings>
@@ -3834,7 +2773,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -3871,6 +2810,36 @@
       </data>
     </settings>
     <settings>
+      <name>OBJCOPY</name>
+      <archiveVersion>0</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>0</debug>
+        <option>
+          <name>OOCOutputFormat</name>
+          <version>1</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCOutputOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OOCOutputFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OOCCommandLineProducer</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OOCObjCopyEnable</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
       <name>CUSTOM</name>
       <archiveVersion>3</archiveVersion>
       <data>
@@ -3892,89 +2861,155 @@
       </data>
     </settings>
     <settings>
-      <name>XLINK</name>
-      <archiveVersion>2</archiveVersion>
+      <name>ILINK</name>
+      <archiveVersion>0</archiveVersion>
       <data>
-        <version>18</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
-          <name>XOutOverride</name>
+          <name>IlinkLibIOConfig</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XLinkMisraHandler</name>
           <state>0</state>
         </option>
         <option>
-          <name>OutputFile</name>
-          <state>RTOSDemo.d79</state>
+          <name>IlinkInputFileSlave</name>
+          <state>0</state>
         </option>
         <option>
-          <name>OutputFormat</name>
-          <version>11</version>
-          <state>16</state>
+          <name>IlinkOutputFile</name>
+          <state>RTOSDemo.out</state>
         </option>
         <option>
-          <name>FormatVariant</name>
-          <version>8</version>
-          <state>17</state>
+          <name>IlinkDebugInfoEnable</name>
+          <state>1</state>
         </option>
         <option>
-          <name>SecondaryOutputFile</name>
-          <state>(None for the selected format)</state>
-        </option>
-        <option>
-          <name>XDefines</name>
+          <name>IlinkKeepSymbols</name>
           <state></state>
         </option>
         <option>
-          <name>AlwaysOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlapWarnings</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>NoGlobalCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XList</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>SegmentMap</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ListSymbols</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>PageLengthCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>PageLength</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>XIncludes</name>
-          <state>$TOOLKIT_DIR$\LIB\</state>
-        </option>
-        <option>
-          <name>ModuleStatus</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XclOverride</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XclFile</name>
-          <state>$PROJ_DIR$\lnkarm_flash.xcl</state>
-        </option>
-        <option>
-          <name>XclFileSlave</name>
+          <name>IlinkRawBinaryFile</name>
           <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySymbol</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinarySegment</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkRawBinaryAlign</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkConfigDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkMapFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogInitialization</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogModule</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogSection</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogVeneer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIcfOverride</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkIcfFile</name>
+          <state>$PROJ_DIR$\STR91x_FLASH.icf</state>
+        </option>
+        <option>
+          <name>IlinkIcfFileSlave</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkEnableRemarks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkSuppressDiags</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsRem</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsWarn</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkTreatAsErr</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkWarningsAreErrors</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkLowLevelInterfaceSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAutoLibEnable</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkAdditionalLibs</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkOverrideProgramEntryLabel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabelSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkProgramEntryLabel</name>
+          <state>__iar_program_start</state>
+        </option>
+        <option>
+          <name>IlinkNXPLPCChecksum</name>
+          <state>0</state>
         </option>
         <option>
           <name>DoFill</name>
@@ -3985,12 +3020,20 @@
           <state>0xFF</state>
         </option>
         <option>
-          <name>DoCrc</name>
-          <state>0</state>
+          <name>FillerStart</name>
+          <state>0x0</state>
+        </option>
+        <option>
+          <name>FillerEnd</name>
+          <state>0x0</state>
         </option>
         <option>
           <name>CrcSize</name>
           <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcAlign</name>
           <state>1</state>
         </option>
         <option>
@@ -4007,168 +3050,45 @@
           <state>0</state>
         </option>
         <option>
-          <name>RangeCheckAlternatives</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressAllWarn</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>SuppressDiags</name>
-          <state>w6</state>
-        </option>
-        <option>
-          <name>TreatAsWarn</name>
-          <state></state>
-        </option>
-        <option>
-          <name>TreatAsErr</name>
-          <state></state>
-        </option>
-        <option>
-          <name>ModuleLocalSym</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>CrcBitOrder</name>
           <version>0</version>
           <state>0</state>
         </option>
         <option>
-          <name>XExtraOptionsCheck</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XExtraOptions</name>
-          <state></state>
-        </option>
-        <option>
-          <name>IncludeSuppressed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OXLibIOConfig</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>ModuleSummary</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
-        </option>
-        <option>
-          <name>DebugInformation</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RuntimeControl</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>IoEmulation</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XcRTLibraryFile</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>AllowExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>GenerateExtraOutput</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XExtraOutOverride</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ExtraOutputFile</name>
-          <state>RTOSDemo.sim</state>
-        </option>
-        <option>
-          <name>ExtraOutputFormat</name>
-          <version>11</version>
-          <state>60</state>
-        </option>
-        <option>
-          <name>ExtraFormatVariant</name>
-          <version>8</version>
-          <state>2</state>
-        </option>
-        <option>
-          <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>xcProgramEntryLabelSelect</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ListOutputFormat</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>BufferedTermOutput</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OverlaySystemMap</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>RawBinaryFile</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySymbol</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinarySegment</name>
-          <state></state>
-        </option>
-        <option>
-          <name>RawBinaryAlign</name>
-          <state></state>
-        </option>
-        <option>
-          <name>XLinkMisraHandler</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CrcAlign</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>CrcInitialValue</name>
           <state>0x0</state>
+        </option>
+        <option>
+          <name>DoCrc</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkBufferedTerminalOutput</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
     <settings>
-      <name>XAR</name>
-      <archiveVersion>2</archiveVersion>
+      <name>IARCHIVE</name>
+      <archiveVersion>0</archiveVersion>
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
-          <name>XARInputs</name>
+          <name>IarchiveInputs</name>
           <state></state>
         </option>
         <option>
-          <name>XAROverride</name>
+          <name>IarchiveOverride</name>
           <state>0</state>
         </option>
         <option>
-          <name>XAROutput</name>
+          <name>IarchiveOutput</name>
           <state>###Unitialized###</state>
         </option>
       </data>
@@ -4230,7 +3150,6 @@
       <name>$PROJ_DIR$\webserver\uIP_Task.c</name>
       <excluded>
         <configuration>ARM - lwIP - D</configuration>
-        <configuration>ARM - lwIP - R</configuration>
       </excluded>
     </file>
   </group>
@@ -4246,7 +3165,7 @@
         <settings>
           <name>ICCARM</name>
           <data>
-            <version>14</version>
+            <version>19</version>
             <wantNonLocal>1</wantNonLocal>
             <debug>1</debug>
             <option>
@@ -4312,33 +3231,12 @@
               <state>1</state>
             </option>
             <option>
-              <name>CCOptSizeSpeed</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimization</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
               <name>CCAllowList</name>
               <version>1</version>
               <state>0000000</state>
             </option>
             <option>
-              <name>CCObjUseModuleName</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCObjModuleName</name>
-              <state></state>
-            </option>
-            <option>
               <name>CCDebugInfo</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IProcessorMode</name>
               <state>1</state>
             </option>
             <option>
@@ -4347,14 +3245,6 @@
             </option>
             <option>
               <name>IProcessor</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IStackAlign</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IInterwork</name>
               <state>1</state>
             </option>
             <option>
@@ -4395,7 +3285,7 @@
             </option>
             <option>
               <name>OutputFile</name>
-              <state>$FILE_BNAME$.r79</state>
+              <state>$FILE_BNAME$.o</state>
             </option>
             <option>
               <name>CCLangSelect</name>
@@ -4404,23 +3294,6 @@
             <option>
               <name>CCLibConfigHeader</name>
               <state>1</state>
-            </option>
-            <option>
-              <name>CCOptSizeSpeedSlave</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimizationSlave</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCCodeFunctions</name>
-              <state>CODE</state>
-            </option>
-            <option>
-              <name>CCData</name>
-              <state>DATA</state>
             </option>
             <option>
               <name>PreInclude</name>
@@ -4433,18 +3306,6 @@
             </option>
             <option>
               <name>CompilerMisraOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleType</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeCmdlineProducer</name>
               <state>0</state>
             </option>
             <option>
@@ -4466,8 +3327,28 @@
               <state>$TOOLKIT_DIR$\INC\</state>
             </option>
             <option>
-              <name>CCInlineThreshold</name>
+              <name>CCCodeSection</name>
+              <state>.text</state>
+            </option>
+            <option>
+              <name>IInterwork2</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>IProcessorMode2</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>CCOptLevel</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>CCOptStrategy</name>
               <version>0</version>
+              <state>0</state>
+            </option>
+            <option>
+              <name>CCOptLevelSlave</name>
               <state>1</state>
             </option>
           </data>
@@ -4478,7 +3359,7 @@
         <settings>
           <name>ICCARM</name>
           <data>
-            <version>14</version>
+            <version>19</version>
             <wantNonLocal>1</wantNonLocal>
             <debug>1</debug>
             <option>
@@ -4547,33 +3428,12 @@
               <state>1</state>
             </option>
             <option>
-              <name>CCOptSizeSpeed</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimization</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
               <name>CCAllowList</name>
               <version>1</version>
               <state>0000000</state>
             </option>
             <option>
-              <name>CCObjUseModuleName</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCObjModuleName</name>
-              <state></state>
-            </option>
-            <option>
               <name>CCDebugInfo</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IProcessorMode</name>
               <state>1</state>
             </option>
             <option>
@@ -4582,14 +3442,6 @@
             </option>
             <option>
               <name>IProcessor</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IStackAlign</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IInterwork</name>
               <state>1</state>
             </option>
             <option>
@@ -4630,7 +3482,7 @@
             </option>
             <option>
               <name>OutputFile</name>
-              <state>$FILE_BNAME$.r79</state>
+              <state>$FILE_BNAME$.o</state>
             </option>
             <option>
               <name>CCLangSelect</name>
@@ -4639,23 +3491,6 @@
             <option>
               <name>CCLibConfigHeader</name>
               <state>1</state>
-            </option>
-            <option>
-              <name>CCOptSizeSpeedSlave</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimizationSlave</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCCodeFunctions</name>
-              <state>CODE</state>
-            </option>
-            <option>
-              <name>CCData</name>
-              <state>DATA</state>
             </option>
             <option>
               <name>PreInclude</name>
@@ -4668,18 +3503,6 @@
             </option>
             <option>
               <name>CompilerMisraOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleType</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeCmdlineProducer</name>
               <state>0</state>
             </option>
             <option>
@@ -4701,8 +3524,28 @@
               <state>$TOOLKIT_DIR$\INC\</state>
             </option>
             <option>
-              <name>CCInlineThreshold</name>
+              <name>CCCodeSection</name>
+              <state>.text</state>
+            </option>
+            <option>
+              <name>IInterwork2</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>IProcessorMode2</name>
+              <state>0</state>
+            </option>
+            <option>
+              <name>CCOptLevel</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>CCOptStrategy</name>
               <version>0</version>
+              <state>0</state>
+            </option>
+            <option>
+              <name>CCOptLevelSlave</name>
               <state>1</state>
             </option>
           </data>
@@ -4713,7 +3556,7 @@
         <settings>
           <name>ICCARM</name>
           <data>
-            <version>14</version>
+            <version>19</version>
             <wantNonLocal>0</wantNonLocal>
             <debug>1</debug>
             <option>
@@ -4780,33 +3623,12 @@
               <state>1</state>
             </option>
             <option>
-              <name>CCOptSizeSpeed</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimization</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
               <name>CCAllowList</name>
               <version>1</version>
               <state>0000000</state>
             </option>
             <option>
-              <name>CCObjUseModuleName</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCObjModuleName</name>
-              <state></state>
-            </option>
-            <option>
               <name>CCDebugInfo</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IProcessorMode</name>
               <state>1</state>
             </option>
             <option>
@@ -4815,14 +3637,6 @@
             </option>
             <option>
               <name>IProcessor</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IStackAlign</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IInterwork</name>
               <state>1</state>
             </option>
             <option>
@@ -4863,7 +3677,7 @@
             </option>
             <option>
               <name>OutputFile</name>
-              <state>$FILE_BNAME$.r79</state>
+              <state>$FILE_BNAME$.o</state>
             </option>
             <option>
               <name>CCLangSelect</name>
@@ -4872,23 +3686,6 @@
             <option>
               <name>CCLibConfigHeader</name>
               <state>1</state>
-            </option>
-            <option>
-              <name>CCOptSizeSpeedSlave</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimizationSlave</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCCodeFunctions</name>
-              <state>CODE</state>
-            </option>
-            <option>
-              <name>CCData</name>
-              <state>DATA</state>
             </option>
             <option>
               <name>PreInclude</name>
@@ -4901,18 +3698,6 @@
             </option>
             <option>
               <name>CompilerMisraOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleType</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeCmdlineProducer</name>
               <state>0</state>
             </option>
             <option>
@@ -4939,245 +3724,28 @@
               <state>$TOOLKIT_DIR$\INC\</state>
             </option>
             <option>
-              <name>CCInlineThreshold</name>
+              <name>CCCodeSection</name>
+              <state>.text</state>
+            </option>
+            <option>
+              <name>IInterwork2</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>IProcessorMode2</name>
+              <state>0</state>
+            </option>
+            <option>
+              <name>CCOptLevel</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>CCOptStrategy</name>
               <version>0</version>
-              <state>1</state>
-            </option>
-          </data>
-        </settings>
-      </configuration>
-      <configuration>
-        <name>ARM - lwIP - R</name>
-        <settings>
-          <name>ICCARM</name>
-          <data>
-            <version>14</version>
-            <wantNonLocal>1</wantNonLocal>
-            <debug>0</debug>
-            <option>
-              <name>CCDefines</name>
-              <state>STR91X_IAR</state>
-              <state>_RUN_TASK_IN_ARM_MODE_</state>
-              <state>STACK_LWIP</state>
-            </option>
-            <option>
-              <name>CCPreprocFile</name>
               <state>0</state>
             </option>
             <option>
-              <name>CCPreprocComments</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCPreprocLine</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCListCFile</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCListCMnemonics</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCListCMessages</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCListAssFile</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCListAssSource</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCEnableRemarks</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCDiagSuppress</name>
-              <state>pe191,pa082, pe144, pe550, pe513, pe167</state>
-            </option>
-            <option>
-              <name>CCDiagRemark</name>
-              <state></state>
-            </option>
-            <option>
-              <name>CCDiagWarning</name>
-              <state></state>
-            </option>
-            <option>
-              <name>CCDiagError</name>
-              <state></state>
-            </option>
-            <option>
-              <name>CCObjPrefix</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptSizeSpeed</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimization</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCAllowList</name>
-              <version>1</version>
-              <state>0000000</state>
-            </option>
-            <option>
-              <name>CCObjUseModuleName</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCObjModuleName</name>
-              <state></state>
-            </option>
-            <option>
-              <name>CCDebugInfo</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IProcessorMode</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IEndianMode</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IProcessor</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IStackAlign</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IInterwork</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IExtraOptionsCheck</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>IExtraOptions</name>
-              <state></state>
-            </option>
-            <option>
-              <name>CCLangConformance</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCSignedPlainChar</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCRequirePrototypes</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCMultibyteSupport</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCDiagWarnAreErr</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCCompilerRuntimeInfo</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>IFpuProcessor</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>OutputFile</name>
-              <state>$FILE_BNAME$.r79</state>
-            </option>
-            <option>
-              <name>CCLangSelect</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCLibConfigHeader</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptSizeSpeedSlave</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimizationSlave</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCCodeFunctions</name>
-              <state>CODE</state>
-            </option>
-            <option>
-              <name>CCData</name>
-              <state>DATA</state>
-            </option>
-            <option>
-              <name>PreInclude</name>
-              <state></state>
-            </option>
-            <option>
-              <name>CompilerMisraRules</name>
-              <version>0</version>
-              <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-            </option>
-            <option>
-              <name>CompilerMisraOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleType</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeCmdlineProducer</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCIncludePath2</name>
-              <state>$PROJ_DIR$\</state>
-              <state>$PROJ_DIR$\library\include\</state>
-              <state>$PROJ_DIR$\..\common\include</state>
-              <state>$PROJ_DIR$\..\..\source\include</state>
-              <state>$PROJ_DIR$\STCode</state>
-              <state>$PROJ_DIR$\..\common\ethernet\lwip\include</state>
-              <state>$PROJ_DIR$\..\common\ethernet\lwip\include\ipv4</state>
-              <state>$PROJ_DIR$\..\common\ethernet\lwip\include\lwip</state>
-              <state>$PROJ_DIR$\..\common\ethernet\lwip\include\netif</state>
-              <state>$PROJ_DIR$\..\common\ethernet\lwip\include\ipv4\lwip</state>
-              <state>$PROJ_DIR$\lwip\include\lwIPWebServer</state>
-              <state>$PROJ_DIR$\lwip\include</state>
-            </option>
-            <option>
-              <name>CCStdIncCheck</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCStdIncludePath</name>
-              <state>$TOOLKIT_DIR$\INC\</state>
-            </option>
-            <option>
-              <name>CCInlineThreshold</name>
-              <version>0</version>
+              <name>CCOptLevelSlave</name>
               <state>1</state>
             </option>
           </data>
@@ -5188,7 +3756,7 @@
         <settings>
           <name>ICCARM</name>
           <data>
-            <version>14</version>
+            <version>19</version>
             <wantNonLocal>1</wantNonLocal>
             <debug>0</debug>
             <option>
@@ -5253,33 +3821,12 @@
               <state>1</state>
             </option>
             <option>
-              <name>CCOptSizeSpeed</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimization</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
               <name>CCAllowList</name>
               <version>1</version>
               <state>0000000</state>
             </option>
             <option>
-              <name>CCObjUseModuleName</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCObjModuleName</name>
-              <state></state>
-            </option>
-            <option>
               <name>CCDebugInfo</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IProcessorMode</name>
               <state>1</state>
             </option>
             <option>
@@ -5288,14 +3835,6 @@
             </option>
             <option>
               <name>IProcessor</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IStackAlign</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>IInterwork</name>
               <state>1</state>
             </option>
             <option>
@@ -5336,7 +3875,7 @@
             </option>
             <option>
               <name>OutputFile</name>
-              <state>$FILE_BNAME$.r79</state>
+              <state>$FILE_BNAME$.o</state>
             </option>
             <option>
               <name>CCLangSelect</name>
@@ -5345,23 +3884,6 @@
             <option>
               <name>CCLibConfigHeader</name>
               <state>1</state>
-            </option>
-            <option>
-              <name>CCOptSizeSpeedSlave</name>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCOptimizationSlave</name>
-              <version>0</version>
-              <state>1</state>
-            </option>
-            <option>
-              <name>CCCodeFunctions</name>
-              <state>CODE</state>
-            </option>
-            <option>
-              <name>CCData</name>
-              <state>DATA</state>
             </option>
             <option>
               <name>PreInclude</name>
@@ -5374,18 +3896,6 @@
             </option>
             <option>
               <name>CompilerMisraOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeOverride</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleType</name>
-              <state>0</state>
-            </option>
-            <option>
-              <name>CCModuleTypeCmdlineProducer</name>
               <state>0</state>
             </option>
             <option>
@@ -5407,8 +3917,28 @@
               <state>$TOOLKIT_DIR$\INC\</state>
             </option>
             <option>
-              <name>CCInlineThreshold</name>
+              <name>CCCodeSection</name>
+              <state>.text</state>
+            </option>
+            <option>
+              <name>IInterwork2</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>IProcessorMode2</name>
+              <state>0</state>
+            </option>
+            <option>
+              <name>CCOptLevel</name>
+              <state>1</state>
+            </option>
+            <option>
+              <name>CCOptStrategy</name>
               <version>0</version>
+              <state>0</state>
+            </option>
+            <option>
+              <name>CCOptLevelSlave</name>
               <state>1</state>
             </option>
           </data>
@@ -5595,23 +4125,16 @@
   <group>
     <name>System Files</name>
     <file>
-      <name>$PROJ_DIR$\91x_init_IAR.s</name>
+      <name>$PROJ_DIR$\91x_init.s</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\91x_vect_IAR.s</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\lnkarm_flash.xcl</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\lnkarm_ram.xcl</name>
+      <name>$PROJ_DIR$\91x_vect.s</name>
     </file>
   </group>
   <group>
     <name>uIP</name>
     <excluded>
       <configuration>ARM - lwIP - D</configuration>
-      <configuration>ARM - lwIP - R</configuration>
     </excluded>
     <file>
       <name>$PROJ_DIR$\..\Common\ethernet\uIP\uip-1.0\apps\webserver\http-strings.c</name>

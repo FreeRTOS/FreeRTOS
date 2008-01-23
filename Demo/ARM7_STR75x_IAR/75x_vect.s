@@ -22,7 +22,7 @@
 
 
                 PROGRAM	?RESET
-		COMMON	INTVEC:CODE(2)			
+		SECTION	.intvec:CODE(2)			
 		CODE32
 
 EIC_base_addr         EQU    0xFFFFF800 ; EIC base address
@@ -35,7 +35,7 @@ IPR_off_addr          EQU    0x40       ; Interrupt Pending Register
 ;              Import  the __program_start address from 75x_init.s
 ;*******************************************************************************
 
-        IMPORT  __program_start
+        IMPORT  __iar_program_start
 
 
 
@@ -113,7 +113,7 @@ IPR_off_addr          EQU    0x40       ; Interrupt Pending Register
 ;               Exception handlers address table
 ;*******************************************************************************
 
-Reset_Addr      DCD     __program_start
+Reset_Addr      DCD     __iar_program_start
 Undefined_Addr  DCD     UndefinedHandler
 SWI_Addr        DCD     vPortYieldProcessor
 Prefetch_Addr   DCD     PrefetchAbortHandler

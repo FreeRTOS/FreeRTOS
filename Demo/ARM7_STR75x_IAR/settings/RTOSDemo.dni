@@ -24,6 +24,10 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
+[CodeCoverage]
+Enabled=_ 0
+[Profiling]
+Enabled=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

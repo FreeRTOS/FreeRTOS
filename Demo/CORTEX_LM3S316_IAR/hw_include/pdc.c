@@ -78,7 +78,8 @@ PDCInit(void)
     //
     // Configure the SSI port.
     //
-    SSIConfig(SSI_BASE, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 1000000, 8);
+    SSIConfigSetExpClk(SSI_BASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0,
+                       SSI_MODE_MASTER, 1000000, 8);
     SSIEnable(SSI_BASE);
 
     //

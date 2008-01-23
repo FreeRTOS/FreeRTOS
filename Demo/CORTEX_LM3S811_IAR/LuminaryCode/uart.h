@@ -94,6 +94,8 @@ extern void UARTIntEnable(unsigned long ulBase, unsigned long ulIntFlags);
 extern void UARTIntDisable(unsigned long ulBase, unsigned long ulIntFlags);
 extern unsigned long UARTIntStatus(unsigned long ulBase, tBoolean bMasked);
 extern void UARTIntClear(unsigned long ulBase, unsigned long ulIntFlags);
+extern void UARTConfigSetExpClk(unsigned long ulBase, unsigned long ulUARTClk,
+                                unsigned long ulBaud, unsigned long ulConfig);
 
 #ifdef __cplusplus
 }

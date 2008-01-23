@@ -90,7 +90,7 @@
 /* Constants to setup the PLL. */
 #define mainPLL_MUL			( ( unsigned portLONG ) ( 12 - 1 ) )
 #define mainPLL_DIV			( ( unsigned portLONG ) 0x0000 )
-#define mainCPU_CLK_DIV		( ( unsigned portLONG ) 0x0004 )
+#define mainCPU_CLK_DIV		( ( unsigned portLONG ) 0x0003 )
 #define mainPLL_ENABLE		( ( unsigned portLONG ) 0x0001 )
 #define mainPLL_CONNECT		( ( ( unsigned portLONG ) 0x0002 ) | mainPLL_ENABLE )
 #define mainPLL_FEED_BYTE1	( ( unsigned portLONG ) 0xaa )
@@ -266,12 +266,18 @@ static void prvSetupHardware( void )
 	PLLFEED = mainPLL_FEED_BYTE2;
 	while( !( PLLSTAT & mainPLL_CONNECTED ) ); 
 	
-	/* Setup and turn on the MAM.  Three cycle access is used due to the fast
+	/* 
+	This code is commented out as the MAM does not work on the original revision
+	LPC2368 chips.  If using Rev B chips then you can increase the speed though
+	the use of the MAM.
+	
+	Setup and turn on the MAM.  Three cycle access is used due to the fast
 	PLL used.  It is possible faster overall performance could be obtained by
-	tuning the MAM and PLL settings. */
+	tuning the MAM and PLL settings.
 	MAMCR = 0;
 	MAMTIM = mainMAM_TIM_3;
 	MAMCR = mainMAM_MODE_FULL;
+	*/
 	
 	/* Setup the led's on the MCB2300 board */
 	vParTestInitialise();

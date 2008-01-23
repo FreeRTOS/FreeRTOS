@@ -81,6 +81,7 @@
 #include "integer.h"
 #include "PollQ.h"
 #include "blocktim.h"
+#include "recmutex.h"
 
 /* Hardware configuration definitions. */
 #define mainBUS_CLK_FULL					( ( unsigned portCHAR ) 0x01 )
@@ -171,6 +172,7 @@ int main( void )
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
     vCreateBlockTimeTasks();
+    vStartRecursiveMutexTasks();
 
 	/* Start the tasks defined within this file. */
 	xTaskCreate( vLEDTask, "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
@@ -255,6 +257,11 @@ const portCHAR * const pcFailMessage = "FAIL\n";
 		}
 
 		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			xErrorOccurred = pdTRUE;
+		}
+
+		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;
 		}

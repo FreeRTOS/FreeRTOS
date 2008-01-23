@@ -3,7 +3,7 @@
 <Workspace>
   <ConfigDictionary>
     
-  <CurrentConfigs><Project>rtosdemo/Flash Debug</Project></CurrentConfigs></ConfigDictionary>
+  <CurrentConfigs><Project>rtosdemo/Flash Bin</Project></CurrentConfigs></ConfigDictionary>
   <Desktop>
     <Static>
       <Workspace>
@@ -11,7 +11,7 @@
           
           
           
-        <Column0>221</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>236</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build><ColumnWidth0>18</ColumnWidth0><ColumnWidth1>1155</ColumnWidth1><ColumnWidth2>308</ColumnWidth2><ColumnWidth3>77</ColumnWidth3></Build>
       <Debug-Log/>
@@ -28,7 +28,7 @@
     <Windows>
       
       
-    <Wnd0>
+    <Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-17425-14382</Identity>
@@ -36,11 +36,11 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/Demo Source</ExpandedNode><ExpandedNode>rtosdemo/Scheduler Source</ExpandedNode><ExpandedNode>rtosdemo/System Files</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-4084-16269</Identity>
@@ -56,20 +56,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>18</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Board.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>952</SelStart><SelEnd>969</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s79</Filename><XPos>0</XPos><YPos>142</YPos><SelStart>6503</SelStart><SelEnd>6517</SelEnd></Tab><ActiveTab>2</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0084c368><key>iaridepm1</key></Toolbar-0084c368></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>659</Bottom><Right>295</Right><x>-2</x><y>-2</y><xscreen>30</xscreen><yscreen>30</yscreen><sizeHorzCX>18750</sizeHorzCX><sizeHorzCY>26809</sizeHorzCY><sizeVertCX>185625</sizeVertCX><sizeVertCY>590705</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>413</Bottom><Right>1602</Right><x>-2</x><y>-2</y><xscreen>1604</xscreen><yscreen>415</yscreen><sizeHorzCX>1002500</sizeHorzCX><sizeHorzCY>370866</sizeHorzCY><sizeVertCX>18750</sizeVertCX><sizeVertCY>26809</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-01284260><key>iaridepm.enu1</key></Toolbar-01284260></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>576</Bottom><Right>310</Right><x>-2</x><y>-2</y><xscreen>32</xscreen><yscreen>26</yscreen><sizeHorzCX>19048</sizeHorzCX><sizeHorzCY>26477</sizeHorzCY><sizeVertCX>185714</sizeVertCX><sizeVertCY>588595</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>362</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>364</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>370672</sizeHorzCY><sizeVertCX>19048</sizeVertCX><sizeVertCY>26477</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

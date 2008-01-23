@@ -129,6 +129,8 @@ extern void I2CSlaveIntDisable(unsigned long ulBase);
 extern void I2CSlaveIntEnable(unsigned long ulBase);
 extern tBoolean I2CSlaveIntStatus(unsigned long ulBase, tBoolean bMasked);
 extern unsigned long I2CSlaveStatus(unsigned long ulBase);
+extern void I2CMasterInitExpClk(unsigned long ulBase, unsigned long ulI2CClk,
+                                tBoolean bFast);
 
 #ifdef __cplusplus
 }

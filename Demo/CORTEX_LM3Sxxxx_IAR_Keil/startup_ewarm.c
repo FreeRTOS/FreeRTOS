@@ -38,7 +38,6 @@
 // Forward declaration of the default fault handlers.
 //
 //*****************************************************************************
-void ResetISR(void);
 static void NmiSR(void);
 static void FaultISR(void);
 static void IntDefaultHandler(void);
@@ -55,7 +54,7 @@ static void IntDefaultHandler(void);
 // The entry point for the application.
 //
 //*****************************************************************************
-extern int main(void);
+extern void __iar_program_start(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
 extern void vEMAC_ISR( void );
@@ -69,7 +68,7 @@ extern Timer0IntHandler( void );
 #ifndef STACK_SIZE
 #define STACK_SIZE                              64
 #endif
-static unsigned long pulStack[STACK_SIZE];
+static unsigned long pulStack[STACK_SIZE] @ ".noinit";
 
 //*****************************************************************************
 //
@@ -92,11 +91,11 @@ uVectorEntry;
 // 0x0000.0000.
 //
 //*****************************************************************************
-__root const uVectorEntry g_pfnVectors[] @ "INTVEC" =
+__root const uVectorEntry __vector_table[] @ ".intvec" =
 {
     { .ulPtr = (unsigned long)pulStack + sizeof(pulStack) },
                                             // The initial stack pointer
-    ResetISR,                               // The reset handler
+    __iar_program_start,                    // The reset handler
     NmiSR,                                  // The NMI handler
     FaultISR,                               // The hard fault handler
     IntDefaultHandler,                      // The MPU fault handler
@@ -157,58 +156,6 @@ __root const uVectorEntry g_pfnVectors[] @ "INTVEC" =
     IntDefaultHandler                       // Power Island
 };
 
-//*****************************************************************************
-//
-// The following are constructs created by the linker, indicating where the
-// the "data" and "bss" segments reside in memory.  The initializers for the
-// for the "data" segment resides immediately following the "text" segment.
-//
-//*****************************************************************************
-#pragma segment="DATA_ID"
-#pragma segment="DATA_I"
-#pragma segment="DATA_Z"
-
-//*****************************************************************************
-//
-// This is the code that gets called when the processor first starts execution
-// following a reset event.  Only the absolutely necessary set is performed,
-// after which the application supplied entry() routine is called.  Any fancy
-// actions (such as making decisions based on the reset cause register, and
-// resetting the bits in that register) are left solely in the hands of the
-// application.
-//
-//*****************************************************************************
-void
-ResetISR(void)
-{
-    unsigned long *pulSrc, *pulDest, *pulEnd;
-
-    //
-    // Copy the data segment initializers from flash to SRAM.
-    //
-    pulSrc = __segment_begin("DATA_ID");
-    pulDest = __segment_begin("DATA_I");
-    pulEnd = __segment_end("DATA_I");
-    while(pulDest < pulEnd)
-    {
-        *pulDest++ = *pulSrc++;
-    }
-
-    //
-    // Zero fill the bss segment.
-    //
-    pulDest = __segment_begin("DATA_Z");
-    pulEnd = __segment_end("DATA_Z");
-    while(pulDest < pulEnd)
-    {
-        *pulDest++ = 0;
-    }
-
-    //
-    // Call the application's entry point.
-    //
-    main();
-}
 
 //*****************************************************************************
 //

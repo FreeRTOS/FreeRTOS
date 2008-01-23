@@ -9,6 +9,20 @@ Watch1=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
 [Low Level]
 Pipeline mode=1
 Initialized=0
+[CodeCoverage]
+Enabled=_ 0
+[Profiling]
+Enabled=0
+[StackPlugin]
+Enabled=1
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnHow=0
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -20,3 +34,6 @@ LogFile=_ ""
 mode=0
 [Breakpoints]
 Count=0
+[TraceHelper]
+Enabled=0
+ShowSource=1

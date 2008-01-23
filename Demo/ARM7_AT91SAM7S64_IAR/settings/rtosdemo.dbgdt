@@ -8,7 +8,7 @@
           
           
           
-        <Column0>191</Column0><Column1>27</Column1><Column2>27</Column2></ColumnWidths>
+        <Column0>204</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Disassembly>
         
@@ -42,20 +42,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2></Windows>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-18517-20319</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\source\portable\iar\AtmelSAM7S64\lib_AT91SAM7S64.h</Filename><XPos>0</XPos><YPos>615</YPos><SelStart>24806</SelStart><SelEnd>24806</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\USB\USBSample.c</Filename><XPos>0</XPos><YPos>289</YPos><SelStart>10498</SelStart><SelEnd>10498</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\main.c</Filename><XPos>0</XPos><YPos>141</YPos><SelStart>6420</SelStart><SelEnd>6420</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Source\portable\IAR\AtmelSAM7S64\port.c</Filename><XPos>0</XPos><YPos>117</YPos><SelStart>5493</SelStart><SelEnd>5493</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\serial\serial.c</Filename><XPos>0</XPos><YPos>132</YPos><SelStart>5547</SelStart><SelEnd>5547</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Source\portable\MemMang\heap_1.c</Filename><XPos>0</XPos><YPos>82</YPos><SelStart>3650</SelStart><SelEnd>3650</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s79</Filename><XPos>0</XPos><YPos>27</YPos><SelStart>2226</SelStart><SelEnd>2226</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\Common\Minimal\integer.c</Filename><XPos>0</XPos><YPos>77</YPos><SelStart>4024</SelStart><SelEnd>4024</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Source\tasks.c</Filename><XPos>0</XPos><YPos>823</YPos><SelStart>29289</SelStart><SelEnd>29289</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Source\portable\IAR\AtmelSAM7S64\portasm.s79</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>519</SelStart><SelEnd>519</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Source\portable\IAR\AtmelSAM7S64\portmacro.h</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>24</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>E:\Dev\FreeRTOS\Demo\Common\Minimal\semtest.c</Filename><XPos>0</XPos><YPos>166</YPos><SelStart>7856</SelStart><SelEnd>7856</SelEnd></Tab><ActiveTab>12</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>25</YPos><SelStart>1726</SelStart><SelEnd>1726</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s79</Filename><XPos>0</XPos><YPos>19</YPos><SelStart>1527</SelStart><SelEnd>1527</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s</Filename><XPos>0</XPos><YPos>52</YPos><SelStart>3250</SelStart><SelEnd>3250</SelEnd></Tab><ActiveTab>2</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Source\portable\IAR\AtmelSAM7S64\port.c</Filename><XPos>0</XPos><YPos>217</YPos><SelStart>8345</SelStart><SelEnd>8345</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0084f8b0><key>IarIdePM1</key></Toolbar-0084f8b0><Toolbar-0272db18><key>DebuggerGui1</key></Toolbar-0272db18></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>1072</Bottom><Right>265</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>166875</sizeVertCX><sizeVertCY>959785</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes/></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-01284260><key>iaridepm.enu1</key></Toolbar-01284260><Toolbar-070bd990><key>debuggergui.enu1</key></Toolbar-070bd990></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>278</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>166667</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>200</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

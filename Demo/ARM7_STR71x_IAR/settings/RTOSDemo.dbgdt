@@ -9,7 +9,7 @@
           
           
           
-        <Column0>129</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>273</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Disassembly>
         <PreferedWindows>
@@ -21,7 +21,7 @@
         
         
         
-      <MixedMode>1</MixedMode><CodeCovEnabled>0</CodeCovEnabled><CodeCovShow>0</CodeCovShow></Disassembly>
+      <CodeCovEnabled>0</CodeCovEnabled><MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow></Disassembly>
       <Debug-Log/>
       <Build>
         
@@ -33,7 +33,7 @@
     <Windows>
       
       
-    <Wnd2>
+    <Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-24393-22702</Identity>
@@ -45,7 +45,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
         <Tabs>
           <Tab>
             <Identity>TabID-13122-22708</Identity>
@@ -61,20 +61,20 @@
           </Tab>
         <Tab><Identity>TabID-19116-28152</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3><Wnd0><Tabs><Tab><Identity>TabID-10243-6871</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><REG1>0</REG1><REG2>0</REG2><Group>0</Group><States>1</States><State0>CPSR</State0></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd0></Windows>
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-10802-25870</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
     <Editor>
       
       
       
       
-    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_STR71x_IAR\main.c</Filename><XPos>0</XPos><YPos>104</YPos><SelStart>4900</SelStart><SelEnd>4900</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_STR71x_IAR\Library\71x_it.c</Filename><XPos>0</XPos><YPos>48</YPos><SelStart>2578</SelStart><SelEnd>2578</SelEnd></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0084c368><key>iaridepm1</key></Toolbar-0084c368><Toolbar-011f0628><key>debuggergui1</key></Toolbar-011f0628></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>853</Bottom><Right>203</Right><x>-2</x><y>-2</y><xscreen>125</xscreen><yscreen>125</yscreen><sizeHorzCX>78125</sizeHorzCX><sizeHorzCY>111706</sizeHorzCY><sizeVertCX>128124</sizeVertCX><sizeVertCY>764075</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>853</Bottom><Right>447</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>125000</sizeHorzCX><sizeHorzCY>178731</sizeHorzCY><sizeVertCX>280625</sizeVertCX><sizeVertCY>764075</sizeVertCY></Rect></Wnd0></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>219</Bottom><Right>1602</Right><x>-2</x><y>-2</y><xscreen>1604</xscreen><yscreen>221</yscreen><sizeHorzCX>1002500</sizeHorzCX><sizeHorzCY>197497</sizeHorzCY><sizeVertCX>78125</sizeVertCX><sizeVertCY>111706</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-01284260><key>iaridepm.enu1</key></Toolbar-01284260><Toolbar-0a3cb9d0><key>debuggergui.enu1</key></Toolbar-0a3cb9d0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>746</Bottom><Right>347</Right><x>-2</x><y>-2</y><xscreen>109</xscreen><yscreen>110</yscreen><sizeHorzCX>77857</sizeHorzCX><sizeHorzCY>112016</sizeHorzCY><sizeVertCX>249286</sizeVertCX><sizeVertCY>761711</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>746</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>761711</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>192</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>194</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>197556</sizeHorzCY><sizeVertCX>77857</sizeVertCX><sizeVertCY>112016</sizeVertCY></Rect></Wnd4></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

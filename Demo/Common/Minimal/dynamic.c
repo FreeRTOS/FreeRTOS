@@ -351,6 +351,12 @@ portBASE_TYPE xGotValue;
 			}
 			xTaskResumeAll();
 
+			#if configUSE_PREEMPTION == 0
+			{
+				taskYIELD();
+			}
+			#endif
+
 		} while( xGotValue == pdFALSE );
 
 		if( ulReceivedValue != ulExpectedValue )

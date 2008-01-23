@@ -15,6 +15,8 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[CodeCoverage]
+Enabled=_ 0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -25,8 +27,7 @@ LogFile=_ ""
 [Disassemble mode]
 mode=1
 [Breakpoints]
-Bp0=_ "Log" "Memory8:0x20000850" 0 0 0 0 "" 0 "" 0
-Count=1
+Count=0
 [TraceHelper]
 Enabled=0
 ShowSource=1

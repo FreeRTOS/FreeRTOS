@@ -19,13 +19,13 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
 	Also see http://www.SafeRTOS.com a version that has been certified for use
@@ -67,7 +67,7 @@ task. */
 /* FIFO setting for the UART.  The FIFO is not used to create a better test. */
 #define commsFIFO_SET				( 0x10 )
 
-/* The string that is transmitted on the UART contains sequentially the 
+/* The string that is transmitted on the UART contains sequentially the
 characters from commsFIRST_TX_CHAR to commsLAST_TX_CHAR. */
 #define commsFIRST_TX_CHAR '0'
 #define commsLAST_TX_CHAR 'z'
@@ -114,7 +114,7 @@ void vSerialInit( void )
 	GPIODirModeSet( GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_DIR_MODE_HW );
 
 	/* Configure the UART for 8-N-1 operation. */
-	UARTConfigSet( UART0_BASE, commsBAUD_RATE, UART_CONFIG_WLEN_8 | UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE );
+	UARTConfigSetExpClk( UART0_BASE, SysCtlClockGet(), commsBAUD_RATE, UART_CONFIG_WLEN_8 | UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE );
 
 	/* We dont want to use the fifo.  This is for test purposes to generate
 	as many interrupts as possible. */
@@ -122,6 +122,7 @@ void vSerialInit( void )
 
 	/* Enable both Rx and Tx interrupts. */
 	HWREG( UART0_BASE + UART_O_IM ) |= ( UART_INT_TX | UART_INT_RX );
+	IntPrioritySet( INT_UART0, configKERNEL_INTERRUPT_PRIORITY );
 	IntEnable( INT_UART0 );
 }
 /*-----------------------------------------------------------*/
@@ -209,7 +210,7 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE;
 		if( ( HWREG(UART0_BASE + UART_O_FR ) & UART_FR_RXFF ) )
 		{
 			/* Get the char from the buffer and post it onto the queue of
-			Rxed chars.  Posting the character should wake the task that is 
+			Rxed chars.  Posting the character should wake the task that is
 			blocked on the queue waiting for characters. */
 			cRxedChar = ( portCHAR ) HWREG( UART0_BASE + UART_O_DR );
 			xTaskWokenByPost = xQueueSendFromISR( xCommsQueue, &cRxedChar, xTaskWokenByPost );
@@ -234,7 +235,7 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE;
 	{
 		/* If a task was woken by the character being received then we force
 		a context switch to occur in case the task is of higher priority than
-		the currently executing task (i.e. the task that this interrupt 
+		the currently executing task (i.e. the task that this interrupt
 		interrupted.) */
 		portEND_SWITCHING_ISR( xTaskWokenByPost );
 	}
@@ -274,8 +275,8 @@ static portCHAR cRxedChar, cExpectedChar;
 		{
 			if( cExpectedChar == commsLAST_TX_CHAR )
 			{
-				/* We have reached the end of the string - we now expect to 
-				receive the first character in the string again.   The LED is 
+				/* We have reached the end of the string - we now expect to
+				receive the first character in the string again.   The LED is
 				toggled to indicate that the entire string was received without
 				error. */
 				vParTestToggleLED( commsRX_LED );

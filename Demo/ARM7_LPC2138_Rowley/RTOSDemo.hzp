@@ -1,55 +1,56 @@
 <!DOCTYPE CrossStudio_Project_File>
-<solution version="1" Name="RTOSDemo" >
-  <project Name="RTOSDemo" >
-    <configuration arm_target_loader_parameter="14745600" Target="LPC2138" arm_simulator_memory_simulation_parameter="LPC21;0x80000;0x10000" property_groups_file_path="$(StudioDir)/targets/Philips_LPC210X/propertyGroups.xml" oscillator_frequency="14.7456MHz" linker_memory_map_file="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC2138_MemoryMap.xml" gcc_entry_point="reset_handler" arm_architecture="v4T" linker_additional_files="$(StudioDir)/lib/liblpc2000$(LibExt)$(LIB)" project_directory="" link_include_startup_code="No" project_type="Executable" Name="Common" arm_target_debug_interface_type="ARM7TDI" arm_core_type="ARM7TDMI-S" arm_simulator_memory_simulation_filename="$(StudioDir)/targets/Philips_LPC210X/LPC2000SimulatorMemory.dll" />
-    <configuration linker_section_placement_file="$(StudioDir)/targets/sram_placement.xml" target_reset_script="SRAMReset()" Name="RAM" Placement="RAM" />
-    <configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/Philips_LPC210X/Release/Loader.elf" linker_section_placement_file="$(StudioDir)/targets/flash_placement.xml" target_reset_script="FLASHReset()" arm_target_flash_loader_type="Comms Channel Loader" Name="Flash" Placement="Flash" />
-    <folder Name="Source Files" >
-      <configuration filter="c;cpp;cxx;cc;h;s;asm;inc" Name="Common" />
-      <folder Name="RTOS Source" >
-        <file file_name="../../Source/tasks.c" Name="tasks.c" >
-          <configuration build_exclude_from_build="No" Name="THUMB Flash Debug" />
+<solution Name="RTOSDemo" version="1">
+  <project Name="RTOSDemo">
+    <configuration Name="Common" Target="LPC2138" arm_architecture="v4T" arm_core_type="ARM7TDMI-S" arm_simulator_memory_simulation_filename="$(StudioDir)/targets/Philips_LPC210X/LPC2000SimulatorMemory.dll" arm_simulator_memory_simulation_parameter="LPC21;0x80000;0x10000" arm_target_debug_interface_type="ARM7TDI" arm_target_loader_parameter="14745600" gcc_entry_point="reset_handler" link_include_startup_code="No" linker_additional_files="$(StudioDir)/lib/liblpc2000$(LibExt)$(LIB)" linker_memory_map_file="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC2138_MemoryMap.xml" oscillator_frequency="14.7456MHz" project_directory="" project_type="Executable" property_groups_file_path="$(StudioDir)/targets/Philips_LPC210X/propertyGroups.xml"/>
+    <configuration Name="RAM" Placement="RAM" linker_section_placement_file="$(StudioDir)/targets/sram_placement.xml" target_reset_script="SRAMReset()"/>
+    <configuration Name="Flash" Placement="Flash" arm_target_flash_loader_file_path="$(StudioDir)/targets/Philips_LPC210X/Release/Loader.elf" arm_target_flash_loader_type="Comms Channel Loader" linker_section_placement_file="$(StudioDir)/targets/flash_placement.xml" target_reset_script="FLASHReset()"/>
+    <folder Name="Source Files">
+      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc"/>
+      <folder Name="RTOS Source">
+        <file Name="tasks.c" file_name="../../Source/tasks.c">
+          <configuration Name="THUMB Flash Debug" build_exclude_from_build="No"/>
         </file>
-        <file file_name="../../Source/list.c" Name="list.c" />
-        <file file_name="../../Source/queue.c" Name="queue.c" />
-        <file file_name="../../Source/portable/MemMang/heap_1.c" Name="heap_1.c" />
-        <file file_name="../../Source/portable/GCC/ARM7_LPC2000/portISR.c" Name="portISR.c" >
-          <configuration arm_instruction_set="ARM" Name="THUMB" />
+        <file Name="list.c" file_name="../../Source/list.c"/>
+        <file Name="queue.c" file_name="../../Source/queue.c"/>
+        <file Name="heap_1.c" file_name="../../Source/portable/MemMang/heap_1.c"/>
+        <file Name="portISR.c" file_name="../../Source/portable/GCC/ARM7_LPC2000/portISR.c">
+          <configuration Name="THUMB" arm_instruction_set="ARM"/>
         </file>
-        <file file_name="../../Source/portable/GCC/ARM7_LPC2000/port.c" Name="port.c" />
+        <file Name="port.c" file_name="../../Source/portable/GCC/ARM7_LPC2000/port.c"/>
       </folder>
-      <folder Name="Demo Source" >
-        <file file_name="main.c" Name="main.c" />
-        <file file_name="../Common/Minimal/PollQ.c" Name="PollQ.c" />
-        <file file_name="../Common/Minimal/BlockQ.c" Name="BlockQ.c" />
-        <file file_name="../Common/Minimal/death.c" Name="death.c" />
-        <file file_name="../Common/Minimal/dynamic.c" Name="dynamic.c" />
-        <file file_name="../Common/Minimal/integer.c" Name="integer.c" />
-        <file file_name="../Common/Minimal/semtest.c" Name="semtest.c" />
-        <file file_name="mainISR.c" Name="mainISR.c" >
-          <configuration arm_instruction_set="ARM" Name="THUMB" />
+      <folder Name="Demo Source">
+        <file Name="main.c" file_name="main.c"/>
+        <file Name="PollQ.c" file_name="../Common/Minimal/PollQ.c"/>
+        <file Name="BlockQ.c" file_name="../Common/Minimal/BlockQ.c"/>
+        <file Name="death.c" file_name="../Common/Minimal/death.c"/>
+        <file Name="dynamic.c" file_name="../Common/Minimal/dynamic.c"/>
+        <file Name="integer.c" file_name="../Common/Minimal/integer.c"/>
+        <file Name="semtest.c" file_name="../Common/Minimal/semtest.c"/>
+        <file Name="mainISR.c" file_name="mainISR.c">
+          <configuration Name="THUMB" arm_instruction_set="ARM"/>
         </file>
-        <file file_name="../Common/Minimal/blocktim.c" Name="blocktim.c" />
+        <file Name="blocktim.c" file_name="../Common/Minimal/blocktim.c"/>
+        <file Name="recmutex.c" file_name="../Common/Minimal/recmutex.c"/>
       </folder>
     </folder>
-    <folder Name="System Files" >
-      <file file_name="$(StudioDir)/source/crt0.s" Name="crt0.s" />
-      <file file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Startup.s" Name="Philips_LPC210X_Startup.s" />
-      <file file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Target.js" Name="Philips_LPC210X_Target.js" >
-        <configuration Name="Common" file_type="Reset Script" />
+    <folder Name="System Files">
+      <file Name="crt0.s" file_name="$(StudioDir)/source/crt0.s"/>
+      <file Name="Philips_LPC210X_Startup.s" file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Startup.s"/>
+      <file Name="Philips_LPC210X_Target.js" file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Target.js">
+        <configuration Name="Common" file_type="Reset Script"/>
       </file>
     </folder>
-    <file file_name="threads.js" Name="threads.js" />
-    <configuration build_quietly="No" Name="THUMB Flash Debug" />
+    <file Name="threads.js" file_name="threads.js"/>
+    <configuration Name="THUMB Flash Debug" build_quietly="No"/>
   </project>
-  <configuration inherited_configurations="ARM;Flash;Debug" Name="ARM Flash Debug" />
-  <configuration arm_library_instruction_set="ARM" c_preprocessor_definitions="__ARM" arm_instruction_set="ARM" hidden="Yes" Name="ARM" />
-  <configuration c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes" Name="Flash" />
-  <configuration c_preprocessor_definitions="DEBUG" link_include_startup_code="No" gcc_optimization_level="None" build_debug_information="Yes" hidden="Yes" Name="Debug" />
-  <configuration inherited_configurations="ARM;Flash;Release" Name="ARM Flash Release" />
-  <configuration c_preprocessor_definitions="NDEBUG;STARTUP_FROM_RESET" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" hidden="Yes" Name="Release" />
-  <configuration inherited_configurations="THUMB;Flash;Debug" Name="THUMB Flash Debug" />
-  <configuration arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB;THUMB_INTERWORK" arm_instruction_set="THUMB" hidden="Yes" Name="THUMB" />
-  <configuration inherited_configurations="THUMB;Flash;Release" Name="THUMB Flash Release" />
-  <configuration c_preprocessor_definitions="GCC_ARM7;SUPERVISOR_START;VECTORED_IRQ_INTERRUPTS" c_user_include_directories=".;..\\..\\Source\\include;..\\..\\Source\\GCC\\ARM7_LPC2000;..\\Common\\Include" c_additional_options="-fomit-frame-pointer" Name="Common" c_system_include_directories="$(StudioDir)/include;$(StudioDir)/include/targets" />
+  <configuration Name="ARM Flash Debug" inherited_configurations="ARM;Flash;Debug"/>
+  <configuration Name="ARM" arm_instruction_set="ARM" arm_library_instruction_set="ARM" c_preprocessor_definitions="__ARM" hidden="Yes"/>
+  <configuration Name="Flash" c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes"/>
+  <configuration Name="Debug" build_debug_information="Yes" c_preprocessor_definitions="DEBUG" gcc_optimization_level="None" hidden="Yes" link_include_startup_code="No"/>
+  <configuration Name="ARM Flash Release" inherited_configurations="ARM;Flash;Release"/>
+  <configuration Name="Release" build_debug_information="No" c_preprocessor_definitions="NDEBUG;STARTUP_FROM_RESET" gcc_optimization_level="Level 1" hidden="Yes" link_include_startup_code="No"/>
+  <configuration Name="THUMB Flash Debug" inherited_configurations="THUMB;Flash;Debug"/>
+  <configuration Name="THUMB" arm_instruction_set="THUMB" arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB;THUMB_INTERWORK" hidden="Yes"/>
+  <configuration Name="THUMB Flash Release" inherited_configurations="THUMB;Flash;Release"/>
+  <configuration Name="Common" c_additional_options="-fomit-frame-pointer" c_preprocessor_definitions="GCC_ARM7;SUPERVISOR_START;VECTORED_IRQ_INTERRUPTS" c_system_include_directories="$(StudioDir)/include;$(StudioDir)/include/targets" c_user_include_directories=".;..\\..\\Source\\include;..\\..\\Source\\GCC\\ARM7_LPC2000;..\\Common\\Include"/>
 </solution>

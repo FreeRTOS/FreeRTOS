@@ -22,11 +22,11 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\bin\armproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\bin\armlmiftdi.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\bin\<libsupport_plugin>" --backend -B "--endian" "little" "--cpu" "cortex-M3" "--fpu" "None" "--proc_device_desc_file" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\CONFIG\iolm3sxxxx.ddf" "--drv_verify_download" "all" "--proc_driver" "lmiftdi" "--lmiftdi_speed" "500" 
+"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\bin\armproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\bin\armlmiftdi.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\bin\<libsupport_plugin>" --backend -B "--endian" "little" "--cpu" "Cortex-M3" "--fpu" "None" "--proc_device_desc_file" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\CONFIG\debugger\Luminary\iolm3sxxxx.ddf" "--drv_verify_download" "all" "--proc_no_semihosting" "--proc_driver" "lmiftdi" "--lmiftdi_speed" "500" 
 
 
 @REM Loaded plugins:
 @REM    armlibsupport.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\CodeCoverage\CodeCoverage.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\Profiling\Profiling.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\stack\stack.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\CodeCoverage\CodeCoverage.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\Profiling\Profiling.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\stack\stack.dll

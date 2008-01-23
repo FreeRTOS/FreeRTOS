@@ -16,7 +16,7 @@
 ; INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
 ;*******************************************************************************
     
-  RSEG CODE:CODE(2)
+  SECTION .text:CODE(2)
 
   ; Exported functions
   EXPORT __WFI
@@ -28,6 +28,10 @@
   EXPORT __SVC
   EXPORT __MRS_CONTROL
   EXPORT __MSR_CONTROL
+  EXPORT __MRS_PSP
+  EXPORT __MSR_PSP
+  EXPORT __MRS_MSP
+  EXPORT __MSR_MSP
   EXPORT __SETPRIMASK
   EXPORT __RESETPRIMASK
   EXPORT __SETFAULTMASK
@@ -136,6 +140,50 @@ __MSR_CONTROL
   MSR CONTROL, r0
   ISB
   BX r14
+
+;*******************************************************************************
+; Function Name  : __MRS_PSP
+; Description    : Assembler function for the MRS instruction.
+; Input          : None
+; Return         : - r0 : Process Stack value.
+;*******************************************************************************
+__MRS_PSP
+
+  MRS r0, PSP
+  BX r14
+
+;*******************************************************************************
+; Function Name  : __MSR_PSP
+; Description    : Assembler function for the MSR instruction.
+; Input          : - r0 : Process Stack new value.
+; Return         : None
+;*******************************************************************************
+__MSR_PSP
+
+    MSR PSP, r0 ; set Process Stack value
+    BX r14
+
+;*******************************************************************************
+; Function Name  : __MRS_MSP
+; Description    : Assembler function for the MRS instruction.
+; Input          : None
+; Return         : - r0 : Main Stack value.
+;*******************************************************************************
+__MRS_MSP
+
+  MRS r0, MSP
+  BX r14
+
+;*******************************************************************************
+; Function Name  : __MSR_MSP
+; Description    : Assembler function for the MSR instruction.
+; Input          : - r0 : Main Stack new value.
+; Return         : None
+;*******************************************************************************
+__MSR_MSP
+
+    MSR MSP, r0 ; set Main Stack value
+    BX r14
 
 ;*******************************************************************************
 ; Function Name  : __SETPRIMASK

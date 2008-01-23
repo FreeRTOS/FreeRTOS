@@ -282,7 +282,7 @@ static void
 OSRAMDelay(unsigned long ulCount)
 {
     __asm("    subs    r0, #1\n"
-          "    bne     OSRAMDelay\n"
+          "    bne.n     OSRAMDelay\n"
           "    bx      lr");
 }
 #endif
@@ -810,7 +810,7 @@ OSRAMInit(tBoolean bFast)
     //
     // Initialize the I2C master.
     //
-    I2CMasterInit(I2C_MASTER_BASE, bFast);
+    I2CMasterInitExpClk(I2C_MASTER_BASE, SysCtlClockGet(), bFast);
 
     //
     // Compute the inter-byte delay for the SSD0303 controller.  This delay is

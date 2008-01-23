@@ -22,11 +22,11 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\bin\armproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\bin\armjlink.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\bin\<libsupport_plugin>" --backend -B "--endian" "little" "--cpu" "ARM966E-S" "--fpu" "None" "--proc_device_desc_file" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\ARM\CONFIG\iostr912.ddf" "--drv_verify_download" "all" "--proc_driver" "jlink" "--jlink_connection" "USB:0" "--jlink_initial_speed" "32" "--jlink_catch_exceptions" "0x000" 
+"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\bin\armproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\bin\armjlink.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\bin\<libsupport_plugin>" --backend -B "--endian" "little" "--cpu" "ARM966E-S" "--fpu" "None" "--proc_device_desc_file" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\ARM\CONFIG\debugger\ST\iostr912f.ddf" "--drv_verify_download" "all" "--proc_no_semihosting" "--proc_driver" "jlink" "--jlink_connection" "USB:0" "--jlink_initial_speed" "32" "--jlink_catch_exceptions" "0x000" 
 
 
 @REM Loaded plugins:
 @REM    armlibsupport.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\CodeCoverage\CodeCoverage.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\Profiling\Profiling.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\stack\stack.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\CodeCoverage\CodeCoverage.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\Profiling\Profiling.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\stack\stack.dll

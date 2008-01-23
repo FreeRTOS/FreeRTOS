@@ -19,13 +19,13 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
+	See http://www.FreeRTOS.org for documentation, latest information, license
+	and contact details.  Please ensure to read the configuration and relevant
 	port sections of the online documentation.
 
 	Also see http://www.SafeRTOS.com a version that has been certified for use
@@ -44,7 +44,7 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION		1
@@ -52,7 +52,7 @@
 #define configUSE_TICK_HOOK			0
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 20000000 )
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 70 )
+#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 3000 ) )
 #define configMAX_TASK_NAME_LEN		( 3 )
 #define configUSE_TRACE_FACILITY	0
@@ -74,7 +74,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			0
 #define INCLUDE_vTaskDelay				1
 
-
+#define configKERNEL_INTERRUPT_PRIORITY 255
 
 
 #endif /* FREERTOS_CONFIG_H */

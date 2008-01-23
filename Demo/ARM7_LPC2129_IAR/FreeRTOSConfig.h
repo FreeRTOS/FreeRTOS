@@ -38,7 +38,7 @@
 #define FREERTOS_CONFIG_H
 
 /* Hardware specifics. */
-#include <iolpc2129.h>
+#include <NXP/iolpc2129.h>
 
 /*-----------------------------------------------------------
  * Application specific definitions.

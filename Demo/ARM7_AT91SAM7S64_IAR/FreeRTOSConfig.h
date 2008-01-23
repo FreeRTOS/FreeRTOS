@@ -37,7 +37,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include <intrinsic.h>
+#include <intrinsics.h>
 #include "Board.h"
 
 /*-----------------------------------------------------------

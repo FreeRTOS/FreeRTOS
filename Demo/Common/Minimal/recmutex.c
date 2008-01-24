@@ -37,11 +37,10 @@
 /*
 	The tasks defined on this page demonstrate the use of recursive mutexes.
 
-	All mutexes are created using a call to xSemaphoreCreateMutex().  For
-	recursive mutex functionality the created mutex should then be manipulated
+	For recursive mutex functionality the created mutex should be created using
+	xSemaphoreCreateRecursiveMutex(), then be manipulated
 	using the xSemaphoreTakeRecursive() and xSemaphoreGiveRecursive() API
-	functions.  Recursive mutexes must NOT be passed as a parameter to the
-	standard mutex API functions xSemaphoreTake() and xSemaphoreGive().
+	functions.
 
 	This demo creates three tasks all of which access the same recursive mutex:
 

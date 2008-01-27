@@ -104,12 +104,12 @@ typedef xQueueHandle xSemaphoreHandle;
  * xSemaphoreCreateCounting().
  *
  * @param xSemaphore A handle to the semaphore being taken - obtained when
- * the semaophore was created.
+ * the semaphore was created.
  *
  * @param xBlockTime The time in ticks to wait for the semaphore to become
  * available.  The macro portTICK_RATE_MS can be used to convert this to a
  * real time.  A block time of zero can be used to poll the semaphore.  A block
- * time of portMAX_DELAY can be used to block indefinately (provided
+ * time of portMAX_DELAY can be used to block indefinitely (provided
  * INCLUDE_vTaskSuspend is set to 1 in FreeRTOSConfig.h).
  *
  * @return pdTRUE if the semaphore was obtained.  pdFALSE
@@ -179,7 +179,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * doesn't become available again until the owner has called 
  * xSemaphoreGiveRecursive() for each successful 'take' request.  For example, 
  * if a task successfully 'takes' the same mutex 5 times then the mutex will 
- * not be avilable to any other task until it has also  'given' the mutex back
+ * not be available to any other task until it has also  'given' the mutex back
  * exactly five times.
  *
  * @param xMutex A handle to the mutex being obtained.  This is the
@@ -189,7 +189,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * available.  The macro portTICK_RATE_MS can be used to convert this to a
  * real time.  A block time of zero can be used to poll the semaphore.  If
  * the task already owns the semaphore then xSemaphoreTakeRecursive() will
- * return immediately nomatter what the value of xBlockTime. 
+ * return immediately no matter what the value of xBlockTime. 
  *
  * @return pdTRUE if the semaphore was obtained.  pdFALSE if xBlockTime
  * expired without the semaphore becoming available.
@@ -232,7 +232,7 @@ typedef xQueueHandle xSemaphoreHandle;
 			// available to another task until it has also been given back
 			// three times.  Again it is unlikely that real code would have
 			// these calls sequentially, but instead buried in a more complex
-			// call structure.  This is just for illustrative puproses.
+			// call structure.  This is just for illustrative purposes.
             xSemaphoreGiveRecursive( xSemaphore );
 			xSemaphoreGiveRecursive( xSemaphore );
 			xSemaphoreGiveRecursive( xSemaphore );
@@ -347,7 +347,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * doesn't become available again until the owner has called 
  * xSemaphoreGiveRecursive() for each successful 'take' request.  For example, 
  * if a task successfully 'takes' the same mutex 5 times then the mutex will 
- * not be avilable to any other task until it has also  'given' the mutex back
+ * not be available to any other task until it has also  'given' the mutex back
  * exactly five times.
  *
  * @param xMutex A handle to the mutex being released, or 'given'.  This is the
@@ -584,7 +584,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * doesn't become available again until the owner has called 
  * xSemaphoreGiveRecursive() for each successful 'take' request.  For example, 
  * if a task successfully 'takes' the same mutex 5 times then the mutex will 
- * not be avilable to any other task until it has also  'given' the mutex back
+ * not be available to any other task until it has also  'given' the mutex back
  * exactly five times.
  * 
  * This type of semaphore uses a priority inheritance mechanism so a task 

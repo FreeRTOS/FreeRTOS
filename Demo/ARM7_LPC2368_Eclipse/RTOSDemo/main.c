@@ -88,7 +88,7 @@
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY ) 
 
 /* Constants to setup the PLL. */
-#define mainPLL_MUL			( ( unsigned portLONG ) ( 12 - 1 ) )
+#define mainPLL_MUL			( ( unsigned portLONG ) ( 8 - 1 ) )
 #define mainPLL_DIV			( ( unsigned portLONG ) 0x0000 )
 #define mainCPU_CLK_DIV		( ( unsigned portLONG ) 0x0003 )
 #define mainPLL_ENABLE		( ( unsigned portLONG ) 0x0001 )

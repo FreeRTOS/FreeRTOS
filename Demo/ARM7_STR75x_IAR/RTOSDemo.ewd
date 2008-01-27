@@ -686,7 +686,7 @@
         </option>
         <option>
           <name>OCDownloadVerifyAll</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCProductVersion</name>
@@ -698,7 +698,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>4.40A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -706,7 +706,7 @@
         </option>
         <option>
           <name>FlashLoaders</name>
-          <state>,,,0x20000000,$TOOLKIT_DIR$\config\flashloader\ST\FlashSTR75xF.d79,</state>
+          <state>,,,0x20000000,$TOOLKIT_DIR$\config\flashloader\ST\FlashSTR75x.out,</state>
         </option>
         <option>
           <name>UseFlashLoader</name>

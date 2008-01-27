@@ -146,6 +146,10 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 		}
 
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
+
 		/*********************************************************************
         Test 2
 
@@ -197,6 +201,9 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 		}
 
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 		
 		/*********************************************************************
         Test 3

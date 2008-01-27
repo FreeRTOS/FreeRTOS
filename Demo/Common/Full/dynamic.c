@@ -251,6 +251,10 @@ unsigned portBASE_TYPE uxOurPriority;
 		vTaskPrioritySet( NULL, uxOurPriority + 1 );
 			( *pulCounter )++;		
 		vTaskPrioritySet( NULL, uxOurPriority );
+
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/
@@ -342,6 +346,10 @@ const portCHAR * const pcTaskFailMsg = "Priority manipulation Task Failed\r\n";
 			portEXIT_CRITICAL();
 		}
 
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
+
 		/* Resume the continuous count task and do it all again. */
 		vTaskResume( xContinuousIncrementHandle );
 	}
@@ -420,6 +428,10 @@ portBASE_TYPE xGotValue;
 				}
 			}
 			xTaskResumeAll();
+
+			#if configUSE_PREEMPTION == 0
+				taskYIELD();
+			#endif
 
 		} while( xGotValue == pdFALSE );
 

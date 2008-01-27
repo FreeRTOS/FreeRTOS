@@ -159,6 +159,10 @@ unsigned portBASE_TYPE ux;
 		( *puxLoopCounter )++;
 	}
 
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
 	/* If the semaphore count is zero then we should not be able to	'take' 
 	the semaphore. */
 	if( xSemaphoreTake( xSemaphore, countDONT_BLOCK ) == pdPASS )
@@ -190,6 +194,10 @@ unsigned portBASE_TYPE ux;
 
 		( *puxLoopCounter )++;
 	}
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
 
 	/* If the semaphore count is at its maximum then we should not be able to
 	'give' the semaphore. */

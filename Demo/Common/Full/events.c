@@ -241,7 +241,9 @@ portBASE_TYPE xDummy = 0;
 		xTaskResumeAll();
 		prvCheckTaskCounters( evtLOWEST_PRIORITY_INDEX, 1 );
 		
-		
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif		
 		
 		/* Do the same basic test another few times - selectively suspending
 		and resuming tasks and each time calling prvCheckTaskCounters() passing
@@ -267,7 +269,9 @@ portBASE_TYPE xDummy = 0;
 		prvCheckTaskCounters( evtHIGHEST_PRIORITY_INDEX_1, 1 );
 
 
-
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 
 
 		/* Now a slight change, first suspend all tasks. */
@@ -310,6 +314,10 @@ portBASE_TYPE xDummy = 0;
 			}
 		}
 		xTaskResumeAll();
+
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 		
 		/* We should have been preempted by resuming the scheduler - so by the
 		time we are running again we expect the high priority task to have 

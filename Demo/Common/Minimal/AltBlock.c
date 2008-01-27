@@ -157,6 +157,12 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 		}
 
+
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
+
+
 		/*********************************************************************
         Test 2
 
@@ -207,6 +213,10 @@ portTickType xTimeToBlock, xBlockedTime;
 				xErrorOccurred = pdTRUE;
 			}
 		}
+
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 
 		
 		/*********************************************************************
@@ -283,6 +293,9 @@ portTickType xTimeToBlock, xBlockedTime;
 		vTaskDelay( bktSHORT_WAIT );
 		xRunIndicator = 0;
 
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 
 		/*********************************************************************
         Test 4

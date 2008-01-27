@@ -240,6 +240,7 @@ static void prvSetupHardware( void )
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
     GPIODirModeSet(GPIO_PORTC_BASE, mainPUSH_BUTTON, GPIO_DIR_MODE_IN);
 	GPIOIntTypeSet( GPIO_PORTC_BASE, mainPUSH_BUTTON,GPIO_FALLING_EDGE );
+	IntPrioritySet( INT_GPIOC, configKERNEL_INTERRUPT_PRIORITY );
 	GPIOPinIntEnable( GPIO_PORTC_BASE, mainPUSH_BUTTON );
 	IntEnable( INT_GPIOC );
 
@@ -262,6 +263,7 @@ static void prvSetupHardware( void )
 
 	/* Enable Tx interrupts. */
 	HWREG( UART0_BASE + UART_O_IM ) |= UART_INT_TX;
+	IntPrioritySet( INT_UART0, configKERNEL_INTERRUPT_PRIORITY );
 	IntEnable( INT_UART0 );
 
 

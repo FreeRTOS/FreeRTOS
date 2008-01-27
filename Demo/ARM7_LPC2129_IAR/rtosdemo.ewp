@@ -854,7 +854,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl4tptinl8n.h</state>
+          <state>$TOOLKIT_DIR$\INC\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -862,7 +862,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>4.30A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>GeneralMisraRules</name>
@@ -965,7 +965,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>1111101</state>
+          <state>0111111</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -1017,7 +1017,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>CCLangSelect</name>
@@ -1075,7 +1075,7 @@
         <option>
           <name>CCOptStrategy</name>
           <version>0</version>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>CCOptLevelSlave</name>
@@ -1213,7 +1213,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.r79</state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -1326,7 +1326,7 @@
         </option>
         <option>
           <name>IlinkOutputFile</name>
-          <state>###Unitialized###</state>
+          <state>rtosdemo.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -1386,11 +1386,11 @@
         </option>
         <option>
           <name>IlinkIcfOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>lnk0t.icf</state>
+          <state>$PROJ_DIR$\resource\lpc212x.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1450,7 +1450,7 @@
         </option>
         <option>
           <name>IlinkProgramEntryLabel</name>
-          <state></state>
+          <state>__iar_program_start</state>
         </option>
         <option>
           <name>IlinkNXPLPCChecksum</name>

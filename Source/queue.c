@@ -341,7 +341,7 @@ size_t xQueueSizeInBytes;
 
 #if configUSE_COUNTING_SEMAPHORES == 1
 
-	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount, portBASE_TYPE xIsRecursive )
+	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount )
 	{
 	xQueueHandle pxHandle;
 	

@@ -64,6 +64,7 @@
 #define configUSE_MUTEXES				1
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configUSE_ALTERNATIVE_API		1
+#define configUSE_RECURSIVE_MUTEXES		1
 
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 10 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

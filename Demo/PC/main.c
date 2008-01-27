@@ -95,6 +95,7 @@
 #include "AltQTest.h"
 #include "AltPollQ.h"
 #include "AltBlckQ.h"
+#include "RecMutex.h"
 
 /* Priority definitions for the tasks in the demo application. */
 #define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -163,6 +164,7 @@ portSHORT main( void )
 	vCreateAltBlockTimeTasks();
 	vStartAltBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );	
 	vStartAltPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartRecursiveMutexTasks();
 		
 	/* Create the "Print" task as described at the top of the file. */
 	xTaskCreate( vErrorChecks, "Print", mainPRINT_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
@@ -413,6 +415,12 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 	if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		vDisplayMessage( "Error in counting semaphore demo task!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+
+	if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	{
+		vDisplayMessage( "Error in recursive mutex tasks!\r\n" );
 		sErrorHasOccurred = pdTRUE;
 	}
 

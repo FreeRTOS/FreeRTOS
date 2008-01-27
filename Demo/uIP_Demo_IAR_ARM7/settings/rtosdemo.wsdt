@@ -3,7 +3,7 @@
 <Workspace>
   <ConfigDictionary>
     
-  <CurrentConfigs><Project>rtosdemo/Flash Debug</Project></CurrentConfigs></ConfigDictionary>
+  <CurrentConfigs><Project>rtosdemo/Flash Release</Project></CurrentConfigs></ConfigDictionary>
   <Desktop>
     <Static>
       <Workspace>
@@ -11,7 +11,7 @@
           
           
           
-        <Column0>227</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>211</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build><ColumnWidth0>18</ColumnWidth0><ColumnWidth1>1155</ColumnWidth1><ColumnWidth2>308</ColumnWidth2><ColumnWidth3>77</ColumnWidth3></Build>
       <Debug-Log/>
@@ -36,7 +36,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/Demo Source</ExpandedNode><ExpandedNode>rtosdemo/FreeRTOS Source</ExpandedNode><ExpandedNode>rtosdemo/uIP Source</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/Demo Source</ExpandedNode><ExpandedNode>rtosdemo/Demo Source/uIP_Task.c</ExpandedNode><ExpandedNode>rtosdemo/FreeRTOS Source</ExpandedNode><ExpandedNode>rtosdemo/uIP Source</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -51,20 +51,20 @@
           
         <Tab><Identity>TabID-23097-10324</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-27351-12303</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory><Session/></Tab><Tab><Identity>TabID-28796-16277</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>3</SelectedTab></Wnd1></Windows>
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\1\Demo\uIP_Demo_IAR_ARM7\SrcIAR\Cstartup.s</Filename><XPos>0</XPos><YPos>55</YPos><SelStart>3250</SelStart><SelEnd>3250</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\1\Demo\uIP_Demo_IAR_ARM7\uIP_Task.c</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\1\Demo\uIP_Demo_IAR_ARM7\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\temp\rc\1\Demo\uIP_Demo_IAR_ARM7\EMAC\SAM7_EMAC.c</Filename><XPos>0</XPos><YPos>174</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><ActiveTab>3</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00a0b9e0><key>iaridepm1</key></Toolbar-00a0b9e0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>764</Bottom><Right>301</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>216429</sizeVertCX><sizeVertCY>788066</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>162</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>164</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>168724</sizeHorzCY><sizeVertCX>0</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-01284318><key>iaridepm.enu1</key></Toolbar-01284318></Sizes></Row0><Row1><Sizes><Toolbar-0952c950><key>debuggergui.enu1</key></Toolbar-0952c950></Sizes></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>774</Bottom><Right>301</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>216429</sizeVertCX><sizeVertCY>790224</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>164</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>166</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>169043</sizeHorzCY><sizeVertCX>0</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

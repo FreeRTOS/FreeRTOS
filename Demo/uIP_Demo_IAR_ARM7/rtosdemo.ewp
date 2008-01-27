@@ -966,7 +966,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>1111101</state>
+          <state>0111101</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -1078,7 +1078,7 @@
         <option>
           <name>CCOptStrategy</name>
           <version>0</version>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>CCOptLevelSlave</name>

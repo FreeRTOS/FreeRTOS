@@ -654,7 +654,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\ioat91sam7x256.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\Atmel\ioAT91SAM7X256.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -686,7 +686,7 @@
         </option>
         <option>
           <name>OCDownloadVerifyAll</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCProductVersion</name>
@@ -698,7 +698,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>4.20A</state>
+          <state>5.11.0.50615</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>

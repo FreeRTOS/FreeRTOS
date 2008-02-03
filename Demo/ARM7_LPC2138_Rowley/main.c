@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -24,13 +24,19 @@
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
-	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
 	***************************************************************************
 */
 
@@ -96,6 +102,7 @@
 /* Demo application definitions. */
 #define mainQUEUE_SIZE						( 3 )
 #define mainLED_DELAY						( ( portTickType ) 500 / portTICK_RATE_MS )
+#define mainERROR_LED_DELAY					( ( portTickType ) 50 / portTICK_RATE_MS )
 #define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
 #define mainLIST_BUFFER_SIZE				2048
 #define mainNO_DELAY						( 0 )
@@ -119,6 +126,9 @@ xSemaphoreHandle xButtonSemaphore;
 terminal output window. */
 xQueueHandle xPrintQueue;
 
+/* The rate at which the LED will toggle.  The toggle rate increases if an
+error is detected in any task. */
+static portTickType xLED_Delay = mainLED_DELAY;
 /*-----------------------------------------------------------*/
 
 /*
@@ -171,7 +181,15 @@ int main( void )
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-    vCreateBlockTimeTasks();
+
+	#if configUSE_PREEMPTION == 1
+	{
+		/* The timing of console output when not using the preemptive 
+		scheduler causes the block time tests to detect a timing problem. */
+		vCreateBlockTimeTasks();
+	}
+	#endif
+
     vStartRecursiveMutexTasks();
 
 	/* Start the tasks defined within this file. */
@@ -199,13 +217,13 @@ static void vLEDTask( void *pvParameters )
 	for( ;; )
 	{
 		/* Not very exiting - just delay... */
-		vTaskDelay( mainLED_DELAY );
+		vTaskDelay( xLED_Delay );
 
 		/* ...set the IO ... */
         IO0CLR = mainLED_BIT;
 
 		/* ...delay again... */
-		vTaskDelay( mainLED_DELAY );
+		vTaskDelay( xLED_Delay );
 
 		/* ...then clear the IO. */
 		IO0SET = mainLED_BIT;
@@ -256,10 +274,16 @@ const portCHAR * const pcFailMessage = "FAIL\n";
 			xErrorOccurred = pdTRUE;
 		}
 
-		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		#if configUSE_PREEMPTION == 1
 		{
-			xErrorOccurred = pdTRUE;
+			/* The timing of console output when not using the preemptive 
+			scheduler causes the block time tests to detect a timing problem. */
+			if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+			{
+				xErrorOccurred = pdTRUE;
+			}
 		}
+		#endif
 
 		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
@@ -270,6 +294,7 @@ const portCHAR * const pcFailMessage = "FAIL\n";
 		never cleared again. */
 		if( xErrorOccurred == pdTRUE )
 		{
+			xLED_Delay = mainERROR_LED_DELAY;
 			xQueueSend( xPrintQueue, &pcFailMessage, portMAX_DELAY );
 		}
 		else
@@ -290,7 +315,9 @@ portCHAR *pcMessage;
 		while( xQueueReceive( xPrintQueue, &pcMessage, portMAX_DELAY ) != pdPASS );
 
 		/* Write the message to the terminal IO. */
-		debug_printf( "%s", pcMessage );
+		#ifndef NDEBUG
+			debug_printf( "%s", pcMessage );
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/

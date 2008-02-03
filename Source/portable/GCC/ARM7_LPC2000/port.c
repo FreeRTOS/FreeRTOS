@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -24,13 +24,19 @@
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
-	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
 	***************************************************************************
 */
 
@@ -199,6 +205,7 @@ void vPortEndScheduler( void )
 static void prvSetupTimerInterrupt( void )
 {
 unsigned portLONG ulCompareMatch;
+extern void ( vTickISR )( void );
 
 	/* A 1ms tick does not require the use of the timer prescale.  This is
 	defaulted to zero but can be used if necessary. */
@@ -225,18 +232,8 @@ unsigned portLONG ulCompareMatch;
 	
 	/* The ISR installed depends on whether the preemptive or cooperative
 	scheduler is being used. */
-	#if configUSE_PREEMPTION == 1
-	{
-		extern void ( vPreemptiveTick )( void );
-		VICVectAddr0 = ( portLONG ) vPreemptiveTick;
-	}
-	#else
-	{
-		extern void ( vNonPreemptiveTick )( void );
-		VICVectAddr0 = ( portLONG ) vNonPreemptiveTick;
-	}
-	#endif
 
+	VICVectAddr0 = ( portLONG ) vTickISR;
 	VICVectCntl0 = portTIMER_VIC_CHANNEL | portTIMER_VIC_ENABLE;
 
 	/* Start the timer - interrupts are disabled when this function is called

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -24,13 +24,19 @@
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
-	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
 	***************************************************************************
 */
 
@@ -119,46 +125,29 @@ void vPortYieldProcessor( void )
 /*-----------------------------------------------------------*/
 
 /* 
- * The ISR used for the scheduler tick depends on whether the cooperative or
- * the preemptive scheduler is being used.
+ * The ISR used for the scheduler tick.
  */
+void vTickISR( void ) __attribute__((naked));
+void vTickISR( void )
+{
+	/* Save the context of the interrupted task. */
+	portSAVE_CONTEXT();	
 
-#if configUSE_PREEMPTION == 0
+	/* Increment the RTOS tick count, then look for the highest priority 
+	task that is ready to run. */
+	vTaskIncrementTick();
 
-	/* The cooperative scheduler requires a normal IRQ service routine to 
-	simply increment the system tick. */
-	void vNonPreemptiveTick( void ) __attribute__ ((interrupt ("IRQ")));
-	void vNonPreemptiveTick( void )
-	{		
-		vTaskIncrementTick();
-		T0_IR = portTIMER_MATCH_ISR_BIT;
-		VICVectAddr = portCLEAR_VIC_INTERRUPT;
-	}
-
-#else
-
-	/* The preemptive scheduler is defined as "naked" as the full context is
-	saved on entry as part of the context switch. */
-	void vPreemptiveTick( void ) __attribute__((naked));
-	void vPreemptiveTick( void )
-	{
-		/* Save the context of the interrupted task. */
-		portSAVE_CONTEXT();	
-
-		/* Increment the RTOS tick count, then look for the highest priority 
-		task that is ready to run. */
-		vTaskIncrementTick();
+	#if configUSE_PREEMPTION == 1
 		vTaskSwitchContext();
+	#endif
 
-		/* Ready for the next interrupt. */
-		T0_IR = portTIMER_MATCH_ISR_BIT;
-		VICVectAddr = portCLEAR_VIC_INTERRUPT;
-		
-		/* Restore the context of the new task. */
-		portRESTORE_CONTEXT();
-	}
-
-#endif
+	/* Ready for the next interrupt. */
+	T0_IR = portTIMER_MATCH_ISR_BIT;
+	VICVectAddr = portCLEAR_VIC_INTERRUPT;
+	
+	/* Restore the context of the new task. */
+	portRESTORE_CONTEXT();
+}
 /*-----------------------------------------------------------*/
 
 /*

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -24,13 +24,19 @@
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license
-	and contact details.  Please ensure to read the configuration and relevant
-	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
 	***************************************************************************
 */
 /* Standard includes. */
@@ -67,6 +73,18 @@
 #define uipIP_ADDR1		25
 #define uipIP_ADDR2		218
 #define uipIP_ADDR3		11	
+
+/* Netmask configuration. */
+#define uipNET_MASK0	255
+#define uipNET_MASK1	255
+#define uipNET_MASK2	255
+#define uipNET_MASK3	0
+
+/* Gateway address configuration. */
+#define uipGATEWAY_ADDR0 172
+#define uipGATEWAY_ADDR1 25
+#define uipGATEWAY_ADDR2 218
+#define uipGATEWAY_ADDR3 1
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
@@ -141,6 +159,10 @@ struct timer periodic_timer, arp_timer;
 	uip_init();
 	uip_ipaddr( xIPAddr, uipIP_ADDR0, uipIP_ADDR1, uipIP_ADDR2, uipIP_ADDR3 );
 	uip_sethostaddr( xIPAddr );
+	uip_ipaddr( xIPAddr, uipNET_MASK0, uipNET_MASK1, uipNET_MASK2, uipNET_MASK3 );
+	uip_setnetmask( xIPAddr );
+	uip_ipaddr( xIPAddr, uipGATEWAY_ADDR0, uipGATEWAY_ADDR1, uipGATEWAY_ADDR2, uipGATEWAY_ADDR3 );
+	uip_setdraddr( xIPAddr );	
 	httpd_init();
 
 	/* Initialise the MAC. */

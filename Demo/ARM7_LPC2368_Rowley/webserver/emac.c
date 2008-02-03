@@ -128,7 +128,7 @@ static portBASE_TYPE xAttempt = 0;
   volatile unsigned int regv,tout,id1,id2;
 
   /* Enable P1 Ethernet Pins. */
-  PINSEL2 = 0x55555555;
+  PINSEL2 = configPINSEL2_VALUE;
   PINSEL3 = (PINSEL3 & ~0x0000000F) | 0x00000005;
 
   /* Power Up the EMAC controller. */

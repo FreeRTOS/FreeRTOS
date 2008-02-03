@@ -23,15 +23,21 @@
     of http://www.FreeRTOS.org for full details of how and when the exception
     can be applied.
 
-    ***************************************************************************
-    See http://www.FreeRTOS.org for documentation, latest information, license
-    and contact details.  Please ensure to read the configuration and relevant
-    port sections of the online documentation.
+	***************************************************************************
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
-    ***************************************************************************
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
+	***************************************************************************
 */
 
 /*

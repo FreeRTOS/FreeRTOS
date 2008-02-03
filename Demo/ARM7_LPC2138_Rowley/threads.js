@@ -52,7 +52,7 @@ function add_list(list, state, current_task)
   {
     index = list.pxIndex;
     end = list.xListEnd;
-    for (i = 0; i < list.uxNumberOfItems + 1; i++)
+    for (i = 0; i < list.uxNumberOfItems; i++)
     {
       item = Debug.evaluate("*(xListItem *)" + index);
       if (index != end)

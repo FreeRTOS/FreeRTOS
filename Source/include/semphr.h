@@ -189,7 +189,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * exactly five times.
  *
  * @param xMutex A handle to the mutex being obtained.  This is the
- * handle returned by xSemaphoreCreateMutex();
+ * handle returned by xSemaphoreCreateRecursiveMutex();
  *
  * @param xBlockTime The time in ticks to wait for the semaphore to become
  * available.  The macro portTICK_RATE_MS can be used to convert this to a
@@ -231,17 +231,17 @@ typedef xQueueHandle xSemaphoreHandle;
 			// code these would not be just sequential calls as this would make
 			// no sense.  Instead the calls are likely to be buried inside
 			// a more complex call structure.
-            xSemaphoreTakeRecursive( xSemaphore, ( portTickType ) 10 );
-            xSemaphoreTakeRecursive( xSemaphore, ( portTickType ) 10 );
+            xSemaphoreTakeRecursive( xMutex, ( portTickType ) 10 );
+            xSemaphoreTakeRecursive( xMutex, ( portTickType ) 10 );
 
             // The mutex has now been 'taken' three times, so will not be 
 			// available to another task until it has also been given back
 			// three times.  Again it is unlikely that real code would have
 			// these calls sequentially, but instead buried in a more complex
 			// call structure.  This is just for illustrative purposes.
-            xSemaphoreGiveRecursive( xSemaphore );
-			xSemaphoreGiveRecursive( xSemaphore );
-			xSemaphoreGiveRecursive( xSemaphore );
+            xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
 
 			// Now the mutex can be taken by other tasks.
         }
@@ -338,7 +338,7 @@ typedef xQueueHandle xSemaphoreHandle;
 
 /**
  * semphr. h
- * <pre>xSemaphoreGiveRecursive( xSemaphoreHandle xSemaphore )</pre>
+ * <pre>xSemaphoreGiveRecursive( xSemaphoreHandle xMutex )</pre>
  *
  * <i>Macro</i> to recursively release, or 'give', a mutex type semaphore.
  * The mutex must have previously been created using a call to 
@@ -381,7 +381,7 @@ typedef xQueueHandle xSemaphoreHandle;
     {
         // See if we can obtain the mutex.  If the mutex is not available
         // wait 10 ticks to see if it becomes free.	
-        if( xSemaphoreTakeRecursive( xSemaphore, ( portTickType ) 10 ) == pdTRUE )
+        if( xSemaphoreTakeRecursive( xMutex, ( portTickType ) 10 ) == pdTRUE )
         {
             // We were able to obtain the mutex and can now access the
             // shared resource.
@@ -392,8 +392,8 @@ typedef xQueueHandle xSemaphoreHandle;
 			// code these would not be just sequential calls as this would make
 			// no sense.  Instead the calls are likely to be buried inside
 			// a more complex call structure.
-            xSemaphoreTakeRecursive( xSemaphore, ( portTickType ) 10 );
-            xSemaphoreTakeRecursive( xSemaphore, ( portTickType ) 10 );
+            xSemaphoreTakeRecursive( xMutex, ( portTickType ) 10 );
+            xSemaphoreTakeRecursive( xMutex, ( portTickType ) 10 );
 
             // The mutex has now been 'taken' three times, so will not be 
 			// available to another task until it has also been given back
@@ -401,9 +401,9 @@ typedef xQueueHandle xSemaphoreHandle;
 			// these calls sequentially, it would be more likely that the calls
 			// to xSemaphoreGiveRecursive() would be called as a call stack
 			// unwound.  This is just for demonstrative purposes.
-            xSemaphoreGiveRecursive( xSemaphore );
-			xSemaphoreGiveRecursive( xSemaphore );
-			xSemaphoreGiveRecursive( xSemaphore );
+            xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
+			xSemaphoreGiveRecursive( xMutex );
 
 			// Now the mutex can be taken by other tasks.
         }

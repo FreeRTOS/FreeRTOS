@@ -119,7 +119,7 @@ void vStartRecursiveMutexTasks( void )
 {
 	/* Just creates the mutex and the three tasks. */
 
-	xMutex = xSemaphoreCreateMutex();
+	xMutex = xSemaphoreCreateRecursiveMutex();
 
 	if( xMutex != NULL )
 	{

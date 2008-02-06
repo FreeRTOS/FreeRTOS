@@ -221,6 +221,12 @@
    #endif
 #endif
 
+#ifdef __91467D
+	#include "portmacro.h"
+	#include "mb91467d.h"
+	#include <stddef.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

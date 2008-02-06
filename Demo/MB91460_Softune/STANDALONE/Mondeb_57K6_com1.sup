@@ -1,0 +1,195 @@
+[Information]
+DebChangeFlag=0
+MCUChangeFlag=0
+[Version]
+Version=1
+Level=1
+Revision=0
+[Debug Type]
+Type=2
+Virtual CPU File=wv911r1.dll
+Monitor Load=0
+Monitor Load Condition=Disable
+[Device]
+Communication=RS COM1 57600
+ProductID=0
+Protocol=0
+[Target]
+AutoLoad=Enable
+Before Batch File=
+After Batch File=PRC\set_MONITOR.prc
+Non AutoMap=Enable
+Load DebInfo Only=Disable
+Ondemand Load Condition=Disable
+[Start]
+Batch File=
+[Window]
+Flag=Enable
+AssemblySize=189 109 609 349
+AssemblyState=0
+AssemblyFGColor=0 0 255
+CommandSize=337 424 757 744
+CommandState=0
+Assembly Address=H'00042B4A
+Memory Address=H'0002F038
+Memory Mode=H'00000003
+Memory Ascii=H'00000001
+Memory SplitRow=0
+RMemory Address=H'00000000
+RMemory Mode=H'FFFFFFFF
+RMemory Ascii=H'00000001
+RMemory SplitRow=0
+Trace ViewMode=FFFFFFFF
+Command Max History=H'00000032
+Source Display Mode=Enable
+Source Multi Mode=Enable
+Source Ask Mode=Enable
+Source Active Mode=Enable
+Source PC Color=255 255 0
+Source Scope Color=255 0 255
+Source Back Trace=255 0 255
+Register Change Color=255 0 0
+Abs Sort Mode=H'00000001
+Perfomance Mode=H'00000001
+Perfomance Scale=1 0 0.000000 0.000000
+RMemory Change Color=255 0 0
+RMemory Invalid Color=128 128 128
+Command History0=step
+Command History1=go ,main
+RegisterSize=0 300 512 600
+RegisterState=0
+Register Select0=H'00000000
+Register Select1=H'00000001
+Register Select2=H'00000002
+Register Select3=H'00000003
+Register Select4=H'00000004
+Register Select5=H'00000005
+Register Select6=H'00000006
+Register Select7=H'00000007
+Register Select8=H'00000008
+Register Select9=H'00000009
+Register Select10=H'0000000A
+Register Select11=H'0000000B
+Register Select12=H'0000000C
+Register Select13=H'0000000D
+Register Select14=H'0000000E
+Register Select15=H'0000000F
+Register Select16=H'00000010
+Register Select17=H'00000011
+Register Select18=H'00000012
+Register Select19=H'00000013
+Register Select20=H'00000014
+Register Select21=H'00000015
+Register Select22=H'00000016
+Register Select23=H'00000017
+Register Select24=H'00000018
+Register Select25=H'00000019
+Register Select26=H'0000001A
+Register Select27=H'0000001B
+Register Select28=H'0000001C
+Register Select29=H'0000001D
+Register Select30=H'0000001E
+Register Select31=H'0000001F
+Register Select32=H'00000020
+Register Select33=H'00000021
+Register Select34=H'00000022
+Register Select35=H'00000027
+MemorySize=512 0 1024 200
+MemoryState=0
+Layer0=1006,
+Layer1=1003,
+Layer2=1005,
+Source0Name=SRC\Start91460.asm
+Source0Size=22 22 848 425
+Source0State=0
+Source0Line=914
+Source0Mode=2
+Source1Name=SRC\MAIN.c
+Source1Size=66 66 892 469
+Source1State=0
+Source1Line=6A
+Source1Mode=2
+SymbolSize=0 0 0 0
+SymbolState=0
+Memory Line Byte=H'00000000
+Memory Change Color=255 0 0
+Memory Mark Color0=192 192 192
+Memory Mark Color1=192 0 0
+Memory Mark Color2=255 255 0
+Memory Mark Color3=0 255 0
+Memory Mark Color4=0 255 255
+Memory Mark Color5=0 128 192
+Memory Mark Color6=255 128 64
+Layer3=1004,
+Layer4=1002,
+Layer5=1007,
+Layer6=2000,SRC\Start91460.asm
+Layer7=2000,SRC\MAIN.c
+LocalSize=512 400 1024 600
+LocalState=0
+WatchSize=512 200 1024 400
+WatchState=0
+Layer8=2000,SRC\vectors.c
+Source2Name=SRC\vectors.c
+Source2Size=176 184 1006 612
+Source2State=2
+Source2Line=80
+Source2Mode=2
+[Path Environment]
+Flag=Enable
+Source=
+[Map]
+Flag=Enable
+[Radix Environment]
+Flag=Enable
+Mode=10
+Source=1
+[Watch Environment]
+Flag=Enable
+Size=0
+Mode=0
+MBuf=0
+Check=1
+CSiz=100
+[Exec Environment]
+Flag=Enable
+GoIntMask=0
+StepUnit=3
+StepIntMask=0
+StepIntpCtrl=4
+GoTrcCtrl=2
+OnTheFlyBreakAdmit=0
+[Break Environment]
+Flag=Enable
+[Emulation Environment]
+Flag=Disable
+[Monitor Environment]
+Flag=Enable
+MemoryWindow=0
+WatchWindow=0
+ObjectWindow=0
+ElapseTime=3E8
+Unit=1
+Mode=0
+RealtimeMemoryWindow=0
+[Error]
+Flag=Enable
+GuiErrorOutput=2
+CommandErrorOutput=1
+BatchErrorOutput=1
+ErrorOutputLevel=0
+[Color]
+Flag=Enable
+[Tab Environment]
+TabSize=8
+[Communication]
+Send=250
+Receive=250
+[CS Memory]
+Flag=Disable
+Area=0
+Write Enable=Disable
+[FLASH Environment]
+File Specified Area=00000001 00000000 00000000
+Environment Area=00000001 00000000 00000000
+MCU Number=MB91F467D

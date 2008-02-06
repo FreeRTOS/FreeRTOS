@@ -1,0 +1,606 @@
+[Version]
+DLLVer=02.5007.00.1
+PRJVer=1
+
+[PRJKIND]
+mode=1
+
+[CPUTYPE]
+CpuSerise=911
+
+[DirInfo]
+PRJ=C:\E\Dev\_FreeRTOS\Demo\MB91460_Softune\
+
+[PrjInfo]
+Count=2
+PrjInfo-0=STANDALONE
+PrjInfo-1=MONDEB_INTERNAL
+Active=STANDALONE
+
+[MEMBER]
+F0=44
+F1=0 f Source Files
+F2=0 c SRC\MAIN.c
+F3=0 a SRC\mb91467d.asm
+F4=0 a SRC\Start91460.asm
+F5=0 c SRC\vectors.c
+F6=0 f Source Files\portable
+F7=0 c ..\..\Source\portable\Softune\MB91460\__STD_LIB_sbrk.c
+F8=0 c ..\..\Source\portable\Softune\MB91460\port.c
+F9=0 f Source Files\FreeRTOS
+F10=0 c ..\..\Source\croutine.c
+F11=0 c ..\..\Source\list.c
+F12=0 c ..\..\Source\queue.c
+F13=0 c ..\..\Source\tasks.c
+F14=0 f Source Files\Minimal
+F15=0 c ..\Common\Minimal\AltBlckQ.c
+F16=0 c ..\Common\Minimal\AltBlock.c
+F17=0 c ..\Common\Minimal\AltPollQ.c
+F18=0 c ..\Common\Minimal\AltQTest.c
+F19=0 c ..\Common\Minimal\BlockQ.c
+F20=0 c ..\Common\Minimal\blocktim.c
+F21=0 c ..\Common\Minimal\comtest.c
+F22=0 c ..\Common\Minimal\countsem.c
+F23=0 c ..\Common\Minimal\crflash.c
+F24=0 c ..\Common\Minimal\crhook.c
+F25=0 c ..\Common\Minimal\death.c
+F26=0 c ..\Common\Minimal\dynamic.c
+F27=0 c ..\Common\Minimal\flash.c
+F28=0 c ..\Common\Minimal\flop.c
+F29=0 c ..\Common\Minimal\GenQTest.c
+F30=0 c ..\Common\Minimal\integer.c
+F31=0 c ..\Common\Minimal\PollQ.c
+F32=0 c ..\Common\Minimal\QPeek.c
+F33=0 c ..\Common\Minimal\semtest.c
+F34=0 f Source Files\MemMang
+F35=0 c ..\..\Source\portable\MemMang\heap_1.c
+F36=0 c ..\..\Source\portable\MemMang\heap_2.c
+F37=0 c ..\..\Source\portable\MemMang\heap_3.c
+F38=0 f Source Files\serial
+F39=0 c SRC\serial\serial.c
+F40=0 f Source Files\watchdog
+F41=0 c SRC\watchdog\watchdog.c
+F42=0 f Source Files\utility
+F43=0 c SRC\utility\taskutility.c
+F44=0 f Include Files
+
+[OPTIONFILE]
+FILE=91460_template_91467d.dat
+
+[CPUTYPE-STANDALONE]
+CsvFile=Lib\911\911.csv
+CpuName=MB91F467D
+ChgChipInfo-0=12@16:0:17:1:18:2:19:3:20:4:21:5:22:6:23:7:24:8:25:9:26:10:27:11:28:12:29:13:30:14:31:15:32:16:33:17:34:18:35:19:36:20:37:21:38:22:39:23:40:24:41:25:42:26:43:27:44:28:45:29:46:30:47:31:48:32:49:33:50:34:51:35:52:36:53:37:54:38:55:39:56:40:57:41:58:42:59:43:60:44:61:45:62:46:63:47:64:48:65:49:66:50:67:51:68:52:69:53:70:54:71:55:72:56:73:57:74:58:75:59:76:60:77:61:78:62:79:63
+Count=1
+BusMode=2
+BusWidth=2
+
+[DirInfo-STANDALONE]
+CONFIG=STANDALONE\
+OBJ=STANDALONE\OBJ\
+LST=STANDALONE\LST\
+OPT=STANDALONE\OPT\
+
+[MEMBER-STANDALONE]
+F0=36
+F1=0 m 1 STANDALONE\ABS\91467d_FreeRTOS.abs
+F2=9 c 1 ..\..\Source\portable\Softune\MB91460\port.c
+F2-1=- ..\..\Source\include\FreeRTOS.h
+F2-2=- ..\..\Source\include\projdefs.h
+F2-3=- SRC\FreeRTOSConfig.h
+F2-4=- ..\..\Source\include\portable.h
+F2-5=- SRC\mb91467d.h
+F2-6=- ..\..\Source\include\task.h
+F2-7=- ..\..\Source\include\list.h
+F2-8=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F2-9=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F3=3 c 1 ..\..\Source\portable\Softune\MB91460\__STD_LIB_sbrk.c
+F3-1=- SRC\FreeRTOSConfig.h
+F3-2=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F3-3=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F4=10 c 1 ..\..\Source\croutine.c
+F4-1=- ..\..\Source\include\FreeRTOS.h
+F4-2=- ..\..\Source\include\projdefs.h
+F4-3=- SRC\FreeRTOSConfig.h
+F4-4=- ..\..\Source\include\portable.h
+F4-5=- ..\..\Source\include\task.h
+F4-6=- ..\..\Source\include\list.h
+F4-7=- ..\..\Source\include\croutine.h
+F4-8=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F4-9=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F4-10=- SRC\mb91467d.h
+F5=9 c 1 ..\..\Source\list.c
+F5-1=- ..\..\Source\include\FreeRTOS.h
+F5-2=- ..\..\Source\include\projdefs.h
+F5-3=- SRC\FreeRTOSConfig.h
+F5-4=- ..\..\Source\include\portable.h
+F5-5=- ..\..\Source\include\list.h
+F5-6=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F5-7=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F5-8=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F5-9=- SRC\mb91467d.h
+F6=12 c 1 ..\..\Source\queue.c
+F6-1=- ..\..\Source\include\FreeRTOS.h
+F6-2=- ..\..\Source\include\projdefs.h
+F6-3=- SRC\FreeRTOSConfig.h
+F6-4=- ..\..\Source\include\portable.h
+F6-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F6-6=- SRC\mb91467d.h
+F6-7=- ..\..\Source\include\task.h
+F6-8=- ..\..\Source\include\list.h
+F6-9=- ..\..\Source\include\croutine.h
+F6-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F6-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F6-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\string.h
+F7=13 c 1 ..\..\Source\tasks.c
+F7-1=- ..\..\Source\include\FreeRTOS.h
+F7-2=- ..\..\Source\include\projdefs.h
+F7-3=- SRC\FreeRTOSConfig.h
+F7-4=- ..\..\Source\include\portable.h
+F7-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F7-6=- SRC\mb91467d.h
+F7-7=- ..\..\Source\include\task.h
+F7-8=- ..\..\Source\include\list.h
+F7-9=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdio.h
+F7-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F7-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdarg.h
+F7-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F7-13=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\string.h
+F8=11 c 1 SRC\MAIN.c
+F8-1=- SRC\mb91467d.h
+F8-2=- SRC\vectors.h
+F8-3=- ..\..\Source\include\FreeRTOS.h
+F8-4=- ..\..\Source\include\projdefs.h
+F8-5=- SRC\FreeRTOSConfig.h
+F8-6=- ..\..\Source\include\portable.h
+F8-7=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F8-8=- ..\..\Source\include\task.h
+F8-9=- ..\..\Source\include\list.h
+F8-10=- SRC\watchdog\watchdog.h
+F8-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F9=2 c 1 SRC\vectors.c
+F9-1=- SRC\mb91467d.h
+F9-2=- SRC\watchdog\watchdog.h
+F10=1 a 1 SRC\mb91467d.asm
+F10-1=- SRC\mb91467d.h
+F11=0 a 1 SRC\Start91460.asm
+F12=12 c 0 ..\Common\Minimal\AltBlckQ.c
+F12-1=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stdlib.h
+F12-2=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F12-3=- ..\..\Source\include\FreeRTOS.h
+F12-4=- ..\..\Source\include\projdefs.h
+F12-5=- SRC\FreeRTOSConfig.h
+F12-6=- ..\..\Source\include\portable.h
+F12-7=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F12-8=- SRC\mb91467d.h
+F12-9=- ..\..\Source\include\task.h
+F12-10=- ..\..\Source\include\list.h
+F12-11=- ..\..\Source\include\queue.h
+F12-12=- ..\Common\include\AltBlckQ.h
+F13=11 c 0 ..\Common\Minimal\AltBlock.c
+F13-1=- ..\..\Source\include\FreeRTOS.h
+F13-2=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F13-3=- ..\..\Source\include\projdefs.h
+F13-4=- SRC\FreeRTOSConfig.h
+F13-5=- ..\..\Source\include\portable.h
+F13-6=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F13-7=- SRC\mb91467d.h
+F13-8=- ..\..\Source\include\task.h
+F13-9=- ..\..\Source\include\list.h
+F13-10=- ..\..\Source\include\queue.h
+F13-11=- ..\Common\include\AltBlock.h
+F14=12 c 0 ..\Common\Minimal\AltPollQ.c
+F14-1=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stdlib.h
+F14-2=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F14-3=- ..\..\Source\include\FreeRTOS.h
+F14-4=- ..\..\Source\include\projdefs.h
+F14-5=- SRC\FreeRTOSConfig.h
+F14-6=- ..\..\Source\include\portable.h
+F14-7=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F14-8=- SRC\mb91467d.h
+F14-9=- ..\..\Source\include\task.h
+F14-10=- ..\..\Source\include\list.h
+F14-11=- ..\..\Source\include\queue.h
+F14-12=- ..\Common\include\AltPollQ.h
+F15=13 c 0 ..\Common\Minimal\AltQTest.c
+F15-1=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stdlib.h
+F15-2=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F15-3=- ..\..\Source\include\FreeRTOS.h
+F15-4=- ..\..\Source\include\projdefs.h
+F15-5=- SRC\FreeRTOSConfig.h
+F15-6=- ..\..\Source\include\portable.h
+F15-7=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F15-8=- SRC\mb91467d.h
+F15-9=- ..\..\Source\include\task.h
+F15-10=- ..\..\Source\include\list.h
+F15-11=- ..\..\Source\include\queue.h
+F15-12=- ..\..\Source\include\semphr.h
+F15-13=- ..\Common\include\AltQTest.h
+F16=12 c 1 ..\Common\Minimal\BlockQ.c
+F16-1=- ..\..\Source\include\FreeRTOS.h
+F16-2=- ..\..\Source\include\projdefs.h
+F16-3=- SRC\FreeRTOSConfig.h
+F16-4=- ..\..\Source\include\portable.h
+F16-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F16-6=- SRC\mb91467d.h
+F16-7=- ..\..\Source\include\task.h
+F16-8=- ..\..\Source\include\list.h
+F16-9=- ..\..\Source\include\queue.h
+F16-10=- ..\Common\include\BlockQ.h
+F16-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F16-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F17=11 c 1 ..\Common\Minimal\blocktim.c
+F17-1=- ..\..\Source\include\FreeRTOS.h
+F17-2=- ..\..\Source\include\projdefs.h
+F17-3=- SRC\FreeRTOSConfig.h
+F17-4=- ..\..\Source\include\portable.h
+F17-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F17-6=- SRC\mb91467d.h
+F17-7=- ..\..\Source\include\task.h
+F17-8=- ..\..\Source\include\list.h
+F17-9=- ..\..\Source\include\queue.h
+F17-10=- ..\Common\include\blocktim.h
+F17-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F18=13 c 1 ..\Common\Minimal\comtest.c
+F18-1=- ..\..\Source\include\FreeRTOS.h
+F18-2=- ..\..\Source\include\projdefs.h
+F18-3=- SRC\FreeRTOSConfig.h
+F18-4=- ..\..\Source\include\portable.h
+F18-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F18-6=- SRC\mb91467d.h
+F18-7=- ..\..\Source\include\task.h
+F18-8=- ..\..\Source\include\list.h
+F18-9=- ..\Common\include\serial.h
+F18-10=- ..\Common\include\comtest.h
+F18-11=- ..\Common\include\partest.h
+F18-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F18-13=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F19=12 c 0 ..\Common\Minimal\countsem.c
+F19-1=- ..\..\Source\include\FreeRTOS.h
+F19-2=- ..\..\..\..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F19-3=- ..\..\Source\include\projdefs.h
+F19-4=- SRC\FreeRTOSConfig.h
+F19-5=- ..\..\Source\include\portable.h
+F19-6=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F19-7=- SRC\mb91467d.h
+F19-8=- ..\..\Source\include\task.h
+F19-9=- ..\..\Source\include\list.h
+F19-10=- ..\..\Source\include\semphr.h
+F19-11=- ..\..\Source\include\queue.h
+F19-12=- ..\Common\include\countsem.h
+F20=12 c 1 ..\Common\Minimal\crflash.c
+F20-1=- ..\..\Source\include\FreeRTOS.h
+F20-2=- ..\..\Source\include\projdefs.h
+F20-3=- SRC\FreeRTOSConfig.h
+F20-4=- ..\..\Source\include\portable.h
+F20-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F20-6=- SRC\mb91467d.h
+F20-7=- ..\..\Source\include\croutine.h
+F20-8=- ..\..\Source\include\list.h
+F20-9=- ..\..\Source\include\queue.h
+F20-10=- ..\Common\include\partest.h
+F20-11=- ..\Common\include\crflash.h
+F20-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F21=11 c 1 ..\Common\Minimal\crhook.c
+F21-1=- ..\..\Source\include\FreeRTOS.h
+F21-2=- ..\..\Source\include\projdefs.h
+F21-3=- SRC\FreeRTOSConfig.h
+F21-4=- ..\..\Source\include\portable.h
+F21-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F21-6=- SRC\mb91467d.h
+F21-7=- ..\..\Source\include\croutine.h
+F21-8=- ..\..\Source\include\list.h
+F21-9=- ..\..\Source\include\queue.h
+F21-10=- ..\Common\include\crhook.h
+F21-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F22=11 c 1 ..\Common\Minimal\death.c
+F22-1=- ..\..\Source\include\FreeRTOS.h
+F22-2=- ..\..\Source\include\projdefs.h
+F22-3=- SRC\FreeRTOSConfig.h
+F22-4=- ..\..\Source\include\portable.h
+F22-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F22-6=- SRC\mb91467d.h
+F22-7=- ..\..\Source\include\task.h
+F22-8=- ..\..\Source\include\list.h
+F22-9=- ..\Common\include\death.h
+F22-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F22-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F23=13 c 1 ..\Common\Minimal\dynamic.c
+F23-1=- ..\..\Source\include\FreeRTOS.h
+F23-2=- ..\..\Source\include\projdefs.h
+F23-3=- SRC\FreeRTOSConfig.h
+F23-4=- ..\..\Source\include\portable.h
+F23-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F23-6=- SRC\mb91467d.h
+F23-7=- ..\..\Source\include\task.h
+F23-8=- ..\..\Source\include\list.h
+F23-9=- ..\..\Source\include\queue.h
+F23-10=- ..\Common\include\dynamic.h
+F23-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F23-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F23-13=- ..\Common\Minimal\semphr.h
+F24=12 c 1 ..\Common\Minimal\flash.c
+F24-1=- ..\..\Source\include\FreeRTOS.h
+F24-2=- ..\..\Source\include\projdefs.h
+F24-3=- SRC\FreeRTOSConfig.h
+F24-4=- ..\..\Source\include\portable.h
+F24-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F24-6=- SRC\mb91467d.h
+F24-7=- ..\..\Source\include\task.h
+F24-8=- ..\..\Source\include\list.h
+F24-9=- ..\Common\include\partest.h
+F24-10=- ..\Common\include\flash.h
+F24-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F24-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F25=13 c 1 ..\Common\Minimal\flop.c
+F25-1=- ..\..\Source\include\FreeRTOS.h
+F25-2=- ..\..\Source\include\projdefs.h
+F25-3=- SRC\FreeRTOSConfig.h
+F25-4=- ..\..\Source\include\portable.h
+F25-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F25-6=- SRC\mb91467d.h
+F25-7=- ..\..\Source\include\task.h
+F25-8=- ..\..\Source\include\list.h
+F25-9=- ..\Common\include\flop.h
+F25-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F25-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F25-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\math.h
+F25-13=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\errno.h
+F26=13 c 1 ..\Common\Minimal\GenQTest.c
+F26-1=- ..\..\Source\include\FreeRTOS.h
+F26-2=- ..\..\Source\include\projdefs.h
+F26-3=- SRC\FreeRTOSConfig.h
+F26-4=- ..\..\Source\include\portable.h
+F26-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F26-6=- SRC\mb91467d.h
+F26-7=- ..\..\Source\include\task.h
+F26-8=- ..\..\Source\include\list.h
+F26-9=- ..\..\Source\include\queue.h
+F26-10=- ..\Common\include\GenQTest.h
+F26-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F26-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F26-13=- ..\Common\Minimal\semphr.h
+F27=11 c 1 ..\Common\Minimal\integer.c
+F27-1=- ..\..\Source\include\FreeRTOS.h
+F27-2=- ..\..\Source\include\projdefs.h
+F27-3=- SRC\FreeRTOSConfig.h
+F27-4=- ..\..\Source\include\portable.h
+F27-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F27-6=- SRC\mb91467d.h
+F27-7=- ..\..\Source\include\task.h
+F27-8=- ..\..\Source\include\list.h
+F27-9=- ..\Common\include\integer.h
+F27-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F27-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F28=12 c 1 ..\Common\Minimal\PollQ.c
+F28-1=- ..\..\Source\include\FreeRTOS.h
+F28-2=- ..\..\Source\include\projdefs.h
+F28-3=- SRC\FreeRTOSConfig.h
+F28-4=- ..\..\Source\include\portable.h
+F28-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F28-6=- SRC\mb91467d.h
+F28-7=- ..\..\Source\include\task.h
+F28-8=- ..\..\Source\include\list.h
+F28-9=- ..\..\Source\include\queue.h
+F28-10=- ..\Common\include\PollQ.h
+F28-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F28-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F29=13 c 1 ..\Common\Minimal\QPeek.c
+F29-1=- ..\..\Source\include\FreeRTOS.h
+F29-2=- ..\..\Source\include\projdefs.h
+F29-3=- SRC\FreeRTOSConfig.h
+F29-4=- ..\..\Source\include\portable.h
+F29-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F29-6=- SRC\mb91467d.h
+F29-7=- ..\..\Source\include\task.h
+F29-8=- ..\..\Source\include\list.h
+F29-9=- ..\..\Source\include\queue.h
+F29-10=- ..\Common\include\QPeek.h
+F29-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F29-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F29-13=- ..\Common\Minimal\semphr.h
+F30=13 c 1 ..\Common\Minimal\semtest.c
+F30-1=- ..\..\Source\include\FreeRTOS.h
+F30-2=- ..\..\Source\include\projdefs.h
+F30-3=- SRC\FreeRTOSConfig.h
+F30-4=- ..\..\Source\include\portable.h
+F30-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F30-6=- SRC\mb91467d.h
+F30-7=- ..\..\Source\include\task.h
+F30-8=- ..\..\Source\include\list.h
+F30-9=- ..\..\Source\include\queue.h
+F30-10=- ..\Common\include\semtest.h
+F30-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F30-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F30-13=- ..\Common\Minimal\semphr.h
+F31=10 c 1 ..\..\Source\portable\MemMang\heap_3.c
+F31-1=- ..\..\Source\include\FreeRTOS.h
+F31-2=- ..\..\Source\include\projdefs.h
+F31-3=- SRC\FreeRTOSConfig.h
+F31-4=- ..\..\Source\include\portable.h
+F31-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F31-6=- SRC\mb91467d.h
+F31-7=- ..\..\Source\include\task.h
+F31-8=- ..\..\Source\include\list.h
+F31-9=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F31-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F32=10 c 0 ..\..\Source\portable\MemMang\heap_1.c
+F32-1=- ..\..\Source\include\FreeRTOS.h
+F32-2=- ..\..\Source\include\projdefs.h
+F32-3=- SRC\FreeRTOSConfig.h
+F32-4=- ..\..\Source\include\portable.h
+F32-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F32-6=- SRC\mb91467d.h
+F32-7=- ..\..\Source\include\task.h
+F32-8=- ..\..\Source\include\list.h
+F32-9=- ..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stdlib.h
+F32-10=- ..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F33=10 c 0 ..\..\Source\portable\MemMang\heap_2.c
+F33-1=- ..\..\Source\include\FreeRTOS.h
+F33-2=- ..\..\Source\include\projdefs.h
+F33-3=- SRC\FreeRTOSConfig.h
+F33-4=- ..\..\Source\include\portable.h
+F33-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F33-6=- SRC\mb91467d.h
+F33-7=- ..\..\Source\include\task.h
+F33-8=- ..\..\Source\include\list.h
+F33-9=- ..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stdlib.h
+F33-10=- ..\..\..\..\..\SoftuneV6_32bit_REV600008\LIB\911\INCLUDE\stddef.h
+F34=12 c 1 SRC\serial\serial.c
+F34-1=- ..\..\Source\include\FreeRTOS.h
+F34-2=- ..\..\Source\include\projdefs.h
+F34-3=- SRC\FreeRTOSConfig.h
+F34-4=- ..\..\Source\include\portable.h
+F34-5=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F34-6=- SRC\mb91467d.h
+F34-7=- ..\..\Source\include\queue.h
+F34-8=- ..\..\Source\include\task.h
+F34-9=- ..\..\Source\include\list.h
+F34-10=- ..\Common\include\serial.h
+F34-11=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdlib.h
+F34-12=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F35=10 c 1 SRC\watchdog\watchdog.c
+F35-1=- SRC\mb91467d.h
+F35-2=- ..\..\Source\include\FreeRTOS.h
+F35-3=- ..\..\Source\include\projdefs.h
+F35-4=- SRC\FreeRTOSConfig.h
+F35-5=- ..\..\Source\include\portable.h
+F35-6=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F35-7=- ..\..\Source\include\task.h
+F35-8=- ..\..\Source\include\list.h
+F35-9=- SRC\watchdog\watchdog.h
+F35-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+F36=10 c 1 SRC\utility\taskutility.c
+F36-1=- SRC\mb91467d.h
+F36-2=- SRC\vectors.h
+F36-3=- ..\..\Source\include\FreeRTOS.h
+F36-4=- ..\..\Source\include\projdefs.h
+F36-5=- SRC\FreeRTOSConfig.h
+F36-6=- ..\..\Source\include\portable.h
+F36-7=- ..\..\Source\portable\Softune\MB91460\portmacro.h
+F36-8=- ..\..\Source\include\task.h
+F36-9=- ..\..\Source\include\list.h
+F36-10=- ..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stddef.h
+
+[BUILDMODE-STANDALONE]
+kernel=1
+
+[RUNSET-STANDALONE]
+CONVERT=1
+CONVERTKIND=0
+
+[DebState-STANDALONE]
+SupCount=6
+Supfile-0=STANDALONE\Simulator.sup
+Supfile-1=STANDALONE\MB2198-01-USB.sup
+Supfile-2=STANDALONE\MB2198-01-COM1.sup
+Supfile-3=STANDALONE\MB2198-01-LAN.sup
+Supfile-4=STANDALONE\Mondeb_57K6_com1.sup
+Supfile-5=STANDALONE\Mondeb_57K6_com2.sup
+Current=Mondeb_57K6_com1.sup
+AliasFile=
+CPURunMode=
+
+[CPUTYPE-MONDEB_INTERNAL]
+CsvFile=Lib\911\911.csv
+CpuName=MB91F467D
+Count=0
+BusMode=3
+BusWidth=2
+
+[DirInfo-MONDEB_INTERNAL]
+CONFIG=MONDEB_INTERNAL\
+OBJ=MONDEB_INTERNAL\OBJ\
+LST=MONDEB_INTERNAL\LST\
+OPT=MONDEB_INTERNAL\OPT\
+
+[MEMBER-MONDEB_INTERNAL]
+F0=36
+F1=0 m 1 MONDEB_INTERNAL\ABS\91467d_FreeRTOS.abs
+F2=0 c 1 ..\..\Source\portable\Softune\MB91460\port.c
+F3=0 c 1 ..\..\Source\portable\Softune\MB91460\__STD_LIB_sbrk.c
+F4=0 c 1 ..\..\Source\croutine.c
+F5=0 c 1 ..\..\Source\list.c
+F6=0 c 1 ..\..\Source\queue.c
+F7=0 c 1 ..\..\Source\tasks.c
+F8=0 c 1 SRC\MAIN.c
+F9=0 c 1 SRC\vectors.c
+F10=0 a 1 SRC\mb91467d.asm
+F11=0 a 1 SRC\Start91460.asm
+F12=0 c 1 ..\Common\Minimal\AltBlckQ.c
+F13=0 c 1 ..\Common\Minimal\AltBlock.c
+F14=0 c 1 ..\Common\Minimal\AltPollQ.c
+F15=0 c 1 ..\Common\Minimal\AltQTest.c
+F16=0 c 1 ..\Common\Minimal\BlockQ.c
+F17=0 c 1 ..\Common\Minimal\blocktim.c
+F18=0 c 1 ..\Common\Minimal\comtest.c
+F19=0 c 1 ..\Common\Minimal\countsem.c
+F20=0 c 1 ..\Common\Minimal\crflash.c
+F21=0 c 1 ..\Common\Minimal\crhook.c
+F22=0 c 1 ..\Common\Minimal\death.c
+F23=0 c 1 ..\Common\Minimal\dynamic.c
+F24=0 c 1 ..\Common\Minimal\flash.c
+F25=0 c 1 ..\Common\Minimal\flop.c
+F26=0 c 1 ..\Common\Minimal\GenQTest.c
+F27=0 c 1 ..\Common\Minimal\integer.c
+F28=0 c 1 ..\Common\Minimal\PollQ.c
+F29=0 c 1 ..\Common\Minimal\QPeek.c
+F30=0 c 1 ..\Common\Minimal\semtest.c
+F31=0 c 1 ..\..\Source\portable\MemMang\heap_3.c
+F32=0 c 1 ..\..\Source\portable\MemMang\heap_1.c
+F33=0 c 1 ..\..\Source\portable\MemMang\heap_2.c
+F34=0 c 1 SRC\serial\serial.c
+F35=0 c 1 SRC\watchdog\watchdog.c
+F36=0 c 1 SRC\utility\taskutility.c
+
+[BUILDMODE-MONDEB_INTERNAL]
+kernel=1
+
+[RUNSET-MONDEB_INTERNAL]
+CONVERT=1
+CONVERTKIND=0
+
+[DebState-MONDEB_INTERNAL]
+SupCount=2
+Supfile-0=MONDEB_INTERNAL\Mondeb_57K6_com1.sup
+Supfile-1=MONDEB_INTERNAL\Mondeb_57K6_com2.sup
+Current=Mondeb_57K6_com1.sup
+AliasFile=
+CPURunMode=
+
+[AsmBefore]
+Count=0
+
+[AsmAfter]
+Count=0
+
+[CcBefore]
+Count=0
+
+[CcAfter]
+Count=0
+
+[LnkBefore]
+Count=0
+
+[LnkAfter]
+Count=0
+
+[LibBefore]
+Count=0
+
+[LibAfter]
+Count=0
+
+[CnvBefore]
+Count=0
+
+[CnvAfter]
+Count=0
+
+[ConfigBefore]
+Count=0
+
+[ConfigAfter]
+Count=0
+

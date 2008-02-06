@@ -314,9 +314,6 @@ unsigned portSHORT usAddress;
 
 portBASE_TYPE xPortStartScheduler( void )
 {
-	/* In this port we ignore the parameter and use the configUSE_PREEMPTION
-	definition instead. */
-
 	/* Setup the hardware to generate the tick. */
 	prvSetupTimerInterrupt();
 

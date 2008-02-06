@@ -487,9 +487,6 @@ unsigned portCHAR ucBlock;
 
 portBASE_TYPE xPortStartScheduler( void )
 {
-	/* In this port we ignore the parameter and use the configUSE_PREEMPTION
-	definition instead. */
-
 	/* Setup a timer for the tick ISR is using the preemptive scheduler. */
 	prvSetupTimerInterrupt(); 
 

@@ -9,23 +9,85 @@ $0
 -I "..\Common\include"
 -I "..\..\Source\include"
 -I "..\..\Source\portable\Softune\MB91460"
--O 0
+-I ".\SRC\utility"
+-O 3
+-K SIZE
 -K SHORTADDRESS
 -B
--K NOSCHEDULE
+-K SCHEDULE
 -K A1
 -K SARG
 -Xdof
 -INF STACK
 -x vTaskIncrementTick,vTaskSwitchContext
--K NOEOPT
+-K EOPT
 -K NOLIB
 -K NOUNROLL
 $other
 -Xalign
 -D__91467D
 $time
-1202156592
+1202672931
+$end
+$..\..\Source\queue.c,0
+-g
+-w 1
+-INF LIST
+-I ".\SRC"
+-I ".\SRC\watchdog"
+-I "..\Common\include"
+-I "..\..\Source\include"
+-I "..\..\Source\portable\Softune\MB91460"
+-I ".\SRC\utility"
+-O 3
+-K SIZE
+-K SHORTADDRESS
+-B
+-K SCHEDULE
+-K A1
+-K SARG
+-Xdof
+-INF STACK
+-x vTaskIncrementTick,vTaskSwitchContext
+-K EOPT
+-K NOLIB
+-K NOUNROLL
+$other
+-Xalign
+-D__91467D
+-w 0
+$time
+1202672960
+$end
+$..\..\Source\tasks.c,0
+-g
+-w 1
+-INF LIST
+-I ".\SRC"
+-I ".\SRC\watchdog"
+-I "..\Common\include"
+-I "..\..\Source\include"
+-I "..\..\Source\portable\Softune\MB91460"
+-I ".\SRC\utility"
+-O 3
+-K SIZE
+-K SHORTADDRESS
+-B
+-K SCHEDULE
+-K A1
+-K SARG
+-Xdof
+-INF STACK
+-x vTaskIncrementTick,vTaskSwitchContext
+-K EOPT
+-K NOLIB
+-K NOUNROLL
+$other
+-Xalign
+-D__91467D
+-w 0
+$time
+1202672960
 $end
 $1
 -g
@@ -71,7 +133,7 @@ $2
 -Xdof
 $other
 $time
-1201699972
+1202669532
 $end
 $3
 -dt s,d,r,a
@@ -81,7 +143,7 @@ $3
 -Xdof
 $other
 $time
-1201699972
+1202669532
 $end
 $4
 -Xdof
@@ -155,7 +217,7 @@ $2
 -Xdof
 $other
 $time
-1201109020
+1202669532
 $end
 $3
 -dt s,d,r,a
@@ -165,7 +227,7 @@ $3
 -Xdof
 $other
 $time
-1201109020
+1202669532
 $end
 $4
 -Xdof

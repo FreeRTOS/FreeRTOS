@@ -15,9 +15,9 @@ Exec=0
 AutoLoad=1
 
 [DirInfo]
-WSP=E:\FreeRTOS\FR\91467d_FreeRTOS\91467d_FreeRTOS\Demo\MB91460_Softune\
+WSP=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB91460_Softune\
 
 [EditState]
-STATE-1=SRC\MAIN.c:1
+STATE-1=..\..\Source\portable\Softune\MB91460\port.c:233
 Count=1
 

@@ -10,66 +10,48 @@
 /*************************@INCLUDE_START************************/
 
 
-/* TODO: Add comment here regarding the behaviour of the demo. */
-
 
 /* Hardware specific includes. */
 #include "mb91467d.h"
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+#include "task.h"
 
+#define partstNUM_LEDs	8
 
-static unsigned portSHORT sState[ ledNUMBER_OF_LEDS ] = { pdFALSE };
-static unsigned portSHORT sState1[ ledNUMBER_OF_LEDS ] = { pdFALSE };
+static unsigned portSHORT sState[ partstNUM_LEDs ] = { pdFALSE };
 
 /*-----------------------------------------------------------*/
-static void vPartestInitialise( void )
+void vParTestInitialise( void )
 {
-	DDR16=0xFF;
-	DDR25=0xFF;
+	/* Set port for LED outputs. */
+	DDR16 = 0xFF;
+
+	/* Start with LEDs off. */
+	PDR25 = 0x00;
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if (uxLED < ledNUMBER_OF_LEDS)
+	if( uxLED < partstNUM_LEDs )
 	{
-		vTaskSuspendAll();
+		taskENTER_CRITICAL();
 		
 		/* Toggle the state of the single genuine on board LED. */
-		if( sState[uxLED])	
+		if( sState[ uxLED ])	
 		{
-			PDR25 |= (1 << uxLED);
+			PDR25 |= ( 1 << uxLED );
 		}
 		else
 		{
-			PDR25 &= ~(1 << uxLED);
+			PDR25 &= ~( 1 << uxLED );
 		}
 	
-		sState[uxLED] = !(sState[uxLED]);
+		sState[ uxLED ] = !( sState[ uxLED ] );
 		
-		xTaskResumeAll();
-	}
-	else
-	{
-		uxLED -= ledNUMBER_OF_LEDS;
-		
-		vTaskSuspendAll();
-		
-		/* Toggle the state of the single genuine on board LED. */
-		if( sState1[uxLED])	
-		{
-			PDR16 |= (1 << uxLED);
-		}
-		else
-		{
-			PDR16 &= ~(1 << uxLED);
-		}
-	
-		sState1[uxLED] = !(sState1[uxLED]);
-		
-		xTaskResumeAll();
+		taskEXIT_CRITICAL();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -77,40 +59,22 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
 	/* Set or clear the output [in this case show or hide the '*' character. */
-	if( uxLED < ledNUMBER_OF_LEDS )
+	if( uxLED < partstNUM_LEDs )
 	{
-		vTaskSuspendAll();
+		taskENTER_CRITICAL();
 		{
 			if( xValue )
 			{
-				PDR25 |= (1 << uxLED);
-				sState[uxLED] = 1;
+				PDR25 |= ( 1 << uxLED );
+				sState[ uxLED ] = 1;
 			}
 			else
 			{
-				PDR25 &= ~(1 << uxLED);
-				sState[uxLED] = 0;
+				PDR25 &= ~( 1 << uxLED );
+				sState[ uxLED ] = 0;
 			}
 		}
-		xTaskResumeAll();
-	}
-	else 
-	{
-		uxLED -= ledNUMBER_OF_LEDS;
-		vTaskSuspendAll();
-		{
-			if( xValue )
-			{
-				PDR16 |= (1 << uxLED);
-				sState1[uxLED] = 1;
-			}
-			else
-			{
-				PDR16 &= ~(1 << uxLED);
-				sState1[uxLED] = 0;
-			}
-		}
-		xTaskResumeAll();
+		taskEXIT_CRITICAL();
 	}
 }
 /*-----------------------------------------------------------*/

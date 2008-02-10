@@ -40,19 +40,18 @@
 /* Demo app includes. */
 #include "flash.h"
 #include "integer.h"
-#include "comtest.h"
+#include "comtest2.h"
 #include "PollQ.h"
 #include "semtest.h"
 #include "BlockQ.h"
 #include "dynamic.h"
 #include "flop.h"
-#include "crflash.h"
-#include "crhook.h"
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "BlockTim.h"
 #include "death.h"
 #include "taskutility.h"
+#include "partest.h"
 	
 /* Demo task priorities. */
 #define mainWATCHDOG_TASK_PRIORITY		( tskIDLE_PRIORITY + 5 )
@@ -78,7 +77,7 @@ LCD represent LED's]*/
 #define mainERROR_CHECK_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS  )
 
 /* The total number of LEDs available. */
-#define ledNUMBER_OF_LEDS		( 8 )
+#define mainNO_CO_ROUTINE_LEDs	( 8 )
 
 /* The first LED used by the comtest tasks. */
 #define mainCOM_TEST_LED		( 0x05 )
@@ -115,7 +114,7 @@ void main(void)
 {
 	/* Initialise the hardware ready for the demo. */	
 	prvSetupHardware();
-	
+
 	/* Start the standard demo application tasks. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
@@ -125,12 +124,10 @@ void main(void)
 	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );	
 	vStartDynamicPriorityTasks();	
 	vStartMathTasks( tskIDLE_PRIORITY );	
-	vStartFlashCoRoutines(ledNUMBER_OF_LEDS);	
-	vStartHookCoRoutines();
 	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vStartQueuePeekTasks();
 	vCreateBlockTimeTasks();
-	
+
 	/* Start the 'Check' task which is defined in this file. */
 	xTaskCreate( vErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
 
@@ -160,7 +157,12 @@ void main(void)
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
+portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
+
+
+	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
+	works correctly. */
+	xLastExecutionTime = xTaskGetTickCount();
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
@@ -169,7 +171,8 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 		/* Wait until it is time to check again.  The time we wait here depends
 		on whether an error has been detected or not.  When an error is 
 		detected the time is shortened resulting in a faster LED flash rate. */
-		vTaskDelay( xDelayPeriod );
+		/* Perform this check every mainCHECK_DELAY milliseconds. */
+		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
 		/* See if the other tasks are all ok. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
@@ -181,14 +184,14 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 		}
 
 		/* Flash! */
-		vParTestToggleLED(mainCHECK_TEST_LED);
+		vParTestToggleLED( mainCHECK_TEST_LED );
 	}
 }
 /*-----------------------------------------------------------*/
 
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
-static portBASE_TYPE xErrorOccurred = pdFALSE;
+portBASE_TYPE lReturn = pdPASS;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -198,70 +201,60 @@ static portBASE_TYPE xErrorOccurred = pdFALSE;
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 
 	if( xAreComTestTasksStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if( xAreMathsTaskStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
-	}
-	
-	if( xAreFlashCoRoutinesStillRunning() != pdTRUE ) 
-	{
-		xErrorOccurred = pdTRUE
-	}
-	
-	if( xAreHookCoRoutinesStillRunning() != pdTRUE )
-	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
 	if ( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
-		xErrorOccurred = pdTRUE
+		lReturn = pdFAIL;
 	}
 	
-	return sNoErrorFound;
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -283,20 +276,6 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-/* The below callback function is called from Tick ISR if configUSE_TICK_HOOK 
-is configured as 1. This function needs to be uncommented if the crhook.c
-is not used, since the crhook.c has also defined vApplicationTickHook().  */  
-#if configUSE_TICK_HOOK == 1
-	void vApplicationTickHook ( void )
-	{
-		/* Are we using the tick interrupt to kick the watchdog? */
-		#if WATCHDOG == WTC_IN_TICK
-			Kick_Watchdog();
-		#endif
-	}
-#endif
-/*-----------------------------------------------------------*/
-
 /* The below callback function is called from Delayed ISR if configUSE_IDLE_HOOK 
 is configured as 1. */  
 #if configUSE_IDLE_HOOK == 1
@@ -306,7 +285,24 @@ is configured as 1. */
 		#if WATCHDOG == WTC_IN_IDLE
 			Kick_Watchdog();
 		#endif
-		
-		vCoRoutineSchedule();
+
+		#if configUSE_CO_ROUTINES == 1		
+			vCoRoutineSchedule();
+		#endif
 	}
 #endif
+
+/*
+The below callback function is called from Tick ISR if configUSE_TICK_HOOK 
+is configured as 1. */  
+#if configUSE_TICK_HOOK == 1
+	void vApplicationTickHook ( void )
+	{
+		#if WATCHDOG == WTC_IN_TICK
+			Kick_Watchdog();
+		#endif
+	}
+#endif
+
+
+

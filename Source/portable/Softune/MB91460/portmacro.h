@@ -60,7 +60,7 @@
 #define portLONG		long
 #define portSHORT		int
 #define portSTACK_TYPE	unsigned portSHORT
-#define portBASE_TYPE	char
+#define portBASE_TYPE	long
 
 /* This is required since SOFTUNE doesn't support inline directive as is. */
 #define inline

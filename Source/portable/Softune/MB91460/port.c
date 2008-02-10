@@ -219,8 +219,8 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the AVR port will get stopped.  If required simply
-	disable the tick interrupt here. */
+	/* Not implemented - unlikely to ever be required as there is nothing to
+	return to. */
 }
 /*-----------------------------------------------------------*/
 
@@ -229,6 +229,8 @@ void vPortEndScheduler( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
+/* The peripheral clock divided by 32 is used by the timer. */
+const unsigned portSHORT usReloadValue = ( unsigned portSHORT ) ( ( ( configPER_CLOCK_HZ / configTICK_RATE_HZ ) / 32UL ) - 1UL );
 
 	TMCSR0_CNTE=0;		/* Count Disable */
     TMCSR0_CSL=0x2;		/* CLKP/32 */
@@ -236,8 +238,7 @@ static void prvSetupTimerInterrupt( void )
     TMCSR0_RELD=1;		/* Reload */
     
     TMCSR0_UF=0;		/* Clear underflow flag */
-	//TMRLR0=0x1F3;		/* Tick = 1 ms*/ 
-	TMRLR0=0x1387;		/* Tick = 10 ms*/ 
+	TMRLR0=usReloadValue;
 	TMCSR0_INTE=1;		/* Interrupt Enable */
 	TMCSR0_CNTE=1;		/* Count Enable */
 	TMCSR0_TRG=1;		/* Trigger */

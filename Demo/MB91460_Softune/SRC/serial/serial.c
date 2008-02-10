@@ -74,12 +74,12 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
 		 /* Initialize UART asynchronous mode */
 		BGR02 = configPER_CLOCK_HZ / ulWantedBaud;
 		  
-		SCR02 = 0x17;    /* 8N1 */
-		SMR02 = 0x0d;    /* enable SOT3, Reset, normal mode */
-		SSR02 = 0x02;    /* LSB first, enable receive interrupts */
+		SCR02 = 0x17;	/* 8N1 */
+		SMR02 = 0x0d;	/* enable SOT3, Reset, normal mode */
+		SSR02 = 0x02;	/* LSB first, enable receive interrupts */
 
-		PFR20_D0 = 1;    // enable UART
-		PFR20_D1 = 1;    // enable UART
+		PFR20_D0 = 1;	// enable UART
+		PFR20_D1 = 1;	// enable UART
 
 		EPFR20_D1 = 0;   // enable UART
 	}

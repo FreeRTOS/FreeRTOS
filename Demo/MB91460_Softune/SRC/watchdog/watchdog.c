@@ -1,7 +1,7 @@
 /* THIS SAMPLE CODE IS PROVIDED AS IS AND IS SUBJECT TO ALTERATIONS. FUJITSU */
 /* MICROELECTRONICS ACCEPTS NO RESPONSIBILITY OR LIABILITY FOR ANY ERRORS OR */
-/* ELIGIBILITY FOR ANY PURPOSES.                                             */
-/*                 (C) Fujitsu Microelectronics Europe GmbH                  */
+/* ELIGIBILITY FOR ANY PURPOSES.											 */
+/*				 (C) Fujitsu Microelectronics Europe GmbH				  */
 /*------------------------------------------------------------------------
   watchdog.c
   - This file contains the function deefinition for hardware watchdog.
@@ -29,16 +29,13 @@ void InitWatchdog(void)
 static void prvWatchdogTask	( void *pvParameters )
 {
  	const portTickType xFrequency = WTC_CLR_PER;
-    portTickType xLastWakeTime;
+	portTickType xLastWakeTime;
 
 	/* Get currrent tick count */ 
 	xLastWakeTime = xTaskGetTickCount();
 	
-    for( ; ; )
-    {
-	   	/* Get currrent tick count */ 
-	    xLastWakeTime = xTaskGetTickCount();
-		
+	for( ; ; )
+	{
 		Kick_Watchdog();
 			   
 		/* Block the task for WTC_CLR_PER ticks (300 ms) at watchdog overflow 

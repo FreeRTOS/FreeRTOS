@@ -1,7 +1,7 @@
 /* THIS SAMPLE CODE IS PROVIDED AS IS AND IS SUBJECT TO ALTERATIONS. FUJITSU */
 /* MICROELECTRONICS ACCEPTS NO RESPONSIBILITY OR LIABILITY FOR ANY ERRORS OR */
-/* ELIGIBILITY FOR ANY PURPOSES.                                             */
-/*                 (C) Fujitsu Microelectronics Europe GmbH                  */
+/* ELIGIBILITY FOR ANY PURPOSES.											 */
+/*				 (C) Fujitsu Microelectronics Europe GmbH				  */
 /*------------------------------------------------------------------------
   taskutility.C
   - 
@@ -28,36 +28,36 @@ void InitUart5(void)
 	//Initialize UART asynchronous mode
 	BGR05 = 1666; //  9600 Baud @ 16MHz
 	
-	SCR05 = 0x17;    // 7N2
-	SMR05 = 0x0d;    // enable SOT3, Reset, normal mode
-	SSR05 = 0x00;    // LSB first
+	SCR05 = 0x17;	// 7N2
+	SMR05 = 0x0d;	// enable SOT3, Reset, normal mode
+	SSR05 = 0x00;	// LSB first
 	
-	PFR19_D4 = 1;    // enable UART
-	PFR19_D5 = 1;    // enable UART
+	PFR19_D4 = 1;	// enable UART
+	PFR19_D5 = 1;	// enable UART
 
 	//EPFR19 = 0x00;   // enable UART
 	
 	SSR05_RIE = 1;
 }
 
-void Putch5(char ch)         /* sends a char */
+void Putch5(char ch)		 /* sends a char */
 {
-  while (SSR05_TDRE == 0);    /* wait for transmit buffer empty 	*/
-  TDR05 = ch;                 /* put ch into buffer			*/
+  while (SSR05_TDRE == 0);	/* wait for transmit buffer empty 	*/
+  TDR05 = ch;				 /* put ch into buffer			*/
 }
 
-char Getch5(void)            /* waits for and returns incomming char 	*/
+char Getch5(void)			/* waits for and returns incomming char 	*/
 {
   volatile unsigned ch;
   
   while(SSR05_RDRF == 0);	 /* wait for data received  	*/
-  if (SSR05_ORE)              /* overrun error 		*/
+  if (SSR05_ORE)			  /* overrun error 		*/
   {
-    ch = RDR05;              /* reset error flags 		*/
-    return (char)(-1);
+	ch = RDR05;			  /* reset error flags 		*/
+	return (char)(-1);
   }
   else
-  return (RDR05);            /* return char 			*/
+  return (RDR05);			/* return char 			*/
 }
 
 void Puts5(const char *Name5)  /* Puts a String to UART */
@@ -65,11 +65,11 @@ void Puts5(const char *Name5)  /* Puts a String to UART */
   volatile portSHORT i,len;
   len = strlen(Name5);
 	
-  for (i=0; i<strlen(Name5); i++)   /* go through string                     */
+  for (i=0; i<strlen(Name5); i++)   /* go through string					 */
   {
-    if (Name5[i] == 10)
-      Putch5(13);
-    Putch5(Name5[i]);              /* send it out                           */
+	if (Name5[i] == 10)
+	  Putch5(13);
+	Putch5(Name5[i]);			  /* send it out						   */
   }
 }
 
@@ -80,9 +80,9 @@ void Puthex5(unsigned long n, unsigned char digits)
    div=(4*(digits-1));	/* init shift divisor */
    for (i=0;i<digits;i++)
    {
-     digit = ((n >> div)&0xF); /* get hex-digit value */
+	 digit = ((n >> div)&0xF); /* get hex-digit value */
 	 Putch5(digit + ((digit < 0xA) ? '0' : 'A' - 0xA));
-     div-=4;     		/* next digit shift */
+	 div-=4;	 		/* next digit shift */
    }
 }
 
@@ -91,7 +91,7 @@ void Putdec5(unsigned long x, int digits)
 	portSHORT i;
 	portCHAR buf[10],sign=1;
 	
-	if (digits < 0) {     /* should be print of zero? */
+	if (digits < 0) {	 /* should be print of zero? */
 	  digits *= (-1);
 	  sign =1;
 	}  
@@ -102,18 +102,18 @@ void Putdec5(unsigned long x, int digits)
 		x = x/10;
 	}
 
-    if ( sign )
-    {
+	if ( sign )
+	{
 	  for (i=0; buf[i]=='0'; i++) { /* no print of zero */
 		if ( i<digits-1)
 			buf[i] = ' ';
 	  }		
-    }
-    
+	}
+	
 	Puts5(buf);					/* send string */
 }
 
-void vTraceListTasks( unsigned portBASE_TYPE uxPriority )
+void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 {
 	portENTER_CRITICAL();
 	InitUart5();
@@ -150,7 +150,7 @@ static void vUART5Task( void *pvParameters )
 				vTaskList( ( signed char * ) tasklist_buff );
 				Puts5("\n\rThe current task list is as follows....");
 				Puts5("\n\r----------------------------------------------");
-				Puts5("\n\rName          State  Priority  Stack   Number");
+				Puts5("\n\rName		  State  Priority  Stack   Number");
 				Puts5("\n\r----------------------------------------------");
 				Puts5(tasklist_buff);
 				Puts5("\r----------------------------------------------");
@@ -164,7 +164,7 @@ static void vUART5Task( void *pvParameters )
 				Puts5("\n\rThe trace ended!!");
 				Puts5("\n\rThe trace is as follows....");
 				Puts5("\n\r--------------------------------------------------------");
-				Puts5("\n\r  Tick     | Task Number  |     Tick     | Task Number  |");
+				Puts5("\n\r  Tick	 | Task Number  |	 Tick	 | Task Number  |");
 				Puts5("\n\r--------------------------------------------------------\n\r");
 				for( j = 0 ; j < trace_len ; j++ )
 				{

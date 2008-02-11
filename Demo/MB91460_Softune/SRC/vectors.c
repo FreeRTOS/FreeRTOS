@@ -49,7 +49,7 @@ void InitIrqLevels(void)
 					/* External Interrupt 13	*/
 	ICR07 = 31;		/* External Interrupt 14	*/
 					/* External Interrupt 15	*/
-	ICR08 = 23;		/* Reload Timer 0			*/
+	ICR08 = 30;		/* Reload Timer 0			*/
 					/* Reload Timer 1			*/
 	ICR09 = 31;		/* Reload Timer 2			*/
 					/* Reload Timer 3			*/
@@ -75,17 +75,17 @@ void InitIrqLevels(void)
 					/* USART (LIN) 0 TX			*/
 	ICR20 = 31;		/* USART (LIN) 1 RX			*/
 					/* USART (LIN) 1 TX			*/
-	ICR21 = 21;		/* USART (LIN) 2 RX			*/
+	ICR21 = 30;		/* USART (LIN) 2 RX			*/
 					/* USART (LIN) 2 TX			*/
 	ICR22 = 31;		/* USART (LIN) 3 RX			*/
 					/* USART (LIN) 3 TX			*/
-	ICR23 = 23;		/* System Reserved			*/
+	ICR23 = 30;		/* System Reserved			*/
 					/* Delayed Interrupt		*/
 	ICR24 = 31;		/* System Reserved			*/
 					/* System Reserved			*/
 	ICR25 = 31;		/* USART (LIN, FIFO) 4 RX	*/
 					/* USART (LIN, FIFO) 4 TX	*/
-	ICR26 = 21;		/* USART (LIN, FIFO) 5 RX	*/
+	ICR26 = 30;		/* USART (LIN, FIFO) 5 RX	*/
 					/* USART (LIN, FIFO) 5 TX	*/
 	ICR27 = 31;		/* USART (LIN, FIFO) 6 RX	*/
 					/* USART (LIN, FIFO) 6 TX	*/

@@ -18,6 +18,8 @@ AutoLoad=1
 WSP=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB91460_Softune\
 
 [EditState]
-STATE-1=SRC\main.c:1
-Count=1
+STATE-1=SRC\main.c:18
+STATE-2=..\..\Source\queue.c:988
+STATE-3=..\..\Source\tasks.c:1342
+Count=3
 

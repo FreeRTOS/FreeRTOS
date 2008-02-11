@@ -174,7 +174,7 @@ signed portBASE_TYPE xReturn;
 		/*If the post causes a task to wake force a context switch 
 		as the woken task may have a higher priority than the task we have 
 		interrupted. */
-		portYIELDFromISR();
+		portYIELD_FROM_ISR();
 	}
 }
 

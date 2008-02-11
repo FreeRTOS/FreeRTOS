@@ -107,6 +107,24 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void );
  */
 static void prvSetupHardware( void );
 
+/*
+ * Tasks that test the context switch mechanism by filling the CPU registers
+ * with known values then checking that each register contains the value
+ * expected.  Each of the two tasks use different values, and as low priority
+ * tasks, get swapped in and out regularly.
+ */
+static void vFirstRegisterTestTask( void *pvParameters );
+static void vSecondRegisterTestTask( void *pvParameters );
+
+/*---------------------------------------------------------------------------*/
+
+/* The variable that is set to true should an error be found in one of the 
+register test tasks. */
+unsigned portLONG ulRegTestError = pdFALSE;
+
+/* Variables used to ensure the register check tasks are still executing. */
+static volatile unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
+
 /*---------------------------------------------------------------------------*/
 
 /* Start all the demo application tasks, then start the scheduler. */
@@ -130,6 +148,9 @@ void main(void)
 
 	/* Start the 'Check' task which is defined in this file. */
 	xTaskCreate( vErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
+
+	xTaskCreate( vFirstRegisterTestTask, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vSecondRegisterTestTask, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Start the task that write trace information to the UART. */	
 	vUtilityStartTraceTask( mainUTILITY_TASK_PRIORITY );
@@ -158,7 +179,6 @@ void main(void)
 static void vErrorChecks( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
-
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -192,6 +212,7 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
+static unsigned portLONG ulLastRegTest1Counter = 0UL, ulLastRegTest2Counter = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -253,7 +274,27 @@ portBASE_TYPE lReturn = pdPASS;
 	{
 		lReturn = pdFAIL;
 	}
+
+	/* Have the register test tasks found any errors? */
+	if( ulRegTestError != pdFALSE )
+	{
+		lReturn = pdFAIL;
+	}
+
+	/* Are the register test tasks still running? */
+	if( ulLastRegTest1Counter == ulRegTest1Counter )
+	{
+		lReturn = pdFAIL;
+	}
 	
+	if( ulLastRegTest2Counter == ulRegTest2Counter )
+	{
+		lReturn = pdFAIL;
+	}
+
+	ulLastRegTest1Counter = ulRegTest1Counter;
+	ulLastRegTest2Counter = ulRegTest2Counter;
+
 	return lReturn;
 }
 /*-----------------------------------------------------------*/
@@ -279,7 +320,7 @@ static void prvSetupHardware( void )
 /* The below callback function is called from Delayed ISR if configUSE_IDLE_HOOK 
 is configured as 1. */  
 #if configUSE_IDLE_HOOK == 1
-	void vApplicationIdleHook ( void )
+	void vApplicationIdleHook( void )
 	{
 		/* Are we using the idle task to kick the watchdog? */
 		#if WATCHDOG == WTC_IN_IDLE
@@ -291,18 +332,265 @@ is configured as 1. */
 		#endif
 	}
 #endif
+/*-----------------------------------------------------------*/
 
 /*
 The below callback function is called from Tick ISR if configUSE_TICK_HOOK 
 is configured as 1. */  
 #if configUSE_TICK_HOOK == 1
-	void vApplicationTickHook ( void )
+	void vApplicationTickHook( void )
 	{
 		#if WATCHDOG == WTC_IN_TICK
 			Kick_Watchdog();
 		#endif
 	}
 #endif
+/*-----------------------------------------------------------*/
 
+static void vFirstRegisterTestTask( void *pvParameters )
+{
+extern volatile unsigned portLONG ulCriticalNesting;
+
+	/* Fills the registers with known values (different to the values
+	used in vSecondRegisterTestTask()), then checks that the registers still
+	all contain the expected value.  This is done to test the context save
+	and restore mechanism as this task is swapped onto and off of the CPU.
+
+	The critical nesting depth is also saved as part of the context so also
+	check this maintains an expected value. */
+	ulCriticalNesting = 0x12345678;
+
+	for( ;; )
+	{
+		#pragma asm
+			;Load known values into each register.
+			LDI	#0x11111111, R0
+			LDI	#0x22222222, R1
+			LDI	#0x33333333, R2
+			LDI #0x44444444, R3
+			LDI	#0x55555555, R4
+			LDI	#0x66666666, R5
+			LDI	#0x77777777, R6
+			LDI	#0x88888888, R7
+			LDI	#0x99999999, R8
+			LDI	#0xaaaaaaaa, R9
+			LDI	#0xbbbbbbbb, R10
+			LDI	#0xcccccccc, R11
+			LDI	#0xdddddddd, R12
+			
+			;Check each register still contains the expected value.
+			LDI #0x11111111, R13
+			CMP R13, R0
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x22222222, R13
+			CMP R13, R1
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x33333333, R13
+			CMP R13, R2
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x44444444, R13
+			CMP R13, R3
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x55555555, R13
+			CMP R13, R4
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x66666666, R13
+			CMP R13, R5
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x77777777, R13
+			CMP R13, R6
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x88888888, R13
+			CMP R13, R7
+			BNE First_Set_Error
+			NOP
+
+			LDI #0x99999999, R13
+			CMP R13, R8
+			BNE First_Set_Error
+			NOP
+
+			LDI #0xaaaaaaaa, R13
+			CMP R13, R9
+			BNE First_Set_Error
+			NOP
+
+			LDI #0xbbbbbbbb, R13
+			CMP R13, R10
+			BNE First_Set_Error
+			NOP
+
+			LDI #0xcccccccc, R13
+			CMP R13, R11
+			BNE First_Set_Error
+			NOP
+
+			LDI #0xdddddddd, R13
+			CMP R13, R12
+			BNE First_Set_Error
+			NOP
+
+			BRA First_Start_Next_Loop
+			NOP
+
+		First_Set_Error:
+
+			; Latch that an error has occurred.
+			LDI #_ulRegTestError, R0			
+			LDI #0x00000001, R1
+			ST R1, @R0
+
+
+		First_Start_Next_Loop:
+
+
+		#pragma endasm
+
+		ulRegTest1Counter++;
+
+		if( ulCriticalNesting != 0x12345678 )
+		{
+			ulRegTestError = pdTRUE;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void vSecondRegisterTestTask( void *pvParameters )
+{
+extern volatile unsigned portLONG ulCriticalNesting;
+
+	/* Fills the registers with known values (different to the values
+	used in vFirstRegisterTestTask()), then checks that the registers still
+	all contain the expected value.  This is done to test the context save
+	and restore mechanism as this task is swapped onto and off of the CPU.
+
+	The critical nesting depth is also saved as part of the context so also
+	check this maintains an expected value. */
+	ulCriticalNesting = 0x87654321;
+
+	for( ;; )
+	{
+		#pragma asm
+			;Load known values into each register.
+			LDI	#0x11111111, R1
+			LDI	#0x22222222, R2
+			LDI	#0x33333333, R3
+			LDI #0x44444444, R4
+			LDI	#0x55555555, R5
+			LDI	#0x66666666, R6
+			LDI	#0x77777777, R7
+			LDI	#0x88888888, R8
+			LDI	#0x99999999, R9
+			LDI	#0xaaaaaaaa, R10
+			LDI	#0xbbbbbbbb, R11
+			LDI	#0xcccccccc, R12
+			LDI	#0xdddddddd, R0
+			
+			;Check each register still contains the expected value.
+			LDI #0x11111111, R13
+			CMP R13, R1
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x22222222, R13
+			CMP R13, R2
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x33333333, R13
+			CMP R13, R3
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x44444444, R13
+			CMP R13, R4
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x55555555, R13
+			CMP R13, R5
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x66666666, R13
+			CMP R13, R6
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x77777777, R13
+			CMP R13, R7
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x88888888, R13
+			CMP R13, R8
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0x99999999, R13
+			CMP R13, R9
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0xaaaaaaaa, R13
+			CMP R13, R10
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0xbbbbbbbb, R13
+			CMP R13, R11
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0xcccccccc, R13
+			CMP R13, R12
+			BNE Second_Set_Error
+			NOP
+
+			LDI #0xdddddddd, R13
+			CMP R13, R0
+			BNE Second_Set_Error
+			NOP
+
+			BRA Second_Start_Next_Loop
+			NOP
+
+		Second_Set_Error:
+
+			; Latch that an error has occurred.
+			LDI #_ulRegTestError, R0			
+			LDI #0x00000001, R1
+			ST R1, @R0
+
+
+		Second_Start_Next_Loop:
+
+
+		#pragma endasm
+
+		ulRegTest2Counter++;
+
+		if( ulCriticalNesting != 0x87654321 )
+		{
+			ulRegTestError = pdTRUE;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
 
 

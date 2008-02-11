@@ -18,6 +18,6 @@ AutoLoad=1
 WSP=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB91460_Softune\
 
 [EditState]
-STATE-1=..\..\Source\portable\Softune\MB91460\port.c:233
+STATE-1=SRC\main.c:1
 Count=1
 

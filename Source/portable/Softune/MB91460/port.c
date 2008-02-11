@@ -51,6 +51,10 @@ any details of its type. */
 typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
+/* Constants required to handle critical sections. */
+#define portNO_CRITICAL_NESTING		( ( unsigned portBASE_TYPE ) 0 )
+volatile unsigned portLONG ulCriticalNesting = 9999UL;
+
 /*-----------------------------------------------------------*/
 
 
@@ -63,6 +67,10 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 	 STM1 (R14,R13,R12,R11,R10,R9,R8)			;Store R14-R8
 	 ST MDH, @-R15								;Store MDH
 	 ST MDL, @-R15								;Store MDL
+
+	 LDI #_ulCriticalNesting, R0				;Get the address of the critical nesting counter
+	 LD @R0, R0									;Get the value of the critical nesting counter
+	 ST R0, @-R15								;Store the critical nesting value to the user stack.
 	 
 	 ANDCCR #0xDF								;Switch back to system stack
 	 LD @R15+,R0								;Store PC to R0 
@@ -98,6 +106,10 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 
 	 ORCCR #0x20								;Switch back to retreive the remaining context
 
+	 LDI #_ulCriticalNesting, R0				;Get the address of the critical nesting counter
+	 LD @R15+, R1								;Get the saved critical nesting value
+	 ST R1, @R0									;Save the critical nesting value into the ulCriticalNesting variable
+
 	 LD @R15+, MDL								;Restore MDL
 	 LD @R15+, MDH								;Restore MDH
 	 LDM1 (R14,R13,R12,R11,R10,R9,R8)			;Restore R14-R8
@@ -124,8 +136,6 @@ static void prvSetupTimerInterrupt( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned portSHORT usAddress;
-
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
 
@@ -185,8 +195,13 @@ unsigned portSHORT usAddress;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x22220000;	/* MDL */
 	pxTopOfStack--;
 
-	usAddress = ( unsigned portSHORT ) pxCode;
-	*pxTopOfStack = ( portSTACK_TYPE ) usAddress ;	/* PC */
+	/* The task starts with its ulCriticalNesting variable set to 0, interrupts
+	being enabled. */
+	*pxTopOfStack = portNO_CRITICAL_NESTING;
+	pxTopOfStack--;
+
+	/* The start of the task code. */
+	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
 	pxTopOfStack--;
 	 
     /* PS - User Mode, USP, ILM=31, Interrupts enabled */
@@ -351,3 +366,31 @@ const unsigned portSHORT usReloadValue = ( unsigned portSHORT ) ( ( ( configPER_
 	RETI
 
 #pragma endasm
+
+/*-----------------------------------------------------------*/
+
+void vPortEnterCritical( void )
+{
+	/* Disable interrupts */
+	portDISABLE_INTERRUPTS();
+
+	/* Now interrupts are disabled ulCriticalNesting can be accessed
+	 directly.  Increment ulCriticalNesting to keep a count of how many times
+	 portENTER_CRITICAL() has been called. */
+	ulCriticalNesting++;
+}
+/*-----------------------------------------------------------*/
+
+void vPortExitCritical( void )
+{
+	if( ulCriticalNesting > portNO_CRITICAL_NESTING )
+	{
+		ulCriticalNesting--;
+		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
+		{
+			/* Enable all interrupt/exception. */
+			portENABLE_INTERRUPTS();
+		}
+	}
+}
+/*-----------------------------------------------------------*/

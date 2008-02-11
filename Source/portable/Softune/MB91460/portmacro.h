@@ -59,7 +59,7 @@
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		int
-#define portSTACK_TYPE	unsigned portSHORT
+#define portSTACK_TYPE	unsigned portLONG
 #define portBASE_TYPE	long
 
 /* This is required since SOFTUNE doesn't support inline directive as is. */
@@ -75,20 +75,12 @@
 /*-----------------------------------------------------------*/	
 
 /* Critical section management. */
-
-
-#define portENTER_CRITICAL() \
-	__asm(" ST PS,@-R15 "); \
-	__asm(" ANDCCR #0xef "); \
-
-
-#define portEXIT_CRITICAL()	 \
-	__asm(" LD @R15+,PS "); \
-
-
-#define portDISABLE_INTERRUPTS()  __DI();
-
-#define portENABLE_INTERRUPTS()  __EI();
+void vPortEnterCritical( void );
+void vPortExitCritical( void );
+#define portENTER_CRITICAL() vPortEnterCritical()
+#define portEXIT_CRITICAL() vPortExitCritical()
+#define portDISABLE_INTERRUPTS() __DI();
+#define portENABLE_INTERRUPTS() __EI();
 
 /*-----------------------------------------------------------*/
 
@@ -102,8 +94,8 @@
 /* portYIELD() uses SW interrupt */
 #define portYIELD()					__asm( " INT #40H " );
 
-/* portYIELDFromISR() uses delayed interrupt */
-#define portYIELDFromISR()			DICR_DLYI = 1;
+/* portYIELD_FROM_ISR() uses delayed interrupt */
+#define portYIELD_FROM_ISR()			DICR_DLYI = 1
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

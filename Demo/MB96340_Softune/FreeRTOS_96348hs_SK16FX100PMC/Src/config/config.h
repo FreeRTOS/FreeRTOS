@@ -1,12 +1,17 @@
 /* THIS SAMPLE CODE IS PROVIDED AS IS AND IS SUBJECT TO ALTERATIONS. FUJITSU */
+
 /* MICROELECTRONICS ACCEPTS NO RESPONSIBILITY OR LIABILITY FOR ANY ERRORS OR */
+
 /* ELIGIBILITY FOR ANY PURPOSES.                                             */
+
 /*                 (C) Fujitsu Microelectronics Europe GmbH                  */
+
 /*---------------------------------------------------------------------------
   config.h
   - This file contains the defines to include or exclude a certain demo
     application function.
 /*---------------------------------------------------------------------------*/
+
 /* The below are the defines that includes the corresponding function (those create related
  * tasks) if they are defined and vice a versa.
  */
@@ -29,27 +34,30 @@
  * requires high amount of memory. It should be noted that if all the task are tried to be inclued
  * then the compiler would give memory overflow error.
  */
-
 #if __CONFIG__ == 1
-	#define INCLUDE_AltStartComTestTasks		1
-	#define INCLUDE_StartMathTasks				0
-	#define INCLUDE_CreateBlockTimeTasks		0
-	#define INCLUDE_TraceListTasks				0
+	#define INCLUDE_AltStartComTestTasks	1
+	#define INCLUDE_StartMathTasks			0
+	#define INCLUDE_CreateBlockTimeTasks	0
+	#define INCLUDE_TraceListTasks			0
 #elif __CONFIG__ == 2
-	#define INCLUDE_AltStartComTestTasks		0
-	#define INCLUDE_StartMathTasks				0
-	#define INCLUDE_CreateBlockTimeTasks		0
-	#define INCLUDE_TraceListTasks				1
+	#define INCLUDE_AltStartComTestTasks	0
+	#define INCLUDE_StartMathTasks			0
+	#define INCLUDE_CreateBlockTimeTasks	0
+	#define INCLUDE_TraceListTasks			1
 #elif __CONFIG__ == 3
-	#define INCLUDE_AltStartComTestTasks		1
-	#define INCLUDE_StartMathTasks				1
-	#define INCLUDE_CreateBlockTimeTasks		1
-	#define INCLUDE_TraceListTasks				0
+	#define INCLUDE_AltStartComTestTasks	0
+	#define INCLUDE_StartMathTasks			0
+	#define INCLUDE_CreateBlockTimeTasks	0
+	#define INCLUDE_TraceListTasks			0
 #elif __CONFIG__ == 4
-	#define INCLUDE_AltStartComTestTasks		0
-	#define INCLUDE_StartMathTasks				0
-	#define INCLUDE_CreateBlockTimeTasks		1
-	#define INCLUDE_TraceListTasks				1
+	#define INCLUDE_AltStartComTestTasks	0
+	#define INCLUDE_StartMathTasks			0
+	#define INCLUDE_CreateBlockTimeTasks	1
+	#define INCLUDE_TraceListTasks			1
 #else
+	#define INCLUDE_AltStartComTestTasks	0
+	#define INCLUDE_StartMathTasks			0
+	#define INCLUDE_CreateBlockTimeTasks	0
+	#define INCLUDE_TraceListTasks			0
 	#error __CONFIG__ should be defined and it should have value between 1 to 4
 #endif

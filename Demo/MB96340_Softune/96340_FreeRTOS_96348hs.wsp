@@ -19,9 +19,9 @@ Exec=0
 AutoLoad=1
 
 [DirInfo]
-WSP=E:\FreeRTOS\16FX\96340_FreeRTOS_96348hs\96340_FreeRTOS_96348hs\Demo\MB96340_Softune\
+WSP=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB96340_Softune\
 
 [EditState]
-STATE-1=..\Common\Minimal\crflash_sk16fx100mpc.c:1
+STATE-1=freertos_96348hs_sk16fx100pmc\src\serial\serial.c:192
 Count=1
 

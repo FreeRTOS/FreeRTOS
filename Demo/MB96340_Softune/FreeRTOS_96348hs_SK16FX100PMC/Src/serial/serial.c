@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.6.1 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -19,21 +19,26 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
-	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
 	***************************************************************************
 */
-
 
 /* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.   
  * 
@@ -52,50 +57,49 @@
 #include "serial.h"
 
 /* The queue used to hold received characters. */
-static xQueueHandle xRxedChars; 
+static xQueueHandle			xRxedChars;
 
 /* The queue used to hold characters waiting transmission. */
-static xQueueHandle xCharsForTx; 
+static xQueueHandle			xCharsForTx;
 
-static volatile portSHORT sTHREEmpty;
+static volatile portSHORT	sTHREEmpty;
 
-static volatile portSHORT queueFail = pdFALSE;
+static volatile portSHORT	queueFail = pdFALSE;
 
 /*-----------------------------------------------------------*/
-
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-
 	/* Initialise the hardware. */
 	portENTER_CRITICAL();
 	{
 		/* Create the queues used by the com test task. */
-		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof(signed portCHAR) );
+		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof(signed portCHAR) );
 
-		if ( xRxedChars == 0)
+		if( xRxedChars == 0 )
 		{
 			queueFail = pdTRUE;
 		}
-		
-		if ( xCharsForTx == 0)
+
+		if( xCharsForTx == 0 )
 		{
 			queueFail = pdTRUE;
 		}
-		
+
 		/* Initialize UART asynchronous mode */
 		BGR0 = configCLKP1_CLOCK_HZ / ulWantedBaud;
-		  
-		SCR0 = 0x17;    /* 8N1 */
-		SMR0 = 0x0d;    /* enable SOT3, Reset, normal mode */
-		SSR0 = 0x02;    /* LSB first, enable receive interrupts */
-  
-		PIER08_IE2 = 1;  /* enable input */
-		DDR08_D2 = 0;    /* switch P08_2 to input */
-		DDR08_D3 = 1;    /* switch P08_3 to output */
+
+		SCR0 = 0x17;	/* 8N1 */
+		SMR0 = 0x0d;	/* enable SOT3, Reset, normal mode */
+		SSR0 = 0x02;	/* LSB first, enable receive interrupts */
+
+		PIER08_IE2 = 1; /* enable input */
+		DDR08_D2 = 0;	/* switch P08_2 to input */
+		DDR08_D3 = 1;	/* switch P08_3 to output */
 	}
+
 	portEXIT_CRITICAL();
-	
+
 	/* Unlike other ports, this serial code does not allow for more than one
 	com port.  We therefore don't return a pointer to a port structure and can
 	instead just return NULL. */
@@ -107,7 +111,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
-	if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
+	if( xQueueReceive(xRxedChars, pcRxedChar, xBlockTime) )
 	{
 		return pdTRUE;
 	}
@@ -120,7 +124,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
 {
-signed portBASE_TYPE xReturn;
+signed portBASE_TYPE	xReturn;
 
 	/* Transmit a character. */
 	portENTER_CRITICAL();
@@ -143,7 +147,7 @@ signed portBASE_TYPE xReturn;
 			/* Return false if after the block time there is no room on the Tx 
 			queue.  It is ok to block inside a critical section as each task
 			maintains it's own critical section status. */
-			if (xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) == pdTRUE)
+			if( xQueueSend(xCharsForTx, &cOutChar, xBlockTime) == pdTRUE )
 			{
 				xReturn = pdPASS;
 			}
@@ -152,8 +156,8 @@ signed portBASE_TYPE xReturn;
 				xReturn = pdFAIL;
 			}
 		}
-		
-		if (pdPASS == xReturn)
+
+		if( pdPASS == xReturn )
 		{
 			/* Turn on the Tx interrupt so the ISR will remove the character from the
 			queue and send it.   This does not need to be in a critical section as
@@ -161,8 +165,8 @@ signed portBASE_TYPE xReturn;
 			will simply turn off the Tx interrupt again. */
 			SSR0_TIE = 1;
 		}
-		
 	}
+
 	portEXIT_CRITICAL();
 
 	return pdPASS;
@@ -172,36 +176,35 @@ signed portBASE_TYPE xReturn;
 /*
  * UART RX interrupt service routine.
  */
- __interrupt void UART0_RxISR (void)
+__interrupt void UART0_RxISR( void )
 {
-	volatile signed portCHAR cChar;
-	
+volatile signed portCHAR	cChar;
+
 	/* Get the character from the UART and post it on the queue of Rxed 
 	characters. */
 	cChar = RDR0;
-	
-	if( xQueueGenericSendFromISR( xRxedChars, (const void * const) &cChar, (signed portBASE_TYPE) pdFALSE, (portBASE_TYPE) 0 ) )
+
+	if( xQueueGenericSendFromISR(xRxedChars, ( const void *const ) &cChar, (signed portBASE_TYPE) pdFALSE, (portBASE_TYPE) 0) )
 	{
 		/*If the post causes a task to wake force a context switch 
 		as the woken task may have a higher priority than the task we have 
 		interrupted. */
-		portYIELDFromISR();
+		portYIELD_FROM_ISR();
 	}
 }
-
 /*-----------------------------------------------------------*/
 
 /*
  * UART Tx interrupt service routine.
  */
-__interrupt void UART0_TxISR (void)
+__interrupt void UART0_TxISR( void )
 {
-	signed portCHAR cChar;
-	signed portBASE_TYPE xTaskWoken;
+signed portCHAR			cChar;
+signed portBASE_TYPE	xTaskWoken;
 
 	/* The previous character has been transmitted.  See if there are any
 	further characters waiting transmission. */
-	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
+	if( xQueueReceiveFromISR(xCharsForTx, &cChar, &xTaskWoken) == pdTRUE )
 	{
 		/* There was another character queued - transmit it now. */
 		TDR0 = cChar;
@@ -210,9 +213,8 @@ __interrupt void UART0_TxISR (void)
 	{
 		/* There were no other characters to transmit. */
 		sTHREEmpty = pdTRUE;
-		
+
 		/* Disable transmit interrupts */
 		SSR0_TIE = 0;
 	}
 }
-

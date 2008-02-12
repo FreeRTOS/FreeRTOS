@@ -2,7 +2,7 @@ $CPUSERIES-907
 $Prj-Config_1
 $0
 -g
--w 3
+-w 0
 -INF LIST
 -D __CONFIG__=1
 -I ".\Src"
@@ -22,9 +22,10 @@ $0
 -K LIB
 -K UNROLL
 $other
--INF srcin  
+-INF srcin
+-D __96340
 $time
-1201716243
+1202822767
 $end
 $1
 -g
@@ -71,7 +72,7 @@ $2
 $other
 -Xset_rora
 $time
-1201864951
+1202811016
 $end
 $3
 -dt s,d,r,a
@@ -81,7 +82,7 @@ $3
 -Xdof
 $other
 $time
-1201864951
+1202811016
 $end
 $4
 -Xdof
@@ -118,9 +119,10 @@ $0
 -K LIB
 -K UNROLL
 $other
--INF srcin  
+-INF srcin
+-D __96340
 $time
-1201716243
+1202809391
 $end
 $1
 -g
@@ -166,7 +168,7 @@ $2
 $other
 -Xset_rora
 $time
-1201864951
+1202811016
 $end
 $3
 -dt s,d,r,a
@@ -176,7 +178,7 @@ $3
 -Xdof
 $other
 $time
-1201864951
+1202811016
 $end
 $4
 -Xdof
@@ -193,7 +195,7 @@ $Prjend
 $Prj-Config_3
 $0
 -g
--w 3
+-w 1
 -INF LIST
 -D __CONFIG__=3
 -I ".\Src"
@@ -213,9 +215,10 @@ $0
 -K LIB
 -K UNROLL
 $other
--INF srcin  
+-INF srcin
+-D __96340
 $time
-1201716243
+1202828865
 $end
 $1
 -g
@@ -261,7 +264,7 @@ $2
 $other
 -Xset_rora
 $time
-1201864951
+1202811016
 $end
 $3
 -dt s,d,r,a
@@ -271,7 +274,7 @@ $3
 -Xdof
 $other
 $time
-1201864951
+1202811016
 $end
 $4
 -Xdof
@@ -288,7 +291,7 @@ $Prjend
 $Prj-Config_4
 $0
 -g
--w 3
+-w 1
 -INF LIST
 -D __CONFIG__=4
 -I ".\Src"
@@ -308,9 +311,10 @@ $0
 -K LIB
 -K UNROLL
 $other
--INF srcin  
+-INF srcin
+-D __96340
 $time
-1201716243
+1202825423
 $end
 $1
 -g
@@ -356,7 +360,7 @@ $2
 $other
 -Xset_rora
 $time
-1201864951
+1202811016
 $end
 $3
 -dt s,d,r,a
@@ -366,7 +370,7 @@ $3
 -Xdof
 $other
 $time
-1201864951
+1202811016
 $end
 $4
 -Xdof

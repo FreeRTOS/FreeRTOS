@@ -164,54 +164,68 @@ void main( void )
 	prvSetupHardware();
 
 	#if WATCHDOG == WTC_IN_TASK
-	vStartWatchdogTask( WTC_TASK_PRIORITY );
+		vStartWatchdogTask( WTC_TASK_PRIORITY );
 	#endif
 
 	/* Start the standard demo application tasks. */
 	#if ( INCLUDE_StartLEDFlashTasks == 1 )
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+		vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_StartIntegerMathTasks == 1 )
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
+		vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_AltStartComTestTasks == 1 )
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
 	#endif
+
 	#if ( INCLUDE_StartPolledQueueTasks == 1 )
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_StartSemaphoreTasks == 1 )
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_StartBlockingQueueTasks == 1 )
-	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
+		vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_StartDynamicPriorityTasks == 1 )
-	vStartDynamicPriorityTasks();
+		vStartDynamicPriorityTasks();
 	#endif
+
 	#if ( INCLUDE_StartMathTasks == 1 )
-	vStartMathTasks( tskIDLE_PRIORITY );
+		vStartMathTasks( tskIDLE_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_StartFlashCoRoutines == 1 )
-	vStartFlashCoRoutines( ledNUMBER_OF_LEDS );
+		vStartFlashCoRoutines( ledNUMBER_OF_LEDS );
 	#endif
+
 	#if ( INCLUDE_StartHookCoRoutines == 1 )
-	vStartHookCoRoutines();
+		vStartHookCoRoutines();
 	#endif
+
 	#if ( INCLUDE_StartGenericQueueTasks == 1 )
-	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
+		vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_StartQueuePeekTasks == 1 )
-	vStartQueuePeekTasks();
+		vStartQueuePeekTasks();
 	#endif
+
 	#if ( INCLUDE_CreateBlockTimeTasks == 1 )
-	vCreateBlockTimeTasks();
+		vCreateBlockTimeTasks();
 	#endif
+
 	#if ( INCLUDE_CreateSuicidalTasks == 1 )
-	vCreateSuicidalTasks( mainDEATH_PRIORITY );
+		vCreateSuicidalTasks( mainDEATH_PRIORITY );
 	#endif
+
 	#if ( INCLUDE_TraceListTasks == 1 )
-	vTraceListTasks( TASK_UTILITY_PRIORITY );
+		vTraceListTasks( TASK_UTILITY_PRIORITY );
 	#endif
 
 	/* Start the 'Check' task which is defined in this file. */

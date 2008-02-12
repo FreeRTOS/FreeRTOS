@@ -48,20 +48,36 @@
  * Implementation of functions defined in portable.h for the 16FX port.
  *----------------------------------------------------------*/
 
-/* ------- Memory models ---------      default address size */
-                                 /*     data      code       */
-#define SMALL     0              /*    16 Bit    16 Bit      */
-#define MEDIUM    1              /*    16 Bit    24 Bit      */
-#define COMPACT   2              /*    24 Bit    16 Bit      */
-#define LARGE     3              /*    24 Bit    24 Bit      */
-
 /* 
  * The below define should be same as the option selected by the Memory 
  * Model (Project->Setup Project->C Compiler->Catagory->Target Depend ) 
  */
-#define MEMMODEL MEDIUM
+#define configMEMMODEL portMEDIUM
 
 /*-----------------------------------------------------------*/
+
+/* 
+ * Get current value of DPR and ADB registers 
+ */
+portSTACK_TYPE xGet_DPR_ADB_bank( void ); 
+
+/* 
+ * Get current value of DTB and PCB registers 
+ */
+portSTACK_TYPE xGet_DTB_PCB_bank( void );
+
+/* 
+ * Get current register pointer 
+ */ 
+portCHAR xGet_RP( void );           
+
+/*
+ * Sets up the periodic ISR used for the RTOS tick.  This uses RLT0, but
+ * can be done using any given RLT.
+ */
+static void prvSetupRLT0Interrupt( void );
+
+/*-----------------------------------------------------------*/		
 
 /* 
  * We require the address of the pxCurrentTCB variable, but don't want to know
@@ -70,18 +86,11 @@
 typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
+/* Constants required to handle critical sections. */
+#define portNO_CRITICAL_NESTING		( ( unsigned portBASE_TYPE ) 0x1234 )
+volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
+
 /*-----------------------------------------------------------*/
-
-/* Get current value of DPR and ADB registers */
-portSTACK_TYPE Get_DPR_ADB_bank(void); 
-
-/* Get current value of DTB and PCB registers */
-portSTACK_TYPE Get_DTB_PCB_bank(void);
-
-/* Get current register pointer */ 
-portCHAR	   Get_RP(void);           
-
-/*-----------------------------------------------------------*/		
 
 /* 
  * Macro to save a task context to the task stack. This macro  copies the 
@@ -94,147 +103,156 @@ portCHAR	   Get_RP(void);
  * executes.
  */
  
-#if (MEMMODEL == SMALL || MEMMODEL == MEDIUM)				
-#define portSAVE_CONTEXT()											\
-	    {	__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-	    	__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" PUSHW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
-			__asm(" MOVW A, _pxCurrentTCB ");						\
-			__asm(" MOVW A, SP ");									\
-  			__asm(" SWAPW ");										\
-		    __asm(" MOVW @AL, AH ");								\
-		    __asm(" OR   CCR,#H'20 ");								\
-		}
+#if( ( configMEMMODEL == portSMALL ) || ( configMEMMODEL == portMEDIUM ) )
 
-/* 
- * Macro to restore a task context from the task stack.  This is effecti-
- * vely the reverse of portSAVE_CONTEXT(). First the stack pointer  value
- * (USP for SMALL and MEDIUM memory model amd  USB:USP  for  COMPACT  and 
- * LARGE memory model ) is loaded from the task  control block.  Next the 
- * value of all the general purpose registers RW0-RW7 is retrieved. Fina-
- * lly it copies of the context ( AH:AL,  DPR:ADB, DTB:PCB, PC and PS) of 
- * the task to be executed upon RETI from user stack to system stack.  
- */
+	#define portSAVE_CONTEXT()											\
+			{	__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+	    		__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" PUSHW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
+				__asm(" MOVW A, _pxCurrentTCB ");						\
+				__asm(" MOVW A, SP ");									\
+  				__asm(" SWAPW ");										\
+				__asm(" MOVW @AL, AH ");								\
+				__asm(" OR   CCR,#H'20 ");								\
+			}
+
+	/* 
+	 * Macro to restore a task context from the task stack.  This is effecti-
+	 * vely the reverse of SAVE_CONTEXT(). First the stack pointer  value
+	 * (USP for SMALL and MEDIUM memory model amd  USB:USP  for  COMPACT  and 
+	 * LARGE memory model ) is loaded from the task  control block.  Next the 
+	 * value of all the general purpose registers RW0-RW7 is retrieved. Fina-
+	 * lly it copies of the context ( AH:AL,  DPR:ADB, DTB:PCB, PC and PS) of 
+	 * the task to be executed upon RETI from user stack to system stack.  
+	 */
  
-#define portRESTORE_CONTEXT()										\
-		{	__asm(" MOVW A, _pxCurrentTCB ");						\
-			__asm(" MOVW A, @A ");									\
-  			__asm(" AND  CCR,#H'DF ");  							\
-  			__asm(" MOVW SP, A ");									\
-			__asm(" POPW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-		}
+	#define portRESTORE_CONTEXT()										\
+			{	__asm(" MOVW A, _pxCurrentTCB ");						\
+				__asm(" MOVW A, @A ");									\
+  				__asm(" AND  CCR,#H'DF ");  							\
+  				__asm(" MOVW SP, A ");									\
+																		\
+				/* Load the saves uxCriticalNesting value into RW0. */	\
+				__asm(" POPW (RW0) ");									\
+																		\
+				/* Save the loaded value into the uxCriticalNesting variable. */ \
+				__asm(" MOVW _uxCriticalNesting, RW0 ");								\
+																		\
+				__asm(" POPW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+			}
 		
-#elif (MEMMODEL == COMPACT || MEMMODEL == LARGE)			
-#define portSAVE_CONTEXT()											\
-	    {	__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-	    	__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" POPW  A ");										\
-		    __asm(" AND  CCR,#H'DF ");  							\
-			__asm(" PUSHW  A ");									\
-			__asm(" PUSHW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
-			__asm(" MOVL A, _pxCurrentTCB ");						\
-			__asm(" MOVL RL2, A ");									\
-			__asm(" MOVW A, SP ");									\
-		    __asm(" MOVW @RL2+0, A ");								\
-            __asm(" MOV A, USB ");									\
-            __asm(" MOV @RL2+2, A ");								\
-		}	
+#elif (configMEMMODEL == portCOMPACT || configMEMMODEL == portLARGE)			
+
+	#define portSAVE_CONTEXT()											\
+			{	__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+	    		__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" POPW  A ");										\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" PUSHW  A ");									\
+				__asm(" PUSHW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
+				__asm(" MOVL A, _pxCurrentTCB ");						\
+				__asm(" MOVL RL2, A ");									\
+				__asm(" MOVW A, SP ");									\
+				__asm(" MOVW @RL2+0, A ");								\
+				__asm(" MOV A, USB ");									\
+				__asm(" MOV @RL2+2, A ");								\
+			}	
             
-#define portRESTORE_CONTEXT()										\
-		{	__asm(" MOVL A, _pxCurrentTCB ");						\
-			__asm(" MOVL RL2, A ");									\
-			__asm(" MOVW A, @RL2+0 ");								\
-            __asm(" AND  CCR,#H'DF ");  							\
-            __asm(" MOVW SP, A ");									\
-            __asm(" MOV A, @RL2+2 ");								\
-			__asm(" MOV USB, A ");									\
-			__asm(" POPW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-			__asm(" AND  CCR,#H'DF ");  							\
-			__asm(" POPW  A ");										\
-			__asm(" OR   CCR,#H'20 ");								\
-			__asm(" PUSHW  A ");									\
-		}
+	#define portRESTORE_CONTEXT()										\
+			{	__asm(" MOVL A, _pxCurrentTCB ");						\
+				__asm(" MOVL RL2, A ");									\
+				__asm(" MOVW A, @RL2+0 ");								\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" MOVW SP, A ");									\
+				__asm(" MOV A, @RL2+2 ");								\
+				__asm(" MOV USB, A ");									\
+				__asm(" POPW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+				__asm(" AND  CCR,#H'DF ");  							\
+				__asm(" POPW  A ");										\
+				__asm(" OR   CCR,#H'20 ");								\
+				__asm(" PUSHW  A ");									\
+			}
 #endif
 
 /*-----------------------------------------------------------*/	
@@ -245,50 +263,52 @@ portCHAR	   Get_RP(void);
  */
  
 #pragma asm
-        .GLOBAL    _Get_DPR_ADB_bank
-        .GLOBAL    _Get_DTB_PCB_bank
-        .GLOBAL    _Get_RP
+
+        .GLOBAL    _xGet_DPR_ADB_bank
+        .GLOBAL    _xGet_DTB_PCB_bank
+        .GLOBAL    _xGet_RP
         .SECTION   CODE, CODE, ALIGN=1
-_Get_DPR_ADB_bank:
+
+_xGet_DPR_ADB_bank:
+
     MOV A, DPR
     SWAP
     MOV A, ADB
     ORW A
-#if MEMMODEL == MEDIUM || MEMMODEL == LARGE
-    RETP
-#elif MEMMODEL == SMALL || MEMMODEL == COMPACT   
-    RET
-#endif 
+	#if configMEMMODEL == portMEDIUM || configMEMMODEL == portLARGE
+		RETP
+	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT   
+		RET
+	#endif 
 
-_Get_DTB_PCB_bank:
+
+_xGet_DTB_PCB_bank:
+
     MOV A, DTB
     SWAP
     MOV A, PCB
     ORW A
-#if MEMMODEL == MEDIUM || MEMMODEL == LARGE
-    RETP
-#elif MEMMODEL == SMALL || MEMMODEL == COMPACT   
-    RET
-#endif 
+	#if configMEMMODEL == portMEDIUM || configMEMMODEL == portLARGE
+		RETP
+	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT   
+		RET
+	#endif 
 
-_Get_RP:
+
+_xGet_RP:
+
     PUSHW PS
     POPW  A
     SWAP
     ANDW  A,#0x1f
- #if MEMMODEL == MEDIUM || MEMMODEL == LARGE
-    RETP
-#elif MEMMODEL == SMALL || MEMMODEL == COMPACT   
-    RET
-#endif 
-#pragma endasm
-/*-----------------------------------------------------------*/
+	#if configMEMMODEL == portMEDIUM || configMEMMODEL == portLARGE
+		RETP
+	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT   
+		RET
+	#endif 
 
-/*
- * Sets up the periodic ISR used for the RTOS tick.  This uses RLT0, but
- * can be done using any given RLT.
- */
-static void prvSetupRLT0Interrupt( void );
+
+#pragma endasm
 /*-----------------------------------------------------------*/
 
 /* 
@@ -301,7 +321,6 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 {
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
-
 	*pxTopOfStack = 0x1111;
 	pxTopOfStack--;
 	*pxTopOfStack = 0x2222;
@@ -309,69 +328,75 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = 0x3333;
 	pxTopOfStack--;
 
-	/* Once the task is called the called  would  push  the  pointer to the
+	/* Once the task is called the task  would  push  the  pointer to the
 	parameter on to the stack. Hence here the pointer would be copied first
 	to  the  stack.  In  case of COMPACT or LARGE memory model such pointer 
 	would be 24 bit and in  case of SMALL or MEDIUM memory model such pointer 
 	would be 16 bit */ 
-#if MEMMODEL == COMPACT || MEMMODEL == LARGE
-    *pxTopOfStack = (portSTACK_TYPE)((portLONG)(pvParameters)>>16);
-	pxTopOfStack--;         
-#endif
+	#if( ( configMEMMODEL == portCOMPACT ) || ( configMEMMODEL == portLARGE ) )
+	{
+		*pxTopOfStack = ( portSTACK_TYPE ) ( ( unsigned portLONG ) ( pvParameters ) >> 16 );
+		pxTopOfStack--;         
+	}
+	#endif
 
-    *pxTopOfStack = (portSTACK_TYPE)(pvParameters);
+    *pxTopOfStack = ( portSTACK_TYPE ) ( pvParameters );
     pxTopOfStack--;                  
     
     /* This is redundant push to the stack. This is required in order to introduce 
     an offset so that the task accesses a parameter correctly that is passed on to 
     the task stack. */
-#if MEMMODEL == MEDIUM || MEMMODEL == LARGE
-    *pxTopOfStack = (Get_DTB_PCB_bank() & 0xff00) |
-           (((portLONG)(pxCode) >>16) & 0xff);      
-    pxTopOfStack--;       
-#endif
+	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
+	{
+		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( portLONG ) ( pxCode ) >> 16 ) & 0xff );      
+		pxTopOfStack--;       
+	}
+	#endif
 
     /* This is redundant push to the stack. This is required in order to introduce 
     an offset so that the task accesses a parameter correctly that is passed on to 
     the task stack. */
-    *pxTopOfStack = ( portSTACK_TYPE )(pxCode);
+    *pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );
     pxTopOfStack--;       
 
     /* PS - User Mode, ILM=7, RB=0, Interrupts enabled,USP */
     *pxTopOfStack = 0xE0C0;							
 	pxTopOfStack--; 
 
-	/* PC    											   */
-	*pxTopOfStack = ( portSTACK_TYPE )(pxCode);     
+	/* PC */
+	*pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );     
     pxTopOfStack--;      
     
-    /* DTB | PCB 										   */
-#if MEMMODEL == SMALL || MEMMODEL == COMPACT
-    *pxTopOfStack = Get_DTB_PCB_bank();         	
-    pxTopOfStack--;
-#endif
+    /* DTB | PCB */
+	#if configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT
+	{
+		*pxTopOfStack = xGet_DTB_PCB_bank();         	
+		pxTopOfStack--;
+	}
+	#endif
 
-	/* DTB | PCB, in case of MEDIUM or LARGE memory model PCB would be used
+	/* DTB | PCB, in case of portMEDIUM or portLARGE memory model PCB would be used
 	along with PC to indicate the start address of the functiom */
-#if MEMMODEL == MEDIUM || MEMMODEL == LARGE
-    *pxTopOfStack = (Get_DTB_PCB_bank() & 0xff00) |
-           (((portLONG)(pxCode) >>16) & 0xff);      
-    pxTopOfStack--;       
-#endif
+	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
+	{
+		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( portLONG ) ( pxCode ) >> 16 ) & 0xff );
+		pxTopOfStack--;       
+	}
+	#endif
 
-	/* DPR | ADB 										  */
-	*pxTopOfStack = Get_DPR_ADB_bank();				
+	/* DPR | ADB  */
+	*pxTopOfStack = xGet_DPR_ADB_bank();				
 	pxTopOfStack--;
     
-	/* AL 												  */
+	/* AL */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x9999;		
 	pxTopOfStack--;
 
-	/* AH 												  */
+	/* AH */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xAAAA;		
 	pxTopOfStack--;
 	
-	/* Next the general purpose registers. 				  */
+	/* Next the general purpose registers. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x7777;	/* RW7 */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x6666;	/* RW6 */
@@ -387,13 +412,16 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;	/* RW1 */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x8888;	/* RW0 */
+	pxTopOfStack--;
+
+	/* The task starts with its uxCriticalNesting variable set to 0, interrupts
+	being enabled. */
+	*pxTopOfStack = portNO_CRITICAL_NESTING;
 		
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
-/*
- * Setup RLT0 to generate a tick interrupt.
- */
+
 static void prvSetupRLT0Interrupt( void )
 {
 	/* set reload value = 34999+1, TICK Interrupt after 10 ms @ 56MHz of CLKP1 */
@@ -403,9 +431,7 @@ static void prvSetupRLT0Interrupt( void )
     TMCSR0 = 0x041B;    
 }
 /*-----------------------------------------------------------*/
-/*
- * Start the scheduler.
- */
+
 portBASE_TYPE xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick. */
@@ -427,8 +453,8 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the AVR port will get stopped.  If required simply
-	disable the tick interrupt here. */
+	/* Not implemented - unlikely to ever be required as there is nothing to
+	return to. */
 }
 
 /*-----------------------------------------------------------*/
@@ -488,6 +514,7 @@ void vPortEndScheduler( void )
 		
 		vTaskIncrementTick();
 	}
+
 #endif
 
 /*-----------------------------------------------------------*/
@@ -508,6 +535,7 @@ __nosavereg __interrupt void vPortYield( void )
 	/* Restore the context of the new task. */
 	portRESTORE_CONTEXT();
 }
+/*-----------------------------------------------------------*/
 
 __nosavereg __interrupt void vPortYieldDelayed( void )
 {    
@@ -535,3 +563,30 @@ __nosavereg __interrupt void vPortYieldDelayed( void )
 	/* Enable interrupts */
 	__EI();
 }	
+/*-----------------------------------------------------------*/
+
+void vPortEnterCritical( void )
+{
+	/* Disable interrupts */
+	portDISABLE_INTERRUPTS();
+
+	/* Now interrupts are disabled uxCriticalNesting can be accessed
+	 directly.  Increment uxCriticalNesting to keep a count of how many times
+	 portENTER_CRITICAL() has been called. */
+	uxCriticalNesting++;
+}
+/*-----------------------------------------------------------*/
+
+void vPortExitCritical( void )
+{
+	if( uxCriticalNesting > portNO_CRITICAL_NESTING )
+	{
+		uxCriticalNesting--;
+		if( uxCriticalNesting == portNO_CRITICAL_NESTING )
+		{
+			/* Enable all interrupt/exception. */
+			portENABLE_INTERRUPTS();
+		}
+	}
+}
+/*-----------------------------------------------------------*/

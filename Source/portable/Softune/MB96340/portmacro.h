@@ -44,6 +44,10 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
+#include "mb96348hs.h"
+#include <stddef.h>
+
+
 /*-----------------------------------------------------------
  * Port specific definitions.  
  *
@@ -59,12 +63,9 @@
 #define portFLOAT		float
 #define portDOUBLE		double
 #define portLONG		long
-#define portSHORT		int
+#define portSHORT		short
 #define portSTACK_TYPE	unsigned portSHORT
-#define portBASE_TYPE	char
-
-/* This is required since SOFTUNE doesn't support inline directive as is. */
-#define inline
+#define portBASE_TYPE	portSHORT
 
 #if( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned portSHORT portTickType;
@@ -75,21 +76,11 @@
 #endif
 /*-----------------------------------------------------------*/	
 
-#define portDISABLE_INTERRUPTS()  __DI();
-
-#define portENABLE_INTERRUPTS()  __EI();
-
-/*-----------------------------------------------------------*/	
-
-#define portENTER_CRITICAL()								\
-		{	__asm(" PUSHW PS ");							\
-			portDISABLE_INTERRUPTS();						\
-		}
-
-#define portEXIT_CRITICAL()									\
-		{	__asm(" POPW PS ");								\
-		}
-
+/* Critical section handling. */
+#define portDISABLE_INTERRUPTS()	__DI();
+#define portENABLE_INTERRUPTS()		__EI();
+#define portENTER_CRITICAL()		vPortEnterCritical()
+#define portEXIT_CRITICAL()			vPortExitCritical()
 
 /*-----------------------------------------------------------*/
 
@@ -103,8 +94,8 @@
 /* portYIELD() uses SW interrupt */
 #define portYIELD()					__asm( " INT #122 " );
 
-/* portYIELD() uses delayed interrupt */
-#define portYIELDFromISR()			 __asm (" SETB  03A4H:0 ");		
+/* portYIELD_FROM_ISR() uses delayed interrupt */
+#define portYIELD_FROM_ISR()		 __asm( " SETB  03A4H:0 " );
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
@@ -112,6 +103,9 @@
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
 #define portMINIMAL_STACK_SIZE configMINIMAL_STACK_SIZE
+
+/* Remove the inline declaration from within the kernel code. */
+#define inline
 
 #endif /* PORTMACRO_H */
 

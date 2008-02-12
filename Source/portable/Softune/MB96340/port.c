@@ -49,14 +49,6 @@
  *----------------------------------------------------------*/
 
 /* 
- * The below define should be same as the option selected by the Memory 
- * Model (Project->Setup Project->C Compiler->Catagory->Target Depend ) 
- */
-#define configMEMMODEL portMEDIUM
-
-/*-----------------------------------------------------------*/
-
-/* 
  * Get current value of DPR and ADB registers 
  */
 portSTACK_TYPE xGet_DPR_ADB_bank( void ); 
@@ -77,7 +69,7 @@ portCHAR xGet_RP( void );
  */
 static void prvSetupRLT0Interrupt( void );
 
-/*-----------------------------------------------------------*/		
+/*-----------------------------------------------------------*/
 
 /* 
  * We require the address of the pxCurrentTCB variable, but don't want to know
@@ -87,7 +79,7 @@ typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
 /* Constants required to handle critical sections. */
-#define portNO_CRITICAL_NESTING		( ( unsigned portBASE_TYPE ) 0x1234 )
+#define portNO_CRITICAL_NESTING		( ( unsigned portBASE_TYPE ) 0 )
 volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 
 /*-----------------------------------------------------------*/
@@ -130,6 +122,11 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 				__asm(" AND  CCR,#H'DF ");  							\
 				__asm(" PUSHW  A ");									\
 				__asm(" PUSHW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
+																		\
+				/* Save the critical nesting count to the stack. */		\
+				__asm(" MOVW RW0, _uxCriticalNesting ");				\
+				__asm(" PUSHW (RW0) ");									\
+																		\
 				__asm(" MOVW A, _pxCurrentTCB ");						\
 				__asm(" MOVW A, SP ");									\
   				__asm(" SWAPW ");										\
@@ -153,7 +150,7 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
   				__asm(" AND  CCR,#H'DF ");  							\
   				__asm(" MOVW SP, A ");									\
 																		\
-				/* Load the saves uxCriticalNesting value into RW0. */	\
+				/* Load the saved uxCriticalNesting value into RW0. */	\
 				__asm(" POPW (RW0) ");									\
 																		\
 				/* Save the loaded value into the uxCriticalNesting variable. */ \

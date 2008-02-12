@@ -47,6 +47,11 @@
 #include "mb96348hs.h"
 #include <stddef.h>
 
+#define portSMALL     0
+#define portMEDIUM    1
+#define portCOMPACT   2
+#define portLARGE     3
+
 
 /*-----------------------------------------------------------
  * Port specific definitions.  

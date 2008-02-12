@@ -43,6 +43,9 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
+#include "mb91467d.h"
+#include <stddef.h>
+
 /*-----------------------------------------------------------
  * Port specific definitions.  
  *
@@ -58,7 +61,7 @@
 #define portFLOAT		float
 #define portDOUBLE		double
 #define portLONG		long
-#define portSHORT		int
+#define portSHORT		short
 #define portSTACK_TYPE	unsigned portLONG
 #define portBASE_TYPE	long
 

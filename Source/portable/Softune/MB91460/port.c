@@ -161,9 +161,10 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00005555;	/* R5 */
 	pxTopOfStack--;
 	
-	/* In the current implemention of the compiler the first parameter to the task(or function) is passed
-	via R4 parameter to the task, hennce the pvParameters pointer is copied in R4 regsiter. See compiler 
-	manual section 4.6.2 for more information.*/
+	/* In the current implemention of the compiler the first 
+	parameter to the task(or function) is passed via R4 parameter 
+	to the task, hennce the pvParameters pointer is copied in R4 
+	regsiter. See compiler manual section 4.6.2 for more information.*/
 	*pxTopOfStack = ( portSTACK_TYPE ) (pvParameters);	/* R4 */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00003333;	/* R3 */

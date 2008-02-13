@@ -353,15 +353,20 @@ const unsigned portSHORT usReloadValue = ( unsigned portSHORT ) ( ( ( configPER_
 
 void vPortEnterCritical( void )
 {
-	/* Disable interrupts */
-	portDISABLE_INTERRUPTS();
+	/* Disable interrupts upto level 30. */
+	#if configKERNEL_INTERRUPT_PRIORITY != 30
+		#error configKERNEL_INTERRUPT_PRIORITY (set in FreeRTOSConfig.h) must match the ILM value set in the following line - 30 (0x1e) being the default.
+	#endif
+
+	__asm(" STILM #1Eh ");
+ 
 
 	/* Now interrupts are disabled ulCriticalNesting can be accessed
-	 directly.  Increment ulCriticalNesting to keep a count of how many times
-	 portENTER_CRITICAL() has been called. */
+	directly. Increment ulCriticalNesting to keep a count of how many times
+	portENTER_CRITICAL() has been called. */
 	ulCriticalNesting++;
 }
-/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/ 
 
 void vPortExitCritical( void )
 {
@@ -370,9 +375,8 @@ void vPortExitCritical( void )
 		ulCriticalNesting--;
 		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
-			/* Enable all interrupt/exception. */
-			portENABLE_INTERRUPTS();
+			/* Enable all interrupts */
+			__asm(" STILM #1Fh ");
 		}
 	}
 }
-/*-----------------------------------------------------------*/

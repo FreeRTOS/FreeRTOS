@@ -45,17 +45,21 @@
 
 /* 
  * The below define should be same as the option selected by the Memory 
- * Model (Project->Setup Project->C Compiler->Catagory->Target Depend ) 
+ * Model (Project->Setup Project->C Compiler->Category->Target Depend ) 
  *
  * Valid settings here include:
- * portSMALL     16 Bit    16 Bit
- * portMEDIUM    16 Bit    24 Bit
- * portCOMPACT   24 Bit    16 Bit
- * portLARGE     24 Bit    24 Bit
+ * ------- Memory models ---------      Data	  Code
+ * portSMALL							16 Bit    16 Bit
+ * portMEDIUM							16 Bit    24 Bit
+ * portCOMPACT							24 Bit    16 Bit
+ * portLARGE							24 Bit    24 Bit
  */
 #define configMEMMODEL portMEDIUM
 
-
+/* Demo specific definition - set this to 1 if you want to include the task
+that writes trace and debug information to the UART.  This cannot be used
+when running the application using the EUROScope debugger. */
+#define INCLUDE_TraceListTasks		0
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -68,7 +72,7 @@
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			1
-#define configUSE_TICK_HOOK			1
+#define configUSE_TICK_HOOK			0
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configCLKP1_CLOCK_HZ		( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configTICK_RATE_HZ			( (portTickType) 100 )
@@ -97,4 +101,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_xTaskGetSchedulerState		1
 #define INCLUDE_xTaskGetCurrentTaskHandle	1
+
+
+#define configKERNEL_INTERRUPT_PRIORITY 6
+
 #endif /* FREERTOS_CONFIG_H */

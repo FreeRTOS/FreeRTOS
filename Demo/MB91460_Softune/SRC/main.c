@@ -374,7 +374,12 @@ static void prvSetupHardware( void )
 			Kick_Watchdog();
 		#endif
 	}
+#else
+	#if WATCHDOG == WTC_IN_IDLE
+		#error configUSE_IDLE_HOOK must be set to 1 in FreeRTOSConfig.h if the watchdog is being cleared in the idle task hook.
+	#endif
 #endif
+
 /*-----------------------------------------------------------*/
 
 /* Tick hook function. */
@@ -389,6 +394,10 @@ static void prvSetupHardware( void )
 			Kick_Watchdog();
 		#endif
 	}
+#else
+	#if WATCHDOG == WTC_IN_TICK
+		#error configUSE_TICK_HOOK must be set to 1 in FreeRTOSConfig.h if the watchdog is being cleared in the tick hook.
+	#endif
 #endif
 /*-----------------------------------------------------------*/
 

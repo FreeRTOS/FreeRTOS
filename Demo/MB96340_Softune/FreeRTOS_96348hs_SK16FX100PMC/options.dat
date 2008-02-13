@@ -1,198 +1,5 @@
 $CPUSERIES-907
-$Prj-Config_1
-$0
--g
--w 0
--INF LIST
--D __CONFIG__=1
--I ".\Src"
--I ".\Src\config"
--I ".\Src\watchdog"
--I "..\..\Common\include"
--I "..\..\..\Source\include"
--I "..\..\..\Source\portable\Softune\MB96340"
--O 4
--K SPEED
--model MEDIUM
--B
--Xdof
--xauto 127
--x vTaskSwitchContext,vTaskIncrementTick
--K EOPT
--K LIB
--K UNROLL
-$other
--INF srcin
--D __96340
-$time
-1202822767
-$end
-$1
--g
--w 2
--D __CONFIG__=1
--I ".\Src\config"
--I ".\Src\os"
--I ".\Src\port"
--linf ON
--lsrc ON
--lsec ON
--lcros OFF
--linc ON
--lexp OBJ
--pl 60
--pw 100
--tab 8
--lf
--Xdof
-$other
-$time
-1200393386
-$end
-$2
--g
--AL 2
--ra _INRAM01=0x000180/0x00037F
--ra _INRAM02=0x002240/0x007FFF
--ro _INROM03=0xF80000/0xFFFFFF
--ro _INROM01=0xDE0000/0xDE7FFF
--ro _INROM02=0xDF0000/0xDF7FFF
--sc CONST/Data/BYTE=0xFF8000
--check_rora
--check_locate
--rg 0
--m
--pl 60
--pw 132
--Xals
--Xalr
--na
--w 2
--Xdof
-$other
--Xset_rora
-$time
-1202811016
-$end
-$3
--dt s,d,r,a
--pl 60
--pw 132
--g
--Xdof
-$other
-$time
-1202811016
-$end
-$4
--Xdof
-$other
-$time
-1200320865
-$end
-$5
-$other
-$time
-1200320865
-$end
-$Prjend
-$Prj-Config_2
-$0
--g
--w 3
--INF LIST
--D __CONFIG__=2
--I ".\Src"
--I ".\Src\config"
--I ".\Src\watchdog"
--I "..\..\Common\include"
--I "..\..\..\Source\include"
--I "..\..\..\Source\portable\Softune\MB96340"
--O 4
--K SPEED
--model MEDIUM
--B
--Xdof
--xauto 127
--x vTaskSwitchContext,vTaskIncrementTick
--K EOPT
--K LIB
--K UNROLL
-$other
--INF srcin
--D __96340
-$time
-1202809391
-$end
-$1
--g
--w 2
--D __CONFIG__=2
--I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\os"
--I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\port"
--linf ON
--lsrc ON
--lsec ON
--lcros OFF
--linc ON
--lexp OBJ
--pl 60
--pw 100
--tab 8
--lf
--Xdof
-$other
-$time
-1200332591
-$end
-$2
--g
--AL 2
--ra _INRAM01=0x000180/0x00037F
--ra _INRAM02=0x002240/0x007FFF
--ro _INROM03=0xF80000/0xFFFFFF
--ro _INROM01=0xDE0000/0xDE7FFF
--ro _INROM02=0xDF0000/0xDF7FFF
--sc CONST/Data/BYTE=0xFF8000
--check_rora
--check_locate
--rg 0
--m
--pl 60
--pw 132
--Xals
--Xalr
--na
--w 2
--Xdof
-$other
--Xset_rora
-$time
-1202811016
-$end
-$3
--dt s,d,r,a
--pl 60
--pw 132
--g
--Xdof
-$other
-$time
-1202811016
-$end
-$4
--Xdof
-$other
-$time
-1200320939
-$end
-$5
-$other
-$time
-1200320939
-$end
-$Prjend
-$Prj-Config_3
+$Prj-STANDALONE
 $0
 -g
 -w 1
@@ -218,7 +25,7 @@ $other
 -INF srcin
 -D __96340
 $time
-1202828865
+1202902449
 $end
 $1
 -g
@@ -239,7 +46,7 @@ $1
 -Xdof
 $other
 $time
-1200332591
+1202902449
 $end
 $2
 -g
@@ -264,7 +71,7 @@ $2
 $other
 -Xset_rora
 $time
-1202811016
+1202902449
 $end
 $3
 -dt s,d,r,a
@@ -274,114 +81,18 @@ $3
 -Xdof
 $other
 $time
-1202811016
+1202902449
 $end
 $4
 -Xdof
 $other
 $time
-1200332229
+1202902449
 $end
 $5
 $other
 $time
-1200332229
-$end
-$Prjend
-$Prj-Config_4
-$0
--g
--w 1
--INF LIST
--D __CONFIG__=4
--I ".\Src"
--I ".\Src\config"
--I ".\Src\watchdog"
--I "..\..\Common\include"
--I "..\..\..\Source\include"
--I "..\..\..\Source\portable\Softune\MB96340"
--O 4
--K SPEED
--model MEDIUM
--B
--Xdof
--xauto 127
--x vTaskSwitchContext,vTaskIncrementTick
--K EOPT
--K LIB
--K UNROLL
-$other
--INF srcin
--D __96340
-$time
-1202825423
-$end
-$1
--g
--w 2
--D __CONFIG__=4
--I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\os"
--I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\port"
--linf ON
--lsrc ON
--lsec ON
--lcros OFF
--linc ON
--lexp OBJ
--pl 60
--pw 100
--tab 8
--lf
--Xdof
-$other
-$time
-1200332591
-$end
-$2
--g
--AL 2
--ra _INRAM01=0x000180/0x00037F
--ra _INRAM02=0x002240/0x007FFF
--ro _INROM03=0xF80000/0xFFFFFF
--ro _INROM01=0xDE0000/0xDE7FFF
--ro _INROM02=0xDF0000/0xDF7FFF
--sc CONST/Data/BYTE=0xFF8000
--check_rora
--check_locate
--rg 0
--m
--pl 60
--pw 132
--Xals
--Xalr
--na
--w 2
--Xdof
-$other
--Xset_rora
-$time
-1202811016
-$end
-$3
--dt s,d,r,a
--pl 60
--pw 132
--g
--Xdof
-$other
-$time
-1202811016
-$end
-$4
--Xdof
-$other
-$time
-1200332258
-$end
-$5
-$other
-$time
-1200332258
+1202902449
 $end
 $Prjend
 $CPUSERIESEND

@@ -44,9 +44,14 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
+/* Device specific includes. */
 #include "mb96348hs.h"
+
+/* Standard includes. */
 #include <stddef.h>
 
+/* Constants denoting the available memory models.  These are used within
+FreeRTOSConfig.h to set the configMEMMODEL value. */
 #define portSMALL     0
 #define portMEDIUM    1
 #define portCOMPACT   2

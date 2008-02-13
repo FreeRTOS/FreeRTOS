@@ -43,7 +43,10 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
+/* Hardware specific includes. */
 #include "mb91467d.h"
+
+/* Standard includes. */
 #include <stddef.h>
 
 /*-----------------------------------------------------------
@@ -64,9 +67,6 @@
 #define portSHORT		short
 #define portSTACK_TYPE	unsigned portLONG
 #define portBASE_TYPE	long
-
-/* This is required since SOFTUNE doesn't support inline directive as is. */
-#define inline
 
 #if( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned portSHORT portTickType;
@@ -94,7 +94,7 @@ void vPortExitCritical( void );
 #define portNOP()					__asm( " nop " );
 /*-----------------------------------------------------------*/
 
-/* portYIELD() uses SW interrupt */
+/* portYIELD() uses a SW interrupt */
 #define portYIELD()					__asm( " INT #40H " );
 
 /* portYIELD_FROM_ISR() uses delayed interrupt */
@@ -106,6 +106,9 @@ void vPortExitCritical( void );
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
 #define portMINIMAL_STACK_SIZE configMINIMAL_STACK_SIZE
+
+/* Remove the inline statement from within the kernel code. */
+#define inline
 
 #endif /* PORTMACRO_H */
 

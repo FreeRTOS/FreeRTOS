@@ -58,11 +58,6 @@ portSTACK_TYPE xGet_DPR_ADB_bank( void );
  */
 portSTACK_TYPE xGet_DTB_PCB_bank( void );
 
-/* 
- * Get current register pointer 
- */ 
-portCHAR xGet_RP( void );           
-
 /*
  * Sets up the periodic ISR used for the RTOS tick.  This uses RLT0, but
  * can be done using any given RLT.
@@ -93,8 +88,7 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
  * stack. Finally the  resultant  stack  pointer  value is saved into the 
  * task  control  block  so  it  can  be retrieved the next time the task 
  * executes.
- */
- 
+ */ 
 #if( ( configMEMMODEL == portSMALL ) || ( configMEMMODEL == portMEDIUM ) )
 
 	#define portSAVE_CONTEXT()											\
@@ -134,15 +128,15 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 				__asm(" OR   CCR,#H'20 ");								\
 			}
 
-	/* 
-	 * Macro to restore a task context from the task stack.  This is effecti-
-	 * vely the reverse of SAVE_CONTEXT(). First the stack pointer  value
-	 * (USP for SMALL and MEDIUM memory model amd  USB:USP  for  COMPACT  and 
-	 * LARGE memory model ) is loaded from the task  control block.  Next the 
-	 * value of all the general purpose registers RW0-RW7 is retrieved. Fina-
-	 * lly it copies of the context ( AH:AL,  DPR:ADB, DTB:PCB, PC and PS) of 
-	 * the task to be executed upon RETI from user stack to system stack.  
-	 */
+/* 
+ * Macro to restore a task context from the task stack.  This is effecti-
+ * vely the reverse of SAVE_CONTEXT(). First the stack pointer  value
+ * (USP for SMALL and MEDIUM memory model amd  USB:USP  for  COMPACT  and 
+ * LARGE memory model ) is loaded from the task  control block.  Next the 
+ * value of all the general purpose registers RW0-RW7 is retrieved. Fina-
+ * lly it copies of the context ( AH:AL,  DPR:ADB, DTB:PCB, PC and PS) of 
+ * the task to be executed upon RETI from user stack to system stack.  
+ */
  
 	#define portRESTORE_CONTEXT()										\
 			{	__asm(" MOVW A, _pxCurrentTCB ");						\
@@ -154,7 +148,7 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 				__asm(" POPW (RW0) ");									\
 																		\
 				/* Save the loaded value into the uxCriticalNesting variable. */ \
-				__asm(" MOVW _uxCriticalNesting, RW0 ");								\
+				__asm(" MOVW _uxCriticalNesting, RW0 ");				\
 																		\
 				__asm(" POPW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
 				__asm(" POPW  A ");										\
@@ -182,7 +176,7 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 				__asm(" PUSHW  A ");									\
 			}
 		
-#elif (configMEMMODEL == portCOMPACT || configMEMMODEL == portLARGE)			
+#elif( ( configMEMMODEL == portCOMPACT ) || ( configMEMMODEL == portLARGE ) )
 
 	#define portSAVE_CONTEXT()											\
 			{	__asm(" POPW  A ");										\
@@ -209,6 +203,11 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 				__asm(" AND  CCR,#H'DF ");  							\
 				__asm(" PUSHW  A ");									\
 				__asm(" PUSHW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
+																		\
+				/* Save the critical nesting count to the stack. */		\
+				__asm(" MOVW RW0, _uxCriticalNesting ");				\
+				__asm(" PUSHW (RW0) ");									\
+																		\
 				__asm(" MOVL A, _pxCurrentTCB ");						\
 				__asm(" MOVL RL2, A ");									\
 				__asm(" MOVW A, SP ");									\
@@ -225,6 +224,13 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 				__asm(" MOVW SP, A ");									\
 				__asm(" MOV A, @RL2+2 ");								\
 				__asm(" MOV USB, A ");									\
+																		\
+				/* Load the saved uxCriticalNesting value into RW0. */	\
+				__asm(" POPW (RW0) ");									\
+																		\
+				/* Save the loaded value into the uxCriticalNesting variable. */ \
+				__asm(" MOVW _uxCriticalNesting, RW0 ");				\
+																		\
 				__asm(" POPW (RW0,RW1,RW2,RW3,RW4,RW5,RW6,RW7) ");		\
 				__asm(" POPW  A ");										\
 				__asm(" OR   CCR,#H'20 ");								\
@@ -255,15 +261,13 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = 9999UL;
 /*-----------------------------------------------------------*/	
 
 /* 
- * The below are the functions for getting the current value  of  DPR:ADB, 
- * DTB:PCB bank registers
+ * Functions for obtaining the current value  of  DPR:ADB, DTB:PCB bank registers
  */
  
 #pragma asm
 
         .GLOBAL    _xGet_DPR_ADB_bank
         .GLOBAL    _xGet_DTB_PCB_bank
-        .GLOBAL    _xGet_RP
         .SECTION   CODE, CODE, ALIGN=1
 
 _xGet_DPR_ADB_bank:
@@ -291,20 +295,6 @@ _xGet_DTB_PCB_bank:
 		RET
 	#endif 
 
-
-_xGet_RP:
-
-    PUSHW PS
-    POPW  A
-    SWAP
-    ANDW  A,#0x1f
-	#if configMEMMODEL == portMEDIUM || configMEMMODEL == portLARGE
-		RETP
-	#elif configMEMMODEL == portSMALL || configMEMMODEL == portCOMPACT   
-		RET
-	#endif 
-
-
 #pragma endasm
 /*-----------------------------------------------------------*/
 
@@ -326,10 +316,10 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 
 	/* Once the task is called the task  would  push  the  pointer to the
-	parameter on to the stack. Hence here the pointer would be copied first
-	to  the  stack.  In  case of COMPACT or LARGE memory model such pointer 
-	would be 24 bit and in  case of SMALL or MEDIUM memory model such pointer 
-	would be 16 bit */ 
+	parameter onto the stack. Hence here the pointer would be copied to the stack
+	first.  When using the COMPACT or LARGE memory model the pointer would be 24 
+	bits, and when using the SMALL or MEDIUM memory model the pointer would be 16 
+	bits. */ 
 	#if( ( configMEMMODEL == portCOMPACT ) || ( configMEMMODEL == portLARGE ) )
 	{
 		*pxTopOfStack = ( portSTACK_TYPE ) ( ( unsigned portLONG ) ( pvParameters ) >> 16 );
@@ -351,8 +341,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	#endif
 
     /* This is redundant push to the stack. This is required in order to introduce 
-    an offset so that the task accesses a parameter correctly that is passed on to 
-    the task stack. */
+    an offset so the task correctly accesses the parameter passed on the task stack. */
     *pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );
     pxTopOfStack--;       
 
@@ -372,8 +361,8 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	}
 	#endif
 
-	/* DTB | PCB, in case of portMEDIUM or portLARGE memory model PCB would be used
-	along with PC to indicate the start address of the functiom */
+	/* DTB | PCB, in case of MEDIUM and LARGE memory models, PCB would be used
+	along with PC to indicate the start address of the function. */
 	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
 	{
 		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( portLONG ) ( pxCode ) >> 16 ) & 0xff );
@@ -421,8 +410,11 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 static void prvSetupRLT0Interrupt( void )
 {
+/* The peripheral clock divided by 16 is used by the timer. */
+const unsigned portSHORT usReloadValue = ( unsigned portSHORT ) ( ( ( configCLKP1_CLOCK_HZ / configTICK_RATE_HZ ) / 16UL ) - 1UL );
+
 	/* set reload value = 34999+1, TICK Interrupt after 10 ms @ 56MHz of CLKP1 */
-	TMRLR0 = 0x88B7;    
+	TMRLR0 = usReloadValue;    
     
     /* prescaler 1:16, reload, interrupt enable, count enable, trigger */
     TMCSR0 = 0x041B;    
@@ -438,8 +430,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	portRESTORE_CONTEXT();
 
 	/* Simulate a function call end as generated by the compiler.  We will now
-	jump to the start of the task the context of which we have just restored. */
-	
+	jump to the start of the task the context of which we have just restored. */	
 	__asm(" reti ");
 
 
@@ -465,8 +456,9 @@ void vPortEndScheduler( void )
 
 	/* 
 	 * Tick ISR for preemptive scheduler.  We can use a __nosavereg attribute
-	 * as the context would be saved by PortSAVE_CONTEXT().  The tick count 
-	 * is incremented after the context is saved. 
+	 * as the context is to be saved by the portSAVE_CONTEXT() macro, not the
+	 * compiler generated code.  The tick count is incremented after the context 
+	 * is saved. 
 	 */
 	__nosavereg __interrupt void prvRLT0_TICKISR( void )
 	{
@@ -518,8 +510,8 @@ void vPortEndScheduler( void )
 
 /*
  * Manual context switch. We can use a __nosavereg attribute  as the context 
- * would be saved by PortSAVE_CONTEXT().  The context is switched and then 
- * the context of the new task is restored saved. 
+ * is to be saved by the portSAVE_CONTEXT() macro, not the compiler generated 
+ * code.
  */
 __nosavereg __interrupt void vPortYield( void )
 {

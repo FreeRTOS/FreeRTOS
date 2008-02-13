@@ -9,7 +9,7 @@
   - Interrupt vector definition
 -----------------------------------------------------------------------------*/
 #include "mb96348hs.h"
-#include "config.h"
+#include "FreeRTOSConfig.h"
 
 /*---------------------------------------------------------------------------
    InitIrqLevels()
@@ -33,16 +33,14 @@ volatile int irq;
 		ICR = ( irq << 8 ) | DEFAULT_ILM_MASK;
 	}
 
-	ICR = ( (51 & 0xFF) << 8 ) | ( DEFAULT_ILM_MASK - 1 );			/* Reload Timer 0 of MB9634x Series */
-	ICR = ( (12 & 0xFF) << 8 ) | ( DEFAULT_ILM_MASK - 1 );			/* Delayed interrupt of 16FX Family */
+	ICR = ( (51 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Reload Timer 0 of MB9634x Series */
+	ICR = ( (12 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Delayed interrupt of 16FX Family */
 
-	#if ( INCLUDE_AltStartComTestTasks == 1 )
-		ICR = ( 79 << 8 ) | ( DEFAULT_ILM_MASK - 1 );				/* UART 0 Rx of MB9634x Series */
-		ICR = ( 80 << 8 ) | ( DEFAULT_ILM_MASK - 1 );				/* UART 0 Tx of MB9634x Series */
-	#endif
+	ICR = ( 79 << 8 ) | configKERNEL_INTERRUPT_PRIORITY;				/* UART 0 Rx of MB9634x Series */
+	ICR = ( 80 << 8 ) | configKERNEL_INTERRUPT_PRIORITY;				/* UART 0 Tx of MB9634x Series */
 
 	#if ( INCLUDE_TraceListTasks == 1 )
-		ICR = ( 81 << 8 ) | ( DEFAULT_ILM_MASK - 1 );				/* UART 1 Rx of MB9634x Series */
+		ICR = ( 81 << 8 ) | configKERNEL_INTERRUPT_PRIORITY;				/* UART 1 Rx of MB9634x Series */
 	#endif
 }
 

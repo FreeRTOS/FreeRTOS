@@ -8,6 +8,7 @@
 -I "..\..\Common\include"
 -I "..\..\..\Source\include"
 -I "..\..\..\Source\portable\Softune\MB96340"
+-I ".\Src\utility"
 -O 4
 -K SPEED
 -model MEDIUM

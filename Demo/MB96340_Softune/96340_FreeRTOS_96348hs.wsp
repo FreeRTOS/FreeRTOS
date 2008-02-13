@@ -22,7 +22,5 @@ AutoLoad=1
 WSP=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB96340_Softune\
 
 [EditState]
-STATE-1=freertos_96348hs_sk16fx100pmc\src\serial\serial.c:192
-STATE-2=FreeRTOS_96348hs_SK16FX100PMC\Src\vectors.c:1
-Count=2
+Count=0
 

@@ -11,6 +11,7 @@ $0
 -I "..\..\Common\include"
 -I "..\..\..\Source\include"
 -I "..\..\..\Source\portable\Softune\MB96340"
+-I ".\Src\utility"
 -O 4
 -K SPEED
 -model MEDIUM
@@ -25,7 +26,7 @@ $other
 -INF srcin
 -D __96340
 $time
-1202902449
+1202908049
 $end
 $1
 -g
@@ -71,7 +72,7 @@ $2
 $other
 -Xset_rora
 $time
-1202902449
+1202908772
 $end
 $3
 -dt s,d,r,a
@@ -81,7 +82,7 @@ $3
 -Xdof
 $other
 $time
-1202902449
+1202908772
 $end
 $4
 -Xdof

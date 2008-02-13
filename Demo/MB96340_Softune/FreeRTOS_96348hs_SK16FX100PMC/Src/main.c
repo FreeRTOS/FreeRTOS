@@ -40,24 +40,62 @@
 	***************************************************************************
 */
 
-/*---------------------------------------------------------------------------
-  MAIN.C
-  - description
-  - See README.TXT for project description and disclaimer.
+/*
+ * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * documentation provides more details of the demo application tasks.
+ * 
+ * In addition to the standard demo tasks, the follow demo specific tasks are
+ * create:
+ *
+ * The "Check" task.  This only executes every three seconds but has the highest 
+ * priority so is guaranteed to get processor time.  Its main function is to 
+ * check that all the other tasks are still operational.  Most tasks maintain 
+ * a unique count that is incremented each time the task successfully completes 
+ * its function.  Should any error occur within such a task the count is 
+ * permanently halted.  The check task inspects the count of each task to ensure 
+ * it has changed since the last time the check task executed.  If all the count 
+ * variables have changed all the tasks are still executing error free, and the 
+ * check task toggles the onboard LED.  Should any task contain an error at any time 
+ * the LED toggle rate will change from 3 seconds to 500ms.
+ *
+ * The "Register Check" tasks.  These tasks fill the CPU registers with known
+ * values, then check that each register still contains the expected value 0 the
+ * discovery of an unexpected value being indicative of an error in the RTOS
+ * context switch mechanism.  The register check tasks operate at low priority
+ * so are switched in and out frequently.
+ *
+ * The "Trace Utility" task.  This can be used to obtain trace and debug 
+ * information via UART5.
+ */
 
-/*---------------------------------------------------------------------------*/
-
-/* 16FX includes */
-#include "mb96348hs.h"
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include <watchdog.h>
-#include <config.h>
 
-/*---------------------------------------------------------------------------*/
+/* Demo application includes. */
+#include "flash.h"
+#include "integer.h"
+#include "comtest2.h"
+#include "PollQ.h"
+#include "semtest.h"
+#include "BlockQ.h"
+#include "dynamic.h"
+#include "flop.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "BlockTim.h"
+#include "death.h"
+#include "taskutility.h"
+#include "partest.h"
+#include "crflash.h"
+#include "watchdog.h"
+
+/* Library includes. */
+#include <watchdog.h>
+
+/*-----------------------------------------------------------*/
 
 /* Demo task priorities. */
 #define WTC_TASK_PRIORITY			( tskIDLE_PRIORITY + 5 )
@@ -78,84 +116,36 @@
 top of the page.  When the system is operating error free the 'Check' task
 toggles an LED every three seconds.  If an error is discovered in any task the
 rate is increased to 500 milliseconds.  [in this case the '*' characters on the 
-LCD represent LED's]*/
+LCD represent LED's] */
 #define mainNO_ERROR_CHECK_DELAY	( (portTickType) 3000 / portTICK_RATE_MS )
 #define mainERROR_CHECK_DELAY		( (portTickType) 500 / portTICK_RATE_MS )
 
-/*---------------------------------------------------------------------------*/
-#define ledNUMBER_OF_LEDS	8
-#define mainCOM_TEST_LED	0x05
-#define mainCHECK_TEST_LED	0x07
+/* LED assignments for the demo tasks. */
+#define mainNUM_FLASH_CO_ROUTINES	8
+#define mainCOM_TEST_LED			0x05
+#define mainCHECK_TEST_LED			0x07
 
-/*---------------------------------------------------------------------------*/
+/*-----------------------------------------------------------*/
 
 /* 
  * The function that implements the Check task.  See the comments at the head
  * of the page for implementation details.
  */
-static void					vErrorChecks( void *pvParameters );
+static void	vErrorChecks( void *pvParameters );
 
 /*
  * Called by the Check task.  Returns pdPASS if all the other tasks are found
  * to be operating without error - otherwise returns pdFAIL.
  */
-static portSHORT			prvCheckOtherTasksAreStillRunning( void );
+static portSHORT prvCheckOtherTasksAreStillRunning( void );
 
-/*---------------------------------------------------------------------------*/
-static unsigned portCHAR	sState[2] = { 0xFF, 0xFF };
+/*
+ * Perform any hardware setup necessary for the demo.
+ */
+static void prvSetupHardware( void );
 
-/*---------------------------------------------------------------------------
- * The below callback function is called from Tick ISR if configUSE_TICK_HOOK 
- * is configured as 1.
- *---------------------------------------------------------------------------*/
+/*-----------------------------------------------------------*/
 
-/*void vApplicationTickHook ( void )
-{
-#if WATCHDOG == WTC_IN_TICK
-	Kick_Watchdog();
-#endif
-}*/
-
-/*---------------------------------------------------------------------------
- * The below callback function is called from Delayed ISR if configUSE_IDLE_HOOK 
- * is configured as 1.
- *---------------------------------------------------------------------------*/
-void vApplicationIdleHook( void )
-{
-	#if WATCHDOG == WTC_IN_IDLE
-	Kick_Watchdog();
-	#endif
-	#if ( INCLUDE_StartFlashCoRoutines == 1 || INCLUDE_StartHookCoRoutines == 1 )
-	vCoRoutineSchedule();
-	#endif
-}
-
-/*---------------------------------------------------------------------------
- * Initialize Port 00
- *---------------------------------------------------------------------------*/
-static void prvInitPort00( void )
-{
-	DDR00 = 0xFF;
-	PDR00 = 0xFF;
-	DDR09 = 0xFF;
-	PDR09 = 0xFF;
-}
-
-/*---------------------------------------------------------------------------
- * Setup the hardware
- *---------------------------------------------------------------------------*/
-static void prvSetupHardware( void )
-{
-	prvInitPort00();
-
-	#if WATCHDOG != WTC_NONE
-	InitWatchdog();
-	#endif
-}
-
-/*---------------------------------------------------------------------------
- * main()
- *---------------------------------------------------------------------------*/
 void main( void )
 {
 	InitIrqLevels();		/* Initialize interrupts */
@@ -168,167 +158,58 @@ void main( void )
 	#endif
 
 	/* Start the standard demo application tasks. */
-	#if ( INCLUDE_StartLEDFlashTasks == 1 )
-		vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	#endif
+	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
+	vStartIntegerMathTasks( tskIDLE_PRIORITY );
+	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
+	vStartDynamicPriorityTasks();
+	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
+	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
+	vCreateBlockTimeTasks();
 
-	#if ( INCLUDE_StartIntegerMathTasks == 1 )
-		vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_AltStartComTestTasks == 1 )
-		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
-	#endif
-
-	#if ( INCLUDE_StartPolledQueueTasks == 1 )
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_StartSemaphoreTasks == 1 )
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_StartBlockingQueueTasks == 1 )
-		vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_StartDynamicPriorityTasks == 1 )
-		vStartDynamicPriorityTasks();
-	#endif
-
-	#if ( INCLUDE_StartMathTasks == 1 )
-		vStartMathTasks( tskIDLE_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_StartFlashCoRoutines == 1 )
-		vStartFlashCoRoutines( ledNUMBER_OF_LEDS );
-	#endif
-
-	#if ( INCLUDE_StartHookCoRoutines == 1 )
-		vStartHookCoRoutines();
-	#endif
-
-	#if ( INCLUDE_StartGenericQueueTasks == 1 )
-		vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_StartQueuePeekTasks == 1 )
-		vStartQueuePeekTasks();
-	#endif
-
-	#if ( INCLUDE_CreateBlockTimeTasks == 1 )
-		vCreateBlockTimeTasks();
-	#endif
-
-	#if ( INCLUDE_CreateSuicidalTasks == 1 )
-		vCreateSuicidalTasks( mainDEATH_PRIORITY );
-	#endif
-
-	#if ( INCLUDE_TraceListTasks == 1 )
+	/* The definition INCLUDE_TraceListTasks is set within FreeRTOSConfig.h.
+	It should be set to 0 if using the EUROScope debugger. */
+	#if INCLUDE_TraceListTasks == 1
 		vTraceListTasks( TASK_UTILITY_PRIORITY );
 	#endif
 
 	/* Start the 'Check' task which is defined in this file. */
 	xTaskCreate( vErrorChecks, (signed portCHAR *) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	vTaskStartScheduler();
+	/* The suicide tasks must be started last as they record the number of other
+	tasks that exist within the system.  The value is then used to ensure at run
+	time the number of tasks that exists is within expected bounds. */
+	vCreateSuicidalTasks( mainDEATH_PRIORITY );
 
-	/* Should not reach here */
-	while( 1 )
-	{
-		__asm( " NOP " );	/*  //  */
-	}
+	/* Now start the scheduler.  Following this call the created tasks should
+	be executing. */	
+	vTaskStartScheduler( );
+	
+	/* vTaskStartScheduler() will only return if an error occurs while the 
+	idle task is being created. */
+	for( ;; );
 }
-
 /*-----------------------------------------------------------*/
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
+
+static void prvSetupHardware( void )
 {
-	if( uxLED < ledNUMBER_OF_LEDS )
-	{
-		vTaskSuspendAll();
+	/* Initialise the port used by the LEDs. */
+	vParTestInitialise();
 
-		/* Toggle the state of the single genuine on board LED. */
-		if( (sState[0] & ((portCHAR) (1 << uxLED))) == 0 )
-		{
-			PDR09 |= ( 1 << uxLED );
-			sState[0] |= ( 1 << uxLED );
-		}
-		else
-		{
-			PDR09 &= ~( 1 << uxLED );
-			sState[0] &= ~( 1 << uxLED );
-		}
-
-		xTaskResumeAll();
-	}
-	else
-	{
-		vTaskSuspendAll();
-
-		uxLED -= ledNUMBER_OF_LEDS;
-
-		if( (sState[1] & ((portCHAR) (1 << uxLED))) == 0 )
-		{
-			PDR00 |= ( 1 << uxLED );
-			sState[1] |= ( 1 << uxLED );
-		}
-		else
-		{
-			PDR00 &= ~( 1 << uxLED );
-			sState[1] &= ~( 1 << uxLED );
-		}
-
-		xTaskResumeAll();
-	}
+	/* See watchdog.h for definitions relating to the watchdog use. */
+	#if WATCHDOG != WTC_NONE
+		InitWatchdog();
+	#endif
 }
-
 /*-----------------------------------------------------------*/
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{
-	/* Set or clear the output [in this case show or hide the '*' character. */
-	if( uxLED < ledNUMBER_OF_LEDS )
-	{
-		vTaskSuspendAll();
-		{
-			if( xValue )
-			{
-				PDR09 &= ~( 1 << uxLED );
-				sState[0] &= ~( 1 << uxLED );
-			}
-			else
-			{
-				PDR09 |= ( 1 << uxLED );
-				sState[0] |= ( 1 << uxLED );
-			}
-		}
 
-		xTaskResumeAll();
-	}
-	else
-	{
-		vTaskSuspendAll();
-		{
-			if( xValue )
-			{
-				PDR00 &= ~( 1 << uxLED );
-				sState[1] &= ~( 1 << uxLED );
-			}
-			else
-			{
-				PDR00 |= ( 1 << uxLED );
-				sState[1] |= ( 1 << uxLED );
-			}
-		}
-
-		xTaskResumeAll();
-	}
-}
-
-/*-----------------------------------------------------------*/
 static void vErrorChecks( void *pvParameters )
 {
-	static volatile unsigned portLONG	ulDummyVariable = 3UL;
-	portTickType						xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
+portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
+
+	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
@@ -339,14 +220,6 @@ static void vErrorChecks( void *pvParameters )
 		on whether an error has been detected or not.  When an error is 
 		detected the time is shortened resulting in a faster LED flash rate. */
 		vTaskDelay( xDelayPeriod );
-
-		/* Perform a bit of 32bit maths to ensure the registers used by the 
-		integer tasks get some exercise outside of the integer tasks 
-		themselves. The result here is not important we are just deliberately
-		changing registers used by other tasks to ensure that their context
-		switch is operating as required. - see the demo application 
-		documentation for more info. */
-		ulDummyVariable *= 3UL;
 
 		/* See if the other tasks are all ok. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
@@ -361,8 +234,8 @@ static void vErrorChecks( void *pvParameters )
 		vParTestToggleLED( mainCHECK_TEST_LED );
 	}
 }
-
 /*-----------------------------------------------------------*/
+
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
 	static portSHORT	sNoErrorFound = pdTRUE;
@@ -373,98 +246,97 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void )
 	incremented.  A count remaining at the same value between calls therefore
 	indicates that an error has been detected.  Only tasks that do not flash
 	an LED are checked. */
-	#if ( INCLUDE_StartIntegerMathTasks == 1 )
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_AltStartComTestTasks == 1 )
 	if( xAreComTestTasksStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartPolledQueueTasks == 1 )
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartSemaphoreTasks == 1 )
 	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartBlockingQueueTasks == 1 )
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartDynamicPriorityTasks == 1 )
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartMathTasks == 1 )
-	if( xAreMathsTaskStillRunning() != pdTRUE )
-	{
-		sNoErrorFound = pdFALSE;
-	}
-
-	#endif
-	#if ( INCLUDE_StartFlashCoRoutines == 1 )
 	if( xAreFlashCoRoutinesStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartHookCoRoutines == 1 )
-	if( xAreHookCoRoutinesStillRunning() != pdTRUE )
-	{
-		sNoErrorFound = pdFALSE;
-	}
-
-	#endif
-	#if ( INCLUDE_StartGenericQueueTasks == 1 )
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_StartQueuePeekTasks == 1 )
-	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-	{
-		sNoErrorFound = pdFALSE;
-	}
-
-	#endif
-	#if ( INCLUDE_CreateBlockTimeTasks == 1 )
 	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
-	#if ( INCLUDE_CreateSuicidalTasks == 1 )
 	if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
 	}
 
-	#endif
 	return sNoErrorFound;
 }
+/*-----------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
+/* Idle hook function. */
+#if configUSE_IDLE_HOOK == 1
+	void vApplicationIdleHook( void )
+	{
+		/* Are we using the idle task to kick the watchdog?  See watchdog.h
+		for watchdog kicking options. Note this is for demonstration only
+		and is not a suggested method of servicing the watchdog in a real
+		application. */
+		#if WATCHDOG == WTC_IN_IDLE
+			Kick_Watchdog();
+		#endif
+	}
+#else
+	#if WATCHDOG == WTC_IN_IDLE
+		#error configUSE_IDLE_HOOK must be set to 1 in FreeRTOSConfig.h if the watchdog is being cleared in the idle task hook.
+	#endif
+#endif
+
+/*-----------------------------------------------------------*/
+
+/* Tick hook function. */
+#if configUSE_TICK_HOOK == 1
+	void vApplicationTickHook( void )
+	{
+		/* Are we using the tick to kick the watchdog?  See watchdog.h
+		for watchdog kicking options.  Note this is for demonstration
+		only and is not a suggested method of servicing the watchdog in
+		a real application. */
+		#if WATCHDOG == WTC_IN_TICK
+			Kick_Watchdog();
+		#endif
+
+		vCoRoutineSchedule();
+	}
+#else
+	#if WATCHDOG == WTC_IN_TICK
+		#error configUSE_TICK_HOOK must be set to 1 in FreeRTOSConfig.h if the watchdog is being cleared in the tick hook.
+	#endif
+#endif
+/*-----------------------------------------------------------*/

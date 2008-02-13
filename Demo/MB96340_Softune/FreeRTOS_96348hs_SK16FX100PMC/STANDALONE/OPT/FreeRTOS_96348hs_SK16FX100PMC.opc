@@ -1,0 +1,24 @@
+-g
+-w 1
+-INF LIST
+-D __CONFIG__=3
+-I ".\Src"
+-I ".\Src\config"
+-I ".\Src\watchdog"
+-I "..\..\Common\include"
+-I "..\..\..\Source\include"
+-I "..\..\..\Source\portable\Softune\MB96340"
+-O 4
+-K SPEED
+-model MEDIUM
+-B
+-xauto 127
+-x vTaskSwitchContext,vTaskIncrementTick
+-K EOPT
+-K LIB
+-K UNROLL
+-c
+-cwno
+-cpu MB96F348HSA
+-INF srcin
+-D __96340

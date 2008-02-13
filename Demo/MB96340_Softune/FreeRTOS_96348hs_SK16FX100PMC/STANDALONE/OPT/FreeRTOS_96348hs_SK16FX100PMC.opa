@@ -1,0 +1,16 @@
+-g
+-w 2
+-D __CONFIG__=3
+-I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\os"
+-I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\port"
+-linf ON
+-lsrc ON
+-lsec ON
+-lcros OFF
+-linc ON
+-lexp OBJ
+-pl 60
+-pw 100
+-tab 8
+-cwno
+-cpu MB96F348HSA

@@ -436,70 +436,56 @@ extern volatile unsigned portLONG ulCriticalNesting;
 			LDI #0x11111111, R13
 			CMP R13, R0
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x22222222, R13
 			CMP R13, R1
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x33333333, R13
 			CMP R13, R2
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x44444444, R13
 			CMP R13, R3
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x55555555, R13
 			CMP R13, R4
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x66666666, R13
 			CMP R13, R5
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x77777777, R13
 			CMP R13, R6
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x88888888, R13
 			CMP R13, R7
 			BNE First_Set_Error
-			NOP
 
 			LDI #0x99999999, R13
 			CMP R13, R8
 			BNE First_Set_Error
-			NOP
 
 			LDI #0xaaaaaaaa, R13
 			CMP R13, R9
 			BNE First_Set_Error
-			NOP
 
 			LDI #0xbbbbbbbb, R13
 			CMP R13, R10
 			BNE First_Set_Error
-			NOP
 
 			LDI #0xcccccccc, R13
 			CMP R13, R11
 			BNE First_Set_Error
-			NOP
 
 			LDI #0xdddddddd, R13
 			CMP R13, R12
 			BNE First_Set_Error
-			NOP
 
 			BRA First_Start_Next_Loop
-			NOP
 
 		First_Set_Error:
 
@@ -543,6 +529,7 @@ extern volatile unsigned portLONG ulCriticalNesting;
 			;Load known values into each register.
 			LDI	#0x11111111, R1
 			LDI	#0x22222222, R2
+			INT #40H
 			LDI	#0x33333333, R3
 			LDI #0x44444444, R4
 			LDI	#0x55555555, R5
@@ -550,6 +537,7 @@ extern volatile unsigned portLONG ulCriticalNesting;
 			LDI	#0x77777777, R7
 			LDI	#0x88888888, R8
 			LDI	#0x99999999, R9
+			INT #40H
 			LDI	#0xaaaaaaaa, R10
 			LDI	#0xbbbbbbbb, R11
 			LDI	#0xcccccccc, R12
@@ -559,70 +547,60 @@ extern volatile unsigned portLONG ulCriticalNesting;
 			LDI #0x11111111, R13
 			CMP R13, R1
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x22222222, R13
 			CMP R13, R2
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x33333333, R13
 			CMP R13, R3
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x44444444, R13
 			CMP R13, R4
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x55555555, R13
 			CMP R13, R5
 			BNE Second_Set_Error
-			NOP
+
+			INT #40H
 
 			LDI #0x66666666, R13
 			CMP R13, R6
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x77777777, R13
 			CMP R13, R7
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x88888888, R13
 			CMP R13, R8
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0x99999999, R13
 			CMP R13, R9
 			BNE Second_Set_Error
-			NOP
+
+			INT #40H
 
 			LDI #0xaaaaaaaa, R13
 			CMP R13, R10
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0xbbbbbbbb, R13
 			CMP R13, R11
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0xcccccccc, R13
 			CMP R13, R12
 			BNE Second_Set_Error
-			NOP
 
 			LDI #0xdddddddd, R13
 			CMP R13, R0
 			BNE Second_Set_Error
-			NOP
 
 			BRA Second_Start_Next_Loop
-			NOP
 
 		Second_Set_Error:
 

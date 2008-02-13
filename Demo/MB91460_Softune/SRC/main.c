@@ -1,30 +1,72 @@
-/* THIS SAMPLE CODE IS PROVIDED AS IS AND IS SUBJECT TO ALTERATIONS. FUJITSU */
-/* MICROELECTRONICS ACCEPTS NO RESPONSIBILITY OR LIABILITY FOR ANY ERRORS OR */
-/* ELIGIBILITY FOR ANY PURPOSES.											 */
-/*				 (C) Fujitsu Microelectronics Europe GmbH				  */
-/*------------------------------------------------------------------------
-  MAIN.C
-  - description
-  - See README.TXT for project description and disclaimer.
--------------------------------------------------------------------------*/
+/*
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+
+	This file is part of the FreeRTOS.org distribution.
+
+	FreeRTOS.org is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	FreeRTOS.org is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with FreeRTOS.org; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+	A special exception to the GPL can be applied should you wish to distribute
+	a combined work that includes FreeRTOS.org, without being obliged to provide
+	the source code for any proprietary components.  See the licensing section
+	of http://www.FreeRTOS.org for full details of how and when the exception
+	can be applied.
+
+	***************************************************************************
+
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
+	***************************************************************************
+*/
 
 
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
  * 
- * Main.c also creates a task called "Check".  This only executes every three 
- * seconds but has the highest priority so is guaranteed to get processor time.  
- * Its main function is to check that all the other tasks are still operational.
- * Each task (other than the "flash" tasks) maintains a unique count that is 
- * incremented each time the task successfully completes its function.  Should 
- * any error occur within such a task the count is permanently halted.  The 
- * check task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have 
- * changed all the tasks are still executing error free, and the check task
- * toggles the onboard LED.  Should any task contain an error at any time 
+ * In addition to the standard demo tasks, the follow demo specific tasks are
+ * create:
+ *
+ * The "Check" task.  This only executes every three seconds but has the highest 
+ * priority so is guaranteed to get processor time.  Its main function is to 
+ * check that all the other tasks are still operational.  Most tasks maintain 
+ * a unique count that is incremented each time the task successfully completes 
+ * its function.  Should any error occur within such a task the count is 
+ * permanently halted.  The check task inspects the count of each task to ensure 
+ * it has changed since the last time the check task executed.  If all the count 
+ * variables have changed all the tasks are still executing error free, and the 
+ * check task toggles the onboard LED.  Should any task contain an error at any time 
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
+ * The "Register Check" tasks.  These tasks fill the CPU registers with known
+ * values, then check that each register still contains the expected value 0 the
+ * discovery of an unexpected value being indicative of an error in the RTOS
+ * context switch mechanism.  The register check tasks operate at low priority
+ * so are switched in and out frequently.
+ *
+ * The "Trace Utility" task.  This can be used to obtain trace and debug 
+ * information via UART5.
  */
 
 
@@ -72,7 +114,7 @@
 top of the page.  When the system is operating error free the 'Check' task
 toggles an LED every three seconds.  If an error is discovered in any task the
 rate is increased to 500 milliseconds.  [in this case the '*' characters on the 
-LCD represent LED's]*/
+LCD represent LEDs]*/
 #define mainNO_ERROR_CHECK_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_CHECK_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS  )
 
@@ -94,7 +136,7 @@ LCD represent LED's]*/
  * The function that implements the Check task.  See the comments at the head
  * of the page for implementation details.
  */ 
-static void vErrorChecks( void *pvParameters );
+static void prvErrorChecks( void *pvParameters );
 
 /*
  * Called by the Check task.  Returns pdPASS if all the other tasks are found
@@ -147,8 +189,9 @@ void main(void)
 	vCreateBlockTimeTasks();
 
 	/* Start the 'Check' task which is defined in this file. */
-	xTaskCreate( vErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
+	xTaskCreate( prvErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
 
+	/* Start the 'Register Test' tasks as described at the top of this file. */
 	xTaskCreate( vFirstRegisterTestTask, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vSecondRegisterTestTask, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
@@ -176,7 +219,7 @@ void main(void)
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void prvErrorChecks( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 
@@ -292,6 +335,8 @@ static unsigned portLONG ulLastRegTest1Counter = 0UL, ulLastRegTest2Counter = 0U
 		lReturn = pdFAIL;
 	}
 
+	/* Record the current values of the register check cycle counters so we
+	can ensure they are still running the next time this function is called. */
 	ulLastRegTest1Counter = ulRegTest1Counter;
 	ulLastRegTest2Counter = ulRegTest2Counter;
 
@@ -317,29 +362,29 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-/* The below callback function is called from Delayed ISR if configUSE_IDLE_HOOK 
-is configured as 1. */  
+/* Idle hook function. */
 #if configUSE_IDLE_HOOK == 1
 	void vApplicationIdleHook( void )
 	{
-		/* Are we using the idle task to kick the watchdog? */
+		/* Are we using the idle task to kick the watchdog?  See watchdog.h
+		for watchdog kicking options. Note this is for demonstration only
+		and is not a suggested method of servicing the watchdog in a real
+		application. */
 		#if WATCHDOG == WTC_IN_IDLE
 			Kick_Watchdog();
-		#endif
-
-		#if configUSE_CO_ROUTINES == 1		
-			vCoRoutineSchedule();
 		#endif
 	}
 #endif
 /*-----------------------------------------------------------*/
 
-/*
-The below callback function is called from Tick ISR if configUSE_TICK_HOOK 
-is configured as 1. */  
+/* Tick hook function. */
 #if configUSE_TICK_HOOK == 1
 	void vApplicationTickHook( void )
 	{
+		/* Are we using the tick to kick the watchdog?  See watchdog.h
+		for watchdog kicking options.  Note this is for demonstration
+		only and is not a suggested method of servicing the watchdog in
+		a real application. */
 		#if WATCHDOG == WTC_IN_TICK
 			Kick_Watchdog();
 		#endif

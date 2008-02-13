@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.0 - Copyright (C) 2003-2007 Richard Barry.
+	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -19,23 +19,30 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
 	***************************************************************************
-	See http://www.FreeRTOS.org for documentation, latest information, license 
-	and contact details.  Please ensure to read the configuration and relevant 
-	port sections of the online documentation.
 
-	Also see http://www.SafeRTOS.com a version that has been certified for use
-	in safety critical systems, plus commercial licensing, development and
-	support options.
+	Please ensure to read the configuration and relevant port sections of the 
+	online documentation.
+
+	+++ http://www.FreeRTOS.org +++
+	Documentation, latest information, license and contact details.  
+
+	+++ http://www.SafeRTOS.com +++
+	A version that is certified for use in safety critical systems.
+
+	+++ http://www.OpenRTOS.com +++
+	Commercial support, development, porting, licensing and training services.
+
 	***************************************************************************
 */
 
 
-/* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.   
+/* 
+ * BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.   
  * 
  * This file only supports UART 2
  */
@@ -63,8 +70,6 @@ static volatile portSHORT sTHREEmpty;
 
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-//unsigned portLONG ulBaudRateCount;
-
 	portENTER_CRITICAL();
 	{
 		/* Create the queues used by the com test task. */
@@ -78,10 +83,10 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
 		SMR02 = 0x0d;	/* enable SOT3, Reset, normal mode */
 		SSR02 = 0x02;	/* LSB first, enable receive interrupts */
 
-		PFR20_D0 = 1;	// enable UART
-		PFR20_D1 = 1;	// enable UART
+		PFR20_D0 = 1;	/* enable UART */
+		PFR20_D1 = 1;	/* enable UART */
 
-		EPFR20_D1 = 0;   // enable UART
+		EPFR20_D1 = 0;  /* enable UART */
 	}
 	portEXIT_CRITICAL();
 	

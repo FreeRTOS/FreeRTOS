@@ -6,6 +6,10 @@
   watchdog.h
   - This file contains the defines and function declaration for hardware watchdog.
 -------------------------------------------------------------------------*/
+
+#ifndef WATCHDOG_H
+#define WATCHDOG_H
+
 /* 
  * Clear watchdog defines 
  */
@@ -43,4 +47,6 @@
  */
 void InitWatchdog (void);
 void vStartWatchdogTask(unsigned portSHORT);
+
+#endif
 

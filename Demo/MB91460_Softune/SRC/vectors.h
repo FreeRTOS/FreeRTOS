@@ -9,5 +9,10 @@
   06.10.06  1.00   UMa    Initial Version
 -----------------------------------------------------------------------------*/
 
+#ifndef VECTORS_H
+#define VECTORS_H
 
-void InitIrqLevels(void);
+void InitIrqLevels( void );
+
+#endif
+

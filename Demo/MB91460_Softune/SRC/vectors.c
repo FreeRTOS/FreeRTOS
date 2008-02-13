@@ -17,6 +17,7 @@
 
 #include "mb91467d.h"
 #include "watchdog.h"
+#include "FreeRTOSConfig.h"
 
 /*------------------------------------------------------------------------
   InitIrqLevels()
@@ -34,133 +35,133 @@ void InitIrqLevels(void)
 	/*  ICRxx */ 
 	/* Softune Workbench Monitor Debugger is using ext int0 for abort function */
 	/*  ICR00 = 31;  *//* External Interrupt 0		 */
-					/* External Interrupt 1		*/				 
-	ICR01 = 31;		/* External Interrupt 2		*/
-					/* External Interrupt 3		*/
-	ICR02 = 31;		/* External Interrupt 4		*/
-					/* External Interrupt 5		*/
-	ICR03 = 31;		/* External Interrupt 6		*/
-					/* External Interrupt 7		*/
-	ICR04 = 31;		/* External Interrupt 8		*/
-					/* External Interrupt 9		*/
-	ICR05 = 31;		/* External Interrupt 10	*/
-					/* External Interrupt 11	*/
-	ICR06 = 31;		/* External Interrupt 12	*/
-					/* External Interrupt 13	*/
-	ICR07 = 31;		/* External Interrupt 14	*/
-					/* External Interrupt 15	*/
-	ICR08 = 30;		/* Reload Timer 0			*/
-					/* Reload Timer 1			*/
-	ICR09 = 31;		/* Reload Timer 2			*/
-					/* Reload Timer 3			*/
-	ICR10 = 31;		/* Reload Timer 4			*/
-					/* Reload Timer 5			*/
-	ICR11 = 31;		/* Reload Timer 6			*/
-					/* Reload Timer 7			*/
-	ICR12 = 31;		/* Free Run Timer 0			*/
-					/* Free Run Timer 1			*/
-	ICR13 = 31;		/* Free Run Timer 2			*/
-					/* Free Run Timer 3			*/
-	ICR14 = 31;		/* Free Run Timer 4			*/
-					/* Free Run Timer 5			*/
-	ICR15 = 31;		/* Free Run Timer 6			*/
-					/* Free Run Timer 7			*/
-	ICR16 = 31;		/* CAN 0					*/
-					/* CAN 1					*/
-	ICR17 = 31;		/* CAN 2					*/
-					/* CAN 3					*/
-	ICR18 = 31;		/* CAN 4					*/
-					/* CAN 5					*/
-	ICR19 = 31;		/* USART (LIN) 0 RX			*/
-					/* USART (LIN) 0 TX			*/
-	ICR20 = 31;		/* USART (LIN) 1 RX			*/
-					/* USART (LIN) 1 TX			*/
-	ICR21 = 30;		/* USART (LIN) 2 RX			*/
-					/* USART (LIN) 2 TX			*/
-	ICR22 = 31;		/* USART (LIN) 3 RX			*/
-					/* USART (LIN) 3 TX			*/
-	ICR23 = 30;		/* System Reserved			*/
-					/* Delayed Interrupt		*/
-	ICR24 = 31;		/* System Reserved			*/
-					/* System Reserved			*/
-	ICR25 = 31;		/* USART (LIN, FIFO) 4 RX	*/
-					/* USART (LIN, FIFO) 4 TX	*/
-	ICR26 = 30;		/* USART (LIN, FIFO) 5 RX	*/
-					/* USART (LIN, FIFO) 5 TX	*/
-	ICR27 = 31;		/* USART (LIN, FIFO) 6 RX	*/
-					/* USART (LIN, FIFO) 6 TX	*/
-	ICR28 = 31;		/* USART (LIN, FIFO) 7 RX	*/
-					/* USART (LIN, FIFO) 7 TX	*/
-	ICR29 = 31;		/* I2C 0 / I2C 2			*/
-					/* I2C 1 / I2C 3			*/
-	ICR30 = 31;		/* USART (LIN, FIFO) 8 RX	*/
-					/* USART (LIN, FIFO) 8 TX	*/
-	ICR31 = 31;		/* USART (LIN, FIFO) 9 RX	*/
-					/* USART (LIN, FIFO) 9 TX	*/
-	ICR32 = 31;		/* USART (LIN, FIFO) 10 RX	*/
-					/* USART (LIN, FIFO) 10 TX	*/
-	ICR33 = 31;		/* USART (LIN, FIFO) 11 RX	*/
-					/* USART (LIN, FIFO) 11 TX	*/
-	ICR34 = 31;		/* USART (LIN, FIFO) 12 RX	*/
-					/* USART (LIN, FIFO) 12 TX	*/
-	ICR35 = 31;		/* USART (LIN, FIFO) 13 RX	*/
-					/* USART (LIN, FIFO) 13 TX	*/
-	ICR36 = 31;		/* USART (LIN, FIFO) 14 RX	*/
-					/* USART (LIN, FIFO) 14 TX	*/
-	ICR37 = 31;		/* USART (LIN, FIFO) 15 RX	*/
-					/* USART (LIN, FIFO) 15 TX	*/
-	ICR38 = 31;		/* Input Capture 0			*/
-					/* Input Capture 1			*/
-	ICR39 = 31;		/* Input Capture 2			*/
-					/* Input Capture 3			*/
-	ICR40 = 31;		/* Input Capture 4			*/
-					/* Input Capture 5			*/
-	ICR41 = 31;		/* Input Capture 6			*/
-					/* Input Capture 7			*/
-	ICR42 = 31;		/* Output Compare 0			*/
-					/* Output Compare 1			*/
-	ICR43 = 31;		/* Output Compare 2			*/
-					/* Output Compare 3			*/
-	ICR44 = 31;		/* Output Compare 4			*/
-					/* Output Compare 5			*/
-	ICR45 = 31;		/* Output Compare 6			*/
-					/* Output Compare 7			*/
-	ICR46 = 31;		/* Sound Generator			*/
-					/* Phase Frequ. Modulator	*/
-	ICR47 = 31;		/* System Reserved			*/
-					/* System Reserved			*/
-	ICR48 = 31;		/* Prog. Pulse Gen. 0		*/
-					/* Prog. Pulse Gen. 1		*/
-	ICR49 = 31;		/* Prog. Pulse Gen. 2		*/
-					/* Prog. Pulse Gen. 3		*/
-	ICR50 = 31;		/* Prog. Pulse Gen. 4		*/
-					/* Prog. Pulse Gen. 5		*/
-	ICR51 = 31;		/* Prog. Pulse Gen. 6		*/
-					/* Prog. Pulse Gen. 7		*/
-	ICR52 = 31;		/* Prog. Pulse Gen. 8		*/
-					/* Prog. Pulse Gen. 9		*/
-	ICR53 = 31;		/* Prog. Pulse Gen. 10		*/
-					/* Prog. Pulse Gen. 11		*/
-	ICR54 = 31;		/* Prog. Pulse Gen. 12		*/
-					/* Prog. Pulse Gen. 13		*/
-	ICR55 = 31;		/* Prog. Pulse Gen. 14		*/
-					/* Prog. Pulse Gen. 15		*/
-	ICR56 = 31;		/* Up/Down Counter 0		*/
-					/* Up/Down Counter 1		*/
-	ICR57 = 31;		/* Up/Down Counter 2		*/
-					/* Up/Down Counter 3		*/
-	ICR58 = 31;		/* Real Time Clock			*/
-					/* Calibration Unit			*/
-	ICR59 = 31;		/* A/D Converter 0			*/
-					/* -						*/
-	ICR60 = 31;		/* Alarm Comperator 0		*/
-					/* Alarm Comperator 1		*/
-	ICR61 = 31;		/* Low Volage Detector		*/
-					/* SMC Zero Point 0-5		*/
-	ICR62 = 31;		/* Timebase Overflow		*/
-					/* PLL Clock Gear			*/
-	ICR63 = 31;		/* DMA Controller			*/
-					/* Main/Sub OSC stability wait  */
+												/* External Interrupt 1		*/				 
+	ICR01 = 31;									/* External Interrupt 2		*/
+												/* External Interrupt 3		*/
+	ICR02 = 31;									/* External Interrupt 4		*/
+												/* External Interrupt 5		*/
+	ICR03 = 31;									/* External Interrupt 6		*/
+												/* External Interrupt 7		*/
+	ICR04 = 31;									/* External Interrupt 8		*/
+												/* External Interrupt 9		*/
+	ICR05 = 31;									/* External Interrupt 10	*/
+												/* External Interrupt 11	*/
+	ICR06 = 31;									/* External Interrupt 12	*/
+												/* External Interrupt 13	*/
+	ICR07 = 31;									/* External Interrupt 14	*/
+												/* External Interrupt 15	*/
+	ICR08 = configKERNEL_INTERRUPT_PRIORITY;	/* Reload Timer 0			*/
+												/* Reload Timer 1			*/
+	ICR09 = 31;									/* Reload Timer 2			*/
+												/* Reload Timer 3			*/
+	ICR10 = 31;									/* Reload Timer 4			*/
+												/* Reload Timer 5			*/
+	ICR11 = 31;									/* Reload Timer 6			*/
+												/* Reload Timer 7			*/
+	ICR12 = 31;									/* Free Run Timer 0			*/
+												/* Free Run Timer 1			*/
+	ICR13 = 31;									/* Free Run Timer 2			*/
+												/* Free Run Timer 3			*/
+	ICR14 = 31;									/* Free Run Timer 4			*/
+												/* Free Run Timer 5			*/
+	ICR15 = 31;									/* Free Run Timer 6			*/
+												/* Free Run Timer 7			*/
+	ICR16 = 31;									/* CAN 0					*/
+												/* CAN 1					*/
+	ICR17 = 31;									/* CAN 2					*/
+												/* CAN 3					*/
+	ICR18 = 31;									/* CAN 4					*/
+												/* CAN 5					*/
+	ICR19 = 31;									/* USART (LIN) 0 RX			*/
+												/* USART (LIN) 0 TX			*/
+	ICR20 = 31;									/* USART (LIN) 1 RX			*/
+												/* USART (LIN) 1 TX			*/
+	ICR21 = configKERNEL_INTERRUPT_PRIORITY;	/* USART (LIN) 2 RX			*/
+												/* USART (LIN) 2 TX			*/
+	ICR22 = 31;									/* USART (LIN) 3 RX			*/
+												/* USART (LIN) 3 TX			*/
+	ICR23 = configKERNEL_INTERRUPT_PRIORITY;	/* System Reserved			*/
+												/* Delayed Interrupt		*/
+	ICR24 = 31;									/* System Reserved			*/
+												/* System Reserved			*/
+	ICR25 = 31;									/* USART (LIN, FIFO) 4 RX	*/
+												/* USART (LIN, FIFO) 4 TX	*/
+	ICR26 = configKERNEL_INTERRUPT_PRIORITY;	/* USART (LIN, FIFO) 5 RX	*/
+												/* USART (LIN, FIFO) 5 TX	*/
+	ICR27 = 31;									/* USART (LIN, FIFO) 6 RX	*/
+												/* USART (LIN, FIFO) 6 TX	*/
+	ICR28 = 31;									/* USART (LIN, FIFO) 7 RX	*/
+												/* USART (LIN, FIFO) 7 TX	*/
+	ICR29 = 31;									/* I2C 0 / I2C 2			*/
+												/* I2C 1 / I2C 3			*/
+	ICR30 = 31;									/* USART (LIN, FIFO) 8 RX	*/
+												/* USART (LIN, FIFO) 8 TX	*/
+	ICR31 = 31;									/* USART (LIN, FIFO) 9 RX	*/
+												/* USART (LIN, FIFO) 9 TX	*/
+	ICR32 = 31;									/* USART (LIN, FIFO) 10 RX	*/
+												/* USART (LIN, FIFO) 10 TX	*/
+	ICR33 = 31;									/* USART (LIN, FIFO) 11 RX	*/
+												/* USART (LIN, FIFO) 11 TX	*/
+	ICR34 = 31;									/* USART (LIN, FIFO) 12 RX	*/
+												/* USART (LIN, FIFO) 12 TX	*/
+	ICR35 = 31;									/* USART (LIN, FIFO) 13 RX	*/
+												/* USART (LIN, FIFO) 13 TX	*/
+	ICR36 = 31;									/* USART (LIN, FIFO) 14 RX	*/
+												/* USART (LIN, FIFO) 14 TX	*/
+	ICR37 = 31;									/* USART (LIN, FIFO) 15 RX	*/
+												/* USART (LIN, FIFO) 15 TX	*/
+	ICR38 = 31;									/* Input Capture 0			*/
+												/* Input Capture 1			*/
+	ICR39 = 31;									/* Input Capture 2			*/
+												/* Input Capture 3			*/
+	ICR40 = 31;									/* Input Capture 4			*/
+												/* Input Capture 5			*/
+	ICR41 = 31;									/* Input Capture 6			*/
+												/* Input Capture 7			*/
+	ICR42 = 31;									/* Output Compare 0			*/
+												/* Output Compare 1			*/
+	ICR43 = 31;									/* Output Compare 2			*/
+												/* Output Compare 3			*/
+	ICR44 = 31;									/* Output Compare 4			*/
+												/* Output Compare 5			*/
+	ICR45 = 31;									/* Output Compare 6			*/
+												/* Output Compare 7			*/
+	ICR46 = 31;									/* Sound Generator			*/
+												/* Phase Frequ. Modulator	*/
+	ICR47 = 31;									/* System Reserved			*/
+												/* System Reserved			*/
+	ICR48 = 31;									/* Prog. Pulse Gen. 0		*/
+												/* Prog. Pulse Gen. 1		*/
+	ICR49 = 31;									/* Prog. Pulse Gen. 2		*/
+												/* Prog. Pulse Gen. 3		*/
+	ICR50 = 31;									/* Prog. Pulse Gen. 4		*/
+												/* Prog. Pulse Gen. 5		*/
+	ICR51 = 31;									/* Prog. Pulse Gen. 6		*/
+												/* Prog. Pulse Gen. 7		*/
+	ICR52 = 31;									/* Prog. Pulse Gen. 8		*/
+												/* Prog. Pulse Gen. 9		*/
+	ICR53 = 31;									/* Prog. Pulse Gen. 10		*/
+												/* Prog. Pulse Gen. 11		*/
+	ICR54 = 31;									/* Prog. Pulse Gen. 12		*/
+												/* Prog. Pulse Gen. 13		*/
+	ICR55 = 31;									/* Prog. Pulse Gen. 14		*/
+												/* Prog. Pulse Gen. 15		*/
+	ICR56 = 31;									/* Up/Down Counter 0		*/
+												/* Up/Down Counter 1		*/
+	ICR57 = 31;									/* Up/Down Counter 2		*/
+												/* Up/Down Counter 3		*/
+	ICR58 = 31;									/* Real Time Clock			*/
+												/* Calibration Unit			*/
+	ICR59 = 31;									/* A/D Converter 0			*/
+												/* -						*/
+	ICR60 = 31;									/* Alarm Comperator 0		*/
+												/* Alarm Comperator 1		*/
+	ICR61 = 31;									/* Low Volage Detector		*/
+												/* SMC Zero Point 0-5		*/
+	ICR62 = 31;									/* Timebase Overflow		*/
+												/* PLL Clock Gear			*/
+	ICR63 = 31;									/* DMA Controller			*/
+												/* Main/Sub OSC stability wait  */
 }
 
 

@@ -1,0 +1,109 @@
+### uVision2 Project, (C) Keil Software
+### Do not modify !
+
+Target (LM3S1xx), 0x0004 // Tools: 'ARM-ADS'
+
+Group (Source)
+Group (Demo)
+
+File 1,1,<..\..\Source\croutine.c><croutine.c> 0x440790D8 
+File 1,1,<..\..\Source\list.c><list.c> 0x440790D8 
+File 1,1,<..\..\Source\queue.c><queue.c> 0x440790D8 
+File 1,1,<..\..\Source\tasks.c><tasks.c> 0x440790D8 
+File 1,1,<..\..\Source\portable\MemMang\heap_1.c><heap_1.c> 0x440790D8 
+File 1,1,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 0x440790D8 
+File 2,1,<.\main.c><main.c> 0x441EE317 
+File 2,2,<.\init\Startup.s><Startup.s> 0x44172A20 
+File 2,1,<..\Common\Minimal\crflash.c><crflash.c> 0x440790D8 
+File 2,1,<.\ParTest\ParTest.c><ParTest.c> 0x440790D8 
+File 2,1,<.\include\pdc.c><pdc.c> 0x44187439 
+File 2,4,<C:\Keil\ARM\RV30\LIB\Luminary\DriverLib.lib><DriverLib.lib> 0x44206F94 
+
+
+Options 1,0,0  // Target 'LM3S1xx'
+ Device (LM3S101)
+ Vendor (Luminary Micro)
+ Cpu (IRAM(0x20000000-0x200007FF) IROM(0-0x1FFF) CLOCK(20000000) CPUTYPE("Cortex-M3"))
+ FlashUt ()
+ StupF ("STARTUP\Luminary\Startup.s" ("Luminary Startup Code"))
+ FlashDR (UL2CM3(-U40296420 -O7 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0LM3S_8 -FS00 -FL02000))
+ DevID (4079)
+ Rgf (LM3Sxxx.H)
+ Mem ()
+ C ()
+ A ()
+ RL ()
+ OH ()
+ DBC_IFX ()
+ DBC_CMS ()
+ DBC_AMS ()
+ DBC_LMS ()
+ UseEnv=0
+ EnvBin ()
+ EnvInc ()
+ EnvLib ()
+ EnvReg (ÿLuminary\)
+ OrgReg (ÿLuminary\)
+ TgStat=0
+ OutDir (.\uvision\)
+ OutName (RTOSDemo)
+ GenApp=1
+ GenLib=0
+ GenHex=0
+ Debug=1
+ Browse=1
+ LstDir (.\uvision\)
+ HexSel=1
+ MG32K=0
+ TGMORE=0
+ RunUsr 0 0 <>
+ RunUsr 1 0 <>
+ BrunUsr 0 0 <>
+ BrunUsr 1 0 <>
+ SVCSID <>
+ GLFLAGS=1790
+ ADSFLGA { 243,31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ACPUTYP (Cortex-M3)
+ ADSTFLGA { 0,12,0,0,99,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ OCMADSOCM { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ OCMADSIRAM { 0,0,0,0,32,0,8,0,0 }
+ OCMADSIROM { 1,0,0,0,0,0,32,0,0 }
+ OCMADSXRAM { 0,0,0,0,0,0,0,0,0 }
+ OCR_RVCT { 1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,32,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,8,0,0,0,0,0,0,0,0,0,0,0 }
+ RV_STAVEC ()
+ ADSCCFLG { 8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSCMISC ()
+ ADSCDEFN (RVDS_ARMCM3_LM3S102)
+ ADSCUDEF ()
+ ADSCINCD (C:\Keil\ARM\RV30\LIB\Luminary;..\CORTEX_LM3S102_KEIL;..\..\Source\portable\RVDS\ARM_CM3;..\..\Source\include;..\Common\include;.\include)
+ ADSASFLG { 65,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSAMISC (--diag_suppress 1581)
+ ADSADEFN ()
+ ADSAUDEF ()
+ ADSAINCD ()
+ PropFld { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ IncBld=1
+ AlwaysBuild=0
+ GenAsm=0
+ AsmAsm=0
+ PublicsOnly=0
+ StopCode=3
+ CustArgs ()
+ LibMods ()
+ ADSLDFG { 16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSLDTA (0x00000000)
+ ADSLDDA (0x20000000)
+ ADSLDSC ()
+ ADSLDIB ()
+ ADSLDIC ()
+ ADSLDMC (--entry Reset_Handler)
+ ADSLDIF ()
+ ADSLDDW (6306)
+  OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S101)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S101)
+  OPTDBG 49150,1,()()()()()()()()()() (BIN\UL2CM3.DLL)()()()
+ FLASH1 { 1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0 }
+ FLASH2 (BIN\UL2CM3.DLL)
+ FLASH3 ("" ())
+ FLASH4 ()
+EndOpt
+

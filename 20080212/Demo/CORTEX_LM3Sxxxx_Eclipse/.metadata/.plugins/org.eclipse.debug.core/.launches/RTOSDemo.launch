@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.cdt.debug.gdbjtag.launchConfigurationType">
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.imageFileName" value="C:\E\Dev\FreeRTOS\Demo\CORTEX_LM3S8962_Eclipse\RTOSDemo\RTOSDemo.axf"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.initCommands" value="target extended-remote localhost:3333&#13;&#10;b main&#13;&#10;monitor soft_reset_halt&#13;&#10;monitor sleep 500&#13;&#10;continue&#13;&#10;clear main&#13;&#10;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.ipAddress" value="localhost"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbremote.core.loadImage" value="false"/>
+<intAttribute key="org.eclipse.cdt.debug.gdbremote.core.portNumber" value="3333"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.runCommands" value=""/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbremote.core.useRemoteTarget" value="false"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.DEBUG_NAME" value="arm-none-eabi-gdb.exe"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.GDB_INIT" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.commandFactory" value="Standard"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.protocol" value="mi"/>
+<booleanAttribute key="org.eclipse.cdt.debug.mi.core.verboseMode" value="false"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="RTOSDemo.axf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="RTOSDemo"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/RTOSDemo"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+</launchConfiguration>

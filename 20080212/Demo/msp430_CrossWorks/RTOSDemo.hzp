@@ -1,0 +1,34 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution version="1" Name="RTOSDemo" >
+  <project Name="RTOSDemo" >
+    <configuration Target="MSP430F449" linker_memory_map_file="$(StudioDir)/targets/MSP430F449.xml" project_directory="" link_include_startup_code="No" project_type="Executable" Name="Common" build_use_hardware_multiplier="Yes" />
+    <folder Name="Scheduler Source" >
+      <configuration filter="c;h;s;asm;inc;s43" Name="Common" />
+      <file file_name="../../Source/tasks.c" Name="tasks.c" >
+        <configuration c_preprocessor_definitions="" c_user_include_directories="" Name="Common" c_system_include_directories="" />
+      </file>
+      <file file_name="../../Source/queue.c" Name="queue.c" />
+      <file file_name="../../Source/list.c" Name="list.c" />
+      <file file_name="../../Source/portable/Rowley/MSP430F449/portext.asm" Name="portext.asm" />
+      <file file_name="../../Source/portable/Rowley/MSP430F449/port.c" Name="port.c" />
+      <file file_name="../../Source/portable/MemMang/heap_1.c" Name="heap_1.c" />
+    </folder>
+    <folder Name="Startup Code" >
+      <configuration filter="" Name="Common" />
+      <file file_name="$(StudioDir)/targets/section_placement.xml" Name="section_placement.xml" />
+      <file file_name="$(StudioDir)/src/crt0.asm" Name="crt0.asm" />
+    </folder>
+    <folder Name="Demo Source" >
+      <file file_name="main.c" Name="main.c" />
+      <file file_name="../Common/Minimal/flash.c" Name="flash.c" />
+      <file file_name="../Common/Minimal/comtest.c" Name="comtest.c" />
+      <file file_name="../Common/Minimal/PollQ.c" Name="PollQ.c" />
+      <file file_name="ParTest/ParTest.c" Name="ParTest.c" />
+      <file file_name="serial/serial.c" Name="serial.c" />
+      <file file_name="../Common/Minimal/integer.c" Name="integer.c" />
+    </folder>
+  </project>
+  <configuration compiler_optimization_strategy="Minimize size" optimize_code_motion="No" optimize_block_locality="No" optimize_register_allocation="Locals Only" Name="Debug" />
+  <configuration c_preprocessor_definitions="NDEBUG" build_debug_information="No" Name="Release" build_optimize_output="Yes" />
+  <configuration c_preprocessor_definitions="ROWLEY_MSP430" c_user_include_directories="$(ProjectDir);$(ProjectDir)/../common/include" linker_printf_width_precision_supported="No" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/Rowley/msp430F449" />
+</solution>

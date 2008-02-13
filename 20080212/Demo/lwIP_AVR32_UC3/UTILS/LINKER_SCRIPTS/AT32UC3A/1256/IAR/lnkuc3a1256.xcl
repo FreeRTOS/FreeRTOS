@@ -1,0 +1,138 @@
+/******************************************************************************
+ * AVR32 AT32UC3A1256 XLINK command file for AVR32 IAR C/C++ Compiler.
+ *
+ * The assumed memory layout is the one of the AT32UC3A1256:
+ *
+ *   Start       Stop        Name     Type
+ *   ----------  ----------  -----    --------------
+ *   0x00000000  0x0000FFFF  SRAM     RAM
+ *   0x80000000  0x8003FFFF  FLASH    FLASH
+ *
+ * Usage:  xlink  your_file(s)  -f xcl-file  libraries
+ *
+ * - Compiler:           IAR EWAVR32
+ * - Supported devices:  AVR32 AT32UC3A1256
+ *
+ * - author              Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
+ *
+ ******************************************************************************/
+
+/* Copyright (c) 2007, Atmel Corporation All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. The name of ATMEL may not be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE EXPRESSLY AND
+ * SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+/************************************************************************/
+/*      The following segments are defined in this link file:           */
+/*                                                                      */
+/*      Code segments                                                   */
+/*      CODE32    -- Program code used by __code32 functions.           */
+/*      RESET     -- Reset code.                                        */
+/*      EVSEG     -- Exception vector handlers.                         */
+/*                                                                      */
+/*      Constant segments                                               */
+/*      INITTAB   -- Segment initializer table.                         */
+/*      DIFUNCT   -- Dynamic initialization vector used by C++.         */
+/*      SWITCH    -- Switch tables.                                     */
+/*      ACTAB     -- Table of pointers to acall functions.              */
+/*                                                                      */
+/*      DATA21_ID -- Initialization data for DATA21_I.                  */
+/*      DATA32_ID -- Initialization data for DATA32_I.                  */
+/*      DATA32_C  -- Constant __data32 data.                            */
+/*                                                                      */
+/*      CHECKSUM  -- Checksum segment.                                  */
+/*                                                                      */
+/*      Data segments                                                   */
+/*      DATA21_I  -- Initialized __data21 data with non-zero            */
+/*                   initial value.                                     */
+/*      DATA32_I  -- Initialized __data32 data with non-zero            */
+/*                   initial value.                                     */
+/*      DATA21_Z  -- Initialized __data21 data with zero initial value. */
+/*      DATA32_Z  -- Initialized __data32 data with zero initial value. */
+/*      DATA21_N  -- Non-initialized __data21.                          */
+/*      DATA32_N  -- Non-initialized __data32.                          */
+/*      SSTACK    -- The system stack.                                  */
+/*      CSTACK    -- The application stack.                             */
+/*      HEAP      -- The heap used by malloc and free.                  */
+/*                                                                      */
+/************************************************************************/
+
+/************************************************************************/
+/*      Define CPU                                                      */
+/************************************************************************/
+
+-cavr32
+
+// Declare the IPR0 memory location
+-DIPR0=FFFF0800
+
+/************************************************************************/
+/*      Reset code is located at address 0x80000000 and up.             */
+/************************************************************************/
+
+-Z(CODE)RESET=80000000-8003FFFF
+
+/************************************************************************/
+/*      The exception handler code is located at address 0x80000000     */
+/*      and up. Make sure that the exception table gets properly        */
+/*      allocated. By using the special -Z@ allocation primitive, the   */
+/*      placement is guaranteed to be at _EVBASE and onwards.           */
+/************************************************************************/
+
+-Z@(CODE)EVTAB=80004000-8003FFFF
+-Z@(CODE)EV100=80004100-8003FFFF
+-P(CODE)EVSEG=80004000-8003FFFF
+
+/************************************************************************/
+/*      Allocate code and const segments.                               */
+/************************************************************************/
+
+-P(CODE)CODE32=80000000-8003FFFF
+-P(CONST)DATA32_C=80000000-8003FFFF
+
+// Initializers
+-Z(CONST)INITTAB,DIFUNCT=80000000-8003FFFF
+-Z(CONST)CHECKSUM,SWITCH=80000000-8003FFFF
+-Z(CONST)DATA21_ID,DATA32_ID=80000000-8003FFFF
+
+-Z(CONST)ACTAB,HTAB=80000000-8003FFFF
+
+/************************************************************************/
+/*      Allocate the read/write segments that are mapped to RAM.        */
+/************************************************************************/
+
+-Z(DATA)DATA21_I,DATA21_Z,DATA21_N=00000004-0000FFFF
+-Z(DATA)DATA32_I,DATA32_Z,DATA32_N=00000004-0000FFFF
+-Z(DATA)TRACEBUFFER=00000004-0000FFFF
+
+-Z(DATA)SSTACK+_SSTACK_SIZE#00000004-0000FFFF
+-Z(DATA)CSTACK+_CSTACK_SIZE#00000004-0000FFFF
+-Z(DATA)HEAP+_HEAP_SIZE=00000004-0000FFFF
+
+/************************************************************************/
+/*      End of File                                                     */
+/************************************************************************/

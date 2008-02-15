@@ -18,6 +18,5 @@ AutoLoad=1
 WSP=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB91460_Softune\
 
 [EditState]
-STATE-1=SRC\main.c:11
-Count=1
+Count=0
 

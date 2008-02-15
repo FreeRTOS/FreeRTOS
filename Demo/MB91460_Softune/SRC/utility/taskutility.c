@@ -10,7 +10,7 @@
 #include "vectors.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
+#include "queue.h"
 
 static void vUART5Task( void *pvParameters );
 
@@ -18,7 +18,8 @@ const char			ASCII[] = "0123456789ABCDEF";
 
 void				vInitUart5( void );
 
-xSemaphoreHandle	xSemaphore;
+
+static xQueueHandle xQueue;
 
 void vInitUart5( void )
 {
@@ -65,7 +66,7 @@ void Puts5( const char *Name5 ) /* Puts a String to UART */
 	volatile portSHORT	i, len;
 	len = strlen( Name5 );
 
-	for( i = 0; i < strlen(Name5); i++ )	/* go through string */
+	for( i = 0; i < len; i++ )	/* go through string */
 	{
 		if( Name5[i] == 10 )
 		{
@@ -124,25 +125,26 @@ void Putdec5( unsigned long x, int digits )
 
 void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 {
-	portENTER_CRITICAL();
-	vInitUart5();
-	portENTER_CRITICAL();
+	xQueue = xQueueCreate( 5, sizeof( char ) );
 
-	vSemaphoreCreateBinary( xSemaphore );
-
-	if( xSemaphore != NULL )
+	if( xQueue != NULL )
 	{
-		xTaskCreate( vUART5Task, (signed portCHAR *) "UART4", ( unsigned portSHORT ) 2048, ( void * ) NULL, uxPriority, NULL );
+		portENTER_CRITICAL();
+		vInitUart5();
+		portENTER_CRITICAL();
+
+		xTaskCreate( vUART5Task, (signed portCHAR *) "UART5", configMINIMAL_STACK_SIZE * 2, ( void * ) NULL, uxPriority, NULL );
 	}
 }
 
 static void vUART5Task( void *pvParameters )
 {
-	portCHAR			tasklist_buff[512], trace_buff[512];
+	static portCHAR	buff[ 900 ] = { 0 };
 	unsigned portLONG	trace_len, j;
 
 	unsigned portCHAR	ch;
 
+	SSR05_RIE = 1;
 	Puts5( "\n -------------MB91467D FreeRTOS DEMO Task List and Trace Utility----------- \n" );
 
 	for( ;; )
@@ -153,28 +155,24 @@ static void vUART5Task( void *pvParameters )
 
 		Puts5( "\n\r2: To call vTaskStartTrace() and to display trace results once the trace ends" );
 
-		SSR05_RIE = 1;
-
 		/* Block on the semaphore.  The UART interrupt will use the semaphore to
 		wake this task when required. */
-		xSemaphoreTake( xSemaphore, portMAX_DELAY );
-
-		ch = Getch5();
+		xQueueReceive( xQueue, &ch, portMAX_DELAY );
 
 		switch( ch )
 		{
 			case '1':
-				vTaskList( (signed char *) tasklist_buff );
+				vTaskList( (signed char *) buff );
 				Puts5( "\n\rThe current task list is as follows...." );
 				Puts5( "\n\r----------------------------------------------" );
 				Puts5( "\n\rName		  State  Priority  Stack   Number" );
 				Puts5( "\n\r----------------------------------------------" );
-				Puts5( tasklist_buff );
+				Puts5( buff );
 				Puts5( "\r----------------------------------------------" );
 				break;
 
 			case '2':
-				vTaskStartTrace( (signed char *) trace_buff, 512 );
+				vTaskStartTrace( (signed char *) buff, 512 );
 				Puts5( "\n\rThe trace started!!" );
 				vTaskDelay( (portTickType) 450 );
 				trace_len = ulTaskEndTrace();
@@ -185,7 +183,7 @@ static void vUART5Task( void *pvParameters )
 				Puts5( "\n\r--------------------------------------------------------\n\r" );
 				for( j = 0; j < trace_len; j++ )
 				{
-					Puthex5( trace_buff[j], 2 );
+					Puthex5( buff[j], 2 );
 					if( j % 4 == 3 )
 					{
 						Puts5( "   |   " );
@@ -210,6 +208,8 @@ static void vUART5Task( void *pvParameters )
 
 __interrupt void UART5_RxISR( void )
 {
-	SSR05_RIE = 0;
-	xSemaphoreGiveFromISR( xSemaphore, pdFALSE );
+unsigned portCHAR ch;
+
+	ch = RDR05;
+	xQueueSendFromISR( xQueue, &ch, pdFALSE );
 }

@@ -234,7 +234,7 @@
 ;
 #set    STACK_RESERVE   ON                      ; <<< reserve stack area in 
 ;                                               ;     this module
-#set    STACK_SYS_SIZE  2000	                ; <<< byte size of System stack
+#set    STACK_SYS_SIZE  1000	                ; <<< byte size of System stack
 #set    STACK_USR_SIZE  4                       ; <<< byte size of User stack 
 ;
 #set    STACK_FILL      ON                     ; <<< fills the stack area with pattern

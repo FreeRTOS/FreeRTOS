@@ -48,14 +48,25 @@
 #define partstNUM_LEDs	8
 
 static unsigned portCHAR sState[ 2 ] = { 0xFF, 0xFF };
+static unsigned portSHORT sState1[ partstNUM_LEDs ] = { pdFALSE };
 
 /*-----------------------------------------------------------*/
 void vParTestInitialise( void )
 {
+<<<<<<< .mine
+	/* Set port for LED outputs. */
+	DDR16 = 0xFF;
+	DDR25=0xFF;
+
+	/* Start with LEDs off. */
+	PDR16 = 0x00;
+	PDR25 = 0x00;
+=======
 	DDR00 = 0xFF;
 	PDR00 = 0xFF;
 	DDR09 = 0xFF;
 	PDR09 = 0xFF;
+>>>>>>> .r192
 }
 /*-----------------------------------------------------------*/
 
@@ -63,11 +74,30 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	if( uxLED < partstNUM_LEDs )
 	{
+<<<<<<< .mine
+		taskENTER_CRITICAL();
+=======
 		vTaskSuspendAll();
 
 		/* Toggle the state of the single genuine on board LED. */
 		if( ( sState[ 0 ] & ( ( unsigned portCHAR ) ( 1 << uxLED ) ) ) == 0 )
+>>>>>>> .r192
 		{
+<<<<<<< .mine
+			/* Toggle the state of the single genuine on board LED. */
+			if( sState[ uxLED ])	
+			{
+				PDR25 |= ( 1 << uxLED );
+			}
+			else
+			{
+				PDR25 &= ~( 1 << uxLED );
+			}
+		
+			sState[ uxLED ] = !( sState[ uxLED ] );
+		}		
+		taskEXIT_CRITICAL();
+=======
 			PDR09 |= ( 1 << uxLED );
 			sState[ 0 ] |= ( 1 << uxLED );
 		}
@@ -78,7 +108,33 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		}
 
 		xTaskResumeAll();
+>>>>>>> .r192
 	}
+<<<<<<< .mine
+	else
+	{
+		uxLED -= partstNUM_LEDs;
+
+		if( uxLED < partstNUM_LEDs )
+		{
+			taskENTER_CRITICAL();
+			{
+				/* Toggle the state of the single genuine on board LED. */
+				if( sState1[uxLED])	
+				{
+					PDR16 |= ( 1 << uxLED );
+				}
+				else
+				{
+					PDR16 &= ~( 1 << uxLED );
+				}
+			
+				sState1[ uxLED ] = !( sState1[ uxLED ] );
+			}
+			taskEXIT_CRITICAL();
+		}
+	}
+=======
 	else
 	{
 		vTaskSuspendAll();
@@ -98,6 +154,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 
 		xTaskResumeAll();
 	}
+>>>>>>> .r192
 }
 /*-----------------------------------------------------------*/
 
@@ -122,6 +179,30 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 
 		xTaskResumeAll();
 	}
+<<<<<<< .mine
+	else 
+	{
+		uxLED -= partstNUM_LEDs;
+
+		if( uxLED < partstNUM_LEDs )
+		{
+			taskENTER_CRITICAL();
+			{
+				if( xValue )
+				{
+					PDR16 |= (1 << uxLED);
+					sState1[uxLED] = 1;
+				}
+				else
+				{
+					PDR16 &= ~(1 << uxLED);
+					sState1[uxLED] = 0;
+				}
+			}
+			taskEXIT_CRITICAL();
+		}
+	}
+=======
 	else
 	{
 		vTaskSuspendAll();
@@ -140,5 +221,6 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 
 		xTaskResumeAll();
 	}
+>>>>>>> .r192
 }
 

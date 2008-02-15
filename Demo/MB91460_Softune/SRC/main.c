@@ -83,7 +83,6 @@
 #include "flash.h"
 #include "integer.h"
 #include "comtest2.h"
-#include "PollQ.h"
 #include "semtest.h"
 #include "BlockQ.h"
 #include "dynamic.h"
@@ -94,14 +93,14 @@
 #include "death.h"
 #include "taskutility.h"
 #include "partest.h"
+#include "crflash.h"
 	
 /* Demo task priorities. */
 #define mainWATCHDOG_TASK_PRIORITY		( tskIDLE_PRIORITY + 5 )
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 4 )
-#define mainUTILITY_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
+#define mainUTILITY_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainSEM_TEST_PRIORITY			( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_BLOCK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainDEATH_PRIORITY 				( tskIDLE_PRIORITY + 1 )
 #define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
@@ -129,6 +128,9 @@ LCD represent LEDs]*/
 
 /* The number of interrupt levels to use. */
 #define mainINTERRUPT_LEVELS	( 31 )
+
+/* The number of 'flash' co-routines to create - each toggles a different LED. */
+#define mainNUM_FLASH_CO_ROUTINES	( 8 )
 
 /*---------------------------------------------------------------------------*/
 
@@ -176,7 +178,6 @@ void main(void)
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );	
 	vStartDynamicPriorityTasks();	
@@ -184,6 +185,7 @@ void main(void)
 	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vStartQueuePeekTasks();
 	vCreateBlockTimeTasks();
+	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
 
 	/* Start the 'Check' task which is defined in this file. */
 	xTaskCreate( prvErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
@@ -260,11 +262,6 @@ portBASE_TYPE lReturn = pdPASS;
 	indicates that an error has been detected. */
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
-
-	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
@@ -353,6 +350,8 @@ static void prvSetupHardware( void )
 		#if WATCHDOG == WTC_IN_IDLE
 			Kick_Watchdog();
 		#endif
+
+		vCoRoutineSchedule();
 	}
 #else
 	#if WATCHDOG == WTC_IN_IDLE

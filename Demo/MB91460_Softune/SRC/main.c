@@ -164,9 +164,6 @@ static void vSecondRegisterTestTask( void *pvParameters );
 register test tasks. */
 unsigned portLONG ulRegTestError = pdFALSE;
 
-/* Variables used to ensure the register check tasks are still executing. */
-static volatile unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
-
 /*---------------------------------------------------------------------------*/
 
 /* Start all the demo application tasks, then start the scheduler. */
@@ -255,7 +252,6 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
-static unsigned portLONG ulLastRegTest1Counter = 0UL, ulLastRegTest2Counter = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -323,22 +319,6 @@ static unsigned portLONG ulLastRegTest1Counter = 0UL, ulLastRegTest2Counter = 0U
 	{
 		lReturn = pdFAIL;
 	}
-
-	/* Are the register test tasks still running? */
-	if( ulLastRegTest1Counter == ulRegTest1Counter )
-	{
-		lReturn = pdFAIL;
-	}
-	
-	if( ulLastRegTest2Counter == ulRegTest2Counter )
-	{
-		lReturn = pdFAIL;
-	}
-
-	/* Record the current values of the register check cycle counters so we
-	can ensure they are still running the next time this function is called. */
-	ulLastRegTest1Counter = ulRegTest1Counter;
-	ulLastRegTest2Counter = ulRegTest2Counter;
 
 	return lReturn;
 }
@@ -408,11 +388,7 @@ extern volatile unsigned portLONG ulCriticalNesting;
 	/* Fills the registers with known values (different to the values
 	used in vSecondRegisterTestTask()), then checks that the registers still
 	all contain the expected value.  This is done to test the context save
-	and restore mechanism as this task is swapped onto and off of the CPU.
-
-	The critical nesting depth is also saved as part of the context so also
-	check this maintains an expected value. */
-	ulCriticalNesting = 0x12345678;
+	and restore mechanism as this task is swapped onto and off of the CPU. */
 
 	for( ;; )
 	{
@@ -499,13 +475,6 @@ extern volatile unsigned portLONG ulCriticalNesting;
 
 
 		#pragma endasm
-
-		ulRegTest1Counter++;
-
-		if( ulCriticalNesting != 0x12345678 )
-		{
-			ulRegTestError = pdTRUE;
-		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -517,11 +486,7 @@ extern volatile unsigned portLONG ulCriticalNesting;
 	/* Fills the registers with known values (different to the values
 	used in vFirstRegisterTestTask()), then checks that the registers still
 	all contain the expected value.  This is done to test the context save
-	and restore mechanism as this task is swapped onto and off of the CPU.
-
-	The critical nesting depth is also saved as part of the context so also
-	check this maintains an expected value. */
-	ulCriticalNesting = 0x87654321;
+	and restore mechanism as this task is swapped onto and off of the CPU. */
 
 	for( ;; )
 	{
@@ -614,13 +579,6 @@ extern volatile unsigned portLONG ulCriticalNesting;
 
 
 		#pragma endasm
-
-		ulRegTest2Counter++;
-
-		if( ulCriticalNesting != 0x87654321 )
-		{
-			ulRegTestError = pdTRUE;
-		}
 	}
 }
 /*-----------------------------------------------------------*/

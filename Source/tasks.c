@@ -1339,7 +1339,7 @@ unsigned portBASE_TYPE uxNumberOfTasks;
 	{
 		portENTER_CRITICAL();
 		{
-			pcTraceBuffer = ( volatile signed portCHAR * volatile )pcBuffer;
+			pcTraceBuffer = ( signed portCHAR * )pcBuffer;
 			pcTraceBufferStart = pcBuffer;
 			pcTraceBufferEnd = pcBuffer + ( ulBufferSize - tskSIZE_OF_EACH_TRACE_LINE );
 			xTracing = pdTRUE;

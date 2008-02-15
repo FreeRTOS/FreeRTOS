@@ -78,6 +78,12 @@
 /*-----------------------------------------------------------*/	
 
 /* Critical section management. */
+#if configKERNEL_INTERRUPT_PRIORITY != 30
+	#error configKERNEL_INTERRUPT_PRIORITY (set in FreeRTOSConfig.h) must match the ILM value set in the following line - 30 (1Eh) being the default.
+#endif
+#define portDISABLE_INTERRUPTS() __asm(" STILM #1Eh ")
+#define portENABLE_INTERRUPTS() __asm(" MOVL ILM, #1Fh ")
+
 #define portENTER_CRITICAL()	\
 	__asm(" ST PS,@-R15 ");		\
 	__asm(" ANDCCR #0xef ");	\
@@ -85,9 +91,6 @@
 
 #define portEXIT_CRITICAL()		\
 	__asm(" LD @R15+,PS ");		\
-
-#define portDISABLE_INTERRUPTS() __DI();
-#define portENABLE_INTERRUPTS() __EI();
 
 /*-----------------------------------------------------------*/
 

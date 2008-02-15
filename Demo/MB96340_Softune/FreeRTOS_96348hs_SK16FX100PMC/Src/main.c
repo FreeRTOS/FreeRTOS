@@ -58,14 +58,8 @@
  * check task toggles the onboard LED.  Should any task contain an error at any time 
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
- * The "Register Check" tasks.  These tasks fill the CPU registers with known
- * values, then check that each register still contains the expected value 0 the
- * discovery of an unexpected value being indicative of an error in the RTOS
- * context switch mechanism.  The register check tasks operate at low priority
- * so are switched in and out frequently.
- *
  * The "Trace Utility" task.  This can be used to obtain trace and debug 
- * information via UART5.
+ * information via UART1.
  */
 
 

@@ -78,10 +78,14 @@
 /*-----------------------------------------------------------*/	
 
 /* Critical section management. */
-void vPortEnterCritical( void );
-void vPortExitCritical( void );
-#define portENTER_CRITICAL() vPortEnterCritical()
-#define portEXIT_CRITICAL() vPortExitCritical()
+#define portENTER_CRITICAL()	\
+	__asm(" ST PS,@-R15 ");		\
+	__asm(" ANDCCR #0xef ");	\
+
+
+#define portEXIT_CRITICAL()		\
+	__asm(" LD @R15+,PS ");		\
+
 #define portDISABLE_INTERRUPTS() __DI();
 #define portENABLE_INTERRUPTS() __EI();
 

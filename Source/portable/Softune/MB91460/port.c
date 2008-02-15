@@ -51,10 +51,6 @@ any details of its type. */
 typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
-/* Constants required to handle critical sections. */
-#define portNO_CRITICAL_NESTING		( ( unsigned portBASE_TYPE ) 0 )
-volatile unsigned portLONG ulCriticalNesting = 9999UL;
-
 /*-----------------------------------------------------------*/
  
 #pragma asm
@@ -65,10 +61,6 @@ volatile unsigned portLONG ulCriticalNesting = 9999UL;
 	 STM1 (R14,R13,R12,R11,R10,R9,R8)			;Store R14-R8
 	 ST MDH, @-R15								;Store MDH
 	 ST MDL, @-R15								;Store MDL
-
-	 LDI #_ulCriticalNesting, R0				;Get the address of the critical nesting counter
-	 LD @R0, R0									;Get the value of the critical nesting counter
-	 ST R0, @-R15								;Store the critical nesting value to the user stack.
 	 
 	 ANDCCR #0xDF								;Switch back to system stack
 	 LD @R15+,R0								;Store PC to R0 
@@ -103,10 +95,6 @@ volatile unsigned portLONG ulCriticalNesting = 9999UL;
 	 ST R0,@-R15								;Store PC to system stack
 
 	 ORCCR #0x20								;Switch back to retrieve the remaining context
-
-	 LDI #_ulCriticalNesting, R0				;Get the address of the critical nesting counter
-	 LD @R15+, R1								;Get the saved critical nesting value
-	 ST R1, @R0									;Save the critical nesting value into the ulCriticalNesting variable
 
 	 LD @R15+, MDL								;Restore MDL
 	 LD @R15+, MDH								;Restore MDH
@@ -190,11 +178,6 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x11110000;	/* MDH */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x22220000;	/* MDL */
-	pxTopOfStack--;
-
-	/* The task starts with its ulCriticalNesting variable set to 0, 
-	interrupts being enabled. */
-	*pxTopOfStack = portNO_CRITICAL_NESTING;
 	pxTopOfStack--;
 
 	/* The start of the task code. */
@@ -351,32 +334,3 @@ const unsigned portSHORT usReloadValue = ( unsigned portSHORT ) ( ( ( configPER_
 #pragma endasm
 /*-----------------------------------------------------------*/
 
-void vPortEnterCritical( void )
-{
-	/* Disable interrupts upto level 30. */
-	#if configKERNEL_INTERRUPT_PRIORITY != 30
-		#error configKERNEL_INTERRUPT_PRIORITY (set in FreeRTOSConfig.h) must match the ILM value set in the following line - 30 (0x1e) being the default.
-	#endif
-
-	__asm(" STILM #1Eh ");
- 
-
-	/* Now interrupts are disabled ulCriticalNesting can be accessed
-	directly. Increment ulCriticalNesting to keep a count of how many times
-	portENTER_CRITICAL() has been called. */
-	ulCriticalNesting++;
-}
-/*-----------------------------------------------------------*/ 
-
-void vPortExitCritical( void )
-{
-	if( ulCriticalNesting > portNO_CRITICAL_NESTING )
-	{
-		ulCriticalNesting--;
-		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
-		{
-			/* Enable all interrupts */
-			__asm(" STILM #1Fh ");
-		}
-	}
-}

@@ -388,7 +388,8 @@ F28-9=- ..\..\Source\include\list.h
 F28-10=- ..\..\Source\include\queue.h
 F28-11=- ..\Common\include\partest.h
 F28-12=- ..\Common\include\crflash.h
-F29=0 c 1 SRC\utility\printf-stdarg.c
+F29=1 c 1 SRC\utility\printf-stdarg.c
+F29-1=- ..\..\..\..\..\..\devtools\Softune6\LIB\911\INCLUDE\stdarg.h
 
 [BUILDMODE-STANDALONE]
 kernel=1

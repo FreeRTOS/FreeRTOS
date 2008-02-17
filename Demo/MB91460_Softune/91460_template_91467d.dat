@@ -10,24 +10,23 @@ $0
 -I "..\..\Source\include"
 -I "..\..\Source\portable\Softune\MB91460"
 -I ".\SRC\utility"
--O 4
--K SPEED
+-O 0
 -K SHORTADDRESS
 -B
--K SCHEDULE
+-K NOSCHEDULE
 -K A1
 -K SARG
 -Xdof
 -INF STACK
 -x vTaskIncrementTick,vTaskSwitchContext
--K EOPT
--K LIB
--K UNROLL
+-K NOEOPT
+-K NOLIB
+-K NOUNROLL
 $other
 -Xalign
 -D__91467D
 $time
-1202935848
+1203192944
 $end
 $1
 -g

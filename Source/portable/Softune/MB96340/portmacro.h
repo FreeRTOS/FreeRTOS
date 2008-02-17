@@ -90,8 +90,8 @@ FreeRTOSConfig.h to set the configMEMMODEL value. */
 #if configKERNEL_INTERRUPT_PRIORITY != 6
 	#error configKERNEL_INTERRUPT_PRIORITY (set in FreeRTOSConfig.h) must match the ILM value set in the following line - #06H being the default.
 #endif
-#define portENABLE_INTERRUPTS()		__asm(" MOV ILM, #06h ")
-#define portDISABLE_INTERRUPTS()	__asm(" MOV ILM, #07h ")
+#define portDISABLE_INTERRUPTS()	__asm(" MOV ILM, #06h ")
+#define portENABLE_INTERRUPTS()		__asm(" MOV ILM, #07h ")
 
 #define portENTER_CRITICAL()								\
 		{	__asm(" PUSHW PS ");							\

@@ -73,6 +73,7 @@ when running the application using the EUROScope debugger. */
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			1
 #define configUSE_TICK_HOOK			0
+#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 120 )
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configCLKP1_CLOCK_HZ		( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configTICK_RATE_HZ			( (portTickType) 1000 )
@@ -83,12 +84,6 @@ when running the application using the EUROScope debugger. */
 #define configIDLE_SHOULD_YIELD		1
 #define configUSE_MUTEXES			1
 #define configUSE_TRACE_FACILITY	1
-
-#if( ( configMEMMODEL == portSMALL ) || ( configMEMMODEL == portMEDIUM ) )
-	#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
-#else
-	#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 120 )
-#endif
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES			1

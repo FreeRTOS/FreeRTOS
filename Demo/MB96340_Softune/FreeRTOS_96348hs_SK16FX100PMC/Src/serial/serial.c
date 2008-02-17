@@ -42,7 +42,7 @@
 
 /* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.   
  * 
- * This file only supports UART 1
+ * This file only supports UART 0
  */
 
 /* Standard includes. */
@@ -97,7 +97,6 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
 		DDR08_D2 = 0;	/* switch P08_2 to input */
 		DDR08_D3 = 1;	/* switch P08_3 to output */
 	}
-
 	portEXIT_CRITICAL();
 
 	/* Unlike other ports, this serial code does not allow for more than one
@@ -166,7 +165,6 @@ signed portBASE_TYPE	xReturn;
 			SSR0_TIE = 1;
 		}
 	}
-
 	portEXIT_CRITICAL();
 
 	return pdPASS;
@@ -184,7 +182,7 @@ volatile signed portCHAR	cChar;
 	characters. */
 	cChar = RDR0;
 
-	if( xQueueGenericSendFromISR(xRxedChars, ( const void *const ) &cChar, (signed portBASE_TYPE) pdFALSE, (portBASE_TYPE) 0) )
+	if( xQueueSendFromISR( xRxedChars, ( const void *const ) &cChar, (signed portBASE_TYPE) pdFALSE ) )
 	{
 		/*If the post causes a task to wake force a context switch 
 		as the woken task may have a higher priority than the task we have 

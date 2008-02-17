@@ -15,8 +15,9 @@
 #include "mb96348hs.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
-static void vUART1Task( void *pvParameters );
+static void vUART0Task( void *pvParameters );
 
 /**************************@INCLUDE_END*************************/
 
@@ -25,63 +26,64 @@ const char	ASCII[] = "0123456789ABCDEF";
 
 xTaskHandle UART_TaskHandle;
 
-void InitUart1( void )
+static xQueueHandle xQueue;
+void InitUart0( void )
 {
 	/* Initialize UART asynchronous mode */
-	BGR1 = configCLKP1_CLOCK_HZ / 9600; /* 9600 Baud @ CLKP1 - 56 MHz */
+	BGR0 = configCLKP1_CLOCK_HZ / 9600; /* 9600 Baud @ CLKP1 - 56 MHz */
 
-	SCR1 = 0x17;						/* 8N1 */
-	SMR1 = 0x0d;						/* enable SOT3, Reset, normal mode */
-	SSR1 = 0x02;						/* LSB first, enable receive interrupts */
+	SCR0 = 0x17;						/* 8N1 */
+	SMR0 = 0x0d;						/* enable SOT3, Reset, normal mode */
+	SSR0 = 0x02;						/* LSB first, enable receive interrupts */
 
-	PIER08_IE5 = 1;						/* enable input */
-	DDR08_D5 = 0;						/* switch P08_5 to input */
-	DDR08_D6 = 1;						/* switch P08_6 to output */
+	PIER08_IE2 = 1; /* enable input */
+	DDR08_D2 = 0;	/* switch P08_2 to input */
+	DDR08_D3 = 1;	/* switch P08_3 to output */
 }
 
-void Putch1( char ch )	/* sends a char */
+void Putch0( char ch )	/* sends a char */
 {
-	while( SSR1_TDRE == 0 );
+	while( SSR0_TDRE == 0 );
 
 	/* wait for transmit buffer empty 	*/
-	TDR1 = ch;	/* put ch into buffer			*/
+	TDR0 = ch;	/* put ch into buffer			*/
 }
 
-char Getch1( void ) /* waits for and returns incomming char 	*/
+char Getch0( void ) /* waits for and returns incomming char 	*/
 {
 	volatile unsigned	ch;
 
-	while( SSR1_RDRF == 0 );
+	while( SSR0_RDRF == 0 );
 
 	/* wait for data received  	*/
-	if( SSR1_ORE )		/* overrun error 		*/
+	if( SSR0_ORE )		/* overrun error 		*/
 	{
-		ch = RDR1;		/* reset error flags 		*/
+		ch = RDR0;		/* reset error flags 		*/
 		return ( char ) ( -1 );
 	}
 	else
 	{
-		return( RDR1 ); /* return char 			*/
+		return( RDR0 ); /* return char 			*/
 	}
 }
 
-void Puts1( const char *Name1 ) /* Puts a String to UART */
+void Puts0( const char *Name1 ) /* Puts a String to UART */
 {
 	volatile portSHORT	i, len;
 	len = strlen( Name1 );
 
-	for( i = 0; i < strlen(Name1); i++ )	/* go through string                     */
+	for( i = 0; i < len; i++ )	/* go through string */
 	{
 		if( Name1[i] == 10 )
 		{
-			Putch1( 13 );
+			Putch0( 13 );
 		}
 
-		Putch1( Name1[i] );					/* send it out                           */
+		Putch0( Name1[i] );					/* send it out                           */
 	}
 }
 
-void Puthex1( unsigned long n, unsigned char digits )
+void Puthex0( unsigned long n, unsigned char digits )
 {
 	unsigned portCHAR	digit = 0, div = 0, i;
 
@@ -89,12 +91,12 @@ void Puthex1( unsigned long n, unsigned char digits )
 	for( i = 0; i < digits; i++ )
 	{
 		digit = ( (n >> div) & 0xF );		/* get hex-digit value */
-		Putch1( digit + ((digit < 0xA) ? '0' : 'A' - 0xA) );
+		Putch0( digit + ((digit < 0xA) ? '0' : 'A' - 0xA) );
 		div -= 4;		/* next digit shift */
 	}
 }
 
-void Putdec1( unsigned long x, int digits )
+void Putdec0( unsigned long x, int digits )
 {
 	portSHORT	i;
 	portCHAR	buf[10], sign = 1;
@@ -124,95 +126,101 @@ void Putdec1( unsigned long x, int digits )
 		}
 	}
 
-	Puts1( buf );		/* send string */
+	Puts0( buf );		/* send string */
 }
 
-void vTraceListTasks( unsigned portBASE_TYPE uxPriority )
+void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 {
-	portENTER_CRITICAL();
-	InitUart1();
-	portENTER_CRITICAL();
-	xTaskCreate( vUART1Task, (signed portCHAR *) "UART1", ( unsigned portSHORT ) 2048, ( void * ) NULL, uxPriority, &UART_TaskHandle );
+	xQueue = xQueueCreate( 5, sizeof( char ) );
+
+	if( xQueue != NULL )
+	{
+		portENTER_CRITICAL();
+		InitUart0();
+		portENTER_CRITICAL();
+		xTaskCreate( vUART0Task, (signed portCHAR *) "UART1", configMINIMAL_STACK_SIZE * 3, ( void * ) NULL, uxPriority, &UART_TaskHandle );
+	}
 }
 
-static void vUART1Task( void *pvParameters )
+static void vUART0Task( void *pvParameters )
 {
-	portCHAR			tasklist_buff[512];
-	portCHAR			trace_buff[512];
+	static portCHAR	buff[ 800 ] = { 0 };
 	unsigned portLONG	trace_len;
 	signed portLONG		i, j, l = 0;
 
 	unsigned portCHAR	ch;
 	( void ) pvParameters;
 
-	Puts1( "\n -------------MB96348 FreeRTOS DEMO Task List and Trace Utility----------- \n" );
+	SSR0_RIE = 1;
+
+	Puts0( "\n -------------MB96348 FreeRTOS DEMO Task List and Trace Utility----------- \n" );
 
 	for( ;; )
 	{
-		Puts1( "\n\rPress any of the following keys for the corresponding functionality: " );
+		Puts0( "\n\rPress any of the following keys for the corresponding functionality: " );
 
-		Puts1( "\n\r1: To call vTaskList() and display current task status " );
+		Puts0( "\n\r1: To call vTaskList() and display current task status " );
 
-		Puts1( "\n\r2: To call vTaskStartTrace() and to display trace results once the trace ends" );
+		Puts0( "\n\r2: To call vTaskStartTrace() and to display trace results once the trace ends" );
 
-		SSR1_RIE = 1;
-
-		vTaskSuspend( NULL );
-
-		ch = Getch1();
+		/* Block on the semaphore.  The UART interrupt will use the semaphore to
+		wake this task when required. */
+		xQueueReceive( xQueue, &ch, portMAX_DELAY );
 
 		switch( ch )
 		{
 			case '1':
-				vTaskList( (signed char *) tasklist_buff );
-				Puts1( "\n\rThe current task list is as follows...." );
-				Puts1( "\n\r----------------------------------------------" );
-				Puts1( "\n\rName          State  Priority  Stack   Number" );
-				Puts1( "\n\r----------------------------------------------" );
-				Puts1( tasklist_buff );
-				Puts1( "\r----------------------------------------------" );
+				vTaskList( (signed char *) buff );
+				Puts0( "\n\rThe current task list is as follows...." );
+				Puts0( "\n\r----------------------------------------------" );
+				Puts0( "\n\rName          State  Priority  Stack   Number" );
+				Puts0( "\n\r----------------------------------------------" );
+				Puts0( buff );
+				Puts0( "\r----------------------------------------------" );
 				break;
 
 			case '2':
-				vTaskStartTrace( (signed char *) trace_buff, 512 );
-				Puts1( "\n\rThe trace started!!" );
+				vTaskStartTrace( (signed char *) buff, sizeof( buff ) );
+				Puts0( "\n\rThe trace started!!" );
 				vTaskDelay( (portTickType) 500 );
 				trace_len = ulTaskEndTrace();
-				Puts1( "\n\rThe trace ended!!" );
-				Puts1( "\n\rThe trace is as follows...." );
-				Puts1( "\n\r--------------------------------------------------------" );
-				Puts1( "\n\r  Tick     | Task Number  |     Tick     | Task Number  |" );
-				Puts1( "\n\r--------------------------------------------------------\n\r" );
+				Puts0( "\n\rThe trace ended!!" );
+				Puts0( "\n\rThe trace is as follows...." );
+				Puts0( "\n\r--------------------------------------------------------" );
+				Puts0( "\n\r  Tick     | Task Number  |     Tick     | Task Number  |" );
+				Puts0( "\n\r--------------------------------------------------------\n\r" );
 
 				for( i = 0; i < trace_len; i += 4 )
 				{
 					for( j = i + 3; j >= i; j-- )
 					{
-						Puthex1( trace_buff[j], 2 );
+						Puthex0( buff[j], 2 );
 					}
 
-					Puts1( "   |   " );
+					Puts0( "   |   " );
 					l++;
 					if( l == 4 )
 					{
-						Puts1( "\n" );
+						Puts0( "\n" );
 						l = 0;
 					}
 				}
 
-				Puts1( "\r--------------------------------------------------------" );
+				Puts0( "\r--------------------------------------------------------" );
 				break;
 
 			default:
 				break;
 		}
 
-		Puts1( "\n" );
+		Puts0( "\n" );
 	}
 }
 
-__interrupt void UART1_RxISR( void )
+__interrupt void UART0_TraceRxISR( void )
 {
-	SSR1_RIE = 0;
-	vTaskResume( UART_TaskHandle );
+unsigned portCHAR ch;
+
+	ch = RDR0;
+	xQueueSendFromISR( xQueue, &ch, pdFALSE );
 }

@@ -9,15 +9,14 @@
 -I "..\..\..\Source\include"
 -I "..\..\..\Source\portable\Softune\MB96340"
 -I ".\Src\utility"
--O 4
--K SPEED
+-O 1
 -model MEDIUM
 -B
 -xauto 127
 -x vTaskSwitchContext,vTaskIncrementTick
--K EOPT
--K LIB
--K UNROLL
+-K NOEOPT
+-K NOLIB
+-K NOUNROLL
 -c
 -cwno
 -cpu MB96F348HSA

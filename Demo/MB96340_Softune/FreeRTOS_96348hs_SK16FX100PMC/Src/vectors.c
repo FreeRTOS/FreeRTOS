@@ -38,10 +38,6 @@ volatile int irq;
 
 	ICR = ( 79 << 8 ) | configKERNEL_INTERRUPT_PRIORITY;				/* UART 0 Rx of MB9634x Series */
 	ICR = ( 80 << 8 ) | configKERNEL_INTERRUPT_PRIORITY;				/* UART 0 Tx of MB9634x Series */
-
-	#if ( INCLUDE_TraceListTasks == 1 )
-		ICR = ( 81 << 8 ) | configKERNEL_INTERRUPT_PRIORITY;				/* UART 1 Rx of MB9634x Series */
-	#endif
 }
 
 /*---------------------------------------------------------------------------
@@ -53,15 +49,14 @@ __interrupt void		DefaultIRQHandler( void );
 
 extern __interrupt void prvRLT0_TICKISR( void );
 
-#if ( INCLUDE_AltStartComTestTasks == 1 )
 extern __interrupt void UART0_RxISR( void );
 extern __interrupt void UART0_TxISR( void );
-#endif
+extern __interrupt void UART0_TraceRxISR( void );
 extern __interrupt void vPortYield( void );
 extern __interrupt void vPortYieldDelayed( void );
 
 #if ( INCLUDE_TraceListTasks == 1 )
-extern __interrupt void UART1_RxISR( void );
+	extern __interrupt void UART1_RxISR( void );
 #endif
 
 /*---------------------------------------------------------------------------
@@ -145,18 +140,15 @@ extern __interrupt void UART1_RxISR( void );
 #pragma intvect DefaultIRQHandler 77		/* ALARM0                       */
 #pragma intvect DefaultIRQHandler 78		/* ALARM1                       */
 
-#if ( INCLUDE_AltStartComTestTasks == 1 )
-	#pragma intvect UART0_RxISR 79			/* LIN-UART 0 RX                */
-	#pragma intvect UART0_TxISR 80			/* LIN-UART 0 TX                */
+#if ( INCLUDE_TraceListTasks == 1 )  
+	#pragma intvect UART0_TraceRxISR       79   /* LIN-UART 0 RX                */	
+	#pragma intvect DefaultIRQHandler       80   /* LIN-UART 0 TX                */
 #else
-	#pragma intvect DefaultIRQHandler 79	/* LIN-UART 0 RX                */
-	#pragma intvect DefaultIRQHandler 80	/* LIN-UART 0 TX                */
+	#pragma intvect UART0_RxISR 79   /* LIN-UART 0 RX                */
+	#pragma intvect UART0_TxISR 80   /* LIN-UART 0 TX                */
 #endif
-#if ( INCLUDE_TraceListTasks == 1 )
-	#pragma intvect UART1_RxISR 81			/* LIN-UART 1 RX                */
-#else
-	#pragma intvect DefaultIRQHandler 81	/* LIN-UART 1 RX                */
-#endif
+
+#pragma intvect DefaultIRQHandler 81	/* LIN-UART 1 RX                */
 #pragma intvect DefaultIRQHandler 82		/* LIN-UART 1 TX                */
 #pragma intvect DefaultIRQHandler 83		/* LIN-UART 2 RX                */
 #pragma intvect DefaultIRQHandler 84		/* LIN-UART 2 TX                */

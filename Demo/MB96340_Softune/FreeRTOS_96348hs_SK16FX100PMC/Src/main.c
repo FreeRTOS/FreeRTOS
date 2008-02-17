@@ -94,7 +94,7 @@
 /* Demo task priorities. */
 #define WTC_TASK_PRIORITY			( tskIDLE_PRIORITY + 5 )
 #define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
-#define TASK_UTILITY_PRIORITY		( tskIDLE_PRIORITY + 3 )
+#define TASK_UTILITY_PRIORITY		( tskIDLE_PRIORITY )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -153,8 +153,7 @@ void main( void )
 
 	/* Start the standard demo application tasks. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
+	vStartIntegerMathTasks( tskIDLE_PRIORITY );	
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
@@ -166,7 +165,9 @@ void main( void )
 	/* The definition INCLUDE_TraceListTasks is set within FreeRTOSConfig.h.
 	It should be set to 0 if using the EUROScope debugger. */
 	#if INCLUDE_TraceListTasks == 1
-		vTraceListTasks( TASK_UTILITY_PRIORITY );
+		vUtilityStartTraceTask( TASK_UTILITY_PRIORITY );
+	#else
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
 	#endif
 
 	/* Start the 'Check' task which is defined in this file. */
@@ -245,11 +246,6 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void )
 		sNoErrorFound = pdFALSE;
 	}
 
-	if( xAreComTestTasksStillRunning() != pdTRUE )
-	{
-		sNoErrorFound = pdFALSE;
-	}
-
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		sNoErrorFound = pdFALSE;
@@ -290,6 +286,15 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void )
 		sNoErrorFound = pdFALSE;
 	}
 
+	#if INCLUDE_TraceListTasks == 0
+	{
+		if( xAreComTestTasksStillRunning() != pdTRUE )
+		{
+			sNoErrorFound = pdFALSE;
+		}
+	}
+	#endif
+
 	return sNoErrorFound;
 }
 /*-----------------------------------------------------------*/
@@ -305,6 +310,8 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void )
 		#if WATCHDOG == WTC_IN_IDLE
 			Kick_Watchdog();
 		#endif
+
+		vCoRoutineSchedule();
 	}
 #else
 	#if WATCHDOG == WTC_IN_IDLE
@@ -325,8 +332,6 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void )
 		#if WATCHDOG == WTC_IN_TICK
 			Kick_Watchdog();
 		#endif
-
-		vCoRoutineSchedule();
 	}
 #else
 	#if WATCHDOG == WTC_IN_TICK

@@ -54,13 +54,21 @@ static unsigned portCHAR sState1[ partstNUM_LEDs ] = { pdFALSE };
 /*-----------------------------------------------------------*/
 void vParTestInitialise( void )
 {
+portBASE_TYPE x;
+
 	/* Set port for LED outputs. */
-	DDR16 = 0xFF;
-	DDR25 = 0xFF;
+	DDR00 = 0xFF;
+	DDR09 = 0xFF;
 
 	/* Start with LEDs off. */
-	PDR25 = 0x00;
-	PDR16 = 0x00;
+	PDR09 = 0xff;
+	PDR00 = 0xff;
+
+	for( x = 0; x < partstNUM_LEDs; x++ )
+	{
+		sState[ x ] = pdTRUE;
+		sState1[ x ] = pdTRUE;
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -73,11 +81,11 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 			/* Toggle the state of the single genuine on board LED. */
 			if( sState[ uxLED ] )
 			{
-				PDR25 |= ( 1 << uxLED );
+				PDR09 |= ( 1 << uxLED );
 			}
 			else
 			{
-				PDR25 &= ~( 1 << uxLED );
+				PDR09 &= ~( 1 << uxLED );
 			}
 		
 			sState[uxLED] = !( sState[ uxLED ] );
@@ -95,11 +103,11 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 				/* Toggle the state of the single genuine on board LED. */
 				if( sState1[uxLED])	
 				{
-					PDR16 |= ( 1 << uxLED );
+					PDR00 |= ( 1 << uxLED );
 				}
 				else
 				{
-					PDR16 &= ~( 1 << uxLED );
+					PDR00 &= ~( 1 << uxLED );
 				}
 			
 				sState1[ uxLED ] = !( sState1[ uxLED ] );
@@ -119,12 +127,12 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		{
 			if( xValue )
 			{
-				PDR25 |= ( 1 << uxLED );
+				PDR09 |= ( 1 << uxLED );
 				sState[ uxLED ] = 1;
 			}
 			else
 			{
-				PDR25 &= ~( 1 << uxLED );
+				PDR09 &= ~( 1 << uxLED );
 				sState[ uxLED ] = 0;
 			}
 		}
@@ -138,12 +146,12 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		{
 			if( xValue )
 			{
-				PDR16 |= ( 1 << uxLED );
+				PDR00 |= ( 1 << uxLED );
 				sState1[ uxLED ] = 1;
 			}
 			else
 			{
-				PDR16 &= ~( 1 << uxLED );
+				PDR00 &= ~( 1 << uxLED );
 				sState1[ uxLED ] = 0;
 			}
 		}

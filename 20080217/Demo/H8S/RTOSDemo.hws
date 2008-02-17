@@ -1,0 +1,38 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"7.0" 
+[WORKSPACE_DETAILS]
+"RTOSDemo" "C:\E\Dev\FreeRTOS\Demo\H8S" "C:\E\Dev\FreeRTOS\Demo\H8S\RTOSDemo.hws" "H8S,H8/300" "KPIT GNUH8 [ELF]" 
+[SHARED_WORKSPACE_CONTROL_STATUS]
+"" "" "" 
+"" "" "" 
+[PROJECTS]
+"RTOSDemo" "C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo" "C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\rtosdemo.hwp" 0 
+[INFORMATION]
+"No workspace information available" 
+[SCRAP]
+[PROJECT_DEPENDENCY]
+[WORKSPACE_PROPERTIES]
+[VCS]
+"" "" "" 0 
+[VCS_PROJECT]
+[HELP_FILES]
+[GENERAL_DATA_PROJECT]
+[SYSMENUTOOLS]
+"GNUH8 Archive Editor" "1.1" 
+"Hitachi Mapview" "1.0" 
+"Hitachi H Series Librarian Interface" "1.1" 
+"Hitachi Call Walker" "1.1" 
+[USERMENUTOOLS]
+[CUSTOMPLACEHOLDERS]
+[MAKEFILE_BUILD_INFO]
+"$(WORKSPDIR)\make\$(WORKSPNAME).mak" "" 0 0 
+[VD_CONFIGURATION_OPTIONS]
+"ACTIVE_DESKTOP" "0" 
+[VD_CONFIGURATIONS]
+"0" "Default1" "1" 
+"1" "Default2" "1" 
+"2" "Default3" "1" 
+"3" "Default4" "1" 
+[END]

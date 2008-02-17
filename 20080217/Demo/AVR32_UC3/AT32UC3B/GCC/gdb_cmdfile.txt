@@ -1,0 +1,29 @@
+target extended-remote :4711
+symbol uc3b0256-rtosdemo.elf
+
+b _handle_Unrecoverable_Exception
+b _handle_TLB_Multiple_Hit
+b _handle_Bus_Error_Data_Fetch
+b _handle_Bus_Error_Instruction_Fetch
+b _handle_NMI
+b _handle_Instruction_Address
+b _handle_ITLB_Protection
+b _handle_Breakpoint
+b _handle_Illegal_Opcode
+b _handle_Unimplemented_Instruction
+b _handle_Privilege_Violation
+b _handle_Floating_Point
+b _handle_Coprocessor_Absent
+b _handle_Data_Address_Read
+b _handle_Data_Address_Write
+b _handle_DTLB_Protection_Read
+b _handle_DTLB_Protection_Write
+b _handle_DTLB_Modified
+b _handle_ITLB_Miss
+b _handle_DTLB_Miss_Read
+b _handle_DTLB_Miss_Write
+
+define current_task
+printf "Task name: %s\n", ((tskTCB *)pxCurrentTCB)->pcTaskName
+printf "pxTopOfStack: %x\n", ((tskTCB *)pxCurrentTCB)->pxTopOfStack
+end

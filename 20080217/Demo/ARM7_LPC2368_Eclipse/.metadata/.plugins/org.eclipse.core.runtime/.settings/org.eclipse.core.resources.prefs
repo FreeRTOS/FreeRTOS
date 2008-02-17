@@ -1,0 +1,5 @@
+#Fri Aug 31 14:25:00 BST 2007
+version=1
+eclipse.preferences.version=1
+pathvariable.FreeRTOS_ROOT=C\:/E/Dev/FreeRTOS
+description.autobuilding=false

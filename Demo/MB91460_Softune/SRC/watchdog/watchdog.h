@@ -18,7 +18,7 @@
 #define	WTC_IN_TICK	2		/* Clear Watchdog in TICK Hook */
 #define	WTC_IN_IDLE	3		/* Clear Watchdog in Idle Hook */
 
-#define WATCHDOG WTC_IN_TASK	/* Clear Watchdog in vWatchdogTask() */
+#define WATCHDOG WTC_NONE	/* Clear Watchdog in vWatchdogTask() */
 /*------------------------------------------------------------------------*/
 /* 
  * Watchdog period defines

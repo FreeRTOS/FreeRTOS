@@ -77,13 +77,18 @@ when running the application using the EUROScope debugger. */
 #define configCLKP1_CLOCK_HZ		( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configTICK_RATE_HZ			( (portTickType) 1000 )
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 6 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
 #define configTOTAL_HEAP_SIZE		( (size_t) (20000) )
 #define configMAX_TASK_NAME_LEN		( 20 )
 #define configUSE_16_BIT_TICKS		1
 #define configIDLE_SHOULD_YIELD		1
 #define configUSE_MUTEXES			1
 #define configUSE_TRACE_FACILITY	1
+
+#if( ( configMEMMODEL == portSMALL ) || ( configMEMMODEL == portMEDIUM ) )
+	#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
+#else
+	#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 120 )
+#endif
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES			1

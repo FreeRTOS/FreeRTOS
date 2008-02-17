@@ -82,7 +82,7 @@
 	#error configKERNEL_INTERRUPT_PRIORITY (set in FreeRTOSConfig.h) must match the ILM value set in the following line - 30 (1Eh) being the default.
 #endif
 #define portDISABLE_INTERRUPTS() __asm(" STILM #1Eh ")
-#define portENABLE_INTERRUPTS() __asm(" MOVL ILM, #1Fh ")
+#define portENABLE_INTERRUPTS() __asm(" STILM #1Fh ")
 
 #define portENTER_CRITICAL()	\
 	__asm(" ST PS,@-R15 ");		\

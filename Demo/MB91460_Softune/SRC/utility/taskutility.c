@@ -172,7 +172,7 @@ static void vUART5Task( void *pvParameters )
 				break;
 
 			case '2':
-				vTaskStartTrace( (signed char *) buff, 512 );
+				vTaskStartTrace( (signed char *) buff, sizeof( buff ) );
 				Puts5( "\n\rThe trace started!!" );
 				vTaskDelay( (portTickType) 450 );
 				trace_len = ulTaskEndTrace();

@@ -73,7 +73,7 @@ when running the application using the EUROScope debugger. */
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			1
 #define configUSE_TICK_HOOK			0
-#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 120 )
+#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 180 ) /* This can be greatly reduced when using the small or medium memory model. */
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configCLKP1_CLOCK_HZ		( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configTICK_RATE_HZ			( (portTickType) 1000 )

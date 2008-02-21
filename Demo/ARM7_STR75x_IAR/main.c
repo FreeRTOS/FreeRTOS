@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -69,11 +69,11 @@
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
-#include "Task.h"
-#include "Queue.h"
+#include "task.h"
+#include "queue.h"
 
 /* Demo application includes. */
-#include "ParTest.h"
+#include "partest.h"
 #include "flash.h"
 #include "integer.h"
 #include "blocktim.h"

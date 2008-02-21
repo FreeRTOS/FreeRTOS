@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -65,7 +65,7 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 #include "queue.h"
 #include "semphr.h"
 

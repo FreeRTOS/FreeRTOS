@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -63,7 +63,7 @@
 #include "semtest.h"
 #include "dynamic.h"
 #include "BlockQ.h"
-#include "Death.h"
+#include "death.h"
 #include "serial.h"
 #include "comtest.h"
 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -71,7 +71,7 @@
 #include "task.h"
 
 /* Demo application includes. */
-#include "ParTest.h"
+#include "partest.h"
 #include "flash.h"
 #include "comtest2.h"
 #include "integer.h"

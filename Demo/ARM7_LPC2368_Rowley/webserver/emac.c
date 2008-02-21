@@ -20,7 +20,7 @@
 #include "FreeRTOS.h"
 #include "Semphr.h" 
 #include "task.h"
-#include "EMAC.h"
+#include "emac.h"
 
 /* The semaphore used to wake the uIP task when data arives. */
 xSemaphoreHandle xEMACSemaphore = NULL;

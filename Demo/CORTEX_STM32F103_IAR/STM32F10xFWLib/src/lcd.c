@@ -22,7 +22,7 @@
 #include "spi_flash.h"
 
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/

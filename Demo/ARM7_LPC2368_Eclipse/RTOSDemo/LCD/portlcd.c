@@ -21,7 +21,7 @@
 
 #include "portlcd.h"
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 
 /* Please note, on old MCB2300 board, the LCD_E bit is p1.30, on the new board
 it's p1.31, please check the schematic carefully, and change LCD_CTRL and LCD_E 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -81,7 +81,7 @@ Changes from V3.0.1
 
 /* Demo app include files. */
 #include "integer.h"
-#include "pollq.h"
+#include "PollQ.h"
 #include "semtest.h"
 #include "flash.h"
 #include "partest.h"

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -57,8 +57,8 @@
 #define configMEMMODEL portMEDIUM
 
 /* Demo specific definition - set this to 1 if you want to include the task
-that writes trace and debug information to the UART.  This cannot be used
-when running the application using the EUROScope debugger. */
+that writes trace and debug information to the UART.  If it is set to 0 then
+the ComTest tasks will be included in place of the trace task. */
 #define INCLUDE_TraceListTasks		0
 
 /*-----------------------------------------------------------

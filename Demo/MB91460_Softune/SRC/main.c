@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -89,7 +89,7 @@
 #include "flop.h"
 #include "GenQTest.h"
 #include "QPeek.h"
-#include "BlockTim.h"
+#include "blocktim.h"
 #include "death.h"
 #include "taskutility.h"
 #include "partest.h"

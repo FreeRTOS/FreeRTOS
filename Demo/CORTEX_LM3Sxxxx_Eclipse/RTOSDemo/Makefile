@@ -1,4 +1,4 @@
-#	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+#	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 #
 #	This file is part of the FreeRTOS.org distribution.
 #
@@ -77,8 +77,8 @@ SOURCE=	main.c \
 		$(RTOS_SOURCE_DIR)/list.c \
 		$(RTOS_SOURCE_DIR)/queue.c \
 		$(RTOS_SOURCE_DIR)/tasks.c \
-		$(RTOS_SOURCE_DIR)/Portable/GCC/ARM_CM3/port.c \
-		$(RTOS_SOURCE_DIR)/Portable/MemMang/heap_2.c
+		$(RTOS_SOURCE_DIR)/portable/GCC/ARM_CM3/port.c \
+		$(RTOS_SOURCE_DIR)/portable/MemMang/heap_2.c
 
 LIBS= $(LUMINARY_DRIVER_DIR)/arm-none-eabi-gcc/libdriver.a
 

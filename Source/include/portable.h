@@ -191,6 +191,11 @@
     #include "../../Source/portable/GCC/MCF5235/portmacro.h"
 #endif
 
+#ifdef GCC_PPC405
+	#include "../../Source/portable/GCC/PPC405/portmacro.h"
+#endif
+
+
 #ifdef BCC_INDUSTRIAL_PC_PORT
 	/* A short file name has to be used in place of the normal
 	FreeRTOSConfig.h when using the Borland compiler. */

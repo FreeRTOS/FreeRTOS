@@ -2,9 +2,11 @@
 
 	.extern pxCurrentTCB
 	.extern vTaskSwitchContext
+	.extern vTaskIncrementTick
 
-	.global vStartFirstTask
+	.global vPortStartFirstTask
 	.global vPortYield
+	.global vPortTickISR
 
 .set portCONTEXT_SIZE, 156
 .set portR0_OFFSET, 152
@@ -196,12 +198,12 @@
 .endm
 
 
-vStartFirstTask:
+vPortStartFirstTask:
 
 	int_epilogue
 	rfi
 
-#vStartFirstTask:
+#vPortStartFirstTask:
 #	portRESTORE_CONTEXT
 #	rfi
 
@@ -214,5 +216,19 @@ vPortYield:
 	portEXIT_SWITCHING_ISR
 	blr
 
-	NOP
-	NOP
+vPortTickISR:
+
+	portENTER_SWITCHING_ISR
+	bl vTaskIncrementTick
+	#if configUSE_PREEMPTION == 1
+		bl vTaskSwitchContext
+	#endif
+
+	# Clear the interrupt
+	lis		R0, 2048
+	mttsr	R0
+
+	portEXIT_SWITCHING_ISR
+	blr
+
+

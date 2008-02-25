@@ -41,7 +41,7 @@
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the MicroBlaze port.
+ * Implementation of functions defined in portable.h for the PPC405 port.
  *----------------------------------------------------------*/
 
 
@@ -50,7 +50,6 @@
 #include "task.h"
 
 /* Library includes. */
-#include "xexception_l.h"
 #include "xtime_l.h"
 
 /* Standard includes. */
@@ -58,20 +57,17 @@
 
 /*-----------------------------------------------------------*/
 
-#define portCRITICAL_INTERRUPT_ENABLE	( 1UL << 14UL )
-#define portEXTERNAL_INTERRUPT_ENABLE	( 1UL << 16UL )
-#define portMACHINE_CHECK_ENABLE		( 1UL << 19UL )
+#define portCRITICAL_INTERRUPT_ENABLE	( 0UL << 17UL )
+#define portEXTERNAL_INTERRUPT_ENABLE	( 1UL << 15UL )
+#define portMACHINE_CHECK_ENABLE		( 0UL << 12UL )
 #define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE )
-
 
 /*
  */
 static void prvSetupTimerInterrupt( void );
-extern void vStartFirstTask( void );
-/*-----------------------------------------------------------*/
-
-static void prvTickISR( void );
+extern void vPortTickISR( void );
 extern void vPortYield( void );
+extern void vPortStartFirstTask( void );
 
 /* 
  * Initialise the stack of a task to look exactly as if a call to 
@@ -156,13 +152,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;	/* CTR. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) vStartFirstTask;	/* LR. */
+	*pxTopOfStack = ( portSTACK_TYPE ) vPortStartFirstTask;	/* LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode; /* SRR0. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_MSR;/* SRR1. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) vStartFirstTask;/* Next LR. */
+	*pxTopOfStack = ( portSTACK_TYPE ) vPortStartFirstTask;/* Next LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;;/* Backchain. */
 //	pxTopOfStack--;
@@ -178,12 +174,14 @@ extern void *pxCurrentTCB;
 	XExc_Init();
 	XExc_mDisableExceptions( XEXC_NON_CRITICAL ) ;	
 
-//	prvSetupTimerInterrupt();
-	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
-	XExc_mEnableExceptions( XEXC_NON_CRITICAL ) ;
+	prvSetupTimerInterrupt();
 
-	vStartFirstTask();
-	
+	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
+
+//	XExc_mEnableExceptions( XEXC_NON_CRITICAL );
+
+	vPortStartFirstTask();
+
 	/* Should not get here as the tasks are now running! */
 	return pdFALSE;
 }
@@ -198,11 +196,18 @@ void vPortEndScheduler( void )
 /*
  * Hardware initialisation to generate the RTOS tick.   
  */
+static void prvTickISR( void );
 static void prvSetupTimerInterrupt( void )
 {
 const unsigned portLONG ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
 
-	XExc_RegisterHandler( XEXC_ID_PIT_INT, ( XExceptionHandler ) prvTickISR, ( void * ) 0 );
+	XTime_PITClearInterrupt();
+	XTime_FITClearInterrupt();
+	XTime_WDTClearInterrupt();
+	XTime_WDTDisableInterrupt();
+	XTime_FITDisableInterrupt();
+
+	XExc_RegisterHandler( XEXC_ID_PIT_INT, ( XExceptionHandler ) vPortTickISR, ( void * ) 0 );
 
 	XTime_PITEnableAutoReload();
 	XTime_PITSetInterval( ulInterval );
@@ -221,9 +226,6 @@ static unsigned portLONG ulTicks = 0;
 		ulTicks = 0;
 	}
 	XTime_PITClearInterrupt();
-	
-	#if configUSE_PREEMPTION == 1
-	#endif
 }
 /*-----------------------------------------------------------*/
 

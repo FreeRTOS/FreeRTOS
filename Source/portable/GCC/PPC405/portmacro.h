@@ -43,6 +43,8 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
+#include "xexception_l.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -75,16 +77,19 @@ extern "C" {
 #endif
 /*-----------------------------------------------------------*/	
 
+#define portCRITICAL_NESTING_IN_TCB		1
+
 /* Interrupt control macros. */
-#define portDISABLE_INTERRUPTS()	
-#define portENABLE_INTERRUPTS()		
+#define portDISABLE_INTERRUPTS()		XExc_mDisableExceptions( XEXC_NON_CRITICAL );
+#define portENABLE_INTERRUPTS()			XExc_mEnableExceptions( XEXC_NON_CRITICAL );
+
 /*-----------------------------------------------------------*/
 
 /* Critical section macros. */
-void vPortEnterCritical( void );
-void vPortExitCritical( void );
-#define portENTER_CRITICAL()									
-#define portEXIT_CRITICAL()
+void vTaskEnterCritical( void );
+void vTaskExitCritical( void );
+#define portENTER_CRITICAL()			vTaskEnterCritical()
+#define portEXIT_CRITICAL()				vTaskExitCritical()
 
 /*-----------------------------------------------------------*/
 

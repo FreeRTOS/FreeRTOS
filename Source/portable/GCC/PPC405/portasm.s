@@ -11,7 +11,7 @@
 .set portGPR_OFFSET, 32
 .set portCR_OFFSET, 28
 .set portXER_OFFSET, 24
-.set portLR_OFFSET, 20
+.set portLR_OFFSET, 16
 .set portCTR_OFFSET, 16
 .set portUSPRG0_OFFSET, 12
 .set portSRR0_OFFSET, 8
@@ -167,9 +167,23 @@
 	# Store the stack pointer into the TCB
 	stw		SP,	0( R2 )
 
+	# Save the link register
+	stwu	R1, -24( R1 )
+	mflr	R0
+	stw		R31, 20( R1 )
+	stw		R0, 28( R1 )
+	mr		R31, r1
+
 .endm
 
 .macro portEXIT_SWITCHING_ISR
+
+	# Restore the link register
+	lwz		R11, 0( R1 )
+	lwz		R0, 4( R11 )
+	mtlr	R0
+	lwz		R31, -4( R11 )
+	mr		R1, R11
 
 	# Get the address of the TCB.
 	xor		R0, R0, R0
@@ -178,11 +192,6 @@
 
 	# Get the task stack pointer from the TCB.
 	lwz		SP, 0( SP )
-
-	# Load up the LR for the correct return.
-	lwz	R0,LRField(R1)
-	mtlr	R0
-
 
 .endm
 

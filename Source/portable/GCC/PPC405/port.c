@@ -162,9 +162,9 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_MSR;/* SRR1. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000UL;/* Next LR. */
+	*pxTopOfStack = ( portSTACK_TYPE ) vStartFirstTask;/* Next LR. */
 	pxTopOfStack--;
-	*pxTopOfStack = portINITIAL_MSR;/* Backchain. */
+	*pxTopOfStack = 0x00000000UL;;/* Backchain. */
 //	pxTopOfStack--;
 
 	return pxTopOfStack;

@@ -134,6 +134,10 @@
 	#define configUSE_ALTERNATIVE_API 0
 #endif
 
+#ifndef portCRITICAL_NESTING_IN_TCB
+	#define portCRITICAL_NESTING_IN_TCB 0
+#endif
+
 #if ( configUSE_MUTEXES == 1 )
 	/* xTaskGetCurrentTaskHandle is used by the priority inheritance mechanism
 	within the mutex implementation so must be available if mutexes are used. */

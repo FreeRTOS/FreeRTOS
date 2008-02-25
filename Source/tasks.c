@@ -266,6 +266,10 @@ typedef struct tskTaskControlBlock
 	portSTACK_TYPE			*pxStack;			/*< Points to the start of the stack. */
 	signed portCHAR			pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */
 
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+		unsigned portBASE_TYPE uxCriticalNesting;
+	#endif
+
 	#if ( configUSE_TRACE_FACILITY == 1 )
 		unsigned portBASE_TYPE	uxTCBNumber;		/*< This is used for tracing the scheduler and making debugging easier only. */
 	#endif	
@@ -1755,6 +1759,12 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * co
 	strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned portSHORT ) configMAX_TASK_NAME_LEN );
 	pxTCB->pcTaskName[ ( unsigned portSHORT ) configMAX_TASK_NAME_LEN - ( unsigned portSHORT ) 1 ] = '\0';
 
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+	{
+		pxTCB->uxCriticalNesting = ( unsigned portBASE_TYPE ) 0;
+	}
+	#endif
+
 	/* This is used as an array index so must ensure it's not too large. */
 	if( uxPriority >= configMAX_PRIORITIES )
 	{
@@ -1983,6 +1993,7 @@ tskTCB *pxNewTCB;
 	}
 
 #endif
+/*-----------------------------------------------------------*/
 
 #if ( configUSE_MUTEXES == 1 )
 	
@@ -2014,6 +2025,7 @@ tskTCB *pxNewTCB;
 	}
 
 #endif
+/*-----------------------------------------------------------*/
 
 #if ( configUSE_MUTEXES == 1 )	
 
@@ -2039,8 +2051,44 @@ tskTCB *pxNewTCB;
 	}
 
 #endif
+/*-----------------------------------------------------------*/
 
-	
+#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+
+	void vTaskEnterCritical( void )
+	{
+		portDISABLE_INTERRUPTS();
+
+		if( xSchedulerRunning != pdFALSE )
+		{
+			pxCurrentTCB->uxCriticalNesting++;
+		}
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+
+void vTaskExitCritical( void )
+{
+	if( xSchedulerRunning != pdFALSE )
+	{
+		if( pxCurrentTCB->uxCriticalNesting > 0 )
+		{
+			pxCurrentTCB->uxCriticalNesting--;
+
+			if( pxCurrentTCB->uxCriticalNesting == 0 )
+			{
+				portENABLE_INTERRUPTS();
+			}
+		}
+	}
+}
+
+#endif
+/*-----------------------------------------------------------*/
+
 
 	
 

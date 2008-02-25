@@ -63,6 +63,7 @@
 #define portMACHINE_CHECK_ENABLE		( 1UL << 19UL )
 #define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE )
 
+
 /*
  */
 static void prvSetupTimerInterrupt( void );
@@ -84,9 +85,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = 0xDEADBEEF;
 	*pxTopOfStack--;
 
-	*pxTopOfStack = 0x10000001UL;;	/* R0. */
-	pxTopOfStack--;
-									/* SP. */
+	/* EABI stack frame. */
 	*pxTopOfStack = 0x31313131UL;	/* R31. */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x30303030UL;	/* R30. */
@@ -147,20 +146,26 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = 0x02020202UL;	/* R2. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000;		/* CR. */
+	*pxTopOfStack = 0x10000001UL;;	/* R0. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000;		/* XER. */
+	*pxTopOfStack = 0x00000000UL;	/* USPRG0. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000;		/* LR. */
+	*pxTopOfStack = 0x00000000UL;	/* CR. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000;		/* CTR. */
+	*pxTopOfStack = 0x00000000UL;	/* XER. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000;		/* USPRG0. */
+	*pxTopOfStack = 0x00000000UL;	/* CTR. */
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) vStartFirstTask;	/* LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode; /* SRR0. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_MSR;/* SRR1. */
 	pxTopOfStack--;
+	*pxTopOfStack = 0x00000000UL;/* Next LR. */
+	pxTopOfStack--;
+	*pxTopOfStack = portINITIAL_MSR;/* Backchain. */
+//	pxTopOfStack--;
 
 	return pxTopOfStack;
 }
@@ -170,7 +175,13 @@ portBASE_TYPE xPortStartScheduler( void )
 {
 extern void *pxCurrentTCB;
 
-	prvSetupTimerInterrupt();
+	XExc_Init();
+	XExc_mDisableExceptions( XEXC_NON_CRITICAL ) ;	
+
+//	prvSetupTimerInterrupt();
+	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
+	XExc_mEnableExceptions( XEXC_NON_CRITICAL ) ;
+
 	vStartFirstTask();
 	
 	/* Should not get here as the tasks are now running! */
@@ -191,17 +202,11 @@ static void prvSetupTimerInterrupt( void )
 {
 const unsigned portLONG ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
 
-	XExc_Init();
-	XExc_mDisableExceptions( XEXC_NON_CRITICAL ) ;	
 	XExc_RegisterHandler( XEXC_ID_PIT_INT, ( XExceptionHandler ) prvTickISR, ( void * ) 0 );
-	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
 
 	XTime_PITEnableAutoReload();
-	XTime_PITEnableInterrupt();
 	XTime_PITSetInterval( ulInterval );
 	XTime_PITEnableInterrupt();
-	
-	XExc_mEnableExceptions( XEXC_NON_CRITICAL ) ;
 }
 /*-----------------------------------------------------------*/
 
@@ -221,7 +226,4 @@ static unsigned portLONG ulTicks = 0;
 	#endif
 }
 /*-----------------------------------------------------------*/
-
-
-
 

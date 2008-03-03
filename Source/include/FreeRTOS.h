@@ -118,8 +118,8 @@
 	#error Missing definition:  configUSE_16_BIT_TICKS should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef INCLUDE_uxGetStackHighWaterMark
-	#define INCLUDE_uxGetStackHighWaterMark 0
+#ifndef INCLUDE_uxTaskGetStackHighWaterMark
+	#define INCLUDE_uxTaskGetStackHighWaterMark 0
 #endif
 
 #ifndef configUSE_RECURSIVE_MUTEXES
@@ -189,6 +189,9 @@
 	#define traceBLOCKING_ON_QUEUE_SEND( pxQueue )
 #endif
 
+#ifndef configCHECK_FOR_STACK_OVERFLOW
+	#define configCHECK_FOR_STACK_OVERFLOW 0
+#endif
 
 /* The following event macros are embedded in the kernel API calls. */
 

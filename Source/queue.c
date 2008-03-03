@@ -213,10 +213,13 @@ size_t xQueueSizeInBytes;
 				vListInitialise( &( pxNewQueue->xTasksWaitingToSend ) );
 				vListInitialise( &( pxNewQueue->xTasksWaitingToReceive ) );
 
+				traceQUEUE_CREATE( pxNewQueue );
+
 				return  pxNewQueue;
 			}
 			else
 			{
+				traceQUEUE_CREATE_FAILED();
 				vPortFree( pxNewQueue );
 			}
 		}
@@ -262,6 +265,12 @@ size_t xQueueSizeInBytes;
 
 			/* Start with the semaphore in the expected state. */
 			xQueueGenericSend( pxNewQueue, NULL, 0, queueSEND_TO_BACK );
+
+			traceCREATE_MUTEX( pxNewQueue );
+		}
+		else
+		{
+			traceCREATE_MUTEX_FAILED();
 		}
 	
 		return pxNewQueue;
@@ -300,11 +309,15 @@ size_t xQueueSizeInBytes;
 			}
 
 			xReturn = pdPASS;
+
+			traceGIVE_MUTEX_RECURSIVE( pxMutex );
 		}
 		else
 		{
 			/* We cannot give the mutex because we are not the holder. */
 			xReturn = pdFAIL;
+
+			traceGIVE_MUTEX_RECURSIVE_FAILED( pxMutex );
 		}
 
 		return xReturn;
@@ -339,6 +352,8 @@ size_t xQueueSizeInBytes;
 			}
 		}
 
+		traceTAKE_MUTEX_RECURSIVE( pxMutex );
+
 		return xReturn;
 	}
 
@@ -356,6 +371,12 @@ size_t xQueueSizeInBytes;
 		if( pxHandle != NULL )
 		{
 			pxHandle->uxMessagesWaiting = uxInitialCount;
+
+			traceCREATE_COUNTING_SEMAPHORE();
+		}
+		else
+		{
+			traceCREATE_COUNTING_SEMAPHORE_FAILED();
 		}
 
 		return pxHandle;
@@ -448,6 +469,8 @@ xTimeOutType xTimeOut;
 				list. */
 				taskENTER_CRITICAL();
 				{
+					traceBLOCKING_ON_QUEUE_SEND( pxQueue );
+
 					/* We can safely unlock the queue and scheduler here as
 					interrupts are disabled.  We must not yield with anything
 					locked, but we can yield from within a critical section.
@@ -505,6 +528,8 @@ xTimeOutType xTimeOut;
 			{
 				if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
 				{
+					traceQUEUE_SEND( pxQueue );
+
 					/* There is room in the queue, copy the data into the queue. */			
 					prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 					xReturn = pdPASS;
@@ -529,6 +554,14 @@ xTimeOutType xTimeOut;
 				{
 					xReturn = queueERRONEOUS_UNBLOCK;
 				}
+				else
+				{
+					traceQUEUE_SEND_FAILED( pxQueue );
+				}
+			}
+			else
+			{
+				traceQUEUE_SEND_FAILED( pxQueue );
 			}
 		}
 	}
@@ -571,6 +604,8 @@ xTimeOutType xTimeOut;
 					posting? */
 					if( xTicksToWait > ( portTickType ) 0 )
 					{
+						traceBLOCKING_ON_QUEUE_SEND( pxQueue );
+
 						/* We are going to place ourselves on the xTasksWaitingToSend 
 						event list, and will get woken should the delay expire, or 
 						space become available on the queue. */
@@ -586,6 +621,8 @@ xTimeOutType xTimeOut;
 					
 				if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
 				{
+					traceQUEUE_SEND( pxQueue );
+
 					/* There is room in the queue, copy the data into the queue. */			
 					prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 					xReturn = pdPASS;
@@ -611,6 +648,14 @@ xTimeOutType xTimeOut;
 							this task unblocking and actually executing. */
 							xReturn = queueERRONEOUS_UNBLOCK;
 						}
+						else
+						{
+							traceQUEUE_SEND_FAILED( pxQueue );
+						}
+					}
+					else
+					{
+						traceQUEUE_SEND_FAILED( pxQueue );
 					}
 				}
 			}
@@ -655,6 +700,8 @@ xTimeOutType xTimeOut;
 					leave with nothing? */			
 					if( xTicksToWait > ( portTickType ) 0 )
 					{
+						traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
+
 						#if ( configUSE_MUTEXES == 1 )
 						{
 							if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
@@ -678,6 +725,8 @@ xTimeOutType xTimeOut;
 
 					if( xJustPeeking == pdFALSE )
 					{
+						traceQUEUE_RECEIVE( pxQueue );
+
 						/* We are actually removing data. */
 						--( pxQueue->uxMessagesWaiting );
 							
@@ -703,6 +752,8 @@ xTimeOutType xTimeOut;
 					}
 					else
 					{
+						traceQUEUE_PEEK( pxQueue );
+
 						/* We are not removing the data, so reset our read
 						pointer. */
 						pxQueue->pcReadFrom = pcOriginalReadPosition;
@@ -720,6 +771,14 @@ xTimeOutType xTimeOut;
 						{
 							xReturn = queueERRONEOUS_UNBLOCK;
 						}
+						else
+						{
+							traceQUEUE_RECEIVE_FAILED( pxQueue );
+						}
+					}
+					else
+					{
+						traceQUEUE_RECEIVE_FAILED( pxQueue );
 					}
 				}
 
@@ -742,6 +801,8 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 	by this	post). */
 	if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
 	{
+		traceQUEUE_SEND_FROM_ISR( pxQueue );
+
 		prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
 		/* If the queue is locked we do not alter the event list.  This will
@@ -769,6 +830,10 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 			knows that data was posted while it was locked. */
 			++( pxQueue->xTxLock );
 		}
+	}
+	else
+	{
+		traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
 	}
 
 	return xTaskPreviouslyWoken;
@@ -802,6 +867,8 @@ signed portCHAR *pcOriginalReadPosition;
 			leave with nothing? */			
 			if( xTicksToWait > ( portTickType ) 0 )
 			{
+				traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
+
 				#if ( configUSE_MUTEXES == 1 )
 				{
 					if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
@@ -849,6 +916,8 @@ signed portCHAR *pcOriginalReadPosition;
 
 					if( xJustPeeking == pdFALSE )
 					{
+						traceQUEUE_RECEIVE( pxQueue );
+
 						/* We are actually removing data. */
 						--( pxQueue->uxMessagesWaiting );
 							
@@ -869,6 +938,8 @@ signed portCHAR *pcOriginalReadPosition;
 					}
 					else
 					{
+						traceQUEUE_PEEK( pxQueue );
+
 						/* We are not removing the data, so reset our read
 						pointer. */
 						pxQueue->pcReadFrom = pcOriginalReadPosition;
@@ -897,6 +968,14 @@ signed portCHAR *pcOriginalReadPosition;
 				{
 					xReturn = queueERRONEOUS_UNBLOCK;
 				}
+				else
+				{
+					traceQUEUE_RECEIVE_FAILED( pxQueue );
+				}
+			}
+			else
+			{
+				traceQUEUE_RECEIVE_FAILED( pxQueue );
 			}
 		}
 	} while( xReturn == queueERRONEOUS_UNBLOCK );
@@ -916,6 +995,8 @@ signed portBASE_TYPE xReturn;
 	/* We cannot block from an ISR, so check there is data available. */
 	if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 	{
+		traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
+
 		prvCopyDataFromQueue( pxQueue, pvBuffer );
 		--( pxQueue->uxMessagesWaiting );
 
@@ -951,6 +1032,7 @@ signed portBASE_TYPE xReturn;
 	else
 	{
 		xReturn = pdFAIL;
+		traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
 	}
 
 	return xReturn;
@@ -971,6 +1053,8 @@ unsigned portBASE_TYPE uxReturn;
 
 void vQueueDelete( xQueueHandle pxQueue )
 {
+	traceQUEUE_DELETE( pxQueue );
+
 	vPortFree( pxQueue->pcHead );
 	vPortFree( pxQueue );
 }

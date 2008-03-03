@@ -508,7 +508,7 @@ static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth );
  * This function determines the 'high water mark' of the task stack by
  * determining how much of the stack remains at the original preset value.
  */
-#if ( configUSE_TRACE_FACILITY == 1 )
+#if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxGetStackHighWaterMark == 1 ) )
 
 	unsigned portSHORT usTaskCheckFreeStackSpace( const unsigned portCHAR * pucStackByte );
 
@@ -620,12 +620,14 @@ tskTCB * pxNewTCB;
 			prvAddTaskToReadyQueue( pxNewTCB );
 
 			xReturn = pdPASS;
+			traceTASK_CREATE( pxNewTCB );
 		}
 		portEXIT_CRITICAL();
 	}
 	else
 	{
 		xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
+		traceTASK_CREATE_FAILED( pxNewTCB );
 	}
 
 	if( xReturn == pdPASS )
@@ -670,6 +672,8 @@ tskTCB * pxNewTCB;
 
 			/* If null is passed in here then we are deleting ourselves. */
 			pxTCB = prvGetTCBFromHandle( pxTaskToDelete );
+
+			traceTASK_DELETE( pxTCB );
 
 			/* Remove task from the ready list and place in the	termination list.
 			This will stop the task from be scheduled.  The idle task will check
@@ -753,6 +757,8 @@ tskTCB * pxNewTCB;
 
 			if( xShouldDelay )
 			{
+				traceTASK_DELAY_UNTIL();
+
 				/* We must remove ourselves from the ready list before adding
 				ourselves to the blocked list as the same list item is used for
 				both lists. */
@@ -800,6 +806,8 @@ tskTCB * pxNewTCB;
 		{
 			vTaskSuspendAll();
 			{
+				traceTASK_DELAY();
+
 				/* A task that is removed from the event list while the
 				scheduler is suspended will not get placed in the ready
 				list or removed from the blocked list until the scheduler
@@ -888,6 +896,8 @@ tskTCB * pxNewTCB;
 			priority of the calling function. */
 			pxTCB = prvGetTCBFromHandle( pxTask );
 			
+			traceTASK_PRIORITY_SET( pxTask, uxNewPriority );
+
 			#if ( configUSE_MUTEXES == 1 )
 			{
 				uxCurrentPriority = pxTCB->uxBasePriority;
@@ -985,6 +995,8 @@ tskTCB * pxNewTCB;
 			/* If null is passed in here then we are suspending ourselves. */
 			pxTCB = prvGetTCBFromHandle( pxTaskToSuspend );
 
+			traceTASK_SUSPEND( pxTaskToSuspend );
+
 			/* Remove task from the ready/delayed list and place in the	suspended list. */
 			vListRemove( &( pxTCB->xGenericListItem ) );
 
@@ -1056,6 +1068,8 @@ tskTCB * pxNewTCB;
 			{
 				if( prvIsTaskSuspended( pxTCB ) == pdTRUE )
 				{
+					traceTASK_RESUME( pxTCB );
+
 					/* As we are in a critical section we can access the ready
 					lists even if the scheduler is suspended. */
 					vListRemove(  &( pxTCB->xGenericListItem ) );
@@ -1089,6 +1103,8 @@ tskTCB * pxNewTCB;
 
 		if( prvIsTaskSuspended( pxTCB ) == pdTRUE )
 		{
+			traceTASK_RESUME_FROM_ISR( pxTCB );
+
 			if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
 			{
 				xYieldRequired = ( pxTCB->uxPriority >= pxCurrentTCB->uxPriority );
@@ -1430,6 +1446,8 @@ inline void vTaskIncrementTick( void )
 		}
 	}
 	#endif
+
+	traceTASK_INCREMENT_TICK( xTickCount );
 }
 /*-----------------------------------------------------------*/
 
@@ -1505,6 +1523,8 @@ void vTaskSwitchContext( void )
 	/* listGET_OWNER_OF_NEXT_ENTRY walks through the list, so the tasks of the
 	same priority get an equal share of the processor time. */
 	listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &( pxReadyTasksLists[ uxTopReadyPriority ] ) );
+
+	traceTASK_SWITCHED_IN();
 	vWriteTraceToBuffer();
 }
 /*-----------------------------------------------------------*/
@@ -1913,7 +1933,7 @@ tskTCB *pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_TRACE_FACILITY == 1 )
+#if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxGetStackHighWaterMark == 1 ) )
 	unsigned portSHORT usTaskCheckFreeStackSpace( const unsigned portCHAR * pucStackByte )
 	{
 	register unsigned portSHORT usCount = 0;
@@ -1931,7 +1951,13 @@ tskTCB *pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
-
+#if ( INCLUDE_uxGetStackHighWaterMark == 1 )
+	unsigned portBASE_TYPE uxGetStackHighWaterMark( void )
+	{
+		return usTaskCheckFreeStackSpace( pxCurrentTCB->pxStack );
+	}
+#endif
+/*-----------------------------------------------------------*/
 
 #if ( ( INCLUDE_vTaskDelete == 1 ) || ( INCLUDE_vTaskCleanUpResources == 1 ) )
 

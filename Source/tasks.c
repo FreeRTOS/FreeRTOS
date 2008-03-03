@@ -268,7 +268,7 @@ register tskTCB *pxTCB;																								\
  * the stack limit.  Setting configCHECK_FOR_STACK_OVERFLOW to greater than 1
  * will also cause the last few stack bytes to be checked to ensure the value
  * to which the bytes were set when the task was created have not been 
- * overwritten.  Note this second test does not guarantee that an overflown
+ * overwritten.  Note this second test does not guarantee that an overflowed
  * stack will always be recognised.
  */
 
@@ -296,7 +296,7 @@ register tskTCB *pxTCB;																								\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
 		{																								\
-			vApplicationStackOverflowHook( pxCurrentTCB, pxCurrentTCB->pcTaskName );					\
+			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
 		}																								\
 	}
 
@@ -317,17 +317,18 @@ register tskTCB *pxTCB;																								\
 		/* Is the currently saved stack pointer within the stack limit? */																			\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )																					\
 		{																																			\
-			vApplicationStackOverflowHook( pxCurrentTCB, pxCurrentTCB->pcTaskName );																\
+			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );												\
 		}																																			\
 																																					\
 		/* Has the extremity of the task stack ever been written over? */																			\
-		if( memcmp( pxCurrentTCB->pxStack, ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )											\
+		if( memcmp( ( void * ) pxCurrentTCB->pxStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )						\
 		{																																			\
-			vApplicationStackOverflowHook( pxCurrentTCB, pxCurrentTCB->pcTaskName );																\
+			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );																\
 		}																																			\
 	}
 
 #endif /* #if( configCHECK_FOR_STACK_OVERFLOW > 1 ) */
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -1859,7 +1860,7 @@ tskTCB *pxNewTCB;
 
 	unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( void )
 	{
-		return usTaskCheckFreeStackSpace( pxCurrentTCB->pxStack );
+		return usTaskCheckFreeStackSpace( ( unsigned portCHAR * ) pxCurrentTCB->pxStack );
 	}
 
 #endif

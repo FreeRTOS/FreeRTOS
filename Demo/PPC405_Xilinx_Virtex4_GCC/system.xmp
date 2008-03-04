@@ -1,0 +1,75 @@
+#Please do not modify this file by hand
+XmpVersion: 8.2.02
+IntStyle: default
+MHS File: system.mhs
+MSS File: system.mss
+NPL File: projnav/system.ise
+Architecture: virtex4
+Device: xc4vfx12
+Package: ff668
+SpeedGrade: -10
+UseProjNav: 0
+PNImportBitFile: 
+PNImportBmmFile: 
+UserCmd1: 
+UserCmd1Type: 0
+UserCmd2: 
+UserCmd2Type: 0
+TopInst: system_i
+ReloadPbde: 0
+MainMhsEditor: 0
+InsertNoPads: 0
+WarnForEAArch: 1
+HdlLang: VHDL
+Simulator: mti
+SimModel: BEHAVIORAL
+SimXLib: 
+SimEdkLib: 
+MixLangSim: 1
+UcfFile: data/system.ucf
+FpgaImpMode: 0
+ShowLicenseDialog: 1
+ICacheAddr: SRAM_256Kx32,C_MEM0_BASEADDR
+DCacheAddr: SRAM_256Kx32,C_MEM0_BASEADDR
+Processor: ppc405_0
+BootLoop: 0
+XmdStub: 0
+SwProj: RTOSDemo
+Processor: ppc405_0
+Executable: RTOSDemo/executable.elf
+Source: RTOSDemo/main.c
+Source: RTOSDemo/serial/serial.c
+Source: RTOSDemo/partest/partest.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405/port.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/tasks.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/list.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/queue.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/MemMang/heap_2.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405/portasm.s
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/flash.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/blocktim.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/dynamic.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/flop.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/GenQTest.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/integer.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/QPeek.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/semtest.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/BlockQ.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/death.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/comtest.c
+Header: RTOSDemo/FreeRTOSConfig.h
+DefaultInit: EXECUTABLE
+InitBram: 0
+Active: 1
+CompilerOptLevel: 4
+GlobPtrOpt: 0
+DebugSym: 1
+ProfileFlag: 0
+SearchIncl: . ./RTOSDemo/ ../Common/include/ ../../Source/include/ ./ppc405_0/include/ ./ppc405_0/include
+ProgStart: 
+StackSize: 
+HeapSize: 
+LinkerScript: RTOSDemo/RTOSDemo.ld
+ProgCCFlags: -D GCC_PPC405 -mregnames -Xlinker -Map=rtosdemo.map
+CompileInXps: 1
+NonXpsApp: 0

@@ -1,0 +1,36 @@
+Xilinx Platform Studio (XPS)
+Xilinx EDK 8.2.02 Build EDK_Im_Sp2.4
+
+Copyright (c) 1995-2006 Xilinx, Inc.  All rights reserved.
+
+Copied C:/devtools/XilinxEDK/data/xflow/bitgen.ut to etc directory
+
+At Local date and time: Tue Mar 04 08:52:42 2008
+ xbash -q -c "cd /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_Xilinx_Virtex4_GCC/; /usr/bin/make -f system.make clean; exit;" started...
+
+rm -f implementation/system.ngc
+
+
+rm -f implementation/system.bmm
+rm -f implementation/system.bit
+
+
+rm -f implementation/system.ncd
+rm -f implementation/system_bd.bmm 
+rm -rf implementation synthesis xst hdl
+
+
+rm -rf xst.srp system.srp
+rm -rf ppc405_0/lib/
+rm -f RTOSDemo/executable.elf 
+
+
+rm -rf simulation/behavioral
+rm -rf virtualplatform
+rm -f _impact.cmd
+
+
+
+
+Done!
+

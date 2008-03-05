@@ -77,6 +77,7 @@
 #include "death.h"
 #include "partest.h"
 #include "xcache_l.h"
+#include "xintc.h"
 
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 4 )
 #define mainSEM_TEST_PRIORITY			( tskIDLE_PRIORITY + 3 )
@@ -102,16 +103,27 @@ static void prvErrorChecks( void *pvParameters );
 static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 static portSHORT prvCheckOtherTasksAreStillRunning( void );
 
+XIntc xInterruptController;
+extern void vPortISRWrapper( void );
+
 int main( void )
 {
-   XCache_EnableICache( 0x80000000 );
-   XCache_EnableDCache( 0x80000000 );
+	XCache_EnableICache( 0x80000000 );
+	XCache_EnableDCache( 0x80000000 );
+
+	XExc_Init();
+	XExc_mDisableExceptions( XEXC_NON_CRITICAL );
+    XExc_RegisterHandler( XEXC_ID_NON_CRITICAL_INT, (XExceptionHandler)vPortISRWrapper, &xInterruptController );
+
+	XIntc_Initialize( &xInterruptController, XPAR_OPB_INTC_0_DEVICE_ID );
+	XIntc_Start( &xInterruptController, XIN_REAL_MODE );
+
 	vParTestInitialise();
 
 	/* Start the standard demo application tasks. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED - 1 );
+	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );	
 	vStartDynamicPriorityTasks();	
@@ -215,7 +227,7 @@ static void prvErrorChecks( void *pvParameters )
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 volatile unsigned portBASE_TYPE uxFreeStack;
 
-	uxFreeStack = uxTaskGetStackHighWaterMark();
+	uxFreeStack = uxTaskGetStackHighWaterMark( NULL );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -225,7 +237,7 @@ volatile unsigned portBASE_TYPE uxFreeStack;
 	operating without error. */
 	for( ;; )
 	{
-		uxFreeStack = uxTaskGetStackHighWaterMark();
+		uxFreeStack = uxTaskGetStackHighWaterMark( NULL );
 
 		/* Wait until it is time to check again.  The time we wait here depends
 		on whether an error has been detected or not.  When an error is 

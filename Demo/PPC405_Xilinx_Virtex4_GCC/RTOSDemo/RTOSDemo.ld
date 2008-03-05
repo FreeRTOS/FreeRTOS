@@ -18,7 +18,7 @@ _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x2000;
 MEMORY
 {
    SRAM_256Kx32_C_MEM0_BASEADDR : ORIGIN = 0x00000000, LENGTH = 0x00100000
-   plb_bram_if_cntlr_1 : ORIGIN = 0xFFFFC000, LENGTH = 0x00004000
+   plb_bram_if_cntlr_1 : ORIGIN = 0xFFFFF000, LENGTH = 0x00001000
 }
 
 /* Specify the default entry point to the program */

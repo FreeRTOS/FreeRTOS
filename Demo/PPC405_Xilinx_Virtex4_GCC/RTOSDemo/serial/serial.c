@@ -54,8 +54,11 @@
 #include "serial.h"
 
 /* Microblaze driver includes. */
+#include "xparameters.h"
+#include "xuartlite.h"
 #include "xuartlite_l.h"
 #include "xintc_l.h"
+#include "xintc.h"
 
 /*-----------------------------------------------------------*/
 
@@ -64,11 +67,16 @@ transmitted. */
 static xQueueHandle xRxedChars; 
 static xQueueHandle xCharsForTx; 
 
+static XUartLite xUART;
+
+static void vSerialISR( XUartLite *pxUART );
+
 /*-----------------------------------------------------------*/
 
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 unsigned portLONG ulControlReg, ulMask;
+extern XIntc xInterruptController;
 
 	/* NOTE: The baud rate used by this driver is determined by the hardware
 	parameterization of the UART Lite peripheral, and the baud value passed to
@@ -80,18 +88,14 @@ unsigned portLONG ulControlReg, ulMask;
 
 	if( ( xRxedChars ) && ( xCharsForTx ) )
 	{
-		/* Disable the interrupt. */
-		XUartLite_mDisableIntr( XPAR_RS232_UART_BASEADDR );
+
+		XUartLite_Initialize( &xUART, XPAR_RS232_UART_DEVICE_ID );
+		XUartLite_ResetFifos( &xUART );
+		XUartLite_DisableInterrupt( &xUART );
+		XIntc_Connect( &xInterruptController, XPAR_OPB_INTC_0_RS232_UART_INTERRUPT_INTR, ( XInterruptHandler )vSerialISR, (void *)&xUART );
+		XIntc_Enable( &xInterruptController, XPAR_OPB_INTC_0_RS232_UART_INTERRUPT_INTR );
 		
-		/* Flush the fifos. */
-		ulControlReg = XIo_In32( XPAR_RS232_UART_BASEADDR + XUL_STATUS_REG_OFFSET );
-		XIo_Out32( XPAR_RS232_UART_BASEADDR + XUL_CONTROL_REG_OFFSET, ulControlReg | XUL_CR_FIFO_TX_RESET | XUL_CR_FIFO_RX_RESET );
-
-		/* Register the handler. */
-		XExc_RegisterHandler( XEXC_ID_UART0_INT, ( XExceptionHandler ) vSerialISR, ( void * ) 0 );
-
-		/* Enable the interrupt again. */
-		XUartLite_mEnableIntr( XPAR_RS232_UART_BASEADDR );
+		XUartLite_EnableInterrupt( &xUART );
 	}
 	
 	return ( xComPortHandle ) 0;
@@ -162,21 +166,20 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
-void vSerialISR( void *pvBaseAddress )
+static void vSerialISR( XUartLite *pxUART )
 {
 unsigned portLONG ulISRStatus;
 portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
 portCHAR cChar;
 
-	/* Determine the cause of the interrupt. */
-    ulISRStatus = XIo_In32( XPAR_RS232_UART_BASEADDR + XUL_STATUS_REG_OFFSET );
+    ulISRStatus = XIo_In32( pxUART->RegBaseAddress + XUL_STATUS_REG_OFFSET );
 
-    if( ( ulISRStatus & ( XUL_SR_RX_FIFO_FULL | XUL_SR_RX_FIFO_VALID_DATA ) ) != 0 )
-	{
+    if( ( ulISRStatus & (XUL_SR_RX_FIFO_FULL | XUL_SR_RX_FIFO_VALID_DATA ) ) != 0 )
+    {
 		/* A character is available - place it in the queue of received
 		characters.  This might wake a task that was blocked waiting for 
 		data. */
-		cChar = ( portCHAR )XIo_In32( XPAR_RS232_UART_BASEADDR + XUL_RX_FIFO_OFFSET );
+		cChar = ( portCHAR ) XIo_In32( pxUART->RegBaseAddress + XUL_RX_FIFO_OFFSET );
 		xTaskWokenByRx = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByRx );
     }
 
@@ -187,8 +190,9 @@ portCHAR cChar;
 		task that was waiting for space to become available on the Tx queue. */
 		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
 		{
-			XIo_Out32( XPAR_RS232_UART_BASEADDR + XUL_TX_FIFO_OFFSET, cChar );
+			XIo_Out32( pxUART->RegBaseAddress + XUL_TX_FIFO_OFFSET, cChar );
 		}
+
     }
 
 	/* If we woke any tasks we may require a context switch. */
@@ -197,3 +201,6 @@ portCHAR cChar;
 		portYIELD_FROM_ISR();
 	}
 }
+
+
+

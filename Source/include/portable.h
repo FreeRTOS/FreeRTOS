@@ -192,7 +192,7 @@
 #endif
 
 #ifdef GCC_PPC405
-	#include "../../Source/portable/GCC/PPC405/portmacro.h"
+	#include "../../Source/portable/GCC/PPC405_Xilinx/portmacro.h"
 #endif
 
 

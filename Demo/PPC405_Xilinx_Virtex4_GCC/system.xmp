@@ -40,12 +40,12 @@ Executable: RTOSDemo/executable.elf
 Source: RTOSDemo/main.c
 Source: RTOSDemo/serial/serial.c
 Source: RTOSDemo/partest/partest.c
-Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405/port.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405_Xilinx/port.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/tasks.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/list.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/queue.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/MemMang/heap_2.c
-Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405/portasm.s
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405_Xilinx/portasm.s
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/flash.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/blocktim.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/dynamic.c

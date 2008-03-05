@@ -71,6 +71,8 @@ extern void vPortTickISR( void );
 extern void vPortYield( void );
 extern void vPortStartFirstTask( void );
 
+static XIntc xInterruptController;
+
 /* 
  * Initialise the stack of a task to look exactly as if a call to 
  * portSAVE_CONTEXT had been made.
@@ -228,7 +230,7 @@ static unsigned portLONG ulTicks = 0;
 }
 /*-----------------------------------------------------------*/
 
-void vPortISRHandler( void *DeviceId )
+void vPortISRHandler( void *vNullDoNotUse )
 {
 Xuint32 IntrStatus;
 Xuint32 IntrMask = 1;
@@ -277,4 +279,30 @@ XIntc_Config *CfgPtr;// = xInterruptController.CfgPtr;
             break;
         }
     }
+}
+/*-----------------------------------------------------------*/
+
+void vPortSetupInterruptController( void )
+{
+extern void vPortISRWrapper( void );
+
+	XExc_mDisableExceptions( XEXC_NON_CRITICAL );
+	XExc_Init();
+	XExc_RegisterHandler( XEXC_ID_NON_CRITICAL_INT, (XExceptionHandler)vPortISRWrapper, NULL );
+	XIntc_Initialize( &xInterruptController, XPAR_OPB_INTC_0_DEVICE_ID );
+	XIntc_Start( &xInterruptController, XIN_REAL_MODE );
+}
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE xPortInstallInterruptHandler( unsigned portCHAR ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef )
+{
+portBASE_TYPE xReturn = pdFAIL;
+
+	if( XST_SUCCESS == XIntc_Connect( &xInterruptController, ucInterruptID, pxHandler, pvCallBackRef ) )
+	{
+		XIntc_Enable( &xInterruptController, ucInterruptID );
+		xReturn = pdPASS;
+	}
+
+	return xReturn;		
 }

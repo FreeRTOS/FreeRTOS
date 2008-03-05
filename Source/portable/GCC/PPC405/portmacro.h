@@ -110,6 +110,10 @@ void vPortYield( void );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
+/* Port specific initialisation function. */
+void vPortSetupInterruptController( void );
+portBASE_TYPE xPortInstallInterruptHandler( unsigned portCHAR ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef );
+
 #ifdef __cplusplus
 }
 #endif

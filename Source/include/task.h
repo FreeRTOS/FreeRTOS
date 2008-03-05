@@ -868,17 +868,23 @@ unsigned portLONG ulTaskEndTrace( void );
 
 /**
  * task.h
- * <PRE>unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( void );</PRE>
+ * <PRE>unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask );</PRE>
  *
  * INCLUDE_uxTaskGetStackHighWaterMark must be set to 1 in FreeRTOSConfig.h for
  * this function to be available.
  *
- * Returns the high water mark for the stack of the calling task.  That is,
+ * Returns the high water mark of the stack associated with xTask.  That is,
  * the minimum free stack space there has been (in bytes) since the task
- * started.  The small the returned number the closer the task has come
+ * started.  The smaller the returned number the closer the task has come
  * to overflowing its stack.
+ *
+ * @param xTask Handle of the task associated with the stack to be checked.
+ * Set xTask to NULL to check the stack of the calling task.
+ *
+ * @return The smallest amount of free stack space there has been (in bytes)
+ * since the task referenced by xTask was created.
  */
-unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( void );
+unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask );
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

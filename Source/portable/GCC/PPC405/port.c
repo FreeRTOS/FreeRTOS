@@ -51,6 +51,8 @@
 
 /* Library includes. */
 #include "xtime_l.h"
+#include "xintc.h"
+#include "xintc_i.h"
 
 /* Standard includes. */
 #include <string.h>
@@ -171,9 +173,6 @@ portBASE_TYPE xPortStartScheduler( void )
 {
 extern void *pxCurrentTCB;
 
-	XExc_Init();
-	XExc_mDisableExceptions( XEXC_NON_CRITICAL ) ;	
-
 	prvSetupTimerInterrupt();
 
 	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
@@ -229,3 +228,53 @@ static unsigned portLONG ulTicks = 0;
 }
 /*-----------------------------------------------------------*/
 
+void vPortISRHandler( void *DeviceId )
+{
+Xuint32 IntrStatus;
+Xuint32 IntrMask = 1;
+int IntrNumber;
+//extern XIntc xInterruptController;
+XIntc_Config *CfgPtr;// = xInterruptController.CfgPtr;
+	  
+    /* Get the configuration data using the device ID */
+    //CfgPtr = &XIntc_ConfigTable[(Xuint32)DeviceId];
+	CfgPtr = &XIntc_ConfigTable[(Xuint32)XPAR_OPB_INTC_0_DEVICE_ID];
+  
+    /* Get the interrupts that are waiting to be serviced */
+    IntrStatus = XIntc_mGetIntrStatus(CfgPtr->BaseAddress);
+  
+    /* Service each interrupt that is active and enabled by checking each
+     * bit in the register from LSB to MSB which corresponds to an interrupt
+     * intput signal
+     */
+    for (IntrNumber = 0; IntrNumber < XPAR_INTC_MAX_NUM_INTR_INPUTS;
+         IntrNumber++)
+    {
+        if (IntrStatus & 1)
+        {
+            XIntc_VectorTableEntry *TablePtr;
+      
+            /* The interrupt is active and enabled, call the interrupt
+             * handler that was setup with the specified parameter
+             */
+            TablePtr = &(CfgPtr->HandlerTable[IntrNumber]);
+            TablePtr->Handler(TablePtr->CallBackRef);
+
+			/* Clear the interrupt. */      
+            XIntc_mAckIntr(CfgPtr->BaseAddress, IntrMask);
+			break;
+        }
+        
+        /* Move to the next interrupt to check */
+        IntrMask <<= 1;
+        IntrStatus >>= 1;
+      
+        /* If there are no other bits set indicating that all interrupts
+         * have been serviced, then exit the loop
+         */
+        if (IntrStatus == 0)
+        {
+            break;
+        }
+    }
+}

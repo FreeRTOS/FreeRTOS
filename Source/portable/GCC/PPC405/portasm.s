@@ -3,10 +3,12 @@
 	.extern pxCurrentTCB
 	.extern vTaskSwitchContext
 	.extern vTaskIncrementTick
+	.extern vPortISRHandler
 
 	.global vPortStartFirstTask
 	.global vPortYield
 	.global vPortTickISR
+	.global vPortISRWrapper
 
 .set portCONTEXT_SIZE, 156
 .set portR0_OFFSET, 152
@@ -231,4 +233,9 @@ vPortTickISR:
 	portEXIT_SWITCHING_ISR
 	blr
 
+vPortISRWrapper:
 
+	portENTER_SWITCHING_ISR
+	bl vPortISRHandler
+	portEXIT_SWITCHING_ISR
+	blr

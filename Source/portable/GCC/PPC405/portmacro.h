@@ -96,7 +96,7 @@ void vTaskExitCritical( void );
 /* Task utilities. */
 void vPortYield( void );
 #define portYIELD() asm volatile ( "SC \n\t NOP" )
-#define portYIELD_FROM_ISR()
+#define portYIELD_FROM_ISR() vTaskSwitchContext()
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */

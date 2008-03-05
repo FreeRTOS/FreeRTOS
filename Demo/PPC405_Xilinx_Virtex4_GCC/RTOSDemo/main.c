@@ -58,12 +58,24 @@
  * check task toggles the onboard LED.  Should any task contain an error at any time 
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
+ * The "Register Check" tasks.  These tasks fill the CPU registers with known
+ * values, then check that each register still contains the expected value, the
+ * discovery of an unexpected value being indicative of an error in the RTOS
+ * context switch mechanism.  The register check tasks operate at low priority
+ * so are switched in and out frequently.
+ *
  */
 
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+
+/* Xilinx library includes. */
+#include "xcache_l.h"
+#include "xintc.h"
+
+/* Demo application includes. */
 #include "flash.h"
 #include "integer.h"
 #include "comtest2.h"
@@ -76,9 +88,8 @@
 #include "blocktim.h"
 #include "death.h"
 #include "partest.h"
-#include "xcache_l.h"
-#include "xintc.h"
 
+/* Priorities assigned to the demo tasks. */
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 4 )
 #define mainSEM_TEST_PRIORITY			( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
@@ -87,43 +98,64 @@
 #define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainGENERIC_QUEUE_PRIORITY		( tskIDLE_PRIORITY )
 
-#define mainCOM_TEST_BAUD_RATE			( 115200UL )
+/* The first LED used by the COM test and check tasks respectively. */
 #define mainCOM_TEST_LED				( 4 )
+#define mainCHECK_TEST_LED				( 3 )
 
+/* The baud rate used by the comtest tasks is set by the hardware, so the
+baud rate parameters passed into the comtest initialisation has no effect. */
+#define mainBAUD_SET_IN_HARDWARE		( 0 )
+
+/* Delay periods used by the check task.  If no errors have been found then
+the check LED will toggle every mainNO_ERROR_CHECK_DELAY milliseconds.  If an
+error has been found at any time then the toggle rate will increase to 
+mainERROR_CHECK_DELAY milliseconds. */
 #define mainNO_ERROR_CHECK_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_CHECK_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS  )
 
-#define mainCHECK_TEST_LED		( 3 )
 
+/* 
+ * The tasks defined within this file - described within the comments at the
+ * head of this page. 
+ */
 static void prvRegTestTask1( void *pvParameters );
 static void prvRegTestTask2( void *pvParameters );
-static void prvFlashTask( void *pvParameters );
 static void prvErrorChecks( void *pvParameters );
 
-static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
+/*
+ * Called by the 'check' task to inspect all the standard demo tasks within
+ * the system, as described within the comments at the head of this page.
+ */
 static portSHORT prvCheckOtherTasksAreStillRunning( void );
 
-XIntc xInterruptController;
-extern void vPortISRWrapper( void );
+/*
+ * Perform any hardware initialisation required by the demo application.
+ */
+static void prvSetupHardware( void );
+
+/*-----------------------------------------------------------*/
+
+/* xRegTestStatus will geet set to pdFAIL by the regtest tasks if they
+discover an unexpected value. */
+static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
+
+/*-----------------------------------------------------------*/
 
 int main( void )
 {
-	XCache_EnableICache( 0x80000000 );
-	XCache_EnableDCache( 0x80000000 );
+	/* Must be called prior to installing any interrupt handlers! */
+	vPortSetupInterruptController();
 
-	XExc_Init();
-	XExc_mDisableExceptions( XEXC_NON_CRITICAL );
-    XExc_RegisterHandler( XEXC_ID_NON_CRITICAL_INT, (XExceptionHandler)vPortISRWrapper, &xInterruptController );
+	/* In this case prvSetupHardware() just enables the caches and and
+	configures the IO ports for the LED outputs. */
+	prvSetupHardware();
 
-	XIntc_Initialize( &xInterruptController, XPAR_OPB_INTC_0_DEVICE_ID );
-	XIntc_Start( &xInterruptController, XIN_REAL_MODE );
-
-	vParTestInitialise();
-
-	/* Start the standard demo application tasks. */
+	/* Start the standard demo application tasks.  Note that the baud rate used
+	by the comtest tasks is set by the hardware, so the baud rate paramter
+	passed has no effect. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainBAUD_SET_IN_HARDWARE, mainCOM_TEST_LED );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );	
 	vStartDynamicPriorityTasks();	
@@ -132,6 +164,7 @@ int main( void )
 	vStartQueuePeekTasks();
 	vCreateBlockTimeTasks();
 
+	/* Create the tasks defined within this file. */
 	xTaskCreate( prvRegTestTask1, "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTestTask2, "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -144,13 +177,14 @@ int main( void )
 	/* Now start the scheduler.  Following this call the created tasks should
 	be executing. */	
 	vTaskStartScheduler( );
-	
+
 	/* vTaskStartScheduler() will only return if an error occurs while the 
 	idle task is being created. */
 	for( ;; );
 
 	return 0;
 }
+/*-----------------------------------------------------------*/
 
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
@@ -260,6 +294,13 @@ volatile unsigned portBASE_TYPE uxFreeStack;
 }
 /*-----------------------------------------------------------*/
 
+static void prvSetupHardware( void )
+{
+	XCache_EnableICache( 0x80000000 );
+	XCache_EnableDCache( 0x80000000 );
+
+	vParTestInitialise();
+}
 
 static void prvRegTestTask1( void *pvParameters )
 {

@@ -92,10 +92,11 @@ extern XIntc xInterruptController;
 		XUartLite_Initialize( &xUART, XPAR_RS232_UART_DEVICE_ID );
 		XUartLite_ResetFifos( &xUART );
 		XUartLite_DisableInterrupt( &xUART );
-		XIntc_Connect( &xInterruptController, XPAR_OPB_INTC_0_RS232_UART_INTERRUPT_INTR, ( XInterruptHandler )vSerialISR, (void *)&xUART );
-		XIntc_Enable( &xInterruptController, XPAR_OPB_INTC_0_RS232_UART_INTERRUPT_INTR );
-		
-		XUartLite_EnableInterrupt( &xUART );
+
+		if( xPortInstallInterruptHandler( XPAR_OPB_INTC_0_RS232_UART_INTERRUPT_INTR, ( XInterruptHandler )vSerialISR, (void *)&xUART ) == pdPASS )
+		{		
+			XUartLite_EnableInterrupt( &xUART );
+		}
 	}
 	
 	return ( xComPortHandle ) 0;

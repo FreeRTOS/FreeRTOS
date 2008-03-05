@@ -1858,9 +1858,12 @@ tskTCB *pxNewTCB;
 
 #if ( INCLUDE_uxTaskGetStackHighWaterMark == 1 )
 
-	unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( void )
+	unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask )
 	{
-		return usTaskCheckFreeStackSpace( ( unsigned portCHAR * ) pxCurrentTCB->pxStack );
+	tskTCB *pxTCB;
+
+		pxTCB = prvGetTCBFromHandle( xTask );
+		return usTaskCheckFreeStackSpace( ( unsigned portCHAR * ) pxTCB->pxStack );
 	}
 
 #endif

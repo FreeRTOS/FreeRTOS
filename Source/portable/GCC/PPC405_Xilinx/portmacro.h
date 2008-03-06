@@ -77,6 +77,8 @@ extern "C" {
 #endif
 /*-----------------------------------------------------------*/	
 
+/* This port uses the critical nesting count from the TCB rather than
+maintaining a separate value and then saving this value in the task stack. */
 #define portCRITICAL_NESTING_IN_TCB		1
 
 /* Interrupt control macros. */
@@ -97,6 +99,7 @@ void vTaskExitCritical( void );
 void vPortYield( void );
 #define portYIELD() asm volatile ( "SC \n\t NOP" )
 #define portYIELD_FROM_ISR() vTaskSwitchContext()
+
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
@@ -110,7 +113,7 @@ void vPortYield( void );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
-/* Port specific initialisation function. */
+/* Port specific interrupt handling functions. */
 void vPortSetupInterruptController( void );
 portBASE_TYPE xPortInstallInterruptHandler( unsigned portCHAR ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef );
 

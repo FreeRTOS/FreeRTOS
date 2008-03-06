@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -54,28 +54,47 @@
 #include "xintc.h"
 #include "xintc_i.h"
 
-/* Standard includes. */
-#include <string.h>
+/*-----------------------------------------------------------*/
+
+/* Definitions to set the initial MSR of each task. */
+#define portCRITICAL_INTERRUPT_ENABLE	( 1UL << 17UL )
+#define portEXTERNAL_INTERRUPT_ENABLE	( 1UL << 15UL )
+#define portMACHINE_CHECK_ENABLE		( 1UL << 12UL )
+#define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE )
 
 /*-----------------------------------------------------------*/
 
-#define portCRITICAL_INTERRUPT_ENABLE	( 0UL << 17UL )
-#define portEXTERNAL_INTERRUPT_ENABLE	( 1UL << 15UL )
-#define portMACHINE_CHECK_ENABLE		( 0UL << 12UL )
-#define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE )
-
 /*
+ * Setup the system timer to generate the tick interrupt.
  */
 static void prvSetupTimerInterrupt( void );
+
+/*
+ * The handler for the tick interrupt - defined in portasm.s.
+ */
 extern void vPortTickISR( void );
+
+/*
+ * The handler for the yield function - defined in portasm.s.
+ */
 extern void vPortYield( void );
+
+/*
+ * Function to start the scheduler running by starting the highest
+ * priority task that has thus far been created.
+ */
 extern void vPortStartFirstTask( void );
 
+/*-----------------------------------------------------------*/
+
+/* Structure used to hold the state of the interrupt controller. */
 static XIntc xInterruptController;
 
+/*-----------------------------------------------------------*/
+
 /* 
- * Initialise the stack of a task to look exactly as if a call to 
- * portSAVE_CONTEXT had been made.
+ * Initialise the stack of a task to look exactly as if the task had been
+ * interrupted.
  * 
  * See the header file portable.h.
  */
@@ -165,7 +184,6 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = ( portSTACK_TYPE ) vPortStartFirstTask;/* Next LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;;/* Backchain. */
-//	pxTopOfStack--;
 
 	return pxTopOfStack;
 }
@@ -173,14 +191,8 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 portBASE_TYPE xPortStartScheduler( void )
 {
-extern void *pxCurrentTCB;
-
 	prvSetupTimerInterrupt();
-
 	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
-
-//	XExc_mEnableExceptions( XEXC_NON_CRITICAL );
-
 	vPortStartFirstTask();
 
 	/* Should not get here as the tasks are now running! */
@@ -197,7 +209,6 @@ void vPortEndScheduler( void )
 /*
  * Hardware initialisation to generate the RTOS tick.   
  */
-static void prvTickISR( void );
 static void prvSetupTimerInterrupt( void )
 {
 const unsigned portLONG ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
@@ -216,69 +227,43 @@ const unsigned portLONG ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ
 }
 /*-----------------------------------------------------------*/
 
-static void prvTickISR( void )
-{
-static unsigned portLONG ulTicks = 0;
-
-	ulTicks++;
-	if( ulTicks >= 1000 )
-	{
-		vParTestToggleLED( 0 );
-		ulTicks = 0;
-	}
-	XTime_PITClearInterrupt();
-}
-/*-----------------------------------------------------------*/
-
 void vPortISRHandler( void *vNullDoNotUse )
 {
-Xuint32 IntrStatus;
-Xuint32 IntrMask = 1;
-int IntrNumber;
-//extern XIntc xInterruptController;
-XIntc_Config *CfgPtr;// = xInterruptController.CfgPtr;
-	  
-    /* Get the configuration data using the device ID */
-    //CfgPtr = &XIntc_ConfigTable[(Xuint32)DeviceId];
-	CfgPtr = &XIntc_ConfigTable[(Xuint32)XPAR_OPB_INTC_0_DEVICE_ID];
-  
-    /* Get the interrupts that are waiting to be serviced */
-    IntrStatus = XIntc_mGetIntrStatus(CfgPtr->BaseAddress);
-  
-    /* Service each interrupt that is active and enabled by checking each
-     * bit in the register from LSB to MSB which corresponds to an interrupt
-     * intput signal
-     */
-    for (IntrNumber = 0; IntrNumber < XPAR_INTC_MAX_NUM_INTR_INPUTS;
-         IntrNumber++)
-    {
-        if (IntrStatus & 1)
-        {
-            XIntc_VectorTableEntry *TablePtr;
-      
-            /* The interrupt is active and enabled, call the interrupt
-             * handler that was setup with the specified parameter
-             */
-            TablePtr = &(CfgPtr->HandlerTable[IntrNumber]);
-            TablePtr->Handler(TablePtr->CallBackRef);
+unsigned portLONG ulInterruptStatus, ulInterruptMask = 1UL;
+portBASE_TYPE xInterruptNumber;
+XIntc_Config *pxInterruptController;
+XIntc_VectorTableEntry *pxTable;
 
-			/* Clear the interrupt. */      
-            XIntc_mAckIntr(CfgPtr->BaseAddress, IntrMask);
+	/* Get the configuration by using the device ID - in this case it is
+	assumed that only one interrupt controller is being used. */
+	pxInterruptController = &XIntc_ConfigTable[ XPAR_OPB_INTC_0_DEVICE_ID ];
+  
+	/* Which interrupts are pending? */
+	ulInterruptStatus = XIntc_mGetIntrStatus( pxInterruptController->BaseAddress );
+  
+	for( xInterruptNumber = 0; xInterruptNumber < XPAR_INTC_MAX_NUM_INTR_INPUTS; xInterruptNumber++ )
+	{
+		if( ulInterruptStatus & 0x01UL )
+		{
+			/* Call the registered handler. */
+			pxTable = &( pxInterruptController->HandlerTable[ xInterruptNumber ] );
+			pxTable->Handler( pxTable->CallBackRef );
+
+			/* Clear the pending interrupt. */
+			XIntc_mAckIntr( pxInterruptController->BaseAddress, ulInterruptMask );
 			break;
-        }
+		}
         
-        /* Move to the next interrupt to check */
-        IntrMask <<= 1;
-        IntrStatus >>= 1;
-      
-        /* If there are no other bits set indicating that all interrupts
-         * have been serviced, then exit the loop
-         */
-        if (IntrStatus == 0)
-        {
-            break;
-        }
-    }
+		/* Check the next interrupt. */
+		ulInterruptMask <<= 0x01UL;
+		ulInterruptStatus >>= 0x01UL;
+
+		/* Have we serviced all interrupts? */
+		if( ulInterruptStatus == 0UL )
+		{
+			break;
+		}
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -286,9 +271,16 @@ void vPortSetupInterruptController( void )
 {
 extern void vPortISRWrapper( void );
 
+	/* Perform all library calls necessary to initialise the exception table
+	and interrupt controller.  This assumes only one interrupt controller is in
+	use. */
 	XExc_mDisableExceptions( XEXC_NON_CRITICAL );
 	XExc_Init();
-	XExc_RegisterHandler( XEXC_ID_NON_CRITICAL_INT, (XExceptionHandler)vPortISRWrapper, NULL );
+
+	/* The library functions save the context - we then jump to a wrapper to
+	save the stack into the TCB.  The wrapper then calls the handler defined
+	above. */
+	XExc_RegisterHandler( XEXC_ID_NON_CRITICAL_INT, ( XExceptionHandler ) vPortISRWrapper, NULL );
 	XIntc_Initialize( &xInterruptController, XPAR_OPB_INTC_0_DEVICE_ID );
 	XIntc_Start( &xInterruptController, XIN_REAL_MODE );
 }
@@ -297,6 +289,9 @@ extern void vPortISRWrapper( void );
 portBASE_TYPE xPortInstallInterruptHandler( unsigned portCHAR ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef )
 {
 portBASE_TYPE xReturn = pdFAIL;
+
+	/* This function is defined here so the scope of xInterruptController can
+	remain within this file. */
 
 	if( XST_SUCCESS == XIntc_Connect( &xInterruptController, ucInterruptID, pxHandler, pvCallBackRef ) )
 	{

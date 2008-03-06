@@ -44,8 +44,6 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 
-#define partstNUM_LEDs	8
-
 /* Demo application includes. */
 #include "partest.h"
 

@@ -135,7 +135,7 @@ static void prvSetupHardware( void );
 
 /*-----------------------------------------------------------*/
 
-/* xRegTestStatus will geet set to pdFAIL by the regtest tasks if they
+/* xRegTestStatus will get set to pdFAIL by the regtest tasks if they
 discover an unexpected value. */
 static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 
@@ -151,7 +151,7 @@ int main( void )
 	prvSetupHardware();
 
 	/* Start the standard demo application tasks.  Note that the baud rate used
-	by the comtest tasks is set by the hardware, so the baud rate paramter
+	by the comtest tasks is set by the hardware, so the baud rate parameter
 	passed has no effect. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
@@ -261,6 +261,10 @@ static void prvErrorChecks( void *pvParameters )
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 volatile unsigned portBASE_TYPE uxFreeStack;
 
+	/* This call is just to demonstrate the use of the function - nothing is
+	done with the value.  You would expect the stack high water mark to be
+	lower (the function to return a larger value) here at function entry than
+	later following calls to other functions. */
 	uxFreeStack = uxTaskGetStackHighWaterMark( NULL );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
@@ -271,12 +275,14 @@ volatile unsigned portBASE_TYPE uxFreeStack;
 	operating without error. */
 	for( ;; )
 	{
+		/* Again just for demo purposes - uxFreeStack should have a lower value
+		here than following the call to uxTaskGetStackHighWaterMark() on the
+		task entry. */
 		uxFreeStack = uxTaskGetStackHighWaterMark( NULL );
 
 		/* Wait until it is time to check again.  The time we wait here depends
 		on whether an error has been detected or not.  When an error is 
 		detected the time is shortened resulting in a faster LED flash rate. */
-		/* Perform this check every mainCHECK_DELAY milliseconds. */
 		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
 		/* See if the other tasks are all ok. */
@@ -299,11 +305,18 @@ static void prvSetupHardware( void )
 	XCache_EnableICache( 0x80000000 );
 	XCache_EnableDCache( 0x80000000 );
 
+	/* Setup the IO port for use with the LED outputs. */
 	vParTestInitialise();
 }
+/*-----------------------------------------------------------*/
 
 static void prvRegTestTask1( void *pvParameters )
 {
+	/* The first register test task as described at the top of this file.  The
+	values used in the registers are different to those use in the second 
+	register test task.  Also, unlike the second register test task, this task
+	yields between setting the register values and subsequently checking the
+	register values. */
 	asm volatile
 	(
 		"RegTest1Start:					\n\t" \
@@ -416,9 +429,13 @@ static void prvRegTestTask1( void *pvParameters )
 		"	b RegTest1Start				\n\t" \
 	);
 }
+/*-----------------------------------------------------------*/
 
 static void prvRegTestTask2( void *pvParameters )
 {
+	/* The second register test task as described at the top of this file.  
+	Note that this task fills the registers with different values to the
+	first register test task. */
 	asm volatile
 	(
 		"RegTest2Start:					\n\t" \
@@ -454,9 +471,6 @@ static void prvRegTestTask2( void *pvParameters )
 		"	li		29,	129				\n\t" \
 		"	li		30,	130				\n\t" \
 		"	li		31,	131				\n\t" \
-		"								\n\t" \
-		"	sc							\n\t" \
-		"	nop							\n\t" \
 		"								\n\t" \
 		"	cmpwi	0, 11				\n\t" \
 		"	bne		RegTest2Fail		\n\t" \
@@ -531,34 +545,11 @@ static void prvRegTestTask2( void *pvParameters )
 		"	b RegTest2Start				\n\t" \
 	);
 }
+/*-----------------------------------------------------------*/
 
-
-#if 0
-
-static void prvRegTestTask2( void *pvParameters )
-{
-volatile unsigned int i= 0;
-
-	for( ;; )
-	{
-		i++;
-		taskYIELD();
-	}
-}
-
-static void prvRegTestTask1( void *pvParameters )
-{
-volatile unsigned int i= 0;
-
-	for( ;; )
-	{
-		i++;
-		taskYIELD();
-	}
-}
-
-#endif
-
+/* This hook function will get called if there is a suspected stack overflow.
+An overflow can cause the task name to be corrupted, in which case the task
+handle needs to be used to determine the offending task. */
 void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName );
 void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName )
 {

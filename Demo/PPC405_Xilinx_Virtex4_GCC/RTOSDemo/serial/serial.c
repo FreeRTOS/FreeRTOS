@@ -53,12 +53,10 @@
 /* Demo application includes. */
 #include "serial.h"
 
-/* Microblaze driver includes. */
+/* Library includes. */
 #include "xparameters.h"
 #include "xuartlite.h"
 #include "xuartlite_l.h"
-#include "xintc_l.h"
-#include "xintc.h"
 
 /*-----------------------------------------------------------*/
 
@@ -67,26 +65,31 @@ transmitted. */
 static xQueueHandle xRxedChars; 
 static xQueueHandle xCharsForTx; 
 
+/* Structure that maintains information on the UART being used. */
 static XUartLite xUART;
 
+/*
+ * Sample UART interrupt handler.  Note this is used to demonstrate the kernel
+ * features and test the port - it is not intended to represent an efficient
+ * implementation.
+ */
 static void vSerialISR( XUartLite *pxUART );
 
 /*-----------------------------------------------------------*/
 
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-unsigned portLONG ulControlReg, ulMask;
-extern XIntc xInterruptController;
-
 	/* NOTE: The baud rate used by this driver is determined by the hardware
 	parameterization of the UART Lite peripheral, and the baud value passed to
 	this function has no effect. */
+	( void ) ulWantedBaud;
 
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 
-	if( ( xRxedChars ) && ( xCharsForTx ) )
+	/* Only initialise the UART if the queues were created correctly. */
+	if( ( xRxedChars != NULL ) && ( xCharsForTx != NULL ) )
 	{
 
 		XUartLite_Initialize( &xUART, XPAR_RS232_UART_DEVICE_ID );
@@ -94,11 +97,15 @@ extern XIntc xInterruptController;
 		XUartLite_DisableInterrupt( &xUART );
 
 		if( xPortInstallInterruptHandler( XPAR_OPB_INTC_0_RS232_UART_INTERRUPT_INTR, ( XInterruptHandler )vSerialISR, (void *)&xUART ) == pdPASS )
-		{		
+		{
+			/* xPortInstallInterruptHandler() could fail if 
+			vPortSetupInterruptController() has not been called prior to this 
+			function. */
 			XUartLite_EnableInterrupt( &xUART );
 		}
 	}
 	
+	/* There is only one port so the handle is not used. */
 	return ( xComPortHandle ) 0;
 }
 /*-----------------------------------------------------------*/
@@ -170,31 +177,37 @@ void vSerialClose( xComPortHandle xPort )
 static void vSerialISR( XUartLite *pxUART )
 {
 unsigned portLONG ulISRStatus;
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE, lDidSomething;
 portCHAR cChar;
 
-    ulISRStatus = XIo_In32( pxUART->RegBaseAddress + XUL_STATUS_REG_OFFSET );
+	do
+	{
+		lDidSomething = pdFALSE;
 
-    if( ( ulISRStatus & (XUL_SR_RX_FIFO_FULL | XUL_SR_RX_FIFO_VALID_DATA ) ) != 0 )
-    {
-		/* A character is available - place it in the queue of received
-		characters.  This might wake a task that was blocked waiting for 
-		data. */
-		cChar = ( portCHAR ) XIo_In32( pxUART->RegBaseAddress + XUL_RX_FIFO_OFFSET );
-		xTaskWokenByRx = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByRx );
-    }
+		ulISRStatus = XIo_In32( pxUART->RegBaseAddress + XUL_STATUS_REG_OFFSET );
 
-    if( ( ulISRStatus & XUL_SR_TX_FIFO_EMPTY ) != 0 )
-    {
-		/* There is space in the FIFO - if there are any characters queue for
-		transmission they can be send to the UART now.  This might unblock a
-		task that was waiting for space to become available on the Tx queue. */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+		if( ( ulISRStatus & (XUL_SR_RX_FIFO_FULL | XUL_SR_RX_FIFO_VALID_DATA ) ) != 0 )
 		{
-			XIo_Out32( pxUART->RegBaseAddress + XUL_TX_FIFO_OFFSET, cChar );
+			/* A character is available - place it in the queue of received
+			characters.  This might wake a task that was blocked waiting for 
+			data. */
+			cChar = ( portCHAR ) XIo_In32( pxUART->RegBaseAddress + XUL_RX_FIFO_OFFSET );
+			xTaskWokenByRx = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByRx );
+			lDidSomething = pdTRUE;
 		}
 
-    }
+		if( ( ulISRStatus & XUL_SR_TX_FIFO_EMPTY ) != 0 )
+		{
+			/* There is space in the FIFO - if there are any characters queue for
+			transmission they can be sent to the UART now.  This might unblock a
+			task that was waiting for space to become available on the Tx queue. */
+			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+			{
+				XIo_Out32( pxUART->RegBaseAddress + XUL_TX_FIFO_OFFSET, cChar );
+				lDidSomething = pdTRUE;
+			}			
+		}
+	} while( lDidSomething == pdTRUE );
 
 	/* If we woke any tasks we may require a context switch. */
 	if( xTaskWokenByTx || xTaskWokenByRx )

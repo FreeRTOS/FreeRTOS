@@ -87,6 +87,4 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
 
-#define configKERNEL_INTERRUPT_PRIORITY 6
-
 #endif /* FREERTOS_CONFIG_H */

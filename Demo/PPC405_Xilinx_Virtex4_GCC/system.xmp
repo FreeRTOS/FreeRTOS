@@ -45,7 +45,6 @@ Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/tasks.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/list.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/queue.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/MemMang/heap_2.c
-Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405_Xilinx/portasm.s
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/flash.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/blocktim.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/dynamic.c
@@ -57,6 +56,7 @@ Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/semtest.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/BlockQ.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/death.c
 Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/Minimal/comtest.c
+Source: C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/PPC405_Xilinx/portasm.S
 Header: RTOSDemo/FreeRTOSConfig.h
 DefaultInit: EXECUTABLE
 InitBram: 0

@@ -66,7 +66,6 @@
  *
  */
 
-
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -139,6 +138,9 @@ static void prvSetupHardware( void );
 discover an unexpected value. */
 static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 
+/* Counters used to ensure the regtest tasks are still running. */
+static unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -189,6 +191,7 @@ int main( void )
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
+static unsigned portLONG ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -252,6 +255,25 @@ portBASE_TYPE lReturn = pdPASS;
 		lReturn = pdFAIL;
 	}
 
+	/* Are the register test tasks still looping? */
+	if( ulLastRegTest1Counter == ulRegTest1Counter )
+	{
+		lReturn = pdFAIL;
+	}
+	else
+	{
+		ulLastRegTest1Counter = ulRegTest1Counter;
+	}
+
+	if( ulLastRegTest2Counter == ulRegTest2Counter )
+	{
+		lReturn = pdFAIL;
+	}
+	else
+	{
+		ulLastRegTest2Counter = ulRegTest2Counter;
+	}
+
 	return lReturn;
 }
 /*-----------------------------------------------------------*/
@@ -310,6 +332,24 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
+static void prvRegTest1Pass( void )
+{
+	ulRegTest1Counter++;
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTest2Pass( void )
+{
+	ulRegTest2Counter++;
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTestFail( void )
+{
+	xRegTestStatus = pdFAIL;
+}
+/*-----------------------------------------------------------*/
+
 static void prvRegTestTask1( void *pvParameters )
 {
 	/* The first register test task as described at the top of this file.  The
@@ -321,20 +361,12 @@ static void prvRegTestTask1( void *pvParameters )
 	(
 		"RegTest1Start:					\n\t" \
 		"								\n\t" \
-		"	li		0, 101				\n\t" \
-		"	mtspr	27, 0	#SSR1		\n\t" \
-		"	li		0, 201				\n\t" \
-		"	mtspr	990, 0	#SSR2		\n\t" \
 		"	li		0, 301				\n\t" \
 		"	mtspr	256, 0	#USPRG0		\n\t" \
-		"	li		0, 401				\n\t" \
-		"	mtspr	9, 0	#CTR		\n\t" \
 		"	li		0, 501				\n\t" \
 		"	mtspr	8, 0	#LR			\n\t" \
-		"	li		0, 601				\n\t" \
+		"	li		0, 4				\n\t" \
 		"	mtspr	1, 0	#XER		\n\t" \
-		"	li		0, 701				\n\t" \
-		"	mtcr	0					\n\t" \
 		"								\n\t" \
 		"	li		0, 1				\n\t" \
 		"	li		2, 2				\n\t" \
@@ -372,97 +404,85 @@ static void prvRegTestTask1( void *pvParameters )
 		"	nop							\n\t" \
 		"								\n\t" \
 		"	cmpwi	0, 1				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	2, 2				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	3, 3				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	4, 4				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	5, 5				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	6, 6				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	7, 7				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	8, 8				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	9, 9				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	10, 10				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	11, 11				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	12, 12				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	13, 13				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	14, 14				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	15, 15				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	16, 16				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	17, 17				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	18, 18				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	19, 19				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	20, 20				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	21, 21				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	22, 22				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	23, 23				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	24, 24				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	25, 25				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	26, 26				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	27, 27				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	28, 28				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	29, 29				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	30, 30				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	cmpwi	31, 31				\n\t" \
-		"	bne		RegTest1Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"								\n\t" \
-		"	mfspr	0, 27	#SSR1		\n\t" \
-		"	cmpwi	0, 101				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
-		"	mfspr	0, 990	#SSR2		\n\t" \
-		"	cmpwi	0, 201				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
 		"	mfspr	0, 256	#USPRG0		\n\t" \
 		"	cmpwi	0, 301				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
-		"	mfspr	0, 9	#CTR		\n\t" \
-		"	cmpwi	0, 401				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	mfspr	0, 8	#LR			\n\t" \
 		"	cmpwi	0, 501				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"	mfspr	0, 1	#XER		\n\t" \
-		"	cmpwi	0, 601				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
-		"	mfcr	0					\n\t" \
-		"	cmpwi	0, 701				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	cmpwi	0, 4				\n\t" \
+		"	bne	RegTest1Fail			\n\t" \
 		"								\n\t" \
+		"	bl prvRegTest1Pass			\n\t" \
 		"	b RegTest1Start				\n\t" \
 		"								\n\t" \
 		"RegTest1Fail:					\n\t" \
 		"								\n\t" \
-		"	xor		0, 0, 0				\n\t" \
-		"	stw		0, xRegTestStatus( 0 ) \n\t" \
 		"								\n\t" \
+		"	bl prvRegTestFail			\n\t" \
 		"	b RegTest1Start				\n\t" \
 	);
 }
@@ -477,20 +497,12 @@ static void prvRegTestTask2( void *pvParameters )
 	(
 		"RegTest2Start:					\n\t" \
 		"								\n\t" \
-		"	li		0, 100				\n\t" \
-		"	mtspr	27, 0	#SSR1		\n\t" \
-		"	li		0, 200				\n\t" \
-		"	mtspr	990, 0	#SSR2		\n\t" \
 		"	li		0, 300				\n\t" \
 		"	mtspr	256, 0	#USPRG0		\n\t" \
-		"	li		0, 400				\n\t" \
-		"	mtspr	9, 0	#CTR		\n\t" \
 		"	li		0, 500				\n\t" \
 		"	mtspr	8, 0	#LR			\n\t" \
-		"	li		0, 600				\n\t" \
+		"	li		0, 4				\n\t" \
 		"	mtspr	1, 0	#XER		\n\t" \
-		"	li		0, 700				\n\t" \
-		"	mtcr	0					\n\t" \
 		"								\n\t" \
 		"	li		0, 11				\n\t" \
 		"	li		2, 12				\n\t" \
@@ -525,97 +537,85 @@ static void prvRegTestTask2( void *pvParameters )
 		"	li		31,	131				\n\t" \
 		"								\n\t" \
 		"	cmpwi	0, 11				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	2, 12				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	3, 13				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	4, 14				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	5, 15				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	6, 16				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	7, 17				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	8, 18				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	9, 19				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	10, 110				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	11, 111				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	12, 112				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	13, 113				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	14, 114				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	15, 115				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	16, 116				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	17, 117				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	18, 118				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	19, 119				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	20, 120				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	21, 121				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	22, 122				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	23, 123				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	24, 124				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	25, 125				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	26, 126				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	27, 127				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	28, 128				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	29, 129				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	30, 130				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	cmpwi	31, 131				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"								\n\t" \
-		"	mfspr	0, 27	#SSR1		\n\t" \
-		"	cmpwi	0, 100				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
-		"	mfspr	0, 990	#SSR2		\n\t" \
-		"	cmpwi	0, 200				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
 		"	mfspr	0, 256	#USPRG0		\n\t" \
 		"	cmpwi	0, 300				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
-		"	mfspr	0, 9	#CTR		\n\t" \
-		"	cmpwi	0, 400				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	mfspr	0, 8	#LR			\n\t" \
 		"	cmpwi	0, 500				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"	mfspr	0, 1	#XER		\n\t" \
-		"	cmpwi	0, 600				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
-		"	mfcr	0					\n\t" \
-		"	cmpwi	0, 700				\n\t" \
-		"	bne		RegTest2Fail		\n\t" \
+		"	cmpwi	0, 4				\n\t" \
+		"	bne	RegTest2Fail			\n\t" \
 		"								\n\t" \
+		"	bl prvRegTest2Pass			\n\t" \
 		"	b RegTest2Start				\n\t" \
 		"								\n\t" \
 		"RegTest2Fail:					\n\t" \
 		"								\n\t" \
-		"	xor		0, 0, 0				\n\t" \
-		"	stw		0, xRegTestStatus( 0 ) \n\t" \
 		"								\n\t" \
+		"	bl prvRegTestFail			\n\t" \
 		"	b RegTest2Start				\n\t" \
 	);
 }
@@ -627,6 +627,14 @@ handle needs to be used to determine the offending task. */
 void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName );
 void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName )
 {
+	/* The following three calls are simply to stop compiler warnings about the
+	functions not being used - they are called from the inline assembly. */
+	prvRegTest1Pass();
+	prvRegTest2Pass();
+	prvRegTestFail();
+
 	for( ;; );
 }
+
+
 

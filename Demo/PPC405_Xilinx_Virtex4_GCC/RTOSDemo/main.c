@@ -321,6 +321,21 @@ static void prvRegTestTask1( void *pvParameters )
 	(
 		"RegTest1Start:					\n\t" \
 		"								\n\t" \
+		"	li		0, 101				\n\t" \
+		"	mtspr	27, 0	#SSR1		\n\t" \
+		"	li		0, 201				\n\t" \
+		"	mtspr	990, 0	#SSR2		\n\t" \
+		"	li		0, 301				\n\t" \
+		"	mtspr	256, 0	#USPRG0		\n\t" \
+		"	li		0, 401				\n\t" \
+		"	mtspr	9, 0	#CTR		\n\t" \
+		"	li		0, 501				\n\t" \
+		"	mtspr	8, 0	#LR			\n\t" \
+		"	li		0, 601				\n\t" \
+		"	mtspr	1, 0	#XER		\n\t" \
+		"	li		0, 701				\n\t" \
+		"	mtcr	0					\n\t" \
+		"								\n\t" \
 		"	li		0, 1				\n\t" \
 		"	li		2, 2				\n\t" \
 		"	li		3, 3				\n\t" \
@@ -419,6 +434,28 @@ static void prvRegTestTask1( void *pvParameters )
 		"	cmpwi	31, 31				\n\t" \
 		"	bne		RegTest1Fail		\n\t" \
 		"								\n\t" \
+		"	mfspr	0, 27	#SSR1		\n\t" \
+		"	cmpwi	0, 101				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 990	#SSR2		\n\t" \
+		"	cmpwi	0, 201				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 256	#USPRG0		\n\t" \
+		"	cmpwi	0, 301				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 9	#CTR		\n\t" \
+		"	cmpwi	0, 401				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 8	#LR			\n\t" \
+		"	cmpwi	0, 501				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 1	#XER		\n\t" \
+		"	cmpwi	0, 601				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfcr	0					\n\t" \
+		"	cmpwi	0, 701				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"								\n\t" \
 		"	b RegTest1Start				\n\t" \
 		"								\n\t" \
 		"RegTest1Fail:					\n\t" \
@@ -439,6 +476,21 @@ static void prvRegTestTask2( void *pvParameters )
 	asm volatile
 	(
 		"RegTest2Start:					\n\t" \
+		"								\n\t" \
+		"	li		0, 100				\n\t" \
+		"	mtspr	27, 0	#SSR1		\n\t" \
+		"	li		0, 200				\n\t" \
+		"	mtspr	990, 0	#SSR2		\n\t" \
+		"	li		0, 300				\n\t" \
+		"	mtspr	256, 0	#USPRG0		\n\t" \
+		"	li		0, 400				\n\t" \
+		"	mtspr	9, 0	#CTR		\n\t" \
+		"	li		0, 500				\n\t" \
+		"	mtspr	8, 0	#LR			\n\t" \
+		"	li		0, 600				\n\t" \
+		"	mtspr	1, 0	#XER		\n\t" \
+		"	li		0, 700				\n\t" \
+		"	mtcr	0					\n\t" \
 		"								\n\t" \
 		"	li		0, 11				\n\t" \
 		"	li		2, 12				\n\t" \
@@ -533,6 +585,28 @@ static void prvRegTestTask2( void *pvParameters )
 		"	cmpwi	30, 130				\n\t" \
 		"	bne		RegTest2Fail		\n\t" \
 		"	cmpwi	31, 131				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"								\n\t" \
+		"	mfspr	0, 27	#SSR1		\n\t" \
+		"	cmpwi	0, 100				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 990	#SSR2		\n\t" \
+		"	cmpwi	0, 200				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 256	#USPRG0		\n\t" \
+		"	cmpwi	0, 300				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 9	#CTR		\n\t" \
+		"	cmpwi	0, 400				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 8	#LR			\n\t" \
+		"	cmpwi	0, 500				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfspr	0, 1	#XER		\n\t" \
+		"	cmpwi	0, 600				\n\t" \
+		"	bne		RegTest2Fail		\n\t" \
+		"	mfcr	0					\n\t" \
+		"	cmpwi	0, 700				\n\t" \
 		"	bne		RegTest2Fail		\n\t" \
 		"								\n\t" \
 		"	b RegTest2Start				\n\t" \

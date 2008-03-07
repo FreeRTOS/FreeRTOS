@@ -245,13 +245,12 @@ XIntc_VectorTableEntry *pxTable;
 	{
 		if( ulInterruptStatus & 0x01UL )
 		{
+			/* Clear the pending interrupt. */
+			XIntc_mAckIntr( pxInterruptController->BaseAddress, ulInterruptMask );
+
 			/* Call the registered handler. */
 			pxTable = &( pxInterruptController->HandlerTable[ xInterruptNumber ] );
 			pxTable->Handler( pxTable->CallBackRef );
-
-			/* Clear the pending interrupt. */
-			XIntc_mAckIntr( pxInterruptController->BaseAddress, ulInterruptMask );
-			break;
 		}
         
 		/* Check the next interrupt. */

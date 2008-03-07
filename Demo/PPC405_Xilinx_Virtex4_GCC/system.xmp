@@ -70,6 +70,6 @@ ProgStart:
 StackSize: 
 HeapSize: 
 LinkerScript: RTOSDemo/RTOSDemo.ld
-ProgCCFlags: -D GCC_PPC405 -mregnames -Xlinker -Map=rtosdemo.map
+ProgCCFlags: -D GCC_PPC405 -mregnames -Xlinker -Map=rtosdemo.map -Wall
 CompileInXps: 1
 NonXpsApp: 0

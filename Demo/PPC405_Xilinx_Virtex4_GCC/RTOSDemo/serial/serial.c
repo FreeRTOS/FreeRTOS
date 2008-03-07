@@ -184,18 +184,18 @@ portCHAR cChar;
 	{
 		lDidSomething = pdFALSE;
 
-		ulISRStatus = XIo_In32( pxUART->RegBaseAddress + XUL_STATUS_REG_OFFSET );
+		ulISRStatus = XIo_In32( XPAR_RS232_UART_BASEADDR + XUL_STATUS_REG_OFFSET );
 
-		if( ( ulISRStatus & (XUL_SR_RX_FIFO_FULL | XUL_SR_RX_FIFO_VALID_DATA ) ) != 0 )
+		if( ( ulISRStatus & XUL_SR_RX_FIFO_VALID_DATA ) != 0 )
 		{
 			/* A character is available - place it in the queue of received
 			characters.  This might wake a task that was blocked waiting for 
 			data. */
-			cChar = ( portCHAR ) XIo_In32( pxUART->RegBaseAddress + XUL_RX_FIFO_OFFSET );
+			cChar = ( portCHAR ) XIo_In32( XPAR_RS232_UART_BASEADDR + XUL_RX_FIFO_OFFSET );
 			xTaskWokenByRx = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByRx );
 			lDidSomething = pdTRUE;
 		}
-
+		
 		if( ( ulISRStatus & XUL_SR_TX_FIFO_EMPTY ) != 0 )
 		{
 			/* There is space in the FIFO - if there are any characters queue for
@@ -203,7 +203,7 @@ portCHAR cChar;
 			task that was waiting for space to become available on the Tx queue. */
 			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
 			{
-				XIo_Out32( pxUART->RegBaseAddress + XUL_TX_FIFO_OFFSET, cChar );
+				XIo_Out32( XPAR_RS232_UART_BASEADDR + XUL_TX_FIFO_OFFSET, cChar );
 				lDidSomething = pdTRUE;
 			}			
 		}

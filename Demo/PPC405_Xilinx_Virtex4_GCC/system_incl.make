@@ -115,7 +115,7 @@ RTOSDEMO_HEADERS = RTOSDemo/FreeRTOSConfig.h
 
 RTOSDEMO_CC = powerpc-eabi-gcc
 RTOSDEMO_CC_SIZE = powerpc-eabi-size
-RTOSDEMO_CC_OPT = -O0
+RTOSDEMO_CC_OPT = -Os
 RTOSDEMO_CFLAGS = -D GCC_PPC405 -mregnames -Xlinker -Map=rtosdemo.map -Wall
 RTOSDEMO_CC_SEARCH = # -B
 RTOSDEMO_LIBPATH = -L./ppc405_0/lib/ # -L

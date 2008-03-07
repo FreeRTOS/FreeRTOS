@@ -139,7 +139,7 @@ discover an unexpected value. */
 static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 
 /* Counters used to ensure the regtest tasks are still running. */
-static unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
+static volatile unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -332,20 +332,26 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTest1Pass( void )
+void prvRegTest1Pass( void )
 {
+	/* Called from the inline assembler - this cannot be static
+	otherwise it can get optimised away. */
 	ulRegTest1Counter++;
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTest2Pass( void )
+void prvRegTest2Pass( void )
 {
+	/* Called from the inline assembler - this cannot be static
+	otherwise it can get optimised away. */
 	ulRegTest2Counter++;
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTestFail( void )
+void prvRegTestFail( void )
 {
+	/* Called from the inline assembler - this cannot be static
+	otherwise it can get optimised away. */
 	xRegTestStatus = pdFAIL;
 }
 /*-----------------------------------------------------------*/

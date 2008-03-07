@@ -105,66 +105,16 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack--;
 
 	/* EABI stack frame. */
-	*pxTopOfStack = 0x31313131UL;	/* R31. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x30303030UL;	/* R30. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x29292929UL;	/* R29. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x28282828UL;	/* R28. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x27272727UL;	/* R27. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x26262626UL;	/* R26. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x25252525UL;	/* R25. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x24242424UL;	/* R24. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x23232323UL;	/* R23. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x22222222UL;	/* R22. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x21212121UL;	/* R21. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x20202020UL;	/* R20. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x19191919UL;	/* R19. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x18181818UL;	/* R18. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x17171717UL;	/* R17. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x16161616UL;	/* R16. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x15151515UL;	/* R15. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x14141414UL;	/* R14. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x13131313UL;	/* R13. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x12121212UL;	/* R12. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x11111111UL;	/* R11. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x10101010UL;	/* R10. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x09090909UL;	/* R9. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x08080808UL;	/* R8. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x07070707UL;	/* R7. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x06060606UL;	/* R6. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x05050505UL;	/* R5. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x04040404UL;	/* R4. */
-	pxTopOfStack--;
+	pxTopOfStack -= 28;	/* R31 to R4 inclusive. */
+
+	/* Parameters in R3. */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
 	pxTopOfStack--;
 	*pxTopOfStack = 0x02020202UL;	/* R2. */
 	pxTopOfStack--;
+
+	/* R1 is the stack pointer so is omitted. */
+
 	*pxTopOfStack = 0x10000001UL;;	/* R0. */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;	/* USPRG0. */
@@ -175,13 +125,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;	/* CTR. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) vPortStartFirstTask;	/* LR. */
+	*pxTopOfStack = ( portSTACK_TYPE ) vPortEndScheduler;	/* LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode; /* SRR0. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_MSR;/* SRR1. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) vPortStartFirstTask;/* Next LR. */
+	*pxTopOfStack = ( portSTACK_TYPE ) vPortEndScheduler;/* Next LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;;/* Backchain. */
 
@@ -203,6 +153,7 @@ portBASE_TYPE xPortStartScheduler( void )
 void vPortEndScheduler( void )
 {
 	/* Not implemented. */
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 

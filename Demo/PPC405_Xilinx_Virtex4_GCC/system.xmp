@@ -61,7 +61,7 @@ Header: RTOSDemo/FreeRTOSConfig.h
 DefaultInit: EXECUTABLE
 InitBram: 0
 Active: 1
-CompilerOptLevel: 0
+CompilerOptLevel: 4
 GlobPtrOpt: 0
 DebugSym: 1
 ProfileFlag: 0

@@ -323,7 +323,7 @@ register tskTCB *pxTCB;																								\
 		/* Has the extremity of the task stack ever been written over? */																			\
 		if( memcmp( ( void * ) pxCurrentTCB->pxStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )						\
 		{																																			\
-			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );																\
+			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );												\
 		}																																			\
 	}
 
@@ -1560,36 +1560,40 @@ portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType * const pxTimeOut, portTickType
 {
 portBASE_TYPE xReturn;
 
-	#if ( INCLUDE_vTaskSuspend == 1 )
-		/* If INCLUDE_vTaskSuspend is set to 1 and the block time specified is
-		the maximum block time then the task should block indefinitely, and
-		therefore never time out. */
-		if( *pxTicksToWait == portMAX_DELAY )
+	portENTER_CRITICAL();
+	{
+		#if ( INCLUDE_vTaskSuspend == 1 )
+			/* If INCLUDE_vTaskSuspend is set to 1 and the block time specified is
+			the maximum block time then the task should block indefinitely, and
+			therefore never time out. */
+			if( *pxTicksToWait == portMAX_DELAY )
+			{
+				xReturn = pdFALSE;
+			}
+			else /* We are not blocking indefinitely, perform the checks below. */
+		#endif
+
+		if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount >= pxTimeOut->xTimeOnEntering ) )
 		{
+			/* The tick count is greater than the time at which vTaskSetTimeout()
+			was called, but has also overflowed since vTaskSetTimeOut() was called.
+			It must have wrapped all the way around and gone past us again. This
+			passed since vTaskSetTimeout() was called. */
+			xReturn = pdTRUE;
+		}
+		else if( ( xTickCount - pxTimeOut->xTimeOnEntering ) < *pxTicksToWait )
+		{
+			/* Not a genuine timeout. Adjust parameters for time remaining. */
+			*pxTicksToWait -= ( xTickCount - pxTimeOut->xTimeOnEntering );
+			vTaskSetTimeOutState( pxTimeOut );
 			xReturn = pdFALSE;
 		}
-		else /* We are not blocking indefinitely, perform the checks below. */
-	#endif
-
-    if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount >= pxTimeOut->xTimeOnEntering ) )
-    {
-        /* The tick count is greater than the time at which vTaskSetTimeout()
-		was called, but has also overflowed since vTaskSetTimeOut() was called.
-        It must have wrapped all the way around and gone past us again. This
-        passed since vTaskSetTimeout() was called. */
-        xReturn = pdTRUE;
-    }
-    else if( ( xTickCount - pxTimeOut->xTimeOnEntering ) < *pxTicksToWait )
-    {
-        /* Not a genuine timeout. Adjust parameters for time remaining. */
-        *pxTicksToWait -= ( xTickCount - pxTimeOut->xTimeOnEntering );
-        vTaskSetTimeOutState( pxTimeOut );
-        xReturn = pdFALSE;
-    }
-    else
-    {
-        xReturn = pdTRUE;
-    }
+		else
+		{
+			xReturn = pdTRUE;
+		}
+	}
+	portEXIT_CRITICAL();
 
     return xReturn;
 }

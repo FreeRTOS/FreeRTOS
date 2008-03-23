@@ -911,7 +911,6 @@ void vQueueDelete( xQueueHandle xQueue );
  */
 #define xQueueSendToBackFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken, queueSEND_TO_BACK )
 
-
 /**
  * queue. h
  * <pre>
@@ -1165,6 +1164,15 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
  */
 signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 
+/*
+ * Utilities to query queue that are safe to use from an ISR.  These utilities
+ * should be used only from witin an ISR, or within a critical section.
+ */
+signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueMessagesWaitingFromISR( const xQueueHandle pxQueue, unsigned portBASE_TYPE *puxMessagesWaiting );
+
+
 /* 
  * xQueueAltGenericSend() is an alternative version of xQueueGenericSend().
  * Likewise xQueueAltGenericReceive() is an alternative version of
@@ -1213,6 +1221,7 @@ xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue,
  */
 portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime );
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
+
 
 #ifdef __cplusplus
 }

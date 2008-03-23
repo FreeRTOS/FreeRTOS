@@ -25,11 +25,11 @@
 
 	***************************************************************************
 
-	Please ensure to read the configuration and relevant port sections of the 
+	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
 	+++ http://www.FreeRTOS.org +++
-	Documentation, latest information, license and contact details.  
+	Documentation, latest information, license and contact details.
 
 	+++ http://www.SafeRTOS.com +++
 	A version that is certified for use in safety critical systems.
@@ -61,23 +61,18 @@ FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 	thumb
 
 	EXTERN vPortYieldFromISR
-	EXTERN vPortSwitchContext
-	EXTERN vPortIncrementTick
 	EXTERN uxCriticalNesting
 	EXTERN pxCurrentTCB
+	EXTERN vTaskSwitchContext
 
-	PUBLIC vSetPSP
 	PUBLIC vSetMSP
 	PUBLIC xPortPendSVHandler
-	PUBLIC xPortSysTickHandler
 	PUBLIC vPortSetInterruptMask
 	PUBLIC vPortClearInterruptMask
+	PUBLIC vPortSVCHandler
+	PUBLIC vPortStartFirstTask
 
 
-vSetPSP:
-	msr psp, r0
-	bx lr
-	
 /*-----------------------------------------------------------*/
 
 vSetMSP
@@ -88,66 +83,33 @@ vSetMSP
 
 xPortPendSVHandler:
 	mrs r0, psp						
-	cbz r0, no_save					
-	/* Save the context into the TCB. */
-	stmdb r0!, {r4-r11}				
-	sub r0, r0, #0x04					
-	ldr r1, =uxCriticalNesting
-	ldr r2, =pxCurrentTCB		
+	ldr	r3, =pxCurrentTCB			/* Get the location of the current TCB. */
+	ldr	r2, [r3]						
+
+	ldr r1, =uxCriticalNesting		/* Save the remaining registers and the critical nesting count onto the task stack. */
 	ldr r1, [r1]					
-	ldr r2, [r2]					
-	str r1, [r0]					
-	str r0, [r2]					
-									
-no_save:
-	push {r14}						
-	bl vPortSwitchContext			
-	pop {r14}						
-	/* Restore the context. */		
-	ldr r1, =pxCurrentTCB
-	ldr r1, [r1]					
-	ldr r0, [r1]					
-	ldmia r0!, {r1, r4-r11}			
-	ldr r2, =uxCriticalNesting
-	str r1, [r2]					
+	stmdb r0!, {r1,r4-r11}			
+	str r0, [r2]					/* Save the new top of stack into the first member of the TCB. */
+
+	stmdb sp!, {r3, r14}			
+	bl vTaskSwitchContext			
+	ldmia sp!, {r3, r14}			
+
+	ldr r1, [r3]					
+	ldr r2, =uxCriticalNesting	
+	ldr r0, [r1]					/* The first item in pxCurrentTCB is the task top of stack. */
+	ldmia r0!, {r1, r4-r11}			/* Pop the registers and the critical nesting count. */
+	str r1, [r2]					/* Save the new critical nesting value into ulCriticalNesting. */
 	msr psp, r0						
-	orr r14, r14, #0xd					
-	/* Exit with interrupts in the state required by the task. */
-	cbnz r1, sv_disable_interrupts	
+	orr r14, r14, #13			
+
+	cbnz r1, sv_disable_interrupts	/* If the nesting count is greater than 0 we need to exit with interrupts masked. */
 	bx r14							
-									
+
 sv_disable_interrupts:				
 	mov	r1, #configKERNEL_INTERRUPT_PRIORITY
-	msr	basepri, R1
+	msr	basepri, r1
 	bx r14							
-
-
-/*-----------------------------------------------------------*/
-
-xPortSysTickHandler:
-	/* Call the scheduler tick function. */
-	push {r14}
-	bl vPortIncrementTick
-	pop {r14}
-	
-	/* If using preemption, also force a context switch. */
-	#if configUSE_PREEMPTION == 1
-		push {r14}
-		bl vPortYieldFromISR
-		pop {r14}
-	#endif
-
-	/* Exit with interrupts in the correct state. */
-    ldr r2, =uxCriticalNesting
-	ldr r2, [r2]
-	cbnz r2, tick_disable_interrupts
-	bx r14
-
-tick_disable_interrupts:
-	mov	r1, #configKERNEL_INTERRUPT_PRIORITY
-	msr	basepri, R1
-	
-	bx r14
 
 /*-----------------------------------------------------------*/
 
@@ -170,6 +132,24 @@ vPortClearInterruptMask:
 	bx r14
 
 /*-----------------------------------------------------------*/
+
+vPortSVCHandler;
+	ldr	r3, =pxCurrentTCB
+	ldr r1, [r3]
+	ldr r0, [r1]
+	ldmia r0!, {r1, r4-r11}
+	ldr r2, =uxCriticalNesting
+	str r1, [r2]
+	msr psp, r0
+	orr r14, r14, #13
+	bx r14
+
+/*-----------------------------------------------------------*/
+
+vPortStartFirstTask
+	msr msp, r0
+	svc 0
+
 
 	END
 	

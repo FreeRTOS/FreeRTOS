@@ -95,7 +95,7 @@
 /* Misc. */
 #define recmuSHORT_DELAY				( 20 / portTICK_RATE_MS )
 #define recmuNO_DELAY					( ( portTickType ) 0 )
-#define recmuONE_TICK_DELAY				( ( portTickType ) 1 )
+#define recmuTWO_TICK_DELAY				( ( portTickType ) 2 )
 
 /* The three tasks as described at the top of this file. */
 static void prvRecursiveMutexControllingTask( void *pvParameters );
@@ -150,7 +150,7 @@ unsigned portBASE_TYPE ux;
 			inherit our priority on all but the first cycle of this task. 
 			If we did not block attempting to receive the mutex then no
 			priority inheritance would occur. */
-			if( xSemaphoreTakeRecursive( xMutex, recmuONE_TICK_DELAY ) != pdPASS )
+			if( xSemaphoreTakeRecursive( xMutex, recmuTWO_TICK_DELAY ) != pdPASS )
 			{
 				xErrorOccurred = pdTRUE;
 			}
@@ -176,7 +176,7 @@ unsigned portBASE_TYPE ux;
 		}
 
 		/* Having given it back the same number of times as it was taken, we
-		should no longer be the mutex owner, so the next give should fail. */
+		should no longer be the mutex owner, so the next give sh ould fail. */
 		if( xSemaphoreGiveRecursive( xMutex ) == pdPASS )
 		{
 			xErrorOccurred = pdTRUE;

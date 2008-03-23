@@ -71,6 +71,7 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configUSE_ALTERNATIVE_API		1
 #define configUSE_RECURSIVE_MUTEXES		1
+#define configCHECK_FOR_STACK_OVERFLOW	0 /* Do not use this option on the PC port. */
 
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 10 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
@@ -78,14 +79,14 @@
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet        1
-#define INCLUDE_uxTaskPriorityGet       1
-#define INCLUDE_vTaskDelete             1
-#define INCLUDE_vTaskCleanUpResources   1
-#define INCLUDE_vTaskSuspend            1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
-
+#define INCLUDE_vTaskPrioritySet        	1
+#define INCLUDE_uxTaskPriorityGet       	1
+#define INCLUDE_vTaskDelete             	1
+#define INCLUDE_vTaskCleanUpResources   	1
+#define INCLUDE_vTaskSuspend            	1
+#define INCLUDE_vTaskDelayUntil				1
+#define INCLUDE_vTaskDelay					1
+#define INCLUDE_uxTaskGetStackHighWaterMark 0 /* Do not use this option on the PC port. */
 
 
 #endif /* FREERTOS_CONFIG_H */

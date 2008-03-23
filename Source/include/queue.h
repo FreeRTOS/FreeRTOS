@@ -1170,7 +1170,7 @@ signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * co
  */
 signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
 signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
-signed portBASE_TYPE xQueueMessagesWaitingFromISR( const xQueueHandle pxQueue, unsigned portBASE_TYPE *puxMessagesWaiting );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
 
 
 /* 

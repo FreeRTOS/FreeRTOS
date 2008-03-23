@@ -43,6 +43,7 @@ static void IntDefaultHandler(void);
 extern int main(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
+extern void vPortSVCHandler( void );
 extern void Timer0IntHandler( void );
 extern void vEMAC_ISR(void);
 
@@ -78,7 +79,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    IntDefaultHandler,                      // SVCall handler
+    vPortSVCHandler,						// SVCall handler
     IntDefaultHandler,                      // Debug monitor handler
     0,                                      // Reserved
     xPortPendSVHandler,                     // The PendSV handler

@@ -97,6 +97,7 @@
 #include "bitmap.h"
 #include "GenQTest.h"
 #include "QPeek.h"
+#include "recmutex.h"
 
 /* Hardware library includes. */
 #include "hw_memmap.h"
@@ -214,6 +215,7 @@ int main( void )
     vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
     vStartQueuePeekTasks();
+    vStartRecursiveMutexTasks();
 
 	/* Start the tasks defined within this file/specific to this demo. */
 	xTaskCreate( vOLEDTask, ( signed portCHAR * ) "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -304,6 +306,10 @@ static unsigned portLONG ulTicksSinceLastDisplay = 0;
 	    {
 	        xMessage.pcMessage = "ERROR IN MATH";
 	    }
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	xMessage.pcMessage = "ERROR IN REC MUTEX";
+	    }
 		else if( ulIdleError != pdFALSE )
 		{
 			xMessage.pcMessage = "ERROR IN HOOK";
@@ -321,6 +327,7 @@ xOLEDMessage xMessage;
 unsigned portLONG ulY, ulMaxY;
 static portCHAR cMessage[ mainMAX_MSG_LEN ];
 extern unsigned portLONG ulMaxJitter;
+unsigned portBASE_TYPE uxUnusedStackOnEntry, uxUnusedStackNow;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
@@ -328,6 +335,9 @@ void ( *vOLEDInit )( unsigned portLONG );
 void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR );
 void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG );
 void ( *vOLEDClear )( void );
+
+	/* Just for demo purposes. */
+	uxUnusedStackOnEntry = uxTaskGetStackHighWaterMark( NULL );
 
 	/* Map the OLED access functions to the driver functions that are appropriate
 	for the evaluation kit being used. */	
@@ -355,6 +365,8 @@ void ( *vOLEDClear )( void );
 	vOLEDInit( ulSSI_FREQUENCY );	
 	vOLEDStringDraw( " POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
 	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
+	
+	uxUnusedStackNow = uxTaskGetStackHighWaterMark( NULL );
 	
 	for( ;; )
 	{
@@ -437,6 +449,10 @@ void vApplicationIdleHook( void )
 					"	.align 2				\n"			
 					"ulIdleErrorConst: .word ulIdleError" );
 }
+/*-----------------------------------------------------------*/
 
-
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+{
+	for( ;; );
+}
 

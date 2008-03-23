@@ -6,6 +6,7 @@
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/bitmap.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/lcd_message.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/main.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/osram128x64x4.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/rit128x96x4.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/startup.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/timertest.c" type="1"/>
@@ -26,14 +27,33 @@
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/webserver/uIP_Task.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/webserver/uip-conf.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/webserver/webserver.h" type="1"/>
-<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/osram128x64x4.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS.org Source/include" type="2"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS.org Source/list.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS.org Source/portable/GCC/ARM_CM3" type="2"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS.org Source/portable/MemMang/heap_2.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS.org Source/queue.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS.org Source/tasks.c" type="1"/>
-<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/.svn" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/AltBlckQ.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/AltBlock.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/AltPollQ.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/AltQTest.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/BlockQ.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/GenQTest.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/PollQ.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/QPeek.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/blocktim.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/comtest.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/countsem.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/crflash.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/crhook.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/death.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/dynamic.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/flash.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/flop.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/integer.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/recmutex.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/Minimal/semtest.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/ethernet/uIP/uip-1.0/uip/clock.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/ethernet/uIP/uip-1.0/uip/lc-addrlabels.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Common Demo Files/ethernet/uIP/uip-1.0/uip/lc-switch.h" type="1"/>

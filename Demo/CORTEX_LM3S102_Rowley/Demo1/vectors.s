@@ -15,6 +15,7 @@
   .extern xPortPendSVHandler
   .extern xPortSysTickHandler
   .extern vUART_ISR
+  .extern vPortSVCHandler
 
 .macro DEFAULT_ISR_HANDLER name=
   .thumb_func
@@ -39,7 +40,7 @@ _vectors:
   .word 0 // Reserved
   .word 0 // Reserved
   .word 0 // Reserved
-  .word 0
+  .word vPortSVCHandler
   .word 0 // Populate if using a debug monitor
   .word 0 // Reserved
   .word xPortPendSVHandler // Populate if using pendable service request

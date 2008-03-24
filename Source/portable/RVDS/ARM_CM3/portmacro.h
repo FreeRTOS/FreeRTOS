@@ -94,13 +94,13 @@ extern void vPortYieldFromISR( void );
 
 /* Critical section management. */
 
-extern void vPortDisableInterrupts( void );
-extern void vPortEnableInterrupts( void );
+extern void vPortSetInterruptMask( void );
+extern void vPortClearInterruptMask( void );
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()	vPortDisableInterrupts()
-#define portENABLE_INTERRUPTS()		vPortEnableInterrupts()
+#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask()
+#define portENABLE_INTERRUPTS()		vPortClearInterruptMask()
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 /*-----------------------------------------------------------*/

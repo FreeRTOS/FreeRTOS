@@ -25,11 +25,11 @@
 
 	***************************************************************************
 
-	Please ensure to read the configuration and relevant port sections of the 
+	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
 	+++ http://www.FreeRTOS.org +++
-	Documentation, latest information, license and contact details.  
+	Documentation, latest information, license and contact details.
 
 	+++ http://www.SafeRTOS.com +++
 	A version that is certified for use in safety critical systems.
@@ -120,7 +120,7 @@ signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * co
 signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
 portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
-portBASE_TYPE xQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
 
 
 #if configUSE_CO_ROUTINES == 1
@@ -289,7 +289,7 @@ size_t xQueueSizeInBytes;
 	{
 	portBASE_TYPE xReturn;
 
-		/* If this is the task that holds the mutex then pxMutexHolder will not 
+		/* If this is the task that holds the mutex then pxMutexHolder will not
 		change outside of this task.  If this task does not hold the mutex then
 		pxMutexHolder can never coincidentally equal the tasks handle, and as
 		this is the only condition we are interested in it does not matter if
@@ -298,7 +298,7 @@ size_t xQueueSizeInBytes;
 		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
 		{
 			/* uxRecursiveCallCount cannot be zero if pxMutexHolder is equal to
-			the task handle, therefore no underflow check is required.  Also, 
+			the task handle, therefore no underflow check is required.  Also,
 			uxRecursiveCallCount is only modified by the mutex holder, and as
 			there can only be one, no mutual exclusion is required to modify the
 			uxRecursiveCallCount member. */
@@ -336,7 +336,7 @@ size_t xQueueSizeInBytes;
 	{
 	portBASE_TYPE xReturn;
 
-		/* Comments regarding mutual exclusion as per those within 
+		/* Comments regarding mutual exclusion as per those within
 		xQueueGiveMutexRecursive(). */
 
 		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
@@ -406,7 +406,7 @@ xTimeOutType xTimeOut;
 			if( xReturn == pdTRUE )
 			{
 				/* This is the first time through - we need to capture the
-				time while the scheduler is locked to ensure we attempt to 
+				time while the scheduler is locked to ensure we attempt to
 				block at least once. */
 				vTaskSetTimeOutState( &xTimeOut );
 			}
@@ -422,10 +422,10 @@ xTimeOutType xTimeOut;
 					vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 						
 					/* Unlocking the queue means queue events can effect the
-					event list.  It is possible	that interrupts occurring now 
+					event list.  It is possible	that interrupts occurring now
 					remove this task from the event	list again - but as the
 					scheduler is suspended the task will go onto the pending
-					ready last instead of the actual ready list. */ 
+					ready last instead of the actual ready list. */
 					prvUnlockQueue( pxQueue );
 						
 					/* Resuming the scheduler will move tasks from the pending
@@ -453,7 +453,7 @@ xTimeOutType xTimeOut;
 			}
 		}
     			
-  		/* Higher priority tasks and interrupts can execute during 
+  		/* Higher priority tasks and interrupts can execute during
   		this time and could possible refill the queue - even if we
   		unblocked because space became available. */
     		
@@ -525,9 +525,9 @@ xTimeOutType xTimeOut;
 
 		/* The source code that implements the alternative (Alt) API is
 		simpler	because it makes more use of critical sections.  This is	
-		the approach taken by many other RTOSes, but FreeRTOS.org has the 
-		preferred fully featured API too.  The fully featured API has more 
-		complex	code that takes longer to execute, but makes less use of 
+		the approach taken by many other RTOSes, but FreeRTOS.org has the
+		preferred fully featured API too.  The fully featured API has more
+		complex	code that takes longer to execute, but makes less use of
 		critical sections.  */
 
 		do
@@ -541,7 +541,7 @@ xTimeOutType xTimeOut;
 					if( xReturn == pdPASS )
 					{
 						/* This is the first time through - capture the time
-						inside the critical section to ensure we attempt to 
+						inside the critical section to ensure we attempt to
 						block at least once. */
 						vTaskSetTimeOutState( &xTimeOut );
 					}
@@ -565,7 +565,7 @@ xTimeOutType xTimeOut;
 				portEXIT_CRITICAL();
 			}
     				
-   			/* Higher priority tasks and interrupts can execute during 
+   			/* Higher priority tasks and interrupts can execute during
    			this time and could possible refill the queue - even if we
    			unblocked because space became available. */
     			
@@ -640,9 +640,9 @@ xTimeOutType xTimeOut;
 
 		/* The source code that implements the alternative (Alt) API is
 		simpler	because it makes more use of critical sections.  This is	
-		the approach taken by many other RTOSes, but FreeRTOS.org has the 
-		preferred fully featured API too.  The fully featured API has more 
-		complex	code that takes longer to execute, but makes less use of 
+		the approach taken by many other RTOSes, but FreeRTOS.org has the
+		preferred fully featured API too.  The fully featured API has more
+		complex	code that takes longer to execute, but makes less use of
 		critical sections.  */
 
 		do
@@ -655,7 +655,7 @@ xTimeOutType xTimeOut;
 					if( xReturn == pdPASS )
 					{
 						/* This is the first time through - capture the time
-						inside the critical section to ensure we attempt to 
+						inside the critical section to ensure we attempt to
 						block at least once. */
 						vTaskSetTimeOutState( &xTimeOut );
 					}
@@ -847,7 +847,7 @@ signed portCHAR *pcOriginalReadPosition;
 			if( xReturn == pdTRUE )
 			{
 				/* This is the first time through - we need to capture the
-				time while the scheduler is locked to ensure we attempt to 
+				time while the scheduler is locked to ensure we attempt to
 				block at least once. */
 				vTaskSetTimeOutState( &xTimeOut );
 			}

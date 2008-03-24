@@ -67,9 +67,11 @@ DCGC2_OFS       EQU     0x0128          ; Deep-Sleep-Mode Clock Gating Control 2
 				IMPORT	xPortPendSVHandler
 				IMPORT 	xPortSysTickHandler
 				IMPORT	vUART_ISR
+				IMPORT	vPortSVCHandler
 
 ; Vector Table
-Vectors         DCD     Stack_Mem + Stack_Size  ; Top of Stack
+				EXPORT __Vectors
+__Vectors       DCD     Stack_Mem + Stack_Size  ; Top of Stack
                 DCD     Reset_Handler      		; Reset Handler
                 DCD     NmiSR            		; NMI Handler
                 DCD     DefaultISR       		; Hard Fault Handler
@@ -80,7 +82,7 @@ Vectors         DCD     Stack_Mem + Stack_Size  ; Top of Stack
                 DCD     0                       ; Reserved
                 DCD     0                       ; Reserved
                 DCD     0                       ; Reserved
-                DCD     0				      	; SVCall Handler
+                DCD     vPortSVCHandler      	; SVCall Handler
                 DCD     DefaultISR         		; Debug Monitor Handler
                 DCD     0                       ; Reserved
                 DCD     xPortPendSVHandler      ; PendSV Handler

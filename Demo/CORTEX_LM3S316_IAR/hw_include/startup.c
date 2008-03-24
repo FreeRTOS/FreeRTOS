@@ -49,6 +49,7 @@ static void IntDefaultHandler(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
 extern void vUART_ISR( void );
+extern void vPortSVCHandler( void );
 
 //*****************************************************************************
 //
@@ -101,7 +102,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    IntDefaultHandler,                      // SVCall handler
+    vPortSVCHandler,                      // SVCall handler
     IntDefaultHandler,                      // Debug monitor handler
     0,                                      // Reserved
     xPortPendSVHandler,                     // The PendSV handler

@@ -94,7 +94,8 @@ __Vectors
         DCD     0                           ; Reserved
         DCD     0                           ; Reserved
         DCD     0                           ; Reserved
-        DCD     IntDefaultHandler           ; SVCall Handler
+		EXTERN 	vPortSVCHandler
+        DCD     vPortSVCHandler           	; SVCall Handler
         DCD     IntDefaultHandler           ; Debug Monitor Handler
         DCD     0                           ; Reserved
 		EXTERN  xPortPendSVHandler

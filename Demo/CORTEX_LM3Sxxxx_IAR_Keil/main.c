@@ -218,11 +218,7 @@ int main( void )
 	/* Configure the high frequency interrupt used to measure the interrupt
 	jitter time.  The Keil port does not yet include the
 	configKERNEL_INTERRUPT_PRIORITY functionality so cannot perform this test. */
-	#ifndef RVDS_ARMCM3_LM3S102
-	{
-		vSetupTimer();
-	}
-	#endif
+	vSetupTimer();
 	
 	/* Start the scheduler. */
 	vTaskStartScheduler();

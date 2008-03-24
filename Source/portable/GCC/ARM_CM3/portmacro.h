@@ -40,12 +40,6 @@
 	***************************************************************************
 */
 
-/*
-	Change from V4.4.0:
-
-	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
-	  interrupt priority used by the kernel.
-*/
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H

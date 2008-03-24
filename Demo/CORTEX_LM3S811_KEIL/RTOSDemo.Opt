@@ -12,13 +12,13 @@
 
 Target (FreeRTOS_Demo), 0x0004 // Tools: 'ARM-ADS'
 GRPOPT 1,(Demo_Source),1,0,0
-GRPOPT 2,(Libraries),1,0,0
-GRPOPT 3,(RTOS_Source),1,0,0
-GRPOPT 4,(Documentation),1,0,0
+GRPOPT 2,(Libraries),0,0,0
+GRPOPT 3,(RTOS_Source),0,0,0
+GRPOPT 4,(Documentation),0,0,0
 
-OPTFFF 1,1,2,0,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S> 
+OPTFFF 1,1,2,301989888,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S> 
 OPTFFF 1,2,1,167772160,0,0,0,0,<.\LuminaryCode\osram96x16.c><osram96x16.c> 
-OPTFFF 1,3,1,0,0,0,0,0,<.\main.c><main.c> 
+OPTFFF 1,3,1,2,0,148,161,0,<.\main.c><main.c> { 44,0,0,0,0,0,0,0,1,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,100,0,0,0,12,0,0,0,27,4,0,0,178,1,0,0 }
 OPTFFF 1,4,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c> 
 OPTFFF 1,5,1,989855744,0,0,0,0,<..\Common\Minimal\integer.c><integer.c> 
 OPTFFF 1,6,1,939524096,0,0,0,0,<..\Common\Minimal\PollQ.c><PollQ.c> 
@@ -28,10 +28,9 @@ OPTFFF 2,9,4,0,0,0,0,0,<C:\Devtools\Keil\ARM\RV30\LIB\Luminary\driverlib.lib><dr
 OPTFFF 3,10,1,0,0,0,0,0,<..\..\Source\tasks.c><tasks.c> 
 OPTFFF 3,11,1,0,0,0,0,0,<..\..\Source\list.c><list.c> 
 OPTFFF 3,12,1,0,0,0,0,0,<..\..\Source\queue.c><queue.c> 
-OPTFFF 3,13,1,0,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 
-OPTFFF 4,14,5,2,0,1,1,0,<.\readme.txt><readme.txt> { 44,0,0,0,0,0,0,0,1,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,66,0,0,0,99,0,0,0,22,4,0,0,64,2,0,0 }
+OPTFFF 3,13,1,335544320,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 
+OPTFFF 4,14,5,0,0,0,0,0,<.\readme.txt><readme.txt> 
 
-ExtF <.\readme.txt> 1,1,0,{ 44,0,0,0,0,0,0,0,1,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,66,0,0,0,99,0,0,0,22,4,0,0,64,2,0,0 }
 
 TARGOPT 1, (FreeRTOS_Demo)
  ADSCLK=50000000
@@ -42,9 +41,10 @@ TARGOPT 1, (FreeRTOS_Demo)
   OPTLT 1,1,1,0,1,1,0,1,0,0,0,0
   OPTXL 1,1,1,1,1,1,1,0,0
   OPTFL 1,0,1
+  OPTAX 0
   OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S811)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S811)
   OPTDBG 48126,4,()()()()()()()()()() (BIN\lmidk-agdi.dll)()()()
-  OPTKEY 0,(DLGTARM)()
+  OPTKEY 0,(DLGTARM)((1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(110=-1,-1,-1,-1,0)(100=-1,-1,-1,-1,0)(101=-1,-1,-1,-1,0)(102=-1,-1,-1,-1,0)(103=-1,-1,-1,-1,0)(104=-1,-1,-1,-1,0)(161=-1,-1,-1,-1,0)(162=-1,-1,-1,-1,0)(163=-1,-1,-1,-1,0)(150=-1,-1,-1,-1,0)(151=-1,-1,-1,-1,0)(1011=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)(1013=-1,-1,-1,-1,0)(171=-1,-1,-1,-1,0)(172=-1,-1,-1,-1,0)(173=-1,-1,-1,-1,0)(1014=-1,-1,-1,-1,0)(1016=-1,-1,-1,-1,0)(136=-1,-1,-1,-1,0))
   OPTKEY 0,(ARMDBGFLAGS)(-T5F)
   OPTKEY 0,(LMIDK-AGDI)(-B0 -O1792)
   OPTDF 0x84

@@ -82,7 +82,8 @@ HeapMem
 ; The vector table.
 ;
 ;******************************************************************************
-Vectors
+		EXPORT __Vectors
+__Vectors
         DCD     StackMem + Stack            ; Top of Stack
         DCD     Reset_Handler               ; Reset Handler
         DCD     NmiSR                       ; NMI Handler
@@ -94,7 +95,7 @@ Vectors
         DCD     0                           ; Reserved
         DCD     0                           ; Reserved
         DCD     0                           ; Reserved
-        DCD     IntDefaultHandler           ; SVCall Handler
+        DCD     vPortSVCHandler             ; SVCall Handler
         DCD     IntDefaultHandler           ; Debug Monitor Handler
         DCD     0                           ; Reserved
         DCD     xPortPendSVHandler      	; PendSV Handler
@@ -147,6 +148,7 @@ Reset_Handler
 		IMPORT  vUART_ISR
 		IMPORT	xPortPendSVHandler
 		IMPORT 	xPortSysTickHandler
+		IMPORT 	vPortSVCHandler
 
         LDR     R0, =__main
         BX      R0

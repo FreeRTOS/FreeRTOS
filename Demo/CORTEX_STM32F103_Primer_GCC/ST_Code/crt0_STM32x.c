@@ -95,6 +95,7 @@ extern int main(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
 extern void vTimer2IntHandler( void );
+extern void vPortSVCHandler( void );
 
 
 /******************************************************************************
@@ -117,7 +118,7 @@ void (* const g_pfnVectors[])(void) =
   BusFaultException,
   UsageFaultException,
   0, 0, 0, 0,            /* Reserved */ 
-  SVCHandler,
+  vPortSVCHandler,
   DebugMonitor,
   0,                      /* Reserved */
   xPortPendSVHandler,

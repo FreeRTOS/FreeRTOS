@@ -263,6 +263,7 @@ __asm void vPortSetInterruptMask( void )
 	mov r0, #configKERNEL_INTERRUPT_PRIORITY
 	msr basepri, r0
 	pop { r0 }
+	bx r14
 }
 
 /*-----------------------------------------------------------*/
@@ -275,4 +276,5 @@ __asm void vPortClearInterruptMask( void )
 	mov r0, #0
 	msr basepri, r0
 	pop { r0 }
+	bx r14
 }

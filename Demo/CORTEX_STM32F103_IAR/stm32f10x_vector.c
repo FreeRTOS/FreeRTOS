@@ -26,6 +26,7 @@ extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
 extern void vTimer2IntHandler( void );
 extern void vUARTInterruptHandler( void );
+extern void vPortSVCHandler( void );
 
 /* Private typedef -----------------------------------------------------------*/
 typedef void( *intfunc )( void );
@@ -55,7 +56,7 @@ const intvec_elem __vector_table[] =
   BusFaultException,
   UsageFaultException,
   0, 0, 0, 0,            /* Reserved */
-  SVCHandler,
+  vPortSVCHandler,
   DebugMonitor,
   0,                      /* Reserved */
   xPortPendSVHandler,

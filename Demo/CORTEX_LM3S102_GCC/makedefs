@@ -51,7 +51,7 @@ ifeq (${COMPILER}, gcc)
 #
 # The command for calling the compiler.
 #
-CC=arm-stellaris-eabi-gcc
+CC=arm-none-eabi-gcc
 
 #
 # The flags passed to the assembler.
@@ -71,12 +71,12 @@ CFLAGS=-mthumb         \
 #
 # The command for calling the library archiver.
 #
-AR=arm-stellaris-eabi-ar
+AR=arm-none-eabi-ar
 
 #
 # The command for calling the linker.
 #
-LD=arm-stellaris-eabi-ld
+LD=arm-none-eabi-ld
 
 #
 # The flags passed to the linker.
@@ -96,7 +96,7 @@ LIBC=${shell ${CC} -mthumb -march=armv6t2 -print-file-name=libc.a}
 #
 # The command for extracting images from the linked executables.
 #
-OBJCOPY=arm-stellaris-eabi-objcopy
+OBJCOPY=arm-none-eabi-objcopy
 
 endif
 

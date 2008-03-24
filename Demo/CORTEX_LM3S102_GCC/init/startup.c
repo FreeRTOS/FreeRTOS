@@ -34,6 +34,7 @@ void FaultISR(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
 extern void vUART_ISR( void );
+extern void vPortSVCHandler( void );
 
 //*****************************************************************************
 //
@@ -73,7 +74,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    0,                     					// SVCall handler
+    vPortSVCHandler,						// SVCall handler
     0,                                      // Debug monitor handler
     0,                                      // Reserved
     xPortPendSVHandler,                     // The PendSV handler

@@ -729,7 +729,7 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * con
 
 /**
  * queue. h
- * <pre>unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue );</pre>
+ * <pre>unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const xQueue );</pre>
  *
  * Return the number of messages stored in a queue.
  *
@@ -740,7 +740,7 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * con
  * \page uxQueueMessagesWaiting uxQueueMessagesWaiting
  * \ingroup QueueManagement
  */
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const xQueue );
 
 /**
  * queue. h
@@ -1168,9 +1168,9 @@ signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * co
  * Utilities to query queue that are safe to use from an ISR.  These utilities
  * should be used only from witin an ISR, or within a critical section.
  */
-signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
-signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle const pxQueue );
+signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle const pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle const pxQueue );
 
 
 /* 

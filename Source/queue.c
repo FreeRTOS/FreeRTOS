@@ -107,7 +107,7 @@ typedef xQUEUE * xQueueHandle;
  */
 xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize );
 signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const pxQueue );
 void vQueueDelete( xQueueHandle xQueue );
 signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE xTaskPreviouslyWoken, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
@@ -118,9 +118,9 @@ portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlock
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
-portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
+portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle const pxQueue );
+portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle const pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle const pxQueue );
 
 
 #if configUSE_CO_ROUTINES == 1
@@ -145,14 +145,14 @@ static void prvUnlockQueue( xQueueHandle pxQueue );
  *
  * @return pdTRUE if the queue contains no items, otherwise pdFALSE.
  */
-static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue );
+static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle const pxQueue );
 
 /*
  * Uses a critical section to determine if there is any space in a queue.
  *
  * @return pdTRUE if there is no space, otherwise pdFALSE;
  */
-static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue );
+static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle const pxQueue );
 
 /*
  * Copies an item into the queue, either at the front of the queue or the
@@ -493,7 +493,7 @@ xTimeOutType xTimeOut;
 
 		if( xReturn == errQUEUE_FULL )
 		{
-			if( xTicksToWait > 0 )
+			if( xTicksToWait > ( portTickType ) 0 )
 			{
 				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 				{
@@ -605,7 +605,7 @@ xTimeOutType xTimeOut;
 
 			if( xReturn == errQUEUE_FULL )
 			{
-				if( xTicksToWait > 0 )
+				if( xTicksToWait > ( portTickType ) 0 )
 				{
 					if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 					{
@@ -757,7 +757,7 @@ xTimeOutType xTimeOut;
 
 			if( xReturn == errQUEUE_EMPTY )
 			{
-				if( xTicksToWait > 0 )
+				if( xTicksToWait > ( portTickType ) 0 )
 				{
 					if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 					{
@@ -1034,7 +1034,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue )
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const pxQueue )
 {
 unsigned portBASE_TYPE uxReturn;
 
@@ -1173,7 +1173,7 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 }
 /*-----------------------------------------------------------*/
 
-static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue )
+static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle const pxQueue )
 {
 signed portBASE_TYPE xReturn;
 
@@ -1195,7 +1195,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue )
+static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle const pxQueue )
 {
 signed portBASE_TYPE xReturn;
 

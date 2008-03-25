@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.7.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -24,20 +24,26 @@
 	can be applied.
 
 	***************************************************************************
+	***************************************************************************
+	*																		  *
+	* SAVE TIME AND MONEY!  Why not get us to quote to get FreeRTOS.org		  *
+	* running on your hardware - or even write all or part of your application*
+	* for you?  See http://www.OpenRTOS.com for details.					  *
+	*																		  *
+	***************************************************************************
+	***************************************************************************
 
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	+++ http://www.FreeRTOS.org +++
-	Documentation, latest information, license and contact details.
+	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	contact details.
 
-	+++ http://www.SafeRTOS.com +++
-	A version that is certified for use in safety critical systems.
+	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	critical systems.
 
-	+++ http://www.OpenRTOS.com +++
-	Commercial support, development, porting, licensing and training services.
-
-	***************************************************************************
+	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	licensing and training services.
 */
 
 

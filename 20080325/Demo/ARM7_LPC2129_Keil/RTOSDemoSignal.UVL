@@ -1,0 +1,40 @@
+[Signal 1]
+DispName=Port1
+PlotType=1
+Color=16711935
+MinDec=0
+MinVal=0.
+MaxDec=0
+MaxVal=-1.
+Mask=65536
+Offset=16
+[Signal 2]
+DispName=Port1
+PlotType=1
+Color=255
+MinDec=0
+MinVal=0.
+MaxDec=0
+MaxVal=-1.
+Mask=131072
+Offset=17
+[Signal 3]
+DispName=Port1
+PlotType=1
+Color=32768
+MinDec=0
+MinVal=0.
+MaxDec=0
+MaxVal=-1.
+Mask=262144
+Offset=18
+[Signal 4]
+DispName=Port1
+PlotType=1
+Color=16711680
+MinDec=0
+MinVal=0.
+MaxDec=0
+MaxVal=-1.
+Mask=524288
+Offset=19

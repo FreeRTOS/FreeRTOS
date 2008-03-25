@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.debug.ui.STRING_VARIABLE_SELECTION_DIALOG_SECTION">
+		<item value="326" key="DIALOG_WIDTH"/>
+		<item value="-33" key="DIALOG_Y_ORIGIN"/>
+		<item value="309" key="DIALOG_X_ORIGIN"/>
+		<item value="530" key="DIALOG_HEIGHT"/>
+		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.debug.ui.LAUNCH_CONFIGURATIONS_DIALOG_SECTION">
+		<item value="944" key="DIALOG_WIDTH"/>
+		<item value="154" key="DIALOG_Y_ORIGIN"/>
+		<item value=", org.eclipse.ui.externaltools.ProgramLaunchConfigurationType, org.eclipse.cdt.debug.gdbjtag.launchConfigurationType, org.eclipse.cdt.launch.localCLaunch, " key="org.eclipse.debug.ui.EXPANDED_NODES"/>
+		<item value="274" key="DIALOG_X_ORIGIN"/>
+		<item value="640" key="DIALOG_HEIGHT"/>
+		<item value="237" key="org.eclipse.debug.ui.DIALOG_SASH_WEIGHTS_1"/>
+		<item value="762" key="org.eclipse.debug.ui.DIALOG_SASH_WEIGHTS_2"/>
+		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.debug.ui.SELECT_CONFIGURATION_TYPE_DIALOG">
+		<item value="300" key="DIALOG_WIDTH"/>
+		<item value="46" key="DIALOG_Y_ORIGIN"/>
+		<item value="301" key="DIALOG_X_ORIGIN"/>
+		<item value="350" key="DIALOG_HEIGHT"/>
+		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="FAVORITES_DIALOG_SECTION">
+		<item value="227" key="DIALOG_WIDTH"/>
+		<item value="360" key="DIALOG_Y_ORIGIN"/>
+		<item value="731" key="DIALOG_X_ORIGIN"/>
+		<item value="233" key="DIALOG_HEIGHT"/>
+		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+	</section>
+</section>

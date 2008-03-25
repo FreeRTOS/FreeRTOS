@@ -1,0 +1,2175 @@
+
+PROGRAM "E:\Dev\FreeRTOS\Demo\HCS12_CodeWarrior_small\bin\Simulator.abs"
+
+*********************************************************************************************
+TARGET SECTION
+---------------------------------------------------------------------------------------------
+Processor   : Motorola HC12
+Memory Model: SMALL
+File Format : ELF\Dwarf 2.0
+Linker      : SmartLinker V-5.0.22 Build 4047, Feb 17 2004
+
+*********************************************************************************************
+FILE SECTION
+---------------------------------------------------------------------------------------------
+Start12.c.o                             Model: SMALL,         Lang: ANSI-C
+STRING.C.o (ansisi.lib)                 Model: SMALL,         Lang: ANSI-C
+rtshc12.c.o (ansisi.lib)                Model: SMALL,         Lang: ANSI-C
+Cpu.C.o                                 Model: SMALL,         Lang: ANSI-C
+Byte1.C.o                               Model: SMALL,         Lang: ANSI-C
+IO_Map.C.o                              Model: SMALL,         Lang: ANSI-C
+Vectors.c.o                             Model: SMALL,         Lang: ANSI-C
+RTOSDemo.C.o                            Model: SMALL,         Lang: ANSI-C
+tasks.c.o                               Model: SMALL,         Lang: ANSI-C
+queue.c.o                               Model: SMALL,         Lang: ANSI-C
+list.c.o                                Model: SMALL,         Lang: ANSI-C
+port.c.o                                Model: SMALL,         Lang: ANSI-C
+flash.c.o                               Model: SMALL,         Lang: ANSI-C
+main.c.o                                Model: SMALL,         Lang: ANSI-C
+heap_1.c.o                              Model: SMALL,         Lang: ANSI-C
+TickTimer.C.o                           Model: SMALL,         Lang: ANSI-C
+PE_Timer.C.o                            Model: SMALL,         Lang: ANSI-C
+ParTest.c.o                             Model: SMALL,         Lang: ANSI-C
+PollQ.c.o                               Model: SMALL,         Lang: ANSI-C
+dynamic.c.o                             Model: SMALL,         Lang: ANSI-C
+ButtonInterrupt.C.o                     Model: SMALL,         Lang: ANSI-C
+
+*********************************************************************************************
+STARTUP SECTION
+---------------------------------------------------------------------------------------------
+Entry point: 0xC000 (_EntryPoint)
+_startupData is allocated at 0xC076 and uses 23 Bytes
+extern struct _tagStartup {
+  unsigned flags          0
+  _PFunc   main           0xC1FD    (main)
+  long     stackOffset    0xFED
+  unsigned nofZeroOut     1
+  _Range   pZeroOut       0x800     1982
+  _Copy    *toCopyDownBeg 0xD3CF
+  int      nofLibInits    0
+  _LibInit *libInits      0xC091
+  int      nofInitBodies  0
+  _Cpp     *initBodies    0xC093
+  int      nofFiniBodies  0
+  _Cpp     *finiBodies    0xC093
+} _startupData;
+
+*********************************************************************************************
+SECTION-ALLOCATION SECTION
+Section Name                    Size  Type     From       To       Segment
+---------------------------------------------------------------------------------------------
+.data                              1   R/W      0x800      0x800   RAM
+.init                            118     R     0xC000     0xC075   ROM_C000
+.startData                        29     R     0xC076     0xC092   ROM_C000
+.rodata1                          78     R     0xC093     0xC0E0   ROM_C000
+NON_BANKED                       114     R     0xC0E1     0xC152   ROM_C000
+.text                           4164     R     0xC153     0xD196   ROM_C000
+.copy                             19     R     0xD3CF     0xD3E1   ROM_C000
+.abs_section_3f                    1   N/I       0x3F       0x3F   .absSeg0
+.abs_section_8d                    1   N/I       0x8D       0x8D   .absSeg1
+.abs_section_86                    1   N/I       0x86       0x86   .absSeg2
+.abs_section_8b                    1   N/I       0x8B       0x8B   .absSeg3
+.abs_section_ff06                  1   N/I     0xFF06     0xFF06   .absSeg4
+.abs_section_ff07                  1   N/I     0xFF07     0xFF07   .absSeg5
+.abs_section_ff01                  1   N/I     0xFF01     0xFF01   .absSeg6
+.abs_section_2b                    1   N/I       0x2B       0x2B   .absSeg7
+.abs_section_2c                    1   N/I       0x2C       0x2C   .absSeg8
+.abs_section_2a                    1   N/I       0x2A       0x2A   .absSeg9
+.abs_section_2e                    1   N/I       0x2E       0x2E   .absSeg10
+.abs_section_2f                    1   N/I       0x2F       0x2F   .absSeg11
+.abs_section_2d                    1   N/I       0x2D       0x2D   .absSeg12
+.abs_section_28                    1   N/I       0x28       0x28   .absSeg13
+.abs_section_29                    1   N/I       0x29       0x29   .absSeg14
+.abs_section_142                   1   N/I      0x142      0x142   .absSeg15
+.abs_section_143                   1   N/I      0x143      0x143   .absSeg16
+.abs_section_140                   1   N/I      0x140      0x140   .absSeg17
+.abs_section_141                   1   N/I      0x141      0x141   .absSeg18
+.abs_section_14b                   1   N/I      0x14B      0x14B   .absSeg19
+.abs_section_150                   1   N/I      0x150      0x150   .absSeg20
+.abs_section_151                   1   N/I      0x151      0x151   .absSeg21
+.abs_section_152                   1   N/I      0x152      0x152   .absSeg22
+.abs_section_153                   1   N/I      0x153      0x153   .absSeg23
+.abs_section_158                   1   N/I      0x158      0x158   .absSeg24
+.abs_section_159                   1   N/I      0x159      0x159   .absSeg25
+.abs_section_15a                   1   N/I      0x15A      0x15A   .absSeg26
+.abs_section_15b                   1   N/I      0x15B      0x15B   .absSeg27
+.abs_section_154                   1   N/I      0x154      0x154   .absSeg28
+.abs_section_155                   1   N/I      0x155      0x155   .absSeg29
+.abs_section_156                   1   N/I      0x156      0x156   .absSeg30
+.abs_section_157                   1   N/I      0x157      0x157   .absSeg31
+.abs_section_15c                   1   N/I      0x15C      0x15C   .absSeg32
+.abs_section_15d                   1   N/I      0x15D      0x15D   .absSeg33
+.abs_section_15e                   1   N/I      0x15E      0x15E   .absSeg34
+.abs_section_15f                   1   N/I      0x15F      0x15F   .absSeg35
+.abs_section_144                   1   N/I      0x144      0x144   .absSeg36
+.abs_section_145                   1   N/I      0x145      0x145   .absSeg37
+.abs_section_16c                   1   N/I      0x16C      0x16C   .absSeg38
+.abs_section_164                   1   N/I      0x164      0x164   .absSeg39
+.abs_section_165                   1   N/I      0x165      0x165   .absSeg40
+.abs_section_166                   1   N/I      0x166      0x166   .absSeg41
+.abs_section_167                   1   N/I      0x167      0x167   .absSeg42
+.abs_section_168                   1   N/I      0x168      0x168   .absSeg43
+.abs_section_169                   1   N/I      0x169      0x169   .absSeg44
+.abs_section_16a                   1   N/I      0x16A      0x16A   .absSeg45
+.abs_section_16b                   1   N/I      0x16B      0x16B   .absSeg46
+.abs_section_14e                   1   N/I      0x14E      0x14E   .absSeg47
+.abs_section_160                   1   N/I      0x160      0x160   .absSeg48
+.abs_section_161                   1   N/I      0x161      0x161   .absSeg49
+.abs_section_162                   1   N/I      0x162      0x162   .absSeg50
+.abs_section_163                   1   N/I      0x163      0x163   .absSeg51
+.abs_section_149                   1   N/I      0x149      0x149   .absSeg52
+.abs_section_148                   1   N/I      0x148      0x148   .absSeg53
+.abs_section_14a                   1   N/I      0x14A      0x14A   .absSeg54
+.abs_section_146                   1   N/I      0x146      0x146   .absSeg55
+.abs_section_147                   1   N/I      0x147      0x147   .absSeg56
+.abs_section_17c                   1   N/I      0x17C      0x17C   .absSeg57
+.abs_section_174                   1   N/I      0x174      0x174   .absSeg58
+.abs_section_175                   1   N/I      0x175      0x175   .absSeg59
+.abs_section_176                   1   N/I      0x176      0x176   .absSeg60
+.abs_section_177                   1   N/I      0x177      0x177   .absSeg61
+.abs_section_178                   1   N/I      0x178      0x178   .absSeg62
+.abs_section_179                   1   N/I      0x179      0x179   .absSeg63
+.abs_section_17a                   1   N/I      0x17A      0x17A   .absSeg64
+.abs_section_17b                   1   N/I      0x17B      0x17B   .absSeg65
+.abs_section_14f                   1   N/I      0x14F      0x14F   .absSeg66
+.abs_section_170                   1   N/I      0x170      0x170   .absSeg67
+.abs_section_171                   1   N/I      0x171      0x171   .absSeg68
+.abs_section_172                   1   N/I      0x172      0x172   .absSeg69
+.abs_section_173                   1   N/I      0x173      0x173   .absSeg70
+.abs_section_17f                   1   N/I      0x17F      0x17F   .absSeg71
+.abs_section_41                    1   N/I       0x41       0x41   .absSeg72
+.abs_section_39                    1   N/I       0x39       0x39   .absSeg73
+.abs_section_3c                    1   N/I       0x3C       0x3C   .absSeg74
+.abs_section_37                    1   N/I       0x37       0x37   .absSeg75
+.abs_section_38                    1   N/I       0x38       0x38   .absSeg76
+.abs_section_3e                    1   N/I       0x3E       0x3E   .absSeg77
+.abs_section_36                    1   N/I       0x36       0x36   .absSeg78
+.abs_section_272                   1   N/I      0x272      0x272   .absSeg79
+.abs_section_9                     1   N/I        0x9        0x9   .absSeg80
+.abs_section_26a                   1   N/I      0x26A      0x26A   .absSeg81
+.abs_section_33                    1   N/I       0x33       0x33   .absSeg82
+.abs_section_252                   1   N/I      0x252      0x252   .absSeg83
+.abs_section_25a                   1   N/I      0x25A      0x25A   .absSeg84
+.abs_section_24a                   1   N/I      0x24A      0x24A   .absSeg85
+.abs_section_242                   1   N/I      0x242      0x242   .absSeg86
+.abs_section_e                     1   N/I        0xE        0xE   .absSeg87
+.abs_section_100                   1   N/I      0x100      0x100   .absSeg88
+.abs_section_106                   1   N/I      0x106      0x106   .absSeg89
+.abs_section_103                   1   N/I      0x103      0x103   .absSeg90
+.abs_section_104                   1   N/I      0x104      0x104   .absSeg91
+.abs_section_101                   1   N/I      0x101      0x101   .absSeg92
+.abs_section_105                   1   N/I      0x105      0x105   .absSeg93
+.abs_section_1f                    1   N/I       0x1F       0x1F   .absSeg94
+.abs_section_12                    1   N/I       0x12       0x12   .absSeg95
+.abs_section_11                    1   N/I       0x11       0x11   .absSeg96
+.abs_section_10                    1   N/I       0x10       0x10   .absSeg97
+.abs_section_1e                    1   N/I       0x1E       0x1E   .absSeg98
+.abs_section_15                    1   N/I       0x15       0x15   .absSeg99
+.abs_section_16                    1   N/I       0x16       0x16   .absSeg100
+.abs_section_1c                    1   N/I       0x1C       0x1C   .absSeg101
+.abs_section_1d                    1   N/I       0x1D       0x1D   .absSeg102
+.abs_section_13                    1   N/I       0x13       0x13   .absSeg103
+.abs_section_b                     1   N/I        0xB        0xB   .absSeg104
+.abs_section_247                   1   N/I      0x247      0x247   .absSeg105
+.abs_section_14                    1   N/I       0x14       0x14   .absSeg106
+.abs_section_17                    1   N/I       0x17       0x17   .absSeg107
+.abs_section_43                    1   N/I       0x43       0x43   .absSeg108
+.abs_section_42                    1   N/I       0x42       0x42   .absSeg109
+.abs_section_60                    1   N/I       0x60       0x60   .absSeg110
+.abs_section_61                    1   N/I       0x61       0x61   .absSeg111
+.abs_section_1a                    1   N/I       0x1A       0x1A   .absSeg112
+.abs_section_1b                    1   N/I       0x1B       0x1B   .absSeg113
+.abs_section_a                     1   N/I        0xA        0xA   .absSeg114
+.abs_section_274                   1   N/I      0x274      0x274   .absSeg115
+.abs_section_26c                   1   N/I      0x26C      0x26C   .absSeg116
+.abs_section_254                   1   N/I      0x254      0x254   .absSeg117
+.abs_section_25c                   1   N/I      0x25C      0x25C   .absSeg118
+.abs_section_24c                   1   N/I      0x24C      0x24C   .absSeg119
+.abs_section_244                   1   N/I      0x244      0x244   .absSeg120
+.abs_section_26e                   1   N/I      0x26E      0x26E   .absSeg121
+.abs_section_25e                   1   N/I      0x25E      0x25E   .absSeg122
+.abs_section_26f                   1   N/I      0x26F      0x26F   .absSeg123
+.abs_section_25f                   1   N/I      0x25F      0x25F   .absSeg124
+.abs_section_3a                    1   N/I       0x3A       0x3A   .absSeg125
+.abs_section_8f                    1   N/I       0x8F       0x8F   .absSeg126
+.abs_section_8                     1   N/I        0x8        0x8   .absSeg127
+.abs_section_32                    1   N/I       0x32       0x32   .absSeg128
+.abs_section_30                    1   N/I       0x30       0x30   .absSeg129
+.abs_section_275                   1   N/I      0x275      0x275   .absSeg130
+.abs_section_26d                   1   N/I      0x26D      0x26D   .absSeg131
+.abs_section_255                   1   N/I      0x255      0x255   .absSeg132
+.abs_section_25d                   1   N/I      0x25D      0x25D   .absSeg133
+.abs_section_24d                   1   N/I      0x24D      0x24D   .absSeg134
+.abs_section_245                   1   N/I      0x245      0x245   .absSeg135
+.abs_section_270                   1   N/I      0x270      0x270   .absSeg136
+.abs_section_271                   1   N/I      0x271      0x271   .absSeg137
+.abs_section_269                   1   N/I      0x269      0x269   .absSeg138
+.abs_section_251                   1   N/I      0x251      0x251   .absSeg139
+.abs_section_259                   1   N/I      0x259      0x259   .absSeg140
+.abs_section_249                   1   N/I      0x249      0x249   .absSeg141
+.abs_section_241                   1   N/I      0x241      0x241   .absSeg142
+.abs_section_268                   1   N/I      0x268      0x268   .absSeg143
+.abs_section_250                   1   N/I      0x250      0x250   .absSeg144
+.abs_section_258                   1   N/I      0x258      0x258   .absSeg145
+.abs_section_248                   1   N/I      0x248      0x248   .absSeg146
+.abs_section_240                   1   N/I      0x240      0x240   .absSeg147
+.abs_section_c                     1   N/I        0xC        0xC   .absSeg148
+.abs_section_e4                    1   N/I       0xE4       0xE4   .absSeg149
+.abs_section_e2                    1   N/I       0xE2       0xE2   .absSeg150
+.abs_section_e5                    1   N/I       0xE5       0xE5   .absSeg151
+.abs_section_e0                    1   N/I       0xE0       0xE0   .absSeg152
+.abs_section_e1                    1   N/I       0xE1       0xE1   .absSeg153
+.abs_section_e3                    1   N/I       0xE3       0xE3   .absSeg154
+.abs_section_e8                    1   N/I       0xE8       0xE8   .absSeg155
+.abs_section_e9                    1   N/I       0xE9       0xE9   .absSeg156
+.abs_section_fe                    1   N/I       0xFE       0xFE   .absSeg157
+.abs_section_273                   1   N/I      0x273      0x273   .absSeg158
+.abs_section_d                     1   N/I        0xD        0xD   .absSeg159
+.abs_section_26b                   1   N/I      0x26B      0x26B   .absSeg160
+.abs_section_253                   1   N/I      0x253      0x253   .absSeg161
+.abs_section_25b                   1   N/I      0x25B      0x25B   .absSeg162
+.abs_section_24b                   1   N/I      0x24B      0x24B   .absSeg163
+.abs_section_243                   1   N/I      0x243      0x243   .absSeg164
+.abs_section_35                    1   N/I       0x35       0x35   .absSeg165
+.abs_section_3b                    1   N/I       0x3B       0x3B   .absSeg166
+.abs_section_ca                    1   N/I       0xCA       0xCA   .absSeg167
+.abs_section_cb                    1   N/I       0xCB       0xCB   .absSeg168
+.abs_section_ce                    1   N/I       0xCE       0xCE   .absSeg169
+.abs_section_cf                    1   N/I       0xCF       0xCF   .absSeg170
+.abs_section_cc                    1   N/I       0xCC       0xCC   .absSeg171
+.abs_section_cd                    1   N/I       0xCD       0xCD   .absSeg172
+.abs_section_da                    1   N/I       0xDA       0xDA   .absSeg173
+.abs_section_d8                    1   N/I       0xD8       0xD8   .absSeg174
+.abs_section_d9                    1   N/I       0xD9       0xD9   .absSeg175
+.abs_section_dd                    1   N/I       0xDD       0xDD   .absSeg176
+.abs_section_db                    1   N/I       0xDB       0xDB   .absSeg177
+.abs_section_34                    1   N/I       0x34       0x34   .absSeg178
+.abs_section_48                    1   N/I       0x48       0x48   .absSeg179
+.abs_section_49                    1   N/I       0x49       0x49   .absSeg180
+.abs_section_4a                    1   N/I       0x4A       0x4A   .absSeg181
+.abs_section_4b                    1   N/I       0x4B       0x4B   .absSeg182
+.abs_section_4e                    1   N/I       0x4E       0x4E   .absSeg183
+.abs_section_4f                    1   N/I       0x4F       0x4F   .absSeg184
+.abs_section_4c                    1   N/I       0x4C       0x4C   .absSeg185
+.abs_section_40                    1   N/I       0x40       0x40   .absSeg186
+.abs_section_46                    1   N/I       0x46       0x46   .absSeg187
+.abs_section_4d                    1   N/I       0x4D       0x4D   .absSeg188
+.abs_section_47                    1   N/I       0x47       0x47   .absSeg189
+.abs_section_256                   1   N/I      0x256      0x256   .absSeg190
+.abs_section_24e                   1   N/I      0x24E      0x24E   .absSeg191
+.abs_section_82                    2   N/I       0x82       0x83   .absSeg192
+.abs_section_84                    2   N/I       0x84       0x85   .absSeg193
+.abs_section_90                    2   N/I       0x90       0x91   .absSeg194
+.abs_section_92                    2   N/I       0x92       0x93   .absSeg195
+.abs_section_94                    2   N/I       0x94       0x95   .absSeg196
+.abs_section_96                    2   N/I       0x96       0x97   .absSeg197
+.abs_section_98                    2   N/I       0x98       0x99   .absSeg198
+.abs_section_9a                    2   N/I       0x9A       0x9B   .absSeg199
+.abs_section_9c                    2   N/I       0x9C       0x9D   .absSeg200
+.abs_section_9e                    2   N/I       0x9E       0x9F   .absSeg201
+.abs_section_2                     2   N/I        0x2        0x3   .absSeg202
+.abs_section_62                    2   N/I       0x62       0x63   .absSeg203
+.abs_section_0                     2   N/I        0x0        0x1   .absSeg204
+.abs_section_ec                    2   N/I       0xEC       0xED   .absSeg205
+.abs_section_ee                    2   N/I       0xEE       0xEF   .absSeg206
+.abs_section_f0                    2   N/I       0xF0       0xF1   .absSeg207
+.abs_section_f8                    2   N/I       0xF8       0xF9   .absSeg208
+.abs_section_fa                    2   N/I       0xFA       0xFB   .absSeg209
+.abs_section_fc                    2   N/I       0xFC       0xFD   .absSeg210
+.abs_section_f2                    2   N/I       0xF2       0xF3   .absSeg211
+.abs_section_f4                    2   N/I       0xF4       0xF5   .absSeg212
+.abs_section_f6                    2   N/I       0xF6       0xF7   .absSeg213
+.abs_section_c8                    2   N/I       0xC8       0xC9   .absSeg214
+.abs_section_50                    2   N/I       0x50       0x51   .absSeg215
+.abs_section_52                    2   N/I       0x52       0x53   .absSeg216
+.abs_section_54                    2   N/I       0x54       0x55   .absSeg217
+.abs_section_56                    2   N/I       0x56       0x57   .absSeg218
+.abs_section_58                    2   N/I       0x58       0x59   .absSeg219
+.abs_section_5a                    2   N/I       0x5A       0x5B   .absSeg220
+.abs_section_5c                    2   N/I       0x5C       0x5D   .absSeg221
+.abs_section_5e                    2   N/I       0x5E       0x5F   .absSeg222
+.abs_section_44                    2   N/I       0x44       0x45   .absSeg223
+.abs_section_ff80                128     R     0xFF80     0xFFFF   .absSeg224
+.bss                            1968   R/W      0x801      0xFB0   RAM
+RUNTIME                          373     R     0xD197     0xD30B   ROM_C000
+.common                            2   R/W      0xFB1      0xFB2   RAM
+Byte1_CODE                        28     R     0xD30C     0xD327   ROM_C000
+TickTimer_CODE                   157     R     0xD328     0xD3C4   ROM_C000
+ButtonInterrupt_CODE              10     R     0xD3C5     0xD3CE   ROM_C000
+Byte1_DATA                         8   R/W      0xFB3      0xFBA   RAM
+TickTimer_DATA                     3   R/W      0xFBB      0xFBD   RAM
+.stack                            48   R/W      0xFBE      0xFED   RAM
+
+Summary of section sizes per section type:
+READ_ONLY (R):        1462 (dec:     5218)
+READ_WRITE (R/W):      7EE (dec:     2030)
+NO_INIT (N/I):         100 (dec:      256)
+
+*********************************************************************************************
+VECTOR-ALLOCATION SECTION
+    Address     InitValue   InitFunction
+---------------------------------------------------------------------------------------------
+
+*********************************************************************************************
+OBJECT-ALLOCATION SECTION
+     Name               Module                 Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+MODULE:                 -- Start12.c.o --
+- PROCEDURES:
+     Init                                      C153      29      41       1   .text       
+     _Startup                                  C17C      10      16       1   .text       
+- VARIABLES:
+     _startupData                              C076      17      23       6   .startData  
+MODULE:                 -- STRING.C.o (ansisi.lib) --
+- PROCEDURES:
+     memcpy                                    C18C      26      38       3   .text       
+     memset                                    C1B2      1E      30       1   .text       
+     strncpy                                   C1D0      2D      45       1   .text       
+- VARIABLES:
+MODULE:                 -- rtshc12.c.o (ansisi.lib) --
+- PROCEDURES:
+     _LCMP                                     D197      19      25       2   RUNTIME     
+     _LCMP_P                                   D1B0      15      21       2   RUNTIME     
+     _LNEG                                     D1C5       D      13       1   RUNTIME     
+     _LINC                                     D1D2       5       5       4   RUNTIME     
+     _lDivMod                                  D1D7      E3     227       3   RUNTIME     
+     _LDIVU                                    D2BA       E      14       1   RUNTIME     
+     _NEG_P                                    D2C8       F      15       4   RUNTIME     
+     _LDIVS                                    D2D7      35      53       1   RUNTIME     
+- VARIABLES:
+MODULE:                 -- Cpu.C.o --
+- PROCEDURES:
+     _EntryPoint                               C000      2E      46       1   .init       
+     PE_low_level_init                         C02E      48      72       1   .init       
+     Cpu_Interrupt                             C0E1       1       1      60   NON_BANKED  
+- VARIABLES:
+MODULE:                 -- Byte1.C.o --
+- PROCEDURES:
+     Byte1_GetMsk                              D30C       D      13       1   Byte1_CODE  
+     Byte1_NegBit                              D319       F      15       1   Byte1_CODE  
+- VARIABLES:
+     Byte1_Table                                FB3       8       8       1   Byte1_DATA  
+MODULE:                 -- IO_Map.C.o --
+- PROCEDURES:
+- VARIABLES:
+     _ARMCOP                                     3F       1       1       0   .abs_section_3f
+     _ATDDIEN                                    8D       1       1       0   .abs_section_8d
+     _ATDSTAT0                                   86       1       1       0   .abs_section_86
+     _ATDSTAT1                                   8B       1       1       0   .abs_section_8b
+     _BDMCCR                                   FF06       1       1       0   .abs_section_ff06
+     _BDMINR                                   FF07       1       1       0   .abs_section_ff07
+     _BDMSTS                                   FF01       1       1       0   .abs_section_ff01
+     _BKP0H                                      2B       1       1       0   .abs_section_2b
+     _BKP0L                                      2C       1       1       0   .abs_section_2c
+     _BKP0X                                      2A       1       1       0   .abs_section_2a
+     _BKP1H                                      2E       1       1       0   .abs_section_2e
+     _BKP1L                                      2F       1       1       0   .abs_section_2f
+     _BKP1X                                      2D       1       1       0   .abs_section_2d
+     _BKPCT0                                     28       1       1       0   .abs_section_28
+     _BKPCT1                                     29       1       1       0   .abs_section_29
+     _CANBTR0                                   142       1       1       0   .abs_section_142
+     _CANBTR1                                   143       1       1       0   .abs_section_143
+     _CANCTL0                                   140       1       1       0   .abs_section_140
+     _CANCTL1                                   141       1       1       0   .abs_section_141
+     _CANIDAC                                   14B       1       1       0   .abs_section_14b
+     _CANIDAR0                                  150       1       1       0   .abs_section_150
+     _CANIDAR1                                  151       1       1       0   .abs_section_151
+     _CANIDAR2                                  152       1       1       0   .abs_section_152
+     _CANIDAR3                                  153       1       1       0   .abs_section_153
+     _CANIDAR4                                  158       1       1       0   .abs_section_158
+     _CANIDAR5                                  159       1       1       0   .abs_section_159
+     _CANIDAR6                                  15A       1       1       0   .abs_section_15a
+     _CANIDAR7                                  15B       1       1       0   .abs_section_15b
+     _CANIDMR0                                  154       1       1       0   .abs_section_154
+     _CANIDMR1                                  155       1       1       0   .abs_section_155
+     _CANIDMR2                                  156       1       1       0   .abs_section_156
+     _CANIDMR3                                  157       1       1       0   .abs_section_157
+     _CANIDMR4                                  15C       1       1       0   .abs_section_15c
+     _CANIDMR5                                  15D       1       1       0   .abs_section_15d
+     _CANIDMR6                                  15E       1       1       0   .abs_section_15e
+     _CANIDMR7                                  15F       1       1       0   .abs_section_15f
+     _CANRFLG                                   144       1       1       0   .abs_section_144
+     _CANRIER                                   145       1       1       0   .abs_section_145
+     _CANRXDLR                                  16C       1       1       0   .abs_section_16c
+     _CANRXDSR0                                 164       1       1       0   .abs_section_164
+     _CANRXDSR1                                 165       1       1       0   .abs_section_165
+     _CANRXDSR2                                 166       1       1       0   .abs_section_166
+     _CANRXDSR3                                 167       1       1       0   .abs_section_167
+     _CANRXDSR4                                 168       1       1       0   .abs_section_168
+     _CANRXDSR5                                 169       1       1       0   .abs_section_169
+     _CANRXDSR6                                 16A       1       1       0   .abs_section_16a
+     _CANRXDSR7                                 16B       1       1       0   .abs_section_16b
+     _CANRXERR                                  14E       1       1       0   .abs_section_14e
+     _CANRXIDR0                                 160       1       1       0   .abs_section_160
+     _CANRXIDR1                                 161       1       1       0   .abs_section_161
+     _CANRXIDR2                                 162       1       1       0   .abs_section_162
+     _CANRXIDR3                                 163       1       1       0   .abs_section_163
+     _CANTAAK                                   149       1       1       0   .abs_section_149
+     _CANTARQ                                   148       1       1       0   .abs_section_148
+     _CANTBSEL                                  14A       1       1       0   .abs_section_14a
+     _CANTFLG                                   146       1       1       0   .abs_section_146
+     _CANTIER                                   147       1       1       0   .abs_section_147
+     _CANTXDLR                                  17C       1       1       0   .abs_section_17c
+     _CANTXDSR0                                 174       1       1       0   .abs_section_174
+     _CANTXDSR1                                 175       1       1       0   .abs_section_175
+     _CANTXDSR2                                 176       1       1       0   .abs_section_176
+     _CANTXDSR3                                 177       1       1       0   .abs_section_177
+     _CANTXDSR4                                 178       1       1       0   .abs_section_178
+     _CANTXDSR5                                 179       1       1       0   .abs_section_179
+     _CANTXDSR6                                 17A       1       1       0   .abs_section_17a
+     _CANTXDSR7                                 17B       1       1       0   .abs_section_17b
+     _CANTXERR                                  14F       1       1       0   .abs_section_14f
+     _CANTXIDR0                                 170       1       1       0   .abs_section_170
+     _CANTXIDR1                                 171       1       1       0   .abs_section_171
+     _CANTXIDR2                                 172       1       1       0   .abs_section_172
+     _CANTXIDR3                                 173       1       1       0   .abs_section_173
+     _CANTXTBPR                                 17F       1       1       0   .abs_section_17f
+     _CFORC                                      41       1       1       0   .abs_section_41
+     _CLKSEL                                     39       1       1       3   .abs_section_39
+     _COPCTL                                     3C       1       1       0   .abs_section_3c
+     _CRGFLG                                     37       1       1       1   .abs_section_37
+     _CRGINT                                     38       1       1       0   .abs_section_38
+     _CTCTL                                      3E       1       1       0   .abs_section_3e
+     _CTFLG                                      36       1       1       0   .abs_section_36
+     _DDRAD                                     272       1       1       0   .abs_section_272
+     _DDRE                                        9       1       1       0   .abs_section_9
+     _DDRJ                                      26A       1       1       0   .abs_section_26a
+     _DDRK                                       33       1       1       0   .abs_section_33
+     _DDRM                                      252       1       1       0   .abs_section_252
+     _DDRP                                      25A       1       1       1   .abs_section_25a
+     _DDRS                                      24A       1       1       0   .abs_section_24a
+     _DDRT                                      242       1       1       0   .abs_section_242
+     _EBICTL                                      E       1       1       0   .abs_section_e
+     _FCLKDIV                                   100       1       1       0   .abs_section_100
+     _FCMD                                      106       1       1       0   .abs_section_106
+     _FCNFG                                     103       1       1       0   .abs_section_103
+     _FPROT                                     104       1       1       0   .abs_section_104
+     _FSEC                                      101       1       1       0   .abs_section_101
+     _FSTAT                                     105       1       1       0   .abs_section_105
+     _HPRIO                                      1F       1       1       0   .abs_section_1f
+     _INITEE                                     12       1       1       0   .abs_section_12
+     _INITRG                                     11       1       1       0   .abs_section_11
+     _INITRM                                     10       1       1       1   .abs_section_10
+     _INTCR                                      1E       1       1       1   .abs_section_1e
+     _ITCR                                       15       1       1       0   .abs_section_15
+     _ITEST                                      16       1       1       0   .abs_section_16
+     _MEMSIZ0                                    1C       1       1       0   .abs_section_1c
+     _MEMSIZ1                                    1D       1       1       0   .abs_section_1d
+     _MISC                                       13       1       1       1   .abs_section_13
+     _MODE                                        B       1       1       0   .abs_section_b
+     _MODRR                                     247       1       1       0   .abs_section_247
+     _MTST0                                      14       1       1       0   .abs_section_14
+     _MTST1                                      17       1       1       0   .abs_section_17
+     _OC7D                                       43       1       1       0   .abs_section_43
+     _OC7M                                       42       1       1       0   .abs_section_42
+     _PACTL                                      60       1       1       0   .abs_section_60
+     _PAFLG                                      61       1       1       0   .abs_section_61
+     _PARTIDH                                    1A       1       1       0   .abs_section_1a
+     _PARTIDL                                    1B       1       1       0   .abs_section_1b
+     _PEAR                                        A       1       1       0   .abs_section_a
+     _PERAD                                     274       1       1       0   .abs_section_274
+     _PERJ                                      26C       1       1       0   .abs_section_26c
+     _PERM                                      254       1       1       0   .abs_section_254
+     _PERP                                      25C       1       1       1   .abs_section_25c
+     _PERS                                      24C       1       1       0   .abs_section_24c
+     _PERT                                      244       1       1       0   .abs_section_244
+     _PIEJ                                      26E       1       1       0   .abs_section_26e
+     _PIEP                                      25E       1       1       2   .abs_section_25e
+     _PIFJ                                      26F       1       1       0   .abs_section_26f
+     _PIFP                                      25F       1       1       2   .abs_section_25f
+     _PLLCTL                                     3A       1       1       3   .abs_section_3a
+     _PORTAD0                                    8F       1       1       0   .abs_section_8f
+     _PORTE                                       8       1       1       0   .abs_section_8
+     _PORTK                                      32       1       1       0   .abs_section_32
+     _PPAGE                                      30       1       1       0   .abs_section_30
+     _PPSAD                                     275       1       1       0   .abs_section_275
+     _PPSJ                                      26D       1       1       0   .abs_section_26d
+     _PPSM                                      255       1       1       0   .abs_section_255
+     _PPSP                                      25D       1       1       1   .abs_section_25d
+     _PPSS                                      24D       1       1       0   .abs_section_24d
+     _PPST                                      245       1       1       0   .abs_section_245
+     _PTAD                                      270       1       1       0   .abs_section_270
+     _PTIAD                                     271       1       1       0   .abs_section_271
+     _PTIJ                                      269       1       1       0   .abs_section_269
+     _PTIM                                      251       1       1       0   .abs_section_251
+     _PTIP                                      259       1       1       0   .abs_section_259
+     _PTIS                                      249       1       1       0   .abs_section_249
+     _PTIT                                      241       1       1       0   .abs_section_241
+     _PTJ                                       268       1       1       0   .abs_section_268
+     _PTM                                       250       1       1       0   .abs_section_250
+     _PTP                                       258       1       1       0   .abs_section_258
+     _PTS                                       248       1       1       0   .abs_section_248
+     _PTT                                       240       1       1       0   .abs_section_240
+     _PUCR                                        C       1       1       0   .abs_section_c
+     _PWMCAE                                     E4       1       1       0   .abs_section_e4
+     _PWMCLK                                     E2       1       1       0   .abs_section_e2
+     _PWMCTL                                     E5       1       1       1   .abs_section_e5
+     _PWME                                       E0       1       1       0   .abs_section_e0
+     _PWMPOL                                     E1       1       1       0   .abs_section_e1
+     _PWMPRCLK                                   E3       1       1       0   .abs_section_e3
+     _PWMSCLA                                    E8       1       1       0   .abs_section_e8
+     _PWMSCLB                                    E9       1       1       0   .abs_section_e9
+     _PWMSDN                                     FE       1       1       1   .abs_section_fe
+     _RDRAD                                     273       1       1       0   .abs_section_273
+     _RDRIV                                       D       1       1       0   .abs_section_d
+     _RDRJ                                      26B       1       1       0   .abs_section_26b
+     _RDRM                                      253       1       1       0   .abs_section_253
+     _RDRP                                      25B       1       1       0   .abs_section_25b
+     _RDRS                                      24B       1       1       0   .abs_section_24b
+     _RDRT                                      243       1       1       0   .abs_section_243
+     _REFDV                                      35       1       1       1   .abs_section_35
+     _RTICTL                                     3B       1       1       0   .abs_section_3b
+     _SCICR1                                     CA       1       1       0   .abs_section_ca
+     _SCICR2                                     CB       1       1       0   .abs_section_cb
+     _SCIDRH                                     CE       1       1       0   .abs_section_ce
+     _SCIDRL                                     CF       1       1       0   .abs_section_cf
+     _SCISR1                                     CC       1       1       0   .abs_section_cc
+     _SCISR2                                     CD       1       1       0   .abs_section_cd
+     _SPIBR                                      DA       1       1       0   .abs_section_da
+     _SPICR1                                     D8       1       1       0   .abs_section_d8
+     _SPICR2                                     D9       1       1       0   .abs_section_d9
+     _SPIDR                                      DD       1       1       0   .abs_section_dd
+     _SPISR                                      DB       1       1       0   .abs_section_db
+     _SYNR                                       34       1       1       1   .abs_section_34
+     _TCTL1                                      48       1       1       1   .abs_section_48
+     _TCTL2                                      49       1       1       1   .abs_section_49
+     _TCTL3                                      4A       1       1       0   .abs_section_4a
+     _TCTL4                                      4B       1       1       0   .abs_section_4b
+     _TFLG1                                      4E       1       1       2   .abs_section_4e
+     _TFLG2                                      4F       1       1       0   .abs_section_4f
+     _TIE                                        4C       1       1       3   .abs_section_4c
+     _TIOS                                       40       1       1       1   .abs_section_40
+     _TSCR1                                      46       1       1       3   .abs_section_46
+     _TSCR2                                      4D       1       1       5   .abs_section_4d
+     _TTOV                                       47       1       1       1   .abs_section_47
+     _WOMM                                      256       1       1       0   .abs_section_256
+     _WOMS                                      24E       1       1       0   .abs_section_24e
+     _ATDCTL23                                   82       2       2       0   .abs_section_82
+     _ATDCTL45                                   84       2       2       0   .abs_section_84
+     _ATDDR0                                     90       2       2       0   .abs_section_90
+     _ATDDR1                                     92       2       2       0   .abs_section_92
+     _ATDDR2                                     94       2       2       0   .abs_section_94
+     _ATDDR3                                     96       2       2       0   .abs_section_96
+     _ATDDR4                                     98       2       2       0   .abs_section_98
+     _ATDDR5                                     9A       2       2       0   .abs_section_9a
+     _ATDDR6                                     9C       2       2       0   .abs_section_9c
+     _ATDDR7                                     9E       2       2       0   .abs_section_9e
+     _DDRAB                                       2       2       2       1   .abs_section_2
+     _PACNT                                      62       2       2       0   .abs_section_62
+     _PORTAB                                      0       2       2       3   .abs_section_0
+     _PWMCNT01                                   EC       2       2       0   .abs_section_ec
+     _PWMCNT23                                   EE       2       2       0   .abs_section_ee
+     _PWMCNT45                                   F0       2       2       0   .abs_section_f0
+     _PWMDTY01                                   F8       2       2       0   .abs_section_f8
+     _PWMDTY23                                   FA       2       2       0   .abs_section_fa
+     _PWMDTY45                                   FC       2       2       0   .abs_section_fc
+     _PWMPER01                                   F2       2       2       0   .abs_section_f2
+     _PWMPER23                                   F4       2       2       0   .abs_section_f4
+     _PWMPER45                                   F6       2       2       0   .abs_section_f6
+     _SCIBD                                      C8       2       2       0   .abs_section_c8
+     _TC0                                        50       2       2       1   .abs_section_50
+     _TC1                                        52       2       2       0   .abs_section_52
+     _TC2                                        54       2       2       0   .abs_section_54
+     _TC3                                        56       2       2       0   .abs_section_56
+     _TC4                                        58       2       2       0   .abs_section_58
+     _TC5                                        5A       2       2       0   .abs_section_5a
+     _TC6                                        5C       2       2       0   .abs_section_5c
+     _TC7                                        5E       2       2       1   .abs_section_5e
+     _TCNT                                       44       2       2       0   .abs_section_44
+MODULE:                 -- Vectors.c.o --
+- PROCEDURES:
+- VARIABLES:
+     _vect                                     FF80      80     128       0   .abs_section_ff80
+MODULE:                 -- RTOSDemo.C.o --
+- PROCEDURES:
+     main                                      C1FD       8       8       0   .text       
+- VARIABLES:
+MODULE:                 -- tasks.c.o --
+- PROCEDURES:
+     xTaskCreate                               C205      CE     206      11   .text       
+     vTaskDelayUntil                           C2D3      74     116       3   .text       
+     vTaskDelay                                C347      46      70       4   .text       
+     uxTaskPriorityGet                         C38D      26      38       1   .text       
+     vTaskPrioritySet                          C3B3      69     105       2   .text       
+     vTaskSuspend                              C41C      44      68       3   .text       
+     vTaskResume                               C460      59      89       3   .text       
+     vTaskStartScheduler                       C4B9      30      48       1   .text       
+     vTaskSuspendAll                           C4E9      13      19      11   .text       
+     xTaskResumeAll                            C4FC      9F     159      13   .text       
+     xTaskGetTickCount                         C59B      17      23       2   .text       
+     vTaskIncrementTick                        C5B2      81     129       2   .text       
+     vTaskSwitchContext                        C633      5B      91       3   .text       
+     vTaskPlaceOnEventList                     C68E      41      65       2   .text       
+     xTaskRemoveFromEventList                  C6CF      6C     108       3   .text       
+     prvIdleTask                               C73B      10      16       1   .text       
+     prvInitialiseTCBVariables                 C74B      4C      76       1   .text       
+     prvInitialiseTaskLists                    C797      3C      60       1   .text       
+     prvCheckTasksWaitingTermination           C7D3       1       1       1   .text       
+     prvAllocateTCBAndStack                    C7D4      33      51       1   .text       
+- VARIABLES:
+     STRING.IDLE.2                             C093       5       5       1   .rodata1    
+     pxCurrentTCB                               801       2       2      29   .bss        
+     uxCurrentNumberOfTasks                     803       1       1       3   .bss        
+     xTickCount                                 804       2       2      14   .bss        
+     uxTopUsedPriority                          806       1       1       2   .bss        
+     uxTopReadyPriority                         807       1       1      15   .bss        
+     xSchedulerRunning                          808       1       1       3   .bss        
+     uxSchedulerSuspended                       809       1       1       6   .bss        
+     uxMissedTicks                              80A       1       1       4   .bss        
+     uxTaskNumber.1                             80B       1       1       2   .bss        
+     pxReadyTasksLists                          80C      3C      60      11   .bss        
+     xDelayedTaskList1                          848       F      15       2   .bss        
+     xDelayedTaskList2                          857       F      15       2   .bss        
+     pxDelayedTaskList                          866       2       2       8   .bss        
+     pxOverflowDelayedTaskList                  868       2       2       6   .bss        
+     xPendingReadyList                          86A       F      15       4   .bss        
+     xSuspendedTaskList                         879       F      15       2   .bss        
+MODULE:                 -- queue.c.o --
+- PROCEDURES:
+     xQueueCreate                              C807      77     119       3   .text       
+     xQueueSend                                C87E      CA     202       3   .text       
+     xQueueSendFromISR                         C948      54      84       1   .text       
+     xQueueReceive                             C99C      C4     196       4   .text       
+     uxQueueMessagesWaiting                    CA60      1B      27       1   .text       
+     prvUnlockQueue                            CA7B      6F     111       4   .text       
+     prvIsQueueEmpty                           CAEA      21      33       1   .text       
+     prvIsQueueFull                            CB0B      24      36       1   .text       
+- VARIABLES:
+MODULE:                 -- list.c.o --
+- PROCEDURES:
+     vListInitialise                           CB2F      1F      31       7   .text       
+     vListInitialiseItem                       CB4E       7       7       3   .text       
+     vListInsertEnd                            CB55      27      39       7   .text       
+     vListInsert                               CB7C      5A      90       4   .text       
+     vListRemove                               CBD6      23      35      13   .text       
+- VARIABLES:
+MODULE:                 -- port.c.o --
+- PROCEDURES:
+     pxPortInitialiseStack                     CBF9      2B      43       1   .text       
+     prvSetupTimerInterrupt                    CC24       9       9       1   .text       
+     xPortStartScheduler                       CC2D       4       4       1   .text       
+     xBankedStartScheduler                     C0E2       F      15       1   NON_BANKED  
+     vPortYield                                C0F1      16      22       1   NON_BANKED  
+     vPortTickInterrupt                        C107      1D      29       1   NON_BANKED  
+- VARIABLES:
+     uxCriticalNesting                          800       1       1      91   .data       
+MODULE:                 -- flash.c.o --
+- PROCEDURES:
+     vStartLEDFlashTasks                       CC31      26      38       1   .text       
+     vLEDFlashTask                             CC57      52      82       1   .text       
+- VARIABLES:
+     STRING.LEDx.1                             C098       5       5       1   .rodata1    
+     uxFlashTaskNumber                          888       1       1       2   .bss        
+MODULE:                 -- main.c.o --
+- PROCEDURES:
+     vMain                                     CCA9      42      66       1   .text       
+     vErrorChecks                              CCEB      2F      47       1   .text       
+     prvCheckOtherTasksAreStillRunning         CD1A      23      35       1   .text       
+     vApplicationIdleHook                      CD3D      73     115       1   .text       
+     vButtonTask                               CDB0      4F      79       1   .text       
+     vButtonPush                               C124      2F      47       1   NON_BANKED  
+- VARIABLES:
+     STRING.Check.1                            C09D       6       6       1   .rodata1    
+     STRING.Button.2                           C0A3       7       7       1   .rodata1    
+     xLocalError                                889       1       1       3   .bss        
+     uxValToSend.3                              88A       1       1       2   .bss        
+     xButtonQueue                               88B       2       2       3   .bss        
+MODULE:                 -- heap_1.c.o --
+- PROCEDURES:
+     pvPortMalloc                              CDFF      30      48       4   .text       
+     vPortFree                                 CE2F       1       1       2   .text       
+- VARIABLES:
+     xNextFreeByte                              88D       2       2       5   .bss        
+     xHeap                                      88F     704    1796       1   .bss        
+MODULE:                 -- TickTimer.C.o --
+- PROCEDURES:
+     SetCV                                     D328       F      15       2   TickTimer_CODE
+     SetPV                                     D337       C      12       1   TickTimer_CODE
+     HWEnDi                                    D343      11      17       2   TickTimer_CODE
+     TickTimer_Enable                          D354       E      14       1   TickTimer_CODE
+     TickTimer_SetFreqHz                       D362      4F      79       1   TickTimer_CODE
+     TickTimer_Init                            D3B1      14      20       1   TickTimer_CODE
+- VARIABLES:
+     EnUser                                     FBB       1       1       4   TickTimer_DATA
+     CmpHighVal                                 FBC       2       2       2   TickTimer_DATA
+MODULE:                 -- PE_Timer.C.o --
+- PROCEDURES:
+     PE_Timer_LngHi1                           CE30      43      67       1   .text       
+- VARIABLES:
+MODULE:                 -- ParTest.c.o --
+- PROCEDURES:
+     vParTestToggleLED                         CE73      13      19       4   .text       
+- VARIABLES:
+MODULE:                 -- PollQ.c.o --
+- PROCEDURES:
+     vStartPolledQueueTasks                    CE86      40      64       1   .text       
+     vPolledQueueProducer                      CEC6      4D      77       1   .text       
+     vPolledQueueConsumer                      CF13      59      89       1   .text       
+     xArePollingQueuesStillRunning             CF6C      1D      29       1   .text       
+- VARIABLES:
+     STRING.QConsNB.2                          C0AA       8       8       1   .rodata1    
+     STRING.QProdNB.3                          C0B2       8       8       1   .rodata1    
+     xPollingConsumerCount                      F93       1       1       3   .bss        
+     xPollingProducerCount                      F94       1       1       3   .bss        
+     xPolledQueue.1                             F95       2       2       3   .bss        
+MODULE:                 -- dynamic.c.o --
+- PROCEDURES:
+     vStartDynamicPriorityTasks                CF89      7C     124       1   .text       
+     vLimitedIncrementTask                     D005      21      33       1   .text       
+     vContinuousIncrementTask                  D026      30      48       1   .text       
+     vCounterControlTask                       D056      98     152       3   .text       
+     vQueueSendWhenSuspendedTask               D0EE      34      52       1   .text       
+     vQueueReceiveWhenSuspendedTask            D122      4E      78       1   .text       
+     xAreDynamicPriorityTasksStillRunning       D170      27      39       1   .text       
+- VARIABLES:
+     STRING.CNT_INC.1                          C0BA       8       8       1   .rodata1    
+     STRING.LIM_INC.2                          C0C2       8       8       1   .rodata1    
+     STRING.C_CTRL.3                           C0CA       7       7       1   .rodata1    
+     STRING.SUSP_TX.4                          C0D1       8       8       1   .rodata1    
+     STRING.SUSP_RX.5                          C0D9       8       8       1   .rodata1    
+     usCheckVariable                            F97       2       2       4   .bss        
+     xSuspendedQueueSendError                   F99       1       1       2   .bss        
+     xSuspendedQueueReceiveError                F9A       1       1       3   .bss        
+     ulValueToSend.6                            F9B       4       4       5   .bss        
+     ulExpectedValue.7                          F9F       4       4       6   .bss        
+     usLastTaskCheck.9                          FA3       2       2       2   .bss        
+     xContinousIncrementHandle                  FA5       2       2       5   .bss        
+     xLimitedIncrementHandle                    FA7       2       2       2   .bss        
+     ulCounter                                  FA9       4       4      10   .bss        
+     ulReceivedValue.8                          FAD       4       4       3   .bss        
+     xSuspendedTestQueue                        FB1       2       2       3   .common     
+MODULE:                 -- ButtonInterrupt.C.o --
+- PROCEDURES:
+     ButtonInterrupt_Enable                    D3C5       A      10       1   ButtonInterrupt_CODE
+- VARIABLES:
+
+*********************************************************************************************
+MODULE STATISTIC
+  Name                                      Data   Code  Const
+---------------------------------------------------------------------------------------------
+  Start12.c.o                                  0     57      0
+  STRING.C.o (ansisi.lib)                      0    113      0
+  rtshc12.c.o (ansisi.lib)                     0    373      0
+  Cpu.C.o                                      0    119      0
+  Byte1.C.o                                    8     28      0
+  IO_Map.C.o                                 256      0      0
+  Vectors.c.o                                  0      0    128
+  RTOSDemo.C.o                                 0      8      0
+  tasks.c.o                                  135   1538      5
+  queue.c.o                                    0    808      0
+  list.c.o                                     0    202      0
+  port.c.o                                     1    122      0
+  flash.c.o                                    1    120      5
+  main.c.o                                     4    389     13
+  heap_1.c.o                                1798     49      0
+  TickTimer.C.o                                3    157      0
+  PE_Timer.C.o                                 0     67      0
+  ParTest.c.o                                  0     19      0
+  PollQ.c.o                                    4    259     16
+  dynamic.c.o                                 28    526     39
+  ButtonInterrupt.C.o                          0     10      0
+  other                                       48     29     19
+
+*********************************************************************************************
+SECTION USE IN OBJECT-ALLOCATION SECTION
+---------------------------------------------------------------------------------------------
+SECTION: ".text"
+  Init _Startup memcpy memset strncpy main xTaskCreate vTaskDelayUntil 
+  vTaskDelay uxTaskPriorityGet vTaskPrioritySet vTaskSuspend vTaskResume 
+  vTaskStartScheduler vTaskSuspendAll xTaskResumeAll xTaskGetTickCount 
+  vTaskIncrementTick vTaskSwitchContext vTaskPlaceOnEventList 
+  xTaskRemoveFromEventList prvIdleTask prvInitialiseTCBVariables 
+  prvInitialiseTaskLists prvCheckTasksWaitingTermination prvAllocateTCBAndStack 
+  xQueueCreate xQueueSend xQueueSendFromISR xQueueReceive 
+  uxQueueMessagesWaiting prvUnlockQueue prvIsQueueEmpty prvIsQueueFull 
+  vListInitialise vListInitialiseItem vListInsertEnd vListInsert vListRemove 
+  pxPortInitialiseStack prvSetupTimerInterrupt xPortStartScheduler 
+  vStartLEDFlashTasks vLEDFlashTask vMain vErrorChecks 
+  prvCheckOtherTasksAreStillRunning vApplicationIdleHook vButtonTask 
+  pvPortMalloc vPortFree PE_Timer_LngHi1 vParTestToggleLED 
+  vStartPolledQueueTasks vPolledQueueProducer vPolledQueueConsumer 
+  xArePollingQueuesStillRunning vStartDynamicPriorityTasks 
+  vLimitedIncrementTask vContinuousIncrementTask vCounterControlTask 
+  vQueueSendWhenSuspendedTask vQueueReceiveWhenSuspendedTask 
+  xAreDynamicPriorityTasksStillRunning 
+SECTION: ".data"
+  uxCriticalNesting 
+SECTION: ".bss"
+  pxCurrentTCB uxCurrentNumberOfTasks xTickCount uxTopUsedPriority 
+  uxTopReadyPriority xSchedulerRunning uxSchedulerSuspended uxMissedTicks 
+  uxTaskNumber.1 pxReadyTasksLists xDelayedTaskList1 xDelayedTaskList2 
+  pxDelayedTaskList pxOverflowDelayedTaskList xPendingReadyList 
+  xSuspendedTaskList uxFlashTaskNumber xLocalError uxValToSend.3 xButtonQueue 
+  xNextFreeByte xHeap xPollingConsumerCount xPollingProducerCount 
+  xPolledQueue.1 usCheckVariable xSuspendedQueueSendError 
+  xSuspendedQueueReceiveError ulValueToSend.6 ulExpectedValue.7 
+  usLastTaskCheck.9 xContinousIncrementHandle xLimitedIncrementHandle ulCounter 
+  ulReceivedValue.8 
+SECTION: ".init"
+  _EntryPoint PE_low_level_init 
+SECTION: ".rodata1"
+  STRING.IDLE.2 STRING.LEDx.1 STRING.Check.1 STRING.Button.2 STRING.QConsNB.2 
+  STRING.QProdNB.3 STRING.CNT_INC.1 STRING.LIM_INC.2 STRING.C_CTRL.3 
+  STRING.SUSP_TX.4 STRING.SUSP_RX.5 
+SECTION: "NON_BANKED"
+  Cpu_Interrupt xBankedStartScheduler vPortYield vPortTickInterrupt 
+  vButtonPush 
+SECTION: "RUNTIME"
+  _LCMP _LCMP_P _LNEG _LINC _lDivMod _LDIVU _NEG_P _LDIVS 
+SECTION: ".common"
+  xSuspendedTestQueue 
+SECTION: "Byte1_CODE"
+  Byte1_GetMsk Byte1_NegBit 
+SECTION: "TickTimer_CODE"
+  SetCV SetPV HWEnDi TickTimer_Enable TickTimer_SetFreqHz TickTimer_Init 
+SECTION: "ButtonInterrupt_CODE"
+  ButtonInterrupt_Enable 
+SECTION: "Byte1_DATA"
+  Byte1_Table 
+SECTION: ".abs_section_3f"
+  _ARMCOP 
+SECTION: ".abs_section_8d"
+  _ATDDIEN 
+SECTION: ".abs_section_86"
+  _ATDSTAT0 
+SECTION: ".abs_section_8b"
+  _ATDSTAT1 
+SECTION: ".abs_section_ff06"
+  _BDMCCR 
+SECTION: ".abs_section_ff07"
+  _BDMINR 
+SECTION: ".abs_section_ff01"
+  _BDMSTS 
+SECTION: ".abs_section_2b"
+  _BKP0H 
+SECTION: ".abs_section_2c"
+  _BKP0L 
+SECTION: ".abs_section_2a"
+  _BKP0X 
+SECTION: ".abs_section_2e"
+  _BKP1H 
+SECTION: ".abs_section_2f"
+  _BKP1L 
+SECTION: ".abs_section_2d"
+  _BKP1X 
+SECTION: ".abs_section_28"
+  _BKPCT0 
+SECTION: ".abs_section_29"
+  _BKPCT1 
+SECTION: ".abs_section_142"
+  _CANBTR0 
+SECTION: ".abs_section_143"
+  _CANBTR1 
+SECTION: ".abs_section_140"
+  _CANCTL0 
+SECTION: ".abs_section_141"
+  _CANCTL1 
+SECTION: ".abs_section_14b"
+  _CANIDAC 
+SECTION: ".abs_section_150"
+  _CANIDAR0 
+SECTION: ".abs_section_151"
+  _CANIDAR1 
+SECTION: ".abs_section_152"
+  _CANIDAR2 
+SECTION: ".abs_section_153"
+  _CANIDAR3 
+SECTION: ".abs_section_158"
+  _CANIDAR4 
+SECTION: ".abs_section_159"
+  _CANIDAR5 
+SECTION: ".abs_section_15a"
+  _CANIDAR6 
+SECTION: ".abs_section_15b"
+  _CANIDAR7 
+SECTION: ".abs_section_154"
+  _CANIDMR0 
+SECTION: ".abs_section_155"
+  _CANIDMR1 
+SECTION: ".abs_section_156"
+  _CANIDMR2 
+SECTION: ".abs_section_157"
+  _CANIDMR3 
+SECTION: ".abs_section_15c"
+  _CANIDMR4 
+SECTION: ".abs_section_15d"
+  _CANIDMR5 
+SECTION: ".abs_section_15e"
+  _CANIDMR6 
+SECTION: ".abs_section_15f"
+  _CANIDMR7 
+SECTION: ".abs_section_144"
+  _CANRFLG 
+SECTION: ".abs_section_145"
+  _CANRIER 
+SECTION: ".abs_section_16c"
+  _CANRXDLR 
+SECTION: ".abs_section_164"
+  _CANRXDSR0 
+SECTION: ".abs_section_165"
+  _CANRXDSR1 
+SECTION: ".abs_section_166"
+  _CANRXDSR2 
+SECTION: ".abs_section_167"
+  _CANRXDSR3 
+SECTION: ".abs_section_168"
+  _CANRXDSR4 
+SECTION: ".abs_section_169"
+  _CANRXDSR5 
+SECTION: ".abs_section_16a"
+  _CANRXDSR6 
+SECTION: ".abs_section_16b"
+  _CANRXDSR7 
+SECTION: ".abs_section_14e"
+  _CANRXERR 
+SECTION: ".abs_section_160"
+  _CANRXIDR0 
+SECTION: ".abs_section_161"
+  _CANRXIDR1 
+SECTION: ".abs_section_162"
+  _CANRXIDR2 
+SECTION: ".abs_section_163"
+  _CANRXIDR3 
+SECTION: ".abs_section_149"
+  _CANTAAK 
+SECTION: ".abs_section_148"
+  _CANTARQ 
+SECTION: ".abs_section_14a"
+  _CANTBSEL 
+SECTION: ".abs_section_146"
+  _CANTFLG 
+SECTION: ".abs_section_147"
+  _CANTIER 
+SECTION: ".abs_section_17c"
+  _CANTXDLR 
+SECTION: ".abs_section_174"
+  _CANTXDSR0 
+SECTION: ".abs_section_175"
+  _CANTXDSR1 
+SECTION: ".abs_section_176"
+  _CANTXDSR2 
+SECTION: ".abs_section_177"
+  _CANTXDSR3 
+SECTION: ".abs_section_178"
+  _CANTXDSR4 
+SECTION: ".abs_section_179"
+  _CANTXDSR5 
+SECTION: ".abs_section_17a"
+  _CANTXDSR6 
+SECTION: ".abs_section_17b"
+  _CANTXDSR7 
+SECTION: ".abs_section_14f"
+  _CANTXERR 
+SECTION: ".abs_section_170"
+  _CANTXIDR0 
+SECTION: ".abs_section_171"
+  _CANTXIDR1 
+SECTION: ".abs_section_172"
+  _CANTXIDR2 
+SECTION: ".abs_section_173"
+  _CANTXIDR3 
+SECTION: ".abs_section_17f"
+  _CANTXTBPR 
+SECTION: ".abs_section_41"
+  _CFORC 
+SECTION: ".abs_section_39"
+  _CLKSEL 
+SECTION: ".abs_section_3c"
+  _COPCTL 
+SECTION: ".abs_section_37"
+  _CRGFLG 
+SECTION: ".abs_section_38"
+  _CRGINT 
+SECTION: ".abs_section_3e"
+  _CTCTL 
+SECTION: ".abs_section_36"
+  _CTFLG 
+SECTION: ".abs_section_272"
+  _DDRAD 
+SECTION: ".abs_section_9"
+  _DDRE 
+SECTION: ".abs_section_26a"
+  _DDRJ 
+SECTION: ".abs_section_33"
+  _DDRK 
+SECTION: ".abs_section_252"
+  _DDRM 
+SECTION: ".abs_section_25a"
+  _DDRP 
+SECTION: ".abs_section_24a"
+  _DDRS 
+SECTION: ".abs_section_242"
+  _DDRT 
+SECTION: ".abs_section_e"
+  _EBICTL 
+SECTION: ".abs_section_100"
+  _FCLKDIV 
+SECTION: ".abs_section_106"
+  _FCMD 
+SECTION: ".abs_section_103"
+  _FCNFG 
+SECTION: ".abs_section_104"
+  _FPROT 
+SECTION: ".abs_section_101"
+  _FSEC 
+SECTION: ".abs_section_105"
+  _FSTAT 
+SECTION: ".abs_section_1f"
+  _HPRIO 
+SECTION: ".abs_section_12"
+  _INITEE 
+SECTION: ".abs_section_11"
+  _INITRG 
+SECTION: ".abs_section_10"
+  _INITRM 
+SECTION: ".abs_section_1e"
+  _INTCR 
+SECTION: ".abs_section_15"
+  _ITCR 
+SECTION: ".abs_section_16"
+  _ITEST 
+SECTION: ".abs_section_1c"
+  _MEMSIZ0 
+SECTION: ".abs_section_1d"
+  _MEMSIZ1 
+SECTION: ".abs_section_13"
+  _MISC 
+SECTION: ".abs_section_b"
+  _MODE 
+SECTION: ".abs_section_247"
+  _MODRR 
+SECTION: ".abs_section_14"
+  _MTST0 
+SECTION: ".abs_section_17"
+  _MTST1 
+SECTION: ".abs_section_43"
+  _OC7D 
+SECTION: ".abs_section_42"
+  _OC7M 
+SECTION: ".abs_section_60"
+  _PACTL 
+SECTION: ".abs_section_61"
+  _PAFLG 
+SECTION: ".abs_section_1a"
+  _PARTIDH 
+SECTION: ".abs_section_1b"
+  _PARTIDL 
+SECTION: ".abs_section_a"
+  _PEAR 
+SECTION: ".abs_section_274"
+  _PERAD 
+SECTION: ".abs_section_26c"
+  _PERJ 
+SECTION: ".abs_section_254"
+  _PERM 
+SECTION: ".abs_section_25c"
+  _PERP 
+SECTION: ".abs_section_24c"
+  _PERS 
+SECTION: ".abs_section_244"
+  _PERT 
+SECTION: ".abs_section_26e"
+  _PIEJ 
+SECTION: ".abs_section_25e"
+  _PIEP 
+SECTION: ".abs_section_26f"
+  _PIFJ 
+SECTION: ".abs_section_25f"
+  _PIFP 
+SECTION: ".abs_section_3a"
+  _PLLCTL 
+SECTION: ".abs_section_8f"
+  _PORTAD0 
+SECTION: ".abs_section_8"
+  _PORTE 
+SECTION: ".abs_section_32"
+  _PORTK 
+SECTION: ".abs_section_30"
+  _PPAGE 
+SECTION: ".abs_section_275"
+  _PPSAD 
+SECTION: ".abs_section_26d"
+  _PPSJ 
+SECTION: ".abs_section_255"
+  _PPSM 
+SECTION: ".abs_section_25d"
+  _PPSP 
+SECTION: ".abs_section_24d"
+  _PPSS 
+SECTION: ".abs_section_245"
+  _PPST 
+SECTION: ".abs_section_270"
+  _PTAD 
+SECTION: ".abs_section_271"
+  _PTIAD 
+SECTION: ".abs_section_269"
+  _PTIJ 
+SECTION: ".abs_section_251"
+  _PTIM 
+SECTION: ".abs_section_259"
+  _PTIP 
+SECTION: ".abs_section_249"
+  _PTIS 
+SECTION: ".abs_section_241"
+  _PTIT 
+SECTION: ".abs_section_268"
+  _PTJ 
+SECTION: ".abs_section_250"
+  _PTM 
+SECTION: ".abs_section_258"
+  _PTP 
+SECTION: ".abs_section_248"
+  _PTS 
+SECTION: ".abs_section_240"
+  _PTT 
+SECTION: ".abs_section_c"
+  _PUCR 
+SECTION: ".abs_section_e4"
+  _PWMCAE 
+SECTION: ".abs_section_e2"
+  _PWMCLK 
+SECTION: ".abs_section_e5"
+  _PWMCTL 
+SECTION: ".abs_section_e0"
+  _PWME 
+SECTION: ".abs_section_e1"
+  _PWMPOL 
+SECTION: ".abs_section_e3"
+  _PWMPRCLK 
+SECTION: ".abs_section_e8"
+  _PWMSCLA 
+SECTION: ".abs_section_e9"
+  _PWMSCLB 
+SECTION: ".abs_section_fe"
+  _PWMSDN 
+SECTION: ".abs_section_273"
+  _RDRAD 
+SECTION: ".abs_section_d"
+  _RDRIV 
+SECTION: ".abs_section_26b"
+  _RDRJ 
+SECTION: ".abs_section_253"
+  _RDRM 
+SECTION: ".abs_section_25b"
+  _RDRP 
+SECTION: ".abs_section_24b"
+  _RDRS 
+SECTION: ".abs_section_243"
+  _RDRT 
+SECTION: ".abs_section_35"
+  _REFDV 
+SECTION: ".abs_section_3b"
+  _RTICTL 
+SECTION: ".abs_section_ca"
+  _SCICR1 
+SECTION: ".abs_section_cb"
+  _SCICR2 
+SECTION: ".abs_section_ce"
+  _SCIDRH 
+SECTION: ".abs_section_cf"
+  _SCIDRL 
+SECTION: ".abs_section_cc"
+  _SCISR1 
+SECTION: ".abs_section_cd"
+  _SCISR2 
+SECTION: ".abs_section_da"
+  _SPIBR 
+SECTION: ".abs_section_d8"
+  _SPICR1 
+SECTION: ".abs_section_d9"
+  _SPICR2 
+SECTION: ".abs_section_dd"
+  _SPIDR 
+SECTION: ".abs_section_db"
+  _SPISR 
+SECTION: ".abs_section_34"
+  _SYNR 
+SECTION: ".abs_section_48"
+  _TCTL1 
+SECTION: ".abs_section_49"
+  _TCTL2 
+SECTION: ".abs_section_4a"
+  _TCTL3 
+SECTION: ".abs_section_4b"
+  _TCTL4 
+SECTION: ".abs_section_4e"
+  _TFLG1 
+SECTION: ".abs_section_4f"
+  _TFLG2 
+SECTION: ".abs_section_4c"
+  _TIE 
+SECTION: ".abs_section_40"
+  _TIOS 
+SECTION: ".abs_section_46"
+  _TSCR1 
+SECTION: ".abs_section_4d"
+  _TSCR2 
+SECTION: ".abs_section_47"
+  _TTOV 
+SECTION: ".abs_section_256"
+  _WOMM 
+SECTION: ".abs_section_24e"
+  _WOMS 
+SECTION: ".abs_section_82"
+  _ATDCTL23 
+SECTION: ".abs_section_84"
+  _ATDCTL45 
+SECTION: ".abs_section_90"
+  _ATDDR0 
+SECTION: ".abs_section_92"
+  _ATDDR1 
+SECTION: ".abs_section_94"
+  _ATDDR2 
+SECTION: ".abs_section_96"
+  _ATDDR3 
+SECTION: ".abs_section_98"
+  _ATDDR4 
+SECTION: ".abs_section_9a"
+  _ATDDR5 
+SECTION: ".abs_section_9c"
+  _ATDDR6 
+SECTION: ".abs_section_9e"
+  _ATDDR7 
+SECTION: ".abs_section_2"
+  _DDRAB 
+SECTION: ".abs_section_62"
+  _PACNT 
+SECTION: ".abs_section_0"
+  _PORTAB 
+SECTION: ".abs_section_ec"
+  _PWMCNT01 
+SECTION: ".abs_section_ee"
+  _PWMCNT23 
+SECTION: ".abs_section_f0"
+  _PWMCNT45 
+SECTION: ".abs_section_f8"
+  _PWMDTY01 
+SECTION: ".abs_section_fa"
+  _PWMDTY23 
+SECTION: ".abs_section_fc"
+  _PWMDTY45 
+SECTION: ".abs_section_f2"
+  _PWMPER01 
+SECTION: ".abs_section_f4"
+  _PWMPER23 
+SECTION: ".abs_section_f6"
+  _PWMPER45 
+SECTION: ".abs_section_c8"
+  _SCIBD 
+SECTION: ".abs_section_50"
+  _TC0 
+SECTION: ".abs_section_52"
+  _TC1 
+SECTION: ".abs_section_54"
+  _TC2 
+SECTION: ".abs_section_56"
+  _TC3 
+SECTION: ".abs_section_58"
+  _TC4 
+SECTION: ".abs_section_5a"
+  _TC5 
+SECTION: ".abs_section_5c"
+  _TC6 
+SECTION: ".abs_section_5e"
+  _TC7 
+SECTION: ".abs_section_44"
+  _TCNT 
+SECTION: ".abs_section_ff80"
+  _vect 
+SECTION: "TickTimer_DATA"
+  EnUser CmpHighVal 
+
+*********************************************************************************************
+OBJECT LIST SORTED BY ADDRESS
+     Name                                      Addr   hSize   dSize     Ref    Section   RLIB
+---------------------------------------------------------------------------------------------
+     _PORTAB                                      0       2       2       3   .abs_section_0
+     _DDRAB                                       2       2       2       1   .abs_section_2
+     _PORTE                                       8       1       1       0   .abs_section_8
+     _DDRE                                        9       1       1       0   .abs_section_9
+     _PEAR                                        A       1       1       0   .abs_section_a
+     _MODE                                        B       1       1       0   .abs_section_b
+     _PUCR                                        C       1       1       0   .abs_section_c
+     _RDRIV                                       D       1       1       0   .abs_section_d
+     _EBICTL                                      E       1       1       0   .abs_section_e
+     _INITRM                                     10       1       1       1   .abs_section_10
+     _INITRG                                     11       1       1       0   .abs_section_11
+     _INITEE                                     12       1       1       0   .abs_section_12
+     _MISC                                       13       1       1       1   .abs_section_13
+     _MTST0                                      14       1       1       0   .abs_section_14
+     _ITCR                                       15       1       1       0   .abs_section_15
+     _ITEST                                      16       1       1       0   .abs_section_16
+     _MTST1                                      17       1       1       0   .abs_section_17
+     _PARTIDH                                    1A       1       1       0   .abs_section_1a
+     _PARTIDL                                    1B       1       1       0   .abs_section_1b
+     _MEMSIZ0                                    1C       1       1       0   .abs_section_1c
+     _MEMSIZ1                                    1D       1       1       0   .abs_section_1d
+     _INTCR                                      1E       1       1       1   .abs_section_1e
+     _HPRIO                                      1F       1       1       0   .abs_section_1f
+     _BKPCT0                                     28       1       1       0   .abs_section_28
+     _BKPCT1                                     29       1       1       0   .abs_section_29
+     _BKP0X                                      2A       1       1       0   .abs_section_2a
+     _BKP0H                                      2B       1       1       0   .abs_section_2b
+     _BKP0L                                      2C       1       1       0   .abs_section_2c
+     _BKP1X                                      2D       1       1       0   .abs_section_2d
+     _BKP1H                                      2E       1       1       0   .abs_section_2e
+     _BKP1L                                      2F       1       1       0   .abs_section_2f
+     _PPAGE                                      30       1       1       0   .abs_section_30
+     _PORTK                                      32       1       1       0   .abs_section_32
+     _DDRK                                       33       1       1       0   .abs_section_33
+     _SYNR                                       34       1       1       1   .abs_section_34
+     _REFDV                                      35       1       1       1   .abs_section_35
+     _CTFLG                                      36       1       1       0   .abs_section_36
+     _CRGFLG                                     37       1       1       1   .abs_section_37
+     _CRGINT                                     38       1       1       0   .abs_section_38
+     _CLKSEL                                     39       1       1       3   .abs_section_39
+     _PLLCTL                                     3A       1       1       3   .abs_section_3a
+     _RTICTL                                     3B       1       1       0   .abs_section_3b
+     _COPCTL                                     3C       1       1       0   .abs_section_3c
+     _CTCTL                                      3E       1       1       0   .abs_section_3e
+     _ARMCOP                                     3F       1       1       0   .abs_section_3f
+     _TIOS                                       40       1       1       1   .abs_section_40
+     _CFORC                                      41       1       1       0   .abs_section_41
+     _OC7M                                       42       1       1       0   .abs_section_42
+     _OC7D                                       43       1       1       0   .abs_section_43
+     _TCNT                                       44       2       2       0   .abs_section_44
+     _TSCR1                                      46       1       1       3   .abs_section_46
+     _TTOV                                       47       1       1       1   .abs_section_47
+     _TCTL1                                      48       1       1       1   .abs_section_48
+     _TCTL2                                      49       1       1       1   .abs_section_49
+     _TCTL3                                      4A       1       1       0   .abs_section_4a
+     _TCTL4                                      4B       1       1       0   .abs_section_4b
+     _TIE                                        4C       1       1       3   .abs_section_4c
+     _TSCR2                                      4D       1       1       5   .abs_section_4d
+     _TFLG1                                      4E       1       1       2   .abs_section_4e
+     _TFLG2                                      4F       1       1       0   .abs_section_4f
+     _TC0                                        50       2       2       1   .abs_section_50
+     _TC1                                        52       2       2       0   .abs_section_52
+     _TC2                                        54       2       2       0   .abs_section_54
+     _TC3                                        56       2       2       0   .abs_section_56
+     _TC4                                        58       2       2       0   .abs_section_58
+     _TC5                                        5A       2       2       0   .abs_section_5a
+     _TC6                                        5C       2       2       0   .abs_section_5c
+     _TC7                                        5E       2       2       1   .abs_section_5e
+     _PACTL                                      60       1       1       0   .abs_section_60
+     _PAFLG                                      61       1       1       0   .abs_section_61
+     _PACNT                                      62       2       2       0   .abs_section_62
+     _ATDCTL23                                   82       2       2       0   .abs_section_82
+     _ATDCTL45                                   84       2       2       0   .abs_section_84
+     _ATDSTAT0                                   86       1       1       0   .abs_section_86
+     _ATDSTAT1                                   8B       1       1       0   .abs_section_8b
+     _ATDDIEN                                    8D       1       1       0   .abs_section_8d
+     _PORTAD0                                    8F       1       1       0   .abs_section_8f
+     _ATDDR0                                     90       2       2       0   .abs_section_90
+     _ATDDR1                                     92       2       2       0   .abs_section_92
+     _ATDDR2                                     94       2       2       0   .abs_section_94
+     _ATDDR3                                     96       2       2       0   .abs_section_96
+     _ATDDR4                                     98       2       2       0   .abs_section_98
+     _ATDDR5                                     9A       2       2       0   .abs_section_9a
+     _ATDDR6                                     9C       2       2       0   .abs_section_9c
+     _ATDDR7                                     9E       2       2       0   .abs_section_9e
+     _SCIBD                                      C8       2       2       0   .abs_section_c8
+     _SCICR1                                     CA       1       1       0   .abs_section_ca
+     _SCICR2                                     CB       1       1       0   .abs_section_cb
+     _SCISR1                                     CC       1       1       0   .abs_section_cc
+     _SCISR2                                     CD       1       1       0   .abs_section_cd
+     _SCIDRH                                     CE       1       1       0   .abs_section_ce
+     _SCIDRL                                     CF       1       1       0   .abs_section_cf
+     _SPICR1                                     D8       1       1       0   .abs_section_d8
+     _SPICR2                                     D9       1       1       0   .abs_section_d9
+     _SPIBR                                      DA       1       1       0   .abs_section_da
+     _SPISR                                      DB       1       1       0   .abs_section_db
+     _SPIDR                                      DD       1       1       0   .abs_section_dd
+     _PWME                                       E0       1       1       0   .abs_section_e0
+     _PWMPOL                                     E1       1       1       0   .abs_section_e1
+     _PWMCLK                                     E2       1       1       0   .abs_section_e2
+     _PWMPRCLK                                   E3       1       1       0   .abs_section_e3
+     _PWMCAE                                     E4       1       1       0   .abs_section_e4
+     _PWMCTL                                     E5       1       1       1   .abs_section_e5
+     _PWMSCLA                                    E8       1       1       0   .abs_section_e8
+     _PWMSCLB                                    E9       1       1       0   .abs_section_e9
+     _PWMCNT01                                   EC       2       2       0   .abs_section_ec
+     _PWMCNT23                                   EE       2       2       0   .abs_section_ee
+     _PWMCNT45                                   F0       2       2       0   .abs_section_f0
+     _PWMPER01                                   F2       2       2       0   .abs_section_f2
+     _PWMPER23                                   F4       2       2       0   .abs_section_f4
+     _PWMPER45                                   F6       2       2       0   .abs_section_f6
+     _PWMDTY01                                   F8       2       2       0   .abs_section_f8
+     _PWMDTY23                                   FA       2       2       0   .abs_section_fa
+     _PWMDTY45                                   FC       2       2       0   .abs_section_fc
+     _PWMSDN                                     FE       1       1       1   .abs_section_fe
+     _FCLKDIV                                   100       1       1       0   .abs_section_100
+     _FSEC                                      101       1       1       0   .abs_section_101
+     _FCNFG                                     103       1       1       0   .abs_section_103
+     _FPROT                                     104       1       1       0   .abs_section_104
+     _FSTAT                                     105       1       1       0   .abs_section_105
+     _FCMD                                      106       1       1       0   .abs_section_106
+     _CANCTL0                                   140       1       1       0   .abs_section_140
+     _CANCTL1                                   141       1       1       0   .abs_section_141
+     _CANBTR0                                   142       1       1       0   .abs_section_142
+     _CANBTR1                                   143       1       1       0   .abs_section_143
+     _CANRFLG                                   144       1       1       0   .abs_section_144
+     _CANRIER                                   145       1       1       0   .abs_section_145
+     _CANTFLG                                   146       1       1       0   .abs_section_146
+     _CANTIER                                   147       1       1       0   .abs_section_147
+     _CANTARQ                                   148       1       1       0   .abs_section_148
+     _CANTAAK                                   149       1       1       0   .abs_section_149
+     _CANTBSEL                                  14A       1       1       0   .abs_section_14a
+     _CANIDAC                                   14B       1       1       0   .abs_section_14b
+     _CANRXERR                                  14E       1       1       0   .abs_section_14e
+     _CANTXERR                                  14F       1       1       0   .abs_section_14f
+     _CANIDAR0                                  150       1       1       0   .abs_section_150
+     _CANIDAR1                                  151       1       1       0   .abs_section_151
+     _CANIDAR2                                  152       1       1       0   .abs_section_152
+     _CANIDAR3                                  153       1       1       0   .abs_section_153
+     _CANIDMR0                                  154       1       1       0   .abs_section_154
+     _CANIDMR1                                  155       1       1       0   .abs_section_155
+     _CANIDMR2                                  156       1       1       0   .abs_section_156
+     _CANIDMR3                                  157       1       1       0   .abs_section_157
+     _CANIDAR4                                  158       1       1       0   .abs_section_158
+     _CANIDAR5                                  159       1       1       0   .abs_section_159
+     _CANIDAR6                                  15A       1       1       0   .abs_section_15a
+     _CANIDAR7                                  15B       1       1       0   .abs_section_15b
+     _CANIDMR4                                  15C       1       1       0   .abs_section_15c
+     _CANIDMR5                                  15D       1       1       0   .abs_section_15d
+     _CANIDMR6                                  15E       1       1       0   .abs_section_15e
+     _CANIDMR7                                  15F       1       1       0   .abs_section_15f
+     _CANRXIDR0                                 160       1       1       0   .abs_section_160
+     _CANRXIDR1                                 161       1       1       0   .abs_section_161
+     _CANRXIDR2                                 162       1       1       0   .abs_section_162
+     _CANRXIDR3                                 163       1       1       0   .abs_section_163
+     _CANRXDSR0                                 164       1       1       0   .abs_section_164
+     _CANRXDSR1                                 165       1       1       0   .abs_section_165
+     _CANRXDSR2                                 166       1       1       0   .abs_section_166
+     _CANRXDSR3                                 167       1       1       0   .abs_section_167
+     _CANRXDSR4                                 168       1       1       0   .abs_section_168
+     _CANRXDSR5                                 169       1       1       0   .abs_section_169
+     _CANRXDSR6                                 16A       1       1       0   .abs_section_16a
+     _CANRXDSR7                                 16B       1       1       0   .abs_section_16b
+     _CANRXDLR                                  16C       1       1       0   .abs_section_16c
+     _CANTXIDR0                                 170       1       1       0   .abs_section_170
+     _CANTXIDR1                                 171       1       1       0   .abs_section_171
+     _CANTXIDR2                                 172       1       1       0   .abs_section_172
+     _CANTXIDR3                                 173       1       1       0   .abs_section_173
+     _CANTXDSR0                                 174       1       1       0   .abs_section_174
+     _CANTXDSR1                                 175       1       1       0   .abs_section_175
+     _CANTXDSR2                                 176       1       1       0   .abs_section_176
+     _CANTXDSR3                                 177       1       1       0   .abs_section_177
+     _CANTXDSR4                                 178       1       1       0   .abs_section_178
+     _CANTXDSR5                                 179       1       1       0   .abs_section_179
+     _CANTXDSR6                                 17A       1       1       0   .abs_section_17a
+     _CANTXDSR7                                 17B       1       1       0   .abs_section_17b
+     _CANTXDLR                                  17C       1       1       0   .abs_section_17c
+     _CANTXTBPR                                 17F       1       1       0   .abs_section_17f
+     _PTT                                       240       1       1       0   .abs_section_240
+     _PTIT                                      241       1       1       0   .abs_section_241
+     _DDRT                                      242       1       1       0   .abs_section_242
+     _RDRT                                      243       1       1       0   .abs_section_243
+     _PERT                                      244       1       1       0   .abs_section_244
+     _PPST                                      245       1       1       0   .abs_section_245
+     _MODRR                                     247       1       1       0   .abs_section_247
+     _PTS                                       248       1       1       0   .abs_section_248
+     _PTIS                                      249       1       1       0   .abs_section_249
+     _DDRS                                      24A       1       1       0   .abs_section_24a
+     _RDRS                                      24B       1       1       0   .abs_section_24b
+     _PERS                                      24C       1       1       0   .abs_section_24c
+     _PPSS                                      24D       1       1       0   .abs_section_24d
+     _WOMS                                      24E       1       1       0   .abs_section_24e
+     _PTM                                       250       1       1       0   .abs_section_250
+     _PTIM                                      251       1       1       0   .abs_section_251
+     _DDRM                                      252       1       1       0   .abs_section_252
+     _RDRM                                      253       1       1       0   .abs_section_253
+     _PERM                                      254       1       1       0   .abs_section_254
+     _PPSM                                      255       1       1       0   .abs_section_255
+     _WOMM                                      256       1       1       0   .abs_section_256
+     _PTP                                       258       1       1       0   .abs_section_258
+     _PTIP                                      259       1       1       0   .abs_section_259
+     _DDRP                                      25A       1       1       1   .abs_section_25a
+     _RDRP                                      25B       1       1       0   .abs_section_25b
+     _PERP                                      25C       1       1       1   .abs_section_25c
+     _PPSP                                      25D       1       1       1   .abs_section_25d
+     _PIEP                                      25E       1       1       2   .abs_section_25e
+     _PIFP                                      25F       1       1       2   .abs_section_25f
+     _PTJ                                       268       1       1       0   .abs_section_268
+     _PTIJ                                      269       1       1       0   .abs_section_269
+     _DDRJ                                      26A       1       1       0   .abs_section_26a
+     _RDRJ                                      26B       1       1       0   .abs_section_26b
+     _PERJ                                      26C       1       1       0   .abs_section_26c
+     _PPSJ                                      26D       1       1       0   .abs_section_26d
+     _PIEJ                                      26E       1       1       0   .abs_section_26e
+     _PIFJ                                      26F       1       1       0   .abs_section_26f
+     _PTAD                                      270       1       1       0   .abs_section_270
+     _PTIAD                                     271       1       1       0   .abs_section_271
+     _DDRAD                                     272       1       1       0   .abs_section_272
+     _RDRAD                                     273       1       1       0   .abs_section_273
+     _PERAD                                     274       1       1       0   .abs_section_274
+     _PPSAD                                     275       1       1       0   .abs_section_275
+     uxCriticalNesting                          800       1       1      91   .data       
+     pxCurrentTCB                               801       2       2      29   .bss        
+     uxCurrentNumberOfTasks                     803       1       1       3   .bss        
+     xTickCount                                 804       2       2      14   .bss        
+     uxTopUsedPriority                          806       1       1       2   .bss        
+     uxTopReadyPriority                         807       1       1      15   .bss        
+     xSchedulerRunning                          808       1       1       3   .bss        
+     uxSchedulerSuspended                       809       1       1       6   .bss        
+     uxMissedTicks                              80A       1       1       4   .bss        
+     uxTaskNumber.1                             80B       1       1       2   .bss        
+     pxReadyTasksLists                          80C      3C      60      11   .bss        
+     xDelayedTaskList1                          848       F      15       2   .bss        
+     xDelayedTaskList2                          857       F      15       2   .bss        
+     pxDelayedTaskList                          866       2       2       8   .bss        
+     pxOverflowDelayedTaskList                  868       2       2       6   .bss        
+     xPendingReadyList                          86A       F      15       4   .bss        
+     xSuspendedTaskList                         879       F      15       2   .bss        
+     uxFlashTaskNumber                          888       1       1       2   .bss        
+     xLocalError                                889       1       1       3   .bss        
+     uxValToSend.3                              88A       1       1       2   .bss        
+     xButtonQueue                               88B       2       2       3   .bss        
+     xNextFreeByte                              88D       2       2       5   .bss        
+     xHeap                                      88F     704    1796       1   .bss        
+     xPollingConsumerCount                      F93       1       1       3   .bss        
+     xPollingProducerCount                      F94       1       1       3   .bss        
+     xPolledQueue.1                             F95       2       2       3   .bss        
+     usCheckVariable                            F97       2       2       4   .bss        
+     xSuspendedQueueSendError                   F99       1       1       2   .bss        
+     xSuspendedQueueReceiveError                F9A       1       1       3   .bss        
+     ulValueToSend.6                            F9B       4       4       5   .bss        
+     ulExpectedValue.7                          F9F       4       4       6   .bss        
+     usLastTaskCheck.9                          FA3       2       2       2   .bss        
+     xContinousIncrementHandle                  FA5       2       2       5   .bss        
+     xLimitedIncrementHandle                    FA7       2       2       2   .bss        
+     ulCounter                                  FA9       4       4      10   .bss        
+     ulReceivedValue.8                          FAD       4       4       3   .bss        
+     xSuspendedTestQueue                        FB1       2       2       3   .common     
+     Byte1_Table                                FB3       8       8       1   Byte1_DATA  
+     EnUser                                     FBB       1       1       4   TickTimer_DATA
+     CmpHighVal                                 FBC       2       2       2   TickTimer_DATA
+     _EntryPoint                               C000      2E      46       1   .init       
+     PE_low_level_init                         C02E      48      72       1   .init       
+     STRING.IDLE.2                             C093       5       5       1   .rodata1    
+     STRING.LEDx.1                             C098       5       5       1   .rodata1    
+     STRING.Check.1                            C09D       6       6       1   .rodata1    
+     STRING.Button.2                           C0A3       7       7       1   .rodata1    
+     STRING.QConsNB.2                          C0AA       8       8       1   .rodata1    
+     STRING.QProdNB.3                          C0B2       8       8       1   .rodata1    
+     STRING.CNT_INC.1                          C0BA       8       8       1   .rodata1    
+     STRING.LIM_INC.2                          C0C2       8       8       1   .rodata1    
+     STRING.C_CTRL.3                           C0CA       7       7       1   .rodata1    
+     STRING.SUSP_TX.4                          C0D1       8       8       1   .rodata1    
+     STRING.SUSP_RX.5                          C0D9       8       8       1   .rodata1    
+     Cpu_Interrupt                             C0E1       1       1      60   NON_BANKED  
+     xBankedStartScheduler                     C0E2       F      15       1   NON_BANKED  
+     vPortYield                                C0F1      16      22       1   NON_BANKED  
+     vPortTickInterrupt                        C107      1D      29       1   NON_BANKED  
+     vButtonPush                               C124      2F      47       1   NON_BANKED  
+     Init                                      C153      29      41       1   .text       
+     _Startup                                  C17C      10      16       1   .text       
+     memcpy                                    C18C      26      38       3   .text       
+     memset                                    C1B2      1E      30       1   .text       
+     strncpy                                   C1D0      2D      45       1   .text       
+     main                                      C1FD       8       8       0   .text       
+     xTaskCreate                               C205      CE     206      11   .text       
+     vTaskDelayUntil                           C2D3      74     116       3   .text       
+     vTaskDelay                                C347      46      70       4   .text       
+     uxTaskPriorityGet                         C38D      26      38       1   .text       
+     vTaskPrioritySet                          C3B3      69     105       2   .text       
+     vTaskSuspend                              C41C      44      68       3   .text       
+     vTaskResume                               C460      59      89       3   .text       
+     vTaskStartScheduler                       C4B9      30      48       1   .text       
+     vTaskSuspendAll                           C4E9      13      19      11   .text       
+     xTaskResumeAll                            C4FC      9F     159      13   .text       
+     xTaskGetTickCount                         C59B      17      23       2   .text       
+     vTaskIncrementTick                        C5B2      81     129       2   .text       
+     vTaskSwitchContext                        C633      5B      91       3   .text       
+     vTaskPlaceOnEventList                     C68E      41      65       2   .text       
+     xTaskRemoveFromEventList                  C6CF      6C     108       3   .text       
+     prvIdleTask                               C73B      10      16       1   .text       
+     prvInitialiseTCBVariables                 C74B      4C      76       1   .text       
+     prvInitialiseTaskLists                    C797      3C      60       1   .text       
+     prvCheckTasksWaitingTermination           C7D3       1       1       1   .text       
+     prvAllocateTCBAndStack                    C7D4      33      51       1   .text       
+     xQueueCreate                              C807      77     119       3   .text       
+     xQueueSend                                C87E      CA     202       3   .text       
+     xQueueSendFromISR                         C948      54      84       1   .text       
+     xQueueReceive                             C99C      C4     196       4   .text       
+     uxQueueMessagesWaiting                    CA60      1B      27       1   .text       
+     prvUnlockQueue                            CA7B      6F     111       4   .text       
+     prvIsQueueEmpty                           CAEA      21      33       1   .text       
+     prvIsQueueFull                            CB0B      24      36       1   .text       
+     vListInitialise                           CB2F      1F      31       7   .text       
+     vListInitialiseItem                       CB4E       7       7       3   .text       
+     vListInsertEnd                            CB55      27      39       7   .text       
+     vListInsert                               CB7C      5A      90       4   .text       
+     vListRemove                               CBD6      23      35      13   .text       
+     pxPortInitialiseStack                     CBF9      2B      43       1   .text       
+     prvSetupTimerInterrupt                    CC24       9       9       1   .text       
+     xPortStartScheduler                       CC2D       4       4       1   .text       
+     vStartLEDFlashTasks                       CC31      26      38       1   .text       
+     vLEDFlashTask                             CC57      52      82       1   .text       
+     vMain                                     CCA9      42      66       1   .text       
+     vErrorChecks                              CCEB      2F      47       1   .text       
+     prvCheckOtherTasksAreStillRunning         CD1A      23      35       1   .text       
+     vApplicationIdleHook                      CD3D      73     115       1   .text       
+     vButtonTask                               CDB0      4F      79       1   .text       
+     pvPortMalloc                              CDFF      30      48       4   .text       
+     vPortFree                                 CE2F       1       1       2   .text       
+     PE_Timer_LngHi1                           CE30      43      67       1   .text       
+     vParTestToggleLED                         CE73      13      19       4   .text       
+     vStartPolledQueueTasks                    CE86      40      64       1   .text       
+     vPolledQueueProducer                      CEC6      4D      77       1   .text       
+     vPolledQueueConsumer                      CF13      59      89       1   .text       
+     xArePollingQueuesStillRunning             CF6C      1D      29       1   .text       
+     vStartDynamicPriorityTasks                CF89      7C     124       1   .text       
+     vLimitedIncrementTask                     D005      21      33       1   .text       
+     vContinuousIncrementTask                  D026      30      48       1   .text       
+     vCounterControlTask                       D056      98     152       3   .text       
+     vQueueSendWhenSuspendedTask               D0EE      34      52       1   .text       
+     vQueueReceiveWhenSuspendedTask            D122      4E      78       1   .text       
+     xAreDynamicPriorityTasksStillRunning       D170      27      39       1   .text       
+     _LCMP                                     D197      19      25       2   RUNTIME     
+     _LCMP_P                                   D1B0      15      21       2   RUNTIME     
+     _LNEG                                     D1C5       D      13       1   RUNTIME     
+     _LINC                                     D1D2       5       5       4   RUNTIME     
+     _lDivMod                                  D1D7      E3     227       3   RUNTIME     
+     _LDIVU                                    D2BA       E      14       1   RUNTIME     
+     _NEG_P                                    D2C8       F      15       4   RUNTIME     
+     _LDIVS                                    D2D7      35      53       1   RUNTIME     
+     Byte1_GetMsk                              D30C       D      13       1   Byte1_CODE  
+     Byte1_NegBit                              D319       F      15       1   Byte1_CODE  
+     SetCV                                     D328       F      15       2   TickTimer_CODE
+     SetPV                                     D337       C      12       1   TickTimer_CODE
+     HWEnDi                                    D343      11      17       2   TickTimer_CODE
+     TickTimer_Enable                          D354       E      14       1   TickTimer_CODE
+     TickTimer_SetFreqHz                       D362      4F      79       1   TickTimer_CODE
+     TickTimer_Init                            D3B1      14      20       1   TickTimer_CODE
+     ButtonInterrupt_Enable                    D3C5       A      10       1   ButtonInterrupt_CODE
+     _BDMSTS                                   FF01       1       1       0   .abs_section_ff01
+     _BDMCCR                                   FF06       1       1       0   .abs_section_ff06
+     _BDMINR                                   FF07       1       1       0   .abs_section_ff07
+     _vect                                     FF80      80     128       0   .abs_section_ff80
+
+*********************************************************************************************
+UNUSED-OBJECTS SECTION
+---------------------------------------------------------------------------------------------
+NOT USED PROCEDURES
+STRING.C.o (ansisi.lib):
+  strerror memchr memcmp memcpy2 _memcpy_8bitCount memmove 
+  _memset_clear_8bitCount strlen strset strcat strncat strcpy strcmp strncmp 
+  strchr strrchr strspn strcspn strpbrk strstr strtok strcoll strxfrm 
+rtshc12.c.o (ansisi.lib):
+  _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
+  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP_PP _LABS _LCOM _LDEC _LMUL _LMODU 
+  _LMODS _ILSEXT _LTEST _COPY _CASE_DIRECT _CASE_DIRECT_BYTE _CASE_CHECKED 
+  _CASE_CHECKED_BYTE _CASE_SEARCH _CASE_SEARCH_BYTE _CASE_SEARCH_8 
+  _CASE_SEARCH_8_BYTE _FCALL _FPCMP 
+Byte1.C.o:
+  Byte1_PutBit 
+tasks.c.o:
+  vTaskEndScheduler uxTaskGetNumberOfTasks 
+queue.c.o:
+  xQueueReceiveFromISR vQueueDelete 
+port.c.o:
+  vPortEndScheduler 
+heap_1.c.o:
+  vPortInitialiseBlocks 
+TickTimer.C.o:
+  TickTimer_Interrupt 
+ParTest.c.o:
+  vParTestSetLED 
+ButtonInterrupt.C.o:
+  ButtonInterrupt_Interrupt 
+NOT USED VARIABLES
+STRING.C.o (ansisi.lib):
+  STRING..1 next.2 
+rtshc12.c.o (ansisi.lib):
+  _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 
+Cpu.C.o:
+  CpuMode CCR_reg 
+
+*********************************************************************************************
+COPYDOWN SECTION
+---------------------------------------------------------------------------------------------
+------- ROM-ADDRESS: 0xD3CF ---- SIZE       4 ---
+Filling bytes inserted
+ 00010800
+------- ROM-ADDRESS: 0xD3D3 ---- RAM-ADDRESS: 0x800 ---- SIZE       1 ---
+Name of initialized Object : uxCriticalNesting
+ FF
+------- ROM-ADDRESS: 0xD3D4 ---- SIZE       4 ---
+Filling bytes inserted
+ 00080FB3
+------- ROM-ADDRESS: 0xD3D8 ---- RAM-ADDRESS: 0xFB3 ---- SIZE       8 ---
+Name of initialized Object : Byte1_Table
+ 0102040810 204080
+------- ROM-ADDRESS: 0xD3E0 ---- SIZE       2 ---
+Filling bytes inserted
+ 0000
+
+*********************************************************************************************
+OBJECT-DEPENDENCIES SECTION
+---------------------------------------------------------------------------------------------
+_EntryPoint               USES _INITRM _MISC _CLKSEL _PLLCTL _SYNR _REFDV 
+                                _CRGFLG _Startup 
+PE_low_level_init         USES _TSCR1 _TCTL2 _TCTL1 _TIE _TTOV _TSCR2 _TIOS 
+                                _PPSP _PERP _DDRP _PWMCTL _PWMSDN _PORTAB _DDRAB 
+                                TickTimer_Init _PIEP _INTCR 
+xBankedStartScheduler     USES prvSetupTimerInterrupt pxCurrentTCB 
+                                uxCriticalNesting 
+vPortYield                USES uxCriticalNesting pxCurrentTCB 
+                                vTaskSwitchContext 
+vPortTickInterrupt        USES uxCriticalNesting pxCurrentTCB 
+                                vTaskIncrementTick vTaskSwitchContext _TFLG1 
+vButtonPush               USES uxValToSend.3 _PIFP xButtonQueue 
+                                xQueueSendFromISR uxCriticalNesting pxCurrentTCB 
+                                vTaskSwitchContext 
+Init                      USES _startupData 
+_Startup                  USES _startupData Init 
+main                      USES PE_low_level_init vMain 
+xTaskCreate               USES prvAllocateTCBAndStack 
+                                prvInitialiseTCBVariables pxPortInitialiseStack uxCriticalNesting 
+                                uxCurrentNumberOfTasks pxCurrentTCB prvInitialiseTaskLists 
+                                xSchedulerRunning uxTopUsedPriority uxTaskNumber.1 
+                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd 
+vTaskDelayUntil           USES vTaskSuspendAll xTickCount pxCurrentTCB 
+                                vListRemove pxOverflowDelayedTaskList pxDelayedTaskList 
+                                vListInsert xTaskResumeAll 
+vTaskDelay                USES vTaskSuspendAll xTickCount pxCurrentTCB 
+                                vListRemove pxOverflowDelayedTaskList pxDelayedTaskList 
+                                vListInsert xTaskResumeAll 
+uxTaskPriorityGet         USES uxCriticalNesting pxCurrentTCB 
+vTaskPrioritySet          USES uxCriticalNesting pxCurrentTCB 
+                                pxReadyTasksLists vListRemove uxTopReadyPriority vListInsertEnd 
+vTaskSuspend              USES uxCriticalNesting pxCurrentTCB vListRemove 
+                                xSuspendedTaskList vListInsertEnd 
+vTaskResume               USES uxCriticalNesting pxCurrentTCB vListRemove 
+                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd 
+vTaskStartScheduler       USES pxCurrentTCB prvIdleTask STRING.IDLE.2 
+                                xTaskCreate xSchedulerRunning xTickCount 
+                                xPortStartScheduler 
+vTaskSuspendAll           USES uxCriticalNesting uxSchedulerSuspended 
+xTaskResumeAll            USES uxCriticalNesting uxSchedulerSuspended 
+                                uxCurrentNumberOfTasks vListRemove uxTopReadyPriority 
+                                pxReadyTasksLists vListInsertEnd pxCurrentTCB xPendingReadyList 
+                                uxMissedTicks vTaskIncrementTick 
+xTaskGetTickCount         USES uxCriticalNesting xTickCount 
+vTaskIncrementTick        USES uxSchedulerSuspended xTickCount 
+                                pxDelayedTaskList pxOverflowDelayedTaskList vListRemove 
+                                uxTopReadyPriority pxReadyTasksLists vListInsertEnd uxMissedTicks 
+vTaskSwitchContext        USES uxSchedulerSuspended uxTopReadyPriority 
+                                pxCurrentTCB pxReadyTasksLists 
+vTaskPlaceOnEventList     USES pxCurrentTCB vListInsert xTickCount vListRemove 
+                                pxOverflowDelayedTaskList pxDelayedTaskList 
+xTaskRemoveFromEventList  USES vListRemove uxSchedulerSuspended 
+                                uxTopReadyPriority pxReadyTasksLists xPendingReadyList 
+                                vListInsertEnd pxCurrentTCB 
+prvIdleTask               USES prvCheckTasksWaitingTermination 
+                                pxReadyTasksLists vApplicationIdleHook 
+prvInitialiseTCBVariables USES strncpy vListInitialiseItem 
+prvInitialiseTaskLists    USES pxReadyTasksLists vListInitialise 
+                                xDelayedTaskList1 xDelayedTaskList2 xPendingReadyList 
+                                xSuspendedTaskList pxDelayedTaskList pxOverflowDelayedTaskList 
+prvAllocateTCBAndStack    USES pvPortMalloc vPortFree memset 
+xQueueCreate              USES pvPortMalloc vListInitialise vPortFree 
+xQueueSend                USES vTaskSuspendAll uxCriticalNesting xQueueSend 
+                                prvIsQueueFull vTaskPlaceOnEventList prvUnlockQueue 
+                                xTaskResumeAll memcpy 
+xQueueSendFromISR         USES memcpy xTaskRemoveFromEventList 
+xQueueReceive             USES vTaskSuspendAll uxCriticalNesting xQueueReceive 
+                                prvIsQueueEmpty vTaskPlaceOnEventList prvUnlockQueue 
+                                xTaskResumeAll memcpy 
+uxQueueMessagesWaiting    USES uxCriticalNesting 
+prvUnlockQueue            USES uxCriticalNesting xTaskRemoveFromEventList 
+prvIsQueueEmpty           USES uxCriticalNesting 
+prvIsQueueFull            USES uxCriticalNesting 
+vListInitialise           USES vListInitialiseItem 
+prvSetupTimerInterrupt    USES TickTimer_SetFreqHz TickTimer_Enable 
+xPortStartScheduler       USES xBankedStartScheduler 
+vStartLEDFlashTasks       USES vLEDFlashTask STRING.LEDx.1 xTaskCreate 
+vLEDFlashTask             USES uxCriticalNesting uxFlashTaskNumber 
+                                xTaskGetTickCount vTaskDelayUntil vParTestToggleLED 
+vMain                     USES vStartLEDFlashTasks vStartPolledQueueTasks 
+                                vStartDynamicPriorityTasks vErrorChecks STRING.Check.1 xTaskCreate 
+                                vButtonTask STRING.Button.2 vTaskStartScheduler 
+vErrorChecks              USES xTaskGetTickCount vTaskDelayUntil 
+                                prvCheckOtherTasksAreStillRunning _LCMP vParTestToggleLED 
+prvCheckOtherTasksAreStillRunning USES xArePollingQueuesStillRunning 
+                                xAreDynamicPriorityTasksStillRunning xLocalError 
+vApplicationIdleHook      USES _LNEG _LDIVS _LCMP_P uxCriticalNesting 
+                                xLocalError 
+vButtonTask               USES xQueueCreate xButtonQueue 
+                                ButtonInterrupt_Enable xQueueReceive uxCriticalNesting xLocalError 
+                                vParTestToggleLED 
+pvPortMalloc              USES vTaskSuspendAll xNextFreeByte xHeap 
+                                xTaskResumeAll 
+PE_Timer_LngHi1           USES _LCMP 
+vParTestToggleLED         USES uxCriticalNesting Byte1_NegBit 
+vStartPolledQueueTasks    USES xQueueCreate xPolledQueue.1 
+                                vPolledQueueConsumer STRING.QConsNB.2 xTaskCreate 
+                                vPolledQueueProducer STRING.QProdNB.3 
+vPolledQueueProducer      USES xQueueSend uxCriticalNesting 
+                                xPollingProducerCount vTaskDelay 
+vPolledQueueConsumer      USES xQueueReceive uxCriticalNesting 
+                                xPollingConsumerCount uxQueueMessagesWaiting vTaskDelay 
+xArePollingQueuesStillRunning USES xPollingConsumerCount xPollingProducerCount 
+vStartDynamicPriorityTasks USES xQueueCreate xSuspendedTestQueue 
+                                vContinuousIncrementTask STRING.CNT_INC.1 ulCounter 
+                                xContinousIncrementHandle xTaskCreate vLimitedIncrementTask 
+                                STRING.LIM_INC.2 xLimitedIncrementHandle vCounterControlTask 
+                                STRING.C_CTRL.3 vQueueSendWhenSuspendedTask STRING.SUSP_TX.4 
+                                vQueueReceiveWhenSuspendedTask STRING.SUSP_RX.5 
+vLimitedIncrementTask     USES _LINC _LCMP_P vTaskSuspend 
+vContinuousIncrementTask  USES uxTaskPriorityGet vTaskPrioritySet _LINC 
+vCounterControlTask       USES vCounterControlTask xContinousIncrementHandle 
+                                vTaskSuspend ulCounter vTaskResume vTaskDelay 
+                                vTaskSuspendAll xTaskResumeAll xLimitedIncrementHandle 
+                                uxCriticalNesting usCheckVariable 
+vQueueSendWhenSuspendedTask USES vTaskSuspendAll xSuspendedTestQueue 
+                                ulValueToSend.6 xQueueSend xSuspendedQueueSendError 
+                                xTaskResumeAll vTaskDelay _LINC 
+vQueueReceiveWhenSuspendedTask USES vTaskSuspendAll xSuspendedTestQueue 
+                                ulReceivedValue.8 xQueueReceive xTaskResumeAll 
+                                xSuspendedQueueReceiveError ulExpectedValue.7 _LINC 
+xAreDynamicPriorityTasksStillRunning USES usCheckVariable usLastTaskCheck.9 
+                                xSuspendedQueueSendError xSuspendedQueueReceiveError 
+_LDIVU                    USES _lDivMod 
+_LDIVS                    USES _NEG_P _lDivMod 
+Byte1_GetMsk              USES Byte1_Table 
+Byte1_NegBit              USES Byte1_GetMsk _PORTAB 
+SetCV                     USES _TC0 _TC7 
+SetPV                     USES _TSCR2 
+HWEnDi                    USES EnUser _TFLG1 _TIE 
+TickTimer_Enable          USES EnUser HWEnDi 
+TickTimer_SetFreqHz       USES _LDIVU PE_Timer_LngHi1 CmpHighVal SetCV 
+TickTimer_Init            USES CmpHighVal EnUser SetCV SetPV HWEnDi 
+ButtonInterrupt_Enable    USES _PIFP _PIEP 
+_vect                     USES Cpu_Interrupt vButtonPush vPortTickInterrupt 
+                                vPortYield _EntryPoint 
+
+*********************************************************************************************
+DEPENDENCY TREE
+*********************************************************************************************
+ main and _Startup Group
+ | 
+ +- main                
+ |  | 
+ |  +- PE_low_level_init   
+ |  |  | 
+ |  |  +- TickTimer_Init      
+ |  |     | 
+ |  |     +- SetCV               
+ |  |     |    
+ |  |     +- SetPV               
+ |  |     |    
+ |  |     +- HWEnDi              
+ |  |          
+ |  +- vMain               
+ |     | 
+ |     +- vStartLEDFlashTasks 
+ |     |  | 
+ |     |  +- vLEDFlashTask       
+ |     |  |  | 
+ |     |  |  +- xTaskGetTickCount   
+ |     |  |  |    
+ |     |  |  +- vTaskDelayUntil     
+ |     |  |  |  | 
+ |     |  |  |  +- vTaskSuspendAll     
+ |     |  |  |  |    
+ |     |  |  |  +- vListRemove         
+ |     |  |  |  |    
+ |     |  |  |  +- vListInsert         
+ |     |  |  |  |    
+ |     |  |  |  +- xTaskResumeAll      
+ |     |  |  |     | 
+ |     |  |  |     +- vListRemove          (see above)
+ |     |  |  |     |  
+ |     |  |  |     +- vListInsertEnd      
+ |     |  |  |     |    
+ |     |  |  |     +- vTaskIncrementTick  
+ |     |  |  |        | 
+ |     |  |  |        +- vListRemove          (see above)
+ |     |  |  |        |  
+ |     |  |  |        +- vListInsertEnd       (see above)
+ |     |  |  |           
+ |     |  |  +- vParTestToggleLED   
+ |     |  |     | 
+ |     |  |     +- Byte1_NegBit        
+ |     |  |        | 
+ |     |  |        +- Byte1_GetMsk        
+ |     |  |             
+ |     |  +- xTaskCreate         
+ |     |     | 
+ |     |     +- prvAllocateTCBAndStack
+ |     |     |  | 
+ |     |     |  +- pvPortMalloc        
+ |     |     |  |  | 
+ |     |     |  |  +- vTaskSuspendAll      (see above)
+ |     |     |  |  |  
+ |     |     |  |  +- xTaskResumeAll       (see above)
+ |     |     |  |     
+ |     |     |  +- vPortFree           
+ |     |     |  |    
+ |     |     |  +- memset              
+ |     |     |       
+ |     |     +- prvInitialiseTCBVariables
+ |     |     |  | 
+ |     |     |  +- strncpy             
+ |     |     |  |    
+ |     |     |  +- vListInitialiseItem 
+ |     |     |       
+ |     |     +- pxPortInitialiseStack
+ |     |     |    
+ |     |     +- prvInitialiseTaskLists
+ |     |     |  | 
+ |     |     |  +- vListInitialise     
+ |     |     |     | 
+ |     |     |     +- vListInitialiseItem  (see above)
+ |     |     |        
+ |     |     +- vListInsertEnd       (see above)
+ |     |        
+ |     +- vStartPolledQueueTasks
+ |     |  | 
+ |     |  +- xQueueCreate        
+ |     |  |  | 
+ |     |  |  +- pvPortMalloc         (see above)
+ |     |  |  |  
+ |     |  |  +- vListInitialise      (see above)
+ |     |  |  |  
+ |     |  |  +- vPortFree            (see above)
+ |     |  |     
+ |     |  +- vPolledQueueConsumer
+ |     |  |  | 
+ |     |  |  +- xQueueReceive       
+ |     |  |  |  | 
+ |     |  |  |  +- vTaskSuspendAll      (see above)
+ |     |  |  |  |  
+ |     |  |  |  +- prvIsQueueEmpty     
+ |     |  |  |  |    
+ |     |  |  |  +- vTaskPlaceOnEventList
+ |     |  |  |  |  | 
+ |     |  |  |  |  +- vListInsert          (see above)
+ |     |  |  |  |  |  
+ |     |  |  |  |  +- vListRemove          (see above)
+ |     |  |  |  |     
+ |     |  |  |  +- prvUnlockQueue      
+ |     |  |  |  |  | 
+ |     |  |  |  |  +- xTaskRemoveFromEventList
+ |     |  |  |  |     | 
+ |     |  |  |  |     +- vListRemove          (see above)
+ |     |  |  |  |     |  
+ |     |  |  |  |     +- vListInsertEnd       (see above)
+ |     |  |  |  |        
+ |     |  |  |  +- xTaskResumeAll       (see above)
+ |     |  |  |  |  
+ |     |  |  |  +- memcpy              
+ |     |  |  |       
+ |     |  |  +- uxQueueMessagesWaiting
+ |     |  |  |    
+ |     |  |  +- vTaskDelay          
+ |     |  |     | 
+ |     |  |     +- vTaskSuspendAll      (see above)
+ |     |  |     |  
+ |     |  |     +- vListRemove          (see above)
+ |     |  |     |  
+ |     |  |     +- vListInsert          (see above)
+ |     |  |     |  
+ |     |  |     +- xTaskResumeAll       (see above)
+ |     |  |        
+ |     |  +- xTaskCreate          (see above)
+ |     |  |  
+ |     |  +- vPolledQueueProducer
+ |     |     | 
+ |     |     +- xQueueSend          
+ |     |     |  | 
+ |     |     |  +- vTaskSuspendAll      (see above)
+ |     |     |  |  
+ |     |     |  +- prvIsQueueFull      
+ |     |     |  |    
+ |     |     |  +- vTaskPlaceOnEventList (see above)
+ |     |     |  |  
+ |     |     |  +- prvUnlockQueue       (see above)
+ |     |     |  |  
+ |     |     |  +- xTaskResumeAll       (see above)
+ |     |     |  |  
+ |     |     |  +- memcpy               (see above)
+ |     |     |     
+ |     |     +- vTaskDelay           (see above)
+ |     |        
+ |     +- vStartDynamicPriorityTasks
+ |     |  | 
+ |     |  +- xQueueCreate         (see above)
+ |     |  |  
+ |     |  +- vContinuousIncrementTask
+ |     |  |  | 
+ |     |  |  +- uxTaskPriorityGet   
+ |     |  |  |    
+ |     |  |  +- vTaskPrioritySet    
+ |     |  |  |  | 
+ |     |  |  |  +- vListRemove          (see above)
+ |     |  |  |  |  
+ |     |  |  |  +- vListInsertEnd       (see above)
+ |     |  |  |     
+ |     |  |  +- _LINC               
+ |     |  |       
+ |     |  +- xTaskCreate          (see above)
+ |     |  |  
+ |     |  +- vLimitedIncrementTask
+ |     |  |  | 
+ |     |  |  +- _LINC                (see above)
+ |     |  |  |  
+ |     |  |  +- _LCMP_P             
+ |     |  |  |    
+ |     |  |  +- vTaskSuspend        
+ |     |  |     | 
+ |     |  |     +- vListRemove          (see above)
+ |     |  |     |  
+ |     |  |     +- vListInsertEnd       (see above)
+ |     |  |        
+ |     |  +- vCounterControlTask 
+ |     |  |  | 
+ |     |  |  +- vTaskSuspend         (see above)
+ |     |  |  |  
+ |     |  |  +- vTaskResume         
+ |     |  |  |  | 
+ |     |  |  |  +- vListRemove          (see above)
+ |     |  |  |  |  
+ |     |  |  |  +- vListInsertEnd       (see above)
+ |     |  |  |     
+ |     |  |  +- vTaskDelay           (see above)
+ |     |  |  |  
+ |     |  |  +- vTaskSuspendAll      (see above)
+ |     |  |  |  
+ |     |  |  +- xTaskResumeAll       (see above)
+ |     |  |     
+ |     |  +- vQueueSendWhenSuspendedTask
+ |     |  |  | 
+ |     |  |  +- vTaskSuspendAll      (see above)
+ |     |  |  |  
+ |     |  |  +- xQueueSend           (see above)
+ |     |  |  |  
+ |     |  |  +- xTaskResumeAll       (see above)
+ |     |  |  |  
+ |     |  |  +- vTaskDelay           (see above)
+ |     |  |  |  
+ |     |  |  +- _LINC                (see above)
+ |     |  |     
+ |     |  +- vQueueReceiveWhenSuspendedTask
+ |     |     | 
+ |     |     +- vTaskSuspendAll      (see above)
+ |     |     |  
+ |     |     +- xQueueReceive        (see above)
+ |     |     |  
+ |     |     +- xTaskResumeAll       (see above)
+ |     |     |  
+ |     |     +- _LINC                (see above)
+ |     |        
+ |     +- vErrorChecks        
+ |     |  | 
+ |     |  +- xTaskGetTickCount    (see above)
+ |     |  |  
+ |     |  +- vTaskDelayUntil      (see above)
+ |     |  |  
+ |     |  +- prvCheckOtherTasksAreStillRunning
+ |     |  |  | 
+ |     |  |  +- xArePollingQueuesStillRunning
+ |     |  |  |    
+ |     |  |  +- xAreDynamicPriorityTasksStillRunning
+ |     |  |       
+ |     |  +- _LCMP               
+ |     |  |    
+ |     |  +- vParTestToggleLED    (see above)
+ |     |     
+ |     +- xTaskCreate          (see above)
+ |     |  
+ |     +- vButtonTask         
+ |     |  | 
+ |     |  +- xQueueCreate         (see above)
+ |     |  |  
+ |     |  +- ButtonInterrupt_Enable
+ |     |  |    
+ |     |  +- xQueueReceive        (see above)
+ |     |  |  
+ |     |  +- vParTestToggleLED    (see above)
+ |     |     
+ |     +- vTaskStartScheduler 
+ |        | 
+ |        +- prvIdleTask         
+ |        |  | 
+ |        |  +- prvCheckTasksWaitingTermination
+ |        |  |    
+ |        |  +- vApplicationIdleHook
+ |        |     | 
+ |        |     +- _LNEG               
+ |        |     |    
+ |        |     +- _LDIVS              
+ |        |     |  | 
+ |        |     |  +- _NEG_P              
+ |        |     |  |    
+ |        |     |  +- _lDivMod            
+ |        |     |       
+ |        |     +- _LCMP_P              (see above)
+ |        |        
+ |        +- xTaskCreate          (see above)
+ |        |  
+ |        +- xPortStartScheduler 
+ |           | 
+ |           +- xBankedStartScheduler
+ |              | 
+ |              +- prvSetupTimerInterrupt
+ |                 | 
+ |                 +- TickTimer_SetFreqHz 
+ |                 |  | 
+ |                 |  +- _LDIVU              
+ |                 |  |  | 
+ |                 |  |  +- _lDivMod             (see above)
+ |                 |  |     
+ |                 |  +- PE_Timer_LngHi1     
+ |                 |  |  | 
+ |                 |  |  +- _LCMP                (see above)
+ |                 |  |     
+ |                 |  +- SetCV                (see above)
+ |                 |     
+ |                 +- TickTimer_Enable    
+ |                    | 
+ |                    +- HWEnDi               (see above)
+ |                       
+ +- _EntryPoint         
+    | 
+    +- _Startup            
+       | 
+       +- Init                
+            
+ _vect               
+ | 
+ +- Cpu_Interrupt       
+ |    
+ +- vButtonPush         
+ |  | 
+ |  +- xQueueSendFromISR   
+ |  |  | 
+ |  |  +- memcpy               (see above)
+ |  |  |  
+ |  |  +- xTaskRemoveFromEventList (see above)
+ |  |     
+ |  +- vTaskSwitchContext  
+ |       
+ +- vPortTickInterrupt  
+ |  | 
+ |  +- vTaskIncrementTick   (see above)
+ |  |  
+ |  +- vTaskSwitchContext   (see above)
+ |     
+ +- vPortYield          
+ |  | 
+ |  +- vTaskSwitchContext   (see above)
+ |     
+ +- _EntryPoint          (see above)
+    
+*********************************************************************************************
+STATISTIC SECTION
+---------------------------------------------------------------------------------------------
+
+ExeFile:
+--------
+Number of blocks to be downloaded: 9
+Total size of all blocks to be downloaded: 5218
+

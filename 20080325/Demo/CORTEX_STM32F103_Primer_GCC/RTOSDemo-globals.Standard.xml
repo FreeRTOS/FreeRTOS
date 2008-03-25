@@ -1,0 +1,577 @@
+<!-- DWF2XML 0.01.29 - Raisonance Dwarf information extractor -->
+<aoffile Header="RTOSDemo" Path="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\RTOSDemo.elf">
+ <Def>
+  <Col Header="DeclFile" Desc="File"/>
+  <Col Header="Type" Desc="Type"/>
+  <Col Header="Header" Desc="Name"/>
+ </Def>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <func Header="LED_Set" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="201"/>
+ <func Header="LED_Handler_hw" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="93"/>
+ <func Header="LED_Handler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="73"/>
+ <func Header="LED_Init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="46"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="GreenLED_Counter" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="19" Pointer="No"/>
+ <variable Header="RedLED_Counter" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="20" Pointer="No"/>
+ <variable Header="GreenLED_mode" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="21" Pointer="No"/>
+ <variable Header="RedLED_mode" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="22" Pointer="No"/>
+ <variable Header="GreenLED_newmode" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="23" Pointer="No"/>
+ <variable Header="RedLED_newmode" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="24" Pointer="No"/>
+ <variable Header="HalfPeriod_LF" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="25" Pointer="No"/>
+ <variable Header="HalfPeriod_HF" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="26" Pointer="No"/>
+ <variable Header="Period_LF" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="27" Pointer="No"/>
+ <variable Header="Period_HF" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\led.c" DeclLine="28" Pointer="No"/>
+ <func Header="Reset_Handler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\crt0_STM32x.c" DeclLine="188"/>
+ <variable Header="g_pfnVectors" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\crt0_STM32x.c" DeclLine="110" Pointer="No"/>
+ <type Header="s16" Icon="1" Type="type" Desc=": int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="29" Pointer="No"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="GPIO_TypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_map.h" DeclLine="208" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <type Header="BitAction" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="70" Pointer="No"/>
+ <type Header="TIM_TimeBaseInitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_tim.h" DeclLine="38" Pointer="No"/>
+ <type Header="TIM_OCInitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_tim.h" DeclLine="47" Pointer="No"/>
+ <type Header="DataConfigMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.h" DeclLine="26" Pointer="No"/>
+ <type Header="Rotate_H12_V_Match_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="101" Pointer="No"/>
+ <func Header="LCD_DataLinesWrite" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="202"/>
+ <func Header="LCD_SetBackLight" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1053"/>
+ <func Header="LCD_SetBackLightOff" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1076"/>
+ <func Header="LCD_SetBackLightOn" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1092"/>
+ <func Header="LCD_GetBackLight" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1110"/>
+ <func Header="LCD_SetRotateScreen" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1129"/>
+ <func Header="LCD_GetRotateScreen" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1148"/>
+ <func Header="LCD_GetScreenOrientation" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1186"/>
+ <func Header="LCD_CtrlLinesWrite" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="255"/>
+ <func Header="LCD_SendLCDData" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="707"/>
+ <func Header="LCD_SendLCDCmd" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="679"/>
+ <func Header="LCD_SetRect_For_Cmd" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1028"/>
+ <func Header="LCD_DrawPixel" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="901"/>
+ <func Header="LCD_FillRect" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="777"/>
+ <func Header="LCD_DrawRect" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="873"/>
+ <func Header="LCD_SetScreenOrientation" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1166"/>
+ <func Header="LCD_DisplayChar" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="1004"/>
+ <func Header="LCD_DataLinesConfig" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="167"/>
+ <func Header="LCD_ReadLCDData" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="734"/>
+ <func Header="LCD_RectRead" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="934"/>
+ <func Header="LCD_GetPixel" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="973"/>
+ <func Header="LCD_Handler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="651"/>
+ <func Header="LCD_Init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="613"/>
+ <variable Header="TIM_TimeBaseStructure" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="28" Pointer="No"/>
+ <variable Header="TIM_OCInitStructure" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="29" Pointer="No"/>
+ <variable Header="HandlerDivider" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="30" Pointer="No"/>
+ <variable Header="AsciiDotsTable" Icon="2" Type="variable" Desc=":   unsigned char[1330]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="42" Pointer="No"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="Current_CCR_BackLightStart" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="32" Pointer="No"/>
+ <variable Header="OrientationOffsetX" Icon="2" Type="variable" Desc=":   long[4]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="139" Pointer="No"/>
+ <variable Header="OrientationOffsetY" Icon="2" Type="variable" Desc=":   long[4]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\lcd.c" DeclLine="140" Pointer="No"/>
+ <type Header="s32" Icon="1" Type="type" Desc=": long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="28" Pointer="No"/>
+ <type Header="s16" Icon="1" Type="type" Desc=": int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="29" Pointer="No"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <type Header="RCC_ClocksTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_rcc.h" DeclLine="37" Pointer="No"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <func Header="_int2str" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="56"/>
+ <func Header="delay_unit" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="116"/>
+ <func Header="UTIL_GetBat" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="138"/>
+ <func Header="UTIL_GetTemp" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="167"/>
+ <func Header="UTIL_SetTempMode" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="202"/>
+ <func Header="UTIL_uint2str" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="251"/>
+ <func Header="UTIL_int2str" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="273"/>
+ <func Header="UTIL_GetPll" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="372"/>
+ <func Header="UTIL_GetVersion" Icon="3" Type="func" Desc=":   unsigned char CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="390"/>
+ <func Header="UTIL_ReadBackupRegister" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="410"/>
+ <func Header="UTIL_WriteBackupRegister" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="429"/>
+ <func Header="UTIL_SetIrqHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="449"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <func Header="UTIL_GetIrqHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="471"/>
+ <func Header="UTIL_SetSchHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="499"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <func Header="UTIL_GetSchHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="524"/>
+ <func Header="UTIL_SetPll" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="291"/>
+ <func Header="UTIL_GetUsb" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="223"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <type Header="tHandler" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\scheduler.h" DeclLine="75" Pointer="No"/>
+ <variable Header="CurrentSpeed" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="25" Pointer="No"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="RCC_ClockFreq" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="28" Pointer="No"/>
+ <variable Header="fTemperatureInFahrenheit" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="30" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="dummycounter" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\Util.c" DeclLine="29" Pointer="No"/>
+ <type Header="s16" Icon="1" Type="type" Desc=": int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="29" Pointer="No"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="Rotate_H12_V_Match_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="101" Pointer="No"/>
+ <func Header="DRAW_SetCharMagniCoeff" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="218"/>
+ <func Header="DRAW_GetCharMagniCoeff" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="236"/>
+ <func Header="DRAW_GetTextColor" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="254"/>
+ <func Header="DRAW_SetTextColor" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="272"/>
+ <func Header="DRAW_GetBGndColor" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="290"/>
+ <func Header="DRAW_SetBGndColor" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="308"/>
+ <func Header="DRAW_SetDefaultColor" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="414"/>
+ <func Header="DRAW_Line" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="476"/>
+ <func Header="DRAW_DisplayStringWithMode" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="129"/>
+ <func Header="DRAW_DisplayStringInverted" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="397"/>
+ <func Header="DRAW_DisplayString" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="373"/>
+ <func Header="DRAW_DisplayTemp" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="437"/>
+ <func Header="DRAW_SetImage" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="335"/>
+ <func Header="DRAW_Init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="178"/>
+ <variable Header="CharMagniCoeff" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="28" Pointer="No"/>
+ <variable Header="BGndColor" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="29" Pointer="No"/>
+ <variable Header="TextColor" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="30" Pointer="No"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="fDisplayTime" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="32" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="BatState" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="33" Pointer="No"/>
+ <variable Header="OldBatState" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="34" Pointer="No"/>
+ <variable Header="OldTHH" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="35" Pointer="No"/>
+ <variable Header="OldTMM" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="36" Pointer="No"/>
+ <variable Header="OldTSS" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="37" Pointer="No"/>
+ <variable Header="OldTemp" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="38" Pointer="No"/>
+ <variable Header="xBat" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="39" Pointer="No"/>
+ <variable Header="yBat" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="40" Pointer="No"/>
+ <variable Header="widthBat" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="41" Pointer="No"/>
+ <variable Header="heightBat" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="42" Pointer="No"/>
+ <variable Header="UsbState" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="43" Pointer="No"/>
+ <variable Header="OldUsbState" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="43" Pointer="No"/>
+ <variable Header="rotate_counter" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="47" Pointer="No"/>
+ <variable Header="previous_H12" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="48" Pointer="No"/>
+ <variable Header="previous_previous_H12" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="49" Pointer="No"/>
+ <variable Header="H12" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="50" Pointer="No"/>
+ <variable Header="CurrentScreenOrientation" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="51" Pointer="No"/>
+ <variable Header="CurrentRotateScreen" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\draw.c" DeclLine="52" Pointer="No"/>
+ <type Header="s32" Icon="1" Type="type" Desc=": long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="28" Pointer="No"/>
+ <type Header="s16" Icon="1" Type="type" Desc=": int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="29" Pointer="No"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <type Header="SPI_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_spi.h" DeclLine="42" Pointer="No"/>
+ <type Header="Rotate_H12_V_Match_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="101" Pointer="No"/>
+ <type Header="tMEMS_Info" Icon="1" Type="type" Desc=": struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="124" Pointer="No"/>
+ <func Header="MEMS_GetPosition" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="523"/>
+ <func Header="MEMS_GetRotation" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="542"/>
+ <func Header="MEMS_SetNeutral" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="584"/>
+ <func Header="MEMS_GetInfo" Icon="3" Type="func" Desc=":   struct  CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="603"/>
+ <func Header="MEMS_SendByte" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="236"/>
+ <func Header="MEMS_ChipSelect" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="215"/>
+ <func Header="MEMS_ReadID" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="482"/>
+ <func Header="MEMS_ReadOutXY" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="138"/>
+ <func Header="MEMS_Handler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="381"/>
+ <func Header="MEMS_Init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="266"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="MEMS_Info" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="37" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="TestingActive" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="38" Pointer="No"/>
+ <variable Header="StartingFromResetOrShockCounter" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="39" Pointer="No"/>
+ <variable Header="TimeCounterForDoubleClick" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="40" Pointer="No"/>
+ <variable Header="TimeLastShock" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="41" Pointer="No"/>
+ <variable Header="Gradient2" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="44" Pointer="No"/>
+ <variable Header="N_filtering" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="47" Pointer="No"/>
+ <variable Header="GradX" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="50" Pointer="No"/>
+ <variable Header="GradY" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="51" Pointer="No"/>
+ <variable Header="GradZ" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="52" Pointer="No"/>
+ <variable Header="fMovePtrX" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="59" Pointer="No"/>
+ <variable Header="iMovePtrX" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="60" Pointer="No"/>
+ <variable Header="tMovePtrX" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="61" Pointer="No"/>
+ <variable Header="fMovePtrY" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="62" Pointer="No"/>
+ <variable Header="iMovePtrY" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="63" Pointer="No"/>
+ <variable Header="tMovePtrY" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="64" Pointer="No"/>
+ <variable Header="fMovePtrZ" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="65" Pointer="No"/>
+ <variable Header="iMovePtrZ" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="66" Pointer="No"/>
+ <variable Header="tMovePtrZ" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="67" Pointer="No"/>
+ <variable Header="XInit" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="69" Pointer="No"/>
+ <variable Header="YInit" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="70" Pointer="No"/>
+ <variable Header="ZInit" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\mems.c" DeclLine="71" Pointer="No"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <type Header="RCC_ClocksTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_rcc.h" DeclLine="37" Pointer="No"/>
+ <type Header="TIM_TimeBaseInitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_tim.h" DeclLine="38" Pointer="No"/>
+ <type Header="TIM_OCInitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_tim.h" DeclLine="47" Pointer="No"/>
+ <func Header="BUZZER_GetMode" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="358"/>
+ <func Header="BUZZER_SetFrequency" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="195"/>
+ <func Header="PlayMusic" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="104"/>
+ <func Header="BUZZER_SetMode" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="376"/>
+ <func Header="BUZZER_PlayMusic" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="464"/>
+ <func Header="BUZZER_Handler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="291"/>
+ <func Header="BUZZER_Init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="231"/>
+ <variable Header="TIM_TimeBaseStructure" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="54" Pointer="No"/>
+ <variable Header="TIM_OCInitStructure" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="55" Pointer="No"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="octave" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="26" Pointer="No"/>
+ <variable Header="note" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="43" Pointer="No"/>
+ <variable Header="buzz_counter" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="52" Pointer="No"/>
+ <variable Header="buzz_in_progress" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="53" Pointer="No"/>
+ <variable Header="CCR_Val" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="56" Pointer="No"/>
+ <variable Header="Buzzer_Mode" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="57" Pointer="No"/>
+ <variable Header="Buzzer_Counter" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="58" Pointer="No"/>
+ <variable Header="CurrentMelody" Icon="2" Type="variable" Desc=":   unsigned char CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="61" Pointer="Yes"/>
+ <variable Header="CurrentMelodySTART" Icon="2" Type="variable" Desc=":   unsigned char CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="62" Pointer="Yes"/>
+ <variable Header="DefaultOctave" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="63" Pointer="No"/>
+ <variable Header="DefaultDuration" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="64" Pointer="No"/>
+ <variable Header="DefaultBeats" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="65" Pointer="No"/>
+ <variable Header="Note_Freq" Icon="2" Type="variable" Desc=":   unsigned int[16]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\buzzer.c" DeclLine="67" Pointer="No"/>
+ <type Header="s32" Icon="1" Type="type" Desc=": long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="28" Pointer="No"/>
+ <type Header="s16" Icon="1" Type="type" Desc=": int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="29" Pointer="No"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="tMEMS_Info" Icon="1" Type="type" Desc=": struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="124" Pointer="No"/>
+ <type Header="tPointer_Info" Icon="1" Type="type" Desc=": struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="194" Pointer="No"/>
+ <type Header="tAppPtrMgr" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="226" Pointer="No"/>
+ <func Header="POINTER_SetCurrentPointer" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="351"/>
+ <func Header="POINTER_GetCurrentAngleStart" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="376"/>
+ <func Header="POINTER_SetCurrentAngleStart" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="394"/>
+ <func Header="POINTER_GetCurrentSpeedOnAngle" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="412"/>
+ <func Header="POINTER_SetCurrentSpeedOnAngle" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="430"/>
+ <func Header="POINTER_SetCurrentAreaStore" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="453"/>
+ <func Header="POINTER_GetMode" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="532"/>
+ <func Header="POINTER_GetState" Icon="3" Type="func" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="550"/>
+ <func Header="POINTER_SetRect" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="573"/>
+ <func Header="POINTER_SetRectScreen" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="615"/>
+ <func Header="POINTER_GetPos" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="634"/>
+ <func Header="POINTER_SetPos" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="655"/>
+ <func Header="POINTER_SetApplication_Pointer_Mgr" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="845"/>
+ <type Header="tAppPtrMgr" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="226" Pointer="No"/>
+ <func Header="POINTER_SetColor" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="863"/>
+ <func Header="POINTER_GetColor" Icon="3" Type="func" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="881"/>
+ <func Header="POINTER_GetInfo" Icon="3" Type="func" Desc=":   struct  CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="899"/>
+ <func Header="POINTER_Restore" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="806"/>
+ <func Header="POINTER_Draw" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="682"/>
+ <func Header="POINTER_Save" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="759"/>
+ <func Header="POINTER_SetMode" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="473"/>
+ <func Header="POINTER_Init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="289"/>
+ <func Header="POINTER_Handler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="315"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="POINTER_Info" Icon="2" Type="variable" Desc=":   struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="58" Pointer="No"/>
+ <variable Header="BallPointerBmp" Icon="2" Type="variable" Desc=":   unsigned char[7]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="39" Pointer="No"/>
+ <variable Header="CurrentPointerBmp" Icon="2" Type="variable" Desc=":   unsigned char CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="44" Pointer="Yes"/>
+ <variable Header="CurrentPointerColor" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="50" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="locbuf" Icon="2" Type="variable" Desc=":   unsigned char[7]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="40" Pointer="No"/>
+ <variable Header="DefaultAreaStore" Icon="2" Type="variable" Desc=":   unsigned char[98]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="41" Pointer="No"/>
+ <variable Header="CurrentPointerWidth" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="45" Pointer="No"/>
+ <variable Header="CurrentPointerHeight" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="46" Pointer="No"/>
+ <variable Header="CurrentSpeedOnAngle" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="47" Pointer="No"/>
+ <variable Header="CurrentAngleStart" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="48" Pointer="No"/>
+ <variable Header="ptrAreaStore" Icon="2" Type="variable" Desc=":   unsigned char CODE*" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="49" Pointer="Yes"/>
+ <variable Header="Pointer_Mode" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="51" Pointer="No"/>
+ <variable Header="Pointer_State" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="52" Pointer="No"/>
+ <variable Header="OUT_X" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="54" Pointer="No"/>
+ <variable Header="OUT_Y" Icon="2" Type="variable" Desc=":   int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\pointer.c" DeclLine="55" Pointer="No"/>
+ <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="74" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\Queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xLCDMessage" Icon="1" Type="type" Desc=": struct " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="158" Pointer="No"/>
+ <func Header="starting_delay" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="460"/>
+ <func Header="vApplicationTickHook" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="358"/>
+ <func Header="main" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="215"/>
+ <func Header="prvFlashTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="443"/>
+ <func Header="prvLCDTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="251"/>
+ <func Header="prvCheckTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="301"/>
+ <variable Header="dummy_var" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="77" Pointer="No"/>
+ <variable Header="Application_Pointer_Mgr" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ST_Code\circle.h" DeclLine="429" Pointer="No"/>
+ <variable Header="pucImage" Icon="2" Type="variable" Desc=":   unsigned int[3312]" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\bitmap.h" DeclLine="42" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\Queue.h" DeclLine="43" Pointer="No"/>
+ <variable Header="xLCDQueue" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\main.c" DeclLine="210" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <func Header="vParTestToggleLED" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ParTest\ParTest.c" DeclLine="97"/>
+ <func Header="vParTestSetLED" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ParTest\ParTest.c" DeclLine="70"/>
+ <func Header="vParTestInitialise" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ParTest\ParTest.c" DeclLine="54"/>
+ <variable Header="usOutputValue" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\ParTest\ParTest.c" DeclLine="49" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="u8" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="38" Pointer="No"/>
+ <type Header="FunctionalState" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="56" Pointer="No"/>
+ <type Header="NVIC_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_nvic.h" DeclLine="37" Pointer="No"/>
+ <type Header="TIM_TimeBaseInitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stm32f10x_tim.h" DeclLine="38" Pointer="No"/>
+ <func Header="vTimer2IntHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\timertest.c" DeclLine="127"/>
+ <func Header="vSetupTimerTest" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\timertest.c" DeclLine="81"/>
+ <variable Header="usMaxJitter" Icon="2" Type="variable" Desc=":   unsigned int" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\timertest.c" DeclLine="76" Pointer="No"/>
+ <type Header="__gnuc_va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="43" Pointer="No"/>
+ <type Header="__gnuc_va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="43" Pointer="No"/>
+ <type Header="va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="110" Pointer="No"/>
+ <func Header="printchar" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="32"/>
+ <func Header="prints" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="46"/>
+ <func Header="printi" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="79"/>
+ <func Header="print" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="122"/>
+ <type Header="__gnuc_va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="43" Pointer="No"/>
+ <type Header="va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="110" Pointer="No"/>
+ <func Header="snprintf" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="203"/>
+ <type Header="__gnuc_va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="43" Pointer="No"/>
+ <type Header="va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="110" Pointer="No"/>
+ <func Header="sprintf" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="194"/>
+ <type Header="__gnuc_va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="43" Pointer="No"/>
+ <type Header="va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="110" Pointer="No"/>
+ <func Header="printf" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="186"/>
+ <type Header="__gnuc_va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="43" Pointer="No"/>
+ <type Header="va_list" Icon="1" Type="type" Desc=":  " DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stdarg.h" DeclLine="110" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xSemaphoreHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\semphr.h" DeclLine="42" Pointer="No"/>
+ <func Header="xAreGenericQueueTasksStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="513"/>
+ <func Header="vStartGenericQueueTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="116"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xSemaphoreHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\semphr.h" DeclLine="42" Pointer="No"/>
+ <func Header="prvMediumPriorityMutexTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="468"/>
+ <func Header="prvHighPriorityMutexTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="484"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xSemaphoreHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\semphr.h" DeclLine="42" Pointer="No"/>
+ <func Header="prvLowPriorityMutexTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="370"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xSemaphoreHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\semphr.h" DeclLine="42" Pointer="No"/>
+ <func Header="prvSendFrontAndBackTest" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="142"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <variable Header="xErrorDetected" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="99" Pointer="No"/>
+ <variable Header="ulLoopCounter" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="103" Pointer="No"/>
+ <variable Header="ulLoopCounter2" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="104" Pointer="No"/>
+ <variable Header="ulGuardedVariable" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="107" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <variable Header="xHighPriorityMutexTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="111" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <variable Header="xMediumPriorityMutexTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\GenQTest.c" DeclLine="111" Pointer="No"/>
+ <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="74" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <type Header="xBlockingQueueParameters" Icon="1" Type="type" Desc=": struct BLOCKING_QUEUE_PARAMETERS" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="89" Pointer="No"/>
+ <func Header="xAreBlockingQueuesStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="261"/>
+ <func Header="vStartBlockingQueueTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="110"/>
+ <func Header="vBlockingQueueProducer" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="192"/>
+ <func Header="vBlockingQueueConsumer" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="223"/>
+ <variable Header="sBlockingConsumerCount" Icon="2" Type="variable" Desc=":   int[3]" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="101" Pointer="No"/>
+ <variable Header="sBlockingProducerCount" Icon="2" Type="variable" Desc=":   int[3]" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" DeclLine="105" Pointer="No"/>
+ <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="74" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="xAreBlockTimeTestTasksStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="449"/>
+ <func Header="vCreateBlockTimeTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="86"/>
+ <func Header="vSecondaryBlockTimeTestTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="353"/>
+ <func Header="vPrimaryBlockTimeTestTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="97"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <variable Header="xTestQueue" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="65" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <variable Header="xSecondary" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="69" Pointer="No"/>
+ <variable Header="xPrimaryCycles" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="72" Pointer="No"/>
+ <variable Header="xSecondaryCycles" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="72" Pointer="No"/>
+ <variable Header="xErrorOccurred" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="73" Pointer="No"/>
+ <variable Header="xRunIndicator" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\blocktim.c" DeclLine="77" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="xAreQueuePeekTasksStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="404"/>
+ <func Header="vStartQueuePeekTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="91"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="prvMediumPriorityPeekTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="272"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="prvHighPriorityPeekTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="217"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="prvHighestPriorityPeekTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="108"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="prvLowPriorityPeekTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="313"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <variable Header="xErrorDetected" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="80" Pointer="No"/>
+ <variable Header="ulLoopCounter" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="84" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <variable Header="xMediumPriorityTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="87" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <variable Header="xHighPriorityTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="87" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <variable Header="xHighestPriorityTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\QPeek.c" DeclLine="87" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="xArePollingQueuesStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\PollQ.c" DeclLine="197"/>
+ <func Header="vStartPolledQueueTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\PollQ.c" DeclLine="98"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\queue.h" DeclLine="43" Pointer="No"/>
+ <func Header="vPolledQueueProducer" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\PollQ.c" DeclLine="111"/>
+ <func Header="vPolledQueueConsumer" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\PollQ.c" DeclLine="150"/>
+ <variable Header="xPollingConsumerCount" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\PollQ.c" DeclLine="93" Pointer="No"/>
+ <variable Header="xPollingProducerCount" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Demo\Common\Minimal\PollQ.c" DeclLine="93" Pointer="No"/>
+ <type Header="pdTASK_CODE" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\projdefs.h" DeclLine="41" Pointer="No"/>
+ <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="74" Pointer="No"/>
+ <type Header="xListItem" Icon="1" Type="type" Desc=": struct xLIST_ITEM" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="89" Pointer="No"/>
+ <type Header="xMiniListItem" Icon="1" Type="type" Desc=": struct xMINI_LIST_ITEM" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="97" Pointer="No"/>
+ <type Header="xList" Icon="1" Type="type" Desc=": struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="107" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xTimeOutType" Icon="1" Type="type" Desc=": struct xTIME_OUT" DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="77" Pointer="No"/>
+ <type Header="tskTCB" Icon="1" Type="type" Desc=": struct tskTaskControlBlock" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="271" Pointer="No"/>
+ <func Header="prvIsTaskSuspended" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1004"/>
+ <func Header="vTaskSwitchContext" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1476"/>
+ <func Header="vTaskSetTimeOutState" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1616"/>
+ <func Header="xTaskCheckForTimeOut" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1623"/>
+ <func Header="vTaskMissedYield" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1662"/>
+ <func Header="vTaskPriorityDisinherit" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="2011"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskPriorityInherit" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1980"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="xTaskRemoveFromEventList" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1569"/>
+ <func Header="xTaskResumeFromISR" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1074"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="xTaskGetCurrentTaskHandle" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1934"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="uxTaskGetNumberOfTasks" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1260"/>
+ <func Header="xTaskGetTickCount" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1245"/>
+ <func Header="vTaskSuspendAll" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1159"/>
+ <func Header="uxTaskPriorityGet" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="843"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskPlaceOnEventList" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1499"/>
+ <func Header="vTaskIncrementTick" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1369"/>
+ <func Header="xTaskResumeAll" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1167"/>
+ <func Header="vTaskResume" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1034"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskSuspend" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="963"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskPrioritySet" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="865"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskDelay" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="784"/>
+ <func Header="vTaskDelayUntil" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="709"/>
+ <func Header="vTaskDelete" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="649"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskEndScheduler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1148"/>
+ <func Header="prvIdleTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1678"/>
+ <func Header="xTaskCreate" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="528"/>
+ <type Header="pdTASK_CODE" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\projdefs.h" DeclLine="41" Pointer="No"/>
+ <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="68" Pointer="No"/>
+ <func Header="vTaskStartScheduler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="1111"/>
+ <variable Header="pxReadyTasksLists" Icon="2" Type="variable" Desc=":   struct xLIST[5]" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="279" Pointer="No"/>
+ <variable Header="xDelayedTaskList1" Icon="2" Type="variable" Desc=":   struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="280" Pointer="No"/>
+ <variable Header="xDelayedTaskList2" Icon="2" Type="variable" Desc=":   struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="281" Pointer="No"/>
+ <variable Header="pxDelayedTaskList" Icon="2" Type="variable" Desc=":   struct xLIST CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="282" Pointer="Yes"/>
+ <variable Header="pxOverflowDelayedTaskList" Icon="2" Type="variable" Desc=":   struct xLIST CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="283" Pointer="Yes"/>
+ <variable Header="xPendingReadyList" Icon="2" Type="variable" Desc=":   struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="284" Pointer="No"/>
+ <variable Header="xTasksWaitingTermination" Icon="2" Type="variable" Desc=":   struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="288" Pointer="No"/>
+ <variable Header="uxTasksDeleted" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="289" Pointer="No"/>
+ <variable Header="xSuspendedTaskList" Icon="2" Type="variable" Desc=":   struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="295" Pointer="No"/>
+ <variable Header="uxCurrentNumberOfTasks" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="300" Pointer="No"/>
+ <variable Header="xTickCount" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="301" Pointer="No"/>
+ <variable Header="uxTopUsedPriority" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="302" Pointer="No"/>
+ <variable Header="uxTopReadyPriority" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="303" Pointer="No"/>
+ <variable Header="xSchedulerRunning" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="304" Pointer="No"/>
+ <variable Header="uxSchedulerSuspended" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="305" Pointer="No"/>
+ <variable Header="uxMissedTicks" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="306" Pointer="No"/>
+ <variable Header="xMissedYield" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="307" Pointer="No"/>
+ <variable Header="xNumOfOverflows" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="308" Pointer="No"/>
+ <variable Header="pxCurrentTCB" Icon="2" Type="variable" Desc=":   struct tskTaskControlBlock CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\tasks.c" DeclLine="275" Pointer="Yes"/>
+ <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="74" Pointer="No"/>
+ <type Header="xListItem" Icon="1" Type="type" Desc=": struct xLIST_ITEM" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="89" Pointer="No"/>
+ <type Header="xMiniListItem" Icon="1" Type="type" Desc=": struct xMINI_LIST_ITEM" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="97" Pointer="No"/>
+ <type Header="xList" Icon="1" Type="type" Desc=": struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="107" Pointer="No"/>
+ <func Header="vListInitialise" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\list.c" DeclLine="94"/>
+ <func Header="vListInitialiseItem" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\list.c" DeclLine="114"/>
+ <func Header="vListInsertEnd" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\list.c" DeclLine="121"/>
+ <func Header="vListInsert" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\list.c" DeclLine="144"/>
+ <func Header="vListRemove" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\list.c" DeclLine="185"/>
+ <type Header="size_t" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stddef.h" DeclLine="213" Pointer="No"/>
+ <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="74" Pointer="No"/>
+ <type Header="xListItem" Icon="1" Type="type" Desc=": struct xLIST_ITEM" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="89" Pointer="No"/>
+ <type Header="xMiniListItem" Icon="1" Type="type" Desc=": struct xMINI_LIST_ITEM" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="97" Pointer="No"/>
+ <type Header="xList" Icon="1" Type="type" Desc=": struct xLIST" DeclFile="C:\E\Dev\FreeRTOS\Source\include\list.h" DeclLine="107" Pointer="No"/>
+ <type Header="xTimeOutType" Icon="1" Type="type" Desc=": struct xTIME_OUT" DeclFile="C:\E\Dev\FreeRTOS\Source\include\task.h" DeclLine="77" Pointer="No"/>
+ <type Header="xQUEUE" Icon="1" Type="type" Desc=": struct QueueDefinition" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="124" Pointer="No"/>
+ <type Header="xQueueHandle" Icon="1" Type="type" Desc=": struct QueueDefinition CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="132" Pointer="Yes"/>
+ <func Header="vQueueDelete" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="713"/>
+ <func Header="uxQueueMessagesWaiting" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="701"/>
+ <func Header="prvCopyDataFromQueue" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="757"/>
+ <func Header="xQueueReceiveFromISR" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="653"/>
+ <func Header="prvUnlockQueue" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="771"/>
+ <func Header="xQueueGenericReceive" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="519"/>
+ <func Header="prvCopyDataToQueue" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="720"/>
+ <func Header="xQueueGenericSendFromISR" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="477"/>
+ <func Header="xQueueGenericSend" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="300"/>
+ <func Header="xQueueCreateMutex" Icon="3" Type="func" Desc=":   struct QueueDefinition CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="260"/>
+ <func Header="xQueueCreate" Icon="3" Type="func" Desc=":   struct QueueDefinition CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\queue.c" DeclLine="210"/>
+ <type Header="pdTASK_CODE" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\projdefs.h" DeclLine="41" Pointer="No"/>
+ <func Header="pxPortInitialiseStack" Icon="3" Type="func" Desc=":   unsigned long CODE*" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="111"/>
+ <type Header="pdTASK_CODE" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\Dev\FreeRTOS\Source\include\projdefs.h" DeclLine="41" Pointer="No"/>
+ <func Header="prvSetPSP" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="129"/>
+ <func Header="prvSetMSP" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="136"/>
+ <func Header="vPortEndScheduler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="169"/>
+ <func Header="vPortYieldFromISR" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="176"/>
+ <func Header="vPortEnterCritical" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="187"/>
+ <func Header="vPortExitCritical" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="194"/>
+ <func Header="xPortPendSVHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="204"/>
+ <func Header="xPortSysTickHandler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="251"/>
+ <func Header="xPortStartScheduler" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="146"/>
+ <func Header="vPortIncrementTick" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="317"/>
+ <func Header="vPortSwitchContext" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="309"/>
+ <variable Header="ulKernelPriority" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="82" Pointer="No"/>
+ <variable Header="uxCriticalNesting" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" DeclLine="86" Pointer="No"/>
+ <type Header="size_t" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\devtools\Raisonance\Ride\Lib\ARM\include\stddef.h" DeclLine="213" Pointer="No"/>
+ <type Header="xBlockLink" Icon="1" Type="type" Desc=": struct A_BLOCK_LINK" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\MemMang\heap_2.c" DeclLine="86" Pointer="No"/>
+ <func Header="vPortFree" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\MemMang\heap_2.c" DeclLine="223"/>
+ <func Header="pvPortMalloc" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\MemMang\heap_2.c" DeclLine="145"/>
+ <variable Header="xHeap" Icon="2" Type="variable" Desc=":   struct xRTOS_HEAP" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\MemMang\heap_2.c" DeclLine="78" Pointer="No"/>
+ <variable Header="xStart" Icon="2" Type="variable" Desc=":   struct A_BLOCK_LINK" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\MemMang\heap_2.c" DeclLine="93" Pointer="No"/>
+ <variable Header="xEnd" Icon="2" Type="variable" Desc=":   struct A_BLOCK_LINK" DeclFile="C:\E\Dev\FreeRTOS\Source\portable\MemMang\heap_2.c" DeclLine="93" Pointer="No"/>
+ <type Header="clock_t" Icon="1" Type="type" Desc=": unsigned long" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="104" Pointer="No"/>
+ <type Header="time_t" Icon="1" Type="type" Desc=": long" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="109" Pointer="No"/>
+ <type Header="caddr_t" Icon="1" Type="type" Desc=": unsigned char CODE*" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="126" Pointer="Yes"/>
+ <type Header="ino_t" Icon="1" Type="type" Desc=": unsigned int" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="133" Pointer="No"/>
+ <type Header="dev_t" Icon="1" Type="type" Desc=": int" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="166" Pointer="No"/>
+ <type Header="off_t" Icon="1" Type="type" Desc=": long" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="171" Pointer="No"/>
+ <type Header="uid_t" Icon="1" Type="type" Desc=": unsigned int" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="173" Pointer="No"/>
+ <type Header="gid_t" Icon="1" Type="type" Desc=": unsigned int" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="174" Pointer="No"/>
+ <type Header="mode_t" Icon="1" Type="type" Desc=": unsigned long" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="195" Pointer="No"/>
+ <type Header="nlink_t" Icon="1" Type="type" Desc=": unsigned int" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="200" Pointer="No"/>
+ <type Header="suseconds_t" Icon="1" Type="type" Desc=": long" DeclFile="c:\program files\raisonance\ride\arm-gcc\arm-none-eabi\include\sys\types.h" DeclLine="263" Pointer="No"/>
+ <type Header="poslog" Icon="1" Type="type" Desc=": struct " DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="83" Pointer="No"/>
+ <func Header="_read" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="173"/>
+ <func Header="_lseek" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="180"/>
+ <func Header="_open" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="203"/>
+ <func Header="_close" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="208"/>
+ <func Header="_exit" Icon="3" Type="func" Desc=":   void" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="213"/>
+ <func Header="_kill" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="219"/>
+ <func Header="_fstat" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="247"/>
+ <func Header="_stat" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="253"/>
+ <func Header="_link" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="259"/>
+ <func Header="_unlink" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="264"/>
+ <func Header="_raise" Icon="3" Type="func" Desc=":   void" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="269"/>
+ <func Header="_getpid" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="274"/>
+ <func Header="_gettimeofday" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="279"/>
+ <func Header="_times" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="304"/>
+ <func Header="isatty" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="322"/>
+ <func Header="_rename" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="336"/>
+ <func Header="_system" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="328"/>
+ <func Header="_write" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="189"/>
+ <func Header="_sbrk" Icon="3" Type="func" Desc=":   unsigned char CODE*" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="224"/>
+ <variable Header="stack_ptr" Icon="2" Type="variable" Desc=":   unsigned char CODE*" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\syscalls.c" DeclLine="53" Pointer="Yes"/>
+ <type Header="u32" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\Program Files\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="36" Pointer="No"/>
+ <type Header="u16" Icon="1" Type="type" Desc=": unsigned int" DeclFile="C:\Program Files\Raisonance\Ride\Lib\ARM\include\stm32f10x_type.h" DeclLine="37" Pointer="No"/>
+ <type Header="GPIOSpeed_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\Program Files\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="36" Pointer="No"/>
+ <type Header="GPIOMode_TypeDef" Icon="1" Type="type" Desc=": unsigned char" DeclFile="C:\Program Files\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="51" Pointer="No"/>
+ <type Header="GPIO_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\Program Files\Raisonance\Ride\Lib\ARM\include\stm32f10x_gpio.h" DeclLine="64" Pointer="No"/>
+ <type Header="USART_InitTypeDef" Icon="1" Type="type" Desc=": struct " DeclFile="C:\Program Files\Raisonance\Ride\Lib\ARM\include\stm32f10x_usart.h" DeclLine="43" Pointer="No"/>
+ <func Header="__io_SetMainOscFreq" Icon="3" Type="func" Desc=":   void" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="29"/>
+ <func Header="__io_init" Icon="3" Type="func" Desc=":   void" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="35"/>
+ <func Header="__io_getchar" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="122"/>
+ <func Header="getchar" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="142"/>
+ <func Header="__io_putchar" Icon="3" Type="func" Desc=":   void" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="94"/>
+ <func Header="putchar" Icon="3" Type="func" Desc=":   long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="116"/>
+ <variable Header="__io_init_done" Icon="2" Type="variable" Desc=":   unsigned char" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="23" Pointer="No"/>
+ <variable Header="__io_Main_Osc" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\Program Files\Raisonance\Ride\lib\ARM\io_putchar\STM32F10X_IO_putchar.c" DeclLine="25" Pointer="No"/>
+</aoffile>
+

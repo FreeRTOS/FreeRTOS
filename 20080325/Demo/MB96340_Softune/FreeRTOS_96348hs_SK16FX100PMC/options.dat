@@ -1,0 +1,98 @@
+$CPUSERIES-907
+$Prj-STANDALONE
+$0
+-g
+-w 1
+-INF LIST
+-D __CONFIG__=3
+-I ".\Src"
+-I ".\Src\config"
+-I ".\Src\watchdog"
+-I "..\..\Common\include"
+-I "..\..\..\Source\include"
+-I "..\..\..\Source\portable\Softune\MB96340"
+-I ".\Src\utility"
+-O 1
+-model MEDIUM
+-B
+-Xdof
+-xauto 127
+-x vTaskSwitchContext,vTaskIncrementTick
+-K NOEOPT
+-K NOLIB
+-K NOUNROLL
+$other
+-INF srcin
+-D __96340
+$time
+1203265443
+$end
+$1
+-g
+-w 2
+-D __CONFIG__=3
+-I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\os"
+-I "C:\Fujitsu\FreeRTOS\FreeRTOS Port 16FX\96340_FreeRTOS_96348hs-v17\96340_FreeRTOS_96348hs-v17\Src\port"
+-linf ON
+-lsrc ON
+-lsec ON
+-lcros OFF
+-linc ON
+-lexp OBJ
+-pl 60
+-pw 100
+-tab 8
+-lf
+-Xdof
+$other
+$time
+1202902449
+$end
+$2
+-g
+-AL 2
+-ra _INRAM01=0x000180/0x00037F
+-ra _INRAM02=0x002240/0x007FFF
+-ro _INROM03=0xF80000/0xFFFFFF
+-ro _INROM01=0xDE0000/0xDE7FFF
+-ro _INROM02=0xDF0000/0xDF7FFF
+-sc CONST/Data/BYTE=0xFF8000
+-check_rora
+-check_locate
+-rg 0
+-m
+-pl 60
+-pw 132
+-Xals
+-Xalr
+-na
+-w 2
+-Xdof
+$other
+-Xset_rora
+$time
+1203262255
+$end
+$3
+-dt s,d,r,a
+-pl 60
+-pw 132
+-g
+-Xdof
+$other
+$time
+1203262255
+$end
+$4
+-Xdof
+$other
+$time
+1202902449
+$end
+$5
+$other
+$time
+1202902449
+$end
+$Prjend
+$CPUSERIESEND

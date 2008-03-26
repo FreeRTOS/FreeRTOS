@@ -23,15 +23,16 @@
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
-	***************************************************************************
-	***************************************************************************
-	*																		  *
-	* SAVE TIME AND MONEY!  Why not get us to quote to get FreeRTOS.org		  *
-	* running on your hardware - or even write all or part of your application*
-	* for you?  See http://www.OpenRTOS.com for details.					  *
-	*																		  *
-	***************************************************************************
-	***************************************************************************
+    ***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
+    * and even write all or part of your application on your behalf.          *
+    * See http://www.OpenRTOS.com for details of the services we provide to   *
+    * expedite your project.                                                  *
+    *                                                                         *
+    ***************************************************************************
+    ***************************************************************************
 
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
@@ -113,7 +114,7 @@ typedef xQUEUE * xQueueHandle;
  */
 xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize );
 signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue );
 void vQueueDelete( xQueueHandle xQueue );
 signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE xTaskPreviouslyWoken, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
@@ -124,9 +125,9 @@ portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlock
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle const pxQueue );
-portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle const pxQueue );
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle const pxQueue );
+portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
+portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
 
 
 #if configUSE_CO_ROUTINES == 1
@@ -151,14 +152,14 @@ static void prvUnlockQueue( xQueueHandle pxQueue );
  *
  * @return pdTRUE if the queue contains no items, otherwise pdFALSE.
  */
-static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle const pxQueue );
+static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue );
 
 /*
  * Uses a critical section to determine if there is any space in a queue.
  *
  * @return pdTRUE if there is no space, otherwise pdFALSE;
  */
-static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle const pxQueue );
+static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue );
 
 /*
  * Copies an item into the queue, either at the front of the queue or the
@@ -1040,7 +1041,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const pxQueue )
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue )
 {
 unsigned portBASE_TYPE uxReturn;
 
@@ -1179,7 +1180,7 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 }
 /*-----------------------------------------------------------*/
 
-static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle const pxQueue )
+static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue )
 {
 signed portBASE_TYPE xReturn;
 
@@ -1201,7 +1202,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle const pxQueue )
+static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue )
 {
 signed portBASE_TYPE xReturn;
 

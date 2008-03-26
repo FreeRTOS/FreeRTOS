@@ -42,6 +42,7 @@
 #include "src/sysctl.h"
 #include "osram96x16.h"
 
+extern void I2CMasterInitExpClk(unsigned long ulBase, unsigned long ulI2CClk,  tBoolean bFast);
 //*****************************************************************************
 //
 // The I2C slave address of the SSD0303 controller on the OLED display.
@@ -801,7 +802,7 @@ OSRAMInit(tBoolean bFast)
     //
     // Initialize the I2C master.
     //
-    I2CMasterInit(I2C_MASTER_BASE, bFast);
+    I2CMasterInitExpClk(I2C_MASTER_BASE, SysCtlClockGet(), bFast);
 
     //
     // Compute the inter-byte delay for the SSD0303 controller.  This delay is

@@ -1,5 +1,5 @@
-#Sun Mar 23 09:21:36 GMT 2008
+#Mon Aug 27 13:15:37 BST 2007
 version=1
 eclipse.preferences.version=1
-pathvariable.FreeRTOS_ROOT=C\:/E/Dev/FreeRTOS/WorkingCopy2
+pathvariable.FreeRTOS_ROOT=C\:/Dev/FreeRTOS
 description.autobuilding=false

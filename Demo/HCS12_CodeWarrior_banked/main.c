@@ -24,15 +24,16 @@
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
-	***************************************************************************
-	***************************************************************************
-	*																		  *
-	* SAVE TIME AND MONEY!  Why not get us to quote to get FreeRTOS.org		  *
-	* running on your hardware - or even write all or part of your application*
-	* for you?  See http://www.OpenRTOS.com for details.					  *
-	*																		  *
-	***************************************************************************
-	***************************************************************************
+    ***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
+    * and even write all or part of your application on your behalf.          *
+    * See http://www.OpenRTOS.com for details of the services we provide to   *
+    * expedite your project.                                                  *
+    *                                                                         *
+    ***************************************************************************
+    ***************************************************************************
 
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.

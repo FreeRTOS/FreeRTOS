@@ -10,13 +10,6 @@
 <includePath path="c:/devtools/codesourcery/sourcery g++ lite/lib/gcc/../../lib/gcc/arm-none-eabi/4.2.0/include"/>
 <includePath path="c:/devtools/codesourcery/sourcery g++ lite/lib/gcc/../../lib/gcc/arm-none-eabi/4.2.0/include-fixed"/>
 <includePath path="c:/devtools/codesourcery/sourcery g++ lite/lib/gcc/../../lib/gcc/arm-none-eabi/4.2.0/../../../../arm-none-eabi/include"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/CORTEX_LM3Sxxxx_Eclipse/RTOSDemo"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Source/include"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/ARM_CM3"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/include"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/ethernet/uIP/uip-1.0/uip"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/CORTEX_LM3Sxxxx_Eclipse/RTOSDemo/webserver"/>
-<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/drivers/LuminaryMicro"/>
 <definedSymbol symbol="__STDC__=1"/>
 <definedSymbol symbol="__STDC_HOSTED__=1"/>
 <definedSymbol symbol="__GNUC__=4"/>
@@ -119,18 +112,6 @@
 <definedSymbol symbol="__GXX_TYPEINFO_EQUALITY_INLINE=0"/>
 <definedSymbol symbol="__ELF__=1"/>
 <definedSymbol symbol="__USES_INITFINI__=1"/>
-<definedSymbol symbol="GCC_ARMCM3_LM3S102"/>
-<definedSymbol symbol="inline="/>
-<definedSymbol symbol="PACK_STRUCT_END=__attribute\(\(packed\)\)"/>
-<definedSymbol symbol="ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\)"/>
-<definedSymbol symbol="sprintf=usprintf"/>
-<definedSymbol symbol="snprintf=usnprintf"/>
-<definedSymbol symbol="printf=uipprintf"/>
-<definedSymbol symbol="__OPTIMIZE__=1"/>
-<definedSymbol symbol="__thumb__=1"/>
-<definedSymbol symbol="__thumb2__=1"/>
-<definedSymbol symbol="__THUMBEL__=1"/>
-<definedSymbol symbol="__ARM_ARCH_7M__=1"/>
 </collector>
 </instance>
 </scannerInfo>

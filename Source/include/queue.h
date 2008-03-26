@@ -23,15 +23,16 @@
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
-	***************************************************************************
-	***************************************************************************
-	*																		  *
-	* SAVE TIME AND MONEY!  Why not get us to quote to get FreeRTOS.org		  *
-	* running on your hardware - or even write all or part of your application*
-	* for you?  See http://www.OpenRTOS.com for details.					  *
-	*																		  *
-	***************************************************************************
-	***************************************************************************
+    ***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
+    * and even write all or part of your application on your behalf.          *
+    * See http://www.OpenRTOS.com for details of the services we provide to   *
+    * expedite your project.                                                  *
+    *                                                                         *
+    ***************************************************************************
+    ***************************************************************************
 
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
@@ -735,7 +736,7 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * con
 
 /**
  * queue. h
- * <pre>unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const xQueue );</pre>
+ * <pre>unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue );</pre>
  *
  * Return the number of messages stored in a queue.
  *
@@ -746,7 +747,7 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * con
  * \page uxQueueMessagesWaiting uxQueueMessagesWaiting
  * \ingroup QueueManagement
  */
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle const xQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue );
 
 /**
  * queue. h
@@ -1174,9 +1175,9 @@ signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * co
  * Utilities to query queue that are safe to use from an ISR.  These utilities
  * should be used only from witin an ISR, or within a critical section.
  */
-signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle const pxQueue );
-signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle const pxQueue );
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle const pxQueue );
+signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
 
 
 /* 

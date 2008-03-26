@@ -23,15 +23,16 @@
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
-	***************************************************************************
-	***************************************************************************
-	*																		  *
-	* SAVE TIME AND MONEY!  Why not get us to quote to get FreeRTOS.org		  *
-	* running on your hardware - or even write all or part of your application*
-	* for you?  See http://www.OpenRTOS.com for details.					  *
-	*																		  *
-	***************************************************************************
-	***************************************************************************
+    ***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
+    * and even write all or part of your application on your behalf.          *
+    * See http://www.OpenRTOS.com for details of the services we provide to   *
+    * expedite your project.                                                  *
+    *                                                                         *
+    ***************************************************************************
+    ***************************************************************************
 
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
@@ -154,6 +155,8 @@ xSemaphoreHandle xButtonSemaphore;
 /* The queue used to send strings to the print task for display on the LCD. */
 xQueueHandle xPrintQueue;
 
+/* Newer library version. */
+extern void UARTConfigSetExpClk(unsigned long ulBase, unsigned long ulUARTClk, unsigned long ulBaud, unsigned long ulConfig);
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -252,6 +255,7 @@ static void prvSetupHardware( void )
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
     GPIODirModeSet(GPIO_PORTC_BASE, mainPUSH_BUTTON, GPIO_DIR_MODE_IN);
 	GPIOIntTypeSet( GPIO_PORTC_BASE, mainPUSH_BUTTON,GPIO_FALLING_EDGE );
+	IntPrioritySet( INT_GPIOC, configKERNEL_INTERRUPT_PRIORITY );
 	GPIOPinIntEnable( GPIO_PORTC_BASE, mainPUSH_BUTTON );
 	IntEnable( INT_GPIOC );
 
@@ -266,7 +270,7 @@ static void prvSetupHardware( void )
 	GPIODirModeSet( GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_DIR_MODE_HW );
 
 	/* Configure the UART for 8-N-1 operation. */
-	UARTConfigSet( UART0_BASE, mainBAUD_RATE, UART_CONFIG_WLEN_8 | UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE );
+	UARTConfigSetExpClk( UART0_BASE, SysCtlClockGet(), mainBAUD_RATE, UART_CONFIG_WLEN_8 | UART_CONFIG_PAR_NONE | UART_CONFIG_STOP_ONE );
 
 	/* We don't want to use the fifo.  This is for test purposes to generate
 	as many interrupts as possible. */
@@ -274,6 +278,7 @@ static void prvSetupHardware( void )
 
 	/* Enable Tx interrupts. */
 	HWREG( UART0_BASE + UART_O_IM ) |= UART_INT_TX;
+	IntPrioritySet( INT_UART0, configKERNEL_INTERRUPT_PRIORITY );
 	IntEnable( INT_UART0 );
 
 

@@ -58,7 +58,9 @@
  *----------------------------------------------------------*/
 
 /* Constants used with the cRxLock and cTxLock structure members. */
-#define queueUNLOCKED	( ( signed portBASE_TYPE ) -1 )
+#define queueUNLOCKED							( ( signed portBASE_TYPE ) -1 )
+#define queueLOCKED_UNMODIFIED					( ( signed portBASE_TYPE ) 0 )
+
 #define queueERRONEOUS_UNBLOCK					( -1 )
 
 /* For internal use only. */
@@ -177,12 +179,20 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
  * Macro to mark a queue as locked.  Locking a queue prevents an ISR from
  * accessing the queue event lists.
  */
-#define prvLockQueue( pxQueue )			\
-{										\
-	taskENTER_CRITICAL();				\
-		++( pxQueue->xRxLock );			\
-		++( pxQueue->xTxLock );			\
-	taskEXIT_CRITICAL();				\
+#define prvLockQueue( pxQueue )							\
+{														\
+	taskENTER_CRITICAL();								\
+	{													\
+		if( pxQueue->xRxLock == queueUNLOCKED )			\
+		{												\
+			pxQueue->xRxLock = queueLOCKED_UNMODIFIED;	\
+		}												\
+		if( pxQueue->xTxLock == queueUNLOCKED )			\
+		{												\
+			pxQueue->xTxLock = queueLOCKED_UNMODIFIED;	\
+		}												\
+	}													\
+	taskEXIT_CRITICAL();								\
 }
 /*-----------------------------------------------------------*/
 
@@ -1134,13 +1144,9 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 	updated. */
 	taskENTER_CRITICAL();
 	{
-		--( pxQueue->xTxLock );
-
 		/* See if data was added to the queue while it was locked. */
-		if( pxQueue->xTxLock > queueUNLOCKED )
+		while( pxQueue->xTxLock > queueLOCKED_UNMODIFIED )
 		{
-			pxQueue->xTxLock = queueUNLOCKED;
-
 			/* Data was posted while the queue was locked.  Are any tasks
 			blocked waiting for data to become available? */
 			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
@@ -1153,28 +1159,40 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 					context	switch is required. */
 					vTaskMissedYield();
 				}
-			}			
+
+				--( pxQueue->xTxLock );
+			}
+			else
+			{
+				break;
+			}
 		}
+
+		pxQueue->xTxLock = queueUNLOCKED;
 	}
 	taskEXIT_CRITICAL();
 
 	/* Do the same for the Rx lock. */
 	taskENTER_CRITICAL();
 	{
-		--( pxQueue->xRxLock );
-
-		if( pxQueue->xRxLock > queueUNLOCKED )
+		while( pxQueue->xRxLock > queueLOCKED_UNMODIFIED )
 		{
-			pxQueue->xRxLock = queueUNLOCKED;
-
 			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
 			{
 				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 				{
 					vTaskMissedYield();
 				}
-			}			
+
+				--( pxQueue->xRxLock );
+			}
+			else
+			{
+				break;
+			}
 		}
+
+		pxQueue->xRxLock = queueUNLOCKED;
 	}
 	taskEXIT_CRITICAL();
 }

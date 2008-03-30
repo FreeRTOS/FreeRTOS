@@ -109,7 +109,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 {
 	/* Place a known value at the bottom of the stack for debugging. */
 	*pxTopOfStack = 0xDEADBEEF;
-	*pxTopOfStack--;
+	pxTopOfStack--;
 
 	/* EABI stack frame. */
 	pxTopOfStack -= 28;	/* R31 to R4 inclusive. */
@@ -140,7 +140,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) vPortEndScheduler;/* Next LR. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x00000000UL;;/* Backchain. */
+	*pxTopOfStack = 0x00000000UL;/* Backchain. */
 
 	return pxTopOfStack;
 }
@@ -194,7 +194,7 @@ XIntc_VectorTableEntry *pxTable;
 
 	/* Get the configuration by using the device ID - in this case it is
 	assumed that only one interrupt controller is being used. */
-	pxInterruptController = &XIntc_ConfigTable[ XPAR_OPB_INTC_0_DEVICE_ID ];
+	pxInterruptController = &XIntc_ConfigTable[ XPAR_XPS_INTC_0_DEVICE_ID ];
   
 	/* Which interrupts are pending? */
 	ulInterruptStatus = XIntc_mGetIntrStatus( pxInterruptController->BaseAddress );
@@ -238,7 +238,7 @@ extern void vPortISRWrapper( void );
 	save the stack into the TCB.  The wrapper then calls the handler defined
 	above. */
 	XExc_RegisterHandler( XEXC_ID_NON_CRITICAL_INT, ( XExceptionHandler ) vPortISRWrapper, NULL );
-	XIntc_Initialize( &xInterruptController, XPAR_OPB_INTC_0_DEVICE_ID );
+	XIntc_Initialize( &xInterruptController, XPAR_XPS_INTC_0_DEVICE_ID );
 	XIntc_Start( &xInterruptController, XIN_REAL_MODE );
 }
 /*-----------------------------------------------------------*/

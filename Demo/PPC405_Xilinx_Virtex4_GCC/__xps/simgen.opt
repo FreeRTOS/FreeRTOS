@@ -1,0 +1,1 @@
+ -p virtex4 -lang vhdl   -pe ppc405_0  $(PPC405_0_BOOTLOOP)  -s mti -X C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_Xilinx_Virtex4_GCC/ -E C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_Xilinx_Virtex4_GCC/

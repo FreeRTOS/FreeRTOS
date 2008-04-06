@@ -1414,6 +1414,8 @@ inline void vTaskIncrementTick( void )
 
 void vTaskSwitchContext( void )
 {
+	traceTASK_SWITCHED_OUT();
+
 	if( uxSchedulerSuspended != ( unsigned portBASE_TYPE ) pdFALSE )
 	{
 		/* The scheduler is currently suspended - do not allow a context

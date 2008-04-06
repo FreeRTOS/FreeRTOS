@@ -314,6 +314,8 @@ size_t xQueueSizeInBytes;
 		mutual exclusion is required to test the pxMutexHolder variable. */
 		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
 		{
+			traceGIVE_MUTEX_RECURSIVE( pxMutex );
+
 			/* uxRecursiveCallCount cannot be zero if pxMutexHolder is equal to
 			the task handle, therefore no underflow check is required.  Also,
 			uxRecursiveCallCount is only modified by the mutex holder, and as
@@ -329,9 +331,7 @@ size_t xQueueSizeInBytes;
                 xQueueGenericSend( pxMutex, NULL, queueMUTEX_GIVE_BLOCK_TIME, queueSEND_TO_BACK );
 			}
 
-			xReturn = pdPASS;
-
-			traceGIVE_MUTEX_RECURSIVE( pxMutex );
+			xReturn = pdPASS;			
 		}
 		else
 		{
@@ -356,6 +356,8 @@ size_t xQueueSizeInBytes;
 		/* Comments regarding mutual exclusion as per those within
 		xQueueGiveMutexRecursive(). */
 
+		traceTAKE_MUTEX_RECURSIVE( pxMutex );
+
 		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
 		{
 			( pxMutex->uxRecursiveCallCount )++;
@@ -371,9 +373,7 @@ size_t xQueueSizeInBytes;
 			{
 				( pxMutex->uxRecursiveCallCount )++;
 			}
-		}
-
-		traceTAKE_MUTEX_RECURSIVE( pxMutex );
+		}		
 
 		return xReturn;
 	}

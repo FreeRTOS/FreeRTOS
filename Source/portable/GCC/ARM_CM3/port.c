@@ -135,6 +135,8 @@ void vPortSVCHandler( void )
 					"	ldr r2, uxCriticalNestingConst2	\n" /* Restore the critical nesting count used by the task. */
 					"	str r1, [r2]					\n"
 					"	msr psp, r0						\n" /* Restore the task stack pointer. */
+					"	mov r0, #0 						\n"
+					"	msr	basepri, r0					\n"			
 					"	orr r14, #0xd					\n"
 					"	bx r14							\n"
 					"									\n"

@@ -148,6 +148,8 @@ vPortSVCHandler;
 	ldr r2, =uxCriticalNesting
 	str r1, [r2]
 	msr psp, r0
+	mov r0, #0
+	msr	basepri, r0
 	orr r14, r14, #13
 	bx r14
 

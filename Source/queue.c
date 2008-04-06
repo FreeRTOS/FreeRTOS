@@ -127,8 +127,8 @@ portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlock
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
-portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
 unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
 
 

@@ -513,7 +513,7 @@ static portSHORT sComPortISR( const xComPort * const pxPort )
 {
 portSHORT sInterruptID;
 portCHAR cIn, cOut;
-portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTaskWokenByTx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 extern void vComTestUnsuspendTask( void );
 
 	portOUTPUT_BYTE( pxPort->us8259InterruptMaskReg, ( portINPUT_BYTE( pxPort->us8259InterruptMaskReg) | ~pxPort->ucInterruptEnableMast ) );
@@ -536,13 +536,13 @@ extern void vComTestUnsuspendTask( void );
 						do
 						{
 							cIn = ( portCHAR ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
-							xTaskWokenByPost = xQueueSendFromISR( pxPort->xRxedChars, &cIn, xTaskWokenByPost );
+							xQueueSendFromISR( pxPort->xRxedChars, &cIn, &xHigherPriorityTaskWoken );
 
 							/* Also release the semaphore - this does nothing interesting and is just a test.
 							We first attempt to unsuspend the task to check the scheduler correctely detects
 							this as an invalid call, then give the semaphore for real. */
 							vComTestUnsuspendTask();
-							xAnotherTaskWokenByPost = xSemaphoreGiveFromISR( pxPort->xTestSem, xAnotherTaskWokenByPost );
+							xSemaphoreGiveFromISR( pxPort->xTestSem, &xHigherPriorityTaskWoken );
 
 						} while( portINPUT_BYTE( pxPort->usLineStatusReg ) & 0x01 );
 						break;
@@ -559,19 +559,19 @@ extern void vComTestUnsuspendTask( void );
 						do
 						{
 							cIn = ( portCHAR ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
-							xTaskWokenByPost = xQueueSendFromISR( pxPort->xRxedChars, &cIn, xTaskWokenByPost );
+							xQueueSendFromISR( pxPort->xRxedChars, &cIn, &xHigherPriorityTaskWoken );
 
 							/* Also release the semaphore - this does nothing interesting and is just a test.
 							We first attempt to unsuspend the task to check the scheduler correctely detects
 							this as an invalid call, then give the semaphore for real. */
 							vComTestUnsuspendTask();
-							xAnotherTaskWokenByPost = xSemaphoreGiveFromISR( pxPort->xTestSem, xAnotherTaskWokenByPost );
+							xSemaphoreGiveFromISR( pxPort->xTestSem, &xHigherPriorityTaskWoken );
 
 						} while( portINPUT_BYTE( pxPort->usLineStatusReg ) & 0x01 );
 						break;
 
 			case 0x02:	/* serTRANSMIT_HOLD_EMPTY_INT */
-						if( xQueueReceiveFromISR( pxPort->xCharsForTx, &cOut, &xTaskWokenByTx ) != pdTRUE )						
+						if( xQueueReceiveFromISR( pxPort->xCharsForTx, &cOut, &xHigherPriorityTaskWoken ) != pdTRUE )						
 						{																						
 							/* Queue empty, nothing to send */													
 							vInterruptOff( pxPort, serTRANSMIT_HOLD_EMPTY_INT);									
@@ -607,14 +607,7 @@ extern void vComTestUnsuspendTask( void );
 	/* If posting any of the characters to a queue woke a task that was blocked on
 	the queue we may want to return to the task just woken (depending on its 
 	priority relative to the task this ISR interrupted. */
-	if( xTaskWokenByPost || xAnotherTaskWokenByPost || xTaskWokenByTx )
-	{
-		return pdTRUE;
-	}
-	else
-	{
-		return pdFALSE;
-	}
+	return xHigherPriorityTaskWoken;
 }
 /*-----------------------------------------------------------*/
 

@@ -79,6 +79,7 @@
 #define configUSE_ALTERNATIVE_API		1
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configCHECK_FOR_STACK_OVERFLOW	0 /* Do not use this option on the PC port. */
+#define configUSE_APPLICATION_TASK_HOOK	1
 
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 10 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

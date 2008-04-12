@@ -243,12 +243,12 @@ sv_disable_interrupts
 
 void xPortSysTickHandler( void )
 {
-	vTaskIncrementTick();
-	
 	/* If using preemption, also force a context switch. */
 	#if configUSE_PREEMPTION == 1
 		*(portNVIC_INT_CTRL) |= portNVIC_PENDSVSET;	
 	#endif
+
+	vTaskIncrementTick();
 }
 /*-----------------------------------------------------------*/
 

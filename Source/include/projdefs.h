@@ -50,7 +50,7 @@
 #ifndef PROJDEFS_H
 #define PROJDEFS_H
 
-/* Defines to prototype to which task functions must conform. */
+/* Defines the prototype to which task functions must conform. */
 typedef void (*pdTASK_CODE)( void * );
 
 #define pdTRUE		( 1 )

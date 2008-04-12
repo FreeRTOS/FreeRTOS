@@ -66,7 +66,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V4.7.2"
+#define tskKERNEL_VERSION_NUMBER "V5.0.0"
 
 /**
  * task. h
@@ -892,6 +892,29 @@ unsigned portLONG ulTaskEndTrace( void );
  * since the task referenced by xTask was created.
  */
 unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask );
+
+/**
+ * task.h
+ * <pre>void vTaskSetApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
+ *
+ * Sets pxHookFunction to be the task hook function used by the task xTask.
+ * Passing xTask as NULL has the effect of setting the calling tasks hook
+ * function.
+ */
+void vTaskSetApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );
+
+/**
+ * task.h
+ * <pre>portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
+ *
+ * Calls the hook function associated with xTask.  Passing xTask as NULL has
+ * the effect of calling the Running tasks (the calling task) hook function.
+ *
+ * pvParameter is passed to the hook function for the task to interpret as it
+ * wants.
+ */
+portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter );
+
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

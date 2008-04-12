@@ -460,15 +460,13 @@ typedef xQueueHandle xSemaphoreHandle;
  * @param xSemaphore A handle to the semaphore being released.  This is the
  * handle returned when the semaphore was created.
  *
- * @param sTaskPreviouslyWoken This is included so an ISR can make multiple calls
- * to xSemaphoreGiveFromISR () from a single interrupt.  The first call
- * should always pass in pdFALSE.  Subsequent calls should pass in
- * the value returned from the previous call.  See the file serial .c in the
- * PC port for a good example of using xSemaphoreGiveFromISR ().
+ * @param pxHigherPriorityTaskWoken xSemaphoreGiveFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xSemaphoreGiveFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
  *
- * @return pdTRUE if a task was woken by releasing the semaphore.  This is 
- * used by the ISR to determine if a context switch may be required following
- * the ISR.
+ * @return pdTRUE if the semaphore was successfully given, otherwise errQUEUE_FULL.
  *
  * Example usage:
  <pre>
@@ -503,25 +501,25 @@ typedef xQueueHandle xSemaphoreHandle;
  void vTimerISR( void * pvParameters )
  {
  static unsigned portCHAR ucLocalTickCount = 0;
- static portBASE_TYPE xTaskWoken;
+ static portBASE_TYPE xHigherPriorityTaskWoken;
 
     // A timer tick has occurred.
 
     // ... Do other time functions.
 
     // Is it time for vATask () to run?
-	xTaskWoken = pdFALSE;
+	xHigherPriorityTaskWoken = pdFALSE;
     ucLocalTickCount++;
     if( ucLocalTickCount >= TICKS_TO_WAIT )
     {
         // Unblock the task by releasing the semaphore.
-        xTaskWoken = xSemaphoreGiveFromISR( xSemaphore, xTaskWoken );
+        xSemaphoreGiveFromISR( xSemaphore, &xHigherPriorityTaskWoken );
 
         // Reset the count so we release the semaphore again in 10 ticks time.
         ucLocalTickCount = 0;
     }
 
-    if( xTaskWoken != pdFALSE )
+    if( xHigherPriorityTaskWoken != pdFALSE )
     {
         // We can force a context switch here.  Context switching from an
         // ISR uses port specific syntax.  Check the demo task for your port
@@ -532,7 +530,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreGiveFromISR xSemaphoreGiveFromISR
  * \ingroup Semaphores
  */
-#define xSemaphoreGiveFromISR( xSemaphore, xTaskPreviouslyWoken )			xQueueGenericSendFromISR( ( xQueueHandle ) xSemaphore, NULL, xTaskPreviouslyWoken, queueSEND_TO_BACK )
+#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )			xQueueGenericSendFromISR( ( xQueueHandle ) xSemaphore, NULL, pxHigherPriorityTaskWoken, queueSEND_TO_BACK )
 
 /**
  * semphr. h

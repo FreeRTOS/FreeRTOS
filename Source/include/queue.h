@@ -789,15 +789,14 @@ void vQueueDelete( xQueueHandle xQueue );
  * queue was created, so this many bytes will be copied from pvItemToQueue
  * into the queue storage area.
  *
- * @param cTaskPreviouslyWoken This is included so an ISR can post onto
- * the same queue multiple times from a single interrupt.  The first call
- * should always pass in pdFALSE.  Subsequent calls should pass in
- * the value returned from the previous call.  See the file serial .c in the
- * PC port for a good example of this mechanism.
+ * @param pxHigherPriorityTaskWoken xQueueSendToFrontFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xQueueSendToFromFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
  *
- * @return pdTRUE if a task was woken by posting onto the queue.  This is
- * used by the ISR to determine if a context switch may be required following
- * the ISR.
+ * @return pdTRUE if the data was successfully sent to the queue, otherwise
+ * errQUEUE_FULL.
  *
  * Example usage for buffered IO (where the ISR can obtain more than one value
  * per call):
@@ -805,10 +804,10 @@ void vQueueDelete( xQueueHandle xQueue );
  void vBufferISR( void )
  {
  portCHAR cIn;
- portBASE_TYPE xTaskWokenByPost;
+ portBASE_TYPE xHigherPrioritTaskWoken;
 
     // We have not woken a task at the start of the ISR.
-    cTaskWokenByPost = pdFALSE;
+    xHigherPriorityTaskWoken = pdFALSE;
 
     // Loop until the buffer is empty.
     do
@@ -816,19 +815,13 @@ void vQueueDelete( xQueueHandle xQueue );
         // Obtain a byte from the buffer.
         cIn = portINPUT_BYTE( RX_REGISTER_ADDRESS );						
 
-        // Post the byte.  The first time round the loop cTaskWokenByPost
-        // will be pdFALSE.  If the queue send causes a task to wake we do
-        // not want the task to run until we have finished the ISR, so
-        // xQueueSendFromISR does not cause a context switch.  Also we
-        // don't want subsequent posts to wake any other tasks, so we store
-        // the return value back into cTaskWokenByPost so xQueueSendFromISR
-        // knows not to wake any task the next iteration of the loop.
-        xTaskWokenByPost = xQueueSendToFrontFromISR( xRxQueue, &cIn, cTaskWokenByPost );
+        // Post the byte.  
+        xQueueSendToFrontFromISR( xRxQueue, &cIn, &xHigherPriorityTaskWoken );
 
     } while( portINPUT_BYTE( BUFFER_COUNT ) );
 
     // Now the buffer is empty we can switch context if necessary.
-    if( cTaskWokenByPost )
+    if( xHigherPriorityTaskWoken )
     {
         taskYIELD ();
     }
@@ -838,7 +831,7 @@ void vQueueDelete( xQueueHandle xQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendToFrontFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken, queueSEND_TO_FRONT )
+#define xQueueSendToFrontFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken, queueSEND_TO_FRONT )
 
 
 /**
@@ -867,15 +860,14 @@ void vQueueDelete( xQueueHandle xQueue );
  * queue was created, so this many bytes will be copied from pvItemToQueue
  * into the queue storage area.
  *
- * @param cTaskPreviouslyWoken This is included so an ISR can post onto
- * the same queue multiple times from a single interrupt.  The first call
- * should always pass in pdFALSE.  Subsequent calls should pass in
- * the value returned from the previous call.  See the file serial .c in the
- * PC port for a good example of this mechanism.
+ * @param pxHigherPriorityTaskWoken xQueueSendToBackFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xQueueSendToBackFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
  *
- * @return pdTRUE if a task was woken by posting onto the queue.  This is
- * used by the ISR to determine if a context switch may be required following
- * the ISR.
+ * @return pdTRUE if the data was successfully sent to the queue, otherwise
+ * errQUEUE_FULL.
  *
  * Example usage for buffered IO (where the ISR can obtain more than one value
  * per call):
@@ -883,10 +875,10 @@ void vQueueDelete( xQueueHandle xQueue );
  void vBufferISR( void )
  {
  portCHAR cIn;
- portBASE_TYPE xTaskWokenByPost;
+ portBASE_TYPE xHigherPriorityTaskWoken;
 
     // We have not woken a task at the start of the ISR.
-    cTaskWokenByPost = pdFALSE;
+    xHigherPriorityTaskWoken = pdFALSE;
 
     // Loop until the buffer is empty.
     do
@@ -894,19 +886,13 @@ void vQueueDelete( xQueueHandle xQueue );
         // Obtain a byte from the buffer.
         cIn = portINPUT_BYTE( RX_REGISTER_ADDRESS );						
 
-        // Post the byte.  The first time round the loop cTaskWokenByPost
-        // will be pdFALSE.  If the queue send causes a task to wake we do
-        // not want the task to run until we have finished the ISR, so
-        // xQueueSendFromISR does not cause a context switch.  Also we
-        // don't want subsequent posts to wake any other tasks, so we store
-        // the return value back into cTaskWokenByPost so xQueueSendFromISR
-        // knows not to wake any task the next iteration of the loop.
-        xTaskWokenByPost = xQueueSendToBackFromISR( xRxQueue, &cIn, cTaskWokenByPost );
+        // Post the byte.
+        xQueueSendToBackFromISR( xRxQueue, &cIn, &xHigherPriorityTaskWoken );
 
     } while( portINPUT_BYTE( BUFFER_COUNT ) );
 
     // Now the buffer is empty we can switch context if necessary.
-    if( cTaskWokenByPost )
+    if( xHigherPriorityTaskWoken )
     {
         taskYIELD ();
     }
@@ -916,7 +902,7 @@ void vQueueDelete( xQueueHandle xQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendToBackFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken, queueSEND_TO_BACK )
+#define xQueueSendToBackFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken, queueSEND_TO_BACK )
 
 /**
  * queue. h
@@ -947,15 +933,14 @@ void vQueueDelete( xQueueHandle xQueue );
  * queue was created, so this many bytes will be copied from pvItemToQueue
  * into the queue storage area.
  *
- * @param cTaskPreviouslyWoken This is included so an ISR can post onto
- * the same queue multiple times from a single interrupt.  The first call
- * should always pass in pdFALSE.  Subsequent calls should pass in
- * the value returned from the previous call.  See the file serial .c in the
- * PC port for a good example of this mechanism.
+ * @param pxHigherPriorityTaskWoken xQueueSendFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xQueueSendFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
  *
- * @return pdTRUE if a task was woken by posting onto the queue.  This is
- * used by the ISR to determine if a context switch may be required following
- * the ISR.
+ * @return pdTRUE if the data was successfully sent to the queue, otherwise
+ * errQUEUE_FULL.
  *
  * Example usage for buffered IO (where the ISR can obtain more than one value
  * per call):
@@ -963,10 +948,10 @@ void vQueueDelete( xQueueHandle xQueue );
  void vBufferISR( void )
  {
  portCHAR cIn;
- portBASE_TYPE xTaskWokenByPost;
+ portBASE_TYPE xHigherPriorityTaskWoken;
 
     // We have not woken a task at the start of the ISR.
-    cTaskWokenByPost = pdFALSE;
+    xHigherPriorityTaskWoken = pdFALSE;
 
     // Loop until the buffer is empty.
     do
@@ -974,19 +959,13 @@ void vQueueDelete( xQueueHandle xQueue );
         // Obtain a byte from the buffer.
         cIn = portINPUT_BYTE( RX_REGISTER_ADDRESS );						
 
-        // Post the byte.  The first time round the loop cTaskWokenByPost
-        // will be pdFALSE.  If the queue send causes a task to wake we do
-        // not want the task to run until we have finished the ISR, so
-        // xQueueSendFromISR does not cause a context switch.  Also we
-        // don't want subsequent posts to wake any other tasks, so we store
-        // the return value back into cTaskWokenByPost so xQueueSendFromISR
-        // knows not to wake any task the next iteration of the loop.
-        xTaskWokenByPost = xQueueSendFromISR( xRxQueue, &cIn, cTaskWokenByPost );
+        // Post the byte.  
+        xTaskWokenByPost = xQueueSendFromISR( xRxQueue, &cIn, &xHigherPriorityTaskWoken );
 
     } while( portINPUT_BYTE( BUFFER_COUNT ) );
 
     // Now the buffer is empty we can switch context if necessary.
-    if( cTaskWokenByPost )
+    if( xHigherPriorityTaskWoken )
     {
         taskYIELD ();
     }
@@ -996,7 +975,7 @@ void vQueueDelete( xQueueHandle xQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, xTaskPreviouslyWoken, queueSEND_TO_BACK )
+#define xQueueSendFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken, queueSEND_TO_BACK )
 
 /**
  * queue. h
@@ -1004,7 +983,7 @@ void vQueueDelete( xQueueHandle xQueue );
  portBASE_TYPE xQueueGenericSendFromISR(
                                            xQueueHandle pxQueue,
                                            const void *pvItemToQueue,
-                                           portBASE_TYPE xTaskPreviouslyWoken
+                                           portBASE_TYPE *pxHigherPriorityTaskWoken,
 										   portBASE_TYPE xCopyPosition
                                        );
  </pre>
@@ -1027,19 +1006,18 @@ void vQueueDelete( xQueueHandle xQueue );
  * queue was created, so this many bytes will be copied from pvItemToQueue
  * into the queue storage area.
  *
- * @param cTaskPreviouslyWoken This is included so an ISR can post onto
- * the same queue multiple times from a single interrupt.  The first call
- * should always pass in pdFALSE.  Subsequent calls should pass in
- * the value returned from the previous call.  See the file serial .c in the
- * PC port for a good example of this mechanism.
+ * @param pxHigherPriorityTaskWoken xQueueGenericSendFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xQueueGenericSendFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
  *
  * @param xCopyPosition Can take the value queueSEND_TO_BACK to place the
  * item at the back of the queue, or queueSEND_TO_FRONT to place the item
  * at the front of the queue (for high priority messages).
  *
- * @return pdTRUE if a task was woken by posting onto the queue.  This is
- * used by the ISR to determine if a context switch may be required following
- * the ISR.
+ * @return pdTRUE if the data was successfully sent to the queue, otherwise
+ * errQUEUE_FULL.
  *
  * Example usage for buffered IO (where the ISR can obtain more than one value
  * per call):
@@ -1047,10 +1025,10 @@ void vQueueDelete( xQueueHandle xQueue );
  void vBufferISR( void )
  {
  portCHAR cIn;
- portBASE_TYPE xTaskWokenByPost;
+ portBASE_TYPE xHigherPriorityTaskWokenByPost;
 
     // We have not woken a task at the start of the ISR.
-    cTaskWokenByPost = pdFALSE;
+    xHigherPriorityTaskWokenByPost = pdFALSE;
 
     // Loop until the buffer is empty.
     do
@@ -1058,21 +1036,16 @@ void vQueueDelete( xQueueHandle xQueue );
         // Obtain a byte from the buffer.
         cIn = portINPUT_BYTE( RX_REGISTER_ADDRESS );						
 
-        // Post the byte.  The first time round the loop cTaskWokenByPost
-        // will be pdFALSE.  If the queue send causes a task to wake we do
-        // not want the task to run until we have finished the ISR, so
-        // xQueueSendFromISR does not cause a context switch.  Also we
-        // don't want subsequent posts to wake any other tasks, so we store
-        // the return value back into cTaskWokenByPost so xQueueSendFromISR
-        // knows not to wake any task the next iteration of the loop.
-        xTaskWokenByPost = xQueueGenericSendFromISR( xRxQueue, &cIn, cTaskWokenByPost, queueSEND_TO_BACK );
+        // Post each byte.
+        xQueueGenericSendFromISR( xRxQueue, &cIn, &xHigherPriorityTaskWokenByPost, queueSEND_TO_BACK );
 
     } while( portINPUT_BYTE( BUFFER_COUNT ) );
 
-    // Now the buffer is empty we can switch context if necessary.
-    if( cTaskWokenByPost )
+    // Now the buffer is empty we can switch context if necessary.  Note that the
+    // name of the yield function required is port specific.
+    if( xHigherPriorityTaskWokenByPost )
     {
-        taskYIELD ();
+        taskYIELD_YIELD_FROM_ISR();
     }
  }
  </pre>
@@ -1080,7 +1053,7 @@ void vQueueDelete( xQueueHandle xQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE xTaskPreviouslyWoken, portBASE_TYPE xCopyPosition );
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition );
 
 /**
  * queue. h

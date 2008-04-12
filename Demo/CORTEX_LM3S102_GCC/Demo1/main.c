@@ -503,7 +503,7 @@ void vUART_ISR(void)
 {
 unsigned portLONG ulStatus;
 portCHAR cRxedChar;
-portBASE_TYPE xTaskWokenByPost = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt. */
 	ulStatus = UARTIntStatus( UART0_BASE, pdTRUE );
@@ -520,7 +520,7 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE;
 			Rxed chars.  Posting the character should wake the task that is 
 			blocked on the queue waiting for characters. */
 			cRxedChar = ( portCHAR ) HWREG( UART0_BASE + UART_O_DR );
-			xTaskWokenByPost = xQueueSendFromISR( xCommsQueue, &cRxedChar, xTaskWokenByPost );
+			xQueueSendFromISR( xCommsQueue, &cRxedChar, &xHigherPriorityTaskWoken );
 		}		
 	}
 
@@ -538,14 +538,11 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE;
 		}
 	}
 	
-	if( xTaskWokenByPost )
-	{
-		/* If a task was woken by the character being received then we force
-		a context switch to occur in case the task is of higher priority than
-		the currently executing task (i.e. the task that this interrupt 
-		interrupted.) */
-		portEND_SWITCHING_ISR( xTaskWokenByPost );
-	}
+	/* If a task was woken by the character being received then we force
+	a context switch to occur in case the task is of higher priority than
+	the currently executing task (i.e. the task that this interrupt 
+	interrupted.) */
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

@@ -352,14 +352,14 @@ unsigned portLONG ulStatus;
 
 void vGPIO_ISR( void )
 {
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
 	/* Clear the interrupt. */
-	GPIOPinIntClear(GPIO_PORTC_BASE, mainPUSH_BUTTON);
+	GPIOPinIntClear( GPIO_PORTC_BASE, mainPUSH_BUTTON );
 
 	/* Wake the button handler task. */
-	if( xSemaphoreGiveFromISR( xButtonSemaphore, pdFALSE ) )
-	{
-		portEND_SWITCHING_ISR( pdTRUE );
-	}
+	xSemaphoreGiveFromISR( xButtonSemaphore, &xHigherPriorityTaskWoken );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

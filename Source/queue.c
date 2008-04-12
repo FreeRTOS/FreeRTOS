@@ -978,7 +978,7 @@ signed portCHAR *pcOriginalReadPosition;
 
 		if( xReturn == errQUEUE_EMPTY )
 		{
-			if( xTicksToWait > 0 )
+			if( xTicksToWait > ( portTickType ) 0 )
 			{
 				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 				{
@@ -1079,7 +1079,7 @@ void vQueueDelete( xQueueHandle pxQueue )
 
 static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, portBASE_TYPE xPosition )
 {
-	if( pxQueue->uxItemSize == 0 )
+	if( pxQueue->uxItemSize == ( unsigned portBASE_TYPE ) 0 )
 	{
 		#if ( configUSE_MUTEXES == 1 )
 		{

@@ -118,7 +118,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
 signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue );
 void vQueueDelete( xQueueHandle xQueue );
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE xTaskPreviouslyWoken, portBASE_TYPE xCopyPosition );
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 xQueueHandle xQueueCreateMutex( void );
@@ -799,8 +799,10 @@ xTimeOutType xTimeOut;
 #endif /* configUSE_ALTERNATIVE_API */
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE xTaskPreviouslyWoken, portBASE_TYPE xCopyPosition )
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition )
 {
+signed portBASE_TYPE xReturn;
+
 	/* Similar to xQueueGenericSend, except we don't block if there is no room
 	in the queue.  Also we don't directly wake a task that was blocked on a
 	queue read, instead we return a flag to say whether a context switch is
@@ -816,18 +818,13 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 		be done when the queue is unlocked later. */
 		if( pxQueue->xTxLock == queueUNLOCKED )
 		{
-			/* We only want to wake one task per ISR, so check that a task has
-			not already been woken. */
-			if( !xTaskPreviouslyWoken )		
+			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
 			{
-				if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 				{
-					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
-					{
-						/* The task waiting has a higher priority so record that a
-						context	switch is required. */
-						return pdTRUE;
-					}
+					/* The task waiting has a higher priority so record that a
+					context	switch is required. */
+					*pxHigherPriorityTaskWoken = pdTRUE;
 				}
 			}
 		}
@@ -837,13 +834,16 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 			knows that data was posted while it was locked. */
 			++( pxQueue->xTxLock );
 		}
+
+		xReturn = pdPASS;
 	}
 	else
 	{
 		traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
+		xReturn = errQUEUE_FULL;
 	}
 
-	return xTaskPreviouslyWoken;
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -1017,18 +1017,13 @@ signed portBASE_TYPE xReturn;
 		that an ISR has removed data while the queue was locked. */
 		if( pxQueue->xRxLock == queueUNLOCKED )
 		{
-			/* We only want to wake one task per ISR, so check that a task has
-			not already been woken. */
-			if( !( *pxTaskWoken ) )
+			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
 			{
-				if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
+				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 				{
-					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
-					{
-						/* The task waiting has a higher priority than us so
-						force a context switch. */
-						*pxTaskWoken = pdTRUE;
-					}
+					/* The task waiting has a higher priority than us so
+					force a context switch. */
+					*pxTaskWoken = pdTRUE;
 				}
 			}
 		}

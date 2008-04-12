@@ -215,14 +215,14 @@ void vSerialClose( xComPortHandle xPort )
 
 void vUARTInterruptHandler( void )
 {
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 portCHAR cChar;
 
 	if( USART_GetITStatus( USART1, USART_IT_TXE ) == SET )
 	{
 		/* The interrupt was caused by the THR becoming empty.  Are there any
 		more characters to transmit? */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* A character was retrieved from the queue so can be sent to the
 			THR now. */
@@ -237,10 +237,10 @@ portCHAR cChar;
 	if( USART_GetITStatus( USART1, USART_IT_RXNE ) == SET )
 	{
 		cChar = USART_ReceiveData( USART1 );
-		xTaskWokenByPost = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByPost );
+		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}	
 	
-	portEND_SWITCHING_ISR( xTaskWokenByPost || xTaskWokenByTx );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 
 

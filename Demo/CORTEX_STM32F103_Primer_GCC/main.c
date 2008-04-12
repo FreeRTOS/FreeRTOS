@@ -371,6 +371,7 @@ void vApplicationTickHook( void )
 {
 static unsigned portLONG ulCallCount;
 static const xLCDMessage xMemsMessage = { mainUPDATE_BALL_MESSAGE, NULL };
+static portBASE_TYPE xHigherPriorityTaskWoken;
 
 	/* Periodically send a message to the LCD task telling it to update
 	the MEMS input, and then if necessary the LCD. */
@@ -378,7 +379,8 @@ static const xLCDMessage xMemsMessage = { mainUPDATE_BALL_MESSAGE, NULL };
 	if( ulCallCount >= mainMEMS_DELAY )
 	{
 		ulCallCount = 0;
-		xQueueSendFromISR( xLCDQueue, &xMemsMessage, pdFALSE );
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR( xLCDQueue, &xMemsMessage, &xHigherPriorityTaskWoken );
 	}
 }
 /*-----------------------------------------------------------*/

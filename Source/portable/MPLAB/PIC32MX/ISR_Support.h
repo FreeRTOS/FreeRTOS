@@ -60,21 +60,21 @@
 .macro	portSAVE_CONTEXT
 
 	/* Make room for the context. */	
-	addiu		sp,	sp, -portCONTEXT_SIZE
 
 	/* Get interrupts above the kernel priority enabled again ASAP.  First
 	save the current status so we can manipulate it, and the cause and EPC
 	registers so we capture their original values in case of interrupt nesting. */
 
 	mfc0		k0, _CP0_CAUSE
+	addiu		sp,	sp, -portCONTEXT_SIZE
 	sw			k0, portCAUSE_STACK_LOCATION(sp)
 	mfc0		k1, _CP0_STATUS
-	sw			k1, portSTATUS_STACK_LOCATION(sp)
-
 	/* Also save s6 so we can use it during this interrupt.  Any
 	nesting interrupts should maintain the values of this register
 	accross the ISR. */
 	sw			s6, 44(sp)
+	sw			k1, portSTATUS_STACK_LOCATION(sp)
+
 
 	/* s6 holds the EPC value, we may want this during the context switch. */
 	mfc0 		s6, _CP0_EPC

@@ -197,7 +197,7 @@ unsigned portLONG ulNextWord;
 
 void vEMAC_ISR( void )
 {
-portBASE_TYPE xSwitchRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned portLONG ulTemp;
 
 	/* Clear the interrupt. */
@@ -207,13 +207,12 @@ unsigned portLONG ulTemp;
 	/* Was it an Rx interrupt? */
 	if( ulTemp & ETH_INT_RX )
 	{
-		xSwitchRequired = pdTRUE;
-		xSemaphoreGiveFromISR( xMACInterruptSemaphore, pdFALSE );
+		xSemaphoreGiveFromISR( xMACInterruptSemaphore, &xHigherPriorityTaskWoken );
 		EthernetIntDisable( ETH_BASE, ETH_INT_RX );
 	}
 		
     /* Switch to the uIP task. */
-	portEND_SWITCHING_ISR( xSwitchRequired );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

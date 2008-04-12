@@ -62,31 +62,6 @@
 
 
 /*
- * Default a definitions for backwards compatibility with old
- * portmacro.h files.
- */
-#ifndef configMAX_TASK_NAME_LEN
-	#define configMAX_TASK_NAME_LEN 16
-#endif
-
-#ifndef configIDLE_SHOULD_YIELD
-	#define configIDLE_SHOULD_YIELD		1
-#endif
-
-#if configMAX_TASK_NAME_LEN < 1
-	#undef configMAX_TASK_NAME_LEN
-	#define configMAX_TASK_NAME_LEN 1
-#endif
-
-#ifndef INCLUDE_xTaskResumeFromISR
-	#define INCLUDE_xTaskResumeFromISR 1
-#endif
-
-#ifndef INCLUDE_xTaskGetSchedulerState
-	#define INCLUDE_xTaskGetSchedulerState 0
-#endif
-
-/*
  * Task control block.  A task control block (TCB) is allocated to each task,
  * and stores the context of the task.
  */
@@ -109,6 +84,10 @@ typedef struct tskTaskControlBlock
 		
 	#if ( configUSE_MUTEXES == 1 )
 		unsigned portBASE_TYPE uxBasePriority;
+	#endif
+
+	#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+		pdTASK_HOOK_CODE pxTaskHook;
 	#endif
 		
 } tskTCB;
@@ -1412,6 +1391,61 @@ inline void vTaskIncrementTick( void )
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+
+	void vTaskSetApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction )
+	{
+	tskTCB *xTCB;
+
+		/* If xTask is NULL then we are setting our own task hook. */
+		if( xTask == NULL )
+		{
+			xTCB = ( tskTCB * ) pxCurrentTCB;
+		}
+		else
+		{
+			xTCB = ( tskTCB * ) xTask;
+		}
+		
+		/* Save the hook function in the TCB. */
+		xTCB->pxTaskHook = pxHookFunction;
+	}
+	
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+
+	portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter )
+	{
+	tskTCB *xTCB;
+	portBASE_TYPE xReturn;
+
+		/* If xTask is NULL then we are calling our own task hook. */
+		if( xTask == NULL )
+		{
+			xTCB = ( tskTCB * ) pxCurrentTCB;
+		}
+		else
+		{
+			xTCB = ( tskTCB * ) xTask;
+		}
+
+		if( xTCB->pxTaskHook != NULL )
+		{
+			xReturn = xTCB->pxTaskHook( pvParameter );
+		}
+		else
+		{
+			xReturn = pdFAIL;
+		}
+
+		return xReturn;
+	}
+	
+#endif
+/*-----------------------------------------------------------*/
+
 void vTaskSwitchContext( void )
 {
 	traceTASK_SWITCHED_OUT();
@@ -1695,12 +1729,6 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * co
 	strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned portSHORT ) configMAX_TASK_NAME_LEN );
 	pxTCB->pcTaskName[ ( unsigned portSHORT ) configMAX_TASK_NAME_LEN - ( unsigned portSHORT ) 1 ] = '\0';
 
-	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
-	{
-		pxTCB->uxCriticalNesting = ( unsigned portBASE_TYPE ) 0;
-	}
-	#endif
-
 	/* This is used as an array index so must ensure it's not too large. */
 	if( uxPriority >= configMAX_PRIORITIES )
 	{
@@ -1724,6 +1752,18 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * co
 	/* Event lists are always in priority order. */
 	listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) uxPriority );
 	listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
+
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+	{
+		pxTCB->uxCriticalNesting = ( unsigned portBASE_TYPE ) 0;
+	}
+	#endif
+
+	#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+	{
+		pxTCB->pxTaskHook = NULL;
+	}
+	#endif	
 }
 /*-----------------------------------------------------------*/
 

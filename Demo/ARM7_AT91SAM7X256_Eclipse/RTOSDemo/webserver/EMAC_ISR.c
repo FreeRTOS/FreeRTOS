@@ -71,7 +71,7 @@ void vPassEMACSemaphore( xSemaphoreHandle xSemaphore )
 void vEMACISR_Handler( void )
 {
 volatile unsigned portLONG ulIntStatus, ulRxStatus;
-portBASE_TYPE xSwitchRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	ulIntStatus = AT91C_BASE_EMAC->EMAC_ISR;
 	ulRxStatus = AT91C_BASE_EMAC->EMAC_RSR;
@@ -80,7 +80,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 	{
 		/* A frame has been received, signal the uIP task so it can process
 		the Rx descriptors. */
-		xSwitchRequired = xSemaphoreGiveFromISR( xEMACSemaphore, pdFALSE );
+		xSemaphoreGiveFromISR( xEMACSemaphore, &xHigherPriorityTaskWoken );
 		AT91C_BASE_EMAC->EMAC_RSR = AT91C_EMAC_REC;
 	}
 
@@ -88,7 +88,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 	
     /* Switch to the uIP task. */
-    if( xSwitchRequired )
+    if( xHigherPriorityTaskWoken )
     {
     	/* If a task of higher priority than the interrupted task was
     	unblocked by the ISR then this call will ensure that the 

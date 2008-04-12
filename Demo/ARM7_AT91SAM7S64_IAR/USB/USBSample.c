@@ -19,7 +19,7 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
@@ -37,26 +37,26 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
 /*
-	Sample interrupt driven USB device driver.  This is a minimal implementation 
+	Sample interrupt driven USB device driver.  This is a minimal implementation
 	for demonstration only.  Although functional, it is not a full and compliant
-	implementation.  
+	implementation.
 	
 	The USB device enumerates as a simple 3 axis joystick, and once configured
 	transmits 3 axis of data which can be viewed from the USB host machine.
 
-	This file implements the USB interrupt service routine, and a demo FreeRTOS 
-	task.  The interrupt service routine handles the USB hardware - taking a 
+	This file implements the USB interrupt service routine, and a demo FreeRTOS
+	task.  The interrupt service routine handles the USB hardware - taking a
 	snapshot of the USB status at the point of the interrupt.  The task receives
 	the status information from the interrupt for processing at the task level.
 	
@@ -67,7 +67,7 @@
 	Changes from V2.5.5
 	
 	+ Descriptors that have a length that is an exact multiple of usbFIFO_LENGTH
-	  can now be transmitted.  To this end an extra parameter has been 
+	  can now be transmitted.  To this end an extra parameter has been
 	  added to the prvSendControlData() function, and the state
 	  eSENDING_EVEN_DESCRIPTOR has been introduced.  Thanks to Scott Miller for
 	  assisting with this contribution.
@@ -127,7 +127,7 @@
 #define usbINTERFACE_STRING					( 4 )
 
 /* Data indexes for reading the request from the xISRStatus.ucFifoData[]
-into xUSB_REQUEST.  The data order is designed for speed - so looks a 
+into xUSB_REQUEST.  The data order is designed for speed - so looks a
 little odd. */
 #define usbREQUEST_TYPE_INDEX				( 7 )
 #define usbREQUEST_INDEX					( 6 )
@@ -176,7 +176,7 @@ typedef struct X_ISR_STATUS
 } xISRStatus;
 
 /* Structure used to hold the received requests. */
-typedef struct 
+typedef struct
 {
 	unsigned portCHAR ucReqType;
 	unsigned portCHAR ucRequest;
@@ -205,7 +205,7 @@ typedef struct
 
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * The USB interrupt service routine.  This takes a snapshot of the USB
  * device at the time of the interrupt, clears the interrupts, and posts
  * the data to the USB processing task.
@@ -219,7 +219,7 @@ __arm void vUSB_ISR( void );
 static void prvResetEndPoints( void );
 
 /*
- * Setup the USB hardware, install the interrupt service routine and 
+ * Setup the USB hardware, install the interrupt service routine and
  * initialise all the state variables.
  */
 static void vInitUSBInterface( void );
@@ -229,17 +229,17 @@ static void vInitUSBInterface( void );
  */
 static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage );
 
-/* 
- * For simplicity requests are separated into device, interface, class 
+/*
+ * For simplicity requests are separated into device, interface, class
  * interface and end point requests.
  *
  * Decode and handle standard device requests originating on the control
- * end point. 
+ * end point.
  */
 static void prvHandleStandardDeviceRequest( xUSB_REQUEST *pxRequest );
 
 /*
- * For simplicity requests are separated into device, interface, class 
+ * For simplicity requests are separated into device, interface, class
  * interface and end point requests.
  *
  * Decode and handle standard interface requests originating on the control
@@ -248,7 +248,7 @@ static void prvHandleStandardDeviceRequest( xUSB_REQUEST *pxRequest );
 static void prvHandleStandardInterfaceRequest( xUSB_REQUEST *pxRequest );
 
 /*
- * For simplicity requests are separated into device, interface, class 
+ * For simplicity requests are separated into device, interface, class
  * interface and end point requests.
  *
  * Decode and handle standard end point requests originating on the control
@@ -257,7 +257,7 @@ static void prvHandleStandardInterfaceRequest( xUSB_REQUEST *pxRequest );
 static void prvHandleStandardEndPointRequest( xUSB_REQUEST *pxRequest );
 
 /*
- * For simplicity requests are separated into device, interface, class 
+ * For simplicity requests are separated into device, interface, class
  * interface and end point requests.
  *
  * Decode and handle the class interface requests.
@@ -277,7 +277,7 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 
 /*
  * Examine the Tx buffer to see if there is any more data to be transmitted.
- * 
+ *
  * If there is data to be transmitted then send the next segment.  A segment
  * can have a maximum of 8 bytes (this is defined as the maximum for the end
  * point by the descriptor).  The final segment may be less than 8 bytes if
@@ -288,36 +288,36 @@ static void prvSendNextSegment( void );
 /*
  * A stall condition is forced each time the host makes a request that is not
  * supported by this minimal implementation.
- * 
+ *
  * A stall is forced by setting the appropriate bit in the end points control
- * and status register. 
+ * and status register.
  */
 static void prvSendStall( void );
 
 /*
- * A NULL (or zero length packet) is transmitted in acknowledge the reception 
+ * A NULL (or zero length packet) is transmitted in acknowledge the reception
  * of certain events from the host.
  */
 static void prvUSBTransmitNull( void );
 
-/* 
- * When the host requests a descriptor this function is called to determine 
+/*
+ * When the host requests a descriptor this function is called to determine
  * which descriptor is being requested and start its transmission.
  */
 static void prvGetStandardInterfaceDescriptor( xUSB_REQUEST *pxRequest );
 
 /*
- * This demo USB device enumerates as a simple 3 axis joystick.  Once 
+ * This demo USB device enumerates as a simple 3 axis joystick.  Once
  * configured this function is periodically called to generate some sample
  * joystick data.
  *
- * The x and y axis are made to move in a square.  The z axis is made to 
+ * The x and y axis are made to move in a square.  The z axis is made to
  * repeatedly increment up to its maximum.
  */
 static void prvTransmitSampleValues( void );
 
 /*
- * The created task to handle the USB demo functionality. 
+ * The created task to handle the USB demo functionality.
  */
 void vUSBDemoTask( void *pvParameters );
 
@@ -343,7 +343,7 @@ const portCHAR pxLanguageStringDescriptor[] =
 	0x09, 0x04
 };
 
-const portCHAR pxManufacturerStringDescriptor[] = 
+const portCHAR pxManufacturerStringDescriptor[] =
 {
 	18,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -358,7 +358,7 @@ const portCHAR pxManufacturerStringDescriptor[] =
 	'S', 0x00	
 };
 
-const portCHAR pxProductStringDescriptor[] = 
+const portCHAR pxProductStringDescriptor[] =
 {
 	44,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -386,7 +386,7 @@ const portCHAR pxProductStringDescriptor[] =
 	'k', 0x00
 };
 
-const portCHAR pxConfigurationStringDescriptor[] = 
+const portCHAR pxConfigurationStringDescriptor[] =
 {
 	38,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -411,7 +411,7 @@ const portCHAR pxConfigurationStringDescriptor[] =
 	'e', 0x00
 };
 
-const portCHAR pxInterfaceStringDescriptor[] = 
+const portCHAR pxInterfaceStringDescriptor[] =
 {
 	30,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -453,7 +453,7 @@ const portCHAR pxReportDescriptor[] =
 	 0xc0			/* END_COLLECTION					*/
 };
 
-const char pxDeviceDescriptor[] = 
+const char pxDeviceDescriptor[] =
 {
 	/* Device descriptor */
 	0x12,								/* bLength				*/
@@ -526,7 +526,7 @@ static xISRStatus xISRMessages[ usbQUEUE_LENGTH + 1 ];
 static xTX_MESSAGE pxCharsForTx;
 
 /* Queue used to pass messages between the ISR and the task. */
-static xQueueHandle xUSBInterruptQueue; 
+static xQueueHandle xUSBInterruptQueue;
 
 /* ISR entry has to be written in the asm file as we want a context switch
 to occur from within the ISR.  See the port documentation on the FreeRTOS.org
@@ -535,9 +535,9 @@ extern void vUSBISREntry( void );
 
 /*-----------------------------------------------------------*/
 
-/* Macros to manipulate the control and status registers.  These registers 
-cannot be accessed using a direct read modify write operation outside of the 
-ISR as some bits are left unchanged by writing with a 0, and some are left 
+/* Macros to manipulate the control and status registers.  These registers
+cannot be accessed using a direct read modify write operation outside of the
+ISR as some bits are left unchanged by writing with a 0, and some are left
 unchanged by writing with a 1. */
 
 #define usbINT_CLEAR_MASK	(AT91C_UDP_TXCOMP | AT91C_UDP_STALLSENT | AT91C_UDP_RXSETUP | AT91C_UDP_RX_DATA_BK0 | AT91C_UDP_RX_DATA_BK1 )
@@ -576,7 +576,7 @@ unchanged by writing with a 1. */
 
 __arm void vUSB_ISR( void )
 {
-portBASE_TYPE xTaskWokenByPost = pdFALSE; 
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 static volatile unsigned portLONG ulNextMessage = 0;
 xISRStatus *pxMessage;
 unsigned portLONG ulTemp, ulRxBytes;
@@ -595,7 +595,7 @@ unsigned portLONG ulTemp, ulRxBytes;
 	cleared separately as it does not appear in the mask register. */
 	AT91C_BASE_UDP->UDP_ICR = AT91C_BASE_UDP->UDP_IMR | AT91C_UDP_ENDBUSRES;
 	
-	/* If there are bytes in the FIFO then we have to retrieve them here.  
+	/* If there are bytes in the FIFO then we have to retrieve them here.
 	Ideally this would be done at the task level.  However we need to clear the
 	RXSETUP interrupt before leaving the ISR, and this may cause the data in
 	the FIFO to be overwritten.  Also the DIR bit has to be changed before the
@@ -606,7 +606,7 @@ unsigned portLONG ulTemp, ulRxBytes;
 	ulRxBytes = ulTemp >> 16;
 	ulRxBytes &= usbRX_COUNT_MASK;
 	
-	/* With this minimal implementation we are only interested in receiving 
+	/* With this minimal implementation we are only interested in receiving
 	setup bytes on the control end point. */
 	if( ( ulRxBytes > 0 ) && ( ulTemp & AT91C_UDP_RXSETUP ) )
 	{
@@ -635,11 +635,11 @@ unsigned portLONG ulTemp, ulRxBytes;
 	/* The message now contains the entire state and optional data from
 	the USB interrupt.  This can now be posted on the Rx queue ready for
 	processing at the task level. */
-	xTaskWokenByPost = xQueueSendFromISR( xUSBInterruptQueue, &pxMessage, xTaskWokenByPost );
+	xQueueSendFromISR( xUSBInterruptQueue, &pxMessage, &xHigherPriorityTaskWoken );
 
 	/* We may want to switch to the USB task, if this message has made
 	it the highest priority task that is ready to execute. */
-	portEND_SWITCHING_ISR( xTaskWokenByPost );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
 	/* Clear the AIC ready for the next interrupt. */		
 	AT91C_BASE_AIC->AIC_EOICR = 0;
@@ -658,7 +658,7 @@ xISRStatus *pxMessage;
 	    vInitUSBInterface();
     portEXIT_CRITICAL();
 
-	/* Process interrupts as they arrive.   The ISR takes a snapshot of the 
+	/* Process interrupts as they arrive.   The ISR takes a snapshot of the
 	interrupt status then posts the information on this queue for processing
 	at the task level.  This simple demo implementation only processes
 	a few interrupt sources. */
@@ -825,7 +825,7 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 {
 	if( pxMessage->ulCSR0 & AT91C_UDP_RX_DATA_BK0 )
 	{		
-		/* We only expect to receive zero length data here as ACK's. 
+		/* We only expect to receive zero length data here as ACK's.
 		Set the data pointer to the end of the current Tx packet to
 		ensure we don't send out any more data. */	
 		pxCharsForTx.ulNextCharIndex = pxCharsForTx.ulTotalDataLength;
@@ -910,9 +910,9 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 			xRequest.usLength <<= 8;
 			xRequest.usLength |= pxMessage->ucFifoData[ usbLENGTH_LOW_BYTE ];
 	
-			/* Manipulate the ucRequestType and the ucRequest parameters to 
-			generate a zero based request selection.  This is just done to 
-			break up the requests into subsections for clarity.  The 
+			/* Manipulate the ucRequestType and the ucRequest parameters to
+			generate a zero based request selection.  This is just done to
+			break up the requests into subsections for clarity.  The
 			alternative would be to have more huge switch statement that would
 			be difficult to optimise. */
 			ucRequest = ( ( xRequest.ucReqType & 0x60 ) >> 3 );
@@ -1040,8 +1040,8 @@ unsigned portSHORT usStatus = 0;
 
 	    case usbSET_CONFIGURATION_REQUEST:
 
-			/* Acknowledge the SET_CONFIGURATION, but (according to the manual) 
-			we cannot actually move to the configured state until we get a 
+			/* Acknowledge the SET_CONFIGURATION, but (according to the manual)
+			we cannot actually move to the configured state until we get a
 			TXCOMP interrupt from this NULL packet.  Therefore we just remember the
 			config and set our state so we know we have received the go ahead. */			
 			ucUSBConfig = ( unsigned portCHAR ) ( pxRequest->usValue & 0xff );
@@ -1109,7 +1109,7 @@ unsigned portSHORT usStatus = 0;
 			break;
 
 	    case usbGET_DESCRIPTOR_REQUEST:
-			prvGetStandardInterfaceDescriptor( pxRequest ); 
+			prvGetStandardInterfaceDescriptor( pxRequest );
 			break;
 
 		/* This minimal implementation does not respond to these. */
@@ -1130,7 +1130,7 @@ static void prvHandleStandardEndPointRequest( xUSB_REQUEST *pxRequest )
 	{
 		/* This minimal implementation does not expect to respond to these. */
 	    case usbGET_STATUS_REQUEST:
-	    case usbCLEAR_FEATURE_REQUEST: 
+	    case usbCLEAR_FEATURE_REQUEST:
 	    case usbSET_FEATURE_REQUEST:
 
 	    default:			
@@ -1164,7 +1164,7 @@ volatile unsigned portLONG ulTemp;
     /* Setup the PIO for the USB pull up resistor. */
     AT91F_PIO_CfgOutput(AT91C_BASE_PIOA,AT91C_PIO_PA16);
 
-    /* Start without the pullup - this will get set at the end of this 
+    /* Start without the pullup - this will get set at the end of this
 	function. */
     AT91F_PIO_SetOutput( AT91C_BASE_PIOA, AT91C_PIO_PA16 );
 
@@ -1181,7 +1181,7 @@ volatile unsigned portLONG ulTemp;
 	/* Enable the transceiver. */
 	AT91C_UDP_TRANSCEIVER_ENABLE = 0;
 
-	/* Enable the USB interrupts - other interrupts get enabled as the 
+	/* Enable the USB interrupts - other interrupts get enabled as the
 	enumeration process progresses. */
 	AT91F_AIC_ConfigureIt( AT91C_BASE_AIC, AT91C_ID_UDP, usbINTERRUPT_PRIORITY, AT91C_AIC_SRCTYPE_INT_LEVEL_SENSITIVE, ( void (*)( void ) ) vUSBISREntry );
 	AT91F_AIC_EnableIt( AT91C_BASE_AIC, AT91C_ID_UDP );
@@ -1201,7 +1201,7 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 	}
 	else if( ( ulLengthToSend < ( unsigned portLONG ) usRequestedLength ) && lSendingDescriptor )
 	{
-		/* We are sending a descriptor.  If the descriptor is an exact 
+		/* We are sending a descriptor.  If the descriptor is an exact
 		multiple of the FIFO length then it will have to be terminated
 		with a NULL packet.  Set the state to indicate this if
 		necessary. */
@@ -1218,12 +1218,12 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 	(if it is greater than 8 bytes in length). */
 	memcpy( pxCharsForTx.ucTxBuffer, pucData, ulLengthToSend );
 
-	/* Reinitialise the buffer index so we start sending from the start of 
+	/* Reinitialise the buffer index so we start sending from the start of
 	the data. */
 	pxCharsForTx.ulTotalDataLength = ulLengthToSend;
 	pxCharsForTx.ulNextCharIndex = ( unsigned portLONG ) 0;
 
-	/* Send the first 8 bytes now.  The rest will get sent in response to 
+	/* Send the first 8 bytes now.  The rest will get sent in response to
 	TXCOMP interrupts. */
 	prvSendNextSegment();
 }
@@ -1275,7 +1275,7 @@ volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
 	}
 	else
 	{
-		/* There is no data to send.  If we were sending a descriptor and the 
+		/* There is no data to send.  If we were sending a descriptor and the
 		descriptor was an exact multiple of the max packet size then we need
 		to send a null to terminate the transmission. */
 		if( eDriverState == eSENDING_EVEN_DESCRIPTOR )

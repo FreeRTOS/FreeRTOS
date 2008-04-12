@@ -213,7 +213,7 @@ __arm void vSerialISR( void )
 {
 unsigned portSHORT usStatus;
 signed portCHAR cChar;
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	usStatus = UART_FlagStatus( UART0 );
@@ -222,7 +222,7 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
 	{
 		/* The interrupt was caused by the THR becoming empty.  Are there any
 		more characters to transmit? */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* A character was retrieved from the queue so can be sent to the
 			THR now. */
@@ -241,12 +241,12 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
 		character from the RHR and place it in the queue of received
 		characters. */
 		cChar = UART0->RxBUFR;
-		xTaskWokenByPost = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByPost );
+		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}
 
 	/* If a task was woken by either a character being received or a character
 	being transmitted then we may need to switch to another task. */
-	portEND_SWITCHING_ISR( ( xTaskWokenByPost || xTaskWokenByTx ) );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
 	/* End the interrupt in the EIC. */
 	portCLEAR_EIC();

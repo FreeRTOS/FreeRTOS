@@ -153,9 +153,9 @@ void vU2InterruptHandler( void )
 {
 /* Declared static to minimise stack use. */
 static portCHAR cChar;
-static portBASE_TYPE xYieldRequired;
+static portBASE_TYPE xHigherPriorityTaskWoken;
 
-	xYieldRequired = pdFALSE;
+	xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Are any Rx interrupts pending? */
 	if( mU2RXGetIntFlag() )
@@ -165,7 +165,7 @@ static portBASE_TYPE xYieldRequired;
 			/* Retrieve the received character and place it in the queue of
 			received characters. */
 			cChar = U2RXREG;
-			xYieldRequired = xQueueSendFromISR( xRxedChars, &cChar, xYieldRequired );
+			xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 		}
 		mU2RXClearIntFlag();
 	}
@@ -175,7 +175,7 @@ static portBASE_TYPE xYieldRequired;
 	{
 		while( !( U2STAbits.UTXBF ) )
 		{
-			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xYieldRequired ) == pdTRUE )
+			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 			{
 				/* Send the next character queued for Tx. */
 				U2TXREG = cChar;
@@ -192,7 +192,7 @@ static portBASE_TYPE xYieldRequired;
 	}
 
 	/* If sending or receiving necessitates a context switch, then switch now. */
-	portEND_SWITCHING_ISR( xYieldRequired );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 
 

@@ -136,7 +136,7 @@ void vUART_ISR_Wrapper( void )
 void vUART_ISR_Handler( void )
 {
 signed portCHAR cChar;
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	switch( UART0_IIR & serINTERRUPT_SOURCE_MASK )
@@ -147,7 +147,7 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
 
 		case serSOURCE_THRE	:	/* The THRE is empty.  If there is another
 								character in the Tx queue, send it now. */
-								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 								{
 									UART0_THR = cChar;
 								}
@@ -164,17 +164,14 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
 		case serSOURCE_RX	:	/* A character was received.  Place it in 
 								the queue of received characters. */
 								cChar = UART0_RBR;
-								if( xQueueSendFromISR( xRxedChars, &cChar, ( portBASE_TYPE ) pdFALSE ) ) 
-								{
-									xTaskWokenByRx = pdTRUE;
-								}
+								xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 								break;
 
 		default				:	/* There is nothing to do, leave the ISR. */
 								break;
 	}
 
-	if( xTaskWokenByTx || xTaskWokenByRx )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

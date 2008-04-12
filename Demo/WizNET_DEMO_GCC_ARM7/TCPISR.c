@@ -76,10 +76,10 @@ static portLONG lDummyVariable;
 void vEINT0_ISR_Handler( void )
 {
 extern xQueueHandle xTCPISRQueue;
-portBASE_TYPE xTaskWoken = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Just wake the TCP task so it knows an ISR has occurred. */
-	xTaskWoken = xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, xTaskWoken );	
+	xQueueSendFromISR( xTCPISRQueue, ( void * ) &lDummyVariable, &xHigherPriorityTaskWoken );	
 
 	/* We cannot carry on processing interrupts until the TCP task has 
 	processed this one - so for now interrupts are disabled.  The TCP task will
@@ -89,7 +89,7 @@ portBASE_TYPE xTaskWoken = pdFALSE;
 	/* Clear the interrupt bit. */	
 	VICVectAddr = tcpCLEAR_VIC_INTERRUPT;
 
-	if( xTaskWoken )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

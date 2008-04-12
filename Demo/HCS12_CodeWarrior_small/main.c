@@ -355,6 +355,9 @@ unsigned portBASE_TYPE uxExpected = 1, uxReceived;
 	void interrupt vButtonPush( void )
 	{
 		static unsigned portBASE_TYPE uxValToSend = 0;
+		static unsigned portLONG xHigherPriorityTaskWoken;
+
+		xHigherPriorityTaskWoken = pdFALSE;
 		
 		/* Send an incrementing value to the button push task each run. */
 		uxValToSend++;		
@@ -366,7 +369,9 @@ unsigned portBASE_TYPE uxExpected = 1, uxReceived;
 		blocked waiting for the data.  As the button push task is high priority
 		it will wake and a context switch should be performed before leaving
 		the ISR. */
-		if( xQueueSendFromISR( xButtonQueue, &uxValToSend, pdFALSE ) )
+		xQueueSendFromISR( xButtonQueue, &uxValToSend, &xHigherPriorityTaskWoken );
+
+		if( xHigherPriorityTaskWoken )
 		{
 			/* NOTE: This macro can only be used if there are no local
 			variables defined.  This function uses a static variable so it's

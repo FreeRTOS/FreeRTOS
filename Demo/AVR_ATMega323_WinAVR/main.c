@@ -188,7 +188,7 @@ portSHORT main( void )
 	vStartRegTestTasks();
 	
 	/* Create the tasks defined within this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the co-routines that flash the LED's. */
 	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );

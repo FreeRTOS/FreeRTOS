@@ -204,6 +204,7 @@ void vSerialClose( xComPortHandle xPort )
 void vSerialRxISR( void )
 {
 portCHAR cChar;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character and post it on the queue of Rxed characters.
 	If the post causes a task to wake force a context switch as the woken task
@@ -217,7 +218,9 @@ portCHAR cChar;
 		RCSTAbits.CREN = serCONTINUOUS_RX;	
 	}
 
-	if( xQueueSendFromISR( xRxedChars, ( const void * ) &cChar, pdFALSE ) )
+	xQueueSendFromISR( xRxedChars, ( const void * ) &cChar, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken )
 	{
 		taskYIELD();
 	}

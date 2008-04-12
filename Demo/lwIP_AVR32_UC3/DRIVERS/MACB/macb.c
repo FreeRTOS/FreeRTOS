@@ -900,7 +900,7 @@ static long prvMACB_ISR_NonNakedBehaviour( void )
 
   // Variable definitions can be made now.
   volatile unsigned long ulIntStatus, ulEventStatus;
-  long xSwitchRequired = FALSE;
+  long xHigherPriorityTaskWoken = FALSE;
 
   // Find the cause of the interrupt.
   ulIntStatus = AVR32_MACB.isr;
@@ -912,7 +912,7 @@ static long prvMACB_ISR_NonNakedBehaviour( void )
     // the Rx descriptors.
     portENTER_CRITICAL();
 #ifdef FREERTOS_USED
-    xSwitchRequired = xSemaphoreGiveFromISR( xSemaphore, FALSE );
+    xSemaphoreGiveFromISR( xSemaphore, &xHigherPriorityTaskWoken );
 #else
     DataToRead = TRUE;   
 #endif      
@@ -930,7 +930,7 @@ static long prvMACB_ISR_NonNakedBehaviour( void )
     AVR32_MACB.tsr;
   }
 
-  return ( xSwitchRequired );
+  return ( xHigherPriorityTaskWoken );
 }
 
 

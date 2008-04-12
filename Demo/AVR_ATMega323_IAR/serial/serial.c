@@ -181,13 +181,16 @@ unsigned portCHAR ucByte;
 __interrupt void SIG_UART_RECV( void )
 {
 signed portCHAR cChar;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character and post it on the queue of Rxed characters.
 	If the post causes a task to wake force a context switch as the woken task
 	may have a higher priority than the task we have interrupted. */
 	cChar = UDR;
 
-	if( xQueueSendFromISR( xRxedChars, &cChar, pdFALSE ) )
+	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken != pdFALSE )
 	{
 		taskYIELD();
 	}

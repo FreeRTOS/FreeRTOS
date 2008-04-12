@@ -99,7 +99,7 @@ extern xQueueHandle xUSBInterruptQueue;
 
 void vUSB_ISR_Handler( void )
 {
-portBASE_TYPE xTaskWokenByPost = pdFALSE; 
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE; 
 static volatile unsigned portLONG ulNextMessage = 0;
 xISRStatus *pxMessage;
 unsigned portLONG ulTemp, ulRxBytes;
@@ -163,11 +163,11 @@ unsigned portLONG ulTemp, ulRxBytes;
 	/* The message now contains the entire state and optional data from
 	the USB interrupt.  This can now be posted on the Rx queue ready for
 	processing at the task level. */
-	xTaskWokenByPost = xQueueSendFromISR( xUSBInterruptQueue, &pxMessage, xTaskWokenByPost );
+	xQueueSendFromISR( xUSBInterruptQueue, &pxMessage, &xHigherPriorityTaskWoken );
 
 	/* We may want to switch to the USB task, if this message has made
 	it the highest priority task that is ready to execute. */
-	if( xTaskWokenByPost )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

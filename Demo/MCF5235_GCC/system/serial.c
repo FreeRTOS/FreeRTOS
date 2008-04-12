@@ -270,7 +270,7 @@ void
 prvSerialISR( void )
 {
     static signed portCHAR cChar;
-    static portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+    static portBASE_TYPE xHigherPriorityTaskWoken;
 
     /* We have to remvoe the effect of the GCC. Please note that the
      * __attribute__ ((interrupt_handler)) does not work here because we
@@ -285,12 +285,13 @@ prvSerialISR( void )
      * variable declarations.
      */
     portENTER_SWITCHING_ISR();
+	xHigherPriorityTaskWoken = pdFALSE;
 
     /* Ready to send a character from the buffer. */
     if( MCF_UART_USR0 & MCF_UART_USR_TXRDY )
     {
         /* Transmit buffer is ready. Test if there are characters available. */
-        if( xQueueReceiveFromISR( xComPortIF[ 0 ].xTXChars, &cChar, &xTaskWokenByTx ) ==
+        if( xQueueReceiveFromISR( xComPortIF[ 0 ].xTXChars, &cChar, &xHigherPriorityTaskWoken ) ==
             pdTRUE )
         {
             /* A character was retrieved from the queue so can be sent. */
@@ -305,11 +306,10 @@ prvSerialISR( void )
     if( MCF_UART_USR0 & MCF_UART_USR_RXRDY )
     {
         cChar = MCF_UART_URB0;
-        xTaskWokenByRx =
-            xQueueSendFromISR( xComPortIF[ 0].xRXChars, &cChar, xTaskWokenByRx );
+        xQueueSendFromISR( xComPortIF[ 0].xRXChars, &cChar, &xHigherPriorityTaskWoken );
     }
     /* Exit the ISR.  If a task was woken by either a character being
      * or transmitted then a context switch will occur.
      */
-    portEXIT_SWITCHING_ISR( ( xTaskWokenByTx || xTaskWokenByRx ) );
+    portEXIT_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }

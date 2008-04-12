@@ -176,12 +176,15 @@ signed portBASE_TYPE xReturn;
  __interrupt void UART2_RxISR (void)
 {
 	signed portCHAR cChar;
+	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character from the UART and post it on the queue of Rxed 
 	characters. */
 	cChar = RDR02;
 
-	if( xQueueSendFromISR( xRxedChars, &cChar, pdFALSE ) )
+	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken )
 	{
 		/*If the post causes a task to wake force a context switch 
 		as the woken task may have a higher priority than the task we have 

@@ -13,14 +13,16 @@ extern xSemaphoreHandle xEMACSemaphore;
 
 void vEMAC_ISR_Handler( void )
 {
-portBASE_TYPE xSwitchRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
     /* Clear the interrupt. */
     MAC_INTCLEAR = 0xffff;
     VICVectAddr = 0;
 
     /* Ensure the uIP task is not blocked as data has arrived. */
-    if( xSemaphoreGiveFromISR( xEMACSemaphore, pdFALSE ) )
+    xSemaphoreGiveFromISR( xEMACSemaphore, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken )
     {
     	/* Giving the semaphore woke a task. */
         portYIELD_FROM_ISR();

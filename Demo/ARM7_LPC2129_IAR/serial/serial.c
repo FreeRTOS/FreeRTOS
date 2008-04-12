@@ -257,7 +257,7 @@ signed portBASE_TYPE xReturn;
 __arm void vSerialISR( void )
 {
 signed portCHAR cChar;
-portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	switch( U0IIR & serINTERRUPT_SOURCE_MASK )
@@ -268,7 +268,7 @@ portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
 
 		case serSOURCE_THRE	:	/* The THRE is empty.  If there is another
 								character in the Tx queue, send it now. */
-								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 								{
 									U0THR = cChar;
 								}
@@ -285,10 +285,7 @@ portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
 		case serSOURCE_RX	:	/* A character was received.  Place it in
 								the queue of received characters. */
 								cChar = U0RBR;
-								if( xQueueSendFromISR( xRxedChars, &cChar, pdFALSE ) )
-								{
-									xTaskWokenByRx = pdTRUE;
-								}
+								xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 								break;
 
 		default				:	/* There is nothing to do, leave the ISR. */
@@ -297,7 +294,7 @@ portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
 
 	/* Exit the ISR.  If a task was woken by either a character being received
 	or transmitted then a context switch will occur. */
-	portEND_SWITCHING_ISR( ( xTaskWokenByTx || xTaskWokenByRx ) );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
 	/* Clear the ISR in the VIC. */
 	VICVectAddr = serCLEAR_VIC_INTERRUPT;

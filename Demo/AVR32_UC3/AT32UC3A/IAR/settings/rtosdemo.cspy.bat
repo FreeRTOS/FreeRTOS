@@ -25,7 +25,7 @@
 "C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\avr32\bin\avr32proc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\avr32\bin\avr32jtagicemkII.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 4.0\avr32\bin\<libsupport_plugin>" --backend -B "--core" "avr32a" "--avr32_simd_instructions" "disabled" "--avr32_dsp_instructions" "enabled" "--avr32_rmw_instructions" "enabled" "-p" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\avr32\config\iouc3a0512.ddf" "-d" "jtagicemkII" "--drv_communication" "USB" "--jtagice_clock" "100000" 
 
 
-@REM loaded plugins:
+@REM Loaded plugins:
 @REM    avr32LibSupport.dll
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\CodeCoverage\CodeCoverage.dll
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\Profiling\Profiling.dll

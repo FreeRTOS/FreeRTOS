@@ -197,7 +197,7 @@ void vSerialClose( xComPortHandle xPort )
 void __attribute__((__interrupt__, auto_psv)) _U2RXInterrupt( void )
 {
 portCHAR cChar;
-portBASE_TYPE xYieldRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character and post it on the queue of Rxed characters.
 	If the post causes a task to wake force a context switch as the woken task
@@ -206,10 +206,10 @@ portBASE_TYPE xYieldRequired = pdFALSE;
 	while( U2STAbits.URXDA )
 	{
 		cChar = U2RXREG;
-		xYieldRequired = xQueueSendFromISR( xRxedChars, &cChar, xYieldRequired );
+		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}
 
-	if( xYieldRequired != pdFALSE )
+	if( xHigherPriorityTaskWoken != pdFALSE )
 	{
 		taskYIELD();
 	}

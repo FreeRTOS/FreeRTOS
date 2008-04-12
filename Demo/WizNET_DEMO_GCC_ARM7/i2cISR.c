@@ -161,7 +161,7 @@ void vI2C_ISR_Handler( void )
 /* Holds the current transmission state. */							
 static I2C_STATE eCurrentState = eSentStart;
 static portLONG lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
-portBASE_TYPE xTaskWokenByTx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 portLONG lBytesLeft;
 
 	/* The action taken for this interrupt depends on our current state. */
@@ -268,11 +268,11 @@ portLONG lBytesLeft;
 						must 'give' the semaphore so the task is woken.*/
 						if( pxCurrentMessage->xMessageCompleteSemaphore )
 						{
-							xTaskWokenByTx = xSemaphoreGiveFromISR( pxCurrentMessage->xMessageCompleteSemaphore, xTaskWokenByTx );
+							xSemaphoreGiveFromISR( pxCurrentMessage->xMessageCompleteSemaphore, &xHigherPriorityTaskWoken );
 						}
 
 						/* Are there any other messages to transact? */
-						if( xQueueReceiveFromISR( xMessagesForTx, &pxCurrentMessage, &xTaskWokenByTx ) == pdTRUE )
+						if( xQueueReceiveFromISR( xMessagesForTx, &pxCurrentMessage, &xHigherPriorityTaskWoken ) == pdTRUE )
 						{
 							/* Start the next message - which was
 							retrieved from the queue. */
@@ -336,11 +336,11 @@ portLONG lBytesLeft;
 						semaphore must be 'given' to wake the task. */
 						if( pxCurrentMessage->xMessageCompleteSemaphore )
 						{
-							xTaskWokenByTx = xSemaphoreGiveFromISR( pxCurrentMessage->xMessageCompleteSemaphore, xTaskWokenByTx );
+							xSemaphoreGiveFromISR( pxCurrentMessage->xMessageCompleteSemaphore, &xHigherPriorityTaskWoken );
 						}
 
 						/* Are there any other messages to transact? */
-						if( xQueueReceiveFromISR( xMessagesForTx, &pxCurrentMessage, &xTaskWokenByTx ) == pdTRUE )
+						if( xQueueReceiveFromISR( xMessagesForTx, &pxCurrentMessage, &xHigherPriorityTaskWoken ) == pdTRUE )
 						{
 							/* Start the next message from the Tx queue. */
 							I2C_I2CONSET = i2cSTA_BIT;
@@ -371,7 +371,7 @@ portLONG lBytesLeft;
 	I2C_I2CONCLR = i2cSI_BIT;
 	VICVectAddr = i2cCLEAR_VIC_INTERRUPT;
 
-	if( xTaskWokenByTx )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

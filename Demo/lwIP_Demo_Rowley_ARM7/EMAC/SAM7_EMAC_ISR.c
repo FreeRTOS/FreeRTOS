@@ -74,7 +74,7 @@ void vEMACISR_Handler( void );
 void vEMACISR_Handler( void )
 {
 volatile unsigned portLONG ulIntStatus, ulEventStatus;
-portBASE_TYPE xSwitchRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 extern void vClearEMACTxBuffer( void );
 
 	/* Find the cause of the interrupt. */
@@ -85,7 +85,7 @@ extern void vClearEMACTxBuffer( void );
 	{
 		/* A frame has been received, signal the lwIP task so it can process
 		the Rx descriptors. */
-		xSwitchRequired = xSemaphoreGiveFromISR( xSemaphore, pdFALSE );
+		xSemaphoreGiveFromISR( xSemaphore, &xHigherPriorityTaskWoken );
 		AT91C_BASE_EMAC->EMAC_RSR = AT91C_EMAC_REC;
 	}
 
@@ -104,7 +104,7 @@ extern void vClearEMACTxBuffer( void );
 	switch to another task.  If the unblocked task was of higher priority then
 	the interrupted task it will then execute immediately that the ISR
 	completes. */
-	if( xSwitchRequired )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

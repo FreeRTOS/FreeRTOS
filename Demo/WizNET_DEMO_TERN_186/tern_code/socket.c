@@ -80,7 +80,7 @@ portBASE_TYPE prvProcessISR( void )
 {
 unsigned char status;
 extern xSemaphoreHandle xTCPSemaphore;
-portBASE_TYPE xSwitchRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 #ifdef I2CHIP_WINDOW
 u_int current_window = i2chip_get_window();
@@ -91,7 +91,7 @@ status = READ_VALUE(INT_REG);
 
 if (status)
   {
-  xSwitchRequired = pdTRUE;
+  xHigherPriorityTaskWoken = pdTRUE;
   // channel 0 interrupt(sysinit, sockinit, established, closed, timeout, send_ok, recv_ok)
   if (status & 0x01)
     {
@@ -178,12 +178,12 @@ WRITE_VALUE(INT_REG, 0xFF);
 i2chip_set_window(current_window);
 #endif
 
-	if( xSwitchRequired == pdTRUE )
+	if( xHigherPriorityTaskWoken == pdTRUE )
     {
-		xSwitchRequired = xSemaphoreGiveFromISR( xTCPSemaphore, pdFALSE );
+		xSemaphoreGiveFromISR( xTCPSemaphore, &xHigherPriorityTaskWoken );
     }
 
-	return xSwitchRequired;
+	return xHigherPriorityTaskWoken;
 }
 
 void far interrupt in4_isr_i2chip(void)

@@ -124,7 +124,7 @@ unsigned portCHAR ucOriginalSFRPage;
 void vSerialISR( void ) interrupt 4
 {
 portCHAR cChar;
-portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* 8051 port interrupt routines MUST be placed within a critical section
 	if taskYIELD() is used within the ISR! */
@@ -134,20 +134,17 @@ portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
 		if( RI ) 
 		{
 			/* Get the character and post it on the queue of Rxed characters.
-			If the post causes a task to wake force a context switch as the woken task
-			may have a higher priority than the task we have interrupted. */
+			If the post causes a task to wake force a context switch if the woken task
+			has a higher priority than the task we have interrupted. */
 			cChar = SBUF;
 			RI = 0;
 
-			if( xQueueSendFromISR( xRxedChars, &cChar, pdFALSE ) )
-			{
-				xTaskWokenByRx = ( portBASE_TYPE ) pdTRUE;
-			}
+			xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 		}
 
 		if( TI ) 
 		{
-			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == ( portBASE_TYPE ) pdTRUE )
+			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == ( portBASE_TYPE ) pdTRUE )
 			{
 				/* Send the next character queued for Tx. */
 				SBUF = cChar;
@@ -161,7 +158,7 @@ portBASE_TYPE xTaskWokenByRx = pdFALSE, xTaskWokenByTx = pdFALSE;
 			TI = 0;
 		}
 	
-		if( xTaskWokenByRx || xTaskWokenByTx )
+		if( xHigherPriorityTaskWoken )
 		{
 			portYIELD();
 		}

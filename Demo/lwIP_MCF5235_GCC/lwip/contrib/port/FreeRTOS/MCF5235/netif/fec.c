@@ -346,7 +346,7 @@ eth_input( struct netif *netif, struct pbuf *p )
 void
 mcf523xfec_rx_irq( void )
 {
-    static portBASE_TYPE xNeedSwitch = pdFALSE;
+    static portBASE_TYPE xHigherPriorityTaskWoken;
 
     /* Workaround GCC if frame pointers are enabled. This is an ISR and
      * we must not modify the stack before portENTER_SWITCHING_ISR( )
@@ -359,7 +359,7 @@ mcf523xfec_rx_irq( void )
      * a call to the portENTER_SWITCHING_ISR() macro.
      */
     portENTER_SWITCHING_ISR(  );
-
+	xHigherPriorityTaskWoken = pdFALSE;
     /* Set Debug PIN to high to measure RX latency. */
     FEC_DEBUG_RX_TIMING( 1 );
 
@@ -368,9 +368,9 @@ mcf523xfec_rx_irq( void )
     {
         /* Clear interrupt from EIR register immediately */
         MCF_FEC_EIR = ( MCF_FEC_EIR_RXB | MCF_FEC_EIR_RXF );
-        xNeedSwitch = xSemaphoreGiveFromISR( fecif_g->rx_sem, pdFALSE );
+        xSemaphoreGiveFromISR( fecif_g->rx_sem, &xHigherPriorityTaskWoken );
     }
-    portEXIT_SWITCHING_ISR( xNeedSwitch );
+    portEXIT_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 
 void

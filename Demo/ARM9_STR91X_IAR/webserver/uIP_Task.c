@@ -297,16 +297,16 @@ static unsigned portCHAR *pcTxData;
 
 void ENET_IRQHandler(void)
 {
-portBASE_TYPE xSwitchRequired;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Give the semaphore in case the uIP task needs waking. */
-	xSwitchRequired = xSemaphoreGiveFromISR( xSemaphore, pdFALSE );
+	xSemaphoreGiveFromISR( xSemaphore, &xHigherPriorityTaskWoken );
 	
 	/* Clear the interrupt. */
 	ENET_DMA->ISR = uipDMI_RX_CURRENT_DONE;
 	
 	/* Switch tasks if necessary. */	
-	portEND_SWITCHING_ISR( xSwitchRequired );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

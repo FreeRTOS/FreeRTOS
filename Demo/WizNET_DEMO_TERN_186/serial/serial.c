@@ -409,7 +409,7 @@ static portBASE_TYPE xComPortISR( xComPort * const pxPort )
 {
 unsigned portSHORT usStatusRegister;
 portCHAR cChar;
-portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTaskWokenByTx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* NOTE:  THIS IS NOT AN EFFICIENT ISR AS IT IS DESIGNED SOLELY TO TEST
 	THE SCHEDULER FUNCTIONALITY.  REAL APPLICATIONS SHOULD NOT USE THIS
@@ -420,14 +420,14 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTa
 	if( usStatusRegister & serRX_READY )
 	{
 		cChar = ( portCHAR ) portINPUT_WORD( pxPort->usRxReg );
-		xTaskWokenByPost = xQueueSendFromISR( pxPort->xRxedChars, &cChar, xTaskWokenByPost );
+		xQueueSendFromISR( pxPort->xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
 		/* Also release the semaphore - this does nothing interesting and is just a test. */
-		xAnotherTaskWokenByPost = xSemaphoreGiveFromISR( pxPort->xTestSem, xAnotherTaskWokenByPost );
+		xSemaphoreGiveFromISR( pxPort->xTestSem, &xHigherPriorityTaskWoken );
 	}
 	else if( pxPort->sTxInterruptOn && ( usStatusRegister & serTX_EMPTY ) )
 	{
-		if( xQueueReceiveFromISR( pxPort->xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+		if( xQueueReceiveFromISR( pxPort->xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			portOUTPUT_WORD( pxPort->usTxReg, ( unsigned portSHORT ) cChar );
 		}
@@ -443,7 +443,7 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE, xAnotherTaskWokenByPost = pdFALSE, xTa
 	/* If posting to the queue woke a task that was blocked on the queue we may
 	want to switch to the woken task - depending on its priority relative to
 	the task interrupted by this ISR. */
-	if( xTaskWokenByPost || xAnotherTaskWokenByPost || xTaskWokenByTx)
+	if( xHigherPriorityTaskWoken )
 	{
 		return pdTRUE;
 	}

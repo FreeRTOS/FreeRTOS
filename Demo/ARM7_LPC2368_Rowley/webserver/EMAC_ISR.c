@@ -13,12 +13,16 @@ extern xSemaphoreHandle xEMACSemaphore;
 
 void vEMAC_ISR_Handler( void )
 {
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
     /* Clear the interrupt. */
     IntClear = 0xffff;
     VICVectAddr = 0;
 
     /* Ensure the uIP task is not blocked as data has arrived. */
-    if( xSemaphoreGiveFromISR( xEMACSemaphore, pdFALSE ) )
+    xSemaphoreGiveFromISR( xEMACSemaphore, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken )
     {
 		/* If the uIP task was unblocked then calling "Yield from ISR" here
 		will ensure the interrupt returns directly to the uIP task, if it

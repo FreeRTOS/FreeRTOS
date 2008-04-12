@@ -515,7 +515,7 @@ static void prvSetupEMACInterrupt( void )
 __arm void vEMACISR( void )
 {
 volatile unsigned portLONG ulIntStatus, ulRxStatus;
-portBASE_TYPE xSwitchRequired = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	ulIntStatus = AT91C_BASE_EMAC->EMAC_ISR;
 	ulRxStatus = AT91C_BASE_EMAC->EMAC_RSR;
@@ -524,13 +524,13 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 	{
 		/* A frame has been received, signal the uIP task so it can process
 		the Rx descriptors. */
-		xSwitchRequired = xSemaphoreGiveFromISR( xSemaphore, pdFALSE );
+		xSemaphoreGiveFromISR( xSemaphore, &xHigherPriorityTaskWoken );
 		AT91C_BASE_EMAC->EMAC_RSR = AT91C_EMAC_REC;
 	}
 
 	/* If a task was woken by either a character being received or a character
 	being transmitted then we may need to switch to another task. */
-	portEND_SWITCHING_ISR( xSwitchRequired );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 
 	/* Clear the interrupt. */
 	AT91C_BASE_AIC->AIC_EOICR = 0;

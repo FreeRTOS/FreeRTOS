@@ -209,7 +209,8 @@ static void vUART5Task( void *pvParameters )
 __interrupt void UART5_RxISR( void )
 {
 unsigned portCHAR ch;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	ch = RDR05;
-	xQueueSendFromISR( xQueue, &ch, pdFALSE );
+	xQueueSendFromISR( xQueue, &ch, &xHigherPriorityTaskWoken );
 }

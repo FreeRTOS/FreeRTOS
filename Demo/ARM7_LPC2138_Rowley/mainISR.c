@@ -64,8 +64,11 @@ void vButtonHandler( void );
 void vButtonHandler( void )
 {
 extern xSemaphoreHandle xButtonSemaphore;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	if( xSemaphoreGiveFromISR( xButtonSemaphore, pdFALSE ) )
+	xSemaphoreGiveFromISR( xButtonSemaphore, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken )
 	{
 		/* We have woken a task.  Calling "yield from ISR" here will ensure
 		the interrupt returns to the woken task if it has a priority higher

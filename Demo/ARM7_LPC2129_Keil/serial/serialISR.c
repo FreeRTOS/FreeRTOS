@@ -120,10 +120,9 @@ void vUART_ISR( void ) __task
 
 	/* Now we can declare the local variables. */
 	static signed portCHAR cChar;
-	static portBASE_TYPE xTaskWokenByRx, xTaskWokenByTx;
+	static portBASE_TYPE xHigherPriorityTaskWoken;
 
-	xTaskWokenByTx = pdFALSE;
-	xTaskWokenByRx = pdFALSE;
+	xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	switch( U0IIR & serINTERRUPT_SOURCE_MASK )
@@ -134,7 +133,7 @@ void vUART_ISR( void ) __task
 
 		case serSOURCE_THRE	:	/* The THRE is empty.  If there is another
 								character in the Tx queue, send it now. */
-								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 								{
 									U0THR = cChar;
 								}
@@ -151,10 +150,7 @@ void vUART_ISR( void ) __task
 		case serSOURCE_RX	:	/* A character was received.  Place it in 
 								the queue of received characters. */
 								cChar = U0RBR;
-								if( xQueueSendFromISR( xRxedChars, &cChar, pdFALSE ) )
-								{
-									xTaskWokenByRx = pdTRUE;
-								}
+								xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 								break;
 
 		default				:	/* There is nothing to do, leave the ISR. */
@@ -166,7 +162,7 @@ void vUART_ISR( void ) __task
 
 	/* Exit the ISR.  If a task was woken by either a character being received
 	or transmitted then a context switch will occur. */
-	portEXIT_SWITCHING_ISR( ( xTaskWokenByTx || xTaskWokenByRx ) );
+	portEXIT_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

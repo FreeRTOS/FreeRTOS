@@ -220,7 +220,8 @@ static void vUART0Task( void *pvParameters )
 __interrupt void UART0_TraceRxISR( void )
 {
 unsigned portCHAR ch;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	ch = RDR0;
-	xQueueSendFromISR( xQueue, &ch, pdFALSE );
+	xQueueSendFromISR( xQueue, &ch, &xHigherPriorityTaskWoken );
 }

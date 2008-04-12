@@ -204,14 +204,16 @@ void vCOM_1_Rx_ISR( void )
 	/* As this is a switching ISR the local variables must be declared as 
 	static. */
 	static portCHAR cRxByte;
-	static portBASE_TYPE xTaskWokenByPost;
+	static portBASE_TYPE xHigherPriorityTaskWoken;
+
+		xHigherPriorityTaskWoken = pdFALSE;
 
 		/* Get the character. */
 		cRxByte = RDR1;
 
 		/* Post the character onto the queue of received characters - noting
 		whether or not this wakes a task. */
-		xTaskWokenByPost = xQueueSendFromISR( xRxedChars, &cRxByte, pdFALSE );		
+		xQueueSendFromISR( xRxedChars, &cRxByte, &xHigherPriorityTaskWoken );
 
 		/* Clear the interrupt. */
 		SSR1 &= ~serRX_INTERRUPT;
@@ -219,7 +221,7 @@ void vCOM_1_Rx_ISR( void )
 	/* This must be the last line in the function.  We pass cTaskWokenByPost so 
 	a context switch will occur if the received character woke a task that has
 	a priority higher than the task we interrupted. */
-	portEXIT_SWITCHING_ISR( xTaskWokenByPost );
+	portEXIT_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

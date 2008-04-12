@@ -80,6 +80,7 @@ Changes from V3.0.1
 /* Queues to interface between comms API and interrupt routines. */
 xQueueHandle xRxedChars; 
 xQueueHandle xCharsForTx;
+portBASE_TYPE xHigherPriorityTaskWoken;
 
 /*-----------------------------------------------------------*/
 

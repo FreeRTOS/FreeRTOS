@@ -415,16 +415,16 @@ ethernetif_init(struct netif *netif)
 
 void ENET_IRQHandler(void)
 {
-portBASE_TYPE xSwitchRequired;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Give the semaphore in case the lwIP task needs waking. */
-	xSwitchRequired = xSemaphoreGiveFromISR( s_xSemaphore, pdFALSE );
+	xSemaphoreGiveFromISR( s_xSemaphore, &xHigherPriorityTaskWoken );
 	
 	/* Clear the interrupt. */
 	ENET_DMA->ISR = DMI_RX_CURRENT_DONE;
 	
 	/* Switch tasks if necessary. */	
-	portEND_SWITCHING_ISR( xSwitchRequired );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

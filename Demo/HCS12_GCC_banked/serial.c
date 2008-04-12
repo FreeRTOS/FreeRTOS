@@ -103,7 +103,7 @@ void ATTR_INT ATTR_NEAR vCOM_ISR( void );
 void vCOM_ISR( void )
 {
 volatile unsigned portCHAR ucByte, ucStatus;
-portBASE_TYPE xTaskWokenByPost = pdFALSE, xTaskWokenByTx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */
 	ucStatus = SCISR1;
@@ -123,13 +123,13 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE, xTaskWokenByTx = pdFALSE;
 
 		/* Post the character onto the queue of received characters - noting
 		whether or not this wakes a task. */
-		xTaskWokenByPost = xQueueSendFromISR( xRxedChars, ( void * ) &ucByte, pdFALSE );
+		xQueueSendFromISR( xRxedChars, ( void * ) &ucByte, &xHigherPriorityTaskWoken );
 	}
 	
 	if( ( ucStatus & serTX_INTERRUPT ) && ( SCICR2 & 0x80 ) )
 	{	
 		/* The interrupt was caused by a character being transmitted. */
-		if( xQueueReceiveFromISR( xCharsForTx, ( void * ) &ucByte, &xTaskWokenByTx ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, ( void * ) &ucByte, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* Clear the SCRF bit. */
 			SCIDRL = ucByte;
@@ -141,10 +141,9 @@ portBASE_TYPE xTaskWokenByPost = pdFALSE, xTaskWokenByTx = pdFALSE;
 		}
 	}
 
-	if( ( xTaskWokenByPost ) || ( xTaskWokenByTx ) )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD();
 	}
-
 }
 

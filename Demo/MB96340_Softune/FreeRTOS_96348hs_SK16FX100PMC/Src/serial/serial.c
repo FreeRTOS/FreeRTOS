@@ -184,12 +184,15 @@ signed portBASE_TYPE	xReturn;
 __interrupt void UART0_RxISR( void )
 {
 volatile signed portCHAR	cChar;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character from the UART and post it on the queue of Rxed 
 	characters. */
 	cChar = RDR0;
 
-	if( xQueueSendFromISR( xRxedChars, ( const void *const ) &cChar, (signed portBASE_TYPE) pdFALSE ) )
+	xQueueSendFromISR( xRxedChars, ( const void *const ) &cChar, &xHigherPriorityTaskWoken );
+
+	if( xHigherPriorityTaskWoken )
 	{
 		/*If the post causes a task to wake force a context switch 
 		as the woken task may have a higher priority than the task we have 

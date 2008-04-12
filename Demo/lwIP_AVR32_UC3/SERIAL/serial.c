@@ -88,7 +88,7 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
 {
   /* Now we can declare the local variables. */
   signed portCHAR     cChar;
-  portBASE_TYPE     xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+  portBASE_TYPE     xHigherPriorityTaskWoken = pdFALSE;
   unsigned portLONG     ulStatus;
   volatile avr32_usart_t  *usart0 = &AVR32_USART0;
   portBASE_TYPE retstatus;
@@ -103,7 +103,7 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
     /* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
       calls in a critical section . */
     portENTER_CRITICAL();
-    retstatus = xQueueReceiveFromISR(xCharsForTx, &cChar, &xTaskWokenByTx);
+    retstatus = xQueueReceiveFromISR(xCharsForTx, &cChar, &xHigherPriorityTaskWoken);
     portEXIT_CRITICAL();
     if (retstatus == pdTRUE)
     {
@@ -126,17 +126,13 @@ static portBASE_TYPE prvUSART0_ISR_NonNakedBehaviour( void )
     /* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
       calls in a critical section . */
     portENTER_CRITICAL();
-    retstatus = xQueueSendFromISR(xRxedChars, &cChar, pdFALSE);
+	xQueueSendFromISR(xRxedChars, &cChar, &xHigherPriorityTaskWoken);
     portEXIT_CRITICAL();
-    if (retstatus)
-    {
-      xTaskWokenByRx = pdTRUE;
-    }
   }
 
   /* The return value will be used by portEXIT_SWITCHING_ISR() to know if it
   should perform a vTaskSwitchContext(). */
-  return ( xTaskWokenByTx || xTaskWokenByRx );
+  return ( xHigherPriorityTaskWoken );
 }
 
 

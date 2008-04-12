@@ -68,7 +68,7 @@ void vUSB_ISR_Handler( void );
 
 void vUSB_ISR_Handler( void )
 {
-portCHAR cTaskWokenByPost = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 static volatile unsigned portLONG ulNextMessage = 0;
 xISRStatus *pxMessage;
 unsigned portLONG ulRxBytes;
@@ -145,13 +145,13 @@ unsigned portCHAR ucFifoIndex;
 	AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_3 ] &= ~usbINT_CLEAR_MASK;
 
 	/* Post ISR data to queue for task-level processing */
-	cTaskWokenByPost = xQueueSendFromISR( xUSBInterruptQueue, &pxMessage, cTaskWokenByPost );
+	xQueueSendFromISR( xUSBInterruptQueue, &pxMessage, &xHigherPriorityTaskWoken );
 
 	/* Clear AIC to complete ISR processing */
 	AT91C_BASE_AIC->AIC_EOICR = 0;
 
 	/* Do a task switch if needed */
-	if( cTaskWokenByPost )
+	if( xHigherPriorityTaskWoken )
 	{
 		/* This call will ensure that the unblocked task will be executed
 		immediately upon completion of the ISR if it has a priority higher

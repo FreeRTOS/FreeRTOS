@@ -270,7 +270,7 @@ void vSerialClose( xComPortHandle xPort )
 void UART1_IRQHandler( void )
 {
 signed portCHAR cChar;
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	while( UART1->RIS &	mainRXRIS )
 	{
@@ -278,7 +278,7 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
 		character from the DR and place it in the queue of received
 		characters. */
 		cChar = UART1->DR;
-		xTaskWokenByPost = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByPost );
+		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}	
 	
 	if( UART1->RIS & mainTXRIS )
@@ -287,7 +287,7 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
 		{
 			/* This interrupt was caused by space becoming available on the Tx
 			FIFO, wake any task that is waiting to post (if any). */
-			xTaskWokenByTx = xSemaphoreGiveFromISR( xTxFIFOSemaphore, xTaskWokenByTx );
+			xSemaphoreGiveFromISR( xTxFIFOSemaphore, &xHigherPriorityTaskWoken );
 			lTaskWaiting = pdFALSE;
 		}
 		
@@ -296,7 +296,7 @@ portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByPost = pdFALSE;
 
 	/* If a task was woken by either a character being received or a character
 	being transmitted then we may need to switch to another task. */
-	portEND_SWITCHING_ISR( ( xTaskWokenByPost || xTaskWokenByTx ) );
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 
 

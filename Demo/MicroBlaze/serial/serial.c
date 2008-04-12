@@ -178,7 +178,7 @@ void vSerialClose( xComPortHandle xPort )
 void vSerialISR( void *pvBaseAddress )
 {
 unsigned portLONG ulISRStatus;
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 portCHAR cChar;
 
 	/* Determine the cause of the interrupt. */
@@ -190,7 +190,7 @@ portCHAR cChar;
 		characters.  This might wake a task that was blocked waiting for 
 		data. */
 		cChar = ( portCHAR )XIo_In32( XPAR_RS232_UART_BASEADDR + XUL_RX_FIFO_OFFSET );
-		xTaskWokenByRx = xQueueSendFromISR( xRxedChars, &cChar, xTaskWokenByRx );
+		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
     }
 
     if( ( ulISRStatus & XUL_SR_TX_FIFO_EMPTY ) != 0 )
@@ -198,14 +198,14 @@ portCHAR cChar;
 		/* There is space in the FIFO - if there are any characters queue for
 		transmission they can be send to the UART now.  This might unblock a
 		task that was waiting for space to become available on the Tx queue. */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			XIo_Out32( XPAR_RS232_UART_BASEADDR + XUL_TX_FIFO_OFFSET, cChar );
 		}
     }
 
 	/* If we woke any tasks we may require a context switch. */
-	if( xTaskWokenByTx || xTaskWokenByRx )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

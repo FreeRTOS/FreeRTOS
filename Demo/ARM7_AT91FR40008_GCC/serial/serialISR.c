@@ -112,7 +112,7 @@ void vUART_ISR_Handler( void )
 {
 /* Now we can declare the local variables.   These must be static. */
 signed portCHAR cChar;
-portBASE_TYPE xTaskWokenByTx = pdFALSE, xTaskWokenByRx = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned portLONG ulStatus;
 
 	/* What caused the interrupt? */
@@ -122,7 +122,7 @@ unsigned portLONG ulStatus;
 	{
 		/* The interrupt was caused by the THR becoming empty.  Are there any
 		more characters to transmit? */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* A character was retrieved from the queue so can be sent to the
 			THR now. */
@@ -140,10 +140,7 @@ unsigned portLONG ulStatus;
 		/* The interrupt was caused by the receiver getting data. */
 		cChar = AT91C_BASE_US0->US_RHR;
 
-		if (xQueueSendFromISR(xRxedChars, &cChar, pdFALSE))
-		{
-			xTaskWokenByRx = pdTRUE;
-		}
+		xQueueSendFromISR(xRxedChars, &cChar, &xHigherPriorityTaskWoken);
 	}
 
 	/* Acknowledge the interrupt at AIC level... */
@@ -153,7 +150,7 @@ unsigned portLONG ulStatus;
 	ensure that the unblocked task is the task that executes when the interrupt
 	completes if the unblocked task has a priority higher than the interrupted
 	task. */
-	if( xTaskWokenByTx || xTaskWokenByRx )
+	if( xHigherPriorityTaskWoken )
 	{
 		portYIELD_FROM_ISR();
 	}

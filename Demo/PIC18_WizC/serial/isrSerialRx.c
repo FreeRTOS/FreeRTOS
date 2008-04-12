@@ -83,6 +83,7 @@ Changes from V3.0.1
 		 * because this SFR will be restored before exiting the ISR.
 		 */
 		extern portCHAR			cChar;
+		extern portBASE_TYPE xHigherPriorityTaskWoken;
 		#pragma locate cChar	&PRODL
 
 		/*
@@ -112,7 +113,10 @@ Changes from V3.0.1
 				bCREN = serCONTINUOUS_RX;	
 			}
 
-			if( xQueueSendFromISR( xRxedChars, ( const void * ) &cChar, pdFALSE ) )
+			xHigherPriorityTaskWoken = pdFALSE;
+			xQueueSendFromISR( xRxedChars, ( const void * ) &cChar, &xHigherPriorityTaskWoken );
+
+			if( xHigherPriorityTaskWoken )
 			{
 				uxSwitchRequested = pdTRUE;
 			}

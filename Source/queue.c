@@ -119,14 +119,14 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
 unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue );
 void vQueueDelete( xQueueHandle xQueue );
 signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition );
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 xQueueHandle xQueueCreateMutex( void );
 xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount );
 portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime );
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
-signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
+signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
 signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
 unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
@@ -649,7 +649,7 @@ xTimeOutType xTimeOut;
 
 #if configUSE_ALTERNATIVE_API == 1
 
-	signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+	signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
 	{
 	signed portBASE_TYPE xReturn = pdTRUE;
 	xTimeOutType xTimeOut;
@@ -847,7 +847,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
 {
 signed portBASE_TYPE xReturn = pdTRUE;
 xTimeOutType xTimeOut;
@@ -1000,7 +1000,7 @@ signed portCHAR *pcOriginalReadPosition;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, const void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken )
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken )
 {
 signed portBASE_TYPE xReturn;
 

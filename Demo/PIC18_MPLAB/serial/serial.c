@@ -230,7 +230,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 #pragma interruptlow vSerialTxISR save=PRODH, PRODL, TABLAT, section(".tmpdata")
 void vSerialTxISR( void )
 {
-portCHAR cChar, cTaskWoken;
+portCHAR cChar, cTaskWoken = pdFALSE;
 
 	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &cTaskWoken ) == pdTRUE )
 	{

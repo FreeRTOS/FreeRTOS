@@ -176,6 +176,7 @@ void vApplicationTickHook( void )
 unsigned portBASE_TYPE uxColumn = 0;
 static xLCDMessage xMessage = { 0, "PASS" };
 static unsigned portLONG ulTicksSinceLastDisplay = 0;
+static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it
 	time to perform our health status check again? */
@@ -214,7 +215,8 @@ static unsigned portLONG ulTicksSinceLastDisplay = 0;
         xMessage.xColumn++;
 
 		/* Send the message to the LCD gatekeeper for display. */
-		xQueueSendToBackFromISR( xLCDQueue, &xMessage, pdFALSE );
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendToBackFromISR( xLCDQueue, &xMessage, &xHigherPriorityTaskWoken );
 	}
 }
 /*-----------------------------------------------------------*/

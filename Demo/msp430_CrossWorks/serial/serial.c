@@ -234,7 +234,7 @@ signed portBASE_TYPE xReturn;
 	void vTxISR( void ) __interrupt[ UART1TX_VECTOR ]
 	{
 	signed portCHAR cChar;
-	portBASE_TYPE xTaskWoken;
+	portBASE_TYPE xTaskWoken = pdFALSE;
 	
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */
@@ -282,7 +282,7 @@ signed portBASE_TYPE xReturn;
 	void ISRCom1Tx( void )
 	{
 	signed portCHAR cChar;
-	portBASE_TYPE xTaskWoken;
+	portBASE_TYPE xTaskWoken = pdFALSE;
 	
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */

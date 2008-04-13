@@ -443,14 +443,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* If posting to the queue woke a task that was blocked on the queue we may
 	want to switch to the woken task - depending on its priority relative to
 	the task interrupted by this ISR. */
-	if( xHigherPriorityTaskWoken )
-	{
-		return pdTRUE;
-	}
-	else
-	{
-		return pdFALSE;
-	}
+	return xHigherPriorityTaskWoken;
 }
 
 

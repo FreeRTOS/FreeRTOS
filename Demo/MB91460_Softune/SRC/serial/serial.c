@@ -201,7 +201,7 @@ signed portBASE_TYPE xReturn;
 __interrupt void UART2_TxISR (void)
 {
 	signed portCHAR cChar;
-	signed portBASE_TYPE xTaskWoken;
+	signed portBASE_TYPE xTaskWoken = pdFALSE;
 
 	/* The previous character has been transmitted.  See if there are any
 	further characters waiting transmission. */

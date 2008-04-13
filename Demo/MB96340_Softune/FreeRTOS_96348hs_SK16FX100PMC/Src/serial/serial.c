@@ -208,7 +208,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 __interrupt void UART0_TxISR( void )
 {
 signed portCHAR			cChar;
-signed portBASE_TYPE	xTaskWoken;
+signed portBASE_TYPE	xTaskWoken = pdFALSE;
 
 	/* The previous character has been transmitted.  See if there are any
 	further characters waiting transmission. */

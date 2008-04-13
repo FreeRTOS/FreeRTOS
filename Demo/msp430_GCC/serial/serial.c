@@ -235,7 +235,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 interrupt (UART1TX_VECTOR) vTxISR( void )
 {
 signed portCHAR cChar;
-portBASE_TYPE xTaskWoken;
+portBASE_TYPE xTaskWoken = pdFALSE;
 
 	/* The previous character has been transmitted.  See if there are any
 	further characters waiting transmission. */

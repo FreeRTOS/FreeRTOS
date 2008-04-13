@@ -128,7 +128,7 @@ static portBASE_TYPE prvUSART_ISR_NonNakedBehaviour( void )
 		/* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
 		calls in a critical section . */
 		portENTER_CRITICAL();
-			retstatus = xQueueSendFromISR(xRxedChars, &cChar, &xHigherPriorityTaskWoken);
+			xQueueSendFromISR(xRxedChars, &cChar, &xHigherPriorityTaskWoken);
 		portEXIT_CRITICAL();
 	}
 

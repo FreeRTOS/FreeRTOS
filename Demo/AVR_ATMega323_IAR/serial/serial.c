@@ -199,7 +199,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 __interrupt void SIG_UART_DATA( void )
 {
-signed portCHAR cChar, cTaskWoken;
+signed portCHAR cChar, cTaskWoken = pdFALSE;
 
 	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &cTaskWoken ) == pdTRUE )
 	{

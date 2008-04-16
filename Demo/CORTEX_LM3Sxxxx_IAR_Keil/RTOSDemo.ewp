@@ -665,6 +665,7 @@
         <option>
           <name>IlinkAdditionalLibs</name>
           <state>$PROJ_DIR$\..\Common\drivers\LuminaryMicro\IAR\driverlib.a</state>
+          <state>$PROJ_DIR$\..\Common\drivers\LuminaryMicro\IAR\grlib.a</state>
         </option>
         <option>
           <name>IlinkOverrideProgramEntryLabel</name>
@@ -812,7 +813,13 @@
   <group>
     <name>Library files</name>
     <file>
-      <name>$PROJ_DIR$\..\Common\drivers\LuminaryMicro\IAR\driverlib.r79</name>
+      <name>$PROJ_DIR$\..\Common\drivers\LuminaryMicro\IAR\driverlib.a</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\formike128x128x16.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\drivers\LuminaryMicro\IAR\grlib.a</name>
     </file>
     <file>
       <name>$PROJ_DIR$\osram128x64x4.c</name>

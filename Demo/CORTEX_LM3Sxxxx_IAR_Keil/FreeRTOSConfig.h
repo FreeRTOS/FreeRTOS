@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -60,19 +60,20 @@
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION		1
-#define configUSE_IDLE_HOOK			0
-#define configUSE_TICK_HOOK			1
-#define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 50000000 )
-#define configTICK_RATE_HZ			( ( portTickType ) 1000 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 70 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 24000 ) )
-#define configMAX_TASK_NAME_LEN		( 12 )
-#define configUSE_TRACE_FACILITY	1
-#define configUSE_16_BIT_TICKS		0
-#define configIDLE_SHOULD_YIELD		0
-#define configUSE_CO_ROUTINES 		0
-#define configUSE_MUTEXES			1
+#define configUSE_PREEMPTION			1
+#define configUSE_IDLE_HOOK				0
+#define configUSE_TICK_HOOK				1
+#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 50000000 )
+#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 70 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 24000 ) )
+#define configMAX_TASK_NAME_LEN			( 12 )
+#define configUSE_TRACE_FACILITY		1
+#define configUSE_16_BIT_TICKS			0
+#define configIDLE_SHOULD_YIELD			0
+#define configUSE_CO_ROUTINES 			0
+#define configUSE_MUTEXES				1
+#define configCHECK_FOR_STACK_OVERFLOW	2
 
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

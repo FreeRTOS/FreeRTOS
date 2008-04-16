@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -82,6 +82,16 @@
 
 
 
+
+/************************************************************************* 
+ * Please ensure to read http://www.freertos.org/portLM3Sxxxx_Eclipse.html
+ * which provides information on configuring and running this demo for the
+ * various Luminary Micro EKs.
+ *************************************************************************/
+
+
+
+
 /* Standard includes. */
 #include <stdio.h>
 
@@ -90,6 +100,17 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+
+/* Hardware library includes. */
+#include "hw_memmap.h"
+#include "hw_types.h"
+#include "hw_sysctl.h"
+#include "sysctl.h"
+#include "gpio.h"
+#include "grlib.h"
+#include "rit128x96x4.h"
+#include "osram128x64x4.h"
+#include "formike128x128x16.h"
 
 /* Demo app includes. */
 #include "BlockQ.h"
@@ -106,14 +127,6 @@
 #include "QPeek.h"
 #include "recmutex.h"
 
-/* Hardware library includes. */
-#include "hw_memmap.h"
-#include "hw_types.h"
-#include "hw_sysctl.h"
-#include "sysctl.h"
-#include "gpio.h"
-#include "rit128x96x4.h"
-#include "osram128x64x4.h"
 
 /*-----------------------------------------------------------*/
 
@@ -149,6 +162,7 @@ the jitter time in nano seconds. */
 
 /* Constants used when writing strings to the display. */
 #define mainCHARACTER_HEIGHT				( 9 )
+#define mainMAX_ROWS_128					( mainCHARACTER_HEIGHT * 14 )
 #define mainMAX_ROWS_96						( mainCHARACTER_HEIGHT * 10 )
 #define mainMAX_ROWS_64						( mainCHARACTER_HEIGHT * 7 )
 #define mainFULL_SCALE						( 15 )
@@ -199,6 +213,11 @@ unsigned portLONG ulIdleError = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
+/************************************************************************* 
+ * Please ensure to read http://www.freertos.org/portLM3Sxxxx_Eclipse.html
+ * which provides information on configuring and running this demo for the
+ * various Luminary Micro EKs.
+ *************************************************************************/
 int main( void )
 {
 	prvSetupHardware();
@@ -272,6 +291,7 @@ void vApplicationTickHook( void )
 {
 static xOLEDMessage xMessage = { "PASS" };
 static unsigned portLONG ulTicksSinceLastDisplay = 0;
+static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it
 	time to perform our health status check again? */
@@ -323,7 +343,8 @@ static unsigned portLONG ulTicksSinceLastDisplay = 0;
 		}
 
 		/* Send the message to the OLED gatekeeper for display. */
-		xQueueSendFromISR( xOLEDQueue, &xMessage, pdFALSE );
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -335,13 +356,14 @@ unsigned portLONG ulY, ulMaxY;
 static portCHAR cMessage[ mainMAX_MSG_LEN ];
 extern unsigned portLONG ulMaxJitter;
 unsigned portBASE_TYPE uxUnusedStackOnEntry, uxUnusedStackNow;
+const unsigned portCHAR *pucImage;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
-void ( *vOLEDInit )( unsigned portLONG );
-void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR );
-void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG );
-void ( *vOLEDClear )( void );
+void ( *vOLEDInit )( unsigned portLONG ) = NULL;
+void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR ) = NULL;
+void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG ) = NULL;
+void ( *vOLEDClear )( void ) = NULL;
 
 	/* Just for demo purposes. */
 	uxUnusedStackOnEntry = uxTaskGetStackHighWaterMark( NULL );
@@ -356,13 +378,24 @@ void ( *vOLEDClear )( void );
 										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
 										vOLEDClear = OSRAM128x64x4Clear;
 										ulMaxY = mainMAX_ROWS_64;
+										pucImage = pucBasicBitmap;
 										break;
 										
-		default						:	vOLEDInit = RIT128x96x4Init;
+		case SYSCTL_DID1_PRTNO_1968	:	
+		case SYSCTL_DID1_PRTNO_8962 :	vOLEDInit = RIT128x96x4Init;
 										vOLEDStringDraw = RIT128x96x4StringDraw;
 										vOLEDImageDraw = RIT128x96x4ImageDraw;
 										vOLEDClear = RIT128x96x4Clear;
-										ulMaxY = mainMAX_ROWS_96;										
+										ulMaxY = mainMAX_ROWS_96;
+										pucImage = pucBasicBitmap;
+										break;
+										
+		default						:	vOLEDInit = vFormike128x128x16Init;
+										vOLEDStringDraw = vFormike128x128x16StringDraw;
+										vOLEDImageDraw = vFormike128x128x16ImageDraw;
+										vOLEDClear = vFormike128x128x16Clear;
+										ulMaxY = mainMAX_ROWS_128;
+										pucImage = pucGrLibBitmap;
 										break;
 	}
 
@@ -370,10 +403,8 @@ void ( *vOLEDClear )( void );
 	
 	/* Initialise the OLED and display a startup message. */
 	vOLEDInit( ulSSI_FREQUENCY );	
-	vOLEDStringDraw( " POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
+	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
 	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
-	
-	uxUnusedStackNow = uxTaskGetStackHighWaterMark( NULL );
 	
 	for( ;; )
 	{
@@ -397,69 +428,9 @@ void ( *vOLEDClear )( void );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIdleHook( void )
-{
-	/* This is just a sanity check function to test the port is
-	functioning correctly.  It can be removed from real applications.
-	
-	Fill the general purpose registers with known values. */
-	__asm volatile( "    mov r11, #10		\n"
-					"    add r0, r11, #1	\n"
-					"    add r1, r11, #2	\n"
-		            "    add r2, r11, #3	\n"
-		            "    add r3, r11, #4	\n"
-		            "    add r4, r11, #5	\n"
-		            "    add r5, r11, #6	\n"
-		            "    add r6, r11, #7	\n"
-		            "    add r7, r11, #8	\n"
-		            "    add r8, r11, #9	\n"
-		            "    add r9, r11, #10	\n"
-		            "    add r10, r11, #11	\n"
-		            "    add r12, r11, #12" );
-	
-	/* Check the values are as expected.  A context switch might
-	have occurred since setting the register values. */
-	__asm volatile( "    cmp r11, #10			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r0, #11			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r1, #12			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r2, #13			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r3, #14			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r4, #15			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r5, #16			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r6, #17			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r7, #18			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r8, #19			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r9, #20			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r10, #21			\n"
-		            "    bne set_error_flag		\n"
-		            "    cmp r12, #22			\n"
-		            "    bne set_error_flag		\n"
-					"	 bx r14 				\n"
-					" 							\n"	/* If an error is detected in the */					
-					"set_error_flag:			\n" /* value of a register then the error */
-					"	ldr r1, ulIdleErrorConst\n" /* variable will be set to true.  This */
-					"	mov r0, #1				\n" /* will cause	an error message to be */
-					"	str r0, [r1]			\n" /* written to the OLED. */
-					"	bx r14 					\n"
-					"							\n"
-					"	.align 2				\n"			
-					"ulIdleErrorConst: .word ulIdleError" );
-}
-/*-----------------------------------------------------------*/
-
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
 {
 	for( ;; );
 }
+
 

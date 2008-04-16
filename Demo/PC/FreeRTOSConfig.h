@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -79,7 +79,7 @@
 #define configUSE_ALTERNATIVE_API		1
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configCHECK_FOR_STACK_OVERFLOW	0 /* Do not use this option on the PC port. */
-#define configUSE_APPLICATION_TASK_HOOK	1
+#define configUSE_APPLICATION_TASK_TAG	1
 
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 10 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
@@ -96,5 +96,11 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark 0 /* Do not use this option on the PC port. */
 
+
+/* An example "task switched in" hook macro definition. */
+#define traceTASK_SWITCHED_IN() xTaskCallApplicationTaskHook( NULL, ( void * ) 0xabcd )
+
+extern void vMainQueueSendPassed( void );
+#define traceQUEUE_SEND( pxQueue ) vMainQueueSendPassed()
 
 #endif /* FREERTOS_CONFIG_H */

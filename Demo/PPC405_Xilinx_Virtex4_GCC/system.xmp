@@ -41,7 +41,6 @@ Source: RTOSDemo/../../Common/Minimal/countsem.c
 Source: RTOSDemo/../../Common/Minimal/death.c
 Source: RTOSDemo/../../Common/Minimal/dynamic.c
 Source: RTOSDemo/../../Common/Minimal/flash.c
-Source: RTOSDemo/../../Common/Minimal/flop.c
 Source: RTOSDemo/../../Common/Minimal/GenQTest.c
 Source: RTOSDemo/../../Common/Minimal/integer.c
 Source: RTOSDemo/../../Common/Minimal/QPeek.c

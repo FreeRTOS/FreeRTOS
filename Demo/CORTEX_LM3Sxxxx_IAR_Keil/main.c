@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -82,6 +82,16 @@
 
 
 
+
+/************************************************************************* 
+ * Please ensure to read http://www.freertos.org/portlm3sx965.html
+ * which provides information on configuring and running this demo for the
+ * various Luminary Micro EKs.
+ *************************************************************************/
+
+
+
+
 /* Standard includes. */
 #include <stdio.h>
 
@@ -90,6 +100,17 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+
+/* Hardware library includes. */
+#include "hw_memmap.h"
+#include "hw_types.h"
+#include "hw_sysctl.h"
+#include "sysctl.h"
+#include "gpio.h"
+#include "grlib.h"
+#include "rit128x96x4.h"
+#include "osram128x64x4.h"
+#include "formike128x128x16.h"
 
 /* Demo app includes. */
 #include "BlockQ.h"
@@ -104,15 +125,6 @@
 #include "bitmap.h"
 #include "GenQTest.h"
 #include "QPeek.h"
-
-/* Hardware library includes. */
-#include "hw_memmap.h"
-#include "hw_types.h"
-#include "hw_sysctl.h"
-#include "sysctl.h"
-#include "gpio.h"
-#include "rit128x96x4.h"
-#include "osram128x64x4.h"
 
 /*-----------------------------------------------------------*/
 
@@ -148,6 +160,7 @@ the jitter time in nano seconds. */
 
 /* Constants used when writing strings to the display. */
 #define mainCHARACTER_HEIGHT				( 9 )
+#define mainMAX_ROWS_128					( mainCHARACTER_HEIGHT * 14 )
 #define mainMAX_ROWS_96						( mainCHARACTER_HEIGHT * 10 )
 #define mainMAX_ROWS_64						( mainCHARACTER_HEIGHT * 7 )
 #define mainFULL_SCALE						( 15 )
@@ -180,6 +193,13 @@ static void prvSetupHardware( void );
  */
 extern void vSetupTimer( void );
 
+/* 
+ * Hook functions that can get called by the kernel.
+ */
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );
+void vApplicationTickHook( void );
+
+
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the OLED task. */
@@ -190,6 +210,12 @@ const portCHAR * const pcWelcomeMessage = "   www.FreeRTOS.org";
 
 /*-----------------------------------------------------------*/
 
+
+/************************************************************************* 
+ * Please ensure to read http://www.freertos.org/portlm3sx965.html
+ * which provides information on configuring and running this demo for the
+ * various Luminary Micro EKs.
+ *************************************************************************/
 int main( void )
 {
 	prvSetupHardware();
@@ -263,6 +289,7 @@ void vApplicationTickHook( void )
 {
 static xOLEDMessage xMessage = { "PASS" };
 static unsigned portLONG ulTicksSinceLastDisplay = 0;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it
 	time to perform our health status check again? */
@@ -306,7 +333,8 @@ static unsigned portLONG ulTicksSinceLastDisplay = 0;
 	    }
 	
 		/* Send the message to the OLED gatekeeper for display. */
-		xQueueSendFromISR( xOLEDQueue, &xMessage, pdFALSE );
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -316,14 +344,15 @@ void vOLEDTask( void *pvParameters )
 xOLEDMessage xMessage;
 unsigned portLONG ulY, ulMaxY;
 static portCHAR cMessage[ mainMAX_MSG_LEN ];
-extern unsigned portLONG ulMaxJitter;
+extern volatile unsigned portLONG ulMaxJitter;
+const unsigned portCHAR *pucImage;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
-void ( *vOLEDInit )( unsigned portLONG );
-void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR );
-void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG );
-void ( *vOLEDClear )( void );
+void ( *vOLEDInit )( unsigned portLONG ) = NULL;
+void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR ) = NULL;
+void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG ) = NULL;
+void ( *vOLEDClear )( void ) = NULL;
 
 	/* Map the OLED access functions to the driver functions that are appropriate
 	for the evaluation kit being used. */	
@@ -335,21 +364,33 @@ void ( *vOLEDClear )( void );
 										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
 										vOLEDClear = OSRAM128x64x4Clear;
 										ulMaxY = mainMAX_ROWS_64;
+										pucImage = pucBasicBitmap;
 										break;
 										
-		default						:	vOLEDInit = RIT128x96x4Init;
+		case SYSCTL_DID1_PRTNO_1968	:	
+		case SYSCTL_DID1_PRTNO_8962 :	vOLEDInit = RIT128x96x4Init;
 										vOLEDStringDraw = RIT128x96x4StringDraw;
 										vOLEDImageDraw = RIT128x96x4ImageDraw;
 										vOLEDClear = RIT128x96x4Clear;
-										ulMaxY = mainMAX_ROWS_96;										
+										ulMaxY = mainMAX_ROWS_96;
+										pucImage = pucBasicBitmap;
 										break;
+										
+		default						:	vOLEDInit = vFormike128x128x16Init;
+										vOLEDStringDraw = vFormike128x128x16StringDraw;
+										vOLEDImageDraw = vFormike128x128x16ImageDraw;
+										vOLEDClear = vFormike128x128x16Clear;
+										ulMaxY = mainMAX_ROWS_128;
+										pucImage = pucGrLibBitmap;
+										break;
+										
 	}
 
 	ulY = ulMaxY;
 	
 	/* Initialise the OLED and display a startup message. */
 	vOLEDInit( ulSSI_FREQUENCY );	
-	vOLEDStringDraw( " POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
+	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
 	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
 	
 	for( ;; )
@@ -371,4 +412,13 @@ void ( *vOLEDClear )( void );
 		sprintf( cMessage, "%s [%uns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
 		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+{
+	( void ) pxTask;
+	( void ) pcTaskName;
+
+	for( ;; );
 }

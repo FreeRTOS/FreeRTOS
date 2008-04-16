@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -88,7 +88,6 @@
 #include "semtest.h"
 #include "BlockQ.h"
 #include "dynamic.h"
-#include "flop.h"
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "blocktim.h"
@@ -171,7 +170,6 @@ int main( void )
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks ( mainQUEUE_BLOCK_PRIORITY );	
 	vStartDynamicPriorityTasks();	
-	vStartMathTasks( tskIDLE_PRIORITY );	
 	vStartGenericQueueTasks( mainGENERIC_QUEUE_PRIORITY );
 	vStartQueuePeekTasks();
 	vCreateBlockTimeTasks();
@@ -232,11 +230,6 @@ static unsigned portLONG ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL
 	}
 	
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
-	
-	if( xAreMathsTaskStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}

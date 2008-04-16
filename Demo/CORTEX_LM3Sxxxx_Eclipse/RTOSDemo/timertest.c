@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -81,7 +81,7 @@ zero. */
 void Timer0IntHandler( void );
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-unsigned portLONG ulMaxJitter = 0;
+volatile unsigned portLONG ulMaxJitter = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -102,6 +102,9 @@ unsigned long ulFrequency;
 	/* Just used to measure time. */
     TimerLoadSet(TIMER1_BASE, TIMER_A, timerMAX_32BIT_VALUE );
 	
+	/* Ensure interrupts do not start until the scheduler is running. */
+	portDISABLE_INTERRUPTS();
+	
 	/* The rate at which the timer will interrupt. */
 	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
     TimerLoadSet( TIMER0_BASE, TIMER_A, ulFrequency );
@@ -116,7 +119,8 @@ unsigned long ulFrequency;
 
 void Timer0IntHandler( void )
 {
-unsigned portLONG ulDifference, ulCurrentCount;
+unsigned portLONG ulDifference;
+volatile unsigned portLONG ulCurrentCount;
 static portLONG ulMaxDifference = 0, ulLastCount = 0;
 
 	/* We use the timer 1 counter value to measure the clock cycles between

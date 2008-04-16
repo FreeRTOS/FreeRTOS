@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -153,6 +153,14 @@ static void prvStartMathTasks( void );
 /* Check which ever tasks are relevant to this build. */
 static portBASE_TYPE prvCheckMathTasksAreStillRunning( void );
 
+/* Used to demonstrate the "task switched in" callback function. */
+static portBASE_TYPE prvExampleTaskHook( void * pvParameter );
+
+/* Just used to count the number of times the example task callback function is
+called, and the number of times a queue send passes. */
+static unsigned portLONG portLONG uxCheckTaskHookCallCount = 0;
+static unsigned portLONG portLONG uxQueueSendPassedCount = 0;
+
 /*-----------------------------------------------------------*/
 
 portSHORT main( void )
@@ -200,6 +208,31 @@ portSHORT main( void )
 }
 /*-----------------------------------------------------------*/
 
+static portBASE_TYPE prvExampleTaskHook( void * pvParameter )
+{
+	if( pvParameter != ( void * ) 0xabcd )
+	{
+		/* The parameter did not contain the value we expected, so cause an
+		error to be detected by setting the call count back to zero. */
+		uxCheckTaskHookCallCount = 0;
+	}
+	else
+	{
+		/* Simply increment a number so we know the callback has been executed. */
+		uxCheckTaskHookCallCount++;
+	}
+
+	return 0;
+}
+/*-----------------------------------------------------------*/
+
+void vMainQueueSendPassed( void )
+{
+	/* This is just an example implementation of the "queue send" trace hook. */
+	uxQueueSendPassedCount++;
+}
+/*-----------------------------------------------------------*/
+
 static void vErrorChecks( void *pvParameters )
 {
 portTickType xExpectedWakeTime;
@@ -211,6 +244,9 @@ const portCHAR *pcReceivedMessage;
 const portCHAR * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
 
 	( void ) pvParameters;
+
+	/* Register our callback function. */
+	vTaskSetApplicationTaskTag( NULL, prvExampleTaskHook );
 
 	/* Loop continuously, blocking, then checking all the other tasks are still
 	running, before blocking once again.  This task blocks on the queue of
@@ -322,6 +358,7 @@ portSHORT sIn;
 static void prvCheckOtherTasksAreStillRunning( void )
 {
 static portSHORT sErrorHasOccurred = pdFALSE;
+static unsigned portLONG portLONG uxLastHookCallCount = 0, uxLastQueueSendCount = 0;
 
 	if( prvCheckMathTasksAreStillRunning() != pdTRUE )
 	{
@@ -435,6 +472,32 @@ static portSHORT sErrorHasOccurred = pdFALSE;
 	{
 		vDisplayMessage( "Error in recursive mutex tasks!\r\n" );
 		sErrorHasOccurred = pdTRUE;
+	}
+
+	/* The hook function associated with this task is called each time the task
+	is switched in.  We therefore expect the number of times the callback 
+	function has been executed to have increrment since the last time this 
+	function executed. */
+	if( uxCheckTaskHookCallCount <= uxLastHookCallCount )
+	{
+		vDisplayMessage( "Error in task hook call count!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+	else
+	{
+		uxLastHookCallCount = uxCheckTaskHookCallCount;
+	}
+
+	/* We would expect some queue sending to occur between calls of this 
+	function. */
+	if( uxQueueSendPassedCount <= uxLastQueueSendCount )
+	{
+		vDisplayMessage( "Error in queue send hook call count!\r\n" );
+		sErrorHasOccurred = pdTRUE;
+	}
+	else
+	{
+		uxLastQueueSendCount = uxQueueSendPassedCount;
 	}
 
 	if( sErrorHasOccurred == pdFALSE )

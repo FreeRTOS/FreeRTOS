@@ -57,6 +57,7 @@ static void IntDefaultHandler(void);
 extern void __iar_program_start(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
+extern void vPortSVCHandler(void);
 extern void vEMAC_ISR( void );
 extern Timer0IntHandler( void );
 
@@ -105,7 +106,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
-    IntDefaultHandler,                      // SVCall handler
+    vPortSVCHandler,                        // SVCall handler
     IntDefaultHandler,                      // Debug monitor handler
     0,                                      // Reserved
     xPortPendSVHandler,                     // The PendSV handler
@@ -153,7 +154,11 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // CAN1
     IntDefaultHandler,                      // CAN2
     vEMAC_ISR,                     			// Ethernet
-    IntDefaultHandler                       // Power Island
+    IntDefaultHandler,                      // Hibernate
+    IntDefaultHandler,                      // USB0
+    IntDefaultHandler,                      // PWM Generator 3
+    IntDefaultHandler,                      // uDMA Software Transfer
+    IntDefaultHandler                       // uDMA Error
 };
 
 

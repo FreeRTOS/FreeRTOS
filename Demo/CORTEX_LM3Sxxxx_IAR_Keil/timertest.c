@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -59,6 +59,7 @@
 #include "interrupt.h"
 #include "sysctl.h"
 #include "lmi_timer.h"
+#include "hw_timer.h"
 
 /* The set frequency of the interrupt.  Deviations from this are measured as
 the jitter. */
@@ -73,7 +74,7 @@ zero. */
 
 /* Misc defines. */
 #define timerMAX_32BIT_VALUE			( 0xffffffffUL )
-#define timerTIMER_1_COUNT_VALUE		( * ( ( unsigned long * ) ( TIMER1_BASE + 0x48 ) ) )
+#define timerTIMER_1_COUNT_VALUE		( * ( ( volatile unsigned long * ) ( ( unsigned portLONG ) TIMER1_BASE + 0x48UL ) ) )
 
 /*-----------------------------------------------------------*/
 
@@ -119,13 +120,14 @@ unsigned long ulFrequency;
 
 void Timer0IntHandler( void )
 {
-unsigned portLONG ulDifference;
-volatile unsigned portLONG ulCurrentCount;
-static portLONG ulMaxDifference = 0, ulLastCount = 0;
+unsigned portLONG ulDifference, ulCurrentCount;
+static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
 
 	/* We use the timer 1 counter value to measure the clock cycles between
 	the timer 0 interrupts. */
 	ulCurrentCount = timerTIMER_1_COUNT_VALUE;
+
+	TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
 
 	if( ulCurrentCount < ulLastCount )
 	{	
@@ -141,9 +143,9 @@ static portLONG ulMaxDifference = 0, ulLastCount = 0;
 	}
 	
 	ulLastCount = ulCurrentCount;
-
-    TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
 }
+
+
 
 
 

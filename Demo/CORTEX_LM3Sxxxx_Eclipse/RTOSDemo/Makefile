@@ -1,4 +1,4 @@
-#	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+#	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 #
 #	This file is part of the FreeRTOS.org distribution.
 #
@@ -29,6 +29,12 @@
 #	***************************************************************************
 
 
+#/************************************************************************* 
+# * Please ensure to read http://www.freertos.org/portLM3Sxxxx_Eclipse.html
+# * which provides information on configuring and running this demo for the
+# * various Luminary Micro EKs.
+# *************************************************************************/
+
 RTOS_SOURCE_DIR=../../../Source
 DEMO_COMMON_DIR=../../Common/Minimal
 DEMO_INCLUDE_DIR=../../Common/include
@@ -56,6 +62,7 @@ SOURCE=	main.c \
 		./ParTest/ParTest.c \
 		rit128x96x4.c \
 		osram128x64x4.c \
+		formike128x128x16.c \
 		$(LUMINARY_DRIVER_DIR)/ustdlib.c \
 		$(DEMO_COMMON_DIR)/BlockQ.c \
 		$(DEMO_COMMON_DIR)/blocktim.c \
@@ -82,7 +89,7 @@ SOURCE=	main.c \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM_CM3/port.c \
 		$(RTOS_SOURCE_DIR)/portable/MemMang/heap_2.c
 
-LIBS= $(LUMINARY_DRIVER_DIR)/arm-none-eabi-gcc/libdriver.a
+LIBS= $(LUMINARY_DRIVER_DIR)/arm-none-eabi-gcc/libdriver.a $(LUMINARY_DRIVER_DIR)/arm-none-eabi-gcc/libgr.a
 
 OBJS = $(SOURCE:.c=.o)
 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -895,13 +895,13 @@ unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask );
 
 /**
  * task.h
- * <pre>void vTaskSetApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
+ * <pre>void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
  *
  * Sets pxHookFunction to be the task hook function used by the task xTask.
  * Passing xTask as NULL has the effect of setting the calling tasks hook
  * function.
  */
-void vTaskSetApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );
+void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );
 
 /**
  * task.h

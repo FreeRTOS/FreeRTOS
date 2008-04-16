@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -960,14 +960,15 @@ void vQueueDelete( xQueueHandle xQueue );
         cIn = portINPUT_BYTE( RX_REGISTER_ADDRESS );						
 
         // Post the byte.  
-        xTaskWokenByPost = xQueueSendFromISR( xRxQueue, &cIn, &xHigherPriorityTaskWoken );
+        xQueueSendFromISR( xRxQueue, &cIn, &xHigherPriorityTaskWoken );
 
     } while( portINPUT_BYTE( BUFFER_COUNT ) );
 
     // Now the buffer is empty we can switch context if necessary.
     if( xHigherPriorityTaskWoken )
     {
-        taskYIELD ();
+        // Actual macro used here is port specific.
+        taskYIELD_FROM_ISR ();
     }
  }
  </pre>

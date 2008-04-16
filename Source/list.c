@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -47,53 +47,6 @@
 	licensing and training services.
 */
 
-/*
-Changes from V1.2.0
-
-	+ Removed the volatile modifier from the function parameters.  This was
-	  only ever included to prevent compiler warnings.  Now warnings are
-	  removed by casting parameters where the calls are made.
-
-	+ prvListGetOwnerOfNextEntry() and prvListGetOwnerOfHeadEntry() have been
-	  removed from the c file and added as macros to the h file.
-
-	+ uxNumberOfItems has been added to the list structure.  This removes the
-	  need for a pointer comparison when checking if a list is empty, and so
-	  is slightly faster.
-
-	+ Removed the NULL check in vListRemove().  This makes the call faster but
-	  necessitates any application code utilising the list implementation to
-	  ensure NULL pointers are not passed.
-
-Changes from V2.0.0
-
-	+ Double linked the lists to allow faster removal item removal.
-
-Changes from V2.6.1
-
-	+ Make use of the new portBASE_TYPE definition where ever appropriate.
-
-Changes from V3.0.0
-
-	+ API changes as described on the FreeRTOS.org WEB site.
-
-Changes from V3.2.4
-
-	+ Removed the pxHead member of the xList structure.  This always pointed
-	  to the same place so has been removed to free a few bytes of RAM.
-
-	+ Introduced the xMiniListItem structure that does not include the 
-	  xListItem members that are not required by the xListEnd member of a list.
-	  Again this was done to reduce RAM usage.
-
-	+ Changed the volatile definitions of some structure members to clean up
-	  the code where the list structures are used.
-
-Changes from V4.0.4
-
-	+ Optimised vListInsert() in the case when the wake time is the maximum 
-	  tick count value.
-*/
 
 #include <stdlib.h>
 #include "FreeRTOS.h"

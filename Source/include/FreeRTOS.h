@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -128,8 +128,8 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#error Missing definition:  configUSE_16_BIT_TICKS should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef configUSE_APPLICATION_TASK_HOOK
-	#define configUSE_APPLICATION_TASK_HOOK 0
+#ifndef configUSE_APPLICATION_TASK_TAG
+	#define configUSE_APPLICATION_TASK_TAG 0
 #endif
 
 #ifndef INCLUDE_uxTaskGetStackHighWaterMark

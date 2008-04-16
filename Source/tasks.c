@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -86,8 +86,8 @@ typedef struct tskTaskControlBlock
 		unsigned portBASE_TYPE uxBasePriority;
 	#endif
 
-	#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
-		pdTASK_HOOK_CODE pxTaskHook;
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+		pdTASK_HOOK_CODE pxTaskTag;
 	#endif
 		
 } tskTCB;
@@ -1391,9 +1391,9 @@ inline void vTaskIncrementTick( void )
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+#if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	void vTaskSetApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction )
+	void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue )
 	{
 	tskTCB *xTCB;
 
@@ -1408,13 +1408,15 @@ inline void vTaskIncrementTick( void )
 		}
 		
 		/* Save the hook function in the TCB. */
-		xTCB->pxTaskHook = pxHookFunction;
+		portENTER_CRITICAL();
+			xTCB->pxTaskTag = pxTagValue;
+		portEXIT_CRITICAL();
 	}
 	
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+#if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
 	portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter )
 	{
@@ -1431,9 +1433,9 @@ inline void vTaskIncrementTick( void )
 			xTCB = ( tskTCB * ) xTask;
 		}
 
-		if( xTCB->pxTaskHook != NULL )
+		if( xTCB->pxTaskTag != NULL )
 		{
-			xReturn = xTCB->pxTaskHook( pvParameter );
+			xReturn = xTCB->pxTaskTag( pvParameter );
 		}
 		else
 		{
@@ -1759,9 +1761,9 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * co
 	}
 	#endif
 
-	#if ( configUSE_APPLICATION_TASK_HOOK == 1 )
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
 	{
-		pxTCB->pxTaskHook = NULL;
+		pxTCB->pxTaskTag = NULL;
 	}
 	#endif	
 }

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V4.8.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -446,7 +446,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * <pre>
  xSemaphoreGiveFromISR( 
                           xSemaphoreHandle xSemaphore, 
-                          portSHORT sTaskPreviouslyWoken 
+                          portBASE_TYPE *pxHigherPriorityTaskWoken
                       )</pre>
  *
  * <i>Macro</i> to  release a semaphore.  The semaphore must have previously been
@@ -461,7 +461,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * handle returned when the semaphore was created.
  *
  * @param pxHigherPriorityTaskWoken xSemaphoreGiveFromISR() will set
- * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * *pxHigherPriorityTaskWoken to pdTRUE if giving the semaphore caused a task
  * to unblock, and the unblocked task has a priority higher than the currently
  * running task.  If xSemaphoreGiveFromISR() sets this value to pdTRUE then
  * a context switch should be requested before the interrupt is exited.

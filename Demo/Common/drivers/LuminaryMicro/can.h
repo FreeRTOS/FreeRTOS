@@ -2,7 +2,7 @@
 //
 // can.h - Defines and Macros for the CAN controller.
 //
-// Copyright (c) 2006-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2006-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,17 +22,12 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
 #ifndef __CAN_H__
 #define __CAN_H__
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 //*****************************************************************************
 //
@@ -42,6 +38,17 @@ extern "C"
 
 //*****************************************************************************
 //
+// If building with a C++ compiler, make all of the definitions in this header
+// have a C binding.
+//
+//*****************************************************************************
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+//*****************************************************************************
+//
 // Miscellaneous defines for Message ID Types
 //
 //*****************************************************************************
@@ -49,7 +56,7 @@ extern "C"
 //*****************************************************************************
 //
 //! These are the flags used by the tCANMsgObject variable when calling the
-//! the CANMessageSet() and CANMessageGet() APIs.
+//! CANMessageSet() and CANMessageGet() functions.
 //
 //*****************************************************************************
 typedef enum
@@ -61,7 +68,7 @@ typedef enum
     MSG_OBJ_TX_INT_ENABLE =     0x00000001,
 
     //
-    //! This indicates that receive interrupts should be enabled or are
+    //! This indicates that receive interrupts should be enabled, or are
     //! enabled.
     //
     MSG_OBJ_RX_INT_ENABLE =     0x00000002,
@@ -74,7 +81,7 @@ typedef enum
 
     //
     //! This indicates that a message object will use or is using filtering
-    //! based on the object's message Identifier.
+    //! based on the object's message identifier.
     //
     MSG_OBJ_USE_ID_FILTER =     0x00000008,
 
@@ -91,16 +98,15 @@ typedef enum
 
     //
     //! This indicates that a message object will use or is using filtering
-    //! based on the direction of the transfer. If the direction filtering is
-    //! used then ID filtering must also be enabled.
+    //! based on the direction of the transfer.  If the direction filtering is
+    //! used, then ID filtering must also be enabled.
     //
     MSG_OBJ_USE_DIR_FILTER =    (0x00000010 | MSG_OBJ_USE_ID_FILTER),
 
     //
     //! This indicates that a message object will use or is using message
-    //! identifier filtering based of the the extended identifier.
-    //! If the extended identifier filtering is used then ID filtering must
-    //! also be enabled.
+    //! identifier filtering based on the extended identifier.  If the extended
+    //! identifier filtering is used, then ID filtering must also be enabled.
     //
     MSG_OBJ_USE_EXT_FILTER =    (0x00000020 | MSG_OBJ_USE_ID_FILTER),
 
@@ -126,7 +132,7 @@ tCANObjFlags;
 
 //*****************************************************************************
 //
-//! This structure used for encapsulating all the items associated with a CAN
+//! The structure used for encapsulating all the items associated with a CAN
 //! message object in the CAN controller.
 //
 //*****************************************************************************
@@ -163,7 +169,7 @@ tCANMsgObject;
 //*****************************************************************************
 //
 //! This structure is used for encapsulating the values associated with setting
-//! up the bit timing for a CAN controller. The structure is used when calling
+//! up the bit timing for a CAN controller.  The structure is used when calling
 //! the CANGetBitTiming and CANSetBitTiming functions.
 //
 //*****************************************************************************
@@ -177,13 +183,13 @@ typedef struct
     unsigned int uSyncPropPhase1Seg;
 
     //
-    //! This value holds the Phase Buffer 2 segment in time quanta. The valid
+    //! This value holds the Phase Buffer 2 segment in time quanta.  The valid
     //! values for this setting range from 1 to 8.
     //
     unsigned int uPhase2Seg;
 
     //
-    //! This value holds the Resynchronization Jump Width in time quanta. The
+    //! This value holds the Resynchronization Jump Width in time quanta.  The
     //! valid values for this setting range from 1 to 4.
     //
     unsigned int uSJW;
@@ -200,7 +206,7 @@ tCANBitClkParms;
 //*****************************************************************************
 //
 //! This data type is used to identify the interrupt status register.  This is
-//! used when calling the a CANIntStatus() function.
+//! used when calling the CANIntStatus() function.
 //
 //*****************************************************************************
 typedef enum
@@ -219,8 +225,8 @@ tCANIntStsReg;
 
 //*****************************************************************************
 //
-//! This data type is used to identify which of the several status registers
-//! to read when calling the CANStatusGet() function.
+//! This data type is used to identify which of several status registers to
+//! read when calling the CANStatusGet() function.
 //
 //*****************************************************************************
 typedef enum
@@ -231,18 +237,18 @@ typedef enum
     CAN_STS_CONTROL,
 
     //
-    //! Read the full 32 bit mask of message objects with a transmit request
+    //! Read the full 32-bit mask of message objects with a transmit request
     //! set.
     //
     CAN_STS_TXREQUEST,
 
     //
-    //! Read the full 32 bit mask of message objects with a new data available.
+    //! Read the full 32-bit mask of message objects with new data available.
     //
     CAN_STS_NEWDAT,
 
     //
-    //! Read the full 32 bit mask of message objects that are enabled.
+    //! Read the full 32-bit mask of message objects that are enabled.
     //
     CAN_STS_MSGVAL
 }
@@ -270,8 +276,8 @@ typedef enum
 
     //
     //! This flag is used to allow a CAN controller to generate any CAN
-    //! interrupts. If this is not set then no interrupts will be generated by
-    //! the CAN controller.
+    //! interrupts.  If this is not set, then no interrupts will be generated
+    //! by the CAN controller.
     //
     CAN_INT_MASTER =            0x00000002
 }
@@ -314,8 +320,8 @@ tMsgObjType;
 
 //*****************************************************************************
 //
-//! The following enumeration contains all error or status indicators that
-//! can be returned when calling the CANStatusGet() API.
+//! The following enumeration contains all error or status indicators that can
+//! be returned when calling the CANStatusGet() function.
 //
 //*****************************************************************************
 typedef enum
@@ -412,6 +418,7 @@ extern void CANMessageGet(unsigned long ulBase, unsigned long ulObjID,
 extern unsigned long CANStatusGet(unsigned long ulBase, tCANStsReg eStatusReg);
 extern void CANMessageClear(unsigned long ulBase, unsigned long ulObjID);
 extern void CANIntRegister(unsigned long ulBase, void (*pfnHandler)(void));
+extern void CANIntUnregister(unsigned long ulBase);
 extern void CANIntEnable(unsigned long ulBase, unsigned long ulIntFlags);
 extern void CANIntDisable(unsigned long ulBase, unsigned long ulIntFlags);
 extern void CANIntClear(unsigned long ulBase, unsigned long ulIntClr);
@@ -429,13 +436,18 @@ extern void CANWriteDataReg(unsigned char *pucData, unsigned long *pulRegister,
 
 //*****************************************************************************
 //
+// Mark the end of the C bindings section for C++ compilers.
+//
+//*****************************************************************************
+#ifdef __cplusplus
+}
+#endif
+
+//*****************************************************************************
+//
 // Close the Doxygen group.
 //! @}
 //
 //*****************************************************************************
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif //  __CAN_H__

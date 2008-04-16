@@ -19,14 +19,28 @@ be governed by this Agreement. Your prior use will also continue to be governed
 by this Agreement.
 
 1. LICENSE GRANT. LMI grants to you, free of charge, the non-exclusive,
-non-transferable right (1) to use the Software solely and exclusively on LMI's
-microcontroller products, (2) to reproduce the Software, (3) to prepare
-derivative works of the Software, (4) to distribute the Software and derivative
-works thereof in source (human-readable) form and object (machine-readable)
-form, and (5) to sublicense to others the right to use the distributed
-Software. If you violate any of the terms or restrictions of this Agreement,
-LMI may immediately terminate this Agreement, and require that you stop using
-and delete all copies of the Software in your possession or control.
+non-transferable rights solely and exclusively on or for LMI's microcontroller
+products: (1) to use and reproduce the Software, (2) to prepare derivative
+works of the Software, (3) to distribute the Software and derivative works
+thereof in source (human-readable) form and object (machine-readable) form, (4)
+to sublicense to others the right to use the distributed Software, (5) permit
+the Software and derivative works thereof to communicate with "viral open
+source" software (as defined below); provided however that you may not combine
+the two separate and independent works to form a larger program, and (6)
+combine the Software and derivative works thereof with "non-viral open source"
+software (as defined below). For the purposes of this Agreement, "viral open
+source" software means open source software made available on license terms,
+such as the GNU General Public License (GPL), that would alter the foregoing
+license grant restrictions if combined with the Software. For the purposes of
+this Agreement, "non-viral open source" software means open source software
+made available on license terms that would not alter the foregoing license
+grant restrictions if combined with the Software. For the avoidance of any
+doubt, the foregoing license grant does not permit you to combine the Software
+and derivative works thereof with "viral open-source" software in order to
+sublicense to others the right to use the combined software product. If you
+violate any of the terms or restrictions of this Agreement, LMI may immediately
+terminate this Agreement, and require that you stop using and delete all copies
+of the Software in your possession or control.
 
 2. COPYRIGHT. The Software is licensed to you, not sold. LMI owns the Software,
 and United States copyright laws and international treaty provisions protect

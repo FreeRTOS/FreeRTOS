@@ -2,7 +2,7 @@
 //
 // comp.h - Prototypes for the analog comparator driver.
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,13 +22,19 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
 #ifndef __COMP_H__
 #define __COMP_H__
 
+//*****************************************************************************
+//
+// If building with a C++ compiler, make all of the definitions in this header
+// have a C binding.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 extern "C"
 {
@@ -37,8 +44,8 @@ extern "C"
 //
 // Values that can be passed to ComparatorConfigure() as the ulConfig
 // parameter.  For each group (i.e. COMP_TRIG_xxx, COMP_INT_xxx, etc.), one of
-// the values may be selected and ORed together will values from the other
-// groups.
+// the values may be selected and combined together with values from the other
+// groups via a logical OR.
 //
 //*****************************************************************************
 #define COMP_TRIG_NONE          0x00000000  // No ADC trigger
@@ -115,6 +122,11 @@ extern tBoolean ComparatorIntStatus(unsigned long ulBase, unsigned long ulComp,
                                     tBoolean bMasked);
 extern void ComparatorIntClear(unsigned long ulBase, unsigned long ulComp);
 
+//*****************************************************************************
+//
+// Mark the end of the C bindings section for C++ compilers.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 }
 #endif

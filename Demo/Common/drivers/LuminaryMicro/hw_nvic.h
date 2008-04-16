@@ -2,7 +2,7 @@
 //
 // hw_nvic.h - Macros used when accessing the NVIC hardware.
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,7 +22,7 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -30,7 +31,7 @@
 
 //*****************************************************************************
 //
-// The following define the addresses of the NVIC registers.
+// The following are defines for the NVIC register addresses.
 //
 //*****************************************************************************
 #define NVIC_INT_TYPE           0xE000E004  // Interrupt Controller Type Reg.
@@ -59,6 +60,7 @@
 #define NVIC_PRI8               0xE000E420  // IRQ 32 to 35 Priority Register
 #define NVIC_PRI9               0xE000E424  // IRQ 36 to 39 Priority Register
 #define NVIC_PRI10              0xE000E428  // IRQ 40 to 43 Priority Register
+#define NVIC_PRI11              0xE000E42C  // IRQ 44 to 47 Priority Register
 #define NVIC_CPUID              0xE000ED00  // CPUID Base Register
 #define NVIC_INT_CTRL           0xE000ED04  // Interrupt Control State Register
 #define NVIC_VTABLE             0xE000ED08  // Vector Table Offset Register
@@ -87,7 +89,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_INT_TYPE register.
+// The following are defines for the bit fields in the NVIC_INT_TYPE register.
 //
 //*****************************************************************************
 #define NVIC_INT_TYPE_LINES_M   0x0000001F  // Number of interrupt lines (x32)
@@ -95,7 +97,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_ST_CTRL register.
+// The following are defines for the bit fields in the NVIC_ST_CTRL register.
 //
 //*****************************************************************************
 #define NVIC_ST_CTRL_COUNT      0x00010000  // Count flag
@@ -105,7 +107,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_ST_RELOAD register.
+// The following are defines for the bit fields in the NVIC_ST_RELOAD register.
 //
 //*****************************************************************************
 #define NVIC_ST_RELOAD_M        0x00FFFFFF  // Counter load value
@@ -113,7 +115,8 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_ST_CURRENT register.
+// The following are defines for the bit fields in the NVIC_ST_CURRENT
+// register.
 //
 //*****************************************************************************
 #define NVIC_ST_CURRENT_M       0x00FFFFFF  // Counter current value
@@ -121,7 +124,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_ST_CAL register.
+// The following are defines for the bit fields in the NVIC_ST_CAL register.
 //
 //*****************************************************************************
 #define NVIC_ST_CAL_NOREF       0x80000000  // No reference clock
@@ -131,7 +134,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_EN0 register.
+// The following are defines for the bit fields in the NVIC_EN0 register.
 //
 //*****************************************************************************
 #define NVIC_EN0_INT31          0x80000000  // Interrupt 31 enable
@@ -169,7 +172,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_EN1 register.
+// The following are defines for the bit fields in the NVIC_EN1 register.
 //
 //*****************************************************************************
 #define NVIC_EN1_INT59          0x08000000  // Interrupt 59 enable
@@ -203,7 +206,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DIS0 register.
+// The following are defines for the bit fields in the NVIC_DIS0 register.
 //
 //*****************************************************************************
 #define NVIC_DIS0_INT31         0x80000000  // Interrupt 31 disable
@@ -241,7 +244,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DIS1 register.
+// The following are defines for the bit fields in the NVIC_DIS1 register.
 //
 //*****************************************************************************
 #define NVIC_DIS1_INT59         0x08000000  // Interrupt 59 disable
@@ -275,7 +278,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PEND0 register.
+// The following are defines for the bit fields in the NVIC_PEND0 register.
 //
 //*****************************************************************************
 #define NVIC_PEND0_INT31        0x80000000  // Interrupt 31 pend
@@ -313,7 +316,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PEND1 register.
+// The following are defines for the bit fields in the NVIC_PEND1 register.
 //
 //*****************************************************************************
 #define NVIC_PEND1_INT59        0x08000000  // Interrupt 59 pend
@@ -347,7 +350,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_UNPEND0 register.
+// The following are defines for the bit fields in the NVIC_UNPEND0 register.
 //
 //*****************************************************************************
 #define NVIC_UNPEND0_INT31      0x80000000  // Interrupt 31 unpend
@@ -385,7 +388,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_UNPEND1 register.
+// The following are defines for the bit fields in the NVIC_UNPEND1 register.
 //
 //*****************************************************************************
 #define NVIC_UNPEND1_INT59      0x08000000  // Interrupt 59 unpend
@@ -419,7 +422,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_ACTIVE0 register.
+// The following are defines for the bit fields in the NVIC_ACTIVE0 register.
 //
 //*****************************************************************************
 #define NVIC_ACTIVE0_INT31      0x80000000  // Interrupt 31 active
@@ -457,7 +460,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_ACTIVE1 register.
+// The following are defines for the bit fields in the NVIC_ACTIVE1 register.
 //
 //*****************************************************************************
 #define NVIC_ACTIVE1_INT59      0x08000000  // Interrupt 59 active
@@ -491,7 +494,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI0 register.
+// The following are defines for the bit fields in the NVIC_PRI0 register.
 //
 //*****************************************************************************
 #define NVIC_PRI0_INT3_M        0xFF000000  // Interrupt 3 priority mask
@@ -505,7 +508,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI1 register.
+// The following are defines for the bit fields in the NVIC_PRI1 register.
 //
 //*****************************************************************************
 #define NVIC_PRI1_INT7_M        0xFF000000  // Interrupt 7 priority mask
@@ -519,7 +522,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI2 register.
+// The following are defines for the bit fields in the NVIC_PRI2 register.
 //
 //*****************************************************************************
 #define NVIC_PRI2_INT11_M       0xFF000000  // Interrupt 11 priority mask
@@ -533,7 +536,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI3 register.
+// The following are defines for the bit fields in the NVIC_PRI3 register.
 //
 //*****************************************************************************
 #define NVIC_PRI3_INT15_M       0xFF000000  // Interrupt 15 priority mask
@@ -547,7 +550,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI4 register.
+// The following are defines for the bit fields in the NVIC_PRI4 register.
 //
 //*****************************************************************************
 #define NVIC_PRI4_INT19_M       0xFF000000  // Interrupt 19 priority mask
@@ -561,7 +564,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI5 register.
+// The following are defines for the bit fields in the NVIC_PRI5 register.
 //
 //*****************************************************************************
 #define NVIC_PRI5_INT23_M       0xFF000000  // Interrupt 23 priority mask
@@ -575,7 +578,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI6 register.
+// The following are defines for the bit fields in the NVIC_PRI6 register.
 //
 //*****************************************************************************
 #define NVIC_PRI6_INT27_M       0xFF000000  // Interrupt 27 priority mask
@@ -589,7 +592,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI7 register.
+// The following are defines for the bit fields in the NVIC_PRI7 register.
 //
 //*****************************************************************************
 #define NVIC_PRI7_INT31_M       0xFF000000  // Interrupt 31 priority mask
@@ -603,7 +606,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI8 register.
+// The following are defines for the bit fields in the NVIC_PRI8 register.
 //
 //*****************************************************************************
 #define NVIC_PRI8_INT35_M       0xFF000000  // Interrupt 35 priority mask
@@ -617,7 +620,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI9 register.
+// The following are defines for the bit fields in the NVIC_PRI9 register.
 //
 //*****************************************************************************
 #define NVIC_PRI9_INT39_M       0xFF000000  // Interrupt 39 priority mask
@@ -631,7 +634,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_PRI10 register.
+// The following are defines for the bit fields in the NVIC_PRI10 register.
 //
 //*****************************************************************************
 #define NVIC_PRI10_INT43_M      0xFF000000  // Interrupt 43 priority mask
@@ -645,7 +648,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_CPUID register.
+// The following are defines for the bit fields in the NVIC_CPUID register.
 //
 //*****************************************************************************
 #define NVIC_CPUID_IMP_M        0xFF000000  // Implementer
@@ -655,7 +658,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_INT_CTRL register.
+// The following are defines for the bit fields in the NVIC_INT_CTRL register.
 //
 //*****************************************************************************
 #define NVIC_INT_CTRL_NMI_SET   0x80000000  // Pend a NMI
@@ -671,7 +674,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_VTABLE register.
+// The following are defines for the bit fields in the NVIC_VTABLE register.
 //
 //*****************************************************************************
 #define NVIC_VTABLE_BASE        0x20000000  // Vector table base
@@ -680,28 +683,28 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_APINT register.
+// The following are defines for the bit fields in the NVIC_APINT register.
 //
 //*****************************************************************************
 #define NVIC_APINT_VECTKEY_M    0xFFFF0000  // Vector key mask
 #define NVIC_APINT_VECTKEY      0x05FA0000  // Vector key
 #define NVIC_APINT_ENDIANESS    0x00008000  // Data endianess
 #define NVIC_APINT_PRIGROUP_M   0x00000700  // Priority group
-#define NVIC_APINT_PRIGROUP_7_1 0x00000000  // Priority group 7.1 split
-#define NVIC_APINT_PRIGROUP_6_2 0x00000100  // Priority group 6.2 split
-#define NVIC_APINT_PRIGROUP_5_3 0x00000200  // Priority group 5.3 split
-#define NVIC_APINT_PRIGROUP_4_4 0x00000300  // Priority group 4.4 split
-#define NVIC_APINT_PRIGROUP_3_5 0x00000400  // Priority group 3.5 split
-#define NVIC_APINT_PRIGROUP_2_6 0x00000500  // Priority group 2.6 split
-#define NVIC_APINT_PRIGROUP_1_7 0x00000600  // Priority group 1.7 split
 #define NVIC_APINT_PRIGROUP_0_8 0x00000700  // Priority group 0.8 split
+#define NVIC_APINT_PRIGROUP_1_7 0x00000600  // Priority group 1.7 split
+#define NVIC_APINT_PRIGROUP_2_6 0x00000500  // Priority group 2.6 split
+#define NVIC_APINT_PRIGROUP_3_5 0x00000400  // Priority group 3.5 split
+#define NVIC_APINT_PRIGROUP_4_4 0x00000300  // Priority group 4.4 split
+#define NVIC_APINT_PRIGROUP_5_3 0x00000200  // Priority group 5.3 split
+#define NVIC_APINT_PRIGROUP_6_2 0x00000100  // Priority group 6.2 split
 #define NVIC_APINT_SYSRESETREQ  0x00000004  // System reset request
 #define NVIC_APINT_VECT_CLR_ACT 0x00000002  // Clear active NMI/fault info
 #define NVIC_APINT_VECT_RESET   0x00000001  // System reset
+#define NVIC_APINT_PRIGROUP_7_1 0x00000000  // Priority group 7.1 split
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_SYS_CTRL register.
+// The following are defines for the bit fields in the NVIC_SYS_CTRL register.
 //
 //*****************************************************************************
 #define NVIC_SYS_CTRL_SEVONPEND 0x00000010  // Wakeup on pend
@@ -710,7 +713,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_CFG_CTRL register.
+// The following are defines for the bit fields in the NVIC_CFG_CTRL register.
 //
 //*****************************************************************************
 #define NVIC_CFG_CTRL_BFHFNMIGN 0x00000100  // Ignore bus fault in NMI/fault
@@ -722,7 +725,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_SYS_PRI1 register.
+// The following are defines for the bit fields in the NVIC_SYS_PRI1 register.
 //
 //*****************************************************************************
 #define NVIC_SYS_PRI1_RES_M     0xFF000000  // Priority of reserved handler
@@ -735,7 +738,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_SYS_PRI2 register.
+// The following are defines for the bit fields in the NVIC_SYS_PRI2 register.
 //
 //*****************************************************************************
 #define NVIC_SYS_PRI2_SVC_M     0xFF000000  // Priority of SVCall handler
@@ -744,7 +747,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_SYS_PRI3 register.
+// The following are defines for the bit fields in the NVIC_SYS_PRI3 register.
 //
 //*****************************************************************************
 #define NVIC_SYS_PRI3_TICK_M    0xFF000000  // Priority of Sys Tick handler
@@ -757,7 +760,8 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_SYS_HND_CTRL register.
+// The following are defines for the bit fields in the NVIC_SYS_HND_CTRL
+// register.
 //
 //*****************************************************************************
 #define NVIC_SYS_HND_CTRL_USAGE 0x00040000  // Usage fault enable
@@ -775,7 +779,8 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_FAULT_STAT register.
+// The following are defines for the bit fields in the NVIC_FAULT_STAT
+// register.
 //
 //*****************************************************************************
 #define NVIC_FAULT_STAT_DIV0    0x02000000  // Divide by zero fault
@@ -798,7 +803,8 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_HFAULT_STAT register.
+// The following are defines for the bit fields in the NVIC_HFAULT_STAT
+// register.
 //
 //*****************************************************************************
 #define NVIC_HFAULT_STAT_DBG    0x80000000  // Debug event
@@ -807,7 +813,8 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DEBUG_STAT register.
+// The following are defines for the bit fields in the NVIC_DEBUG_STAT
+// register.
 //
 //*****************************************************************************
 #define NVIC_DEBUG_STAT_EXTRNL  0x00000010  // EDBGRQ asserted
@@ -818,7 +825,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_MM_ADDR register.
+// The following are defines for the bit fields in the NVIC_MM_ADDR register.
 //
 //*****************************************************************************
 #define NVIC_MM_ADDR_M          0xFFFFFFFF  // Data fault address
@@ -826,7 +833,8 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_FAULT_ADDR register.
+// The following are defines for the bit fields in the NVIC_FAULT_ADDR
+// register.
 //
 //*****************************************************************************
 #define NVIC_FAULT_ADDR_M       0xFFFFFFFF  // Data bus fault address
@@ -834,92 +842,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_EXC_STACK register.
-//
-//*****************************************************************************
-#define NVIC_EXC_STACK_DEEP     0x00000001  // Exception stack
-
-//*****************************************************************************
-//
-// The following define the bit fields in the NVIC_EXC_NUM register.
-//
-//*****************************************************************************
-#define NVIC_EXC_NUM_M          0x000003FF  // Exception number
-#define NVIC_EXC_NUM_S          0
-
-//*****************************************************************************
-//
-// The following define the bit fields in the NVIC_COPRO register.
-//
-//*****************************************************************************
-#define NVIC_COPRO_15_M         0xC0000000  // Coprocessor 15 access mask
-#define NVIC_COPRO_15_DENIED    0x00000000  // Coprocessor 15 access denied
-#define NVIC_COPRO_15_PRIV      0x40000000  // Coprocessor 15 privileged addess
-#define NVIC_COPRO_15_FULL      0xC0000000  // Coprocessor 15 full access
-#define NVIC_COPRO_14_M         0x30000000  // Coprocessor 14 access mask
-#define NVIC_COPRO_14_DENIED    0x00000000  // Coprocessor 14 access denied
-#define NVIC_COPRO_14_PRIV      0x10000000  // Coprocessor 14 privileged addess
-#define NVIC_COPRO_14_FULL      0x30000000  // Coprocessor 14 full access
-#define NVIC_COPRO_13_M         0x0C000000  // Coprocessor 13 access mask
-#define NVIC_COPRO_13_DENIED    0x00000000  // Coprocessor 13 access denied
-#define NVIC_COPRO_13_PRIV      0x04000000  // Coprocessor 13 privileged addess
-#define NVIC_COPRO_13_FULL      0x0C000000  // Coprocessor 13 full access
-#define NVIC_COPRO_12_M         0x03000000  // Coprocessor 12 access mask
-#define NVIC_COPRO_12_DENIED    0x00000000  // Coprocessor 12 access denied
-#define NVIC_COPRO_12_PRIV      0x01000000  // Coprocessor 12 privileged addess
-#define NVIC_COPRO_12_FULL      0x03000000  // Coprocessor 12 full access
-#define NVIC_COPRO_11_M         0x00C00000  // Coprocessor 11 access mask
-#define NVIC_COPRO_11_DENIED    0x00000000  // Coprocessor 11 access denied
-#define NVIC_COPRO_11_PRIV      0x00400000  // Coprocessor 11 privileged addess
-#define NVIC_COPRO_11_FULL      0x00C00000  // Coprocessor 11 full access
-#define NVIC_COPRO_10_M         0x00300000  // Coprocessor 10 access mask
-#define NVIC_COPRO_10_DENIED    0x00000000  // Coprocessor 10 access denied
-#define NVIC_COPRO_10_PRIV      0x00100000  // Coprocessor 10 privileged addess
-#define NVIC_COPRO_10_FULL      0x00300000  // Coprocessor 10 full access
-#define NVIC_COPRO_9_M          0x000C0000  // Coprocessor 9 access mask
-#define NVIC_COPRO_9_DENIED     0x00000000  // Coprocessor 9 access denied
-#define NVIC_COPRO_9_PRIV       0x00040000  // Coprocessor 9 privileged addess
-#define NVIC_COPRO_9_FULL       0x000C0000  // Coprocessor 9 full access
-#define NVIC_COPRO_8_M          0x00030000  // Coprocessor 8 access mask
-#define NVIC_COPRO_8_DENIED     0x00000000  // Coprocessor 8 access denied
-#define NVIC_COPRO_8_PRIV       0x00010000  // Coprocessor 8 privileged addess
-#define NVIC_COPRO_8_FULL       0x00030000  // Coprocessor 8 full access
-#define NVIC_COPRO_7_M          0x0000C000  // Coprocessor 7 access mask
-#define NVIC_COPRO_7_DENIED     0x00000000  // Coprocessor 7 access denied
-#define NVIC_COPRO_7_PRIV       0x00004000  // Coprocessor 7 privileged addess
-#define NVIC_COPRO_7_FULL       0x0000C000  // Coprocessor 7 full access
-#define NVIC_COPRO_6_M          0x00003000  // Coprocessor 6 access mask
-#define NVIC_COPRO_6_DENIED     0x00000000  // Coprocessor 6 access denied
-#define NVIC_COPRO_6_PRIV       0x00001000  // Coprocessor 6 privileged addess
-#define NVIC_COPRO_6_FULL       0x00003000  // Coprocessor 6 full access
-#define NVIC_COPRO_5_M          0x00000C00  // Coprocessor 5 access mask
-#define NVIC_COPRO_5_DENIED     0x00000000  // Coprocessor 5 access denied
-#define NVIC_COPRO_5_PRIV       0x00000400  // Coprocessor 5 privileged addess
-#define NVIC_COPRO_5_FULL       0x00000C00  // Coprocessor 5 full access
-#define NVIC_COPRO_4_M          0x00000300  // Coprocessor 4 access mask
-#define NVIC_COPRO_4_DENIED     0x00000000  // Coprocessor 4 access denied
-#define NVIC_COPRO_4_PRIV       0x00000100  // Coprocessor 4 privileged addess
-#define NVIC_COPRO_4_FULL       0x00000300  // Coprocessor 4 full access
-#define NVIC_COPRO_3_M          0x000000C0  // Coprocessor 3 access mask
-#define NVIC_COPRO_3_DENIED     0x00000000  // Coprocessor 3 access denied
-#define NVIC_COPRO_3_PRIV       0x00000040  // Coprocessor 3 privileged addess
-#define NVIC_COPRO_3_FULL       0x000000C0  // Coprocessor 3 full access
-#define NVIC_COPRO_2_M          0x00000030  // Coprocessor 2 access mask
-#define NVIC_COPRO_2_DENIED     0x00000000  // Coprocessor 2 access denied
-#define NVIC_COPRO_2_PRIV       0x00000010  // Coprocessor 2 privileged addess
-#define NVIC_COPRO_2_FULL       0x00000030  // Coprocessor 2 full access
-#define NVIC_COPRO_1_M          0x0000000C  // Coprocessor 1 access mask
-#define NVIC_COPRO_1_DENIED     0x00000000  // Coprocessor 1 access denied
-#define NVIC_COPRO_1_PRIV       0x00000004  // Coprocessor 1 privileged addess
-#define NVIC_COPRO_1_FULL       0x0000000C  // Coprocessor 1 full access
-#define NVIC_COPRO_0_M          0x00000003  // Coprocessor 0 access mask
-#define NVIC_COPRO_0_DENIED     0x00000000  // Coprocessor 0 access denied
-#define NVIC_COPRO_0_PRIV       0x00000001  // Coprocessor 0 privileged addess
-#define NVIC_COPRO_0_FULL       0x00000003  // Coprocessor 0 full access
-
-//*****************************************************************************
-//
-// The following define the bit fields in the NVIC_MPU_TYPE register.
+// The following are defines for the bit fields in the NVIC_MPU_TYPE register.
 //
 //*****************************************************************************
 #define NVIC_MPU_TYPE_IREGION_M 0x00FF0000  // Number of I regions
@@ -930,15 +853,17 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_MPU_CTRL register.
+// The following are defines for the bit fields in the NVIC_MPU_CTRL register.
 //
 //*****************************************************************************
+#define NVIC_MPU_CTRL_PRIVDEFEN 0x00000004  // MPU default region in priv mode
 #define NVIC_MPU_CTRL_HFNMIENA  0x00000002  // MPU enabled during faults
 #define NVIC_MPU_CTRL_ENABLE    0x00000001  // MPU enable
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_MPU_NUMBER register.
+// The following are defines for the bit fields in the NVIC_MPU_NUMBER
+// register.
 //
 //*****************************************************************************
 #define NVIC_MPU_NUMBER_M       0x000000FF  // MPU region to access
@@ -946,10 +871,10 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_MPU_BASE register.
+// The following are defines for the bit fields in the NVIC_MPU_BASE register.
 //
 //*****************************************************************************
-#define NVIC_MPU_BASE_ADDR_M    0xFFFFFF00  // Base address
+#define NVIC_MPU_BASE_ADDR_M    0xFFFFFFE0  // Base address mask
 #define NVIC_MPU_BASE_VALID     0x00000010  // Region number valid
 #define NVIC_MPU_BASE_REGION_M  0x0000000F  // Region number
 #define NVIC_MPU_BASE_ADDR_S    8
@@ -957,16 +882,65 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_MPU_ATTR register.
+// The following are defines for the bit fields in the NVIC_MPU_ATTR register.
 //
 //*****************************************************************************
-#define NVIC_MPU_ATTR_ATTRS     0xFFFF0000  // Attributes
-#define NVIC_MPU_ATTR_SRD       0x0000FF00  // Sub-region disable
-#define NVIC_MPU_ATTR_SZENABLE  0x000000FF  // Region size
+#define NVIC_MPU_ATTR_M         0xFFFF0000  // Attributes
+#define NVIC_MPU_ATTR_AP_NO_NO  0x00000000  // prv: no access, usr: no access
+#define NVIC_MPU_ATTR_BUFFRABLE 0x00010000  // Bufferable
+#define NVIC_MPU_ATTR_CACHEABLE 0x00020000  // Cacheable
+#define NVIC_MPU_ATTR_SHAREABLE 0x00040000  // Shareable
+#define NVIC_MPU_ATTR_TEX_M     0x00380000  // Type extension mask
+#define NVIC_MPU_ATTR_AP_RW_NO  0x01000000  // prv: rw, usr: none
+#define NVIC_MPU_ATTR_AP_RW_RO  0x02000000  // prv: rw, usr: read-only
+#define NVIC_MPU_ATTR_AP_RW_RW  0x03000000  // prv: rw, usr: rw
+#define NVIC_MPU_ATTR_AP_RO_NO  0x05000000  // prv: ro, usr: none
+#define NVIC_MPU_ATTR_AP_RO_RO  0x06000000  // prv: ro, usr: ro
+#define NVIC_MPU_ATTR_AP_M      0x07000000  // Access permissions mask
+#define NVIC_MPU_ATTR_XN        0x10000000  // Execute disable
+#define NVIC_MPU_ATTR_SRD_M     0x0000FF00  // Sub-region disable mask
+#define NVIC_MPU_ATTR_SRD_0     0x00000100  // Sub-region 0 disable
+#define NVIC_MPU_ATTR_SRD_1     0x00000200  // Sub-region 1 disable
+#define NVIC_MPU_ATTR_SRD_2     0x00000400  // Sub-region 2 disable
+#define NVIC_MPU_ATTR_SRD_3     0x00000800  // Sub-region 3 disable
+#define NVIC_MPU_ATTR_SRD_4     0x00001000  // Sub-region 4 disable
+#define NVIC_MPU_ATTR_SRD_5     0x00002000  // Sub-region 5 disable
+#define NVIC_MPU_ATTR_SRD_6     0x00004000  // Sub-region 6 disable
+#define NVIC_MPU_ATTR_SRD_7     0x00008000  // Sub-region 7 disable
+#define NVIC_MPU_ATTR_SIZE_M    0x0000003E  // Region size mask
+#define NVIC_MPU_ATTR_SIZE_32B  0x00000008  // Region size 32 bytes
+#define NVIC_MPU_ATTR_SIZE_64B  0x0000000A  // Region size 64 bytes
+#define NVIC_MPU_ATTR_SIZE_128B 0x0000000C  // Region size 128 bytes
+#define NVIC_MPU_ATTR_SIZE_256B 0x0000000E  // Region size 256 bytes
+#define NVIC_MPU_ATTR_SIZE_512B 0x00000010  // Region size 512 bytes
+#define NVIC_MPU_ATTR_SIZE_1K   0x00000012  // Region size 1 Kbytes
+#define NVIC_MPU_ATTR_SIZE_2K   0x00000014  // Region size 2 Kbytes
+#define NVIC_MPU_ATTR_SIZE_4K   0x00000016  // Region size 4 Kbytes
+#define NVIC_MPU_ATTR_SIZE_8K   0x00000018  // Region size 8 Kbytes
+#define NVIC_MPU_ATTR_SIZE_16K  0x0000001A  // Region size 16 Kbytes
+#define NVIC_MPU_ATTR_SIZE_32K  0x0000001C  // Region size 32 Kbytes
+#define NVIC_MPU_ATTR_SIZE_64K  0x0000001E  // Region size 64 Kbytes
+#define NVIC_MPU_ATTR_SIZE_128K 0x00000020  // Region size 128 Kbytes
+#define NVIC_MPU_ATTR_SIZE_256K 0x00000022  // Region size 256 Kbytes
+#define NVIC_MPU_ATTR_SIZE_512K 0x00000024  // Region size 512 Kbytes
+#define NVIC_MPU_ATTR_SIZE_1M   0x00000026  // Region size 1 Mbytes
+#define NVIC_MPU_ATTR_SIZE_2M   0x00000028  // Region size 2 Mbytes
+#define NVIC_MPU_ATTR_SIZE_4M   0x0000002A  // Region size 4 Mbytes
+#define NVIC_MPU_ATTR_SIZE_8M   0x0000002C  // Region size 8 Mbytes
+#define NVIC_MPU_ATTR_SIZE_16M  0x0000002E  // Region size 16 Mbytes
+#define NVIC_MPU_ATTR_SIZE_32M  0x00000030  // Region size 32 Mbytes
+#define NVIC_MPU_ATTR_SIZE_64M  0x00000032  // Region size 64 Mbytes
+#define NVIC_MPU_ATTR_SIZE_128M 0x00000034  // Region size 128 Mbytes
+#define NVIC_MPU_ATTR_SIZE_256M 0x00000036  // Region size 256 Mbytes
+#define NVIC_MPU_ATTR_SIZE_512M 0x00000038  // Region size 512 Mbytes
+#define NVIC_MPU_ATTR_SIZE_1G   0x0000003A  // Region size 1 Gbytes
+#define NVIC_MPU_ATTR_SIZE_2G   0x0000003C  // Region size 2 Gbytes
+#define NVIC_MPU_ATTR_SIZE_4G   0x0000003E  // Region size 4 Gbytes
+#define NVIC_MPU_ATTR_ENABLE    0x00000001  // Region enable
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DBG_CTRL register.
+// The following are defines for the bit fields in the NVIC_DBG_CTRL register.
 //
 //*****************************************************************************
 #define NVIC_DBG_CTRL_DBGKEY_M  0xFFFF0000  // Debug key mask
@@ -987,36 +961,36 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DBG_XFER register.
+// The following are defines for the bit fields in the NVIC_DBG_XFER register.
 //
 //*****************************************************************************
 #define NVIC_DBG_XFER_REG_WNR   0x00010000  // Write or not read
 #define NVIC_DBG_XFER_REG_SEL_M 0x0000001F  // Register
-#define NVIC_DBG_XFER_REG_R0    0x00000000  // Register R0
-#define NVIC_DBG_XFER_REG_R1    0x00000001  // Register R1
-#define NVIC_DBG_XFER_REG_R2    0x00000002  // Register R2
-#define NVIC_DBG_XFER_REG_R3    0x00000003  // Register R3
-#define NVIC_DBG_XFER_REG_R4    0x00000004  // Register R4
-#define NVIC_DBG_XFER_REG_R5    0x00000005  // Register R5
-#define NVIC_DBG_XFER_REG_R6    0x00000006  // Register R6
-#define NVIC_DBG_XFER_REG_R7    0x00000007  // Register R7
-#define NVIC_DBG_XFER_REG_R8    0x00000008  // Register R8
-#define NVIC_DBG_XFER_REG_R9    0x00000009  // Register R9
-#define NVIC_DBG_XFER_REG_R10   0x0000000A  // Register R10
-#define NVIC_DBG_XFER_REG_R11   0x0000000B  // Register R11
-#define NVIC_DBG_XFER_REG_R12   0x0000000C  // Register R12
-#define NVIC_DBG_XFER_REG_R13   0x0000000D  // Register R13
-#define NVIC_DBG_XFER_REG_R14   0x0000000E  // Register R14
-#define NVIC_DBG_XFER_REG_R15   0x0000000F  // Register R15
-#define NVIC_DBG_XFER_REG_FLAGS 0x00000010  // xPSR/Flags register
-#define NVIC_DBG_XFER_REG_MSP   0x00000011  // Main SP
-#define NVIC_DBG_XFER_REG_PSP   0x00000012  // Process SP
-#define NVIC_DBG_XFER_REG_DSP   0x00000013  // Deep SP
 #define NVIC_DBG_XFER_REG_CFBP  0x00000014  // Control/Fault/BasePri/PriMask
+#define NVIC_DBG_XFER_REG_DSP   0x00000013  // Deep SP
+#define NVIC_DBG_XFER_REG_PSP   0x00000012  // Process SP
+#define NVIC_DBG_XFER_REG_MSP   0x00000011  // Main SP
+#define NVIC_DBG_XFER_REG_FLAGS 0x00000010  // xPSR/Flags register
+#define NVIC_DBG_XFER_REG_R15   0x0000000F  // Register R15
+#define NVIC_DBG_XFER_REG_R14   0x0000000E  // Register R14
+#define NVIC_DBG_XFER_REG_R13   0x0000000D  // Register R13
+#define NVIC_DBG_XFER_REG_R12   0x0000000C  // Register R12
+#define NVIC_DBG_XFER_REG_R11   0x0000000B  // Register R11
+#define NVIC_DBG_XFER_REG_R10   0x0000000A  // Register R10
+#define NVIC_DBG_XFER_REG_R9    0x00000009  // Register R9
+#define NVIC_DBG_XFER_REG_R8    0x00000008  // Register R8
+#define NVIC_DBG_XFER_REG_R7    0x00000007  // Register R7
+#define NVIC_DBG_XFER_REG_R6    0x00000006  // Register R6
+#define NVIC_DBG_XFER_REG_R5    0x00000005  // Register R5
+#define NVIC_DBG_XFER_REG_R4    0x00000004  // Register R4
+#define NVIC_DBG_XFER_REG_R3    0x00000003  // Register R3
+#define NVIC_DBG_XFER_REG_R2    0x00000002  // Register R2
+#define NVIC_DBG_XFER_REG_R1    0x00000001  // Register R1
+#define NVIC_DBG_XFER_REG_R0    0x00000000  // Register R0
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DBG_DATA register.
+// The following are defines for the bit fields in the NVIC_DBG_DATA register.
 //
 //*****************************************************************************
 #define NVIC_DBG_DATA_M         0xFFFFFFFF  // Data temporary cache
@@ -1024,7 +998,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_DBG_INT register.
+// The following are defines for the bit fields in the NVIC_DBG_INT register.
 //
 //*****************************************************************************
 #define NVIC_DBG_INT_HARDERR    0x00000400  // Debug trap on hard fault
@@ -1041,7 +1015,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the NVIC_SW_TRIG register.
+// The following are defines for the bit fields in the NVIC_SW_TRIG register.
 //
 //*****************************************************************************
 #define NVIC_SW_TRIG_INTID_M    0x000003FF  // Interrupt to trigger

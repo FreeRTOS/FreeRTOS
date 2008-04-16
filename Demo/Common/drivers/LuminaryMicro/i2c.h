@@ -2,7 +2,7 @@
 //
 // i2c.h - Prototypes for the I2C Driver.
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,13 +22,19 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
 #ifndef __I2C_H__
 #define __I2C_H__
 
+//*****************************************************************************
+//
+// If building with a C++ compiler, make all of the definitions in this header
+// have a C binding.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 extern "C"
 {
@@ -81,6 +88,7 @@ extern "C"
 #define I2C_SLAVE_ACT_NONE      0
 #define I2C_SLAVE_ACT_RREQ      0x00000001  // Master has sent data
 #define I2C_SLAVE_ACT_TREQ      0x00000002  // Master has requested data
+#define I2C_SLAVE_ACT_RREQ_FBR  0x00000005  // Master has sent first byte
 
 //*****************************************************************************
 //
@@ -136,6 +144,11 @@ extern unsigned long I2CSlaveStatus(unsigned long ulBase);
         I2CMasterInitExpClk(a, SysCtlClockGet(), b)
 #endif
 
+//*****************************************************************************
+//
+// Mark the end of the C bindings section for C++ compilers.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 }
 #endif

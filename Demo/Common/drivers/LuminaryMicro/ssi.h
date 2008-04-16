@@ -2,7 +2,7 @@
 //
 // ssi.h - Prototypes for the Synchronous Serial Interface Driver.
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,13 +22,19 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
 #ifndef __SSI_H__
 #define __SSI_H__
 
+//*****************************************************************************
+//
+// If building with a C++ compiler, make all of the definitions in this header
+// have a C binding.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 extern "C"
 {
@@ -62,6 +69,14 @@ extern "C"
 
 //*****************************************************************************
 //
+// Values that can be passed to SSIDMAEnable() and SSIDMADisable().
+//
+//*****************************************************************************
+#define SSI_DMA_TX              0x00000002  // Enable DMA for transmit
+#define SSI_DMA_RX              0x00000001  // Enable DMA for receive
+
+//*****************************************************************************
+//
 // Prototypes for the APIs.
 //
 //*****************************************************************************
@@ -82,6 +97,8 @@ extern void SSIIntEnable(unsigned long ulBase, unsigned long ulIntFlags);
 extern void SSIIntRegister(unsigned long ulBase, void(*pfnHandler)(void));
 extern unsigned long SSIIntStatus(unsigned long ulBase, tBoolean bMasked);
 extern void SSIIntUnregister(unsigned long ulBase);
+extern void SSIDMAEnable(unsigned long ulBase, unsigned long ulDMAFlags);
+extern void SSIDMADisable(unsigned long ulBase, unsigned long ulDMAFlags);
 
 //*****************************************************************************
 //
@@ -99,6 +116,11 @@ extern void SSIIntUnregister(unsigned long ulBase);
         SSIDataPutNonBlocking(a, b)
 #endif
 
+//*****************************************************************************
+//
+// Mark the end of the C bindings section for C++ compilers.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 }
 #endif

@@ -2,7 +2,7 @@
 //
 // pwm.h - API function protoypes for Pulse Width Modulation (PWM) ports
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,13 +22,19 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
 #ifndef __PWM_H__
 #define __PWM_H__
 
+//*****************************************************************************
+//
+// If building with a C++ compiler, make all of the definitions in this header
+// have a C binding.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 extern "C"
 {
@@ -45,6 +52,34 @@ extern "C"
 #define PWM_GEN_MODE_NO_SYNC    0x00000000  // Immediate updates
 #define PWM_GEN_MODE_DBG_RUN    0x00000004  // Continue running in debug mode
 #define PWM_GEN_MODE_DBG_STOP   0x00000000  // Stop running in debug mode
+#define PWM_GEN_MODE_FAULT_LATCHED \
+                                0x00040000  // Fault is latched
+#define PWM_GEN_MODE_FAULT_UNLATCHED \
+                                0x00000000  // Fault is not latched
+#define PWM_GEN_MODE_FAULT_MINPER \
+                                0x00020000  // Enable min fault period
+#define PWM_GEN_MODE_FAULT_NO_MINPER \
+                                0x00000000  // Disable min fault period
+#define PWM_GEN_MODE_FAULT_EXT  0x00010000  // Enable extended fault support
+#define PWM_GEN_MODE_FAULT_LEGACY \
+                                0x00000000  // Disable extended fault support
+#define PWM_GEN_MODE_DB_NO_SYNC 0x00000000  // Deadband updates occur
+                                            // immediately
+#define PWM_GEN_MODE_DB_SYNC_LOCAL \
+                                0x0000A800  // Deadband updates locally
+                                            // synchronized
+#define PWM_GEN_MODE_DB_SYNC_GLOBAL \
+                                0x0000FC00  // Deadband updates globally
+                                            // synchronized
+#define PWM_GEN_MODE_GEN_NO_SYNC \
+                                0x00000000  // Generator mode updates occur
+                                            // immediately
+#define PWM_GEN_MODE_GEN_SYNC_LOCAL \
+                                0x00000280  // Generator mode updates locally
+                                            // synchronized
+#define PWM_GEN_MODE_GEN_SYNC_GLOBAL \
+                                0x000003C0  // Generator mode updates globally
+                                            // synchronized
 
 //*****************************************************************************
 //
@@ -73,7 +108,15 @@ extern "C"
 #define PWM_INT_GEN_0           0x00000001  // Generator 0 interrupt
 #define PWM_INT_GEN_1           0x00000002  // Generator 1 interrupt
 #define PWM_INT_GEN_2           0x00000004  // Generator 2 interrupt
+#define PWM_INT_GEN_3           0x00000008  // Generator 3 interrupt
+#ifndef DEPRECATED
 #define PWM_INT_FAULT           0x00010000  // Fault interrupt
+#endif
+#define PWM_INT_FAULT0          0x00010000  // Fault0 interrupt
+#define PWM_INT_FAULT1          0x00020000  // Fault1 interrupt
+#define PWM_INT_FAULT2          0x00040000  // Fault2 interrupt
+#define PWM_INT_FAULT3          0x00080000  // Fault3 interrupt
+#define PWM_INT_FAULT_M         0x000F0000  // Fault interrupt source mask
 
 //*****************************************************************************
 //
@@ -83,10 +126,17 @@ extern "C"
 #define PWM_GEN_0               0x00000040  // Offset address of Gen0
 #define PWM_GEN_1               0x00000080  // Offset address of Gen1
 #define PWM_GEN_2               0x000000C0  // Offset address of Gen2
+#define PWM_GEN_3               0x00000100  // Offset address of Gen3
 
 #define PWM_GEN_0_BIT           0x00000001  // Bit-wise ID for Gen0
 #define PWM_GEN_1_BIT           0x00000002  // Bit-wise ID for Gen1
 #define PWM_GEN_2_BIT           0x00000004  // Bit-wise ID for Gen2
+#define PWM_GEN_3_BIT           0x00000008  // Bit-wise ID for Gen3
+
+#define PWM_GEN_EXT_0           0x00000800  // Offset of Gen0 ext address range
+#define PWM_GEN_EXT_1           0x00000880  // Offset of Gen1 ext address range
+#define PWM_GEN_EXT_2           0x00000900  // Offset of Gen2 ext address range
+#define PWM_GEN_EXT_3           0x00000980  // Offset of Gen3 ext address range
 
 //*****************************************************************************
 //
@@ -99,6 +149,8 @@ extern "C"
 #define PWM_OUT_3               0x00000083  // Encoded offset address of PWM3
 #define PWM_OUT_4               0x000000C4  // Encoded offset address of PWM4
 #define PWM_OUT_5               0x000000C5  // Encoded offset address of PWM5
+#define PWM_OUT_6               0x00000106  // Encoded offset address of PWM6
+#define PWM_OUT_7               0x00000107  // Encoded offset address of PWM7
 
 #define PWM_OUT_0_BIT           0x00000001  // Bit-wise ID for PWM0
 #define PWM_OUT_1_BIT           0x00000002  // Bit-wise ID for PWM1
@@ -106,6 +158,38 @@ extern "C"
 #define PWM_OUT_3_BIT           0x00000008  // Bit-wise ID for PWM3
 #define PWM_OUT_4_BIT           0x00000010  // Bit-wise ID for PWM4
 #define PWM_OUT_5_BIT           0x00000020  // Bit-wise ID for PWM5
+#define PWM_OUT_6_BIT           0x00000040  // Bit-wise ID for PWM6
+#define PWM_OUT_7_BIT           0x00000080  // Bit-wise ID for PWM7
+
+//*****************************************************************************
+//
+// Defines to identify each of the possible fault trigger conditions in
+// PWM_FAULT_GROUP_0
+//
+//*****************************************************************************
+#define PWM_FAULT_GROUP_0     0
+
+#define PWM_FAULT_FAULT0      0x00000001
+#define PWM_FAULT_FAULT1      0x00000002
+#define PWM_FAULT_FAULT2      0x00000004
+#define PWM_FAULT_FAULT3      0x00000008
+#define PWM_FAULT_ACMP0       0x00010000
+#define PWM_FAULT_ACMP1       0x00020000
+#define PWM_FAULT_ACMP2       0x00040000
+
+//*****************************************************************************
+//
+// Defines to identify the sense of each of the external FAULTn signals
+//
+//*****************************************************************************
+#define PWM_FAULT0_SENSE_HIGH   0x00000000
+#define PWM_FAULT0_SENSE_LOW    0x00000001
+#define PWM_FAULT1_SENSE_HIGH   0x00000000
+#define PWM_FAULT1_SENSE_LOW    0x00000002
+#define PWM_FAULT2_SENSE_HIGH   0x00000000
+#define PWM_FAULT2_SENSE_LOW    0x00000004
+#define PWM_FAULT3_SENSE_HIGH   0x00000000
+#define PWM_FAULT3_SENSE_LOW    0x00000008
 
 //*****************************************************************************
 //
@@ -133,8 +217,11 @@ extern void PWMOutputState(unsigned long ulBase, unsigned long ulPWMOutBits,
                            tBoolean bEnable);
 extern void PWMOutputInvert(unsigned long ulBase, unsigned long ulPWMOutBits,
                             tBoolean bInvert);
+extern void PWMOutputFaultLevel(unsigned long ulBase,
+                                unsigned long ulPWMOutBits,
+                                tBoolean bDriveHigh);
 extern void PWMOutputFault(unsigned long ulBase, unsigned long ulPWMOutBits,
-                           tBoolean bFaultKill);
+                           tBoolean bFaultSuppress);
 extern void PWMGenIntRegister(unsigned long ulBase, unsigned long ulGen,
                               void (*pfnIntHandler)(void));
 extern void PWMGenIntUnregister(unsigned long ulBase, unsigned long ulGen);
@@ -153,7 +240,29 @@ extern void PWMIntEnable(unsigned long ulBase, unsigned long ulGenFault);
 extern void PWMIntDisable(unsigned long ulBase, unsigned long ulGenFault);
 extern void PWMFaultIntClear(unsigned long ulBase);
 extern unsigned long PWMIntStatus(unsigned long ulBase, tBoolean bMasked);
+extern void PWMFaultIntClearExt(unsigned long ulBase,
+                                unsigned long ulFaultInts);
+extern void PWMGenFaultConfigure(unsigned long ulBase, unsigned long ulGen,
+                                 unsigned long ulMinFaultPeriod,
+                                 unsigned long ulFaultSenses);
+extern void PWMGenFaultTriggerSet(unsigned long ulBase, unsigned long ulGen,
+                                  unsigned long ulGroup,
+                                  unsigned long ulFaultTriggers);
+extern unsigned long PWMGenFaultTriggerGet(unsigned long ulBase,
+                                           unsigned long ulGen,
+                                           unsigned long ulGroup);
+extern unsigned long PWMGenFaultStatus(unsigned long ulBase,
+                                       unsigned long ulGen,
+                                       unsigned long ulGroup);
+extern void PWMGenFaultClear(unsigned long ulBase, unsigned long ulGen,
+                             unsigned long ulGroup,
+                             unsigned long ulFaultTriggers);
 
+//*****************************************************************************
+//
+// Mark the end of the C bindings section for C++ compilers.
+//
+//*****************************************************************************
 #ifdef __cplusplus
 }
 #endif

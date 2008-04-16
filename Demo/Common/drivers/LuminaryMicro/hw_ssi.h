@@ -2,7 +2,7 @@
 //
 // hw_ssi.h - Macros used when accessing the SSI hardware.
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,7 +22,7 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -30,7 +31,7 @@
 
 //*****************************************************************************
 //
-// The following define the offsets of the SSI registers.
+// The following are defines for the SSI register offsets.
 //
 //*****************************************************************************
 #define SSI_O_CR0               0x00000000  // Control register 0
@@ -42,20 +43,21 @@
 #define SSI_O_RIS               0x00000018  // Raw interrupt register
 #define SSI_O_MIS               0x0000001C  // Masked interrupt register
 #define SSI_O_ICR               0x00000020  // Interrupt clear register
+#define SSI_O_DMACTL            0x00000024  // SSI DMA Control
 
 //*****************************************************************************
 //
-// The following define the bit fields in the SSI Control register 0.
+// The following are defines for the bit fields in the SSI Control register 0.
 //
 //*****************************************************************************
-#define SSI_CR0_SCR             0x0000FF00  // Serial clock rate
+#define SSI_CR0_SCR_M           0x0000FF00  // SSI Serial Clock Rate.
 #define SSI_CR0_SPH             0x00000080  // SSPCLKOUT phase
 #define SSI_CR0_SPO             0x00000040  // SSPCLKOUT polarity
-#define SSI_CR0_FRF_MASK        0x00000030  // Frame format mask
+#define SSI_CR0_FRF_M           0x00000030  // Frame format mask
 #define SSI_CR0_FRF_MOTO        0x00000000  // Motorola SPI frame format
 #define SSI_CR0_FRF_TI          0x00000010  // TI sync serial frame format
 #define SSI_CR0_FRF_NMW         0x00000020  // National Microwire frame format
-#define SSI_CR0_DSS             0x0000000F  // Data size select
+#define SSI_CR0_DSS_M           0x0000000F  // SSI Data Size Select.
 #define SSI_CR0_DSS_4           0x00000003  // 4 bit data
 #define SSI_CR0_DSS_5           0x00000004  // 5 bit data
 #define SSI_CR0_DSS_6           0x00000005  // 6 bit data
@@ -69,10 +71,11 @@
 #define SSI_CR0_DSS_14          0x0000000D  // 14 bit data
 #define SSI_CR0_DSS_15          0x0000000E  // 15 bit data
 #define SSI_CR0_DSS_16          0x0000000F  // 16 bit data
+#define SSI_CR0_SCR_S           8
 
 //*****************************************************************************
 //
-// The following define the bit fields in the SSI Control register 1.
+// The following are defines for the bit fields in the SSI Control register 1.
 //
 //*****************************************************************************
 #define SSI_CR1_SOD             0x00000008  // Slave mode output disable
@@ -82,7 +85,7 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the SSI Status register.
+// The following are defines for the bit fields in the SSI Status register.
 //
 //*****************************************************************************
 #define SSI_SR_BSY              0x00000010  // SSI busy
@@ -93,14 +96,108 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the SSI clock prescale register.
+// The following are defines for the bit fields in the SSI clock prescale
+// register.
+//
+//*****************************************************************************
+#define SSI_CPSR_CPSDVSR_M      0x000000FF  // SSI Clock Prescale Divisor.
+#define SSI_CPSR_CPSDVSR_S      0
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SSI_O_DR register.
+//
+//*****************************************************************************
+#define SSI_DR_DATA_M           0x0000FFFF  // SSI Receive/Transmit Data.
+#define SSI_DR_DATA_S           0
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SSI_O_IM register.
+//
+//*****************************************************************************
+#define SSI_IM_TXIM             0x00000008  // SSI Transmit FIFO Interrupt
+                                            // Mask.
+#define SSI_IM_RXIM             0x00000004  // SSI Receive FIFO Interrupt Mask.
+#define SSI_IM_RTIM             0x00000002  // SSI Receive Time-Out Interrupt
+                                            // Mask.
+#define SSI_IM_RORIM            0x00000001  // SSI Receive Overrun Interrupt
+                                            // Mask.
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SSI_O_RIS register.
+//
+//*****************************************************************************
+#define SSI_RIS_TXRIS           0x00000008  // SSI Transmit FIFO Raw Interrupt
+                                            // Status.
+#define SSI_RIS_RXRIS           0x00000004  // SSI Receive FIFO Raw Interrupt
+                                            // Status.
+#define SSI_RIS_RTRIS           0x00000002  // SSI Receive Time-Out Raw
+                                            // Interrupt Status.
+#define SSI_RIS_RORRIS          0x00000001  // SSI Receive Overrun Raw
+                                            // Interrupt Status.
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SSI_O_MIS register.
+//
+//*****************************************************************************
+#define SSI_MIS_TXMIS           0x00000008  // SSI Transmit FIFO Masked
+                                            // Interrupt Status.
+#define SSI_MIS_RXMIS           0x00000004  // SSI Receive FIFO Masked
+                                            // Interrupt Status.
+#define SSI_MIS_RTMIS           0x00000002  // SSI Receive Time-Out Masked
+                                            // Interrupt Status.
+#define SSI_MIS_RORMIS          0x00000001  // SSI Receive Overrun Masked
+                                            // Interrupt Status.
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SSI_O_ICR register.
+//
+//*****************************************************************************
+#define SSI_ICR_RTIC            0x00000002  // SSI Receive Time-Out Interrupt
+                                            // Clear.
+#define SSI_ICR_RORIC           0x00000001  // SSI Receive Overrun Interrupt
+                                            // Clear.
+
+//*****************************************************************************
+//
+// The following are defines for the bit fields in the SSI_O_DMACTL register.
+//
+//*****************************************************************************
+#define SSI_DMACTL_TXDMAE       0x00000002  // Transmit DMA Enable.
+#define SSI_DMACTL_RXDMAE       0x00000001  // Receive DMA Enable.
+
+//*****************************************************************************
+//
+// The following definitions are deprecated.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+
+//*****************************************************************************
+//
+// The following are deprecated defines for the bit fields in the SSI Control
+// register 0.
+//
+//*****************************************************************************
+#define SSI_CR0_SCR             0x0000FF00  // Serial clock rate
+#define SSI_CR0_FRF_MASK        0x00000030  // Frame format mask
+#define SSI_CR0_DSS             0x0000000F  // Data size select
+
+//*****************************************************************************
+//
+// The following are deprecated defines for the bit fields in the SSI clock
+// prescale register.
 //
 //*****************************************************************************
 #define SSI_CPSR_CPSDVSR_MASK   0x000000FF  // Clock prescale
 
 //*****************************************************************************
 //
-// The following define information concerning the SSI Data register.
+// The following are deprecated defines for the SSI controller's FIFO size.
 //
 //*****************************************************************************
 #define TX_FIFO_SIZE            (8)         // Number of entries in the TX FIFO
@@ -108,13 +205,16 @@
 
 //*****************************************************************************
 //
-// The following define the bit fields in the interrupt mask set and clear,
-// raw interrupt, masked interrupt, and interrupt clear registers.
+// The following are deprecated defines for the bit fields in the interrupt
+// mask set and clear, raw interrupt, masked interrupt, and interrupt clear
+// registers.
 //
 //*****************************************************************************
 #define SSI_INT_TXFF            0x00000008  // TX FIFO interrupt
 #define SSI_INT_RXFF            0x00000004  // RX FIFO interrupt
 #define SSI_INT_RXTO            0x00000002  // RX timeout interrupt
 #define SSI_INT_RXOR            0x00000001  // RX overrun interrupt
+
+#endif
 
 #endif // __HW_SSI_H__

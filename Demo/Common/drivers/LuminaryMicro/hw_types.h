@@ -2,7 +2,7 @@
 //
 // hw_types.h - Common types and macros.
 //
-// Copyright (c) 2005-2007 Luminary Micro, Inc.  All rights reserved.
+// Copyright (c) 2005-2008 Luminary Micro, Inc.  All rights reserved.
 // 
 // Software License Agreement
 // 
@@ -10,10 +10,11 @@
 // exclusively on LMI's microcontroller products.
 // 
 // The software is owned by LMI and/or its suppliers, and is protected under
-// applicable copyright laws.  All rights are reserved.  Any use in violation
-// of the foregoing restrictions may subject the user to criminal sanctions
-// under applicable laws, as well as to civil liability for the breach of the
-// terms and conditions of this license.
+// applicable copyright laws.  All rights are reserved.  You may not combine
+// this software with "viral" open-source software in order to form a larger
+// program.  Any use in violation of the foregoing restrictions may subject
+// the user to criminal sanctions under applicable laws, as well as to civil
+// liability for the breach of the terms and conditions of this license.
 // 
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
@@ -21,7 +22,7 @@
 // LMI SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
 // CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 // 
-// This is part of revision 1582 of the Stellaris Peripheral Driver Library.
+// This is part of revision 2523 of the Stellaris Peripheral Driver Library.
 //
 //*****************************************************************************
 
@@ -72,12 +73,12 @@ typedef unsigned char tBoolean;
 // conditional code blocks that will allow a single version of the Driverlib
 // "binary" code to support multiple(all) Stellaris silicon revisions.
 //
-// It is expected that these macros will be used inside of a standard 'C' 
+// It is expected that these macros will be used inside of a standard 'C'
 // conditional block of code, e.g.
 //
-//     if(DEVICE_IS_SANDSTORM())
+//     if(CLASS_IS_SANDSTORM)
 //     {
-//         do some Sandstorm specific code here.
+//         do some Sandstorm-class specific code here.
 //     }
 //
 // By default, these macros will be defined as run-time checks of the
@@ -87,43 +88,66 @@ typedef unsigned char tBoolean;
 // However, if code-space optimization is required, these macros can be "hard-
 // coded" for a specific version of Stellaris silicon.  Many compilers will
 // then detect the "hard-coded" conditionals, and appropriately optimize the
-// code blocks, eliminating any "unreachable" code.  This would result in 
+// code blocks, eliminating any "unreachable" code.  This would result in
 // a smaller Driverlib, thus producing a smaller final application size, but
 // at the cost of limiting the Driverlib binary to a specific Stellaris
 // silicon revision.
 //
 //*****************************************************************************
-#ifndef DEVICE_IS_SANDSTORM
-#define DEVICE_IS_SANDSTORM                                                \
-    (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_MASK) == SYSCTL_DID0_VER_0) || \
-    (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_MASK) == SYSCTL_DID0_VER_1) && \
-     ((HWREG(SYSCTL_DID0) & SYSCTL_DID0_CLASS_MASK) ==                     \
-        SYSCTL_DID0_CLASS_SANDSTORM)))
+#ifndef CLASS_IS_SANDSTORM
+#define CLASS_IS_SANDSTORM                                                    \
+        (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_M) == SYSCTL_DID0_VER_0) ||   \
+         ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+          (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_SANDSTORM)))
 #endif
 
-#ifndef DEVICE_IS_FURY
-#define DEVICE_IS_FURY                                                     \
-    (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_VER_MASK) == SYSCTL_DID0_VER_1) && \
-     ((HWREG(SYSCTL_DID0) & SYSCTL_DID0_CLASS_MASK) ==                     \
-        SYSCTL_DID0_CLASS_FURY))
+#ifndef CLASS_IS_FURY
+#define CLASS_IS_FURY                                                        \
+        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_FURY))
 #endif
 
-#ifndef DEVICE_IS_REVA2
-#define DEVICE_IS_REVA2                                                    \
-    (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_MAJ_MASK) == SYSCTL_DID0_MAJ_A) && \
-     ((HWREG(SYSCTL_DID0) & SYSCTL_DID0_MIN_MASK) == SYSCTL_DID0_MIN_2))
+#ifndef CLASS_IS_DUSTDEVIL
+#define CLASS_IS_DUSTDEVIL                                                   \
+        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_VER_M | SYSCTL_DID0_CLASS_M)) == \
+         (SYSCTL_DID0_VER_1 | SYSCTL_DID0_CLASS_DUSTDEVIL))
 #endif
 
-#ifndef DEVICE_IS_REVC1
-#define DEVICE_IS_REVC1                                                    \
-    (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_MAJ_MASK) == SYSCTL_DID0_MAJ_C) && \
-     ((HWREG(SYSCTL_DID0) & SYSCTL_DID0_MIN_MASK) == SYSCTL_DID0_MIN_1))
+#ifndef REVISION_IS_A0
+#define REVISION_IS_A0                                                     \
+        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_0))
 #endif
 
-#ifndef DEVICE_IS_REVC2
-#define DEVICE_IS_REVC2                                                    \
-    (((HWREG(SYSCTL_DID0) & SYSCTL_DID0_MAJ_MASK) == SYSCTL_DID0_MAJ_C) && \
-     ((HWREG(SYSCTL_DID0) & SYSCTL_DID0_MIN_MASK) == SYSCTL_DID0_MIN_2))
+#ifndef REVISION_IS_A2
+#define REVISION_IS_A2                                                     \
+        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+         (SYSCTL_DID0_MAJ_REVA | SYSCTL_DID0_MIN_2))
+#endif
+
+#ifndef REVISION_IS_C1
+#define REVISION_IS_C1                                                     \
+        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_1))
+#endif
+
+#ifndef REVISION_IS_C2
+#define REVISION_IS_C2                                                     \
+        ((HWREG(SYSCTL_DID0) & (SYSCTL_DID0_MAJ_M | SYSCTL_DID0_MIN_M)) == \
+         (SYSCTL_DID0_MAJ_REVC | SYSCTL_DID0_MIN_2))
+#endif
+
+//*****************************************************************************
+//
+// Deprecated silicon class and revision detection macros.
+//
+//*****************************************************************************
+#ifndef DEPRECATED
+#define DEVICE_IS_SANDSTORM     CLASS_IS_SANDSTORM
+#define DEVICE_IS_FURY          CLASS_IS_FURY
+#define DEVICE_IS_REVA2         REVISION_IS_A2
+#define DEVICE_IS_REVC1         REVISION_IS_C1
+#define DEVICE_IS_REVC2         REVISION_IS_C2
 #endif
 
 #endif // __HW_TYPES_H__

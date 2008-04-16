@@ -769,7 +769,7 @@ void vQueueDelete( xQueueHandle xQueue );
  portBASE_TYPE xQueueSendToFrontFromISR(
                                          xQueueHandle pxQueue,
                                          const void *pvItemToQueue,
-                                         portBASE_TYPE xTaskPreviouslyWoken
+                                         portBASE_TYPE *pxHigherPriorityTaskWoken
                                       );
  </pre>
  *
@@ -840,7 +840,7 @@ void vQueueDelete( xQueueHandle xQueue );
  portBASE_TYPE xQueueSendToBackFromISR(
                                          xQueueHandle pxQueue,
                                          const void *pvItemToQueue,
-                                         portBASE_TYPE xTaskPreviouslyWoken
+                                         portBASE_TYPE *pxHigherPriorityTaskWoken
                                       );
  </pre>
  *
@@ -910,7 +910,7 @@ void vQueueDelete( xQueueHandle xQueue );
  portBASE_TYPE xQueueSendFromISR(
                                      xQueueHandle pxQueue,
                                      const void *pvItemToQueue,
-                                     portBASE_TYPE xTaskPreviouslyWoken
+                                     portBASE_TYPE *pxHigherPriorityTaskWoken
                                 );
  </pre>
  *

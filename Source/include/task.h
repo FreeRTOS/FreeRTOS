@@ -694,6 +694,10 @@ void vTaskEndScheduler( void );
  * without risk of being swapped out until a call to xTaskResumeAll () has been
  * made.
  *
+ * API functions that have the potential to cause a context switch (for example, 
+ * vTaskDelayUntil(), xQueueSend(), etc.) must not be called while the scheduler 
+ * is suspended.
+ *
  * Example usage:
    <pre>
  void vTask1( void * pvParameters )

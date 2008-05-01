@@ -930,7 +930,7 @@ portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter
  * for a finite period required removing from a blocked list and placing on
  * a ready list.
  */
-inline void vTaskIncrementTick( void );
+void vTaskIncrementTick( void );
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -993,7 +993,7 @@ void vTaskCleanUpResources( void );
  * Sets the pointer to the current TCB to the TCB of the highest priority task
  * that is ready to run.
  */
-inline void vTaskSwitchContext( void );
+void vTaskSwitchContext( void );
 
 /*
  * Return the handle of the calling task.

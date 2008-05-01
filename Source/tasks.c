@@ -1282,7 +1282,7 @@ unsigned portBASE_TYPE uxNumberOfTasks;
  *----------------------------------------------------------*/
 
 
-inline void vTaskIncrementTick( void )
+void vTaskIncrementTick( void )
 {
 	/* Called by the portable layer each time a tick interrupt occurs.
 	Increments the tick then checks to see if the new tick value will cause any

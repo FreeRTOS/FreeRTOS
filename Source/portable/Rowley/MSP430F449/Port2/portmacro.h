@@ -148,7 +148,6 @@ extern void vPortYield( void );
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters ) __toplevel
 
 /* Compiler specifics. */
-#define inline
 #define portNOP()
 
 

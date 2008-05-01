@@ -121,8 +121,6 @@
 
 #define portMINIMAL_STACK_SIZE configMINIMAL_STACK_SIZE
 
-/* Remove the inline statement from within the kernel code. */
-#define inline
 
 #endif /* PORTMACRO_H */
 

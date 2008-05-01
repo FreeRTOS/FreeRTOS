@@ -109,7 +109,6 @@ void portENABLE_INTERRUPTS( void );
 /* Compiler specifics. */
 #define portINPUT_BYTE( xAddr )				inp( xAddr )
 #define portOUTPUT_BYTE( xAddr, ucValue )	outp( xAddr, ucValue )
-#define inline
 #define portNOP() __asm{ nop }
 /*-----------------------------------------------------------*/
 

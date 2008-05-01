@@ -103,7 +103,7 @@
 /* Compiler specifics. */
 #define portINPUT_BYTE( xAddr )				inp( xAddr )
 #define portOUTPUT_BYTE( xAddr, ucValue )	outp( xAddr, ucValue )
-#define inline
+
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

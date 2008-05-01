@@ -113,8 +113,6 @@ extern void vPortYield( void );
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
-/* Compiler specifics. */
-#define inline
 
 #define portNOP()				asm volatile ( "NOP" )
 

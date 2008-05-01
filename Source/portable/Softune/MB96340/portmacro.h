@@ -131,8 +131,6 @@ FreeRTOSConfig.h to set the configMEMMODEL value. */
 
 #define portMINIMAL_STACK_SIZE configMINIMAL_STACK_SIZE
 
-/* Remove the inline declaration from within the kernel code. */
-#define inline
 
 #endif /* PORTMACRO_H */
 

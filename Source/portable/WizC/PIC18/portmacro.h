@@ -432,7 +432,7 @@ extern void vPortYield( void );
 #define portTASK_FUNCTION_PROTO		portTASK_FUNCTION
 /*-----------------------------------------------------------*/
 
-#define inline
+
 #define volatile
 #define register
 

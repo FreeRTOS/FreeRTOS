@@ -137,8 +137,6 @@ extern void vPortYield( void );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters ) __toplevel
 
-/* Compiler specifics. */
-#define inline
 
 /* Just used by the demo application to indicate which form of interrupt 
 service routine should be used.  See the online port documentation for more

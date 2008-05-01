@@ -115,9 +115,6 @@ extern void vTaskSwitchContext( void );				\
 }
 /*-----------------------------------------------------------*/	
 
-/* Compiler specifics. */
-#define inline
-/*-----------------------------------------------------------*/	
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void * pvParameters )

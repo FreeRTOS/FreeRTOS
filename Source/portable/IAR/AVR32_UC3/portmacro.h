@@ -664,8 +664,6 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
-#define inline
-
 #ifdef __cplusplus
 }
 #endif

@@ -231,8 +231,6 @@ extern void vPortExitCritical( void );
 #define portEXIT_CRITICAL()			vPortExitCritical();
 /*-----------------------------------------------------------*/	
 
-/* Compiler specifics. */
-#define inline
 #define register
 #define portNOP()	__asm{ NOP }
 /*-----------------------------------------------------------*/	

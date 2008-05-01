@@ -110,7 +110,6 @@ typedef void ( __interrupt __far *pxISR )();
 #define portOUTPUT_BYTE( xAddr, ucValue )	outp( xAddr, ucValue )
 #define portINPUT_WORD( xAddr )				inpw( xAddr )
 #define portOUTPUT_WORD( xAddr, usValue )	outpw( xAddr, usValue )
-#define inline
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

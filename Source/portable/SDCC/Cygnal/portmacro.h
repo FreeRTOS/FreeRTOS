@@ -118,8 +118,6 @@ void vPortYield( void ) _naked;
 #define portYIELD()	vPortYield();
 /*-----------------------------------------------------------*/	
 
-/* Compiler specifics. */
-#define inline
 #define portNOP()				_asm	\
 									nop \
 								_endasm;

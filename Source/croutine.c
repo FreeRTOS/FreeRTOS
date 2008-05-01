@@ -95,7 +95,7 @@ static void prvInitialiseCoRoutineLists( void );
  * in the pending ready list in order that they can later be moved to the ready
  * list by the co-routine scheduler.
  */
-static inline void prvCheckPendingReadyList( void );
+static void prvCheckPendingReadyList( void );
 
 /*
  * Macro that looks at the list of co-routines that are currently delayed to
@@ -105,7 +105,7 @@ static inline void prvCheckPendingReadyList( void );
  * meaning once one co-routine has been found whose timer has not expired
  * we need not look any further down the list.
  */
-static inline void prvCheckDelayedList( void );
+static void prvCheckDelayedList( void );
 
 /*-----------------------------------------------------------*/
 
@@ -204,7 +204,7 @@ portTickType xTimeToWake;
 }
 /*-----------------------------------------------------------*/
 
-static inline void prvCheckPendingReadyList( void )
+static void prvCheckPendingReadyList( void )
 {
 	/* Are there any co-routines waiting to get moved to the ready list?  These
 	are co-routines that have been readied by an ISR.  The ISR cannot access
@@ -227,7 +227,7 @@ static inline void prvCheckPendingReadyList( void )
 }
 /*-----------------------------------------------------------*/
 
-static inline void prvCheckDelayedList( void )
+static void prvCheckDelayedList( void )
 {
 static portTickType xLastTickCount, xPassedTicks;
 corCRCB *pxCRCB;

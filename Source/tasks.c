@@ -779,6 +779,11 @@ tskTCB * pxNewTCB;
 
 		taskENTER_CRITICAL();
 		{
+			if( pxTask == pxCurrentTCB )
+			{
+				pxTask = NULL;
+			}
+
 			/* If null is passed in here then we are changing the
 			priority of the calling function. */
 			pxTCB = prvGetTCBFromHandle( pxTask );
@@ -949,7 +954,7 @@ tskTCB * pxNewTCB;
 
 		/* The parameter cannot be NULL as it is impossible to resume the
 		currently executing task. */
-		if( pxTCB != NULL )
+		if( ( pxTCB != NULL ) && ( pxTCB != pxCurrentTCB ) )
 		{
 			taskENTER_CRITICAL();
 			{

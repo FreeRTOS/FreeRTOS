@@ -51,6 +51,9 @@
  * Implementation of functions defined in portable.h for the PIC32MX port.
   *----------------------------------------------------------*/
 
+/* Library includes. */
+#include <string.h>
+
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -70,6 +73,10 @@ the first task is being restored. */
 
 /* Records the nesting depth of calls to portENTER_CRITICAL(). */
 unsigned portBASE_TYPE uxCriticalNesting = 0x55555555;
+
+/* Records the interrupt nesting depth.  This starts at one as it will be
+decremented to 0 when the first task starts. */
+volatile unsigned portBASE_TYPE uxInterruptNesting = 0x01;
 
 /* The stack used by interrupt service routines that cause a context switch. */
 portSTACK_TYPE xISRStack[ configISR_STACK_SIZE ] = { 0 };
@@ -179,6 +186,8 @@ unsigned portLONG ulStatus;
 portBASE_TYPE xPortStartScheduler( void )
 {
 extern void vPortStartFirstTask( void );
+
+	memset( xISRStack, 0x5a, configISR_STACK_SIZE * sizeof( portSTACK_TYPE ) );
 
 	/* Setup the timer to generate the tick.  Interrupts will have been 
 	disabled by the time we get here. */

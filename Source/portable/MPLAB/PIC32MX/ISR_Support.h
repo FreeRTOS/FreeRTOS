@@ -59,139 +59,181 @@
 /******************************************************************/ 	
 .macro	portSAVE_CONTEXT
 
-	/* Make room for the context. */	
-
-	/* Get interrupts above the kernel priority enabled again ASAP.  First
-	save the current status so we can manipulate it, and the cause and EPC
-	registers so we capture their original values in case of interrupt nesting. */
-
+	/* Make room for the context. First save the current status so we can 
+	manipulate it, and the cause and EPC registers so we capture their 
+	original values in case of interrupt nesting. */
 	mfc0		k0, _CP0_CAUSE
 	addiu		sp,	sp, -portCONTEXT_SIZE
 	sw			k0, portCAUSE_STACK_LOCATION(sp)
 	mfc0		k1, _CP0_STATUS
-	/* Also save s6 so we can use it during this interrupt.  Any
-	nesting interrupts should maintain the values of this register
+
+	/* Also save s6 and s5 so we can use them during this interrupt.  Any
+	nesting interrupts should maintain the values of these registers
 	accross the ISR. */
 	sw			s6, 44(sp)
+	sw			s5, 40(sp)
 	sw			k1, portSTATUS_STACK_LOCATION(sp)
 
+	/* Enable interrupts above the current priority.  SysCall interrupts
+	enable priorities above configKERNEL_INTERRUPT_PRIORITY, so first 
+	check if the interrupt was a system call (32). */
+	add			s6, zero, k0
+	and			s6, s6, 32
+	beq			s6, zero, .+20 /* Not a system call, mask up to the current interrupt priority. */
+	nop
+	addiu		k0, zero, configKERNEL_INTERRUPT_PRIORITY /* Was a system call, mask only to kernel priority. */
+	beq			zero, zero, .+12
+	nop
+	srl			k0, k0, 0xa
+	ins 		k1, k0, 10, 6
+	ins			k1, zero, 1, 4
+
+	/* Load, incrmement, then save the interrupt nesting count. */
+	la			k0, uxInterruptNesting
+	lw			s6, (k0)
+	addiu		s6, s6, 1
+	sw			s6, 0(k0)
+
+	/* If it was zero, switch to the system stack.  If it was not zero then
+	we are already using the system stack.  s5 holds the old stack value -
+	this might be used to determine the cause of a general exception. */
+	add			s5, zero, sp
+	addiu		s6, s6, -1
+	bne			zero, s6, .+20
+	nop
+	la			s6, xISRStackTop
+	lw			sp, (s6)
 
 	/* s6 holds the EPC value, we may want this during the context switch. */
 	mfc0 		s6, _CP0_EPC
 
-	/* Enable interrupts above the kernel priority. */
-	addiu		k0, zero, configKERNEL_INTERRUPT_PRIORITY
-	ins 		k1, k0, 10, 6
-	ins			k1, zero, 1, 4
+	/* Re-enable interrupts. */
 	mtc0		k1, _CP0_STATUS
 
 	/* Save the context into the space just created.  s6 is saved again
 	here as it now contains the EPC value. */
-	sw			ra,	120(sp)
-	sw			s8, 116(sp)
-	sw			t9, 112(sp)
-	sw			t8,	108(sp)
-	sw			t7,	104(sp)
-	sw			t6, 100(sp)
-	sw			t5, 96(sp)
-	sw			t4, 92(sp)
-	sw			t3, 88(sp)
-	sw			t2, 84(sp)
-	sw			t1, 80(sp)
-	sw			t0, 76(sp)
-	sw			a3, 72(sp)
-	sw			a2, 68(sp)
-	sw			a1, 64(sp)
-	sw			a0, 60(sp)
-	sw			v1, 56(sp)
-	sw			v0, 52(sp)
-	sw			s7, 48(sp)
-	sw			s6, portEPC_STACK_LOCATION(sp)
-	sw			s5, 40(sp)
-	sw			s4,	36(sp)
-	sw			s3, 32(sp)
-	sw			s2, 28(sp)
-	sw			s1, 24(sp)
-	sw			s0, 20(sp)
-	sw			$1, 16(sp)
+	sw			ra,	120(s5)
+	sw			s8, 116(s5)
+	sw			t9, 112(s5)
+	sw			t8,	108(s5)
+	sw			t7,	104(s5)
+	sw			t6, 100(s5)
+	sw			t5, 96(s5)
+	sw			t4, 92(s5)
+	sw			t3, 88(s5)
+	sw			t2, 84(s5)
+	sw			t1, 80(s5)
+	sw			t0, 76(s5)
+	sw			a3, 72(s5)
+	sw			a2, 68(s5)
+	sw			a1, 64(s5)
+	sw			a0, 60(s5)
+	sw			v1, 56(s5)
+	sw			v0, 52(s5)
+	sw			s7, 48(s5)
+	sw			s6, portEPC_STACK_LOCATION(s5)
+	/* s5 has already been saved. */
+	sw			s4,	36(s5)
+	sw			s3, 32(s5)
+	sw			s2, 28(s5)
+	sw			s1, 24(s5)
+	sw			s0, 20(s5)
+	sw			$1, 16(s5)
 
 	/* s7 is used as a scratch register. */
 	mfhi		s7
-	sw			s7, 12(sp)
+	sw			s7, 12(s5)
 	mflo		s7
-	sw			s7, 8(sp)
+	sw			s7, 8(s5)
 
 	/* Each task maintains its own nesting count. */
 	la			s7, uxCriticalNesting
 	lw			s7, (s7)
-	sw			s7, 4(sp)
-	
-	/* Update the TCB stack pointer value */
+	sw			s7, 4(s5)
+
+	/* Update the TCB stack pointer value if the nesting count is 1. */
+	la			s7, uxInterruptNesting
+	lw			s7, (s7)
+	addiu		s7, s7, -1
+	bne			s7, zero, .+24 /* Dont save the stack pointer to the task or swap stacks. */
+	nop
+
+	/* Save the stack pointer to the task. */
 	la			s7, pxCurrentTCB
 	lw			s7, (s7)
-	sw			sp, (s7)
-
-	/* Switch to the ISR stack, saving the current stack in s5.  This might
-	be used to determine the cause of a general exception. */
-	add			s5, zero, sp
-	la			s7, xISRStackTop
-	lw			sp, (s7)
+	sw			s5, (s7)
 
 	.endm
 	
 /******************************************************************/	
 .macro	portRESTORE_CONTEXT
 
-	/* Restore the stack pointer from the TCB */
+	/* Restore the stack pointer from the TCB.  This is only done if the
+	nesting count is 1. */
+	la			s7, uxInterruptNesting
+	lw			s7, (s7)
+	addiu		s7, s7, -1
+	bne			s7, zero, .+24 /* Dont load the stack pointer. */
+	nop
 	la			s0, pxCurrentTCB
-	lw			s1, (s0)
-	lw			sp, (s1)
+	lw			s0, (s0)
+	lw			s5, (s0)
 	
 	/* Restore the context, the first item of which is the critical nesting
 	depth. */
 	la			s0, uxCriticalNesting
-	lw			s1, 4(sp)
+	lw			s1, 4(s5)
 	sw			s1, (s0)
 
 	/* Restore the rest of the context. */
-	lw			s0, 8(sp)
+	lw			s0, 8(s5)
 	mtlo		s0
-	lw			s0, 12(sp)
+	lw			s0, 12(s5)
 	mthi		s0
-	lw			$1, 16(sp)
-	lw			s0, 20(sp)
-	lw			s1, 24(sp)
-	lw			s2, 28(sp)
-	lw			s3, 32(sp)
-	lw			s4, 36(sp)
-	lw			s5, 40(sp)
-	lw			s6, 44(sp)
-	lw			s7, 48(sp)
-	lw			v0, 52(sp)
-	lw			v1, 56(sp)
-	lw			a0, 60(sp)
-	lw			a1, 64(sp)
-	lw			a2, 68(sp)
-	lw			a3, 72(sp)
-	lw			t0, 76(sp)
-	lw			t1, 80(sp)
-	lw			t2, 84(sp)
-	lw			t3, 88(sp)
-	lw			t4, 92(sp)
-	lw			t5, 96(sp)
-	lw			t6, 100(sp)
-	lw			t7, 104(sp)
-	lw			t8, 108(sp)
-	lw			t9, 112(sp)
-	lw			s8, 116(sp)
-	lw			ra, 120(sp)
+	lw			$1, 16(s5)
+	lw			s0, 20(s5)
+	lw			s1, 24(s5)
+	lw			s2, 28(s5)
+	lw			s3, 32(s5)
+	lw			s4, 36(s5)
+	/* s5 is loaded later. */
+	lw			s6, 44(s5)
+	lw			s7, 48(s5)
+	lw			v0, 52(s5)
+	lw			v1, 56(s5)
+	lw			a0, 60(s5)
+	lw			a1, 64(s5)
+	lw			a2, 68(s5)
+	lw			a3, 72(s5)
+	lw			t0, 76(s5)
+	lw			t1, 80(s5)
+	lw			t2, 84(s5)
+	lw			t3, 88(s5)
+	lw			t4, 92(s5)
+	lw			t5, 96(s5)
+	lw			t6, 100(s5)
+	lw			t7, 104(s5)
+	lw			t8, 108(s5)
+	lw			t9, 112(s5)
+	lw			s8, 116(s5)
+	lw			ra, 120(s5)
 
-	/* Protect access to the k registers. */
+	/* Protect access to the k registers, and others. */
 	di
-	lw			k1, portSTATUS_STACK_LOCATION(sp)
-	lw			k0, portEPC_STACK_LOCATION(sp)
 
-	/* Leave the stack how we found it. */
+	/* Decrement the nesting count. */
+	la			k0, uxInterruptNesting
+	lw			k1, (k0)
+	addiu		k1, k1, -1
+	sw			k1, 0(k0)
+
+	lw			k1, portSTATUS_STACK_LOCATION(s5)
+	lw			k0, portEPC_STACK_LOCATION(s5)
+
+	/* Leave the stack how we found it.  First load sp from s5, then restore
+	s5 from the stack. */
+	add			sp, zero, s5
+	lw			s5, 40(sp)
 	addiu		sp,	sp,	portCONTEXT_SIZE
 
 	mtc0		k1, _CP0_STATUS

@@ -88,21 +88,25 @@
 	ins 		k1, k0, 10, 6
 	ins			k1, zero, 1, 4
 
-	/* Load, incrmement, then save the interrupt nesting count. */
+	/* s5 is used as the frame pointer. */
+	add			s5, zero, sp
+
+	/* Check the nesting count value. */
 	la			k0, uxInterruptNesting
 	lw			s6, (k0)
+
+	/* If the nesting count is 0 then swap to the the system stack, otherwise
+	the system stack is already being used. */
+	bne			s6, zero, .+16
+	nop
+
+	/* Swap to the system stack. */
+	la			sp, xISRStackTop
+	lw			sp, (sp)
+
+	/* Increment and save the nesting count. */
 	addiu		s6, s6, 1
 	sw			s6, 0(k0)
-
-	/* If it was zero, switch to the system stack.  If it was not zero then
-	we are already using the system stack.  s5 holds the old stack value -
-	this might be used to determine the cause of a general exception. */
-	add			s5, zero, sp
-	addiu		s6, s6, -1
-	bne			zero, s6, .+20
-	nop
-	la			s6, xISRStackTop
-	lw			sp, (s6)
 
 	/* s6 holds the EPC value, we may want this during the context switch. */
 	mfc0 		s6, _CP0_EPC
@@ -132,7 +136,7 @@
 	sw			v0, 52(s5)
 	sw			s7, 48(s5)
 	sw			s6, portEPC_STACK_LOCATION(s5)
-	/* s5 has already been saved. */
+	/* s5 and s6 has already been saved. */
 	sw			s4,	36(s5)
 	sw			s3, 32(s5)
 	sw			s2, 28(s5)

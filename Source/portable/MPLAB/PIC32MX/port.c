@@ -134,7 +134,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
  */
 void prvSetupTimerInterrupt( void )
 {
-const unsigned portLONG ulCompareMatch = (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ;
+const unsigned portLONG ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ ) - 1;
 
 	OpenTimer1( ( T1_ON | T1_PS_1_8 | T1_SOURCE_INT ), ulCompareMatch );
 	ConfigIntTimer1( T1_INT_ON | configKERNEL_INTERRUPT_PRIORITY );

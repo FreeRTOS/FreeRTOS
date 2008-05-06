@@ -99,11 +99,17 @@ extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
+
+extern void vPortSetInterruptMaskFromISR();
+extern void vPortClearInterruptMaskFromISR();
+#define portSET_INTERRUPT_MASK_FROM_ISR() vPortSetInterruptMaskFromISR()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR() vPortClearInterruptMaskFromISR()
+
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
-#define portYIELD() asm volatile ( 	"ehb \r\n"	\
-									"SYSCALL \r\n" )
+extern void vPortYield( void );
+#define portYIELD()	vPortYield()
 
 #define portNOP()				asm volatile ( 	"nop" )
 
@@ -114,7 +120,7 @@ extern void vPortExitCritical( void );
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
-#define portEND_SWITCHING_ISR( vSwitchRequired ) if( vSwitchRequired ) vTaskSwitchContext()
+#define portEND_SWITCHING_ISR( vSwitchRequired ) if( vSwitchRequired ) SetCoreSW0()
 
 #ifdef __cplusplus
 }

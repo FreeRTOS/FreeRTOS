@@ -94,7 +94,7 @@ unsigned portSHORT usBRG;
 	/* Configure the UART and interrupts. */
 	usBRG = (unsigned portSHORT)(( (float)configPERIPHERAL_CLOCK_HZ / ( (float)16 * (float)ulWantedBaud ) ) - (float)0.5);
 	OpenUART2( UART_EN, UART_RX_ENABLE | UART_TX_ENABLE | UART_INT_TX | UART_INT_RX_CHAR, usBRG );
-	ConfigIntUART2( configKERNEL_INTERRUPT_PRIORITY | UART_INT_SUB_PR0 | UART_TX_INT_EN | UART_RX_INT_EN );
+	ConfigIntUART2( ( configKERNEL_INTERRUPT_PRIORITY + 1 ) | UART_INT_SUB_PR0 | UART_TX_INT_EN | UART_RX_INT_EN );
 
 	xTxHasEnded = pdTRUE;
 

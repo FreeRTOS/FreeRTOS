@@ -189,6 +189,15 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 
+#ifndef portSET_INTERRUPT_MASK_FROM_ISR
+	#define portSET_INTERRUPT_MASK_FROM_ISR()
+#endif
+
+#ifndef portCLEAR_INTERRUPT_MASK_FROM_ISR
+	#define portCLEAR_INTERRUPT_MASK_FROM_ISR()
+#endif
+
+
 /* Remove any unused trace macros. */
 #ifndef traceSTART
 	/* Used to perform any necessary initialisation - for example, open a file

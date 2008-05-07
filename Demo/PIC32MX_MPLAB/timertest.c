@@ -62,6 +62,8 @@
 /* The maximum value the 16bit timer can contain. */
 #define timerMAX_COUNT				0xffff
 
+/* The timer 1 interrupt handler. */
+void __attribute__( (interrupt(ipl0), vector(_TIMER_2_VECTOR))) vT2InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/
 
@@ -83,7 +85,7 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 
 	/* Setup timer 2 interrupt priority to be above the kernel priority so 
 	the timer jitter is not effected by the kernel activity. */
-	ConfigIntTimer2( T2_INT_ON | ( configKERNEL_INTERRUPT_PRIORITY + 1 ) );
+	ConfigIntTimer2( T2_INT_ON | ( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 ) );
 
 	/* Clear the interrupt as a starting condition. */
 	IFS0bits.T2IF = 0;
@@ -96,7 +98,6 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 }
 /*-----------------------------------------------------------*/
 
-void __attribute__( (interrupt(ipl0), vector(_TIMER_2_VECTOR))) vT2InterruptHandler( void );
 void vT2InterruptHandler( void )
 {
 static unsigned portLONG ulLastCount = 0, ulSettleCount = 0;

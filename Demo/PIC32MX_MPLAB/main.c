@@ -190,7 +190,6 @@ unsigned portLONG ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
 
 /*-----------------------------------------------------------*/
 
-
 /*
  * Create the demo tasks then start the scheduler.
  */
@@ -218,9 +217,6 @@ int main( void )
 
 	/* prvCheckTask uses sprintf so requires more stack. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 2, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
-	/* Setup the high frequency, high priority, timer test. */
-	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 
 	/* Finally start the scheduler. */
 	vTaskStartScheduler();
@@ -289,6 +285,10 @@ static portCHAR cStringBuffer[ mainMAX_STRING_LENGTH ];
 /* The maximum jitter time measured by the fast interrupt test. */
 extern unsigned portLONG ulMaxJitter ;
 xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
+
+	/* Setup the high frequency, high priority, timer test.  It is setup here
+	to ensure it does not fire before the scheduler is started. */
+	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 
 	/* Initialise the variable used to control our iteration rate prior to
 	its first use. */
@@ -367,7 +367,13 @@ xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationGeneralExceptionHandler( unsigned portLONG ulCause, unsigned portLONG ulStatus )
+void vApplicationStackOverflowHook( void )
+{
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void _general_exception_handler( unsigned portLONG ulCause, unsigned portLONG ulStatus )
 {
 	/* This overrides the definition provided by the kernel.  Other exceptions 
 	should be handled here. */

@@ -93,10 +93,6 @@ vRegTest1:
 			addiu	$25, $0, 0x125						
 			addiu	$30, $0, 0x130						
 
-			#if configUSE_PREEMPTION == 0
-				syscall 0
-			#endif
-
 			addiu	$1, $1, -0x11
 			beq		$1, $0, .+12
 			nop
@@ -235,10 +231,6 @@ vRegTest2:
 			addiu	$24, $0, 0x240					
 			addiu	$25, $0, 0x250					
 			addiu	$30, $0, 0x300					
-
-			#if configUSE_PREEMPTION == 0
-				syscall 0
-			#endif
 
 			addiu	$1, $1, -0x10
 			beq		$1, $0, .+12

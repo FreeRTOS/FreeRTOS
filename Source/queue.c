@@ -808,40 +808,44 @@ signed portBASE_TYPE xReturn;
 	queue read, instead we return a flag to say whether a context switch is
 	required or not (i.e. has a task with a higher priority than us been woken
 	by this	post). */
-	if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+	portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		traceQUEUE_SEND_FROM_ISR( pxQueue );
-
-		prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-
-		/* If the queue is locked we do not alter the event list.  This will
-		be done when the queue is unlocked later. */
-		if( pxQueue->xTxLock == queueUNLOCKED )
+		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
 		{
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+			traceQUEUE_SEND_FROM_ISR( pxQueue );
+	
+			prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+	
+			/* If the queue is locked we do not alter the event list.  This will
+			be done when the queue is unlocked later. */
+			if( pxQueue->xTxLock == queueUNLOCKED )
 			{
-				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+				if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
 				{
-					/* The task waiting has a higher priority so record that a
-					context	switch is required. */
-					*pxHigherPriorityTaskWoken = pdTRUE;
+					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+					{
+						/* The task waiting has a higher priority so record that a
+						context	switch is required. */
+						*pxHigherPriorityTaskWoken = pdTRUE;
+					}
 				}
 			}
+			else
+			{
+				/* Increment the lock count so the task that unlocks the queue
+				knows that data was posted while it was locked. */
+				++( pxQueue->xTxLock );
+			}
+	
+			xReturn = pdPASS;
 		}
 		else
 		{
-			/* Increment the lock count so the task that unlocks the queue
-			knows that data was posted while it was locked. */
-			++( pxQueue->xTxLock );
+			traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
+			xReturn = errQUEUE_FULL;
 		}
-
-		xReturn = pdPASS;
 	}
-	else
-	{
-		traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
-		xReturn = errQUEUE_FULL;
-	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR();
 
 	return xReturn;
 }
@@ -1004,43 +1008,47 @@ signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pv
 {
 signed portBASE_TYPE xReturn;
 
-	/* We cannot block from an ISR, so check there is data available. */
-	if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+	portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
-
-		prvCopyDataFromQueue( pxQueue, pvBuffer );
-		--( pxQueue->uxMessagesWaiting );
-
-		/* If the queue is locked we will not modify the event list.  Instead
-		we update the lock count so the task that unlocks the queue will know
-		that an ISR has removed data while the queue was locked. */
-		if( pxQueue->xRxLock == queueUNLOCKED )
+		/* We cannot block from an ISR, so check there is data available. */
+		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 		{
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
+			traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
+	
+			prvCopyDataFromQueue( pxQueue, pvBuffer );
+			--( pxQueue->uxMessagesWaiting );
+	
+			/* If the queue is locked we will not modify the event list.  Instead
+			we update the lock count so the task that unlocks the queue will know
+			that an ISR has removed data while the queue was locked. */
+			if( pxQueue->xRxLock == queueUNLOCKED )
 			{
-				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
+				if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
 				{
-					/* The task waiting has a higher priority than us so
-					force a context switch. */
-					*pxTaskWoken = pdTRUE;
+					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
+					{
+						/* The task waiting has a higher priority than us so
+						force a context switch. */
+						*pxTaskWoken = pdTRUE;
+					}
 				}
 			}
+			else
+			{
+				/* Increment the lock count so the task that unlocks the queue
+				knows that data was removed while it was locked. */
+				++( pxQueue->xRxLock );
+			}
+	
+			xReturn = pdPASS;
 		}
 		else
 		{
-			/* Increment the lock count so the task that unlocks the queue
-			knows that data was removed while it was locked. */
-			++( pxQueue->xRxLock );
+			xReturn = pdFAIL;
+			traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
 		}
-
-		xReturn = pdPASS;
 	}
-	else
-	{
-		xReturn = pdFAIL;
-		traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
-	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR();
 
 	return xReturn;
 }

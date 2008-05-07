@@ -69,14 +69,15 @@
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 72000000UL )  
 #define configPERIPHERAL_CLOCK_HZ		( ( unsigned portLONG ) 36000000UL )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE		( 230 )
-#define configISR_STACK_SIZE			( 130 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) 29000 )
+#define configMINIMAL_STACK_SIZE		( 210 )
+#define configISR_STACK_SIZE			( 400 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) 25000 )
 #define configMAX_TASK_NAME_LEN			( 8 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
+#define configCHECK_FOR_STACK_OVERFLOW	2
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0
@@ -93,8 +94,14 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
+/* The priority at which the tick interrupt runs.  This should probably be
+kept at 1. */
+#define configKERNEL_INTERRUPT_PRIORITY			0x01
 
-#define configKERNEL_INTERRUPT_PRIORITY	0x01
+/* The maximum interrupt priority from which FreeRTOS.org API functions can
+be called.  Only API functions that end in ...FromISR() can be used within
+interrupts. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY	0x03
 
 
 #endif /* FREERTOS_CONFIG_H */

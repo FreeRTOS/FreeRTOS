@@ -180,17 +180,10 @@ int main( void )
 
 	#if ( configUSE_FPU == 1 )
 	{
-		/* To use floating point:
-			
-			0) Add the files contained in the RTOSDemo/flop directory to the 
-			   build.
-			1) Your FPGA hardware design needs to add the APU FPU.  This should
-			   then also make the compiler options change to include the option
-			   -mfpu=sp_full, but best to check.
-			2) Set configUSE_FPU to 1 in FreeRTOSConfig.h.
-			3) Set configUSE_APPLICATION_TASK_TAG to 1 in FreeRTOSConfig.h.
-			4) Ensure #include "FPU_Macros.h" is contained within 
-			   FreeRTOSConfig.h (as per this example). */
+		/* A different project is provided that has configUSE_FPU set to 1
+		in order to demonstrate all the settings required to use the floating
+		point unit.  If you wish to use the floating point unit do not start
+		with this project. */
 		vStartMathTasks( mainFLOP_PRIORITY );
 		vStartFlopRegTests();
 	}

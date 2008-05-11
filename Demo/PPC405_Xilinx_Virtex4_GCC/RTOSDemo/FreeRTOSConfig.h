@@ -74,6 +74,8 @@
 #define configUSE_TRACE_FACILITY		0
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_COUNTING_SEMAPHORES	1
+#define configUSE_APPLICATION_TASK_TAG	0
+#define configUSE_FPU					0
 
 
 /* Co-routine definitions. */
@@ -96,4 +98,13 @@ to exclude the API function. */
 #define configUSE_RECURSIVE_MUTEXES		1
 
 
+#if configUSE_FPU == 1
+	/* Include the header that define the traceTASK_SWITCHED_IN() and
+	traceTASK_SWITCHED_OUT() macros to save and restore the floating
+	point registers for tasks that have requested this behaviour. */
+	#include "FPU_Macros.h"
+#endif
+
 #endif /* FREERTOS_CONFIG_H */
+
+

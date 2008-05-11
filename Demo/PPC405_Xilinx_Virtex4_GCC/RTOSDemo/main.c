@@ -95,6 +95,8 @@
 #include "partest.h"
 #include "countsem.h"
 #include "recmutex.h"
+#include "flop.h"
+#include "flop-reg-test.h"
 
 /* Priorities assigned to the demo tasks. */
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 4 )
@@ -175,6 +177,24 @@ int main( void )
 	vCreateBlockTimeTasks();
 	vStartCountingSemaphoreTasks();
 	vStartRecursiveMutexTasks();
+
+	#if ( configUSE_FPU == 1 )
+	{
+		/* To use floating point:
+			
+			0) Add the files contained in the RTOSDemo/flop directory to the 
+			   build.
+			1) Your FPGA hardware design needs to add the APU FPU.  This should
+			   then also make the compiler options change to include the option
+			   -mfpu=sp_full, but best to check.
+			2) Set configUSE_FPU to 1 in FreeRTOSConfig.h.
+			3) Set configUSE_APPLICATION_TASK_TAG to 1 in FreeRTOSConfig.h.
+			4) Ensure #include "FPU_Macros.h" is contained within 
+			   FreeRTOSConfig.h (as per this example). */
+		vStartMathTasks( mainFLOP_PRIORITY );
+		vStartFlopRegTests();
+	}
+	#endif
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( prvRegTestTask1, "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -263,6 +283,18 @@ static unsigned portLONG ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL
 	{
 		lReturn = pdFAIL;
 	}
+
+	#if ( configUSE_FPU == 1 )
+		if( xAreMathsTaskStillRunning() != pdTRUE )
+		{
+			lReturn = pdFAIL;
+		}
+
+		if( xAreFlopRegisterTestsStillRunning() != pdTRUE )
+		{
+			lReturn = pdFAIL;
+		}
+	#endif
 
 	/* Have the register test tasks found any errors? */
 	if( xRegTestStatus != pdPASS )

@@ -67,7 +67,16 @@
 #define portCRITICAL_INTERRUPT_ENABLE	( 1UL << 17UL )
 #define portEXTERNAL_INTERRUPT_ENABLE	( 1UL << 15UL )
 #define portMACHINE_CHECK_ENABLE		( 1UL << 12UL )
-#define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE )
+
+#if configUSE_FPU == 1
+	#define portAPU_PRESENT				( 1UL << 25UL )
+	#define portFCM_FPU_PRESENT			( 1UL << 13UL )
+#else
+	#define portAPU_PRESENT				( 0UL )
+	#define portFCM_FPU_PRESENT			( 0UL )
+#endif
+
+#define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE | portAPU_PRESENT | portFCM_FPU_PRESENT )
 
 /*-----------------------------------------------------------*/
 

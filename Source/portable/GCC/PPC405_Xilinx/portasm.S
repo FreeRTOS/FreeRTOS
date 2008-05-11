@@ -1,3 +1,52 @@
+/*
+	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+
+	This file is part of the FreeRTOS.org distribution.
+
+	FreeRTOS.org is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	FreeRTOS.org is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with FreeRTOS.org; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+	A special exception to the GPL can be applied should you wish to distribute
+	a combined work that includes FreeRTOS.org, without being obliged to provide
+	the source code for any proprietary components.  See the licensing section 
+	of http://www.FreeRTOS.org for full details of how and when the exception
+	can be applied.
+
+    ***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
+    * and even write all or part of your application on your behalf.          *
+    * See http://www.OpenRTOS.com for details of the services we provide to   *
+    * expedite your project.                                                  *
+    *                                                                         *
+    ***************************************************************************
+    ***************************************************************************
+
+	Please ensure to read the configuration and relevant port sections of the
+	online documentation.
+
+	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	contact details.
+
+	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	critical systems.
+
+	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	licensing and training services.
+*/
+
 #include "FreeRTOSConfig.h"
 
 	.extern pxCurrentTCB
@@ -9,6 +58,8 @@
 	.global vPortYield
 	.global vPortTickISR
 	.global vPortISRWrapper
+	.global vPortSaveFPURegisters
+	.global vPortRestoreFPURegisters
 
 .set	BChainField, 0
 .set	NextLRField, BChainField + 4
@@ -146,3 +197,118 @@ vPortISRWrapper:
 	bl vPortISRHandler
 	portRESTORE_STACK_POINTER_AND_LR
 	blr
+
+#if configUSE_FPU == 1
+
+vPortSaveFPURegisters:
+
+	/* Enable APU and mark FPU as present. */
+	mfmsr	r0
+	xor		r30, r30, r30
+	oris	r30, r30, 512
+	ori		r30, r30, 8192
+	or		r0, r0, r30
+	mtmsr	r0
+
+	/* Buffer address is in r3.  Save each flop register into an offset from
+	this buffer address. */
+	stfs	f0, 0(r3)
+	stfs	f1, 4(r3)
+	stfs	f2, 8(r3)
+	stfs	f3, 12(r3)
+	stfs	f4, 16(r3)
+	stfs	f5, 20(r3)
+	stfs	f6, 24(r3)
+	stfs	f7, 28(r3)
+	stfs	f8, 32(r3)
+	stfs	f9, 36(r3)
+	stfs	f10, 40(r3)
+	stfs	f11, 44(r3)
+	stfs	f12, 48(r3)
+	stfs	f13, 52(r3)
+	stfs	f14, 56(r3)
+	stfs	f15, 60(r3)
+	stfs	f16, 64(r3)
+	stfs	f17, 68(r3)
+	stfs	f18, 72(r3)
+	stfs	f19, 76(r3)
+	stfs	f20, 80(r3)
+	stfs	f21, 84(r3)
+	stfs	f22, 88(r3)
+	stfs	f23, 92(r3)
+	stfs	f24, 96(r3)
+	stfs	f25, 100(r3)
+	stfs	f26, 104(r3)
+	stfs	f27, 108(r3)
+	stfs	f28, 112(r3)
+	stfs	f29, 116(r3)
+	stfs	f30, 120(r3)
+	stfs	f31, 124(r3)
+	
+	/* Also save the FPSCR. */
+	mffs	f31
+	stfs	f31, 128(r3)
+
+	blr
+
+#endif /* configUSE_FPU. */
+
+
+#if configUSE_FPU == 1
+
+vPortRestoreFPURegisters:
+
+	/* Enable APU and mark FPU as present. */
+	mfmsr	r0
+	xor		r30, r30, r30
+	oris	r30, r30, 512
+	ori		r30, r30, 8192
+	or		r0, r0, r30
+	mtmsr	r0
+
+
+	/* Buffer address is in r3.  Restore each flop register from an offset
+	into this buffer. 
+	
+	First the FPSCR. */
+	lfs		f31, 128(r3)
+	mtfsf	f31, 7
+
+	lfs		f0, 0(r3)
+	lfs		f1, 4(r3)
+	lfs		f2, 8(r3)
+	lfs		f3, 12(r3)
+	lfs		f4, 16(r3)
+	lfs		f5, 20(r3)
+	lfs		f6, 24(r3)
+	lfs		f7, 28(r3)
+	lfs		f8, 32(r3)
+	lfs		f9, 36(r3)
+	lfs		f10, 40(r3)
+	lfs		f11, 44(r3)
+	lfs		f12, 48(r3)
+	lfs		f13, 52(r3)
+	lfs		f14, 56(r3)
+	lfs		f15, 60(r3)
+	lfs		f16, 64(r3)
+	lfs		f17, 68(r3)
+	lfs		f18, 72(r3)
+	lfs		f19, 76(r3)
+	lfs		f20, 80(r3)
+	lfs		f21, 84(r3)
+	lfs		f22, 88(r3)
+	lfs		f23, 92(r3)
+	lfs		f24, 96(r3)
+	lfs		f25, 100(r3)
+	lfs		f26, 104(r3)
+	lfs		f27, 108(r3)
+	lfs		f28, 112(r3)
+	lfs		f29, 116(r3)
+	lfs		f30, 120(r3)
+	lfs		f31, 124(r3)
+
+	blr
+
+#endif /* configUSE_FPU. */
+
+

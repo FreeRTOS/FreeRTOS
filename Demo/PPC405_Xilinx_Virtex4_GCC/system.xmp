@@ -1,6 +1,6 @@
 #Please do not modify this file by hand
-XmpVersion: 10.1
-VerMgmt: 10.1
+XmpVersion: 10.1.01
+VerMgmt: 10.1.01
 IntStyle: default
 MHS File: system.mhs
 MSS File: system.mss
@@ -67,6 +67,6 @@ ProgStart:
 StackSize: 
 HeapSize: 
 LinkerScript: RTOSDemo/RTOSDemo_linker_script.ld
-ProgCCFlags: -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames -Wextra
+ProgCCFlags: -I./RTOSDemo/flop -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames -Wextra
 CompileInXps: 1
 NonXpsApp: 0

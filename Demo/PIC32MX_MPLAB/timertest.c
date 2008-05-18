@@ -62,7 +62,7 @@
 /* The maximum value the 16bit timer can contain. */
 #define timerMAX_COUNT				0xffff
 
-/* The timer 1 interrupt handler. */
+/* The timer 2 interrupt handler. */
 void __attribute__( (interrupt(ipl0), vector(_TIMER_2_VECTOR))) vT2InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/

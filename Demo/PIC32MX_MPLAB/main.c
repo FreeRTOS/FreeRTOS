@@ -94,7 +94,6 @@
 
 /* Demo application includes. */
 #include "partest.h"
-#include "integer.h"
 #include "blocktim.h"
 #include "flash.h"
 #include "semtest.h"
@@ -103,6 +102,7 @@
 #include "lcd.h"
 #include "comtest2.h"
 #include "timertest.h"
+#include "IntQueue.h"
 
 #pragma config FPLLMUL = MUL_18, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
 #pragma config POSCMOD = HS, FNOSC = PRIPLL, FPBDIV = DIV_2
@@ -206,17 +206,17 @@ int main( void )
 	vStartLEDFlashTasks( tskIDLE_PRIORITY );
     vCreateBlockTimeTasks();
     vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-    vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
     vStartQueuePeekTasks();
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+	vStartInterruptQueueTasks();
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( prvTestTask1, "Tst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvTestTask2, "Tst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* prvCheckTask uses sprintf so requires more stack. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 2, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Finally start the scheduler. */
 	vTaskStartScheduler();
@@ -351,11 +351,11 @@ xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 	        ulTicksToWait = mainERROR_PERIOD;
 			xMessage.pcMessage = "Error: Sem test";
 	    }
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
-	        ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Int math";
-	    }
+		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainERROR_PERIOD;
+			xMessage.pcMessage = "Error: Int queue";
+		}
 
 		/* Write the max jitter time to the string buffer.  It will only be 
 		displayed if no errors have been detected. */
@@ -379,3 +379,5 @@ void _general_exception_handler( unsigned portLONG ulCause, unsigned portLONG ul
 	should be handled here. */
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
+

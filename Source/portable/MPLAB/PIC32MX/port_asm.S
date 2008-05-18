@@ -57,7 +57,6 @@
  	.set 	noreorder
  	
  	.extern pxCurrentTCB
- 	.extern uxCriticalNesting
  	.extern vTaskSwitchContext
  	.extern vPortIncrementTick
 	.extern xISRStackTop
@@ -189,11 +188,6 @@ vPortYieldISR:
 	mflo		s7
 	sw			s7, 8(s5)
 
-	/* Each task maintains its own nesting count. */
-	la			s7, uxCriticalNesting
-	lw			s7, (s7)
-	sw			s7, 4(s5)
-
 	/* Save the stack pointer to the task. */
 	la			s7, pxCurrentTCB
 	lw			s7, (s7)
@@ -276,33 +270,19 @@ vPortYieldISR:
 	/* Switch back to use the real stack pointer. */
 	add			sp, zero, s5
 
-	/* Restore the critical nesting	depth. */
-	la			s5, uxCriticalNesting
-	lw			k0, 4(sp)
-	sw			k0, (s5)
+	/* Restore the real s5 value. */
+	lw			s5, 40(sp)
 
 	/* If the critical nesting is not zero and a yield is not pended
 	then set status as if within a critical section. */
-	lw			s5, portSTATUS_STACK_LOCATION(sp)
-	beq			k0, zero, .+28
-	nop
-	mfc0		k1, _CP0_CAUSE
-	andi		k1, k1, 256
-	bne			k1, zero, .+12
-	nop
-	or			s5, s5, (configMAX_SYSCALL_INTERRUPT_PRIORITY<<10)
-
+	lw			k1, portSTATUS_STACK_LOCATION(sp)
 	lw			k0, portEPC_STACK_LOCATION(sp)
-
-	mtc0		s5, _CP0_STATUS
-	ehb	
-
-	/* Restore the real s5 value. */
-	lw			s5, 40(sp)
 
 	/* Remove stack frame. */
 	addiu		sp,	sp,	portCONTEXT_SIZE
 
+	mtc0		k1, _CP0_STATUS
+	ehb	
 	mtc0 		k0, _CP0_EPC
 	eret 
 	nop

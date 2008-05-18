@@ -92,18 +92,40 @@ extern "C" {
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
-#define portDISABLE_INTERRUPTS()	INTDisableInterrupts()                   
-#define portENABLE_INTERRUPTS()		INTEnableInterrupts()
+#define portIPL_SHIFT				( 10 )
+#define portALL_IPL_BITS			( 0x3f << portIPL_SHIFT )
 
-extern void vPortEnterCritical( void );
-extern void vPortExitCritical( void );
-#define portENTER_CRITICAL()		vPortEnterCritical()
-#define portEXIT_CRITICAL()			vPortExitCritical()
+#define portDISABLE_INTERRUPTS()											\
+{																			\
+unsigned portLONG ulStatus;													\
+																			\
+	/* Mask interrupts at and below the kernel interrupt priority. */		\
+	ulStatus = _CP0_GET_STATUS();											\
+	ulStatus |= ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT );	\
+	_CP0_SET_STATUS( ulStatus );											\
+}
 
-extern void vPortSetInterruptMaskFromISR();
-extern void vPortClearInterruptMaskFromISR();
-#define portSET_INTERRUPT_MASK_FROM_ISR() vPortSetInterruptMaskFromISR()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR() vPortClearInterruptMaskFromISR()
+#define portENABLE_INTERRUPTS()												\
+{																			\
+unsigned portLONG ulStatus;													\
+																			\
+	/* Unmask all interrupts. */											\
+	ulStatus = _CP0_GET_STATUS();											\
+	ulStatus &= ~portALL_IPL_BITS;											\
+	_CP0_SET_STATUS( ulStatus );											\
+}
+
+
+extern void vTaskEnterCritical( void );
+extern void vTaskExitCritical( void );
+#define portCRITICAL_NESTING_IN_TCB	1
+#define portENTER_CRITICAL()		vTaskEnterCritical()
+#define portEXIT_CRITICAL()			vTaskExitCritical()
+
+extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR();
+extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
+#define portSET_INTERRUPT_MASK_FROM_ISR() uxPortSetInterruptMaskFromISR()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) vPortClearInterruptMaskFromISR( uxSavedStatusRegister )
 
 /*-----------------------------------------------------------*/
 

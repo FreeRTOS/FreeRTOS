@@ -62,23 +62,14 @@
 #define portIE_BIT					( 0x00000001 )
 #define portEXL_BIT					( 0x00000002 )
 #define portSW0_ENABLE				( 0x00000100 )
-#define portIPL_SHIFT				( 10 )
-#define portALL_IPL_BITS			( 0x3f << portIPL_SHIFT )
 
 /* The EXL bit is set to ensure interrupts do not occur while the context of
 the first task is being restored. */
 #define portINITIAL_SR				( portIE_BIT | portEXL_BIT | portSW0_ENABLE )
 
-/* Records the nesting depth of calls to portENTER_CRITICAL(). */
-unsigned portBASE_TYPE uxCriticalNesting = 0x55555555;
-
 /* Records the interrupt nesting depth.  This starts at one as it will be
 decremented to 0 when the first task starts. */
 volatile unsigned portBASE_TYPE uxInterruptNesting = 0x01;
-
-/* Used to store the original interrupt mask when the mask level is temporarily
-raised during an ISR. */
-volatile unsigned portBASE_TYPE uxSavedStatusRegister = 0;
 
 /* Stores the task stack pointer when a switch is made to use the system stack. */
 unsigned portBASE_TYPE uxSavedTaskStackPointer = 0;
@@ -126,7 +117,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = (portSTACK_TYPE) pvParameters; /* Parameters to pass in */
 	pxTopOfStack -= 14;
 
-	*pxTopOfStack = (portSTACK_TYPE) 0x00000000; 	/* critical nesting level */
+	*pxTopOfStack = (portSTACK_TYPE) 0x00000000; 	/* critical nesting level - no longer used. */
 	pxTopOfStack--;
 	
 	return pxTopOfStack;
@@ -151,39 +142,6 @@ void vPortEndScheduler(void)
 	once running.  If required disable the tick interrupt here, then return 
 	to xPortStartScheduler(). */
 	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-void vPortEnterCritical(void)
-{
-unsigned portLONG ulStatus;
-
-	/* Mask interrupts at and below the kernel interrupt priority. */
-	ulStatus = _CP0_GET_STATUS();
-	ulStatus |= ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT );
-	_CP0_SET_STATUS( ulStatus );
-
-	/* Once interrupts are disabled we can access the nesting count directly. */
-	uxCriticalNesting++;
-}
-/*-----------------------------------------------------------*/
-
-void vPortExitCritical(void)
-{
-unsigned portLONG ulStatus;
-
-	/* If we are in a critical section then we can access the nesting count
-	directly. */
-	uxCriticalNesting--;
-
-	/* Has the nesting unwound? */
-	if( uxCriticalNesting == 0 ) 
-	{
-		/* Unmask all interrupts. */
-		ulStatus = _CP0_GET_STATUS();
-		ulStatus &= ~portALL_IPL_BITS;
-		_CP0_SET_STATUS( ulStatus );
-	}
 }
 /*-----------------------------------------------------------*/
 
@@ -224,9 +182,11 @@ unsigned portLONG ulStatus;
 
 void vPortIncrementTick( void )
 {
-	vPortSetInterruptMaskFromISR();
+unsigned portBASE_TYPE uxSavedStatus;
+
+	uxSavedStatus = uxPortSetInterruptMaskFromISR();
 		vTaskIncrementTick();
-	vPortClearInterruptMaskFromISR();
+	vPortClearInterruptMaskFromISR( uxSavedStatus );
 	
 	/* If we are using the preemptive scheduler then we might want to select
 	a different task to execute. */
@@ -239,15 +199,19 @@ void vPortIncrementTick( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortSetInterruptMaskFromISR( void )
+unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void )
 {
+unsigned portBASE_TYPE uxSavedStatusRegister;
+
 	asm volatile ( "di" );
 	uxSavedStatusRegister = _CP0_GET_STATUS() | 0x01;
 	_CP0_SET_STATUS( ( uxSavedStatusRegister | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) );
+
+	return uxSavedStatusRegister;
 }
 /*-----------------------------------------------------------*/
 
-void vPortClearInterruptMaskFromISR( void )
+void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedStatusRegister )
 {
 	_CP0_SET_STATUS( uxSavedStatusRegister );
 }

@@ -131,11 +131,6 @@
 	mflo		s6
 	sw			s6, 8(s5)
 
-	/* Each task maintains its own nesting count. */
-	la			s6, uxCriticalNesting
-	lw			s6, (s6)
-	sw			s6, 4(s5)
-
 	/* Update the task stack pointer value if nesting is zero. */
 	la			s6, uxInterruptNesting
 	lw			s6, (s6)
@@ -199,13 +194,6 @@
 	addiu		k1, k1, -1
 	sw			k1, 0(k0)
 
-	/* Restore the critical nesting count. */
-	la			k0, uxCriticalNesting
-	lw			k1, 4(s5)
-	sw			k1, (k0)
-
-	/* If the critical nesting is not zero then set status as if within
-	a critical section. */
 	lw			k0, portSTATUS_STACK_LOCATION(s5)
 	lw			k1, portEPC_STACK_LOCATION(s5)
 

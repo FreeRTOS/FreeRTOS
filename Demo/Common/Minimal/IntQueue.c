@@ -47,6 +47,21 @@
 	licensing and training services.
 */
 
+/*
+ * This file defines one of the more complex set of demo/test tasks.  They are
+ * designed to stress test the queue implementation though pseudo simultaneous 
+ * multiple reads and multiple writes from both tasks of varying priority and 
+ * interrupts.  The interrupts are prioritised such to ensure that nesting 
+ * occurs (for those ports that support it).
+ *
+ * The test ensures that, while being accessed from three tasks and two 
+ * interrupts, all the data sent to the queues is also received from
+ * the same queue, and that no duplicate items are either sent or received.
+ * The tests also ensure that a low priority task is never able to successfully
+ * read from or write to a queue when a task of higher priority is attempting
+ * the same operation.
+ */
+
 /* Standard includes. */
 #include <string.h>
 
@@ -68,10 +83,20 @@ processed as expected. */
 #define intqNUM_VALUES_TO_LOG	( 200 )
 #define intqSHORT_DELAY			( 75 )
 
+/* The value by which the value being sent to or received from a queue should
+increment past intqNUM_VALUES_TO_LOG before we check that all values have been
+sent/received correctly.  This is done to ensure that all tasks and interrupts
+accessing the queue have completed their accesses with the 
+intqNUM_VALUES_TO_LOG range. */
+#define intqVALUE_OVERRUN		( 50 )
+
 /* The delay used by the polling task.  A short delay is used for code 
 coverage. */
 #define intqONE_TICK_DELAY		( 1 )
 
+/* Each task and interrupt is given a unique identifier.  This value is used to 
+identify which task sent or received each value.  The identifier is also used 
+to distinguish between two tasks that are running the same task function. */
 #define intqHIGH_PRIROITY_TASK1	( ( unsigned portBASE_TYPE ) 1 )
 #define intqHIGH_PRIROITY_TASK2	( ( unsigned portBASE_TYPE ) 2 )
 #define intqLOW_PRIROITY_TASK	( ( unsigned portBASE_TYPE ) 3 )
@@ -79,10 +104,12 @@ coverage. */
 #define intqSECOND_INTERRUPT	( ( unsigned portBASE_TYPE ) 5 )
 #define intqQUEUE_LENGTH		( ( unsigned portBASE_TYPE ) 10 )
 
-
+/* At least intqMIN_ACCEPTABLE_TASK_COUNT values should be sent to/received
+from each queue by each task, otherwise an error is detected. */
 #define intqMIN_ACCEPTABLE_TASK_COUNT		( 5 )
 
-
+/* Send the next value to the queue that is normally empty.  This is called
+from within the interrupts. */
 #define timerNORMALLY_EMPTY_TX()																							\
 	if( xQueueIsQueueFullFromISR( xNormallyEmptyQueue ) != pdTRUE )															\
 	{																														\
@@ -95,6 +122,8 @@ coverage. */
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
 
+/* Send the next value to the queue that is normally full.  This is called
+from within the interrupts. */
 #define timerNORMALLY_FULL_TX()																								\
 	if( xQueueIsQueueFullFromISR( xNormallyFullQueue ) != pdTRUE )															\
 	{																														\
@@ -107,6 +136,8 @@ coverage. */
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
 
+/* Receive a value from the normally empty queue.  This is called from within 
+an interrupt. */
 #define timerNORMALLY_EMPTY_RX()																			\
 	if( xQueueReceiveFromISR( xNormallyEmptyQueue, &uxRxedValue, &xHigherPriorityTaskWoken ) != pdPASS )	\
 	{																										\
@@ -117,6 +148,8 @@ coverage. */
 		prvRecordValue_NormallyEmpty( uxRxedValue, intqSECOND_INTERRUPT );									\
 	}
 
+/* Receive a value from the normally full queue.  This is called from within 
+an interrupt. */
 #define timerNORMALLY_FULL_RX()																				\
 	if( xQueueReceiveFromISR( xNormallyFullQueue, &uxRxedValue, &xHigherPriorityTaskWoken ) == pdPASS )		\
 	{																										\
@@ -124,14 +157,12 @@ coverage. */
 	}																										\
 
 
-
-
 /*-----------------------------------------------------------*/
 
 /* The two queues used by the test. */
 static xQueueHandle xNormallyEmptyQueue, xNormallyFullQueue;
 
-/* Variables used to detect a stall in one of the tasts. */
+/* Variables used to detect a stall in one of the tasks. */
 static unsigned portBASE_TYPE uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0, uxLowPriorityLoops1 = 0, uxLowPriorityLoops2 = 0;
 
 /* Any unexpected behaviour sets xErrorStatus to fail and log the line that
@@ -139,6 +170,7 @@ caused the error in xErrorLine. */
 static portBASE_TYPE xErrorStatus = pdPASS;
 static unsigned portBASE_TYPE xErrorLine = ( unsigned portBASE_TYPE ) 0;
 
+/* Used for sequencing between tasks. */
 static portBASE_TYPE xWasSuspended = pdFALSE;
 
 /* The values that are sent to the queues.  An incremented value is sent each
@@ -149,8 +181,9 @@ volatile unsigned portBASE_TYPE uxValueForNormallyEmptyQueue = 0, uxValueForNorm
 xTaskHandle xHighPriorityNormallyEmptyTask1, xHighPriorityNormallyEmptyTask2, xHighPriorityNormallyFullTask1, xHighPriorityNormallyFullTask2;
 
 /* When a value is received in a queue the value is ticked off in the array
-the array position of the vlaue is set to a 1.  This way missing or duplicate
-values can be detected. */
+the array position of the value is set to a the identifier of the task or 
+interrupt that accessed the queue.  This way missing or duplicate values can be 
+detected. */
 static unsigned portCHAR ucNormallyEmptyReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
 static unsigned portCHAR ucNormallyFullReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
 
@@ -161,6 +194,8 @@ static void prvHigherPriorityNormallyEmptyTask( void *pvParameters );
 static void prv1stHigherPriorityNormallyFullTask( void *pvParameters );
 static void prv2ndHigherPriorityNormallyFullTask( void *pvParameters );
 
+/* Used to mark the positions within the ucNormallyEmptyReceivedValues and
+ucNormallyFullReceivedValues arrays, while checking for duplicates. */
 static void prvRecordValue_NormallyEmpty( unsigned portBASE_TYPE uxValue, unsigned portBASE_TYPE uxSource );
 static void prvRecordValue_NormallyFull( unsigned portBASE_TYPE uxValue, unsigned portBASE_TYPE uxSource );
 
@@ -191,7 +226,7 @@ static void prvRecordValue_NormallyFull( unsigned portBASE_TYPE uxValue, unsigne
 	if( uxValue < intqNUM_VALUES_TO_LOG )
 	{
 		/* We don't expect to receive the same value twice, so if the value
-		has already been marked as recieved an error has occurred. */
+		has already been marked as received an error has occurred. */
 		if( ucNormallyFullReceivedValues[ uxValue ] != 0x00 )
 		{
 			prvQueueAccessLogError( __LINE__ );
@@ -208,7 +243,7 @@ static void prvRecordValue_NormallyEmpty( unsigned portBASE_TYPE uxValue, unsign
 	if( uxValue < intqNUM_VALUES_TO_LOG )
 	{
 		/* We don't expect to receive the same value twice, so if the value
-		has already been marked as recieved an error has occurred. */
+		has already been marked as received an error has occurred. */
 		if( ucNormallyEmptyReceivedValues[ uxValue ] != 0x00 )
 		{
 			prvQueueAccessLogError( __LINE__ );
@@ -261,7 +296,7 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 		if( ( unsigned portBASE_TYPE ) pvParameters == intqHIGH_PRIROITY_TASK1 )
 		{
 			/* Have we received all the expected values? */
-			if( uxValueForNormallyEmptyQueue > ( intqNUM_VALUES_TO_LOG + 50 ) )
+			if( uxValueForNormallyEmptyQueue > ( intqNUM_VALUES_TO_LOG + intqVALUE_OVERRUN ) )
 			{
 				vTaskSuspend( xHighPriorityNormallyEmptyTask2 );
 				
@@ -329,7 +364,7 @@ static void prvLowerPriorityNormallyEmptyTask( void *pvParameters )
 unsigned portBASE_TYPE uxValue, uxRxed;
 portBASE_TYPE xQueueStatus;
 
-	/* The paramters are not being used so avoid compiler warnings. */
+	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
 	
 	for( ;; )
@@ -373,48 +408,12 @@ portBASE_TYPE xQueueStatus;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreIntQueueTasksStillRunning( void )
-{
-static unsigned portBASE_TYPE uxLastHighPriorityLoops1 = 0, uxLastHighPriorityLoops2 = 0, uxLastLowPriorityLoops1 = 0, uxLastLowPriorityLoops2 = 0;
-	
-	if( uxHighPriorityLoops1 == uxLastHighPriorityLoops1 )
-	{
-		prvQueueAccessLogError( __LINE__ );
-	}
-	
-	uxLastHighPriorityLoops1 = uxHighPriorityLoops1;
-	
-	if( uxHighPriorityLoops2 == uxLastHighPriorityLoops2 )
-	{
-		prvQueueAccessLogError( __LINE__ );
-	}
-	
-	uxLastHighPriorityLoops2 = uxHighPriorityLoops2;
-	
-	if( uxLowPriorityLoops1 == uxLastLowPriorityLoops1 )
-	{
-		prvQueueAccessLogError( __LINE__ );
-	}
-
-	uxLastLowPriorityLoops1 = uxLowPriorityLoops1;
-
-	if( uxLowPriorityLoops2 == uxLastLowPriorityLoops2 )
-	{
-		prvQueueAccessLogError( __LINE__ );
-	}
-
-	uxLastLowPriorityLoops2 = uxLowPriorityLoops2;
-
-	return xErrorStatus;
-}
-/*-----------------------------------------------------------*/
-
 static void prv1stHigherPriorityNormallyFullTask( void *pvParameters )
 {
 unsigned portBASE_TYPE uxValueToTx, ux;
 portBASE_TYPE xQueueStatus;
 
-	/* The paramters are not being used so avoid compiler warnings. */
+	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
 	
 	/* Make sure the queue starts full or near full.  >> 1 as there are two
@@ -451,7 +450,7 @@ portBASE_TYPE xQueueStatus;
 		taskYIELD();
 		
 		/* Have all the expected values been sent to the queue? */
-		if( uxValueToTx > ( intqNUM_VALUES_TO_LOG + 50 ) )
+		if( uxValueToTx > ( intqNUM_VALUES_TO_LOG + intqVALUE_OVERRUN ) )
 		{
 			/* Make sure the other high priority task completes its send of
 			any values below intqNUM_VALUE_TO_LOG. */
@@ -461,7 +460,7 @@ portBASE_TYPE xQueueStatus;
 			
 			if( xWasSuspended == pdTRUE )
 			{
-				/* We would have expected the other high pririty task to have
+				/* We would have expected the other high priority task to have
 				set this back to false by now. */
 				prvQueueAccessLogError( __LINE__ );
 			}
@@ -503,7 +502,7 @@ static void prv2ndHigherPriorityNormallyFullTask( void *pvParameters )
 unsigned portBASE_TYPE uxValueToTx, ux;
 portBASE_TYPE xQueueStatus;
 
-	/* The paramters are not being used so avoid compiler warnings. */
+	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
 	
 	/* Make sure the queue starts full or near full.  >> 1 as there are two
@@ -550,7 +549,7 @@ static void prvLowerPriorityNormallyFullTask( void *pvParameters )
 unsigned portBASE_TYPE uxValue, uxTxed = 9999;
 portBASE_TYPE xQueueStatus;
 
-	/* The paramters are not being used so avoid compiler warnings. */
+	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
 	
 	for( ;; )
@@ -593,6 +592,9 @@ portBASE_TYPE xFirstTimerHandler( void )
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, uxRxedValue;
 static unsigned portBASE_TYPE uxNextOperation = 0;
 
+	/* Called from a timer interrupt.  Perform various read and write
+	accesses on the queues. */
+
 	uxNextOperation++;
 	
 	if( uxNextOperation & ( unsigned portBASE_TYPE ) 0x01 )
@@ -618,6 +620,9 @@ unsigned portBASE_TYPE uxRxedValue;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 static unsigned portBASE_TYPE uxNextOperation = 0;
 
+	/* Called from a timer interrupt.  Perform various read and write
+	accesses on the queues. */
+
 	uxNextOperation++;
 	
 	if( uxNextOperation & ( unsigned portBASE_TYPE ) 0x01 )
@@ -639,5 +644,48 @@ static unsigned portBASE_TYPE uxNextOperation = 0;
 	
 	return xHigherPriorityTaskWoken;
 }
+/*-----------------------------------------------------------*/
 
+
+portBASE_TYPE xAreIntQueueTasksStillRunning( void )
+{
+static unsigned portBASE_TYPE uxLastHighPriorityLoops1 = 0, uxLastHighPriorityLoops2 = 0, uxLastLowPriorityLoops1 = 0, uxLastLowPriorityLoops2 = 0;
+	
+	/* xErrorStatus can be set outside of this function.  This function just
+	checks that all the tasks are still cycling. */
+
+	if( uxHighPriorityLoops1 == uxLastHighPriorityLoops1 )
+	{
+		/* The high priority 1 task has stalled. */
+		prvQueueAccessLogError( __LINE__ );
+	}
+	
+	uxLastHighPriorityLoops1 = uxHighPriorityLoops1;
+	
+	if( uxHighPriorityLoops2 == uxLastHighPriorityLoops2 )
+	{
+		/* The high priority 2 task has stalled. */
+		prvQueueAccessLogError( __LINE__ );
+	}
+	
+	uxLastHighPriorityLoops2 = uxHighPriorityLoops2;
+	
+	if( uxLowPriorityLoops1 == uxLastLowPriorityLoops1 )
+	{
+		/* The low priority 1 task has stalled. */
+		prvQueueAccessLogError( __LINE__ );
+	}
+
+	uxLastLowPriorityLoops1 = uxLowPriorityLoops1;
+
+	if( uxLowPriorityLoops2 == uxLastLowPriorityLoops2 )
+	{
+		/* The low priority 2 task has stalled. */
+		prvQueueAccessLogError( __LINE__ );
+	}
+
+	uxLastLowPriorityLoops2 = uxLowPriorityLoops2;
+
+	return xErrorStatus;
+}
 

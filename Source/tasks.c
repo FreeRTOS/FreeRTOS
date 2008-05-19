@@ -403,15 +403,6 @@ static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth );
 
 #endif
 
-/*
- * Checks that a task being resumed (unsuspended) is actually in the Suspended
- * state.
- */
-#if ( INCLUDE_vTaskSuspend == 1 )
-
-	static portBASE_TYPE prvIsTaskSuspended( const tskTCB * const pxTCB );	
-
-#endif
 
 /*lint +e956 */
 
@@ -914,9 +905,10 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	static portBASE_TYPE prvIsTaskSuspended( const tskTCB * const pxTCB )
+	signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask )
 	{
 	portBASE_TYPE xReturn = pdFALSE;
+	const tskTCB * const pxTCB = ( tskTCB * ) xTask;
 
 		/* Is the task we are attempting to resume actually in the
 		suspended list? */
@@ -958,7 +950,7 @@ tskTCB * pxNewTCB;
 		{
 			taskENTER_CRITICAL();
 			{
-				if( prvIsTaskSuspended( pxTCB ) == pdTRUE )
+				if( xTaskIsTaskSuspended( pxTCB ) == pdTRUE )
 				{
 					traceTASK_RESUME( pxTCB );
 
@@ -993,7 +985,7 @@ tskTCB * pxNewTCB;
 
 		pxTCB = ( tskTCB * ) pxTaskToResume;
 
-		if( prvIsTaskSuspended( pxTCB ) == pdTRUE )
+		if( xTaskIsTaskSuspended( pxTCB ) == pdTRUE )
 		{
 			traceTASK_RESUME_FROM_ISR( pxTCB );
 

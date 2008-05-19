@@ -121,7 +121,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 
 	/* EABI stack frame. */
-	pxTopOfStack -= 28;	/* R31 to R4 inclusive. */
+	pxTopOfStack -= 30;	/* Previous backchain and LR, R31 to R4 inclusive. */
 
 	/* Parameters in R3. */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;

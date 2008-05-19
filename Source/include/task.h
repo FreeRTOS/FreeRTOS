@@ -786,6 +786,16 @@ void vTaskSuspendAll( void );
  */
 signed portBASE_TYPE xTaskResumeAll( void );
 
+/**
+ * task. h
+ * <pre>signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask );</pre>
+ *
+ * Utility task that simply returns pdTRUE if the task referenced by xTask is
+ * currently in the Suspended state, or pdFALSE if the task referenced by xTask
+ * is in any other state.
+ *
+ */
+signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask );
 
 /*-----------------------------------------------------------
  * TASK UTILITIES

@@ -190,11 +190,11 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 
 #ifndef portSET_INTERRUPT_MASK_FROM_ISR
-	#define portSET_INTERRUPT_MASK_FROM_ISR()
+	#define portSET_INTERRUPT_MASK_FROM_ISR() 0
 #endif
 
 #ifndef portCLEAR_INTERRUPT_MASK_FROM_ISR
-	#define portCLEAR_INTERRUPT_MASK_FROM_ISR()
+	#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) ( void ) uxSavedStatusValue
 #endif
 
 

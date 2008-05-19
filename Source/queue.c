@@ -690,9 +690,7 @@ xTimeOutType xTimeOut;
 							{
 								if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 								{
-									portENTER_CRITICAL();
-										vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
-									portEXIT_CRITICAL();
+									vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
 								}
 							}
 							#endif
@@ -802,13 +800,14 @@ xTimeOutType xTimeOut;
 signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition )
 {
 signed portBASE_TYPE xReturn;
+unsigned portBASE_TYPE uxSavedInterruptStatus;
 
 	/* Similar to xQueueGenericSend, except we don't block if there is no room
 	in the queue.  Also we don't directly wake a task that was blocked on a
 	queue read, instead we return a flag to say whether a context switch is
 	required or not (i.e. has a task with a higher priority than us been woken
 	by this	post). */
-	portSET_INTERRUPT_MASK_FROM_ISR();
+	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
 		{
@@ -845,7 +844,7 @@ signed portBASE_TYPE xReturn;
 			xReturn = errQUEUE_FULL;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 	return xReturn;
 }
@@ -1007,8 +1006,9 @@ signed portCHAR *pcOriginalReadPosition;
 signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken )
 {
 signed portBASE_TYPE xReturn;
+unsigned portBASE_TYPE uxSavedInterruptStatus;
 
-	portSET_INTERRUPT_MASK_FROM_ISR();
+	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* We cannot block from an ISR, so check there is data available. */
 		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
@@ -1048,7 +1048,7 @@ signed portBASE_TYPE xReturn;
 			traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 	return xReturn;
 }

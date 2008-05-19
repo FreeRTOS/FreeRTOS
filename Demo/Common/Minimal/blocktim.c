@@ -69,7 +69,7 @@
 #define bktQUEUE_LENGTH				( 5 )
 #define bktSHORT_WAIT				( ( ( portTickType ) 20 ) / portTICK_RATE_MS )
 #define bktPRIMARY_BLOCK_TIME		( 10 )
-#define bktALLOWABLE_MARGIN			( 12 )
+#define bktALLOWABLE_MARGIN			( 15 )
 #define bktTIME_TO_BLOCK			( 175 )
 #define bktDONT_BLOCK				( ( portTickType ) 0 )
 #define bktRUN_INDICATOR			( ( unsigned portBASE_TYPE ) 0x55 )
@@ -126,23 +126,17 @@ portTickType xTimeToBlock, xBlockedTime;
 			time.  When we wake, ensure the delta in time is as expected. */
 			xTimeToBlock = bktPRIMARY_BLOCK_TIME << xItem;
 
-			/* A critical section is used to minimise the jitter in the time
-			measurements. */
-			portENTER_CRITICAL();
+			xTimeWhenBlocking = xTaskGetTickCount();
+			
+			/* We should unblock after xTimeToBlock having not received
+			anything on the queue. */
+			if( xQueueReceive( xTestQueue, &xData, xTimeToBlock ) != errQUEUE_EMPTY )
 			{
-				xTimeWhenBlocking = xTaskGetTickCount();
-				
-				/* We should unblock after xTimeToBlock having not received
-				anything on the queue. */
-				if( xQueueReceive( xTestQueue, &xData, xTimeToBlock ) != errQUEUE_EMPTY )
-				{
-					xErrorOccurred = pdTRUE;
-				}
-
-				/* How long were we blocked for? */
-				xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
+				xErrorOccurred = pdTRUE;
 			}
-			portEXIT_CRITICAL();
+
+			/* How long were we blocked for? */
+			xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
 
 			if( xBlockedTime < xTimeToBlock )
 			{
@@ -183,21 +177,17 @@ portTickType xTimeToBlock, xBlockedTime;
 			time.  When we wake, ensure the delta in time is as expected. */
 			xTimeToBlock = bktPRIMARY_BLOCK_TIME << xItem;
 
-			portENTER_CRITICAL();
+			xTimeWhenBlocking = xTaskGetTickCount();
+			
+			/* We should unblock after xTimeToBlock having not received
+			anything on the queue. */
+			if( xQueueSend( xTestQueue, &xItem, xTimeToBlock ) != errQUEUE_FULL )
 			{
-				xTimeWhenBlocking = xTaskGetTickCount();
-				
-				/* We should unblock after xTimeToBlock having not received
-				anything on the queue. */
-				if( xQueueSend( xTestQueue, &xItem, xTimeToBlock ) != errQUEUE_FULL )
-				{
-					xErrorOccurred = pdTRUE;
-				}
-
-				/* How long were we blocked for? */
-				xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
+				xErrorOccurred = pdTRUE;
 			}
-			portEXIT_CRITICAL();
+
+			/* How long were we blocked for? */
+			xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
 
 			if( xBlockedTime < xTimeToBlock )
 			{
@@ -388,23 +378,19 @@ portBASE_TYPE xData;
 		The first thing we do is attempt to read from the queue.  It should be
 		full so we block.  Note the time before we block so we can check the
 		wake time is as per that expected. */
-		portENTER_CRITICAL();
+		xTimeWhenBlocking = xTaskGetTickCount();
+		
+		/* We should unblock after bktTIME_TO_BLOCK having not received
+		anything on the queue. */
+		xData = 0;
+		xRunIndicator = bktRUN_INDICATOR;
+		if( xQueueSend( xTestQueue, &xData, bktTIME_TO_BLOCK ) != errQUEUE_FULL )
 		{
-			xTimeWhenBlocking = xTaskGetTickCount();
-			
-			/* We should unblock after bktTIME_TO_BLOCK having not received
-			anything on the queue. */
-			xData = 0;
-			xRunIndicator = bktRUN_INDICATOR;
-			if( xQueueSend( xTestQueue, &xData, bktTIME_TO_BLOCK ) != errQUEUE_FULL )
-			{
-				xErrorOccurred = pdTRUE;
-			}
-
-			/* How long were we inside the send function? */
-			xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
+			xErrorOccurred = pdTRUE;
 		}
-		portEXIT_CRITICAL();
+
+		/* How long were we inside the send function? */
+		xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
 
 		/* We should not have blocked for less time than bktTIME_TO_BLOCK. */
 		if( xBlockedTime < bktTIME_TO_BLOCK )
@@ -428,21 +414,17 @@ portBASE_TYPE xData;
         Test 4
 
 		As per test three, but with the send and receive reversed. */
-		portENTER_CRITICAL();
+		xTimeWhenBlocking = xTaskGetTickCount();
+		
+		/* We should unblock after bktTIME_TO_BLOCK having not received
+		anything on the queue. */
+		xRunIndicator = bktRUN_INDICATOR;
+		if( xQueueReceive( xTestQueue, &xData, bktTIME_TO_BLOCK ) != errQUEUE_EMPTY )
 		{
-			xTimeWhenBlocking = xTaskGetTickCount();
-			
-			/* We should unblock after bktTIME_TO_BLOCK having not received
-			anything on the queue. */
-			xRunIndicator = bktRUN_INDICATOR;
-			if( xQueueReceive( xTestQueue, &xData, bktTIME_TO_BLOCK ) != errQUEUE_EMPTY )
-			{
-				xErrorOccurred = pdTRUE;
-			}
-
-			xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
+			xErrorOccurred = pdTRUE;
 		}
-		portEXIT_CRITICAL();
+
+		xBlockedTime = xTaskGetTickCount() - xTimeWhenBlocking;
 
 		/* We should not have blocked for less time than bktTIME_TO_BLOCK. */
 		if( xBlockedTime < bktTIME_TO_BLOCK )

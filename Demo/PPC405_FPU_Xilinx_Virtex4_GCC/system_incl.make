@@ -63,7 +63,7 @@ DEFAULT_SIM_SCRIPT = $(BEHAVIORAL_SIM_SCRIPT)
 
 MIX_LANG_SIM_OPT = -mixed yes
 
-SIMGEN_OPTIONS = -p $(DEVICE) -lang $(LANGUAGE) $(SEARCHPATHOPT) $(BRAMINIT_ELF_FILE_ARGS) $(MIX_LANG_SIM_OPT)  -s mti -X ./ -E ./
+SIMGEN_OPTIONS = -p $(DEVICE) -lang $(LANGUAGE) $(SEARCHPATHOPT) $(BRAMINIT_ELF_FILE_ARGS) $(MIX_LANG_SIM_OPT)  -s mti -X C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/ -E C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/
 
 
 LIBRARIES =  \
@@ -123,8 +123,8 @@ RTOSDEMO_HEADERS = RTOSDemo/FreeRTOSConfig.h
 
 RTOSDEMO_CC = powerpc-eabi-gcc
 RTOSDEMO_CC_SIZE = powerpc-eabi-size
-RTOSDEMO_CC_OPT = -O0
-RTOSDEMO_CFLAGS = -I./RTOSDemo/flop -I../../Source/portable/GCC/PPC405_Xilinx -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames -Wextra
+RTOSDEMO_CC_OPT = -O2
+RTOSDEMO_CFLAGS = -I./RTOSDemo/flop -I../../Source/portable/GCC/PPC405_Xilinx -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames
 RTOSDEMO_CC_SEARCH = # -B
 RTOSDEMO_LIBPATH = -L./ppc405_0/lib/ # -L
 RTOSDEMO_INCLUDES = -I./ppc405_0/include/  -IRTOSDemo/ # -I

@@ -130,9 +130,9 @@ void vStartRecursiveMutexTasks( void )
 
 	if( xMutex != NULL )
 	{
-		xTaskCreate( prvRecursiveMutexControllingTask, "Rec1", configMINIMAL_STACK_SIZE, NULL, recmuCONTROLLING_TASK_PRIORITY, &xControllingTaskHandle );
-        xTaskCreate( prvRecursiveMutexBlockingTask, "Rec2", configMINIMAL_STACK_SIZE, NULL, recmuBLOCKING_TASK_PRIORITY, &xBlockingTaskHandle );
-        xTaskCreate( prvRecursiveMutexPollingTask, "Rec3", configMINIMAL_STACK_SIZE, NULL, recmuPOLLING_TASK_PRIORITY, NULL );
+		xTaskCreate( prvRecursiveMutexControllingTask, ( signed portCHAR * ) "Rec1", configMINIMAL_STACK_SIZE, NULL, recmuCONTROLLING_TASK_PRIORITY, &xControllingTaskHandle );
+        xTaskCreate( prvRecursiveMutexBlockingTask, ( signed portCHAR * ) "Rec2", configMINIMAL_STACK_SIZE, NULL, recmuBLOCKING_TASK_PRIORITY, &xBlockingTaskHandle );
+        xTaskCreate( prvRecursiveMutexPollingTask, ( signed portCHAR * ) "Rec3", configMINIMAL_STACK_SIZE, NULL, recmuPOLLING_TASK_PRIORITY, NULL );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -140,6 +140,9 @@ void vStartRecursiveMutexTasks( void )
 static void prvRecursiveMutexControllingTask( void *pvParameters )
 {
 unsigned portBASE_TYPE ux;
+
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
 
 	for( ;; )
 	{
@@ -203,6 +206,9 @@ unsigned portBASE_TYPE ux;
 
 static void prvRecursiveMutexBlockingTask( void *pvParameters )
 {
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	for( ;; )
 	{
 		/* Attempt to obtain the mutex.  We should block until the 
@@ -252,6 +258,9 @@ static void prvRecursiveMutexBlockingTask( void *pvParameters )
 
 static void prvRecursiveMutexPollingTask( void *pvParameters )
 {
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	for( ;; )
 	{
 		/* Keep attempting to obtain the mutex.  We should only obtain it when

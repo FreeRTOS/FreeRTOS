@@ -92,7 +92,7 @@ static volatile unsigned portSHORT usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsi
 each task created within this file.  Zeroing out this array is the normal and
 safe option as this will cause the task to start with all zeros in its flop
 context. */
-static unsigned portLONG ulFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ] = { 0 };
+static unsigned portLONG ulFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
 
 /*-----------------------------------------------------------*/
 

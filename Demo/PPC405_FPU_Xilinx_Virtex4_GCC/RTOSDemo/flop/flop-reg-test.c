@@ -109,7 +109,7 @@ static void vFlopTest2( void *pvParameters );
 
 /* Buffers into which the flop registers will be saved.  There is a buffer for 
 both tasks. */
-static volatile unsigned portLONG ulFlopRegisters[ flopNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ] = { 0 };
+static volatile unsigned portLONG ulFlopRegisters[ flopNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
 
 /* Variables that are incremented by the tasks to indicate that they are still
 running. */
@@ -156,6 +156,9 @@ unsigned portBASE_TYPE x, y, z = flopSTART_VALUE;
 
 static void vFlopTest1( void *pvParameters )
 {
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	for( ;; )
 	{
 		/* The values from the buffer should have now been written to the flop
@@ -176,6 +179,9 @@ static void vFlopTest1( void *pvParameters )
 
 static void vFlopTest2( void *pvParameters )
 {
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	for( ;; )
 	{
 		/* The values from the buffer should have now been written to the flop
@@ -232,5 +238,7 @@ static unsigned portLONG ulLastFlop1CycleCount = 0, ulLastFlop2CycleCount = 0;
 
 	ulLastFlop1CycleCount = ulFlop1CycleCount;
 	ulLastFlop2CycleCount = ulFlop2CycleCount;
+
+	return xReturn;
 }
 

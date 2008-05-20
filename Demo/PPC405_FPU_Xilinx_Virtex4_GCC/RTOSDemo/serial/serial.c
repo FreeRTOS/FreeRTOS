@@ -139,6 +139,9 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOut
 {
 portBASE_TYPE xReturn = pdTRUE;
 
+	/* Just to remove compiler warning. */
+	( void ) pxPort;
+
 	portENTER_CRITICAL();
 	{
 		/* If the UART FIFO is full we can block posting the new data on the
@@ -186,6 +189,9 @@ static void vSerialISR( XUartLite *pxUART )
 unsigned portLONG ulISRStatus;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, lDidSomething;
 portCHAR cChar;
+
+	/* Just to remove compiler warning. */
+	( void ) pxUART;
 
 	do
 	{

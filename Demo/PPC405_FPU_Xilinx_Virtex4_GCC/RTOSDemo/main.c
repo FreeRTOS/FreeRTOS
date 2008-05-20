@@ -137,7 +137,7 @@ static void prvErrorChecks( void *pvParameters );
  * Called by the 'check' task to inspect all the standard demo tasks within
  * the system, as described within the comments at the head of this page.
  */
-static portSHORT prvCheckOtherTasksAreStillRunning( void );
+static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void );
 
 /*
  * Perform any hardware initialisation required by the demo application.
@@ -148,7 +148,7 @@ static void prvSetupHardware( void );
 
 /* xRegTestStatus will get set to pdFAIL by the regtest tasks if they
 discover an unexpected value. */
-static unsigned portBASE_TYPE xRegTestStatus = pdPASS;
+static volatile unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 
 /* Counters used to ensure the regtest tasks are still running. */
 static volatile unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
@@ -186,9 +186,9 @@ int main( void )
 	#endif
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvRegTestTask1, "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTestTask2, "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask1, ( signed portCHAR * ) "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask2, ( signed portCHAR * ) "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* The suicide tasks must be started last as they record the number of other
 	tasks that exist within the system.  The value is then used to ensure at run
@@ -197,7 +197,7 @@ int main( void )
 
 	/* Now start the scheduler.  Following this call the created tasks should
 	be executing. */	
-	vTaskStartScheduler( );
+	vTaskStartScheduler();
 
 	/* vTaskStartScheduler() will only return if an error occurs while the 
 	idle task is being created. */
@@ -207,7 +207,7 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-static portSHORT prvCheckOtherTasksAreStillRunning( void )
+static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
 static unsigned portLONG ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
@@ -319,6 +319,9 @@ static void prvErrorChecks( void *pvParameters )
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 volatile unsigned portBASE_TYPE uxFreeStack;
 
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	/* This call is just to demonstrate the use of the function - nothing is
 	done with the value.  You would expect the stack high water mark to be
 	lower (the function to return a larger value) here at function entry than
@@ -394,6 +397,9 @@ void prvRegTestFail( void )
 
 static void prvRegTestTask1( void *pvParameters )
 {
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	/* The first register test task as described at the top of this file.  The
 	values used in the registers are different to those use in the second 
 	register test task.  Also, unlike the second register test task, this task
@@ -532,6 +538,9 @@ static void prvRegTestTask1( void *pvParameters )
 
 static void prvRegTestTask2( void *pvParameters )
 {
+	/* Just to remove compiler warning. */
+	( void ) pvParameters;
+
 	/* The second register test task as described at the top of this file.  
 	Note that this task fills the registers with different values to the
 	first register test task. */
@@ -672,6 +681,10 @@ void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskNa
 /* To prevent the optimiser removing the variables. */
 volatile xTaskHandle xTaskIn = xTask;
 volatile signed portCHAR *pcTaskNameIn = pcTaskName;
+
+	/* Remove compiler warnings. */
+	( void ) xTaskIn;
+	( void ) pcTaskNameIn;
 
 	/* The following three calls are simply to stop compiler warnings about the
 	functions not being used - they are called from the inline assembly. */

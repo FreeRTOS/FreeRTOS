@@ -61,7 +61,7 @@ Header: RTOSDemo/FreeRTOSConfig.h
 DefaultInit: EXECUTABLE
 InitBram: 0
 Active: 1
-CompilerOptLevel: 0
+CompilerOptLevel: 2
 GlobPtrOpt: 0
 DebugSym: 1
 ProfileFlag: 0
@@ -69,6 +69,6 @@ ProgStart:
 StackSize: 
 HeapSize: 
 LinkerScript: RTOSDemo/RTOSDemo_linker_script.ld
-ProgCCFlags: -I./RTOSDemo/flop -I../../Source/portable/GCC/PPC405_Xilinx -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames -Wextra
+ProgCCFlags: -I./RTOSDemo/flop -I../../Source/portable/GCC/PPC405_Xilinx -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames
 CompileInXps: 1
 NonXpsApp: 0

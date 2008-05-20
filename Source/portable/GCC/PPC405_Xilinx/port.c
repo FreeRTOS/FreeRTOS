@@ -194,12 +194,15 @@ const unsigned portLONG ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ
 }
 /*-----------------------------------------------------------*/
 
-void vPortISRHandler( void *vNullDoNotUse )
+void vPortISRHandler( void *pvNullDoNotUse )
 {
 unsigned portLONG ulInterruptStatus, ulInterruptMask = 1UL;
 portBASE_TYPE xInterruptNumber;
 XIntc_Config *pxInterruptController;
 XIntc_VectorTableEntry *pxTable;
+
+	/* Just to remove compiler warning. */
+	( void ) pvNullDoNotUse;	
 
 	/* Get the configuration by using the device ID - in this case it is
 	assumed that only one interrupt controller is being used. */

@@ -82,8 +82,8 @@ to vTaskSuspend/Resume(). */
 static xTaskHandle xSecondary;
 
 /* Used to ensure that tasks are still executing without error. */
-static portBASE_TYPE xPrimaryCycles = 0, xSecondaryCycles = 0;
-static portBASE_TYPE xErrorOccurred = pdFALSE;
+static volatile portBASE_TYPE xPrimaryCycles = 0, xSecondaryCycles = 0;
+static volatile portBASE_TYPE xErrorOccurred = pdFALSE;
 
 /* Provides a simple mechanism for the primary task to know when the
 secondary task has executed. */

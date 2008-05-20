@@ -79,7 +79,7 @@ count value set to the maximum, and one with the count value set to zero. */
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
 detected in any of the tasks. */
-static portBASE_TYPE xErrorDetected = pdFALSE;
+static volatile portBASE_TYPE xErrorDetected = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -122,7 +122,7 @@ typedef struct COUNT_SEM_STRUCT
 } xCountSemStruct;
 
 /* Two structures are defined, one is passed to each test task. */
-static xCountSemStruct xParameters[ countNUM_TEST_TASKS ];
+static volatile xCountSemStruct xParameters[ countNUM_TEST_TASKS ];
 
 /*-----------------------------------------------------------*/
 

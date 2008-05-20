@@ -148,9 +148,9 @@ static unsigned portLONG ulCounter;
 Each complete iteration of the controller task increments this variable
 provided no errors have been found.  The variable maintaining the same value
 is therefore indication of an error. */
-static unsigned portSHORT usCheckVariable = ( unsigned portSHORT ) 0;
-static portBASE_TYPE xSuspendedQueueSendError = pdFALSE;
-static portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
+static volatile unsigned portSHORT usCheckVariable = ( unsigned portSHORT ) 0;
+static volatile portBASE_TYPE xSuspendedQueueSendError = pdFALSE;
+static volatile portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
 
 /* Queue used by the second test. */
 xQueueHandle xSuspendedTestQueue;

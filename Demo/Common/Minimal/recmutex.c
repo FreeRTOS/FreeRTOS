@@ -113,8 +113,8 @@ static void prvRecursiveMutexPollingTask( void *pvParameters );
 static xSemaphoreHandle xMutex;
 
 /* Variables used to detect and latch errors. */
-static portBASE_TYPE xErrorOccurred = pdFALSE, xControllingIsSuspended = pdFALSE, xBlockingIsSuspended = pdFALSE;
-static unsigned portBASE_TYPE uxControllingCycles = 0, uxBlockingCycles, uxPollingCycles = 0;
+static volatile portBASE_TYPE xErrorOccurred = pdFALSE, xControllingIsSuspended = pdFALSE, xBlockingIsSuspended = pdFALSE;
+static volatile unsigned portBASE_TYPE uxControllingCycles = 0, uxBlockingCycles, uxPollingCycles = 0;
 
 /* Handles of the two higher priority tasks, required so they can be resumed 
 (unsuspended). */

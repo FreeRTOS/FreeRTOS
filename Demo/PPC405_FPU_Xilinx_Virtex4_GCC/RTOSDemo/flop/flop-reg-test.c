@@ -109,7 +109,7 @@ static void vFlopTest2( void *pvParameters );
 
 /* Buffers into which the flop registers will be saved.  There is a buffer for 
 both tasks. */
-static unsigned portLONG ulFlopRegisters[ flopNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ] = { 0 };
+static volatile unsigned portLONG ulFlopRegisters[ flopNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ] = { 0 };
 
 /* Variables that are incremented by the tasks to indicate that they are still
 running. */
@@ -163,7 +163,7 @@ static void vFlopTest1( void *pvParameters )
 		back the next time the task runs.  Being preempted during this memset
 		could cause the test to fail, hence the critical section. */
 		portENTER_CRITICAL();
-			memset( ulFlopRegisters[ 0 ], 0x00, ( portNO_FLOP_REGISTERS_TO_SAVE * sizeof( unsigned portBASE_TYPE ) ) );
+			memset( ( void * ) ulFlopRegisters[ 0 ], 0x00, ( portNO_FLOP_REGISTERS_TO_SAVE * sizeof( unsigned portBASE_TYPE ) ) );
 		portEXIT_CRITICAL();
 
 		/* We don't have to do anything other than indicate that we are 
@@ -182,7 +182,7 @@ static void vFlopTest2( void *pvParameters )
 		registers.  Clear the buffer to ensure the same values then get written
 		back the next time the task runs. */
 		portENTER_CRITICAL();
-			memset( ulFlopRegisters[ 1 ], 0x00, ( portNO_FLOP_REGISTERS_TO_SAVE * sizeof( unsigned portBASE_TYPE ) ) );
+			memset( ( void * ) ulFlopRegisters[ 1 ], 0x00, ( portNO_FLOP_REGISTERS_TO_SAVE * sizeof( unsigned portBASE_TYPE ) ) );
 		portEXIT_CRITICAL();
 
 		/* We don't have to do anything other than indicate that we are 
@@ -197,6 +197,7 @@ portBASE_TYPE xAreFlopRegisterTestsStillRunning( void )
 {
 portBASE_TYPE xReturn = pdPASS;
 unsigned portBASE_TYPE x, y, z = flopSTART_VALUE;
+static unsigned portLONG ulLastFlop1CycleCount = 0, ulLastFlop2CycleCount = 0;
 
 	/* Called from the 'check' task.
 	
@@ -219,17 +220,17 @@ unsigned portBASE_TYPE x, y, z = flopSTART_VALUE;
 
 	/* Check both tasks have actually been swapped in and out since this function
 	last executed. */
-	if( ulFlop1CycleCount == 0 )
+	if( ulFlop1CycleCount == ulLastFlop1CycleCount )
 	{
 		xReturn = pdFAIL;
 	}
 
-	if( ulFlop2CycleCount == 0 )
+	if( ulFlop2CycleCount == ulLastFlop2CycleCount )
 	{
 		xReturn = pdFAIL;
 	}
 
-	ulFlop1CycleCount = 0;
-	ulFlop2CycleCount = 0;
+	ulLastFlop1CycleCount = ulFlop1CycleCount;
+	ulLastFlop2CycleCount = ulFlop2CycleCount;
 }
 

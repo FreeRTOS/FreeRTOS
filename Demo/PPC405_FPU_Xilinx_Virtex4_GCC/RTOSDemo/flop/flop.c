@@ -155,16 +155,16 @@ portBASE_TYPE x, y;
 
 static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
 {
-volatile portFLOAT d1, d2, d3, d4;
+volatile portFLOAT ff1, ff2, ff3, ff4;
 volatile unsigned portSHORT *pusTaskCheckVariable;
-volatile portFLOAT dAnswer;
+volatile portFLOAT fAnswer;
 portSHORT sError = pdFALSE;
 
-	d1 = 123.4567;
-	d2 = 2345.6789;
-	d3 = -918.222;
+	ff1 = 123.4567F;
+	ff2 = 2345.6789F;
+	ff3 = -918.222F;
 
-	dAnswer = ( d1 + d2 ) * d3;
+	fAnswer = ( ff1 + ff2 ) * ff3;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
@@ -173,11 +173,11 @@ portSHORT sError = pdFALSE;
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
 	{
-		d1 = 123.4567;
-		d2 = 2345.6789;
-		d3 = -918.222;
+		ff1 = 123.4567F;
+		ff2 = 2345.6789F;
+		ff3 = -918.222F;
 
-		d4 = ( d1 + d2 ) * d3;
+		ff4 = ( ff1 + ff2 ) * ff3;
 
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
@@ -185,7 +185,7 @@ portSHORT sError = pdFALSE;
 
 		/* If the calculation does not match the expected constant, stop the 
 		increment of the check variable. */
-		if( fabs( d4 - dAnswer ) > 0.001 )
+		if( fabs( ff4 - fAnswer ) > 0.001F )
 		{
 			sError = pdTRUE;
 		}
@@ -207,16 +207,16 @@ portSHORT sError = pdFALSE;
 
 static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
 {
-volatile portFLOAT d1, d2, d3, d4;
+volatile portFLOAT ff1, ff2, ff3, ff4;
 volatile unsigned portSHORT *pusTaskCheckVariable;
-volatile portFLOAT dAnswer;
+volatile portFLOAT fAnswer;
 portSHORT sError = pdFALSE;
 
-	d1 = -389.38;
-	d2 = 32498.2;
-	d3 = -2.0001;
+	ff1 = -389.38F;
+	ff2 = 32498.2F;
+	ff3 = -2.0001F;
 
-	dAnswer = ( d1 / d2 ) * d3;
+	fAnswer = ( ff1 / ff2 ) * ff3;
 
 
 	/* The variable this task increments to show it is still running is passed in 
@@ -226,11 +226,11 @@ portSHORT sError = pdFALSE;
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
 	{
-		d1 = -389.38;
-		d2 = 32498.2;
-		d3 = -2.0001;
+		ff1 = -389.38F;
+		ff2 = 32498.2F;
+		ff3 = -2.0001F;
 
-		d4 = ( d1 / d2 ) * d3;
+		ff4 = ( ff1 / ff2 ) * ff3;
 
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
@@ -238,7 +238,7 @@ portSHORT sError = pdFALSE;
 		
 		/* If the calculation does not match the expected constant, stop the 
 		increment of the check variable. */
-		if( fabs( d4 - dAnswer ) > 0.001 )
+		if( fabs( ff4 - fAnswer ) > 0.001F )
 		{
 			sError = pdTRUE;
 		}
@@ -260,7 +260,7 @@ portSHORT sError = pdFALSE;
 
 static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
 {
-volatile portFLOAT *pdArray, dTotal1, dTotal2, dDifference;
+volatile portFLOAT *pfArray, fTotal1, fTotal2, fDifference;
 volatile unsigned portSHORT *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
@@ -270,20 +270,20 @@ portSHORT sError = pdFALSE;
 	as the parameter. */
 	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
 
-	pdArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
+	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
 	/* Keep filling an array, keeping a running total of the values placed in the 
 	array.  Then run through the array adding up all the values.  If the two totals 
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
-		dTotal1 = 0.0;
-		dTotal2 = 0.0;
+		fTotal1 = 0.0F;
+		fTotal2 = 0.0F;
 
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
-			pdArray[ xPosition ] = ( portFLOAT ) xPosition + 5.5;
-			dTotal1 += ( portFLOAT ) xPosition + 5.5;	
+			pfArray[ xPosition ] = ( portFLOAT ) xPosition + 5.5F;
+			fTotal1 += ( portFLOAT ) xPosition + 5.5F;	
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -292,11 +292,11 @@ portSHORT sError = pdFALSE;
 
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
-			dTotal2 += pdArray[ xPosition ];
+			fTotal2 += pfArray[ xPosition ];
 		}
 
-		dDifference = dTotal1 - dTotal2;
-		if( fabs( dDifference ) > 0.001 )
+		fDifference = fTotal1 - fTotal2;
+		if( fabs( fDifference ) > 0.001F )
 		{
 			sError = pdTRUE;
 		}
@@ -317,7 +317,7 @@ portSHORT sError = pdFALSE;
 
 static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
 {
-volatile portFLOAT *pdArray, dTotal1, dTotal2, dDifference;
+volatile portFLOAT *pfArray, fTotal1, fTotal2, fDifference;
 volatile unsigned portSHORT *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
@@ -327,20 +327,20 @@ portSHORT sError = pdFALSE;
 	as the parameter. */
 	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
 
-	pdArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
+	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
 	/* Keep filling an array, keeping a running total of the values placed in the 
 	array.  Then run through the array adding up all the values.  If the two totals 
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
-		dTotal1 = 0.0;
-		dTotal2 = 0.0;
+		fTotal1 = 0.0F;
+		fTotal2 = 0.0F;
 
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
-			pdArray[ xPosition ] = ( portFLOAT ) xPosition * 12.123;
-			dTotal1 += ( portFLOAT ) xPosition * 12.123;	
+			pfArray[ xPosition ] = ( portFLOAT ) xPosition * 12.123F;
+			fTotal1 += ( portFLOAT ) xPosition * 12.123F;	
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -349,11 +349,11 @@ portSHORT sError = pdFALSE;
 
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
-			dTotal2 += pdArray[ xPosition ];
+			fTotal2 += pfArray[ xPosition ];
 		}
 
-		dDifference = dTotal1 - dTotal2;
-		if( fabs( dDifference ) > 0.001 )
+		fDifference = fTotal1 - fTotal2;
+		if( fabs( fDifference ) > 0.001F )
 		{
 			sError = pdTRUE;
 		}

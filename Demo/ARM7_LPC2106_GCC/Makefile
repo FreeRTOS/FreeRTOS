@@ -44,7 +44,7 @@ WARNINGS=-Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align
 #
 CFLAGS=$(WARNINGS) -D $(RUN_MODE) -D GCC_ARM7 -I. -I../../Source/include \
 		-I../Common/include $(DEBUG) -mcpu=arm7tdmi -T$(LDSCRIPT) \
-		 $(OPTIM) -fomit-frame-pointer
+		 $(OPTIM) -fomit-frame-pointer -fno-strict-aliasing
 
 ifeq ($(USE_THUMB_MODE),YES)
 	CFLAGS += -mthumb-interwork -D THUMB_INTERWORK

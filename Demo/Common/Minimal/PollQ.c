@@ -114,6 +114,14 @@ static xQueueHandle xPolledQueue;
 	/* Create the queue used by the producer and consumer. */
 	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
 
+	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
+	in use.  The queue registry is provided as a means for kernel aware 
+	debuggers to locate queues and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( xPolledQueue, ( signed portCHAR * ) "Poll_Test_Queue" );
+
 	/* Spawn the producer and consumer. */
 	xTaskCreate( vPolledQueueConsumer, ( signed portCHAR * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
 	xTaskCreate( vPolledQueueProducer, ( signed portCHAR * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );

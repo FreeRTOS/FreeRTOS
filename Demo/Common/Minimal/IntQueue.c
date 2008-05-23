@@ -218,6 +218,16 @@ void vStartInterruptQueueTasks( void )
 	interrupts. */
 	xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( unsigned portBASE_TYPE ) sizeof( unsigned portBASE_TYPE ) );
 	xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( unsigned portBASE_TYPE ) sizeof( unsigned portBASE_TYPE ) );
+
+	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
+	in use.  The queue registry is provided as a means for kernel aware 
+	debuggers to locate queues and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( xNormallyFullQueue, ( signed portCHAR * ) "NormallyFull" );
+	vQueueAddToRegistry( xNormallyEmptyQueue, ( signed portCHAR * ) "NormallyEmpty" );
+
 }
 /*-----------------------------------------------------------*/
 

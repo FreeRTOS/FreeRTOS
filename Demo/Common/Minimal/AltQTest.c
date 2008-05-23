@@ -132,6 +132,14 @@ xSemaphoreHandle xMutex;
 	prvSendFrontAndBackTest demo. */
 	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( unsigned portLONG ) );
 
+	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
+	in use.  The queue registry is provided as a means for kernel aware 
+	debuggers to locate queues and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( xQueue, ( signed portCHAR * ) "Alt_Gen_Test_Queue" );
+
 	/* Create the demo task and pass it the queue just created.  We are
 	passing the queue handle by value so it does not matter that it is
 	declared on the stack here. */
@@ -139,6 +147,14 @@ xSemaphoreHandle xMutex;
 
 	/* Create the mutex used by the prvMutexTest task. */
 	xMutex = xSemaphoreCreateMutex();
+
+	/* vQueueAddToRegistry() adds the mutex to the registry, if one is
+	in use.  The registry is provided as a means for kernel aware 
+	debuggers to locate mutex and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( ( xQueueHandle ) xMutex, ( signed portCHAR * ) "Alt_Q_Mutex" );
 
 	/* Create the mutex demo tasks and pass it the mutex just created.  We are
 	passing the mutex handle by value so it does not matter that it is declared

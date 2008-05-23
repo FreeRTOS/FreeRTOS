@@ -139,6 +139,16 @@ void vStartCountingSemaphoreTasks( void )
 	xParameters[ 1 ].uxExpectedStartCount = 0;
 	xParameters[ 1 ].uxLoopCounter = 0;
 
+	/* vQueueAddToRegistry() adds the semaphore to the registry, if one is
+	in use.  The registry is provided as a means for kernel aware 
+	debuggers to locate semaphores and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( ( xQueueHandle ) xParameters[ 0 ].xSemaphore, ( signed portCHAR * ) "Counting_Sem_1" );
+	vQueueAddToRegistry( ( xQueueHandle ) xParameters[ 1 ].xSemaphore, ( signed portCHAR * ) "Counting_Sem_2" );
+
+
 	/* Were the semaphores created? */
 	if( ( xParameters[ 0 ].xSemaphore != NULL ) || ( xParameters[ 1 ].xSemaphore != NULL ) )
 	{

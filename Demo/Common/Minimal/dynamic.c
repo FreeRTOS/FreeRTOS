@@ -163,6 +163,15 @@ xQueueHandle xSuspendedTestQueue;
 void vStartDynamicPriorityTasks( void )
 {
 	xSuspendedTestQueue = xQueueCreate( priSUSPENDED_QUEUE_LENGTH, sizeof( unsigned portLONG ) );
+
+	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
+	in use.  The queue registry is provided as a means for kernel aware 
+	debuggers to locate queues and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( xSuspendedTestQueue, ( signed portCHAR * ) "Suspended_Test_Queue" );
+
 	xTaskCreate( vContinuousIncrementTask, ( signed portCHAR * ) "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinousIncrementHandle );
 	xTaskCreate( vLimitedIncrementTask, ( signed portCHAR * ) "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
 	xTaskCreate( vCounterControlTask, ( signed portCHAR * ) "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );

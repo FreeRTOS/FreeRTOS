@@ -198,6 +198,17 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 
+#ifndef configQUEUE_REGISTRY_SIZE
+	#define configQUEUE_REGISTRY_SIZE 0
+#endif
+
+#if configQUEUE_REGISTRY_SIZE < 1
+	#define configQUEUE_REGISTRY_SIZE 0
+	#define vQueueAddToRegistry( xQueue, pcName )
+	#define vQueueUnregisterQueue( xQueue )
+#endif
+
+
 /* Remove any unused trace macros. */
 #ifndef traceSTART
 	/* Used to perform any necessary initialisation - for example, open a file

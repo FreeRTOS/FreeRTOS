@@ -78,6 +78,7 @@ zero. */
 #define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( 0 )
 #define queueDONT_BLOCK					 ( ( portTickType ) 0 )
 #define queueMUTEX_GIVE_BLOCK_TIME		 ( ( portTickType ) 0 )
+
 /*
  * Definition of the queue used by the scheduler.
  * Items are queued by copy, not reference.
@@ -99,6 +100,7 @@ typedef struct QueueDefinition
 
 	signed portBASE_TYPE xRxLock;			/*< Stores the number of items received from the queue (removed from the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
 	signed portBASE_TYPE xTxLock;			/*< Stores the number of items transmitted to the queue (added to the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
+
 } xQUEUE;
 /*-----------------------------------------------------------*/
 
@@ -131,13 +133,44 @@ signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
 signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
 unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
 
-
+/*
+ * Co-routine queue functions differ from task queue functions.  Co-routines are
+ * an optional component.
+ */
 #if configUSE_CO_ROUTINES == 1
 	signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken );
 	signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle pxQueue, void *pvBuffer, signed portBASE_TYPE *pxTaskWoken );
 	signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xTicksToWait );
 	signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait );
 #endif
+
+/*
+ * The queue registry is just a means for kernel aware debuggers to locate
+ * queue structures.  It has no other purpose so is an optional component.
+ */
+#if configQUEUE_REGISTRY_SIZE > 0
+	
+	/* The type stored within the queue registry array.  This allows a name
+	to be assigned to each queue making kernel aware debugging a little 
+	more user friendly. */
+	typedef struct QUEUE_REGISTRY_ITEM
+	{
+		signed portCHAR *pcQueueName;
+		xQueueHandle xHandle;
+	} xQueueRegistryItem;
+
+	/* The queue registry is simply an array of xQueueRegistryItem structures.
+	The pcQueueName member of a structure being NULL is indicative of the
+	array position being vacant. */
+	static xQueueRegistryItem xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
+
+	/* Removes a queue from the registry by simply setting the pcQueueName
+	member to NULL. */
+	static void vQueueUnregisterQueue( xQueueHandle xQueue );
+	void vQueueAddToRegistry( xQueueHandle xQueue, signed portCHAR *pcQueueName );
+
+#endif
+
 
 /*
  * Unlocks a queue locked by a call to prvLockQueue.  Locking a queue does not
@@ -1079,7 +1112,7 @@ unsigned portBASE_TYPE uxReturn;
 void vQueueDelete( xQueueHandle pxQueue )
 {
 	traceQUEUE_DELETE( pxQueue );
-
+	vQueueUnregisterQueue( pxQueue );
 	vPortFree( pxQueue->pcHead );
 	vPortFree( pxQueue );
 }
@@ -1456,4 +1489,48 @@ signed portBASE_TYPE xReturn;
 }
 #endif
 /*-----------------------------------------------------------*/
+
+#if configQUEUE_REGISTRY_SIZE > 0
+
+	void vQueueAddToRegistry( xQueueHandle xQueue, signed portCHAR *pcQueueName )
+	{
+	unsigned portBASE_TYPE ux;
+
+		/* See if there is an empty space in the registry.  A NULL name denotes
+		a free slot. */
+		for( ux = 0; ux < configQUEUE_REGISTRY_SIZE; ux++ )
+		{
+			if( xQueueRegistry[ ux ].pcQueueName == NULL )
+			{
+				/* Store the information on this queue. */
+				xQueueRegistry[ ux ].pcQueueName = pcQueueName;
+				xQueueRegistry[ ux ].xHandle = xQueue;
+				break;
+			}
+		}
+	}
+
+#endif
+	/*-----------------------------------------------------------*/
+
+#if configQUEUE_REGISTRY_SIZE > 0
+
+	static void vQueueUnregisterQueue( xQueueHandle xQueue )
+	{
+	unsigned portBASE_TYPE ux;
+
+		/* See if the handle of the queue being unregistered in actually in the
+		registry. */
+		for( ux = 0; ux < configQUEUE_REGISTRY_SIZE; ux++ )
+		{
+			if( xQueueRegistry[ ux ].xHandle == xQueue )
+			{
+				/* Set the name to NULL to show that this slot if free again. */
+				xQueueRegistry[ ux ].pcQueueName = NULL;
+				break;
+			}
+		}	
+	}
+
+#endif
 

@@ -167,19 +167,6 @@ extern void *pxCurrentTCB;
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( void )
-{
-unsigned portLONG ulStatus;
-
-	SetCoreSW0();
-
-	/* Unmask all interrupts. */
-	ulStatus = _CP0_GET_STATUS();
-	ulStatus &= ~portALL_IPL_BITS;
-	_CP0_SET_STATUS( ulStatus );
-}
-/*-----------------------------------------------------------*/
-
 void vPortIncrementTick( void )
 {
 unsigned portBASE_TYPE uxSavedStatus;

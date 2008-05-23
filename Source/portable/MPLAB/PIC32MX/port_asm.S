@@ -51,7 +51,6 @@
 #include <sys/asm.h>
 #include "ISR_Support.h"
  
-#define portEXC_CODE_MASK ( 0x1f << 2 )
 
 	.set	nomips16
  	.set 	noreorder
@@ -138,10 +137,9 @@ vPortYieldISR:
 	la			sp, xISRStackTop
 	lw			sp, (sp)
 
-	/* Increment and save the nesting count in case this gets preempted. */
+	/* Set the nesting count. */
 	la			k0, uxInterruptNesting
-	lw			s6, (k0)
-	addiu		s6, s6, 1
+	addiu		s6, zero, 1
 	sw			s6, 0(k0)
 
 	/* s6 holds the EPC value, this is saved with the rest of the context
@@ -261,11 +259,10 @@ vPortYieldISR:
 	/* Protect access to the k registers, and others. */
 	di
 
-	/* Decrement the nesting count. */
+	/* Set nesting back to zero.  As the lowest priority interrupt this
+	interrupt cannot have nested. */
 	la			k0, uxInterruptNesting
-	lw			k1, (k0)
-	addiu		k1, k1, -1
-	sw			k1, 0(k0)
+	sw			zero, 0(k0)
 
 	/* Switch back to use the real stack pointer. */
 	add			sp, zero, s5
@@ -273,8 +270,7 @@ vPortYieldISR:
 	/* Restore the real s5 value. */
 	lw			s5, 40(sp)
 
-	/* If the critical nesting is not zero and a yield is not pended
-	then set status as if within a critical section. */
+	/* Pop the status and epc values. */
 	lw			k1, portSTATUS_STACK_LOCATION(sp)
 	lw			k0, portEPC_STACK_LOCATION(sp)
 

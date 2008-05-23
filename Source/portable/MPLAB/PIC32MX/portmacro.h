@@ -94,6 +94,7 @@ extern "C" {
 /* Critical section management. */
 #define portIPL_SHIFT				( 10 )
 #define portALL_IPL_BITS			( 0x3f << portIPL_SHIFT )
+#define portSW0_BIT					( 0x01 << 8 )
 
 #define portDISABLE_INTERRUPTS()											\
 {																			\
@@ -130,10 +131,19 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
-extern void vPortYield( void );
-#define portYIELD()	vPortYield()
 
-#define portNOP()				asm volatile ( 	"nop" )
+#define portYIELD()								\
+{												\
+unsigned portLONG ulStatus;						\
+												\
+	/* Unmask all interrupts. */				\
+	ulStatus = _CP0_GET_CAUSE();				\
+	ulStatus |= portSW0_BIT;					\
+	_CP0_SET_CAUSE( ulStatus );					\
+}
+
+
+#define portNOP()	asm volatile ( 	"nop" )
 
 /*-----------------------------------------------------------*/
 

@@ -68,8 +68,8 @@ portBASE_TYPE xRegTestError = pdFALSE;
 
 void vStartRegTestTasks( void )
 {
-	xTaskCreate( prvRegisterCheck1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegisterCheck2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );		
+	xTaskCreate( prvRegisterCheck1, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegisterCheck2, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );		
 }
 /*-----------------------------------------------------------*/
 

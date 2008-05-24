@@ -113,6 +113,10 @@ extern void vPortYield( void );
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
+/* Required by the kernel aware debugger. */
+#ifdef __DEBUG
+	#define portREMOVE_STATIC_QUALIFIER
+#endif
 
 #define portNOP()				asm volatile ( "NOP" )
 

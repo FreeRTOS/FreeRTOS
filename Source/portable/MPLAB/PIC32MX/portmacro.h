@@ -152,7 +152,15 @@ unsigned portLONG ulStatus;						\
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
-#define portEND_SWITCHING_ISR( vSwitchRequired ) if( vSwitchRequired ) SetCoreSW0()
+#define portEND_SWITCHING_ISR( xSwitchRequired )	if( xSwitchRequired )	\
+													{						\
+														portYIELD();		\
+													}
+
+/* Required by the kernel aware debugger. */
+#ifdef __DEBUG
+	#define portREMOVE_STATIC_QUALIFIER
+#endif
 
 #ifdef __cplusplus
 }

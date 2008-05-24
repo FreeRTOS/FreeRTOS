@@ -162,7 +162,7 @@ unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue
 	/* The queue registry is simply an array of xQueueRegistryItem structures.
 	The pcQueueName member of a structure being NULL is indicative of the
 	array position being vacant. */
-	static xQueueRegistryItem xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
+	xQueueRegistryItem xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
 
 	/* Removes a queue from the registry by simply setting the pcQueueName
 	member to NULL. */

@@ -60,7 +60,6 @@
  */
 #define tskIDLE_STACK_SIZE	configMINIMAL_STACK_SIZE
 
-
 /*
  * Task control block.  A task control block (TCB) is allocated to each task,
  * and stores the context of the task.
@@ -91,6 +90,14 @@ typedef struct tskTaskControlBlock
 	#endif
 		
 } tskTCB;
+
+/*
+ * Some kernel aware debuggers require data to be viewed to be global, rather
+ * than file scope.
+ */
+#ifdef portREMOVE_STATIC_QUALIFIER
+	#define static
+#endif
 
 /*lint -e956 */
 

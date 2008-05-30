@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -66,8 +66,8 @@
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 72000000UL )  
-#define configPERIPHERAL_CLOCK_HZ		( ( unsigned portLONG ) 36000000UL )
+#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 80000000UL )  
+#define configPERIPHERAL_CLOCK_HZ		( ( unsigned portLONG ) 40000000UL )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( 200 )
 #define configISR_STACK_SIZE			( 400 )
@@ -81,7 +81,7 @@
 #define configQUEUE_REGISTRY_SIZE		0
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 		0
+#define configUSE_CO_ROUTINES 			0
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero

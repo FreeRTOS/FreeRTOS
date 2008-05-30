@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -53,15 +53,6 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Fast Interrupt Test" - A high frequency periodic interrupt is generated
- * using a free running timer to demonstrate the use of the
- * configKERNEL_INTERRUPT_PRIORITY configuration constant.  The interrupt
- * service routine measures the number of processor clocks that occur between
- * each interrupt - and in so doing measures the jitter in the interrupt timing.
- * The maximum measured jitter time is latched in the ulMaxJitter variable, and
- * displayed on the LCD display by the 'LCD' task as described below.  The
- * fast interrupt is configured and handled in the timertest.c source file.
- *
  * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
  * is permitted to access the display directly.  Other tasks wishing to write a
  * message to the LCD send the message on a queue to the LCD task instead of
@@ -73,8 +64,9 @@
  * check that all the standard demo tasks are still operational.  Should any 
  * unexpected behaviour within a demo task be discovered the check task will 
  * write an error to the LCD (via the LCD task).  If all the demo tasks are 
- * executing with their expected behaviour then the check task writes the 
- * maximum jitter time to the LCD (as described above) - again via the LCD task.
+ * executing with their expected behaviour then the check task instead writes 
+ * a count of the number of times the high frequency interrupt has incremented
+ * ulHighFrequencyTimerInterrupts - which is one in every 20,000 interrupts.
  *
  * "Register test" tasks - These tasks are used in part to test the kernel port.
  * They set each processor register to a known value, then check that the 
@@ -82,6 +74,26 @@
  * to different values, and will get swapping in and out between setting and 
  * then subsequently checking the register values.  Discovery of an incorrect
  * value would be indicative of an error in the task switching mechanism.
+ *
+ * By way of demonstration, the demo application defines 
+ * configMAX_SYSCALL_INTERRUPT_PRIORITY to be 3, configKERNEL_INTERRUPT_PRIORITY 
+ * to be 1, and all other interrupts as follows:
+ *
+ *	+ The UART is allocated a priority of 2. This means it can interrupt the 
+ *    RTOS tick, and can also safely use queues.
+ *  + Two timers are configured to generate interrupts just to test the nesting 
+ *    and queue access mechanisms. These timers are allocated priorities 2 and 3 
+ *    respectively. Even though they both access the same two queues, the 
+ *    priority 3 interrupt can safely interrupt the priority 2 interrupt. Both 
+ *    can interrupt the RTOS tick.
+ *  + Finally a high frequency timer interrupt is configured to use priority 4 - 
+ *    therefore kernel activity will never prevent the high frequency timer from 
+ *    executing immediately that the interrupt is raised (within the limitations 
+ *    of the hardware itself). It would not be safe to access a queue from this 
+ *    interrupt as it is above configMAX_SYSCALL_INTERRUPT_PRIORITY. 
+ *
+ * See the online documentation for this demo for more information on interrupt
+ * usage.
  */
 
 /* Standard includes. */
@@ -104,7 +116,7 @@
 #include "timertest.h"
 #include "IntQueue.h"
 
-#pragma config FPLLMUL = MUL_18, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
+#pragma config FPLLMUL = MUL_20, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
 #pragma config POSCMOD = HS, FNOSC = PRIPLL, FPBDIV = DIV_2
 
 /*-----------------------------------------------------------*/
@@ -138,8 +150,8 @@ See the comtest.c file for more information. */
 /* Misc. */
 #define mainDONT_WAIT						( 0 )
 
-/* Dimension the buffer used to hold the value of the maximum jitter time when
-it is converted to a string. */
+/* Dimension the buffer used to hold the value of the high frequency timer 
+count when it is converted to a string. */
 #define mainMAX_STRING_LENGTH				( 20 )
 
 /* The frequency at which the "fast interrupt test" interrupt will occur. */
@@ -262,7 +274,8 @@ extern void vRegTest2( unsigned long * );
 static void prvSetupHardware( void )
 {
 	/* Set the system and peripheral bus speeds and enable the program cache*/
-    SYSTEMConfigPerformance( configCPU_CLOCK_HZ );
+    SYSTEMConfigPerformance( configCPU_CLOCK_HZ - 1 );
+	mOSCSetPBDIV( OSC_PB_DIV_2 );
 
 	/* Setup to use the external interrupt controller. */
     INTEnableSystemMultiVectoredInt();
@@ -279,11 +292,11 @@ static void prvCheckTask( void *pvParameters )
 unsigned portLONG ulLastRegTest1Value = 0, ulLastRegTest2Value = 0, ulTicksToWait = mainNO_ERROR_PERIOD;
 portTickType xLastExecutionTime;
 
-/* Buffer into which the maximum jitter time is written as a string. */
+/* Buffer into which the high frequency timer count is written as a string. */
 static portCHAR cStringBuffer[ mainMAX_STRING_LENGTH ];
 
-/* The maximum jitter time measured by the fast interrupt test. */
-extern unsigned portLONG ulMaxJitter ;
+/* The count of the high frequency timer interrupts. */
+extern unsigned portLONG ulHighFrequencyTimerInterrupts;
 xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 
 	/* Setup the high frequency, high priority, timer test.  It is setup here
@@ -357,9 +370,9 @@ xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 			xMessage.pcMessage = "Error: Int queue";
 		}
 
-		/* Write the max jitter time to the string buffer.  It will only be 
-		displayed if no errors have been detected. */
-		sprintf( cStringBuffer, "%dns max jitter", ( int ) ( ( ulMaxJitter - mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ) * mainNS_PER_CLOCK ) );
+		/* Write the ulHighFrequencyTimerInterrupts value to the string 
+		buffer.  It will only be displayed if no errors have been detected. */
+		sprintf( cStringBuffer, "Pass %u", ( unsigned int ) ulHighFrequencyTimerInterrupts );
 
 		xQueueSend( xLCDQueue, &xMessage, mainDONT_WAIT );
 		vParTestToggleLED( mainCHECK_LED );
@@ -369,6 +382,7 @@ xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 
 void vApplicationStackOverflowHook( void )
 {
+	/* Look at pxCurrentTCB to see which task overflowed its stack. */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/

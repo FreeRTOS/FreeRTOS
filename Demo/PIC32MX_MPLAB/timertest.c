@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -53,12 +53,6 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 
-/* Demo includes. */
-#include "partest.h"
-
-/* The number of interrupts to pass before we start looking at the jitter. */
-#define timerSETTLE_TIME			200
-
 /* The maximum value the 16bit timer can contain. */
 #define timerMAX_COUNT				0xffff
 
@@ -67,21 +61,26 @@ void __attribute__( (interrupt(ipl0), vector(_TIMER_2_VECTOR))) vT2InterruptWrap
 
 /*-----------------------------------------------------------*/
 
-/* The maximum time (in processor clocks) between two consecutive timer
-interrupts so far. */
-unsigned portLONG ulMaxJitter = 0;
+/* Incremented every 20,000 interrupts, so should count in seconds. */
+unsigned portLONG ulHighFrequencyTimerInterrupts = 0;
+
+/* The frequency at which the timer is interrupting. */
+static unsigned portLONG ulFrequencyHz;
 
 /*-----------------------------------------------------------*/
 
 void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 {
-	/* T2 is used to generate interrupts.  The core timer is used to provide an 
-	accurate time measurement. */
+	/* Remember the frequency so it can be used from the ISR. */
+	ulFrequencyHz = ( unsigned portLONG ) usFrequencyHz;
+
+	/* T2 is used to generate interrupts above the kernel and max syscall interrupt
+	priority. */
 	T2CON = 0;
 	TMR2 = 0;
 
 	/* Timer 2 is going to interrupt at usFrequencyHz Hz. */
-	PR2 = ( unsigned portSHORT ) ( configPERIPHERAL_CLOCK_HZ / ( unsigned portLONG ) usFrequencyHz );
+	PR2 = ( unsigned portSHORT ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned portLONG ) usFrequencyHz ) - 1 );
 
 	/* Setup timer 2 interrupt priority to be above the kernel priority so 
 	the timer jitter is not effected by the kernel activity. */
@@ -100,37 +99,17 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 
 void vT2InterruptHandler( void )
 {
-static unsigned portLONG ulLastCount = 0, ulSettleCount = 0;
-static unsigned portLONG ulThisCount, ulDifference;
+static unsigned portLONG ulCalls = 0;
 
-	/* Capture the timer value as we enter the interrupt. */
-	ulThisCount = _CP0_GET_COUNT();
-
-	if( ulSettleCount >= timerSETTLE_TIME )
+	++ulCalls;
+	if( ulCalls >= ulFrequencyHz )
 	{
-		/* What is the difference between the timer value in this interrupt
-		and the value from the last interrupt. */
-		ulDifference = ulThisCount - ulLastCount;
-
-		/* Store the difference in the timer values if it is larger than the
-		currently stored largest value.  The difference over and above the 
-		expected difference will give the 'jitter' in the processing of these
-		interrupts. */
-		if( ulDifference > ulMaxJitter )
-		{
-			ulMaxJitter = ulDifference;
-		}
+		/* Increment the count that will be shown on the LCD. 
+		The increment occurs once every 20,000 interrupts so
+		ulHighFrequencyTimerInterrupts should count in seconds. */
+		ulHighFrequencyTimerInterrupts++;
+		ulCalls = 0;
 	}
-	else
-	{
-		/* Don't bother storing any values for the first couple of 
-		interrupts. */
-		ulSettleCount++;
-	}
-
-	/* Remember what the timer value was this time through, so we can calculate
-	the difference the next time through. */
-	ulLastCount = ulThisCount;
 
 	/* Clear the timer interrupt. */
 	IFS0bits.T2IF = 0;

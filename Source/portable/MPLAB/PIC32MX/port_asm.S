@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -118,7 +118,7 @@ vPortYieldISR:
 
 	/* Also save s6 and s5 so we can use them during this interrupt.  Any
 	nesting interrupts should maintain the values of these registers
-	accross the ISR. */
+	across the ISR. */
 	sw			s6, 44(sp)
 	sw			s5, 40(sp)
 	sw			k1, portSTATUS_STACK_LOCATION(sp)

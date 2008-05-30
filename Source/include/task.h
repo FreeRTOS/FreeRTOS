@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -66,7 +66,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V5.0.0"
+#define tskKERNEL_VERSION_NUMBER "V5.0.2"
 
 /**
  * task. h
@@ -287,38 +287,39 @@ void vTaskDelete( xTaskHandle pxTask );
  * INCLUDE_vTaskDelay must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
+ *
+ * vTaskDelay() specifies a time at which the task wishes to unblock relative to
+ * the time at which vTaskDelay() is called.  For example, specifying a block 
+ * period of 100 ticks will cause the task to unblock 100 ticks after 
+ * vTaskDelay() is called.  vTaskDelay() does not therefore provide a good method
+ * of controlling the frequency of a cyclical task as the path taken through the 
+ * code, as well as other task and interrupt activity, will effect the frequency 
+ * at which vTaskDelay() gets called and therefore the time at which the task 
+ * next executes.  See vTaskDelayUntil() for an alternative API function designed 
+ * to facilitate fixed frequency execution.  It does this by specifying an 
+ * absolute time (rather than a relative time) at which the calling task should 
+ * unblock.
+ *
  * @param xTicksToDelay The amount of time, in tick periods, that
  * the calling task should block.
  *
  * Example usage:
-   <pre>
- // Wait 10 ticks before performing an action.
- // NOTE:
- // This is for demonstration only and would be better achieved
- // using vTaskDelayUntil ().
+
  void vTaskFunction( void * pvParameters )
  {
- portTickType xDelay, xNextTime;
-
-     // Calc the time at which we want to perform the action
-     // next.
-     xNextTime = xTaskGetTickCount () + ( portTickType ) 10;
+ void vTaskFunction( void * pvParameters )
+ {
+ // Block for 500ms.
+ const portTickType xDelay = 500 / portTICK_RATE_MS;
 
      for( ;; )
      {
-         xDelay = xNextTime - xTaskGetTickCount ();
-         xNextTime += ( portTickType ) 10;
-
-         // Guard against overflow
-         if( xDelay <= ( portTickType ) 10 )
-         {
-             vTaskDelay( xDelay );
-         }
-
-         // Perform action here.
+         // Simply toggle the LED every 500ms, blocking between each toggle.
+         vToggleLED();
+         vTaskDelay( xDelay );
      }
  }
-   </pre>
+
  * \defgroup vTaskDelay vTaskDelay
  * \ingroup TaskCtrl
  */

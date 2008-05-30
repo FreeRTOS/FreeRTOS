@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -549,7 +549,7 @@ typedef xQueueHandle xSemaphoreHandle;
  *
  * Mutex type semaphores cannot be used from within interrupt service routines.  
  *
- * See xSemaphoreCreateBinary() for an alternative implementation that can be 
+ * See vSemaphoreCreateBinary() for an alternative implementation that can be 
  * used for pure synchronisation (where one task or interrupt always 'gives' the 
  * semaphore and another always 'takes' the semaphore) and from within interrupt 
  * service routines.
@@ -604,7 +604,7 @@ typedef xQueueHandle xSemaphoreHandle;
  *
  * Mutex type semaphores cannot be used from within interrupt service routines.  
  *
- * See xSemaphoreCreateBinary() for an alternative implementation that can be 
+ * See vSemaphoreCreateBinary() for an alternative implementation that can be 
  * used for pure synchronisation (where one task or interrupt always 'gives' the 
  * semaphore and another always 'takes' the semaphore) and from within interrupt 
  * service routines.

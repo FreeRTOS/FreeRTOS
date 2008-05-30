@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -155,6 +155,15 @@ const portTickType xBlockTime = ( portTickType ) 100;
 			xTaskCreate( prvSemaphoreTest, ( signed portCHAR * ) "BlkSEM2", semtstSTACK_SIZE, ( void * ) pxSecondSemaphoreParameters, uxPriority, ( xTaskHandle * ) NULL );
 		}
 	}
+
+	/* vQueueAddToRegistry() adds the semaphore to the registry, if one is
+	in use.  The registry is provided as a means for kernel aware 
+	debuggers to locate semaphores and has no purpose if a kernel aware debugger
+	is not being used.  The call to vQueueAddToRegistry() will be removed
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	defined to be less than 1. */
+	vQueueAddToRegistry( ( xQueueHandle ) pxFirstSemaphoreParameters->xSemaphore, ( signed portCHAR * ) "Counting_Sem_1" );
+	vQueueAddToRegistry( ( xQueueHandle ) pxSecondSemaphoreParameters->xSemaphore, ( signed portCHAR * ) "Counting_Sem_2" );
 }
 /*-----------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -97,9 +97,9 @@ coverage. */
 /* Each task and interrupt is given a unique identifier.  This value is used to 
 identify which task sent or received each value.  The identifier is also used 
 to distinguish between two tasks that are running the same task function. */
-#define intqHIGH_PRIROITY_TASK1	( ( unsigned portBASE_TYPE ) 1 )
-#define intqHIGH_PRIROITY_TASK2	( ( unsigned portBASE_TYPE ) 2 )
-#define intqLOW_PRIROITY_TASK	( ( unsigned portBASE_TYPE ) 3 )
+#define intqHIGH_PRIORITY_TASK1	( ( unsigned portBASE_TYPE ) 1 )
+#define intqHIGH_PRIORITY_TASK2	( ( unsigned portBASE_TYPE ) 2 )
+#define intqLOW_PRIORITY_TASK	( ( unsigned portBASE_TYPE ) 3 )
 #define intqFIRST_INTERRUPT		( ( unsigned portBASE_TYPE ) 4 )
 #define intqSECOND_INTERRUPT	( ( unsigned portBASE_TYPE ) 5 )
 #define intqQUEUE_LENGTH		( ( unsigned portBASE_TYPE ) 10 )
@@ -207,11 +207,11 @@ static void prvQueueAccessLogError( unsigned portBASE_TYPE uxLine );
 void vStartInterruptQueueTasks( void )
 {
 	/* Start the test tasks. */
-	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H1QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIROITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask1 );
-	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIROITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
+	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H1QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask1 );
+	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
 	xTaskCreate( prvLowerPriorityNormallyEmptyTask, ( signed portCHAR * ) "LQRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
-	xTaskCreate( prv1stHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIROITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
-	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIROITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
+	xTaskCreate( prv1stHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
+	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
 	xTaskCreate( prvLowerPriorityNormallyFullTask, ( signed portCHAR * ) "LQRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
 
 	/* Create the queues that are accessed by multiple tasks and multiple 
@@ -280,7 +280,7 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 	/* The timer should not be started until after the scheduler has started. 
 	More than one task is running this code so we check the parameter value
 	to determine which task should start the timer. */
-	if( ( unsigned portBASE_TYPE ) pvParameters == intqHIGH_PRIROITY_TASK1 )
+	if( ( unsigned portBASE_TYPE ) pvParameters == intqHIGH_PRIORITY_TASK1 )
 	{
 		vInitialiseTimerForIntQueueTest();
 	}
@@ -303,7 +303,7 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 		/* Ensure the other task running this code gets a chance to execute. */
 		taskYIELD();
 		
-		if( ( unsigned portBASE_TYPE ) pvParameters == intqHIGH_PRIROITY_TASK1 )
+		if( ( unsigned portBASE_TYPE ) pvParameters == intqHIGH_PRIORITY_TASK1 )
 		{
 			/* Have we received all the expected values? */
 			if( uxValueForNormallyEmptyQueue > ( intqNUM_VALUES_TO_LOG + intqVALUE_OVERRUN ) )
@@ -324,12 +324,12 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 					}
 					else
 					{
-						if( ucNormallyEmptyReceivedValues[ ux ] == intqHIGH_PRIROITY_TASK1 )
+						if( ucNormallyEmptyReceivedValues[ ux ] == intqHIGH_PRIORITY_TASK1 )
 						{
 							/* Value was placed into the array by task 1. */
 							uxTask1++;
 						}
-						else if( ucNormallyEmptyReceivedValues[ ux ] == intqHIGH_PRIROITY_TASK2 )
+						else if( ucNormallyEmptyReceivedValues[ ux ] == intqHIGH_PRIORITY_TASK2 )
 						{
 							/* Value was placed into the array by task 2. */
 							uxTask2++;
@@ -388,7 +388,7 @@ portBASE_TYPE xQueueStatus;
 				prvQueueAccessLogError( __LINE__ );
 			}
 
-			prvRecordValue_NormallyEmpty( uxRxed, intqLOW_PRIROITY_TASK );
+			prvRecordValue_NormallyEmpty( uxRxed, intqLOW_PRIORITY_TASK );
 			
 			/* Wake the higher priority task again. */
 			vTaskResume( xHighPriorityNormallyEmptyTask1 );
@@ -451,7 +451,7 @@ portBASE_TYPE xQueueStatus;
 
 		if( ( xQueueStatus = xQueueSend( xNormallyFullQueue, &uxValueToTx, intqSHORT_DELAY ) ) != pdPASS )
 		{
-			/* intqHIGH_PRIROITY_TASK2 is never suspended so we would not 
+			/* intqHIGH_PRIORITY_TASK2 is never suspended so we would not 
 			expect it to ever time out. */
 			prvQueueAccessLogError( __LINE__ );
 		}
@@ -588,7 +588,7 @@ portBASE_TYPE xQueueStatus;
 			}
 			else
 			{
-				prvRecordValue_NormallyFull( uxValue, intqLOW_PRIROITY_TASK );
+				prvRecordValue_NormallyFull( uxValue, intqLOW_PRIORITY_TASK );
 			}
 			
 			vTaskPrioritySet( NULL, intqLOWER_PRIORITY );

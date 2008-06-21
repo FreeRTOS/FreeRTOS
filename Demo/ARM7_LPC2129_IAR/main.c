@@ -112,7 +112,7 @@
 #define mainRX_ENABLE				( ( unsigned portLONG ) 0x0004 )
 
 /* Constants to setup the PLL. */
-#define mainPLL_MUL_4				( ( unsigned portCHAR ) 0x0003 )
+#define mainPLL_MUL_5				( ( unsigned portCHAR ) 0x0004 )
 #define mainPLL_DIV_1				( ( unsigned portCHAR ) 0x0000 )
 #define mainPLL_ENABLE				( ( unsigned portCHAR ) 0x0001 )
 #define mainPLL_CONNECT				( ( unsigned portCHAR ) 0x0003 )
@@ -188,8 +188,8 @@ void main( void )
 
 static void prvSetupHardware( void )
 {
-	/* Setup the PLL to multiply the XTAL input by 4. */
-	PLLCFG = ( mainPLL_MUL_4 | mainPLL_DIV_1 );
+	/* Setup the PLL to multiply the XTAL input by 5. */
+	PLLCFG = ( mainPLL_MUL_5 | mainPLL_DIV_1 );
 
 	/* Activate the PLL by turning it on then feeding the correct sequence of
 	bytes. */

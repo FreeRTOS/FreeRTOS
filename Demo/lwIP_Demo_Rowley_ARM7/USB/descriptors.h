@@ -148,7 +148,7 @@ const char pxConfigDescriptor[] = {
 	0x01,				/* bNumEndpoints						*/
 	0x02,				/* bInterfaceClass: Comm Interface Class */
 	0x02,				/* bInterfaceSubclass: Abstract Control Model*/
-	0x00,				/* bInterfaceProtocol					*/
+	0x01,				/* bInterfaceProtocol					*/
 	usbINTERFACE_STRING,/* iInterface							*/
 
 	/* Header Functional Descriptor								*/
@@ -196,7 +196,7 @@ const char pxConfigDescriptor[] = {
 	0x02,				/* bNumEndPoints						*/
 	0x0A,				/* bInterfaceClass						*/
 	0x00,				/* bInterfaceSubclass					*/
-	0x00,				/* bInterfaceProtocol					*/
+	0x01,				/* bInterfaceProtocol					*/
 	0x00,				/* iInterface							*/
 
 	/* CDC Data - Endpoint 1 descriptor */

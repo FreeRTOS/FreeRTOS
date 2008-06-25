@@ -491,7 +491,7 @@ const char pxConfigDescriptor[] = {
 	0x01,			/* bNumEndpoints							*/
 	0x03,			/* bInterfaceClass: HID code				*/
 	0x00,			/* bInterfaceSubclass						*/
-	0x00,			/* bInterfaceProtocol						*/
+	0x01,			/* bInterfaceProtocol						*/
 	usbINTERFACE_STRING,/* iInterface							*/
 
 	/* HID Descriptor */

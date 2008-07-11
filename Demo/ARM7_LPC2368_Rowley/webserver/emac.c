@@ -18,7 +18,7 @@
 /* Adapted from file originally written by Andreas Dannenberg.  Supplied with permission. */
 
 #include "FreeRTOS.h"
-#include "Semphr.h" 
+#include "semphr.h" 
 #include "task.h"
 #include "emac.h"
 

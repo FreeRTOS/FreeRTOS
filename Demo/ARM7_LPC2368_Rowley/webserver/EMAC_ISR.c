@@ -1,5 +1,5 @@
 #include "FreeRTOS.h"
-#include "Semphr.h"
+#include "semphr.h"
 #include "task.h"
 
 /* The interrupt entry point. */

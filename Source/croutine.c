@@ -51,18 +51,27 @@
 #include "task.h"
 #include "croutine.h"
 
+/*
+ * Some kernel aware debuggers require data to be viewed to be global, rather
+ * than file scope.
+ */
+#ifdef portREMOVE_STATIC_QUALIFIER
+	#define static
+#endif
+
+
 /* Lists for ready and blocked co-routines. --------------------*/
 static xList pxReadyCoRoutineLists[ configMAX_CO_ROUTINE_PRIORITIES ];	/*< Prioritised ready co-routines. */
 static xList xDelayedCoRoutineList1;									/*< Delayed co-routines. */
 static xList xDelayedCoRoutineList2;									/*< Delayed co-routines (two lists are used - one for delays that have overflowed the current tick count. */
 static xList * pxDelayedCoRoutineList;									/*< Points to the delayed co-routine list currently being used. */
 static xList * pxOverflowDelayedCoRoutineList;							/*< Points to the delayed co-routine list currently being used to hold co-routines that have overflowed the current tick count. */
-static xList xPendingReadyList;											/*< Holds co-routines that have been readied by an external event.  They cannot be added directly to the ready lists as the ready lists cannot be accessed by interrupts. */
+static xList xPendingReadyCoRoutineList;											/*< Holds co-routines that have been readied by an external event.  They cannot be added directly to the ready lists as the ready lists cannot be accessed by interrupts. */
 
 /* Other file private variables. --------------------------------*/
 corCRCB * pxCurrentCoRoutine = NULL;
 static unsigned portBASE_TYPE uxTopCoRoutineReadyPriority = 0;
-static portTickType xCoRoutineTickCount = 0;
+static portTickType xCoRoutineTickCount = 0, xLastTickCount = 0, xPassedTicks = 0;
 
 /* The initial state of the co-routine when it is created. */
 #define corINITIAL_STATE	( 0 )
@@ -209,14 +218,14 @@ static void prvCheckPendingReadyList( void )
 	/* Are there any co-routines waiting to get moved to the ready list?  These
 	are co-routines that have been readied by an ISR.  The ISR cannot access
 	the	ready lists itself. */
-	while( !listLIST_IS_EMPTY( &xPendingReadyList ) )
+	while( !listLIST_IS_EMPTY( &xPendingReadyCoRoutineList ) )
 	{
 		corCRCB *pxUnblockedCRCB;
 
 		/* The pending ready list can be accessed by an ISR. */
 		portDISABLE_INTERRUPTS();
 		{	
-			pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( (&xPendingReadyList) );			
+			pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( (&xPendingReadyCoRoutineList) );			
 			vListRemove( &( pxUnblockedCRCB->xEventListItem ) );
 		}
 		portENABLE_INTERRUPTS();
@@ -229,7 +238,6 @@ static void prvCheckPendingReadyList( void )
 
 static void prvCheckDelayedList( void )
 {
-static portTickType xLastTickCount, xPassedTicks;
 corCRCB *pxCRCB;
 
 	xPassedTicks = xTaskGetTickCount() - xLastTickCount;
@@ -325,7 +333,7 @@ unsigned portBASE_TYPE uxPriority;
 
 	vListInitialise( ( xList * ) &xDelayedCoRoutineList1 );
 	vListInitialise( ( xList * ) &xDelayedCoRoutineList2 );
-	vListInitialise( ( xList * ) &xPendingReadyList );
+	vListInitialise( ( xList * ) &xPendingReadyCoRoutineList );
 
 	/* Start with pxDelayedCoRoutineList using list1 and the
 	pxOverflowDelayedCoRoutineList using list2. */
@@ -343,7 +351,7 @@ signed portBASE_TYPE xReturn;
 	event lists and the pending ready list. */
 	pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
 	vListRemove( &( pxUnblockedCRCB->xEventListItem ) );
-	vListInsertEnd( ( xList * ) &( xPendingReadyList ), &( pxUnblockedCRCB->xEventListItem ) );
+	vListInsertEnd( ( xList * ) &( xPendingReadyCoRoutineList ), &( pxUnblockedCRCB->xEventListItem ) );
 
 	if( pxUnblockedCRCB->uxPriority >= pxCurrentCoRoutine->uxPriority )
 	{

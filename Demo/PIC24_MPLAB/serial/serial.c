@@ -219,7 +219,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 void __attribute__((__interrupt__, auto_psv)) _U2TXInterrupt( void )
 {
 signed portCHAR cChar;
-portBASE_TYPE xTaskWoken = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* If the transmit buffer is full we cannot get the next character.
 	Another interrupt will occur the next time there is space so this does
@@ -227,7 +227,7 @@ portBASE_TYPE xTaskWoken = pdFALSE;
 	IFS1bits.U2TXIF = serCLEAR_FLAG;
 	while( !( U2STAbits.UTXBF ) )
 	{
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* Send the next character queued for Tx. */
 			U2TXREG = cChar;
@@ -240,7 +240,7 @@ portBASE_TYPE xTaskWoken = pdFALSE;
 		}
 	}
 
-	if( xTaskWoken != pdFALSE )
+	if( xHigherPriorityTaskWoken != pdFALSE )
 	{
 		taskYIELD();
 	}

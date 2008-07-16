@@ -103,29 +103,6 @@ unsigned portBASE_TYPE uxCriticalNesting = 0xef;
 						"POP.D	W0						\n"																\
 						"POP	SR						  " );
 
-
-	#define portSAVE_CONTEXT()																							\
-		asm volatile(	"PUSH	SR						\n"	/* Save the SR used by the task.... */						\
-						"PUSH	W0						\n"	/* ....then disable interrupts. */							\
-						"MOV	#32, W0				\n"																\
-						"MOV	W0, SR					\n"																\
-						"PUSH	W1						\n"	/* Save registers to the stack. */							\
-						"PUSH.D	W2						\n"																\
-						"PUSH.D	W4						\n"																\
-						"PUSH.D	W6						\n"																\
-						"PUSH.D W8						\n"																\
-						"PUSH.D W10						\n"																\
-						"PUSH.D	W12						\n"																\
-						"PUSH	W14						\n"																\
-						"PUSH	RCOUNT					\n"																\
-						"PUSH	TBLPAG					\n"																\
-						"PUSH	CORCON					\n"																\
-						"PUSH	PSVPAG					\n"																\
-						"MOV	_uxCriticalNesting, W0	\n"	/* Save the critical nesting counter for the task. */		\
-						"PUSH	W0						\n"																\
-						"MOV	_pxCurrentTCB, W0		\n"	/* Save the new top of stack into the TCB. */				\
-						"MOV	W15, [W0]				  ");
-
 #endif /* MPLAB_PIC24_PORT */
 
 #ifdef MPLAB_DSPIC_PORT
@@ -159,40 +136,6 @@ unsigned portBASE_TYPE uxCriticalNesting = 0xef;
 						"POP.D	W2						\n"																\
 						"POP.D	W0						\n"																\
 						"POP	SR						  " );
-
-
-	#define portSAVE_CONTEXT()																							\
-		asm volatile(	"PUSH	SR						\n"	/* Save the SR used by the task.... */						\
-						"PUSH	W0						\n"	/* ....then disable interrupts. */							\
-						"MOV	#32, W0				\n"																\
-						"MOV	W0, SR					\n"																\
-						"PUSH	W1						\n"	/* Save registers to the stack. */							\
-						"PUSH.D	W2						\n"																\
-						"PUSH.D	W4						\n"																\
-						"PUSH.D	W6						\n"																\
-						"PUSH.D W8						\n"																\
-						"PUSH.D W10						\n"																\
-						"PUSH.D	W12						\n"																\
-						"PUSH	W14						\n"																\
-						"PUSH	RCOUNT					\n"																\
-						"PUSH	TBLPAG					\n"																\
-						"PUSH	ACCAL					\n"																\
-						"PUSH	ACCAH					\n"																\
-						"PUSH	ACCAU					\n"																\
-						"PUSH	ACCBL					\n"																\
-						"PUSH	ACCBH					\n"																\
-						"PUSH	ACCBU					\n"																\
-						"PUSH	DCOUNT					\n"																\
-						"PUSH	DOSTARTL				\n"																\
-						"PUSH	DOSTARTH				\n"																\
-						"PUSH	DOENDL					\n"																\
-						"PUSH	DOENDH					\n"																\
-						"PUSH	CORCON					\n"																\
-						"PUSH	PSVPAG					\n"																\
-						"MOV	_uxCriticalNesting, W0	\n"	/* Save the critical nesting counter for the task. */		\
-						"PUSH	W0						\n"																\
-						"MOV	_pxCurrentTCB, W0		\n"	/* Save the new top of stack into the TCB. */				\
-						"MOV	W15, [W0]				  " );
 
 #endif /* MPLAB_DSPIC_PORT */
 
@@ -309,19 +252,6 @@ void vPortEndScheduler( void )
 /*-----------------------------------------------------------*/
 
 /*
- * Manual context switch.  This is similar to the tick context switch,
- * but does not increment the tick count.  It must be identical to the
- * tick context switch in how it stores the stack of a task.
- */
-void vPortYield( void )
-{
-	portSAVE_CONTEXT();
-	vTaskSwitchContext();
-	portRESTORE_CONTEXT();
-}
-/*-----------------------------------------------------------*/
-
-/*
  * Setup a timer for a regular tick.
  */
 static void prvSetupTimerInterrupt( void )
@@ -371,10 +301,10 @@ void vPortExitCritical( void )
 
 void __attribute__((__interrupt__, auto_psv)) _T1Interrupt( void )
 {
-	vTaskIncrementTick();
-
 	/* Clear the timer interrupt. */
 	IFS0bits.T1IF = 0;
+
+	vTaskIncrementTick();
 
 	#if configUSE_PREEMPTION == 1
 		portYIELD();

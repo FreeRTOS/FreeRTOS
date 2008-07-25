@@ -73,6 +73,8 @@ SOURCE=	main.c \
 		$(DEMO_COMMON_DIR)/GenQTest.c \
 		$(DEMO_COMMON_DIR)/QPeek.c \
 		$(DEMO_COMMON_DIR)/recmutex.c \
+		$(DEMO_COMMON_DIR)/IntQueue.c \
+		./IntQueueTimer.c \
 		./webserver/uIP_Task.c \
 		./webserver/emac.c \
 		./webserver/httpd.c \

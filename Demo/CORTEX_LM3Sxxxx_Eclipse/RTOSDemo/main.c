@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -70,10 +70,10 @@
  * for messages - waking and displaying the messages as they arrive.
  *
  * "Check" hook -  This only executes every five seconds from the tick hook.
- * Its main function is to check that all the standard demo tasks are still 
- * operational.  Should any unexpected behaviour within a demo task be discovered 
- * the tick hook will write an error to the OLED (via the OLED task).  If all the 
- * demo tasks are executing with their expected behaviour then the check task 
+ * Its main function is to check that all the standard demo tasks are still
+ * operational.  Should any unexpected behaviour within a demo task be discovered
+ * the tick hook will write an error to the OLED (via the OLED task).  If all the
+ * demo tasks are executing with their expected behaviour then the check task
  * writes PASS to the OLED (again via the OLED task), as described above.
  *
  * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
@@ -83,7 +83,7 @@
 
 
 
-/************************************************************************* 
+/*************************************************************************
  * Please ensure to read http://www.freertos.org/portLM3Sxxxx_Eclipse.html
  * which provides information on configuring and running this demo for the
  * various Luminary Micro EKs.
@@ -126,7 +126,7 @@
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
-
+#include "IntQueue.h"
 
 /*-----------------------------------------------------------*/
 
@@ -193,7 +193,7 @@ static void prvSetupHardware( void );
  * Configures the high frequency timers - those used to measure the timing
  * jitter while the real time kernel is executing.
  */
-extern void vSetupTimer( void );
+extern void vSetupHighFrequencyTimer( void );
 
 /*
  * The idle hook is used to run a test of the scheduler context switch
@@ -213,7 +213,7 @@ unsigned portLONG ulIdleError = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
-/************************************************************************* 
+/*************************************************************************
  * Please ensure to read http://www.freertos.org/portLM3Sxxxx_Eclipse.html
  * which provides information on configuring and running this demo for the
  * various Luminary Micro EKs.
@@ -226,7 +226,7 @@ int main( void )
 	are received via this queue. */
 	xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( xOLEDMessage ) );
 
-	/* Create the uIP task if running on a processor that includes a MAC and 
+	/* Create the uIP task if running on a processor that includes a MAC and
 	PHY. */
 	if( SysCtlPeripheralPresent( SYSCTL_PERIPH_ETH ) )
 	{
@@ -242,6 +242,7 @@ int main( void )
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
+    vStartInterruptQueueTasks();
 
 	/* Start the tasks defined within this file/specific to this demo. */
 	xTaskCreate( vOLEDTask, ( signed portCHAR * ) "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -253,8 +254,8 @@ int main( void )
 
 	/* Configure the high frequency interrupt used to measure the interrupt
 	jitter time. */
-	vSetupTimer();
-	
+	vSetupHighFrequencyTimer();
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -272,17 +273,17 @@ void prvSetupHardware( void )
     {
         SysCtlLDOSet( SYSCTL_LDO_2_75V );
     }
-	
+
 	/* Set the clocking to run from the PLL at 50 MHz */
 	SysCtlClockSet( SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_8MHZ );
-	
+
 	/* 	Enable Port F for Ethernet LEDs
 		LED0        Bit 3   Output
 		LED1        Bit 2   Output */
 	SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOF );
 	GPIODirModeSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3), GPIO_DIR_MODE_HW );
-	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );	
-	
+	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
+
 	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
@@ -291,7 +292,7 @@ void vApplicationTickHook( void )
 {
 static xOLEDMessage xMessage = { "PASS" };
 static unsigned portLONG ulTicksSinceLastDisplay = 0;
-static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it
 	time to perform our health status check again? */
@@ -299,7 +300,7 @@ static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	if( ulTicksSinceLastDisplay >= mainCHECK_DELAY )
 	{
 		ulTicksSinceLastDisplay = 0;
-		
+
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
@@ -341,6 +342,11 @@ static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			xMessage.pcMessage = "ERROR IN HOOK";
 		}
+		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN INT QUEUE";
+		}
+		
 
 		/* Send the message to the OLED gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
@@ -354,7 +360,7 @@ void vOLEDTask( void *pvParameters )
 xOLEDMessage xMessage;
 unsigned portLONG ulY, ulMaxY;
 static portCHAR cMessage[ mainMAX_MSG_LEN ];
-extern unsigned portLONG ulMaxJitter;
+extern volatile unsigned portLONG ulMaxJitter;
 unsigned portBASE_TYPE uxUnusedStackOnEntry, uxUnusedStackNow;
 const unsigned portCHAR *pucImage;
 
@@ -369,10 +375,10 @@ void ( *vOLEDClear )( void ) = NULL;
 	uxUnusedStackOnEntry = uxTaskGetStackHighWaterMark( NULL );
 
 	/* Map the OLED access functions to the driver functions that are appropriate
-	for the evaluation kit being used. */	
+	for the evaluation kit being used. */
 	switch( HWREG( SYSCTL_DID1 ) & SYSCTL_DID1_PRTNO_MASK )
 	{
-		case SYSCTL_DID1_PRTNO_6965	:	 
+		case SYSCTL_DID1_PRTNO_6965	:
 		case SYSCTL_DID1_PRTNO_2965	:	vOLEDInit = OSRAM128x64x4Init;
 										vOLEDStringDraw = OSRAM128x64x4StringDraw;
 										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
@@ -380,8 +386,8 @@ void ( *vOLEDClear )( void ) = NULL;
 										ulMaxY = mainMAX_ROWS_64;
 										pucImage = pucBasicBitmap;
 										break;
-										
-		case SYSCTL_DID1_PRTNO_1968	:	
+
+		case SYSCTL_DID1_PRTNO_1968	:
 		case SYSCTL_DID1_PRTNO_8962 :	vOLEDInit = RIT128x96x4Init;
 										vOLEDStringDraw = RIT128x96x4StringDraw;
 										vOLEDImageDraw = RIT128x96x4ImageDraw;
@@ -389,7 +395,7 @@ void ( *vOLEDClear )( void ) = NULL;
 										ulMaxY = mainMAX_ROWS_96;
 										pucImage = pucBasicBitmap;
 										break;
-										
+
 		default						:	vOLEDInit = vFormike128x128x16Init;
 										vOLEDStringDraw = vFormike128x128x16StringDraw;
 										vOLEDImageDraw = vFormike128x128x16ImageDraw;
@@ -400,27 +406,27 @@ void ( *vOLEDClear )( void ) = NULL;
 	}
 
 	ulY = ulMaxY;
-	
+
 	/* Initialise the OLED and display a startup message. */
-	vOLEDInit( ulSSI_FREQUENCY );	
+	vOLEDInit( ulSSI_FREQUENCY );
 	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
 	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
-	
+
 	for( ;; )
 	{
 		/* Wait for a message to arrive that requires displaying. */
 		xQueueReceive( xOLEDQueue, &xMessage, portMAX_DELAY );
-	
+
 		/* Write the message on the next available row. */
 		ulY += mainCHARACTER_HEIGHT;
 		if( ulY >= ulMaxY )
 		{
 			ulY = mainCHARACTER_HEIGHT;
 			vOLEDClear();
-			vOLEDStringDraw( pcWelcomeMessage, 0, 0, mainFULL_SCALE );			
+			vOLEDStringDraw( pcWelcomeMessage, 0, 0, mainFULL_SCALE );
 		}
 
-		/* Display the message along with the maximum jitter time from the 
+		/* Display the message along with the maximum jitter time from the
 		high priority time test. */
 		sprintf( cMessage, "%s [%uns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
 		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );

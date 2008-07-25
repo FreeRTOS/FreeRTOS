@@ -85,7 +85,7 @@ volatile unsigned portLONG ulMaxJitter = 0;
 
 /*-----------------------------------------------------------*/
 
-void vSetupTimer( void )
+void vSetupHighFrequencyTimer( void )
 {
 unsigned long ulFrequency;
 
@@ -121,12 +121,14 @@ void Timer0IntHandler( void )
 {
 unsigned portLONG ulDifference;
 volatile unsigned portLONG ulCurrentCount;
-static portLONG ulMaxDifference = 0, ulLastCount = 0;
+static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
 
 	/* We use the timer 1 counter value to measure the clock cycles between
 	the timer 0 interrupts. */
 	ulCurrentCount = timerTIMER_1_COUNT_VALUE;
 
+	TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
+	
 	if( ulCurrentCount < ulLastCount )
 	{	
 		/* How many times has timer 1 counted since the last interrupt? */
@@ -141,8 +143,6 @@ static portLONG ulMaxDifference = 0, ulLastCount = 0;
 	}
 	
 	ulLastCount = ulCurrentCount;
-
-    TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
 }
 
 

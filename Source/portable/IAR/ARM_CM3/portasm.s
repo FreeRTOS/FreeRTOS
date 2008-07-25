@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -68,7 +68,6 @@ FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
 	thumb
 
 	EXTERN vPortYieldFromISR
-	EXTERN uxCriticalNesting
 	EXTERN pxCurrentTCB
 	EXTERN vTaskSwitchContext
 
@@ -93,36 +92,29 @@ xPortPendSVHandler:
 	ldr	r3, =pxCurrentTCB			/* Get the location of the current TCB. */
 	ldr	r2, [r3]						
 
-	ldr r1, =uxCriticalNesting		/* Save the remaining registers and the critical nesting count onto the task stack. */
-	ldr r1, [r1]					
-	stmdb r0!, {r1,r4-r11}			
+	stmdb r0!, {r4-r11}				/* Save the remaining registers. */
 	str r0, [r2]					/* Save the new top of stack into the first member of the TCB. */
 
-	stmdb sp!, {r3, r14}			
+	stmdb sp!, {r3, r14}
+	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r0
 	bl vTaskSwitchContext			
-	ldmia sp!, {r3, r14}			
+	mov r0, #0
+	msr basepri, r0
+	ldmia sp!, {r3, r14}
 
 	ldr r1, [r3]					
-	ldr r2, =uxCriticalNesting	
 	ldr r0, [r1]					/* The first item in pxCurrentTCB is the task top of stack. */
-	ldmia r0!, {r1, r4-r11}			/* Pop the registers and the critical nesting count. */
-	str r1, [r2]					/* Save the new critical nesting value into ulCriticalNesting. */
+	ldmia r0!, {r4-r11}				/* Pop the registers. */
 	msr psp, r0						
-	orr r14, r14, #13			
-
-	cbnz r1, sv_disable_interrupts	/* If the nesting count is greater than 0 we need to exit with interrupts masked. */
 	bx r14							
 
-sv_disable_interrupts:				
-	mov	r1, #configKERNEL_INTERRUPT_PRIORITY
-	msr	basepri, r1
-	bx r14							
 
 /*-----------------------------------------------------------*/
 
 vPortSetInterruptMask:
 	push { r0 }
-	mov R0, #configKERNEL_INTERRUPT_PRIORITY
+	mov R0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr BASEPRI, R0
 	pop { R0 }
 
@@ -144,9 +136,7 @@ vPortSVCHandler;
 	ldr	r3, =pxCurrentTCB
 	ldr r1, [r3]
 	ldr r0, [r1]
-	ldmia r0!, {r1, r4-r11}
-	ldr r2, =uxCriticalNesting
-	str r1, [r2]
+	ldmia r0!, {r4-r11}
 	msr psp, r0
 	mov r0, #0
 	msr	basepri, r0

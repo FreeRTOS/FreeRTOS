@@ -146,9 +146,14 @@ vPortSVCHandler;
 /*-----------------------------------------------------------*/
 
 vPortStartFirstTask
+	/* Use the NVIC offset register to locate the stack. */
+	ldr r0, =0xE000ED08
+	ldr r0, [r0]
+	ldr r0, [r0]
+	/* Set the msp back to the start of the stack. */
 	msr msp, r0
+	/* Call SVC to start the first task. */
 	svc 0
-
 
 	END
 	

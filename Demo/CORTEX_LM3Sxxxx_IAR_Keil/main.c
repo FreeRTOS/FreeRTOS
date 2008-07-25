@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -83,13 +83,18 @@
 
 
 
-/************************************************************************* 
+/*************************************************************************
  * Please ensure to read http://www.freertos.org/portlm3sx965.html
  * which provides information on configuring and running this demo for the
  * various Luminary Micro EKs.
  *************************************************************************/
 
-
+/* Set the following option to 1 to include the WEB server in the build.  By
+default the WEB server is excluded to keep the compiled code size under the 32K
+limit imposed by the KickStart version of the IAR compiler.  The graphics
+libraries take up a lot of ROM space, hence including the graphics libraries
+and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
+#define mainINCLUDE_WEB_SERVER		0
 
 
 /* Standard includes. */
@@ -125,6 +130,8 @@
 #include "bitmap.h"
 #include "GenQTest.h"
 #include "QPeek.h"
+#include "recmutex.h"
+#include "IntQueue.h"
 
 /*-----------------------------------------------------------*/
 
@@ -191,9 +198,9 @@ static void prvSetupHardware( void );
  * Configures the high frequency timers - those used to measure the timing
  * jitter while the real time kernel is executing.
  */
-extern void vSetupTimer( void );
+extern void vSetupHighFrequencyTimer( void );
 
-/* 
+/*
  * Hook functions that can get called by the kernel.
  */
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );
@@ -211,7 +218,7 @@ const portCHAR * const pcWelcomeMessage = "   www.FreeRTOS.org";
 /*-----------------------------------------------------------*/
 
 
-/************************************************************************* 
+/*************************************************************************
  * Please ensure to read http://www.freertos.org/portlm3sx965.html
  * which provides information on configuring and running this demo for the
  * various Luminary Micro EKs.
@@ -224,22 +231,32 @@ int main( void )
 	are received via this queue. */
 	xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( xOLEDMessage ) );
 
-	/* Create the uIP task if running on a processor that includes a MAC and
-	PHY. */
-	if( SysCtlPeripheralPresent( SYSCTL_PERIPH_ETH ) )
-	{
-		xTaskCreate( vuIP_Task, ( signed portCHAR * ) "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
-	}
-
 	/* Start the standard demo tasks. */
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-    vCreateBlockTimeTasks();
-    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
     vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-    vStartQueuePeekTasks();
+    vStartInterruptQueueTasks();
+	vStartRecursiveMutexTasks();	
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+	vCreateBlockTimeTasks();
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartQueuePeekTasks();		
 
+	/* Exclude some tasks if using the kickstart version to ensure we stay within
+	the 32K code size limit. */
+	#if mainINCLUDE_WEB_SERVER != 0
+	{
+		/* Create the uIP task if running on a processor that includes a MAC and
+		PHY. */
+		if( SysCtlPeripheralPresent( SYSCTL_PERIPH_ETH ) )
+		{
+			xTaskCreate( vuIP_Task, ( signed portCHAR * ) "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+		}
+	}
+	#endif
+	
+	
+	
 	/* Start the tasks defined within this file/specific to this demo. */
 	xTaskCreate( vOLEDTask, ( signed portCHAR * ) "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
@@ -249,10 +266,9 @@ int main( void )
     vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Configure the high frequency interrupt used to measure the interrupt
-	jitter time.  The Keil port does not yet include the
-	configKERNEL_INTERRUPT_PRIORITY functionality so cannot perform this test. */
-	vSetupTimer();
-	
+	jitter time. */
+	vSetupHighFrequencyTimer();
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -303,9 +319,17 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			xMessage.pcMessage = "ERROR IN GEN Q";
 		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR IN CREATE";
+	    }
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR IN MATH";
+	    }
+		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN PEEK Q";
+			xMessage.pcMessage = "ERROR IN INT QUEUE";
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
@@ -315,23 +339,23 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			xMessage.pcMessage = "ERROR IN BLOCK TIME";
 		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-	        xMessage.pcMessage = "ERROR IN SEMAPHORE";
-	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
-	    {
-	        xMessage.pcMessage = "ERROR IN POLL Q";
-	    }
-	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-	    {
-	        xMessage.pcMessage = "ERROR IN CREATE";
-	    }
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
-	        xMessage.pcMessage = "ERROR IN MATH";
-	    }
-	
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN SEMAPHORE";
+		}
+		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN POLL Q";
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN PEEK Q";
+		}			
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN REC MUTEX";
+		}			
+		
 		/* Send the message to the OLED gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
 		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
@@ -345,7 +369,8 @@ xOLEDMessage xMessage;
 unsigned portLONG ulY, ulMaxY;
 static portCHAR cMessage[ mainMAX_MSG_LEN ];
 extern volatile unsigned portLONG ulMaxJitter;
-const unsigned portCHAR *pucImage;
+unsigned portBASE_TYPE uxUnusedStackOnEntry, uxUnusedStackNow;
+const unsigned portCHAR *pucImage = NULL;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
@@ -353,6 +378,9 @@ void ( *vOLEDInit )( unsigned portLONG ) = NULL;
 void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR ) = NULL;
 void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG ) = NULL;
 void ( *vOLEDClear )( void ) = NULL;
+
+	/* Just for demo purposes. */
+	uxUnusedStackOnEntry = uxTaskGetStackHighWaterMark( NULL );
 
 	/* Map the OLED access functions to the driver functions that are appropriate
 	for the evaluation kit being used. */	
@@ -364,7 +392,6 @@ void ( *vOLEDClear )( void ) = NULL;
 										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
 										vOLEDClear = OSRAM128x64x4Clear;
 										ulMaxY = mainMAX_ROWS_64;
-										pucImage = pucBasicBitmap;
 										break;
 										
 		case SYSCTL_DID1_PRTNO_1968	:	
@@ -373,7 +400,6 @@ void ( *vOLEDClear )( void ) = NULL;
 										vOLEDImageDraw = RIT128x96x4ImageDraw;
 										vOLEDClear = RIT128x96x4Clear;
 										ulMaxY = mainMAX_ROWS_96;
-										pucImage = pucBasicBitmap;
 										break;
 										
 		default						:	vOLEDInit = vFormike128x128x16Init;
@@ -381,9 +407,7 @@ void ( *vOLEDClear )( void ) = NULL;
 										vOLEDImageDraw = vFormike128x128x16ImageDraw;
 										vOLEDClear = vFormike128x128x16Clear;
 										ulMaxY = mainMAX_ROWS_128;
-										pucImage = pucGrLibBitmap;
-										break;
-										
+										break;										
 	}
 
 	ulY = ulMaxY;
@@ -391,6 +415,19 @@ void ( *vOLEDClear )( void ) = NULL;
 	/* Initialise the OLED and display a startup message. */
 	vOLEDInit( ulSSI_FREQUENCY );	
 	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
+
+	switch( HWREG( SYSCTL_DID1 ) & SYSCTL_DID1_PRTNO_MASK )
+	{
+		case SYSCTL_DID1_PRTNO_6965	:	
+		case SYSCTL_DID1_PRTNO_2965	:	
+		case SYSCTL_DID1_PRTNO_1968	:	
+		case SYSCTL_DID1_PRTNO_8962 :	pucImage = pucBasicBitmap;
+										break;
+										
+		default						:	pucImage = pucGrLibBitmap;
+										break;										
+	}
+
 	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
 	
 	for( ;; )

@@ -58,6 +58,8 @@ extern void __iar_program_start(void);
 extern void xPortPendSVHandler(void);
 extern void xPortSysTickHandler(void);
 extern void vPortSVCHandler(void);
+extern void vT2InterruptHandler( void );
+extern void vT3InterruptHandler( void );
 extern void vEMAC_ISR( void );
 extern Timer0IntHandler( void );
 
@@ -67,7 +69,7 @@ extern Timer0IntHandler( void );
 //
 //*****************************************************************************
 #ifndef STACK_SIZE
-#define STACK_SIZE                              64
+#define STACK_SIZE                              120
 #endif
 static unsigned long pulStack[STACK_SIZE] @ ".noinit";
 
@@ -134,7 +136,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // Timer 0 subtimer B
     IntDefaultHandler,                      // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
-    IntDefaultHandler,                      // Timer 2 subtimer A
+    vT2InterruptHandler,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B
     IntDefaultHandler,                      // Analog Comparator 0
     IntDefaultHandler,                      // Analog Comparator 1
@@ -146,7 +148,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // GPIO Port H
     IntDefaultHandler,                      // UART2 Rx and Tx
     IntDefaultHandler,                      // SSI1 Rx and Tx
-    IntDefaultHandler,                      // Timer 3 subtimer A
+    vT3InterruptHandler,                    // Timer 3 subtimer A
     IntDefaultHandler,                      // Timer 3 subtimer B
     IntDefaultHandler,                      // I2C1 Master and Slave
     IntDefaultHandler,                      // Quadrature Encoder 1

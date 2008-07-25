@@ -47,10 +47,12 @@
 	licensing and training services.
 */
 
-/* High speed timer test as described in main.c. */
-
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+
+/* Demo includes. */
+#include "IntQueueTimer.h"
+#include "IntQueue.h"
 
 /* Library includes. */
 #include "hw_ints.h"
@@ -59,96 +61,57 @@
 #include "interrupt.h"
 #include "sysctl.h"
 #include "lmi_timer.h"
-#include "hw_timer.h"
 
-/* The set frequency of the interrupt.  Deviations from this are measured as
-the jitter. */
-#define timerINTERRUPT_FREQUENCY		( 20000UL )
+#define tmrTIMER_2_FREQUENCY	( 2000UL )
+#define tmrTIMER_3_FREQUENCY	( 2001UL )
 
-/* The expected time between each of the timer interrupts - if the jitter was
-zero. */
-#define timerEXPECTED_DIFFERENCE_VALUE	( configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY )
-
-/* The highest available interrupt priority. */
-#define timerHIGHEST_PRIORITY			( 0 )
-
-/* Misc defines. */
-#define timerMAX_32BIT_VALUE			( 0xffffffffUL )
-#define timerTIMER_1_COUNT_VALUE		( * ( ( volatile unsigned long * ) ( ( unsigned portLONG ) TIMER1_BASE + 0x48UL ) ) )
-
-/*-----------------------------------------------------------*/
-
-/* Interrupt handler in which the jitter is measured. */
-void Timer0IntHandler( void );
-
-/* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned portLONG ulMaxJitter = 0;
-
-/*-----------------------------------------------------------*/
-
-void vSetupHighFrequencyTimer( void )
+void vInitialiseTimerForIntQueueTest( void )
 {
 unsigned long ulFrequency;
 
-	/* Timer zero is used to generate the interrupts, and timer 1 is used
-	to measure the jitter. */
-	SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER0 );
-    SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER1 );
-    TimerConfigure( TIMER0_BASE, TIMER_CFG_32_BIT_PER );
-    TimerConfigure( TIMER1_BASE, TIMER_CFG_32_BIT_PER );
+	/* Timer 2 and 3 are utilised for this test. */
+	SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER2 );
+    SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER3 );
+    TimerConfigure( TIMER2_BASE, TIMER_CFG_32_BIT_PER );
+    TimerConfigure( TIMER3_BASE, TIMER_CFG_32_BIT_PER );
 	
-	/* Set the timer interrupt to be above the kernel - highest. */
-	IntPrioritySet( INT_TIMER0A, timerHIGHEST_PRIORITY );
+	/* Set the timer interrupts to be above the kernel.  The interrupts are
+	 assigned different priorities so they nest with each other. */
+	IntPrioritySet( INT_TIMER2A, configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 );
+	IntPrioritySet( INT_TIMER3A, configMAX_SYSCALL_INTERRUPT_PRIORITY );
 
-	/* Just used to measure time. */
-    TimerLoadSet(TIMER1_BASE, TIMER_A, timerMAX_32BIT_VALUE );
-	
 	/* Ensure interrupts do not start until the scheduler is running. */
 	portDISABLE_INTERRUPTS();
 	
-	/* The rate at which the timer will interrupt. */
-	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
-    TimerLoadSet( TIMER0_BASE, TIMER_A, ulFrequency );
-    IntEnable( INT_TIMER0A );
-    TimerIntEnable( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
+	/* The rate at which the timers will interrupt. */
+	ulFrequency = configCPU_CLOCK_HZ / tmrTIMER_2_FREQUENCY;	
+    TimerLoadSet( TIMER2_BASE, TIMER_A, ulFrequency );
+    IntEnable( INT_TIMER2A );
+    TimerIntEnable( TIMER2_BASE, TIMER_TIMA_TIMEOUT );
 
-	/* Enable both timers. */	
-    TimerEnable( TIMER0_BASE, TIMER_A );
-    TimerEnable( TIMER1_BASE, TIMER_A );
+	/* The rate at which the timers will interrupt. */
+	ulFrequency = configCPU_CLOCK_HZ / tmrTIMER_3_FREQUENCY;	
+    TimerLoadSet( TIMER3_BASE, TIMER_A, ulFrequency );
+    IntEnable( INT_TIMER3A );
+    TimerIntEnable( TIMER3_BASE, TIMER_TIMA_TIMEOUT );
+
+    /* Enable both timers. */	
+    TimerEnable( TIMER2_BASE, TIMER_A );
+    TimerEnable( TIMER3_BASE, TIMER_A );
 }
 /*-----------------------------------------------------------*/
 
-void Timer0IntHandler( void )
+void vT2InterruptHandler( void )
 {
-unsigned portLONG ulDifference;
-volatile unsigned portLONG ulCurrentCount;
-static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
-
-	/* We use the timer 1 counter value to measure the clock cycles between
-	the timer 0 interrupts. */
-	ulCurrentCount = timerTIMER_1_COUNT_VALUE;
-
-	TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
-
-	if( ulCurrentCount < ulLastCount )
-	{	
-		/* How many times has timer 1 counted since the last interrupt? */
-		ulDifference = 	ulLastCount - ulCurrentCount;
-	
-		/* Is this the largest difference we have measured yet? */
-		if( ulDifference > ulMaxDifference )
-		{
-			ulMaxDifference = ulDifference;
-			ulMaxJitter = ulMaxDifference - timerEXPECTED_DIFFERENCE_VALUE;
-		}
-	}
-	
-	ulLastCount = ulCurrentCount;
+    TimerIntClear( TIMER2_BASE, TIMER_TIMA_TIMEOUT );	
+	portEND_SWITCHING_ISR( xFirstTimerHandler() );
 }
+/*-----------------------------------------------------------*/
 
-
-
-
-
+void vT3InterruptHandler( void )
+{
+	TimerIntClear( TIMER3_BASE, TIMER_TIMA_TIMEOUT );
+	portEND_SWITCHING_ISR( xSecondTimerHandler() );
+}
 
 

@@ -306,7 +306,7 @@
         <option>
           <name>CCOptStrategy</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCOptLevelSlave</name>
@@ -588,7 +588,7 @@
         </option>
         <option>
           <name>IlinkMapFile</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkLogFile</name>
@@ -792,6 +792,12 @@
       <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\IntQueueTimer.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
@@ -802,6 +808,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>

@@ -101,35 +101,39 @@ extern void vPortYieldFromISR( void );
 
 /* Critical section management. */
 
-#define vPortSetInterruptMask()							\
+/* 
+ * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
+ * registers.  r0 is clobbered.
+ */ 
+#define portSET_INTERRUPT_MASK()						\
 	__asm volatile										\
 	(													\
-		"	push { r0 }								\n"	\
-		"	ldr r0, =ulKernelPriority 				\n"	\
-		"	ldr r0, [r0]							\n"	\
+		"	mov r0, %0								\n"	\
 		"	msr basepri, r0							\n" \
-		"	pop { r0 }								"	\
+		::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY):"r0"	\
 	)
 	
-/*-----------------------------------------------------------*/
-
-#define vPortClearInterruptMask()						\
-	__asm volatile										\
-	(													\
-		"	push { r0 }								\n"	\
-		"	mov r0, #0								\n"	\
-		"	msr basepri, r0							\n"	\
-		"	pop	 { r0 }								"	\
+/*
+ * Set basepri back to 0 without effective other registers.
+ * r0 is clobbered.
+ */
+#define portCLEAR_INTERRUPT_MASK()			\
+	__asm volatile							\
+	(										\
+		"	mov r0, #0					\n"	\
+		"	msr basepri, r0				\n"	\
+		:::"r0"								\
 	)
 
-/*-----------------------------------------------------------*/
+#define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK()
 
 
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask();
-#define portENABLE_INTERRUPTS()		vPortClearInterruptMask();
+#define portDISABLE_INTERRUPTS()	portSET_INTERRUPT_MASK()
+#define portENABLE_INTERRUPTS()		portCLEAR_INTERRUPT_MASK()
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 /*-----------------------------------------------------------*/

@@ -126,7 +126,8 @@ __Vectors
         DCD     IntDefaultHandler           ; Timer 0B
         DCD     IntDefaultHandler           ; Timer 1A
         DCD     IntDefaultHandler           ; Timer 1B
-        DCD     IntDefaultHandler           ; Timer 2A
+		EXTERN  vT2InterruptHandler
+        DCD     vT2InterruptHandler         ; Timer 2A
         DCD     IntDefaultHandler           ; Timer 2B
         DCD     IntDefaultHandler           ; Comp 0
         DCD     IntDefaultHandler           ; Comp 1
@@ -138,7 +139,8 @@ __Vectors
         DCD     IntDefaultHandler           ; GPIO Port H
         DCD     IntDefaultHandler           ; UART2 Rx and Tx
         DCD     IntDefaultHandler           ; SSI1 Rx and Tx
-        DCD     IntDefaultHandler           ; Timer 3 subtimer A
+		EXTERN  vT3InterruptHandler
+        DCD     vT3InterruptHandler         ; Timer 3 subtimer A
         DCD     IntDefaultHandler           ; Timer 3 subtimer B
         DCD     IntDefaultHandler           ; I2C1 Master and Slave
         DCD     IntDefaultHandler           ; Quadrature Encoder 1

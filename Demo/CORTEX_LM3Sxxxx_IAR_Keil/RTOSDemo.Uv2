@@ -21,6 +21,9 @@ File 1,1,<.\timertest.c><timertest.c>
 File 1,5,<.\FreeRTOSConfig.h><FreeRTOSConfig.h>
 File 1,1,<..\Common\Minimal\GenQTest.c><GenQTest.c>
 File 1,1,<..\Common\Minimal\QPeek.c><QPeek.c>
+File 1,1,<.\IntQueueTimer.c><IntQueueTimer.c>
+File 1,1,<..\Common\Minimal\IntQueue.c><IntQueue.c>
+File 1,1,<..\Common\Minimal\recmutex.c><recmutex.c>
 File 2,1,<.\rit128x96x4.c><rit128x96x4.c>
 File 2,1,<.\osram128x64x4.c><osram128x64x4.c>
 File 2,4,<..\Common\drivers\LuminaryMicro\Keil\driverlib.lib><driverlib.lib>
@@ -44,14 +47,14 @@ File 4,1,<..\Common\ethernet\uIP\uip-1.0\uip\uip.c><uip.c>
 
 
 Options 1,0,0  // Target 'FreeRTOS_Demo'
- Device (LM3S2965)
+ Device (LM3S8962)
  Vendor (Luminary Micro)
- Cpu (IRAM(0x20000000-0x2000FFFF) IROM(0-0x3FFFF) CLOCK(6000000) CPUTYPE("Cortex-M3"))
+ Cpu (IRAM(0x20000000-0x2000FFFF) IROM(0-0x3FFFF) CLOCK(8000000) CPUTYPE("Cortex-M3"))
  FlashUt ()
  StupF ("STARTUP\Luminary\Startup.s" ("Luminary Startup Code"))
  FlashDR (UL2CM3(-UU0101L5E -O14 -S0 -C0 -N00("ARM Cortex-M3") -D00(1BA00477) -L00(4) -FO7 -FD20000000 -FC800 -FN1 -FF0LM3S_256 -FS00 -FL040000))
- DevID (4322)
- Rgf (LM3Sxxxx.H)
+ DevID (4285)
+ Rgf (LM3Sxxx.H)
  Mem ()
  C ()
  A ()
@@ -97,7 +100,7 @@ Options 1,0,0  // Target 'FreeRTOS_Demo'
  OCMADSXRAM { 0,0,0,0,0,0,0,0,0 }
  OCR_RVCT { 1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,0,1,0,0,0,0,0,0,0,0,0,0 }
  RV_STAVEC ()
- ADSCCFLG { 17,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSCCFLG { 5,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
  ADSCMISC (--diag_suppress 191,550,513,167,177,144)
  ADSCDEFN (RVDS_ARMCM3_LM3S102, "PACK_STRUCT_END=","ALIGN_STRUCT_END=")
  ADSCUDEF ()
@@ -125,11 +128,11 @@ Options 1,0,0  // Target 'FreeRTOS_Demo'
  ADSLDMC (--entry Reset_Handler)
  ADSLDIF ()
  ADSLDDW ()
-  OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S2965)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S2965)
+  OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S8962)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S8962)
   OPTDBG 48126,4,()()()()()()()()()() (BIN\lmidk-agdi.dll)()()()
- FLASH1 { 1,0,0,0,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0 }
+ FLASH1 { 1,0,0,0,1,0,0,0,3,16,0,0,0,0,0,0,0,0,0,0 }
  FLASH2 (BIN\lmidk-agdi.dll)
- FLASH3 ()
+ FLASH3 ("" ())
  FLASH4 ()
 EndOpt
 

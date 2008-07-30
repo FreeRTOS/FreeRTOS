@@ -76,7 +76,7 @@
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
-unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
+static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 
 /* 
  * Setup the timer to generate the tick interrupts.
@@ -111,8 +111,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = 0;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
-	pxTopOfStack -= 9;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
-	*pxTopOfStack = 0x00000000; /* uxCriticalNesting. */
+	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	return pxTopOfStack;
 }
@@ -125,9 +124,7 @@ __asm void vPortSVCHandler( void )
 	ldr	r3, =pxCurrentTCB		/* Restore the context. */
 	ldr r1, [r3]				/* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
 	ldr r0, [r1]				/* The first item in pxCurrentTCB is the task top of stack. */
-	ldmia r0!, {r1, r4-r11}		/* Pop the registers that are not automatically saved on exception entry and the critical nesting count. */
-	ldr r2, =uxCriticalNesting	/* Restore the critical nesting count used by the task. */
-	str r1, [r2]				
+	ldmia r0!, {r4-r11}		/* Pop the registers that are not automatically saved on exception entry and the critical nesting count. */
 	msr psp, r0					/* Restore the task stack pointer. */
 	mov r0, #0
 	msr	basepri, r0
@@ -140,8 +137,14 @@ __asm void vPortStartFirstTask( unsigned long ulValue )
 {
 	PRESERVE8
 
-	msr msp, r0					/* Set the msp back to the start of the stack. */
-	svc 0						/* System call to start first task. */
+	/* Use the NVIC offset register to locate the stack. */
+	ldr r0, =0xE000ED08
+	ldr r0, [r0]
+	ldr r0, [r0]
+	/* Set the msp back to the start of the stack. */
+	msr msp, r0
+	/* Call SVC to start the first task. */
+	svc 0
 }
 /*-----------------------------------------------------------*/
 
@@ -158,6 +161,9 @@ portBASE_TYPE xPortStartScheduler( void )
 	here already. */
 	prvSetupTimerInterrupt();
 	
+	/* Initialise the critical nesting count ready for the first task. */
+	uxCriticalNesting = 0;
+
 	/* Start the first task. */
 	vPortStartFirstTask( *((unsigned portLONG *) 0 ) );
 
@@ -177,10 +183,6 @@ void vPortYieldFromISR( void )
 {
 	/* Set a PendSV to request a context switch. */
 	*(portNVIC_INT_CTRL) |= portNVIC_PENDSVSET;
-
-	/* This function is also called in response to a Yield(), so we want
-	the yield to occur immediately. */
-	portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
 
@@ -211,44 +213,43 @@ __asm void xPortPendSVHandler( void )
 
 	mrs r0, psp						 
 
-	ldr	r3, =pxCurrentTCB		 	/* Get the location of the current TCB. */
+	ldr	r3, =pxCurrentTCB		 	 /* Get the location of the current TCB. */
 	ldr	r2, [r3]						
 
-	ldr r1, =uxCriticalNesting		/* Save the remaining registers and the critical nesting count onto the task stack. */
-	ldr r1, [r1]					
-	stmdb r0!, {r1,r4-r11}			
+	stmdb r0!, {r4-r11}				 /* Save the remaining registers. */
 	str r0, [r2]					 /* Save the new top of stack into the first member of the TCB. */
 
-	stmdb sp!, {r3, r14}			 
-	bl vTaskSwitchContext			
+	stmdb sp!, {r3, r14}		
+	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r0		 
+	bl vTaskSwitchContext
+	mov r0, #0
+	msr basepri, r0
 	ldmia sp!, {r3, r14}			
 
 	ldr r1, [r3]					 
-	ldr r2, =uxCriticalNesting
 	ldr r0, [r1]					 /* The first item in pxCurrentTCB is the task top of stack. */
-	ldmia r0!, {r1, r4-r11}			 /* Pop the registers and the critical nesting count. */
+	ldmia r0!, {r4-r11}			 /* Pop the registers and the critical nesting count. */
 	str r1, [r2]					 /* Save the new critical nesting value into ulCriticalNesting. */ 
 	msr psp, r0						 
-	orr r14, #0xd					
-
-	cbnz r1, sv_disable_interrupts	 /* If the nesting count is greater than 0 we need to exit with interrupts masked. */
 	bx r14
-
-sv_disable_interrupts
-	mov r1, #configKERNEL_INTERRUPT_PRIORITY
-	msr	basepri, r1					
-	bx r14							
 }
 /*-----------------------------------------------------------*/
 
 void xPortSysTickHandler( void )
 {
+unsigned portLONG ulDummy;
+
 	/* If using preemption, also force a context switch. */
 	#if configUSE_PREEMPTION == 1
 		*(portNVIC_INT_CTRL) |= portNVIC_PENDSVSET;	
 	#endif
 
-	vTaskIncrementTick();
+	ulDummy = portSET_INTERRUPT_MASK_FROM_ISR();
+	{
+		vTaskIncrementTick();
+	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR();
 }
 /*-----------------------------------------------------------*/
 
@@ -269,7 +270,7 @@ __asm void vPortSetInterruptMask( void )
 	PRESERVE8
 
 	push { r0 }
-	mov r0, #configKERNEL_INTERRUPT_PRIORITY
+	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
 	pop { r0 }
 	bx r14

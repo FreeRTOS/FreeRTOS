@@ -106,10 +106,13 @@ extern void vPortClearInterruptMask( void );
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask()
-#define portENABLE_INTERRUPTS()		vPortClearInterruptMask()
-#define portENTER_CRITICAL()		vPortEnterCritical()
-#define portEXIT_CRITICAL()			vPortExitCritical()
+#define portDISABLE_INTERRUPTS()				vPortSetInterruptMask()
+#define portENABLE_INTERRUPTS()					vPortClearInterruptMask()
+#define portENTER_CRITICAL()					vPortEnterCritical()
+#define portEXIT_CRITICAL()						vPortExitCritical()
+#define portSET_INTERRUPT_MASK_FROM_ISR()		0;vPortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask()
+
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

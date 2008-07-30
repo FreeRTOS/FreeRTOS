@@ -135,6 +135,10 @@ static volatile unsigned portBASE_TYPE uxSchedulerSuspended		= ( unsigned portBA
 static volatile unsigned portBASE_TYPE uxMissedTicks			= ( unsigned portBASE_TYPE ) 0;
 static volatile portBASE_TYPE xMissedYield						= ( portBASE_TYPE ) pdFALSE;
 static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
+#if ( configUSE_TRACE_FACILITY == 1 )
+	static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberate - this is guarded before use. */
+#endif
+
 /* Debugging and trace facilities private variables and macros. ------------*/
 
 /*
@@ -161,7 +165,8 @@ static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
 	static signed portCHAR *pcTraceBufferStart;
 	static signed portCHAR *pcTraceBufferEnd;
 	static signed portBASE_TYPE xTracing = pdFALSE;
-
+	static unsigned portBASE_TYPE uxPreviousTask = 255;
+	static portCHAR pcStatusString[ 50 ];
 #endif
 
 /*-----------------------------------------------------------*/
@@ -178,8 +183,6 @@ static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
 	{																								\
 		if( xTracing )																				\
 		{																							\
-			static unsigned portBASE_TYPE uxPreviousTask = 255;										\
-																									\
 			if( uxPreviousTask != pxCurrentTCB->uxTCBNumber )										\
 			{																						\
 				if( ( pcTraceBuffer + tskSIZE_OF_EACH_TRACE_LINE ) < pcTraceBufferEnd )				\
@@ -423,9 +426,6 @@ signed portBASE_TYPE xTaskCreate( pdTASK_CODE pvTaskCode, const signed portCHAR 
 {
 signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
-#if ( configUSE_TRACE_FACILITY == 1 )
-	static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberate - this is guarded before use. */
-#endif
 
 	/* Allocate the memory required by the TCB and stack for the new task.
 	checking that the allocation was successful. */
@@ -1877,7 +1877,6 @@ tskTCB *pxNewTCB;
 	static void prvListTaskWithinSingleList( const signed portCHAR *pcWriteBuffer, xList *pxList, signed portCHAR cStatus )
 	{
 	volatile tskTCB *pxNextTCB, *pxFirstTCB;
-	static portCHAR pcStatusString[ 50 ];
 	unsigned portSHORT usStackRemaining;
 
 		/* Write the details of all the TCB's in pxList into the buffer. */

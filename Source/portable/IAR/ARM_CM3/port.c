@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -101,7 +101,7 @@ void xPortSysTickHandler( void );
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-extern void vPortStartFirstTask( unsigned portLONG ulValue );
+extern void vPortStartFirstTask( void );
 
 /*-----------------------------------------------------------*/
 
@@ -142,7 +142,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	uxCriticalNesting = 0;
 
 	/* Start the first task. */
-	vPortStartFirstTask( *((unsigned portLONG *) 0 ) );
+	vPortStartFirstTask();
 
 	/* Should not get here! */
 	return 0;

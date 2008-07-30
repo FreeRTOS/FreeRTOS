@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -87,7 +87,9 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			0
 #define INCLUDE_vTaskDelay				1
 
-#define configKERNEL_INTERRUPT_PRIORITY 255
+#define configKERNEL_INTERRUPT_PRIORITY 		255
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xa0, or priority 5. */
+
 
 
 #endif /* FREERTOS_CONFIG_H */

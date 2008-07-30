@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -148,7 +148,7 @@ const char pxConfigDescriptor[] = {
 	0x01,				/* bNumEndpoints						*/
 	0x02,				/* bInterfaceClass: Comm Interface Class */
 	0x02,				/* bInterfaceSubclass: Abstract Control Model*/
-	0x01,				/* bInterfaceProtocol					*/
+	0x00,				/* bInterfaceProtocol					*/
 	usbINTERFACE_STRING,/* iInterface							*/
 
 	/* Header Functional Descriptor								*/
@@ -175,7 +175,7 @@ const char pxConfigDescriptor[] = {
 	0x05,				/* bFunctionLength						*/
 	0x24,				/* bDescriptor type: CS_INTERFACE		*/
 	0x01,				/* bDescriptor subtype: Call Management Func*/
-	0x00,				/* bmCapabilities: D1 + D0				*/
+	0x01,				/* bmCapabilities: D1 + D0				*/
 	0x01,				/* bDataInterface: Data Class Interface 1*/
 
 	/* CDC Control - Endpoint 3 descriptor
@@ -196,7 +196,7 @@ const char pxConfigDescriptor[] = {
 	0x02,				/* bNumEndPoints						*/
 	0x0A,				/* bInterfaceClass						*/
 	0x00,				/* bInterfaceSubclass					*/
-	0x01,				/* bInterfaceProtocol					*/
+	0x00,				/* bInterfaceProtocol					*/
 	0x00,				/* iInterface							*/
 
 	/* CDC Data - Endpoint 1 descriptor */

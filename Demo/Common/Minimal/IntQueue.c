@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -37,24 +37,24 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
 /*
  * This file defines one of the more complex set of demo/test tasks.  They are
- * designed to stress test the queue implementation though pseudo simultaneous 
- * multiple reads and multiple writes from both tasks of varying priority and 
- * interrupts.  The interrupts are prioritised such to ensure that nesting 
+ * designed to stress test the queue implementation though pseudo simultaneous
+ * multiple reads and multiple writes from both tasks of varying priority and
+ * interrupts.  The interrupts are prioritised such to ensure that nesting
  * occurs (for those ports that support it).
  *
- * The test ensures that, while being accessed from three tasks and two 
+ * The test ensures that, while being accessed from three tasks and two
  * interrupts, all the data sent to the queues is also received from
  * the same queue, and that no duplicate items are either sent or received.
  * The tests also ensure that a low priority task is never able to successfully
@@ -75,8 +75,8 @@
 #include "IntQueueTimer.h"
 
 /* Priorities used by test tasks. */
-#define intqHIGHER_PRIORITY		1
-#define intqLOWER_PRIORITY		0
+#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 2 )
+#define intqLOWER_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The number of values to send/receive before checking that all values were
 processed as expected. */
@@ -86,16 +86,16 @@ processed as expected. */
 /* The value by which the value being sent to or received from a queue should
 increment past intqNUM_VALUES_TO_LOG before we check that all values have been
 sent/received correctly.  This is done to ensure that all tasks and interrupts
-accessing the queue have completed their accesses with the 
+accessing the queue have completed their accesses with the
 intqNUM_VALUES_TO_LOG range. */
 #define intqVALUE_OVERRUN		( 50 )
 
-/* The delay used by the polling task.  A short delay is used for code 
+/* The delay used by the polling task.  A short delay is used for code
 coverage. */
 #define intqONE_TICK_DELAY		( 1 )
 
-/* Each task and interrupt is given a unique identifier.  This value is used to 
-identify which task sent or received each value.  The identifier is also used 
+/* Each task and interrupt is given a unique identifier.  This value is used to
+identify which task sent or received each value.  The identifier is also used
 to distinguish between two tasks that are running the same task function. */
 #define intqHIGH_PRIORITY_TASK1	( ( unsigned portBASE_TYPE ) 1 )
 #define intqHIGH_PRIORITY_TASK2	( ( unsigned portBASE_TYPE ) 2 )
@@ -136,7 +136,7 @@ from within the interrupts. */
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
 
-/* Receive a value from the normally empty queue.  This is called from within 
+/* Receive a value from the normally empty queue.  This is called from within
 an interrupt. */
 #define timerNORMALLY_EMPTY_RX()																			\
 	if( xQueueReceiveFromISR( xNormallyEmptyQueue, &uxRxedValue, &xHigherPriorityTaskWoken ) != pdPASS )	\
@@ -148,7 +148,7 @@ an interrupt. */
 		prvRecordValue_NormallyEmpty( uxRxedValue, intqSECOND_INTERRUPT );									\
 	}
 
-/* Receive a value from the normally full queue.  This is called from within 
+/* Receive a value from the normally full queue.  This is called from within
 an interrupt. */
 #define timerNORMALLY_FULL_RX()																				\
 	if( xQueueReceiveFromISR( xNormallyFullQueue, &uxRxedValue, &xHigherPriorityTaskWoken ) == pdPASS )		\
@@ -181,8 +181,8 @@ volatile unsigned portBASE_TYPE uxValueForNormallyEmptyQueue = 0, uxValueForNorm
 xTaskHandle xHighPriorityNormallyEmptyTask1, xHighPriorityNormallyEmptyTask2, xHighPriorityNormallyFullTask1, xHighPriorityNormallyFullTask2;
 
 /* When a value is received in a queue the value is ticked off in the array
-the array position of the value is set to a the identifier of the task or 
-interrupt that accessed the queue.  This way missing or duplicate values can be 
+the array position of the value is set to a the identifier of the task or
+interrupt that accessed the queue.  This way missing or duplicate values can be
 detected. */
 static unsigned portCHAR ucNormallyEmptyReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
 static unsigned portCHAR ucNormallyFullReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
@@ -214,16 +214,16 @@ void vStartInterruptQueueTasks( void )
 	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
 	xTaskCreate( prvLowerPriorityNormallyFullTask, ( signed portCHAR * ) "LQRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
 
-	/* Create the queues that are accessed by multiple tasks and multiple 
+	/* Create the queues that are accessed by multiple tasks and multiple
 	interrupts. */
 	xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( unsigned portBASE_TYPE ) sizeof( unsigned portBASE_TYPE ) );
 	xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( unsigned portBASE_TYPE ) sizeof( unsigned portBASE_TYPE ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware 
+	in use.  The queue registry is provided as a means for kernel aware
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( xNormallyFullQueue, ( signed portCHAR * ) "NormallyFull" );
 	vQueueAddToRegistry( xNormallyEmptyQueue, ( signed portCHAR * ) "NormallyEmpty" );
@@ -277,7 +277,7 @@ static void prvHigherPriorityNormallyEmptyTask( void *pvParameters )
 {
 unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 
-	/* The timer should not be started until after the scheduler has started. 
+	/* The timer should not be started until after the scheduler has started.
 	More than one task is running this code so we check the parameter value
 	to determine which task should start the timer. */
 	if( ( unsigned portBASE_TYPE ) pvParameters == intqHIGH_PRIORITY_TASK1 )
@@ -348,14 +348,14 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 					/* Only task 1 seemed to log any values. */
 					prvQueueAccessLogError( __LINE__ );
 				}
-
+				
 				/* Clear the array again, ready to start a new cycle. */
 				memset( ucNormallyEmptyReceivedValues, 0x00, sizeof( ucNormallyEmptyReceivedValues ) );
 				
 				uxHighPriorityLoops1++;
 				uxValueForNormallyEmptyQueue = 0;
 
-				/* Suspend ourselves, allowing the lower priority task to 
+				/* Suspend ourselves, allowing the lower priority task to
 				actually receive something from the queue.  Until now it
 				will have been prevented from doing so by the higher
 				priority tasks.  The lower priority task will resume us
@@ -451,7 +451,7 @@ portBASE_TYPE xQueueStatus;
 
 		if( ( xQueueStatus = xQueueSend( xNormallyFullQueue, &uxValueToTx, intqSHORT_DELAY ) ) != pdPASS )
 		{
-			/* intqHIGH_PRIORITY_TASK2 is never suspended so we would not 
+			/* intqHIGH_PRIORITY_TASK2 is never suspended so we would not
 			expect it to ever time out. */
 			prvQueueAccessLogError( __LINE__ );
 		}
@@ -494,7 +494,7 @@ portBASE_TYPE xQueueStatus;
 			uxHighPriorityLoops2++;
 			uxValueForNormallyFullQueue = 0;
 
-			/* Suspend ourselves, allowing the lower priority task to 
+			/* Suspend ourselves, allowing the lower priority task to
 			actually receive something from the queue.  Until now it
 			will have been prevented from doing so by the higher
 			priority tasks.  The lower priority task will resume us

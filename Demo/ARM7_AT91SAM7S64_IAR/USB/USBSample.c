@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -491,7 +491,7 @@ const char pxConfigDescriptor[] = {
 	0x01,			/* bNumEndpoints							*/
 	0x03,			/* bInterfaceClass: HID code				*/
 	0x00,			/* bInterfaceSubclass						*/
-	0x01,			/* bInterfaceProtocol						*/
+	0x00,			/* bInterfaceProtocol						*/
 	usbINTERFACE_STRING,/* iInterface							*/
 
 	/* HID Descriptor */

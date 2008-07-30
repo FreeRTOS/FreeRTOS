@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -100,7 +100,7 @@ void vPortSVCHandler( void ) __attribute__ (( naked ));
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-void vPortStartFirstTask( unsigned long ulValue ) __attribute__ (( naked ));
+void vPortStartFirstTask( void ) __attribute__ (( naked ));
 
 /*-----------------------------------------------------------*/
 
@@ -143,12 +143,8 @@ void vPortSVCHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortStartFirstTask( unsigned long ulValue )
+void vPortStartFirstTask( void )
 {
-	/* ulValue is used from the asm code, but the compiler does not know
-	this so remove the warning. */
-	( void ) ulValue;
-
 	asm volatile(
 					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
 					" ldr r0, [r0] 			\n"
@@ -176,7 +172,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	uxCriticalNesting = 0;
 
 	/* Start the first task. */
-	vPortStartFirstTask( *((unsigned portLONG *) 0 ) );
+	vPortStartFirstTask();
 
 	/* Should not get here! */
 	return 0;
@@ -251,16 +247,18 @@ void xPortPendSVHandler( void )
 
 void xPortSysTickHandler( void )
 {
+unsigned portLONG ulDummy;
+
 	/* If using preemption, also force a context switch. */
 	#if configUSE_PREEMPTION == 1
 		*(portNVIC_INT_CTRL) |= portNVIC_PENDSVSET;
 	#endif
 
-	portSET_INTERRUPT_MASK_FROM_ISR();
+	ulDummy = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		vTaskIncrementTick();
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
 }
 /*-----------------------------------------------------------*/
 

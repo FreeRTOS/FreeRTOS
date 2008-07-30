@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -369,8 +369,8 @@ xOLEDMessage xMessage;
 unsigned portLONG ulY, ulMaxY;
 static portCHAR cMessage[ mainMAX_MSG_LEN ];
 extern volatile unsigned portLONG ulMaxJitter;
-unsigned portBASE_TYPE uxUnusedStackOnEntry, uxUnusedStackNow;
-const unsigned portCHAR *pucImage = NULL;
+unsigned portBASE_TYPE uxUnusedStackOnEntry;
+const unsigned portCHAR *pucImage;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
@@ -392,6 +392,7 @@ void ( *vOLEDClear )( void ) = NULL;
 										vOLEDImageDraw = OSRAM128x64x4ImageDraw;
 										vOLEDClear = OSRAM128x64x4Clear;
 										ulMaxY = mainMAX_ROWS_64;
+										pucImage = pucBasicBitmap;
 										break;
 										
 		case SYSCTL_DID1_PRTNO_1968	:	
@@ -400,6 +401,7 @@ void ( *vOLEDClear )( void ) = NULL;
 										vOLEDImageDraw = RIT128x96x4ImageDraw;
 										vOLEDClear = RIT128x96x4Clear;
 										ulMaxY = mainMAX_ROWS_96;
+										pucImage = pucBasicBitmap;
 										break;
 										
 		default						:	vOLEDInit = vFormike128x128x16Init;
@@ -407,7 +409,9 @@ void ( *vOLEDClear )( void ) = NULL;
 										vOLEDImageDraw = vFormike128x128x16ImageDraw;
 										vOLEDClear = vFormike128x128x16Clear;
 										ulMaxY = mainMAX_ROWS_128;
-										break;										
+										pucImage = pucGrLibBitmap;
+										break;
+										
 	}
 
 	ulY = ulMaxY;
@@ -415,19 +419,6 @@ void ( *vOLEDClear )( void ) = NULL;
 	/* Initialise the OLED and display a startup message. */
 	vOLEDInit( ulSSI_FREQUENCY );	
 	vOLEDStringDraw( "POWERED BY FreeRTOS", 0, 0, mainFULL_SCALE );
-
-	switch( HWREG( SYSCTL_DID1 ) & SYSCTL_DID1_PRTNO_MASK )
-	{
-		case SYSCTL_DID1_PRTNO_6965	:	
-		case SYSCTL_DID1_PRTNO_2965	:	
-		case SYSCTL_DID1_PRTNO_1968	:	
-		case SYSCTL_DID1_PRTNO_8962 :	pucImage = pucBasicBitmap;
-										break;
-										
-		default						:	pucImage = pucGrLibBitmap;
-										break;										
-	}
-
 	vOLEDImageDraw( pucImage, 0, mainCHARACTER_HEIGHT + 1, bmpBITMAP_WIDTH, bmpBITMAP_HEIGHT );
 	
 	for( ;; )

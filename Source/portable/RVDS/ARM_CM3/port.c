@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -93,7 +93,7 @@ void vPortSVCHandler( void );
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-void vPortStartFirstTask( unsigned long ulValue );
+void vPortStartFirstTask( void );
 
 /*-----------------------------------------------------------*/
 
@@ -133,7 +133,7 @@ __asm void vPortSVCHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-__asm void vPortStartFirstTask( unsigned long ulValue )
+__asm void vPortStartFirstTask( void )
 {
 	PRESERVE8
 
@@ -165,7 +165,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	uxCriticalNesting = 0;
 
 	/* Start the first task. */
-	vPortStartFirstTask( *((unsigned portLONG *) 0 ) );
+	vPortStartFirstTask();
 
 	/* Should not get here! */
 	return 0;
@@ -230,9 +230,9 @@ __asm void xPortPendSVHandler( void )
 	ldr r1, [r3]					 
 	ldr r0, [r1]					 /* The first item in pxCurrentTCB is the task top of stack. */
 	ldmia r0!, {r4-r11}			 /* Pop the registers and the critical nesting count. */
-	str r1, [r2]					 /* Save the new critical nesting value into ulCriticalNesting. */ 
 	msr psp, r0						 
 	bx r14
+	nop
 }
 /*-----------------------------------------------------------*/
 
@@ -249,7 +249,7 @@ unsigned portLONG ulDummy;
 	{
 		vTaskIncrementTick();
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
 }
 /*-----------------------------------------------------------*/
 

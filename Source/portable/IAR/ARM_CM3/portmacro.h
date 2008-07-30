@@ -47,13 +47,6 @@
 	licensing and training services.
 */
 
-/*
-	Change from V4.2.1:
-
-	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
-	  interrupt priority used by the kernel.
-*/
-
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
@@ -113,8 +106,8 @@ extern void vPortExitCritical( void );
 extern void vPortSetInterruptMask( void );
 extern void vPortClearInterruptMask( void );
 
-#define portDISABLE_INTERRUPTS()				vPortSetInterruptMask();
-#define portENABLE_INTERRUPTS()					vPortClearInterruptMask();
+#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask()
+#define portENABLE_INTERRUPTS()		vPortClearInterruptMask()
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
 #define portSET_INTERRUPT_MASK_FROM_ISR()		0;vPortSetInterruptMask()

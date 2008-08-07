@@ -52,6 +52,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+static unsigned portLONG ulCriticalNesting = 0x9999UL;
+
 
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
@@ -61,6 +63,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
 portBASE_TYPE xPortStartScheduler( void )
 {
+	ulCriticalNesting = 0UL;
 }
 /*-----------------------------------------------------------*/
 
@@ -68,3 +71,35 @@ void vPortEndScheduler( void )
 {
 }
 /*-----------------------------------------------------------*/
+
+void vPortEnterCritical( void )
+{
+	portDISABLE_INTERRUPTS();
+	ulCriticalNesting++;
+}
+/*-----------------------------------------------------------*/
+
+void vPortExitCritical( void )
+{
+	ulCriticalNesting--;
+	if( ulCriticalNesting == 0 )
+	{
+		portENABLE_INTERRUPTS();
+	}
+}
+/*-----------------------------------------------------------*/
+
+unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void )
+{
+	return 0;
+}
+/*-----------------------------------------------------------*/
+
+void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedInterruptMask )
+{
+}
+
+
+
+
+

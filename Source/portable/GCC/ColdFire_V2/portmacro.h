@@ -100,7 +100,7 @@ extern void vTaskExitCritical( void );
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 
-extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR();
+extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void );
 extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 #define portSET_INTERRUPT_MASK_FROM_ISR() uxPortSetInterruptMaskFromISR()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) vPortClearInterruptMaskFromISR( uxSavedStatusRegister )

@@ -198,6 +198,15 @@
     #include "../../Source/portable/GCC/MCF5235/portmacro.h"
 #endif
 
+#ifdef COLDFIRE_V2_CODEWARRIOR
+	#include "../../source/portable/CodeWarrior/ColdFire_MCF52259/portmacro.h"
+#endif
+
+#ifdef COLDFIRE_V2_GCC
+	#include "../../../source/portable/GCC/ColdFire_V2/portmacro.h"
+#endif
+
+
 #ifdef GCC_PPC405
 	#include "../../Source/portable/GCC/PPC405_Xilinx/portmacro.h"
 #endif

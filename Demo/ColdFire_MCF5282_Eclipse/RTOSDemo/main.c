@@ -85,6 +85,7 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "IntQueue.h"
+#include "comtest2.h"
 
 /*-----------------------------------------------------------*/
 
@@ -99,7 +100,12 @@ error has been detected. */
 /* The LED controlled by the 'check' task. */
 #define mainCHECK_LED						( 3 )
 
+/* Contest constants - there is no free LED for the comtest. */
+#define mainCOM_TEST_BAUD_RATE	( ( unsigned portLONG ) 115200 )
+#define mainCOM_TEST_LED		( 5 )
+
 /* Task priorities. */
+#define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
@@ -107,7 +113,6 @@ error has been detected. */
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
-
 
 /*
  * Configure the hardware for the demo.
@@ -137,6 +142,7 @@ int main( void )
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
+	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 
 	/* Create the check task. */
 	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -157,7 +163,7 @@ int main( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-unsigned ulTicksToWait = mainNO_ERROR_PERIOD;
+unsigned ulTicksToWait = mainNO_ERROR_PERIOD, ulError = 0;
 portTickType xLastExecutionTime;
 
 	( void ) pvParameters;
@@ -174,40 +180,49 @@ portTickType xLastExecutionTime;
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-			ulTicksToWait = mainERROR_PERIOD;
+			ulError |= 0x01UL;
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			ulTicksToWait = mainERROR_PERIOD;
+			ulError |= 0x02UL;
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
-			ulTicksToWait = mainERROR_PERIOD;
+			ulError |= 0x04UL;
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			ulTicksToWait = mainERROR_PERIOD;
+			ulError |= 0x10UL;
 		}
 	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
-	    	ulTicksToWait = mainERROR_PERIOD;
+	    	ulError |= 0x20UL;
 	    }
 	    else if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
-	    	ulTicksToWait = mainERROR_PERIOD;
+	    	ulError |= 0x40UL;
 	    }
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
-	    	ulTicksToWait = mainERROR_PERIOD;
+	    	ulError |= 0x80UL;
 	    }
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
-	    	ulTicksToWait = mainERROR_PERIOD;
+	    	ulError |= 0x100UL;
 	    }
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
-	    	ulTicksToWait = mainERROR_PERIOD;
+	    	ulError |= 0x200UL;
 	    }
+	    else if( xAreComTestTasksStillRunning() != pdTRUE )
+		{
+	    	ulError |= 0x400UL;
+		}
+
+		if( ulError != 0 )
+		{
+	    	ulTicksToWait = mainERROR_PERIOD;
+		}
 
 		vParTestToggleLED( mainCHECK_LED );
 	}
@@ -216,6 +231,15 @@ portTickType xLastExecutionTime;
 
 void prvSetupHardware( void )
 {
+	/* Multiply 8Mhz reference crystal by 8 to achieve system clock of 64Mhz. */
+	MCF_CLOCK_SYNCR = MCF_CLOCK_SYNCR_MFD( 2 );
+
+	/* Wait for PLL to lock. */
+	while( !( MCF_CLOCK_SYNSR & MCF_CLOCK_SYNSR_LOCK ) )
+	{
+		__asm__ volatile ( "NOP" );
+	}
+
 	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/

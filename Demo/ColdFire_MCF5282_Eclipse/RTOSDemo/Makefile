@@ -2,17 +2,19 @@ RM := rm -rf
 
 FREERTOS_SOURCE_DIR=./../../../Source
 PORT_SOURCE_DIR=./../../../Source/portable/GCC/ColdFire_V2
-COMMON_DEMO_CODE_DIR=./../../Common/Minimal
+COMMON_DEMO_SOURCE_DIR=./../../Common/Minimal
 OUTPUT_DIR=./bin
 CPU=528x
 LINKER_SCRIPT=m5282evb-ram-hosted.ld
 OUTPUT_FILENAME=RTOSDemo.elf
 CC=m68k-elf-gcc
 AS=m68K-elf-as
-VPATH=$(FREERTOS_SOURCE_DIR) : $(PORT_SOURCE_DIR) : $(COMMON_DEMO_CODE_DIR) : $(FREERTOS_SOURCE_DIR)/portable/MemMang : . : ./ParTest
+VPATH=$(FREERTOS_SOURCE_DIR) : $(PORT_SOURCE_DIR) : $(COMMON_DEMO_SOURCE_DIR) : $(FREERTOS_SOURCE_DIR)/portable/MemMang : . : ./ParTest : ./serial
 
 OBJS =		$(OUTPUT_DIR)/portasm.o \
 			$(OUTPUT_DIR)/main.o \
+			$(OUTPUT_DIR)/serial.o \
+			$(OUTPUT_DIR)/comtest.o \
 			$(OUTPUT_DIR)/flash.o \
 			$(OUTPUT_DIR)/ParTest.o \
 			$(OUTPUT_DIR)/BlockQ.o \
@@ -36,7 +38,7 @@ C_DEPS = $(OBJS:.o=.d)
 
 CFLAGS=		-I"$(FREERTOS_SOURCE_DIR)/include" \
 			-I"include" \
-			-I"$(COMMON_DEMO_CODE_DIR)/../include" \
+			-I"$(COMMON_DEMO_SOURCE_DIR)/../include" \
 			-I"$(PORT_SOURCE_DIR)" \
 			-I./MCF5282 \
 			-I. \

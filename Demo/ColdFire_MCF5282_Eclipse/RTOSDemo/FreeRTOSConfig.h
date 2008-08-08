@@ -94,10 +94,9 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
-
-
 #define configKERNEL_INTERRUPT_PRIORITY 		1
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xa0, or priority 5. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	4
 
+void vApplicationSetupInterrupts( void );
 
 #endif /* FREERTOS_CONFIG_H */

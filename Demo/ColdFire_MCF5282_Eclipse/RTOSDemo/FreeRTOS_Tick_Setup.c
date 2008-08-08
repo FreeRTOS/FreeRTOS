@@ -54,7 +54,7 @@
 #define portPIT_INTERRUPT_ENABLED	( 0x08 )
 #define configPIT0_INTERRUPT_VECTOR	( 55 )
 
-static void vApplicationSetupInterrupts( void )
+void vApplicationSetupInterrupts( void )
 {
 const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
 

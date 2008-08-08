@@ -28,7 +28,7 @@ OBJS =		$(OUTPUT_DIR)/portasm.o \
 			$(OUTPUT_DIR)/tasks.o \
 			$(OUTPUT_DIR)/queue.o \
 			$(OUTPUT_DIR)/heap_2.o \
-			$(OUTPUT_DIR)/FreeRTOS_Timer.o
+			$(OUTPUT_DIR)/FreeRTOS_Tick_Setup.o
 			
 C_DEPS = $(OBJS:.o=.d)
 

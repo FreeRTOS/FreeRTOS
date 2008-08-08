@@ -52,18 +52,92 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#define portINITIAL_FORMAT_VECTOR		( ( portSTACK_TYPE ) 0x4000 )
+
+/* Supervisor mode set. */
+#define portINITIAL_STATUS_REGISTER		( ( portSTACK_TYPE ) 0x2000)
+
 static unsigned portLONG ulCriticalNesting = 0x9999UL;
 
 
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-    return NULL;
+	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+	pxTopOfStack--;
+
+	*pxTopOfStack = (portSTACK_TYPE) 0xDEADBEEF;
+	pxTopOfStack--;
+
+	/* Exception stack frame starts with the return address. */
+	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portINITIAL_FORMAT_VECTOR << 16UL ) | ( portINITIAL_STATUS_REGISTER );
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x0; /*FP*/
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xA5A5A5A5;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xA4A4A4A4;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xA3A3A3A3;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xA2A2A2A2;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xA1A1A1A1;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xA0A0A0A0;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD7D7D7D7;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD6D6D6D6;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD5D5D5D5;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD4D4D4D4;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD3D3D3D3;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD2D2D2D2;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD1D1D1D1;
+	pxTopOfStack--;
+
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xD0D0D0D0;
+
+    return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
 portBASE_TYPE xPortStartScheduler( void )
 {
 	ulCriticalNesting = 0UL;
+
+	vApplicationSetupInterrupts();
+
+	asm volatile(
+					"move.l		pxCurrentTCB, %sp				\n\t"\
+					"move.l		(%sp), %sp						\n\t"\
+					"movem.l	(%sp), %d0-%fp					\n\t"\
+					"lea.l		%sp@(60), %sp					\n\t"\
+					"rte										    "
+				);
+
+	return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 

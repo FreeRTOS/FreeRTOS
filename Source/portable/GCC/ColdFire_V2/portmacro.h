@@ -19,7 +19,7 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
@@ -37,28 +37,25 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
-/* System include files */
-#include <plib.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -88,15 +85,15 @@ extern "C" {
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			4
 #define portSTACK_GROWTH			-4
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
+unsigned portLONG ulPortSetIPL( unsigned portLONG );
+#define portDISABLE_INTERRUPTS()	ulPortSetIPL( configKERNEL_INTERRUPT_PRIORITY )
+#define portENABLE_INTERRUPTS()		ulPortSetIPL( 0 )
 
-#define portDISABLE_INTERRUPTS()
-#define portENABLE_INTERRUPTS()
 
-
-extern void vTaskEnterCritical( void );
-extern void vTaskExitCritical( void );
+extern void vPortEnterCritical( void );
+extern void vPortExitCritical( void );
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 

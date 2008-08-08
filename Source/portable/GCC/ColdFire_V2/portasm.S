@@ -8,7 +8,7 @@
  * Function copied from mcf5xxx.S provided by FreeScale.
  */
 
-    .global french_cheese
+    .global ulPortSetIPL
 
     .text
 
@@ -23,7 +23,7 @@
  * value are used.
  */
 
-portSET_IPL:
+ulPortSetIPL:
     link    A6,#-8
     movem.l D6-D7,(SP)
 

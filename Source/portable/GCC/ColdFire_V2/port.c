@@ -125,17 +125,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
 portBASE_TYPE xPortStartScheduler( void )
 {
+extern void vPortStartFirstTask( void );
+
 	ulCriticalNesting = 0UL;
 
 	vApplicationSetupInterrupts();
-
-	asm volatile(
-					"move.l		pxCurrentTCB, %sp				\n\t"\
-					"move.l		(%sp), %sp						\n\t"\
-					"movem.l	(%sp), %d0-%fp					\n\t"\
-					"lea.l		%sp@(60), %sp					\n\t"\
-					"rte										    "
-				);
+	vPortStartFirstTask();
 
 	return pdFALSE;
 }
@@ -172,6 +167,13 @@ unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void )
 void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedInterruptMask )
 {
 }
+
+void vPortClearYield( void )
+{
+	/* -32 as we are using the high word of the 64bit mask. */
+	MCF_INTC0_INTFRCH &= ~( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) );
+}
+
 
 
 

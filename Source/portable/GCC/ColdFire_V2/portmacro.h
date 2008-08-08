@@ -106,7 +106,8 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 
 /* Task utilities. */
 
-#define portYIELD()
+#define portYIELD()			MCF_INTC0_INTFRCH |= ( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) ); portNOP(); portNOP(); portNOP(); /* -32 as we are using the high word of the 64bit mask. */
+
 
 
 #define portNOP()	asm volatile ( 	"nop" )

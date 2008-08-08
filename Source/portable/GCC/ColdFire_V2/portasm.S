@@ -9,8 +9,30 @@
  */
 
     .global ulPortSetIPL
+    .global __cs3_isr_interrupt_127
+    .global __cs3_isr_interrupt_119
+    .global vPortStartFirstTask
 
     .text
+
+.macro portSAVE_CONTEXT
+
+	lea.l		(-60, %sp), %sp
+	movem.l		%d0-%fp, (%sp)
+	move.l		pxCurrentTCB, %a0
+	move.l		%sp, (%a0)
+
+	.endm
+
+.macro portRESTORE_CONTEXT
+
+	move.l		pxCurrentTCB, %sp
+	move.l		(%sp), %sp
+	movem.l		(%sp), %d0-%fp
+	lea.l		%sp@(60), %sp
+	rte
+
+	.endm
 
 /********************************************************************/
 /*
@@ -47,6 +69,20 @@ ulPortSetIPL:
     rts
 
 /********************************************************************/
+
+/* Yield interrupt. */
+__cs3_isr_interrupt_127:
+	portSAVE_CONTEXT
+	jsr vPortClearYield
+	jsr vTaskSwitchContext
+	portRESTORE_CONTEXT
+
+/********************************************************************/
+
+
+vPortStartFirstTask:
+	portRESTORE_CONTEXT
+
     .end
 
 

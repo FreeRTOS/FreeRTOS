@@ -48,6 +48,7 @@
 */
 
 #include "FreeRTOS.h"
+#include "task.h"
 
 #define portPRESCALE_VALUE			64
 #define portPRESCALE_REG_SETTING	( 5 << 8 )
@@ -69,14 +70,16 @@ const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRES
     MCF_PIT0_PCSR = ( portPRESCALE_REG_SETTING | MCF_PIT_PCSR_PIE | MCF_PIT_PCSR_RLD | MCF_PIT_PCSR_EN );
 	MCF_PIT0_PMR = usCompareMatchValue;
 }
+/*-----------------------------------------------------------*/
 
-void __attribute__ ((interrupt)) __cs3_isr_interrupt_127(void)
-{
-	MCF_INTC0_INTFRCH &= ~( 1UL << 31UL );
-}
-
-void __attribute__ ((interrupt)) __cs3_isr_interrupt_119(void)
+void __attribute__ ((interrupt)) __cs3_isr_interrupt_119( void )
 {
 	MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;
-	MCF_INTC0_INTFRCH |= ( 1UL << 31UL );
+	vTaskIncrementTick();
+
+	#if configUSE_PREEMPTION == 1
+	{
+		taskYIELD();
+	}
+	#endif
 }

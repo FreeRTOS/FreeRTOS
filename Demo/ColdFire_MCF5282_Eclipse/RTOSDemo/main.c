@@ -90,7 +90,14 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_PERIOD					( ( portTickType ) 5000 / portTICK_RATE_MS )
+
+/* The rate at which the LED controlled by the 'check' task will flash when an
+error has been detected. */
+#define mainERROR_PERIOD 					( 500 )
+
+/* The LED controlled by the 'check' task. */
+#define mainCHECK_LED						( 3 )
 
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -107,6 +114,13 @@ tick hook. */
  */
 static void prvSetupHardware( void );
 
+/*
+ * Implements the 'check' task functionality as described at the top of this
+ * file.
+ */
+static void prvCheckTask( void *pvParameters );
+
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -114,14 +128,18 @@ int main( void )
 	prvSetupHardware();
 
 	/* Start the standard demo tasks. */
+	vStartLEDFlashTasks( tskIDLE_PRIORITY );
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-    vCreateBlockTimeTasks();
-    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-    vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
-    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-    vStartQueuePeekTasks();
-    vStartRecursiveMutexTasks();
+	vCreateBlockTimeTasks();
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartQueuePeekTasks();
+	vStartRecursiveMutexTasks();
+
+	/* Create the check task. */
+	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
@@ -133,7 +151,66 @@ int main( void )
 
     /* Will only get here if there was insufficient memory to create the idle
     task. */
-	return 0;
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+static void prvCheckTask( void *pvParameters )
+{
+unsigned ulTicksToWait = mainNO_ERROR_PERIOD;
+portTickType xLastExecutionTime;
+
+	( void ) pvParameters;
+
+	/* Initialise the variable used to control our iteration rate prior to
+	its first use. */
+	xLastExecutionTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		/* Wait until it is time to run the tests again. */
+		vTaskDelayUntil( &xLastExecutionTime, ulTicksToWait );
+
+		/* Has an error been found in any task? */
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainERROR_PERIOD;
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainERROR_PERIOD;
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainERROR_PERIOD;
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainERROR_PERIOD;
+		}
+	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	    {
+	    	ulTicksToWait = mainERROR_PERIOD;
+	    }
+	    else if( xArePollingQueuesStillRunning() != pdTRUE )
+	    {
+	    	ulTicksToWait = mainERROR_PERIOD;
+	    }
+	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+	    {
+	    	ulTicksToWait = mainERROR_PERIOD;
+	    }
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+	    	ulTicksToWait = mainERROR_PERIOD;
+	    }
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	ulTicksToWait = mainERROR_PERIOD;
+	    }
+
+		vParTestToggleLED( mainCHECK_LED );
+	}
 }
 /*-----------------------------------------------------------*/
 

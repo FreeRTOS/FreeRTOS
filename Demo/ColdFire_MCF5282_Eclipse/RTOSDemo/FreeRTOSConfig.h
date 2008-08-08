@@ -67,7 +67,7 @@
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 25000000 )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 60 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 90 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 24000 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
@@ -94,6 +94,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
+#define configYIELD_INTERRUPT_VECTOR			63UL
 #define configKERNEL_INTERRUPT_PRIORITY 		1
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	4
 

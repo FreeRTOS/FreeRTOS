@@ -13,6 +13,7 @@ VPATH=$(FREERTOS_SOURCE_DIR) : $(PORT_SOURCE_DIR) : $(COMMON_DEMO_CODE_DIR) : $(
 
 OBJS =		$(OUTPUT_DIR)/portasm.o \
 			$(OUTPUT_DIR)/main.o \
+			$(OUTPUT_DIR)/flash.o \
 			$(OUTPUT_DIR)/ParTest.o \
 			$(OUTPUT_DIR)/BlockQ.o \
 			$(OUTPUT_DIR)/blocktim.o \

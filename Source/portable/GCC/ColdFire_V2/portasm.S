@@ -73,8 +73,7 @@ ulPortSetIPL:
 /* Yield interrupt. */
 __cs3_isr_interrupt_127:
 	portSAVE_CONTEXT
-	jsr vPortClearYield
-	jsr vTaskSwitchContext
+	jsr vPortYieldHandler
 	portRESTORE_CONTEXT
 
 /********************************************************************/

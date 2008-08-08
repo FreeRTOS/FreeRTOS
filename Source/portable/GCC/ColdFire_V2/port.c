@@ -158,20 +158,16 @@ void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void )
+void vPortYieldHandler( void )
 {
-	return 0;
-}
-/*-----------------------------------------------------------*/
+unsigned portLONG ulSavedInterruptMask;
 
-void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedInterruptMask )
-{
-}
-
-void vPortClearYield( void )
-{
 	/* -32 as we are using the high word of the 64bit mask. */
 	MCF_INTC0_INTFRCH &= ~( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) );
+
+	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
+		vTaskSwitchContext();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
 }
 
 

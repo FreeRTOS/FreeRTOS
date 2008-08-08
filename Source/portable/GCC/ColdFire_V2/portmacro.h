@@ -88,7 +88,7 @@ extern "C" {
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 unsigned portLONG ulPortSetIPL( unsigned portLONG );
-#define portDISABLE_INTERRUPTS()	ulPortSetIPL( configKERNEL_INTERRUPT_PRIORITY )
+#define portDISABLE_INTERRUPTS()	ulPortSetIPL( configMAX_SYSCALL_INTERRUPT_PRIORITY )
 #define portENABLE_INTERRUPTS()		ulPortSetIPL( 0 )
 
 
@@ -99,8 +99,8 @@ extern void vPortExitCritical( void );
 
 extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void );
 extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
-#define portSET_INTERRUPT_MASK_FROM_ISR() uxPortSetInterruptMaskFromISR()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) vPortClearInterruptMaskFromISR( uxSavedStatusRegister )
+#define portSET_INTERRUPT_MASK_FROM_ISR()	ulPortSetIPL( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) ulPortSetIPL( uxSavedStatusRegister )
 
 /*-----------------------------------------------------------*/
 

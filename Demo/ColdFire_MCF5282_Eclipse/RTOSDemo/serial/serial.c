@@ -66,9 +66,9 @@ an example of an efficient driver. */
 #include "serial.h"
 
 /* Hardware definitions. */
-#define serNO_PARITY		( ( unsigned portCHAR ) 0x10 << 3 )
-#define ser8DATA_BITS		( ( unsigned portCHAR ) 0x11 )
-#define ser1STOP_BIT		( ( unsigned portCHAR ) 0x111 )
+#define serNO_PARITY		( ( unsigned portCHAR ) 0x02 << 3 )
+#define ser8DATA_BITS		( ( unsigned portCHAR ) 0x03 )
+#define ser1STOP_BIT		( ( unsigned portCHAR ) 0x07 )
 #define serSYSTEM_CLOCK		( ( unsigned portCHAR ) 0xdd )
 #define serTX_OUTPUT		( ( unsigned portCHAR ) 0x04 )
 #define serRX_INPUT			( ( unsigned portCHAR ) 0x08 )
@@ -83,7 +83,7 @@ static xQueueHandle xRxedChars;
 static xQueueHandle xCharsForTx;
 
 /* Flag used to indicate the tx status. */
-static portBASE_TYPE xTxHasEnded;
+static portBASE_TYPE xTxHasEnded = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
@@ -94,14 +94,23 @@ void __attribute__( ( interrupt ) ) __cs3_isr_interrupt_78( void );
 
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32 * ulWantedBaud ) );
+const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32UL * ulWantedBaud ) );
 
 	/* Create the queues used by the com test task. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 
+	xTxHasEnded = pdTRUE;
+
 	/* Set the pins to UART mode. */
 	MCF_PAD_PUAPAR |= ( serTX_OUTPUT | serRX_INPUT );
+
+	/* Reset the peripheral. */
+	MCF_UART1_UCR = MCF_UART_UCR_RESET_RX;
+	MCF_UART1_UCR = MCF_UART_UCR_RESET_TX;
+	MCF_UART1_UCR = MCF_UART_UCR_RESET_ERROR;
+	MCF_UART1_UCR = MCF_UART_UCR_RESET_BKCHGINT;
+	MCF_UART1_UCR = MCF_UART_UCR_RESET_MR | MCF_UART_UCR_RX_DISABLED | MCF_UART_UCR_TX_DISABLED;
 
 	/* Configure the UART. */
 	MCF_UART1_UMR1 = serNO_PARITY | ser8DATA_BITS;
@@ -111,20 +120,16 @@ const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32 * ulWant
 	MCF_UART1_UBG1 = ( unsigned portCHAR ) ( ( ulBaudRateDivisor >> 8UL ) & 0xffUL );
 	MCF_UART1_UBG2 = ( unsigned portCHAR ) ( ulBaudRateDivisor & 0xffUL );
 
-	/* Reset the peripheral before turning it on. */
-	MCF_UART1_UCR = MCF_UART_UCR_RESET_MR;
-	MCF_UART1_UCR = MCF_UART_UCR_RESET_RX;
-	MCF_UART1_UCR = MCF_UART_UCR_RESET_TX;
-	MCF_UART1_UCR = MCF_UART_UCR_RESET_ERROR;
+	/* Turn it on. */
 	MCF_UART1_UCR = serTX_ENABLE | serRX_ENABLE;
 
 	/* Configure the interrupt controller.  Run the UARTs above the kernel
 	interrupt priority for demo purposes. */
     MCF_INTC0_ICR14 = ( ( configKERNEL_INTERRUPT_PRIORITY + 1 ) | ( 1 << 3 ) );
-    MCF_INTC0_IMRL &= ~MCF_INTC_IMRL_INT_MASK14;
+    MCF_INTC0_IMRL &= ~( MCF_INTC_IMRL_INT_MASK14 | 0x01 );
 
 	/* The Tx interrupt is not enabled until there is data to send. */
-	MCF_UART0_UIMR = serRX_INT;
+	MCF_UART1_UIMR = serRX_INT;
 
 	/* Only a single port is implemented so we don't need to return anything. */
 	return NULL;
@@ -162,10 +167,10 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOut
 
 	/* A critical section should not be required as xTxHasEnded will not be
 	written to by the ISR if it is already 0 (is this correct?). */
-	if( xTxHasEnded )
+	if( xTxHasEnded != pdFALSE )
 	{
 		xTxHasEnded = pdFALSE;
-		MCF_UART0_UIMR = serRX_INT | serTX_INT;
+		MCF_UART1_UIMR = serRX_INT | serTX_INT;
 	}
 
 	return pdPASS;
@@ -188,26 +193,27 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, xDoneSomething = pdTRUE;
 		xDoneSomething = pdFALSE;
 
 		/* Does the tx buffer contain space? */
-		if( ( MCF_UART0_USR & MCF_UART_USR_TXRDY ) != 0x00 )
+		if( ( MCF_UART1_USR & MCF_UART_USR_TXRDY ) != 0x00 )
 		{
 			/* Are there any characters queued to be sent? */
 			if( xQueueReceiveFromISR( xCharsForTx, &ucChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 			{
 				/* Send the next char. */
-				MCF_UART0_UTB = ucChar;
+				MCF_UART1_UTB = ucChar;
 				xDoneSomething = pdTRUE;
 			}
 			else
 			{
 				/* Turn off the Tx interrupt until such time as another character
 				is being transmitted. */
-				MCF_UART0_UIMR = serRX_INT;
+				MCF_UART1_UIMR = serRX_INT;
+				xTxHasEnded = pdTRUE;
 			}
 		}
 
-		if( MCF_UART0_USR & MCF_UART_USR_RXRDY )
+		if( MCF_UART1_USR & MCF_UART_USR_RXRDY )
 		{
-			ucChar = MCF_UART0_URB;
+			ucChar = MCF_UART1_URB;
 			xQueueSendFromISR( xRxedChars, &ucChar, &xHigherPriorityTaskWoken );
 			xDoneSomething = pdTRUE;
 		}

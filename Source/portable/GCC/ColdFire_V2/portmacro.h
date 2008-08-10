@@ -84,7 +84,7 @@ extern "C" {
 
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			4
-#define portSTACK_GROWTH			-4
+#define portSTACK_GROWTH			-1
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 unsigned portLONG ulPortSetIPL( unsigned portLONG );
@@ -106,7 +106,7 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 
 /* Task utilities. */
 
-#define portYIELD()			MCF_INTC0_INTFRCH |= ( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) ); portNOP(); portNOP(); portNOP(); /* -32 as we are using the high word of the 64bit mask. */
+#define portYIELD()			MCF_INTC0_INTFRCH |= ( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) ); portNOP(); portNOP(); portNOP() /* -32 as we are using the high word of the 64bit mask. */
 
 
 
@@ -119,9 +119,9 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
-#define portEND_SWITCHING_ISR( xSwitchRequired )	if( xSwitchRequired )	\
-													{						\
-														portYIELD();		\
+#define portEND_SWITCHING_ISR( xSwitchRequired )	if( xSwitchRequired != pdFALSE )	\
+													{									\
+														portYIELD();					\
 													}
 
 

@@ -9,8 +9,8 @@
  */
 
     .global ulPortSetIPL
+    .global mcf5xxx_wr_cacr
     .global __cs3_isr_interrupt_127
-    .global __cs3_isr_interrupt_119
     .global vPortStartFirstTask
 
     .text
@@ -25,9 +25,8 @@
 	.endm
 
 .macro portRESTORE_CONTEXT
-
-	move.l		pxCurrentTCB, %sp
-	move.l		(%sp), %sp
+	move.l		pxCurrentTCB, %a0
+	move.l		(%a0), %sp
 	movem.l		(%sp), %d0-%fp
 	lea.l		%sp@(60), %sp
 	rte
@@ -66,6 +65,13 @@ ulPortSetIPL:
     movem.l (SP),D6-D7
     lea     8(SP),SP
     unlk    A6
+    rts
+/********************************************************************/
+
+mcf5xxx_wr_cacr:
+    move.l  4(sp),d0
+    .long   0x4e7b0002      /* movec d0,cacr   */
+    nop
     rts
 
 /********************************************************************/

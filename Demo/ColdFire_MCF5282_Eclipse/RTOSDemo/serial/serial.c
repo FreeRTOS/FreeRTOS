@@ -125,7 +125,7 @@ const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32UL * ulWa
 
 	/* Configure the interrupt controller.  Run the UARTs above the kernel
 	interrupt priority for demo purposes. */
-    MCF_INTC0_ICR14 = ( ( configKERNEL_INTERRUPT_PRIORITY + 1 ) | ( 1 << 3 ) );
+    MCF_INTC0_ICR14 = ( ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 2  ) << 3 );
     MCF_INTC0_IMRL &= ~( MCF_INTC_IMRL_INT_MASK14 | 0x01 );
 
 	/* The Tx interrupt is not enabled until there is data to send. */

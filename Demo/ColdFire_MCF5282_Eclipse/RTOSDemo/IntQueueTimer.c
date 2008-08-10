@@ -47,57 +47,45 @@
 	licensing and training services.
 */
 
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
+#include "FreeRTOS.h"
+#include "IntQueueTimer.h"
+#include "IntQueue.h"
 
-#include "MCF5282.h"
+#define timerINTERRUPT1_FREQUENCY	( 2000UL )
+#define timerINTERRUPT2_FREQUENCY	( 2001UL )
+#define timerPRESCALE_VALUE			( 2 )
 
-/*-----------------------------------------------------------
- * Application specific definitions.
- *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
- *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
- *----------------------------------------------------------*/
+void vInitialiseTimerForIntQueueTest( void )
+{
+const unsigned portSHORT usCompareMatchValue1 = ( unsigned portSHORT ) ( ( configCPU_CLOCK_HZ / timerPRESCALE_VALUE ) / timerINTERRUPT1_FREQUENCY );
+const unsigned portSHORT usCompareMatchValue2 = ( unsigned portSHORT ) ( ( configCPU_CLOCK_HZ / timerPRESCALE_VALUE ) / timerINTERRUPT2_FREQUENCY );
 
-#define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
-#define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 64000000 )
-#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 100 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 30000 ) )
-#define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		1
-#define configUSE_16_BIT_TICKS			0
-#define configIDLE_SHOULD_YIELD			0
-#define configUSE_CO_ROUTINES 			0
-#define configUSE_MUTEXES				1
-#define configCHECK_FOR_STACK_OVERFLOW	2
-#define configUSE_RECURSIVE_MUTEXES		1
-#define configQUEUE_REGISTRY_SIZE		10
+	/* Configure interrupt priority and level and unmask interrupt. */
+	MCF_INTC0_ICR56 = ( ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 ) << 3 );
+	MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK56 );
 
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+	MCF_PIT1_PCSR |= MCF_PIT_PCSR_PIF;
+	MCF_PIT1_PCSR = ( MCF_PIT_PCSR_PIE | MCF_PIT_PCSR_RLD | MCF_PIT_PCSR_EN );
+	MCF_PIT1_PMR = usCompareMatchValue1;
 
-/* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
+	MCF_INTC0_ICR57 = ( configMAX_SYSCALL_INTERRUPT_PRIORITY << 3 );
+	MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK57 );
 
-#define INCLUDE_vTaskPrioritySet			1
-#define INCLUDE_uxTaskPriorityGet			1
-#define INCLUDE_vTaskDelete					1
-#define INCLUDE_vTaskCleanUpResources		0
-#define INCLUDE_vTaskSuspend				1
-#define INCLUDE_vTaskDelayUntil				1
-#define INCLUDE_vTaskDelay					1
-#define INCLUDE_uxTaskGetStackHighWaterMark	1
+	MCF_PIT2_PCSR |= MCF_PIT_PCSR_PIF;
+	MCF_PIT2_PCSR = ( MCF_PIT_PCSR_PIE | MCF_PIT_PCSR_RLD | MCF_PIT_PCSR_EN );
+	MCF_PIT2_PMR = usCompareMatchValue2;
+}
+/*-----------------------------------------------------------*/
 
-#define configYIELD_INTERRUPT_VECTOR			63UL
-#define configKERNEL_INTERRUPT_PRIORITY 		1
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	4
+void __attribute__ ((interrupt)) __cs3_isr_interrupt_120( void )
+{
+	MCF_PIT1_PCSR |= MCF_PIT_PCSR_PIF;
+	portEND_SWITCHING_ISR( xFirstTimerHandler() );
+}
+/*-----------------------------------------------------------*/
 
-void vApplicationSetupInterrupts( void );
-
-#endif /* FREERTOS_CONFIG_H */
+void __attribute__ ((interrupt)) __cs3_isr_interrupt_121( void )
+{
+	MCF_PIT2_PCSR |= MCF_PIT_PCSR_PIF;
+	portEND_SWITCHING_ISR( xSecondTimerHandler() );
+}

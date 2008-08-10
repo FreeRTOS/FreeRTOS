@@ -37,53 +37,22 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
+	http://www.FreeRTOS.org - Documentation, latest information, license and 
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
+	http://www.SafeRTOS.com - A version that is certified for use in safety 
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
+	http://www.OpenRTOS.com - Commercial support, development, porting, 
 	licensing and training services.
 */
 
-#include "FreeRTOS.h"
-#include "task.h"
+#ifndef INT_QUEUE_TIMER_H
+#define INT_QUEUE_TIMER_H
 
-#define portPRESCALE_VALUE			64
-#define portPRESCALE_REG_SETTING	( 5 << 8 )
-#define portPIT_INTERRUPT_ENABLED	( 0x08 )
-#define configPIT0_INTERRUPT_VECTOR	( 55 )
+void vInitialiseTimerForIntQueueTest( void );
+portBASE_TYPE xTimer0Handler( void );
+portBASE_TYPE xTimer1Handler( void );
 
-void vApplicationSetupInterrupts( void )
-{
-const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
+#endif
 
-    /* Configure interrupt priority and level and unmask interrupt. */
-    MCF_INTC0_ICR55 = ( 2 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
-    MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK55 );
-
-    MCF_INTC0_ICR63 = ( 1 | configKERNEL_INTERRUPT_PRIORITY << 3 );
-    MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK63 );
-
-    MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;
-    MCF_PIT0_PCSR = ( portPRESCALE_REG_SETTING | MCF_PIT_PCSR_PIE | MCF_PIT_PCSR_RLD | MCF_PIT_PCSR_EN );
-	MCF_PIT0_PMR = usCompareMatchValue;
-}
-/*-----------------------------------------------------------*/
-
-void __attribute__ ((interrupt)) __cs3_isr_interrupt_119( void )
-{
-unsigned portLONG ulSavedInterruptMask;
-
-	MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;
-	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
-		vTaskIncrementTick();
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
-
-	#if configUSE_PREEMPTION == 1
-	{
-		taskYIELD();
-	}
-	#endif
-}

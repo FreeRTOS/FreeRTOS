@@ -124,9 +124,11 @@ static void prvSetupHardware( void );
  * file.
  */
 static void prvCheckTask( void *pvParameters );
-
+static void vRegTest1Task( void *pvParameters );
+static void vRegTest2Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
+static volatile unsigned portLONG ulRegTest1Counter = 0, ulRegTest2Counter = 0;
 
 int main( void )
 {
@@ -143,6 +145,10 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+	vStartInterruptQueueTasks();
+
+	xTaskCreate( vRegTest1Task, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Create the check task. */
 	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -163,7 +169,7 @@ int main( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-unsigned ulTicksToWait = mainNO_ERROR_PERIOD, ulError = 0;
+unsigned ulTicksToWait = mainNO_ERROR_PERIOD, ulError = 0, ulLastRegTest1Count = 0, ulLastRegTest2Count = 0;
 portTickType xLastExecutionTime;
 
 	( void ) pvParameters;
@@ -182,42 +188,69 @@ portTickType xLastExecutionTime;
 		{
 			ulError |= 0x01UL;
 		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+
+		if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
 			ulError |= 0x02UL;
 		}
-		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+
+		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			ulError |= 0x04UL;
 		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+
+		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			ulError |= 0x10UL;
 		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+
+		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
 	    	ulError |= 0x20UL;
 	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
+
+		if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
 	    	ulError |= 0x40UL;
 	    }
-	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+
+		if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
 	    	ulError |= 0x80UL;
 	    }
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+
+		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 	    	ulError |= 0x100UL;
 	    }
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+
+		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
 	    	ulError |= 0x200UL;
 	    }
-	    else if( xAreComTestTasksStillRunning() != pdTRUE )
+
+		if( xAreComTestTasksStillRunning() != pdTRUE )
 		{
 	    	ulError |= 0x400UL;
 		}
+
+		if( xAreIntQueueTasksStillRunning() != pdTRUE )
+	    {
+	    	ulError |= 0x800UL;
+	    }
+
+		if( ulLastRegTest1Count == ulRegTest1Counter )
+		{
+			ulError |= 0x1000UL;
+		}
+
+		if( ulLastRegTest2Count == ulRegTest2Counter )
+		{
+			ulError |= 0x1000UL;
+		}
+
+		ulLastRegTest1Count = ulRegTest1Counter;
+		ulLastRegTest2Count = ulRegTest2Counter;
 
 		if( ulError != 0 )
 		{
@@ -231,6 +264,11 @@ portTickType xLastExecutionTime;
 
 void prvSetupHardware( void )
 {
+extern void mcf5xxx_wr_cacr( unsigned portLONG );
+
+	/* Enable the cache. */
+	mcf5xxx_wr_cacr( MCF5XXX_CACR_CENB | MCF5XXX_CACR_CINV | MCF5XXX_CACR_DISD | MCF5XXX_CACR_CEIB | MCF5XXX_CACR_CLNF_00 );
+
 	/* Multiply 8Mhz reference crystal by 8 to achieve system clock of 64Mhz. */
 	MCF_CLOCK_SYNCR = MCF_CLOCK_SYNCR_MFD( 2 );
 
@@ -251,5 +289,141 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTask
 
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
 
+static void vRegTest1Task( void *pvParameters )
+{
+	( void ) pvParameters;
+
+	asm volatile 	(	"reg_test_1_start:						\n\t"
+						"	moveq		#1, %d0					\n\t"
+						"	moveq		#2, %d1					\n\t"
+						"	moveq		#3, %d2					\n\t"
+						"	moveq		#4, %d3					\n\t"
+						"	moveq		#5, %d4					\n\t"
+						"	moveq		#6, %d5					\n\t"
+						"	moveq		#7, %d6					\n\t"
+						"	moveq		#8, %d7					\n\t"
+						"	move		#9, %a0					\n\t"
+						"	move		#10, %a1					\n\t"
+						"	move		#11, %a2				\n\t"
+						"	move		#12, %a3				\n\t"
+						"	move		#13, %a4				\n\t"
+						"	move		#14, %a5				\n\t"
+						"	move		#15, %a6				\n\t"
+						"										\n\t"
+						"	cmpi.l		#1, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#2, %d1					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#3, %d2					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#4, %d3					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#5, %d4					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#6, %d5					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#7, %d6					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#8, %d7					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a0, %d0				\n\t"
+						"	cmpi.l		#9, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a1, %d0				\n\t"
+						"	cmpi.l		#10, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a2, %d0				\n\t"
+						"	cmpi.l		#11, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a3, %d0				\n\t"
+						"	cmpi.l		#12, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a4, %d0				\n\t"
+						"	cmpi.l		#13, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a5, %d0				\n\t"
+						"	cmpi.l		#14, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a6, %d0				\n\t"
+						"	cmpi.l		#15, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	movel		ulRegTest1Counter, %d0	\n\t"
+						"	addql		#1, %d0					\n\t"
+						"	movel		%d0, ulRegTest1Counter	\n\t"
+						"	bra			reg_test_1_start		\n\t"
+						"reg_test_1_error:						\n\t"
+						"	bra			reg_test_1_error		\n\t"
+					);
+}
+/*-----------------------------------------------------------*/
+
+static void vRegTest2Task( void *pvParameters )
+{
+	( void ) pvParameters;
+
+	asm volatile 	(	"reg_test_2_start:						\n\t"
+						"	moveq		#10, %d0					\n\t"
+						"	moveq		#20, %d1					\n\t"
+						"	moveq		#30, %d2					\n\t"
+						"	moveq		#40, %d3					\n\t"
+						"	moveq		#50, %d4					\n\t"
+						"	moveq		#60, %d5					\n\t"
+						"	moveq		#70, %d6					\n\t"
+						"	moveq		#80, %d7					\n\t"
+						"	move		#90, %a0					\n\t"
+						"	move		#100, %a1					\n\t"
+						"	move		#110, %a2				\n\t"
+						"	move		#120, %a3				\n\t"
+						"	move		#130, %a4				\n\t"
+						"	move		#140, %a5				\n\t"
+						"	move		#150, %a6				\n\t"
+						"										\n\t"
+						"	cmpi.l		#10, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#20, %d1					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#30, %d2					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#40, %d3					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#50, %d4					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#60, %d5					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#70, %d6					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#80, %d7					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a0, %d0				\n\t"
+						"	cmpi.l		#90, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a1, %d0				\n\t"
+						"	cmpi.l		#100, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a2, %d0				\n\t"
+						"	cmpi.l		#110, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a3, %d0				\n\t"
+						"	cmpi.l		#120, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a4, %d0				\n\t"
+						"	cmpi.l		#130, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a5, %d0				\n\t"
+						"	cmpi.l		#140, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a6, %d0				\n\t"
+						"	cmpi.l		#150, %d0					\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	movel		ulRegTest1Counter, %d0	\n\t"
+						"	addql		#1, %d0					\n\t"
+						"	movel		%d0, ulRegTest2Counter	\n\t"
+						"	bra			reg_test_2_start		\n\t"
+						"reg_test_2_error:						\n\t"
+						"	bra			reg_test_2_error		\n\t"
+					);
+}
+/*-----------------------------------------------------------*/
 

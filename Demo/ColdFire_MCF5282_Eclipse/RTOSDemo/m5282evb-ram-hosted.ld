@@ -231,7 +231,7 @@ SECTIONS
     . = ALIGN (8);
     *(.ram)
     _edata = .;
-  } >rambar
+  } >ram
   .bss :
   {
     *(.shbss)
@@ -241,7 +241,7 @@ SECTIONS
     *(.ram.b)
     _end = .;
     __end = .;
-  } >rambar
+  } >ram
   /* __cs3_region_end_ram is deprecated */
   __cs3_region_end_ram = __cs3_region_start_ram + LENGTH(ram);
   __cs3_region_size_ram = LENGTH(ram);

@@ -76,7 +76,6 @@
 #include "BlockQ.h"
 #include "death.h"
 #include "integer.h"
-#include "blocktim.h"
 #include "flash.h"
 #include "partest.h"
 #include "semtest.h"
@@ -101,8 +100,8 @@ error has been detected. */
 #define mainCHECK_LED						( 3 )
 
 /* Contest constants - there is no free LED for the comtest. */
-#define mainCOM_TEST_BAUD_RATE	( ( unsigned portLONG ) 115200 )
-#define mainCOM_TEST_LED		( 5 )
+#define mainCOM_TEST_BAUD_RATE				( ( unsigned portLONG ) 19200 )
+#define mainCOM_TEST_LED					( 5 )
 
 /* Task priorities. */
 #define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -137,7 +136,6 @@ int main( void )
 	/* Start the standard demo tasks. */
 	vStartLEDFlashTasks( tskIDLE_PRIORITY );
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
@@ -197,11 +195,6 @@ portTickType xLastExecutionTime;
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			ulError |= 0x04UL;
-		}
-
-		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			ulError |= 0x10UL;
 		}
 
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )

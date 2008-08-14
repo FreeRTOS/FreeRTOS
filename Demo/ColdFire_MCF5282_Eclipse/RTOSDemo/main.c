@@ -392,7 +392,7 @@ static void vRegTest1Task( void *pvParameters )
 static void vRegTest2Task( void *pvParameters )
 {
 	/* Sanity check - did we receive the parameter expected? */
-	if( pvParameters != &ulRegTest1Counter )
+	if( pvParameters != &ulRegTest2Counter )
 	{
 		/* Change here so the check task can detect that an error occurred. */
 		for( ;; );

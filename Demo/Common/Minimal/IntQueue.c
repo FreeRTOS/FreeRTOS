@@ -274,7 +274,7 @@ static void prvQueueAccessLogError( unsigned portBASE_TYPE uxLine )
 
 static void prvHigherPriorityNormallyEmptyTask( void *pvParameters )
 {
-unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
+unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorCount2 = 0;
 
 	/* The timer should not be started until after the scheduler has started.
 	More than one task is running this code so we check the parameter value
@@ -339,13 +339,29 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2;
 				if( uxTask1 < intqMIN_ACCEPTABLE_TASK_COUNT )
 				{
 					/* Only task 2 seemed to log any values. */
-					prvQueueAccessLogError( __LINE__ );
+					uxErrorCount1++;
+					if( uxErrorCount1 > 2 )
+					{
+						prvQueueAccessLogError( __LINE__ );
+					}
+				}
+				else
+				{
+					uxErrorCount1 = 0;
 				}
 
 				if( uxTask2 < intqMIN_ACCEPTABLE_TASK_COUNT  )
 				{
 					/* Only task 1 seemed to log any values. */
-					prvQueueAccessLogError( __LINE__ );
+					uxErrorCount2++;
+					if( uxErrorCount2 > 2 )
+					{
+						prvQueueAccessLogError( __LINE__ );
+					}
+				}
+				else
+				{
+					uxErrorCount2 = 0;
 				}
 
 				/* Clear the array again, ready to start a new cycle. */

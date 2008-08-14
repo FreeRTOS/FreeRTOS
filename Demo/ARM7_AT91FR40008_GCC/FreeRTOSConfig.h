@@ -62,7 +62,12 @@
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ *
+ * See http://www.freertos.org/a00110.html.
+ */
+
  *----------------------------------------------------------*/
+
 
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			0

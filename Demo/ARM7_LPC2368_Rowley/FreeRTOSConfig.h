@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <targets/LPC2368.h>
 #define vPortYieldProcessor swi_handler
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -44,7 +45,10 @@
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ *
+ * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
+
 
 /* Value to use on old rev '-' devices. */
 //#define configPINSEL2_VALUE	0x50151105

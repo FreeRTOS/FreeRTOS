@@ -81,9 +81,9 @@ INCLUDE_PATHS=	-I"$(FREERTOS_SOURCE_DIR)/include" \
 
 CFLAGS=		$(INCLUDE_PATHS) \
 			-D COLDFIRE_V2_GCC \
-			-O0 \
+			-Os \
 			-fno-strict-aliasing \
-			-g3 \
+			-g1 \
 			-Wall \
 			-Wextra \
 			-c \

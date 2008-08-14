@@ -51,8 +51,8 @@
 #include "IntQueueTimer.h"
 #include "IntQueue.h"
 
-#define timerINTERRUPT1_FREQUENCY	( 1000UL )
-#define timerINTERRUPT2_FREQUENCY	( 1001UL )
+#define timerINTERRUPT1_FREQUENCY	( 2000UL )
+#define timerINTERRUPT2_FREQUENCY	( 2001UL )
 #define timerPRESCALE_VALUE			( 2 )
 
 void vInitialiseTimerForIntQueueTest( void )

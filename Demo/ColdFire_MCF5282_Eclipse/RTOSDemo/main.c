@@ -94,7 +94,7 @@ tick hook. */
 
 /* The rate at which the LED controlled by the 'check' task will flash when an
 error has been detected. */
-#define mainERROR_PERIOD 					( 500 )
+#define mainERROR_PERIOD 					( ( portTickType ) 500 / portTICK_RATE_MS )
 
 /* The LED controlled by the 'check' task. */
 #define mainCHECK_LED						( 3 )
@@ -109,7 +109,7 @@ error has been detected. */
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
+#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
@@ -261,6 +261,7 @@ extern void mcf5xxx_wr_cacr( unsigned portLONG );
 
 	/* Enable the cache. */
 	mcf5xxx_wr_cacr( MCF5XXX_CACR_CENB | MCF5XXX_CACR_CINV | MCF5XXX_CACR_DISD | MCF5XXX_CACR_CEIB | MCF5XXX_CACR_CLNF_00 );
+	asm volatile( "NOP" ); /* As per errata. */
 
 	/* Multiply 8Mhz reference crystal by 8 to achieve system clock of 64Mhz. */
 	MCF_CLOCK_SYNCR = MCF_CLOCK_SYNCR_MFD( 2 );

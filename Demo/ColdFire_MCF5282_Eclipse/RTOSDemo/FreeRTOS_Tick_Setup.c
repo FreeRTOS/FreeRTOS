@@ -60,10 +60,10 @@ void vApplicationSetupInterrupts( void )
 const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
 
     /* Configure interrupt priority and level and unmask interrupt. */
-    MCF_INTC0_ICR55 = ( 2 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
+    MCF_INTC0_ICR55 = ( 1 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
     MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK55 );
 
-    MCF_INTC0_ICR63 = ( 1 | configKERNEL_INTERRUPT_PRIORITY << 3 );
+    MCF_INTC0_ICR63 = ( 0 | configKERNEL_INTERRUPT_PRIORITY << 3 );
     MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK63 );
 
     MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;

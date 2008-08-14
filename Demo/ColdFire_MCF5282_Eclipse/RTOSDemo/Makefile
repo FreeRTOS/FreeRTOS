@@ -1,5 +1,8 @@
 RM := rm -rf
 
+# Set the optimisation level - this should be set to 0, 1, 2, 3 or s (s for size).
+OPTIM=s
+
 ###############################################################################
 # List the directories that contain files to be built.
 ###############################################################################
@@ -81,9 +84,9 @@ INCLUDE_PATHS=	-I"$(FREERTOS_SOURCE_DIR)/include" \
 
 CFLAGS=		$(INCLUDE_PATHS) \
 			-D COLDFIRE_V2_GCC \
-			-Os \
+			-O$(OPTIM) \
 			-fno-strict-aliasing \
-			-g1 \
+			-g3 \
 			-Wall \
 			-Wextra \
 			-c \

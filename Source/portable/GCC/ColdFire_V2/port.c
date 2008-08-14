@@ -143,7 +143,20 @@ void vPortEndScheduler( void )
 
 void vPortEnterCritical( void )
 {
-	portDISABLE_INTERRUPTS();
+	if( ulCriticalNesting == 0UL )
+	{
+		do
+		{
+			portDISABLE_INTERRUPTS();
+			if( MCF_INTC0_INTFRCH == 0UL )
+			{
+				break;
+			}
+
+			portENABLE_INTERRUPTS();
+
+		} while( 1 );
+	}
 	ulCriticalNesting++;
 }
 /*-----------------------------------------------------------*/
@@ -162,10 +175,10 @@ void vPortYieldHandler( void )
 {
 unsigned portLONG ulSavedInterruptMask;
 
-	/* -32 as we are using the high word of the 64bit mask. */
-	MCF_INTC0_INTFRCH &= ~( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) );
-
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
+		/* -32 as we are using the high word of the 64bit mask. */
+		/* Note this will clear all forced interrupts - this is done for speed. */
+		MCF_INTC0_INTFRCH = 0;
 		vTaskSwitchContext();
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
 }

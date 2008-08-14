@@ -58,8 +58,14 @@
  * to ensure it gets processor time.  Its main function is to check that all the
  * standard demo tasks are still operational.  While no errors have been
  * discovered the check task will toggle an LED every 5 seconds - the toggle
- * rate increasing to 500ms then being a visual indication that at least one
- * task has reported unexpected behaviour.
+ * rate increasing to 500ms being a visual indication that at least one task has
+ * reported unexpected behaviour.
+ *
+ * "Reg test" tasks - These fill the registers with known values, then check
+ * that each register still contains its expected value.  Each task uses
+ * different values.  The tasks run with very low priority so get preempted very
+ * frequently.  A register containing an unexpected value is indicative of an
+ * error in the context switching mechanism.
  *
  */
 
@@ -88,18 +94,18 @@
 
 /*-----------------------------------------------------------*/
 
-/* The time between cycles of the 'check' functionality (defined within the
-tick hook. */
+/* The time between cycles of the 'check' functionality - as described at the
+top of this file. */
 #define mainNO_ERROR_PERIOD					( ( portTickType ) 5000 / portTICK_RATE_MS )
 
-/* The rate at which the LED controlled by the 'check' task will flash when an
-error has been detected. */
+/* The rate at which the LED controlled by the 'check' task will flash should an
+error have been detected. */
 #define mainERROR_PERIOD 					( ( portTickType ) 500 / portTICK_RATE_MS )
 
 /* The LED controlled by the 'check' task. */
 #define mainCHECK_LED						( 3 )
 
-/* Contest constants - there is no free LED for the comtest. */
+/* ComTest constants - there is no free LED for the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE				( ( unsigned portLONG ) 19200 )
 #define mainCOM_TEST_LED					( 5 )
 
@@ -123,14 +129,23 @@ static void prvSetupHardware( void );
  * file.
  */
 static void prvCheckTask( void *pvParameters );
+
+/*
+ * Implement the 'Reg test' functionality as described at the top of this file.
+ */
 static void vRegTest1Task( void *pvParameters );
 static void vRegTest2Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
-static volatile unsigned portLONG ulRegTest1Counter = 0, ulRegTest2Counter = 0;
+
+/* Counters used to detect errors within the reg test tasks. */
+static volatile unsigned portLONG ulRegTest1Counter = 0x11111111, ulRegTest2Counter = 0x22222222;
+
+/*-----------------------------------------------------------*/
 
 int main( void )
 {
+	/* Setup the hardware ready for this demo. */
 	prvSetupHardware();
 
 	/* Start the standard demo tasks. */
@@ -145,8 +160,9 @@ int main( void )
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartInterruptQueueTasks();
 
-	xTaskCreate( vRegTest1Task, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	/* Start the reg test tasks - defined in this file. */
+	xTaskCreate( vRegTest1Task, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest1Counter, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest2Counter, tskIDLE_PRIORITY, NULL );
 
 	/* Create the check task. */
 	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -245,11 +261,14 @@ portTickType xLastExecutionTime;
 		ulLastRegTest1Count = ulRegTest1Counter;
 		ulLastRegTest2Count = ulRegTest2Counter;
 
+		/* If an error has been found then increase our cycle rate, and in so
+		going increase the rate at which the check task LED toggles. */
 		if( ulError != 0 )
 		{
 	    	ulTicksToWait = mainERROR_PERIOD;
 		}
 
+		/* Toggle the LED each itteration. */
 		vParTestToggleLED( mainCHECK_LED );
 	}
 }
@@ -258,6 +277,8 @@ portTickType xLastExecutionTime;
 void prvSetupHardware( void )
 {
 extern void mcf5xxx_wr_cacr( unsigned portLONG );
+
+	portDISABLE_INTERRUPTS();
 
 	/* Enable the cache. */
 	mcf5xxx_wr_cacr( MCF5XXX_CACR_CENB | MCF5XXX_CACR_CINV | MCF5XXX_CACR_DISD | MCF5XXX_CACR_CEIB | MCF5XXX_CACR_CLNF_00 );
@@ -272,12 +293,18 @@ extern void mcf5xxx_wr_cacr( unsigned portLONG );
 		__asm__ volatile ( "NOP" );
 	}
 
+	/* Setup the port used to toggle LEDs. */
 	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
 {
+	/* This will get called if a stack overflow is detected during the context
+	switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
+	problems within nested interrupts, but only do this for debug purposes as
+	it will increase the context switch time. */
+
 	( void ) pxTask;
 	( void ) pcTaskName;
 
@@ -287,8 +314,17 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTask
 
 static void vRegTest1Task( void *pvParameters )
 {
-	( void ) pvParameters;
+	/* Sanity check - did we receive the parameter expected? */
+	if( pvParameters != &ulRegTest1Counter )
+	{
+		/* Change here so the check task can detect that an error occurred. */
+		for( ;; );
+	}
 
+	/* Set all the registers to known values, then check that each retains its
+	expected value - as described at the top of this file.  If an error is
+	found then the loop counter will no longer be incremented allowing the check
+	task to recognise the error. */
 	asm volatile 	(	"reg_test_1_start:						\n\t"
 						"	moveq		#1, %d0					\n\t"
 						"	moveq		#2, %d1					\n\t"
@@ -299,7 +335,7 @@ static void vRegTest1Task( void *pvParameters )
 						"	moveq		#7, %d6					\n\t"
 						"	moveq		#8, %d7					\n\t"
 						"	move		#9, %a0					\n\t"
-						"	move		#10, %a1					\n\t"
+						"	move		#10, %a1				\n\t"
 						"	move		#11, %a2				\n\t"
 						"	move		#12, %a3				\n\t"
 						"	move		#13, %a4				\n\t"
@@ -326,22 +362,22 @@ static void vRegTest1Task( void *pvParameters )
 						"	cmpi.l		#9, %d0					\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	move		%a1, %d0				\n\t"
-						"	cmpi.l		#10, %d0					\n\t"
+						"	cmpi.l		#10, %d0				\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	move		%a2, %d0				\n\t"
-						"	cmpi.l		#11, %d0					\n\t"
+						"	cmpi.l		#11, %d0				\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	move		%a3, %d0				\n\t"
-						"	cmpi.l		#12, %d0					\n\t"
+						"	cmpi.l		#12, %d0				\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	move		%a4, %d0				\n\t"
-						"	cmpi.l		#13, %d0					\n\t"
+						"	cmpi.l		#13, %d0				\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	move		%a5, %d0				\n\t"
-						"	cmpi.l		#14, %d0					\n\t"
+						"	cmpi.l		#14, %d0				\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	move		%a6, %d0				\n\t"
-						"	cmpi.l		#15, %d0					\n\t"
+						"	cmpi.l		#15, %d0				\n\t"
 						"	bne			reg_test_1_error		\n\t"
 						"	movel		ulRegTest1Counter, %d0	\n\t"
 						"	addql		#1, %d0					\n\t"
@@ -355,61 +391,70 @@ static void vRegTest1Task( void *pvParameters )
 
 static void vRegTest2Task( void *pvParameters )
 {
-	( void ) pvParameters;
+	/* Sanity check - did we receive the parameter expected? */
+	if( pvParameters != &ulRegTest1Counter )
+	{
+		/* Change here so the check task can detect that an error occurred. */
+		for( ;; );
+	}
 
+	/* Set all the registers to known values, then check that each retains its
+	expected value - as described at the top of this file.  If an error is
+	found then the loop counter will no longer be incremented allowing the check
+	task to recognise the error. */
 	asm volatile 	(	"reg_test_2_start:						\n\t"
-						"	moveq		#10, %d0					\n\t"
-						"	moveq		#20, %d1					\n\t"
-						"	moveq		#30, %d2					\n\t"
-						"	moveq		#40, %d3					\n\t"
-						"	moveq		#50, %d4					\n\t"
-						"	moveq		#60, %d5					\n\t"
-						"	moveq		#70, %d6					\n\t"
-						"	moveq		#80, %d7					\n\t"
-						"	move		#90, %a0					\n\t"
-						"	move		#100, %a1					\n\t"
+						"	moveq		#10, %d0				\n\t"
+						"	moveq		#20, %d1				\n\t"
+						"	moveq		#30, %d2				\n\t"
+						"	moveq		#40, %d3				\n\t"
+						"	moveq		#50, %d4				\n\t"
+						"	moveq		#60, %d5				\n\t"
+						"	moveq		#70, %d6				\n\t"
+						"	moveq		#80, %d7				\n\t"
+						"	move		#90, %a0				\n\t"
+						"	move		#100, %a1				\n\t"
 						"	move		#110, %a2				\n\t"
 						"	move		#120, %a3				\n\t"
 						"	move		#130, %a4				\n\t"
 						"	move		#140, %a5				\n\t"
 						"	move		#150, %a6				\n\t"
 						"										\n\t"
-						"	cmpi.l		#10, %d0					\n\t"
+						"	cmpi.l		#10, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#20, %d1					\n\t"
+						"	cmpi.l		#20, %d1				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#30, %d2					\n\t"
+						"	cmpi.l		#30, %d2				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#40, %d3					\n\t"
+						"	cmpi.l		#40, %d3				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#50, %d4					\n\t"
+						"	cmpi.l		#50, %d4				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#60, %d5					\n\t"
+						"	cmpi.l		#60, %d5				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#70, %d6					\n\t"
+						"	cmpi.l		#70, %d6				\n\t"
 						"	bne			reg_test_2_error		\n\t"
-						"	cmpi.l		#80, %d7					\n\t"
+						"	cmpi.l		#80, %d7				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a0, %d0				\n\t"
-						"	cmpi.l		#90, %d0					\n\t"
+						"	cmpi.l		#90, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a1, %d0				\n\t"
-						"	cmpi.l		#100, %d0					\n\t"
+						"	cmpi.l		#100, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a2, %d0				\n\t"
-						"	cmpi.l		#110, %d0					\n\t"
+						"	cmpi.l		#110, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a3, %d0				\n\t"
-						"	cmpi.l		#120, %d0					\n\t"
+						"	cmpi.l		#120, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a4, %d0				\n\t"
-						"	cmpi.l		#130, %d0					\n\t"
+						"	cmpi.l		#130, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a5, %d0				\n\t"
-						"	cmpi.l		#140, %d0					\n\t"
+						"	cmpi.l		#140, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	move		%a6, %d0				\n\t"
-						"	cmpi.l		#150, %d0					\n\t"
+						"	cmpi.l		#150, %d0				\n\t"
 						"	bne			reg_test_2_error		\n\t"
 						"	movel		ulRegTest1Counter, %d0	\n\t"
 						"	addql		#1, %d0					\n\t"

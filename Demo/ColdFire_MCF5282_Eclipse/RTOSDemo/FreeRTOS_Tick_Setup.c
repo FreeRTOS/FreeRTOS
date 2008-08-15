@@ -102,7 +102,7 @@ const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRES
     /* Do the same for vector 63 (interrupt controller 0.  I don't think the
     write to MCF_INTC0_IMRH is actually required here but is included for
     completeness. */
-    MCF_INTC0_ICR63 = ( 0 | configKERNEL_INTERRUPT_PRIORITY << 3 );
+    MCF_INTC0_ICR63 = ( 0 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
     MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK63 );
 
     /* Configure PIT0 to generate the RTOS tick. */

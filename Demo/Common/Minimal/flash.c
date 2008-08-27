@@ -58,22 +58,8 @@
  * The LED flash tasks provide instant visual feedback.  They show that the scheduler 
  * is still operational.
  *
- * The PC port uses the standard parallel port for outputs, the Flashlite 186 port 
- * uses IO port F and the AVR port port B.
- *
  */
 
-/*
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
-
-Changes from V2.5.5
-
-	+ Calls to vTaskDelay() have been replaced with vTaskDelayUntil().
-
-*/
 
 #include <stdlib.h>
 

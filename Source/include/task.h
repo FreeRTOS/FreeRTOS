@@ -47,11 +47,12 @@
 	licensing and training services.
 */
 
-/*
-Changes since V4.3.1:
 
-	+ Added xTaskGetSchedulerState() function.
-*/
+#ifndef INC_FREERTOS_H
+	#error "#include FreeRTOS.h" must appear in source files before "#include task.h"
+#endif
+
+
 
 #ifndef TASK_H
 #define TASK_H

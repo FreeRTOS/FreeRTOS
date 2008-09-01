@@ -46,6 +46,14 @@
 	http://www.OpenRTOS.com - Commercial support, development, porting, 
 	licensing and training services.
 */
+
+#ifndef INC_FREERTOS_H
+	#error #error "#include FreeRTOS.h" must appear in source files before "#include croutine.h"
+#endif
+
+
+
+
 #ifndef CO_ROUTINE_H
 #define CO_ROUTINE_H
 

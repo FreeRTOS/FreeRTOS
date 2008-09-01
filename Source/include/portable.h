@@ -199,7 +199,13 @@
 #endif
 
 #ifdef COLDFIRE_V2_CODEWARRIOR
-	#include "../../source/portable/CodeWarrior/ColdFire_MCF52259/portmacro.h"
+	/* The portmacro.h file must be included as part of the CodeWarrior project. */
+	#include "portmacro.h"
+#endif
+
+#ifdef COLDFIRE_V1_CODEWARRIOR
+	/* The portmacro.h file must be included as part of the CodeWarrior project. */
+	#include "portmacro.h"
 #endif
 
 #ifdef COLDFIRE_V2_GCC

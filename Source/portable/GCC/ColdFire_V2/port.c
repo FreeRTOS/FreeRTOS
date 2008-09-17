@@ -48,7 +48,6 @@
 */
 
 /* Kernel includes. */
-
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -57,8 +56,11 @@
 /* Supervisor mode set. */
 #define portINITIAL_STATUS_REGISTER		( ( portSTACK_TYPE ) 0x2000)
 
+/* Used to keep track of the number of nested calls to taskENTER_CRITICAL().  This
+will be set to 0 prior to the first task being started. */
 static unsigned portLONG ulCriticalNesting = 0x9999UL;
 
+/*-----------------------------------------------------------*/
 
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
@@ -76,48 +78,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 	pxTopOfStack--;
 
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x0; /*FP*/
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xA5A5A5A5;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xA4A4A4A4;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xA3A3A3A3;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xA2A2A2A2;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xA1A1A1A1;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xA0A0A0A0;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD7D7D7D7;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD6D6D6D6;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD5D5D5D5;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD4D4D4D4;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD3D3D3D3;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD2D2D2D2;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD1D1D1D1;
-	pxTopOfStack--;
-
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xD0D0D0D0;
+	pxTopOfStack -= 14; /* A5 to D0. */
 
     return pxTopOfStack;
 }
@@ -129,7 +90,10 @@ extern void vPortStartFirstTask( void );
 
 	ulCriticalNesting = 0UL;
 
+	/* Configure the interrupts used by this port. */
 	vApplicationSetupInterrupts();
+
+	/* Start the first task executing. */
 	vPortStartFirstTask();
 
 	return pdFALSE;
@@ -138,6 +102,7 @@ extern void vPortStartFirstTask( void );
 
 void vPortEndScheduler( void )
 {
+	/* Not implemented as there is nothing to return to. */
 }
 /*-----------------------------------------------------------*/
 
@@ -145,6 +110,8 @@ void vPortEnterCritical( void )
 {
 	if( ulCriticalNesting == 0UL )
 	{
+		/* Guard against context switches being pended simultaneously with a
+		critical section being entered. */
 		do
 		{
 			portDISABLE_INTERRUPTS();
@@ -176,7 +143,6 @@ void vPortYieldHandler( void )
 unsigned portLONG ulSavedInterruptMask;
 
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
-		/* -32 as we are using the high word of the 64bit mask. */
 		/* Note this will clear all forced interrupts - this is done for speed. */
 		MCF_INTC0_INTFRCH = 0;
 		vTaskSwitchContext();

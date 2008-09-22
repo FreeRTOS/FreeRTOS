@@ -215,10 +215,13 @@ typedef struct xTIME_OUT
  // Function that creates a task.
  void vOtherFunction( void )
  {
- unsigned char ucParameterToPass;
+ static unsigned char ucParameterToPass;
  xTaskHandle xHandle;
 		
-     // Create the task, storing the handle.
+     // Create the task, storing the handle.  Note that the passed parameter ucParameterToPass
+     // must exist for the lifetime of the task, so in this case is declared static.  If it was just an
+     // an automatic stack variable it might no longer exist, or at least have been corrupted, by the time
+     // the new time attempts to access it.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, &ucParameterToPass, tskIDLE_PRIORITY, &xHandle );
 		
      // Use the handle to delete the task.

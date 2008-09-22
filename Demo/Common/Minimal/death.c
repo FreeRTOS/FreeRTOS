@@ -210,7 +210,7 @@ unsigned portBASE_TYPE uxPriority;
 are not any more than four extra tasks. */
 portBASE_TYPE xIsCreateTaskStillRunning( void )
 {
-static portSHORT usLastCreationCount = -1;
+static unsigned portSHORT usLastCreationCount = 0xfff;
 portBASE_TYPE xReturn = pdTRUE;
 static unsigned portBASE_TYPE uxTasksRunningNow;
 

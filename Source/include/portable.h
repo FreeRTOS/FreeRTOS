@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.4 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -196,16 +196,6 @@
 
 #ifdef GCC_MCF5235
     #include "../../Source/portable/GCC/MCF5235/portmacro.h"
-#endif
-
-#ifdef COLDFIRE_V2_CODEWARRIOR
-	/* The portmacro.h file must be included as part of the CodeWarrior project. */
-	#include "portmacro.h"
-#endif
-
-#ifdef COLDFIRE_V1_CODEWARRIOR
-	/* The portmacro.h file must be included as part of the CodeWarrior project. */
-	#include "portmacro.h"
 #endif
 
 #ifdef COLDFIRE_V2_GCC

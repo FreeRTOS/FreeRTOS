@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.3 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.0.4 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -48,7 +48,7 @@
 */
 
 #ifndef INC_FREERTOS_H
-	#error #error "#include FreeRTOS.h" must appear in source files before "#include croutine.h"
+	#error "#include FreeRTOS.h" must appear in source files before "#include croutine.h"
 #endif
 
 

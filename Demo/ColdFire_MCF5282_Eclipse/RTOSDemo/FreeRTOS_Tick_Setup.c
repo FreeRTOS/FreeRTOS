@@ -104,7 +104,7 @@ const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRES
     write to MCF_INTC0_IMRH is actually required here but is included for
     completeness. */
     MCF_INTC0_ICR16 = ( 0 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
-    MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK16 );
+    MCF_INTC0_IMRH &= ~( MCF_INTC_IPRL_INT16 );
 
     /* Configure PIT0 to generate the RTOS tick. */
     MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;

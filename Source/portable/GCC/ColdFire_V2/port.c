@@ -115,7 +115,7 @@ void vPortEnterCritical( void )
 		do
 		{
 			portDISABLE_INTERRUPTS();
-			if( MCF_INTC0_INTFRCH == 0UL )
+			if( MCF_INTC0_INTFRCL == 0UL )
 			{
 				break;
 			}
@@ -144,7 +144,7 @@ unsigned portLONG ulSavedInterruptMask;
 
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
 		/* Note this will clear all forced interrupts - this is done for speed. */
-		MCF_INTC0_INTFRCH = 0;
+		MCF_INTC0_INTFRCL = 0;
 		vTaskSwitchContext();
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
 }

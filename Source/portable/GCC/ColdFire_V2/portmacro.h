@@ -109,7 +109,7 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 #define portNOP()	asm volatile ( 	"nop" )
 
 /* Note this will overwrite all other bits in the force register, it is done this way for speed. */
-#define portYIELD()			MCF_INTC0_INTFRCH = ( 1UL << ( configYIELD_INTERRUPT_VECTOR - 32UL ) ); portNOP(); portNOP() /* -32 as we are using the high word of the 64bit mask. */
+#define portYIELD()			MCF_INTC0_INTFRCL = ( 1UL << configYIELD_INTERRUPT_VECTOR ); portNOP(); portNOP()
 
 /*-----------------------------------------------------------*/
 

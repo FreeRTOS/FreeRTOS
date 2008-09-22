@@ -97,7 +97,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
-#define configYIELD_INTERRUPT_VECTOR			63UL
+#define configYIELD_INTERRUPT_VECTOR			16UL
 #define configKERNEL_INTERRUPT_PRIORITY 		1
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	4
 

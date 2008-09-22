@@ -59,7 +59,7 @@
 /*
  * FreeRTOS.org requires two interrupts - a tick interrupt generated from a
  * timer source, and a spare interrupt vector used for context switching.
- * The configuration below uses PIT0 for the former, and vector 63 for the
+ * The configuration below uses PIT0 for the former, and vector 16 for the
  * latter.  **IF YOUR APPLICATION HAS BOTH OF THESE INTERRUPTS FREE THEN YOU DO
  * NOT NEED TO CHANGE ANY OF THIS CODE** - otherwise instructions are provided
  * here for using alternative interrupt sources.
@@ -82,14 +82,15 @@
  *  1) Modify vApplicationSetupInterrupts() below to be correct for whichever
  *  interrupt vector is to be used.  Make sure you use a spare interrupt on interrupt
  *  controller 0, otherwise the register used to request context switches will also
- *  require modification.
+ *  require modification.  By default vector 16 is used which is free on most MCF52xxx
+ *  devices.
  *
  *  2) Change the definition of configYIELD_INTERRUPT_VECTOR within FreeRTOSConfig.h
  *  to be correct for your chosen interrupt vector.
  *
- *  3) Change the name of the function __cs3_isr_interrupt_127() within portasm.S
+ *  3) Change the name of the function __cs3_isr_interrupt_80() within portasm.S
  *  to be correct for whichever vector number is being used.  By default interrupt
- *  controller 0 number 63 is used, which corresponds to vector number 127.
+ *  controller 0 vector number 16 is used, which corresponds to vector number 80.
  */
 void vApplicationSetupInterrupts( void )
 {
@@ -99,11 +100,11 @@ const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRES
     MCF_INTC0_ICR55 = ( 1 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
     MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK55 );
 
-    /* Do the same for vector 63 (interrupt controller 0.  I don't think the
+    /* Do the same for vector 16 (interrupt controller 0).  I don't think the
     write to MCF_INTC0_IMRH is actually required here but is included for
     completeness. */
-    MCF_INTC0_ICR63 = ( 0 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
-    MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK63 );
+    MCF_INTC0_ICR16 = ( 0 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
+    MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK16 );
 
     /* Configure PIT0 to generate the RTOS tick. */
     MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;

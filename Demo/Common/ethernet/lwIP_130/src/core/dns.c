@@ -125,6 +125,9 @@
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 /** DNS message header */
 struct dns_hdr {
   u16_t id;
@@ -144,6 +147,9 @@ PACK_STRUCT_END
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 /** DNS query message structure */
 struct dns_query {
   /* DNS query record starts with either a domain name or a pointer
@@ -160,6 +166,9 @@ PACK_STRUCT_END
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 /** DNS answer message structure */
 struct dns_answer {
   /* DNS answer record starts with either a domain name or a pointer

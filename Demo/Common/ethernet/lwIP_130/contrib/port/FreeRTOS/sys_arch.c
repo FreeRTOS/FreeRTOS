@@ -422,3 +422,16 @@ void sys_arch_unprotect(sys_prot_t pval)
 	vPortExitCritical();
 }
 
+/*
+ * Prints an assertion messages and aborts execution.
+ */
+void sys_assert( const char *msg )
+{	
+	/*FSL:only needed for debugging
+	printf(msg);
+	printf("\n\r");
+	*/
+    vPortEnterCritical(  );
+    for(;;)
+    ;
+}

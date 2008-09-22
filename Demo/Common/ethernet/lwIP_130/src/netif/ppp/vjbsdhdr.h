@@ -11,6 +11,9 @@
  * against negative integers quite easily, and fail in subtle ways.
  */
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct ip
 {
 #if defined(NO_CHAR_BITFIELDS)
@@ -47,6 +50,9 @@ typedef u32_t tcp_seq;
  * Per RFC 793, September, 1981.
  */
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct tcphdr  
 {
   u_short  th_sport;    /* source port */

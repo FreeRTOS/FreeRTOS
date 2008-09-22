@@ -52,6 +52,9 @@ extern "C" {
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct udp_hdr {
   PACK_STRUCT_FIELD(u16_t src);
   PACK_STRUCT_FIELD(u16_t dest);  /* src/dest UDP ports */

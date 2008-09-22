@@ -42,6 +42,9 @@ extern "C" {
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct ip_addr {
   PACK_STRUCT_FIELD(u32_t addr);
 } PACK_STRUCT_STRUCT;
@@ -58,6 +61,9 @@ PACK_STRUCT_END
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct ip_addr2 {
   PACK_STRUCT_FIELD(u16_t addrw[2]);
 } PACK_STRUCT_STRUCT;

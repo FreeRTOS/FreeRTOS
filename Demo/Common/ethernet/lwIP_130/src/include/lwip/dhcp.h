@@ -76,6 +76,9 @@ struct dhcp
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 /** minimum set of fields of any DHCP message */
 struct dhcp_msg
 {

@@ -84,6 +84,9 @@ extern "C" {
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct igmp_msg {
  PACK_STRUCT_FIELD(u8_t           igmp_msgtype);
  PACK_STRUCT_FIELD(u8_t           igmp_maxresp);

@@ -78,6 +78,9 @@
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct pppoehdr {
 	PACK_STRUCT_FIELD(u8_t vertype);
 	PACK_STRUCT_FIELD(u8_t code);
@@ -93,6 +96,9 @@ PACK_STRUCT_END
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct pppoetag {
 	PACK_STRUCT_FIELD(u16_t tag);
 	PACK_STRUCT_FIELD(u16_t len);

@@ -79,6 +79,9 @@ void icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t);
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct icmp_echo_hdr {
   PACK_STRUCT_FIELD(u16_t _type_code);
   PACK_STRUCT_FIELD(u16_t chksum);
@@ -88,6 +91,9 @@ struct icmp_echo_hdr {
 PACK_STRUCT_END
 
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct icmp_dur_hdr {
   PACK_STRUCT_FIELD(u16_t _type_code);
   PACK_STRUCT_FIELD(u16_t chksum);
@@ -96,6 +102,9 @@ struct icmp_dur_hdr {
 PACK_STRUCT_END
 
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct icmp_te_hdr {
   PACK_STRUCT_FIELD(u16_t _type_code);
   PACK_STRUCT_FIELD(u16_t chksum);

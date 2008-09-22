@@ -114,6 +114,9 @@ struct ip_pcb {
 #  include "arch/bpstruct.h"
 #endif
 PACK_STRUCT_BEGIN
+#if (defined(__MWERKS__)  || defined(__CWCC__))
+	#pragma options align= packed
+#endif
 struct ip_hdr {
   /* version / header length / type of service */
   PACK_STRUCT_FIELD(u16_t _v_hl_tos);

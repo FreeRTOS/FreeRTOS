@@ -58,7 +58,7 @@
 
     .global ulPortSetIPL
     .global mcf5xxx_wr_cacr
-    .global __cs3_isr_interrupt_127
+    .global __cs3_isr_interrupt_80
     .global vPortStartFirstTask
 
     .text
@@ -126,7 +126,7 @@ mcf5xxx_wr_cacr:
 /********************************************************************/
 
 /* Yield interrupt. */
-__cs3_isr_interrupt_127:
+__cs3_isr_interrupt_80:
 	portSAVE_CONTEXT
 	jsr vPortYieldHandler
 	portRESTORE_CONTEXT

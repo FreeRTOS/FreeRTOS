@@ -67,7 +67,7 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 50000000 )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 60 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 80 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 24000 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
@@ -96,8 +96,8 @@ to exclude the API function. */
 
 
 
-#define configKERNEL_INTERRUPT_PRIORITY 		255
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xa0, or priority 5. */
+#define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned portCHAR ) 7 << ( unsigned portCHAR ) 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned portCHAR ) 5 << ( unsigned portCHAR ) 5 )  /* Priority 5, or 160 as only the top three bits are implemented. */
 
 
 #endif /* FREERTOS_CONFIG_H */

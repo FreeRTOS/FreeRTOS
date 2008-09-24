@@ -77,7 +77,7 @@ unsigned long ulFrequency;
 	
 	/* Set the timer interrupts to be above the kernel.  The interrupts are
 	 assigned different priorities so they nest with each other. */
-	IntPrioritySet( INT_TIMER2A, configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 );
+	IntPrioritySet( INT_TIMER2A, configMAX_SYSCALL_INTERRUPT_PRIORITY + ( 1 << 5 ) ); /* Shift left 5 as only the top 3 bits are implemented. */
 	IntPrioritySet( INT_TIMER3A, configMAX_SYSCALL_INTERRUPT_PRIORITY );
 
 	/* Ensure interrupts do not start until the scheduler is running. */

@@ -116,8 +116,8 @@ from within the interrupts. */
 	unsigned portBASE_TYPE uxSavedInterruptStatus;																			\
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();															\
 		{																													\
-			xQueueSendFromISR( xNormallyEmptyQueue, ( void * ) &uxValueForNormallyEmptyQueue, &xHigherPriorityTaskWoken );	\
 			uxValueForNormallyEmptyQueue++;																					\
+			xQueueSendFromISR( xNormallyEmptyQueue, ( void * ) &uxValueForNormallyEmptyQueue, &xHigherPriorityTaskWoken );	\
 		}																													\
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
@@ -130,8 +130,8 @@ from within the interrupts. */
 	unsigned portBASE_TYPE uxSavedInterruptStatus;																			\
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();															\
 		{																													\
-			xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ); 	\
 			uxValueForNormallyFullQueue++;																					\
+			xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ); 	\			
 		}																													\
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
@@ -313,8 +313,9 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorC
 				uxTask2 = 0;
 
 				/* Loop through the array, checking that both tasks have
-				placed values into the array, and that no values are missing. */
-				for( ux = 0; ux < intqNUM_VALUES_TO_LOG; ux++ )
+				placed values into the array, and that no values are missing.
+				Start at 1 as we expect position 0 to be unused. */
+				for( ux = 1; ux < intqNUM_VALUES_TO_LOG; ux++ )
 				{
 					if( ucNormallyEmptyReceivedValues[ ux ] == 0 )
 					{
@@ -417,8 +418,8 @@ portBASE_TYPE xQueueStatus;
 
 			portENTER_CRITICAL();
 			{
-				uxValue = uxValueForNormallyEmptyQueue;
 				uxValueForNormallyEmptyQueue++;
+				uxValue = uxValueForNormallyEmptyQueue;				
 			}
 			portEXIT_CRITICAL();
 
@@ -447,8 +448,8 @@ portBASE_TYPE xQueueStatus;
 	{
 		portENTER_CRITICAL();
 		{
-			uxValueToTx = uxValueForNormallyFullQueue;
 			uxValueForNormallyFullQueue++;
+			uxValueToTx = uxValueForNormallyFullQueue;			
 		}
 		portEXIT_CRITICAL();
 
@@ -459,8 +460,8 @@ portBASE_TYPE xQueueStatus;
 	{
 		portENTER_CRITICAL();
 		{
-			uxValueToTx = uxValueForNormallyFullQueue;
 			uxValueForNormallyFullQueue++;
+			uxValueToTx = uxValueForNormallyFullQueue;			
 		}
 		portEXIT_CRITICAL();
 
@@ -494,7 +495,8 @@ portBASE_TYPE xQueueStatus;
 			task recognises a time out when it is unsuspended. */
 			xWasSuspended = pdTRUE;
 
-			for( ux = 0; ux < intqNUM_VALUES_TO_LOG; ux++ )
+			/* Start at 1 as we expect position 0 to be unused. */
+			for( ux = 1; ux < intqNUM_VALUES_TO_LOG; ux++ )
 			{
 				if( ucNormallyFullReceivedValues[ ux ] == 0 )
 				{
@@ -536,8 +538,8 @@ portBASE_TYPE xQueueStatus;
 	{
 		portENTER_CRITICAL();
 		{
-			uxValueToTx = uxValueForNormallyFullQueue;
 			uxValueForNormallyFullQueue++;
+			uxValueToTx = uxValueForNormallyFullQueue;			
 		}
 		portEXIT_CRITICAL();
 
@@ -548,8 +550,8 @@ portBASE_TYPE xQueueStatus;
 	{
 		portENTER_CRITICAL();
 		{
-			uxValueToTx = uxValueForNormallyFullQueue;
 			uxValueForNormallyFullQueue++;
+			uxValueToTx = uxValueForNormallyFullQueue;			
 		}
 		portEXIT_CRITICAL();
 

@@ -93,8 +93,10 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
-#define configKERNEL_INTERRUPT_PRIORITY 		255
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xa0, or priority 5. */
+
+
+#define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned portCHAR ) 7 << ( unsigned portCHAR ) 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned portCHAR ) 5 << ( unsigned portCHAR ) 5 )  /* Priority 5, or 160 as only the top three bits are implemented. */
 
 
 #endif /* FREERTOS_CONFIG_H */

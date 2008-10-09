@@ -54,6 +54,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "StackMacros.h"
 
 /*
  * Macro to define the amount of stack available to the idle task.
@@ -72,6 +73,10 @@ typedef struct tskTaskControlBlock
 	unsigned portBASE_TYPE	uxPriority;			/*< The priority of the task where 0 is the lowest priority. */
 	portSTACK_TYPE			*pxStack;			/*< Points to the start of the stack. */
 	signed portCHAR			pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */
+
+	#if ( portSTACK_GROWTH > 0 )
+		portSTACK_TYPE *pxEndOfStack;			/*< Used for stack overflow checking on architectures where the stack grows up from low memory. */
+	#endif
 
 	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
 		unsigned portBASE_TYPE uxCriticalNesting;
@@ -255,79 +260,6 @@ register tskTCB *pxTCB;																								\
 /*-----------------------------------------------------------*/
 
 /*
- * Call the stack overflow hook function if the stack of the task being swapped
- * out is currently overflowed, or looks like it might have overflowed in the
- * past.
- *
- * Setting configCHECK_FOR_STACK_OVERFLOW to 1 will cause the macro to check
- * the current stack state only - comparing the current top of stack value to
- * the stack limit.  Setting configCHECK_FOR_STACK_OVERFLOW to greater than 1
- * will also cause the last few stack bytes to be checked to ensure the value
- * to which the bytes were set when the task was created have not been 
- * overwritten.  Note this second test does not guarantee that an overflowed
- * stack will always be recognised.
- */
-
-#if( configCHECK_FOR_STACK_OVERFLOW == 0 )
-
-	/* FreeRTOSConfig.h is not set to check for stack overflows. */
-	#define taskCHECK_FOR_STACK_OVERFLOW()
-
-#endif /* configCHECK_FOR_STACK_OVERFLOW == 0 */
-
-#if( ( configCHECK_FOR_STACK_OVERFLOW > 0 ) && ( portSTACK_GROWTH >= 0 ) )
-
-	/* This is an invalid setting. */
-	#error configCHECK_FOR_STACK_OVERFLOW can only be set to a non zero value on architectures where the stack grows down from high memory.
-
-#endif /* ( configCHECK_FOR_STACK_OVERFLOW > 0 ) && ( portSTACK_GROWTH >= 0 ) */
-
-#if( configCHECK_FOR_STACK_OVERFLOW == 1 )
-
-	/* Only the current stack state is to be checked. */
-	#define taskCHECK_FOR_STACK_OVERFLOW()																\
-	{																									\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );		\
-																										\
-		/* Is the currently saved stack pointer within the stack limit? */								\
-		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
-		{																								\
-			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
-		}																								\
-	}
-
-#endif /* configCHECK_FOR_STACK_OVERFLOW == 1 */
-
-#if( configCHECK_FOR_STACK_OVERFLOW > 1 )
-
-	/* Both the current statck state and the stack fill bytes are to be checked. */
-	#define taskCHECK_FOR_STACK_OVERFLOW()																											\
-	{																																				\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );													\
-	static const unsigned portCHAR ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE };	\
-																																					\
-		/* Is the currently saved stack pointer within the stack limit? */																			\
-		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )																					\
-		{																																			\
-			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );												\
-		}																																			\
-																																					\
-		/* Has the extremity of the task stack ever been written over? */																			\
-		if( memcmp( ( void * ) pxCurrentTCB->pxStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )						\
-		{																																			\
-			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );												\
-		}																																			\
-	}
-
-#endif /* #if( configCHECK_FOR_STACK_OVERFLOW > 1 ) */
-
-/*-----------------------------------------------------------*/
-
-/*
  * Several functions take an xTaskHandle parameter that can optionally be NULL,
  * where NULL is used to indicate that the handle of the currently executing
  * task should be used in place of the parameter.  This macro simply checks to
@@ -449,6 +381,11 @@ tskTCB * pxNewTCB;
 		#else
 		{
 			pxTopOfStack = pxNewTCB->pxStack;	
+
+			/* If we want to use stack checking on architectures that use
+			a positive stack growth direction then we also need to store the
+			other extreme of the stack space. */
+			pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 );
 		}
 		#endif
 
@@ -1464,7 +1401,8 @@ void vTaskSwitchContext( void )
 		return;
 	}
 
-	taskCHECK_FOR_STACK_OVERFLOW();
+	taskFIRST_CHECK_FOR_STACK_OVERFLOW();
+	taskSECOND_CHECK_FOR_STACK_OVERFLOW();
 
 	/* Find the highest priority queue that contains ready tasks. */
 	while( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxTopReadyPriority ] ) ) )
@@ -1894,7 +1832,7 @@ tskTCB *pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
+#if ( INCLUDE_uxTaskGetStackHighWaterMark == 1 )
 
 	unsigned portSHORT usTaskCheckFreeStackSpace( const unsigned portCHAR * pucStackByte )
 	{
@@ -1919,9 +1857,21 @@ tskTCB *pxNewTCB;
 	unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask )
 	{
 	tskTCB *pxTCB;
+	unsigned portCHAR *pcEndOfStack;
 
 		pxTCB = prvGetTCBFromHandle( xTask );
-		return usTaskCheckFreeStackSpace( ( unsigned portCHAR * ) pxTCB->pxStack );
+
+		#if portSTACK_GROWTH < 0
+		{
+			pcEndOfStack = ( unsigned portCHAR * ) pxTCB->pxStack;
+		}
+		#else
+		{
+			pcEndOfStack = ( unsigned portCHAR * ) pxTCB->pxEndOfStack;
+		}
+		#endif
+
+		return usTaskCheckFreeStackSpace( pcEndOfStack );
 	}
 
 #endif

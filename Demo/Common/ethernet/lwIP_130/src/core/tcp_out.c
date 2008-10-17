@@ -320,7 +320,7 @@ tcp_enqueue(struct tcp_pcb *pcb, void *arg, u16_t len,
     useg = NULL;
   }
   else {
-    for (useg = pcb->unsent; useg->next != NULL; useg = useg->next);
+    for (useg = pcb->unsent; useg->next != NULL; useg = useg->next){}
   }
   /* { useg is last segment on the unsent queue, NULL if list is empty } */
 
@@ -433,7 +433,7 @@ tcp_output(struct tcp_pcb *pcb)
   /* useg should point to last segment on unacked queue */
   useg = pcb->unacked;
   if (useg != NULL) {
-    for (; useg->next != NULL; useg = useg->next);
+    for (; useg->next != NULL; useg = useg->next){}
   }
 
   /* If the TF_ACK_NOW flag is set and no data will be sent (either
@@ -741,7 +741,7 @@ tcp_rexmit_rto(struct tcp_pcb *pcb)
   }
 
   /* Move all unacked segments to the head of the unsent queue */
-  for (seg = pcb->unacked; seg->next != NULL; seg = seg->next);
+  for (seg = pcb->unacked; seg->next != NULL; seg = seg->next){}
   /* concatenate unsent queue after unacked queue */
   seg->next = pcb->unsent;
   /* unsent queue is the concatenated queue (of unacked, unsent) */

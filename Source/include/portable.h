@@ -202,6 +202,9 @@
 	#include "../../../source/portable/GCC/ColdFire_V2/portmacro.h"
 #endif
 
+#ifdef COLDFIRE_V2_CODEWARRIOR
+	#include "../../Source/portable/CodeWarrior/ColdFire_V2/portmacro.h"
+#endif
 
 #ifdef GCC_PPC405
 	#include "../../Source/portable/GCC/PPC405_Xilinx/portmacro.h"

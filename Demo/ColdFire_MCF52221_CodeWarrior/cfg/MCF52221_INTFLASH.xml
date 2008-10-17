@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+
+<fpconfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fp_config.xsd">
+
+  <targetconfwindow>
+    <usecustomsettings>false</usecustomsettings>
+    <targetprocessor>52221</targetprocessor>
+    <connection></connection>
+    <usetargetinit>true</usetargetinit>
+    <targetinitfile>{CodeWarrior}\ColdFire_Support\Initialization_Files\M52221DEMO.cfg</targetinitfile>
+    <targetmembuffaddr>0x20000000</targetmembuffaddr>
+    <targetmembuffsize>0x00004000</targetmembuffsize>
+    <enablelogging>true</enablelogging>
+    <verifywrites>false</verifywrites>
+  </targetconfwindow>
+
+  <flashconfwindow>
+    <membaseaddr>0x00000000</membaseaddr>
+    <device>CFM_MCF52221</device>
+    <organization>4Kx32x1</organization>
+    <flashstart>0x00000000</flashstart>
+    <flashend>0x0001FFFF</flashend>
+  </flashconfwindow>
+
+  <programverifywindow>
+    <useselectedfile>false</useselectedfile>
+    <projbuildtargetfile>nofile</projbuildtargetfile>
+    <fileiotype>Auto Detect</fileiotype>
+    <restrictaddrrange>false</restrictaddrrange>
+    <restrictaddrrangestart>0x00000000</restrictaddrrangestart>
+    <restrictaddrrangeend>0x0001FFFF</restrictaddrrangeend>
+    <applyaddroffset>false</applyaddroffset>
+    <addroffset>0x00000000</addroffset>
+  </programverifywindow>
+
+  <eraseblankcheckwindow>
+    <eraseallsectors>true</eraseallsectors>
+    <sector/>
+    <processsectorsindividually>false</processsectorsindividually>
+  </eraseblankcheckwindow>
+
+  <checksumwindow>
+    <computechecksumover>FileOnTarg</computechecksumover>
+    <addrstart>0x00000000</addrstart>
+    <addrsize>0x0000FFFF</addrsize>
+  </checksumwindow>
+
+</fpconfig>

@@ -1,0 +1,140 @@
+# Sample Linker Command File for CodeWarrior for ColdFire
+
+KEEP_SECTION {.vectortable}
+
+# Memory ranges	
+
+MEMORY {
+   vectorrom   (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000400
+   cfmprotrom  (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000020   
+   code        (RX)  : ORIGIN = 0x00000500, LENGTH = 0x0001FB00
+   vectorram   (RWX) : ORIGIN = 0x20000000, LENGTH = 0x00000400
+   userram     (RWX) : ORIGIN = 0x20000400, LENGTH = 0x00003C00
+}
+
+SECTIONS {
+
+# Heap and Stack sizes definition
+	___heap_size	  = 0x1000;
+	___stack_size     = 0x1000;
+
+
+
+# MCF52221 Derivative Memory map definitions from linker command files:
+# __IPSBAR, __RAMBAR, __RAMBAR_SIZE, __FLASHBAR, __FLASHBAR_SIZE linker
+# symbols must be defined in the linker command file.
+
+# Memory Mapped Registers (IPSBAR= 0x40000000)
+   ___IPSBAR         = 0x40000000;
+
+# 16 Kbytes Internal SRAM
+   ___RAMBAR         = 0x20000000;
+   ___RAMBAR_SIZE    = 0x00004000;
+
+# 128 KByte Internal Flash Memory
+   ___FLASHBAR       = 0x00000000;
+   ___FLASHBAR_SIZE  = 0x00020000;
+
+   ___SP_AFTER_RESET = ___RAMBAR + ___RAMBAR_SIZE - 4;
+   
+  .userram	  : {} > userram		
+  .code	    : {} > code		
+  .vectorram	: {} > vectorram			
+	
+	.vectors :
+	{
+		exceptions.c(.vectortable)
+		. = ALIGN (0x4); 
+	} > vectorrom
+
+	.cfmprotect :
+	{
+		*(.cfmconfig)
+		. = ALIGN (0x4);
+	} > cfmprotrom
+
+	.text :
+	{
+		*(.text)
+		. = ALIGN (0x4);
+		*(.rodata)
+		. = ALIGN (0x4);		
+		___ROM_AT = .;
+		___DATA_ROM = .;
+	} >> code
+
+	.data : AT(___ROM_AT) 
+	{  
+		___DATA_RAM = .;
+		. = ALIGN(0x4);
+		*(.exception)	
+		. = ALIGN(0x4);	
+		__exception_table_start__ = .;
+		EXCEPTION
+		__exception_table_end__ = .;
+		
+		___sinit__ = .;
+	    STATICINIT
+		__START_DATA = .;
+
+		*(.data)
+		. = ALIGN (0x4);
+		__END_DATA = .;
+
+		__START_SDATA = .;
+		*(.sdata)
+		. = ALIGN (0x4);
+		__END_SDATA = .;
+
+		___DATA_END = .;
+		__SDA_BASE = .;
+		. = ALIGN (0x4);
+	} >> userram
+
+	.bss :
+	{
+		___BSS_START = .;
+		__START_SBSS = .;
+		*(.sbss)
+		. = ALIGN (0x4);
+		*(SCOMMON)
+		__END_SBSS = .;
+
+		__START_BSS = .;
+		*(.bss)
+		. = ALIGN (0x4);
+		*(COMMON)
+		__END_BSS = .;
+		___BSS_END = .;
+
+		. = ALIGN(0x4);
+	} >> userram
+
+	.custom :
+	{
+		___HEAP_START	= .;
+		___heap_addr	= ___HEAP_START;
+		___HEAP_END		= ___HEAP_START + ___heap_size;
+		___SP_END		= ___HEAP_END;
+		___SP_INIT		= ___SP_END + ___stack_size;
+
+		. = ALIGN (0x4);
+	} >> userram
+  	
+	___VECTOR_RAM		= ADDR(.vectorram);
+	
+	__SP_INIT		= ___SP_INIT;
+
+	_romp_at = ___ROM_AT + SIZEOF(.data);
+	.romp : AT(_romp_at)
+	{
+		__S_romp = _romp_at;
+		WRITEW(___ROM_AT);
+		WRITEW(ADDR(.data));
+		WRITEW(SIZEOF(.data));
+		WRITEW(0);
+		WRITEW(0);
+		WRITEW(0);
+	}
+
+}

@@ -56,6 +56,8 @@ sys_mbox_t sys_mbox_new(int size)
 {
 	xQueueHandle mbox;
 	
+	( void ) size;
+	
 	mbox = xQueueCreate( archMESG_QUEUE_LENGTH, sizeof( void * ) );
 
 #if SYS_STATS
@@ -98,7 +100,7 @@ void sys_mbox_free(sys_mbox_t mbox)
 //   Posts the "msg" to the mailbox.
 void sys_mbox_post(sys_mbox_t mbox, void *data)
 {
-	while ( xQueueSendToBack(mbox, &data, portMAX_DELAY ) != pdTRUE );
+	while ( xQueueSendToBack(mbox, &data, portMAX_DELAY ) != pdTRUE ){}
 }
 
 
@@ -171,7 +173,7 @@ portTickType StartTime, EndTime, Elapsed;
 	}
 	else // block forever for a message.
 	{
-		while( pdTRUE != xQueueReceive( mbox, &(*msg), portMAX_DELAY ) ); // time is arbitrary
+		while( pdTRUE != xQueueReceive( mbox, &(*msg), portMAX_DELAY ) ){} // time is arbitrary
 		EndTime = xTaskGetTickCount();
 		Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
 		
@@ -275,7 +277,7 @@ portTickType StartTime, EndTime, Elapsed;
 	}
 	else // must block without a timeout
 	{
-		while( xSemaphoreTake( sem, portMAX_DELAY ) != pdTRUE );
+		while( xSemaphoreTake( sem, portMAX_DELAY ) != pdTRUE ){}
 		EndTime = xTaskGetTickCount();
 		Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
 
@@ -427,6 +429,7 @@ void sys_arch_unprotect(sys_prot_t pval)
  */
 void sys_assert( const char *msg )
 {	
+	( void ) msg;
 	/*FSL:only needed for debugging
 	printf(msg);
 	printf("\n\r");

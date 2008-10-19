@@ -123,6 +123,9 @@ volatile unsigned portSHORT usCriticalNesting = portINITIAL_CRITICAL_NESTING;
  * loaded from the task control block.  Next the value for usCriticalNesting
  * used by the task is retrieved from the stack - followed by the value of all
  * the general purpose msp430 registers.
+ *
+ * The bic instruction ensures there are no low power bits set in the status
+ * register that is about to be popped from the stack.
  */
 #define portRESTORE_CONTEXT()								\
 	asm volatile (	"mov.w	pxCurrentTCB, r12		\n\t"	\
@@ -141,6 +144,7 @@ volatile unsigned portSHORT usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 					"pop	r6						\n\t"	\
 					"pop	r5						\n\t"	\
 					"pop	r4						\n\t"	\
+					"bic	#(0xf0),0(r1)			\n\t"	\
 					"reti							\n\t"	\
 				);
 /*-----------------------------------------------------------*/

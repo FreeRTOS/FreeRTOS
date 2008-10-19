@@ -140,6 +140,7 @@ static void prvSetupHardware( void );
 
 
 portBASE_TYPE xLocalError = pdFALSE;
+volatile unsigned portLONG ulIdleLoops = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -201,6 +202,7 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
 static portSHORT sNoErrorFound = pdTRUE;
+static unsigned portLONG ulLastIdleLoopCount = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -228,6 +230,15 @@ static portSHORT sNoErrorFound = pdTRUE;
 	{
 		sNoErrorFound = pdFALSE;
 	}
+
+    if( ulIdleLoops == ulLastIdleLoopCount )
+    {
+        sNoErrorFound = pdFALSE;
+    }
+    else
+    {
+        ulLastIdleLoopCount = ulIdleLoops;
+    }
 	
 	return sNoErrorFound;
 }
@@ -301,6 +312,11 @@ volatile signed portBASE_TYPE *pxTaskHasExecuted;
 			taskYIELD();
 		}
 		#endif
+
+        ulIdleLoops++;
+
+        /* Place the processor into low power mode. */
+        LPM3;
 	}
 }
 

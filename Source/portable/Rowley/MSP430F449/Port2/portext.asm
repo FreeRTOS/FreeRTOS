@@ -112,6 +112,10 @@ _portRESTORE_CONTEXT::
 		pop		R6		
 		pop		R5		
 		pop		R4		
+
+		/* Ensure any low power mode bits are cleared within the status
+                register about to be restored. */
+		bic #(SCG1+SCG0+OSCOFF+CPUOFF),0(SP)
 		reti	
       
 

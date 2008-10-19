@@ -225,6 +225,8 @@ signed portBASE_TYPE xReturn;
 			interrupted. */
 			taskYIELD();
 		}
+
+        __bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	}
 	/*-----------------------------------------------------------*/
 	
@@ -249,6 +251,8 @@ signed portBASE_TYPE xReturn;
 			/* There were no other characters to transmit. */
 			sTHREEmpty = pdTRUE;
 		}
+
+        __bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	}
 
 #endif

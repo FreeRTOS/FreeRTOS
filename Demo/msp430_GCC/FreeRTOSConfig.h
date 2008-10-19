@@ -65,7 +65,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION		1
-#define configUSE_IDLE_HOOK			0
+#define configUSE_IDLE_HOOK			1
 #define configUSE_TICK_HOOK			0
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 7995392 ) /* Clock setup from main.c in the demo application. */
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )

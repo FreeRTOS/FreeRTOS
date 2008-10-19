@@ -132,6 +132,9 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void );
  */
 static void prvSetupHardware( void );
 
+/* Used to detect the idle hook function stalling. */
+static volatile unsigned portLONG ulIdleLoops = 0UL;
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -201,6 +204,7 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 static portSHORT prvCheckOtherTasksAreStillRunning( void )
 {
 static portSHORT sNoErrorFound = pdTRUE;
+static unsigned portLONG ulLastIdleLoops = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -223,6 +227,13 @@ static portSHORT sNoErrorFound = pdTRUE;
 	{
 		sNoErrorFound = pdFALSE;
 	}
+
+	if( ulLastIdleLoops == ulIdleLoops )
+	{
+		sNoErrorFound = pdFALSE;
+	}
+
+	ulLastIdleLoops = ulIdleLoops;
 	
 	return sNoErrorFound;
 }
@@ -248,6 +259,15 @@ static void prvSetupHardware( void )
 	P3SEL = 0x00;
 	P4SEL = 0xFC;
 	P5SEL = 0xFF;
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void );
+void vApplicationIdleHook( void )
+{
+	/* Simple put the CPU into lowpower mode. */
+	_BIS_SR( LPM3_bits );
+	ulIdleLoops++;
 }
 /*-----------------------------------------------------------*/
 

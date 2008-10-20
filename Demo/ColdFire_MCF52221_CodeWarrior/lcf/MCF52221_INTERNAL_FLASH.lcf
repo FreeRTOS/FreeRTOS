@@ -8,15 +8,15 @@ MEMORY {
    vectorrom   (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000400
    cfmprotrom  (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000020   
    code        (RX)  : ORIGIN = 0x00000500, LENGTH = 0x0001FB00
-   vectorram   (RWX) : ORIGIN = 0x20000000, LENGTH = 0x00000400
    userram     (RWX) : ORIGIN = 0x20000400, LENGTH = 0x00003C00
 }
 
 SECTIONS {
 
 # Heap and Stack sizes definition
-	___heap_size	  = 0x1000;
-	___stack_size     = 0x1000;
+	___heap_size	  = 0x4;
+	___stack_size     = 0x200;
+	
 
 
 
@@ -39,7 +39,6 @@ SECTIONS {
    
   .userram	  : {} > userram		
   .code	    : {} > code		
-  .vectorram	: {} > vectorram			
 	
 	.vectors :
 	{
@@ -121,7 +120,7 @@ SECTIONS {
 		. = ALIGN (0x4);
 	} >> userram
   	
-	___VECTOR_RAM		= ADDR(.vectorram);
+#	___VECTOR_RAM		= ADDR(.vectorram);
 	
 	__SP_INIT		= ___SP_INIT;
 

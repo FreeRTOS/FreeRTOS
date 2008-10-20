@@ -10,8 +10,10 @@
 
 #define REGISTER_ABI __REGABI__
 
-extern __declspec(system) unsigned long __VECTOR_RAM[];
-#define VECTOR_RAM_ADDRESS    (uint32)__VECTOR_RAM
+
+extern void vPIT0InterruptHandler( void );
+extern void vPortYieldISR( void );
+extern void vFECISRHandler( void );
 
 /***********************************************************************/
 /*
@@ -402,7 +404,7 @@ __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vecto
    asm_exception_handler,           /*  77 (0x134) Device-specific interrupts */
    asm_exception_handler,           /*  78 (0x138) Device-specific interrupts */
    asm_exception_handler,           /*  79 (0x13C) Device-specific interrupts */
-   asm_exception_handler,           /*  80 (0x140) Device-specific interrupts */
+   vPortYieldISR,           		/*  80 (0x140) Device-specific interrupts */
    asm_exception_handler,           /*  81 (0x144) Device-specific interrupts */
    asm_exception_handler,           /*  82 (0x148) Device-specific interrupts */
    asm_exception_handler,           /*  83 (0x14C) Device-specific interrupts */
@@ -441,7 +443,7 @@ __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vecto
    asm_exception_handler,           /* 116 (0x___) Reserved                   */
    asm_exception_handler,           /* 117 (0x___) Reserved                   */
    asm_exception_handler,           /* 118 (0x___) Reserved                   */
-   asm_exception_handler,           /* 119 (0x___) Reserved                   */
+   vPIT0InterruptHandler,           /* 119 (0x___) Reserved                   */
    asm_exception_handler,           /* 120 (0x___) Reserved                   */
    asm_exception_handler,           /* 121 (0x___) Reserved                   */
    asm_exception_handler,           /* 122 (0x___) Reserved                   */
@@ -604,6 +606,7 @@ asm void mcf5xxx_wr_vbr(unsigned long) { /* Set VBR */
  */ 
 void initialize_exceptions(void)
 {
+#if 0
 	/*
 	 * Memory map definitions from linker command files used by mcf5xxx_startup
 	 */
@@ -619,6 +622,9 @@ void initialize_exceptions(void)
 			__VECTOR_RAM[n] = (unsigned long)_vect[n];
 	}
 	mcf5xxx_wr_vbr((unsigned long)__VECTOR_RAM);
+#endif
+
+	mcf5xxx_wr_vbr((unsigned long)_vect);
 }
 
 #ifdef __cplusplus

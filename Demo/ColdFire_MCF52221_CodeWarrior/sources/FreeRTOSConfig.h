@@ -70,7 +70,7 @@
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 80000000 )
 #define configTICK_RATE_HZ				( ( portTickType ) 100 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 160 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 0 ) ) /* The heap size is worked out from the linker script, so this constant is not used. */
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) ) /* The heap size is worked out from the linker script, so this constant is not used. */
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0

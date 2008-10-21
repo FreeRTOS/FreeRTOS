@@ -51,7 +51,6 @@
 #include "task.h"
 
 __declspec(interrupt:0) void vPIT0InterruptHandler( void );
-extern unsigned portLONG __VECTOR_RAM[];
 
 /* Constants used to configure the interrupts. */
 #define portPRESCALE_VALUE			64
@@ -62,7 +61,7 @@ extern unsigned portLONG __VECTOR_RAM[];
 /*
  * FreeRTOS.org requires two interrupts - a tick interrupt generated from a
  * timer source, and a spare interrupt vector used for context switching.
- * The configuration below uses PIT0 for the former, and vector 63 for the
+ * The configuration below uses PIT0 for the former, and vector 16 for the
  * latter.  **IF YOUR APPLICATION HAS BOTH OF THESE INTERRUPTS FREE THEN YOU DO
  * NOT NEED TO CHANGE ANY OF THIS CODE** - otherwise instructions are provided
  * here for using alternative interrupt sources.
@@ -92,7 +91,7 @@ extern unsigned portLONG __VECTOR_RAM[];
  *
  *  3) Change the name of the function __cs3_isr_interrupt_127() within portasm.S
  *  to be correct for whichever vector number is being used.  By default interrupt
- *  controller 0 number 63 is used, which corresponds to vector number 127.
+ *  controller 0 number 16 is used, which corresponds to vector number 127.
  */
 void vApplicationSetupInterrupts( void )
 {

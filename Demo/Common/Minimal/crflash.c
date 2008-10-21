@@ -114,7 +114,7 @@ static void prvFlashCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE 
 static xQueueHandle xFlashQueue;
 
 /* This will be set to pdFALSE if we detect an error. */
-static unsigned portBASE_TYPE uxCoRoutineFlashStatus = pdPASS;
+static portBASE_TYPE xCoRoutineFlashStatus = pdPASS;
 
 /*-----------------------------------------------------------*/
 
@@ -177,7 +177,7 @@ static const portTickType xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_R
 			/* For the reasons stated at the top of the file we should always
 			find that we can post to the queue.  If we could not then an error
 			has occurred. */
-			uxCoRoutineFlashStatus = pdFAIL;
+			xCoRoutineFlashStatus = pdFAIL;
 		}
 
 		crDELAY( xHandle, xFlashRates[ uxIndex ] );
@@ -207,7 +207,7 @@ unsigned portBASE_TYPE uxLEDToFlash;
 		if( xResult != pdPASS )
 		{
 			/* We would not expect to wake unless we received something. */
-			uxCoRoutineFlashStatus = pdFAIL;
+			xCoRoutineFlashStatus = pdFAIL;
 		}
 		else
 		{
@@ -225,6 +225,6 @@ portBASE_TYPE xAreFlashCoRoutinesStillRunning( void )
 {
 	/* Return pdPASS or pdFAIL depending on whether an error has been detected
 	or not. */
-	return uxCoRoutineFlashStatus;
+	return xCoRoutineFlashStatus;
 }
 

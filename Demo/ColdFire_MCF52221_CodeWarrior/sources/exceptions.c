@@ -12,6 +12,7 @@
 
 
 extern void vPIT0InterruptHandler( void );
+extern void vUART0InterruptHandler( void );
 extern void vPortYieldISR( void );
 extern void vFECISRHandler( void );
 
@@ -401,7 +402,7 @@ __declspec(vectortable) vectorTableEntryType _vect[256] = {   /* Interrupt vecto
    asm_exception_handler,           /*  74 (0x128) Device-specific interrupts */
    asm_exception_handler,           /*  75 (0x12C) Device-specific interrupts */
    asm_exception_handler,           /*  76 (0x130) Device-specific interrupts */
-   asm_exception_handler,           /*  77 (0x134) Device-specific interrupts */
+   vUART0InterruptHandler,          /*  77 (0x134) Device-specific interrupts */
    asm_exception_handler,           /*  78 (0x138) Device-specific interrupts */
    asm_exception_handler,           /*  79 (0x13C) Device-specific interrupts */
    vPortYieldISR,           		/*  80 (0x140) Device-specific interrupts */

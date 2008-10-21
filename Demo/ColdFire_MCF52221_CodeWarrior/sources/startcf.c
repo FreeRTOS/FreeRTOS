@@ -188,7 +188,7 @@ asm void _startup(void)
 {
 	/* disable interrupts */
     move.w        #0x2700,sr
-
+    
 	/* Pre-init SP, in case memory for stack is not valid it should be setup using 
 	   MEMORY_INIT before __initialize_hardware is called 
 	*/

@@ -55,17 +55,15 @@
 	EXPORT	vPortYieldProcessor
 	EXPORT	vPortStartFirstTask
 	EXPORT	vPreemptiveTick
-
+	EXPORT	vPortYield
 
 
 VICVECTADDR	EQU	0xFFFFF030
 T0IR		EQU	0xE0004000
 T0MATCHBIT	EQU	0x00000001
 
-
 	ARM
 	AREA	PORT_ASM, CODE, READONLY
-	PRESERVE8
 
 
 
@@ -74,8 +72,17 @@ T0MATCHBIT	EQU	0x00000001
 ; setup by pxPortInitialiseStack
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 vPortStartFirstTask
+
+	PRESERVE8
+
 	portRESTORE_CONTEXT
 
+vPortYield
+
+	PRESERVE8
+
+	SVC 0
+	bx lr
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Interrupt service routine for the SWI interrupt.  The vector table is
@@ -86,6 +93,8 @@ vPortStartFirstTask
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 vPortYieldProcessor
+
+	PRESERVE8
 
 	; Within an IRQ ISR the link register has an offset from the true return 
 	; address, but an SWI ISR does not.  Add the offset manually so the same 
@@ -109,6 +118,9 @@ vPortYieldProcessor
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 
 vPreemptiveTick
+
+	PRESERVE8
+
 	portSAVE_CONTEXT					; Save the context of the current task.	
 
 	LDR R0, =vTaskIncrementTick			; Increment the tick count.  

@@ -110,7 +110,8 @@ extern void vTaskSwitchContext(void);						 \
 		}													 \
 }															 \
 
-#define portYIELD() __asm{ SVC 0 }
+extern void vPortYield( void );
+#define portYIELD() vPortYield()
 
 
 /* Critical section management. */

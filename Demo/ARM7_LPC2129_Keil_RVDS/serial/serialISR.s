@@ -61,13 +61,13 @@
 	EXPORT vUART_ISREntry
 
 	;/* Interrupt entry must always be in ARM mode. */
-	AREA	|.text|, CODE, READONLY
 	ARM
-	PRESERVE8
-
+	AREA	|.text|, CODE, READONLY
 
 
 vUART_ISREntry
+
+	PRESERVE8
 
 	; Save the context of the interrupted task.
 	portSAVE_CONTEXT			

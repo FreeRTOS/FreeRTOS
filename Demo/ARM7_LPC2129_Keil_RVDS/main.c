@@ -87,20 +87,10 @@
 #include "integer.h"
 #include "comtest2.h"
 #include "serial.h"
-
-#ifdef KEIL_THUMB_INTERWORK
-
-	/* 
-		THUMB mode allows more tasks to be created without the executable 
-		binary exceeding the limits allowed by the evaluation version of 
-		uVision3.
-	*/
-	#include "PollQ.h"
-	#include "BlockQ.h"
-	#include "semtest.h"
-	#include "dynamic.h"
-
-#endif /* KEIL_THUMB_INTERWORK */
+#include "PollQ.h"
+#include "BlockQ.h"
+#include "semtest.h"
+#include "dynamic.h"
 
 /*-----------------------------------------------------------*/
 
@@ -170,15 +160,10 @@ int main( void )
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-
-	#ifdef KEIL_THUMB_INTERWORK
-		/* When using THUMB mode we can start more tasks without the executable
-		exceeding the size limit imposed by the evaluation version of uVision3. */
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-		vStartDynamicPriorityTasks();
-	#endif
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartDynamicPriorityTasks();
 
 	/* Start the check task - which is defined in this file.  This is the task
 	that periodically checks to see that all the other tasks are executing 
@@ -267,32 +252,25 @@ portLONG lReturn = pdPASS;
 		lReturn = pdFAIL;
 	}
 
-	#ifdef KEIL_THUMB_INTERWORK
+	if( xArePollingQueuesStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
 
-		/* When using THUMB mode we can start more tasks without the executable
-		exceeding the size limit imposed by the evaluation version of uVision3. */
-	
-		if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			lReturn = pdFAIL;
-		}
-	
-		if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			lReturn = pdFAIL;
-		}
-	
-		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			lReturn = pdFAIL;
-		}
+	if( xAreBlockingQueuesStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
 
-		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-		{
-			lReturn = pdFAIL;
-		}
+	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
 
-	#endif
+	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
 
 	return lReturn;
 }

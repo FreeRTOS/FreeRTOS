@@ -15,15 +15,19 @@
 ### List of Objects: adding '"flash.o"'
 ### List of Objects: adding '"integer.o"'
 ### List of Objects: adding '"comtest.o"'
+### List of Objects: adding '"blockq.o"'
+### List of Objects: adding '"dynamic.o"'
+### List of Objects: adding '"pollq.o"'
+### List of Objects: adding '"semtest.o"'
 ### ADS-LD Command completed:
-"startup.o" "partest.o" "main.o" "serial.o" "serialisr.o" "tasks.o" "list.o" "queue.o" "port.o" "heap_2.o" ".\portasm.o" "flash.o" "integer.o" "comtest.o" --device DARMP --strict --scatter "RTOSDemo.sct" 
+"startup.o" "partest.o" "main.o" "serial.o" "serialisr.o" "tasks.o" "list.o" "queue.o" "port.o" "heap_2.o" ".\portasm.o" "flash.o" "integer.o" "comtest.o" "blockq.o" "dynamic.o" "pollq.o" "semtest.o" --device DARMP --strict --scatter "RTOSDemo.sct" 
 --autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
  --list ".\RTOSDemo.map" -o "RTOSDemo.axf"### Preparing Environment (PrepEnvAds)
 ### ADS-LD Output File: 'RTOSDemo.axf'
 ### ADS-LD Command File: 'RTOSDemo.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile 'RTOSDemo.lnp', Handle=0x0000044C
+### Creating CmdFile 'RTOSDemo.lnp', Handle=0x00000214
 ### Writing '.lnp' file
 ### ADS-LD Command file 'RTOSDemo.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

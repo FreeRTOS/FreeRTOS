@@ -1,5 +1,9 @@
 <!DOCTYPE CrossStudio_for_MSP430_Session_File>
 <session>
+ <Autos>
+  <Watches active="0" />
+ </Autos>
+ <Bookmarks/>
  <Breakpoints/>
  <ExecutionCountWindow/>
  <Memory1>
@@ -18,20 +22,18 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Demo Source" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Scheduler Source" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Startup Code" name="unnamed" />
  </Project>
  <Register1>
-  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="CPU Registers" decimalDisplays="" binaryDisplays="" />
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="CPU Registers" visibleGroups="CPU Registers" decimalDisplays="" binaryDisplays="" />
  </Register1>
  <Register2>
-  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
  </Register2>
  <Register3>
-  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
  </Register3>
  <Register4>
-  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
+  <RegisterWindow unsignedDisplays="" asciiDisplays="" octalDisplays="" openGroups="" visibleGroups="" decimalDisplays="" binaryDisplays="" />
  </Register4>
  <SourceNavigatorWindow/>
  <TraceWindow>
@@ -50,8 +52,7 @@
   <Watches active="0" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="E:\Dev\FreeRTOS\Demo\msp430_CrossStudio\serial\serial.c" y="205" useHTMLEdit="0" path="E:\Dev\FreeRTOS\Demo\msp430_CrossStudio\serial\serial.c" left="0" selected="0" name="unnamed" top="186" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="E:\Dev\FreeRTOS\Demo\msp430_CrossStudio\main.c" y="134" useHTMLEdit="0" path="E:\Dev\FreeRTOS\Demo\msp430_CrossStudio\main.c" left="0" selected="0" name="unnamed" top="131" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" x="0" debugPath="c:\e\dev\freertos\workingcopy2\demo\msp430_crossworks\main.c" y="152" useHTMLEdit="0" path="c:\e\dev\freertos\workingcopy2\demo\msp430_crossworks\main.c" left="0" selected="1" name="unnamed" top="146" />
  </Files>
- <MSP430CrossStudioWindow activeProject="RTOSDemo" ignoreExceptions="" autoConnectTarget="/MSP430 Flash Emulation Tool (MSP-FET430PIF)" debugSearchFileMap="" fileDialogInitialDirectory="E:\Dev\FreeRTOS\Demo\Common\Minimal" fileDialogDefaultFilter="*" debugSearchPath="" buildConfiguration="Debug" />
+ <MSP430CrossStudioWindow activeProject="RTOSDemo" moduleClockControl="24791" autoConnectTarget="/TI MSP430 Flash Emulation Tool (MSP-FET430PIF)" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_CrossWorks\serial" fileDialogDefaultFilter="*" haltTimerA="false" autoConnectCapabilities="1407" haltTimerB="false" holdBasicTimer="false" generalClockControl="46" debugSearchPath="" buildConfiguration="Debug" />
 </session>

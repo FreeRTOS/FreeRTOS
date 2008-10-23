@@ -52,6 +52,36 @@
 
 #include <msp430x44x.h>
 
+/* 
+Two interrupt examples are provided - 
+
+ + Method 1 does everything in C code.
+ + Method 2 uses an assembly file wrapper.
+
+Code size:
+Method 1 uses assembly macros to save and restore the task context, whereas 
+method 2 uses functions. This means method 1 will be faster, but method 2 will 
+use less code space. 
+
+Simplicity:
+Method 1 is very simplistic, whereas method 2 is more elaborate. This 
+elaboration results in the code space saving, but also requires a slightly more 
+complex procedure to define interrupt service routines. 
+
+Interrupt efficiency:
+Method 1 uses the compiler generated function prologue and epilogue code to save 
+and restore the necessary registers within an interrupt service routine (other 
+than the RTOS tick ISR). Should a context switch be required from within the ISR 
+the entire processor context is saved. This can result in some registers being saved 
+twice - once by the compiler generated code, and then again by the FreeRTOS code.
+Method 2 saves and restores all the processor registers within each interrupt service 
+routine, whether or not a context switch actually occurs. This means no registers 
+ever get saved twice, but imposes an overhead on the occasions that no context switch 
+occurs. 
+*/
+
+#define configINTERRUPT_EXAMPLE_METHOD 1
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *

@@ -200,9 +200,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-#ifdef MSP_ROWLEY_RB_PORT
-
-/* Serial interrupt service routines for the RB port. */
+#if configINTERRUPT_EXAMPLE_METHOD == 1
 
 	/*
 	 * UART RX interrupt service routine.
@@ -226,6 +224,7 @@ signed portBASE_TYPE xReturn;
 			taskYIELD();
 		}
 
+        /* Make sure any low power mode bits are clear before leaving the ISR. */
         __bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	}
 	/*-----------------------------------------------------------*/
@@ -252,17 +251,16 @@ signed portBASE_TYPE xReturn;
 			sTHREEmpty = pdTRUE;
 		}
 
+        /* Make sure any low power mode bits are clear before leaving the ISR. */
         __bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	}
+    /*-----------------------------------------------------------*/
 
-#endif
-/*-----------------------------------------------------------*/
+#elif configINTERRUPT_EXAMPLE_METHOD == 2
 
-#ifdef MSP_ROWLEY_MP_PORT
-
-/* Serial port interrupts for the alternative port code. */
-
-	void ISRCom1Rx( void )
+    /* This is a standard C function as an assembly file wrapper is used as an
+    interrupt entry point. */
+	void vRxISR( void )
 	{
 	signed portCHAR cChar;
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
@@ -273,17 +271,16 @@ signed portBASE_TYPE xReturn;
 	
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
-		if( xHigherPriorityTaskWoken )
-		{
-			/*If the post causes a task to wake force a context switch 
-			as the woken task may have a higher priority than the task we have 
-			interrupted. */
-			portEXIT_SWITCHING_ISR( pdTRUE );
-		}
+        /*If the post causes a task to wake force a context switch 
+        as the woken task may have a higher priority than the task we have 
+        interrupted. */
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 	}
 	/*-----------------------------------------------------------*/
 	
-	void ISRCom1Tx( void )
+    /* This is a standard C function as an assembly file wrapper is used as an
+    interrupt entry point. */
+	void vTxISR( void )
 	{
 	signed portCHAR cChar;
 	portBASE_TYPE xTaskWoken = pdFALSE;
@@ -303,5 +300,5 @@ signed portBASE_TYPE xReturn;
 		}
 	}
 
-#endif
+#endif /* configINTERRUPT_EXAMPLE_METHOD */
 /*-----------------------------------------------------------*/

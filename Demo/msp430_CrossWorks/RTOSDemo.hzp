@@ -26,9 +26,10 @@
       <file file_name="ParTest/ParTest.c" Name="ParTest.c" />
       <file file_name="serial/serial.c" Name="serial.c" />
       <file file_name="../Common/Minimal/integer.c" Name="integer.c" />
+      <file file_name="serial/serialASM.asm" Name="serialASM.asm" />
     </folder>
   </project>
   <configuration compiler_optimization_strategy="Minimize size" optimize_code_motion="No" optimize_block_locality="No" optimize_register_allocation="Locals Only" Name="Debug" />
   <configuration c_preprocessor_definitions="NDEBUG" build_debug_information="No" Name="Release" build_optimize_output="Yes" />
-  <configuration c_preprocessor_definitions="ROWLEY_MSP430" c_user_include_directories="$(ProjectDir);$(ProjectDir)/../common/include" linker_printf_width_precision_supported="No" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/Rowley/msp430F449" />
+  <configuration compiler_optimization_strategy="Maximize speed" c_preprocessor_definitions="ROWLEY_MSP430" c_user_include_directories="$(ProjectDir);$(ProjectDir)/../common/include" linker_printf_width_precision_supported="No" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/Rowley/msp430F449" />
 </solution>

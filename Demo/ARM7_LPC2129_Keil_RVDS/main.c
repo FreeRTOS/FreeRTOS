@@ -95,8 +95,8 @@
 /*-----------------------------------------------------------*/
 
 /* Constants to setup I/O and processor. */
-#define mainTX_ENABLE		( ( unsigned portLONG ) 0x0001 )
-#define mainRX_ENABLE		( ( unsigned portLONG ) 0x0004 )
+#define mainTX_ENABLE		( ( unsigned portLONG ) 0x00010000 )	/* UART1. */
+#define mainRX_ENABLE		( ( unsigned portLONG ) 0x00040000 ) 	/* UART1. */
 #define mainBUS_CLK_FULL	( ( unsigned portCHAR ) 0x01 )
 #define mainLED_TO_OUTPUT	( ( unsigned portLONG ) 0xff0000 )
 
@@ -223,7 +223,7 @@ static void prvSetupHardware( void )
 	/* Perform the hardware setup required.  This is minimal as most of the
 	setup is managed by the settings in the project file. */
 
-	/* Configure the RS2332 pins.  All other pins remain at their default of 0. */
+	/* Configure the UART1 pins.  All other pins remain at their default of 0. */
 	PINSEL0 |= mainTX_ENABLE;
 	PINSEL0 |= mainRX_ENABLE;
 

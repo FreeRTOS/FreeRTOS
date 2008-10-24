@@ -4,7 +4,9 @@
   <Watches active="0" />
  </Autos>
  <Bookmarks/>
- <Breakpoints/>
+ <Breakpoints>
+  <BreakpointListItem actiontype="0" chainFrom="" line="153" length="0" triggertype="0" useHWbreakpoint="false" group="Breakpoints" breakdatatype="0" value="0" name="unnamed" counter="0" state="2" mask="0" comparison="0" expression="" filename="c:\e\dev\freertos\workingcopy2\demo\msp430_crossworks\main.c" />
+ </Breakpoints>
  <ExecutionCountWindow/>
  <Memory1>
   <MemoryWindow autoEvaluate="0" addressText="0x200" numColumns="8" sizeText="2048" dataSize="1" radix="16" addressSpace="" />

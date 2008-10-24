@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.4 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.0 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -67,7 +67,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V5.0.4"
+#define tskKERNEL_VERSION_NUMBER "V5.1.0"
 
 /**
  * task. h

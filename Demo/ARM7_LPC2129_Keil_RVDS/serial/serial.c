@@ -79,9 +79,9 @@
 #define serWANTED_CLOCK_SCALING			( ( unsigned portLONG ) 16 )
 
 /* Constants to setup and access the VIC. */
-#define serU0VIC_CHANNEL				( ( unsigned portLONG ) 0x0006 )
-#define serU0VIC_CHANNEL_BIT			( ( unsigned portLONG ) 0x0040 )
-#define serU0VIC_ENABLE					( ( unsigned portLONG ) 0x0020 )
+#define serU1VIC_CHANNEL				( ( unsigned portLONG ) 0x0007 )
+#define serU1VIC_CHANNEL_BIT			( ( unsigned portLONG ) 0x0080 )
+#define serU1VIC_ENABLE					( ( unsigned portLONG ) 0x0020 )
 
 /* Misc. */
 #define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
@@ -97,13 +97,14 @@
 #define serSOURCE_ERROR					( ( unsigned portCHAR ) 0x06 )
 #define serSOURCE_RX					( ( unsigned portCHAR ) 0x04 )
 #define serINTERRUPT_SOURCE_MASK		( ( unsigned portCHAR ) 0x0f )
+#define serINTERRUPT_IS_PENDING			( ( unsigned portCHAR ) 0x01 )
 
 /*-----------------------------------------------------------*/
 
 /*
  * The asm wrapper for the interrupt service routine.
  */
-extern void vUART_ISREntry(void);
+extern void vUART_ISREntry( void );
 
 /* 
  * The C function called from the asm wrapper. 
@@ -147,27 +148,27 @@ xComPortHandle xReturn = serHANDLE;
 			ulDivisor = configCPU_CLOCK_HZ / ulWantedClock;
 
 			/* Set the DLAB bit so we can access the divisor. */
-			U0LCR |= serDLAB;
+			U1LCR |= serDLAB;
 
 			/* Setup the divisor. */
-			U0DLL = ( unsigned portCHAR ) ( ulDivisor & ( unsigned portLONG ) 0xff );
+			U1DLL = ( unsigned portCHAR ) ( ulDivisor & ( unsigned portLONG ) 0xff );
 			ulDivisor >>= 8;
-			U0DLM = ( unsigned portCHAR ) ( ulDivisor & ( unsigned portLONG ) 0xff );
+			U1DLM = ( unsigned portCHAR ) ( ulDivisor & ( unsigned portLONG ) 0xff );
 
 			/* Turn on the FIFO's and clear the buffers. */
-			U0FCR = ( serFIFO_ON | serCLEAR_FIFO );
+			U1FCR = ( serFIFO_ON | serCLEAR_FIFO );
 
 			/* Setup transmission format. */
-			U0LCR = serNO_PARITY | ser1_STOP_BIT | ser8_BIT_CHARS;
+			U1LCR = serNO_PARITY | ser1_STOP_BIT | ser8_BIT_CHARS;
 
 			/* Setup the VIC for the UART. */
-			VICIntSelect &= ~( serU0VIC_CHANNEL_BIT );
-			VICIntEnable |= serU0VIC_CHANNEL_BIT;
+			VICIntSelect &= ~( serU1VIC_CHANNEL_BIT );
+			VICIntEnable |= serU1VIC_CHANNEL_BIT;
 			VICVectAddr1 = ( unsigned portLONG ) vUART_ISREntry;
-			VICVectCntl1 = serU0VIC_CHANNEL | serU0VIC_ENABLE;
+			VICVectCntl1 = serU1VIC_CHANNEL | serU1VIC_ENABLE;
 
 			/* Enable UART0 interrupts. */
-			U0IER |= serENABLE_INTERRUPTS;
+			U1IER |= serENABLE_INTERRUPTS;
 		}
 		portEXIT_CRITICAL();
 	}
@@ -234,7 +235,7 @@ signed portBASE_TYPE xReturn;
 			/* We wrote the character directly to the UART, so was 
 			successful. */
 			lTHREEmpty = pdFALSE;
-			U0THR = cOutChar;
+			U1THR = cOutChar;
 			xReturn = pdPASS;
 		}
 		else 
@@ -253,7 +254,7 @@ signed portBASE_TYPE xReturn;
 			{
 				xQueueReceive( xCharsForTx, &cOutChar, serNO_BLOCK );
 				lTHREEmpty = pdFALSE;
-				U0THR = cOutChar;
+				U1THR = cOutChar;
 			}
 		}
 	}
@@ -266,45 +267,48 @@ signed portBASE_TYPE xReturn;
 void vUART_ISRHandler( void )
 {
 signed portCHAR cChar;
-portBASE_TYPE xTaskWokenByRx, xTaskWokenByTx;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+unsigned portCHAR ucInterrupt;
 
-	xTaskWokenByTx = pdFALSE;
-	xTaskWokenByRx = pdFALSE;
+	ucInterrupt = U1IIR;
 
-	/* What caused the interrupt? */
-	switch( U0IIR & serINTERRUPT_SOURCE_MASK )
+	/* The interrupt pending bit is active low. */
+	while( ( ucInterrupt & serINTERRUPT_IS_PENDING ) == 0 )
 	{
-		case serSOURCE_ERROR :	/* Not handling this, but clear the interrupt. */
-								cChar = U0LSR;
-								break;
+		/* What caused the interrupt? */
+		switch( ucInterrupt & serINTERRUPT_SOURCE_MASK )
+		{
+			case serSOURCE_ERROR :	/* Not handling this, but clear the interrupt. */
+									cChar = U1LSR;
+									break;
+	
+			case serSOURCE_THRE	:	/* The THRE is empty.  If there is another
+									character in the Tx queue, send it now. */
+									if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
+									{
+										U1THR = cChar;
+									}
+									else
+									{
+										/* There are no further characters 
+										queued to send so we can indicate 
+										that the THRE is available. */
+										lTHREEmpty = pdTRUE;
+									}
+									break;
+	
+			case serSOURCE_RX_TIMEOUT :
+			case serSOURCE_RX	:	/* A character was received.  Place it in 
+									the queue of received characters. */
+									cChar = U1RBR;
+									xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+									break;
+	
+			default				:	/* There is nothing to do, leave the ISR. */
+									break;
+		}
 
-		case serSOURCE_THRE	:	/* The THRE is empty.  If there is another
-								character in the Tx queue, send it now. */
-								if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWokenByTx ) == pdTRUE )
-								{
-									U0THR = cChar;
-								}
-								else
-								{
-									/* There are no further characters 
-									queued to send so we can indicate 
-									that the THRE is available. */
-									lTHREEmpty = pdTRUE;
-								}
-								break;
-
-		case serSOURCE_RX_TIMEOUT :
-		case serSOURCE_RX	:	/* A character was received.  Place it in 
-								the queue of received characters. */
-								cChar = U0RBR;
-								if( xQueueSendFromISR( xRxedChars, &cChar, pdFALSE ) )
-								{
-									xTaskWokenByRx = pdTRUE;
-								}
-								break;
-
-		default				:	/* There is nothing to do, leave the ISR. */
-								break;
+		ucInterrupt = U1IIR;
 	}
 
 	/* Clear the ISR in the VIC. */
@@ -312,7 +316,7 @@ portBASE_TYPE xTaskWokenByRx, xTaskWokenByTx;
 
 	/* Exit the ISR.  If a task was woken by either a character being received
 	or transmitted then a context switch will occur. */
-	portEXIT_SWITCHING_ISR( ( xTaskWokenByTx || xTaskWokenByRx ) );
+	portEXIT_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

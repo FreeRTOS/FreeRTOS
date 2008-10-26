@@ -17,7 +17,7 @@ Control Register=0
 NextState0=0
 NextState1=0
 [Action Register]
-Break=3
+Break=5
 State Storage=0
 [DisAssemblyWindow]
 NumStates=_ 1
@@ -42,8 +42,7 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "Code" "{$PROJ_DIR$\main.c}.153.2@1" 1 0 0 0 "" 0 ""
-Count=1
+Count=0
 [FET]
 Clock mode=14
 Extended Clock mode=61663

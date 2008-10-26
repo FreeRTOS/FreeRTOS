@@ -54,45 +54,39 @@
 FreeRTOSConfig.h for an explanation. */
 #if configINTERRUPT_EXAMPLE_METHOD == 2
 
-.CODE
+	/* Import the functions that are called by these wrappers. */
+	IMPORT vRxISR
+	IMPORT vTxISR
 
-
-
-
+	RSEG CODE
 
 /* Wrapper for the Rx UART interrupt. */
-_vUARTRx_Wrapper
+vUARTRx_Wrapper
 
 	portSAVE_CONTEXT
-	call #_vRxISR
+	call #vRxISR
 	portRESTORE_CONTEXT
 
 /*-----------------------------------------------------------*/
 
 /* Wrapper for the Tx UART interrupt. */
-_vUARTTx_Wrapper
+vUARTTx_Wrapper
 
 	portSAVE_CONTEXT
-	call #_vTxISR
+	call #vTxISR
 	portRESTORE_CONTEXT
 
 /*-----------------------------------------------------------*/
-
-
       		
 
 	/* Place the UART ISRs in the correct vectors. */
+	ASEG
 
-	.VECTORS
-
-	.KEEP
-
-	ORG		UART1RX_VECTOR
-	DW		_vUARTRx_Wrapper
-
-	ORG		UART1TX_VECTOR
-	DW		_vUARTTx_Wrapper		
+	ORG 0xFFE0 + UART1RX_VECTOR	
+	_vRxISR_: DC16 vUARTRx_Wrapper
 		
+	ORG 0xFFE0 + UART1TX_VECTOR	
+	_vTxISR_: DC16 vUARTTx_Wrapper
 
 #endif /* configINTERRUPT_EXAMPLE_METHOD */
 

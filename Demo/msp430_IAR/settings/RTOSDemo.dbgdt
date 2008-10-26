@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log/>
+      <Build>
+        <ColumnWidth0>20</ColumnWidth0>
+        <ColumnWidth1>1006</ColumnWidth1>
+        <ColumnWidth2>268</ColumnWidth2>
+        <ColumnWidth3>67</ColumnWidth3>
+      </Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>304</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+        
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><MixedMode>1</MixedMode><CodeCovEnabled>0</CodeCovEnabled><CodeCovShow>0</CodeCovShow></Disassembly>
+    <Register><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Register></Static>
+    <Windows>
+      
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-22310-31641</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-21787-31651</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-3522-7304</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-290-31644</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode><ExpandedNode>RTOSDemo/FreeRTOS Source</ExpandedNode><ExpandedNode>RTOSDemo/Output</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\Devtools\IAR Systems\Embedded Workbench 4.0\430\INC\msp430x44x.h</Filename><XPos>0</XPos><YPos>1272</YPos><SelStart>66620</SelStart><SelEnd>66620</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\Debug\List\RTOSDemo.map</Filename><XPos>0</XPos><YPos>1286</YPos><SelStart>4121</SelStart><SelEnd>4121</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\portable\IAR\MSP430\port.c</Filename><XPos>0</XPos><YPos>119</YPos><SelStart>5394</SelStart><SelEnd>5394</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\portable\IAR\MSP430\portext.s43</Filename><XPos>0</XPos><YPos>67</YPos><SelStart>2862</SelStart><SelEnd>2862</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\portable\IAR\MSP430\portmacro.h</Filename><XPos>0</XPos><YPos>81</YPos><SelStart>4509</SelStart><SelEnd>4509</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\serial\serial.c</Filename><XPos>0</XPos><YPos>127</YPos><SelStart>4941</SelStart><SelEnd>4941</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\Common\Minimal\comtest.c</Filename><XPos>0</XPos><YPos>195</YPos><SelStart>8885</SelStart><SelEnd>8885</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\main.c</Filename><XPos>0</XPos><YPos>301</YPos><SelStart>11204</SelStart><SelEnd>11206</SelEnd></Tab><ActiveTab>7</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\queue.c</Filename><XPos>0</XPos><YPos>491</YPos><SelStart>19590</SelStart><SelEnd>19590</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\Common\Minimal\PollQ.c</Filename><XPos>0</XPos><YPos>132</YPos><SelStart>5908</SelStart><SelEnd>5908</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\tasks.c</Filename><XPos>0</XPos><YPos>1837</YPos><SelStart>57274</SelStart><SelEnd>57309</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>95</YPos><SelStart>4581</SelStart><SelEnd>4581</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0088f570><key>iaridepm.enu1</key></Toolbar-0088f570><Toolbar-0317ee28><key>debuggergui.enu1</key></Toolbar-0317ee28></Sizes></Row0><Row1><Sizes><Toolbar-0317ece8><key>430fet1</key></Toolbar-0317ece8></Sizes></Row1><Row2><Sizes/></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6><Row7><Sizes/></Row7><Row8><Sizes/></Row8><Row9><Sizes/></Row9><Row10><Sizes/></Row10><Row11><Sizes/></Row11><Row12><Sizes/></Row12></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>644</Bottom><Right>378</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>271429</sizeVertCX><sizeVertCY>657841</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>270</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>272</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>276986</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

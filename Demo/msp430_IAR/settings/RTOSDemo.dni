@@ -17,7 +17,7 @@ Control Register=0
 NextState0=0
 NextState1=0
 [Action Register]
-Break=5
+Break=3
 State Storage=0
 [DisAssemblyWindow]
 NumStates=_ 1

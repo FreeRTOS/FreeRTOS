@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-  <fileVersion>1</fileVersion>
+  <fileVersion>2</fileVersion>
   <configuration>
     <name>Debug</name>
     <toolchain>
@@ -10,9 +10,9 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>5</archiveVersion>
+      <archiveVersion>7</archiveVersion>
       <data>
-        <version>21</version>
+        <version>24</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -87,22 +87,9 @@
           <state>No specifier a or A, no specifier n, no float or long long, no flags.</state>
         </option>
         <option>
-          <name>GHeapSize</name>
-          <state>8</state>
-        </option>
-        <option>
-          <name>GStackSize</name>
-          <state>80</state>
-        </option>
-        <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
           <state>1</state>
-        </option>
-        <option>
-          <name>GeneralMisraRules</name>
-          <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -116,13 +103,38 @@
           <name>OGChipSelectMenu</name>
           <state>MSP430F449	MSP430F449</state>
         </option>
+        <option>
+          <name>GStackHeapOverride</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GStackSize2</name>
+          <state>80</state>
+        </option>
+        <option>
+          <name>GHeapSize2</name>
+          <state>8</state>
+        </option>
+        <option>
+          <name>RadioDataModelType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GHeap20Size</name>
+          <state>80</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules98</name>
+          <version>0</version>
+          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICC430</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>24</version>
+        <version>27</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -188,15 +200,6 @@
         <option>
           <name>CCRequirePrototypes</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>2</version>
-          <state>2</state>
         </option>
         <option>
           <name>CCAllowList</name>
@@ -268,15 +271,6 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>2</version>
-          <state>2</state>
-        </option>
-        <option>
           <name>CPIC</name>
           <state>1</state>
         </option>
@@ -320,11 +314,6 @@
           <state>$TOOLKIT_DIR$\INC\DLIB\</state>
         </option>
         <option>
-          <name>CompilerMisraRules</name>
-          <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-        </option>
-        <option>
           <name>CompilerMisraOverride</name>
           <state>0</state>
         </option>
@@ -340,13 +329,39 @@
           <name>Save20bit</name>
           <state>0</state>
         </option>
+        <option>
+          <name>CompilerDataModel</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CInput</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules98</name>
+          <version>0</version>
+          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>A430</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>12</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -451,12 +466,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>AIncludes</name>
-          <state>$TOOLKIT_DIR$\INC\</state>
-          <state>$PROJ_DIR$</state>
-          <state>$PROJ_DIR$\..\..\Source\include</state>
-        </option>
-        <option>
           <name>ADebug</name>
           <state>1</state>
         </option>
@@ -481,10 +490,6 @@
           <state>$FILE_BNAME$.r43</state>
         </option>
         <option>
-          <name>IncExterns</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>AMultibyteSupport</name>
           <state>0</state>
         </option>
@@ -497,20 +502,21 @@
           <state></state>
         </option>
         <option>
-          <name>AOverrideModuleTypeDefault</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ARadioModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ARadioModuleTypeSlave</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>OA1M</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>AIgnoreStdInclude</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AStdIncludes</name>
+          <state>$TOOLKIT_DIR$\INC\</state>
+        </option>
+        <option>
+          <name>AUserIncludes</name>
+          <state>$PROJ_DIR$</state>
+          <state>$PROJ_DIR$\..\..\Source\include</state>
         </option>
       </data>
     </settings>
@@ -539,7 +545,7 @@
       <name>XLINK</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>21</version>
+        <version>22</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -557,7 +563,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
@@ -751,7 +757,7 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
@@ -810,6 +816,10 @@
           <name>CrcInitialValue</name>
           <state>0x0</state>
         </option>
+        <option>
+          <name>XLibraryHeap20</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -847,9 +857,9 @@
     <debug>0</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>5</archiveVersion>
+      <archiveVersion>7</archiveVersion>
       <data>
-        <version>21</version>
+        <version>24</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -924,22 +934,9 @@
           <state>Full formatting.</state>
         </option>
         <option>
-          <name>GHeapSize</name>
-          <state>80</state>
-        </option>
-        <option>
-          <name>GStackSize</name>
-          <state>80</state>
-        </option>
-        <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
           <state>4</state>
-        </option>
-        <option>
-          <name>GeneralMisraRules</name>
-          <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -953,13 +950,38 @@
           <name>OGChipSelectMenu</name>
           <state>MSP430F149	MSP430F149</state>
         </option>
+        <option>
+          <name>GStackHeapOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GStackSize2</name>
+          <state>80</state>
+        </option>
+        <option>
+          <name>GHeapSize2</name>
+          <state>80</state>
+        </option>
+        <option>
+          <name>RadioDataModelType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GHeap20Size</name>
+          <state>###Uninitialized###</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules98</name>
+          <version>0</version>
+          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICC430</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>24</version>
+        <version>27</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1025,15 +1047,6 @@
         <option>
           <name>CCRequirePrototypes</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>CCOptSizeSpeed</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimization</name>
-          <version>2</version>
-          <state>4</state>
         </option>
         <option>
           <name>CCAllowList</name>
@@ -1105,15 +1118,6 @@
           <state>1</state>
         </option>
         <option>
-          <name>CCOptSizeSpeedSlave</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCOptimizationSlave</name>
-          <version>2</version>
-          <state>4</state>
-        </option>
-        <option>
           <name>CPIC</name>
           <state>1</state>
         </option>
@@ -1154,11 +1158,6 @@
           <state>###Uninitialized###</state>
         </option>
         <option>
-          <name>CompilerMisraRules</name>
-          <version>0</version>
-          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
-        </option>
-        <option>
           <name>CompilerMisraOverride</name>
           <state>0</state>
         </option>
@@ -1174,13 +1173,39 @@
           <name>Save20bit</name>
           <state>0</state>
         </option>
+        <option>
+          <name>CompilerDataModel</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCOptLevel</name>
+          <state>3</state>
+        </option>
+        <option>
+          <name>CCOptStrategy</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCOptLevelSlave</name>
+          <state>3</state>
+        </option>
+        <option>
+          <name>CInput</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules98</name>
+          <version>0</version>
+          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>A430</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>12</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1285,10 +1310,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>AIncludes</name>
-          <state>###Uninitialized###</state>
-        </option>
-        <option>
           <name>ADebug</name>
           <state>0</state>
         </option>
@@ -1313,10 +1334,6 @@
           <state></state>
         </option>
         <option>
-          <name>IncExterns</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>AMultibyteSupport</name>
           <state>0</state>
         </option>
@@ -1329,20 +1346,20 @@
           <state></state>
         </option>
         <option>
-          <name>AOverrideModuleTypeDefault</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ARadioModuleType</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ARadioModuleTypeSlave</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>OA1M</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>AIgnoreStdInclude</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AStdIncludes</name>
+          <state>$TOOLKIT_DIR$\INC\</state>
+        </option>
+        <option>
+          <name>AUserIncludes</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -1371,7 +1388,7 @@
       <name>XLINK</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>21</version>
+        <version>22</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1389,7 +1406,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
@@ -1583,7 +1600,7 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>7</version>
+          <version>8</version>
           <state>2</state>
         </option>
         <option>
@@ -1641,6 +1658,10 @@
         <option>
           <name>CrcInitialValue</name>
           <state>0x0</state>
+        </option>
+        <option>
+          <name>XLibraryHeap20</name>
+          <state>1</state>
         </option>
       </data>
     </settings>

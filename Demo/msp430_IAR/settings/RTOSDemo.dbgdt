@@ -28,7 +28,7 @@
       
       
       
-    <Wnd3>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-22310-31641</Identity>
@@ -44,7 +44,7 @@
           </Tab>
         <Tab><Identity>TabID-3522-7304</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-290-31644</Identity>
@@ -56,20 +56,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-452-589</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\main.c</Filename><XPos>0</XPos><YPos>142</YPos><SelStart>6347</SelStart><SelEnd>6347</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>72</YPos><SelStart>4168</SelStart><SelEnd>4168</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\serial\serialASM.s43</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>3209</SelStart><SelEnd>3209</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\portable\IAR\MSP430\portext.s43</Filename><XPos>0</XPos><YPos>54</YPos><SelStart>2743</SelStart><SelEnd>2743</SelEnd></Tab><ActiveTab>3</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\serial\serial.c</Filename><XPos>0</XPos><YPos>271</YPos><SelStart>9596</SelStart><SelEnd>9596</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\tasks.c</Filename><XPos>0</XPos><YPos>971</YPos><SelStart>32358</SelStart><SelEnd>32358</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\msp430_IAR\main.c</Filename><XPos>0</XPos><YPos>94</YPos><SelStart>6347</SelStart><SelEnd>6347</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy2\Source\tasks.c</Filename><XPos>0</XPos><YPos>790</YPos><SelStart>27298</SelStart><SelEnd>27310</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0088f570><key>iaridepm.enu1</key></Toolbar-0088f570><Toolbar-01b3c388><key>debuggergui.enu1</key></Toolbar-01b3c388></Sizes></Row0><Row1><Sizes><Toolbar-019e7308><key>430fet1</key></Toolbar-019e7308></Sizes></Row1><Row2><Sizes/></Row2><Row3><Sizes/></Row3></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>644</Bottom><Right>378</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>271429</sizeVertCX><sizeVertCY>657841</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>644</Bottom><Right>198</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>657841</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>270</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>272</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>276986</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0088f570><key>iaridepm.enu1</key></Toolbar-0088f570><Toolbar-01b6a7a8><key>debuggergui.enu1</key></Toolbar-01b6a7a8></Sizes></Row0><Row1><Sizes><Toolbar-01b6a668><key>430fet1</key></Toolbar-01b6a668></Sizes></Row1></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>644</Bottom><Right>378</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>271429</sizeVertCX><sizeVertCY>657841</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>270</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>272</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>276986</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd0></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

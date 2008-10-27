@@ -22,12 +22,13 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\430\bin\430proc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\430\bin\430fet.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 4.0\430\bin\<libsupport_plugin>" --backend -B "-p" "C:\Devtools\IAR Systems\Embedded Workbench 4.0\430\config\MSP430F449.ddf" "-d" "fet" "--verify_all" "--erase_main_and_info" "--derivative" "MSP430F449" "-lpt1" "--connection" "parallel_port" "--allow_locked_flash_access" "--protocol" "4wire" "--eem" "EMEX_HIGH" 
+"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\430\bin\430proc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\430\bin\430fet.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\430\bin\<libsupport_plugin>" --backend -B "-p" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\430\config\MSP430F449.ddf" "-d" "fet" "--verify_all" "--erase_main_and_info" "--derivative" "MSP430F449" "-lpt1" "--allow_locked_flash_access" "--protocol" "4wire" "--eem" "EMEX_HIGH" "--connection" "ti_lpt" 
 
 
 @REM Loaded plugins:
 @REM    430libsupport.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\430\plugins\lcd\lcd.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\CodeCoverage\CodeCoverage.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\Profiling\Profiling.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 4.0\common\plugins\stack\stack.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\430\plugins\lcd\lcd.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\CodeCoverage\CodeCoverage.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\Profiling\Profiling.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\stack\stack.dll
+@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\SymList\SymList.dll

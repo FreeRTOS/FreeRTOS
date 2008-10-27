@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-  <fileVersion>1</fileVersion>
+  <fileVersion>2</fileVersion>
   <configuration>
     <name>Debug</name>
     <toolchain>
@@ -12,7 +12,7 @@
       <name>C-SPY</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -75,13 +75,17 @@
           <name>ProcMSP430X</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CompilerDataModel</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>11</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -109,10 +113,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>VirtualBreakpointP7</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>ExitBreakpointP7</name>
           <state>0</state>
         </option>
@@ -131,10 +131,6 @@
         <option>
           <name>ParallelPortP7</name>
           <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ConnectioonP7</name>
           <state>0</state>
         </option>
         <option>
@@ -177,6 +173,31 @@
           <name>NeedLockedFlashAccess</name>
           <state>1</state>
         </option>
+        <option>
+          <name>UsbComPort</name>
+          <state>Automatic</state>
+        </option>
+        <option>
+          <name>FetConnection</name>
+          <version>1</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>SoftwareBreakpointEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RadioSoftwareBreakpointType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>TargetSettlingtime</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AllowAccessToBSL</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -206,6 +227,10 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
@@ -221,6 +246,10 @@
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
     </debuggerPlugins>
   </configuration>
   <configuration>
@@ -233,7 +262,7 @@
       <name>C-SPY</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -296,13 +325,17 @@
           <name>ProcMSP430X</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CompilerDataModel</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>11</version>
+        <version>14</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -330,10 +363,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>VirtualBreakpointP7</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>ExitBreakpointP7</name>
           <state>0</state>
         </option>
@@ -352,10 +381,6 @@
         <option>
           <name>ParallelPortP7</name>
           <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>ConnectioonP7</name>
           <state>0</state>
         </option>
         <option>
@@ -398,6 +423,31 @@
           <name>NeedLockedFlashAccess</name>
           <state>1</state>
         </option>
+        <option>
+          <name>UsbComPort</name>
+          <state>Automatic</state>
+        </option>
+        <option>
+          <name>FetConnection</name>
+          <version>1</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>SoftwareBreakpointEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RadioSoftwareBreakpointType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>TargetSettlingtime</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AllowAccessToBSL</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -427,6 +477,10 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
@@ -440,6 +494,10 @@
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>

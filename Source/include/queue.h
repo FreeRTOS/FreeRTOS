@@ -151,9 +151,9 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  *
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for space to become available on the queue, should it already
- * be full.  The call will return immediately if this is set to 0.  The
- * time is defined in tick periods so the constant portTICK_RATE_MS
- * should be used to convert to real time if this is required.
+ * be full.  The call will return immediately if this is set to 0 and the
+ * queue is full.  The time is defined in tick periods so the constant 
+ * portTICK_RATE_MS should be used to convert to real time if this is required.
  *
  * @return pdTRUE if the item was successfully posted, otherwise errQUEUE_FULL.
  *
@@ -233,9 +233,9 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  *
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for space to become available on the queue, should it already
- * be full.  The call will return immediately if this is set to 0.  The
- * time is defined in tick periods so the constant portTICK_RATE_MS
- * should be used to convert to real time if this is required.
+ * be full.  The call will return immediately if this is set to 0 and the queue
+ * is full.  The  time is defined in tick periods so the constant 
+ * portTICK_RATE_MS should be used to convert to real time if this is required.
  *
  * @return pdTRUE if the item was successfully posted, otherwise errQUEUE_FULL.
  *
@@ -317,9 +317,9 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  *
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for space to become available on the queue, should it already
- * be full.  The call will return immediately if this is set to 0.  The
- * time is defined in tick periods so the constant portTICK_RATE_MS
- * should be used to convert to real time if this is required.
+ * be full.  The call will return immediately if this is set to 0 and the
+ * queue is full.  The time is defined in tick periods so the constant 
+ * portTICK_RATE_MS should be used to convert to real time if this is required.
  *
  * @return pdTRUE if the item was successfully posted, otherwise errQUEUE_FULL.
  *
@@ -401,9 +401,9 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  *
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for space to become available on the queue, should it already
- * be full.  The call will return immediately if this is set to 0.  The
- * time is defined in tick periods so the constant portTICK_RATE_MS
- * should be used to convert to real time if this is required.
+ * be full.  The call will return immediately if this is set to 0 and the
+ * queue is full.  The time is defined in tick periods so the constant 
+ * portTICK_RATE_MS should be used to convert to real time if this is required.
  *
  * @param xCopyPosition Can take the value queueSEND_TO_BACK to place the
  * item at the back of the queue, or queueSEND_TO_FRONT to place the item
@@ -492,6 +492,8 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * waiting for an item to receive should the queue be empty at the time
  * of the call.    The time is defined in tick periods so the constant
  * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * xQueuePeek() will return immediately if xTicksToWait is 0 and the queue
+ * is empty.
  *
  * @return pdTRUE if an item was successfully received from the queue,
  * otherwise pdFALSE.
@@ -581,8 +583,10 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  *
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for an item to receive should the queue be empty at the time
- * of the call.    The time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * of the call.    xQueueReceive() will return immediately if xTicksToWait
+ * is zero and the queue is empty.  The time is defined in tick periods so the 
+ * constant portTICK_RATE_MS should be used to convert to real time if this is 
+ * required.
  *
  * @return pdTRUE if an item was successfully received from the queue,
  * otherwise pdFALSE.
@@ -675,6 +679,8 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * waiting for an item to receive should the queue be empty at the time
  * of the call.    The time is defined in tick periods so the constant
  * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * xQueueGenericReceive() will return immediately if the queue is empty and
+ * xTicksToWait is 0.
  *
  * @param xJustPeek When set to true, the item received from the queue is not
  * actually removed from the queue - meaning a subsequent call to

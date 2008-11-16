@@ -35,7 +35,7 @@
 #include "semphr.h"
 #include "task.h"
 
-/* Demo includes. */
+/* Hardware includes. */
 #include "fecbd.h"
 #include "mii.h"
 #include "eth_phy.h"
@@ -45,9 +45,6 @@
 #include "uip.h"
 #include "uip_arp.h"
 
-#define MCF_FEC_MSCR_MII_SPEED(x)            	(((x)&0x3F)<<0x1)
-#define MCF_FEC_RCR_MAX_FL(x)                	(((x)&0x7FF)<<0x10)
-
 /* Delay between polling the PHY to see if a link has been established. */
 #define fecLINK_DELAY							( 500 / portTICK_RATE_MS )
 
@@ -55,15 +52,12 @@
 #define fecMII_DELAY							( 10 / portTICK_RATE_MS )
 #define fecMAX_POLLS							( 20 )
 
-/* Delay between looking for incoming packets.  In ideal world this would be
-infinite. */
-#define netifBLOCK_TIME_WAITING_FOR_INPUT		fecLINK_DELAY
-
 /* Constants used to delay while waiting for a tx descriptor to be free. */
-#define fecTX_BUFFER_WAIT						( 200 / portTICK_RATE_MS )
+#define fecMAX_WAIT_FOR_TX_BUFFER						( 200 / portTICK_RATE_MS )
 
-/* We only use a single Tx descriptor - the duplicate send silicon errata
-actually assists in this case. */
+/* We only use a single Tx descriptor which can lead to Txed packets being sent
+twice (due to a bug in the FEC silicon).  However, in this case the bug is used
+to our advantage in that it means the uip-split mechanism is not required. */
 #define fecNUM_FEC_TX_BUFFERS					( 1 )
 #define fecTX_BUFFER_TO_USE						( 0 )
 /*-----------------------------------------------------------*/
@@ -72,7 +66,7 @@ actually assists in this case. */
 xSemaphoreHandle xFECSemaphore = NULL, xTxSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
-point to one of the Rx buffers. */
+point to one of the Rx buffers to effect a zero copy policy. */
 unsigned portCHAR *uip_buf;
 
 /* The DMA descriptors.  This is a char array to allow us to align it correctly. */
@@ -81,17 +75,27 @@ static unsigned portCHAR xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_BUFFERS
 static FECBD *xFECTxDescriptors;
 static FECBD *xFECRxDescriptors;
 
-/* The DMA buffers.  These are char arrays to allow them to be alligned correctly. */
+/* The DMA buffers.  These are char arrays to allow them to be aligned correctly. */
 static unsigned portCHAR ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
 static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxIndexToBufferOwner = 0;
 
 /*-----------------------------------------------------------*/
 
+/* 
+ * Enable all the required interrupts in the FEC and in the interrupt controller. 
+ */
 static void prvEnableFECInterrupts( void );
+
+/*
+ * Reset the FEC if we get into an unrecoverable state.
+ */
 static void prvResetFEC( portBASE_TYPE xCalledFromISR );
 
 /********************************************************************/
+
 /*
+ * FUNCTION ADAPTED FROM FREESCALE SUPPLIED SOURCE
+ * 
  * Write a value to a PHY's MII register.
  *
  * Parameters:
@@ -157,6 +161,8 @@ uint32 eimr;
 
 /********************************************************************/
 /*
+ * FUNCTION ADAPTED FROM FREESCALE SUPPLIED SOURCE
+ *
  * Read a value from a PHY's MII register.
  *
  * Parameters:
@@ -225,6 +231,8 @@ uint32 eimr;
 
 /********************************************************************/
 /*
+ * FUNCTION ADAPTED FROM FREESCALE SUPPLIED SOURCE
+ *
  * Generate the hash table settings for the given address
  *
  * Parameters:
@@ -264,6 +272,8 @@ int i, j;
 
 /********************************************************************/
 /*
+ * FUNCTION ADAPTED FROM FREESCALE SUPPLIED SOURCE
+ *
  * Set the Physical (Hardware) Address and the Individual Address
  * Hash in the selected FEC
  *
@@ -303,6 +313,7 @@ static void prvInitialiseFECBuffers( void )
 unsigned portBASE_TYPE ux;
 unsigned portCHAR *pcBufPointer;
 
+	/* Correctly align the Tx descriptor pointer. */
 	pcBufPointer = &( xFECTxDescriptors_unaligned[ 0 ] );
 	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
 	{
@@ -311,6 +322,7 @@ unsigned portCHAR *pcBufPointer;
 
 	xFECTxDescriptors = ( FECBD * ) pcBufPointer;
 
+	/* Likewise the Rx descriptor pointer. */
 	pcBufPointer = &( xFECRxDescriptors_unaligned[ 0 ] );
 	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
 	{
@@ -320,9 +332,9 @@ unsigned portCHAR *pcBufPointer;
 	xFECRxDescriptors = ( FECBD * ) pcBufPointer;
 
 
-	/* Setup the buffers and descriptors.  The data member does not point
-	anywhere yet as there is not yet anything to send and a zero copy policy
-	is used. */
+	/* Setup the Tx buffers and descriptors.  There is no separate Tx buffer
+	to point to (the Rx buffers are actually used) so the data member is
+	set to NULL for now. */
 	for( ux = 0; ux < fecNUM_FEC_TX_BUFFERS; ux++ )
 	{
 		xFECTxDescriptors[ ux ].status = TX_BD_TC;
@@ -330,6 +342,8 @@ unsigned portCHAR *pcBufPointer;
 		xFECTxDescriptors[ ux ].length = 0;
 	}
 
+	/* Setup the Rx buffers and descriptors, having first ensured correct
+	alignment. */
 	pcBufPointer = &( ucFECRxBuffers[ 0 ] );
 	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
 	{
@@ -352,10 +366,12 @@ unsigned portCHAR *pcBufPointer;
 }
 /*-----------------------------------------------------------*/
 
-void vInitFEC( void )
+void vFECInit( void )
 {
 unsigned portSHORT usData;
 struct uip_eth_addr xAddr;
+
+/* The MAC address is set at the foot of FreeRTOSConfig.h. */
 const unsigned portCHAR ucMACAddress[6] =
 {
 	configMAC_0, configMAC_1,configMAC_2, configMAC_3, configMAC_4, configMAC_5
@@ -363,8 +379,12 @@ const unsigned portCHAR ucMACAddress[6] =
 
 	/* Create the semaphore used by the ISR to wake the uIP task. */
 	vSemaphoreCreateBinary( xFECSemaphore );
+
+	/* Create the semaphore used to unblock any tasks that might be waiting
+	for a Tx descriptor. */
 	vSemaphoreCreateBinary( xTxSemaphore );
 
+	/* Initialise all the buffers and descriptors used by the DMA. */
 	prvInitialiseFECBuffers();
 
 	for( usData = 0; usData < 6; usData++ )
@@ -498,6 +518,7 @@ const unsigned portCHAR ucMACAddress[6] =
 
 	prvEnableFECInterrupts();
 
+	/* Finally... enable. */
 	MCF_FEC_ECR = MCF_FEC_ECR_ETHER_EN;
 	MCF_FEC_RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;
 }
@@ -512,6 +533,7 @@ unsigned portBASE_TYPE ux;
 	#error configFEC_INTERRUPT_PRIORITY must be less than or equal to configMAX_SYSCALL_INTERRUPT_PRIORITY
 #endif
 
+	/* Set the priority of each of the FEC interrupts. */
 	for( ux = uxFirstFECVector; ux <= uxLastFECVector; ux++ )
 	{
 		MCF_INTC0_ICR( ux ) = MCF_INTC_ICR_IL( configFEC_INTERRUPT_PRIORITY );
@@ -536,12 +558,15 @@ static void prvResetFEC( portBASE_TYPE xCalledFromISR )
 {
 portBASE_TYPE x;
 
+	/* A critical section is used unless this function is being called from
+	an ISR. */
 	if( xCalledFromISR == pdFALSE )
 	{
 		taskENTER_CRITICAL();
 	}
 
 	{
+		/* Reset all buffers and descriptors. */
 		prvInitialiseFECBuffers();
 
 		/* Set the Reset bit and clear the Enable bit */
@@ -553,6 +578,7 @@ portBASE_TYPE x;
 			asm( "NOP" );
 		}
 
+		/* Re-enable. */
 		MCF_FEC_ECR = MCF_FEC_ECR_ETHER_EN;
 		MCF_FEC_RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;
 	}
@@ -564,7 +590,7 @@ portBASE_TYPE x;
 }
 /*-----------------------------------------------------------*/
 
-unsigned short usGetFECRxData( void )
+unsigned short usFECGetRxedData( void )
 {
 unsigned portSHORT usLen;
 
@@ -584,7 +610,7 @@ unsigned portSHORT usLen;
 }
 /*-----------------------------------------------------------*/
 
-void vDiscardRxData( void )
+void vFECRxProcessingCompleted( void )
 {
 	/* Free the descriptor as the buffer it points to is no longer in use. */
 	xFECRxDescriptors[ uxNextRxBuffer ].status |= RX_BD_E;
@@ -597,10 +623,10 @@ void vDiscardRxData( void )
 }
 /*-----------------------------------------------------------*/
 
-void vSendBufferToFEC( void )
+void vFECSendData( void )
 {
 	/* Ensure no Tx frames are outstanding. */
-	if( xSemaphoreTake( xTxSemaphore, fecTX_BUFFER_WAIT ) == pdPASS )
+	if( xSemaphoreTake( xTxSemaphore, fecMAX_WAIT_FOR_TX_BUFFER ) == pdPASS )
 	{
 		/* Get a DMA buffer into which we can write the data to send. */
 		if( xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].status & TX_BD_R )
@@ -615,7 +641,7 @@ void vSendBufferToFEC( void )
 		else
 		{
 			/* Setup the buffer descriptor for transmission.  The data being
-			sent is actually stored in one of the Rx descripter buffers,
+			sent is actually stored in one of the Rx descriptor buffers,
 			pointed to by uip_buf. */
 			xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].length = uip_len;
 			xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].status |= ( TX_BD_R | TX_BD_L );
@@ -637,7 +663,8 @@ void vSendBufferToFEC( void )
 	}
 	else
 	{
-		vDiscardRxData();
+		/* Gave up waiting.  Free the buffer back to the DMA. */
+		vFECRxProcessingCompleted();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -647,6 +674,10 @@ void vFEC_ISR( void )
 unsigned portLONG ulEvent;
 portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
 
+	/* This handler is called in response to any of the many separate FEC
+	interrupt. */
+
+	/* Find the cause of the interrupt, then clear the interrupt. */
 	ulEvent = MCF_FEC_EIR & MCF_FEC_EIMR;
 	MCF_FEC_EIR = ulEvent;
 
@@ -675,6 +706,8 @@ portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
+/* Install the many different interrupt vectors, all of which call the same
+handler function. */
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_87( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_88( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_89( void ) { vFEC_ISR(); }

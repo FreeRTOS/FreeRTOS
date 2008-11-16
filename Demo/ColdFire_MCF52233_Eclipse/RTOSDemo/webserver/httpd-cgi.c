@@ -265,6 +265,33 @@ static PT_THREAD(led_io(struct httpd_state *s, char *ptr))
   PSOCK_GENERATOR_SEND(&s->sout, generate_io_state, NULL);
   PSOCK_END(&s->sout);
 }
+/*---------------------------------------------------------------------------*/
+
+void vApplicationProcessFormInput( char *pcInputString )
+{
+char *c = pcInputString;
+
+	/* Process the form input sent by the IO page of the served HTML. 
+	This just contains an instruction to either turn on or off the LED. */
+	while( ( *c != '?' ) && ( *c != 0x00 ) )
+	{
+		c++;
+	}
+
+    if( *c == '?' )
+    {
+    	c++;
+		if( strcmp( c, "LED0=1" ) == 0 )
+		{
+			vParTestSetLED( 3, 1 );
+		}
+		else
+		{
+			vParTestSetLED( 3, 0 );
+		}
+    }
+}
+
 
 /** @} */
 

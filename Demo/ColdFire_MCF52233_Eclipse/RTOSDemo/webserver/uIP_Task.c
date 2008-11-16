@@ -29,6 +29,11 @@
 	port sections of the online documentation.
 	***************************************************************************
 */
+
+
+/* Task that controls the uIP TCP/IP stack. */
+
+
 /* Standard includes. */
 #include <string.h>
 
@@ -48,22 +53,11 @@
 #include "FEC.h"
 #include "partest.h"
 
-//struct timer {
-//  clock_time_t start;
-//  clock_time_t interval;
-//};
-
 
 /*-----------------------------------------------------------*/
 
-/* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT    100
-
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
-
-/* Standard constant. */
-#define uipTOTAL_FRAME_HEADER_SIZE	54
 
 /*-----------------------------------------------------------*/
 
@@ -72,6 +66,9 @@
  */
 void clock_init( void );
 clock_time_t clock_time( void );
+extern void timer_set(struct timer *t, clock_time_t interval);
+extern int timer_expired(struct timer *t);
+extern void timer_reset(struct timer *t);
 
 /*-----------------------------------------------------------*/
 
@@ -92,19 +89,13 @@ clock_time_t clock_time( void )
 {
 	return xTaskGetTickCount();
 }
-extern void timer_set(struct timer *t, clock_time_t interval);
-extern int timer_expired(struct timer *t);
-extern void timer_reset(struct timer *t);
-
-
-
+/*-----------------------------------------------------------*/
 
 void vuIP_Task( void *pvParameters )
 {
 portBASE_TYPE i;
 uip_ipaddr_t xIPAddr;
 struct timer periodic_timer, arp_timer;
-extern void ( vEMAC_ISR )( void );
 
 	/* To prevent compiler warnings. */
 	( void ) pvParameters;
@@ -115,14 +106,17 @@ extern void ( vEMAC_ISR )( void );
 	uip_init();
 	uip_ipaddr( xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
 	uip_sethostaddr( xIPAddr );
+
+	/* Initialise the WEB server. */
 	httpd_init();
 
-	vInitFEC();
+	/* Initialise the Ethernet controller peripheral. */
+	vFECInit();
 
 	for( ;; )
 	{
 		/* Is there received data ready to be processed? */
-		uip_len = usGetFECRxData();
+		uip_len = usFECGetRxedData();
 
 		if( uip_len > 0 )
 		{
@@ -139,11 +133,13 @@ extern void ( vEMAC_ISR )( void );
 				if( uip_len > 0 )
 				{
 					uip_arp_out();
-					vSendBufferToFEC();
+					vFECSendData();
 				}
 				else
 				{
-					vDiscardRxData();
+					/* If we are not sending data then let the FEC driver know
+					the buffer is no longer required. */
+					vFECRxProcessingCompleted();
 				}
 			}
 			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
@@ -155,16 +151,20 @@ extern void ( vEMAC_ISR )( void );
 				uip_len is set to a value > 0. */
 				if( uip_len > 0 )
 				{
-					vSendBufferToFEC();
+					vFECSendData();
 				}
 				else
 				{
-					vDiscardRxData();
+					/* If we are not sending data then let the FEC driver know
+					the buffer is no longer required. */
+					vFECRxProcessingCompleted();
 				}
 			}
 			else
 			{
-				vDiscardRxData();
+				/* If we are not sending data then let the FEC driver know
+				the buffer is no longer required. */
+				vFECRxProcessingCompleted();
 			}
 		}
 		else
@@ -182,7 +182,7 @@ extern void ( vEMAC_ISR )( void );
 					if( uip_len > 0 )
 					{
 						uip_arp_out();
-						vSendBufferToFEC();
+						vFECSendData();
 					}
 				}
 
@@ -205,30 +205,6 @@ extern void ( vEMAC_ISR )( void );
 	}
 }
 /*-----------------------------------------------------------*/
-
-void vApplicationProcessFormInput( portCHAR *pcInputString )
-{
-char *c = pcInputString;
-
-	/* Process the form input sent by the IO page of the served HTML. */
-	while( ( *c != '?' ) && ( *c != 0x00 ) )
-	{
-		c++;
-	}
-
-    if( *c == '?' )
-    {
-    	c++;
-		if( strcmp( c, "LED0=1" ) == 0 )
-		{
-			vParTestSetLED( 3, 1 );
-		}
-		else
-		{
-			vParTestSetLED( 3, 0 );
-		}
-    }
-}
 
 
 

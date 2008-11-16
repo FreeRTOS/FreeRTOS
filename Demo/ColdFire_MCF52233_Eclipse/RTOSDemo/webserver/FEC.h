@@ -70,10 +70,10 @@ typedef struct {
     int rfsw_tr;    /* RFSW Truncated          */
 } FEC_EVENT_LOG;
 
-void vInitFEC( void );
-unsigned short usGetFECRxData( void );
-void vSendBufferToFEC( void );
-void vDiscardRxData( void );
+void vFECInit( void );
+unsigned short usFECGetRxedData( void );
+void vFECSendData( void );
+void vFECRxProcessingCompleted( void );
 
 /********************************************************************/
 

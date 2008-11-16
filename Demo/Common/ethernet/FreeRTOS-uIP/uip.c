@@ -2136,6 +2136,7 @@ void uip_send( const void *data, int len )
 /*---------------------------------------------------------------------------*/
 int uip_fast_send( int xARP )
 {
+	( void ) xARP;
 	#if NOT_YET_COMPLETE
 
 	u16_t		tcplen, len1 = 0, uiAccumulatedLen = 0, len_previous = 0, split_len;

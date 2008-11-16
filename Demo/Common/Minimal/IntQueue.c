@@ -131,7 +131,7 @@ from within the interrupts. */
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();															\
 		{																													\
 			uxValueForNormallyFullQueue++;																					\
-			xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ); 	\			
+			xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ); 	\
 		}																													\
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
@@ -419,7 +419,7 @@ portBASE_TYPE xQueueStatus;
 			portENTER_CRITICAL();
 			{
 				uxValueForNormallyEmptyQueue++;
-				uxValue = uxValueForNormallyEmptyQueue;				
+				uxValue = uxValueForNormallyEmptyQueue;
 			}
 			portEXIT_CRITICAL();
 
@@ -449,7 +449,7 @@ portBASE_TYPE xQueueStatus;
 		portENTER_CRITICAL();
 		{
 			uxValueForNormallyFullQueue++;
-			uxValueToTx = uxValueForNormallyFullQueue;			
+			uxValueToTx = uxValueForNormallyFullQueue;
 		}
 		portEXIT_CRITICAL();
 
@@ -461,7 +461,7 @@ portBASE_TYPE xQueueStatus;
 		portENTER_CRITICAL();
 		{
 			uxValueForNormallyFullQueue++;
-			uxValueToTx = uxValueForNormallyFullQueue;			
+			uxValueToTx = uxValueForNormallyFullQueue;
 		}
 		portEXIT_CRITICAL();
 
@@ -539,7 +539,7 @@ portBASE_TYPE xQueueStatus;
 		portENTER_CRITICAL();
 		{
 			uxValueForNormallyFullQueue++;
-			uxValueToTx = uxValueForNormallyFullQueue;			
+			uxValueToTx = uxValueForNormallyFullQueue;
 		}
 		portEXIT_CRITICAL();
 
@@ -551,7 +551,7 @@ portBASE_TYPE xQueueStatus;
 		portENTER_CRITICAL();
 		{
 			uxValueForNormallyFullQueue++;
-			uxValueToTx = uxValueForNormallyFullQueue;			
+			uxValueToTx = uxValueForNormallyFullQueue;
 		}
 		portEXIT_CRITICAL();
 

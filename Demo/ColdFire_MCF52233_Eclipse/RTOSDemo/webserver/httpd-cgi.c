@@ -50,7 +50,8 @@
 #include "httpd.h"
 #include "httpd-cgi.h"
 #include "httpd-fs.h"
-
+#include "FreeRTOS.h"
+#include "partest.h"
 #include <stdio.h>
 #include <string.h>
 

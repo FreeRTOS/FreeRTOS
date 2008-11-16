@@ -97,13 +97,20 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
+/* Port specific definitions. */
 #define configYIELD_INTERRUPT_VECTOR			16UL
 #define configKERNEL_INTERRUPT_PRIORITY 		1
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	4
 
+/* The function that initialises the tick and context switch interrupts.  This
+function is part of the application side (rather than kernel) to allow users to
+change the peripherals and vectors being used should they conflict in any way
+with the application itself. */
 void vApplicationSetupInterrupts( void );
 
-/* Ethernet configuration. */
+/* Ethernet configuration. **************************/
+
+/* Defines the MAC address to be used. */
 #define configMAC_0	0x00
 #define configMAC_1	0x04
 #define configMAC_2	0x9F
@@ -111,27 +118,29 @@ void vApplicationSetupInterrupts( void );
 #define configMAC_4	0xAB
 #define configMAC_5	0x2B
 
+/* Defines the IP address to be used. */
 #define configIP_ADDR0	192
 #define configIP_ADDR1	168
 #define configIP_ADDR2	0
 #define configIP_ADDR3	11
 
-#define configGW_ADDR0	172
-#define configGW_ADDR1	25
-#define configGW_ADDR2	218
-#define configGW_ADDR3	3
+/* Defines the gateway address to be used. */
+#define configGW_ADDR0	192
+#define configGW_ADDR1	168
+#define configGW_ADDR2	0
+#define configGW_ADDR3	1
 
+/* Defins the net mask. */
 #define configNET_MASK0	255
 #define configNET_MASK1	255
 #define configNET_MASK2	255
 #define configNET_MASK3	0
 
+/* FEC driver configuration. */
 #define configNUM_FEC_RX_BUFFERS	3
 #define configFEC_BUFFER_SIZE		1520
-#define configUSE_PROMISCUOUS_MODE	1
-#define configETHERNET_INPUT_TASK_STACK_SIZE ( 320 )
+#define configUSE_PROMISCUOUS_MODE	0
 #define configFEC_INTERRUPT_PRIORITY configMAX_SYSCALL_INTERRUPT_PRIORITY
-
 #define configPHY_ADDRESS	0
 
 #if ( configFEC_BUFFER_SIZE & 0x0F ) != 0

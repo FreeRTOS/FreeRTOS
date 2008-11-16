@@ -54,12 +54,15 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
+ * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
+ * processing is performed in this task.  It manages the WEB server functionality.
+ *
  * "Check" task -  This only executes every five seconds but has a high priority
  * to ensure it gets processor time.  Its main function is to check that all the
- * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will toggle an LED every 5 seconds - the toggle
- * rate increasing to 500ms being a visual indication that at least one task has
- * reported unexpected behaviour.
+ * standard demo tasks are still operational.  An error found in any task will be
+ * latched in the ulErrorCode variable for display through the WEB server (the
+ * error code is displayed at the foot of the table that contains information on
+ * the state of each task).
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
@@ -96,21 +99,9 @@
 
 /* The time between cycles of the 'check' functionality - as described at the
 top of this file. */
-#define mainNO_ERROR_PERIOD					( ( portTickType ) 5000 / portTICK_RATE_MS )
-
-/* The rate at which the LED controlled by the 'check' task will flash should an
-error have been detected. */
-#define mainERROR_PERIOD 					( ( portTickType ) 500 / portTICK_RATE_MS )
-
-/* The LED controlled by the 'check' task. */
-#define mainCHECK_LED						( 3 )
-
-/* ComTest constants - there is no free LED for the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( ( unsigned portLONG ) 19200 )
-#define mainCOM_TEST_LED					( 5 )
+#define mainCHECK_TASK_PERIOD					( ( portTickType ) 5000 / portTICK_RATE_MS )
 
 /* Task priorities. */
-#define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
@@ -120,8 +111,6 @@ error have been detected. */
 /* The WEB server task uses more stack than most other tasks because of its
 reliance on using sprintf(). */
 #define mainBASIC_WEB_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
-
-static unsigned portLONG ulErrorCode = 0UL;
 
 /*
  * Configure the hardware for the demo.
@@ -138,6 +127,21 @@ static void prvCheckTask( void *pvParameters );
  * The task that implements the WEB server.
  */
 extern void vuIP_Task( void *pvParameters );
+
+/*
+ * Implement the 'Reg test' functionality as described at the top of this file.
+ */
+static void vRegTest1Task( void *pvParameters );
+static void vRegTest2Task( void *pvParameters );
+
+/*-----------------------------------------------------------*/
+
+/* Counters used to detect errors within the reg test tasks. */
+static volatile unsigned portLONG ulRegTest1Counter = 0x11111111, ulRegTest2Counter = 0x22222222;
+
+/* Any errors that the check task finds in any tasks are latched into 
+ulErrorCode, and then displayed via the WEB server. */
+static unsigned portLONG ulErrorCode = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -159,13 +163,17 @@ int main( void )
 	vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
 
+	/* Start the reg test tasks - defined in this file. */
+	xTaskCreate( vRegTest1Task, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest1Counter, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest2Counter, tskIDLE_PRIORITY, NULL );
+
 	/* Create the check task. */
 	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
-    /* Will only get here if there was insufficient memory to create the idle
+    /* Will only get here if there was insufficient heap to create the idle
     task. */
 	for( ;; );
 }
@@ -173,8 +181,10 @@ int main( void )
 
 static void prvCheckTask( void *pvParameters )
 {
+unsigned ulLastRegTest1Count = 0, ulLastRegTest2Count = 0;
 portTickType xLastExecutionTime;
 
+	/* To prevent compiler warnings. */
 	( void ) pvParameters;
 
 	/* Initialise the variable used to control our iteration rate prior to
@@ -184,7 +194,7 @@ portTickType xLastExecutionTime;
 	for( ;; )
 	{
 		/* Wait until it is time to run the tests again. */
-		vTaskDelayUntil( &xLastExecutionTime, mainNO_ERROR_PERIOD );
+		vTaskDelayUntil( &xLastExecutionTime, mainCHECK_TASK_PERIOD );
 
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
@@ -221,12 +231,28 @@ portTickType xLastExecutionTime;
 	    {
 	    	ulErrorCode |= 0x100UL;
 	    }
+
+		if( ulLastRegTest1Count == ulRegTest1Counter )
+		{
+			ulErrorCode |= 0x200UL;
+		}
+
+		if( ulLastRegTest2Count == ulRegTest2Counter )
+		{
+			ulErrorCode |= 0x200UL;
+		}
+
+		/* Remember the reg test counts so a stall in their values can be
+		detected next time around. */
+		ulLastRegTest1Count = ulRegTest1Counter;
+		ulLastRegTest2Count = ulRegTest2Counter;
 	}
 }
 /*-----------------------------------------------------------*/
 
 unsigned portLONG ulGetErrorCode( void )
 {
+	/* Returns the error code for display via the WEB server. */
 	return ulErrorCode;
 }
 /*-----------------------------------------------------------*/
@@ -292,6 +318,160 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTask
 	( void ) pcTaskName;
 
 	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+static void vRegTest1Task( void *pvParameters )
+{
+	/* Sanity check - did we receive the parameter expected? */
+	if( pvParameters != &ulRegTest1Counter )
+	{
+		/* Change here so the check task can detect that an error occurred. */
+		for( ;; );
+	}
+
+	/* Set all the registers to known values, then check that each retains its
+	expected value - as described at the top of this file.  If an error is
+	found then the loop counter will no longer be incremented allowing the check
+	task to recognise the error. */
+	asm volatile 	(	"reg_test_1_start:						\n\t"
+						"	moveq		#1, %d0					\n\t"
+						"	moveq		#2, %d1					\n\t"
+						"	moveq		#3, %d2					\n\t"
+						"	moveq		#4, %d3					\n\t"
+						"	moveq		#5, %d4					\n\t"
+						"	moveq		#6, %d5					\n\t"
+						"	moveq		#7, %d6					\n\t"
+						"	moveq		#8, %d7					\n\t"
+						"	move		#9, %a0					\n\t"
+						"	move		#10, %a1				\n\t"
+						"	move		#11, %a2				\n\t"
+						"	move		#12, %a3				\n\t"
+						"	move		#13, %a4				\n\t"
+						"	move		#14, %a5				\n\t"
+						"	move		#15, %a6				\n\t"
+						"										\n\t"
+						"	cmpi.l		#1, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#2, %d1					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#3, %d2					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#4, %d3					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#5, %d4					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#6, %d5					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#7, %d6					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	cmpi.l		#8, %d7					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a0, %d0				\n\t"
+						"	cmpi.l		#9, %d0					\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a1, %d0				\n\t"
+						"	cmpi.l		#10, %d0				\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a2, %d0				\n\t"
+						"	cmpi.l		#11, %d0				\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a3, %d0				\n\t"
+						"	cmpi.l		#12, %d0				\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a4, %d0				\n\t"
+						"	cmpi.l		#13, %d0				\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a5, %d0				\n\t"
+						"	cmpi.l		#14, %d0				\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	move		%a6, %d0				\n\t"
+						"	cmpi.l		#15, %d0				\n\t"
+						"	bne			reg_test_1_error		\n\t"
+						"	movel		ulRegTest1Counter, %d0	\n\t"
+						"	addql		#1, %d0					\n\t"
+						"	movel		%d0, ulRegTest1Counter	\n\t"
+						"	bra			reg_test_1_start		\n\t"
+						"reg_test_1_error:						\n\t"
+						"	bra			reg_test_1_error		\n\t"
+					);
+}
+/*-----------------------------------------------------------*/
+
+static void vRegTest2Task( void *pvParameters )
+{
+	/* Sanity check - did we receive the parameter expected? */
+	if( pvParameters != &ulRegTest2Counter )
+	{
+		/* Change here so the check task can detect that an error occurred. */
+		for( ;; );
+	}
+
+	/* Set all the registers to known values, then check that each retains its
+	expected value - as described at the top of this file.  If an error is
+	found then the loop counter will no longer be incremented allowing the check
+	task to recognise the error. */
+	asm volatile 	(	"reg_test_2_start:						\n\t"
+						"	moveq		#10, %d0				\n\t"
+						"	moveq		#20, %d1				\n\t"
+						"	moveq		#30, %d2				\n\t"
+						"	moveq		#40, %d3				\n\t"
+						"	moveq		#50, %d4				\n\t"
+						"	moveq		#60, %d5				\n\t"
+						"	moveq		#70, %d6				\n\t"
+						"	moveq		#80, %d7				\n\t"
+						"	move		#90, %a0				\n\t"
+						"	move		#100, %a1				\n\t"
+						"	move		#110, %a2				\n\t"
+						"	move		#120, %a3				\n\t"
+						"	move		#130, %a4				\n\t"
+						"	move		#140, %a5				\n\t"
+						"	move		#150, %a6				\n\t"
+						"										\n\t"
+						"	cmpi.l		#10, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#20, %d1				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#30, %d2				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#40, %d3				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#50, %d4				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#60, %d5				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#70, %d6				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	cmpi.l		#80, %d7				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a0, %d0				\n\t"
+						"	cmpi.l		#90, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a1, %d0				\n\t"
+						"	cmpi.l		#100, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a2, %d0				\n\t"
+						"	cmpi.l		#110, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a3, %d0				\n\t"
+						"	cmpi.l		#120, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a4, %d0				\n\t"
+						"	cmpi.l		#130, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a5, %d0				\n\t"
+						"	cmpi.l		#140, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	move		%a6, %d0				\n\t"
+						"	cmpi.l		#150, %d0				\n\t"
+						"	bne			reg_test_2_error		\n\t"
+						"	movel		ulRegTest1Counter, %d0	\n\t"
+						"	addql		#1, %d0					\n\t"
+						"	movel		%d0, ulRegTest2Counter	\n\t"
+						"	bra			reg_test_2_start		\n\t"
+						"reg_test_2_error:						\n\t"
+						"	bra			reg_test_2_error		\n\t"
+					);
 }
 /*-----------------------------------------------------------*/
 

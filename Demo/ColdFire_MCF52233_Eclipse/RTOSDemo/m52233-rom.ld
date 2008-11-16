@@ -22,8 +22,10 @@ GROUP(-lgcc -lc -lcs3 -lcs3unhosted -lcs3coldfire)
 
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
-  rom (rx) : ORIGIN = 0x00000000, LENGTH = 256K
+  ram (rw) : ORIGIN = 0x20000000, LENGTH = 32K
+  vectorrom   (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000400
+  cfmprotrom  (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000020   
+  rom (rx) : ORIGIN = 0x00000420, LENGTH = 256K - 0x400 - 0x20
   ipsbar (rw) : ORIGIN = 0x40000000, LENGTH = 2M
 }
 
@@ -45,16 +47,27 @@ PROVIDE(__cs3_stack = __cs3_region_start_ram + __cs3_region_size_ram);
 SECTIONS
 {
 
+	.vectors_table :
+	{
+		CREATE_OBJECT_SYMBOLS
+		__cs3_region_start_rom = .;
+		*(.cs3.region-head.rom)
+		ASSERT (. == __cs3_region_start_rom, ".cs3.region-head.rom not permitted");
+		__cs3_interrupt_vector = __cs3_interrupt_vector_coldfire;
+		*(.cs3.interrupt_vector)
+		/* Make sure we pulled in an interrupt vector.  */
+		ASSERT (. != __cs3_interrupt_vector_coldfire, "No interrupt vector");
+	} > vectorrom
+
+	.cfmprotect :
+	{
+		*(.cfmconfig)
+		. = ALIGN (0x4);
+	} > cfmprotrom
+
+
   .text :
   {
-    CREATE_OBJECT_SYMBOLS
-    __cs3_region_start_rom = .;
-    *(.cs3.region-head.rom)
-    ASSERT (. == __cs3_region_start_rom, ".cs3.region-head.rom not permitted");
-    __cs3_interrupt_vector = __cs3_interrupt_vector_coldfire;
-    *(.cs3.interrupt_vector)
-    /* Make sure we pulled in an interrupt vector.  */
-    ASSERT (. != __cs3_interrupt_vector_coldfire, "No interrupt vector");
 
     PROVIDE(__cs3_reset_m52235evb = _start);
     __cs3_reset = __cs3_reset_m52235evb;

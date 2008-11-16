@@ -68,9 +68,9 @@
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 60000000 )
-#define configTICK_RATE_HZ				( ( portTickType ) 100 )
+#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 100 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 15000 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 19000 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
@@ -103,7 +103,6 @@ to exclude the API function. */
 
 void vApplicationSetupInterrupts( void );
 
-
 /* Ethernet configuration. */
 #define configMAC_0	0x00
 #define configMAC_1	0x04
@@ -129,7 +128,7 @@ void vApplicationSetupInterrupts( void );
 
 #define configNUM_FEC_RX_BUFFERS	3
 #define configFEC_BUFFER_SIZE		1520
-#define configUSE_PROMISCUOUS_MODE	0
+#define configUSE_PROMISCUOUS_MODE	1
 #define configETHERNET_INPUT_TASK_STACK_SIZE ( 320 )
 #define configFEC_INTERRUPT_PRIORITY configMAX_SYSCALL_INTERRUPT_PRIORITY
 

@@ -113,6 +113,8 @@
 <definedSymbol symbol="COLDFIRE_V2_GCC=1"/>
 <definedSymbol symbol="PACK_STRUCT_END=__attribute\(\(packed\)\)"/>
 <definedSymbol symbol="ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\)"/>
+<definedSymbol symbol="bktPRIMARY_PRIORITY=4"/>
+<definedSymbol symbol="bktSECONDARY_PRIORITY=3"/>
 </collector>
 </instance>
 </scannerInfo>

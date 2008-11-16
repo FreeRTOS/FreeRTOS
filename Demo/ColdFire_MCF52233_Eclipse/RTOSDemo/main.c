@@ -81,12 +81,14 @@
 /* Demo app includes. */
 #include "BlockQ.h"
 #include "death.h"
+#include "blocktim.h"
 #include "flash.h"
 #include "partest.h"
 #include "semtest.h"
 #include "PollQ.h"
 #include "GenQTest.h"
 #include "QPeek.h"
+#include "recmutex.h"
 #include "IntQueue.h"
 #include "comtest2.h"
 
@@ -113,7 +115,6 @@ error have been detected. */
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 2 )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
 /* The WEB server task uses more stack than most other tasks because of its
@@ -151,10 +152,12 @@ int main( void )
 	/* Start the standard demo tasks. */
 	vStartLEDFlashTasks( tskIDLE_PRIORITY );
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+    vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
+    vStartRecursiveMutexTasks();
 
 	/* Create the check task. */
 	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -207,6 +210,16 @@ portTickType xLastExecutionTime;
 		if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
 	    	ulErrorCode |= 0x40UL;
+	    }
+
+		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			ulErrorCode |= 0x80UL;
+		}
+
+	    if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	ulErrorCode |= 0x100UL;
 	    }
 	}
 }

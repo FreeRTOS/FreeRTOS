@@ -68,6 +68,8 @@ Demo_OBJS=				$(OUTPUT_DIR)/main.o \
 						$(OUTPUT_DIR)/GenQTest.o \
 						$(OUTPUT_DIR)/QPeek.o \
 						$(OUTPUT_DIR)/FEC.o \
+						$(OUTPUT_DIR)/blocktim.o \
+						$(OUTPUT_DIR)/recmutex.o \
 						$(OUTPUT_DIR)/printf-stdarg.o
 
 HTTP_OBJS=				$(OUTPUT_DIR)/uIP_Task.o \
@@ -84,7 +86,7 @@ uIP_OBJS=				$(OUTPUT_DIR)/timer.o \
 						$(OUTPUT_DIR)/uip-split.o \
 						$(OUTPUT_DIR)/psock.o
 
-OBJS = $(FreeRTOS_OBJS) $(Demo_OBJS) $(uIP_OBJS) $(HTTP_OBJS)
+OBJS = $(Demo_OBJS) $(FreeRTOS_OBJS) $(uIP_OBJS) $(HTTP_OBJS)
 			
 C_DEPS = $(OBJS:.o=.d)
 
@@ -102,6 +104,8 @@ CFLAGS=		$(INCLUDE_PATHS) \
 			-D PACK_STRUCT_END=__attribute\(\(packed\)\) \
 			-D ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\) \
 			-O$(OPTIM) \
+			-D bktPRIMARY_PRIORITY=4 \
+			-D bktSECONDARY_PRIORITY=3 \
 			-fno-strict-aliasing \
 			-g3 \
 			-gdwarf-2 \

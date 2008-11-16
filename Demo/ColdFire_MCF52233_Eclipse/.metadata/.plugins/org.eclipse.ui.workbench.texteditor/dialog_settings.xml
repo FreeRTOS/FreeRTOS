@@ -3,26 +3,26 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="237" key="DIALOG_WIDTH"/>
 		<item value="212" key="DIALOG_Y_ORIGIN"/>
-		<item value="356" key="DIALOG_HEIGHT"/>
 		<item value="1167" key="DIALOG_X_ORIGIN"/>
+		<item value="356" key="DIALOG_HEIGHT"/>
 		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="isRegEx"/>
 		<item value="false" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="xTxSemaphore" key="selection"/>
+		<item value="xPrimaryCycles" key="selection"/>
 		<list key="findhistory">
+			<item value="xPrimaryCycles"/>
+			<item value=".ld"/>
+			<item value="strchr"/>
+			<item value="heap"/>
+			<item value="stack"/>
+			<item value="hosted"/>
+			<item value="map"/>
 			<item value="xTxSemaphore"/>
-			<item value="vDiscard"/>
-			<item value="fecTX_BUFFER_WAIT"/>
-			<item value="prvInitialiseFECBuffers"/>
-			<item value="prvResetFEC"/>
-			<item value="MCF_FEC_ECR"/>
-			<item value="uxNextRxBuffer"/>
-			<item value="&#x09;&#x09;xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].length = uip_len;"/>
 		</list>
 		<list key="replacehistory">
 			<item value="uxNextTxBuffer"/>

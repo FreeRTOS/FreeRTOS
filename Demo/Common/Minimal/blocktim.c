@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -61,9 +61,14 @@
 /* Demo includes. */
 #include "blocktim.h"
 
-/* Task priorities. */
-#define bktPRIMARY_PRIORITY			( 3 )
-#define bktSECONDARY_PRIORITY		( 2 )
+/* Task priorities.  Allow these to be overridden. */
+#ifndef bktPRIMARY_PRIORITY
+	#define bktPRIMARY_PRIORITY			( 3 )
+#endif
+
+#ifndef bktSECONDARY_PRIORITY
+	#define bktSECONDARY_PRIORITY		( 2 )
+#endif
 
 /* Task behaviour. */
 #define bktQUEUE_LENGTH				( 5 )
@@ -101,10 +106,10 @@ void vCreateBlockTimeTasks( void )
     xTestQueue = xQueueCreate( bktQUEUE_LENGTH, sizeof( portBASE_TYPE ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware 
+	in use.  The queue registry is provided as a means for kernel aware
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( xTestQueue, ( signed portCHAR * ) "Block_Time_Queue" );
 
@@ -135,7 +140,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			xTimeToBlock = bktPRIMARY_BLOCK_TIME << xItem;
 
 			xTimeWhenBlocking = xTaskGetTickCount();
-			
+
 			/* We should unblock after xTimeToBlock having not received
 			anything on the queue. */
 			if( xQueueReceive( xTestQueue, &xData, xTimeToBlock ) != errQUEUE_EMPTY )
@@ -186,7 +191,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			xTimeToBlock = bktPRIMARY_BLOCK_TIME << xItem;
 
 			xTimeWhenBlocking = xTaskGetTickCount();
-			
+
 			/* We should unblock after xTimeToBlock having not received
 			anything on the queue. */
 			if( xQueueSend( xTestQueue, &xItem, xTimeToBlock ) != errQUEUE_FULL )
@@ -240,7 +245,7 @@ portTickType xTimeToBlock, xBlockedTime;
 		for( xItem = 0; xItem < bktQUEUE_LENGTH; xItem++ )
 		{
 			/* Now when we make space on the queue the other task should wake
-			but not execute as this task has higher priority. */				
+			but not execute as this task has higher priority. */
 			if( xQueueReceive( xTestQueue, &xData, bktDONT_BLOCK ) != pdPASS )
 			{
 				xErrorOccurred = pdTRUE;
@@ -274,7 +279,7 @@ portTickType xTimeToBlock, xBlockedTime;
 			}
 
 			/* Set the priority back down. */
-			vTaskPrioritySet( xSecondary, bktSECONDARY_PRIORITY );			
+			vTaskPrioritySet( xSecondary, bktSECONDARY_PRIORITY );
 		}
 
 		/* Let the other task timeout.  When it unblockes it will check that it
@@ -301,7 +306,7 @@ portTickType xTimeToBlock, xBlockedTime;
 				xErrorOccurred = pdTRUE;
 			}
 		}
-		
+
 		/* Wake the other task so it blocks attempting to read from  the
 		already	empty queue. */
 		vTaskResume( xSecondary );
@@ -317,7 +322,7 @@ portTickType xTimeToBlock, xBlockedTime;
 		for( xItem = 0; xItem < bktQUEUE_LENGTH; xItem++ )
 		{
 			/* Now when we place an item on the queue the other task should
-			wake but not execute as this task has higher priority. */				
+			wake but not execute as this task has higher priority. */
 			if( xQueueSend( xTestQueue, &xItem, bktDONT_BLOCK ) != pdPASS )
 			{
 				xErrorOccurred = pdTRUE;
@@ -349,7 +354,7 @@ portTickType xTimeToBlock, xBlockedTime;
 				queue function. */
 				xErrorOccurred = pdTRUE;
 			}
-			vTaskPrioritySet( xSecondary, bktSECONDARY_PRIORITY );			
+			vTaskPrioritySet( xSecondary, bktSECONDARY_PRIORITY );
 		}
 
 		/* Let the other task timeout.  When it unblockes it will check that it
@@ -387,7 +392,7 @@ portBASE_TYPE xData;
 		full so we block.  Note the time before we block so we can check the
 		wake time is as per that expected. */
 		xTimeWhenBlocking = xTaskGetTickCount();
-		
+
 		/* We should unblock after bktTIME_TO_BLOCK having not received
 		anything on the queue. */
 		xData = 0;
@@ -423,7 +428,7 @@ portBASE_TYPE xData;
 
 		As per test three, but with the send and receive reversed. */
 		xTimeWhenBlocking = xTaskGetTickCount();
-		
+
 		/* We should unblock after bktTIME_TO_BLOCK having not received
 		anything on the queue. */
 		xRunIndicator = bktRUN_INDICATOR;

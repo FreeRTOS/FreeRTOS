@@ -5,14 +5,14 @@
   </head>
   <BODY bgcolor="#CCCCff">
 <font face="arial">
-<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a>
+<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a> <b>|</b> <a href="logo.jpg">30K JPG</a>
 <br><p>
 <hr>
-<b>LED and LCD IO</b><br>
+<b>LED IO</b><br>
 
 <p>
 
-Use the check box to turn on or off the LED, enter text to display on the OLED display, then click "Update IO".
+Use the check box to turn on or off the LED, then click "Update IO".
 
 
 <p>

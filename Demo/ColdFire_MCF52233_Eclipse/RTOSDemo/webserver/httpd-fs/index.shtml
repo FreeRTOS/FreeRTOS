@@ -5,6 +5,9 @@
   </head>
   <BODY onLoad="window.setTimeout(&quot;location.href='index.shtml'&quot;,2000)"bgcolor="#CCCCff">
 <font face="arial">
+<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a> <b>|</b> <a href="logo.jpg">30K JPG</a>
+<br><p>
+<hr>
 <br><p>
 <h2>Task statistics</h2>
 Page will refresh every 2 seconds.<p>

@@ -54,10 +54,14 @@
 #include <stdio.h>
 #include <string.h>
 
-
+HTTPD_CGI_CALL(file, "file-stats", file_stats);
+HTTPD_CGI_CALL(tcp, "tcp-connections", tcp_stats);
+HTTPD_CGI_CALL(net, "net-stats", net_stats);
 HTTPD_CGI_CALL(rtos, "rtos-stats", rtos_stats );
+HTTPD_CGI_CALL(io, "led-io", led_io );
 
-static const struct httpd_cgi_call *calls[] = { &rtos, NULL };
+
+static const struct httpd_cgi_call *calls[] = { &file, &tcp, &net, &rtos, &io, NULL };
 
 /*---------------------------------------------------------------------------*/
 static
@@ -80,6 +84,23 @@ httpd_cgi(char *name)
     }
   }
   return nullfunction;
+}
+/*---------------------------------------------------------------------------*/
+static unsigned short
+generate_file_stats(void *arg)
+{
+  char *f = (char *)arg;
+  return snprintf((char *)uip_appdata, UIP_APPDATA_SIZE, "%5u", httpd_fs_count(f));
+}
+/*---------------------------------------------------------------------------*/
+static
+PT_THREAD(file_stats(struct httpd_state *s, char *ptr))
+{
+  PSOCK_BEGIN(&s->sout);
+
+  PSOCK_GENERATOR_SEND(&s->sout, generate_file_stats, strchr(ptr, ' ') + 1);
+
+  PSOCK_END(&s->sout);
 }
 /*---------------------------------------------------------------------------*/
 static const char closed[] =   /*  "CLOSED",*/
@@ -109,20 +130,92 @@ static const char last_ack[] = /*  "LAST-ACK"*/
 {0x4c, 0x41, 0x53, 0x54, 0x2d, 0x41, 0x43,
  0x4b, 0};
 
+static const char *states[] = {
+  closed,
+  syn_rcvd,
+  syn_sent,
+  established,
+  fin_wait_1,
+  fin_wait_2,
+  closing,
+  time_wait,
+  last_ack};
 
+
+static unsigned short
+generate_tcp_stats(void *arg)
+{
+  struct uip_conn *conn;
+  struct httpd_state *s = (struct httpd_state *)arg;
+
+  conn = &uip_conns[s->count];
+  return snprintf((char *)uip_appdata, UIP_APPDATA_SIZE,
+		 "<tr><td>%d</td><td>%u.%u.%u.%u:%u</td><td>%s</td><td>%u</td><td>%u</td><td>%c %c</td></tr>\r\n",
+		 htons(conn->lport),
+		 htons(conn->ripaddr[0]) >> 8,
+		 htons(conn->ripaddr[0]) & 0xff,
+		 htons(conn->ripaddr[1]) >> 8,
+		 htons(conn->ripaddr[1]) & 0xff,
+		 htons(conn->rport),
+		 states[conn->tcpstateflags & UIP_TS_MASK],
+		 conn->nrtx,
+		 conn->timer,
+		 (uip_outstanding(conn))? '*':' ',
+		 (uip_stopped(conn))? '!':' ');
+}
+/*---------------------------------------------------------------------------*/
+static
+PT_THREAD(tcp_stats(struct httpd_state *s, char *ptr))
+{
+
+  PSOCK_BEGIN(&s->sout);
+  ( void ) ptr;
+  for(s->count = 0; s->count < UIP_CONNS; ++s->count) {
+    if((uip_conns[s->count].tcpstateflags & UIP_TS_MASK) != UIP_CLOSED) {
+      PSOCK_GENERATOR_SEND(&s->sout, generate_tcp_stats, s);
+    }
+  }
+
+  PSOCK_END(&s->sout);
+}
+/*---------------------------------------------------------------------------*/
+static unsigned short
+generate_net_stats(void *arg)
+{
+  struct httpd_state *s = (struct httpd_state *)arg;
+  return snprintf((char *)uip_appdata, UIP_APPDATA_SIZE,
+		  "%5u\n", ((uip_stats_t *)&uip_stat)[s->count]);
+}
+
+static
+PT_THREAD(net_stats(struct httpd_state *s, char *ptr))
+{
+  PSOCK_BEGIN(&s->sout);
+  ( void ) ptr;
+#if UIP_STATISTICS
+
+  for(s->count = 0; s->count < sizeof(uip_stat) / sizeof(uip_stats_t);
+      ++s->count) {
+    PSOCK_GENERATOR_SEND(&s->sout, generate_net_stats, s);
+  }
+
+#endif /* UIP_STATISTICS */
+
+  PSOCK_END(&s->sout);
+}
 /*---------------------------------------------------------------------------*/
 
 extern void vTaskList( signed char *pcWriteBuffer );
+extern unsigned long ulGetErrorCode( void );
+
 static char cCountBuf[ 32 ];
 long lRefreshCount = 0;
-
 static unsigned short
 generate_rtos_stats(void *arg)
 {
 	( void ) arg;
-
 	lRefreshCount++;
-	sprintf( cCountBuf, "<p><br>Refresh count = %d", (int) lRefreshCount );
+	sprintf( cCountBuf, "<p><br>Refresh count = %d, Error code = %d (0 = no errors)", (int)lRefreshCount, (int)ulGetErrorCode() );
     vTaskList( uip_appdata );
 	strcat( uip_appdata, cCountBuf );
 
@@ -141,6 +234,37 @@ PT_THREAD(rtos_stats(struct httpd_state *s, char *ptr))
 }
 /*---------------------------------------------------------------------------*/
 
+char *pcStatus;
+extern unsigned long uxParTestGetLED( unsigned long uxLED );
+
+static unsigned short generate_io_state( void *arg )
+{
+	( void ) arg;
+
+	if( uxParTestGetLED( 3 ) )
+	{
+		pcStatus = "checked";
+	}
+	else
+	{
+		pcStatus = "";
+	}
+
+	sprintf( uip_appdata,
+		"<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED",
+		pcStatus );
+
+	return strlen( uip_appdata );
+}
+/*---------------------------------------------------------------------------*/
+
+static PT_THREAD(led_io(struct httpd_state *s, char *ptr))
+{
+  PSOCK_BEGIN(&s->sout);
+  ( void ) ptr;
+  PSOCK_GENERATOR_SEND(&s->sout, generate_io_state, NULL);
+  PSOCK_END(&s->sout);
+}
 
 /** @} */
 

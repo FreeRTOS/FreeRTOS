@@ -48,9 +48,6 @@
 */
 
 
-unsigned char *uip_buf;
-
-
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the standard demo application tasks.
@@ -123,6 +120,8 @@ error have been detected. */
 reliance on using sprintf(). */
 #define mainBASIC_WEB_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
 
+static unsigned portLONG ulErrorCode = 0UL;
+
 /*
  * Configure the hardware for the demo.
  */
@@ -171,7 +170,6 @@ int main( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-unsigned ulTicksToWait = mainNO_ERROR_PERIOD, ulError = 0;
 portTickType xLastExecutionTime;
 
 	( void ) pvParameters;
@@ -183,44 +181,40 @@ portTickType xLastExecutionTime;
 	for( ;; )
 	{
 		/* Wait until it is time to run the tests again. */
-		vTaskDelayUntil( &xLastExecutionTime, ulTicksToWait );
+		vTaskDelayUntil( &xLastExecutionTime, mainNO_ERROR_PERIOD );
 
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-			ulError |= 0x01UL;
+			ulErrorCode |= 0x01UL;
 		}
 
 		if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			ulError |= 0x02UL;
+			ulErrorCode |= 0x02UL;
 		}
 
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
-			ulError |= 0x04UL;
+			ulErrorCode |= 0x04UL;
 		}
 
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
-	    	ulError |= 0x20UL;
+	    	ulErrorCode |= 0x20UL;
 	    }
 
 		if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
-	    	ulError |= 0x40UL;
+	    	ulErrorCode |= 0x40UL;
 	    }
-
-		/* If an error has been found then increase our cycle rate, and in so
-		going increase the rate at which the check task LED toggles. */
-		if( ulError != 0 )
-		{
-	    	ulTicksToWait = mainERROR_PERIOD;
-		}
-
-		/* Toggle the LED each itteration. */
-		vParTestToggleLED( mainCHECK_LED );
 	}
+}
+/*-----------------------------------------------------------*/
+
+unsigned portLONG ulGetErrorCode( void )
+{
+	return ulErrorCode;
 }
 /*-----------------------------------------------------------*/
 

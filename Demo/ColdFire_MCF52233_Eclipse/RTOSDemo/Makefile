@@ -67,7 +67,8 @@ Demo_OBJS=				$(OUTPUT_DIR)/main.o \
 						$(OUTPUT_DIR)/semtest.o \
 						$(OUTPUT_DIR)/GenQTest.o \
 						$(OUTPUT_DIR)/QPeek.o \
-						$(OUTPUT_DIR)/FEC.o
+						$(OUTPUT_DIR)/FEC.o \
+						$(OUTPUT_DIR)/printf-stdarg.o
 
 HTTP_OBJS=				$(OUTPUT_DIR)/uIP_Task.o \
 						$(OUTPUT_DIR)/httpd.o \

@@ -60,31 +60,35 @@ infinite. */
 #define netifBLOCK_TIME_WAITING_FOR_INPUT		fecLINK_DELAY
 
 /* Constants used to delay while waiting for a tx descriptor to be free. */
-#define fecMAX_TX_WAIT_ATTEMPTS					4
-#define fecTX_BUFFER_WAIT						( 10 / portTICK_RATE_MS )
+#define fecTX_BUFFER_WAIT						( 200 / portTICK_RATE_MS )
 
+/* We only use a single Tx descriptor - the duplicate send silicon errata
+actually assists in this case. */
+#define fecNUM_FEC_TX_BUFFERS					( 1 )
+#define fecTX_BUFFER_TO_USE						( 0 )
 /*-----------------------------------------------------------*/
 
 /* The semaphore used to wake the uIP task when data arrives. */
-xSemaphoreHandle xFECSemaphore = NULL;
+xSemaphoreHandle xFECSemaphore = NULL, xTxSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers. */
 unsigned portCHAR *uip_buf;
 
 /* The DMA descriptors.  This is a char array to allow us to align it correctly. */
-static unsigned portCHAR xFECTxDescriptors_unaligned[ ( configNUM_FEC_TX_BUFFERS * sizeof( FECBD ) ) + 16 ];
+static unsigned portCHAR xFECTxDescriptors_unaligned[ ( fecNUM_FEC_TX_BUFFERS * sizeof( FECBD ) ) + 16 ];
 static unsigned portCHAR xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_BUFFERS * sizeof( FECBD ) ) + 16 ];
 static FECBD *xFECTxDescriptors;
 static FECBD *xFECRxDescriptors;
 
 /* The DMA buffers.  These are char arrays to allow them to be alligned correctly. */
 static unsigned portCHAR ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
-static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxNextTxBuffer = 0, uxIndexToBufferOwner = 0;
+static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxIndexToBufferOwner = 0;
 
 /*-----------------------------------------------------------*/
 
 static void prvEnableFECInterrupts( void );
+static void prvResetFEC( portBASE_TYPE xCalledFromISR );
 
 /********************************************************************/
 /*
@@ -319,7 +323,7 @@ unsigned portCHAR *pcBufPointer;
 	/* Setup the buffers and descriptors.  The data member does not point
 	anywhere yet as there is not yet anything to send and a zero copy policy
 	is used. */
-	for( ux = 0; ux < configNUM_FEC_TX_BUFFERS; ux++ )
+	for( ux = 0; ux < fecNUM_FEC_TX_BUFFERS; ux++ )
 	{
 		xFECTxDescriptors[ ux ].status = TX_BD_TC;
 		xFECTxDescriptors[ ux ].data = NULL;
@@ -341,11 +345,10 @@ unsigned portCHAR *pcBufPointer;
 	}
 
 	/* Set the wrap bit in the last descriptors to form a ring. */
-	xFECTxDescriptors[ configNUM_FEC_TX_BUFFERS - 1 ].status |= TX_BD_W;
+	xFECTxDescriptors[ fecNUM_FEC_TX_BUFFERS - 1 ].status |= TX_BD_W;
 	xFECRxDescriptors[ configNUM_FEC_RX_BUFFERS - 1 ].status |= RX_BD_W;
 
 	uxNextRxBuffer = 0;
-	uxNextTxBuffer = 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -360,6 +363,7 @@ const unsigned portCHAR ucMACAddress[6] =
 
 	/* Create the semaphore used by the ISR to wake the uIP task. */
 	vSemaphoreCreateBinary( xFECSemaphore );
+	vSemaphoreCreateBinary( xTxSemaphore );
 
 	prvInitialiseFECBuffers();
 
@@ -517,13 +521,46 @@ unsigned portBASE_TYPE ux;
 	MCF_INTC0_IMRH &= ~( MCF_INTC_IMRH_INT_MASK33 | MCF_INTC_IMRH_INT_MASK34 | MCF_INTC_IMRH_INT_MASK35 );
 	MCF_INTC0_IMRL &= ~( MCF_INTC_IMRL_INT_MASK25 | MCF_INTC_IMRL_INT_MASK26 | MCF_INTC_IMRL_INT_MASK27
 						| MCF_INTC_IMRL_INT_MASK28 | MCF_INTC_IMRL_INT_MASK29 | MCF_INTC_IMRL_INT_MASK30
-						| MCF_INTC_IMRL_INT_MASK31 | MCF_INTC_IMRL_MASKALL );
+						| MCF_INTC_IMRL_INT_MASK31 | MCF_INTC_IMRL_INT_MASK23 | MCF_INTC_IMRL_INT_MASK24
+						| MCF_INTC_IMRL_MASKALL );
 
 	/* Clear any pending FEC interrupt events */
 	MCF_FEC_EIR = MCF_FEC_EIR_CLEAR_ALL;
 
 	/* Unmask all FEC interrupts */
 	MCF_FEC_EIMR = MCF_FEC_EIMR_UNMASK_ALL;
+}
+/*-----------------------------------------------------------*/
+
+static void prvResetFEC( portBASE_TYPE xCalledFromISR )
+{
+portBASE_TYPE x;
+
+	if( xCalledFromISR == pdFALSE )
+	{
+		taskENTER_CRITICAL();
+	}
+
+	{
+		prvInitialiseFECBuffers();
+
+		/* Set the Reset bit and clear the Enable bit */
+		MCF_FEC_ECR = MCF_FEC_ECR_RESET;
+
+		/* Wait at least 8 clock cycles */
+		for( x = 0; x < 10; x++ )
+		{
+			asm( "NOP" );
+		}
+
+		MCF_FEC_ECR = MCF_FEC_ECR_ETHER_EN;
+		MCF_FEC_RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;
+	}
+
+	if( xCalledFromISR == pdFALSE )
+	{
+		taskEXIT_CRITICAL();
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -562,36 +599,30 @@ void vDiscardRxData( void )
 
 void vSendBufferToFEC( void )
 {
-portLONG l;
-
-	/* Get a DMA buffer into which we can write the data to send. */
-	for( l = 0; l < fecMAX_TX_WAIT_ATTEMPTS; l++ )
+	/* Ensure no Tx frames are outstanding. */
+	if( xSemaphoreTake( xTxSemaphore, fecTX_BUFFER_WAIT ) == pdPASS )
 	{
-		if( xFECTxDescriptors[ uxNextTxBuffer ].status & TX_BD_R )
+		/* Get a DMA buffer into which we can write the data to send. */
+		if( xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].status & TX_BD_R )
 		{
-			/* Wait for the buffer to become available. */
-			vTaskDelay( fecTX_BUFFER_WAIT );
+			/*** ERROR didn't expect this.  Sledge hammer error handling. ***/
+			prvResetFEC( pdFALSE );
+
+			/* Make sure we leave the semaphore in the expected state as nothing
+			is being transmitted this will not happen in the Tx ISR. */
+			xSemaphoreGive( xTxSemaphore );
 		}
 		else
 		{
 			/* Setup the buffer descriptor for transmission.  The data being
 			sent is actually stored in one of the Rx descripter buffers,
 			pointed to by uip_buf. */
-			xFECTxDescriptors[ uxNextTxBuffer ].length = uip_len;
-			xFECTxDescriptors[ uxNextTxBuffer ].status |= (TX_BD_R | TX_BD_L);
-			xFECTxDescriptors[ uxNextTxBuffer ].data = uip_buf;
-
-			/* Continue the Tx DMA (in case it was waiting for a new TxBD) */
-			MCF_FEC_TDAR = MCF_FEC_TDAR_X_DES_ACTIVE;
+			xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].length = uip_len;
+			xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].status |= ( TX_BD_R | TX_BD_L );
+			xFECTxDescriptors[ fecTX_BUFFER_TO_USE ].data = uip_buf;
 
 			/* Remember which Rx descriptor owns the buffer we are sending. */
 			uxIndexToBufferOwner = uxNextRxBuffer;
-
-			uxNextTxBuffer++;
-			if( uxNextTxBuffer >= configNUM_FEC_TX_BUFFERS )
-			{
-				uxNextTxBuffer = 0;
-			}
 
 			/* We have finished with this Rx descriptor now. */
 			uxNextRxBuffer++;
@@ -600,8 +631,13 @@ portLONG l;
 				uxNextRxBuffer = 0;
 			}
 
-			break;
+			/* Continue the Tx DMA (in case it was waiting for a new TxBD) */
+			MCF_FEC_TDAR = MCF_FEC_TDAR_X_DES_ACTIVE;
 		}
+	}
+	else
+	{
+		vDiscardRxData();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -623,8 +659,7 @@ portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
 	if( ulEvent & ( MCF_FEC_EIR_UN | MCF_FEC_EIR_RL | MCF_FEC_EIR_LC | MCF_FEC_EIR_EBERR | MCF_FEC_EIR_BABT | MCF_FEC_EIR_BABR | MCF_FEC_EIR_HBERR ) )
 	{
 		/* Sledge hammer error handling. */
-		prvInitialiseFECBuffers();
-		MCF_FEC_RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;
+		prvResetFEC( pdTRUE );
 	}
 
 	if( ( ulEvent & MCF_FEC_EIR_TXF ) || ( ulEvent & MCF_FEC_EIR_TXB ) )
@@ -633,12 +668,14 @@ portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
 		buffer has been sent we can mark the Rx descriptor as free again. */
 		xFECRxDescriptors[ uxIndexToBufferOwner ].status |= RX_BD_E;
 		MCF_FEC_RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;
+		xSemaphoreGiveFromISR( xTxSemaphore, &xHighPriorityTaskWoken );
 	}
 
 	portEND_SWITCHING_ISR( xHighPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
+void __attribute__ ((interrupt)) __cs3_isr_interrupt_87( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_88( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_89( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_90( void ) { vFEC_ISR(); }
@@ -651,5 +688,5 @@ void __attribute__ ((interrupt)) __cs3_isr_interrupt_96( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_97( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_98( void ) { vFEC_ISR(); }
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_99( void ) { vFEC_ISR(); }
-void __attribute__ ((interrupt)) __cs3_isr_interrupt_100( void ) { vFEC_ISR(); }
+
 

@@ -35,7 +35,7 @@
 #ifndef __HTTPD_FS_H__
 #define __HTTPD_FS_H__
 
-#define HTTPD_FS_STATISTICS 0
+#define HTTPD_FS_STATISTICS 1
 
 struct httpd_fs_file {
   char *data;

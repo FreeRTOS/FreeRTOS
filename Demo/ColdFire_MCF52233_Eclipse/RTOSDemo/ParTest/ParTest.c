@@ -110,3 +110,20 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 }
 /*-----------------------------------------------------------*/
 
+unsigned portBASE_TYPE uxParTestGetLED( unsigned portBASE_TYPE uxLED )
+{
+unsigned portBASE_TYPE uxReturn = pdFALSE;
+
+	if( uxLED < partstNUM_LEDs )
+	{
+		if( ( MCF_GPIO_PORTTC & ( 1 << uxLED ) ) != 0 )
+		{
+			uxReturn = pdTRUE;
+		}
+	}
+
+	return uxReturn;
+}
+
+
+

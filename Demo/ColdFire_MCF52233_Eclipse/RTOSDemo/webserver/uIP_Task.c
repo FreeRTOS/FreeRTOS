@@ -208,23 +208,27 @@ extern void ( vEMAC_ISR )( void );
 
 void vApplicationProcessFormInput( portCHAR *pcInputString )
 {
-char *c;
+char *c = pcInputString;
 
 	/* Process the form input sent by the IO page of the served HTML. */
+	while( ( *c != '?' ) && ( *c != 0x00 ) )
+	{
+		c++;
+	}
 
-	c = strstr( pcInputString, "?" );
-
-    if( c )
+    if( *c == '?' )
     {
-		/* Turn LED's on or off in accordance with the check box status. */
-		if( strstr( c, "LED0=1" ) != NULL )
+    	c++;
+		if( strcmp( c, "LED0=1" ) == 0 )
 		{
-			vParTestSetLED( 0, 1 );
+			vParTestSetLED( 3, 1 );
 		}
 		else
 		{
-			vParTestSetLED( 0, 0 );
+			vParTestSetLED( 3, 0 );
 		}
     }
 }
+
+
 

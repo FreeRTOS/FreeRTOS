@@ -69,7 +69,7 @@
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 60000000 )
 #define configTICK_RATE_HZ				( ( portTickType ) 100 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 90 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 100 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 15000 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
@@ -127,7 +127,6 @@ void vApplicationSetupInterrupts( void );
 #define configNET_MASK2	255
 #define configNET_MASK3	0
 
-#define configNUM_FEC_TX_BUFFERS	1
 #define configNUM_FEC_RX_BUFFERS	3
 #define configFEC_BUFFER_SIZE		1520
 #define configUSE_PROMISCUOUS_MODE	0

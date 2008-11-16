@@ -268,6 +268,12 @@ PT_THREAD(handle_input(struct httpd_state *s))
 
     s->inputbuf[PSOCK_DATALEN(&s->sin) - 1] = 0;
 
+    /* Process any form input being sent to the server. */
+    {
+        extern void vApplicationProcessFormInput( char *pcInputString, long xInputLength );
+        vApplicationProcessFormInput( s->inputbuf, PSOCK_DATALEN(&s->sin) );
+    }
+
     strncpy(s->filename, &s->inputbuf[0], sizeof(s->filename));
   }
 

@@ -1631,6 +1631,10 @@ u16_t uip_tcpchksum(void);
  */
 u16_t uip_udpchksum(void);
 
+/**
+ * Work out the fasted way of sending the data to the low level driver.
+ */
+int uip_fast_send( int xARP );
 
 #endif /* __UIP_H__ */
 

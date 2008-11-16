@@ -205,7 +205,7 @@ PT_THREAD( psock_send ( register struct psock *s, const char *buf, unsigned int 
 
 	/* Save the length of and a pointer to the data that is to be
      sent. */
-	s->sendptr = ( u8_t*)buf;
+	s->sendptr = ( u8_t * ) buf;
 	s->sendlen = len;
 
 	s->state = STATE_NONE;
@@ -305,7 +305,7 @@ PT_THREAD( psock_readto ( register struct psock *psock, unsigned char c ) )
 {
 	PT_BEGIN( &psock->psockpt );
 
-	buf_setup( &psock->buf, (u8_t*) psock->bufptr, psock->bufsize );
+	buf_setup( &psock->buf, ( u8_t * ) psock->bufptr, psock->bufsize );
 
 	/* XXX: Should add buf_checkmarker() before do{} loop, if
      incoming data has been handled while waiting for a write. */
@@ -334,7 +334,7 @@ PT_THREAD( psock_readbuf ( register struct psock *psock ) )
 {
 	PT_BEGIN( &psock->psockpt );
 
-	buf_setup( &psock->buf, (u8_t*) psock->bufptr, psock->bufsize );
+	buf_setup( &psock->buf, ( u8_t * ) psock->bufptr, psock->bufsize );
 
 	/* XXX: Should add buf_checkmarker() before do{} loop, if
      incoming data has been handled while waiting for a write. */
@@ -366,7 +366,7 @@ void psock_init( register struct psock *psock, char *buffer, unsigned int buffer
 	psock->readlen = 0;
 	psock->bufptr = buffer;
 	psock->bufsize = buffersize;
-	buf_setup( &psock->buf, (u8_t*) buffer, buffersize );
+	buf_setup( &psock->buf, ( u8_t * ) buffer, buffersize );
 	PT_INIT( &psock->pt );
 	PT_INIT( &psock->psockpt );
 }

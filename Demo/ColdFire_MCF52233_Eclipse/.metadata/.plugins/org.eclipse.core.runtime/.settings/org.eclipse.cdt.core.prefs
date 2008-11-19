@@ -1,0 +1,10 @@
+#Sun Nov 16 10:20:21 GMT 2008
+indexer/indexerId=org.eclipse.cdt.core.fastIndexer
+environment/workspace=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<environment append\="true" appendContributed\="true"/>\r\n
+indexer/updatePolicy=0
+indexer/filesToParseUpFront=stdarg.h, stddef.h, sys/types.h
+indexer/skipTypeReferences=false
+indexer/skipReferences=false
+indexer/indexAllFiles=false
+indexer/skipMacroReferences=false
+eclipse.preferences.version=1

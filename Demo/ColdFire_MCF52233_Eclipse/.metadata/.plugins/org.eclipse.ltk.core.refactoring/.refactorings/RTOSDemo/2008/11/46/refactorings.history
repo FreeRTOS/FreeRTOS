@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;RTOSDemo/webserver/fec.h&apos; to &apos;FEC.h&apos;" description="Rename resource &apos;fec.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="webserver/fec.h" name="FEC.h" stamp="1226827901062" updateReferences="true"/>
+</session>

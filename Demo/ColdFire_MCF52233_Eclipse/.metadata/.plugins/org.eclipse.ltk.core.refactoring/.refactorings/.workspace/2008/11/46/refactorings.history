@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Delete resource &apos;RTOSDemo/webserver/MCF5223x_Ethernet.c&apos;" deleteContents="false" description="Delete resource &apos;RTOSDemo/webserver/MCF5223x_Ethernet.c&apos;" element1="/RTOSDemo/webserver/MCF5223x_Ethernet.c" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1226771144015"/>
-</session>

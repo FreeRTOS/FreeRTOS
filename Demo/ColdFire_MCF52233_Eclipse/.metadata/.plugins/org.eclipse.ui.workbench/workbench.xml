@@ -34,22 +34,12 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
-<part id="1"/>
-<part id="2"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/main.c" title="main.c" tooltip="RTOSDemo/main.c" workbook="DefaultEditorWorkbook">
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/E/Dev/_FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/main.c" title="main.c" tooltip="RTOSDemo/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/RTOSDemo/main.c"/>
-<editorState selectionLength="0" selectionOffset="0"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="FEC.c" partName="FEC.c" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/webserver/FEC.c" title="FEC.c" tooltip="RTOSDemo/webserver/FEC.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/RTOSDemo/webserver/FEC.c"/>
-<editorState selectionLength="0" selectionOffset="0"/>
-</editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" partName="FreeRTOSConfig.h" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/FreeRTOSConfig.h" title="FreeRTOSConfig.h" tooltip="RTOSDemo/FreeRTOSConfig.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/RTOSDemo/FreeRTOSConfig.h"/>
 <editorState selectionLength="0" selectionOffset="0"/>
 </editor>
 </editors>
@@ -59,13 +49,6 @@
 </view>
 <view id="org.eclipse.cdt.ui.CView" partName="C/C++ Projects">
 <viewState horizontalPosition="0" verticalPosition="0" workingSet="RTOSDemo">
-<expanded>
-<element path="C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo"/>
-<element path="C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\webserver"/>
-</expanded>
-<selection>
-<element path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/FreeRTOSConfig.h"/>
-</selection>
 <customFilters userDefinedPatternsEnabled="false">
 <xmlDefinedFilters>
 <child filterId="org.eclipse.cdt.internal.ui.CView.ExecutableFilter" isEnabled="false"/>
@@ -284,26 +267,18 @@
 <view id="org.eclipse.debug.ui.ExpressionView"/>
 <view id="org.eclipse.debug.ui.DebugView"/>
 <fastViewBars/>
-<layout>
-<mainWindow>
-<info folder="true" part="org.eclipse.debug.internal.ui.NavigatorFolderView">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
+<layout>&#x0A;<mainWindow>&#x0A;<info folder="true" part="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ResourceNavigator" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.PackageExplorer" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.ui.TypeHierarchy" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1254" ratioRight="418" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1254" ratioRight="418" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.debug.internal.ui.ConsoleFolderView" ratio="0.8362445" ratioLeft="766" ratioRight="150" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
-<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
-<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.ConsoleFolderView" ratio="0.8362445" ratioLeft="766" ratioRight="150" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.cdt.debug.ui.executablesView" label="Executables"/>
@@ -313,8 +288,7 @@
 <page content="org.eclipse.ui.views.PropertySheet" label="LabelNotFound"/>
 <page content="org.eclipse.jdt.debug.ui.DisplayView" label="LabelNotFound"/>
 <page content="org.eclipse.search.SearchResultView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
@@ -323,55 +297,39 @@
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@2ee7d4" ratio="0.3210943" ratioLeft="446" ratioRight="943" relationship="2" relative="org.eclipse.debug.internal.ui.ConsoleFolderView">
-<folder appearance="2" expanded="2">
-<page content="rtos.openrtos.viewer.views.TaskTable" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@2ee7d4" ratio="0.3210943" ratioLeft="446" ratioRight="943" relationship="2" relative="org.eclipse.debug.internal.ui.ConsoleFolderView">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="rtos.openrtos.viewer.views.TaskTable" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 <info part="org.eclipse.ui.editorss" ratio="0.14814815" ratioLeft="92" ratioRight="529" relationship="4" relative="org.eclipse.debug.internal.ui.NavigatorFolderView"/>
-<info folder="true" part="org.eclipse.debug.internal.ui.OutlineFolderView" ratio="0.57938886" ratioLeft="967" ratioRight="702" relationship="2" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.OutlineFolderView" ratio="0.57938886" ratioLeft="967" ratioRight="702" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="LabelNotFound"/>
 <page content="org.eclipse.ant.ui.views.AntView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1b63c34" ratio="0.3700504" ratioLeft="514" ratioRight="875" relationship="2" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.cdt.debug.ui.DisassemblyView" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1b63c34" ratio="0.3700504" ratioLeft="514" ratioRight="875" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.cdt.debug.ui.DisassemblyView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@14eb638" ratio="0.6043307" ratioLeft="614" ratioRight="402" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1b63c34">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@14eb638" ratio="0.6043307" ratioLeft="614" ratioRight="402" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1b63c34">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.RegisterView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@d2bf0a" ratio="0.4076923" ratioLeft="159" ratioRight="231" relationship="4" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="rtos.openrtos.viewer.views.QueueTable" label="LabelNotFound"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@d2bf0a" ratio="0.4076923" ratioLeft="159" ratioRight="231" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="rtos.openrtos.viewer.views.QueueTable" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@1ae6338" ratio="0.5" ratioLeft="836" ratioRight="836" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">
-<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">
-<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1ae6338" ratio="0.5" ratioLeft="836" ratioRight="836" relationship="2" relative="org.eclipse.debug.internal.ui.NavigatorFolderView">&#x0A;<folder activePageID="org.eclipse.debug.ui.DebugView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.DebugView" label="Debug"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 </presentation>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.debug.internal.ui.ToolsFolderView" ratio="0.5" ratioLeft="696" ratioRight="696" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1ae6338">
-<folder activePageID="org.eclipse.debug.ui.BreakpointView" appearance="2" expanded="2">
-<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
+<info folder="true" part="org.eclipse.debug.internal.ui.ToolsFolderView" ratio="0.5" ratioLeft="696" ratioRight="696" relationship="2" relative="org.eclipse.ui.internal.ViewStack@1ae6338">&#x0A;<folder activePageID="org.eclipse.debug.ui.BreakpointView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.debug.ui.VariableView" label="Variables"/>
 <page content="org.eclipse.debug.ui.BreakpointView" label="Breakpoints"/>
 <page content="org.eclipse.debug.ui.ExpressionView" label="Expressions"/>
 <page content="org.eclipse.debug.ui.ModuleView" label="LabelNotFound"/>
 <page content="org.eclipse.cdt.debug.ui.SignalsView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 <part id="1"/>
 <part id="2"/>
 </presentation>
@@ -387,16 +345,13 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/FreeRTOSConfig.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.make.editor" path="/RTOSDemo/Makefile"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/RTOSDemo/m52233-rom.ld"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/stdlib.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/webserver/uip-conf.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/main.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/Demo_Source/Minimal/blocktim.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/webserver/FEC.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/FreeRTOSConfig.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/main.c"/>
 </editors>
-<item historyLabel="stdlib.c" index="3">
-<position info="not_deleted" x="8379" y="36"/>
-</item>
 <item historyLabel="m52233-rom.ld" index="2">
 <position info="not_deleted" x="829" y="0"/>
 </item>
@@ -409,76 +364,76 @@
 <item historyLabel="Makefile" index="1">
 <position info="not_deleted" x="1364" y="0"/>
 </item>
-<item historyLabel="uip-conf.h" index="4">
+<item historyLabel="uip-conf.h" index="3">
 <position/>
 </item>
 <item historyLabel="FreeRTOSConfig.h" index="0">
 <position info="not_deleted" x="3274" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position/>
 </item>
 <item historyLabel="Makefile" index="1">
 <position info="not_deleted" x="2453" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="7770" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="8395" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="8460" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="8642" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="8782" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="8828" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="8964" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="9083" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="9189" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="9213" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5765" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5930" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5973" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="6025" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="4214" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="4689" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="4805" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="4940" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="2758" y="155"/>
 </item>
 <item historyLabel="FreeRTOSConfig.h" index="0">
@@ -487,61 +442,64 @@
 <item historyLabel="Makefile" index="1">
 <position info="not_deleted" x="3428" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="6104" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="6155" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="7578" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="15810" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="15937" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="15990" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="16017" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="16074" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="16101" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="16165" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="7578" y="54"/>
 </item>
-<item historyLabel="blocktim.c" index="6">
+<item historyLabel="blocktim.c" index="5">
 <position info="not_deleted" x="12892" y="14"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
 <item historyLabel="FreeRTOSConfig.h" index="0">
 <position info="not_deleted" x="3151" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
-<item historyLabel="main.c" index="5">
+<item historyLabel="main.c" index="4">
 <position/>
 </item>
-<item historyLabel="FEC.c" index="7">
+<item historyLabel="FEC.c" index="6">
 <position/>
 </item>
-<item active="true" historyLabel="FreeRTOSConfig.h" index="8">
+<item historyLabel="FreeRTOSConfig.h" index="7">
+<position/>
+</item>
+<item active="true" historyLabel="main.c" index="8">
 <position/>
 </item>
 </navigationHistory>

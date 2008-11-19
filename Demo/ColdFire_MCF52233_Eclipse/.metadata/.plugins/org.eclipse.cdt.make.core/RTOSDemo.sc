@@ -4,6 +4,14 @@
 <scannerInfo id="org.eclipse.cdt.make.core.discoveredScannerInfo">
 <instance id="0.1348192838">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/webserver"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/ethernet/FreeRTOS-uIP"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Source/include"/>
+<includePath path="C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\include" removed="true"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/Common/include"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Source/portable/GCC/ColdFire_V2"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/MCF5223x"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo"/>
 <includePath path="C:\devtools\cygwin\lib\gcc\i686-pc-cygwin\3.4.4\include"/>
 <includePath path="C:\devtools\cygwin\usr\include"/>
 <includePath path="C:\devtools\cygwin\usr\include\w32api"/>
@@ -86,6 +94,11 @@
 <definedSymbol symbol="unix=1"/>
 <definedSymbol symbol="__unix__=1"/>
 <definedSymbol symbol="__unix=1"/>
+<definedSymbol symbol="COLDFIRE_V2_GCC=1"/>
+<definedSymbol symbol="PACK_STRUCT_END=__attribute\(\(packed\)\)"/>
+<definedSymbol symbol="ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\)"/>
+<definedSymbol symbol="bktPRIMARY_PRIORITY=4"/>
+<definedSymbol symbol="bktSECONDARY_PRIORITY=3"/>
 </collector>
 </instance>
 </scannerInfo>

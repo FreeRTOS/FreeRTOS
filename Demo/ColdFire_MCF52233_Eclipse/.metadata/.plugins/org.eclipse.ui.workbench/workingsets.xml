@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workingSetManager>
+<workingSet editPageId="org.eclipse.cdt.ui.CElementWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" label="RTOSDemo" name="RTOSDemo">
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOSConfig.h" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Source/croutine.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Source/include" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Source/list.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Source/portable/GCC/ColdFire_V2" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Source/queue.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Source/tasks.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_Tick_Setup.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/MCF5223x" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/ParTest" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/main.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/printf-stdarg.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/webserver" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Demo_Source/Minimal" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/Demo_Source/include" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS_uIP" type="2"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/RTOSDemo/Makefile" type="1"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/RTOSDemo/m52235evb-rom-hosted.ld" type="1"/>
+</workingSet>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" label="Window Working Set" name="Aggregate for window 1227127141812"/>
+<mruList name="RTOSDemo"/>
 </workingSetManager>

@@ -144,3 +144,12 @@ org.eclipse.cdt.debug.mi.core.MIException: The program is not being run.
 	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:880)
 	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1083)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SESSION 2008-11-19 21:28:16.062 -----------------------------------------------
+eclipse.buildId=I20080617-2000
+java.version=1.6.0_03
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.cdt.core 1 0 2008-11-19 21:28:46.625
+!MESSAGE Indexed 'RTOSDemo' (256 sources, 168 headers) in 9.20 sec: 11,588 declarations; 45,370 references; 492 unresolved inclusions; 444 syntax errors; 8,737 unresolved names (13.30%)

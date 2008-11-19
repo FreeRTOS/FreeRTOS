@@ -34,13 +34,23 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
+<part id="2"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/main.c" title="main.c" tooltip="RTOSDemo/main.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/main.c" title="main.c" tooltip="RTOSDemo/main.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/RTOSDemo/main.c"/>
-<editorState selectionLength="0" selectionOffset="5705"/>
+<editorState selectionLength="0" selectionOffset="0"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="FEC.c" partName="FEC.c" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/webserver/FEC.c" title="FEC.c" tooltip="RTOSDemo/webserver/FEC.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/RTOSDemo/webserver/FEC.c"/>
+<editorState selectionLength="0" selectionOffset="0"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" partName="FreeRTOSConfig.h" path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/FreeRTOSConfig.h" title="FreeRTOSConfig.h" tooltip="RTOSDemo/FreeRTOSConfig.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/RTOSDemo/FreeRTOSConfig.h"/>
+<editorState selectionLength="0" selectionOffset="0"/>
 </editor>
 </editors>
 <views>
@@ -51,9 +61,10 @@
 <viewState horizontalPosition="0" verticalPosition="0" workingSet="RTOSDemo">
 <expanded>
 <element path="C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo"/>
+<element path="C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\webserver"/>
 </expanded>
 <selection>
-<element path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/main.c"/>
+<element path="C:/E/Dev/FreeRTOS/WorkingCopy2/Demo/ColdFire_MCF52233_Eclipse/RTOSDemo/FreeRTOSConfig.h"/>
 </selection>
 <customFilters userDefinedPatternsEnabled="false">
 <xmlDefinedFilters>
@@ -115,7 +126,7 @@
 </viewState>
 </view>
 </views>
-<perspectives activePart="org.eclipse.cdt.ui.CView" activePerspective="org.eclipse.cdt.ui.CPerspective">
+<perspectives activePart="org.eclipse.cdt.ui.editor.CEditor" activePerspective="org.eclipse.cdt.ui.CPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor class="org.eclipse.cdt.internal.ui.CPerspectiveFactory" id="org.eclipse.cdt.ui.CPerspective" label="C/C++"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -377,21 +388,12 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.make.editor" path="/RTOSDemo/Makefile"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/RTOSDemo/m52233-rom.ld"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/stdlib.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/webserver/httpd.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/string.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/webserver/uip-conf.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/main.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/Demo_Source/Minimal/blocktim.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/webserver/FEC.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/RTOSDemo/FreeRTOSConfig.h"/>
 </editors>
-<item historyLabel="httpd.c" index="4">
-<position info="not_deleted" x="4959" y="40"/>
-</item>
-<item historyLabel="stdlib.c" index="3">
-<position info="not_deleted" x="7212" y="40"/>
-</item>
-<item historyLabel="string.h" index="5">
-<position info="not_deleted" x="21" y="0"/>
-</item>
 <item historyLabel="stdlib.c" index="3">
 <position info="not_deleted" x="8379" y="36"/>
 </item>
@@ -407,76 +409,76 @@
 <item historyLabel="Makefile" index="1">
 <position info="not_deleted" x="1364" y="0"/>
 </item>
-<item historyLabel="uip-conf.h" index="6">
+<item historyLabel="uip-conf.h" index="4">
 <position/>
 </item>
 <item historyLabel="FreeRTOSConfig.h" index="0">
 <position info="not_deleted" x="3274" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position/>
 </item>
 <item historyLabel="Makefile" index="1">
 <position info="not_deleted" x="2453" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="7770" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="8395" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="8460" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="8642" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="8782" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="8828" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="8964" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="9083" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="9189" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="9213" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5765" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5930" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5973" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="6025" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="4214" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="4689" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="4805" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="4940" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="2758" y="155"/>
 </item>
 <item historyLabel="FreeRTOSConfig.h" index="0">
@@ -485,53 +487,62 @@
 <item historyLabel="Makefile" index="1">
 <position info="not_deleted" x="3428" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="6104" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="6155" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="7578" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="15810" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="15937" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="15990" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="16017" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="16074" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="16101" y="0"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="16165" y="0"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="7578" y="54"/>
 </item>
-<item historyLabel="blocktim.c" index="8">
+<item historyLabel="blocktim.c" index="6">
 <position info="not_deleted" x="12892" y="14"/>
 </item>
-<item historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5705" y="0"/>
 </item>
 <item historyLabel="FreeRTOSConfig.h" index="0">
 <position info="not_deleted" x="3151" y="0"/>
 </item>
-<item active="true" historyLabel="main.c" index="7">
+<item historyLabel="main.c" index="5">
 <position info="not_deleted" x="5705" y="0"/>
+</item>
+<item historyLabel="main.c" index="5">
+<position/>
+</item>
+<item historyLabel="FEC.c" index="7">
+<position/>
+</item>
+<item active="true" historyLabel="FreeRTOSConfig.h" index="8">
+<position/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -550,6 +561,12 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" tooltip="RTOSDemo/FreeRTOSConfig.h">
+<persistable path="/RTOSDemo/FreeRTOSConfig.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FEC.c" tooltip="RTOSDemo/webserver/FEC.c">
+<persistable path="/RTOSDemo/webserver/FEC.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="blocktim.c" tooltip="RTOSDemo/Demo_Source/Minimal/blocktim.c">
 <persistable path="/RTOSDemo/Demo_Source/Minimal/blocktim.c"/>
 </file>
@@ -571,9 +588,6 @@
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uip.c" tooltip="RTOSDemo/Demo_Source/ethernet/FreeRTOS-uIP/uip.c">
 <persistable path="/RTOSDemo/Demo_Source/ethernet/FreeRTOS-uIP/uip.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" tooltip="RTOSDemo/FreeRTOSConfig.h">
-<persistable path="/RTOSDemo/FreeRTOSConfig.h"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" name="m52235evb-rom-hosted.ld" tooltip="RTOSDemo/m52235evb-rom-hosted.ld">
 <persistable path="/RTOSDemo/m52235evb-rom-hosted.ld"/>
 </file>
@@ -591,9 +605,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uip_arp.c" tooltip="RTOSDemo/Demo_Source/ethernet/FreeRTOS-uIP/uip_arp.c">
 <persistable path="/RTOSDemo/Demo_Source/ethernet/FreeRTOS-uIP/uip_arp.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="uip.h" tooltip="RTOSDemo/FreeRTOS_uIP/uip.h">
-<persistable path="/RTOSDemo/FreeRTOS_uIP/uip.h"/>
 </file>
 </mruList>
 </workbench>

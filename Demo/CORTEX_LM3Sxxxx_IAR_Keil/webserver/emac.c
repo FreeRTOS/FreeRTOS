@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -75,7 +75,11 @@ point to one of the Rx buffers. */
 unsigned portCHAR *uip_buf;
 
 /* Buffers into which Rx data is placed. */
-static unsigned portCHAR ucRxBuffers[ emacNUM_RX_BUFFERS ][ UIP_BUFSIZE + ( 4 * emacFRAM_SIZE_BYTES ) ];
+static union
+{
+	unsigned portLONG ulJustForAlignment;
+	unsigned portCHAR ucRxBuffers[ emacNUM_RX_BUFFERS ][ UIP_BUFSIZE + ( 4 * emacFRAM_SIZE_BYTES ) ];
+} uxRxBuffers;
 
 /* The length of the data within each of the Rx buffers. */
 static unsigned portLONG ulRxLength[ emacNUM_RX_BUFFERS ];
@@ -134,7 +138,7 @@ unsigned int iLen;
 	if( iLen != 0 )
 	{
 		/* Leave room for the size at the start of the buffer. */
-		uip_buf = &( ucRxBuffers[ ulNextRxBuffer ][ 2 ] );
+		uip_buf = &( uxRxBuffers.ucRxBuffers[ ulNextRxBuffer ][ 2 ] );
 		
 		ulRxLength[ ulNextRxBuffer ] = 0;
 		
@@ -218,11 +222,10 @@ unsigned portLONG ulTemp;
 
 void vMACHandleTask( void *pvParameters )
 {
-unsigned long ulLen = 0, i;
-unsigned portLONG ulLength, ulInt;
+unsigned long i, ulInt;
+unsigned portLONG ulLength;
 unsigned long *pulBuffer;
 static unsigned portLONG ulNextRxBuffer = 0;
-portBASE_TYPE xSwitchRequired = pdFALSE;
 
 	for( ;; )
 	{
@@ -234,11 +237,11 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 			ulLength = HWREG( ETH_BASE + MAC_O_DATA );
 			
 			/* Leave room at the start of the buffer for the size. */
-			pulBuffer = ( unsigned long * ) &( ucRxBuffers[ ulNextRxBuffer ][ 2 ] );			
+			pulBuffer = ( unsigned long * ) &( uxRxBuffers.ucRxBuffers[ ulNextRxBuffer ][ 2 ] );			
 			*pulBuffer = ( ulLength >> 16 );
 
 			/* Get the size of the data. */			
-			pulBuffer = ( unsigned long * ) &( ucRxBuffers[ ulNextRxBuffer ][ 4 ] );			
+			pulBuffer = ( unsigned long * ) &( uxRxBuffers.ucRxBuffers[ ulNextRxBuffer ][ 4 ] );			
 			ulLength &= 0xFFFF;
 			
 			if( ulLength > 4 )
@@ -275,6 +278,8 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 		}
 		
 		EthernetIntEnable( ETH_BASE, ETH_INT_RX );
+		
+		( void ) ulInt;
 	}
 }
 

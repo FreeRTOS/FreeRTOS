@@ -61,7 +61,7 @@ extern void vPortSVCHandler(void);
 extern void vT2InterruptHandler( void );
 extern void vT3InterruptHandler( void );
 extern void vEMAC_ISR( void );
-extern Timer0IntHandler( void );
+extern void Timer0IntHandler( void );
 
 //*****************************************************************************
 //

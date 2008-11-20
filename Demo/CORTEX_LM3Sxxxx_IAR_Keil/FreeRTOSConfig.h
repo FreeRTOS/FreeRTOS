@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -95,8 +95,8 @@ to exclude the API function. */
 
 
 
-#define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned portCHAR ) 7 << ( unsigned portCHAR ) 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned portCHAR ) 5 << ( unsigned portCHAR ) 5 )  /* Priority 5, or 160 as only the top three bits are implemented. */
+#define configKERNEL_INTERRUPT_PRIORITY 		( 7 << 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << 5 )  /* Priority 5, or 160 as only the top three bits are implemented. */
 
 
 #endif /* FREERTOS_CONFIG_H */

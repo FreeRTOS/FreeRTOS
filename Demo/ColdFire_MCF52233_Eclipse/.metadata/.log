@@ -1,9 +1,0 @@
-!SESSION 2008-11-19 22:20:41.046 -----------------------------------------------
-eclipse.buildId=I20080617-2000
-java.version=1.6.0_03
-java.vendor=Sun Microsystems Inc.
-BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_GB
-Command-line arguments:  -os win32 -ws win32 -arch x86
-
-!ENTRY org.eclipse.cdt.core 1 0 2008-11-19 22:21:05.093
-!MESSAGE Indexed 'RTOSDemo' (256 sources, 201 headers) in 12.06 sec: 13,844 declarations; 63,637 references; 137 unresolved inclusions; 316 syntax errors; 8,496 unresolved names (9.88%)

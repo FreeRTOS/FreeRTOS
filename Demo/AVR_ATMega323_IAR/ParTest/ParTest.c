@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -92,23 +92,23 @@ unsigned portCHAR ucBit = ( unsigned portCHAR ) 1;
 	if( uxLED <= partstMAX_OUTPUT_LED )
 	{
 		ucBit <<= uxLED;
-	}	
 
-	vTaskSuspendAll();
-	{
-		if( xValue == pdTRUE )
+		vTaskSuspendAll();
 		{
-			ucBit ^= ( unsigned portCHAR ) 0xff;
-			ucCurrentOutputValue &= ucBit;
-		}
-		else
-		{
-			ucCurrentOutputValue |= ucBit;
-		}
+			if( xValue == pdTRUE )
+			{
+				ucBit ^= ( unsigned portCHAR ) 0xff;
+				ucCurrentOutputValue &= ucBit;
+			}
+			else
+			{
+				ucCurrentOutputValue |= ucBit;
+			}
 
-		PORTB = ucCurrentOutputValue;
+			PORTB = ucCurrentOutputValue;
+		}
+		xTaskResumeAll();
 	}
-	xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 

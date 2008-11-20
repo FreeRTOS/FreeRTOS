@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.0 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -212,7 +212,7 @@ static void prvSetupHardware( void )
 	MAMCR = mainMAM_MODE_FULL;
 
 	/* Setup the peripheral bus to be the same as the PLL output. */
-	VPBDIV = mainBUS_CLK_FULL;
+	APBDIV = mainBUS_CLK_FULL;
 	
 	/* Configure the RS2332 pins.  All other pins remain at their default of 0. */
 	PINSEL0 |= mainTX_ENABLE;
@@ -222,7 +222,7 @@ static void prvSetupHardware( void )
 	IO1DIR = mainLED_TO_OUTPUT;
 
 	/* Setup the peripheral bus to be the same as the PLL output. */
-	VPBDIV = mainBUS_CLK_FULL;
+	APBDIV = mainBUS_CLK_FULL;
 }
 /*-----------------------------------------------------------*/
 

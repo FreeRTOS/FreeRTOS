@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.cdt.debug.gdbjtag.launchConfigurationType">
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.imageFileName" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.initCommands" value="target remote | m68k-elf-sprite pe: m52235evb"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.ipAddress" value="localhost"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbremote.core.loadImage" value="false"/>
+<intAttribute key="org.eclipse.cdt.debug.gdbremote.core.portNumber" value="10000"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbremote.core.runCommands" value="b main&#13;&#10;jump __cs3_reset&#13;&#10;"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbremote.core.useRemoteTarget" value="false"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.DEBUG_NAME" value="m68k-elf-gdb"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.GDB_INIT" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.commandFactory" value="Standard (Windows)"/>
+<stringAttribute key="org.eclipse.cdt.debug.mi.core.protocol" value="mi"/>
+<booleanAttribute key="org.eclipse.cdt.debug.mi.core.verboseMode" value="false"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="bin/RTOSDemo.elf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="RTOSDemo"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="0.289703090"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/RTOSDemo"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+</launchConfiguration>

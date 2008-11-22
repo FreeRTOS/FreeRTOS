@@ -943,12 +943,8 @@ signed portCHAR *pcOriginalReadPosition;
 			}
 		}
 
-/* The two tasks are blocked on the queue, the low priority task is polling/running. */
-
-/* An interrupt occurs here - which unblocks the HP tasks, but they do not run. */
 		taskENTER_CRITICAL();
 		{
-/* Because the interrupt occurred the LP task manages to grab the data as the other two tasks are not yet running. */
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
 				/* Remember our read position in case we are just peeking. */

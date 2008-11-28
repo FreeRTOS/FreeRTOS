@@ -91,6 +91,9 @@
 /* Setup the PIT to generate the tick interrupts. */
 static void prvSetupTimerInterrupt( void );
 
+/* The PIT interrupt handler - the RTOS tick. */
+static void vPortTickISR( void );
+
 /* ulCriticalNesting will get set to zero when the first task starts.  It
 cannot be initialised to 0 as this will cause interrupts to be enabled
 during the kernel initialisation process. */
@@ -189,34 +192,27 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-#if configUSE_PREEMPTION == 0
+static __arm void vPortTickISR( void )
+{
+volatile unsigned portLONG ulDummy;
+	
+	/* Increment the tick count - which may wake some tasks but as the
+	preemptive scheduler is not being used any woken task is not given
+	processor time no matter what its priority. */
+	vTaskIncrementTick();
 
-	/* The cooperative scheduler requires a normal IRQ service routine to
-	simply increment the system tick. */
-	static __arm __irq void vPortNonPreemptiveTick( void );
-	static __arm __irq void vPortNonPreemptiveTick( void )
-	{
-		unsigned portLONG ulDummy;
+	#if configUSE_PREEMPTION == 0
+		vTaskSwitchContext();
+	#endif	
 		
-		/* Increment the tick count - which may wake some tasks but as the
-		preemptive scheduler is not being used any woken task is not given
-		processor time no matter what its priority. */
-		vTaskIncrementTick();
-		
-		/* Clear the PIT interrupt. */
-		ulDummy = AT91C_BASE_PITC->PITC_PIVR;
-		
-		/* End the interrupt in the AIC. */
-		AT91C_BASE_AIC->AIC_EOICR = ulDummy;
-	}
-
-#else
-
-	/* Currently the IAR port requires the preemptive tick function to be
-	defined in an asm file. */
-
-#endif
-
+	/* Clear the PIT interrupt. */
+	ulDummy = AT91C_BASE_PITC->PITC_PIVR;
+	
+	/* To remove compiler warning. */
+	( void ) ulDummy;
+	
+	/* The AIC is cleared in the asm wrapper, outside of this function. */
+}
 /*-----------------------------------------------------------*/
 
 static void prvSetupTimerInterrupt( void )
@@ -228,14 +224,7 @@ const unsigned portLONG ulPeriodIn_uS = ( 1 / configTICK_RATE_HZ ) * port1SECOND
 	
 	/* Setup the PIT interrupt. */
 	AIC_DisableIT( AT91C_ID_SYS );
-
-	#if configUSE_PREEMPTION == 0	
-		AIC_ConfigureIT( AT91C_ID_SYS, AT91C_AIC_PRIOR_LOWEST, vPortNonPreemptiveTick );
-	#else
-		extern void ( vPortPreemptiveTick )( void );
-		AIC_ConfigureIT( AT91C_ID_SYS, AT91C_AIC_PRIOR_LOWEST, vPortPreemptiveTick );		
-	#endif
-
+	AIC_ConfigureIT( AT91C_ID_SYS, AT91C_AIC_PRIOR_LOWEST, vPortTickISR );
 	AIC_EnableIT( AT91C_ID_SYS );
 	PIT_EnableIT();
 	

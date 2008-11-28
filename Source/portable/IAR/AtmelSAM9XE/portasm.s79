@@ -2,10 +2,8 @@
 		CODE32
 
 	EXTERN vTaskSwitchContext
-	EXTERN vTaskIncrementTick
 
 	PUBLIC vPortYieldProcessor
-	PUBLIC vPortPreemptiveTick
 	PUBLIC vPortStartFirstTask
 
 #include "ISR_Support.h"
@@ -29,28 +27,6 @@ vPortYieldProcessor:
 	LDR R0, =vTaskSwitchContext	; before selecting the next task to execute.
 	mov     lr, pc
 	BX R0
-	portRESTORE_CONTEXT			; Restore the context of the selected task.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Preemptive context switch function.  This will only ever get installed if
-; portUSE_PREEMPTION is set to 1 in portmacro.h.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-vPortPreemptiveTick:
-	portSAVE_CONTEXT			; Save the context of the current task.
-
-	LDR R0, =vTaskIncrementTick ; Increment the tick count - this may wake a task.
-	mov lr, pc
-	BX R0
-	LDR R0, =vTaskSwitchContext ; Select the next task to execute.
-	mov lr, pc
-	BX R0
-#if 0
-	LDR	R14, =AT91C_BASE_PITC	; Clear the PIT interrupt
-	LDR	R0, [R14, #PITC_PIVR ]
-
-	LDR R14, =AT91C_BASE_AIC	; Mark the End of Interrupt on the AIC
-    STR	R14, [R14, #AIC_EOICR]
-#endif
 	portRESTORE_CONTEXT			; Restore the context of the selected task.
 
 

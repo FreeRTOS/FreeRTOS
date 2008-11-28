@@ -134,6 +134,10 @@
 	#include "..\..\Source\portable\IAR\AtmelSAM7S64\portmacro.h"
 #endif
 
+#ifdef SAM9XE_IAR
+	#include "..\..\Source\portable\IAR\AtmelSAM9XE\portmacro.h"
+#endif
+
 #ifdef LPC2000_IAR
 	#include "..\..\Source\portable\IAR\LPC2000\portmacro.h"
 #endif

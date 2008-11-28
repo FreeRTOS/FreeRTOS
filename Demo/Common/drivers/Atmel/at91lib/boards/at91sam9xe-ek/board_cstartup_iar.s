@@ -127,37 +127,6 @@ irqHandler:
 
 		portRESTORE_CONTEXT
 
-		/* Won't progress to here. */
-
-		/* Save interrupt context on the stack to allow nesting */
-        SUB     lr, lr, #4
-        STMFD   sp!, {lr}
-        MRS     lr, SPSR
-        STMFD   sp!, {r0, lr}
-
-        /* Write in the IVR to support Protect Mode */
-        LDR     lr, =AT91C_BASE_AIC
-        LDR     r0, [r14, #AIC_IVR]
-        STR     lr, [r14, #AIC_IVR]
-
-        /* Branch to interrupt handler in Supervisor mode */
-        MSR     CPSR_c, #ARM_MODE_SVC
-        STMFD   sp!, {r1-r3, r12, lr}
-        MOV     lr, pc
-        BX      r0
-        LDMIA   sp!, {r1-r3, r12, lr}
-        MSR     CPSR_c, #ARM_MODE_IRQ | I_BIT
-
-        /* Acknowledge interrupt */
-        LDR     lr, =AT91C_BASE_AIC
-        STR     lr, [r14, #AIC_EOICR]
-
-        /* Restore interrupt context and branch back to calling code */
-        LDMIA   sp!, {r0, lr}
-        MSR     SPSR_cxsf, lr
-        LDMIA   sp!, {pc}^
-
-
 /*
    After a reset, execution starts here, the mode is ARM, supervisor
    with interrupts disabled.

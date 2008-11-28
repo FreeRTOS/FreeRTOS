@@ -921,7 +921,8 @@
         <option>
           <name>CCDefines</name>
           <state>at91sam9xe128</state>
-          <state>sdram</state>
+          <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1059,6 +1060,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1258,6 +1262,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -1699,7 +1704,8 @@
         <option>
           <name>CCDefines</name>
           <state>at91sam9xe128</state>
-          <state>sram</state>
+          <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1837,6 +1843,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2036,6 +2045,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -2476,8 +2486,9 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>at91sam9xe256</state>
+          <state>at91sam9xe128</state>
           <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -2615,6 +2626,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2814,6 +2828,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -3254,8 +3269,9 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>at91sam9xe256</state>
-          <state>sdram</state>
+          <state>at91sam9xe128</state>
+          <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -3393,6 +3409,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -3592,6 +3611,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -4032,8 +4052,9 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>at91sam9xe256</state>
-          <state>sram</state>
+          <state>at91sam9xe128</state>
+          <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -4171,6 +4192,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -4370,6 +4394,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -4810,8 +4835,9 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>at91sam9xe512</state>
+          <state>at91sam9xe128</state>
           <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -4949,6 +4975,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -5148,6 +5177,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -5588,8 +5618,9 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>at91sam9xe512</state>
-          <state>sdram</state>
+          <state>at91sam9xe128</state>
+          <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -5727,6 +5758,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -5926,6 +5960,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -6366,8 +6401,9 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>at91sam9xe512</state>
-          <state>sram</state>
+          <state>at91sam9xe128</state>
+          <state>flash</state>
+          <state>SAM9XE_IAR</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -6505,6 +6541,9 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
+          <state>$PROJ_DIR$\..\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..</state>
+          <state>$PROJ_DIR$\..\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -6704,6 +6743,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
+          <state>$PROJ_DIR$\..\..\..\Source\portable\IAR\AtmelSAM9XE</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>

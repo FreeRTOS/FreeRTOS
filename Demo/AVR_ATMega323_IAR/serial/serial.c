@@ -19,7 +19,7 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -69,8 +69,8 @@
 #define serUCSRC_SELECT					( ( unsigned portCHAR ) 0x80 )
 #define serEIGHT_DATA_BITS				( ( unsigned portCHAR ) 0x06 )
 
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static xQueueHandle xRxedChars;
+static xQueueHandle xCharsForTx;
 
 #define vInterruptOn()										\
 {															\
@@ -180,15 +180,14 @@ unsigned portCHAR ucByte;
 
 __interrupt void SIG_UART_RECV( void )
 {
-signed portCHAR cChar;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+signed portCHAR ucChar, xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Get the character and post it on the queue of Rxed characters.
 	If the post causes a task to wake force a context switch as the woken task
 	may have a higher priority than the task we have interrupted. */
-	cChar = UDR;
+	ucChar = UDR;
 
-	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+	xQueueSendFromISR( xRxedChars, &ucChar, &xHigherPriorityTaskWoken );
 
 	if( xHigherPriorityTaskWoken != pdFALSE )
 	{

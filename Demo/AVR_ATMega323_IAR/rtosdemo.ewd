@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-  <fileVersion>1</fileVersion>
+  <fileVersion>2</fileVersion>
   <configuration>
     <name>Debug</name>
     <toolchain>
@@ -404,9 +404,9 @@
     </settings>
     <settings>
       <name>JTAGICEMKIIAVR</name>
-      <archiveVersion>2</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>4</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -534,10 +534,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>OJTAGICEMKIIAVRCommunication</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>OJTAGICEMKIIAVRJtagSoftwareBreak</name>
           <state>0</state>
         </option>
@@ -552,6 +548,128 @@
         <option>
           <name>GetcharBreakpointP7</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OJTAGICEMKIIAVRCommunicationNew</name>
+          <state>2</state>
+        </option>
+        <option>
+          <name>OJTAGICEMKIIAVRCommunicationUsbEditId</name>
+          <state></state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>DRAGONAVR</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>ODRAGONAVRDriver</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>ODRAGONAVRExtraOptionsCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRDoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRLogFile</name>
+          <state>cspycomm.log</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceSuppLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceConsCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagFreqRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagFreqManually</name>
+          <state>100000</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagFreq</name>
+          <version>0</version>
+          <state>8</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagDeviceBefore</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagDeviceAfter</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagInstrBitsBefore</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceJtagInstrBitsAfter</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIceDaisyChain</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagDebugTimers</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagDebugEeprom</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagDebugReset</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagDebugFuses</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagIcedownloadToData</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRJtagSoftwareBreak</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ExitBreakpointP7</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>PutcharBreakpointP7</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GetcharBreakpointP7</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRCommunicationNew</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ODRAGONAVRCommunicationUsbEditId</name>
+          <state></state>
         </option>
       </data>
     </settings>
@@ -619,19 +737,27 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Orti\Orti.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\stack.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>

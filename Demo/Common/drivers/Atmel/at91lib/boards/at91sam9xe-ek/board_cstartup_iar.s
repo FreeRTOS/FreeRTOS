@@ -113,13 +113,9 @@ irqHandler:
         LDR     r0, [r14, #AIC_IVR]
         STR     lr, [r14, #AIC_IVR]
 
-        /* Branch to interrupt handler in Supervisor mode */
-        MSR     CPSR_c, #ARM_MODE_SVC
-        STMFD   sp!, {r1-r3, r12, lr}
+        /* Branch to C portion of the interrupt handler */
         MOV     lr, pc
         BX      r0
-        LDMIA   sp!, {r1-r3, r12, lr}
-        MSR     CPSR_c, #ARM_MODE_IRQ | I_BIT
 
         /* Acknowledge interrupt */
         LDR     lr, =AT91C_BASE_AIC

@@ -96,6 +96,10 @@ int main()
 	prvSetupHardware();
 	
 	/* Start the standard demo tasks. */
+	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
+
+	/* These tasks to be added once the simple flasher is running.
+	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -108,9 +112,9 @@ int main()
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	
-	/* The death demo tasks must be started last as the sanity checks performed
-	require knowledge of the number of other tasks in the system. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	The death demo tasks must be started last as the sanity checks performed
+	require knowledge of the number of other tasks in the system.
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY ); */
 	
 	/* Start the scheduler.  From this point on the execution will be under
 	the control of the kernel. */
@@ -125,7 +129,7 @@ int main()
 static void prvCheckTask( void * pvParameters )
 {
 portTickType xNextWakeTime, xPeriod = mainNO_ERROR_PERIOD;
-static volatile ulErrorCode = 0UL;
+static volatile unsigned portLONG ulErrorCode = 0UL;
 
 	/* Initialise xNextWakeTime prior to its first use.  From this point on
 	the value of the variable is handled automatically by the kernel. */

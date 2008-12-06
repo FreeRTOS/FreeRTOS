@@ -4728,7 +4728,7 @@
         <option>
           <name>Variant</name>
           <version>8</version>
-          <state>0</state>
+          <state>11</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -4750,7 +4750,7 @@
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -4789,7 +4789,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>5.10.0.213</state>
+          <state>5.20.0.50986</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -4877,7 +4877,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pe826,Pe1375</state>
+          <state>Pa082</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -4974,6 +4974,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
+          <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\utility</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
           <state>$PROJ_DIR$\..\..\..\Source\include</state>
           <state>$PROJ_DIR$\..</state>

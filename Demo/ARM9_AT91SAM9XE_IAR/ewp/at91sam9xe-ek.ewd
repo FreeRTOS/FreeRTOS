@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-	<fileVersion>1</fileVersion>
+  <fileVersion>2</fileVersion>
   <configuration>
     <name>at91sam9xe128_flash</name>
     <toolchain>
@@ -12,7 +12,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -96,16 +96,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>1</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -253,7 +265,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -303,14 +315,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -369,6 +373,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -400,7 +413,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -474,6 +487,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -565,11 +586,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -585,7 +606,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -602,6 +627,10 @@
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>
@@ -616,7 +645,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -700,16 +729,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -857,7 +898,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -907,14 +948,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -973,6 +1006,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1004,7 +1046,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1078,6 +1120,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1169,11 +1219,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -1189,7 +1239,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -1206,6 +1260,10 @@
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>
@@ -1220,7 +1278,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1304,16 +1362,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -1461,7 +1531,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1511,14 +1581,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -1577,6 +1639,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1608,7 +1679,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1682,6 +1753,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1773,11 +1852,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -1793,7 +1872,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -1810,6 +1893,10 @@
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>
@@ -1824,7 +1911,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1857,7 +1944,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\Atmel\ioat91sam9xe256.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\Atmel\ioAT91SAM9XE256.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -1901,15 +1988,11 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>5.10.5.376</state>
+          <state>5.20.0.50986</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
         </option>
         <option>
           <name>UseFlashLoader</name>
@@ -1918,6 +2001,22 @@
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -2065,7 +2164,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2115,14 +2214,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -2181,6 +2272,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -2212,7 +2312,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2286,6 +2386,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -2377,11 +2485,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -2397,7 +2505,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -2414,6 +2526,10 @@
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>
@@ -2428,7 +2544,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2512,16 +2628,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -2669,7 +2797,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2719,14 +2847,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -2785,6 +2905,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -2816,7 +2945,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2890,6 +3019,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -2981,11 +3118,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -3001,7 +3138,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -3020,6 +3161,10 @@
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
     </debuggerPlugins>
   </configuration>
   <configuration>
@@ -3032,7 +3177,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3116,16 +3261,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -3273,7 +3430,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3323,14 +3480,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -3389,6 +3538,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -3420,7 +3578,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3494,6 +3652,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -3585,11 +3751,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -3605,7 +3771,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -3624,6 +3794,10 @@
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
     </debuggerPlugins>
   </configuration>
   <configuration>
@@ -3636,7 +3810,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3669,11 +3843,11 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\Atmel\ioat91sam9xe512.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\Atmel\ioAT91SAM9XE512.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>RunToName</name>
@@ -3701,7 +3875,7 @@
         </option>
         <option>
           <name>OCDownloadVerifyAll</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCProductVersion</name>
@@ -3713,15 +3887,11 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>5.10.5.376</state>
+          <state>5.20.0.50986</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
         </option>
         <option>
           <name>UseFlashLoader</name>
@@ -3730,6 +3900,22 @@
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -3877,7 +4063,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3929,16 +4115,8 @@
           <state>aaa.bbb.ccc.ddd</state>
         </option>
         <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>CCJLinkSpeedRadioV2</name>
-          <state>2</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCUSBDevice</name>
@@ -3993,6 +4171,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -4024,7 +4211,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4098,6 +4285,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -4189,11 +4384,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -4209,7 +4404,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -4228,6 +4427,10 @@
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
     </debuggerPlugins>
   </configuration>
   <configuration>
@@ -4240,7 +4443,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4324,16 +4527,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -4481,7 +4696,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4531,14 +4746,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -4597,6 +4804,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -4628,7 +4844,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4702,6 +4918,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -4793,11 +5017,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -4813,7 +5037,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -4832,6 +5060,10 @@
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
     </debuggerPlugins>
   </configuration>
   <configuration>
@@ -4844,7 +5076,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4928,16 +5160,28 @@
           <state>0</state>
         </option>
         <option>
-          <name>FlashLoaders</name>
-          <state>,,,0x200000,(default),</state>
-        </option>
-        <option>
           <name>UseFlashLoader</name>
           <state>0</state>
         </option>
         <option>
           <name>CLowLevel</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>OCBE8Slave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV2</name>
+          <state>,,,0x200000,(default),</state>
         </option>
       </data>
     </settings>
@@ -5085,7 +5329,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5135,14 +5379,6 @@
         <option>
           <name>CCJLinkTCPIP</name>
           <state>aaa.bbb.ccc.ddd</state>
-        </option>
-        <option>
-          <name>CCJLinkResetRadio</name>
-          <state>2</state>
-        </option>
-        <option>
-          <name>CCJLinkResetInitSeq</name>
-          <state>0</state>
         </option>
         <option>
           <name>CCJLinkSpeedRadioV2</name>
@@ -5201,6 +5437,15 @@
           <name>OCJLinkAttachSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CCJLinkResetList</name>
+          <version>0</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -5232,7 +5477,7 @@
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5306,6 +5551,14 @@
         <option>
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -5397,11 +5650,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -5417,7 +5670,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -5436,6 +5693,12 @@
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
     </debuggerPlugins>
   </configuration>
 </project>
+
+

@@ -72,7 +72,8 @@
 /*-----------------------------------------------------------*/
 
 /* Constants required to setup the initial stack. */
-#define portINITIAL_SPSR				( ( portSTACK_TYPE ) 0x3f ) /* System mode, THUMB mode, interrupts enabled. */
+#define portINITIAL_SPSR				( ( portSTACK_TYPE ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
+#define portTHUMB_MODE_BIT				( ( portSTACK_TYPE ) 0x20 )
 #define portINSTRUCTION_SIZE			( ( portSTACK_TYPE ) 4 )
 
 /* Constants required to setup the PIT. */
@@ -158,6 +159,14 @@ portSTACK_TYPE *pxOriginalTOS;
 
 	/* The status register is set for system mode, with interrupts enabled. */
 	*pxTopOfStack = ( portSTACK_TYPE ) portINITIAL_SPSR;
+	
+	#ifdef THUMB_INTERWORK
+	{
+		/* We want the task to start in thumb mode. */
+		*pxTopOfStack |= portTHUMB_MODE_BIT;
+	}
+	#endif
+	
 	pxTopOfStack--;
 
 	/* Interrupt flags cannot always be stored on the stack and will

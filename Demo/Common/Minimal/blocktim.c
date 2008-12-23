@@ -393,8 +393,8 @@ portBASE_TYPE xData;
 		wake time is as per that expected. */
 		xTimeWhenBlocking = xTaskGetTickCount();
 
-		/* We should unblock after bktTIME_TO_BLOCK having not received
-		anything on the queue. */
+		/* We should unblock after bktTIME_TO_BLOCK having not sent
+		anything to the queue. */
 		xData = 0;
 		xRunIndicator = bktRUN_INDICATOR;
 		if( xQueueSend( xTestQueue, &xData, bktTIME_TO_BLOCK ) != errQUEUE_FULL )

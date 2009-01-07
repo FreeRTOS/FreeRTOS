@@ -12,7 +12,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -29,8 +29,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
-          <state>11</state>
+          <version>9</version>
+          <state>12</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -126,13 +126,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -318,6 +327,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -546,7 +560,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -756,6 +770,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -795,7 +813,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -812,7 +830,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
+          <version>9</version>
           <state>0</state>
         </option>
         <option>
@@ -909,13 +927,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1101,6 +1128,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -1329,7 +1361,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1539,6 +1571,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1578,7 +1614,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1595,7 +1631,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
+          <version>9</version>
           <state>0</state>
         </option>
         <option>
@@ -1692,13 +1728,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1884,6 +1929,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -2112,7 +2162,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2322,6 +2372,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -2361,7 +2415,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2378,7 +2432,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
+          <version>9</version>
           <state>0</state>
         </option>
         <option>
@@ -2475,13 +2529,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2667,6 +2730,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -2895,7 +2963,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3105,6 +3173,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -3144,7 +3216,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3161,7 +3233,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
+          <version>9</version>
           <state>0</state>
         </option>
         <option>
@@ -3258,13 +3330,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3450,6 +3531,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -3678,7 +3764,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3888,6 +3974,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -3927,7 +4017,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3944,7 +4034,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
+          <version>9</version>
           <state>0</state>
         </option>
         <option>
@@ -4041,13 +4131,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4233,6 +4332,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -4461,7 +4565,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4671,6 +4775,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -4710,7 +4818,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4727,8 +4835,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
-          <state>11</state>
+          <version>9</version>
+          <state>12</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -4824,13 +4932,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5017,6 +5134,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -5245,7 +5367,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5455,6 +5577,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -5494,7 +5620,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5511,8 +5637,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
-          <state>0</state>
+          <version>9</version>
+          <state>12</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -5534,7 +5660,7 @@
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -5573,7 +5699,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>5.10.0.213</state>
+          <state>5.30.0.51160</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -5589,7 +5715,7 @@
         </option>
         <option>
           <name>GenLowLevelInterface</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GEndianModeBE</name>
@@ -5608,13 +5734,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5661,7 +5796,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pe826,Pe1375</state>
+          <state>Pe826,Pe1375,Pa082</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -5758,6 +5893,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
+          <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\utility</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
           <state>$PROJ_DIR$\..\..\..\Source\include</state>
           <state>$PROJ_DIR$\..</state>
@@ -5777,7 +5913,7 @@
         </option>
         <option>
           <name>IInterwork2</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IProcessorMode2</name>
@@ -5800,6 +5936,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -6028,7 +6169,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -6109,7 +6250,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek\at91sam9xe512\sdram.icf</state>
+          <state>$PROJ_DIR$\sdram.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -6238,6 +6379,10 @@
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
         </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -6277,7 +6422,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>16</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -6294,8 +6439,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>8</version>
-          <state>0</state>
+          <version>9</version>
+          <state>12</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -6391,13 +6536,22 @@
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
         </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>20</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -6541,6 +6695,7 @@
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\peripherals</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\components</state>
+          <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\utility</state>
           <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\usb</state>
           <state>$PROJ_DIR$\..\..\..\Source\include</state>
           <state>$PROJ_DIR$\..</state>
@@ -6583,6 +6738,11 @@
           <name>CompilerMisraRules98</name>
           <version>0</version>
           <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
       </data>
     </settings>
@@ -6811,7 +6971,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -7020,6 +7180,10 @@
         <option>
           <name>IlinkStdoutInterfaceSlave</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>CrcFullSize</name>
+          <state>0</state>
         </option>
       </data>
     </settings>

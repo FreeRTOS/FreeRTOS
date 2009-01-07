@@ -3,7 +3,7 @@
 <Workspace>
   <ConfigDictionary>
     
-  <CurrentConfigs><Project>at91sam9xe-ek/at91sam9xe512_flash</Project></CurrentConfigs></ConfigDictionary>
+  <CurrentConfigs><Project>at91sam9xe-ek/at91sam9xe512_sdram</Project></CurrentConfigs></ConfigDictionary>
   <Desktop>
     <Static>
       <Workspace>
@@ -12,7 +12,7 @@
           
           
           
-        <Column0>258</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>242</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -20,7 +20,7 @@
         
         
       <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1216</ColumnWidth1><ColumnWidth2>324</ColumnWidth2><ColumnWidth3>81</ColumnWidth3></Build>
-    <Debug-Log/><TerminalIO/></Static>
+    <Debug-Log><ColumnWidth0>18</ColumnWidth0><ColumnWidth1>1344</ColumnWidth1></Debug-Log><TerminalIO/></Static>
     <Windows>
       
       
@@ -32,7 +32,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>at91sam9xe-ek</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>at91sam9xe-ek</ExpandedNode><ExpandedNode>at91sam9xe-ek/main.c</ExpandedNode><ExpandedNode>at91sam9xe-ek/scheduler_source</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -52,14 +52,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ARM9_AT91SAM9XE_IAR\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ARM9_AT91SAM9XE_IAR\main.c</Filename><XPos>0</XPos><YPos>74</YPos><SelStart>3772</SelStart><SelEnd>3772</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ARM9_AT91SAM9XE_IAR\ParTest\ParTest.c</Filename><XPos>0</XPos><YPos>45</YPos><SelStart>2969</SelStart><SelEnd>2976</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\tasks.c</Filename><XPos>0</XPos><YPos>1734</YPos><SelStart>54344</SelStart><SelEnd>54344</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ARM9_AT91SAM9XE_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>63</YPos><SelStart>3004</SelStart><SelEnd>3004</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek\board_cstartup_iar.s</Filename><XPos>0</XPos><YPos>98</YPos><SelStart>4027</SelStart><SelEnd>4027</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek\board_lowlevel.c</Filename><XPos>0</XPos><YPos>75</YPos><SelStart>3913</SelStart><SelEnd>3913</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\MemMang\heap_3.c</Filename><XPos>0</XPos><YPos>53</YPos><SelStart>2980</SelStart><SelEnd>2980</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\AtmelSAM9XE\port.c</Filename><XPos>0</XPos><YPos>204</YPos><SelStart>7829</SelStart><SelEnd>7829</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\AtmelSAM9XE\portasm.s79</Filename><XPos>0</XPos><YPos>5</YPos><SelStart>435</SelStart><SelEnd>435</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\Minimal\flash.c</Filename><XPos>0</XPos><YPos>90</YPos><SelStart>4791</SelStart><SelEnd>4791</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\drivers\Atmel\at91lib\peripherals\pit\pit.c</Filename><XPos>0</XPos><YPos>48</YPos><SelStart>3157</SelStart><SelEnd>3157</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek\board.h</Filename><XPos>0</XPos><YPos>186</YPos><SelStart>7460</SelStart><SelEnd>7467</SelEnd></Tab><ActiveTab>11</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\drivers\Atmel\at91lib\utility\led.c</Filename><XPos>0</XPos><YPos>79</YPos><SelStart>3123</SelStart><SelEnd>3132</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00aa9b88><key>iaridepm.enu1</key></Toolbar-00aa9b88></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>592</Bottom><Right>332</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>238571</sizeVertCX><sizeVertCY>604888</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>346</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>348</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>354379</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00abb418><key>iaridepm.enu1</key></Toolbar-00abb418></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>592</Bottom><Right>332</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>238571</sizeVertCX><sizeVertCY>604888</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>346</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>348</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>354379</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

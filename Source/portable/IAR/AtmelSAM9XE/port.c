@@ -78,7 +78,7 @@
 
 /* Constants required to setup the PIT. */
 #define port1MHz_IN_Hz 					( 1000000ul )
-#define port1SECOND_IN_uS				( 1000000ul )
+#define port1SECOND_IN_uS				( 1000000.0 )
 
 /* Constants required to handle critical sections. */
 #define portNO_CRITICAL_NESTING 		( ( unsigned portLONG ) 0 )
@@ -210,7 +210,7 @@ volatile unsigned portLONG ulDummy;
 	processor time no matter what its priority. */
 	vTaskIncrementTick();
 
-	#if configUSE_PREEMPTION == 0
+	#if configUSE_PREEMPTION == 1
 		vTaskSwitchContext();
 	#endif	
 		
@@ -226,7 +226,7 @@ volatile unsigned portLONG ulDummy;
 
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned portLONG ulPeriodIn_uS = ( 1 / configTICK_RATE_HZ ) * port1SECOND_IN_uS;
+const unsigned portLONG ulPeriodIn_uS = ( 1.0 / ( double ) configTICK_RATE_HZ ) * port1SECOND_IN_uS;
 
 	/* Setup the PIT for the required frequency. */
 	PIT_Init( ulPeriodIn_uS, BOARD_MCK / port1MHz_IN_Hz );
@@ -236,9 +236,6 @@ const unsigned portLONG ulPeriodIn_uS = ( 1 / configTICK_RATE_HZ ) * port1SECOND
 	AIC_ConfigureIT( AT91C_ID_SYS, AT91C_AIC_PRIOR_LOWEST, vPortTickISR );
 	AIC_EnableIT( AT91C_ID_SYS );
 	PIT_EnableIT();
-	
-	/* Enable the PIT itself. */
-	PIT_Enable();
 }
 /*-----------------------------------------------------------*/
 

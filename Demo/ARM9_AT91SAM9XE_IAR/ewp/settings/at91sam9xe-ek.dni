@@ -18,7 +18,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-542088010
+Checksum=1592855699
 [InstructionProfiling]
 Enabled=_ 0
 [Log file]
@@ -35,8 +35,7 @@ Graph=0
 [Disassemble mode]
 mode=0
 [Breakpoints]
-Bp0=_ "STD_CODE" "{C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ARM9_AT91SAM9XE_IAR\main.c}.96.2@1" 1 0 0 0 "" 0 "" 0
-Count=1
+Count=0
 [TraceHelper]
 Enabled=0
 ShowSource=1

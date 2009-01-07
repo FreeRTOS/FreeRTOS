@@ -96,12 +96,7 @@ int main()
 	prvSetupHardware();
 	
 	/* Start the standard demo tasks. */
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
-
-	/* These tasks to be added once the simple flasher is running.
-	
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartDynamicPriorityTasks();
@@ -112,9 +107,13 @@ int main()
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	
-	The death demo tasks must be started last as the sanity checks performed
-	require knowledge of the number of other tasks in the system.
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY ); */
+	/* Create the check task - this is the task that checks all the other tasks
+	are executing as expected and without reporting any errors. */
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+	
+	/* The death demo tasks must be started last as the sanity checks performed
+	require knowledge of the number of other tasks in the system. */
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 	
 	/* Start the scheduler.  From this point on the execution will be under
 	the control of the kernel. */
@@ -193,6 +192,13 @@ static volatile unsigned portLONG ulErrorCode = 0UL;
 		{
 			ulErrorCode |= 0x400UL;
 		}
+		
+		if( ulErrorCode != 0x00 )
+		{
+			xPeriod = mainERROR_PERIOD;
+		}
+		
+		vParTestToggleLED( LED_DS1 );
 	}
 }
 /*-----------------------------------------------------------*/

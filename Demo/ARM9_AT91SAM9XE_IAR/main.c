@@ -130,6 +130,9 @@ static void prvCheckTask( void * pvParameters )
 portTickType xNextWakeTime, xPeriod = mainNO_ERROR_PERIOD;
 static volatile unsigned portLONG ulErrorCode = 0UL;
 
+	/* Just to remove the compiler warning. */
+	( void ) pvParameters;
+
 	/* Initialise xNextWakeTime prior to its first use.  From this point on
 	the value of the variable is handled automatically by the kernel. */
 	xNextWakeTime = xTaskGetTickCount();

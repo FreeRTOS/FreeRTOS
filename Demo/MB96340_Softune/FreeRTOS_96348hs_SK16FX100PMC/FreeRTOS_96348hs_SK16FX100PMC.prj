@@ -9,7 +9,7 @@ mode=1
 CpuSerise=907
 
 [DirInfo]
-PRJ=C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\MB96340_Softune\FreeRTOS_96348hs_SK16FX100PMC\
+PRJ=C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96340_Softune\FreeRTOS_96348hs_SK16FX100PMC\
 
 [PrjInfo]
 Count=1
@@ -151,7 +151,7 @@ F9-9=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
 F9-10=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\string.h
 F9-11=- src\mb96348hs.h
 F9-12=- Src\FreeRTOSConfig.h
-F10=13 c 1 ..\..\..\Source\tasks.c
+F10=14 c 1 ..\..\..\Source\tasks.c
 F10-1=- ..\..\..\Source\include\FreeRTOS.h
 F10-2=- ..\..\..\Source\include\projdefs.h
 F10-3=- ..\..\..\Source\include\portable.h
@@ -165,6 +165,7 @@ F10-10=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stdlib.h
 F10-11=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\string.h
 F10-12=- src\mb96348hs.h
 F10-13=- Src\FreeRTOSConfig.h
+F10-14=- ..\..\..\Source\include\StackMacros.h
 F11=12 c 1 ..\..\Common\Minimal\BlockQ.c
 F11-1=- ..\..\..\Source\include\FreeRTOS.h
 F11-2=- ..\..\..\Source\include\projdefs.h
@@ -356,10 +357,11 @@ F25-8=- ..\..\..\Source\include\list.h
 F25-9=- Src\FreeRTOSConfig.h
 F26=1 c 1 Src\utility\printf_stdarg.c
 F26-1=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stdarg.h
-F27=3 c 1 ..\..\..\Source\portable\Softune\MB96340\__STD_LIB_sbrk.c
+F27=4 c 1 ..\..\..\Source\portable\Softune\MB96340\__STD_LIB_sbrk.c
 F27-1=- Src\FreeRTOSConfig.h
 F27-2=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stdlib.h
 F27-3=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
+F27-4=- src\mb96348hs.h
 F28=10 c 1 ..\..\..\Source\portable\MemMang\heap_3.c
 F28-1=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stdlib.h
 F28-2=- ..\..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h

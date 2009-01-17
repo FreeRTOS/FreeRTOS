@@ -50,6 +50,9 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+/* Device specific includes. */
+#include "mb96348hs.h"
+
 /* 
  * The below define should be same as the option selected by the Memory 
  * Model (Project->Setup Project->C Compiler->Category->Target Depend ) 

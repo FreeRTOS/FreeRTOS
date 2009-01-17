@@ -4897,7 +4897,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>5.20.0.50986</state>
+          <state>5.30.0.51160</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -5448,7 +5448,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\..\..\Common\drivers\Atmel\at91lib\boards\at91sam9xe-ek\at91sam9xe512\flash.icf</state>
+          <state>$PROJ_DIR$\flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>

@@ -21,10 +21,6 @@ ByteLimit=50
 Checksum=1592855699
 [InstructionProfiling]
 Enabled=_ 0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -32,6 +28,10 @@ LogFile=_ ""
 Enabled=0
 Source=2
 Graph=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
 [Disassemble mode]
 mode=0
 [Breakpoints]

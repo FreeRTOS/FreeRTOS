@@ -235,16 +235,16 @@ static void MEMS_ChipSelect( u8 State )
 static u8 MEMS_SendByte( u8 byte )
    {
    /* Loop while DR register in not emplty */
-   while( SPI_GetFlagStatus( SPI2, SPI_FLAG_TXE ) == RESET );
+   while( SPI_I2S_GetFlagStatus( SPI2, SPI_I2S_FLAG_TXE ) == RESET );
 
    /* Send byte through the SPI2 peripheral */
-   SPI_SendData( SPI2, byte );
+   SPI_I2S_SendData( SPI2, byte );
 
    /* Wait to receive a byte */
-   while( SPI_GetFlagStatus( SPI2, SPI_FLAG_RXNE ) == RESET );
+   while( SPI_I2S_GetFlagStatus( SPI2, SPI_I2S_FLAG_RXNE ) == RESET );
 
    /* Return the byte read from the SPI bus */
-   return SPI_ReceiveData( SPI2 );
+   return SPI_I2S_ReceiveData( SPI2 );
    }
 
 /* Public functions for CircleOS ---------------------------------------------*/

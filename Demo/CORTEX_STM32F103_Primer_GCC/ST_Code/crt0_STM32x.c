@@ -117,10 +117,10 @@ void (* const g_pfnVectors[])(void) =
   MemManageException,
   BusFaultException,
   UsageFaultException,
-  0, 0, 0, 0,            /* Reserved */ 
+  (void*)0, (void*)0, (void*)0, (void*)0,            /* Reserved */ 
   vPortSVCHandler,
   DebugMonitor,
-  0,                      /* Reserved */
+  (void*)0,                      /* Reserved */
   xPortPendSVHandler,
   xPortSysTickHandler,
   WWDG_IRQHandler,
@@ -166,14 +166,14 @@ void (* const g_pfnVectors[])(void) =
   EXTI15_10_IRQHandler,
   RTCAlarm_IRQHandler,
   USBWakeUp_IRQHandler,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  (unsigned long)0xF108F85F //this is a workaround for boot in RAM mode.
+  (void*)0,
+  (void*)0,
+  (void*)0,
+  (void*)0,
+  (void*)0,
+  (void*)0,
+  (void*)0,
+  (void*)0xF108F85F //this is a workaround for boot in RAM mode.
 };
 
 /*******************************************************************************

@@ -561,10 +561,10 @@ static void LCD_BackLightConfig( void )
 
    /* Output Compare Toggle Mode configuration: Channel2 */
    TIM_OCInitStructure.TIM_OCMode   = TIM_OCMode_PWM1;
-   TIM_OCInitStructure.TIM_Channel  = TIM_Channel_2;
+   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
    TIM_OCInitStructure.TIM_Pulse    = Current_CCR_BackLightStart;
 
-   TIM_OCInit( TIM4, &TIM_OCInitStructure );
+   TIM_OC2Init( TIM4, &TIM_OCInitStructure );
    TIM_OC4PreloadConfig( TIM4, TIM_OCPreload_Disable );
 
    TIM_ARRPreloadConfig( TIM4, ENABLE );

@@ -205,10 +205,10 @@ void BUZZER_SetFrequency ( u16 freq )
 
    /* Output Compare Toggle Mode configuration: Channel3 */
    TIM_OCInitStructure.TIM_OCMode   = TIM_OCMode_PWM1;
-   TIM_OCInitStructure.TIM_Channel  = TIM_Channel_3;
+   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
    TIM_OCInitStructure.TIM_Pulse    = CCR_Val;
 
-   TIM_OCInit( TIM3, &TIM_OCInitStructure );
+   TIM_OC3Init( TIM3, &TIM_OCInitStructure );
    TIM_OC3PreloadConfig( TIM3, TIM_OCPreload_Enable );
    }
 
@@ -261,10 +261,10 @@ void BUZZER_Init( void )
 
    /* Output Compare Toggle Mode configuration: Channel3 */
    TIM_OCInitStructure.TIM_OCMode   = TIM_OCMode_Toggle;
-   TIM_OCInitStructure.TIM_Channel  = TIM_Channel_3;
+   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
    TIM_OCInitStructure.TIM_Pulse    = CCR_Val;
 
-   TIM_OCInit( TIM3, &TIM_OCInitStructure );
+   TIM_OC3Init( TIM3, &TIM_OCInitStructure );
    TIM_OC3PreloadConfig( TIM3, TIM_OCPreload_Disable );
    BUZZER_SetFrequency( 440 );
 

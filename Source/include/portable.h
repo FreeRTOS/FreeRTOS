@@ -218,6 +218,9 @@
 	#include "../../Source/portable/GCC/PPC405_Xilinx/portmacro.h"
 #endif
 
+#ifdef _16FX_SOFTUNE
+	#include "..\..\Source\portable\Softune\MB96340\portmacro.h"
+#endif
 
 #ifdef BCC_INDUSTRIAL_PC_PORT
 	/* A short file name has to be used in place of the normal

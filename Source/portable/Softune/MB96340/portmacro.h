@@ -51,9 +51,6 @@
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
 
-/* Device specific includes. */
-#include "mb96348hs.h"
-
 /* Standard includes. */
 #include <stddef.h>
 

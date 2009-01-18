@@ -49,7 +49,6 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-#include "mb96348hs.h"
 
 /*-----------------------------------------------------------
  * Implementation of functions defined in portable.h for the 16FX port.

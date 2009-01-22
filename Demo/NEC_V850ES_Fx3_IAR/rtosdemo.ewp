@@ -1645,32 +1645,47 @@
   </configuration>
   <group>
     <name>demo source</name>
-    <file>
-      <name>$PROJ_DIR$\..\Common\Full\integer.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\LEDtoggle\LED.c</name>
-    </file>
+    <group>
+      <name>Standard Demo Tasks</name>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\flash.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+      </file>
+    </group>
     <file>
       <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Common\Full\PollQ.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Common\Full\print.c</name>
+      <name>$PROJ_DIR$\ParTest\ParTest.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\RegTest.s85</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\semtest.c</name>
     </file>
   </group>
   <group>
     <name>kernel source</name>
     <file>
-      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\list.c</name>
@@ -1679,7 +1694,7 @@
       <name>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES_Fx3\port.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES_Fx3\portmacro.s85</name>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES_Fx3\portasm.s85</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\queue.c</name>

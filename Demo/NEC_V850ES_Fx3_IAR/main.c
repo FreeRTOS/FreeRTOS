@@ -19,7 +19,7 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -56,68 +56,82 @@
 
 /* Demo file headers. */
 #include <intrinsics.h>
+#include "BlockQ.h"
+#include "death.h"
+#include "flash.h"
+#include "partest.h"
+#include "semtest.h"
 #include "PollQ.h"
-#include "semtest.h"
-#include "print.h"
-#include "semtest.h"
-#include "led.h"
-#include "integer.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "recmutex.h"
 
 /*
  * Priority definitions for most of the tasks in the demo application.  Some
  * tasks just use the idle priority.
  */
-#define mainCHECK_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
-#define mainQUEUE_POLL_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define mainSEMTEST_PRIORITY    ( tskIDLE_PRIORITY + 1 )
-#define mainLED_TOGGLE_PRIORITY ( tskIDLE_PRIORITY + 1 )
+#define mainFLASH_PRIORITY					( tskIDLE_PRIORITY + 1 )
+#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 2 )
+#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
 /* The period between executions of the check task. */
-#define mainCHECK_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
+#define mainNO_ERROR_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
+#define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
+
+#define mainCHECK_TASK_LED		( 3 )
 
 /* The task function for the "Check" task. */
-static void vErrorChecks( void *pvParameters );
-
-/*
- * Checks the unique counts of other tasks to ensure they are still operational.
- * Flashes an LED if everything is okay.
- */
-static long prvCheckOtherTasksAreStillRunning( void );
+static void prvCheckTask( void *pvParameters );
 
 /* low level initialization prototype */
 unsigned portCHAR __low_level_init(void);
+
+static void prvSetupHardware( void );
 
 extern void vRegTest1( void *pvParameters );
 extern void vRegTest2( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-volatile portLONG lRegTestStatus = pdPASS;
+static volatile portLONG lRegTestStatus = pdPASS;
 
 void vRegTestFailed( void )
 {
 	lRegTestStatus = pdFAIL;
+	
+	/* Do not return from here as the reg test tasks clobber all registers so
+	function calls may not function correctly. */
 	for( ;; );
 }
 
 void main( void )
 {
-	/* Create some standard demo tasks. */
-//	vStartIntegerMathTasks( tskIDLE_PRIORITY );
-//	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-//	vStartSemaphoreTasks(mainSEMTEST_PRIORITY);
-
-	/* Create a simple task that toggles a pin. */
-//	vStartLEDToggleTasks( mainLED_TOGGLE_PRIORITY );
+	prvSetupHardware();
+	
+	vStartLEDFlashTasks( mainFLASH_PRIORITY );
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartQueuePeekTasks();
+	vStartRecursiveMutexTasks();
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
 	/* Create the tasks defined within this file. */
-//	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-//	vPrintInitialise();
+	xTaskCreate( vRegTest1, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-xTaskCreate( vRegTest1, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-xTaskCreate( vRegTest2, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-
+	/* The suicide tasks must be created last as they need to know how many
+	tasks were running prior to their creation in order to ascertain whether
+	or not the correct/expected number of tasks are running at any given time. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -127,56 +141,63 @@ xTaskCreate( vRegTest2, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORIT
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void prvCheckTask( void *pvParameters )
 {
-volatile long lError = pdFALSE;
+portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 
 	/* Just to remove the compiler warning. */
 	( void ) pvParameters;
 
+	xLastWakeTime = xTaskGetTickCount();
+	
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
 	for( ;; )
 	{
-		/* Delay until it is time to check the other tasks again. */
-		vTaskDelay( mainCHECK_PERIOD );
-
-		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
+		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
+		
+		if( lRegTestStatus != pdPASS )
 		{
-			lError = pdTRUE;
-			
-			/* Do something to indicate the error. */
-			( void ) lError;
+			xDelayPeriod = mainERROR_DELAY;
 		}
+		
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			xDelayPeriod = mainERROR_DELAY;
+		}
+
+		if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			xDelayPeriod = mainERROR_DELAY;
+		}
+
+		if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			xDelayPeriod = mainERROR_DELAY;
+		}
+
+		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	    {
+	    	xDelayPeriod = mainERROR_DELAY;
+	    }
+
+		if( xArePollingQueuesStillRunning() != pdTRUE )
+	    {
+	    	xDelayPeriod = mainERROR_DELAY;
+	    }
+
+		if( xIsCreateTaskStillRunning() != pdTRUE )
+	    {
+	    	xDelayPeriod = mainERROR_DELAY;
+	    }
+
+		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	xDelayPeriod = mainERROR_DELAY;
+	    }
+
+		vParTestToggleLED( mainCHECK_TASK_LED );
 	}
-}
-/*-----------------------------------------------------------*/
-
-static long prvCheckOtherTasksAreStillRunning( void )
-{
-long lStatus = pdPASS;
-
-	if( xAreIntegerMathsTaskStillRunning() != pdPASS )
-	{
-		lStatus = pdFAIL;
-	}
-
-	if( xArePollingQueuesStillRunning() != pdPASS )
-	{
-		lStatus = pdFAIL;
-	}
-
-	if( xAreSemaphoreTasksStillRunning() != pdPASS )
-	{
-		lStatus = pdFAIL;
-	}
-
-	if( xAreLEDToggleTaskStillRunning() != pdPASS )
-	{
-		lStatus = pdFAIL;
-	}
-
-	return lStatus;
 }
 /*-----------------------------------------------------------*/
 
@@ -249,5 +270,16 @@ unsigned portCHAR psval = 0;
 
 	return pdTRUE;
 }
+
+static void prvSetupHardware( void )
+{
+	vParTestInitialise();
+}
+
+void vApplicationStackOverflowHook( void )
+{
+	for( ;; );
+}
+
 
 

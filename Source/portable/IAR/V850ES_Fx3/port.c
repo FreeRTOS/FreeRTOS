@@ -100,7 +100,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x30303030;      /* Initial Value of R30 */
 	pxTopOfStack--; 	
-        *pxTopOfStack = ( portSTACK_TYPE ) 0x19191919;      /* Initial Value of R19 */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x19191919;      /* Initial Value of R19 */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x18181818;      /* Initial Value of R18 */
 	pxTopOfStack--;
@@ -112,7 +112,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x14141414;      /* Initial Value of R14 */
 	pxTopOfStack--;
-       	*pxTopOfStack = ( portSTACK_TYPE ) 0x13131313;      /* Initial Value of R13 */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x13131313;      /* Initial Value of R13 */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x12121212;      /* Initial Value of R12 */
 	pxTopOfStack--;
@@ -136,13 +136,14 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 #endif /* configDATA_MODE */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x22222222;      /* Initial Value of R02 */
 	pxTopOfStack--;
-       	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;    /* R1 is expected to hold the function parameter*/
+	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;    /* R1 is expected to hold the function parameter*/
 	pxTopOfStack--;
-        *pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
-        /*
-         * Return a pointer to the top of the stack we have generated so this can
-         * be stored in the task control block for the task.
-         */
+	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
+
+	/*
+	 * Return a pointer to the top of the stack we have generated so this can
+	 * be stored in the task control block for the task.
+	 */
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -152,8 +153,10 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
 	prvSetupTimerInterrupt();
+
 	/* Restore the context of the first task that is going to run. */
 	vPortStart();
+
 	/* Should not get here as the tasks are now running! */
 	return pdTRUE;
 }
@@ -171,17 +174,16 @@ void vPortEndScheduler( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-        TM0CE     = 0;	/* TMM0 operation disable */
+	TM0CE     = 0;	/* TMM0 operation disable */
 	TM0EQMK0  = 1;	/* INTTM0EQ0 interrupt disable */
 	TM0EQIF0  = 0;	/* clear INTTM0EQ0 interrupt flag */
 
 	/* Set INTTM0EQ0 level 5 priority */
 	TM0EQIC0 &= 0xF8;
-/*	TM0EQIC0 |= 0x05;*/
 	TM0CTL0   = 0x00;
 	TM0CMP0   = (((configCPU_CLOCK_HZ / configTICK_RATE_HZ) / 2)-1);    /* divided by 2 because peripherals only run at CPU_CLOCK/2 */
-       	
-        TM0EQIF0 =  0;	/* clear INTTM0EQ0 interrupt flag */
+
+	TM0EQIF0 =  0;	/* clear INTTM0EQ0 interrupt flag */
 	TM0EQMK0 =  0;	/* INTTM0EQ0 interrupt enable */
 	TM0CE =     1;	/* TMM0 operation enable */
 }

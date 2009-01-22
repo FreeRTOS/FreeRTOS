@@ -260,6 +260,11 @@
 	#include "portmacro.h"
 #endif
 
+
+#ifdef __IAR_V850ES_Fx3__
+	#include "../../Source/portable/IAR/V850ES_Fx3/portmacro.h"
+#endif    
+    
 #ifdef __cplusplus
 extern "C" {
 #endif

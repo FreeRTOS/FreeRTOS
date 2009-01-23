@@ -57,12 +57,12 @@
 /* Include the macro file relevant to the port being used. */
 
 #ifdef OPEN_WATCOM_INDUSTRIAL_PC_PORT
-	#include "..\..\source\portable\owatcom\16bitdos\pc\portmacro.h"
+	#include "..\..\Source\portable\owatcom\16bitdos\pc\portmacro.h"
 	typedef void ( __interrupt __far *pxISR )();
 #endif
 
 #ifdef OPEN_WATCOM_FLASH_LITE_186_PORT
-	#include "..\..\source\portable\owatcom\16bitdos\flsh186\portmacro.h"
+	#include "..\..\Source\portable\owatcom\16bitdos\flsh186\portmacro.h"
 	typedef void ( __interrupt __far *pxISR )();
 #endif
 
@@ -83,7 +83,7 @@
 #endif
 
 #ifdef MPLAB_PIC18F_PORT
-	#include "..\..\source\portable\MPLAB\PIC18F\portmacro.h"
+	#include "..\..\Source\portable\MPLAB\PIC18F\portmacro.h"
 #endif
 
 #ifdef MPLAB_PIC32MX_PORT
@@ -207,7 +207,7 @@
 #endif
 
 #ifdef COLDFIRE_V2_GCC
-	#include "../../../source/portable/GCC/ColdFire_V2/portmacro.h"
+	#include "../../../Source/portable/GCC/ColdFire_V2/portmacro.h"
 #endif
 
 #ifdef COLDFIRE_V2_CODEWARRIOR

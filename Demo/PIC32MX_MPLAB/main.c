@@ -127,7 +127,7 @@ errors have been detected. */
 
 /* The rate at which the LED controlled by the 'check' task will flash when an
 error has been detected. */
-#define mainERROR_PERIOD 	( 500 )
+#define mainERROR_PERIOD 	( 500 / portTICK_RATE_MS )
 
 /* The priorities of the various demo application tasks. */
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 4 )

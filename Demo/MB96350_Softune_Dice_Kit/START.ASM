@@ -398,7 +398,7 @@ Revision 0.4  2006/08/07 15:35:35  phu
 #set      STACKUSE  SYSSTACK    ; <<< set active stack
 
 #set      STACK_RESERVE  ON     ; <<< reserve stack area in this module
-#set      STACK_SYS_SIZE 1500   ; <<< byte size of System stack
+#set      STACK_SYS_SIZE 200   ; <<< byte size of System stack
 #set      STACK_USR_SIZE 2      ; <<< byte size of User stack 
 
 #set      STACK_FILL     ON     ; <<< fills the stack area with pattern

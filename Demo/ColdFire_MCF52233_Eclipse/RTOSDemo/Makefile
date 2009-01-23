@@ -40,8 +40,8 @@ LINKER_SCRIPT=m52235evb-rom-hosted.ld
 SREC_FILENAME=RTOSDemo.s19
 ELF_FILENAME=RTOSDemo.elf
 CC=m68k-elf-gcc
-AS=m68K-elf-as
-OBJCOPY=m68K-elf-objcopy
+AS=m68k-elf-as
+OBJCOPY=m68k-elf-objcopy
 
 
 ###############################################################################

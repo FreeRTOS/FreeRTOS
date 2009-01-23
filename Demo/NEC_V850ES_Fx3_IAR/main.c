@@ -65,6 +65,7 @@
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
+#include "comtest2.h"
 
 /*
  * Priority definitions for most of the tasks in the demo application.  Some
@@ -78,12 +79,17 @@
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainCOMTEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 
 /* The period between executions of the check task. */
 #define mainNO_ERROR_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
 
 #define mainCHECK_TASK_LED		( 3 )
+#define mainCOMTEST_LED			( 5 )
+
+#define mainBAUD_RATE			( 9600 )
+
 
 /* The task function for the "Check" task. */
 static void prvCheckTask( void *pvParameters );
@@ -112,7 +118,7 @@ void vRegTestFailed( void )
 void main( void )
 {
 	prvSetupHardware();
-	
+
 	vStartLEDFlashTasks( mainFLASH_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -120,6 +126,7 @@ void main( void )
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+	vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -195,6 +202,11 @@ portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 	    {
 	    	xDelayPeriod = mainERROR_DELAY;
 	    }
+		
+		if( xAreComTestTasksStillRunning() != pdTRUE )
+		{
+			xDelayPeriod = mainERROR_DELAY;
+		}
 
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}

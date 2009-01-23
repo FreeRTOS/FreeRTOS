@@ -1651,6 +1651,9 @@
         <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
       </file>
       <file>
@@ -1680,6 +1683,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\RegTest.s85</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serial.c</name>
     </file>
   </group>
   <group>

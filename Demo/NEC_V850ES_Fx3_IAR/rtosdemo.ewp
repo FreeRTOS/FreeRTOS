@@ -481,6 +481,7 @@
         <option>
           <name>OAIncludePath2</name>
           <state>$PROJ_DIR$</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES_Fx3</state>
         </option>
         <option>
           <name>OAStdIncCheck</name>
@@ -1686,6 +1687,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\serial\serial.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\serial\serialISR.s85</name>
     </file>
   </group>
   <group>

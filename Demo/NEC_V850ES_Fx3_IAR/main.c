@@ -81,6 +81,8 @@
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainCOMTEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 
+#define mainCHECK_PARAMETER					( ( void * ) 0x12345678 )
+
 /* The period between executions of the check task. */
 #define mainNO_ERROR_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
@@ -129,10 +131,10 @@ void main( void )
 	vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, mainCHECK_PARAMETER, mainCHECK_TASK_PRIORITY, NULL );
 
-	xTaskCreate( vRegTest1, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
@@ -152,8 +154,11 @@ static void prvCheckTask( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 
-	/* Just to remove the compiler warning. */
-	( void ) pvParameters;
+	/* Ensure parameter is passed in correctly. */
+	if( pvParameters != mainCHECK_PARAMETER )
+	{
+		xDelayPeriod = mainERROR_DELAY;
+	}
 
 	xLastWakeTime = xTaskGetTickCount();
 	
@@ -292,6 +297,4 @@ void vApplicationStackOverflowHook( void )
 {
 	for( ;; );
 }
-
-
 

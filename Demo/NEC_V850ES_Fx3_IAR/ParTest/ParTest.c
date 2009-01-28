@@ -53,8 +53,10 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "partest.h"
+#include "task.h"
 
+/* Demo includes. */
+#include "partest.h"
 
 #define partstNUM_LEDs	4
 

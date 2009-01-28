@@ -47,16 +47,14 @@
 	licensing and training services.
 */
 
-/*
-	Changes from V2.5.2
+/*-----------------------------------------------------------
+ * Simple parallel port IO routines.
+ *-----------------------------------------------------------*/
 
-	+ All LED's are turned off to start.
-*/
-
-
+/* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "task.h"
 #include "partest.h"
+
 
 #define partstNUM_LEDs	4
 
@@ -68,9 +66,6 @@
 static const unsigned short xLEDs[ partstNUM_LEDs ] = { LED0_MASK, LED1_MASK, LED2_MASK, LED3_MASK };
 
 
-/*-----------------------------------------------------------
- * Simple parallel port IO routines.
- *-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {

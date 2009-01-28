@@ -1,4 +1,4 @@
-;	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+;	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2009 Richard Barry.
 ;
 ;	This file is part of the FreeRTOS.org distribution.
 ;
@@ -32,6 +32,13 @@
 ; Note: Select the correct include files for the device used by the application.
 
 	EXTERN	vRegTestFailed
+
+
+
+;
+; The RegTest tasks as described in the comments at the top of main().
+;
+
 
 ;------------------------------------------------------------------------------
 

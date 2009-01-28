@@ -47,6 +47,27 @@
 	licensing and training services.
 */
 
+/*
+ * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * documentation provides more details of the standard demo application tasks.
+ * In addition to the standard demo tasks, the following tasks and tests are
+ * defined and/or created within this file:
+ *
+ * "Check" task -  This only executes every three seconds but has a high priority
+ * to ensure it gets processor time.  Its main function is to check that all the
+ * standard demo tasks are still operational.  If everything is running as
+ * expected then the check task will toggle an LED every 3 seconds.  An error
+ * being discovered in any task will cause the toggle rate to increase to 500ms.
+ *
+ * "Reg test" tasks - These fill the registers with known values, then check
+ * that each register still contains its expected value.  Each task uses
+ * different values.  The tasks run with very low priority so get preempted very
+ * frequently.  A register containing an unexpected value is indicative of an
+ * error in the context switching mechanism.
+ *
+ */
+
+/* Standard include files. */
 #include <stdlib.h>
 #include <string.h>
 
@@ -81,46 +102,50 @@
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainCOMTEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 
+/* Passed into the check task just as a test that the parameter passing
+mechanism is working correctly. */
 #define mainCHECK_PARAMETER					( ( void * ) 0x12345678 )
 
 /* The period between executions of the check task. */
 #define mainNO_ERROR_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
 
+/* The LEDs used by the demos. */
 #define mainCHECK_TASK_LED		( 3 )
 #define mainCOMTEST_LED			( 5 )
 
+/* The baud rate used by the comtest task. */
 #define mainBAUD_RATE			( 9600 )
-
-
-/* The task function for the "Check" task. */
-static void prvCheckTask( void *pvParameters );
-
-/* low level initialization prototype */
-unsigned portCHAR __low_level_init(void);
-
-static void prvSetupHardware( void );
-
-extern void vRegTest1( void *pvParameters );
-extern void vRegTest2( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
+/* The implementation of the 'check' task as described at the top of this file. */
+static void prvCheckTask( void *pvParameters );
+
+/* Called by the startup code to initialise the run time system. */
+unsigned portCHAR __low_level_init(void);
+
+/* Just sets up the LED outputs.  Most generic setup is done in 
+__low_level_init(). */
+static void prvSetupHardware( void );
+
+/* The RegTest functions as described at the top of this file. */
+extern void vRegTest1( void *pvParameters );
+extern void vRegTest2( void *pvParameters );
+
+/* A variable that will get set to fail if a RegTest task finds an error.  The
+variable is inspected by the 'Check' task. */
 static volatile portLONG lRegTestStatus = pdPASS;
 
-void vRegTestFailed( void )
-{
-	lRegTestStatus = pdFAIL;
-	
-	/* Do not return from here as the reg test tasks clobber all registers so
-	function calls may not function correctly. */
-	for( ;; );
-}
+/*-----------------------------------------------------------*/
 
+/* Create all the demo tasks then start the scheduler. */
 void main( void )
 {
+	/* Just sets up the LED outputs. */
 	prvSetupHardware();
 
+	/* Standard demo tasks. */
 	vStartLEDFlashTasks( mainFLASH_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -130,9 +155,10 @@ void main( void )
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
 
-	/* Create the tasks defined within this file. */
+	/* Create the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, mainCHECK_PARAMETER, mainCHECK_TASK_PRIORITY, NULL );
 
+	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
@@ -160,6 +186,8 @@ portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 		xDelayPeriod = mainERROR_DELAY;
 	}
 
+	/* Initialise xLastWakeTime before it is used.  After this point it is not
+	written to directly. */
 	xLastWakeTime = xTaskGetTickCount();
 	
 	/* Cycle for ever, delaying then checking all the other tasks are still
@@ -287,14 +315,32 @@ unsigned portCHAR psval = 0;
 
 	return pdTRUE;
 }
+/*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
+	/* Setup the LED outputs. */
 	vParTestInitialise();
+
+	/* Any additional hardware configuration can be added here. */
 }
+/*-----------------------------------------------------------*/
 
 void vApplicationStackOverflowHook( void )
 {
+	/* This will be called if a task overflows its stack.  pxCurrentTCB
+	can be inspected to see which is the offending task. */
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
 
+void vRegTestFailed( void )
+{
+	/* Called by the RegTest tasks if an error is found.  lRegTestStatus is
+	inspected by the check task. */
+	lRegTestStatus = pdFAIL;
+	
+	/* Do not return from here as the reg test tasks clobber all registers so
+	function calls may not function correctly. */
+	for( ;; );
+}

@@ -236,8 +236,7 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "STD_CODE" "{C:\E\Dev\FreeRTOS\WorkingCopy3\Source\queue.c}.998.8@1" 1 0 0 0 "" 0 ""
-Count=1
+Count=0
 [TraceHelper]
 Enabled=1
 ShowSource=1

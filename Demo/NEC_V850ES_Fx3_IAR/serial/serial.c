@@ -49,6 +49,9 @@
 
 /*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
+
+	*NOTE* - This file is designed to test some of the RTOS features - it is
+	not intended to represent an efficient implementation!
 */
 
 /* Standard includes. */
@@ -62,10 +65,9 @@
 #include "serial.h"
 
 
-
+/* Hardware specifics. */
 #define serRX_DATA_PIN		( 0x01 )
 #define serTX_DATA_PIN		( 0x02 )
-
 #define serCLOCK_Fxx_DIV_8		0x03
 #define serUPWR		( 0x80 )
 #define serUTXE		( 0x40 )
@@ -87,12 +89,10 @@ static xQueueHandle xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
-/* Interrupt entry point written in the assembler file serialISR.s79. */
+/* Interrupt entry point written in the assembler file serialISR.s85. */
 extern void vSerialISREntry( void );
 
-/* The interrupt service routine - called from the assembly entry point. */
-void vSerialISR( void );
-
+/* Flag to indicate whether or not there are characters already queued to send. */
 static volatile unsigned long ulTxInProgress = pdFALSE;
 
 /*-----------------------------------------------------------*/
@@ -103,7 +103,6 @@ static volatile unsigned long ulTxInProgress = pdFALSE;
 xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 xComPortHandle xReturn = serHANDLE;
-extern void ( vUART_ISR )( void );
 const unsigned portLONG ulFuclk = ( configCPU_CLOCK_HZ / 2 ) / 8UL;
 
 	/* Create the queues used to hold Rx and Tx characters. */
@@ -127,8 +126,9 @@ const unsigned portLONG ulFuclk = ( configCPU_CLOCK_HZ / 2 ) / 8UL;
 			/* Enable, n81. */			
 			UD0CTL0 = ( serUPWR | serUTXE | serURXE | serUCL | serLSB );
 			
-			UD0TIC  = 0x07;							/* UARTA0 transmit enable interrupt request signal clear, mask release, priority level 7 set */
-			UD0RIC  = 0x07;							/* UARTA0 receive end interrupt request signal clear, mask release, priority level 7 set */			
+			/* Enable interrupts for both Rx and Tx. */
+			UD0TIC  = 0x07;
+			UD0RIC  = 0x07;
 			
 			ulTxInProgress = pdFALSE;
 		}
@@ -193,6 +193,8 @@ portBASE_TYPE xReturn = pdPASS;
 
 	portENTER_CRITICAL();
 	{
+		/* There are currently no characters queued up to send so write the
+		character directly to the UART. */
 		if( ulTxInProgress == pdFALSE )
 		{
 			UD0TX = cOutChar;
@@ -200,6 +202,8 @@ portBASE_TYPE xReturn = pdPASS;
 		}
 		else
 		{
+			/* The UART is already busy so write the character to the Tx queue.
+			The queue is drained from within the Tx interrupt. */
 			if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 			{
 				xReturn = pdFAIL;
@@ -218,32 +222,46 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
+/* Tx interrupt handler.  This is called from the asm file wrapper. */
 void vUARTTxISRHandler( void )
 {
 char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
+	/* Are there any more characters queue to transmit? */
 	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 	{
+		/* Send the next character. */
 		UD0TX = cChar;
 	}
 	else
 	{
+		/* The UART is no longer active. */
 		ulTxInProgress = pdFALSE;
 	}
 	
+	/* If reading a character from the Rx queue caused a task to unblock, and
+	the unblocked task has a priority higher than the currently running task,
+	then xHigherPriorityTaskWoken will have been set to true and a context
+	switch should occur now. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
+/*-----------------------------------------------------------*/
 
-
+/* Rx interrupt handler.  This is called from the asm file wrapper. */
 void vUARTRxISRHandler( void )
 {
 portCHAR cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
+	/* Send the received character to the Rx queue. */
 	cChar = UD0RX;
 	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	
+	/* If sending a character to the Tx queue caused a task to unblock, and
+	the unblocked task has a priority higher than the currently running task,
+	then xHigherPriorityTaskWoken will have been set to true and a context
+	switch should occur now. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );	
 }
 

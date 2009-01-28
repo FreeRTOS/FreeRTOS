@@ -17,7 +17,7 @@
         <debug>1</debug>
         <option>
           <name>GMemoryModel</name>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>GUseShort</name>
@@ -58,11 +58,11 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl85esnn.h</state>
+          <state>$TOOLKIT_DIR$\LIB\dl85etnn.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dl85esnn.r85</state>
+          <state>$TOOLKIT_DIR$\LIB\dl85etnn.r85</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>

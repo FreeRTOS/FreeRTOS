@@ -54,8 +54,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Critical nesting should be initialised to a non zero value so interrupts don't
+accidentally get enabled before the scheduler is started. */
 #define portINITIAL_CRITICAL_NESTING  (( portSTACK_TYPE ) 10)
 
+/* The PSW value assigned to tasks when they start to run for the first time. */
 #define portPSW		  (( portSTACK_TYPE ) 0x00000000)
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
@@ -63,11 +66,14 @@ any details of its type. */
 typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
+/* Keeps track of the nesting level of critical sections. */
 volatile portSTACK_TYPE usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
 
+/* Sets up the timer to generate the tick interrupt. */
 static void prvSetupTimerInterrupt( void );
 
+/*-----------------------------------------------------------*/
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;          /* Task function start address */

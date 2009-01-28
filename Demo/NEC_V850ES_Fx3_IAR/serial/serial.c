@@ -218,10 +218,6 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
-//#pragma vector=INTUD0T_vector
-//extern __interrupt void vUARTTxISRWrapper( void );
-//#pragma required=vUARTTxISRWrapper
-
 void vUARTTxISRHandler( void )
 {
 char cChar;
@@ -235,11 +231,10 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	{
 		ulTxInProgress = pdFALSE;
 	}
+	
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 
-//#pragma vector=INTUD0R_vector
-//extern __interrupt void vUARTRxISRWrapper( void );
-//#pragma required=vUARTRxISRWrapper
 
 void vUARTRxISRHandler( void )
 {
@@ -248,6 +243,8 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	cChar = UD0RX;
 	xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+	
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );	
 }
 
 

@@ -130,6 +130,9 @@ extern void portRESTORE_CONTEXT( void );
 //#define portYIELD()	vPortYield()
 #define portYIELD()	__asm ( "trap 0" )
 #define portNOP()	__asm ( "NOP" )
+extern void vTaskSwitchContext( void );
+#define portYIELD_FROM_ISR( xHigherPriorityTaskWoken ) if( xHigherPriorityTaskWoken ) vTaskSwitchContext();
+
 /*-----------------------------------------------------------*/
 
 /* Hardwware specifics. */

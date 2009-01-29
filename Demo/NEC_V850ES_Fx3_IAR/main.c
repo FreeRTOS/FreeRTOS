@@ -143,12 +143,9 @@ void main( void )
 
 	/* Standard demo tasks. */
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
-	vStartRecursiveMutexTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-
+	
 	/* Create the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, mainCHECK_PARAMETER, mainCHECK_TASK_PRIORITY, NULL );
 
@@ -156,12 +153,17 @@ void main( void )
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-	/* The extra IO required for the com test and led flashing tasks is only
-	available on the application board, not the target boards. */
 	#ifdef __IAR_V850ES_Fx3__
 	{
+		/* The extra IO required for the com test and led flashing tasks is only
+		available on the application board, not the target boards. */	
 		vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
 		vStartLEDFlashTasks( mainFLASH_PRIORITY );
+		
+		/* The Fx3 also has enough RAM to run loads more tasks. */
+		vStartRecursiveMutexTasks();
+		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );				
 	}
 	#endif	
 	
@@ -214,17 +216,7 @@ portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 			xDelayPeriod = mainERROR_DELAY;
 		}
 
-		if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			xDelayPeriod = mainERROR_DELAY;
-		}
-
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-	    	xDelayPeriod = mainERROR_DELAY;
-	    }
-
-		if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
 	    	xDelayPeriod = mainERROR_DELAY;
 	    }
@@ -234,17 +226,28 @@ portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 	    	xDelayPeriod = mainERROR_DELAY;
 	    }
 
-		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
-	    	xDelayPeriod = mainERROR_DELAY;
-	    }
-		
+		/* The Fx3 runs more tasks, so more checks are performed. */		
 		#ifdef __IAR_V850ES_Fx3__
 		{
 			if( xAreComTestTasksStillRunning() != pdTRUE )
 			{
 				xDelayPeriod = mainERROR_DELAY;
 			}
+			
+			if( xArePollingQueuesStillRunning() != pdTRUE )
+			{
+				xDelayPeriod = mainERROR_DELAY;
+			}
+
+			if( xAreBlockingQueuesStillRunning() != pdTRUE )
+			{
+				xDelayPeriod = mainERROR_DELAY;
+			}
+			
+			if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+			{
+				xDelayPeriod = mainERROR_DELAY;
+			}			
 		}
 		#endif
 

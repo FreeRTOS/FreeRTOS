@@ -114,14 +114,32 @@
 	are dependent on the variant being used. */
 	#ifdef __IAR_V850ES_Fx3__
 		#include "io70f3385.h"
-		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 60000 ) )
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 20000 ) )
 		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 48000000 )
 	#endif
 
 	#ifdef __IAR_V850ES_Jx3__
 		#include "io70f3746.h"
-		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 60000 ) )
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 9000 ) )
 		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 16000000 )
+	#endif
+
+	#ifdef __IAR_V850ES_Jx3_L__
+		#include "io70f3738.h"
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 9000 ) )
+		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 20000000 )
+	#endif
+
+	#ifdef __IAR_V850ES_Jx2__
+		#include "io70f3717.h"
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 9000 ) )
+		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 20000000 )
+	#endif
+
+	#ifdef __IAR_V850ES_Hx2__
+		#include "io70f3707.h"
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 9000 ) )
+		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 20000000 )
 	#endif
 
 #endif /* __IAR_SYSTEMS_ICC__ */

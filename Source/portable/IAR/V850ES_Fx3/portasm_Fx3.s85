@@ -221,29 +221,6 @@ vPortStart:
 ;   Output: NONE
 ;------------------------------------------------------------------------------
 
-#if 0
-
-    RSEG CODE:CODE
-vPortYield:
-    DI
-    ADD     -0x0C,sp                        ; prepare stack to save necessary values
-    st.w    lp,8[sp]                        ; save LP to stack
-    st.w    lp,4[sp]                        ; save LP to stack
-    stsr    5,lp
-    st.w    lp,0[sp]                        ; save PSW to stack
-    portSAVE_CONTEXT		            ; Save the context of the current task.
-    jarl      vTaskSwitchContext,lp         ; Call the scheduler.
-    portRESTORE_CONTEXT		            ; Restore the context of whichever task the ...
-    ld.w    0[sp],lp                        ; restore EIPSW
-    ldsr    lp,1
-    ld.w    4[sp],lp                        ; restore PIPC
-    ldsr    lp,0
-    ld.w    8[sp],lp                        ; restore LP
-    add     0x0C,sp
-    RETI
-
-#else
-
 	RSEG CODE:CODE
 vPortYield:
 
@@ -266,7 +243,6 @@ vPortYield:
 
     RETI
 
-#endif
 ;------------------------------------------------------------------------------
 
 ;------------------------------------------------------------------------------

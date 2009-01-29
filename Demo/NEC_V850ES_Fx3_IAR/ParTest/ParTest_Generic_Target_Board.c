@@ -58,7 +58,7 @@
 /* Demo includes. */
 #include "partest.h"
 
-#define partstNUM_LEDs	4
+#define partstNUM_LEDs	2
 
 #define LED0_MASK		( ( unsigned short ) 0x04 )
 #define LED1_MASK		( ( unsigned short ) 0x08 )
@@ -70,7 +70,7 @@ static const unsigned short xLEDs[ partstNUM_LEDs ] = { LED0_MASK, LED1_MASK };
 void vParTestInitialise( void )
 {
 	/* LED Port Initialization */
-	PMCM  = PM3 &= ~( LED0_MASK | LED1_MASK );
+	PMCM &= ~( LED0_MASK | LED1_MASK );
 }
 /*-----------------------------------------------------------*/
 
@@ -86,11 +86,11 @@ unsigned portBASE_TYPE uxLEDMask;
 		{
 			if( xValue )
 			{
-				PMCM |= uxLEDMask;
+				PCM &= ~uxLEDMask;
 			}
 			else
 			{
-				PMCM &= ~uxLEDMask;
+				PCM |= uxLEDMask;				
 			}
 		}
 		taskEXIT_CRITICAL();
@@ -108,13 +108,13 @@ unsigned portBASE_TYPE uxLEDMask;
 		
 		taskENTER_CRITICAL();
 		{
-			if( PMCM & uxLEDMask )
+			if( PCM & uxLEDMask )
 			{
-				PMCM &= ~uxLEDMask;
+				PCM &= ~uxLEDMask;
 			}
 			else
 			{
-				PMCM |= uxLEDMask;
+				PCM |= uxLEDMask;
 			}
 		}
 		taskEXIT_CRITICAL();

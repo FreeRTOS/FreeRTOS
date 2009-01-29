@@ -111,8 +111,7 @@ mechanism is working correctly. */
 #define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
 
 /* The LEDs used by the demos. */
-#define mainCHECK_TASK_LED		( 3 )
-#define mainCOMTEST_LED			( 5 )
+#define mainCHECK_TASK_LED		( 0 )
 
 /* The baud rate used by the comtest task. */
 #define mainBAUD_RATE			( 9600 )
@@ -122,10 +121,7 @@ mechanism is working correctly. */
 /* The implementation of the 'check' task as described at the top of this file. */
 static void prvCheckTask( void *pvParameters );
 
-/* Called by the startup code to initialise the run time system. */
-unsigned portCHAR __low_level_init(void);
-
-/* Just sets up the LED outputs.  Most generic setup is done in 
+/* Just sets up the LED outputs.  Most generic setup is done in
 __low_level_init(). */
 static void prvSetupHardware( void );
 
@@ -146,14 +142,12 @@ void main( void )
 	prvSetupHardware();
 
 	/* Standard demo tasks. */
-	vStartLEDFlashTasks( mainFLASH_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
 
 	/* Create the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, mainCHECK_PARAMETER, mainCHECK_TASK_PRIORITY, NULL );
@@ -162,6 +156,15 @@ void main( void )
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
+	/* The extra IO required for the com test and led flashing tasks is only
+	available on the application board, not the target boards. */
+	#ifdef __IAR_V850ES_Fx3__
+	{
+		vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
+		vStartLEDFlashTasks( mainFLASH_PRIORITY );
+	}
+	#endif	
+	
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
@@ -236,84 +239,17 @@ portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 	    	xDelayPeriod = mainERROR_DELAY;
 	    }
 		
-		if( xAreComTestTasksStillRunning() != pdTRUE )
+		#ifdef __IAR_V850ES_Fx3__
 		{
-			xDelayPeriod = mainERROR_DELAY;
+			if( xAreComTestTasksStillRunning() != pdTRUE )
+			{
+				xDelayPeriod = mainERROR_DELAY;
+			}
 		}
+		#endif
 
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}
-}
-/*-----------------------------------------------------------*/
-
-unsigned portCHAR __low_level_init(void)
-{
-unsigned portCHAR resetflag = RESF;
-unsigned portCHAR psval = 0;
-
-	/* Setup provided by NEC. */
-
-	/* Disable global interrupts to ensure no interrupts occur during system
-	setup. */
-	portDISABLE_INTERRUPTS();
-
-	PRCMD = 0x00;
-	OCDM = 0x00;
-	VSWC = 0x12;
-	VSWC = 18;
-
-	/* Set main system clock */
-	OSTS = 0x06;
-	psval = 0x80;
-	PRCMD = psval;
-	PCC = psval;
-	while (!OSTC)
-	{
-		;
-	}
-
-	PLLS = 0x03;
-	PLLON = 1;
-	while (LOCKR)
-	{
-		;
-	}
-
-	psval = 0x01;
-	PRCMD = psval;
-	MCM = psval;
-	SELPLL = 1;
-
-	/* Set fCPU */
-	psval = PCC | 0x00;
-	PRCMD = psval;
-	PCC = psval;
-	RCM = 0x83;
-
-	/* Set fXP1 */
-	SELCNT4 = 0x00;
-
-	/* Set fBRG */
-	PRSM0 = 0x00;
-
-	/* Stand-by setting */
-	psval = 0x00;
-	PRCMD = psval;
-	PSC = psval;
-
-	/* WDT2 setting */
-	WDTM2 = 0x1F;
-
-	/* PCL setting */
-	PCLM = 0x00;
-
-	/* disable dma0 - dma3 */
-	E00 = 0;	
-	E11 = 0;
-	E22 = 0;
-	E33 = 0;	
-
-	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 

@@ -54,9 +54,7 @@
 #ifdef __IAR_SYSTEMS_ICC__
 	#pragma language=extended
 	#pragma system_include
-
 	#include <intrinsics.h>
-	#include "io70f3385.h"
 #endif  /* __IAR_SYSTEMS_ICC__ */
 
 /* V850ES/Fx3 Memory Model
@@ -83,11 +81,9 @@
 
 	#define configUSE_IDLE_HOOK				0
 	#define configUSE_TICK_HOOK				0
-	#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 48000000 )  /* using the external clock source */
 	#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 	#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
 	#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 85 )
-	#define configTOTAL_HEAP_SIZE			( (size_t ) ( 60000 ) )
 	#define configMAX_TASK_NAME_LEN			( 10 )
 	#define configUSE_TRACE_FACILITY		0
 	#define configUSE_16_BIT_TICKS			0
@@ -112,6 +108,21 @@
 	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
+
+	/* This IAR workspace contains several different projects - each of which
+	is targeted at a different device variant.  The definitions past this point
+	are dependent on the variant being used. */
+	#ifdef __IAR_V850ES_Fx3__
+		#include "io70f3385.h"
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 60000 ) )
+		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 48000000 )
+	#endif
+
+	#ifdef __IAR_V850ES_Jx3__
+		#include "io70f3746.h"
+		#define configTOTAL_HEAP_SIZE			( (size_t ) ( 60000 ) )
+		#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 16000000 )
+	#endif
 
 #endif /* __IAR_SYSTEMS_ICC__ */
 

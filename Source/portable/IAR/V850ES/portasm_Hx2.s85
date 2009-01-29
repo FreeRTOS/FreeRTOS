@@ -63,11 +63,11 @@
 
 ; Tick ISR Prototype
 ;------------------------------------------------------------------------------
-        PUBWEAK `??MD_INTTM0EQ0??INTVEC 640`
+        PUBWEAK `??MD_INTTM0EQ0??INTVEC 544`
         PUBLIC MD_INTTM0EQ0
 
 MD_INTTM0EQ0        SYMBOL "MD_INTTM0EQ0"
-`??MD_INTTM0EQ0??INTVEC 640` SYMBOL "??INTVEC 640", MD_INTTM0EQ0
+`??MD_INTTM0EQ0??INTVEC 544` SYMBOL "??INTVEC 544", MD_INTTM0EQ0
 
 ;------------------------------------------------------------------------------
 ;   portSAVE_CONTEXT MACRO
@@ -285,8 +285,8 @@ MD_INTTM0EQ0:
 
 ;------------------------------------------------------------------------------
         COMMON INTVEC:CODE:ROOT(2)
-        ORG 640
-`??MD_INTTM0EQ0??INTVEC 640`:
+        ORG 544
+`??MD_INTTM0EQ0??INTVEC 544`:
         JR MD_INTTM0EQ0
 
         RSEG NEAR_ID:CONST:SORT:NOROOT(2)
@@ -315,6 +315,41 @@ MD_INTTM0EQ0:
       DB CG_SECURITY8
       DB CG_SECURITY9
 
+
+; set microcontroller Option bytes
+
+      COMMON INTVEC:CODE:ROOT(2)
+      ORG 122
+`OPTBYTES`:
+      DB 0xFD
+      DB 0xFF
+      DB 0xFF
+      DB 0xFF
+      DB 0xFF
+      DB 0xFF
+
+#if configOCD_USAGE == 1
+
+      COMMON   INTVEC:CODE:ROOT(4)
+      ORG      0x230
+      PUBLIC ROM_INT2
+ROM_INT2:
+      DB 0xff, 0xff, 0xff, 0xff
+      DB 0xff, 0xff, 0xff, 0xff
+      DB 0xff, 0xff, 0xff, 0xff
+      DB 0xff, 0xff, 0xff, 0xff
+
+
+      COMMON   INTVEC:CODE:ROOT(4)
+      ORG      0x60
+      PUBLIC   ROM_INT
+ROM_INT:
+      DB 0xff, 0xff, 0xff, 0xff
+      DB 0xff, 0xff, 0xff, 0xff
+      DB 0xff, 0xff, 0xff, 0xff
+      DB 0xff, 0xff, 0xff, 0xff
+
+#endif /* configOCD_USAGE */
 
       END
 

@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -184,11 +184,18 @@ static void prvSetupTimerInterrupt( void )
 	TM0EQMK0  = 1;	/* INTTM0EQ0 interrupt disable */
 	TM0EQIF0  = 0;	/* clear INTTM0EQ0 interrupt flag */
 
-	/* Set INTTM0EQ0 level 5 priority */
+	#ifdef __IAR_V850ES_Fx3__
+	{
+		TM0CMP0   = (((configCPU_CLOCK_HZ / configTICK_RATE_HZ) / 2)-1);    /* divided by 2 because peripherals only run at CPU_CLOCK/2 */
+	}
+	#else
+	{
+		TM0CMP0   = (configCPU_CLOCK_HZ / configTICK_RATE_HZ);	
+	}
+	#endif
+
 	TM0EQIC0 &= 0xF8;
 	TM0CTL0   = 0x00;
-	TM0CMP0   = (((configCPU_CLOCK_HZ / configTICK_RATE_HZ) / 2)-1);    /* divided by 2 because peripherals only run at CPU_CLOCK/2 */
-
 	TM0EQIF0 =  0;	/* clear INTTM0EQ0 interrupt flag */
 	TM0EQMK0 =  0;	/* INTTM0EQ0 interrupt enable */
 	TM0CE =     1;	/* TMM0 operation enable */

@@ -262,11 +262,23 @@
 
 
 #ifdef __IAR_V850ES_Fx3__
-	#include "../../Source/portable/IAR/V850ES_Fx3/portmacro.h"
+	#include "../../Source/portable/IAR/V850ES/portmacro.h"
 #endif
 
 #ifdef __IAR_V850ES_Jx3__
-	#include "../../Source/portable/IAR/V850ES_Jx3/portmacro.h"
+	#include "../../Source/portable/IAR/V850ES/portmacro.h"
+#endif
+
+#ifdef __IAR_V850ES_Jx3_L__
+	#include "../../Source/portable/IAR/V850ES/portmacro.h"
+#endif
+
+#ifdef __IAR_V850ES_Jx2__
+	#include "../../Source/portable/IAR/V850ES/portmacro.h"
+#endif
+
+#ifdef __IAR_V850ES_Hx2__
+	#include "../../Source/portable/IAR/V850ES/portmacro.h"
 #endif
 
 #ifdef __cplusplus

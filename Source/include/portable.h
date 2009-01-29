@@ -263,11 +263,16 @@
 
 #ifdef __IAR_V850ES_Fx3__
 	#include "../../Source/portable/IAR/V850ES_Fx3/portmacro.h"
-#endif    
-    
+#endif
+
+#ifdef __IAR_V850ES_Jx3__
+	#include "../../Source/portable/IAR/V850ES_Jx3/portmacro.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /*
  * Setup the stack of a new task so it is ready to be placed under the
  * scheduler control.  The registers have to be placed on the stack in

@@ -110,8 +110,9 @@ mechanism is working correctly. */
 #define mainNO_ERROR_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
 
-/* The LEDs used by the demos. */
-#define mainCHECK_TASK_LED		( 0 )
+/* There are no spare LEDs for the comtest tasks, so this is just set to an
+invalid number. */
+#define mainCOMTEST_LED			( 4 )
 
 /* The baud rate used by the comtest task. */
 #define mainBAUD_RATE			( 9600 )
@@ -184,6 +185,7 @@ void main( void )
 static void prvCheckTask( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
+unsigned portBASE_TYPE uxLEDToUse = 0;
 
 	/* Ensure parameter is passed in correctly. */
 	if( pvParameters != mainCHECK_PARAMETER )
@@ -247,11 +249,15 @@ portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 			if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 			{
 				xDelayPeriod = mainERROR_DELAY;
-			}			
+			}		
+			
+			/* The application board has more LEDs and uses the flash tasks
+			so the check task instead uses LED3 as LED3 is still spare. */
+			uxLEDToUse = 3;
 		}
 		#endif
 
-		vParTestToggleLED( mainCHECK_TASK_LED );
+		vParTestToggleLED( uxLEDToUse );
 	}
 }
 /*-----------------------------------------------------------*/

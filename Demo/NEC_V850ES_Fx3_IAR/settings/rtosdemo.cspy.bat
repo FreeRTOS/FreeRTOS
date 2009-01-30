@@ -22,7 +22,7 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\bin\v850proc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\bin\v850minicube2.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\bin\<libsupport_plugin>" --backend -B "-v11" "-p" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\CONFIG\DDF\io70f3707.ddf" "-d" "minicube2" "-c2" 
+"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\bin\v850proc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\bin\v850minicube2.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\bin\<libsupport_plugin>" --backend -B "-v11" "-p" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\v850\CONFIG\DDF\io70f3717.ddf" "-d" "minicube2" "-c2" 
 
 
 @REM Loaded plugins:

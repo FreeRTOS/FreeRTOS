@@ -1305,7 +1305,7 @@
         <option>
           <name>OAIncludePath2</name>
           <state>$PROJ_DIR$</state>
-          <state>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES_Fx3</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES</state>
         </option>
         <option>
           <name>OAStdIncCheck</name>

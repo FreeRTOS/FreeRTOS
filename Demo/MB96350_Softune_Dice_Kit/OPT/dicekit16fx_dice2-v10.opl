@@ -15,6 +15,7 @@
 -Xals
 -Xalr
 -na
+-NCI0302LIB
 -w 2
 -cwno
 -a
@@ -33,4 +34,5 @@
 "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\__STD_LIB_sbrk.obj"
 "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\heap_1.obj"
 "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\croutine.obj"
+"C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\DiceTask.obj"
 

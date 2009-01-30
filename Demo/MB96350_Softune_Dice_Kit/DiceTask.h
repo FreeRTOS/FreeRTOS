@@ -47,78 +47,11 @@
 	licensing and training services.
 */
 
-/* Kernel includes. */
-#include "FreeRTOS.h"
-#include "Task.h"
+#ifndef DICE_TASK_H
+#define DICE_TASK_H
 
-/* Demo includes. */
-#include "DiceTask.h"
+void vDiceTask( void *pvParameters );
 
-static void prvSetupHardware( void );
+#endif
 
-/*-----------------------------------------------------------*/
-
-void main( void )
-{
-	prvSetupHardware();
-
-	xTaskCreate( vDiceTask, ( signed char * ) "Dice", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
-
-	vTaskStartScheduler();
-
-	while( 1 );
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationIdleHook( void )
-{
-}
-/*-----------------------------------------------------------*/
-
-static void prvSetupHardware( void )
-{
-	/* Setup interrupt hardware - interrupts are kept disabled for now to
-	prevent any interrupts attempting to cause a context switch before the
-	scheduler has been started. */
-	InitIrqLevels();
-	portDISABLE_INTERRUPTS();
-	__set_il( 7 );	
-
-	/* Enable P00_0/INT8 and P00_1/INT9 as input. */
-	PIER00 = 0x03;
-	PDR00  = 0x00;
-	DDR00  = 0xfc;
-
-	/* Set Port3 as output (7Segment Display). */
-	DDR03  = 0xff;
-
-	/* Enable P04_2/RX as input. */
-	PIER04 = 0x04;
-
-	/* CAN TX = 1. */
-	PDR04  = 0x08;
-
-	/* CAN RX = input. */
-	DDR04  = 0xfb;
-
-	/* All inputs are disabled on this port. */
-	PIER05 = 0x00;
-
-	/* Use Port 5 as I/O-Port. */
-	ADER1  = 0;
-	PDR05  = 0x7f;
-
-	/* Set Port5 as output (7Segment Display). */
-	DDR05  = 0xff;
-
-	/* Disable inputs on the following ports. */
-	PIER02 = 0x00;
-	PDR02  = 0x00;
-	DDR02  = 0xff;
-	PIER03 = 0x00;
-	PDR03  = 0xff;
-	PIER06 = 0x00;
-	PDR06  = 0x00;
-	DDR06  = 0xff;
-}
 

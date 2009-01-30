@@ -9,6 +9,7 @@
 -----------------------------------------------------------------------------*/
 
 #include "mb96356rs.h"
+#include "FreeRTOSConfig.h"
 
 /*---------------------------------------------------------------------------
    InitIrqLevels()
@@ -32,7 +33,9 @@ void InitIrqLevels(void)
   {
     ICR = (irq << 8) | DEFAULT_ILM_MASK;
   }
-  
+
+	ICR = ( (54 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Reload Timer 0 */
+	ICR = ( (12 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Delayed interrupt of 16FX Family */
 }
 
 /*---------------------------------------------------------------------------
@@ -40,8 +43,11 @@ void InitIrqLevels(void)
    Add your own prototypes here. Each vector definition needs is proto-
    type. Either do it here or include a header file containing them.
 -----------------------------------------------------------------------------*/
+__interrupt void		DefaultIRQHandler( void );
 
-__interrupt void DefaultIRQHandler (void);
+extern __interrupt void prvRLT0_TICKISR( void );
+extern __interrupt void vPortYield( void );
+extern __interrupt void vPortYieldDelayed( void );
 
 /*---------------------------------------------------------------------------
    Vector definiton for MB9635x
@@ -53,7 +59,9 @@ __interrupt void DefaultIRQHandler (void);
 -----------------------------------------------------------------------------*/
 
 #pragma intvect DefaultIRQHandler 11   /* Non-maskable Interrupt       */
-#pragma intvect DefaultIRQHandler 12   /* Delayed Interrupt            */
+
+#pragma intvect vPortYieldDelayed 12		/* Delayed Interrupt            */
+
 #pragma intvect DefaultIRQHandler 13   /* RC Timer                     */
 #pragma intvect DefaultIRQHandler 14   /* Main Clock Timer             */
 #pragma intvect DefaultIRQHandler 15   /* Sub Clock Timer              */
@@ -95,7 +103,7 @@ __interrupt void DefaultIRQHandler (void);
 #pragma intvect DefaultIRQHandler 51   /* PPG17                        */
 #pragma intvect DefaultIRQHandler 52   /* PPG18                        */
 #pragma intvect DefaultIRQHandler 53   /* PPG19                        */
-#pragma intvect DefaultIRQHandler 54   /* RLT0                         */
+#pragma intvect prvRLT0_TICKISR 54   /* RLT0                         */
 #pragma intvect DefaultIRQHandler 55   /* RLT1                         */
 #pragma intvect DefaultIRQHandler 56   /* RLT2                         */
 #pragma intvect DefaultIRQHandler 57   /* RLT3                         */
@@ -126,18 +134,18 @@ __interrupt void DefaultIRQHandler (void);
 #pragma intvect DefaultIRQHandler 92   /* LIN-UART 8 TX                */
 #pragma intvect DefaultIRQHandler 93   /* MAIN FLASH IRQ               */
 
+#pragma intvect vPortYield 122		   /* INT #122       */
+
 /*---------------------------------------------------------------------------
    DefaultIRQHandler()
    This function is a placeholder for all vector definitions. Either use
    your own placeholder or add necessary code here. 
 -----------------------------------------------------------------------------*/
-
-__interrupt 
-void DefaultIRQHandler (void)
+__interrupt void DefaultIRQHandler( void )
 {
-    __DI();                              /* disable interrupts */
-    while(1)
-    {
-        __wait_nop();                    /* halt system */
-    }
+	__DI();				/* disable interrupts */
+	while( 1 )
+	{
+		__wait_nop();	/* halt system */
+	}
 }

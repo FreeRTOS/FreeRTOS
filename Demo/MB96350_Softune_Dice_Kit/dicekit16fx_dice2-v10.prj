@@ -17,7 +17,7 @@ PrjInfo-0=Debug
 Active=Debug
 
 [MEMBER]
-F0=14
+F0=15
 F1=0 f Include Files
 F2=0 f FreeRTOS Source
 F3=0 c ..\..\Source\portable\Softune\MB96340\__STD_LIB_sbrk.c
@@ -28,10 +28,11 @@ F7=0 c ..\..\Source\portable\Softune\MB96340\port.c
 F8=0 c ..\..\Source\queue.c
 F9=0 c ..\..\Source\tasks.c
 F10=0 f Demo Source
-F11=0 c main.c
-F12=0 a mb96356rs.asm
-F13=0 a START.ASM
-F14=0 c vectors.c
+F11=0 c DiceTask.c
+F12=0 c main.c
+F13=0 a mb96356rs.asm
+F14=0 a START.ASM
+F15=0 c vectors.c
 
 [OPTIONFILE]
 FILE=options.dat
@@ -48,12 +49,22 @@ LST=LST\
 OPT=OPT\
 
 [MEMBER-Debug]
-F0=12
+F0=13
 F1=0 m 1 ABS\RTOSDemo.abs
-F2=1 c 1 vectors.c
+F2=2 c 1 vectors.c
 F2-1=- mb96356rs.h
-F3=1 c 1 main.c
+F2-2=- FreeRTOSConfig.h
+F3=10 c 1 main.c
 F3-1=- mb96356rs.h
+F3-2=- ..\..\Source\Include\FreeRTOS.h
+F3-3=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
+F3-4=- ..\..\Source\Include\projdefs.h
+F3-5=- FreeRTOSConfig.h
+F3-6=- ..\..\Source\Include\portable.h
+F3-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
+F3-8=- DiceTask.h
+F3-9=- ..\..\Source\Include\task.h
+F3-10=- ..\..\Source\Include\list.h
 F4=0 a 1 mb96356rs.asm
 F5=0 a 1 START.ASM
 F6=14 c 1 ..\..\Source\tasks.c
@@ -131,6 +142,16 @@ F12-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
 F12-8=- ..\..\Source\Include\task.h
 F12-9=- ..\..\Source\Include\list.h
 F12-10=- ..\..\Source\Include\croutine.h
+F13=9 c 1 DiceTask.c
+F13-1=- ..\..\Source\Include\FreeRTOS.h
+F13-2=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
+F13-3=- ..\..\Source\Include\projdefs.h
+F13-4=- FreeRTOSConfig.h
+F13-5=- mb96356rs.h
+F13-6=- ..\..\Source\Include\portable.h
+F13-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
+F13-8=- ..\..\Source\Include\task.h
+F13-9=- ..\..\Source\Include\list.h
 
 [BUILDMODE-Debug]
 kernel=0

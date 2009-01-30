@@ -53,16 +53,25 @@
 
 /* Demo includes. */
 #include "DiceTask.h"
+#include "ParTest.h"
+#include "Flash.h"
 
 static void prvSetupHardware( void );
 
+#define mainDISPLAY_1		0
+#define mainDISPLAY_2		1
+
+#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 /*-----------------------------------------------------------*/
 
 void main( void )
 {
 	prvSetupHardware();
 
-	xTaskCreate( vDiceTask, ( signed char * ) "Dice", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
+	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+
+	xTaskCreate( vDiceTask, ( signed char * ) "Dice1", configMINIMAL_STACK_SIZE, ( void * ) mainDISPLAY_1, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vDiceTask, ( signed char * ) "Dice2", configMINIMAL_STACK_SIZE, ( void * ) mainDISPLAY_2, tskIDLE_PRIORITY, NULL );
 
 	vTaskStartScheduler();
 

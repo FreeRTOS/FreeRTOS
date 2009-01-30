@@ -59,6 +59,10 @@
 #define diceSTATE_STARTUP		1
 #define diceSTATE_RUNNING		2
 
+#define diceEND_DELAY			( 5000 / portTICK_RATE_MS )
+
+#define dice7SEG_Value( x )		*( pucDisplayOutput[ x ] )
+
 static unsigned char prvButtonHit( unsigned char ucIndex );
 
 static const char cDisplaySegments[ 2 ][ 11 ] =
@@ -67,13 +71,16 @@ static const char cDisplaySegments[ 2 ][ 11 ] =
 	{ 0xa0, 0xf3, 0xc4, 0xc1, 0x93, 0x89, 0x88, 0xe3, 0x80, 0x81, 0x7f }
 };
 
+extern volatile unsigned char *pucDisplayOutput[ 2 ];
+
 /*-----------------------------------------------------------*/
 
 void vDiceTask( void *pvParameters )
 {
 char cDiceState = diceSTATE_STOPPED;
 unsigned char ucDiceValue, ucIndex;
-unsigned long ulDice1RunTime, ulDiceDelay, ulDiceDelayReload;
+unsigned long ulDiceRunTime, ulDiceDelay, ulDiceDelayReload;
+extern void vToggleFlashTaskSuspendState( void );
 
 	ucIndex = ( unsigned char ) pvParameters;
 
@@ -85,49 +92,64 @@ unsigned long ulDice1RunTime, ulDiceDelay, ulDiceDelayReload;
 
 				if( prvButtonHit( ucIndex ) == pdTRUE )
 				{
-					ulDice1RunTime = diceRUN_MIN;
-					srand( ( unsigned char ) ulDice1RunTime );
+					ulDiceRunTime = diceRUN_MIN;
+					srand( ( unsigned char ) ulDiceRunTime );
 					cDiceState = diceSTATE_STARTUP;
 				}
+
 				break;
 
 			case diceSTATE_STARTUP:
 
-				if( ulDice1RunTime < diceRUN_MAX )     // variable running time
+				if( ulDiceRunTime < diceRUN_MAX )     // variable running time
 				{
-					ulDice1RunTime++;
+					ulDiceRunTime++;
 				}
 				else
 				{
-					ulDice1RunTime = diceRUN_MIN;
+					ulDiceRunTime = diceRUN_MIN;
 				}
 
-				if( PDR00_P0 == 0 )              // Key SW2:INT8 released
+				if( prvButtonHit( ucIndex ) == pdFALSE )
 				{
-					ulDiceDelay    = 1;
+					if( ucIndex == 0 )
+					{
+						vToggleFlashTaskSuspendState();
+					}
+
+					ulDiceDelay = 1;
 					ulDiceDelayReload = 1;
 					cDiceState = diceSTATE_RUNNING;
-				}          
+				}   
+				       
 				break;
 
 			case diceSTATE_RUNNING:
 
-				ulDice1RunTime--;
+				ulDiceRunTime--;
 				ulDiceDelay--;
 
 				if( !ulDiceDelay )
 				{
 					ucDiceValue = rand() % 6 + 1;
-					PDR03 = ( PDR03 | 0xf7 ) & cDisplaySegments[ ucIndex ][ ucDiceValue ];
+					dice7SEG_Value( ucIndex ) = ( dice7SEG_Value( ucIndex ) | 0xf7 ) & cDisplaySegments[ ucIndex ][ ucDiceValue ];
 					ulDiceDelayReload = ulDiceDelayReload + 100;
 					ulDiceDelay = ulDiceDelayReload;
 				}
 
-				if( ulDice1RunTime == 0 )         // dice stopped
+				if( ulDiceRunTime == 0 )
 				{
-					PDR03 = ( PDR03 | 0xf7 ) & cDisplaySegments[ ucIndex ][ rand() % 6 + 1 ];
+					dice7SEG_Value( ucIndex ) = ( dice7SEG_Value( ucIndex ) | 0xf7 ) & cDisplaySegments[ ucIndex ][ rand() % 6 + 1 ];
 					cDiceState = diceSTATE_STOPPED;
+
+					if( ucIndex == 0 )
+					{
+						vTaskDelay( diceEND_DELAY );
+						*pucDisplayOutput[ ucIndex ] = 0xff;
+						vToggleFlashTaskSuspendState();
+					}
 				}
+
 				break;
 		}
 	}
@@ -152,69 +174,8 @@ static unsigned char prvButtonHit( unsigned char ucIndex )
 /*-----------------------------------------------------------*/
 
 
-#if 0
-      
-    // DICE 2
-      
-    switch (dice2state)
-    {
-      case 0x00: // dice2 stopped
-                 if( PDR00_P1 == 1)              // Key SW3:INT9 pressed
-                 {
-                   dice2run = diceRUN_MIN;
-                   srand((unsigned char)ulDice1RunTime);
-                   dice2state = 0x01;
-                 }
 
-                 break;
-                
-      case 0x01: // dice2 startup
-                 if( dice2run < diceRUN_MAX)     // variable running time
-                   dice2run++;
-                 else
-                   dice2run = diceRUN_MIN;
-            
-                 if( dice2 == diceMAX)          // simple 'random' number
-                   dice2 = diceMIN;
-                 else dice2++;
 
-                 if( PDR00_P1 == 0)              // Key SW3:INT9 released
-                 {
-                   dice2delay    = 1;
-                   dice2delayrld = 1;
-                   dice2state = 0x02;
-                 }
-                                  
-                 break;
 
-      case 0x02: // dice2 running
-                 dice2run--;
-                 dice2delay--;
 
-                 if( !dice2delay)
-                 {
-                   do                       // get new random number
-                   {
-                    temp = rand() % 6 + 1;
-                   }
-                   while (temp == dice2);
-                   dice2 = temp;
-                   
-                   PDR05 = DICE7SEG2[dice2];
-                   dice2delayrld = dice2delayrld + 100;
-                   dice2delay = dice2delayrld;
-                 }
-
-                 if( dice2run == 0)         // dice stopped
-                 {
-                   PDR05 = DICE7SEG2[rand() % 6 + 1];
-                   dice2state = 0x00;
-                 }
-
-                 break;
-
-    }//switch (dice2state)
-    
-  } // while(1)
-#endif
 

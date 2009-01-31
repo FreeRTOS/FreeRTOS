@@ -61,7 +61,7 @@
 /* Delays used within the dice functionality.  All delays are defined in milliseconds. */
 #define diceDELAY_BETWEEN_RANDOM_NUMBERS_ms		( 20 / portTICK_RATE_MS )
 #define diceSHAKE_TIME							( ( 2000 / portTICK_RATE_MS ) / diceDELAY_BETWEEN_RANDOM_NUMBERS_ms )
-#define diceSHORT_PAUSE_BEFORE_SHAKE			( 1000 / portTICK_RATE_MS )
+#define diceSHORT_PAUSE_BEFORE_SHAKE			( 250 / portTICK_RATE_MS )
 #define diceDELAY_WHILE_DISPLAYING_RESULT		( 5000 / portTICK_RATE_MS )
 
 /* Macro to access the display ports. */
@@ -180,6 +180,8 @@ extern void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks );
 
 		/* Clear the display then resume the tasks or co-routines that were using
 		the segments of the display. */
+		*pucDisplayOutput[ ucIndex ] = 0xff;
+		vSuspendFlashTasks( ucIndex, pdFALSE );
 	}
 }
 /*-----------------------------------------------------------*/

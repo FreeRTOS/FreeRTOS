@@ -80,7 +80,7 @@ the ComTest tasks will be included in place of the trace task. */
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
+#define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 180 ) /* This can be greatly reduced when using the small or medium memory model. */
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 56000000 )	/* Clock setup from start.asm in the demo application. */

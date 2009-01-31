@@ -169,7 +169,19 @@ F14-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
 F14-8=- ..\..\Source\Include\task.h
 F14-9=- ..\..\Source\Include\list.h
 F14-10=- ..\Common\Include\ParTest.h
-F15=0 c 1 SegmentToggleTasks.c
+F15=12 c 1 SegmentToggleTasks.c
+F15-1=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stdlib.h
+F15-2=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
+F15-3=- ..\..\Source\Include\FreeRTOS.h
+F15-4=- ..\..\Source\Include\projdefs.h
+F15-5=- FreeRTOSConfig.h
+F15-6=- mb96356rs.h
+F15-7=- ..\..\Source\Include\portable.h
+F15-8=- ..\..\Source\portable\Softune\MB96340\portmacro.h
+F15-9=- ..\..\Source\Include\task.h
+F15-10=- ..\..\Source\Include\list.h
+F15-11=- ..\..\Source\Include\croutine.h
+F15-12=- ..\Common\Include\ParTest.h
 
 [BUILDMODE-Debug]
 kernel=0

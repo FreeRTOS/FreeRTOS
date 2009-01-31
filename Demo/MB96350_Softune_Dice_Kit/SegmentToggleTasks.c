@@ -48,16 +48,8 @@
 */
 
 /**
- * This version of flash .c is for use on systems that have limited stack space
- * and no display facilities.  The complete version can be found in the 
- * Demo/Common/Full directory.
- * 
- * Three tasks are created, each of which flash an LED at a different rate.  The first 
- * LED flashes every 200ms, the second every 400ms, the third every 600ms.
- *
- * The LED flash tasks provide instant visual feedback.  They show that the scheduler 
- * is still operational.
- *
+ * Defines the tasks and co-routines used to toggle the segments of the two
+ * seven segment displays, as described at the top of main.c
  */
 
 
@@ -70,40 +62,60 @@
 
 /* Demo program include files. */
 #include "partest.h"
-#include "flash.h"
 
-#define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
-#define ledNUMBER_OF_LEDS	( 7 )
+/*-----------------------------------------------------------*/
+
+/* One task per segment of the left side display. */
+#define ledNUM_OF_LED_TASKS	( 7 )
+
+/* Each task toggles at a frequency that is a multiple of 333ms. */
 #define ledFLASH_RATE_BASE	( ( portTickType ) 333 )
 
-#define ledMAX_FLASH_CO_ROUTINES	7
+/* One co-routine per segment of the right hand display. */
+#define ledNUM_OF_LED_CO_ROUTINES	7
+
+/* All co-routines run at the same priority. */
 #define ledCO_ROUTINE_PRIORITY		0
 
-/* The task that is created three times. */
+/*-----------------------------------------------------------*/
+
+/* The task that is created 7 times. */
 static void vLEDFlashTask( void *pvParameters );
+
+/* The co-routine that is created 7 times. */
 static void prvFixedDelayCoRoutine( xCoRoutineHandle xHandle, unsigned short usIndex );
 
 /* This task is created once, but itself creates 7 co-routines. */
 static void vLEDCoRoutineControlTask( void *pvParameters );
 
-static xTaskHandle xFlashTaskHandles[ ledNUMBER_OF_LEDS ] = { 0 };
+/* Handles to each of the 7 tasks.  Used so the tasks can be suspended
+and resumed. */
+static xTaskHandle xFlashTaskHandles[ ledNUM_OF_LED_TASKS ] = { 0 };
+
+/* Handle to the task in which the co-routines run.  Used so the
+co-routines can be suspended and resumed. */
 static xTaskHandle xCoroutineTask;
 
 /*-----------------------------------------------------------*/
 
+/**
+ * Creates the tasks and co-routines used to toggle the segments of the two
+ * seven segment displays, as described at the top of main.c
+ */
 void vCreateFlashTasksAndCoRoutines( void )
 {
 signed short sLEDTask;
 
-	/* Create the three tasks that flash segments on the first LED. */
-	for( sLEDTask = 0; sLEDTask < ledNUMBER_OF_LEDS; ++sLEDTask )
+	/* Create the tasks that flash segments on the first LED. */
+	for( sLEDTask = 0; sLEDTask < ledNUM_OF_LED_TASKS; ++sLEDTask )
 	{
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDt", ledSTACK_SIZE, ( void * ) sLEDTask, ( tskIDLE_PRIORITY + 1 ), &( xFlashTaskHandles[ sLEDTask ] ) );
+		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDt", configMINIMAL_STACK_SIZE, ( void * ) sLEDTask, ( tskIDLE_PRIORITY + 1 ), &( xFlashTaskHandles[ sLEDTask ] ) );
 	}
 
-	/* Create the task in which the co-routines run. */
-	xTaskCreate( vLEDCoRoutineControlTask, ( signed char * ) "LEDc", ledSTACK_SIZE, NULL, tskIDLE_PRIORITY, &xCoroutineTask );
+	/* Create the task in which the co-routines run.  The co-routines themselves
+	are created within the task. */
+	xTaskCreate( vLEDCoRoutineControlTask, ( signed char * ) "LEDc", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCoroutineTask );
 }
 /*-----------------------------------------------------------*/
 
@@ -111,9 +123,11 @@ void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks )
 {
 short sLEDTask;
 
-	if( ucIndex == 0 )
+	if( ucIndex == configLEFT_DISPLAY )
 	{
-		for( sLEDTask = 0; sLEDTask < ledNUMBER_OF_LEDS; ++sLEDTask )
+		/* Suspend or resume the tasks that are toggling the segments of the
+		left side display. */
+		for( sLEDTask = 0; sLEDTask < ledNUM_OF_LED_TASKS; ++sLEDTask )
 		{
 			if( xFlashTaskHandles[ sLEDTask ] != NULL )
 			{
@@ -130,6 +144,8 @@ short sLEDTask;
 	}
 	else
 	{
+		/* Suspend or resume the task in which the co-routines are running.  The
+		co-routines toggle the segments of the right side display. */
 		if( sSuspendTasks == pdTRUE )
 		{
 			vTaskSuspend( xCoroutineTask );
@@ -181,11 +197,14 @@ unsigned short usCoroutine;
 
 	( void ) pvParameters;
 
-	for( usCoroutine = 0; usCoroutine < ledMAX_FLASH_CO_ROUTINES; usCoroutine++ )
+	/* Create the co-routines - one of each segment of the right side display. */
+	for( usCoroutine = 0; usCoroutine < ledNUM_OF_LED_CO_ROUTINES; usCoroutine++ )
 	{
 		xCoRoutineCreate( prvFixedDelayCoRoutine, ledCO_ROUTINE_PRIORITY, usCoroutine );
 	}
 
+	/* This task has nothing else to do except scheduler the co-routines it just
+	created. */
 	for( ;; )
 	{
 		vCoRoutineSchedule();
@@ -197,7 +216,7 @@ static void prvFixedDelayCoRoutine( xCoRoutineHandle xHandle, unsigned short usI
 {
 /* The usIndex parameter of the co-routine function is used as an index into
 the xFlashRates array to obtain the delay period to use. */
-static const portTickType xFlashRates[ ledMAX_FLASH_CO_ROUTINES ] = { 150 / portTICK_RATE_MS,
+static const portTickType xFlashRates[ ledNUM_OF_LED_CO_ROUTINES ] = { 150 / portTICK_RATE_MS,
 																300 / portTICK_RATE_MS,
 																450 / portTICK_RATE_MS,
 																600 / portTICK_RATE_MS,
@@ -210,7 +229,12 @@ static const portTickType xFlashRates[ ledMAX_FLASH_CO_ROUTINES ] = { 150 / port
 
 	for( ;; )
 	{
+		/* Toggle the LED.  An offset of 8 is used to skip over the segments of
+		the left side display which use the low numbers. */
 		vParTestToggleLED( usIndex + 8 );
+
+		/* Delay until it is time to toggle the segment that this co-routine is
+		controlling again. */
 		crDELAY( xHandle, xFlashRates[ usIndex ] );
 	}
 

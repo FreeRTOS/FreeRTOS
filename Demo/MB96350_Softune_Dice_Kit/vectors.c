@@ -34,10 +34,10 @@ void InitIrqLevels(void)
     ICR = (irq << 8) | DEFAULT_ILM_MASK;
   }
 
-	ICR = ( (54 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Reload Timer 0 */
-	ICR = ( (12 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Delayed interrupt of 16FX Family */
-	ICR = ( (24 & 0xFF) << 8 ) | ( configKERNEL_INTERRUPT_PRIORITY - 1 );	/* INT8 */
-	ICR = ( (25 & 0xFF) << 8 ) | ( configKERNEL_INTERRUPT_PRIORITY - 1 );	/* INT9 */	
+	ICR = ( (54 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* Reload Timer 0 */
+	ICR = ( (12 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* Delayed interrupt of 16FX Family */
+	ICR = ( (24 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* INT8 */
+	ICR = ( (25 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;	/* INT9 */	
 }
 
 /*---------------------------------------------------------------------------

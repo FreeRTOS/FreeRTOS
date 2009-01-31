@@ -66,80 +66,92 @@
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "croutine.h"
 
 /* Demo program include files. */
 #include "partest.h"
 #include "flash.h"
 
 #define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
-#define ledNUMBER_OF_LEDS	( 3 )
+#define ledNUMBER_OF_LEDS	( 7 )
 #define ledFLASH_RATE_BASE	( ( portTickType ) 333 )
 
-/* Variable used by the created tasks to calculate the LED number to use, and
-the rate at which they should flash the LED. */
-static volatile unsigned portBASE_TYPE uxFlashTaskNumber = 0;
+#define ledMAX_FLASH_CO_ROUTINES	7
+#define ledCO_ROUTINE_PRIORITY		0
 
 /* The task that is created three times. */
-static portTASK_FUNCTION_PROTO( vLEDFlashTask, pvParameters );
+static void vLEDFlashTask( void *pvParameters );
+static void prvFixedDelayCoRoutine( xCoRoutineHandle xHandle, unsigned short usIndex );
+
+/* This task is created once, but itself creates 7 co-routines. */
+static void vLEDCoRoutineControlTask( void *pvParameters );
 
 static xTaskHandle xFlashTaskHandles[ ledNUMBER_OF_LEDS ] = { 0 };
+static xTaskHandle xCoroutineTask;
 
 /*-----------------------------------------------------------*/
 
 void vStartLEDFlashTasks( unsigned portBASE_TYPE uxPriority )
 {
-signed portBASE_TYPE xLEDTask;
+signed short sLEDTask;
 
-	/* Create the three tasks. */
-	for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
+	/* Create the three tasks that flash segments on the first LED. */
+	for( sLEDTask = 0; sLEDTask < ledNUMBER_OF_LEDS; ++sLEDTask )
 	{
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, ( signed portCHAR * ) "LEDx", ledSTACK_SIZE, NULL, uxPriority, &( xFlashTaskHandles[ xLEDTask ] ) );
+		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDt", ledSTACK_SIZE, ( void * ) sLEDTask, uxPriority, &( xFlashTaskHandles[ sLEDTask ] ) );
 	}
+
+	/* Create the task in which the co-routines run. */
+	xTaskCreate( vLEDCoRoutineControlTask, ( signed char * ) "LEDc", ledSTACK_SIZE, NULL, tskIDLE_PRIORITY, &xCoroutineTask );
 }
 /*-----------------------------------------------------------*/
 
-void vSuspendFlashTasks( short sSuspendTasks )
+void vSuspendFlashTasks( unsigned char ucIndex, short sSuspendTasks )
 {
-signed portBASE_TYPE xLEDTask;
+short sLEDTask;
 
-	for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
+	if( ucIndex == 0 )
 	{
-		if( xFlashTaskHandles[ xLEDTask ] != NULL )
+		for( sLEDTask = 0; sLEDTask < ledNUMBER_OF_LEDS; ++sLEDTask )
 		{
-			if( sSuspendTasks == pdTRUE )
+			if( xFlashTaskHandles[ sLEDTask ] != NULL )
 			{
-				vTaskSuspend( xFlashTaskHandles[ xLEDTask ] );
+				if( sSuspendTasks == pdTRUE )
+				{
+					vTaskSuspend( xFlashTaskHandles[ sLEDTask ] );
+				}
+				else
+				{
+					vTaskResume( xFlashTaskHandles[ sLEDTask ] );
+				}
 			}
-			else
-			{
-				vTaskResume( xFlashTaskHandles[ xLEDTask ] );
-			}
+		}
+	}
+	else
+	{
+		if( sSuspendTasks == pdTRUE )
+		{
+			vTaskSuspend( xCoroutineTask );
+		}
+		else
+		{
+			vTaskResume( xCoroutineTask );
 		}
 	}
 }
 /*-----------------------------------------------------------*/
 
-static portTASK_FUNCTION( vLEDFlashTask, pvParameters )
+static void vLEDFlashTask( void * pvParameters )
 {
 portTickType xFlashRate, xLastFlashTime;
-unsigned portBASE_TYPE uxLED;
+unsigned short usLED;
 
-	/* The parameters are not used. */
-	( void ) pvParameters;
+	/* The LED to flash is passed in as the task parameter. */
+	usLED = ( unsigned short ) pvParameters;
 
-	/* Calculate the LED and flash rate. */
-	portENTER_CRITICAL();
-	{
-		/* See which of the eight LED's we should use. */
-		uxLED = uxFlashTaskNumber;
-
-		/* Update so the next task uses the next LED. */
-		uxFlashTaskNumber++;
-	}
-	portEXIT_CRITICAL();
-
-	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( portTickType ) uxLED );
+	/* Calculate the rate at which this task is going to toggle its LED. */
+	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( portTickType ) usLED );
 	xFlashRate /= portTICK_RATE_MS;
 
 	/* We will turn the LED on and off again in the delay period, so each
@@ -154,11 +166,57 @@ unsigned portBASE_TYPE uxLED;
 	{
 		/* Delay for half the flash period then turn the LED on. */
 		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
-		vParTestToggleLED( uxLED );
+		vParTestToggleLED( usLED );
 
 		/* Delay for half the flash period then turn the LED off. */
 		vTaskDelayUntil( &xLastFlashTime, xFlashRate );
-		vParTestToggleLED( uxLED );
+		vParTestToggleLED( usLED );
 	}
-} /*lint !e715 !e818 !e830 Function definition must be standard for task creation. */
+}
+/*-----------------------------------------------------------*/
+
+static void vLEDCoRoutineControlTask( void *pvParameters )
+{
+unsigned short usCoroutine;
+
+	( void ) pvParameters;
+
+	for( usCoroutine = 0; usCoroutine < ledMAX_FLASH_CO_ROUTINES; usCoroutine++ )
+	{
+		xCoRoutineCreate( prvFixedDelayCoRoutine, ledCO_ROUTINE_PRIORITY, usCoroutine );
+	}
+
+	for( ;; )
+	{
+		vCoRoutineSchedule();
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvFixedDelayCoRoutine( xCoRoutineHandle xHandle, unsigned short usIndex )
+{
+/* The usIndex parameter of the co-routine function is used as an index into
+the xFlashRates array to obtain the delay period to use. */
+static const portTickType xFlashRates[ ledMAX_FLASH_CO_ROUTINES ] = { 150 / portTICK_RATE_MS,
+																300 / portTICK_RATE_MS,
+																450 / portTICK_RATE_MS,
+																600 / portTICK_RATE_MS,
+																750 / portTICK_RATE_MS,
+																900 / portTICK_RATE_MS,
+																1050 / portTICK_RATE_MS };
+
+	/* Co-routines MUST start with a call to crSTART. */
+	crSTART( xHandle );
+
+	for( ;; )
+	{
+		vParTestToggleLED( usIndex + 8 );
+		crDELAY( xHandle, xFlashRates[ usIndex ] );
+	}
+
+	/* Co-routines MUST end with a call to crEND. */
+	crEND();
+}
+/*-----------------------------------------------------------*/
+
 

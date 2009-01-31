@@ -91,7 +91,7 @@ static xTaskHandle xCoroutineTask;
 
 /*-----------------------------------------------------------*/
 
-void vStartLEDFlashTasks( unsigned portBASE_TYPE uxPriority )
+void vCreateFlashTasksAndCoRoutines( void )
 {
 signed short sLEDTask;
 
@@ -99,7 +99,7 @@ signed short sLEDTask;
 	for( sLEDTask = 0; sLEDTask < ledNUMBER_OF_LEDS; ++sLEDTask )
 	{
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDt", ledSTACK_SIZE, ( void * ) sLEDTask, uxPriority, &( xFlashTaskHandles[ sLEDTask ] ) );
+		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDt", ledSTACK_SIZE, ( void * ) sLEDTask, ( tskIDLE_PRIORITY + 1 ), &( xFlashTaskHandles[ sLEDTask ] ) );
 	}
 
 	/* Create the task in which the co-routines run. */

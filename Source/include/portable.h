@@ -281,6 +281,11 @@
 	#include "../../Source/portable/IAR/V850ES/portmacro.h"
 #endif
 
+#ifdef __IAR_78KOR_Kx3__
+	#include "../../Source/portable/IAR/78K0R/portmacro.h"
+#endif
+	
+	
 #ifdef __cplusplus
 extern "C" {
 #endif

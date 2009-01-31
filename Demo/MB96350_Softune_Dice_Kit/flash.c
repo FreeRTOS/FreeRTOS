@@ -99,7 +99,7 @@ signed portBASE_TYPE xLEDTask;
 }
 /*-----------------------------------------------------------*/
 
-void vToggleFlashTaskSuspendState( void )
+void vSuspendFlashTasks( short sSuspendTasks )
 {
 signed portBASE_TYPE xLEDTask;
 
@@ -107,7 +107,7 @@ signed portBASE_TYPE xLEDTask;
 	{
 		if( xFlashTaskHandles[ xLEDTask ] != NULL )
 		{
-			if( xTaskIsTaskSuspended( xFlashTaskHandles[ xLEDTask ] ) == pdFALSE )
+			if( sSuspendTasks == pdTRUE )
 			{
 				vTaskSuspend( xFlashTaskHandles[ xLEDTask ] );
 			}

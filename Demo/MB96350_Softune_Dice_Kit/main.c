@@ -47,6 +47,57 @@
 	licensing and training services.
 */
 
+
+/*****
+ *
+ * See http://www.freertos.org/Documentation/FreeRTOS-documentation-and-book.html
+ * for an introductory guide to using real time kernels, and FreeRTOS in 
+ * particular. 
+ *
+ *****
+ *  
+ * The DICE-KIT-16FX has two 7 segment displays and two buttons that can
+ * generate interrupts.  This example uses this IO as follows:
+ *
+ *
+ * - Left 7 segment display - 
+ *
+ * 7 'flash' tasks are created, each of which toggles a single segment of the 
+ * left display.  Each task executes at a fixed frequency, with a different 
+ * frequency being used by each task.
+ *
+ * When button SW2 is pressed an interrupt is generated that wakes up a 'dice'
+ * task.  The dice task suspends the 7 tasks that are accessing the left display
+ * before simulating a dice being thrown by generating a random number between
+ * 1 and 6.  After the number has been generated the task sleeps for 5 seconds,
+ * if SW2 is pressed again within the 5 seconds another random number is 
+ * generated, if SW2 is not pressed within the 5 seconds then the 7 tasks are
+ * un-suspended and will once again toggle the segments of the left hand display.
+ *
+ *
+ * - Right 7 segment display -
+ *
+ * Control of the right side 7 segment display is very similar to that of the
+ * left, except co-routines are used to toggle the segments instead of tasks,
+ * and button SW3 is used instead of SW2.
+ *
+ *
+ * - Notes -
+ *
+ * Only one dice task is actually defined.  Two instances of this single
+ * definition are created, the first to simulate a dice being thrown on the left
+ * display, and the other to simulate a dice being thrown on the right display.
+ * The task parameter is used to let the dice tasks know which display to 
+ * control.
+ *
+ * Both dice tasks and the flash tasks operate completely independently under
+ * the control of FreeRTOS.  11 tasks and 7 co-routines are created in total,
+ * including the idle task. 
+ *
+ * The co-routines all execute within a single low priority task.
+ *
+ *****/
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "Task.h"
@@ -56,31 +107,42 @@
 #include "ParTest.h"
 #include "Flash.h"
 
+/* The priority at which the dice task execute. */
+#define mainDICE_PRIORITY			( tskIDLE_PRIORITY + 2 )
+
+/*
+ * Sets up the MCU IO for the 7 segment displays and the button inputs.
+ */
 static void prvSetupHardware( void );
 
-#define mainDISPLAY_1		0
-#define mainDISPLAY_2		1
+/*
+ * The function that creates the flash tasks and co-routines (the tasks and
+ * co-routines that toggle the 7 segment display segments.
+ */
+extern vCreateFlashTasksAndCoRoutines( void );
 
-#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 /*-----------------------------------------------------------*/
 
 void main( void )
 {
+	/* Setup the MCU IO. */
 	prvSetupHardware();
 
-	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+	/* Create the tasks and co-routines that toggle the display segments. */
+	vCreateFlashTasksAndCoRoutines();
 
-	xTaskCreate( vDiceTask, ( signed char * ) "Dice1", configMINIMAL_STACK_SIZE, ( void * ) mainDISPLAY_1, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vDiceTask, ( signed char * ) "Dice2", configMINIMAL_STACK_SIZE, ( void * ) mainDISPLAY_2, tskIDLE_PRIORITY, NULL );
+	/* Create a 'dice' task to control the left hand display. */
+	xTaskCreate( vDiceTask, ( signed char * ) "Dice1", configMINIMAL_STACK_SIZE, ( void * ) configLEFT_DISPLAY, mainDICE_PRIORITY, NULL );
 
+	/* Create a 'dice' task to control the right hand display. */
+	xTaskCreate( vDiceTask, ( signed char * ) "Dice2", configMINIMAL_STACK_SIZE, ( void * ) configRIGHT_DISPLAY, mainDICE_PRIORITY, NULL );
+
+	/* Start the scheduler running. */
 	vTaskStartScheduler();
 
+	/* If this loop is executed then there was insufficient heap memory for the
+	idle task to be created - causing vTaskStartScheduler() to return. */
 	while( 1 );
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationIdleHook( void )
-{
 }
 /*-----------------------------------------------------------*/
 
@@ -136,7 +198,7 @@ static void prvSetupHardware( void )
 	ELVRL1_LB9 = 1;
 	ELVRL1_LA9 = 1;
 
-	/* Reset and enable the interrput request. */
+	/* Reset and enable the interrupt request. */
 	EIRR1_ER9 = 0;
 	ENIR1_EN9 = 1;	
 }

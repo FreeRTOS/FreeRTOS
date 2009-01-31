@@ -36,6 +36,8 @@ void InitIrqLevels(void)
 
 	ICR = ( (54 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Reload Timer 0 */
 	ICR = ( (12 & 0xFF) << 8 ) | configKERNEL_INTERRUPT_PRIORITY;			/* Delayed interrupt of 16FX Family */
+	ICR = ( (24 & 0xFF) << 8 ) | ( configKERNEL_INTERRUPT_PRIORITY - 1 );	/* INT8 */
+	ICR = ( (25 & 0xFF) << 8 ) | ( configKERNEL_INTERRUPT_PRIORITY - 1 );	/* INT9 */	
 }
 
 /*---------------------------------------------------------------------------
@@ -48,6 +50,8 @@ __interrupt void		DefaultIRQHandler( void );
 extern __interrupt void prvRLT0_TICKISR( void );
 extern __interrupt void vPortYield( void );
 extern __interrupt void vPortYieldDelayed( void );
+extern __interrupt void vExternalInt8Handler( void );
+extern __interrupt void vExternalInt9Handler( void );
 
 /*---------------------------------------------------------------------------
    Vector definiton for MB9635x
@@ -73,8 +77,8 @@ extern __interrupt void vPortYieldDelayed( void );
 #pragma intvect DefaultIRQHandler 21   /* EXT4                         */
 #pragma intvect DefaultIRQHandler 22   /* EXT5                         */
 #pragma intvect DefaultIRQHandler 23   /* EXT7                         */
-#pragma intvect DefaultIRQHandler 24   /* EXT8                         */
-#pragma intvect DefaultIRQHandler 25   /* EXT9                         */
+#pragma intvect vExternalInt8Handler 24   /* EXT8                         */
+#pragma intvect vExternalInt9Handler 25   /* EXT9                         */
 #pragma intvect DefaultIRQHandler 26   /* EXT10                        */
 #pragma intvect DefaultIRQHandler 27   /* EXT11                        */
 #pragma intvect DefaultIRQHandler 28   /* EXT12                        */

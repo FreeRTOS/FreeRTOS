@@ -17,7 +17,7 @@ PrjInfo-0=Debug
 Active=Debug
 
 [MEMBER]
-F0=15
+F0=17
 F1=0 f Include Files
 F2=0 f FreeRTOS Source
 F3=0 c ..\..\Source\portable\Softune\MB96340\__STD_LIB_sbrk.c
@@ -29,10 +29,12 @@ F8=0 c ..\..\Source\queue.c
 F9=0 c ..\..\Source\tasks.c
 F10=0 f Demo Source
 F11=0 c DiceTask.c
-F12=0 c main.c
-F13=0 a mb96356rs.asm
-F14=0 a START.ASM
-F15=0 c vectors.c
+F12=0 c flash.c
+F13=0 c main.c
+F14=0 a mb96356rs.asm
+F15=0 c ParTest\ParTest.c
+F16=0 a START.ASM
+F17=0 c vectors.c
 
 [OPTIONFILE]
 FILE=options.dat
@@ -49,12 +51,12 @@ LST=LST\
 OPT=OPT\
 
 [MEMBER-Debug]
-F0=13
+F0=15
 F1=0 m 1 ABS\RTOSDemo.abs
 F2=2 c 1 vectors.c
 F2-1=- mb96356rs.h
 F2-2=- FreeRTOSConfig.h
-F3=10 c 1 main.c
+F3=12 c 1 main.c
 F3-1=- mb96356rs.h
 F3-2=- ..\..\Source\Include\FreeRTOS.h
 F3-3=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
@@ -65,6 +67,8 @@ F3-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
 F3-8=- DiceTask.h
 F3-9=- ..\..\Source\Include\task.h
 F3-10=- ..\..\Source\Include\list.h
+F3-11=- ..\Common\Include\ParTest.h
+F3-12=- ..\Common\Include\Flash.h
 F4=0 a 1 mb96356rs.asm
 F5=0 a 1 START.ASM
 F6=14 c 1 ..\..\Source\tasks.c
@@ -152,6 +156,30 @@ F13-6=- ..\..\Source\Include\portable.h
 F13-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
 F13-8=- ..\..\Source\Include\task.h
 F13-9=- ..\..\Source\Include\list.h
+F14=10 c 1 ParTest\ParTest.c
+F14-1=- ..\..\Source\Include\FreeRTOS.h
+F14-2=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
+F14-3=- ..\..\Source\Include\projdefs.h
+F14-4=- FreeRTOSConfig.h
+F14-5=- mb96356rs.h
+F14-6=- ..\..\Source\Include\portable.h
+F14-7=- ..\..\Source\portable\Softune\MB96340\portmacro.h
+F14-8=- ..\..\Source\Include\task.h
+F14-9=- ..\..\Source\Include\list.h
+F14-10=- ..\Common\Include\ParTest.h
+F15=12 c 1 flash.c
+F15-1=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stdlib.h
+F15-2=- ..\..\..\..\..\..\devtools\Softune\LIB\907\INCLUDE\stddef.h
+F15-3=- ..\..\Source\Include\FreeRTOS.h
+F15-4=- ..\..\Source\Include\projdefs.h
+F15-5=- FreeRTOSConfig.h
+F15-6=- mb96356rs.h
+F15-7=- ..\..\Source\Include\portable.h
+F15-8=- ..\..\Source\portable\Softune\MB96340\portmacro.h
+F15-9=- ..\..\Source\Include\task.h
+F15-10=- ..\..\Source\Include\list.h
+F15-11=- ..\Common\Include\ParTest.h
+F15-12=- ..\Common\Include\Flash.h
 
 [BUILDMODE-Debug]
 kernel=0

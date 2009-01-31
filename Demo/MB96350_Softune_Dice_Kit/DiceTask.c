@@ -49,6 +49,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
 #define diceMIN    1
 #define diceMAX    6
@@ -63,13 +64,15 @@
 
 #define dice7SEG_Value( x )		*( pucDisplayOutput[ x ] )
 
-static unsigned char prvButtonHit( unsigned char ucIndex );
+#define prvButtonHit( ucIndex, xTicksToWait ) xSemaphoreTake( xSemaphores[ ucIndex ], xTicksToWait )
 
 static const char cDisplaySegments[ 2 ][ 11 ] =
 {
 	{ 0x48, 0xeb, 0x8c, 0x89, 0x2b, 0x19, 0x18, 0xcb, 0x08, 0x09, 0xf7 },
 	{ 0xa0, 0xf3, 0xc4, 0xc1, 0x93, 0x89, 0x88, 0xe3, 0x80, 0x81, 0x7f }
 };
+
+static xSemaphoreHandle xSemaphores[ 2 ] = { 0 };
 
 extern volatile unsigned char *pucDisplayOutput[ 2 ];
 
@@ -83,6 +86,8 @@ unsigned long ulDiceRunTime, ulDiceDelay, ulDiceDelayReload;
 extern void vToggleFlashTaskSuspendState( void );
 
 	ucIndex = ( unsigned char ) pvParameters;
+	vSemaphoreCreateBinary( xSemaphores[ ucIndex ] );
+	srand( ( unsigned char ) diceRUN_MIN );
 
 	for( ;; )
 	{
@@ -90,38 +95,17 @@ extern void vToggleFlashTaskSuspendState( void );
 		{
 			case diceSTATE_STOPPED:
 
-				if( prvButtonHit( ucIndex ) == pdTRUE )
+				prvButtonHit( ucIndex, portMAX_DELAY );
+				ulDiceRunTime = diceRUN_MIN;				
+				cDiceState = diceSTATE_RUNNING;
+				ulDiceDelay = 1;
+				ulDiceDelayReload = 1;
+				cDiceState = diceSTATE_RUNNING;
+				if( ucIndex == 0 )
 				{
-					ulDiceRunTime = diceRUN_MIN;
-					srand( ( unsigned char ) ulDiceRunTime );
-					cDiceState = diceSTATE_STARTUP;
+					vToggleFlashTaskSuspendState();
 				}
 
-				break;
-
-			case diceSTATE_STARTUP:
-
-				if( ulDiceRunTime < diceRUN_MAX )     // variable running time
-				{
-					ulDiceRunTime++;
-				}
-				else
-				{
-					ulDiceRunTime = diceRUN_MIN;
-				}
-
-				if( prvButtonHit( ucIndex ) == pdFALSE )
-				{
-					if( ucIndex == 0 )
-					{
-						vToggleFlashTaskSuspendState();
-					}
-
-					ulDiceDelay = 1;
-					ulDiceDelayReload = 1;
-					cDiceState = diceSTATE_RUNNING;
-				}   
-				       
 				break;
 
 			case diceSTATE_RUNNING:
@@ -156,22 +140,36 @@ extern void vToggleFlashTaskSuspendState( void );
 }
 /*-----------------------------------------------------------*/
 
-static unsigned char prvButtonHit( unsigned char ucIndex )
+__interrupt void vExternalInt8Handler( void )
 {
-	if( ( ucIndex == 0 ) && PDR00_P0 )
+short sHigherPriorityTaskWoken = pdFALSE;
+
+	/* Reset the interrupt. */
+	EIRR1_ER8 = 0;
+
+	xSemaphoreGiveFromISR( xSemaphores[ 0 ], &sHigherPriorityTaskWoken );
+
+	if( sHigherPriorityTaskWoken != pdFALSE )
 	{
-		return pdTRUE;
-	}
-	else if( ( ucIndex == 1 ) && PDR00_P1 )
-	{
-		return pdTRUE;
-	}
-	else
-	{
-		return pdFALSE;
+		portYIELD_FROM_ISR();
 	}
 }
 /*-----------------------------------------------------------*/
+
+__interrupt void vExternalInt9Handler( void )
+{
+short sHigherPriorityTaskWoken = pdFALSE;
+
+	/* Reset the interrupt. */
+	EIRR1_ER9 = 0;
+
+	xSemaphoreGiveFromISR( xSemaphores[ 1 ], &sHigherPriorityTaskWoken );
+
+	if( sHigherPriorityTaskWoken != pdFALSE )
+	{
+		portYIELD_FROM_ISR();
+	}
+}
 
 
 

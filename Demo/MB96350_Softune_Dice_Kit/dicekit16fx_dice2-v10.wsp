@@ -18,5 +18,6 @@ AutoLoad=1
 WSP=C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\
 
 [EditState]
-Count=0
+STATE-1=vectors.c:40
+Count=1
 

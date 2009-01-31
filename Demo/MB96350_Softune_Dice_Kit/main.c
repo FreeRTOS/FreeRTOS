@@ -93,25 +93,8 @@ static void prvSetupHardware( void )
 	portDISABLE_INTERRUPTS();
 	__set_il( 7 );	
 
-	/* Enable P00_0/INT8 and P00_1/INT9 as input. */
-	PIER00 = 0x03;
-	PDR00  = 0x00;
-	DDR00  = 0xfc;
-
 	/* Set Port3 as output (7Segment Display). */
 	DDR03  = 0xff;
-
-	/* Enable P04_2/RX as input. */
-	PIER04 = 0x04;
-
-	/* CAN TX = 1. */
-	PDR04  = 0x08;
-
-	/* CAN RX = input. */
-	DDR04  = 0xfb;
-
-	/* All inputs are disabled on this port. */
-	PIER05 = 0x00;
 
 	/* Use Port 5 as I/O-Port. */
 	ADER1  = 0;
@@ -126,8 +109,35 @@ static void prvSetupHardware( void )
 	DDR02  = 0xff;
 	PIER03 = 0x00;
 	PDR03  = 0xff;
+	PIER05 = 0x00;
+	PDR05  = 0x00;
 	PIER06 = 0x00;
 	PDR06  = 0x00;
 	DDR06  = 0xff;
+
+	/* Enable P00_0/INT8 and P00_1/INT9 as input. */
+	PIER00 = 0x03;
+
+	/* Enable external interrupt 8. */
+	PIER00_IE0 = 1;
+	
+	/* LB0, LA0 = 11 -> falling edge. */
+	ELVRL1_LB8 = 1;
+	ELVRL1_LA8 = 1;
+
+	/* Reset and enable the interrupt request. */
+	EIRR1_ER8 = 0;
+	ENIR1_EN8 = 1;
+
+	/* Enable external interrupt 9. */
+	PIER00_IE1 = 1;
+	
+	/* LB1, LA1 = 11 -> falling edge. */
+	ELVRL1_LB9 = 1;
+	ELVRL1_LA9 = 1;
+
+	/* Reset and enable the interrput request. */
+	EIRR1_ER9 = 0;
+	ENIR1_EN9 = 1;	
 }
 

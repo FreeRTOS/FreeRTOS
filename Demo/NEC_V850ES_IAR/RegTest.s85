@@ -1,0 +1,362 @@
+;	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2009 Richard Barry.
+;
+;	This file is part of the FreeRTOS.org distribution.
+;
+;	FreeRTOS.org is free software; you can redistribute it and/or modify
+;	it under the terms of the GNU General Public License as published by
+;	the Free Software Foundation; either version 2 of the License, or
+;	(at your option) any later version.
+;
+;	FreeRTOS.org is distributed in the hope that it will be useful,
+;	but WITHOUT ANY WARRANTY; without even the implied warranty of
+;	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;	GNU General Public License for more details.
+;
+;	You should have received a copy of the GNU General Public License
+;	along with FreeRTOS.org; if not, write to the Free Software
+;	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+;
+;	A special exception to the GPL can be applied should you wish to distribute
+;	a combined work that includes FreeRTOS.org, without being obliged to provide
+;	the source code for any proprietary components.  See the licensing section
+;	of http://www.FreeRTOS.org for full details of how and when the exception
+;	can be applied.
+;
+;	***************************************************************************
+;	See http://www.FreeRTOS.org for documentation, latest information, license
+;	and contact details.  Please ensure to read the configuration and relevant
+;	port sections of the online documentation.
+;	***************************************************************************
+;
+;------------------------------------------------------------------------------
+; Note: Select the correct include files for the device used by the application.
+
+	EXTERN	vRegTestFailed
+
+
+
+;
+; The RegTest tasks as described in the comments at the top of main().
+;
+
+
+;------------------------------------------------------------------------------
+
+; Functions implemented in this file
+;------------------------------------------------------------------------------
+    PUBLIC	vRegTest1
+    PUBLIC	vRegTest2
+
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------	
+    RSEG CODE:CODE
+vRegTest1:
+    MOV		0x01010101, R1
+    MOV		0x02020202, R2
+	; Ignore R3 and R4 as these are the stack and global pointers respectively.
+	MOV		0x04040404, R5
+	MOV		0x05050505, R6
+	MOV		0x06060606, R7
+	MOV		0x07070707, R8
+	MOV		0x08080808, R9
+	MOV		0x09090909, R10
+	MOV		0x0a0a0a0a, R11
+	MOV		0x0b0b0b0b, R12
+	MOV		0x0c0c0c0c, R13
+	MOV		0x0d0d0d0d, R14
+	MOV		0x0e0e0e0e, R15
+	MOV		0x0f0f0f0f, R16
+	MOV		0x10101010, R17
+	MOV		0x11111111, R18
+	MOV		0x12121212, R19
+	MOV		0x13131313, R20
+	MOV		0x14141414, R21
+	MOV		0x15151515, R22
+	MOV		0x16161616, R23
+	MOV		0x17171717, R24
+#if ( configDATA_MODE == 1 )
+	;R25 is used as a base register except when the tiny model is used. */
+	MOV		0x18181818, R25
+#endif
+	MOV		0x19191919, R26
+	MOV		0x20202020, R27
+	MOV		0x21212121, R28
+	MOV		0x22222222, R29
+	MOV		0x23232323, R30
+	
+vReg1TestLoopStart:
+	MOV		0x01010101, R31
+	CMP		R31, R1
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x02020202, R31
+	CMP		R31, R2
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x04040404, R31
+	CMP		R31, R5
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x05050505, R31
+	CMP		R31, R6
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x06060606, R31
+	CMP		R31, R7
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x07070707, R31
+	CMP		R31, R8
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x08080808, R31
+	CMP		R31, R9
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x09090909, R31
+	CMP		R31, R10
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x0a0a0a0a, R31
+	CMP		R31, R11
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x0b0b0b0b, R31
+	CMP		R31, R12
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x0c0c0c0c, R31
+	CMP		R31, R13
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x0d0d0d0d, R31
+	CMP		R31, R14
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x0e0e0e0e, R31
+	CMP		R31, R15
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x0f0f0f0f, R31
+	CMP		R31, R16
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x10101010, R31
+	CMP		R31, R17
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x11111111, R31
+	CMP		R31, R18
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x12121212, R31
+	CMP		R31, R19
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x13131313, R31
+	CMP		R31, R20
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x14141414, R31
+	CMP		R31, R21
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x15151515, R31
+	CMP		R31, R22
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x16161616, R31
+	CMP		R31, R23
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x17171717, R31
+	CMP		R31, R24
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+#if ( configDATA_MODE == 1 )
+	MOV		0x18181818, R31
+	CMP		R31, R25
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+#endif
+	MOV		0x19191919, R31
+	CMP		R31, R26
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x20202020, R31
+	CMP		R31, R27
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x21212121, R31
+	CMP		R31, R28
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x22222222, R31
+	CMP		R31, R29
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0x23232323, R31
+	CMP		R31, R30
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		vReg1TestLoopStart, R31	
+	JMP		[R31]
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------	
+    RSEG CODE:CODE
+vRegTest2:
+    MOV		0xa101010b, R1
+    MOV		0xa202020b, R2
+	; Ignore R3 and R4 as these are the stack and global pointers respectively.
+	MOV		0xa404040b, R5
+	MOV		0xa505050b, R6
+	MOV		0xa606060b, R7
+	MOV		0xa707070b, R8
+	MOV		0xa808080b, R9
+	MOV		0xa909090b, R10
+	MOV		0xaa0a0a0b, R11
+	MOV		0xab0b0b0b, R12
+	MOV		0xac0c0c0b, R13
+	MOV		0xad0d0d0b, R14
+	MOV		0xae0e0e0b, R15
+	MOV		0xaf0f0f0b, R16
+	MOV		0xa010101b, R17
+	MOV		0xa111111b, R18
+	MOV		0xa212121b, R19
+	MOV		0xa313131b, R20
+	MOV		0xa414141b, R21
+	MOV		0xa515151b, R22
+	MOV		0xa616161b, R23
+	MOV		0xa717171b, R24
+#if ( configDATA_MODE == 1 )
+	;R25 is used as a base register except when the tiny model is used. */
+	MOV		0xa818181b, R25
+#endif
+	MOV		0xa919191b, R26
+	MOV		0xa020202b, R27
+	MOV		0xa121212b, R28
+	MOV		0xa222222b, R29
+	MOV		0xa323232b, R30
+	
+vReg2TestLoopStart:
+	MOV		0xa101010b, R31
+	CMP		R31, R1
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa202020b, R31
+	CMP		R31, R2
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa404040b, R31
+	CMP		R31, R5
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa505050b, R31
+	CMP		R31, R6
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa606060b, R31
+	CMP		R31, R7
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa707070b, R31
+	CMP		R31, R8
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa808080b, R31
+	CMP		R31, R9
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa909090b, R31
+	CMP		R31, R10
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xaa0a0a0b, R31
+	CMP		R31, R11
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xab0b0b0b, R31
+	CMP		R31, R12
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xac0c0c0b, R31
+	CMP		R31, R13
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xad0d0d0b, R31
+	CMP		R31, R14
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xae0e0e0b, R31
+	CMP		R31, R15
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xaf0f0f0b, R31
+	CMP		R31, R16
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa010101b, R31
+	CMP		R31, R17
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa111111b, R31
+	CMP		R31, R18
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa212121b, R31
+	CMP		R31, R19
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa313131b, R31
+	CMP		R31, R20
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa414141b, R31
+	CMP		R31, R21
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa515151b, R31
+	CMP		R31, R22
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa616161b, R31
+	CMP		R31, R23
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa717171b, R31
+	CMP		R31, R24
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+#if ( configDATA_MODE == 1 )
+	MOV		0xa818181b, R31
+	CMP		R31, R25
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+#endif
+	MOV		0xa919191b, R31
+	CMP		R31, R26
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa020202b, R31
+	CMP		R31, R27
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa121212b, R31
+	CMP		R31, R28
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa222222b, R31
+	CMP		R31, R29
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		0xa323232b, R31
+	CMP		R31, R30
+	BZ		$+6
+	JARL	vRegTestFailed, lp
+	MOV		vReg2TestLoopStart, R31	
+	JMP		[R31]
+
+      END
+	

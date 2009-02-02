@@ -19,7 +19,7 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -65,13 +65,13 @@ extern "C" {
  */
 
 /* Type definitions. */
-  
+
 #define portCHAR        char
 #define portFLOAT       float
 #define portDOUBLE      double
 #define portLONG        long
 #define portSHORT       short
-#define portSTACK_TYPE  unsigned int  
+#define portSTACK_TYPE  unsigned short
 #define portBASE_TYPE   int
 
 #if (configUSE_16_BIT_TICKS==1)
@@ -144,9 +144,9 @@ extern void portRESTORE_CONTEXT( void );
 
 static __interrupt void P0_isr   (void);
 
-/* --------------------------------------------------------------------------*/ 
+/* --------------------------------------------------------------------------*/
 /* Option-bytes and security ID                                              */
-/* --------------------------------------------------------------------------*/ 
+/* --------------------------------------------------------------------------*/
 #define OPT_BYTES_SIZE     4
 #define SECU_ID_SIZE       10
 #define WATCHDOG_DISABLED  0x00

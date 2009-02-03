@@ -1,0 +1,150 @@
+;	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
+;
+;	This file is part of the FreeRTOS.org distribution.
+;
+;	FreeRTOS.org is free software; you can redistribute it and/or modify
+;	it under the terms of the GNU General Public License as published by
+;	the Free Software Foundation; either version 2 of the License, or
+;	(at your option) any later version.
+;
+;	FreeRTOS.org is distributed in the hope that it will be useful,
+;	but WITHOUT ANY WARRANTY; without even the implied warranty of
+;	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;	GNU General Public License for more details.
+;
+;	You should have received a copy of the GNU General Public License
+;	along with FreeRTOS.org; if not, write to the Free Software
+;	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+;
+;	A special exception to the GPL can be applied should you wish to distribute
+;	a combined work that includes FreeRTOS.org, without being obliged to provide
+;	the source code for any proprietary components.  See the licensing section
+;	of http://www.FreeRTOS.org for full details of how and when the exception
+;	can be applied.
+;
+;	***************************************************************************
+;	See http://www.FreeRTOS.org for documentation, latest information, license
+;	and contact details.  Please ensure to read the configuration and relevant
+;	port sections of the online documentation.
+;	***************************************************************************
+;
+;------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
+
+#if __CORE__ != __78K0R__
+	#error "This file is only for 78K0R Devices"
+#endif
+
+; Functions implemented in this file
+;------------------------------------------------------------------------------
+
+	PUBLIC    vRegTest1
+	PUBLIC    vRegTest2
+
+; Functions used by this file
+;------------------------------------------------------------------------------
+	EXTERN    vRegTestError
+
+;------------------------------------------------------------------------------
+;   Fill all the registers with known values, then check that the registers
+;   contain the expected value.  An incorrect value being indicative of an
+;   error in the context switch mechanism.
+;
+;   Input:  NONE
+;
+;   Call:   CALL    vRegTest1
+;
+;   Output: NONE
+;
+;------------------------------------------------------------------------------
+    RSEG CODE:CODE
+vRegTest1:
+
+	MOVW	AX, #0x1122
+	MOVW	BC, #0x3344
+	MOVW	DE, #0x5566
+	MOVW	HL, #0x7788
+	MOV		CS, #0x01
+	MOV		ES, #0x02
+
+loop1:
+	BRK
+	CMPW	AX, #0x1122
+	BZ		+5
+	BR		vRegTestError	
+	MOVW	AX, BC
+	CMPW	AX, #0x3344
+	BZ		+5
+	BR		vRegTestError	
+	MOVW	AX, DE
+	CMPW	AX, #0x5566
+	BZ		+5
+	BR		vRegTestError	
+	MOVW	AX, HL	
+	CMPW	AX, #0x7788
+	BZ		+5
+	BR		vRegTestError
+	MOV		A, CS
+	CMP		A, #0x01
+	BZ		+5
+	BR		vRegTestError
+	MOV		A, ES
+	CMP		A, #0x02
+	BZ		+5
+	BR		vRegTestError
+	MOVW	AX, #0x1122
+	BR 		loop1
+
+
+;------------------------------------------------------------------------------
+;   Fill all the registers with known values, then check that the registers
+;   contain the expected value.  An incorrect value being indicative of an
+;   error in the context switch mechanism.
+;
+;   Input:  NONE
+;
+;   Call:   CALL    vRegTest1
+;
+;   Output: NONE
+;
+;------------------------------------------------------------------------------
+    RSEG CODE:CODE
+vRegTest2:
+
+	MOVW	AX, #0x99aa
+	MOVW	BC, #0xbbcc
+	MOVW	DE, #0xddee
+	MOVW	HL, #0xff12
+	MOV		CS, #0x03
+	MOV		ES, #0x04	
+
+loop2:
+	CMPW	AX, #0x99aa
+	BZ		+5
+	BR		vRegTestError	
+	MOVW	AX, BC
+	CMPW	AX, #0xbbcc
+	BZ		+5
+	BR		vRegTestError	
+	MOVW	AX, DE
+	CMPW	AX, #0xddee
+	BZ		+5
+	BR		vRegTestError	
+	MOVW	AX, HL	
+	CMPW	AX, #0xff12
+	BZ		+5
+	BR		vRegTestError
+	MOV		A, CS
+	CMP		A, #0x03
+	BZ		+5
+	BR		vRegTestError
+	MOV		A, ES
+	CMP		A, #0x04
+	BZ		+5
+	BR		vRegTestError
+	MOVW	AX, #0x99aa
+	BR 		loop2
+
+
+	END

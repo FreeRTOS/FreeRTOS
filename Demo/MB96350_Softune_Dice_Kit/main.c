@@ -96,6 +96,18 @@
  *
  * The co-routines all execute within a single low priority task.
  *
+ *
+ *
+ * When this demo is executing as expected:
+ *
+ * + Every segment of both displays will toggle at a fixed frequency - with each
+ *   segment using a different frequency.
+ * + When a button is pushed the segment toggling will temporarily stop and the
+ *   dice 'throw' will start whereby the display will show a fast changing random
+ *   number for a few seconds before the dice value is chosen and displayed.
+ * + If the button is not pushed again within five seconds of the dice value being
+ *   displayed the segment toggling will commence again.
+ *
  *****/
 
 /* Kernel includes. */

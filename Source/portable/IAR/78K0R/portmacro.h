@@ -123,12 +123,11 @@ extern volatile unsigned portSHORT usCriticalNesting;							\
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
-extern void vPortYield( void );
 extern void vPortStart( void );
 extern void portSAVE_CONTEXT( void );
 extern void portRESTORE_CONTEXT( void );
-#define portYIELD()	vPortYield()
-#define portNOP()	__asm ( "NOP" )
+#define portYIELD()	__asm( "BRK" )
+#define portNOP()	__asm( "NOP" )
 /*-----------------------------------------------------------*/
 
 /* Hardwware specifics. */

@@ -37,13 +37,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -67,7 +67,7 @@
  *   |--------------------- Zero Flag set
  *   ---------------------- Global Interrupt Flag set (enabled)
  */
-#define portPSW		  (( portSTACK_TYPE ) 0xC600)
+#define portPSW		  (0xc6000000UL)
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
@@ -95,19 +95,19 @@ volatile unsigned portSHORT usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 __interrupt void MD_INTTM05( void );
 
 /*
- * Sets up the periodic ISR used for the RTOS tick.  
+ * Sets up the periodic ISR used for the RTOS tick.
  */
 static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
-/* 
- * Initialise the stack of a task to look exactly as if a call to 
+/*
+ * Initialise the stack of a task to look exactly as if a call to
  * portSAVE_CONTEXT had been called.
- * 
+ *
  * See the header file portable.h.
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
-{       
+{
 unsigned long *pulLocal;
 
 	#if configMEMORY_MODE == 1
@@ -116,30 +116,31 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 		pulLocal =  ( unsigned long * ) pxTopOfStack;
 		*pulLocal = ( unsigned long ) pvParameters;
-		pxTopOfStack--; 
+		pxTopOfStack--;
 
-		/* Dummy values on the stack because there normaly the return address 
-		of the funtion is written. */        
+		/* Dummy values on the stack because there normaly the return address
+		of the funtion is written. */
 		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
 		pxTopOfStack--;
 		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
-		pxTopOfStack--;       
-		pxTopOfStack--;
-
-		/* Task function start address. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( unsigned long ) pxCode;
 		pxTopOfStack--;
 
 		/* Initial PSW value. */
-		*pxTopOfStack = portPSW;
+//		*pxTopOfStack = portPSW;
+		
+		pxTopOfStack--;
+
+	
+		/* Task function start address. */
+		pulLocal = ( unsigned long * ) pxTopOfStack;
+		*pulLocal = ( ( ( unsigned long ) pxCode ) | portPSW );
 		pxTopOfStack--;
 
 		/* Next general purpose register AX. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111; 
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
 		pxTopOfStack--;
 	}
-	#else 
+	#else
 	{
 		pxTopOfStack--;
 
@@ -156,7 +157,7 @@ unsigned long *pulLocal;
 		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
 		pxTopOfStack--;
 	}
-	#endif        
+	#endif
 
 	/* HL. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
@@ -173,7 +174,7 @@ unsigned long *pulLocal;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
 
-	/* 
+	/*
 	 * Return a pointer to the top of the stack we have generated so this can
 	 * be stored in the task control block for the task.
 	 */
@@ -203,8 +204,8 @@ void vPortEndScheduler( void )
 /*-----------------------------------------------------------*/
 
 /*
- * Hardware initialisation to generate the RTOS tick.  This uses Channel 5 of 
- * the Timer Array Unit (TAU). Any other Channel could also be used. 
+ * Hardware initialisation to generate the RTOS tick.  This uses Channel 5 of
+ * the Timer Array Unit (TAU). Any other Channel could also be used.
  */
 static void prvSetupTimerInterrupt( void )
 {
@@ -214,7 +215,7 @@ static void prvSetupTimerInterrupt( void )
 	/* To configure the Timer Array Unit all Channels have to first be stopped. */
 	TT0 = 0xff;
 
-	/* Interrupt of Timer Array Unit Channel 5 is disabled to set the interrupt 
+	/* Interrupt of Timer Array Unit Channel 5 is disabled to set the interrupt
 	priority. */
 	TMMK05 = 1;
 

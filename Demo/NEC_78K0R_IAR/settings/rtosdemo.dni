@@ -71,8 +71,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[Breakpoints]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -83,3 +81,5 @@ LogFile=_ ""
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Breakpoints]
+Count=0

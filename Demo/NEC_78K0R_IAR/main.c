@@ -115,8 +115,6 @@ portSHORT main( void )
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );	
 
-	vPrintInitialise();
-
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION
 	 * as 1 in FreeRTOSconfig.h.  To use the cooperative scheduler define
 	 * configUSE_PREEMPTION as 0.

@@ -65,7 +65,7 @@
  *   |||------------------- Auxiliary Cary Flag cleared
  *   ||-------------------- Register bank Select 1 Flag cleared
  *   |--------------------- Zero Flag set
- *   ---------------------- Global Interrupt Flag set
+ *   ---------------------- Global Interrupt Flag set (enabled)
  */
 #define portPSW		  (( portSTACK_TYPE ) 0xC600)
 
@@ -75,26 +75,27 @@ typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
 /* Most ports implement critical sections by placing the interrupt flags on
- * the stack before disabling interrupts.  Exiting the critical section is then
- * simply a case of popping the flags from the stack.  As 78K0 IAR does not use
- * a frame pointer this cannot be done as modifying the stack will clobber all
- * the stack variables.  Instead each task maintains a count of the critical
- * section nesting depth.  Each time a critical section is entered the count is
- * incremented.  Each time a critical section is left the count is decremented -
- * with interrupts only being re-enabled if the count is zero.
- *
- * usCriticalNesting will get set to zero when the scheduler starts, but must
- * not be initialised to zero as this will cause problems during the startup
- * sequence. 
- */
+the stack before disabling interrupts.  Exiting the critical section is then
+simply a case of popping the flags from the stack.  As 78K0 IAR does not use
+a frame pointer this cannot be done as modifying the stack will clobber all
+the stack variables.  Instead each task maintains a count of the critical
+section nesting depth.  Each time a critical section is entered the count is
+incremented.  Each time a critical section is left the count is decremented -
+with interrupts only being re-enabled if the count is zero.
+
+usCriticalNesting will get set to zero when the scheduler starts, but must
+not be initialised to zero as this will cause problems during the startup
+sequence. */
 volatile unsigned portSHORT usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
 
+/*
+ * The tick interrupt handler.
+ */
 __interrupt void MD_INTTM05( void );
 
 /*
- * Sets up the periodic ISR used for the RTOS tick.  This uses timer 0, but
- * could have alternatively used the watchdog timer or timer 1.
+ * Sets up the periodic ISR used for the RTOS tick.  
  */
 static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
@@ -107,70 +108,65 @@ static void prvSetupTimerInterrupt( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {       
-unsigned portLONG *pxLocal;
+unsigned long *pulLocal;
 
-/* 
- * The 78K0R/Kx3 automatically pushes the PSW then PC onto the stack before 
- * executing an ISR.  We want the stack to look just as if this has happened
- * so place a pointer to the start of the task on the stack first - followed
- * by the flags we want the task to use when it starts up. 
- */
-#if configMEMORY_MODE == 1
-	pxTopOfStack--;
-	pxLocal =  (unsigned portLONG*) pxTopOfStack;
-	*pxLocal = (unsigned portLONG) pvParameters;
-	pxTopOfStack--; 
+	#if configMEMORY_MODE == 1
+	{
+		/* Parameters are passed in on the stack. */
+		pxTopOfStack--;
+		pulLocal =  ( unsigned long * ) pxTopOfStack;
+		*pulLocal = ( unsigned long ) pvParameters;
+		pxTopOfStack--; 
 
-	/* dummy are on the stack cause there normaly the return adress of the funtion 
-	 * is written. Can be a dummy cause the function will never end but only be
-	 * yielded an reentered 
-	 */        
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
-	pxTopOfStack--;       
-	pxTopOfStack--;
+		/* Dummy values on the stack because there normaly the return address 
+		of the funtion is written. */        
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
+		pxTopOfStack--;       
+		pxTopOfStack--;
 
-	/* task function start address */
-	pxLocal =  (unsigned portLONG*) pxTopOfStack;
-	*pxLocal = (unsigned portLONG) pxCode;
-	pxTopOfStack--;
+		/* Task function start address. */
+		pulLocal = ( unsigned long * ) pxTopOfStack;
+		*pulLocal = ( unsigned long ) pxCode;
+		pxTopOfStack--;
 
-	/* write initial value of the PSW */
-	*pxTopOfStack = portPSW;
-	pxTopOfStack--;
+		/* Initial PSW value. */
+		*pxTopOfStack = portPSW;
+		pxTopOfStack--;
 
-	/* Next general purpose register AX */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1111; 
-	pxTopOfStack--;
+		/* Next general purpose register AX. */
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111; 
+		pxTopOfStack--;
+	}
+	#else 
+	{
+		pxTopOfStack--;
 
-#else 
+		/* Task function start address. */
+		pulLocal =  (unsigned long*) pxTopOfStack;
+		*pulLocal = (unsigned long) pxCode;
+		pxTopOfStack--;
 
-	pxTopOfStack--;
+		/* Initial PSW value. */
+		*pxTopOfStack = portPSW;
+		pxTopOfStack--;
 
-	/* task function start address */
-	pxLocal =  (unsigned portLONG*) pxTopOfStack;
-	*pxLocal = (unsigned portLONG) pxCode;
-	pxTopOfStack--;
+		/* The parameter is passed in AX. */
+		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+		pxTopOfStack--;
+	}
+	#endif        
 
-	/* write initial value of the PSW */
-	*pxTopOfStack = portPSW;
-	pxTopOfStack--;
-
-	/* Next general purpose registers AX with the task function parameter start address */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
-	pxTopOfStack--;
-
-#endif        
-
+	/* HL. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
 	pxTopOfStack--;
 
-	/* save the CS and ES register */
+	/* CS and ES registers. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x0F00;
 	pxTopOfStack--;
 
-	/* Next the remaining general purpose registers DE and BC */
+	/* Finally the remaining general purpose registers DE and BC */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xDEDE;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xBCBC;
@@ -212,41 +208,42 @@ void vPortEndScheduler( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-	/* First the Timer Array Unit has to be enabled */
+	/* First the Timer Array Unit has to be enabled. */
 	TAU0EN = 1;
 
-	/* To configure the Timer Array Unit all Channels have to been stopped */
+	/* To configure the Timer Array Unit all Channels have to first be stopped. */
 	TT0 = 0xff;
 
-	/* Interrupt of Timer Array Unit Channel 5 disabled to set Interrupt Priority */
+	/* Interrupt of Timer Array Unit Channel 5 is disabled to set the interrupt 
+	priority. */
 	TMMK05 = 1;
 
-	/* Clear Timer Array Unit Channel 5 Interrupt Flag */	
+	/* Clear Timer Array Unit Channel 5 interrupt flag. */	
 	TMIF05 = 0;
 
-	/* Set Timer Array Unit Channel 5  Interrupt Priority */
+	/* Set Timer Array Unit Channel 5 interrupt priority */
 	TMPR005 = 0;
 	TMPR105 = 0;
 
-	/* Set Timer Array Unit Channel 5 Mode as Interval Timer */
+	/* Set Timer Array Unit Channel 5 Mode as interval timer. */
 	TMR05 = 0x0000;
 
 	/* Set the compare match value according to the tick rate we want. */
-	TDR05 = (portTickType) (configCPU_CLOCK_HZ / configTICK_RATE_HZ);
+	TDR05 = ( portTickType ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
 
-	/* Set Timer Array Unit Channel 5 Output Mode */
+	/* Set Timer Array Unit Channel 5 output mode */
 	TOM0 &= ~0x0020;
 
-	/* Set Timer Array Unit Channel 5 Output Level */	
+	/* Set Timer Array Unit Channel 5 output level */	
 	TOL0 &= ~0x0020;
 
-	/* Set Timer Array Unit Channel 5 Output Enable */	
+	/* Set Timer Array Unit Channel 5 output enable */	
 	TOE0 &= ~0x0020;
 
 	/* Interrupt of Timer Array Unit Channel 5 enabled */
 	TMMK05 = 0;
 
-	/* Set Timer Array Unit Channel 5 Start*/
+	/* Start Timer Array Unit Channel 5.*/
 	TS0 |= 0x0020;
 }
 /*-----------------------------------------------------------*/

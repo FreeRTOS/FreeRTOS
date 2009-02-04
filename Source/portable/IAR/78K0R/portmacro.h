@@ -124,9 +124,8 @@ extern volatile unsigned portSHORT usCriticalNesting;							\
 
 /* Task utilities. */
 extern void vPortStart( void );
-extern void portSAVE_CONTEXT( void );
-extern void portRESTORE_CONTEXT( void );
 #define portYIELD()	__asm( "BRK" )
+#define portYIELD_FROM_ISR( xHigherPriorityTaskWoken ) if( xHigherPriorityTaskWoken ) vTaskSwitchContext()
 #define portNOP()	__asm( "NOP" )
 /*-----------------------------------------------------------*/
 

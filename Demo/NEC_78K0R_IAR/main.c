@@ -58,9 +58,10 @@
 /* Demo file headers. */
 #include "int78K0R.h"
 #include "PollQ.h"
-#include "LED.h"
-#include "print.h"
 #include "semtest.h"
+#include "GenQTest.h"
+#include "dynamic.h"
+#include "blocktim.h"
 
 /*
  * Priority definitions for most of the tasks in the demo application.  Some
@@ -69,11 +70,15 @@
 #define mainCHECK_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY	( tskIDLE_PRIORITY + 1 )
 #define mainSEMTEST_PRIORITY    ( tskIDLE_PRIORITY + 1 )
-#define mainLED_TOGGLE_PRIORITY ( tskIDLE_PRIORITY + 1 )
+#define mainBUTTON_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define mainGEN_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
 /* The period between executions of the check task. */
 #define mainNO_ERROR_TOGGLE_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_TOGGLE_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+
+#define LED00   P7_bit.no6
+#define LED01   P7_bit.no7
 
 /*
  * 78K0R/Kx3 Option Byte Definition
@@ -99,29 +104,31 @@ int __low_level_init(void);
 
 extern void vRegTest1( void *pvParameters );
 extern void vRegTest2( void *pvParameters );
+extern void vButtonTask( void *pvParameters );
 
 static short sRegTestStatus = pdPASS;
 
 portSHORT main( void )
 {
 	/* Create the standard demo tasks. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks(mainSEMTEST_PRIORITY);
+	vStartGenericQueueTasks( mainGEN_QUEUE_PRIORITY );
+	vStartDynamicPriorityTasks();
+	vCreateBlockTimeTasks();
 
+	xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );
+	
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, (void*)0x12345678, mainCHECK_TASK_PRIORITY, NULL );
 
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );	
 
-	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION
-	 * as 1 in FreeRTOSconfig.h.  To use the cooperative scheduler define
-	 * configUSE_PREEMPTION as 0.
-	 */
+
 	vTaskStartScheduler();
 
-	return 0;
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -144,7 +151,7 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 	{
 		vTaskDelayUntil( &xLastWakeTime, xToggleRate );
 
-		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			xToggleRate = mainERROR_TOGGLE_PERIOD;
 		}
@@ -158,6 +165,16 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 		{
 			xToggleRate = mainERROR_TOGGLE_PERIOD;
 		}
+		
+		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+		{
+			xToggleRate = mainERROR_TOGGLE_PERIOD;
+		}
+
+		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			xToggleRate = mainERROR_TOGGLE_PERIOD;
+		}
 
 		if( sRegTestStatus != pdPASS )
 		{
@@ -165,7 +182,7 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 		}
 
 		/* Toggle the LED. */
-		LED01 = !LED01;
+		LED00 = !LED00;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -282,6 +299,30 @@ unsigned portCHAR resetflag = RESF;
 	PMK0  = 0;	
 
 	return pdTRUE;
+}
+/*-----------------------------------------------------------*/
+
+static void prvLEDInit(void)
+{
+/* LED Port Initialization */
+        /* set Port Register */
+        P7  = 0x80;
+        /* set Port Mode Register */
+        PM7 = 0x3F;
+
+/* Switch Pin Initialization */
+        /* enable pull-up resistor */
+        PU12_bit.no0  = 1;
+        /* INTP0 disable */
+	PMK0 = 1;			
+        /* INTP0 IF clear */
+	PIF0 = 0;			
+	EGN0_bit.no0  = 1;
+	/* INTP0 priority low */
+	PPR10 = 0;
+	PPR00 = 1;
+        /* enable ext. INTP0 interrupt */
+        PMK0  = 0;
 }
 /*-----------------------------------------------------------*/
 

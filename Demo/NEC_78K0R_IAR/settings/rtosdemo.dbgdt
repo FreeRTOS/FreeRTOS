@@ -3,20 +3,20 @@
 <Project>
   <Desktop>
     <Static>
-      <Debug-Log/>
+      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window><Window><Factory>Breakpoints</Factory></Window><Window><Factory>Watch</Factory></Window></Windows></PreferedWindows></Debug-Log>
       <Build>
         <ColumnWidth0>20</ColumnWidth0>
         <ColumnWidth1>1216</ColumnWidth1>
         <ColumnWidth2>324</ColumnWidth2>
         <ColumnWidth3>81</ColumnWidth3>
-      </Build>
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Breakpoints</Factory></Window><Window><Factory>Watch</Factory></Window></Windows></PreferedWindows></Build>
       <Workspace>
         <ColumnWidths>
           
           
           
           
-        <Column0>138</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>181</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Disassembly>
         <PreferedWindows>
@@ -28,27 +28,11 @@
         
         
       <MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow></Disassembly>
-    <Register/><Watch><Format><struct_types/><watch_formats/></Format><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><Column0>203</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></Watch><Memory><FindDirection>1</FindDirection><FindAsHex>0</FindAsHex></Memory></Static>
+    <Register><PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Register><Watch><Format><struct_types/><watch_formats/></Format><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Build</Factory></Window><Window><Factory>Breakpoints</Factory></Window></Windows></PreferedWindows><Column0>203</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></Watch><Memory><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><FindDirection>1</FindDirection><FindAsHex>0</FindAsHex></Memory><Breakpoints><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Build</Factory></Window><Window><Factory>Watch</Factory></Window></Windows></PreferedWindows></Breakpoints></Static>
     <Windows>
       
       
-    <Wnd0>
-        <Tabs>
-          <Tab>
-            <Identity>TabID-15892-1978</Identity>
-            <TabName>Debug Log</TabName>
-            <Factory>Debug-Log</Factory>
-            <Session/>
-          </Tab>
-          <Tab>
-            <Identity>TabID-15370-1988</Identity>
-            <TabName>Build</TabName>
-            <Factory>Build</Factory>
-            <Session/>
-          </Tab>
-        <Tab><Identity>TabID-15381-14004</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab><Tab><Identity>TabID-30955-22315</Identity><TabName>Watch</TabName><Factory>Watch</Factory><Session><Expressions><Expression><Expression>usCriticalNesting</Expression></Expression><Expression><Expression>pxCurrentTCB</Expression></Expression><Expression><Expression>pxTopOfStack</Expression></Expression></Expressions><TabId>1</TabId><Column0>203</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></Session></Tab></Tabs>
-        
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd4>
+    <Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-26641-1982</Identity>
@@ -60,20 +44,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-29701-24386</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5><Wnd6><Tabs><Tab><Identity>TabID-10381-31310</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><REG1>0</REG1><REG2>0</REG2><Group>0</Group><States>1</States><State0>PSW</State0></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd6><Wnd7><Tabs><Tab><Identity>TabID-32148-30071</Identity><TabName>Memory</TabName><Factory>Memory</Factory><Session><ZoneNumber>5</ZoneNumber><SelectionAnchor>103624864d</SelectionAnchor><SelectionEnd>103624864d</SelectionEnd><UnitsPerGroup>1</UnitsPerGroup><EndianMode>0</EndianMode><DataCovEnabled>0</DataCovEnabled><DataCovShown>0</DataCovShown><HScroll>064d</HScroll><VScroll>6475864d</VScroll></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd7></Windows>
+      <SelectedTab>0</SelectedTab></Wnd1><Wnd4><Tabs><Tab><Identity>TabID-7145-8325</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-6162-8753</Identity><TabName>Watch</TabName><Factory>Watch</Factory><Session><Expressions><Expression><Expression>pvReturn</Expression></Expression><Expression><Expression>xNextFreeByte</Expression></Expression></Expressions><TabId>0</TabId><Column0>203</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></Session></Tab><Tab><Identity>TabID-24881-24777</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-935-8851</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\78K0R\port.c</Filename><XPos>0</XPos><YPos>104</YPos><SelStart>4766</SelStart><SelEnd>4766</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NEC_78K0R_IAR\main.c</Filename><XPos>0</XPos><YPos>115</YPos><SelStart>4695</SelStart><SelEnd>4695</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NEC_78K0R_IAR\RegTest.s26</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>2622</SelStart><SelEnd>2622</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\tasks.c</Filename><XPos>0</XPos><YPos>1207</YPos><SelStart>38811</SelStart><SelEnd>38811</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\78K0R\portasm.s26</Filename><XPos>0</XPos><YPos>153</YPos><SelStart>6500</SelStart><SelEnd>6500</SelEnd></Tab><ActiveTab>4</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\list.c</Filename><XPos>0</XPos><YPos>136</YPos><SelStart>6044</SelStart><SelEnd>6044</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NEC_78K0R_IAR\main.c</Filename><XPos>0</XPos><YPos>91</YPos><SelStart>4068</SelStart><SelEnd>4068</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NEC_78K0R_IAR\SwitchISR.s26.c</Filename><XPos>0</XPos><YPos>20</YPos><SelStart>1732</SelStart><SelEnd>1749</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\78K0R\portasm.s26</Filename><XPos>0</XPos><YPos>36</YPos><SelStart>2187</SelStart><SelEnd>2187</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\78K0R\portmacro.h</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>4776</SelStart><SelEnd>4776</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\IAR\78K0R\ISR_Support.h</Filename><XPos>0</XPos><YPos>24</YPos><SelStart>1618</SelStart><SelEnd>1618</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NEC_78K0R_IAR\ButtonTask.c</Filename><XPos>0</XPos><YPos>44</YPos><SelStart>2364</SelStart><SelEnd>2364</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NEC_78K0R_IAR\ButtonISR.s26</Filename><XPos>0</XPos><YPos>23</YPos><SelStart>1785</SelStart><SelEnd>1785</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\Minimal\blocktim.c</Filename><XPos>0</XPos><YPos>430</YPos><SelStart>15217</SelStart><SelEnd>15251</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00aa9b40><key>iaridepm.enu1</key></Toolbar-00aa9b40><Toolbar-029980a0><key>debuggergui.enu1</key></Toolbar-029980a0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>496</Bottom><Right>212</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>152857</sizeVertCX><sizeVertCY>507128</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes><Wnd6><Rect><Top>-2</Top><Left>-2</Left><Bottom>496</Bottom><Right>281</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>200</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>202143</sizeVertCX><sizeVertCY>507128</sizeVertCY></Rect></Wnd6></Sizes></Row0><Row1><Sizes><Wnd5><Rect><Top>-2</Top><Left>279</Left><Bottom>496</Bottom><Right>738</Right><x>279</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>327857</sizeVertCX><sizeVertCY>507128</sizeVertCY></Rect></Wnd5></Sizes></Row1></Right><Bottom><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>244</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>246</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>250509</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd0></Sizes></Row0><Row1><Sizes><Wnd7><Rect><Top>242</Top><Left>-2</Left><Bottom>442</Bottom><Right>1402</Right><x>-2</x><y>242</y><xscreen>1404</xscreen><yscreen>200</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd7></Sizes></Row1></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00aa9c38><key>iaridepm.enu1</key></Toolbar-00aa9c38><Toolbar-03afbbc8><key>debuggergui.enu1</key></Toolbar-03afbbc8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>255</Right><x>-2</x><y>-2</y><xscreen>240</xscreen><yscreen>200</yscreen><sizeHorzCX>142857</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>152976</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>633</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>119048</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>377976</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>200</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd4></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

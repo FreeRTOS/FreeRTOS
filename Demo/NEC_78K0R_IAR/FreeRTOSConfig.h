@@ -62,14 +62,14 @@
 
 #endif  /* __IAR_SYSTEMS_ICC__ */
 
-/* 
+/*
  * 78K0R/Kx3 Clock Source Configuration
  * 1 = use internal High Speed Clock Source (typically 8Mhz on the 78K0R/Kx3)
  * 0 = use external Clock Source
  */
 #define configCLOCK_SOURCE              0
 
-/* 
+/*
  * 78K0R/Kx3 Memory Model
  * 1 = use far memory mode
  * 0 = use near memory mode
@@ -104,6 +104,7 @@
 	#define configUSE_16_BIT_TICKS			1
 	#define configIDLE_SHOULD_YIELD			1
 	#define configCHECK_FOR_STACK_OVERFLOW	0
+	#define configUSE_MUTEXES				1
 
 	/* Co-routine definitions. */
 	#define configUSE_CO_ROUTINES 			0
@@ -111,11 +112,11 @@
 
 	/* Set the following definitions to 1 to include the API function, or zero
 	to exclude the API function. */
-	#define INCLUDE_vTaskPrioritySet		0
-	#define INCLUDE_uxTaskPriorityGet		0
+	#define INCLUDE_vTaskPrioritySet		1
+	#define INCLUDE_uxTaskPriorityGet		1
 	#define INCLUDE_vTaskDelete				1
 	#define INCLUDE_vTaskCleanUpResources	0
-	#define INCLUDE_vTaskSuspend			0
+	#define INCLUDE_vTaskSuspend			1
 	#define INCLUDE_vTaskDelayUntil			1
 	#define INCLUDE_vTaskDelay				1
 

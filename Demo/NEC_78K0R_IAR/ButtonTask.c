@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.0.2 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -19,7 +19,7 @@
 
 	A special exception to the GPL can be applied should you wish to distribute
 	a combined work that includes FreeRTOS.org, without being obliged to provide
-	the source code for any proprietary components.  See the licensing section 
+	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details of how and when the exception
 	can be applied.
 
@@ -37,22 +37,45 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
-#ifndef INTEGER_TASKS_H
-#define INTEGER_TASKS_H
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 
-void vStartIntegerMathTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xAreIntegerMathsTaskStillRunning( void );
+static xSemaphoreHandle xButtonSemaphore;
 
-#endif
+#define LED01   P7_bit.no7
 
+void vButtonTask( void *pvParameters )
+{
+	vSemaphoreCreateBinary( xButtonSemaphore );
 
+	for( ;; )
+	{
+		xSemaphoreTake( xButtonSemaphore, portMAX_DELAY );
+		LED01 = !LED01;
+		
+		vTaskDelay( 200 / portTICK_RATE_MS );
+		xSemaphoreTake( xButtonSemaphore, 0 );
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vButtonISRHandler( void )
+{
+short sHigherPriorityTaskWoken = pdFALSE;
+
+	xSemaphoreGiveFromISR( xButtonSemaphore, &sHigherPriorityTaskWoken );
+	
+	portYIELD_FROM_ISR( sHigherPriorityTaskWoken );
+}
+/*-----------------------------------------------------------*/

@@ -314,7 +314,6 @@
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\Common\include</state>
-          <state>$PROJ_DIR$\LEDtoggle</state>
           <state>$PROJ_DIR$\Int78K0R</state>
           <state>$PROJ_DIR$</state>
         </option>
@@ -527,9 +526,7 @@
         </option>
         <option>
           <name>OAIncludePath2</name>
-          <state>$PROJ_DIR$\..\..\Source\include</state>
-          <state>$PROJ_DIR$\..\Common\include</state>
-          <state>$PROJ_DIR$\LEDtoggle</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\78K0R</state>
           <state>$PROJ_DIR$</state>
         </option>
         <option>
@@ -1806,11 +1803,32 @@
   </configuration>
   <group>
     <name>Demo Source</name>
+    <group>
+      <name>StandardDemos</name>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+      </file>
+    </group>
     <file>
-      <name>$PROJ_DIR$\main.c</name>
+      <name>$PROJ_DIR$\ButtonISR.s26</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+      <name>$PROJ_DIR$\ButtonTask.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\RegTest.s26</name>
@@ -1837,12 +1855,6 @@
       <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
     </file>
   </group>
-  <file>
-    <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
-  </file>
 </project>
 
 

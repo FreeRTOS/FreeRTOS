@@ -54,20 +54,22 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* The critical nesting value is initialised to a non zero value to ensure
+interrupts don't accidentally become enabled before the scheduler is started. */
 #define portINITIAL_CRITICAL_NESTING  (( unsigned portSHORT ) 10)
 
-/* default Initialization of the PSW for the task:
+/* Initial PSW value allocated to a newly created task.
  *   1100011000000000
  *   ||||||||-------------- Fill byte
- *   |||||||--------------- Cary Flag cleared
+ *   |||||||--------------- Carry Flag cleared
  *   |||||----------------- In-service priority Flags set to low level
  *   ||||------------------ Register bank Select 0 Flag cleared
- *   |||------------------- Auxiliary Cary Flag cleared
+ *   |||------------------- Auxiliary Carry Flag cleared
  *   ||-------------------- Register bank Select 1 Flag cleared
  *   |--------------------- Zero Flag set
  *   ---------------------- Global Interrupt Flag set (enabled)
  */
-#define portPSW		  (0xc6000000UL)
+#define portPSW		  (0xc6UL)
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
@@ -112,36 +114,39 @@ unsigned long *pulLocal;
 
 	#if configMEMORY_MODE == 1
 	{
-		/* Parameters are passed in on the stack. */
+		/* Parameters are passed in on the stack, and written using a 32bit value
+		hence a space is left for the second two bytes. */
 		pxTopOfStack--;
+
+		/* Write in the parameter value. */
 		pulLocal =  ( unsigned long * ) pxTopOfStack;
 		*pulLocal = ( unsigned long ) pvParameters;
 		pxTopOfStack--;
 
-		/* Dummy values on the stack because there normaly the return address
-		of the funtion is written. */
+		/* These values are just spacers.  The return address of the function
+		would normally be written here. */
 		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
 		pxTopOfStack--;
 		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
 		pxTopOfStack--;
 
-		/* Initial PSW value. */
-//		*pxTopOfStack = portPSW;
-		
+		/* The start address / PSW value is also written in as a 32bit value,
+		so leave a space for the second two bytes. */
 		pxTopOfStack--;
-
 	
-		/* Task function start address. */
+		/* Task function start address combined with the PSW. */
 		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | portPSW );
+		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
 		pxTopOfStack--;
 
-		/* Next general purpose register AX. */
+		/* An initial value for the AX register. */
 		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
 		pxTopOfStack--;
 	}
 	#else
 	{
+		TBD
+
 		pxTopOfStack--;
 
 		/* Task function start address. */
@@ -159,7 +164,7 @@ unsigned long *pulLocal;
 	}
 	#endif
 
-	/* HL. */
+	/* An initial value for the HL register. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
 	pxTopOfStack--;
 
@@ -172,12 +177,13 @@ unsigned long *pulLocal;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xBCBC;
 	pxTopOfStack--;
+
+	/* Finally the critical section nesting count is set to zero when the task
+	first starts. */
 	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
 
-	/*
-	 * Return a pointer to the top of the stack we have generated so this can
-	 * be stored in the task control block for the task.
-	 */
+	/* Return a pointer to the top of the stack we have generated so this can
+	be stored in the task control block for the task. */
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -198,17 +204,15 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the 78K0R/Kx3 port will get stopped.  If required simply
+	/* It is unlikely that the 78K0R port will get stopped.  If required simply
 	disable the tick interrupt here. */
 }
 /*-----------------------------------------------------------*/
 
-/*
- * Hardware initialisation to generate the RTOS tick.  This uses Channel 5 of
- * the Timer Array Unit (TAU). Any other Channel could also be used.
- */
 static void prvSetupTimerInterrupt( void )
 {
+	/* Setup channel 5 of the TAU to generate the tick interrupt. */
+
 	/* First the Timer Array Unit has to be enabled. */
 	TAU0EN = 1;
 

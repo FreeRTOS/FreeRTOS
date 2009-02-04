@@ -39,29 +39,28 @@
 
 ;------------------------------------------------------------------------------
 ;   portSAVE_CONTEXT MACRO
-;   Saves the context of the remaining general purpose registers, CS and ES
-;   (only in far memory mode) registers
-;   the usCriticalNesting Value and the Stack Pointer
+;   Saves the context of the general purpose registers, CS and ES (only in far 
+;	memory mode) registers the usCriticalNesting Value and the Stack Pointer
 ;   of the active Task onto the task stack
 ;------------------------------------------------------------------------------
 portSAVE_CONTEXT MACRO
 
-	PUSH      AX                    ; save AX Register to stack
+	PUSH      AX                    ; Save AX Register to stack.
 	PUSH      HL
 #if configMEMORY_MODE == 1
-	MOV       A, CS                 ; save CS register
+	MOV       A, CS                 ; Save CS register.
 	XCH       A, X
-	MOV       A, ES                 ; save ES register
+	MOV       A, ES                 ; Save ES register.
 	PUSH      AX
 #else
-	MOV       A, CS                 ; save CS register
+	MOV       A, CS                 ; Save CS register.
 	PUSH      AX
 #endif
-	PUSH      DE                    ; save the  remaining general purpose registers
+	PUSH      DE                    ; Save the remaining general purpose registers.
 	PUSH      BC
-	MOVW      AX, usCriticalNesting ; save the usCriticalNesting value	
+	MOVW      AX, usCriticalNesting ; Save the usCriticalNesting value.
 	PUSH      AX	
-	MOVW      AX, pxCurrentTCB 	    ; save the Stack pointer	
+	MOVW      AX, pxCurrentTCB 	    ; Save the Stack pointer.
 	MOVW      HL, AX					
 	MOVW      AX, SP					
 	MOVW      [HL], AX					
@@ -70,30 +69,29 @@ portSAVE_CONTEXT MACRO
 
 ;------------------------------------------------------------------------------
 ;   portRESTORE_CONTEXT MACRO
-;   Restores the context of the Stack Pointer, usCriticalNesting
-;   value, general purpose registers and the CS and ES (only in far memory mode)
+;   Restores the task Stack Pointer then use this to restore usCriticalNesting,
+;   general purpose registers and the CS and ES (only in far memory mode)
 ;   of the selected task from the task stack
 ;------------------------------------------------------------------------------
-
 portRESTORE_CONTEXT MACRO
-	MOVW      AX, pxCurrentTCB	    ; restore the Stack pointer
+	MOVW      AX, pxCurrentTCB	    ; Restore the Stack pointer.
 	MOVW      HL, AX
 	MOVW      AX, [HL]
 	MOVW      SP, AX
-	POP	      AX	            ; restore usCriticalNesting value
+	POP	      AX	                ; Restore usCriticalNesting value.
 	MOVW      usCriticalNesting, AX
-	POP	      BC                    ; restore the necessary general purpose registers
+	POP	      BC                    ; Restore the necessary general purpose registers.
 	POP	      DE
 #if configMEMORY_MODE == 1
-	POP       AX                    ; restore the ES register
+	POP       AX                    ; Restore the ES register.
 	MOV       ES, A
-	XCH       A, X                  ; restore the CS register
+	XCH       A, X                  ; Restore the CS register.
 	MOV       CS, A
 #else
 	POP       AX
-	MOV       CS, A                 ; restore CS register
+	MOV       CS, A                 ; Restore CS register.
 #endif
-	POP       HL                    ; restore general purpose register HL
-	POP       AX                    ; restore AX	
+	POP       HL                    ; Restore general purpose register HL.
+	POP       AX                    ; Restore AX.
 	ENDM
 ;------------------------------------------------------------------------------

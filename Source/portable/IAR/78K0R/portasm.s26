@@ -41,7 +41,6 @@
 
 ; Functions implemented in this file
 ;------------------------------------------------------------------------------
-
 	PUBLIC    vPortYield
 	PUBLIC    vPortStart
 
@@ -63,7 +62,9 @@ MD_INTTM05    SYMBOL "MD_INTTM05"
 
 
 ;------------------------------------------------------------------------------
-;   Port Yield function to check for a Task switch in the cooperative mode
+;   Yield to another task.  Implemented as a software interrupt.  The return
+;   address and PSW will have been saved to the stack automatically before
+;   this code runs.
 ;
 ;   Input:  NONE
 ;
@@ -75,9 +76,9 @@ MD_INTTM05    SYMBOL "MD_INTTM05"
     RSEG CODE:CODE
 vPortYield:
 	portSAVE_CONTEXT		        ; Save the context of the current task.
-	call      vTaskSwitchContext    ; Call the scheduler.
-	portRESTORE_CONTEXT		        ; Restore the context of whichever task the ...
-	RETB
+	call      vTaskSwitchContext    ; Call the scheduler to select the next task.
+	portRESTORE_CONTEXT		        ; Restore the context of the next task to run.
+	retb
 
 	
 ;------------------------------------------------------------------------------
@@ -93,8 +94,8 @@ vPortYield:
     RSEG CODE:CODE
 vPortStart:
 	portRESTORE_CONTEXT	            ; Restore the context of whichever task the ...
-;	POP       PSW                   ; restore active task PSW
-	reti					            ; ... scheduler decided should run.
+	reti					        ; An interrupt stack frame is used so the task
+                                    ; is started using a RETI instruction.
 
 ;------------------------------------------------------------------------------
 ;   Perform the necessary steps of the Tick Count Increment and Task Switch
@@ -107,42 +108,31 @@ vPortStart:
 ;   Output: NONE
 ;
 ;------------------------------------------------------------------------------	
-#if configUSE_PREEMPTION == 1
 
 MD_INTTM05:
 
 	portSAVE_CONTEXT		        ; Save the context of the current task.
 	call      vTaskIncrementTick    ; Call the timer tick function.
-	call      vTaskSwitchContext    ; Call the scheduler.
-	portRESTORE_CONTEXT		        ; Restore the context of whichever task the ...
-	RETI
-#else
-
-MD_INTTM05:
-	PUSH        AX                  ; save necessary general purpose register...
-	PUSH        HL                  ; ...used by the ISR
-	MOVW        AX, CS              ; save CS register
-	PUSH        AX
-	CALL        vTaskIncrementTick  ; Call the timer tick function.
-	POP         AX
-	MOVW        CS, AX              ; restore CS register
-	POP         HL                  ; restore used general purpose registers
-	POP         AX
-	RETI
+#if configUSE_PREEMPTION == 1
+	call      vTaskSwitchContext    ; Call the scheduler to select the next task.
 #endif
+	portRESTORE_CONTEXT		        ; Restore the context of the next task to run.
+	reti
+
+
 
 	REQUIRE ?CL78K0R_V2_L00
-	COMMON INTVEC:CODE:ROOT(1)      ; set ISR location to the Interrupt vector table
+	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
 	ORG 68
 `??MD_INTTM05??INTVEC 68`:
 	DW MD_INTTM05
 
-	COMMON INTVEC:CODE:ROOT(1)      ; set ISR location to the Interrupt vector table
+	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
 	ORG 126
 `??vPortYield??INTVEC 126`:
 	DW vPortYield
 
-									; set value for the usCriticalNesting
+									; Set value for the usCriticalNesting.
 	RSEG NEAR_ID:CONST:SORT:NOROOT(1)
 `?<Initializer for usCriticalNesting>`:
 	DW 10

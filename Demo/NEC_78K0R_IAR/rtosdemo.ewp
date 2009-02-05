@@ -71,7 +71,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78kfn3.r26</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78knn3.r26</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -115,7 +115,7 @@
         <option>
           <name>OGeneralDataModel</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralNearConstLocation</name>
@@ -473,7 +473,7 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__FAR_MODEL__</state>
+          <state>__NEAR_MODEL__</state>
           <state>__NEAR_DATA_MODEL__</state>
         </option>
         <option>

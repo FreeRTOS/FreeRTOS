@@ -92,11 +92,6 @@ volatile unsigned portSHORT usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
 
 /*
- * The tick interrupt handler.
- */
-__interrupt void MD_INTTM05( void );
-
-/*
  * Sets up the periodic ISR used for the RTOS tick.
  */
 static void prvSetupTimerInterrupt( void );
@@ -145,17 +140,14 @@ unsigned long *pulLocal;
 	}
 	#else
 	{
-		TBD
-
+		/* Task function address is written to the stack first.  As it is
+		written as a 32bit value a space is left on the stack for the second
+		two bytes. */
 		pxTopOfStack--;
 
-		/* Task function start address. */
-		pulLocal =  (unsigned long*) pxTopOfStack;
-		*pulLocal = (unsigned long) pxCode;
-		pxTopOfStack--;
-
-		/* Initial PSW value. */
-		*pxTopOfStack = portPSW;
+		/* Task function start address combined with the PSW. */
+		pulLocal = ( unsigned long * ) pxTopOfStack;
+		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
 		pxTopOfStack--;
 
 		/* The parameter is passed in AX. */

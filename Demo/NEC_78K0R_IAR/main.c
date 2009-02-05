@@ -302,32 +302,15 @@ unsigned portCHAR resetflag = RESF;
 }
 /*-----------------------------------------------------------*/
 
-static void prvLEDInit(void)
-{
-/* LED Port Initialization */
-        /* set Port Register */
-        P7  = 0x80;
-        /* set Port Mode Register */
-        PM7 = 0x3F;
-
-/* Switch Pin Initialization */
-        /* enable pull-up resistor */
-        PU12_bit.no0  = 1;
-        /* INTP0 disable */
-	PMK0 = 1;			
-        /* INTP0 IF clear */
-	PIF0 = 0;			
-	EGN0_bit.no0  = 1;
-	/* INTP0 priority low */
-	PPR10 = 0;
-	PPR00 = 1;
-        /* enable ext. INTP0 interrupt */
-        PMK0  = 0;
-}
-/*-----------------------------------------------------------*/
-
 void vRegTestError( void )
 {
 	sRegTestStatus = pdFAIL;
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( void )
+{
+	for( ;; );
+}
+

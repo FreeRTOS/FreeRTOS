@@ -82,4 +82,5 @@ LogFile=_ ""
 Enabled=0
 ShowSource=1
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\main.c}.314.2@1" 1 0 0 0 "" 0 ""
+Count=1

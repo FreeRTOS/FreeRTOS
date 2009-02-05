@@ -63,14 +63,14 @@
 #endif  /* __IAR_SYSTEMS_ICC__ */
 
 /*
- * 78K0R/Kx3 Clock Source Configuration
+ * 78K0R Clock Source Configuration
  * 1 = use internal High Speed Clock Source (typically 8Mhz on the 78K0R/Kx3)
  * 0 = use external Clock Source
  */
 #define configCLOCK_SOURCE              0
 
 /*
- * 78K0R/Kx3 Memory Model
+ * 78K0R Memory Model
  * 1 = use far memory mode
  * 0 = use near memory mode
  *
@@ -97,13 +97,13 @@
 	#define configUSE_TICK_HOOK				0
 	#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 	#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
-	#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 75 )
-	#define configTOTAL_HEAP_SIZE			( (size_t ) ( 6000 ) )
+	#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 100 )
+	#define configTOTAL_HEAP_SIZE			( (size_t ) ( 7000 ) )
 	#define configMAX_TASK_NAME_LEN			( 10 )
 	#define configUSE_TRACE_FACILITY		0
 	#define configUSE_16_BIT_TICKS			1
 	#define configIDLE_SHOULD_YIELD			1
-	#define configCHECK_FOR_STACK_OVERFLOW	0
+	#define configCHECK_FOR_STACK_OVERFLOW	2
 	#define configUSE_MUTEXES				1
 
 	/* Co-routine definitions. */

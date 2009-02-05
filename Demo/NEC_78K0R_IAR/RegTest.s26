@@ -72,7 +72,11 @@ vRegTest1:
 	MOVW	DE, #0x5566
 	MOVW	HL, #0x7788
 	MOV		CS, #0x01
+#if configMEMORY_MODE == 1	
+	; ES is not saved or restored when using the near memory model so only
+	; test it when using the far model.
 	MOV		ES, #0x02
+#endif
 
 loop1:
 	; Continuously check that the register values remain at their expected
@@ -104,10 +108,14 @@ loop1:
 	CMP		A, #0x01
 	BZ		+5
 	BR		vRegTestError
+#if configMEMORY_MODE == 1	
+	; ES is not saved or restored when using the near memory model so only
+	; test it when using the far model.
 	MOV		A, ES
 	CMP		A, #0x02
 	BZ		+5
 	BR		vRegTestError
+#endif
 	MOVW	AX, #0x1122
 	BR 		loop1
 
@@ -132,7 +140,9 @@ vRegTest2:
 	MOVW	DE, #0xddee
 	MOVW	HL, #0xff12
 	MOV		CS, #0x03
+#if configMEMORY_MODE == 1	
 	MOV		ES, #0x04	
+#endif
 
 loop2:
 	CMPW	AX, #0x99aa
@@ -154,10 +164,12 @@ loop2:
 	CMP		A, #0x03
 	BZ		+5
 	BR		vRegTestError
+#if configMEMORY_MODE == 1		
 	MOV		A, ES
 	CMP		A, #0x04
 	BZ		+5
 	BR		vRegTestError
+#endif
 	MOVW	AX, #0x99aa
 	BR 		loop2
 

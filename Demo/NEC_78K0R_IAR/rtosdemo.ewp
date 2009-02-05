@@ -71,7 +71,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78knn3.r26</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78kfn3.r26</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -473,7 +473,7 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__NEAR_MODEL__</state>
+          <state>__FAR_MODEL__</state>
           <state>__NEAR_DATA_MODEL__</state>
         </option>
         <option>
@@ -725,7 +725,7 @@
         </option>
         <option>
           <name>SuppressDiags</name>
-          <state></state>
+          <state>w6</state>
         </option>
         <option>
           <name>TreatAsWarn</name>

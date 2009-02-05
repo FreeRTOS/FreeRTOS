@@ -30,6 +30,14 @@
 ;
 ;------------------------------------------------------------------------------
 
+;
+; This file defines a wrapper for the interrupt generated each time the button
+; on the target board is pushed.  The asm wrapper is used to save and restore
+; the task context as a context switch may occur within the ISR itself.
+; The C portion of the ISR is defined within ButtonTask.c.
+;
+
+; Include the portSAVE_CONTEXT and portRESTORE_CONTEXT macros.
 #include "ISR_Support.h"
 
 	PUBLIC    vButtonISRWrapper
@@ -37,15 +45,21 @@
 
     RSEG CODE:CODE
 	
-vButtonISRWrapper:	
+vButtonISRWrapper:
+	; Save the current task context.	
 	portSAVE_CONTEXT
+
+	; Call the C portion of the ISR.
 	call vButtonISRHandler
+
+	; Restore the context of whichever task is to run next - which might be
+	; different from the task that was originally interrupted.
 	portRESTORE_CONTEXT
-	RETI
+	reti
 
 
 
-	; Set ISR location to the Interrupt vector table.
+	; Place the ISR into the vector table.
 	COMMON INTVEC:CODE:ROOT(1)
 	ORG 8
 `??vButtonISRWrapper??INTVEC 8`:

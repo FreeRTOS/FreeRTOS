@@ -30,6 +30,11 @@
 ;
 ;------------------------------------------------------------------------------
 
+
+;
+; This file defines the RegTest tasks as described at the top of main.c
+;
+
 ;------------------------------------------------------------------------------
 
 #if __CORE__ != __78K0R__
@@ -53,7 +58,7 @@
 ;
 ;   Input:  NONE
 ;
-;   Call:   CALL    vRegTest1
+;   Call:   Created as a task.
 ;
 ;   Output: NONE
 ;
@@ -61,6 +66,7 @@
     RSEG CODE:CODE
 vRegTest1:
 
+	; First fill the registers.
 	MOVW	AX, #0x1122
 	MOVW	BC, #0x3344
 	MOVW	DE, #0x5566
@@ -69,10 +75,19 @@ vRegTest1:
 	MOV		ES, #0x02
 
 loop1:
+	; Continuously check that the register values remain at their expected
+	; values.  The BRK is to test the yield.  This task runs at low priority
+	; so will also regularly get preempted.
 	BRK
+
+	; Compare with the expected value.
 	CMPW	AX, #0x1122
 	BZ		+5
+	; Jump over the branch to vRegTestError() if the register contained the
+	; expected value - otherwise flag an error by executing vRegTestError().
 	BR		vRegTestError	
+
+	; Repeat for all the registers.
 	MOVW	AX, BC
 	CMPW	AX, #0x3344
 	BZ		+5
@@ -104,7 +119,7 @@ loop1:
 ;
 ;   Input:  NONE
 ;
-;   Call:   CALL    vRegTest1
+;   Call:   Created as a task.
 ;
 ;   Output: NONE
 ;

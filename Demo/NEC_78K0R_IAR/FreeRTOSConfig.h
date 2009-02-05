@@ -50,7 +50,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/* only include in C files */
+/* Only include in C files */
 #ifdef __IAR_SYSTEMS_ICC__
 
 	#pragma language=extended
@@ -90,7 +90,7 @@
 
 #define configUSE_PREEMPTION		1
 
-/* only use following section for C files */
+/* Only use following section for C files */
 #ifdef __IAR_SYSTEMS_ICC__
 
 	#define configUSE_IDLE_HOOK				0

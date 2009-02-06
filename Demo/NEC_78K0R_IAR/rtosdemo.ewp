@@ -3,7 +3,7 @@
 <project>
   <fileVersion>2</fileVersion>
   <configuration>
-    <name>Debug</name>
+    <name>78K0R_Kx3</name>
     <toolchain>
       <name>78000</name>
     </toolchain>
@@ -22,15 +22,15 @@
         </option>
         <option>
           <name>ExePath</name>
-          <state>Debug\Exe</state>
+          <state>78K0R_Kx3\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>Debug\Obj</state>
+          <state>78K0R_Kx3\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>Debug\List</state>
+          <state>78K0R_Kx3\List</state>
         </option>
         <option>
           <name>GeneralStack</name>
@@ -71,7 +71,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78knn3.r26</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78kff3.r26</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -228,7 +228,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>__IAR_78KOR_Kx3__</state>
+          <state>__IAR_78K0R_Kx3__</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -473,8 +473,8 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__NEAR_MODEL__</state>
-          <state>__NEAR_DATA_MODEL__</state>
+          <state>__FAR_MODEL__</state>
+          <state>__FAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>Debug</name>
@@ -901,34 +901,34 @@
     </settings>
   </configuration>
   <configuration>
-    <name>Release</name>
+    <name>78K0R_Kx3L</name>
     <toolchain>
       <name>78000</name>
     </toolchain>
-    <debug>0</debug>
+    <debug>1</debug>
     <settings>
       <name>General</name>
       <archiveVersion>5</archiveVersion>
       <data>
         <version>7</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>GeneralCodeModel</name>
           <version>1</version>
-          <state>4</state>
+          <state>3</state>
         </option>
         <option>
           <name>ExePath</name>
-          <state>Release\Exe</state>
+          <state>78K0R_Kx3L\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>Release\Obj</state>
+          <state>78K0R_Kx3L\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>Release\List</state>
+          <state>78K0R_Kx3L\List</state>
         </option>
         <option>
           <name>GeneralStack</name>
@@ -1013,7 +1013,7 @@
         <option>
           <name>OGeneralDataModel</name>
           <version>0</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GeneralNearConstLocation</name>
@@ -1026,7 +1026,7 @@
         </option>
         <option>
           <name>GeneralNearConstSize</name>
-          <state>47.75</state>
+          <state>56.75</state>
         </option>
         <option>
           <name>GFarHeapSize</name>
@@ -1034,7 +1034,7 @@
         </option>
         <option>
           <name>GeneralDeviceSelect</name>
-          <state>78F1166_A0	78K0R - uPD78F1166_A0</state>
+          <state>78F1009_64	78K0R - uPD78F1009_64</state>
         </option>
         <option>
           <name>GeneralMisraVer</name>
@@ -1058,7 +1058,7 @@
       <data>
         <version>15</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>CompilerProcessor</name>
           <state>0</state>
@@ -1097,7 +1097,7 @@
         </option>
         <option>
           <name>CompilerDebugInfo</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCRequirePrototypes</name>
@@ -1114,7 +1114,7 @@
         <option>
           <name>CompilerAllowList</name>
           <version>1</version>
-          <state>11111</state>
+          <state>00000</state>
         </option>
         <option>
           <name>CompilerObjUseModuleName</name>
@@ -1126,7 +1126,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>__IAR_78KOR_Kx3__</state>
+          <state>__IAR_78K0R_Kx3L__</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1142,11 +1142,11 @@
         </option>
         <option>
           <name>CCListCFile</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCListCMnemonics</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCListCMessages</name>
@@ -1212,8 +1212,6 @@
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\Common\include</state>
-          <state>$PROJ_DIR$\LEDtoggle</state>
-          <state>$PROJ_DIR$\Int78K0R</state>
           <state>$PROJ_DIR$</state>
         </option>
         <option>
@@ -1265,16 +1263,16 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
           <version>0</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1284,7 +1282,7 @@
       <data>
         <version>9</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>IProcessor</name>
           <state>0</state>
@@ -1304,7 +1302,7 @@
         </option>
         <option>
           <name>AList</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>AListHeader</name>
@@ -1377,7 +1375,7 @@
         </option>
         <option>
           <name>Debug</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>Multibyte</name>
@@ -1425,9 +1423,7 @@
         </option>
         <option>
           <name>OAIncludePath2</name>
-          <state>$PROJ_DIR$\..\..\Source\include</state>
-          <state>$PROJ_DIR$\..\Common\include</state>
-          <state>$PROJ_DIR$\LEDtoggle</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\78K0R</state>
           <state>$PROJ_DIR$</state>
         </option>
         <option>
@@ -1499,7 +1495,7 @@
       <data>
         <version>15</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>XExtraOptionsCheck</name>
           <state>0</state>
@@ -1514,7 +1510,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>rtosdemo.a26</state>
+          <state>rtosdemo.d26</state>
         </option>
         <option>
           <name>OutputFormat</name>
@@ -1536,7 +1532,7 @@
         </option>
         <option>
           <name>AlwaysOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OverlapWarnings</name>
@@ -1548,7 +1544,7 @@
         </option>
         <option>
           <name>XList</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>SegmentMap</name>
@@ -1580,7 +1576,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\lnk78f1166_a0.xcl</state>
+          <state>$TOOLKIT_DIR$\CONFIG\lnk78f1009_64.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -1626,7 +1622,7 @@
         </option>
         <option>
           <name>SuppressDiags</name>
-          <state></state>
+          <state>w6</state>
         </option>
         <option>
           <name>TreatAsWarn</name>
@@ -1668,7 +1664,7 @@
         </option>
         <option>
           <name>DebugInformation</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RuntimeControl</name>
@@ -1696,7 +1692,7 @@
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
@@ -1704,17 +1700,17 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>rtosdemo.a26</state>
+          <state>rtosdemo.lnk</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
           <version>11</version>
-          <state>23</state>
+          <state>72</state>
         </option>
         <option>
           <name>ExtraFormatVariant</name>
           <version>8</version>
-          <state>2</state>
+          <state>0</state>
         </option>
         <option>
           <name>xcOverrideProgramEntryLabel</name>
@@ -1780,7 +1776,7 @@
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>XAROutOverride</name>
           <state>0</state>

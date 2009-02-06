@@ -51,7 +51,7 @@
 
 ; Tick ISR Prototype
 ;------------------------------------------------------------------------------
-	EXTERN    ?CL78K0R_V2_L00
+;	EXTERN    ?CL78K0R_V2_L00
 
 	PUBWEAK   `??MD_INTTM05??INTVEC 68`
 	PUBLIC    MD_INTTM05
@@ -121,7 +121,7 @@ MD_INTTM05:
 
 
 
-	REQUIRE ?CL78K0R_V2_L00
+;	REQUIRE ?CL78K0R_V2_L00
 	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
 	ORG 68
 `??MD_INTTM05??INTVEC 68`:

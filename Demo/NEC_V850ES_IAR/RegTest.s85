@@ -86,6 +86,7 @@ vRegTest1:
 	MOV		0x23232323, R30
 	
 vReg1TestLoopStart:
+	TRAP	0
 	MOV		0x01010101, R31
 	CMP		R31, R1
 	BZ		$+6

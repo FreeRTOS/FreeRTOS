@@ -192,7 +192,7 @@ unsigned portBASE_TYPE uxLEDToUse = 0;
 	{
 		xDelayPeriod = mainERROR_DELAY;
 	}
-
+	
 	/* Initialise xLastWakeTime before it is used.  After this point it is not
 	written to directly. */
 	xLastWakeTime = xTaskGetTickCount();
@@ -201,6 +201,7 @@ unsigned portBASE_TYPE uxLEDToUse = 0;
 	operating without error. */
 	for( ;; )
 	{
+		/* Wait until it is time to check all the other tasks again. */
 		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
 		
 		if( lRegTestStatus != pdPASS )
@@ -257,6 +258,8 @@ unsigned portBASE_TYPE uxLEDToUse = 0;
 		}
 		#endif
 
+		/* Toggle the LED.  The toggle rate will depend on whether or not an
+		error has been found in any tasks. */
 		vParTestToggleLED( uxLEDToUse );
 	}
 }

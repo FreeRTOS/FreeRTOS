@@ -78,8 +78,18 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
 [TraceHelper]
 Enabled=0
 ShowSource=1
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{C:\E\Dev\FreeRTOS\WorkingCopy3\Source\portable\MemMang\heap_1.c}.135.2@1" 1 0 0 0 "" 0 ""
+Count=1

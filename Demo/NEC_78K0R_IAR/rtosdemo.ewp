@@ -969,7 +969,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78kff3.r26</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78knn3.r26</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -991,7 +991,7 @@
         </option>
         <option>
           <name>GHeapSize</name>
-          <state>512</state>
+          <state>4</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
@@ -1370,8 +1370,8 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__FAR_MODEL__</state>
-          <state>__FAR_DATA_MODEL__</state>
+          <state>__NEAR_MODEL__</state>
+          <state>__NEAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>Debug</name>

@@ -64,7 +64,7 @@
  *
  * This setting must match the setting in the IAR project options.
  */
-#define configMEMORY_MODE               1
+#define configMEMORY_MODE               0
 
 /*
  * Application specific definitions.
@@ -135,7 +135,7 @@
 			#include <io78f1009_64.h>
 			#include <io78f1009_64_ext.h>
 		
-			#define configTOTAL_HEAP_SIZE			( (size_t ) ( 2400 ) )
+			#define configTOTAL_HEAP_SIZE			( (size_t ) ( 2500 ) )
 		
 		#endif /* _IAR_78K0R_Kx3L__ */
 	

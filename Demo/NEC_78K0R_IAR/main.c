@@ -168,9 +168,6 @@ short main( void )
 	/* First create the 'standard demo' tasks.  These are used to demonstrate
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks(mainSEMTEST_PRIORITY);
-	vStartGenericQueueTasks( mainGEN_QUEUE_PRIORITY );
 	vStartDynamicPriorityTasks();
 	vCreateBlockTimeTasks();
 
@@ -184,6 +181,15 @@ short main( void )
 	/* Create the 'check' task as described at the top of this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, ( void* )mainCHECK_PARAMETER_VALUE, mainCHECK_TASK_PRIORITY, NULL );
 
+	#ifdef __IAR_78K0R_Kx3__
+	{
+		/* The Kx3 has enough RAM to create more of the standard demo tasks. */
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+		vStartSemaphoreTasks(mainSEMTEST_PRIORITY);
+		vStartGenericQueueTasks( mainGEN_QUEUE_PRIORITY );
+	}
+	#endif
+	
 	/* Finally start the scheduler running. */
 	vTaskStartScheduler();
 
@@ -217,21 +223,6 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 		/* Wait until it is time to check all the other tasks again. */
 		vTaskDelayUntil( &xLastWakeTime, xToggleRate );
 
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			xToggleRate = mainERROR_TOGGLE_PERIOD;
-		}
-
-		if( xArePollingQueuesStillRunning() != pdTRUE)
-		{
-			xToggleRate = mainERROR_TOGGLE_PERIOD;
-		}
-
-		if( xAreSemaphoreTasksStillRunning() != pdTRUE)
-		{
-			xToggleRate = mainERROR_TOGGLE_PERIOD;
-		}
-		
 		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
 			xToggleRate = mainERROR_TOGGLE_PERIOD;
@@ -247,6 +238,26 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 			xToggleRate = mainERROR_TOGGLE_PERIOD;
 		}
 
+		#ifdef __IAR_78K0R_Kx3__
+		{
+			/* Only the Kx3 runs all the tasks. */
+			if( xArePollingQueuesStillRunning() != pdTRUE)
+			{
+				xToggleRate = mainERROR_TOGGLE_PERIOD;
+			}
+		
+			if( xAreSemaphoreTasksStillRunning() != pdTRUE)
+			{
+				xToggleRate = mainERROR_TOGGLE_PERIOD;
+			}
+			
+			if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+			{
+				xToggleRate = mainERROR_TOGGLE_PERIOD;
+			}	
+		}
+		#endif
+		
 		/* Toggle the LED.  The toggle rate will depend on whether or not an
 		error has been found in any tasks. */
 		mainLED_0 = !mainLED_0;

@@ -4262,15 +4262,15 @@
       <name>$PROJ_DIR$\..\..\Source\list.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES\port.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\Source\queue.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
     </file>
   </group>
-  <file>
-    <name>$PROJ_DIR$\..\..\Source\portable\IAR\V850ES\port.c</name>
-  </file>
 </project>
 
 

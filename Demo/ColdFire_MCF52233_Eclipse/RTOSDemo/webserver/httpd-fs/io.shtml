@@ -3,9 +3,9 @@
   <head>
     <title>FreeRTOS.org uIP WEB server demo</title>
   </head>
-  <BODY bgcolor="#CCCCff">
+  <BODY bgcolor="white">
 <font face="arial">
-<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a> <b>|</b> <a href="logo.jpg">30K JPG</a>
+<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a> <b>|</b> <a href="image.html">Large JPG</a>
 <br><p>
 <hr>
 <b>LED IO</b><br>

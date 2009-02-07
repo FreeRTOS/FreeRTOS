@@ -81,8 +81,8 @@ static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxIndexToBufferOwner = 0;
 
 /*-----------------------------------------------------------*/
 
-/* 
- * Enable all the required interrupts in the FEC and in the interrupt controller. 
+/*
+ * Enable all the required interrupts in the FEC and in the interrupt controller.
  */
 static void prvEnableFECInterrupts( void );
 
@@ -95,7 +95,7 @@ static void prvResetFEC( portBASE_TYPE xCalledFromISR );
 
 /*
  * FUNCTION ADAPTED FROM FREESCALE SUPPLIED SOURCE
- * 
+ *
  * Write a value to a PHY's MII register.
  *
  * Parameters:
@@ -370,6 +370,7 @@ void vFECInit( void )
 {
 unsigned portSHORT usData;
 struct uip_eth_addr xAddr;
+unsigned portBASE_TYPE ux;
 
 /* The MAC address is set at the foot of FreeRTOSConfig.h. */
 const unsigned portCHAR ucMACAddress[6] =
@@ -451,6 +452,18 @@ const unsigned portCHAR ucMACAddress[6] =
 		/* Wait for auto negotiate to complete. */
 		do
 		{
+			ux++;
+			if( ux > 10 )
+			{
+				/* Hardware bug workaround!  Force 100Mbps half duplex. */
+				while( !fec_mii_read( configPHY_ADDRESS, 0, &usData ) ){};
+				usData &= ~0x2000;							/* 10Mbps */
+				usData &= ~0x0100;							/* Half Duplex */
+				usData &= ~0x1000;							/* Manual Mode */
+				while( !fec_mii_write( configPHY_ADDRESS, 0, usData ) ){};
+				while( !fec_mii_write( configPHY_ADDRESS, 0, (usData|0x0200) )){}; /* Force re-negotiate */
+				break;
+			}
 			vTaskDelay( fecLINK_DELAY );
 			fec_mii_read( configPHY_ADDRESS, PHY_BMSR, &usData );
 

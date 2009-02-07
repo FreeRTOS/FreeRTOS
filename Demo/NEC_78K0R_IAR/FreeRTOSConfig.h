@@ -112,7 +112,7 @@
 		#define INCLUDE_vTaskDelayUntil			1
 		#define INCLUDE_vTaskDelay				1
 	
-		#ifdef configCLOCK_SOURCE == 0
+		#if configCLOCK_SOURCE == 0
 			#define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 20000000 )  /* using the external clock source */
 		#else
 			#define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 8000000 )   /* using the internal high speed clock */

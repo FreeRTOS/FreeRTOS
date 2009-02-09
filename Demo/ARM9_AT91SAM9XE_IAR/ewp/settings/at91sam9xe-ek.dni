@@ -18,9 +18,16 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1592855699
+Checksum=-425662186
 [InstructionProfiling]
 Enabled=_ 0
+[TraceHelper]
+Enabled=0
+ShowSource=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -28,14 +35,7 @@ LogFile=_ ""
 Enabled=0
 Source=2
 Graph=0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
 [Disassemble mode]
 mode=0
 [Breakpoints]
 Count=0
-[TraceHelper]
-Enabled=0
-ShowSource=1

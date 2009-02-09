@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.2 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -26,10 +26,13 @@
     ***************************************************************************
     ***************************************************************************
     *                                                                         *
-    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
-    * and even write all or part of your application on your behalf.          *
-    * See http://www.OpenRTOS.com for details of the services we provide to   *
-    * expedite your project.                                                  *
+    * Get the FreeRTOS eBook!  See http://www.FreeRTOS.org/Documentation      *
+	*                                                                         *
+	* This is a concise, step by step, 'hands on' guide that describes both   *
+	* general multitasking concepts and FreeRTOS specifics. It presents and   *
+	* explains numerous examples that are written using the FreeRTOS API.     *
+	* Full source code for all the examples is provided in an accompanying    *
+	* .zip file.                                                              *
     *                                                                         *
     ***************************************************************************
     ***************************************************************************
@@ -47,6 +50,19 @@
 	licensing and training services.
 */
 
+/*
+ * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * documentation provides more details of the standard demo application tasks.
+ *
+ * A "Check" task is created in addition to the standard demo tasks.    This
+ * only executes every three seconds but has a high priority to ensure it gets
+ * processor time.  Its main function is to check that all the standard demo
+ * tasks are still operational.  If everything is running as expected then the
+ * check task will toggle an LED every 3 seconds.  An error being discovered in
+ * any task will cause the toggle rate to increase to 500ms.
+ *
+ */
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -57,7 +73,6 @@
 #include "countsem.h"
 #include "death.h"
 #include "dynamic.h"
-#include "flash.h"
 #include "GenQTest.h"
 #include "integer.h"
 #include "PollQ.h"
@@ -65,12 +80,15 @@
 #include "recmutex.h"
 #include "semtest.h"
 #include "ParTest.h"
+#include "comtest2.h"
 
 /* Standard includes. */
 #include <stdio.h>
 
+/* Atmel library includes. */
+#include <pio/pio.h>
+
 /* Priorities for the demo application tasks. */
-#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 0 )
 #define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
@@ -82,6 +100,11 @@
 /* The period of the check task both in and out of the presense of an error. */
 #define mainNO_ERROR_PERIOD			( 5000 / portTICK_RATE_MS )
 #define mainERROR_PERIOD			( 500 / portTICK_RATE_MS );
+
+/* Constants used by the ComTest task. */
+#define mainCOM_TEST_BAUD_RATE		( 38400 )
+#define mainCOM_TEST_LED			( LED_DS1 )
+
 /*-----------------------------------------------------------*/
 
 /* Simple hardware setup required by the demo. */
@@ -93,9 +116,12 @@ static void prvCheckTask( void *pvParameters );
 /*-----------------------------------------------------------*/
 int main()
 {
+	/* Perform any hardware setup necessary to run the demo. */
 	prvSetupHardware();
 	
-	/* Start the standard demo tasks. */
+	/* First create the 'standard demo' tasks.  These exist just to to
+	demonstrate API functions being used and test the kernel port.  More
+	information is provided on the FreeRTOS.org WEB site. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
@@ -106,6 +132,7 @@ int main()
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
+	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	
 	/* Create the check task - this is the task that checks all the other tasks
 	are executing as expected and without reporting any errors. */
@@ -139,8 +166,11 @@ static volatile unsigned portLONG ulErrorCode = 0UL;
 	
 	for( ;; )
 	{
+		/* Delay until it is time for this task to execute again. */
 		vTaskDelayUntil( &xNextWakeTime, xPeriod );
 		
+		/* Check all the other tasks in the system - latch any reported errors
+		into the ulErrorCode variable. */
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			ulErrorCode |= 0x01UL;
@@ -196,17 +226,33 @@ static volatile unsigned portLONG ulErrorCode = 0UL;
 			ulErrorCode |= 0x400UL;
 		}
 		
+		if( xAreComTestTasksStillRunning() != pdTRUE )
+		{
+			ulErrorCode |= 0x800UL;
+		}
+		
+		/* Reduce the block period and in so doing increase the frequency at
+		which this task executes if any errors have been latched.  The increased
+		frequency causes the LED toggle rate to increase and so gives some
+		visual feedback that an error has occurred. */
 		if( ulErrorCode != 0x00 )
 		{
 			xPeriod = mainERROR_PERIOD;
 		}
 		
-		vParTestToggleLED( LED_DS1 );
+		/* Finally toggle the LED. */
+		vParTestToggleLED( LED_POWER );
 	}
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
+const Pin xPins[] = { PIN_USART0_RXD, PIN_USART0_TXD };
+
+	/* Setup the LED outputs. */
 	vParTestInitialise();
+	
+	/* Setup the pins for the UART. */
+	PIO_Configure( xPins, PIO_LISTSIZE( xPins ) );	
 }

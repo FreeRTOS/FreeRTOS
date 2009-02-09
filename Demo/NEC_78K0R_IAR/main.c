@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2009 Richard Barry.
+	FreeRTOS.org V5.1.2 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -26,10 +26,13 @@
     ***************************************************************************
     ***************************************************************************
     *                                                                         *
-    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
-    * and even write all or part of your application on your behalf.          *
-    * See http://www.OpenRTOS.com for details of the services we provide to   *
-    * expedite your project.                                                  *
+    * Get the FreeRTOS eBook!  See http://www.FreeRTOS.org/Documentation      *
+	*                                                                         *
+	* This is a concise, step by step, 'hands on' guide that describes both   *
+	* general multitasking concepts and FreeRTOS specifics. It presents and   *
+	* explains numerous examples that are written using the FreeRTOS API.     *
+	* Full source code for all the examples is provided in an accompanying    *
+	* .zip file.                                                              *
     *                                                                         *
     ***************************************************************************
     ***************************************************************************
@@ -109,7 +112,7 @@
 
 /* A value that is passed in as the parameter to the 'check' task.  This is done
 purely to check that the parameter passing mechanism is functioning correctly. */
-#define mainCHECK_PARAMETER_VALUE	( 0x345678 )
+#define mainCHECK_PARAMETER_VALUE	( 0x5678 )
 
 /*-----------------------------------------------------------*/
 
@@ -169,14 +172,13 @@ short main( void )
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
 	vStartDynamicPriorityTasks();
-	vCreateBlockTimeTasks();
-
-	/* Create the button push task as described at the top of this file. */
-	xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );	
+	
+	/* Create the button push task as described at the top of this file. */
+	xTaskCreate( vButtonTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainBUTTON_PRIORITY, NULL );		
 	
 	/* Create the 'check' task as described at the top of this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, ( void* )mainCHECK_PARAMETER_VALUE, mainCHECK_TASK_PRIORITY, NULL );
@@ -187,6 +189,7 @@ short main( void )
 		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 		vStartSemaphoreTasks(mainSEMTEST_PRIORITY);
 		vStartGenericQueueTasks( mainGEN_QUEUE_PRIORITY );
+		vCreateBlockTimeTasks();
 	}
 	#endif
 	
@@ -228,11 +231,6 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 			xToggleRate = mainERROR_TOGGLE_PERIOD;
 		}
 
-		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			xToggleRate = mainERROR_TOGGLE_PERIOD;
-		}
-
 		if( sRegTestStatus != pdPASS )
 		{
 			xToggleRate = mainERROR_TOGGLE_PERIOD;
@@ -255,6 +253,11 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 			{
 				xToggleRate = mainERROR_TOGGLE_PERIOD;
 			}	
+		
+			if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+			{
+				xToggleRate = mainERROR_TOGGLE_PERIOD;
+			}			
 		}
 		#endif
 		

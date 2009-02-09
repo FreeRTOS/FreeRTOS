@@ -71,7 +71,7 @@
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78kff3.r26</state>
+          <state>$TOOLKIT_DIR$\LIB\CLIB\cl78knn3.r26</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -120,7 +120,7 @@
         <option>
           <name>GeneralNearConstLocation</name>
           <version>0</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralNearConstStart</name>
@@ -473,8 +473,8 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__FAR_MODEL__</state>
-          <state>__FAR_DATA_MODEL__</state>
+          <state>__NEAR_MODEL__</state>
+          <state>__NEAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>Debug</name>
@@ -983,11 +983,11 @@
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>1</state>
+          <state>3</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>Full formatting.</state>
+          <state>No float, no field width, no precision.</state>
         </option>
         <option>
           <name>GHeapSize</name>
@@ -1018,7 +1018,7 @@
         <option>
           <name>GeneralNearConstLocation</name>
           <version>0</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralNearConstStart</name>
@@ -1114,7 +1114,7 @@
         <option>
           <name>CompilerAllowList</name>
           <version>1</version>
-          <state>00000</state>
+          <state>11111</state>
         </option>
         <option>
           <name>CompilerObjUseModuleName</name>
@@ -1263,7 +1263,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>0</state>
+          <state>3</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -1272,7 +1272,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>0</state>
+          <state>3</state>
         </option>
       </data>
     </settings>
@@ -1536,7 +1536,7 @@
         </option>
         <option>
           <name>OverlapWarnings</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>NoGlobalCheck</name>
@@ -1644,11 +1644,11 @@
         </option>
         <option>
           <name>IncludeSuppressed</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ModuleSummary</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XlinkStackSize</name>
@@ -1660,7 +1660,7 @@
         </option>
         <option>
           <name>xcProgramEntryLabel</name>
-          <state>__program_start</state>
+          <state>__program_start_fr</state>
         </option>
         <option>
           <name>DebugInformation</name>
@@ -1714,7 +1714,7 @@
         </option>
         <option>
           <name>xcOverrideProgramEntryLabel</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>xcProgramEntryLabelSelect</name>
@@ -1822,6 +1822,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\ButtonTask.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\cstartup.s26</name>
+      <excluded>
+        <configuration>78K0R_Kx3</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\main.c</name>

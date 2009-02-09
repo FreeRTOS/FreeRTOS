@@ -13,7 +13,7 @@
  *****************************************************************************/
 
 /*
-	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.2 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -40,10 +40,13 @@
     ***************************************************************************
     ***************************************************************************
     *                                                                         *
-    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
-    * and even write all or part of your application on your behalf.          *
-    * See http://www.OpenRTOS.com for details of the services we provide to   *
-    * expedite your project.                                                  *
+    * Get the FreeRTOS eBook!  See http://www.FreeRTOS.org/Documentation      *
+	*                                                                         *
+	* This is a concise, step by step, 'hands on' guide that describes both   *
+	* general multitasking concepts and FreeRTOS specifics. It presents and   *
+	* explains numerous examples that are written using the FreeRTOS API.     *
+	* Full source code for all the examples is provided in an accompanying    *
+	* .zip file.                                                              *
     *                                                                         *
     ***************************************************************************
     ***************************************************************************

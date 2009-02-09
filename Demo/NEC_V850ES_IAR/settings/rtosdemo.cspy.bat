@@ -29,4 +29,3 @@
 @REM    v850LibSupport.dll
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\CodeCoverage\CodeCoverage.dll
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\Profiling\Profiling.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\SymList\SymList.dll

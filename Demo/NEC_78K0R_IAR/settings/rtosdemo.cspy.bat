@@ -22,7 +22,7 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\bin\78k0rproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\bin\78k0rminitks.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\bin\<libsupport_plugin>" --backend -B "--core" "78k0r" "--near_const_location" "rom1" "--near_const_start" "0xF1000" "--near_const_size" "47.75" "-p" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\CONFIG\DDF\io78f1166_a0.ddf" "-d" "minicube" 
+"C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\bin\78k0rproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\bin\78k0rminitks.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\bin\<libsupport_plugin>" --backend -B "--core" "78k0r" "--near_const_location" "rom0" "--near_const_start" "0xF1000" "--near_const_size" "47.75" "-p" "C:\Devtools\IAR Systems\Embedded Workbench 5.0\78k\CONFIG\DDF\io78f1166_a0.ddf" "-d" "minicube" 
 
 
 @REM Loaded plugins:
@@ -30,4 +30,3 @@
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\CodeCoverage\CodeCoverage.dll
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\Profiling\Profiling.dll
 @REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\stack\stack.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.0\common\plugins\SymList\SymList.dll

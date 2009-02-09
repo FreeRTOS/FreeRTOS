@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.1.1 - Copyright (C) 2003-2008 Richard Barry.
+	FreeRTOS.org V5.1.2 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -26,10 +26,13 @@
     ***************************************************************************
     ***************************************************************************
     *                                                                         *
-    * SAVE TIME AND MONEY!  We can port FreeRTOS.org to your own hardware,    *
-    * and even write all or part of your application on your behalf.          *
-    * See http://www.OpenRTOS.com for details of the services we provide to   *
-    * expedite your project.                                                  *
+    * Get the FreeRTOS eBook!  See http://www.FreeRTOS.org/Documentation      *
+	*                                                                         *
+	* This is a concise, step by step, 'hands on' guide that describes both   *
+	* general multitasking concepts and FreeRTOS specifics. It presents and   *
+	* explains numerous examples that are written using the FreeRTOS API.     *
+	* Full source code for all the examples is provided in an accompanying    *
+	* .zip file.                                                              *
     *                                                                         *
     ***************************************************************************
     ***************************************************************************
@@ -37,13 +40,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -78,23 +81,6 @@
  * characters.
  *
  */
-
-/*
-Changes from V1.2.0:
-
-	+ Reduced the maximum time between successive transmissions.  This provides
-	  for a more rigorous test.
-
-Changes from V2.0.0
-
-	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
-
-Changes from V2.5.1
-
-	+ The constant comOFFSET_TIME added to the delay period to ensure a more
-	  random delay period is used.
-*/
 
 /* Scheduler include files. */
 #include <stdlib.h>

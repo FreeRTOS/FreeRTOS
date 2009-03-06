@@ -235,7 +235,7 @@ extern unsigned long uxParTextGetLED( unsigned long uxLED );
 
 static unsigned short generate_io_state( void *arg )
 {
-	for( ulString = 0; ulString < 4; ulString++ )
+	for( ulString = 0; ulString < 3; ulString++ )
 	{
 		if( uxParTextGetLED( ulString + 5 ) )
 		{

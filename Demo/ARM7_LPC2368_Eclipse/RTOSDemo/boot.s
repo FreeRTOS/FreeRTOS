@@ -47,7 +47,7 @@ _mainCRTStartup:
 	for system/user, SWI and IRQ modes.   Also each mode is setup with
 	interrupts initially disabled. */
     ldr   r0, .LC6
-    msr   CPSR_c, #MODE_UND|I_BIT|F_BIT /* Undefined Instruction Mode
+    msr   CPSR_c, #MODE_UND|I_BIT|F_BIT /* Undefined Instruction Mode */
     mov   sp, r0
     sub   r0, r0, #UND_STACK_SIZE
     msr   CPSR_c, #MODE_ABT|I_BIT|F_BIT /* Abort Mode */

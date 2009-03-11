@@ -1014,9 +1014,9 @@ void vTaskEndScheduler( void )
 
 void vTaskSuspendAll( void )
 {
-	portENTER_CRITICAL();
-		++uxSchedulerSuspended;
-	portEXIT_CRITICAL();
+	/* A critical section is not required as the variable is of type
+	portBASE_TYPE. */
+	++uxSchedulerSuspended;
 }
 /*----------------------------------------------------------*/
 
@@ -1119,13 +1119,9 @@ portTickType xTicks;
 
 unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 {
-unsigned portBASE_TYPE uxNumberOfTasks;
-
-	taskENTER_CRITICAL();
-		uxNumberOfTasks = uxCurrentNumberOfTasks;
-	taskEXIT_CRITICAL();
-
-	return uxNumberOfTasks;
+	/* A critical section is not required because the variables are of type
+	portBASE_TYPE. */
+	return uxCurrentNumberOfTasks;
 }
 /*-----------------------------------------------------------*/
 
@@ -1351,7 +1347,8 @@ void vTaskIncrementTick( void )
 			xTCB = ( tskTCB * ) xTask;
 		}
 		
-		/* Save the hook function in the TCB. */
+		/* Save the hook function in the TCB.  A critical section is required as
+		the value can be accessed from an interrupt. */
 		portENTER_CRITICAL();
 			xTCB->pxTaskTag = pxTagValue;
 		portEXIT_CRITICAL();
@@ -1899,15 +1896,10 @@ tskTCB *pxNewTCB;
 
 	xTaskHandle xTaskGetCurrentTaskHandle( void )
 	{
-	xTaskHandle xReturn;
-
-		portENTER_CRITICAL();
-		{
-			xReturn = ( xTaskHandle ) pxCurrentTCB;
-		}
-		portEXIT_CRITICAL();
-
-		return xReturn;
+		/* A critical section is not required as this is not called from
+		an interrupt and the current TCB will always be the same for any
+		individual execution thread. */
+		return pxCurrentTCB;
 	}
 
 #endif

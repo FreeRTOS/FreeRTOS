@@ -445,6 +445,10 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
 
+	/* This function relaxes the coding standard somewhat to allow return
+	statements within the function itself.  This is done in the interest
+	of execution time efficiency. */
+
 	for( ;; )
 	{
 		taskENTER_CRITICAL();
@@ -463,7 +467,9 @@ xTimeOutType xTimeOut;
 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) == pdTRUE )
 					{
 						/* The unblocked task has a priority higher than
-						our own so yield immediately. */
+						our own so yield immediately.  Yes it is ok to do
+						this from within the critical section - the kernel
+						takes care of that. */
 						taskYIELD();
 					}
 				}
@@ -475,11 +481,15 @@ xTimeOutType xTimeOut;
 			{
 				if( xTicksToWait == ( portTickType ) 0 )
 				{
+					/* The queue was full and no block time is specified (or 
+					the block time has expired) so leave now. */
 					taskEXIT_CRITICAL();
 					return errQUEUE_FULL;
 				}
 				else if( xEntryTimeSet == pdFALSE )
 				{
+					/* The queue was full and a block time was specified so
+					configure the timeout structure. */
 					vTaskSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
@@ -487,16 +497,17 @@ xTimeOutType xTimeOut;
 		}
 		taskEXIT_CRITICAL();	
 
+		/* Interrupts and other tasks can send to and receive from the queue
+		now the critical section has been exited. */
+
 		vTaskSuspendAll();
 		prvLockQueue( pxQueue );
 
-		if( prvIsQueueFull( pxQueue ) )
+		/* Update the timeout state to see if it has expired yet. */
+		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 		{
-	    	/* Need to call xTaskCheckForTimeout again as time could
-	    	have passed since it was last called if this is not the
-	    	first time around this loop.  */
-			if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
-			{
+			if( prvIsQueueFull( pxQueue ) )
+			{		
 				traceBLOCKING_ON_QUEUE_SEND( pxQueue );
 				vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 
@@ -519,15 +530,17 @@ xTimeOutType xTimeOut;
 			}
 			else
 			{
+				/* Try again. */
 				prvUnlockQueue( pxQueue );
-				( void ) xTaskResumeAll();
-				return errQUEUE_FULL;
+				( void ) xTaskResumeAll();			
 			}
 		}
 		else
 		{
+			/* The timeout has expired. */
 			prvUnlockQueue( pxQueue );
 			( void ) xTaskResumeAll();
+			return errQUEUE_FULL;
 		}
 	}
 }
@@ -584,22 +597,19 @@ xTimeOutType xTimeOut;
 
 			taskENTER_CRITICAL();
 			{
-				if( prvIsQueueFull( pxQueue ) )
+				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 				{
-	    			/* Need to call xTaskCheckForTimeout again as time could
-	    			have passed since it was last called if this is not the
-	    			first time around this loop.  */
-					if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
-					{
+					if( prvIsQueueFull( pxQueue ) )
+					{				
 						traceBLOCKING_ON_QUEUE_SEND( pxQueue );
 						vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 						taskYIELD();
 					}
-					else
-					{
-						taskEXIT_CRITICAL();
-						return errQUEUE_FULL;
-					}
+				}
+				else
+				{
+					taskEXIT_CRITICAL();
+					return errQUEUE_FULL;
 				}
 			}
 			taskEXIT_CRITICAL();
@@ -698,13 +708,10 @@ xTimeOutType xTimeOut;
 
 			taskENTER_CRITICAL();
 			{
-				if( prvIsQueueEmpty( pxQueue ) )
+				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 				{
-    				/* Need to call xTaskCheckForTimeout again as time could
-    				have passed since it was last called if this is not the
-    				first time around this loop. */
-					if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
-					{
+					if( prvIsQueueEmpty( pxQueue ) )
+					{				
 						traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
 
 						#if ( configUSE_MUTEXES == 1 )
@@ -721,11 +728,11 @@ xTimeOutType xTimeOut;
 						vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
 						taskYIELD();
 					}
-					else
-					{
-						taskEXIT_CRITICAL();
-						return errQUEUE_EMPTY;
-					}
+				}
+				else
+				{
+					taskEXIT_CRITICAL();
+					return errQUEUE_EMPTY;
 				}
 			}
 			taskEXIT_CRITICAL();
@@ -795,10 +802,16 @@ signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
 signed portCHAR *pcOriginalReadPosition;
 
+	/* This function relaxes the coding standard somewhat to allow return
+	statements within the function itself.  This is done in the interest
+	of execution time efficiency. */
+
 	for( ;; )
 	{
 		taskENTER_CRITICAL();
 		{
+  			/* Is there space on the queue now?  To be running we must be
+  			the highest priority task wanting to access the queue. */		
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
 				/* Remember our read position in case we are just peeking. */
@@ -862,11 +875,15 @@ signed portCHAR *pcOriginalReadPosition;
 			{
 				if( xTicksToWait == ( portTickType ) 0 )
 				{
+					/* The queue was empty and no block time is specified (or 
+					the block time has expired) so leave now. */				
 					taskEXIT_CRITICAL();
 					return errQUEUE_EMPTY;
 				}
 				else if( xEntryTimeSet == pdFALSE )
 				{
+					/* The queue was empty and a block time was specified so
+					configure the timeout structure. */				
 					vTaskSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
@@ -874,15 +891,16 @@ signed portCHAR *pcOriginalReadPosition;
 		}
 		taskEXIT_CRITICAL();
 
+		/* Interrupts and other tasks can send to and receive from the queue
+		now the critical section has been exited. */
+
 		vTaskSuspendAll();
 		prvLockQueue( pxQueue );
 
-		if( prvIsQueueEmpty( pxQueue ) )
+		/* Update the timeout state to see if it has expired yet. */
+		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 		{
-    		/* Need to call xTaskCheckForTimeout again as time could
-    		have passed since it was last called if this is not the
-    		first time around this loop. */
-			if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
+			if( prvIsQueueEmpty( pxQueue ) )
 			{
 				traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
 
@@ -891,7 +909,9 @@ signed portCHAR *pcOriginalReadPosition;
 					if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 					{
 						portENTER_CRITICAL();
+						{
 							vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+						}
 						portEXIT_CRITICAL();
 					}
 				}
@@ -906,15 +926,16 @@ signed portCHAR *pcOriginalReadPosition;
 			}
 			else
 			{
+				/* Try again. */
 				prvUnlockQueue( pxQueue );
 				( void ) xTaskResumeAll();
-				return errQUEUE_EMPTY;
 			}
 		}
 		else
 		{
 			prvUnlockQueue( pxQueue );
 			( void ) xTaskResumeAll();
+			return errQUEUE_EMPTY;
 		}
 	}
 }

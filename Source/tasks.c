@@ -143,9 +143,7 @@ static volatile unsigned portBASE_TYPE uxSchedulerSuspended		= ( unsigned portBA
 static volatile unsigned portBASE_TYPE uxMissedTicks			= ( unsigned portBASE_TYPE ) 0;
 static volatile portBASE_TYPE xMissedYield						= ( portBASE_TYPE ) pdFALSE;
 static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
-#if ( configUSE_TRACE_FACILITY == 1 )
-	static unsigned portBASE_TYPE uxTaskNumber = 0; /*lint !e956 Static is deliberate - this is guarded before use. */
-#endif
+static unsigned portBASE_TYPE uxTaskNumber = 0;
 
 /* Debugging and trace facilities private variables and macros. ------------*/
 
@@ -438,9 +436,9 @@ tskTCB * pxNewTCB;
 			{
 				/* Add a counter into the TCB for tracing only. */
 				pxNewTCB->uxTCBNumber = uxTaskNumber;
-				uxTaskNumber++;
 			}
 			#endif
+			uxTaskNumber++;
 
 			prvAddTaskToReadyQueue( pxNewTCB );
 
@@ -518,6 +516,10 @@ tskTCB * pxNewTCB;
 			there is a task that has been deleted and that it should therefore
 			check the xTasksWaitingTermination list. */
 			++uxTasksDeleted;
+
+			/* Increment the uxTaskNumberVariable also so kernel aware debuggers
+			can detect that the task lists need re-generating. */			
+			uxTaskNumber++;
 		}
 		taskEXIT_CRITICAL();
 

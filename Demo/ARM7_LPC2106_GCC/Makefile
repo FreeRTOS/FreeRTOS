@@ -103,6 +103,7 @@ $(ARM_OBJ) : %.o : %.c $(LDSCRIPT) Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean :
+	rm -rf $(ARM_OBJ) $(THUMB_OBJ)
 	touch Makefile
 
 

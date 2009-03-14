@@ -62,10 +62,12 @@
 
 void vDisplayMessage( const portCHAR * const pcMessageToPrint )
 {
-	taskENTER_CRITICAL();
+	vTaskSuspendAll();
+	{
 		printf( "%s", pcMessageToPrint );
 		fflush( stdout );
-	taskEXIT_CRITICAL();
+	}
+	xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
@@ -75,7 +77,7 @@ const portCHAR * const pcFileName = "a:\\RTOSlog.txt";
 const portCHAR * const pcSeparator = "\r\n-----------------------\r\n";
 FILE *pf;
 
-	taskENTER_CRITICAL();
+	vTaskSuspendAll();
 	{	
 		pf = fopen( pcFileName, "a" );
 		if( pf != NULL )
@@ -85,7 +87,7 @@ FILE *pf;
 			fclose( pf );
 		}
 	}
-	taskEXIT_CRITICAL();
+	xTaskResumeAll();
 }
 /*-----------------------------------------------------------*/
 
@@ -94,7 +96,7 @@ void vWriteBufferToDisk( const portCHAR * const pcBuffer, unsigned portLONG ulBu
 const portCHAR * const pcFileName = "a:\\trace.bin";
 FILE *pf;
 
-	taskENTER_CRITICAL();
+	vTaskSuspendAll();
 	{
 		pf = fopen( pcFileName, "wb" );
 		if( pf )
@@ -103,6 +105,6 @@ FILE *pf;
 			fclose( pf );
 		}
 	}
-	taskEXIT_CRITICAL();
+	xTaskResumeAll();
 }
 

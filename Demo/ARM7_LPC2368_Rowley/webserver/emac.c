@@ -133,7 +133,7 @@ static portBASE_TYPE xAttempt = 0;
 
   /* Power Up the EMAC controller. */
   PCONP |= 0x40000000;
-  vTaskDelay( 1 );
+  vTaskDelay( 10 );
 
   /* Reset all EMAC internal modules. */
   MAC1 = MAC1_RES_TX | MAC1_RES_MCS_TX | MAC1_RES_RX | MAC1_RES_MCS_RX |
@@ -141,7 +141,7 @@ static portBASE_TYPE xAttempt = 0;
   Command = CR_REG_RES | CR_TX_RES | CR_RX_RES;
 
   /* A short delay after reset. */
-  vTaskDelay( 1 );
+  vTaskDelay( 10 );
 
   /* Initialize MAC control registers. */
   MAC1 = MAC1_PASS_ALL;
@@ -163,7 +163,7 @@ static portBASE_TYPE xAttempt = 0;
 
   /* Wait for hardware reset to end. */
   for (tout = 0; tout < 100; tout++) {
-    vTaskDelay( 10 );
+    vTaskDelay( 200 );
     regv = read_PHY (PHY_REG_BMCR);
     if (!(regv & 0x8000)) {
       /* Reset complete */
@@ -181,7 +181,7 @@ static portBASE_TYPE xAttempt = 0;
     write_PHY (PHY_REG_BMCR, PHY_AUTO_NEG);
     /* Wait to complete Auto_Negotiation. */
     for (tout = 0; tout < 10; tout++) {
-      vTaskDelay( 100 );
+      vTaskDelay( 200 );
       regv = read_PHY (PHY_REG_BMSR);
       if (regv & 0x0020) {
         /* Autonegotiation Complete. */
@@ -199,7 +199,7 @@ static portBASE_TYPE xAttempt = 0;
   {
     xReturn = pdFAIL;
     for (tout = 0; tout < 10; tout++) {
-      vTaskDelay( 100 );
+      vTaskDelay( 200 );
       regv = read_PHY (PHY_REG_STS);
       if (regv & 0x0001) {
         /* Link is on. */

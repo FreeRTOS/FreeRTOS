@@ -3,15 +3,15 @@
   <head>
     <title>FreeRTOS.org uIP WEB server demo</title>
   </head>
-  <BODY bgcolor="#CCCCff">
+  <BODY>
 <font face="arial">
-<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a>
+<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="image.jpg">65K JPG</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="io.shtml">IO</a>
 <br><p>
 <hr>
 <b>LED and LCD IO</b><br>
 
 <p>
-
+This page demonstrates two way communication.  By using the check boxes and text boxes this WEB interface can influence the program execution.<p>
 Use the check boxes to select the LED's to turn on or off, enter text to display on the LCD, then click "Update IO".
 
 

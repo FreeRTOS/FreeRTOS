@@ -3,13 +3,14 @@
   <head>
     <title>FreeRTOS.org uIP WEB server demo</title>
   </head>
-  <BODY bgcolor="#CCCCff">
+  <BODY>
 <font face="arial">
-<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a>
+<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="image.jpg">65K JPG</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="io.shtml">IO</a>
 <br><p>
 <hr>
 <br>
 <h2>Network connections</h2>
+This page displays dynamically generated status information on the TCP/IP connections.
 <p>
 <table>
 <tr><th>Local</th><th>Remote</th><th>State</th><th>Retransmissions</th><th>Timer</th><th>Flags</th></tr>

@@ -78,13 +78,13 @@
 #define uipMAC_ADDR5	0x11
 
 /* IP address configuration. */
-#define uipIP_ADDR0		172
-#define uipIP_ADDR1		25
-#define uipIP_ADDR2		218
-#define uipIP_ADDR3		10	
+#define uipIP_ADDR0		192
+#define uipIP_ADDR1		168
+#define uipIP_ADDR2		0
+#define uipIP_ADDR3		200	
 
 /* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT    100
+#define uipINIT_WAIT    200
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
@@ -239,6 +239,17 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 static void prvENET_Send(void)
 {
+    RequestSend();
+
+    /* Copy the header into the Tx buffer. */
+    CopyToFrame_EMAC( uip_buf, uipTOTAL_FRAME_HEADER_SIZE );
+    if( uip_len > uipTOTAL_FRAME_HEADER_SIZE )
+    {
+        CopyToFrame_EMAC( uip_appdata, ( uip_len - uipTOTAL_FRAME_HEADER_SIZE ) );
+    }
+
+    DoSend_EMAC( uip_len );
+
     RequestSend();
 
     /* Copy the header into the Tx buffer. */

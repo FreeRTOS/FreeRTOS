@@ -143,7 +143,7 @@ Options 2,0,0  // Target 'RTOSDemo_THUMB'
  EnvReg (ÿPhilips\)
  OrgReg (ÿPhilips\)
  TgStat=16
- OutDir (.\)
+ OutDir (.\bin\)
  OutName (RTOSDemo)
  GenApp=1
  GenLib=0
@@ -201,7 +201,7 @@ Options 2,0,0  // Target 'RTOSDemo_THUMB'
  ADSLDIF ()
  ADSLDDW ()
   OPTDL (SARM.DLL)(-cLPC2100)(DARMP.DLL)(-pLPC21x9)(SARM.DLL)()(TARMP.DLL)(-pLPC21x9)
-  OPTDBG 49150,0,()()()()()()()()()() (BIN\UL2ARM.DLL)()()()
+  OPTDBG 49149,0,()()()()()()()()()() (BIN\UL2ARM.DLL)()()()
  FLASH1 { 1,0,0,0,1,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0 }
  FLASH2 (BIN\UL2ARM.DLL)
  FLASH3 ("LPC210x_ISP.EXE" ("#H" ^X $D COM1: 9600 1))

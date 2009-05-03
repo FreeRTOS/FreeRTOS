@@ -291,6 +291,16 @@
 	#include "../../Source/portable/IAR/78K0R/portmacro.h"
 #endif
 	
+/* Catch all to ensure portmacro.h is included in the build.  Newer demos
+have the path as part of the project options, rather than as relative from
+the project location.  If portENTER_CRITICAL() has not been defined then
+portmacro.h has not yet been included - as every portmacro.h provides a
+portENTER_CRITICAL() definition.  Check the demo application for your demo
+to find the path to the correct portmacro.h file. */
+#ifndef portENTER_CRITICAL
+	#include "portmacro.h"	
+#endif
+	
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -299,6 +309,7 @@ extern "C" {
  * Setup the stack of a new task so it is ready to be placed under the
  * scheduler control.  The registers have to be placed on the stack in
  * the order that the port expects to find them.
+ *
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters );
 

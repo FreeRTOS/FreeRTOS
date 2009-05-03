@@ -142,7 +142,7 @@ static volatile unsigned portBASE_TYPE uxSchedulerSuspended		= ( unsigned portBA
 static volatile unsigned portBASE_TYPE uxMissedTicks			= ( unsigned portBASE_TYPE ) 0;
 static volatile portBASE_TYPE xMissedYield						= ( portBASE_TYPE ) pdFALSE;
 static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
-static unsigned portBASE_TYPE uxTaskNumber = 0;
+static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned portBASE_TYPE ) 0;
 
 /* Debugging and trace facilities private variables and macros. ------------*/
 

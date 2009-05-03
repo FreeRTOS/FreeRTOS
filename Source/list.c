@@ -129,6 +129,22 @@ portTickType xValueOfInsertion;
 	}
 	else
 	{
+		/* *** NOTE ***********************************************************
+		If you find your application is crashing here then likely causes are:
+			1) Stack overflow - 
+			   see http://www.freertos.org/Stacks-and-stack-overflow-checking.html
+			2) Incorrect interrupt priority assignment, especially on Cortex M3 
+			   parts where numerically high priority values denote low actual 
+			   interrupt priories, which can seem counter intuitive.  See 
+			   configMAX_SYSCALL_INTERRUPT_PRIORITY on http://www.freertos.org/a00110.html
+			3) Calling an API function from within a critical section or when
+			   the scheduler is suspended.
+			4) Using a queue or semaphore before it has been initialised or
+			   before the scheduler has been started (are interrupts firing
+			   before vTaskStartScheduler() has been called?).
+		See http://www.freertos.org/FAQHelp.html for more tips. 
+		**********************************************************************/
+		
 		for( pxIterator = ( xListItem * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue <= xValueOfInsertion; pxIterator = pxIterator->pxNext )
 		{
 			/* There is nothing to do here, we are just iterating to the

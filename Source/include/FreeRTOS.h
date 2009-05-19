@@ -374,5 +374,25 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceTASK_INCREMENT_TICK( xTickCount )
 #endif
 
+#ifndef configGENERATE_RUN_TIME_STATS
+	#define configGENERATE_RUN_TIME_STATS 0
+#endif
+
+#if ( configGENERATE_RUN_TIME_STATS == 1 )
+
+	#ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+		#error If configGENERATE_RUN_TIME_STATS is defined then portCONFIGURE_TIMER_FOR_RUN_TIME_STATS must also be defined.  portCONFIGURE_TIMER_FOR_RUN_TIME_STATS should call a port layer function to setup a peripheral timer/counter that can then be used as the run time counter time base.
+	#endif /* portCONFIGURE_TIMER_FOR_RUN_TIME_STATS */
+
+	#ifndef portGET_RUN_TIME_COUNTER_VALUE
+		#error If configGENERATE_RUN_TIME_STATS is defined then portGET_RUN_TIME_COUNTER_VALUE must also be defined.  portGET_RUN_TIME_COUNTER_VALUE should evaluate to the counter value of the timer/counter peripheral used as the run time counter time base.
+	#endif /* portGET_RUN_TIME_COUNTER_VALUE */
+
+#endif /* configGENERATE_RUN_TIME_STATS */
+
+#ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+	#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
+#endif
+
 #endif /* INC_FREERTOS_H */
 

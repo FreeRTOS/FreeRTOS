@@ -3,20 +3,20 @@
 
 	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS.org is free software; you can redistribute it and/or modify it 
+	FreeRTOS.org is free software; you can redistribute it and/or modify it
 	under the terms of the GNU General Public License (version 2) as published
 	by the Free Software Foundation and modified by the FreeRTOS exception.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 	more details.
 
-	You should have received a copy of the GNU General Public License along 
-	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59 
+	You should have received a copy of the GNU General Public License along
+	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59
 	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
-	A special exception to the GPL is included to allow you to distribute a 
+	A special exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details.

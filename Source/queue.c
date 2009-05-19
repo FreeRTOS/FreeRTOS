@@ -3,20 +3,20 @@
 
 	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS.org is free software; you can redistribute it and/or modify it 
+	FreeRTOS.org is free software; you can redistribute it and/or modify it
 	under the terms of the GNU General Public License (version 2) as published
 	by the Free Software Foundation and modified by the FreeRTOS exception.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 	more details.
 
-	You should have received a copy of the GNU General Public License along 
-	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59 
+	You should have received a copy of the GNU General Public License along
+	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59
 	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
-	A special exception to the GPL is included to allow you to distribute a 
+	A special exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details.
@@ -480,7 +480,7 @@ xTimeOutType xTimeOut;
 			{
 				if( xTicksToWait == ( portTickType ) 0 )
 				{
-					/* The queue was full and no block time is specified (or 
+					/* The queue was full and no block time is specified (or
 					the block time has expired) so leave now. */
 					taskEXIT_CRITICAL();
 					traceQUEUE_SEND_FAILED( pxQueue );
@@ -814,7 +814,7 @@ signed portCHAR *pcOriginalReadPosition;
 	{
 		taskENTER_CRITICAL();
 		{
-  			/* Is there space on the queue now?  To be running we must be
+  			/* Is there data in the queue now?  To be running we must be
   			the highest priority task wanting to access the queue. */		
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
@@ -879,7 +879,7 @@ signed portCHAR *pcOriginalReadPosition;
 			{
 				if( xTicksToWait == ( portTickType ) 0 )
 				{
-					/* The queue was empty and no block time is specified (or 
+					/* The queue was empty and no block time is specified (or
 					the block time has expired) so leave now. */				
 					taskEXIT_CRITICAL();
 					traceQUEUE_RECEIVE_FAILED( pxQueue );

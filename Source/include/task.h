@@ -837,9 +837,8 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void );
  * task. h
  * <PRE>void vTaskList( portCHAR *pcWriteBuffer );</PRE>
  *
- * configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and INCLUDE_vTaskSuspend
- * must all be defined as 1 for this function to be available.
- * See the configuration section for more information.
+ * configUSE_TRACE_FACILITY must be defined as 1 for this function to be 
+ * available.  See the configuration section for more information.
  *
  * NOTE: This function will disable interrupts for its duration.  It is
  * not intended for normal application runtime use but as a debug aid.
@@ -859,6 +858,40 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void );
  * \ingroup TaskUtils
  */
 void vTaskList( signed portCHAR *pcWriteBuffer );
+
+/**
+ * task. h
+ * <PRE>void vTaskGetRunTimeStats( portCHAR *pcWriteBuffer );</PRE>
+ *
+ * configGENERATE_RUN_TIME_STATS must be defined as 1 for this function
+ * to be available.  The application must also then provide definitions
+ * for portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and 
+ * portGET_RUN_TIME_COUNTER_VALUE to configure a peripheral timer/counter
+ * and return the timers current count value respectively.  A 1uS timer
+ * frequency is recommended for a 32bit peripheral counter - this will
+ * allow the statistics to be gathered over the first (approximately) 70
+ * minutes of execution.
+ *
+ * NOTE: This function will disable interrupts for its duration.  It is
+ * not intended for normal application runtime use but as a debug aid.
+ *
+ * Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total
+ * accumulated execution time being stored for each task.  The resolution
+ * of the accumulated time value depends on the frequency of the timer
+ * configured by the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro.
+ * Calling vTaskGetRunTimeStats() writes the total execution time of each
+ * task into a buffer, both as an absolute count value and as a percentage
+ * of the total system execution time.
+ *
+ * @param pcWriteBuffer A buffer into which the execution times will be 
+ * written, in ascii form.  This buffer is assumed to be large enough to 
+ * contain the generated report.  Approximately 40 bytes per task should 
+ * be sufficient.
+ *
+ * \page vTaskGetRunTimeStats vTaskGetRunTimeStats
+ * \ingroup TaskUtils
+ */
+void vTaskGetRunTimeStats( signed portCHAR *pcWriteBuffer );
 
 /**
  * task. h

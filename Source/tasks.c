@@ -3,20 +3,20 @@
 
 	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS.org is free software; you can redistribute it and/or modify it 
+	FreeRTOS.org is free software; you can redistribute it and/or modify it
 	under the terms of the GNU General Public License (version 2) as published
 	by the Free Software Foundation and modified by the FreeRTOS exception.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 	more details.
 
-	You should have received a copy of the GNU General Public License along 
-	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59 
+	You should have received a copy of the GNU General Public License along
+	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59
 	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
-	A special exception to the GPL is included to allow you to distribute a 
+	A special exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details.
@@ -85,15 +85,19 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if ( configUSE_TRACE_FACILITY == 1 )
-		unsigned portBASE_TYPE	uxTCBNumber;		/*< This is used for tracing the scheduler and making debugging easier only. */
+		unsigned portBASE_TYPE	uxTCBNumber;	/*< This is used for tracing the scheduler and making debugging easier only. */
 	#endif	
 		
 	#if ( configUSE_MUTEXES == 1 )
-		unsigned portBASE_TYPE uxBasePriority;
+		unsigned portBASE_TYPE uxBasePriority;	/*< The priority last assigned to the task - used by the priority inheritance mechanism. */
 	#endif
 
 	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
 		pdTASK_HOOK_CODE pxTaskTag;
+	#endif
+
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+		unsigned portLONG ulRunTimeCounter;	 		/*< Used for calculating how much CPU time each task is utilising. */
 	#endif
 		
 } tskTCB;
@@ -144,6 +148,14 @@ static volatile portBASE_TYPE xMissedYield						= ( portBASE_TYPE ) pdFALSE;
 static volatile portBASE_TYPE xNumOfOverflows					= ( portBASE_TYPE ) 0;
 static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned portBASE_TYPE ) 0;
 
+#if ( configGENERATE_RUN_TIME_STATS == 1 )
+
+	static portCHAR pcStatsString[ 50 ];
+	static unsigned portLONG ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
+	static void prvGenerateRunTimeStatsForTasksInList( const signed portCHAR *pcWriteBuffer, xList *pxList, unsigned portLONG ulTotalRunTime );
+
+#endif
+
 /* Debugging and trace facilities private variables and macros. ------------*/
 
 /*
@@ -172,6 +184,7 @@ static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned portBASE_TYPE ) 0;
 	static signed portBASE_TYPE xTracing = pdFALSE;
 	static unsigned portBASE_TYPE uxPreviousTask = 255;
 	static portCHAR pcStatusString[ 50 ];
+
 #endif
 
 /*-----------------------------------------------------------*/
@@ -303,7 +316,9 @@ static portTASK_FUNCTION_PROTO( prvIdleTask, pvParameters );
  * allocated by calls to pvPortMalloc from within the tasks application code).
  */
 #if ( ( INCLUDE_vTaskDelete == 1 ) || ( INCLUDE_vTaskCleanUpResources == 1 ) )
+
 	static void prvDeleteTCB( tskTCB *pxTCB );
+
 #endif
 
 /*
@@ -826,7 +841,7 @@ tskTCB * pxNewTCB;
 			/* If null is passed in here then we are suspending ourselves. */
 			pxTCB = prvGetTCBFromHandle( pxTaskToSuspend );
 
-			traceTASK_SUSPEND( pxTaskToSuspend );
+			traceTASK_SUSPEND( pxTCB );
 
 			/* Remove task from the ready/delayed list and place in the	suspended list. */
 			vListRemove( &( pxTCB->xGenericListItem ) );
@@ -987,6 +1002,11 @@ portBASE_TYPE xReturn;
 		xSchedulerRunning = pdTRUE;
 		xTickCount = ( portTickType ) 0;
 
+		/* If configGENERATE_RUN_TIME_STATS is defined then the following
+		macro must be defined to configure the timer/counter used to generate
+		the run time counter time base. */
+		portCONFIGURE_TIMER_FOR_RUN_TIME_STATS();
+
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
 		if( xPortStartScheduler() )
@@ -1126,7 +1146,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_vTaskDelete == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) )
+#if ( configUSE_TRACE_FACILITY == 1 )
 
 	void vTaskList( signed portCHAR *pcWriteBuffer )
 	{
@@ -1165,15 +1185,88 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, tskBLOCKED_CHAR );
 			}
 
-			if( !listLIST_IS_EMPTY( &xTasksWaitingTermination ) )
+			#if( INCLUDE_vTaskDelete == 1 )
 			{
-				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xTasksWaitingTermination, tskDELETED_CHAR );
+				if( !listLIST_IS_EMPTY( &xTasksWaitingTermination ) )
+				{
+					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xTasksWaitingTermination, tskDELETED_CHAR );
+				}
+			}
+			#endif
+
+			#if ( INCLUDE_vTaskSuspend == 1 )
+			{
+				if( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+				{
+					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xSuspendedTaskList, tskSUSPENDED_CHAR );
+				}
+			}
+			#endif
+		}
+        xTaskResumeAll();
+	}
+
+#endif
+/*----------------------------------------------------------*/
+
+#if ( configGENERATE_RUN_TIME_STATS == 1 )
+
+	void vTaskGetRunTimeStats( signed portCHAR *pcWriteBuffer )
+	{
+	unsigned portBASE_TYPE uxQueue;
+	unsigned portLONG ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+
+		/* This is a VERY costly function that should be used for debug only.
+		It leaves interrupts disabled for a LONG time. */
+
+        vTaskSuspendAll();
+		{
+			/* Run through all the lists that could potentially contain a TCB,
+			generating a table of run timer percentages in the provided 
+			buffer. */
+
+			pcWriteBuffer[ 0 ] = ( signed portCHAR ) 0x00;
+			strcat( ( portCHAR * ) pcWriteBuffer, ( const portCHAR * ) "\r\n" );
+
+			uxQueue = uxTopUsedPriority + 1;
+
+			do
+			{
+				uxQueue--;
+
+				if( !listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) )
+				{
+					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), ulTotalRunTime );
+				}
+			}while( uxQueue > ( unsigned portSHORT ) tskIDLE_PRIORITY );
+
+			if( !listLIST_IS_EMPTY( pxDelayedTaskList ) )
+			{
+				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, ulTotalRunTime );
 			}
 
-			if( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+			if( !listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) )
 			{
-				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xSuspendedTaskList, tskSUSPENDED_CHAR );
+				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, ulTotalRunTime );
 			}
+
+			#if ( INCLUDE_vTaskDelete == 1 )
+			{
+				if( !listLIST_IS_EMPTY( &xTasksWaitingTermination ) )
+				{
+					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &xTasksWaitingTermination, ulTotalRunTime );
+				}
+			}
+			#endif
+
+			#if ( INCLUDE_vTaskSuspend == 1 )
+			{
+				if( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+				{
+					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &xSuspendedTaskList, ulTotalRunTime );
+				}
+			}
+			#endif
 		}
         xTaskResumeAll();
 	}
@@ -1393,6 +1486,21 @@ void vTaskIncrementTick( void )
 void vTaskSwitchContext( void )
 {
 	traceTASK_SWITCHED_OUT();
+
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+	{
+		unsigned portLONG ulTempCounter = portGET_RUN_TIME_COUNTER_VALUE();
+
+			/* Add the amount of time the task has been running to the accumulated
+			time so far.  The time the task started running was stored in 
+			ulTaskSwitchedInTime.  Note that there is no overflow protection here
+			so count values are only valid until the timer overflows.  Generally
+			this will be about 1 hour assuming a 1uS timer increment. */
+			pxCurrentTCB->ulRunTimeCounter += ( ulTempCounter - ulTaskSwitchedInTime );
+			ulTaskSwitchedInTime = ulTempCounter;
+	}
+	#endif
+
 
 	if( uxSchedulerSuspended != ( unsigned portBASE_TYPE ) pdFALSE )
 	{
@@ -1709,6 +1817,12 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * co
 		pxTCB->pxTaskTag = NULL;
 	}
 	#endif	
+
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+	{
+		pxTCB->ulRunTimeCounter = 0UL;
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -1826,6 +1940,38 @@ tskTCB *pxNewTCB;
 			usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned portCHAR * ) pxNextTCB->pxStack );
 			sprintf( pcStatusString, ( portCHAR * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxNextTCB->pcTaskName, cStatus, ( unsigned int ) pxNextTCB->uxPriority, usStackRemaining, ( unsigned int ) pxNextTCB->uxTCBNumber );
 			strcat( ( portCHAR * ) pcWriteBuffer, ( portCHAR * ) pcStatusString );
+
+		} while( pxNextTCB != pxFirstTCB );
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configGENERATE_RUN_TIME_STATS == 1 )
+
+	static void prvGenerateRunTimeStatsForTasksInList( const signed portCHAR *pcWriteBuffer, xList *pxList, unsigned portLONG ulTotalRunTime )
+	{
+	volatile tskTCB *pxNextTCB, *pxFirstTCB;
+	unsigned portLONG ulStatsAsPercentage;
+
+		/* Write the run time stats of all the TCB's in pxList into the buffer. */
+		listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
+		do
+		{
+			listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
+
+			ulStatsAsPercentage = ( 100UL * pxNextTCB->ulRunTimeCounter ) / ulTotalRunTime;
+
+			if( ulStatsAsPercentage > 0UL )
+			{
+				sprintf( pcStatsString, ( portCHAR * ) "%s\t\t\t%lu\t\t\t%lu%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter, ulStatsAsPercentage );
+			}
+			else
+			{
+				sprintf( pcStatsString, ( portCHAR * ) "%s\t\t\t%lu\t\t\t< 1%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter );
+			}
+
+			strcat( ( portCHAR * ) pcWriteBuffer, ( portCHAR * ) pcStatsString );
 
 		} while( pxNextTCB != pxFirstTCB );
 	}

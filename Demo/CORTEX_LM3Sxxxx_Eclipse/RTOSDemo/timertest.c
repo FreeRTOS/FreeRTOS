@@ -3,20 +3,20 @@
 
 	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS.org is free software; you can redistribute it and/or modify it 
+	FreeRTOS.org is free software; you can redistribute it and/or modify it
 	under the terms of the GNU General Public License (version 2) as published
 	by the Free Software Foundation and modified by the FreeRTOS exception.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 	more details.
 
-	You should have received a copy of the GNU General Public License along 
-	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59 
+	You should have received a copy of the GNU General Public License along
+	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59
 	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
-	A special exception to the GPL is included to allow you to distribute a 
+	A special exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details.
@@ -83,8 +83,12 @@ zero. */
 void Timer0IntHandler( void );
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned portLONG ulMaxJitter = 0;
+volatile unsigned portLONG ulMaxJitter = 0UL;
 
+/* Counts the total number of times that the high frequency timer has 'ticked'.
+This value is used by the run time stats function to work out what percentage
+of CPU time each task is taking. */
+volatile unsigned portLONG ulHighFrequencyTimerTicks = 0UL;
 /*-----------------------------------------------------------*/
 
 void vSetupHighFrequencyTimer( void )
@@ -97,23 +101,23 @@ unsigned long ulFrequency;
     SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER1 );
     TimerConfigure( TIMER0_BASE, TIMER_CFG_32_BIT_PER );
     TimerConfigure( TIMER1_BASE, TIMER_CFG_32_BIT_PER );
-	
+
 	/* Set the timer interrupt to be above the kernel - highest. */
 	IntPrioritySet( INT_TIMER0A, timerHIGHEST_PRIORITY );
 
 	/* Just used to measure time. */
     TimerLoadSet(TIMER1_BASE, TIMER_A, timerMAX_32BIT_VALUE );
-	
+
 	/* Ensure interrupts do not start until the scheduler is running. */
 	portDISABLE_INTERRUPTS();
-	
+
 	/* The rate at which the timer will interrupt. */
-	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
+	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;
     TimerLoadSet( TIMER0_BASE, TIMER_A, ulFrequency );
     IntEnable( INT_TIMER0A );
     TimerIntEnable( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
 
-	/* Enable both timers. */	
+	/* Enable both timers. */
     TimerEnable( TIMER0_BASE, TIMER_A );
     TimerEnable( TIMER1_BASE, TIMER_A );
 }
@@ -130,12 +134,12 @@ static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
 	ulCurrentCount = timerTIMER_1_COUNT_VALUE;
 
 	TimerIntClear( TIMER0_BASE, TIMER_TIMA_TIMEOUT );
-	
+
 	if( ulCurrentCount < ulLastCount )
-	{	
+	{
 		/* How many times has timer 1 counted since the last interrupt? */
 		ulDifference = 	ulLastCount - ulCurrentCount;
-	
+
 		/* Is this the largest difference we have measured yet? */
 		if( ulDifference > ulMaxDifference )
 		{
@@ -143,8 +147,13 @@ static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
 			ulMaxJitter = ulMaxDifference - timerEXPECTED_DIFFERENCE_VALUE;
 		}
 	}
-	
+
 	ulLastCount = ulCurrentCount;
+
+	/* Keep a count of the total number of 20KHz ticks.  This is used by the
+	run time stats functionality to calculate how much CPU time is used by
+	each task. */
+	ulHighFrequencyTimerTicks++;
 }
 
 

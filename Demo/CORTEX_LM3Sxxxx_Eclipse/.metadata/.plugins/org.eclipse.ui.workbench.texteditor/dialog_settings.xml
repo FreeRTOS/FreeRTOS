@@ -13,16 +13,16 @@
 		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="libdriver" key="selection"/>
+		<item value="TaskList" key="selection"/>
 		<list key="findhistory">
+			<item value="tasklist"/>
+			<item value="ulRunTimeCounter"/>
+			<item value="configGENERATE_RUN_TIME_STATS"/>
+			<item value="run_time"/>
 			<item value="libdriver"/>
 			<item value="luminarydrivers"/>
 			<item value="luminary"/>
 			<item value="driverlil"/>
-			<item value="main"/>
-			<item value="vOLEDTask"/>
-			<item value="cmess"/>
-			<item value="cPassM"/>
 		</list>
 		<list key="replacehistory">
 			<item value="prvCopyDataToQueue"/>

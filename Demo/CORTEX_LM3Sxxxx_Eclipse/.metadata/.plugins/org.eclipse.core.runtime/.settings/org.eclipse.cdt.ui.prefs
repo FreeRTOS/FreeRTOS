@@ -1,9 +1,11 @@
-#Thu Aug 23 20:22:58 BST 2007
+#Tue May 19 14:04:10 BST 2009
 useQuickDiffPrefPage=true
 closeBrackets=false
 ensureNewlineAtEOF=true
 useAnnotationsPrefPage=true
+spelling_locale=en_GB
 closeAngularBrackets=false
+spelling_locale_initialized=true
 eclipse.preferences.version=1
 org.eclipse.cdt.ui.text.templates.custom=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
 hoverModifierMasks=org.eclipse.cdt.ui.BestMatchHover;0;org.eclipse.cdt.ui.CSourceHover;131072;org.eclipse.cdt.debug.internal.ui.editors.DebugTextHover;0;org.eclipse.cdt.ui.CDocHover;0;org.eclipse.cdt.ui.AnnotationHover;0;

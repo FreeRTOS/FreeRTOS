@@ -4,6 +4,19 @@
 <scannerInfo id="org.eclipse.cdt.make.core.discoveredScannerInfo">
 <instance id="0.1109417601">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/CORTEX_LM3Sxxxx_Eclipse/RTOSDemo"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Source/include"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Source/portable/GCC/ARM_CM3"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/Common/include"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/Common/ethernet/uIP/uip-1.0/uip"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/CORTEX_LM3Sxxxx_Eclipse/RTOSDemo/webserver"/>
+<includePath path="C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/Common/drivers/LuminaryMicro"/>
+<includePath path="c:\devtools\codesourcery\sourcery g++ lite arm\bin\../lib/gcc/arm-none-eabi/4.3.2/include"/>
+<includePath path="c:\devtools\codesourcery\sourcery g++ lite arm\bin\../lib/gcc/arm-none-eabi/4.3.2/include-fixed"/>
+<includePath path="c:\devtools\codesourcery\sourcery g++ lite arm\bin\../lib/gcc/arm-none-eabi/4.3.2/../../../../arm-none-eabi/include"/>
+<includePath path="c:/devtools/codesourcery/sourcery g++ lite arm/lib/gcc/../../lib/gcc/arm-none-eabi/4.3.2/include"/>
+<includePath path="c:/devtools/codesourcery/sourcery g++ lite arm/lib/gcc/../../lib/gcc/arm-none-eabi/4.3.2/include-fixed"/>
+<includePath path="c:/devtools/codesourcery/sourcery g++ lite arm/lib/gcc/../../lib/gcc/arm-none-eabi/4.3.2/../../../../arm-none-eabi/include"/>
 <includePath path="c:/devtools/codesourcery/sourcery g++ lite/bin/../lib/gcc/arm-none-eabi/4.2.0/include"/>
 <includePath path="c:/devtools/codesourcery/sourcery g++ lite/bin/../lib/gcc/arm-none-eabi/4.2.0/include-fixed"/>
 <includePath path="c:/devtools/codesourcery/sourcery g++ lite/bin/../lib/gcc/arm-none-eabi/4.2.0/../../../../arm-none-eabi/include"/>
@@ -14,7 +27,9 @@
 <definedSymbol symbol="__STDC_HOSTED__=1"/>
 <definedSymbol symbol="__GNUC__=4"/>
 <definedSymbol symbol="__GNUC_MINOR__=2"/>
+<definedSymbol symbol="__GNUC_MINOR__=3"/>
 <definedSymbol symbol="__GNUC_PATCHLEVEL__=0"/>
+<definedSymbol symbol="__GNUC_PATCHLEVEL__=2"/>
 <definedSymbol symbol="__SIZE_TYPE__=unsigned int"/>
 <definedSymbol symbol="__PTRDIFF_TYPE__=int"/>
 <definedSymbol symbol="__WCHAR_TYPE__=unsigned int"/>
@@ -97,6 +112,7 @@
 <definedSymbol symbol="__REGISTER_PREFIX__"/>
 <definedSymbol symbol="__USER_LABEL_PREFIX__"/>
 <definedSymbol symbol="__VERSION__=&quot;4.2.0 20070413 (prerelease)&quot;"/>
+<definedSymbol symbol="__VERSION__=&quot;4.3.2&quot;"/>
 <definedSymbol symbol="__GNUC_GNU_INLINE__=1"/>
 <definedSymbol symbol="__NO_INLINE__=1"/>
 <definedSymbol symbol="__FINITE_MATH_ONLY__=0"/>
@@ -112,6 +128,30 @@
 <definedSymbol symbol="__GXX_TYPEINFO_EQUALITY_INLINE=0"/>
 <definedSymbol symbol="__ELF__=1"/>
 <definedSymbol symbol="__USES_INITFINI__=1"/>
+<definedSymbol symbol="GCC_ARMCM3_LM3S102=1"/>
+<definedSymbol symbol="inline="/>
+<definedSymbol symbol="PACK_STRUCT_END=__attribute\(\(packed\)\)"/>
+<definedSymbol symbol="ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\)"/>
+<definedSymbol symbol="sprintf=usprintf"/>
+<definedSymbol symbol="snprintf=usnprintf"/>
+<definedSymbol symbol="printf=uipprintf"/>
+<definedSymbol symbol="__OPTIMIZE__=1"/>
+<definedSymbol symbol="__SIZEOF_INT__=4"/>
+<definedSymbol symbol="__SIZEOF_LONG__=4"/>
+<definedSymbol symbol="__SIZEOF_LONG_LONG__=8"/>
+<definedSymbol symbol="__SIZEOF_SHORT__=2"/>
+<definedSymbol symbol="__SIZEOF_FLOAT__=4"/>
+<definedSymbol symbol="__SIZEOF_DOUBLE__=8"/>
+<definedSymbol symbol="__SIZEOF_LONG_DOUBLE__=8"/>
+<definedSymbol symbol="__SIZEOF_SIZE_T__=4"/>
+<definedSymbol symbol="__SIZEOF_WCHAR_T__=4"/>
+<definedSymbol symbol="__SIZEOF_WINT_T__=4"/>
+<definedSymbol symbol="__SIZEOF_PTRDIFF_T__=4"/>
+<definedSymbol symbol="__SIZEOF_POINTER__=4"/>
+<definedSymbol symbol="__thumb__=1"/>
+<definedSymbol symbol="__thumb2__=1"/>
+<definedSymbol symbol="__THUMBEL__=1"/>
+<definedSymbol symbol="__ARM_ARCH_7M__=1"/>
 </collector>
 </instance>
 </scannerInfo>

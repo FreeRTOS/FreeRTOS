@@ -3,20 +3,20 @@
 
 	This file is part of the FreeRTOS.org distribution.
 
-	FreeRTOS.org is free software; you can redistribute it and/or modify it 
+	FreeRTOS.org is free software; you can redistribute it and/or modify it
 	under the terms of the GNU General Public License (version 2) as published
 	by the Free Software Foundation and modified by the FreeRTOS exception.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 	more details.
 
-	You should have received a copy of the GNU General Public License along 
-	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59 
+	You should have received a copy of the GNU General Public License along
+	with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59
 	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
-	A special exception to the GPL is included to allow you to distribute a 
+	A special exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  See the licensing section
 	of http://www.FreeRTOS.org for full details.
@@ -69,7 +69,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V5.1.0"
+#define tskKERNEL_VERSION_NUMBER "V5.2.0"
 
 /**
  * task. h
@@ -219,13 +219,13 @@ typedef struct xTIME_OUT
  {
  static unsigned char ucParameterToPass;
  xTaskHandle xHandle;
-		
+
      // Create the task, storing the handle.  Note that the passed parameter ucParameterToPass
      // must exist for the lifetime of the task, so in this case is declared static.  If it was just an
      // an automatic stack variable it might no longer exist, or at least have been corrupted, by the time
      // the new time attempts to access it.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, &ucParameterToPass, tskIDLE_PRIORITY, &xHandle );
-		
+
      // Use the handle to delete the task.
      vTaskDelete( xHandle );
  }
@@ -263,10 +263,10 @@ signed portBASE_TYPE xTaskCreate( pdTASK_CODE pvTaskCode, const signed portCHAR 
  void vOtherFunction( void )
  {
  xTaskHandle xHandle;
-		
+
      // Create the task, storing the handle.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, NULL, tskIDLE_PRIORITY, &xHandle );
-		
+
      // Use the handle to delete the task.
      vTaskDelete( xHandle );
  }
@@ -295,15 +295,15 @@ void vTaskDelete( xTaskHandle pxTask );
  *
  *
  * vTaskDelay() specifies a time at which the task wishes to unblock relative to
- * the time at which vTaskDelay() is called.  For example, specifying a block 
- * period of 100 ticks will cause the task to unblock 100 ticks after 
+ * the time at which vTaskDelay() is called.  For example, specifying a block
+ * period of 100 ticks will cause the task to unblock 100 ticks after
  * vTaskDelay() is called.  vTaskDelay() does not therefore provide a good method
- * of controlling the frequency of a cyclical task as the path taken through the 
- * code, as well as other task and interrupt activity, will effect the frequency 
- * at which vTaskDelay() gets called and therefore the time at which the task 
- * next executes.  See vTaskDelayUntil() for an alternative API function designed 
- * to facilitate fixed frequency execution.  It does this by specifying an 
- * absolute time (rather than a relative time) at which the calling task should 
+ * of controlling the frequency of a cyclical task as the path taken through the
+ * code, as well as other task and interrupt activity, will effect the frequency
+ * at which vTaskDelay() gets called and therefore the time at which the task
+ * next executes.  See vTaskDelayUntil() for an alternative API function designed
+ * to facilitate fixed frequency execution.  It does this by specifying an
+ * absolute time (rather than a relative time) at which the calling task should
  * unblock.
  *
  * @param xTicksToDelay The amount of time, in tick periods, that
@@ -409,10 +409,10 @@ void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTim
  void vAFunction( void )
  {
  xTaskHandle xHandle;
-		
+
      // Create a task, storing the handle.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, NULL, tskIDLE_PRIORITY, &xHandle );
-		
+
      // ...
 
      // Use the handle to obtain the priority of the created task.
@@ -459,7 +459,7 @@ unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask );
  void vAFunction( void )
  {
  xTaskHandle xHandle;
-		
+
      // Create a task, storing the handle.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, NULL, tskIDLE_PRIORITY, &xHandle );
 
@@ -501,22 +501,22 @@ void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority 
  void vAFunction( void )
  {
  xTaskHandle xHandle;
-		
+
      // Create a task, storing the handle.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, NULL, tskIDLE_PRIORITY, &xHandle );
-		
+
      // ...
 
      // Use the handle to suspend the created task.
      vTaskSuspend( xHandle );
 
      // ...
-		
+
      // The created task will not run during this period, unless
      // another task calls vTaskResume( xHandle ).
-		
+
      //...
-		
+
 
      // Suspend ourselves.
      vTaskSuspend( NULL );
@@ -550,22 +550,22 @@ void vTaskSuspend( xTaskHandle pxTaskToSuspend );
  void vAFunction( void )
  {
  xTaskHandle xHandle;
-		
+
      // Create a task, storing the handle.
      xTaskCreate( vTaskCode, "NAME", STACK_SIZE, NULL, tskIDLE_PRIORITY, &xHandle );
-		
+
      // ...
 
      // Use the handle to suspend the created task.
      vTaskSuspend( xHandle );
 
      // ...
-	
+
      // The created task will not run during this period, unless
      // another task calls vTaskResume( xHandle ).
-		
+
      //...
-		
+
 
      // Resume the suspended task ourselves.
      vTaskResume( xHandle );
@@ -583,7 +583,7 @@ void vTaskResume( xTaskHandle pxTaskToResume );
  * task. h
  * <pre>void xTaskResumeFromISR( xTaskHandle pxTaskToResume );</pre>
  *
- * INCLUDE_xTaskResumeFromISR must be defined as 1 for this function to be 
+ * INCLUDE_xTaskResumeFromISR must be defined as 1 for this function to be
  * available.  See the configuration section for more information.
  *
  * An implementation of vTaskResume() that can be called from within an ISR.
@@ -701,8 +701,8 @@ void vTaskEndScheduler( void );
  * without risk of being swapped out until a call to xTaskResumeAll () has been
  * made.
  *
- * API functions that have the potential to cause a context switch (for example, 
- * vTaskDelayUntil(), xQueueSend(), etc.) must not be called while the scheduler 
+ * API functions that have the potential to cause a context switch (for example,
+ * vTaskDelayUntil(), xQueueSend(), etc.) must not be called while the scheduler
  * is suspended.
  *
  * Example usage:
@@ -837,7 +837,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void );
  * task. h
  * <PRE>void vTaskList( portCHAR *pcWriteBuffer );</PRE>
  *
- * configUSE_TRACE_FACILITY must be defined as 1 for this function to be 
+ * configUSE_TRACE_FACILITY must be defined as 1 for this function to be
  * available.  See the configuration section for more information.
  *
  * NOTE: This function will disable interrupts for its duration.  It is
@@ -865,12 +865,10 @@ void vTaskList( signed portCHAR *pcWriteBuffer );
  *
  * configGENERATE_RUN_TIME_STATS must be defined as 1 for this function
  * to be available.  The application must also then provide definitions
- * for portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and 
+ * for portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and
  * portGET_RUN_TIME_COUNTER_VALUE to configure a peripheral timer/counter
- * and return the timers current count value respectively.  A 1uS timer
- * frequency is recommended for a 32bit peripheral counter - this will
- * allow the statistics to be gathered over the first (approximately) 70
- * minutes of execution.
+ * and return the timers current count value respectively.  The counter
+ * should be at least 10 times the frequency of the tick count.
  *
  * NOTE: This function will disable interrupts for its duration.  It is
  * not intended for normal application runtime use but as a debug aid.
@@ -883,9 +881,9 @@ void vTaskList( signed portCHAR *pcWriteBuffer );
  * task into a buffer, both as an absolute count value and as a percentage
  * of the total system execution time.
  *
- * @param pcWriteBuffer A buffer into which the execution times will be 
- * written, in ascii form.  This buffer is assumed to be large enough to 
- * contain the generated report.  Approximately 40 bytes per task should 
+ * @param pcWriteBuffer A buffer into which the execution times will be
+ * written, in ascii form.  This buffer is assumed to be large enough to
+ * contain the generated report.  Approximately 40 bytes per task should
  * be sufficient.
  *
  * \page vTaskGetRunTimeStats vTaskGetRunTimeStats

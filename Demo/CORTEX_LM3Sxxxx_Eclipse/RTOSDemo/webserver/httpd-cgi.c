@@ -58,10 +58,11 @@ HTTPD_CGI_CALL(file, "file-stats", file_stats);
 HTTPD_CGI_CALL(tcp, "tcp-connections", tcp_stats);
 HTTPD_CGI_CALL(net, "net-stats", net_stats);
 HTTPD_CGI_CALL(rtos, "rtos-stats", rtos_stats );
+HTTPD_CGI_CALL(run, "run-time", run_time );
 HTTPD_CGI_CALL(io, "led-io", led_io );
 
 
-static const struct httpd_cgi_call *calls[] = { &file, &tcp, &net, &rtos, &io, NULL };
+static const struct httpd_cgi_call *calls[] = { &file, &tcp, &net, &rtos, &run, &io, NULL };
 
 /*---------------------------------------------------------------------------*/
 static
@@ -250,6 +251,29 @@ static unsigned short generate_io_state( void *arg )
 		pcStatus );
 
 	return strlen( uip_appdata );
+}
+/*---------------------------------------------------------------------------*/
+
+extern void vTaskGetRunTimeStats( signed char *pcWriteBuffer );
+static unsigned short
+generate_runtime_stats(void *arg)
+{
+	lRefreshCount++;
+	sprintf( cCountBuf, "<p><br>Refresh count = %d", lRefreshCount );
+    vTaskGetRunTimeStats( uip_appdata );
+	strcat( uip_appdata, cCountBuf );
+
+	return strlen( uip_appdata );
+}
+/*---------------------------------------------------------------------------*/
+
+
+static
+PT_THREAD(run_time(struct httpd_state *s, char *ptr))
+{
+  PSOCK_BEGIN(&s->sout);
+  PSOCK_GENERATOR_SEND(&s->sout, generate_runtime_stats, NULL);
+  PSOCK_END(&s->sout);
 }
 /*---------------------------------------------------------------------------*/
 

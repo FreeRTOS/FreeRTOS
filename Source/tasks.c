@@ -510,8 +510,6 @@ tskTCB * pxNewTCB;
 			/* If null is passed in here then we are deleting ourselves. */
 			pxTCB = prvGetTCBFromHandle( pxTaskToDelete );
 
-			traceTASK_DELETE( pxTCB );
-
 			/* Remove task from the ready list and place in the	termination list.
 			This will stop the task from be scheduled.  The idle task will check
 			the termination list and free up any memory allocated by the
@@ -534,6 +532,8 @@ tskTCB * pxNewTCB;
 			/* Increment the uxTaskNumberVariable also so kernel aware debuggers
 			can detect that the task lists need re-generating. */
 			uxTaskNumber++;
+			
+			traceTASK_DELETE( pxTCB );			
 		}
 		taskEXIT_CRITICAL();
 

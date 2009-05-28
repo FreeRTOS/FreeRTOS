@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<list key="installedFeatures">
-		<item value="com.crt.red_suite.feature:2.0.4.200905280812"/>
+		<item value="com.crt.red_suite.feature:2.0.5.200905281200"/>
 		<item value="org.eclipse.cdt:4.0.3.200802251018"/>
 		<item value="org.eclipse.cvs:1.0.2.r33x_r20080129-7C79_B_GLJwq3I9ZCD8L_"/>
 		<item value="org.eclipse.platform:3.3.3.r33x_r20080129-_19UEl7Ezk_gXF1kouft"/>
@@ -17,8 +17,8 @@
 		<item value="443" key="DIALOG_WIDTH"/>
 		<item value="true" key="BUILD_NOW"/>
 		<item value="265" key="DIALOG_Y_ORIGIN"/>
-		<item value="619" key="DIALOG_X_ORIGIN"/>
 		<item value="390" key="DIALOG_HEIGHT"/>
+		<item value="619" key="DIALOG_X_ORIGIN"/>
 		<item value="false" key="TOGGLE_SELECTED"/>
 	</section>
 </section>

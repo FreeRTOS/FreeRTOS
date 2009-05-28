@@ -5,8 +5,8 @@
 		<item value="531" key="DIALOG_X_ORIGIN"/>
 	</section>
 	<section name="org.eclipse.ui.preferences.keysPreferencePage">
-		<item value="true" key="uncategorizedFilter"/>
 		<item value="true" key="showAllField"/>
+		<item value="true" key="uncategorizedFilter"/>
 		<item value="true" key="internalFilter"/>
 		<item value="true" key="showAllConvert"/>
 		<item value="true" key="actionSetFilter"/>

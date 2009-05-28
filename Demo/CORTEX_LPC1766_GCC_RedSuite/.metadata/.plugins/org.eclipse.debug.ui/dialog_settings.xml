@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.debug.ui.LAUNCH_CONFIGURATIONS_DIALOG_SECTION">
+		<item value="821" key="DIALOG_WIDTH"/>
+		<item value="89" key="DIALOG_Y_ORIGIN"/>
+		<item value=", com.crt.ctrlcenter.idleNative2, " key="org.eclipse.debug.ui.EXPANDED_NODES"/>
+		<item value="444" key="DIALOG_X_ORIGIN"/>
+		<item value="725" key="DIALOG_HEIGHT"/>
+		<item value="237" key="org.eclipse.debug.ui.DIALOG_SASH_WEIGHTS_1"/>
+		<item value="762" key="org.eclipse.debug.ui.DIALOG_SASH_WEIGHTS_2"/>
+		<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+	</section>
+</section>

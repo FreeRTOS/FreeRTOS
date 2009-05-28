@@ -60,20 +60,20 @@
  *----------------------------------------------------------*/
 
 /* Constants used with the cRxLock and cTxLock structure members. */
-#define queueUNLOCKED							( ( signed portBASE_TYPE ) -1 )
-#define queueLOCKED_UNMODIFIED					( ( signed portBASE_TYPE ) 0 )
+#define queueUNLOCKED					( ( signed portBASE_TYPE ) -1 )
+#define queueLOCKED_UNMODIFIED			( ( signed portBASE_TYPE ) 0 )
 
-#define queueERRONEOUS_UNBLOCK					( -1 )
+#define queueERRONEOUS_UNBLOCK			( -1 )
 
 /* For internal use only. */
-#define	queueSEND_TO_BACK	( 0 )
-#define	queueSEND_TO_FRONT	( 1 )
+#define	queueSEND_TO_BACK				( 0 )
+#define	queueSEND_TO_FRONT				( 1 )
 
 /* Effectively make a union out of the xQUEUE structure. */
-#define pxMutexHolder				pcTail
-#define uxQueueType					pcHead
-#define uxRecursiveCallCount		pcReadFrom
-#define queueQUEUE_IS_MUTEX			NULL
+#define pxMutexHolder					pcTail
+#define uxQueueType						pcHead
+#define uxRecursiveCallCount			pcReadFrom
+#define queueQUEUE_IS_MUTEX				NULL
 
 /* Semaphores do not actually store or copy data, so have an items size of
 zero. */
@@ -495,7 +495,7 @@ xTimeOutType xTimeOut;
 				}
 			}
 		}
-		taskEXIT_CRITICAL();	
+		taskEXIT_CRITICAL();
 
 		/* Interrupts and other tasks can send to and receive from the queue
 		now the critical section has been exited. */
@@ -507,7 +507,7 @@ xTimeOutType xTimeOut;
 		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 		{
 			if( prvIsQueueFull( pxQueue ) )
-			{		
+			{
 				traceBLOCKING_ON_QUEUE_SEND( pxQueue );
 				vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 
@@ -532,7 +532,7 @@ xTimeOutType xTimeOut;
 			{
 				/* Try again. */
 				prvUnlockQueue( pxQueue );
-				( void ) xTaskResumeAll();			
+				( void ) xTaskResumeAll();
 			}
 		}
 		else
@@ -594,14 +594,14 @@ xTimeOutType xTimeOut;
 					}
 				}
 			}
-			taskEXIT_CRITICAL();	
+			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			{
 				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 				{
 					if( prvIsQueueFull( pxQueue ) )
-					{				
+					{
 						traceBLOCKING_ON_QUEUE_SEND( pxQueue );
 						vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
 						taskYIELD();
@@ -714,7 +714,7 @@ xTimeOutType xTimeOut;
 				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
 				{
 					if( prvIsQueueEmpty( pxQueue ) )
-					{				
+					{
 						traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
 
 						#if ( configUSE_MUTEXES == 1 )
@@ -815,7 +815,7 @@ signed portCHAR *pcOriginalReadPosition;
 		taskENTER_CRITICAL();
 		{
   			/* Is there data in the queue now?  To be running we must be
-  			the highest priority task wanting to access the queue. */		
+  			the highest priority task wanting to access the queue. */
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
 				/* Remember our read position in case we are just peeking. */
@@ -880,7 +880,7 @@ signed portCHAR *pcOriginalReadPosition;
 				if( xTicksToWait == ( portTickType ) 0 )
 				{
 					/* The queue was empty and no block time is specified (or
-					the block time has expired) so leave now. */				
+					the block time has expired) so leave now. */
 					taskEXIT_CRITICAL();
 					traceQUEUE_RECEIVE_FAILED( pxQueue );
 					return errQUEUE_EMPTY;
@@ -888,7 +888,7 @@ signed portCHAR *pcOriginalReadPosition;
 				else if( xEntryTimeSet == pdFALSE )
 				{
 					/* The queue was empty and a block time was specified so
-					configure the timeout structure. */				
+					configure the timeout structure. */
 					vTaskSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}

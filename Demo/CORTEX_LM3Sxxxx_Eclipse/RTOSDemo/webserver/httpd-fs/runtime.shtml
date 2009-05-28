@@ -9,7 +9,7 @@
 <br><p>
 <hr>
 <br><p>
-<h2>Task statistics</h2>
+<h2>Run-time statistics</h2>
 Page will refresh every 2 seconds.<p>
 <font face="courier"><pre>Task            Abs Time      % Time<br>****************************************<br>
 %! run-time

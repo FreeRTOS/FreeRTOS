@@ -43,16 +43,18 @@ static unsigned short SwapBytes(unsigned short Data)
 void write_PHY (int PhyReg, int Value)
 {
   unsigned int tout;
+  const unsigned int uiMaxTime = 10;
 
   MAC_MADR = DP83848C_DEF_ADR | PhyReg;
   MAC_MWTD = Value;
 
   /* Wait utill operation completed */
   tout = 0;
-  for (tout = 0; tout < MII_WR_TOUT; tout++) {
+  for (tout = 0; tout < uiMaxTime; tout++) {
     if ((MAC_MIND & MIND_BUSY) == 0) {
       break;
     }
+    vTaskDelay( 2 );
   }
 }
 
@@ -61,16 +63,18 @@ void write_PHY (int PhyReg, int Value)
 unsigned short read_PHY (unsigned char PhyReg) 
 {
   unsigned int tout;
+  const unsigned int uiMaxTime = 10;
 
   MAC_MADR = DP83848C_DEF_ADR | PhyReg;
   MAC_MCMD = MCMD_READ;
 
   /* Wait until operation completed */
   tout = 0;
-  for (tout = 0; tout < MII_RD_TOUT; tout++) {
+  for (tout = 0; tout < uiMaxTime; tout++) {
     if ((MAC_MIND & MIND_BUSY) == 0) {
       break;
     }
+    vTaskDelay( 2 );
   }
   MAC_MCMD = 0;
   return (MAC_MRDD);
@@ -135,15 +139,15 @@ portBASE_TYPE xReturn = pdPASS;
   PINSEL3 = (PINSEL3 & ~0x0000000F) | 0x00000005;
 
   /* Power Up the EMAC controller. */
-  PCONP |= 0x40000000;
-  vTaskDelay( 1 );
+  PCONP |= PCONP_PCENET;
+  vTaskDelay( 2 );
 
   /* Reset all EMAC internal modules. */
   MAC_MAC1 = MAC1_RES_TX | MAC1_RES_MCS_TX | MAC1_RES_RX | MAC1_RES_MCS_RX | MAC1_SIM_RES | MAC1_SOFT_RES;
-  MAC_COMMAND = CR_REG_RES | CR_TX_RES | CR_RX_RES;
+  MAC_COMMAND = CR_REG_RES | CR_TX_RES | CR_RX_RES | CR_PASS_RUNT_FRM;
 
   /* A short delay after reset. */
-  vTaskDelay( 1 );
+  vTaskDelay( 2 );
 
   /* Initialize MAC control registers. */
   MAC_MAC1 = MAC1_PASS_ALL;
@@ -157,9 +161,10 @@ portBASE_TYPE xReturn = pdPASS;
 
   /* Reset Reduced MII Logic. */
   MAC_SUPP = SUPP_RES_RMII;
+  vTaskDelay( 2 );
   MAC_SUPP = 0;
 
-  /* Put the DP83848C in reset mode */
+  /* Put the PHY in reset mode */
   write_PHY (PHY_REG_BMCR, 0x8000);
   write_PHY (PHY_REG_BMCR, 0x8000);
 
@@ -173,6 +178,21 @@ portBASE_TYPE xReturn = pdPASS;
     }
   }
 
+  /* Set the Ethernet MAC Address registers */
+  MAC_SA0 = (emacETHADDR0 << 8) | emacETHADDR1;
+  MAC_SA1 = (emacETHADDR2 << 8) | emacETHADDR3;
+  MAC_SA2 = (emacETHADDR4 << 8) | emacETHADDR5;
+
+  /* Initialize Tx and Rx DMA Descriptors */
+  rx_descr_init ();
+  tx_descr_init ();
+
+  /* Receive Broadcast and Perfect Match Packets */
+  MAC_RXFILTERCTRL = RFC_UCAST_EN | RFC_BCAST_EN | RFC_PERFECT_EN;
+
+  /* Create the semaphore used ot wake the uIP task. */
+  vSemaphoreCreateBinary( xEMACSemaphore );  
+  
   /* Check if this is a DP83848C PHY. */
   id1 = read_PHY (PHY_REG_IDR1);
   id2 = read_PHY (PHY_REG_IDR2);
@@ -234,21 +254,6 @@ portBASE_TYPE xReturn = pdPASS;
       /* 100MBit mode. */
       MAC_SUPP = SUPP_SPEED;
     }
-
-    /* Set the Ethernet MAC Address registers */
-    MAC_SA0 = (emacETHADDR0 << 8) | emacETHADDR1;
-    MAC_SA1 = (emacETHADDR2 << 8) | emacETHADDR3;
-    MAC_SA2 = (emacETHADDR4 << 8) | emacETHADDR5;
-
-    /* Initialize Tx and Rx DMA Descriptors */
-    rx_descr_init ();
-    tx_descr_init ();
-
-    /* Receive Broadcast and Perfect Match Packets */
-    MAC_RXFILTERCTRL = RFC_UCAST_EN | RFC_BCAST_EN | RFC_PERFECT_EN;
-
-    /* Create the semaphore used ot wake the uIP task. */
-    vSemaphoreCreateBinary( xEMACSemaphore );
 
     /* Reset all interrupts */
     MAC_INTCLEAR  = 0xFFFF;

@@ -72,20 +72,6 @@
 #include "core_cm3.h"
 /*-----------------------------------------------------------*/
 
-/* MAC address configuration. */
-#define uipMAC_ADDR0	0x00
-#define uipMAC_ADDR1	0x12
-#define uipMAC_ADDR2	0x13
-#define uipMAC_ADDR3	0x10
-#define uipMAC_ADDR4	0x15
-#define uipMAC_ADDR5	0x11
-
-/* IP address configuration. */
-#define uipIP_ADDR0		192
-#define uipIP_ADDR1		168
-#define uipIP_ADDR2		0
-#define uipIP_ADDR3		200	
-
 /* How long to wait before attempting to connect the MAC again. */
 #define uipINIT_WAIT    100
 
@@ -150,8 +136,10 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	timer_set( &periodic_timer, configTICK_RATE_HZ / 2 );
 	timer_set( &arp_timer, configTICK_RATE_HZ * 10 );
 	uip_init();
-	uip_ipaddr( xIPAddr, uipIP_ADDR0, uipIP_ADDR1, uipIP_ADDR2, uipIP_ADDR3 );
+	uip_ipaddr( xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
 	uip_sethostaddr( xIPAddr );
+	uip_ipaddr( xIPAddr, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 );
+	uip_setnetmask( xIPAddr );	
 	httpd_init();
 
 	/* Initialise the MAC. */
@@ -277,12 +265,12 @@ static void prvSetMACAddress( void )
 struct uip_eth_addr xAddr;
 
 	/* Configure the MAC address in the uIP stack. */
-	xAddr.addr[ 0 ] = uipMAC_ADDR0;
-	xAddr.addr[ 1 ] = uipMAC_ADDR1;
-	xAddr.addr[ 2 ] = uipMAC_ADDR2;
-	xAddr.addr[ 3 ] = uipMAC_ADDR3;
-	xAddr.addr[ 4 ] = uipMAC_ADDR4;
-	xAddr.addr[ 5 ] = uipMAC_ADDR5;
+	xAddr.addr[ 0 ] = configMAC_ADDR0;
+	xAddr.addr[ 1 ] = configMAC_ADDR1;
+	xAddr.addr[ 2 ] = configMAC_ADDR2;
+	xAddr.addr[ 3 ] = configMAC_ADDR3;
+	xAddr.addr[ 4 ] = configMAC_ADDR4;
+	xAddr.addr[ 5 ] = configMAC_ADDR5;
 	uip_setethaddr( xAddr );
 }
 /*-----------------------------------------------------------*/

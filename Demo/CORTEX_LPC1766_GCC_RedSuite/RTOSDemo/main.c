@@ -69,7 +69,6 @@
 
 /* Demo app includes. */
 #include "BlockQ.h"
-#include "death.h"
 #include "integer.h"
 #include "blocktim.h"
 #include "flash.h"
@@ -162,13 +161,8 @@ long l;
 	xLCDQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( xLCDMessage ) );
 
 	/* Start the tasks defined within this file/specific to this demo. */
-	xTaskCreate( vLCDTask, ( signed portCHAR * ) "LCD", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+	xTaskCreate( vLCDTask, ( signed portCHAR * ) "LCD", configMINIMAL_STACK_SIZE * 2, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
     
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
-    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-
     /* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -292,6 +286,7 @@ void vConfigureTimerForRunTimeStats( void )
 void vLCDTask( void *pvParameters )
 {
 xLCDMessage xMessage;
+char cIPAddr[ 17 ]; /* To fit max IP address length of xxx.xxx.xxx.xxx\0 */
 
 	( void ) pvParameters;
 
@@ -301,6 +296,9 @@ xLCDMessage xMessage;
     LCD_cls();    
     LCD_gotoxy( 1, 1 );
     LCD_puts( "www.FreeRTOS.org" );
+    LCD_gotoxy( 1, 2 );
+    sprintf( cIPAddr, "%d.%d.%d.%d", configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
+    LCD_puts( cIPAddr );
 
 	for( ;; )
 	{

@@ -108,7 +108,6 @@ FreeRTOS_OBJS=			$(OUTPUT_DIR)/port.o \
 # The demo app source files.
 Demo_OBJS=				$(OUTPUT_DIR)/main.o \
 						$(OUTPUT_DIR)/BlockQ.o \
-						$(OUTPUT_DIR)/death.o \
 						$(OUTPUT_DIR)/integer.o \
 						$(OUTPUT_DIR)/PollQ.o \
 						$(OUTPUT_DIR)/semtest.o \

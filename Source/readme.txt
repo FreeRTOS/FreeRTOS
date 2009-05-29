@@ -3,7 +3,9 @@ components and are common to every port, and one or more files that are
 specific to a particular microcontroller and or compiler.
 
 + The FreeRTOS/Source directory contains the three files that are common to 
-every port.  The kernel is contained within these three files.
+every port - list.c, queue.c and tasks.c.  The kernel is contained within these 
+three files.  croutine.c implements the options co-routine functionality - which
+is normally only used on very memory limited systems.
 
 + The FreeRTOS/Source/Portable directory contains the files that are specific to 
 a particular microcontroller and or compiler.

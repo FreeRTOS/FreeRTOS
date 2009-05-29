@@ -1851,8 +1851,10 @@ uip_process(u8_t flag)
   BUF->tcpchksum = 0;
   BUF->tcpchksum = ~(uip_tcpchksum());
 
+#if UIP_UDP  
  ip_send_nolen:
-
+#endif /* UIP_UDP */
+ 
 #if UIP_CONF_IPV6
   BUF->vtc = 0x60;
   BUF->tcflow = 0x00;

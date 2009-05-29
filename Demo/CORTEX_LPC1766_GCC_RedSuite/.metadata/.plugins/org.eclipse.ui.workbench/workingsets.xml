@@ -28,6 +28,7 @@
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS/queue.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOS/tasks.c" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/FreeRTOSConfig.h" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/LCD" type="2"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/LPC17xx.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/LPC17xx_defs.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/core_cm3.h" type="1"/>
@@ -37,6 +38,7 @@
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/system_LPC17xx.h" type="1"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/uIP" type="2"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/webserver" type="2"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/LED.c" type="1"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/RTOSDemo/Makefile" type="1"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/RTOSDemo/rtosdemo_lpc1766.ld" type="1"/>
 </workingSet>

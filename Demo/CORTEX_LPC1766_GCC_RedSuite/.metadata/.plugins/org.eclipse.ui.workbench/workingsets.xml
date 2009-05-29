@@ -39,6 +39,7 @@
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/uIP" type="2"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/webserver" type="2"/>
 <item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/LED.c" type="1"/>
+<item factoryID="org.eclipse.cdt.ui.PersistableCElementFactory" path="/RTOSDemo/LED.h" type="1"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/RTOSDemo/Makefile" type="1"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/RTOSDemo/rtosdemo_lpc1766.ld" type="1"/>
 </workingSet>

@@ -50,7 +50,39 @@
 */
 
 
-
+/*
+ * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * documentation provides more details of the standard demo application tasks
+ * (which just exist to test the kernel port and provide an example of how to use
+ * each FreeRTOS API function).
+ * 
+ * In addition to the standard demo tasks, the following tasks and tests are
+ * defined and/or created within this file:
+ *
+ * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
+ * is permitted to access the display directly.  Other tasks wishing to write a
+ * message to the LCD send the message on a queue to the LCD task instead of
+ * accessing the LCD themselves.  The LCD task just blocks on the queue waiting
+ * for messages - waking and displaying the messages as they arrive.  The use
+ * of a gatekeeper in this manner permits both tasks and interrupts to write to 
+ * the LCD without worrying about mutual exclusion.  This is demonstrated by the 
+ * check hook (see below) which sends messages to the display even though it 
+ * executes from an interrupt context.
+ *
+ * "Check" hook -  This only executes fully every five seconds from the tick 
+ * hook.  Its main function is to check that all the standard demo tasks are 
+ * still operational.  Should any unexpected behaviour be discovered within a 
+ * demo task then the tick hook will write an error to the LCD (via the LCD task).  
+ * If all the demo tasks are executing with their expected behaviour then the 
+ * check task writes PASS to the LCD (again via the LCD task), as described above.
+ *
+ * LED tasks - These just demonstrate how multiple instances of a single task
+ * definition can be created.  Each LED task simply toggles an LED.  The task
+ * parameter is used to pass the number of the LED to be toggled into the task.
+ * 
+ * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
+ * processing is performed in this task.
+ */
 
 /* Standard includes. */
 #include <stdio.h>
@@ -64,9 +96,6 @@
 /* Hardware library includes. */
 #include "LPC17xx_defs.h"
 
-
-#define NUM_LEDS	8
-
 /* Demo app includes. */
 #include "BlockQ.h"
 #include "integer.h"
@@ -79,8 +108,12 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "lcd/portlcd.h"
+#include "LED.h"
 
 /*-----------------------------------------------------------*/
+
+/* The number of LED tasks that will be created. */
+#define mainNUM_LED_TASKS					( 6 )
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
@@ -88,30 +121,26 @@ tick hook. */
 
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
+#define mainUIP_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define mainLCD_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
-/* The period of the system clock in nano seconds.  This is used to calculate
-the jitter time in nano seconds. */
-#define mainNS_PER_CLOCK					( ( unsigned portLONG ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
-
+/* The WEB server has a larger stack as it utilises stack hungry string
+handling library calls. */
 #define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 4 )
+
+/* The length of the queue used to send messages to the LCD task. */
 #define mainQUEUE_SIZE						( 3 )
+
 /*-----------------------------------------------------------*/
 
 /*
  * Configure the hardware for the demo.
  */
 static void prvSetupHardware( void );
-
-/*
- * Simply toggles the indicated LED.
- */
-static void vToggleLED( unsigned portBASE_TYPE uxLED );
 
 /*
  * Very simple task that toggles an LED.
@@ -124,10 +153,17 @@ static void vLEDTask( void *pvParameters );
  */
 extern void vuIP_Task( void *pvParameters );
 
+/*
+ * The LCD gatekeeper task as described in the comments at the top of this file. 
+ * */
 static void vLCDTask( void *pvParameters );
+
+/*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
 xQueueHandle xLCDQueue;
+
+
 
 /*-----------------------------------------------------------*/
 
@@ -135,9 +171,11 @@ int main( void )
 {
 long l;
 
+	/* Configure the hardware for use by this demo. */
 	prvSetupHardware();
 
-	/* Start the standard demo tasks. */
+	/* Start the standard demo tasks.  These are just here to exercise the
+	kernel port and provide examples of how the FreeRTOS API can be used. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
     vCreateBlockTimeTasks();
     vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
@@ -147,34 +185,36 @@ long l;
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
 
-	/* Start 8 tasks, each of which toggles a different LED at a different rate. */
-	for( l = 0; l < NUM_LEDS; l++ )
+	/* Start the tasks that toggle LEDs - the LED to toggle is passed in as the
+	task parameter. */
+	for( l = 0; l < mainNUM_LED_TASKS; l++ )
 	{
-		xTaskCreate( vLEDTask, (signed char *) "LED", configMINIMAL_STACK_SIZE, ( void * ) l, tskIDLE_PRIORITY+1, NULL );
+		xTaskCreate( vLEDTask, (signed char *) "LED", configMINIMAL_STACK_SIZE, ( void * ) l, tskIDLE_PRIORITY, NULL );
 	}
     
-	/* Create the uIP task.  This uses the lwIP RTOS abstraction layer.*/
-    xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+	/* Create the uIP task.  The WEB server runs in this task. */
+    xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL );
 	
 	/* Create the queue used by the LCD task.  Messages for display on the LCD
 	are received via this queue. */
 	xLCDQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( xLCDMessage ) );
 
-	/* Start the tasks defined within this file/specific to this demo. */
-	xTaskCreate( vLCDTask, ( signed portCHAR * ) "LCD", configMINIMAL_STACK_SIZE * 2, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+	/* Start the LCD gatekeeper task - as described in the comments at the top
+	of this file. */
+	xTaskCreate( vLCDTask, ( signed portCHAR * ) "LCD", configMINIMAL_STACK_SIZE * 2, NULL, mainLCD_TASK_PRIORITY, NULL );
     
     /* Start the scheduler. */
 	vTaskStartScheduler();
 
     /* Will only get here if there was insufficient memory to create the idle
-    task. */
+    task.  The idle task is created within vTaskStartScheduler(). */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 static void vLEDTask( void *pvParameters ) 
 {
-/* The LED to toggle is passed in as the task paramter. */
+/* The LED to toggle is passed in as the task parameter. */
 long lLED = ( long ) pvParameters;
 unsigned long ulLEDToToggle = 1 << lLED;
 
@@ -183,46 +223,149 @@ unsigned long ulDelayPeriod = 100 * ( lLED + 1 );
 
 	for( ;; )
 	{
+		/* Delay for the calculated time. */
 		vTaskDelay( ulDelayPeriod );
+		
+		/* Toggle the LED before going back to delay again. */
 		vToggleLED( ulLEDToToggle );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void vToggleLED( unsigned portBASE_TYPE uxLED )
+void vLCDTask( void *pvParameters )
 {
-	if( FIO2PIN & uxLED )
+xLCDMessage xMessage;
+unsigned long ulRow = 0;
+char cIPAddr[ 17 ]; /* To fit max IP address length of xxx.xxx.xxx.xxx\0 */
+
+	( void ) pvParameters;
+
+	/* The LCD gatekeeper task as described in the comments at the top of this
+	file. */
+	
+	/* Initialise the LCD and display a startup message that includes the
+	configured IP address. */
+	LCD_init();
+	LCD_cur_off();
+    LCD_cls();    
+    LCD_gotoxy( 1, 1 );
+    LCD_puts( "www.FreeRTOS.org" );
+    LCD_gotoxy( 1, 2 );
+    sprintf( cIPAddr, "%d.%d.%d.%d", configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
+    LCD_puts( cIPAddr );
+
+	for( ;; )
 	{
-		FIO2CLR = uxLED;
+		/* Wait for a message to arrive to be displayed. */
+		while( xQueueReceive( xLCDQueue, &xMessage, portMAX_DELAY ) != pdPASS );
+		
+		/* Clear the old message. */
+		LCD_cls();
+		
+		/* Switch LCD rows, jut to make it obvious that messages are arriving. */
+		ulRow++;		
+		LCD_gotoxy( 1, ( ulRow & 0x01 ) + 1 );
+		
+		/* Display the received text. */
+		LCD_puts( xMessage.pcMessage );
 	}
-	else
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+static xLCDMessage xMessage = { "PASS" };
+static unsigned portLONG ulTicksSinceLastDisplay = 0;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+	/* Called from every tick interrupt as described in the comments at the top
+	of this file.  
+	 
+	Have enough ticks passed to make it	time to perform our health status 
+	check again? */
+	ulTicksSinceLastDisplay++;
+	if( ulTicksSinceLastDisplay >= mainCHECK_DELAY )
 	{
-		FIO2SET = uxLED;
+		/* Reset the counter so these checks run again in mainCHECK_DELAY
+		ticks time. */
+		ulTicksSinceLastDisplay = 0;
+
+		/* Has an error been found in any task? */
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR: GEN Q";
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR: PEEK Q";
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR: BLOCK Q";
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR: BLOCK TIME";
+		}
+	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR: SEMAPHR";
+	    }
+	    else if( xArePollingQueuesStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR: POLL Q";
+	    }
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+	        xMessage.pcMessage = "ERROR: INT MATH";
+	    }
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	xMessage.pcMessage = "ERROR: REC MUTEX";
+	    }
+
+		/* Send the message to the OLED gatekeeper for display.  The
+		xHigherPriorityTaskWoken parameter is not actually used here
+		as this function is running in the tick interrupt anyway - but
+		it must still be supplied. */
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR( xLCDQueue, &xMessage, &xHigherPriorityTaskWoken );
 	}
 }
 /*-----------------------------------------------------------*/
 
 void prvSetupHardware( void )
 {
-	PCONP = 0;							/* Disable peripherals power. */
-	PCONP = PCONP_PCGPIO;				/* Enable GPIO power. */
-	PINSEL10 = 0;						/* Disable TPIU. */
+	/* Disable peripherals power. */
+	PCONP = 0;							
 	
-	PLL0CON &= ~PLLCON_PLLC;			/* Disconnect the main PLL. */
+	/* Enable GPIO power. */
+	PCONP = PCONP_PCGPIO;				
+	
+	/* Disable TPIU. */
+	PINSEL10 = 0;						
+	
+	/* Disconnect the main PLL. */
+	PLL0CON &= ~PLLCON_PLLC;			
 	PLL0FEED = PLLFEED_FEED1;
 	PLL0FEED = PLLFEED_FEED2;
 	while ((PLL0STAT & PLLSTAT_PLLC) != 0); 
 	
-	PLL0CON &= ~PLLCON_PLLE;			/* Turn off the main PLL. */
+	/* Turn off the main PLL. */
+	PLL0CON &= ~PLLCON_PLLE;			
 	PLL0FEED = PLLFEED_FEED1;
 	PLL0FEED = PLLFEED_FEED2;
 	while ((PLL0STAT & PLLSTAT_PLLE) != 0);    
 	
-	CCLKCFG = 0;						/* No CPU clock divider. */
-	SCS = 0x20;							/* OSCEN. */
+	/* No CPU clock divider. */
+	CCLKCFG = 0;
+	
+	/* OSCEN. */
+	SCS = 0x20;							
 	while ((SCS & 0x40) == 0);
 	
-	CLKSRCSEL = 1;						/* Use main oscillator. */
+	/* Use main oscillator. */
+	CLKSRCSEL = 1;						
 	PLL0CFG = (PLLCFG_MUL16 | PLLCFG_DIV1);
 	
 	PLL0FEED = PLLFEED_FEED1;
@@ -234,7 +377,8 @@ void prvSetupHardware( void )
 	PLL0FEED = PLLFEED_FEED1;
 	PLL0FEED = PLLFEED_FEED2;
 	
-	CCLKCFG = 5;						/* 6x CPU clock divider (72 MHz) */
+	/* 6x CPU clock divider (72 MHz) */
+	CCLKCFG = 5;						
 	
 	/*  Wait for the PLL to lock. */
 	while ((PLL0STAT & PLLSTAT_PLOCK) == 0);
@@ -256,6 +400,8 @@ void prvSetupHardware( void )
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
 {
+	/* This function will get called if a task overflows its stack. */
+	
 	( void ) pxTask;
 	( void ) pcTaskName;
 	
@@ -265,8 +411,17 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTask
 
 void vConfigureTimerForRunTimeStats( void )
 {
+const unsigned long TCR_COUNT_RESET = 2, CTCR_CTM_TIMER = 0x00, TCR_COUNT_ENABLE = 0x01;
+
+	/* This function configures a timer that is used as the time base when
+	collecting run time statistical information - basically the percentage
+	of CPU time that each task is utilising.  It is called automatically when
+	the scheduler is started (assuming configGENERATE_RUN_TIME_STATS is set
+	to 1. */
+	
+	/* Power up and feed the timer. */
 	PCONP |= 0x02UL;
-	_PCLKSEL0 = (_PCLKSEL0 & (~(0x3<<2))) | (0x01 << 2);
+	PCLKSEL0 = (PCLKSEL0 & (~(0x3<<2))) | (0x01 << 2);
 	
 	/* Reset Timer 0 */
 	T0TCR = TCR_COUNT_RESET;
@@ -283,32 +438,3 @@ void vConfigureTimerForRunTimeStats( void )
 }
 /*-----------------------------------------------------------*/
 
-void vLCDTask( void *pvParameters )
-{
-xLCDMessage xMessage;
-char cIPAddr[ 17 ]; /* To fit max IP address length of xxx.xxx.xxx.xxx\0 */
-
-	( void ) pvParameters;
-
-	/* Initialise the LCD and display a startup message. */
-	LCD_init();
-	LCD_cur_off();
-    LCD_cls();    
-    LCD_gotoxy( 1, 1 );
-    LCD_puts( "www.FreeRTOS.org" );
-    LCD_gotoxy( 1, 2 );
-    sprintf( cIPAddr, "%d.%d.%d.%d", configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
-    LCD_puts( cIPAddr );
-
-	for( ;; )
-	{
-		/* Wait for a message to arrive that requires displaying. */
-		while( xQueueReceive( xLCDQueue, &xMessage, portMAX_DELAY ) != pdPASS );
-		
-		/* Display the message.  Print each message to a different position. */
-		LCD_cls();
-		LCD_gotoxy( ( xMessage.xColumn & 0x07 ) + 1, ( xMessage.xColumn & 0x01 ) + 1 );
-		LCD_puts( xMessage.pcMessage );
-	}
-}
-/*-----------------------------------------------------------*/

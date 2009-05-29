@@ -54,6 +54,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "LED.h"
+
 HTTPD_CGI_CALL(file, "file-stats", file_stats);
 HTTPD_CGI_CALL(tcp, "tcp-connections", tcp_stats);
 HTTPD_CGI_CALL(net, "net-stats", net_stats);
@@ -234,35 +236,27 @@ PT_THREAD(rtos_stats(struct httpd_state *s, char *ptr))
 }
 /*---------------------------------------------------------------------------*/
 
-char *pcStatus[ 3 ];
+char *pcStatus;
 unsigned long ulString;
-extern unsigned long uxParTextGetLED( unsigned long uxLED );
 
 static unsigned short generate_io_state( void *arg )
 {
 	( void ) arg;
-	
-//	for( ulString = 0; ulString < 3; ulString++ )
-//	{
-//		if( uxParTextGetLED( ulString + 5 ) )
-//		{
-//			pcStatus[ ulString ] = "checked";
-//		}
-//		else
-//		{
-//			pcStatus[ ulString ] = "";
-//		}
-//	}
+
+	if( lGetLEDState( 1 << 7 ) == 0 )
+	{
+		pcStatus = "";
+	}
+	else
+	{
+		pcStatus = "checked";
+	}
 
 	sprintf( uip_appdata,
-		"<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED 2.5,"\
-		"<input type=\"checkbox\" name=\"LED1\" value=\"1\" %s>LED 2.6,"\
-		"<input type=\"checkbox\" name=\"LED2\" value=\"1\" %s>LED 2.7"\
+		"<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED 7"\
 		"<p>"\
 		"<input type=\"text\" name=\"LCD\" value=\"Enter LCD text\" size=\"16\">",
-		pcStatus[ 0 ], 
-		pcStatus[ 1 ], 
-		pcStatus[ 2 ] );
+		pcStatus );
 
 	return strlen( uip_appdata );
 }

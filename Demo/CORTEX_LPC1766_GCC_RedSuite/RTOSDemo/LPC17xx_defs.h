@@ -19,7 +19,9 @@
 #define SRAM_BASE_AHB         ((unsigned long)0x20000000)	// 32 Kb
 
 /* System Control Space memory map */
-#define SCS_BASE              ((unsigned long)0xE000E000)
+#ifndef SCS_BASE
+	#define SCS_BASE              ((unsigned long)0xE000E000)
+#endif
 
 #define SysTick_BASE          (SCS_BASE + 0x0010)
 #define NVIC_BASE             (SCS_BASE + 0x0100)

@@ -48,6 +48,7 @@
 	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
+
 /* Standard includes. */
 #include <string.h>
 
@@ -65,9 +66,8 @@
 
 /* Demo includes. */
 #include "emac.h"
-//#include "partest.h"
+#include "LED.h"
 
-//#include "LPC17xx_defs.h"
 #include "LPC17xx.h"
 #include "core_cm3.h"
 /*-----------------------------------------------------------*/
@@ -82,7 +82,6 @@
 #define uipTOTAL_FRAME_HEADER_SIZE	54
 
 
-#define MAC_INTENABLE       (*(volatile unsigned long *)(EMAC_BASE + 0xFE4)) /* Interrupt enable reg  */
 /*-----------------------------------------------------------*/
 
 /* 
@@ -275,12 +274,12 @@ struct uip_eth_addr xAddr;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationProcessFormInput( portCHAR *pcInputString, portBASE_TYPE xInputLength )
+void vApplicationProcessFormInput( portCHAR *pcInputString )
 {
 char *c, *pcText;
 static portCHAR cMessageForDisplay[ 32 ];
 extern xQueueHandle xLCDQueue;
-//xLCDMessage xLCDMessage;
+xLCDMessage xLCDMessage;
 
 	/* Process the form input sent by the IO page of the served HTML. */
 
@@ -290,31 +289,15 @@ extern xQueueHandle xLCDQueue;
 		/* Turn LED's on or off in accordance with the check box status. */
 		if( strstr( c, "LED0=1" ) != NULL )
 		{
-//			vParTestSetLED( 5, 0 );
+			/* Set LED7. */
+			vSetLEDState( 1 << 7, 1 );
 		}
 		else
 		{
-//			vParTestSetLED( 5, 1 );
+			/* Clear LED7. */
+			vSetLEDState( 1 << 7, 0 );
 		}		
 		
-		if( strstr( c, "LED1=1" ) != NULL )
-		{
-//			vParTestSetLED( 6, 0 );
-		}
-		else
-		{
-//			vParTestSetLED( 6, 1 );
-		}		
-
-		if( strstr( c, "LED2=1" ) != NULL )
-		{
-//			vParTestSetLED( 7, 0 );
-		}
-		else
-		{
-//			vParTestSetLED( 7, 1 );
-		}
-
 		/* Find the start of the text to be displayed on the LCD. */
         pcText = strstr( c, "LCD=" );
         pcText += strlen( "LCD=" );
@@ -336,10 +319,9 @@ extern xQueueHandle xLCDQueue;
         }
     
         /* Write the message to the LCD. */
-//		strcpy( cMessageForDisplay, pcText );
-//		xLCDMessage.xColumn = 0;
-//		xLCDMessage.pcMessage = cMessageForDisplay;
-//        xQueueSend( xLCDQueue, &xLCDMessage, portMAX_DELAY );
+		strcpy( cMessageForDisplay, pcText );
+		xLCDMessage.pcMessage = cMessageForDisplay;
+        xQueueSend( xLCDQueue, &xLCDMessage, portMAX_DELAY );
     }
 }
 

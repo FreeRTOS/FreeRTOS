@@ -52,7 +52,7 @@
 RM := rm -rf
 
 # Set the optimisation level - this should be set to 0, 1, 2, 3 or s (s for size).
-OPTIM=0
+OPTIM=1
 
 # Set the debug level
 DEBUG=-g3
@@ -118,6 +118,7 @@ Demo_OBJS=				$(OUTPUT_DIR)/main.o \
 						$(OUTPUT_DIR)/blocktim.o \
 						$(OUTPUT_DIR)/printf-stdarg.o \
 						$(OUTPUT_DIR)/cr_startup_nxp_cm3.o \
+						$(OUTPUT_DIR)/LED.o \
 						$(OUTPUT_DIR)/syscalls.o # This is just a dummy.
 						
 # The TCP/IP and WEB server files.

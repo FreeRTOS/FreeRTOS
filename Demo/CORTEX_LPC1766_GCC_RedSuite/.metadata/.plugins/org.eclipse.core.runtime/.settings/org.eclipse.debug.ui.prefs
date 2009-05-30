@@ -1,6 +1,0 @@
-#Wed May 27 15:29:53 BST 2009
-org.eclipse.debug.ui.switch_perspective_on_suspend=always
-eclipse.preferences.version=1
-preferredDetailPanes=DefaultDetailPane\:DefaultDetailPane|
-org.eclipse.debug.ui.PREF_LAUNCH_PERSPECTIVES=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<launchPerspectives/>\r\n
-org.eclipse.debug.ui.user_view_bindings=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<viewBindings>\r\n<view id\="org.eclipse.debug.ui.RegisterView">\r\n<perspective id\="org.eclipse.debug.ui.DebugPerspective" userAction\="closed"/>\r\n</view>\r\n</viewBindings>\r\n

@@ -84,10 +84,13 @@ extern "C" {
 #endif
 /*-----------------------------------------------------------*/
 
-/* Critical section definitions. */
-void portENTER_CRITICAL( void );
-#pragma aux portENTER_CRITICAL = 		"pushf" \
+/* Critical section definitions.  portENTER_CRITICAL() must be defined as a
+macro for portable.h to work properly. */
+void portLOCAL_ENTER_CRITICAL( void );
+#pragma aux portLOCAL_ENTER_CRITICAL = 	"pushf" \
 										"cli";
+#define portENTER_CRITICAL() portLOCAL_ENTER_CRITICAL()
+										
 void portEXIT_CRITICAL( void );
 #pragma aux portEXIT_CRITICAL	=		"popf";
 

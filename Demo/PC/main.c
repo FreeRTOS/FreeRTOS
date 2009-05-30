@@ -244,11 +244,18 @@ portTickType xWakeTime;
 portLONG lTimeDifference;
 const portCHAR *pcReceivedMessage;
 const portCHAR * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
+const portCHAR * const pcUnexpectedHookValueMsg = "Task hook has unexpected value!\r\n";
 
 	( void ) pvParameters;
 
 	/* Register our callback function. */
 	vTaskSetApplicationTaskTag( NULL, prvExampleTaskHook );
+	
+	/* Just for test purposes. */
+	if( xTaskGetApplicationTaskTag( NULL ) != prvExampleTaskHook )
+	{
+		vPrintDisplayMessage( &pcUnexpectedHookValueMsg );
+	}
 
 	/* Loop continuously, blocking, then checking all the other tasks are still
 	running, before blocking once again.  This task blocks on the queue of

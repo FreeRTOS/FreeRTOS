@@ -98,7 +98,7 @@ Changes between V2.6.1 and V3.0.0
 
 /* Allocate the memory for the heap.  The struct is used to force byte
 alignment without using any non-portable code. */
-static struct xRTOS_HEAP
+static union xRTOS_HEAP
 {
 	unsigned portLONG ulDummy;
 	unsigned portCHAR ucHeap[ configTOTAL_HEAP_SIZE ];

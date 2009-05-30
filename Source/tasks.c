@@ -1453,6 +1453,35 @@ void vTaskIncrementTick( void )
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
+	pdTASK_HOOK_CODE xTaskGetApplicationTaskTag( xTaskHandle xTask )
+	{
+	tskTCB *xTCB;
+	pdTASK_HOOK_CODE xReturn;
+
+		/* If xTask is NULL then we are setting our own task hook. */
+		if( xTask == NULL )
+		{
+			xTCB = ( tskTCB * ) pxCurrentTCB;
+		}
+		else
+		{
+			xTCB = ( tskTCB * ) xTask;
+		}
+
+		/* Save the hook function in the TCB.  A critical section is required as
+		the value can be accessed from an interrupt. */
+		portENTER_CRITICAL();
+			xReturn = xTCB->pxTaskTag;
+		portEXIT_CRITICAL();
+		
+		return xReturn;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+
 	portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter )
 	{
 	tskTCB *xTCB;
@@ -1778,7 +1807,12 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * const pcName, unsigned portBASE_TYPE uxPriority )
 {
 	/* Store the function name in the TCB. */
-	strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned portSHORT ) configMAX_TASK_NAME_LEN );
+	#if configMAX_TASK_NAME_LEN > 1
+	{
+		/* Don't bring strncpy into the build unnecessarily. */
+		strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned portSHORT ) configMAX_TASK_NAME_LEN );
+	}
+	#endif
 	pxTCB->pcTaskName[ ( unsigned portSHORT ) configMAX_TASK_NAME_LEN - ( unsigned portSHORT ) 1 ] = '\0';
 
 	/* This is used as an array index so must ensure it's not too large. */

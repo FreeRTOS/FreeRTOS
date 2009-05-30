@@ -957,6 +957,14 @@ void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunct
 
 /**
  * task.h
+ * <pre>void xTaskGetApplicationTaskTag( xTaskHandle xTask );</pre>
+ *
+ * Returns the pxHookFunction value assigned to the task xTask.
+ */
+pdTASK_HOOK_CODE xTaskGetApplicationTaskTag( xTaskHandle xTask );
+
+/**
+ * task.h
  * <pre>portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
  *
  * Calls the hook function associated with xTask.  Passing xTask as NULL has

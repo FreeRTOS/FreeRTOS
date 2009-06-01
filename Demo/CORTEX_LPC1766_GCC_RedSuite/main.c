@@ -377,7 +377,7 @@ void prvSetupHardware( void )
 	PLL0FEED = PLLFEED_FEED1;
 	PLL0FEED = PLLFEED_FEED2;
 	
-	/* 6x CPU clock divider (72 MHz) */
+	/* 6x CPU clock divider (64 MHz) */
 	CCLKCFG = 5;						
 	
 	/*  Wait for the PLL to lock. */
@@ -388,7 +388,7 @@ void prvSetupHardware( void )
 	PLL0FEED = PLLFEED_FEED1;
 	PLL0FEED = PLLFEED_FEED2;
 	
-	/*  Setup the peripheral bus to be the same as the PLL output (72 MHz). */
+	/*  Setup the peripheral bus to be the same as the PLL output (64 MHz). */
 	PCLKSEL0 = 0x05555555;
 
 	/* Configure LED GPIOs as outputs. */

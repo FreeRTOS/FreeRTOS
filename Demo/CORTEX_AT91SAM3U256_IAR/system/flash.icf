@@ -13,8 +13,8 @@ define symbol __ICFEDIT_region_ROM0_end__    = 0x0009FFFF;
 define symbol __ICFEDIT_region_ROM1_start__  = 0x00100000;
 define symbol __ICFEDIT_region_ROM1_end__    = 0x0011FFFF;
 /*-Sizes-*/
-define symbol __ICFEDIT_size_cstack__        = 0x800;
-define symbol __ICFEDIT_size_heap__          = 0x200;
+define symbol __ICFEDIT_size_cstack__ = 0x200;
+define symbol __ICFEDIT_size_heap__   = 0x4;
 /*-Specials-*/
 /*define symbol __ICFEDIT_region_RAM_VECT_start__ = __ICFEDIT_region_RAM0_start__;*/ /*Referenced for CMSIS*/
 /*define symbol __ICFEDIT_size_vectors__          = 0x100;*/ /*Referenced for CMSIS*/

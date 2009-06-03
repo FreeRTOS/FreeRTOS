@@ -117,7 +117,7 @@
         </option>
         <option>
           <name>FlashLoadersV2</name>
-          <state>,,,,(default),</state>
+          <state>,,,,(default),--boot</state>
         </option>
       </data>
     </settings>
@@ -767,7 +767,7 @@
         </option>
         <option>
           <name>FlashLoadersV2</name>
-          <state>,,,,(default),</state>
+          <state>,,,,(default),--boot</state>
         </option>
       </data>
     </settings>

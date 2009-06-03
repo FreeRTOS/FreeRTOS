@@ -113,16 +113,22 @@ void LowLevelInit(void)
 
     /* Initialize main oscillator
      ****************************/
-    if(!(AT91C_BASE_PMC->PMC_MOR & AT91C_CKGR_MOSCSEL))
+
+	if(!(AT91C_BASE_PMC->PMC_MOR & AT91C_CKGR_MOSCSEL))
+	{
+		AT91C_BASE_PMC->PMC_MOR = (0x37 << 16) | BOARD_OSCOUNT | AT91C_CKGR_MOSCRCEN | AT91C_CKGR_MOSCXTEN;
+		timeout = 0;
+		while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MOSCXTS) && (timeout++ < CLOCK_TIMEOUT));
+	}	
+	else
     {
+		AT91C_BASE_PMC->PMC_MOR = (0x37 << 16) | BOARD_OSCOUNT | AT91C_CKGR_MOSCRCEN | AT91C_CKGR_MOSCXTEN | AT91C_CKGR_MOSCSEL;
+        timeout = 0;
+        while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MOSCRCS) && (timeout++ < CLOCK_TIMEOUT));
         AT91C_BASE_PMC->PMC_MOR = (0x37 << 16) | BOARD_OSCOUNT | AT91C_CKGR_MOSCRCEN | AT91C_CKGR_MOSCXTEN;
         timeout = 0;
-        while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MOSCXTS) && (timeout++ < CLOCK_TIMEOUT));
+        while (!(AT91C_BASE_PMC->PMC_SR & AT91C_PMC_MOSCSELS) && (timeout++ < CLOCK_TIMEOUT));
     }
-
-//    AT91C_BASE_PIOB->PIO_CODR = 1 << 1;
-//    AT91C_BASE_PIOB->PIO_OER =  1 << 1;
-//    AT91C_BASE_PIOB->PIO_PER =  1 << 1;
 
     /* Switch to moscsel */
     AT91C_BASE_PMC->PMC_MOR = (0x37 << 16) | BOARD_OSCOUNT | AT91C_CKGR_MOSCRCEN | AT91C_CKGR_MOSCXTEN | AT91C_CKGR_MOSCSEL;

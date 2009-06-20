@@ -9,7 +9,7 @@
 	**NOTE** The exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  Alternative commercial
-	license and support terms are also available upon request.  See the 
+	license and support terms are also available upon request.  See the
 	licensing section of http://www.FreeRTOS.org for full details.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
@@ -128,7 +128,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 void vPortSVCHandler( void )
 {
-	asm volatile (
+	__asm volatile (
 					"	ldr	r3, pxCurrentTCBConst2		\n" /* Restore the context. */
 					"	ldr r1, [r3]					\n" /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
 					"	ldr r0, [r1]					\n" /* The first item in pxCurrentTCB is the task top of stack. */
@@ -147,7 +147,7 @@ void vPortSVCHandler( void )
 
 void vPortStartFirstTask( void )
 {
-	asm volatile(
+	__asm volatile(
 					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
 					" ldr r0, [r0] 			\n"
 					" ldr r0, [r0] 			\n"
@@ -231,7 +231,7 @@ void xPortPendSVHandler( void )
 	"	msr basepri, r0						\n"
 	"	bl vTaskSwitchContext				\n"
 	"	mov r0, #0							\n"
-	"	msr basepri, r0						\n"			
+	"	msr basepri, r0						\n"
 	"	ldmia sp!, {r3, r14}				\n"
 	"										\n"	/* Restore the context, including the critical nesting count. */
 	"	ldr r1, [r3]						\n"

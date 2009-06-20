@@ -142,7 +142,7 @@ struct uip_eth_addr uip_ethaddr = {{0,0,0,0,0,0}};
 #else
 	u8_t uip_buf[UIP_BUFSIZE + 2] ALIGN_STRUCT_END; /* The packet buffer that contains incoming packets. */
 #endif
-				
+
 #endif /* UIP_CONF_EXTERNAL_BUFFER */
 
 void *uip_appdata;               /* The uip_appdata pointer points to
@@ -604,7 +604,7 @@ uip_reass(void)
     if(offset / (8 * 8) == (offset + len) / (8 * 8)) {
       /* If the two endpoints are in the same byte, we only update
 	 that byte. */
-	
+
       uip_reassbitmap[offset / (8 * 8)] |=
 	     bitmap_bits[(offset / 8 ) & 7] &
 	     ~bitmap_bits[((offset + len) / 8 ) & 7];
@@ -766,7 +766,7 @@ uip_process(u8_t flag)
 					 4:
 					 uip_connr->nrtx);
 	  ++(uip_connr->nrtx);
-	
+
 	  /* Ok, so we need to retransmit. We do this differently
 	     depending on which state we are in. In ESTABLISHED, we
 	     call upon the application so that it may prepare the
@@ -779,14 +779,14 @@ uip_process(u8_t flag)
 	    /* In the SYN_RCVD state, we should retransmit our
                SYNACK. */
 	    goto tcp_send_synack;
-	
+
 #if UIP_ACTIVE_OPEN
 	  case UIP_SYN_SENT:
 	    /* In the SYN_SENT state, we retransmit out SYN. */
 	    BUF->flags = 0;
 	    goto tcp_send_syn;
 #endif /* UIP_ACTIVE_OPEN */
-	
+
 	  case UIP_ESTABLISHED:
 	    /* In the ESTABLISHED state, we call upon the application
                to do the actual retransmit after which we jump into
@@ -795,13 +795,13 @@ uip_process(u8_t flag)
 	    uip_flags = UIP_REXMIT;
 	    UIP_APPCALL();
 	    goto apprexmit;
-	
+
 	  case UIP_FIN_WAIT_1:
 	  case UIP_CLOSING:
 	  case UIP_LAST_ACK:
 	    /* In all these states we should retransmit a FINACK. */
 	    goto tcp_send_finack;
-	
+
 	  }
 	}
       } else if((uip_connr->tcpstateflags & UIP_TS_MASK) == UIP_ESTABLISHED) {
@@ -1347,7 +1347,7 @@ uip_process(u8_t flag)
 	  (u16_t)uip_buf[UIP_IPTCPH_LEN + UIP_LLH_LEN + 3 + c];
 	uip_connr->initialmss = uip_connr->mss =
 	  tmp16 > UIP_TCP_MSS? UIP_TCP_MSS: tmp16;
-	
+
 	/* And we are done processing options. */
 	break;
       } else {
@@ -1438,7 +1438,7 @@ uip_process(u8_t flag)
       uip_connr->snd_nxt[1] = uip_acc32[1];
       uip_connr->snd_nxt[2] = uip_acc32[2];
       uip_connr->snd_nxt[3] = uip_acc32[3];
-	
+
 
       /* Do RTT estimation, unless we have done retransmissions. */
       if(uip_connr->nrtx == 0) {
@@ -1851,10 +1851,10 @@ uip_process(u8_t flag)
   BUF->tcpchksum = 0;
   BUF->tcpchksum = ~(uip_tcpchksum());
 
-#if UIP_UDP  
+#if UIP_UDP
  ip_send_nolen:
 #endif /* UIP_UDP */
- 
+
 #if UIP_CONF_IPV6
   BUF->vtc = 0x60;
   BUF->tcflow = 0x00;

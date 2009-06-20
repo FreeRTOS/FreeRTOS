@@ -9,7 +9,7 @@
 	**NOTE** The exception to the GPL is included to allow you to distribute a
 	combined work that includes FreeRTOS.org without being obliged to provide
 	the source code for any proprietary components.  Alternative commercial
-	license and support terms are also available upon request.  See the 
+	license and support terms are also available upon request.  See the
 	licensing section of http://www.FreeRTOS.org for full details.
 
 	FreeRTOS.org is distributed in the hope that it will be useful,	but WITHOUT
@@ -53,30 +53,30 @@
  * This file contains a demo created to execute on the Rowley Associates
  * LPC2138 CrossFire development board.
  *
- * main() creates all the demo application tasks, then starts the scheduler.  
- * The WEB documentation provides more details of the standard demo application 
+ * main() creates all the demo application tasks, then starts the scheduler.
+ * The WEB documentation provides more details of the standard demo application
  * tasks.
- * 
- * Main.c also creates a task called "Check".  This only executes every few 
- * seconds but has a high priority so is guaranteed to get processor time.  
+ *
+ * Main.c also creates a task called "Check".  This only executes every few
+ * seconds but has a high priority so is guaranteed to get processor time.
  * Its function is to check that all the other tasks are still operational.
- * Each standard demo task maintains a unique count that is incremented each 
- * time the task successfully completes its function.  Should any error occur 
- * within such a task the count is permanently halted.  The check task inspects 
- * the count of each task to ensure it has changed since the last time the 
- * check task executed.  If all the count variables have changed all the tasks 
+ * Each standard demo task maintains a unique count that is incremented each
+ * time the task successfully completes its function.  Should any error occur
+ * within such a task the count is permanently halted.  The check task inspects
+ * the count of each task to ensure it has changed since the last time the
+ * check task executed.  If all the count variables have changed all the tasks
  * are still executing error free, and the check task writes "PASS" to the
- * CrossStudio terminal IO window.  Should any task contain an error at any time 
+ * CrossStudio terminal IO window.  Should any task contain an error at any time
  * the error is latched and "FAIL" written to the terminal IO window.
  *
  * Finally, main() sets up an interrupt service routine and task to handle
  * pushes of the button that is built into the CrossFire board.  When the button
  * is pushed the ISR wakes the button task - which generates a table of task
- * status information which is also displayed on the terminal IO window. 
+ * status information which is also displayed on the terminal IO window.
  *
- * A print task is defined to ensure exclusive and consistent access to the 
+ * A print task is defined to ensure exclusive and consistent access to the
  * terminal IO.  This is the only task that is allowed to access the terminal.
- * The check and button task therefore do not access the terminal directly but 
+ * The check and button task therefore do not access the terminal directly but
  * instead pass a pointer to the message they wish to display to the print task.
  */
 
@@ -97,6 +97,7 @@
 #include "PollQ.h"
 #include "blocktim.h"
 #include "recmutex.h"
+#include "semtest.h"
 
 /* Hardware configuration definitions. */
 #define mainBUS_CLK_FULL					( ( unsigned portCHAR ) 0x01 )
@@ -131,7 +132,7 @@
 handler. */
 xSemaphoreHandle xButtonSemaphore;
 
-/* The queue that is used to send message to vPrintTask for display in the 
+/* The queue that is used to send message to vPrintTask for display in the
 terminal output window. */
 xQueueHandle xPrintQueue;
 
@@ -193,7 +194,7 @@ int main( void )
 
 	#if configUSE_PREEMPTION == 1
 	{
-		/* The timing of console output when not using the preemptive 
+		/* The timing of console output when not using the preemptive
 		scheduler causes the block time tests to detect a timing problem. */
 		vCreateBlockTimeTasks();
 	}
@@ -262,22 +263,22 @@ const portCHAR * const pcFailMessage = "FAIL\n";
 		{
 			xErrorOccurred = pdTRUE;
 		}
-	
+
 		if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;
 		}
-	
+
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;
 		}
-	
+
 		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;
 		}
-	
+
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			xErrorOccurred = pdTRUE;
@@ -285,7 +286,7 @@ const portCHAR * const pcFailMessage = "FAIL\n";
 
 		#if configUSE_PREEMPTION == 1
 		{
-			/* The timing of console output when not using the preemptive 
+			/* The timing of console output when not using the preemptive
 			scheduler causes the block time tests to detect a timing problem. */
 			if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 			{
@@ -339,10 +340,10 @@ const portCHAR * const pcHeader = "\nTask          State  Priority  Stack	#\n***
 extern void (vButtonISRWrapper) ( void );
 
 	/* Configure the interrupt. */
-	portENTER_CRITICAL();	
+	portENTER_CRITICAL();
 	{
 		/* Configure P0.14 to generate interrupts. */
-		PINSEL0 |= mainP0_14__EINT_1; 
+		PINSEL0 |= mainP0_14__EINT_1;
 		EXTMODE = mainEINT_1_EDGE_SENSITIVE;
 		EXTPOLAR = mainEINT_1_FALLING_EDGE_SENSITIVE;
 

@@ -342,6 +342,11 @@ typedef struct
   u16  RESERVED5;
   vu16 TXCRCR;
   u16  RESERVED6;
+  vu16 I2SCFGR;
+  u16  RESERVED7;
+  vu16 I2SPR;
+  u16 RESERVED8;
+
 } SPI_TypeDef;
 
 /*------------------------ SystemTick ----------------------------------------*/
@@ -677,7 +682,7 @@ typedef struct
 
 #ifdef _FLASH
   #define FLASH                 ((FLASH_TypeDef *) FLASH_BASE)
-  #define OB                    ((OB_TypeDef *) OB_BASE) 
+  #define OB                    ((OB_TypeDef *) OB_BASE)
 #endif /*_FLASH */
 
 #ifdef _RCC
@@ -835,7 +840,7 @@ typedef struct
 
 #ifdef _FLASH
   EXT FLASH_TypeDef            *FLASH;
-  EXT OB_TypeDef               *OB;  
+  EXT OB_TypeDef               *OB;
 #endif /*_FLASH */
 
 #ifdef _RCC

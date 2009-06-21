@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.3.0 - Copyright (C) 2003-2009 Richard Barry.
+	FreeRTOS.org V5.3.1 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -111,7 +111,7 @@ utilised, although CircleOS itself is not used. */
 and therefore takes up a large proportion of the Flash space.  Setting this
 parameter to 0 excludes the bitmap from the build, freeing up Flash space for
 extra code. */
-#define mainINCLUDE_BITMAP 					1
+#define mainINCLUDE_BITMAP 					0
 
 #if mainINCLUDE_BITMAP == 1
 	#include "bitmap.h"

@@ -5,7 +5,7 @@
 	http://dzcomm.sourceforge.net
 
 
-	FreeRTOS.org V5.3.0 - Copyright (C) 2003-2009 Richard Barry.
+	FreeRTOS.org V5.3.1 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 

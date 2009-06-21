@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.3.0 - Copyright (C) 2003-2009 Richard Barry.
+	FreeRTOS.org V5.3.1 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -48,6 +48,16 @@
 	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
+
+/* CodeWarrior often thinks it knows better than you which files you want to 
+build - and changes the port.c and portasm.S files included in the project from
+the ColdFire V1 versions to the x86 versions.  If you get lots of errors output
+when either file is compiled then delete the files from the project and then
+add back in the port.c and portasm.S files that are located in the 
+FreeRTOS\Source\portable\GCC\ColdFire_V2 directory.  Remove the line below
+before compiling. */
+
+#error Read the comment above this line, then delete this error statement!
 
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H

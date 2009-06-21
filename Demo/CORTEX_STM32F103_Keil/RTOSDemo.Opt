@@ -11,25 +11,25 @@
  DaveTm { 0,0,0,0,0,0,0,0 }
 
 Target (Target 1), 0x0004 // Tools: 'ARM-ADS'
-GRPOPT 1,(System),0,0,0
+GRPOPT 1,(System),1,0,0
 GRPOPT 2,(Demo Files),0,0,0
 GRPOPT 3,(FreeRTOS files),0,0,0
 
 OPTFFF 1,1,2,0,0,0,0,0,<.\STM32F10x.s><STM32F10x.s> 
-OPTFFF 1,2,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\lcd.c><lcd.c> 
-OPTFFF 1,3,2,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\cortexm3_macro_rvds.s><cortexm3_macro_rvds.s> 
-OPTFFF 1,4,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_usart.c><stm32f10x_usart.c> 
-OPTFFF 1,5,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_gpio.c><stm32f10x_gpio.c> 
-OPTFFF 1,6,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_lib.c><stm32f10x_lib.c> 
-OPTFFF 1,7,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_nvic.c><stm32f10x_nvic.c> 
-OPTFFF 1,8,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_rcc.c><stm32f10x_rcc.c> 
-OPTFFF 1,9,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_spi.c><stm32f10x_spi.c> 
-OPTFFF 1,10,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_systick.c><stm32f10x_systick.c> 
-OPTFFF 1,11,1,0,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\stm32f10x_tim.c><stm32f10x_tim.c> 
+OPTFFF 1,2,1,234881024,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\lcd.c><lcd.c> 
+OPTFFF 1,3,2,704643072,0,0,0,0,<..\Common\drivers\ST\STM32F10xFWLib\src\cortexm3_macro_rvds.s><cortexm3_macro_rvds.s> 
+OPTFFF 1,4,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_usart.c><stm32f10x_usart.c> 
+OPTFFF 1,5,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_gpio.c><stm32f10x_gpio.c> 
+OPTFFF 1,6,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_lib.c><stm32f10x_lib.c> 
+OPTFFF 1,7,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_nvic.c><stm32f10x_nvic.c> 
+OPTFFF 1,8,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_rcc.c><stm32f10x_rcc.c> 
+OPTFFF 1,9,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_spi.c><stm32f10x_spi.c> 
+OPTFFF 1,10,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_systick.c><stm32f10x_systick.c> 
+OPTFFF 1,11,1,0,0,0,0,0,<.\STM32F10xFWLib\src\stm32f10x_tim.c><stm32f10x_tim.c> 
 OPTFFF 2,12,1,285212672,0,0,0,0,<.\ParTest\ParTest.c><ParTest.c> 
 OPTFFF 2,13,1,0,0,0,0,0,<.\serial\serial.c><serial.c> 
 OPTFFF 2,14,1,0,0,0,0,0,<.\timertest.c><timertest.c> 
-OPTFFF 2,15,1,117440512,0,0,0,0,<.\main.c><main.c> 
+OPTFFF 2,15,1,2,0,179,199,0,<.\main.c><main.c> { 44,0,0,0,2,0,0,0,3,0,0,0,255,255,255,255,255,255,255,255,252,255,255,255,233,255,255,255,132,0,0,0,132,0,0,0,55,4,0,0,197,1,0,0 }
 OPTFFF 2,16,1,0,0,0,0,0,<.\spi_flash.c><spi_flash.c> 
 OPTFFF 2,17,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c> 
 OPTFFF 2,18,1,0,0,0,0,0,<..\Common\Minimal\BlockQ.c><BlockQ.c> 
@@ -57,15 +57,14 @@ TARGOPT 1, (Target 1)
   OPTFL 1,0,1
   OPTAX 255
   OPTDL (SARMCM3.DLL)()(DARMSTM.DLL)(-pSTM32F103VB)(SARMCM3.DLL)()(TARMSTM.DLL)(-pSTM32F103VB)
-  OPTDBG 48126,1,()()()()()()()()()() (BIN\UL2CM3.DLL)()()()
+  OPTDBG 42998,1,()()()()()()()()()() (BIN\UL2CM3.DLL)()()()
   OPTKEY 0,(DLGTARM)((1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(100=-1,-1,-1,-1,0)(110=-1,-1,-1,-1,0)(111=-1,-1,-1,-1,0)(1011=-1,-1,-1,-1,0)(180=-1,-1,-1,-1,0)(120=-1,-1,-1,-1,0)(121=-1,-1,-1,-1,0)(122=-1,-1,-1,-1,0)(123=-1,-1,-1,-1,0)(124=-1,-1,-1,-1,0)(140=-1,-1,-1,-1,0)(240=-1,-1,-1,-1,0)(190=-1,-1,-1,-1,0)(200=-1,-1,-1,-1,0)(170=-1,-1,-1,-1,0)(130=-1,-1,-1,-1,0)(131=-1,-1,-1,-1,0)(132=-1,-1,-1,-1,0)(133=-1,-1,-1,-1,0)(160=-1,-1,-1,-1,0)(161=-1,-1,-1,-1,0)(162=-1,-1,-1,-1,0)(210=-1,-1,-1,-1,0)(211=-1,-1,-1,-1,0)(220=-1,-1,-1,-1,0)(221=-1,-1,-1,-1,0)(230=-1,-1,-1,-1,0)(231=-1,-1,-1,-1,0)(232=-1,-1,-1,-1,0)(233=-1,-1,-1,-1,0)(150=-1,-1,-1,-1,0)(151=-1,-1,-1,-1,0))
   OPTKEY 0,(DLGUARM)((105=-1,-1,-1,-1,0)(106=-1,-1,-1,-1,0)(107=-1,-1,-1,-1,0))
   OPTKEY 0,(DLGDARM)((1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(100=-1,-1,-1,-1,0)(110=-1,-1,-1,-1,0)(111=-1,-1,-1,-1,0)(1011=-1,-1,-1,-1,0)(180=-1,-1,-1,-1,0)(120=-1,-1,-1,-1,0)(121=-1,-1,-1,-1,0)(122=-1,-1,-1,-1,0)(123=-1,-1,-1,-1,0)(124=-1,-1,-1,-1,0)(140=-1,-1,-1,-1,0)(240=-1,-1,-1,-1,0)(190=-1,-1,-1,-1,0)(200=-1,-1,-1,-1,0)(170=-1,-1,-1,-1,0)(130=-1,-1,-1,-1,0)(131=-1,-1,-1,-1,0)(132=-1,-1,-1,-1,0)(133=-1,-1,-1,-1,0)(160=-1,-1,-1,-1,0)(161=-1,-1,-1,-1,0)(162=-1,-1,-1,-1,0)(210=-1,-1,-1,-1,0)(211=-1,-1,-1,-1,0)(220=-1,-1,-1,-1,0)(221=-1,-1,-1,-1,0)(230=-1,-1,-1,-1,0)(234=-1,-1,-1,-1,0)(231=-1,-1,-1,-1,0)(232=-1,-1,-1,-1,0)(233=-1,-1,-1,-1,0)(150=-1,-1,-1,-1,0)(151=-1,-1,-1,-1,0))
   OPTKEY 0,(ARMDBGFLAGS)(-T0)
   OPTKEY 0,(JLTAgdi)(-O1038 -J1 -Y1000 -Z1 -FO7 -FD20000000 -FC800 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000)
-  OPTKEY 0,(UL2CM3)(-UU0226F8E -O14 -S0 -C0 -N00("ARM CoreSight JTAG-DP") -D00(3BA00477) -L00(4) -N01("Unknown JTAG device") -D01(06410041) -L01(5) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP7 -FO7 -FD20000000 -FC800 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000)
-  OPTBB 0,0,237,1,134228048,0,0,0,0,1,<serial.c>()()
-  OPTDF 0x82
+  OPTKEY 0,(UL2CM3)(-UU0605F6E -O47 -S0 -C0 -N00("ARM CoreSight JTAG-DP") -D00(3BA00477) -L00(4) -N01("Unknown JTAG device") -D01(06410041) -L01(5) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP7 -FO7 -FD20000000 -FC800 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000)
+  OPTDF 0x86
   OPTLE <>
   OPTLC <>
 EndOpt

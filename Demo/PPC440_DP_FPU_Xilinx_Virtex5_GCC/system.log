@@ -1,0 +1,99 @@
+No logfile was found.
+
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\system.mhs line 253 - deprecated core for architecture 'virtex5fx'!
+
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\system.mhs line 298 - deprecated core for architecture 'virtex5fx'!
+
+Generating Block Diagram to Buffer 
+
+Generated Block Diagram SVG
+
+The project file (XMP) has changed on disk.
+
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\system.mhs line 253 - deprecated core for architecture 'virtex5fx'!
+
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\system.mhs line 298 - deprecated core for architecture 'virtex5fx'!
+
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\_xps_tempmhsfilename.mhs line 239 - deprecated core for architecture 'virtex5fx'!
+
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\_xps_tempmhsfilename.mhs line 284 - deprecated core for architecture 'virtex5fx'!
+
+At Local date and time: Tue Jun 30 18:36:00 2009
+ make -f system.make netlistclean started...
+
+rm -f implementation/system.ngc
+rm -f platgen.log
+rm -f __xps/ise/_xmsgs/platgen.xmsgs
+rm -f implementation/system.bmm
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:36:05 2009
+ make -f system.make bitsclean started...
+
+rm -f implementation/system.bit
+rm -f implementation/system.ncd
+rm -f implementation/system_bd.bmm 
+rm -f implementation/system_map.ncd 
+rm -f __xps/system_routed
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:36:10 2009
+ make -f system.make hwclean started...
+
+rm -f implementation/system.ngc
+rm -f platgen.log
+rm -f __xps/ise/_xmsgs/platgen.xmsgs
+rm -f implementation/system.bmm
+rm -f implementation/system.bit
+rm -f implementation/system.ncd
+rm -f implementation/system_bd.bmm 
+rm -f implementation/system_map.ncd 
+rm -f __xps/system_routed
+rm -rf implementation synthesis xst hdl
+rm -rf xst.srp system.srp
+rm -f __xps/ise/_xmsgs/bitinit.xmsgs
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:36:16 2009
+ make -f system.make libsclean started...
+
+rm -rf ppc440_0/
+rm -f libgen.log
+rm -f __xps/ise/_xmsgs/libgen.xmsgs
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:36:20 2009
+ make -f system.make programclean started...
+
+rm -f RTOSDemo/executable.elf 
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:36:25 2009
+ make -f system.make swclean started...
+
+rm -rf ppc440_0/
+rm -f libgen.log
+rm -f __xps/ise/_xmsgs/libgen.xmsgs
+rm -f RTOSDemo/executable.elf 
+
+
+Done!
+
+Writing filter settings....
+
+Done writing filter settings to:
+	C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\__xps\system.filters
+
+Done writing Tab View settings to:
+	C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_DP_FPU_Xilinx_Virtex5_GCC\__xps\system.gui
+

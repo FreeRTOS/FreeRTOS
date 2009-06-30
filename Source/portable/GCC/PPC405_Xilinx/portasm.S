@@ -212,6 +212,49 @@ vPortSaveFPURegisters:
 	or		r0, r0, r30
 	mtmsr	r0
 
+#ifdef USE_DP_FPU
+
+	/* Buffer address is in r3.  Save each flop register into an offset from
+	this buffer address. */
+	stfd	f0, 0(r3)
+	stfd	f1, 8(r3)
+	stfd	f2, 16(r3)
+	stfd	f3, 24(r3)
+	stfd	f4, 32(r3)
+	stfd	f5, 40(r3)
+	stfd	f6, 48(r3)
+	stfd	f7, 56(r3)
+	stfd	f8, 64(r3)
+	stfd	f9, 72(r3)
+	stfd	f10, 80(r3)
+	stfd	f11, 88(r3)
+	stfd	f12, 96(r3)
+	stfd	f13, 104(r3)
+	stfd	f14, 112(r3)
+	stfd	f15, 120(r3)
+	stfd	f16, 128(r3)
+	stfd	f17, 136(r3)
+	stfd	f18, 144(r3)
+	stfd	f19, 152(r3)
+	stfd	f20, 160(r3)
+	stfd	f21, 168(r3)
+	stfd	f22, 176(r3)
+	stfd	f23, 184(r3)
+	stfd	f24, 192(r3)
+	stfd	f25, 200(r3)
+	stfd	f26, 208(r3)
+	stfd	f27, 216(r3)
+	stfd	f28, 224(r3)
+	stfd	f29, 232(r3)
+	stfd	f30, 240(r3)
+	stfd	f31, 248(r3)	
+	
+	/* Also save the FPSCR. */
+	mffs	f31
+	stfs	f31, 256(r3)
+
+#else
+
 	/* Buffer address is in r3.  Save each flop register into an offset from
 	this buffer address. */
 	stfs	f0, 0(r3)
@@ -250,6 +293,8 @@ vPortSaveFPURegisters:
 	/* Also save the FPSCR. */
 	mffs	f31
 	stfs	f31, 128(r3)
+	
+#endif
 
 	blr
 
@@ -268,6 +313,49 @@ vPortRestoreFPURegisters:
 	or		r0, r0, r30
 	mtmsr	r0
 
+#ifdef USE_DP_FPU
+
+	/* Buffer address is in r3.  Restore each flop register from an offset
+	into this buffer. 
+	
+	First the FPSCR. */
+	lfs		f31, 256(r3)
+	mtfsf	f31, 7
+
+	lfd		f0, 0(r3)
+	lfd	    f1, 8(r3)
+	lfd		f2, 16(r3)
+	lfd		f3, 24(r3)
+	lfd		f4, 32(r3)
+	lfd		f5, 40(r3)
+	lfd		f6, 48(r3)
+	lfd		f7, 56(r3)
+	lfd		f8, 64(r3)
+	lfd		f9, 72(r3)
+	lfd		f10, 80(r3)
+	lfd		f11, 88(r3)
+	lfd		f12, 96(r3)
+	lfd		f13, 104(r3)
+	lfd		f14, 112(r3)
+	lfd		f15, 120(r3)
+	lfd		f16, 128(r3)
+	lfd		f17, 136(r3)
+	lfd		f18, 144(r3)
+	lfd		f19, 152(r3)
+	lfd		f20, 160(r3)
+	lfd		f21, 168(r3)
+	lfd		f22, 176(r3)
+	lfd		f23, 184(r3)
+	lfd		f24, 192(r3)
+	lfd		f25, 200(r3)
+	lfd		f26, 208(r3)
+	lfd		f27, 216(r3)
+	lfd		f28, 224(r3)
+	lfd		f29, 232(r3)
+	lfd		f30, 240(r3)
+	lfd		f31, 248(r3)
+
+#else
 
 	/* Buffer address is in r3.  Restore each flop register from an offset
 	into this buffer. 
@@ -308,6 +396,8 @@ vPortRestoreFPURegisters:
 	lfs		f29, 116(r3)
 	lfs		f30, 120(r3)
 	lfs		f31, 124(r3)
+
+#endif
 
 	blr
 

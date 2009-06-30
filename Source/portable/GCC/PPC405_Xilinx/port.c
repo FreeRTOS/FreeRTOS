@@ -80,6 +80,10 @@
 
 #define portINITIAL_MSR		( portCRITICAL_INTERRUPT_ENABLE | portEXTERNAL_INTERRUPT_ENABLE | portMACHINE_CHECK_ENABLE | portAPU_PRESENT | portFCM_FPU_PRESENT )
 
+
+extern const unsigned _SDA_BASE_;
+extern const unsigned _SDA2_BASE_;
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -123,12 +127,18 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 
 	/* EABI stack frame. */
-	pxTopOfStack -= 30;	/* Previous backchain and LR, R31 to R4 inclusive. */
+	pxTopOfStack -= 20;	/* Previous backchain and LR, R31 to R4 inclusive. */
+
+	/* Parameters in R13. */
+	*pxTopOfStack = ( portSTACK_TYPE ) &_SDA_BASE_; /* address of the first small data area */
+	pxTopOfStack -= 10;
 
 	/* Parameters in R3. */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
 	pxTopOfStack--;
-	*pxTopOfStack = 0x02020202UL;	/* R2. */
+
+	/* Parameters in R2. */
+	*pxTopOfStack = ( portSTACK_TYPE ) &_SDA2_BASE_;	/* address of the second small data area */
 	pxTopOfStack--;
 
 	/* R1 is the stack pointer so is omitted. */

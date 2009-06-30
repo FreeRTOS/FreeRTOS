@@ -391,7 +391,7 @@ tskTCB * pxNewTCB;
 		required by the port. */
 		#if portSTACK_GROWTH < 0
 		{
-			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 );
+			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 ) - ( ( usStackDepth - 1 ) % portBYTE_ALIGNMENT );			
 		}
 		#else
 		{

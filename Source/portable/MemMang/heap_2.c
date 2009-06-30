@@ -88,7 +88,11 @@
 alignment without using any non-portable code. */
 static union xRTOS_HEAP
 {
-	volatile unsigned portLONG ulDummy;
+	#if portBYTE_ALIGNMENT == 8
+		volatile portDOUBLE dDummy;
+	#else
+		volatile unsigned portLONG ulDummy;
+	#endif	
 	unsigned portCHAR ucHeap[ configTOTAL_HEAP_SIZE ];
 } xHeap;
 
@@ -101,7 +105,7 @@ typedef struct A_BLOCK_LINK
 } xBlockLink;
 
 
-static const unsigned portSHORT  heapSTRUCT_SIZE	= ( sizeof( xBlockLink ) + ( sizeof( xBlockLink ) % portBYTE_ALIGNMENT ) );
+static const unsigned portSHORT  heapSTRUCT_SIZE	= ( sizeof( xBlockLink ) + portBYTE_ALIGNMENT - ( sizeof( xBlockLink ) % portBYTE_ALIGNMENT ) );
 #define heapMINIMUM_BLOCK_SIZE	( ( size_t ) ( heapSTRUCT_SIZE * 2 ) )
 
 /* Create a couple of list links to mark the start and end of the list. */

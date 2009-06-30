@@ -220,6 +220,10 @@
 	#include "../../Source/portable/GCC/PPC405_Xilinx/portmacro.h"
 #endif
 
+#ifdef GCC_PPC440
+	#include "../../Source/portable/GCC/PPC440_Xilinx/portmacro.h"
+#endif
+
 #ifdef _16FX_SOFTUNE
 	#include "..\..\Source\portable\Softune\MB96340\portmacro.h"
 #endif

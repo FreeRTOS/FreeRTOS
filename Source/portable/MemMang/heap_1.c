@@ -49,19 +49,6 @@
 	licensing and training services.
 */
 
-/* 
-
-Changes between V2.5.1 and V2.5.1
-
-	+ The memory pool has been defined within a struct to ensure correct memory
-	  alignment on 32bit systems.
-
-Changes between V2.6.1 and V3.0.0
-
-	+ An overflow check has been added to ensure the next free byte variable 
-	  does not wrap around.
-*/
-
 
 /*
  * The simplest possible implementation of pvPortMalloc().  Note that this
@@ -100,7 +87,11 @@ Changes between V2.6.1 and V3.0.0
 alignment without using any non-portable code. */
 static union xRTOS_HEAP
 {
-	volatile unsigned portLONG ulDummy;
+	#if portBYTE_ALIGNMENT == 8
+		volatile portDOUBLE dDummy;
+	#else
+		volatile unsigned portLONG ulDummy;
+	#endif	
 	unsigned portCHAR ucHeap[ configTOTAL_HEAP_SIZE ];
 } xHeap;
 

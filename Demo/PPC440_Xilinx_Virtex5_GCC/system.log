@@ -1,0 +1,235 @@
+No logfile was found.
+
+Xilinx Platform Studio (XPS)
+Xilinx EDK 11.2 Build EDK_LS3.47
+
+Copyright (c) 1995-2009 Xilinx, Inc.  All rights reserved.
+
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge - C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\system.mhs line 251 - deprecated core for architecture 'virtex5fx'!
+
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC - C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\system.mhs line 296 - deprecated core for architecture 'virtex5fx'!
+
+Generating Block Diagram to Buffer 
+
+Generated Block Diagram SVG
+
+At Local date and time: Mon Jun 29 21:01:23 2009
+ make -f system.make program started...
+
+*********************************************
+Creating software libraries...
+*********************************************
+libgen -mhs system.mhs -p xc5vfx70tff1136-1  -msg __xps/ise/xmsgprops.lst system.mss
+libgen
+Xilinx EDK 11.2 Build EDK_LS3.47
+Copyright (c) 1995-2009 Xilinx, Inc.  All rights reserved.
+
+Command Line: libgen -mhs system.mhs -p xc5vfx70tff1136-1 -msg
+__xps/ise/xmsgprops.lst system.mss 
+
+Release 11.2 - psf2Edward EDK_LS3.47 (nt)
+Copyright (c) 1995-2009 Xilinx, Inc.  All rights reserved.
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 251 - deprecated core for architecture 'virtex5fx'!
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 296 - deprecated core for architecture 'virtex5fx'!
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 251 - deprecated core for architecture 'virtex5fx'!
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 296 - deprecated core for architecture 'virtex5fx'!
+
+Checking platform configuration ...
+IPNAME:plb_v46 INSTANCE:plb_v46_0 -
+C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\system.m
+hs line 107 - 1 master(s) : 12 slave(s)
+IPNAME:plb_v46 INSTANCE:ppc440_0_SPLB0 -
+C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\system.m
+hs line 288 - 1 master(s) : 1 slave(s)
+
+Checking port drivers...
+WARNING:EDK:2099 - PORT:Peripheral_Reset CONNECTOR:sys_periph_reset -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 446 - floating connection!
+
+Performing Clock DRCs...
+
+Performing Reset DRCs...
+
+Overriding system level properties...
+
+Running system level update procedures...
+
+Running UPDATE Tcl procedures for OPTION SYSLEVEL_UPDATE_PROC...
+
+Running system level DRCs...
+
+Performing System level DRCs on properties...
+
+Running DRC Tcl procedures for OPTION SYSLEVEL_DRC_PROC...
+WARNING:EDK:494 -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\synth
+   esis\ not found.
+WARNING:EDK:2530 - Timing and Resource utilization information not added
+WARNING:EDK:411 - pcie -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mss line 77 - deprecated driver!
+WARNING:EDK:411 - emaclite -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mss line 83 - deprecated driver!
+INFO:EDK:1740 - List of peripherals connected to processor instance ppc440_0: 
+  - DDR2_SDRAM
+  - DIP_Switches_8Bit
+  - Ethernet_MAC
+  - IIC_EEPROM
+  - LEDs_8Bit
+  - LEDs_Positions
+  - PCIe_Bridge
+  - Push_Buttons_5Bit
+  - RS232_Uart_1
+  - SRAM
+  - SysACE_CompactFlash
+  - xps_bram_if_cntlr_1
+  - xps_intc_0
+
+-- Generating libraries for processor: ppc440_0 --
+
+
+Staging source files.
+Running DRCs.
+Running generate.
+Running post_generate.
+Running include - 'make -s include "COMPILER=powerpc-eabi-gcc"
+"ARCHIVER=powerpc-eabi-ar" "COMPILER_FLAGS=-mcpu=440  -O2 -c"
+"EXTRA_COMPILER_FLAGS=-g"'.
+
+Running libs - 'make -s libs "COMPILER=powerpc-eabi-gcc"
+"ARCHIVER=powerpc-eabi-ar" "COMPILER_FLAGS=-mcpu=440  -O2 -c"
+"EXTRA_COMPILER_FLAGS=-g"'.
+Compiling common
+powerpc-eabi-ar: creating ../../../lib/libxil.a
+
+Compiling lldma
+Compiling standalone
+Compiling gpio
+Compiling emaclite
+Compiling iic
+Compiling pci
+Compiling uartlite
+Compiling sysace
+Compiling intc
+Compiling cpu_ppc440
+Running execs_generate.
+powerpc-eabi-gcc -O0 /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/BlockQ.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/blocktim.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/comtest.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/countsem.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/death.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/dynamic.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/flash.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/GenQTest.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/integer.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/QPeek.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/recmutex.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../Common/Minimal/semtest.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/tasks.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/list.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/queue.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/croutine.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/portable/GCC/PPC440_Xilinx/portasm.S /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/portable/GCC/PPC440_Xilinx/port.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/../../../Source/portable/MemMang/heap_2.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/flop/flop-reg-test.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/flop/flop.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/partest/partest.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/serial/serial.c /cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/main.c  -o RTOSDemo/executable.elf \
+    -mcpu=440  -Wl,-T -Wl,/cygdrive/c/Temp/WA00101_002/WA00101_002/FreeRTOS/Demo/PPC440_Xilinx_Virtex5_GCC/RTOSDemo/RTOSDemo_linker_script.ld  -g    -I./ppc440_0/include/   -I../../Source/include -I../Common/include -I./RTOSDemo -I./RTOSDemo/flop  -L./ppc440_0/lib/  \
+-D GCC_PPC440 -mregnames  
+powerpc-eabi-size RTOSDemo/executable.elf 
+   text	   data	    bss	    dec	    hex	filename
+  53754	    372	  86524	 140650	  2256a	RTOSDemo/executable.elf
+
+
+Done!
+
+Writing filter settings....
+
+Done writing filter settings to:
+	C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\__xps\system.filters
+
+Done writing Tab View settings to:
+	C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\__xps\system.gui
+
+Xilinx Platform Studio (XPS)
+Xilinx EDK 11.2 Build EDK_LS3.47
+
+Copyright (c) 1995-2009 Xilinx, Inc.  All rights reserved.
+
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_Xilinx_Virtex5_GCC\_xps_tempmhsfilename.mhs line 237 - deprecated core for architecture 'virtex5fx'!
+
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC - C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_Xilinx_Virtex5_GCC\_xps_tempmhsfilename.mhs line 282 - deprecated core for architecture 'virtex5fx'!
+
+Generating Block Diagram to Buffer 
+
+Generated Block Diagram SVG
+
+At Local date and time: Tue Jun 30 18:32:58 2009
+ make -f system.make hwclean started...
+
+rm -f implementation/system.ngc
+rm -f platgen.log
+rm -f __xps/ise/_xmsgs/platgen.xmsgs
+rm -f implementation/system.bmm
+rm -f implementation/system.bit
+rm -f implementation/system.ncd
+rm -f implementation/system_bd.bmm 
+rm -f implementation/system_map.ncd 
+rm -f __xps/system_routed
+rm -rf implementation synthesis xst hdl
+rm -rf xst.srp system.srp
+rm -f __xps/ise/_xmsgs/bitinit.xmsgs
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:33:07 2009
+ make -f system.make netlistclean started...
+
+rm -f implementation/system.ngc
+rm -f platgen.log
+rm -f __xps/ise/_xmsgs/platgen.xmsgs
+rm -f implementation/system.bmm
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:33:13 2009
+ make -f system.make bitsclean started...
+
+rm -f implementation/system.bit
+rm -f implementation/system.ncd
+rm -f implementation/system_bd.bmm 
+rm -f implementation/system_map.ncd 
+rm -f __xps/system_routed
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:33:24 2009
+ make -f system.make libsclean started...
+
+rm -rf ppc440_0/
+rm -f libgen.log
+rm -f __xps/ise/_xmsgs/libgen.xmsgs
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:33:31 2009
+ make -f system.make programclean started...
+
+rm -f RTOSDemo/executable.elf 
+
+
+Done!
+
+At Local date and time: Tue Jun 30 18:33:37 2009
+ make -f system.make swclean started...
+
+rm -rf ppc440_0/
+rm -f libgen.log
+rm -f __xps/ise/_xmsgs/libgen.xmsgs
+rm -f RTOSDemo/executable.elf 
+
+
+Done!
+
+Writing filter settings....
+
+Done writing filter settings to:
+	C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_Xilinx_Virtex5_GCC\__xps\system.filters
+
+Done writing Tab View settings to:
+	C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\PPC440_Xilinx_Virtex5_GCC\__xps\system.gui
+

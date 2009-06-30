@@ -1,0 +1,45 @@
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 251 - deprecated core for architecture 'virtex5fx'!
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 296 - deprecated core for architecture 'virtex5fx'!
+WARNING:EDK:1582 - IPNAME:plbv46_pcie INSTANCE:PCIe_Bridge -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 251 - deprecated core for architecture 'virtex5fx'!
+WARNING:EDK:1582 - IPNAME:xps_ethernetlite INSTANCE:Ethernet_MAC -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 296 - deprecated core for architecture 'virtex5fx'!
+
+Checking platform configuration ...
+IPNAME:plb_v46 INSTANCE:plb_v46_0 -
+C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\system.m
+hs line 107 - 1 master(s) : 12 slave(s)
+IPNAME:plb_v46 INSTANCE:ppc440_0_SPLB0 -
+C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\system.m
+hs line 288 - 1 master(s) : 1 slave(s)
+
+Checking port drivers...
+WARNING:EDK:2099 - PORT:Peripheral_Reset CONNECTOR:sys_periph_reset -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\syste
+   m.mhs line 446 - floating connection!
+
+Performing Clock DRCs...
+
+Performing Reset DRCs...
+
+Overriding system level properties...
+
+Running system level update procedures...
+
+Running UPDATE Tcl procedures for OPTION SYSLEVEL_UPDATE_PROC...
+
+Running system level DRCs...
+
+Performing System level DRCs on properties...
+
+Running DRC Tcl procedures for OPTION SYSLEVEL_DRC_PROC...
+WARNING:EDK:494 -
+   C:\Temp\WA00101_002\WA00101_002\FreeRTOS\Demo\PPC440_Xilinx_Virtex5_GCC\synth
+   esis\ not found.
+WARNING:EDK:2530 - Timing and Resource utilization information not added

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- IMPORTANT: This is an internal file that has been generated
+     by the Xilinx ISE software.  Any direct editing or
+     changes made to this file may result in unpredictable
+     behavior or data corruption.  It is strongly advised that
+     users do not edit the contents of this file. -->
+<messages>
+<msg type="info" file="Map" num="220" delta="new" >The command line option -timing is automatically supported for this architecture. Therefore, it is not necessary to specify this option.
+</msg>
+
+<msg type="warning" file="LIT" num="243" delta="new" >Logical network <arg fmt="%s" index="1">N194</arg> has no load.
+</msg>
+
+<msg type="warning" file="LIT" num="395" delta="new" >The above <arg fmt="%s" index="1">warning</arg> message <arg fmt="%s" index="2">base_net_load_rule</arg> is repeated <arg fmt="%d" index="3">1200</arg> more times for the following (max. 5 shown):
+<arg fmt="%s" index="4">N195,
+N196,
+N197,
+N198,
+N199</arg>
+To see the details of these <arg fmt="%s" index="5">warning</arg> messages, please use the -detail switch.
+</msg>
+
+<msg type="info" file="MapLib" num="562" delta="new" >No environment variables are currently set.
+</msg>
+
+<msg type="info" file="MapLib" num="159" delta="new" >Net Timing constraints on signal <arg fmt="%s" index="1">fpga_0_SysACE_CompactFlash_SysACE_CLK_pin</arg> are pushed forward through input buffer.
+</msg>
+
+<msg type="info" file="MapLib" num="856" delta="new" >PLL_ADV <arg fmt="%s" index="1">clock_generator_0/clock_generator_0/Using_PLL0.PLL0_INST/PLL_INST/Using_PLL_ADV.PLL_ADV_inst</arg> CLKIN2 pin was disconnected because a constant 1 is driving the CLKINSEL pin.
+</msg>
+
+<msg type="warning" file="MapLib" num="701" delta="new" >Signal <arg fmt="%s" index="1">fpga_0_SysACE_CompactFlash_SysACE_MPIRQ_pin</arg> connected to top level port <arg fmt="%s" index="2">fpga_0_SysACE_CompactFlash_SysACE_MPIRQ_pin</arg> has been removed.
+</msg>
+
+<msg type="warning" file="MapLib" num="701" delta="new" >Signal <arg fmt="%s" index="1">fpga_0_Ethernet_MAC_PHY_col_pin</arg> connected to top level port <arg fmt="%s" index="2">fpga_0_Ethernet_MAC_PHY_col_pin</arg> has been removed.
+</msg>
+
+<msg type="warning" file="MapLib" num="41" delta="new" >All members of TNM group &quot;<arg fmt="%s" index="1">ppc440_0_PPCS0PLBMBUSY</arg>&quot; have been optimized out of the design.
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_0</arg> of frag <arg fmt="%s" index="2">REGCLKAU</arg> connected to power/ground net <arg fmt="%s" index="3">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_0_REGCLKAU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_0</arg> of frag <arg fmt="%s" index="2">REGCLKAL</arg> connected to power/ground net <arg fmt="%s" index="3">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_0_REGCLKAL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_1</arg> of frag <arg fmt="%s" index="2">REGCLKAU</arg> connected to power/ground net <arg fmt="%s" index="3">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_1_REGCLKAU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_1</arg> of frag <arg fmt="%s" index="2">REGCLKAL</arg> connected to power/ground net <arg fmt="%s" index="3">xps_bram_if_cntlr_1_bram/xps_bram_if_cntlr_1_bram/ramb36_1_REGCLKAL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[0].ram_tdp2_inst</arg> of frag <arg fmt="%s" index="2">REGCLKAU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[0].ram_tdp2_inst_REGCLKAU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[0].ram_tdp2_inst</arg> of frag <arg fmt="%s" index="2">REGCLKAL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[0].ram_tdp2_inst_REGCLKAL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[1].ram_tdp2_inst</arg> of frag <arg fmt="%s" index="2">REGCLKAU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[1].ram_tdp2_inst_REGCLKAU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[1].ram_tdp2_inst</arg> of frag <arg fmt="%s" index="2">REGCLKAL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/pcie_mim_wrapper_i/bram_tl_tx/generate_tdp2[1].ram_tdp2_inst_REGCLKAL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk_if/ll_bridge/rx_bridge/fifo_inst/oq_fifo/Mram_regBank</arg> of frag <arg fmt="%s" index="2">RDRCLKU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk_if/ll_bridge/rx_bridge/fifo_inst/oq_fifo/Mram_regBank_RDRCLKU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk_if/ll_bridge/rx_bridge/fifo_inst/oq_fifo/Mram_regBank</arg> of frag <arg fmt="%s" index="2">RDRCLKL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk_if/ll_bridge/rx_bridge/fifo_inst/oq_fifo/Mram_regBank_RDRCLKL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/Comp_FIFO/CompFIFO_64.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/Comp_FIFO/CompFIFO_64.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/Comp_FIFO/CompFIFO_64.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/Comp_FIFO/CompFIFO_64.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/RxSFIFO_64.RxSFIFO/BU2/U0/grf.rf/mem/gbm.gbmg.gbmga.ngecc.bmg/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/RxSFIFO_64.RxSFIFO/BU2/U0/grf.rf/mem/gbm.gbmg.gbmga.ngecc.bmg/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/RxSFIFO_64.RxSFIFO/BU2/U0/grf.rf/mem/gbm.gbmg.gbmga.ngecc.bmg/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_master_bridge/RxSFIFO_64.RxSFIFO/BU2/U0/grf.rf/mem/gbm.gbmg.gbmga.ngecc.bmg/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/GEN_TX_64_FIFO.comp_tx_pkt_fifo/COMP_TX_RAM_70.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/GEN_TX_64_FIFO.comp_tx_pkt_fifo/COMP_TX_RAM_70.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/GEN_TX_64_FIFO.comp_tx_pkt_fifo/COMP_TX_RAM_70.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/GEN_TX_64_FIFO.comp_tx_pkt_fifo/COMP_TX_RAM_70.dpram/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKL_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/comp_rx_fifo/GEN_64.COMP_RX_RAM/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKU</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/comp_rx_fifo/GEN_64.COMP_RX_RAM/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKU_tiesig</arg>
+</msg>
+
+<msg type="warning" file="Pack" num="231" delta="new" >trimming timing constraints from pin <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/comp_rx_fifo/GEN_64.COMP_RX_RAM/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP</arg> of frag <arg fmt="%s" index="2">RDRCLKL</arg> connected to power/ground net <arg fmt="%s" index="3">PCIe_Bridge/PCIe_Bridge/comp_slave_bridge/comp_rx_fifo/GEN_64.COMP_RX_RAM/BU2/U0/blk_mem_generator/valid.cstr/ramloop[0].ram.r/v5_noinit.ram/SDP.WIDE_PRIM36.noeccerr.SDP_RDRCLKL_tiesig</arg>
+</msg>
+
+<msg type="info" file="Pack" num="1716" delta="new" >Initializing temperature to <arg fmt="%0.3f" index="1">85.000</arg> Celsius. (default - Range: <arg fmt="%0.3f" index="2">0.000</arg> to <arg fmt="%0.3f" index="3">85.000</arg> Celsius)
+</msg>
+
+<msg type="info" file="Pack" num="1720" delta="new" >Initializing voltage to <arg fmt="%0.3f" index="1">0.950</arg> Volts. (default - Range: <arg fmt="%0.3f" index="2">0.950</arg> to <arg fmt="%0.3f" index="3">1.050</arg> Volts)
+</msg>
+
+<msg type="warning" file="Timing" num="3223" delta="new" >Timing constraint <arg fmt="%s" index="1">TS_MC_RDEN_SEL_MUX = MAXDELAY FROM TIMEGRP &quot;TNM_RDEN_SEL_MUX&quot; TO TIMEGRP &quot;TNM_CLK0&quot; TS_MC_CLK * 4</arg> ignored during timing analysis.</msg>
+
+<msg type="info" file="Timing" num="3386" delta="new" >Intersecting Constraints found and resolved.  For more information, see the TSI report.  Please consult the Xilinx Command Line Tools User Guide for information on generating a TSI report.</msg>
+
+<msg type="info" file="Map" num="215" delta="new" >The Interim Design Summary has been generated in the MAP Report (.mrp).
+</msg>
+
+<msg type="warning" file="Place" num="838" delta="new" >An IO Bus with more than one IO standard is found.
+<arg fmt="%s" index="1">Components associated with this bus are as follows: 
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;7&gt;   IOSTANDARD = LVCMOS25
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;6&gt;   IOSTANDARD = LVCMOS25
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;5&gt;   IOSTANDARD = LVCMOS25
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;4&gt;   IOSTANDARD = LVCMOS18
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;3&gt;   IOSTANDARD = LVCMOS25
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;2&gt;   IOSTANDARD = LVCMOS18
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;1&gt;   IOSTANDARD = LVCMOS18
+	 Comp: fpga_0_LEDs_8Bit_GPIO_IO_pin&lt;0&gt;   IOSTANDARD = LVCMOS18
+
+</arg>
+</msg>
+
+<msg type="warning" file="Place" num="838" delta="new" >An IO Bus with more than one IO standard is found.
+<arg fmt="%s" index="1">Components associated with this bus are as follows: 
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;31&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;30&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;29&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;28&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;27&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;26&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;25&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;24&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;23&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;22&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;21&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;20&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;19&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;18&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;17&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;16&gt;   IOSTANDARD = LVDCI_33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;15&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;14&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;13&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;12&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;11&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;10&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;9&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;8&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;7&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;6&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;5&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;4&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;3&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;2&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;1&gt;   IOSTANDARD = LVCMOS33
+	 Comp: fpga_0_SRAM_Mem_DQ_pin&lt;0&gt;   IOSTANDARD = LVCMOS33
+
+</arg>
+</msg>
+
+<msg type="info" file="Pack" num="1650" delta="new" >Map created a placed design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="0">One or more GTXs are being used in this design. Evaluate the SelectIO-To-GTX Crosstalk section of the Virtex-5 RocketIO GTX Transceiver User Guide to ensure that the design SelectIO usage meets the guidelines to minimize the impact on GTX performance. 
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="372" delta="new" >Gated clock. Clock net <arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/comp_block_plus/comp_endpoint/pcie_blk/SIO/.pcie_gt_wrapper_i/icdrreset&lt;0&gt;</arg> is sourced by a combinatorial pin. This is not good design practice. Use the CE pin to control the loading of data into the flip-flop.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="372" delta="new" >Gated clock. Clock net <arg fmt="%s" index="1">Ethernet_MAC/Ethernet_MAC/phy_tx_clk_i</arg> is sourced by a combinatorial pin. This is not good design practice. Use the CE pin to control the loading of data into the flip-flop.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="new" >The signal &lt;<arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/sig_sb_txrem_n&lt;0&gt;</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="new" >The signal &lt;<arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/sig_MB_TxREMn&lt;0&gt;</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="new" >The signal &lt;<arg fmt="%s" index="1">xps_bram_if_cntlr_1_port_BRAM_Addr&lt;31&gt;</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="new" >The signal &lt;<arg fmt="%s" index="1">xps_bram_if_cntlr_1_port_BRAM_Addr&lt;30&gt;</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="new" >The signal &lt;<arg fmt="%s" index="1">PCIe_Bridge/PCIe_Bridge/sig_MB_RxFull</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[1].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[1].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[4].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[4].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[7].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[7].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[2].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[2].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[5].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[5].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[0].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[0].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[3].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[3].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1269" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[6].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The Q1 output pin of IFF is not used.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="1273" delta="new" >Dangling pins on block:&lt;<arg fmt="%s" index="1">DDR2_SDRAM/DDR2_SDRAM/u_ddr2_top/u_mem_if_top/u_phy_top/u_phy_io/gen_dqs[6].u_iob_dqs/u_iddr_dq_ce</arg>&gt;:&lt;<arg fmt="%s" index="2">ILOGIC_IFF</arg>&gt;.  The SR pin is used for the IFF Flip-flop but the SRVAL_Q1 set/reset value is not configured.
+</msg>
+
+</messages>
+

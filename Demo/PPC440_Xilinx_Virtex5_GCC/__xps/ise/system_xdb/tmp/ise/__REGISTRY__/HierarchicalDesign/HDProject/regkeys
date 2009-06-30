@@ -1,0 +1,24 @@
+CommandLine-Map
+
+s
+CommandLine-Ngdbuild
+ngdbuild -ise ../__xps/ise/system.ise -p xc5vfx70tff1136-1 -nt timestamp -bm system.bmm E:/my_projects/Wittenstein/release/svn/main/FreeRTOS/Demo/PCC440_Xilinx_Virtex5_GCC/implementation/system.ngc -uc system.ucf system.ngd
+s
+CommandLine-Par
+
+s
+CommandLine-Xst
+
+s
+Previous-NGD
+
+s
+Previous-NGM
+
+s
+Previous-Packed-NCD
+
+s
+Previous-Routed-NCD
+
+s

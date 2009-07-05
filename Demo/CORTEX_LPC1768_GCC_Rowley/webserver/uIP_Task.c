@@ -66,7 +66,8 @@
 
 /* Demo includes. */
 #include "EthDev_LPC17xx.h"
-#include "LED.h"
+#include "EthDev.h"
+#include "ParTest.h"
 
 #include "LPC17xx.h"
 #include "core_cm3.h"
@@ -84,11 +85,6 @@
 /*-----------------------------------------------------------*/
 
 /*
- * Send the uIP buffer to the MAC.
- */
-static void prvENET_Send(void);
-
-/*
  * Setup the MAC address in the MAC itself, and in the uIP stack.
  */
 static void prvSetMACAddress( void );
@@ -102,7 +98,7 @@ clock_time_t clock_time( void );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used by the ISR to wake the uIP task. */
-extern xSemaphoreHandle xEMACSemaphore;
+xSemaphoreHandle xEMACSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -127,9 +123,6 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 	( void ) pvParameters;
 
-	/* Create the semaphore used by the ISR to wake this task. */
-	vSemaphoreCreateBinary( xEMACSemaphore );
-
 	/* Initialise the uIP stack. */
 	timer_set( &periodic_timer, configTICK_RATE_HZ / 2 );
 	timer_set( &arp_timer, configTICK_RATE_HZ * 10 );
@@ -140,6 +133,9 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	uip_setnetmask( xIPAddr );
 	httpd_init();
 
+	/* Create the semaphore used to wake the uIP task. */
+	vSemaphoreCreateBinary( xEMACSemaphore );
+
 	/* Initialise the MAC. */
 	while( Init_EMAC() != pdPASS )
     {
@@ -148,7 +144,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 	portENTER_CRITICAL();
 	{
-		ETH_INTENABLE = INT_RX_DONE;
+		ETH_INTENABLE = ( INT_RX_DONE | INT_TX_DONE );
 		/* set the interrupt priority */
 		NVIC_SetPriority( ENET_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
 		/* enable the interrupt */
@@ -161,9 +157,9 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	for( ;; )
 	{
 		/* Is there received data ready to be processed? */
-		uip_len = uiGetEMACRxData( uip_buf );
+		uip_len = ulGetEMACRxData();
 
-		if( uip_len > 0 )
+		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 		{
 			/* Standard uIP loop taken from the uIP manual. */
 			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
@@ -177,7 +173,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 				if( uip_len > 0 )
 				{
 					uip_arp_out();
-					prvENET_Send();
+					vSendEMACTxData( uip_len );
 				}
 			}
 			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
@@ -189,13 +185,13 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 				uip_len is set to a value > 0. */
 				if( uip_len > 0 )
 				{
-					prvENET_Send();
+					vSendEMACTxData( uip_len );
 				}
 			}
 		}
 		else
 		{
-			if( timer_expired( &periodic_timer ) )
+			if( timer_expired( &periodic_timer ) && ( uip_buf != NULL ) )
 			{
 				timer_reset( &periodic_timer );
 				for( i = 0; i < UIP_CONNS; i++ )
@@ -208,7 +204,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 					if( uip_len > 0 )
 					{
 						uip_arp_out();
-						prvENET_Send();
+						vSendEMACTxData( uip_len );
 					}
 				}
 
@@ -229,32 +225,6 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 			}
 		}
 	}
-}
-/*-----------------------------------------------------------*/
-
-static void prvENET_Send(void)
-{
-    RequestSend();
-
-    /* Copy the header into the Tx buffer. */
-    CopyToFrame_EMAC( uip_buf, uipTOTAL_FRAME_HEADER_SIZE );
-    if( uip_len > uipTOTAL_FRAME_HEADER_SIZE )
-    {
-        CopyToFrame_EMAC( uip_appdata, ( uip_len - uipTOTAL_FRAME_HEADER_SIZE ) );
-    }
-
-    DoSend_EMAC( uip_len );
-
-    RequestSend();
-
-    /* Copy the header into the Tx buffer. */
-    CopyToFrame_EMAC( uip_buf, uipTOTAL_FRAME_HEADER_SIZE );
-    if( uip_len > uipTOTAL_FRAME_HEADER_SIZE )
-    {
-        CopyToFrame_EMAC( uip_appdata, ( uip_len - uipTOTAL_FRAME_HEADER_SIZE ) );
-    }
-
-    DoSend_EMAC( uip_len );
 }
 /*-----------------------------------------------------------*/
 

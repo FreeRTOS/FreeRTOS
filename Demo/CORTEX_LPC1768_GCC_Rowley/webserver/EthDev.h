@@ -103,7 +103,7 @@ void           	RequestSend(void);
 unsigned int   	Rdy4Tx(void);
 void           	DoSend_EMAC(unsigned short FrameSize);
 void 			vEMACWaitForInput( void );
-unsigned int 	uiGetEMACRxData( unsigned char *ucBuffer );
-
+unsigned long 	ulGetEMACRxData( void );
+void vSendEMACTxData( unsigned short usTxDataLen );
 
 #endif

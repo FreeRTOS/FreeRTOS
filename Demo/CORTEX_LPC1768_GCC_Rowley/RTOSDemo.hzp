@@ -25,13 +25,15 @@
         <file file_name="../Common/Minimal/PollQ.c"/>
       </folder>
       <file file_name="main.c"/>
-      <folder Name="WEB Server">
+      <folder Name="WEB Server" file_name="">
         <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip.c"/>
         <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip_arp.c"/>
         <file file_name="../Common/ethernet/uIP/uip-1.0/uip/psock.c"/>
         <file file_name="../Common/ethernet/uIP/uip-1.0/uip/timer.c"/>
         <file file_name="webserver/uIP_Task.c"/>
-        <file file_name="webserver/emac.c"/>
+        <file file_name="webserver/emac.c">
+          <configuration Name="THUMB Flash Debug" build_exclude_from_build="No"/>
+        </file>
         <file file_name="webserver/httpd.c"/>
         <file file_name="webserver/httpd-cgi.c"/>
         <file file_name="webserver/httpd-fs.c"/>

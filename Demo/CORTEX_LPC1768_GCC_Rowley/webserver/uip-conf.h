@@ -57,6 +57,8 @@
 
 #include <stdint.h>
 
+#define UIP_CONF_EXTERNAL_BUFFER
+
 /**
  * 8 bit datatype
  *

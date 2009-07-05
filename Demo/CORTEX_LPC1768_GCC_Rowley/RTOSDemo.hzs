@@ -19,6 +19,9 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;Common Demo Tasks" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;WEB Server" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1]" binaryNodes="" unsignedNodes="" visibleGroups="CPU" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -49,7 +52,12 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" y="172" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" left="0" selected="1" name="unnamed" top="150" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\emac.c" y="523" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\emac.c" left="0" selected="0" name="unnamed" top="489" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" y="172" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" left="0" selected="1" name="unnamed" top="355" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\uIP_Task.c" y="166" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\uIP_Task.c" left="0" selected="0" name="unnamed" top="138" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="8" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\EthDev_LPC17xx.h" y="277" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\EthDev_LPC17xx.h" left="0" selected="0" name="unnamed" top="13" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Source\queue.c" y="1049" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Source\queue.c" left="0" selected="0" name="unnamed" top="1027" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\Minimal\integer.c" y="155" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\Common\Minimal\integer.c" left="0" selected="0" name="unnamed" top="133" />
  </Files>
- <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Amontec JTAGkey" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
+ <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Amontec JTAGkey" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

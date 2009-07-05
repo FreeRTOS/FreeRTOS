@@ -30,8 +30,16 @@
 #define emacFULL_DUPLEX_ENABLED		( 0x0004 )
 #define emac10BASE_T_MODE			( 0x0002 )
 
+/* If no buffers are available, then wait this long before looking again.... */
+#define emacBUFFER_WAIT_DELAY	( 3 / portTICK_RATE_MS )
+
+/* ...and don't look more than this many times. */
+#define emacBUFFER_WAIT_ATTEMPTS	( 30 )
+
+#define emacTX_DESC_INDEX			( 0 )
+
 /* The semaphore used to wake the uIP task when data arives. */
-xSemaphoreHandle		xEMACSemaphore = NULL;
+extern xSemaphoreHandle xEMACSemaphore;
 
 static unsigned short	*rptr;
 static unsigned short	*tptr;
@@ -40,6 +48,21 @@ static void prvInitDescriptors( void );
 static void prvSetupEMACHardware( void );
 static void prvConfigurePHY( void );
 static long prvSetupLinkStatus( void );
+static unsigned char *prvGetNextBuffer( void );
+static void prvReturnBuffer( unsigned char *pucBuffer );
+
+/* Each ucBufferInUse index corresponds to a position in the same index in the
+ucMACBuffers array.  If the index contains a 1 then the buffer within
+ucMACBuffers is in use, if it contains a 0 then the buffer is free. */
+static unsigned char ucBufferInUse[ ETH_NUM_BUFFERS ] = { pdFALSE };
+
+/* The uip_buffer is not a fixed array, but instead gets pointed to the buffers
+allocated within this file. */
+unsigned char * uip_buf;
+
+/* Store the length of the data being sent so the data can be sent twice.  The
+value will be set back to 0 once the data has been sent twice. */
+static unsigned short usSendLen = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -74,7 +97,7 @@ long x;
 }
 /*-----------------------------------------------------------*/
 
-unsigned short read_PHY( unsigned char ucPhyReg, portBASE_TYPE *pxStatus )
+unsigned short read_PHY( unsigned char ucPhyReg, long *plStatus )
 {
 long x;
 const long lMaxTime = 10;
@@ -97,23 +120,67 @@ const long lMaxTime = 10;
 
 	if( x >= lMaxTime )
 	{
-		*pxStatus = pdFAIL;
+		*plStatus = pdFAIL;
 	}
 
 	return( MAC_MRDD );
 }
 /*-----------------------------------------------------------*/
 
-static void prvInitDescriptors( void )
+static unsigned char *prvGetNextBuffer( void )
 {
 long x;
+unsigned char *pucReturn = NULL;
+unsigned long ulAttempts = 0;
+
+	while( pucReturn == NULL )
+	{
+		/* Look through the buffers to find one that is not in use by
+		anything else. */
+		for( x = 0; x < ETH_NUM_BUFFERS; x++ )
+		{
+			if( ucBufferInUse[ x ] == pdFALSE )
+			{
+				ucBufferInUse[ x ] = pdTRUE;
+				pucReturn = ( unsigned char * ) ETH_BUF( x );
+				break;
+			}
+		}
+
+		/* Was a buffer found? */
+		if( pucReturn == NULL )
+		{
+			ulAttempts++;
+
+			if( ulAttempts >= emacBUFFER_WAIT_ATTEMPTS )
+			{
+				break;
+			}
+
+			/* Wait then look again. */
+			vTaskDelay( emacBUFFER_WAIT_DELAY );
+		}
+	}
+
+	return pucReturn;
+}
+/*-----------------------------------------------------------*/
+
+static void prvInitDescriptors( void )
+{
+long x, lNextBuffer = 0;
 
 	for( x = 0; x < NUM_RX_FRAG; x++ )
 	{
-		RX_DESC_PACKET( x ) = RX_BUF( x );
+		/* Allocate the next Ethernet buffer to this descriptor. */
+		RX_DESC_PACKET( x ) = ETH_BUF( lNextBuffer );
 		RX_DESC_CTRL( x ) = RCTRL_INT | ( ETH_FRAG_SIZE - 1 );
 		RX_STAT_INFO( x ) = 0;
 		RX_STAT_HASHCRC( x ) = 0;
+
+		/* The Ethernet buffer is now in use. */
+		ucBufferInUse[ lNextBuffer ] = pdTRUE;
+		lNextBuffer++;
 	}
 
 	/* Set EMAC Receive Descriptor Registers. */
@@ -124,9 +191,11 @@ long x;
 	/* Rx Descriptors Point to 0 */
 	MAC_RXCONSUMEINDEX = 0;
 
+	/* A buffer is not allocated to the Tx descriptors until they are actually
+	used. */
 	for( x = 0; x < NUM_TX_FRAG; x++ )
 	{
-		TX_DESC_PACKET( x ) = TX_BUF( x );
+		TX_DESC_PACKET( x ) = NULL;
 		TX_DESC_CTRL( x ) = 0;
 		TX_STAT_INFO( x ) = 0;
 	}
@@ -144,7 +213,7 @@ long x;
 static void prvSetupEMACHardware( void )
 {
 unsigned short us;
-long x;
+long x, lDummy;
 
 	/* Enable P1 Ethernet Pins. */
 	PINSEL2 = emacPINSEL2_VALUE;
@@ -184,7 +253,7 @@ long x;
 	for( x = 0; x < 100; x++ )
 	{
 		vTaskDelay( emacSHORT_DELAY * 5 );
-		us = read_PHY( PHY_REG_BMCR, &us );
+		us = read_PHY( PHY_REG_BMCR, &lDummy );
 		if( !( us & MCFG_RES_MII ) )
 		{
 			/* Reset complete */
@@ -197,7 +266,7 @@ long x;
 static void prvConfigurePHY( void )
 {
 unsigned short us;
-long x;
+long x, lDummy;
 
 	/* Auto negotiate the configuration. */
 	if( write_PHY( PHY_REG_BMCR, PHY_AUTO_NEG ) )
@@ -206,7 +275,7 @@ long x;
 
 		for( x = 0; x < 10; x++ )
 		{
-			us = read_PHY( PHY_REG_BMSR, &us );
+			us = read_PHY( PHY_REG_BMSR, &lDummy );
 
 			if( us & PHY_AUTO_NEG_COMPLETE )
 			{
@@ -270,9 +339,9 @@ unsigned short usLinkStatus;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE Init_EMAC( void )
+long Init_EMAC( void )
 {
-portBASE_TYPE xReturn = pdPASS;
+long lReturn = pdPASS;
 volatile unsigned long regv, tout;
 unsigned long ulID1, ulID2;
 
@@ -280,8 +349,8 @@ unsigned long ulID1, ulID2;
 	prvSetupEMACHardware();
 
 	/* Check if connected to a DP83848C PHY. */
-	ulID1 = read_PHY( PHY_REG_IDR1, &xReturn );
-	ulID2 = read_PHY( PHY_REG_IDR2, &xReturn );
+	ulID1 = read_PHY( PHY_REG_IDR1, &lReturn );
+	ulID2 = read_PHY( PHY_REG_IDR2, &lReturn );
 	if( ( (ulID1 << 16UL ) | ( ulID2 & 0xFFF0UL ) ) == DP83848C_ID )
 	{
 		/* Set the Ethernet MAC Address registers */
@@ -295,162 +364,169 @@ unsigned long ulID1, ulID2;
 		/* Receive Broadcast and Perfect Match Packets */
 		MAC_RXFILTERCTRL = RFC_UCAST_EN | RFC_BCAST_EN | RFC_PERFECT_EN;
 
-		/* Create the semaphore used to wake the uIP task. */
-		vSemaphoreCreateBinary( xEMACSemaphore );
-
 		/* Setup the PHY. */
 		prvConfigurePHY();
 	}
 	else
 	{
-		xReturn = pdFAIL;
+		lReturn = pdFAIL;
 	}
 
 	/* Check the link status. */
-	if( xReturn == pdPASS )
+	if( lReturn == pdPASS )
 	{
-		xReturn = prvSetupLinkStatus();
+		lReturn = prvSetupLinkStatus();
 	}
 
-	if( xReturn == pdPASS )
+	if( lReturn == pdPASS )
 	{
+		/* Initialise uip_buf to ensure it points somewhere valid. */
+		uip_buf = prvGetNextBuffer();
+
 		/* Reset all interrupts */
-		MAC_INTCLEAR = 0xFFFF;
+		MAC_INTCLEAR = ( INT_RX_OVERRUN | INT_RX_ERR | INT_RX_FIN | INT_RX_DONE | INT_TX_UNDERRUN | INT_TX_ERR | INT_TX_FIN | INT_TX_DONE | INT_SOFT_INT | INT_WAKEUP );
 
 		/* Enable receive and transmit mode of MAC Ethernet core */
 		MAC_COMMAND |= ( CR_RX_EN | CR_TX_EN );
 		MAC_MAC1 |= MAC1_REC_EN;
 	}
 
-	return xReturn;
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
-// reads a word in little-endian byte order from RX_BUFFER
-unsigned short ReadFrame_EMAC( void )
+static void prvReturnBuffer( unsigned char *pucBuffer )
 {
-	return( *rptr++ );
-}
+unsigned long ul;
 
-// copies bytes from frame port to MCU-memory
-// NOTES: * an odd number of byte may only be transfered
-//          if the frame is read to the end!
-//        * MCU-memory MUST start at word-boundary
-void CopyFromFrame_EMAC( void *Dest, unsigned short Size )
-{
-	unsigned short	*piDest;	// Keil: Pointer added to correct expression
-	piDest = Dest;				// Keil: Line added
-	while( Size > 1 )
+	/* Mark a buffer as free for use. */
+	for( ul = 0; ul < ETH_NUM_BUFFERS; ul++ )
 	{
-		*piDest++ = ReadFrame_EMAC();
-		Size -= 2;
+		if( ETH_BUF( ul ) == ( unsigned long ) pucBuffer )
+		{
+			ucBufferInUse[ ul ] = pdFALSE;
+			break;
+		}
 	}
-
-	if( Size )
-	{	// check for leftover byte...
-		*( unsigned char * ) piDest = ( char ) ReadFrame_EMAC();	// the LAN-Controller will return 0
-	}	// for the highbyte
 }
+/*-----------------------------------------------------------*/
 
-
-// Reads the length of the received ethernet frame and checks if the
-// destination address is a broadcast message or not
-// returns the frame length
-unsigned short StartReadFrame( void )
+unsigned long ulGetEMACRxData( void )
 {
-	unsigned short	RxLen;
-	unsigned int	idx;
-
-	idx = MAC_RXCONSUMEINDEX;
-	RxLen = ( RX_STAT_INFO(idx) & RINFO_SIZE ) - 3;
-	rptr = ( unsigned short * ) RX_DESC_PACKET( idx );
-	return( RxLen );
-}
-
-void EndReadFrame( void )
-{
-	unsigned int	idx;
-
-	/* DMA free packet. */
-	idx = MAC_RXCONSUMEINDEX;
-
-	if( ++idx == NUM_RX_FRAG )
-	{
-		idx = 0;
-	}
-
-	MAC_RXCONSUMEINDEX = idx;
-}
-
-unsigned int uiGetEMACRxData( unsigned char *ucBuffer )
-{
-	unsigned int	uiLen = 0;
+unsigned long ulLen = 0;
+long lIndex;
 
 	if( MAC_RXPRODUCEINDEX != MAC_RXCONSUMEINDEX )
 	{
-		uiLen = StartReadFrame();
-		CopyFromFrame_EMAC( ucBuffer, uiLen );
-		EndReadFrame();
+		/* Mark the current buffer as free as uip_buf is going to be set to
+		the buffer that contains the received data. */
+		prvReturnBuffer( uip_buf );
+
+		ulLen = ( RX_STAT_INFO( MAC_RXCONSUMEINDEX ) & RINFO_SIZE ) - 3;
+		uip_buf = ( unsigned char * ) RX_DESC_PACKET( MAC_RXCONSUMEINDEX );
+
+		/* Allocate a new buffer to the descriptor. */
+        RX_DESC_PACKET( MAC_RXCONSUMEINDEX ) = ( unsigned long ) prvGetNextBuffer();
+
+		/* Move the consume index onto the next position, ensuring it wraps to
+		the beginning at the appropriate place. */
+		lIndex = MAC_RXCONSUMEINDEX;
+
+		lIndex++;
+		if( lIndex >= NUM_RX_FRAG )
+		{
+			lIndex = 0;
+		}
+
+		MAC_RXCONSUMEINDEX = lIndex;
 	}
 
-	return uiLen;
+	return ulLen;
 }
+/*-----------------------------------------------------------*/
 
-// requests space in EMAC memory for storing an outgoing frame
-void RequestSend( void )
+void vSendEMACTxData( unsigned short usTxDataLen )
 {
-	unsigned int	idx;
+unsigned long ulAttempts = 0UL;
 
-	idx = MAC_TXPRODUCEINDEX;
-	tptr = ( unsigned short * ) TX_DESC_PACKET( idx );
-}
-
-// writes a word in little-endian byte order to TX_BUFFER
-void WriteFrame_EMAC( unsigned short Data )
-{
-	*tptr++ = Data;
-}
-
-// copies bytes from MCU-memory to frame port
-// NOTES: * an odd number of byte may only be transfered
-//          if the frame is written to the end!
-//        * MCU-memory MUST start at word-boundary
-void CopyToFrame_EMAC( void *Source, unsigned int Size )
-{
-	unsigned short	*piSource;
-
-	piSource = Source;
-	Size = ( Size + 1 ) & 0xFFFE;	// round Size up to next even number
-	while( Size > 0 )
+	/* Check to see if the Tx descriptor is free, indicated by its buffer being
+	NULL. */
+	while( TX_DESC_PACKET( emacTX_DESC_INDEX ) != NULL )
 	{
-		WriteFrame_EMAC( *piSource++ );
-		Size -= 2;
-	}
-}
+		/* Wait for the Tx descriptor to become available. */
+		vTaskDelay( emacBUFFER_WAIT_DELAY );
 
-void DoSend_EMAC( unsigned short FrameSize )
-{
-	unsigned int	idx;
-
-	idx = MAC_TXPRODUCEINDEX;
-	TX_DESC_CTRL( idx ) = FrameSize | TCTRL_LAST;
-	if( ++idx == NUM_TX_FRAG )
-	{
-		idx = 0;
+		ulAttempts++;
+		if( ulAttempts > emacBUFFER_WAIT_ATTEMPTS )
+		{
+			/* Something has gone wrong as the Tx descriptor is still in use.
+			Clear it down manually, the data it was sending will probably be
+			lost. */
+			prvReturnBuffer( ( unsigned char * ) TX_DESC_PACKET( emacTX_DESC_INDEX ) );
+			break;
+		}
 	}
 
-	MAC_TXPRODUCEINDEX = idx;
+	/* Setup the Tx descriptor for transmission.  Remember the length of the
+	data being sent so the second descriptor can be used to send it again from
+	within the ISR. */
+	usSendLen = usTxDataLen;
+	TX_DESC_PACKET( emacTX_DESC_INDEX ) = ( unsigned long ) uip_buf;
+	TX_DESC_CTRL( emacTX_DESC_INDEX ) = ( usTxDataLen | TCTRL_LAST | TCTRL_INT );
+	MAC_TXPRODUCEINDEX = ( emacTX_DESC_INDEX + 1 );
+
+	/* uip_buf is being sent by the Tx descriptor.  Allocate a new buffer. */
+	uip_buf = prvGetNextBuffer();
 }
+/*-----------------------------------------------------------*/
+
+
+static char c[ 256 ] = { 0 };
+static int i = 0;
+
 
 void vEMAC_ISR( void )
 {
-	portBASE_TYPE	xHigherPriorityTaskWoken = pdFALSE;
+unsigned long ulStatus;
+portBASE_TYPE	xHigherPriorityTaskWoken = pdFALSE;
+
+	ulStatus = MAC_INTSTATUS;
 
 	/* Clear the interrupt. */
-	MAC_INTCLEAR = 0xffff;
+	MAC_INTCLEAR = ulStatus;
 
-	/* Ensure the uIP task is not blocked as data has arrived. */
-	xSemaphoreGiveFromISR( xEMACSemaphore, &xHigherPriorityTaskWoken );
+	if( ulStatus & INT_RX_DONE )
+	{
+		/* Ensure the uIP task is not blocked as data has arrived. */
+		xSemaphoreGiveFromISR( xEMACSemaphore, &xHigherPriorityTaskWoken );
+	}
+
+	if( ulStatus & INT_TX_DONE )
+	{
+		if( usSendLen > 0 )
+		{
+if( i < 255 )
+	c[ i++ ] = 1;
+			/* Send the data again, using the second descriptor.  As there are
+			only two descriptors the index is set back to 0. */
+			TX_DESC_PACKET( ( emacTX_DESC_INDEX + 1 ) ) = TX_DESC_PACKET( emacTX_DESC_INDEX );
+			TX_DESC_CTRL( ( emacTX_DESC_INDEX + 1 ) ) = ( usSendLen | TCTRL_LAST | TCTRL_INT );
+			MAC_TXPRODUCEINDEX = ( emacTX_DESC_INDEX );
+
+			/* This is the second Tx so set usSendLen to 0 to indicate that the
+			Tx descriptors will be free again. */
+			usSendLen = 0UL;
+		}
+		else
+		{
+if( i < 255 )
+	c[ i++ ] = 1;
+
+			/* The Tx buffer is no longer required. */
+			prvReturnBuffer( ( unsigned char * ) TX_DESC_PACKET( emacTX_DESC_INDEX ) );
+            TX_DESC_PACKET( emacTX_DESC_INDEX ) = NULL;
+		}
+	}
 
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }

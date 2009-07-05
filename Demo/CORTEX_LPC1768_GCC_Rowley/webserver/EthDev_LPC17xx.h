@@ -25,8 +25,8 @@
 #include <stdint.h>
 
 /* EMAC Memory Buffer configuration for 16K Ethernet RAM. */
-#define NUM_RX_FRAG         4           /* Num.of RX Fragments 4*1536= 6.0kB */
-#define NUM_TX_FRAG         3           /* Num.of TX Fragments 3*1536= 4.6kB */
+#define NUM_RX_FRAG         3           /* Num.of RX Fragments. */
+#define NUM_TX_FRAG         2           /* Num.of TX Fragments. */
 #define ETH_FRAG_SIZE       1536        /* Packet Fragment size 1536 Bytes   */
 
 #define ETH_MAX_FLEN        1536        /* Max. Ethernet Frame Size          */
@@ -57,8 +57,7 @@ typedef struct {                        /* TX Status struct                  */
 #define RX_STAT_BASE        (RX_DESC_BASE + NUM_RX_FRAG*(2*4))     /* 2 * uint32_t, see RX_DESC_TypeDef */
 #define TX_DESC_BASE        (RX_STAT_BASE + NUM_RX_FRAG*(2*4))     /* 2 * uint32_t, see RX_STAT_TypeDef */
 #define TX_STAT_BASE        (TX_DESC_BASE + NUM_TX_FRAG*(2*4))     /* 2 * uint32_t, see TX_DESC_TypeDef */
-#define RX_BUF_BASE         (TX_STAT_BASE + NUM_TX_FRAG*(1*4))     /* 1 * uint32_t, see TX_STAT_TypeDef */
-#define TX_BUF_BASE         (RX_BUF_BASE  + NUM_RX_FRAG*ETH_FRAG_SIZE)
+#define ETH_BUF_BASE		(TX_STAT_BASE + NUM_TX_FRAG*(1*4))     /* 1 * uint32_t, see TX_STAT_TypeDef */
 
 /* RX and TX descriptor and status definitions. */
 #define RX_DESC_PACKET(i)   (*(unsigned int *)(RX_DESC_BASE   + 8*i))
@@ -68,9 +67,8 @@ typedef struct {                        /* TX Status struct                  */
 #define TX_DESC_PACKET(i)   (*(unsigned int *)(TX_DESC_BASE   + 8*i))
 #define TX_DESC_CTRL(i)     (*(unsigned int *)(TX_DESC_BASE+4 + 8*i))
 #define TX_STAT_INFO(i)     (*(unsigned int *)(TX_STAT_BASE   + 4*i))
-#define RX_BUF(i)           (RX_BUF_BASE + ETH_FRAG_SIZE*i)
-#define TX_BUF(i)           (TX_BUF_BASE + ETH_FRAG_SIZE*i)
-
+#define ETH_BUF(i)          ( ETH_BUF_BASE + ETH_FRAG_SIZE*i )
+#define ETH_NUM_BUFFERS		( NUM_TX_FRAG + NUM_RX_FRAG + 1 ) /* There are in fact 2 more buffers than descriptors as the two Tx descriptors use the same buffer to speed up the uip Tx. */
 
 
 /* MAC Configuration Register 1 */

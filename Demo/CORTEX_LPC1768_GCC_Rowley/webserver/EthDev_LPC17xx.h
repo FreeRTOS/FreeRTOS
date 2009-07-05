@@ -1,39 +1,64 @@
-/*----------------------------------------------------------------------------
- *      LPC2378 Ethernet Definitions
+/*
+ * @file:    EthDev_LPC17xx.h
+ * @purpose: Ethernet Device Definitions for NXP LPC17xx
+ * @version: V0.01
+ * @date:    14. May 2009
  *----------------------------------------------------------------------------
- *      Name:    EMAC.H
- *      Purpose: Philips LPC2378 EMAC hardware definitions
- *----------------------------------------------------------------------------
- *      Copyright (c) 2006 KEIL - An ARM Company. All rights reserved.
- *---------------------------------------------------------------------------*/
-#ifndef __EMAC_H
-#define __EMAC_H
+ *
+ * Copyright (C) 2009 ARM Limited. All rights reserved.
+ *
+ * ARM Limited (ARM) is supplying this software for use with Cortex-M3
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
+ *
+ * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+ * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+ * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
+ * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+ *
+ */
 
-/* MAC address definition.  The MAC address must be unique on the network. */
-#define emacETHADDR0 0
-#define emacETHADDR1 0xbd
-#define emacETHADDR2 0x33
-#define emacETHADDR3 0x02
-#define emacETHADDR4 0x64
-#define emacETHADDR5 0x24
+#ifndef __ETHDEV_LPC17XX_H
+#define __ETHDEV_LPC17XX_H
 
+#include <stdint.h>
 
 /* EMAC Memory Buffer configuration for 16K Ethernet RAM. */
 #define NUM_RX_FRAG         4           /* Num.of RX Fragments 4*1536= 6.0kB */
-#define NUM_TX_FRAG         2           /* Num.of TX Fragments 2*1536= 3.0kB */
+#define NUM_TX_FRAG         3           /* Num.of TX Fragments 3*1536= 4.6kB */
 #define ETH_FRAG_SIZE       1536        /* Packet Fragment size 1536 Bytes   */
 
 #define ETH_MAX_FLEN        1536        /* Max. Ethernet Frame Size          */
 
-/* EMAC variables located in 16K Ethernet SRAM */
-//extern unsigned char xEthDescriptors[];
-#define RX_DESC_BASE        (0x2007c000UL)
-#define RX_STAT_BASE        (RX_DESC_BASE + NUM_RX_FRAG*8)
-#define TX_DESC_BASE        (RX_STAT_BASE + NUM_RX_FRAG*8)
-#define TX_STAT_BASE        (TX_DESC_BASE + NUM_TX_FRAG*8)
-#define RX_BUF_BASE         (TX_STAT_BASE + NUM_TX_FRAG*4)
+typedef struct {                        /* RX Descriptor struct              */
+   uint32_t Packet;
+   uint32_t Ctrl;
+} RX_DESC_TypeDef;
+
+typedef struct {                        /* RX Status struct                  */
+   uint32_t Info;
+   uint32_t HashCRC;
+} RX_STAT_TypeDef;
+
+typedef struct {                        /* TX Descriptor struct              */
+   uint32_t Packet;
+   uint32_t Ctrl;
+} TX_DESC_TypeDef;
+
+typedef struct {                        /* TX Status struct                  */
+   uint32_t Info;
+} TX_STAT_TypeDef;
+
+
+/* EMAC variables located in AHB SRAM bank 1*/
+#define AHB_SRAM_BANK1_BASE  0x2007c000UL
+#define RX_DESC_BASE        (AHB_SRAM_BANK1_BASE         )
+#define RX_STAT_BASE        (RX_DESC_BASE + NUM_RX_FRAG*(2*4))     /* 2 * uint32_t, see RX_DESC_TypeDef */
+#define TX_DESC_BASE        (RX_STAT_BASE + NUM_RX_FRAG*(2*4))     /* 2 * uint32_t, see RX_STAT_TypeDef */
+#define TX_STAT_BASE        (TX_DESC_BASE + NUM_TX_FRAG*(2*4))     /* 2 * uint32_t, see TX_DESC_TypeDef */
+#define RX_BUF_BASE         (TX_STAT_BASE + NUM_TX_FRAG*(1*4))     /* 1 * uint32_t, see TX_STAT_TypeDef */
 #define TX_BUF_BASE         (RX_BUF_BASE  + NUM_RX_FRAG*ETH_FRAG_SIZE)
-#define TX_BUF_END			(TX_BUF_BASE  + NUM_TX_FRAG*ETH_FRAG_SIZE)
 
 /* RX and TX descriptor and status definitions. */
 #define RX_DESC_PACKET(i)   (*(unsigned int *)(RX_DESC_BASE   + 8*i))
@@ -45,6 +70,8 @@
 #define TX_STAT_INFO(i)     (*(unsigned int *)(TX_STAT_BASE   + 4*i))
 #define RX_BUF(i)           (RX_BUF_BASE + ETH_FRAG_SIZE*i)
 #define TX_BUF(i)           (TX_BUF_BASE + ETH_FRAG_SIZE*i)
+
+
 
 /* MAC Configuration Register 1 */
 #define MAC1_REC_EN         0x00000001  /* Receive Enable                    */
@@ -70,7 +97,6 @@
 #define MAC2_ADET_PAD_EN    0x00000080  /* Auto Detect Pad Enable            */
 #define MAC2_PPREAM_ENF     0x00000100  /* Pure Preamble Enforcement         */
 #define MAC2_LPREAM_ENF     0x00000200  /* Long Preamble Enforcement         */
-#undef  MAC2_NO_BACKOFF /* Remove compiler warning. */
 #define MAC2_NO_BACKOFF     0x00001000  /* No Backoff Algorithm              */
 #define MAC2_BACK_PRESSURE  0x00002000  /* Backoff Presurre / No Backoff     */
 #define MAC2_EXCESS_DEF     0x00004000  /* Excess Defer                      */
@@ -86,7 +112,6 @@
 #define CLRT_DEF            0x0000370F  /* Default value                     */
 
 /* PHY Support Register */
-#undef SUPP_SPEED   /* Remove compiler warning. */
 #define SUPP_SPEED          0x00000100  /* Reduced MII Logic Current Speed   */
 #define SUPP_RES_RMII       0x00000800  /* Reset Reduced MII Logic           */
 
@@ -98,13 +123,11 @@
 /* MII Management Configuration Register */
 #define MCFG_SCAN_INC       0x00000001  /* Scan Increment PHY Address        */
 #define MCFG_SUPP_PREAM     0x00000002  /* Suppress Preamble                 */
-#define MCFG_CLK_SEL        0x0000001C  /* Clock Select Mask                 */
+#define MCFG_CLK_SEL        0x0000003C  /* Clock Select Mask                 */
 #define MCFG_RES_MII        0x00008000  /* Reset MII Management Hardware     */
 
 /* MII Management Command Register */
-#undef MCMD_READ   /* Remove compiler warning. */
 #define MCMD_READ           0x00000001  /* MII Read                          */
-#undef MCMD_SCAN /* Remove compiler warning. */
 #define MCMD_SCAN           0x00000002  /* MII Scan continuously             */
 
 #define MII_WR_TOUT         0x00050000  /* MII Write timeout count           */
@@ -115,7 +138,6 @@
 #define MADR_PHY_ADR        0x00001F00  /* PHY Address Mask                  */
 
 /* MII Management Indicators Register */
-#undef MIND_BUSY   /* Remove compiler warning. */
 #define MIND_BUSY           0x00000001  /* MII is Busy                       */
 #define MIND_SCAN           0x00000002  /* MII Scanning in Progress          */
 #define MIND_NOT_VAL        0x00000004  /* MII Read Data not valid           */
@@ -267,6 +289,9 @@
 #define TINFO_NO_DESCR      0x40000000  /* No new Descriptor available       */
 #define TINFO_ERR           0x80000000  /* Error Occured (OR of all errors)  */
 
+/* ENET Device Revision ID */
+#define OLD_EMAC_MODULE_ID  0x39022000  /* Rev. ID for first rev '-'         */
+
 /* DP83848C PHY Registers */
 #define PHY_REG_BMCR        0x00        /* Basic Mode Control Register       */
 #define PHY_REG_BMSR        0x01        /* Basic Mode Status Register        */
@@ -300,25 +325,8 @@
 #define DP83848C_DEF_ADR    0x0100      /* Default PHY device address        */
 #define DP83848C_ID         0x20005C90  /* PHY Identifier                    */
 
-// prototypes
-portBASE_TYPE	Init_EMAC(void);
-unsigned short 	ReadFrameBE_EMAC(void);
-void           	CopyToFrame_EMAC(void *Source, unsigned int Size);
-void           	CopyFromFrame_EMAC(void *Dest, unsigned short Size);
-void           	DummyReadFrame_EMAC(unsigned short Size);
-unsigned short 	StartReadFrame(void);
-void           	EndReadFrame(void);
-unsigned int   	CheckFrameReceived(void);
-void           	RequestSend(void);
-unsigned int   	Rdy4Tx(void);
-void           	DoSend_EMAC(unsigned short FrameSize);
-void 			vEMACWaitForInput( void );
-unsigned int 	uiGetEMACRxData( unsigned char *ucBuffer );
-
-
 #endif
 
 /*----------------------------------------------------------------------------
  * end of file
  *---------------------------------------------------------------------------*/
-

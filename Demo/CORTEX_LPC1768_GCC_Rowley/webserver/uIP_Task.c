@@ -66,6 +66,7 @@
 
 /* Demo includes. */
 #include "emac.h"
+#include "EthDev_LPC17xx.h"
 #include "LED.h"
 
 #include "LPC17xx.h"
@@ -80,7 +81,6 @@
 
 /* Standard constant. */
 #define uipTOTAL_FRAME_HEADER_SIZE	54
-
 
 /*-----------------------------------------------------------*/
 

@@ -65,7 +65,6 @@
 #include "clock-arch.h"
 
 /* Demo includes. */
-#include "emac.h"
 #include "EthDev_LPC17xx.h"
 #include "LED.h"
 

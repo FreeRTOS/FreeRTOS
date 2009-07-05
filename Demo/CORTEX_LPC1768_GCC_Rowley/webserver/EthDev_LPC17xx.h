@@ -321,6 +321,7 @@ typedef struct {                        /* TX Status struct                  */
 #define PHY_FULLD_10M       0x0100      /* Full Duplex 10Mbit                */
 #define PHY_HALFD_10M       0x0000      /* Half Duplex 10MBit                */
 #define PHY_AUTO_NEG        0x3000      /* Select Auto Negotiation           */
+#define PHY_AUTO_NEG_COMPLETE 0x0020	/* Auto negotiation have finished.   */
 
 #define DP83848C_DEF_ADR    0x0100      /* Default PHY device address        */
 #define DP83848C_ID         0x20005C90  /* PHY Identifier                    */

@@ -55,7 +55,9 @@
 /* Demo application includes. */
 #include "partest.h"
 
-#define partstFIRST_IO			( ( unsigned portLONG ) 0x04 )
+#define partstFIRST_IO			( ( unsigned long ) 0x04 )
+#define partstFIO2_BITS			( ( unsigned long ) 0x0000007C )
+#define partstFIO1_BITS			( ( unsigned long ) 0xB0000000 )
 #define partstNUM_LEDS			( 5 )
 #define partstALL_OUTPUTS_OFF	( ( unsigned portLONG ) 0xff )
 
@@ -65,13 +67,13 @@
 
 void vParTestInitialise( void )
 {
-	PINSEL10 = 0;
-	FIO2DIR  = 0x000000FF;
-	FIO2MASK = 0x00000000;
-	FIO2CLR  = 0xFF;
-	SCS |= (1<<0); //fast mode for port 0 and 1
+	/* LEDs on ports 1 and 2 to output. */
+	FIO2DIR  = partstFIO2_BITS;
+    FIO1DIR  = partstFIO1_BITS;
 
-    FIO2CLR = partstALL_OUTPUTS_OFF;
+	/* Start will all LEDs off. */
+    FIO1CLR = partstFIO1_BITS;
+    FIO2CLR = partstFIO2_BITS;
 }
 /*-----------------------------------------------------------*/
 

@@ -165,8 +165,6 @@ static void vLCDTask( void *pvParameters );
 /* The queue used to send messages to the LCD task. */
 xQueueHandle xLCDQueue;
 
-
-
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -186,7 +184,6 @@ long l;
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
-
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 
 	/* Create the uIP task.  The WEB server runs in this task. */
@@ -356,10 +353,8 @@ void prvSetupHardware( void )
 	/*  Setup the peripheral bus to be the same as the PLL output (64 MHz). */
 	PCLKSEL0 = 0x05555555;
 
-	/* Configure LED GPIOs as outputs. */
-	FIO2DIR  = 0xff;
-	FIO2CLR  = 0xff;
-	FIO2MASK = 0;
+	/* Configure the LEDs. */
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 

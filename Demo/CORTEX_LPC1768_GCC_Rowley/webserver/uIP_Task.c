@@ -137,7 +137,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	vSemaphoreCreateBinary( xEMACSemaphore );
 
 	/* Initialise the MAC. */
-	while( Init_EMAC() != pdPASS )
+	while( lEMACInit() != pdPASS )
     {
         vTaskDelay( uipINIT_WAIT );
     }

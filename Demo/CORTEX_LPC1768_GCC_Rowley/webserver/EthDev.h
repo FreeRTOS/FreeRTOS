@@ -90,20 +90,22 @@ typedef struct {
    EthDev_STATUS (*LinkChk)    (void);
 } EthDev_IOB;
 
-// prototypes
-portBASE_TYPE	Init_EMAC(void);
-unsigned short 	ReadFrameBE_EMAC(void);
-void           	CopyToFrame_EMAC(void *Source, unsigned int Size);
-void           	CopyFromFrame_EMAC(void *Dest, unsigned short Size);
-void           	DummyReadFrame_EMAC(unsigned short Size);
-unsigned short 	StartReadFrame(void);
-void           	EndReadFrame(void);
-unsigned int   	CheckFrameReceived(void);
-void           	RequestSend(void);
-unsigned int   	Rdy4Tx(void);
-void           	DoSend_EMAC(unsigned short FrameSize);
-void 			vEMACWaitForInput( void );
+
+/*
+ * Look for received data.  If data is found then uip_buf is assigned to the
+ * new data and the length of the data is returned.  If no data is found then
+ * uip_buf is not updated and 0 is returned.
+ */
 unsigned long 	ulGetEMACRxData( void );
+
+/*
+ * Send usTxDataLen bytes from uip_buf.
+ */
 void vSendEMACTxData( unsigned short usTxDataLen );
+
+/*
+ * Prepare the Ethernet hardware ready for TCP/IP comms.
+ */
+long lEMACInit(void);
 
 #endif

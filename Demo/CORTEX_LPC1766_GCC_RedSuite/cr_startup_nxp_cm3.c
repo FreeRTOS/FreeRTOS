@@ -262,7 +262,7 @@ static void NMI_Handler(void)
 
 static void HardFault_Handler(void)
 {
-    while(0)
+    while(1)
     {
     }
 }

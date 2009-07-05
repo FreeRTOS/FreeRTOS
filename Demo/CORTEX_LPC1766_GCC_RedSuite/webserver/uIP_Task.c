@@ -149,11 +149,11 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 	portENTER_CRITICAL();
 	{
-		MAC_INTENABLE = INT_RX_DONE;
+		ETH_INTENABLE = INT_RX_DONE;
 		/* set the interrupt priority */
-		NVIC_SetPriority(ENET_IRQn, 255/*configMAX_SYSCALL_INTERRUPT_PRIORITY*/);
+		NVIC_SetPriority( ENET_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
 		/* enable the interrupt */
-		NVIC_EnableIRQ(ENET_IRQn);
+		NVIC_EnableIRQ( ENET_IRQn );
 		prvSetMACAddress();
 	}
 	portEXIT_CRITICAL();

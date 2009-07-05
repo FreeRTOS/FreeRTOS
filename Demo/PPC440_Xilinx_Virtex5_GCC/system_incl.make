@@ -57,9 +57,9 @@ TIMING_SIM_SCRIPT = simulation/timing/$(SYSTEM)_setup.do
 
 DEFAULT_SIM_SCRIPT = $(BEHAVIORAL_SIM_SCRIPT)
 
-MIX_LANG_SIM_OPT = -mixed yes
+MIX_LANG_SIM_OPT = -mixed no
 
-SIMGEN_OPTIONS = -p $(DEVICE) -lang $(LANGUAGE) $(SEARCHPATHOPT) $(BRAMINIT_ELF_FILE_ARGS) $(MIX_LANG_SIM_OPT) -msg __xps/ise/xmsgprops.lst -s mti -X C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/PPC440_Xilinx_Virtex5_GCC/
+SIMGEN_OPTIONS = -p $(DEVICE) -lang $(LANGUAGE) $(SEARCHPATHOPT) $(BRAMINIT_ELF_FILE_ARGS) $(MIX_LANG_SIM_OPT) -msg __xps/ise/xmsgprops.lst -sd implementation/ -s mti -X C:/E/Dev/FreeRTOS/WorkingCopy3/Demo/PPC440_Xilinx_Virtex5_GCC/
 
 
 LIBRARIES =  \

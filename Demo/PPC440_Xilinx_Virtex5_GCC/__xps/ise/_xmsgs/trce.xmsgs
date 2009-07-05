@@ -5,16 +5,16 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="ConstraintSystem" num="65" delta="new" >Constraint <arg fmt="%s" index="1">&lt;NET &quot;PCIe_Bridge/Bridge_Clk&quot; PERIOD = 8 ns HIGH 50%;&gt; [system.pcf(66101)]</arg> overrides constraint <arg fmt="%s" index="2">&lt;NET &quot;PCIe_Bridge/Bridge_Clk&quot; PERIOD = 8 ns HIGH 50%;&gt; [system.pcf(66100)]</arg>.
+<msg type="warning" file="ConstraintSystem" num="65" delta="new" >Constraint <arg fmt="%s" index="1">&lt;NET &quot;PCIe_Bridge/Bridge_Clk&quot; PERIOD = 8 ns HIGH 50%;&gt; [system.pcf(65973)]</arg> overrides constraint <arg fmt="%s" index="2">&lt;NET &quot;PCIe_Bridge/Bridge_Clk&quot; PERIOD = 8 ns HIGH 50%;&gt; [system.pcf(65972)]</arg>.
 </msg>
 
-<msg type="warning" file="Timing" num="3223" delta="new" >Timing constraint <arg fmt="%s" index="1">TS_MC_RDEN_SEL_MUX = MAXDELAY FROM TIMEGRP &quot;TNM_RDEN_SEL_MUX&quot; TO TIMEGRP        &quot;TNM_CLK0&quot; TS_MC_CLK * 4;</arg> ignored during timing analysis.</msg>
+<msg type="warning" file="Timing" num="3223" delta="old" >Timing constraint <arg fmt="%s" index="1">TS_MC_RDEN_SEL_MUX = MAXDELAY FROM TIMEGRP &quot;TNM_RDEN_SEL_MUX&quot; TO TIMEGRP        &quot;TNM_CLK0&quot; TS_MC_CLK * 4;</arg> ignored during timing analysis.</msg>
 
-<msg type="info" file="Timing" num="3386" delta="new" >Intersecting Constraints found and resolved.  For more information, see the TSI report.  Please consult the Xilinx Command Line Tools User Guide for information on generating a TSI report.</msg>
+<msg type="info" file="Timing" num="3386" delta="old" >Intersecting Constraints found and resolved.  For more information, see the TSI report.  Please consult the Xilinx Command Line Tools User Guide for information on generating a TSI report.</msg>
 
-<msg type="info" file="Timing" num="2752" delta="new" >To get complete path coverage, use the unconstrained paths option. All paths that are not constrained will be reported in the unconstrained paths section(s) of the report.</msg>
+<msg type="info" file="Timing" num="2752" delta="old" >To get complete path coverage, use the unconstrained paths option. All paths that are not constrained will be reported in the unconstrained paths section(s) of the report.</msg>
 
-<msg type="info" file="Timing" num="3339" delta="new" >The clock-to-out numbers in this timing report are based on a 50 Ohm transmission line loading model.  For the details of this model, and for more information on accounting for different loading conditions, please see the device datasheet.</msg>
+<msg type="info" file="Timing" num="3339" delta="old" >The clock-to-out numbers in this timing report are based on a 50 Ohm transmission line loading model.  For the details of this model, and for more information on accounting for different loading conditions, please see the device datasheet.</msg>
 
 </messages>
 

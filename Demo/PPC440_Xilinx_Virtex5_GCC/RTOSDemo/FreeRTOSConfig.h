@@ -52,6 +52,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include <xparameters.h>
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -68,12 +70,12 @@
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 250 )
-#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 200000000 )	/* Clock setup from start.asm in the demo application. */
+#define configCPU_CLOCK_HZ				( ( unsigned portLONG ) XPAR_CPU_PPC440_CORE_CLOCK_FREQ_HZ )	/* Clock setup from start.asm in the demo application. */
 #define configTICK_RATE_HZ				( (portTickType) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 6 )
 #define configTOTAL_HEAP_SIZE			( (size_t) (80 * 1024) )
 #define configMAX_TASK_NAME_LEN			( 20 )
-#define configUSE_16_BIT_TICKS			1
+#define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configUSE_TRACE_FACILITY		0

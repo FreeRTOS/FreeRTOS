@@ -245,6 +245,7 @@ $(SYSTEM_HW_HANDOFF_BMM): implementation/$(SYSTEM)_bd.bmm
 ################## BEHAVIORAL SIMULATION ##################
 
 $(BEHAVIORAL_SIM_SCRIPT): $(MHSFILE) __xps/simgen.opt \
+                          $(WRAPPER_NGC_FILES) \
                           $(BRAMINIT_ELF_FILES)
 	@echo "*********************************************"
 	@echo "Creating behavioral simulation models..."

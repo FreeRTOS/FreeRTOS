@@ -101,7 +101,7 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 	*s = '\0';
 
 	while (u) {
-		t = (int)u % b;
+		t = (unsigned int)u % b;
 		if( t >= 10 )
 			t += letbase - '0' - 10;
 		*--s = (char)(t + '0');

@@ -73,7 +73,7 @@
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 6 )
 #define configTOTAL_HEAP_SIZE			( (size_t) (80 * 1024) )
 #define configMAX_TASK_NAME_LEN			( 20 )
-#define configUSE_16_BIT_TICKS			1
+#define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configUSE_TRACE_FACILITY		0

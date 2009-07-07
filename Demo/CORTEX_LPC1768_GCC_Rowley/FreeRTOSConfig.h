@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.3.1 - Copyright (C) 2003-2009 Richard Barry.
+	FreeRTOS.org V5.4.0 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -72,7 +72,7 @@
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 64000000 )
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 19 * 1024 ) )
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 1 * 1024 ) )
 #define configMAX_TASK_NAME_LEN		( 12 )
 #define configUSE_TRACE_FACILITY	1
 #define configUSE_16_BIT_TICKS		0

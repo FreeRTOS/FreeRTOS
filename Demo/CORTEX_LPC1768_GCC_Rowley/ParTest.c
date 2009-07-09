@@ -68,12 +68,12 @@
 void vParTestInitialise( void )
 {
 	/* LEDs on ports 1 and 2 to output. */
-	FIO2DIR  = partstFIO2_BITS;
-    FIO1DIR  = partstFIO1_BITS;
+	GPIO2->FIODIR  = partstFIO2_BITS;
+    GPIO1->FIODIR  = partstFIO1_BITS;
 
 	/* Start will all LEDs off. */
-    FIO1CLR = partstFIO1_BITS;
-    FIO2CLR = partstFIO2_BITS;
+    GPIO2->FIOCLR = partstFIO2_BITS;
+    GPIO1->FIOCLR = partstFIO1_BITS;
 }
 /*-----------------------------------------------------------*/
 
@@ -89,11 +89,11 @@ unsigned portLONG ulLED = partstFIRST_IO;
 		/* Set of clear the output. */
 		if( xValue )
 		{
-			FIO2CLR = ulLED;
+			GPIO2->FIOCLR = ulLED;
 		}
 		else
 		{
-			FIO2SET = ulLED;
+			GPIO2->FIOSET = ulLED;
 		}
 	}
 }
@@ -110,14 +110,14 @@ unsigned portLONG ulLED = partstFIRST_IO, ulCurrentState;
 		ulLED <<= ( unsigned portLONG ) uxLED;
 
 		/* If this bit is already set, clear it, and visa versa. */
-		ulCurrentState = FIO2PIN;
+		ulCurrentState = GPIO2->FIOPIN;
 		if( ulCurrentState & ulLED )
 		{
-			FIO2CLR = ulLED;
+			GPIO2->FIOCLR = ulLED;
 		}
 		else
 		{
-			FIO2SET = ulLED;
+			GPIO2->FIOSET = ulLED;
 		}
 	}
 }
@@ -129,7 +129,7 @@ unsigned portLONG ulLED = partstFIRST_IO;
 
     ulLED <<= ( unsigned portLONG ) uxLED;
 
-    return ( FIO2PIN & ulLED );
+    return ( GPIO2->FIOPIN & ulLED );
 }
 /*-----------------------------------------------------------*/
 
@@ -138,12 +138,4 @@ long lParTestGetLEDState( unsigned portBASE_TYPE uxLED )
 	return 0;
 }
 /*-----------------------------------------------------------*/
-
-int __putchar( int x )
-{
-	/* Not used. */
-}
-
-
-
 

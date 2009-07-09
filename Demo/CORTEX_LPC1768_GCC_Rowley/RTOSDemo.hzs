@@ -1,7 +1,10 @@
 <!DOCTYPE CrossStudio_for_ARM_Session_File>
 <session>
  <Bookmarks/>
- <Breakpoints/>
+ <Breakpoints>
+  <BreakpointListItem line="184" action="" hardwareBreakpoint="" trigger="" useHWbreakpoint="false" group="Breakpoints" type="Breakpoint" state="2" counter="0" isFunctionBreakpoint="false" filename="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Host\usbhost_lpc17xx.c" expression="" />
+  <BreakpointListItem line="46" action="" hardwareBreakpoint="" trigger="" useHWbreakpoint="false" group="Breakpoints" type="Breakpoint" state="2" counter="0" isFunctionBreakpoint="false" filename="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Main\usbhost_task.c" expression="" />
+ </Breakpoints>
  <ExecutionCountWindow/>
  <Memory1>
   <MemoryWindow autoEvaluate="0" addressText="0x10003c24" numColumns="8" sizeText="100" dataSize="1" radix="16" addressSpace="" />
@@ -19,8 +22,7 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;USBHost" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;System Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;NXPUSBHostLite" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1]" binaryNodes="" unsignedNodes="" visibleGroups="CPU" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -51,8 +53,12 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="54" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\flash_placement.xml" y="22" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\flash_placement.xml" left="0" selected="1" name="unnamed" top="0" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\usbhost_ms.c" y="451" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\usbhost_ms.c" left="0" selected="0" name="unnamed" top="436" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" y="96" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" left="0" selected="0" name="unnamed" top="82" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Main\usbhost_task.c" y="45" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Main\usbhost_task.c" left="0" selected="0" name="unnamed" top="21" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Host\usbhost_lpc17xx.c" y="332" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Host\usbhost_lpc17xx.c" left="0" selected="0" name="unnamed" top="172" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\FreeRTOSConfig.h" y="55" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\FreeRTOSConfig.h" left="0" selected="0" name="unnamed" top="40" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\emac.c" y="59" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\webserver\emac.c" left="0" selected="0" name="unnamed" top="44" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Fat\usbhost_fat.c" y="0" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Fat\usbhost_fat.c" left="0" selected="0" name="unnamed" top="0" />
  </Files>
- <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Amontec JTAGkey" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
+ <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Uart" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

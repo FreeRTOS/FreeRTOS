@@ -53,7 +53,6 @@
 #define FREERTOS_CONFIG_H
 
 #include "LPC17xx.h"
-#include "LPC17xx_defs.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -72,7 +71,7 @@
 #define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 64000000 )
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 1 * 1024 ) )
+#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 19 * 1024 ) )
 #define configMAX_TASK_NAME_LEN		( 12 )
 #define configUSE_TRACE_FACILITY	1
 #define configUSE_16_BIT_TICKS		0
@@ -146,7 +145,7 @@ to exclude the API function. */
  *-----------------------------------------------------------*/
 extern void vConfigureTimerForRunTimeStats( void );
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() T0TC
+#define portGET_RUN_TIME_COUNTER_VALUE() TIM0->TC
 
 
 /* The structure that is passed on the xLCDQueue.  Put here for convenience. */

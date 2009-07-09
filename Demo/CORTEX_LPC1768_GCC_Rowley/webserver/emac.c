@@ -57,7 +57,6 @@
 #include "semphr.h"
 
 /* Hardware specific includes. */
-#include "LPC17xx_defs.h"
 #include "EthDev_LPC17xx.h"
 
 /* Time to wait between each inspection of the link status. */
@@ -150,7 +149,6 @@ static unsigned short usSendLen = 0;
 long lEMACInit( void )
 {
 long lReturn = pdPASS;
-volatile unsigned long regv, tout;
 unsigned long ulID1, ulID2;
 
 	/* Reset peripherals, configure port pins and registers. */
@@ -162,15 +160,15 @@ unsigned long ulID1, ulID2;
 	if( ( (ulID1 << 16UL ) | ( ulID2 & 0xFFF0UL ) ) == DP83848C_ID )
 	{
 		/* Set the Ethernet MAC Address registers */
-		MAC_SA0 = ( configMAC_ADDR0 << 8 ) | configMAC_ADDR1;
-		MAC_SA1 = ( configMAC_ADDR2 << 8 ) | configMAC_ADDR3;
-		MAC_SA2 = ( configMAC_ADDR4 << 8 ) | configMAC_ADDR5;
+		EMAC->SA0 = ( configMAC_ADDR0 << 8 ) | configMAC_ADDR1;
+		EMAC->SA1 = ( configMAC_ADDR2 << 8 ) | configMAC_ADDR3;
+		EMAC->SA2 = ( configMAC_ADDR4 << 8 ) | configMAC_ADDR5;
 
 		/* Initialize Tx and Rx DMA Descriptors */
 		prvInitDescriptors();
 
 		/* Receive broadcast and perfect match packets */
-		MAC_RXFILTERCTRL = RFC_UCAST_EN | RFC_BCAST_EN | RFC_PERFECT_EN;
+		EMAC->RxFilterCtrl = RFC_UCAST_EN | RFC_BCAST_EN | RFC_PERFECT_EN;
 
 		/* Setup the PHY. */
 		prvConfigurePHY();
@@ -192,11 +190,11 @@ unsigned long ulID1, ulID2;
 		uip_buf = prvGetNextBuffer();
 
 		/* Reset all interrupts */
-		MAC_INTCLEAR = ( INT_RX_OVERRUN | INT_RX_ERR | INT_RX_FIN | INT_RX_DONE | INT_TX_UNDERRUN | INT_TX_ERR | INT_TX_FIN | INT_TX_DONE | INT_SOFT_INT | INT_WAKEUP );
+		EMAC->IntClear = ( INT_RX_OVERRUN | INT_RX_ERR | INT_RX_FIN | INT_RX_DONE | INT_TX_UNDERRUN | INT_TX_ERR | INT_TX_FIN | INT_TX_DONE | INT_SOFT_INT | INT_WAKEUP );
 
 		/* Enable receive and transmit mode of MAC Ethernet core */
-		MAC_COMMAND |= ( CR_RX_EN | CR_TX_EN );
-		MAC_MAC1 |= MAC1_REC_EN;
+		EMAC->Command |= ( CR_RX_EN | CR_TX_EN );
+		EMAC->MAC1 |= MAC1_REC_EN;
 	}
 
 	return lReturn;
@@ -260,12 +258,12 @@ long x, lNextBuffer = 0;
 	}
 
 	/* Set EMAC Receive Descriptor Registers. */
-	MAC_RXDESCRIPTOR = RX_DESC_BASE;
-	MAC_RXSTATUS = RX_STAT_BASE;
-	MAC_RXDESCRIPTORNUM = NUM_RX_FRAG - 1;
+	EMAC->RxDescriptor = RX_DESC_BASE;
+	EMAC->RxStatus = RX_STAT_BASE;
+	EMAC->RxDescriptorNumber = NUM_RX_FRAG - 1;
 
 	/* Rx Descriptors Point to 0 */
-	MAC_RXCONSUMEINDEX = 0;
+	EMAC->RxConsumeIndex = 0;
 
 	/* A buffer is not allocated to the Tx descriptors until they are actually
 	used. */
@@ -277,12 +275,12 @@ long x, lNextBuffer = 0;
 	}
 
 	/* Set EMAC Transmit Descriptor Registers. */
-	MAC_TXDESCRIPTOR = TX_DESC_BASE;
-	MAC_TXSTATUS = TX_STAT_BASE;
-	MAC_TXDESCRIPTORNUM = NUM_TX_FRAG - 1;
+	EMAC->TxDescriptor = TX_DESC_BASE;
+	EMAC->TxStatus = TX_STAT_BASE;
+	EMAC->TxDescriptorNumber = NUM_TX_FRAG - 1;
 
 	/* Tx Descriptors Point to 0 */
-	MAC_TXPRODUCEINDEX = 0;
+	EMAC->TxProduceIndex = 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -292,34 +290,34 @@ unsigned short us;
 long x, lDummy;
 
 	/* Enable P1 Ethernet Pins. */
-	PINSEL2 = emacPINSEL2_VALUE;
-	PINSEL3 = ( PINSEL3 & ~0x0000000F ) | 0x00000005;
+	PINCON->PINSEL2 = emacPINSEL2_VALUE;
+	PINCON->PINSEL3 = ( PINCON->PINSEL3 & ~0x0000000F ) | 0x00000005;
 
 	/* Power Up the EMAC controller. */
-	PCONP |= PCONP_PCENET;
+	SC->PCONP |= PCONP_PCENET;
 	vTaskDelay( emacSHORT_DELAY );
 
 	/* Reset all EMAC internal modules. */
-	MAC_MAC1 = MAC1_RES_TX | MAC1_RES_MCS_TX | MAC1_RES_RX | MAC1_RES_MCS_RX | MAC1_SIM_RES | MAC1_SOFT_RES;
-	MAC_COMMAND = CR_REG_RES | CR_TX_RES | CR_RX_RES | CR_PASS_RUNT_FRM;
+	EMAC->MAC1 = MAC1_RES_TX | MAC1_RES_MCS_TX | MAC1_RES_RX | MAC1_RES_MCS_RX | MAC1_SIM_RES | MAC1_SOFT_RES;
+	EMAC->Command = CR_REG_RES | CR_TX_RES | CR_RX_RES | CR_PASS_RUNT_FRM;
 
 	/* A short delay after reset. */
 	vTaskDelay( emacSHORT_DELAY );
 
 	/* Initialize MAC control registers. */
-	MAC_MAC1 = MAC1_PASS_ALL;
-	MAC_MAC2 = MAC2_CRC_EN | MAC2_PAD_EN;
-	MAC_MAXF = ETH_MAX_FLEN;
-	MAC_CLRT = CLRT_DEF;
-	MAC_IPGR = IPGR_DEF;
+	EMAC->MAC1 = MAC1_PASS_ALL;
+	EMAC->MAC2 = MAC2_CRC_EN | MAC2_PAD_EN;
+	EMAC->MAXF = ETH_MAX_FLEN;
+	EMAC->CLRT = CLRT_DEF;
+	EMAC->IPGR = IPGR_DEF;
 
 	/* Enable Reduced MII interface. */
-	MAC_COMMAND = CR_RMII | CR_PASS_RUNT_FRM;
+	EMAC->Command = CR_RMII | CR_PASS_RUNT_FRM;
 
 	/* Reset Reduced MII Logic. */
-	MAC_SUPP = SUPP_RES_RMII;
+	EMAC->SUPP = SUPP_RES_RMII;
 	vTaskDelay( emacSHORT_DELAY );
-	MAC_SUPP = 0;
+	EMAC->SUPP = 0;
 
 	/* Put the PHY in reset mode */
 	prvWritePHY( PHY_REG_BMCR, MCFG_RES_MII );
@@ -389,26 +387,26 @@ unsigned short usLinkStatus;
 		if( usLinkStatus & emacFULL_DUPLEX_ENABLED )
 		{
 			/* Full duplex is enabled. */
-			MAC_MAC2 |= MAC2_FULL_DUP;
-			MAC_COMMAND |= CR_FULL_DUP;
-			MAC_IPGT = IPGT_FULL_DUP;
+			EMAC->MAC2 |= MAC2_FULL_DUP;
+			EMAC->Command |= CR_FULL_DUP;
+			EMAC->IPGT = IPGT_FULL_DUP;
 		}
 		else
 		{
 			/* Half duplex mode. */
-			MAC_IPGT = IPGT_HALF_DUP;
+			EMAC->IPGT = IPGT_HALF_DUP;
 		}
 
 		/* Configure 100MBit/10MBit mode. */
 		if( usLinkStatus & emac10BASE_T_MODE )
 		{
 			/* 10MBit mode. */
-			MAC_SUPP = 0;
+			EMAC->SUPP = 0;
 		}
 		else
 		{
 			/* 100MBit mode. */
-			MAC_SUPP = SUPP_SPEED;
+			EMAC->SUPP = SUPP_SPEED;
 		}
 	}
 
@@ -437,21 +435,21 @@ unsigned long ulGetEMACRxData( void )
 unsigned long ulLen = 0;
 long lIndex;
 
-	if( MAC_RXPRODUCEINDEX != MAC_RXCONSUMEINDEX )
+	if( EMAC->RxProduceIndex != EMAC->RxConsumeIndex )
 	{
 		/* Mark the current buffer as free as uip_buf is going to be set to
 		the buffer that contains the received data. */
 		prvReturnBuffer( uip_buf );
 
-		ulLen = ( RX_STAT_INFO( MAC_RXCONSUMEINDEX ) & RINFO_SIZE ) - 3;
-		uip_buf = ( unsigned char * ) RX_DESC_PACKET( MAC_RXCONSUMEINDEX );
+		ulLen = ( RX_STAT_INFO( EMAC->RxConsumeIndex ) & RINFO_SIZE ) - 3;
+		uip_buf = ( unsigned char * ) RX_DESC_PACKET( EMAC->RxConsumeIndex );
 
 		/* Allocate a new buffer to the descriptor. */
-        RX_DESC_PACKET( MAC_RXCONSUMEINDEX ) = ( unsigned long ) prvGetNextBuffer();
+        RX_DESC_PACKET( EMAC->RxConsumeIndex ) = ( unsigned long ) prvGetNextBuffer();
 
 		/* Move the consume index onto the next position, ensuring it wraps to
 		the beginning at the appropriate place. */
-		lIndex = MAC_RXCONSUMEINDEX;
+		lIndex = EMAC->RxConsumeIndex;
 
 		lIndex++;
 		if( lIndex >= NUM_RX_FRAG )
@@ -459,7 +457,7 @@ long lIndex;
 			lIndex = 0;
 		}
 
-		MAC_RXCONSUMEINDEX = lIndex;
+		EMAC->RxConsumeIndex = lIndex;
 	}
 
 	return ulLen;
@@ -494,7 +492,7 @@ unsigned long ulAttempts = 0UL;
 	usSendLen = usTxDataLen;
 	TX_DESC_PACKET( emacTX_DESC_INDEX ) = ( unsigned long ) uip_buf;
 	TX_DESC_CTRL( emacTX_DESC_INDEX ) = ( usTxDataLen | TCTRL_LAST | TCTRL_INT );
-	MAC_TXPRODUCEINDEX = ( emacTX_DESC_INDEX + 1 );
+	EMAC->TxProduceIndex = ( emacTX_DESC_INDEX + 1 );
 
 	/* uip_buf is being sent by the Tx descriptor.  Allocate a new buffer. */
 	uip_buf = prvGetNextBuffer();
@@ -506,13 +504,13 @@ static long prvWritePHY( long lPhyReg, long lValue )
 const long lMaxTime = 10;
 long x;
 
-	MAC_MADR = DP83848C_DEF_ADR | lPhyReg;
-	MAC_MWTD = lValue;
+	EMAC->MADR = DP83848C_DEF_ADR | lPhyReg;
+	EMAC->MWTD = lValue;
 
 	x = 0;
 	for( x = 0; x < lMaxTime; x++ )
 	{
-		if( ( MAC_MIND & MIND_BUSY ) == 0 )
+		if( ( EMAC->MIND & MIND_BUSY ) == 0 )
 		{
 			/* Operation has finished. */
 			break;
@@ -537,13 +535,13 @@ static unsigned short prvReadPHY( unsigned char ucPhyReg, long *plStatus )
 long x;
 const long lMaxTime = 10;
 
-	MAC_MADR = DP83848C_DEF_ADR | ucPhyReg;
-	MAC_MCMD = MCMD_READ;
+	EMAC->MADR = DP83848C_DEF_ADR | ucPhyReg;
+	EMAC->MCMD = MCMD_READ;
 
 	for( x = 0; x < lMaxTime; x++ )
 	{
 		/* Operation has finished. */
-		if( ( MAC_MIND & MIND_BUSY ) == 0 )
+		if( ( EMAC->MIND & MIND_BUSY ) == 0 )
 		{
 			break;
 		}
@@ -551,31 +549,31 @@ const long lMaxTime = 10;
 		vTaskDelay( emacSHORT_DELAY );
 	}
 
-	MAC_MCMD = 0;
+	EMAC->MCMD = 0;
 
 	if( x >= lMaxTime )
 	{
 		*plStatus = pdFAIL;
 	}
 
-	return( MAC_MRDD );
+	return( EMAC->MRDD );
 }
 /*-----------------------------------------------------------*/
 
 void vEMAC_ISR( void )
 {
 unsigned long ulStatus;
-portBASE_TYPE	xHigherPriorityTaskWoken = pdFALSE;
+long lHigherPriorityTaskWoken = pdFALSE;
 
-	ulStatus = MAC_INTSTATUS;
+	ulStatus = EMAC->IntStatus;
 
 	/* Clear the interrupt. */
-	MAC_INTCLEAR = ulStatus;
+	EMAC->IntClear = ulStatus;
 
 	if( ulStatus & INT_RX_DONE )
 	{
 		/* Ensure the uIP task is not blocked as data has arrived. */
-		xSemaphoreGiveFromISR( xEMACSemaphore, &xHigherPriorityTaskWoken );
+		xSemaphoreGiveFromISR( xEMACSemaphore, &lHigherPriorityTaskWoken );
 	}
 
 	if( ulStatus & INT_TX_DONE )
@@ -586,7 +584,7 @@ portBASE_TYPE	xHigherPriorityTaskWoken = pdFALSE;
 			only two descriptors the index is set back to 0. */
 			TX_DESC_PACKET( ( emacTX_DESC_INDEX + 1 ) ) = TX_DESC_PACKET( emacTX_DESC_INDEX );
 			TX_DESC_CTRL( ( emacTX_DESC_INDEX + 1 ) ) = ( usSendLen | TCTRL_LAST | TCTRL_INT );
-			MAC_TXPRODUCEINDEX = ( emacTX_DESC_INDEX );
+			EMAC->TxProduceIndex = ( emacTX_DESC_INDEX );
 
 			/* This is the second Tx so set usSendLen to 0 to indicate that the
 			Tx descriptors will be free again. */
@@ -600,5 +598,5 @@ portBASE_TYPE	xHigherPriorityTaskWoken = pdFALSE;
 		}
 	}
 
-	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }

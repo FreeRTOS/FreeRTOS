@@ -144,7 +144,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 	portENTER_CRITICAL();
 	{
-		ETH_INTENABLE = ( INT_RX_DONE | INT_TX_DONE );
+		EMAC->IntEnable = ( INT_RX_DONE | INT_TX_DONE );
 		/* set the interrupt priority */
 		NVIC_SetPriority( ENET_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
 		/* enable the interrupt */

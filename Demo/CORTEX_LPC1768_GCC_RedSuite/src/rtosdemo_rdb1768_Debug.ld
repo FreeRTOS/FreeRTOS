@@ -5,8 +5,17 @@
  * (created from nxp_lpc13_c.ld (v2.0.11 (200907061347)) on Thu Jul 09 12:44:31 BST 2009)
 */
 
-INCLUDE "rtosdemo_rdb1768_Debug_lib.ld "
-INCLUDE "rtosdemo_rdb1768_Debug_mem.ld "
+GROUP(libgcc.a libc.a)
+
+MEMORY
+{
+     FLASH (rx) : ORIGIN = 0x0 LENGTH = 0x80000
+     SRAM (rwx) : ORIGIN = 0x10000000, LENGTH = 0x8000
+	 AHBSRAM0   : ORIGIN = 0x2007c000, LENGTH = 0x4000
+	 AHBSRAM1   : ORIGIN = 0x20080000, LENGTH = 0x4000
+}
+
+_vRamTop = 0x10000000 + 0x8000;
 
 ENTRY(ResetISR)
 

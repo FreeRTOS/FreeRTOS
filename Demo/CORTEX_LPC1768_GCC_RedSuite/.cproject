@@ -73,7 +73,7 @@
 <tool id="com.crt.advproject.link.exe.debug.1514106711" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug">
 <option id="com.crt.advproject.link.arch.420484637" name="Architecture" superClass="com.crt.advproject.link.arch" value="com.crt.advproject.link.target.cm3" valueType="enumerated"/>
 <option id="com.crt.advproject.link.thumb.1827721661" name="Thumb mode" superClass="com.crt.advproject.link.thumb" value="true" valueType="boolean"/>
-<option id="com.crt.advproject.link.script.285435470" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;rtosdemo_rdb1768_Debug.ld&quot; " valueType="string"/>
+<option id="com.crt.advproject.link.script.285435470" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;${workspace_loc:/RTOSDemo_RDB1768/src/rtosdemo_rdb1768_Debug.ld}&quot;" valueType="string"/>
 <option id="com.crt.advproject.link.manage.913993351" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="false" valueType="boolean"/>
 <option id="gnu.c.link.option.nostdlibs.1027293252" name="No startup or default libs (-nostdlib)" superClass="gnu.c.link.option.nostdlibs" value="true" valueType="boolean"/>
 <option id="gnu.c.link.option.other.762506621" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" valueType="stringList">
@@ -448,6 +448,7 @@
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cconfiguration>
 <cconfiguration id="com.crt.advproject.config.exe.release.429003282">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.release.429003282" moduleId="org.eclipse.cdt.core.settings" name="Release">
@@ -848,6 +849,7 @@
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cconfiguration>
 </storageModule>
 <storageModule moduleId="cdtBuildSystem" version="4.0.0">

@@ -208,14 +208,15 @@ PT_THREAD(net_stats(struct httpd_state *s, char *ptr))
 /*---------------------------------------------------------------------------*/
 
 extern void vTaskList( signed char *pcWriteBuffer );
-static char cCountBuf[ 32 ];
+extern char *pcGetTaskStatusMessage( void );
+static char cCountBuf[ 128 ];
 long lRefreshCount = 0;
 static unsigned short
 generate_rtos_stats(void *arg)
 {
 	( void ) arg;
 	lRefreshCount++;
-	sprintf( cCountBuf, "<p><br>Refresh count = %d", (int)lRefreshCount );
+	sprintf( cCountBuf, "<p><br>Refresh count = %d<p><br>%s", (int)lRefreshCount, pcGetTaskStatusMessage() );
     vTaskList( uip_appdata );
 	strcat( uip_appdata, cCountBuf );
 
@@ -239,11 +240,12 @@ unsigned long ulString;
 
 static unsigned short generate_io_state( void *arg )
 {
-extern long lParTestGetLEDState( unsigned long ulLED );
+extern long lParTestGetLEDState( void );
 
 	( void ) arg;
 
-	if( lParTestGetLEDState( 1 << 7 ) == 0 )
+	/* Get the state of the LEDs that are on the FIO1 port. */
+	if( lParTestGetLEDState() )
 	{
 		pcStatus = "";
 	}
@@ -253,10 +255,7 @@ extern long lParTestGetLEDState( unsigned long ulLED );
 	}
 
 	sprintf( uip_appdata,
-		"<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED 7"\
-		"<p>"\
-		"<input type=\"text\" name=\"LCD\" value=\"Enter LCD text\" size=\"16\">",
-		pcStatus );
+		"<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED<p><p>", pcStatus );
 
 	return strlen( uip_appdata );
 }

@@ -269,7 +269,7 @@ long x, lNextBuffer = 0;
 	used. */
 	for( x = 0; x < NUM_TX_FRAG; x++ )
 	{
-		TX_DESC_PACKET( x ) = NULL;
+		TX_DESC_PACKET( x ) = ( unsigned long ) NULL;
 		TX_DESC_CTRL( x ) = 0;
 		TX_STAT_INFO( x ) = 0;
 	}
@@ -418,7 +418,7 @@ static void prvReturnBuffer( unsigned char *pucBuffer )
 {
 unsigned long ul;
 
-	/* Mark a buffer as free for use. */
+	/* Return a buffer to the pool of free buffers. */
 	for( ul = 0; ul < ETH_NUM_BUFFERS; ul++ )
 	{
 		if( ETH_BUF( ul ) == ( unsigned long ) pucBuffer )
@@ -470,7 +470,7 @@ unsigned long ulAttempts = 0UL;
 
 	/* Check to see if the Tx descriptor is free, indicated by its buffer being
 	NULL. */
-	while( TX_DESC_PACKET( emacTX_DESC_INDEX ) != NULL )
+	while( TX_DESC_PACKET( emacTX_DESC_INDEX ) != ( unsigned long ) NULL )
 	{
 		/* Wait for the Tx descriptor to become available. */
 		vTaskDelay( emacBUFFER_WAIT_DELAY );
@@ -594,7 +594,7 @@ long lHigherPriorityTaskWoken = pdFALSE;
 		{
 			/* The Tx buffer is no longer required. */
 			prvReturnBuffer( ( unsigned char * ) TX_DESC_PACKET( emacTX_DESC_INDEX ) );
-            TX_DESC_PACKET( emacTX_DESC_INDEX ) = NULL;
+            TX_DESC_PACKET( emacTX_DESC_INDEX ) = ( unsigned long ) NULL;
 		}
 	}
 

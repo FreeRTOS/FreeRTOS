@@ -69,12 +69,10 @@
 #include "EthDev.h"
 #include "ParTest.h"
 
-#include "LPC17xx.h"
-#include "core_cm3.h"
 /*-----------------------------------------------------------*/
 
 /* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT    100
+#define uipINIT_WAIT    ( 100 / portTICK_RATE_MS )
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
@@ -145,9 +143,12 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	portENTER_CRITICAL();
 	{
 		EMAC->IntEnable = ( INT_RX_DONE | INT_TX_DONE );
-		/* set the interrupt priority */
+
+		/* Set the interrupt priority to the max permissible to cause some
+		interrupt nesting. */
 		NVIC_SetPriority( ENET_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
-		/* enable the interrupt */
+
+		/* Enable the interrupt. */
 		NVIC_EnableIRQ( ENET_IRQn );
 		prvSetMACAddress();
 	}
@@ -245,52 +246,23 @@ struct uip_eth_addr xAddr;
 
 void vApplicationProcessFormInput( portCHAR *pcInputString )
 {
-char *c, *pcText;
-static portCHAR cMessageForDisplay[ 32 ];
-extern xQueueHandle xLCDQueue;
-xLCDMessage xLCDMessage;
+char *c;
+extern void vParTestSetLEDState( long lState );
 
 	/* Process the form input sent by the IO page of the served HTML. */
 
 	c = strstr( pcInputString, "?" );
     if( c )
     {
-		/* Turn LED's on or off in accordance with the check box status. */
+		/* Turn the FIO1 LED's on or off in accordance with the check box status. */
 		if( strstr( c, "LED0=1" ) != NULL )
 		{
-			/* Set LED7. */
-			vParTestSetLED( 1 << 7, 1 );
+			vParTestSetLEDState( pdTRUE );
 		}
 		else
 		{
-			/* Clear LED7. */
-			vParTestSetLED( 1 << 7, 0 );
+			vParTestSetLEDState( pdFALSE );
 		}
-
-		/* Find the start of the text to be displayed on the LCD. */
-        pcText = strstr( c, "LCD=" );
-        pcText += strlen( "LCD=" );
-
-        /* Terminate the file name for further processing within uIP. */
-        *c = 0x00;
-
-        /* Terminate the LCD string. */
-        c = strstr( pcText, " " );
-        if( c != NULL )
-        {
-            *c = 0x00;
-        }
-
-        /* Add required spaces. */
-        while( ( c = strstr( pcText, "+" ) ) != NULL )
-        {
-            *c = ' ';
-        }
-
-        /* Write the message to the LCD. */
-		strcpy( cMessageForDisplay, pcText );
-		xLCDMessage.pcMessage = cMessageForDisplay;
-        xQueueSend( xLCDQueue, &xLCDMessage, portMAX_DELAY );
     }
 }
 

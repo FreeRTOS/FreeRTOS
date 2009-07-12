@@ -59,7 +59,7 @@
 #define partstFIO2_BITS			( ( unsigned long ) 0x0000007C )
 #define partstFIO1_BITS			( ( unsigned long ) 0xB0000000 )
 #define partstNUM_LEDS			( 5 )
-#define partstALL_OUTPUTS_OFF	( ( unsigned portLONG ) 0xff )
+#define partstALL_OUTPUTS_OFF	( ( unsigned long ) 0xff )
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -77,14 +77,16 @@ void vParTestInitialise( void )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned long ulLEDIn, signed long xValue )
 {
-unsigned portLONG ulLED = partstFIRST_IO;
+unsigned long ulLED = partstFIRST_IO;
 
-	if( uxLED < partstNUM_LEDS )
+	/* Used to set and clear LEDs on FIO2. */
+
+	if( ulLEDIn < partstNUM_LEDS )
 	{
 		/* Rotate to the wanted bit of port */
-		ulLED <<= ( unsigned portLONG ) uxLED;
+		ulLED <<= ( unsigned long ) ulLEDIn;
 
 		/* Set of clear the output. */
 		if( xValue )
@@ -99,15 +101,17 @@ unsigned portLONG ulLED = partstFIRST_IO;
 }
 /*-----------------------------------------------------------*/
 
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
+void vParTestToggleLED( unsigned long ulLEDIn )
 {
-unsigned portLONG ulLED = partstFIRST_IO, ulCurrentState;
+unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 
-	if( uxLED < partstNUM_LEDS )
+	/* Used to toggle LEDs on FIO2. */
+
+	if( ulLEDIn < partstNUM_LEDS )
 	{
 		/* Rotate to the wanted bit of port 0.  Only P10 to P13 have an LED
 		attached. */
-		ulLED <<= ( unsigned portLONG ) uxLED;
+		ulLED <<= ( unsigned long ) ulLEDIn;
 
 		/* If this bit is already set, clear it, and visa versa. */
 		ulCurrentState = GPIO2->FIOPIN;
@@ -123,19 +127,31 @@ unsigned portLONG ulLED = partstFIRST_IO, ulCurrentState;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxParTextGetLED( unsigned portBASE_TYPE uxLED )
+long lParTestGetLEDState( void )
 {
-unsigned portLONG ulLED = partstFIRST_IO;
-
-    ulLED <<= ( unsigned portLONG ) uxLED;
-
-    return ( GPIO2->FIOPIN & ulLED );
+	/* Returns the state of the LEDs on FIO1. */
+	if( ( GPIO1->FIOPIN & partstFIO1_BITS ) != 0 )
+	{
+		return pdFALSE;
+	}
+	else
+	{
+		return pdTRUE;
+	}
 }
 /*-----------------------------------------------------------*/
 
-long lParTestGetLEDState( unsigned portBASE_TYPE uxLED )
+void vParTestSetLEDState( long lState )
 {
-	return 0;
+	/* Used to set and clear the LEDs on FIO1. */
+	if( lState != pdFALSE )
+	{
+		GPIO1->FIOSET = partstFIO1_BITS;
+	}
+	else
+	{
+		GPIO1->FIOCLR = partstFIO1_BITS;
+	}
 }
 /*-----------------------------------------------------------*/
 

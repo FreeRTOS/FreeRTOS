@@ -1,5 +1,5 @@
 /*
-	FreeRTOS.org V5.3.1 - Copyright (C) 2003-2009 Richard Barry.
+	FreeRTOS.org V5.4.0 - Copyright (C) 2003-2009 Richard Barry.
 
 	This file is part of the FreeRTOS.org distribution.
 
@@ -59,40 +59,18 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
- * is permitted to access the display directly.  Other tasks wishing to write a
- * message to the LCD send the message on a queue to the LCD task instead of
- * accessing the LCD themselves.  The LCD task just blocks on the queue waiting
- * for messages - waking and displaying the messages as they arrive.  The use
- * of a gatekeeper in this manner permits both tasks and interrupts to write to
- * the LCD without worrying about mutual exclusion.  This is demonstrated by the
- * check hook (see below) which sends messages to the display even though it
- * executes from an interrupt context.
- *
  * "Check" hook -  This only executes fully every five seconds from the tick
  * hook.  Its main function is to check that all the standard demo tasks are
- * still operational.  Should any unexpected behaviour be discovered within a
- * demo task then the tick hook will write an error to the LCD (via the LCD task).
- * If all the demo tasks are executing with their expected behaviour then the
- * check hook writes PASS to the LCD (again via the LCD task), as described above.
- * The check hook also toggles LED 4 each time it executes.
- *
- * LED tasks - These just demonstrate how multiple instances of a single task
- * definition can be created.  Each LED task simply toggles an LED.  The task
- * parameter is used to pass the number of the LED to be toggled into the task.
+ * still operational.  The status can be viewed using on the Task Stats page
+ * served by the WEB server.
  *
  * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
  * processing is performed in this task.
  */
 
-/* Standard includes. */
-#include <stdio.h>
-
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "queue.h"
-#include "semphr.h"
 
 /* Demo app includes. */
 #include "BlockQ.h"
@@ -108,11 +86,8 @@
 
 /*-----------------------------------------------------------*/
 
-/* The number of LED tasks that will be created. */
-#define mainNUM_LED_TASKS					( 6 )
-
 /* The time between cycles of the 'check' functionality (defined within the
-tick hook. */
+tick hook). */
 #define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
 
 /* Task priorities. */
@@ -120,7 +95,6 @@ tick hook. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainUIP_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
-#define mainLCD_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -129,11 +103,10 @@ tick hook. */
 handling library calls. */
 #define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 4 )
 
-/* The length of the queue used to send messages to the LCD task. */
-#define mainQUEUE_SIZE						( 3 )
+/* The message displayed by the WEB server when all tasks are executing
+without an error being reported. */
+#define mainPASS_STATUS_MESSAGE				"All tasks are executing without error."
 
-/* The task that is toggled by the check task. */
-#define mainCHECK_TASK_LED					( 4 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -142,25 +115,20 @@ handling library calls. */
 static void prvSetupHardware( void );
 
 /*
- * Very simple task that toggles an LED.
- */
-static void vLEDTask( void *pvParameters );
-
-/*
  * The task that handles the uIP stack.  All TCP/IP processing is performed in
  * this task.
  */
 extern void vuIP_Task( void *pvParameters );
 
 /*
- * The LCD gatekeeper task as described in the comments at the top of this file.
- * */
-static void vLCDTask( void *pvParameters );
+ * Simply returns the current status message for display on served WEB pages.
+ */
+char *pcGetTaskStatusMessage( void );
 
 /*-----------------------------------------------------------*/
 
-/* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+/* Holds the status message displayed by the WEB server. */
+static char *pcStatusMessage = mainPASS_STATUS_MESSAGE;
 
 /*-----------------------------------------------------------*/
 
@@ -184,14 +152,6 @@ int main( void )
 	/* Create the uIP task.  The WEB server runs in this task. */
     xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL );
 
-	/* Create the queue used by the LCD task.  Messages for display on the LCD
-	are received via this queue. */
-	xLCDQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( xLCDMessage ) );
-
-	/* Start the LCD gatekeeper task - as described in the comments at the top
-	of this file. */
-	xTaskCreate( vLCDTask, ( signed portCHAR * ) "LCD", configMINIMAL_STACK_SIZE * 2, NULL, mainLCD_TASK_PRIORITY, NULL );
-
     /* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -201,35 +161,9 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void vLCDTask( void *pvParameters )
-{
-xLCDMessage xMessage;
-unsigned long ulRow = 0;
-char cIPAddr[ 17 ]; /* To fit max IP address length of xxx.xxx.xxx.xxx\0 */
-
-	( void ) pvParameters;
-
-	/* The LCD gatekeeper task as described in the comments at the top of this
-	file. */
-
-	/* Initialise the LCD and display a startup message that includes the
-	configured IP address. */
-    sprintf( cIPAddr, "%d.%d.%d.%d", configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
-
-	for( ;; )
-	{
-		/* Wait for a message to arrive to be displayed. */
-		while( xQueueReceive( xLCDQueue, &xMessage, portMAX_DELAY ) != pdPASS );
-
-	}
-}
-/*-----------------------------------------------------------*/
-
 void vApplicationTickHook( void )
 {
-static xLCDMessage xMessage = { "PASS" };
 static unsigned portLONG ulTicksSinceLastDisplay = 0;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt as described in the comments at the top
 	of this file.
@@ -246,48 +180,44 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR: GEN Q";
+			pcStatusMessage = "An error has been detected in the Generic Queue test/demo.";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR: PEEK Q";
+			pcStatusMessage = "An error has been detected in the Peek Queue test/demo.";
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR: BLOCK Q";
+			pcStatusMessage = "An error has been detected in the Block Queue test/demo.";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR: BLOCK TIME";
+			pcStatusMessage = "An error has been detected in the Block Time test/demo.";
 		}
 	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
-	        xMessage.pcMessage = "ERROR: SEMAPHR";
+	        pcStatusMessage = "An error has been detected in the Semaphore test/demo.";
 	    }
 	    else if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
-	        xMessage.pcMessage = "ERROR: POLL Q";
+	        pcStatusMessage = "An error has been detected in the Poll Queue test/demo.";
 	    }
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
-	        xMessage.pcMessage = "ERROR: INT MATH";
+	        pcStatusMessage = "An error has been detected in the Int Math test/demo.";
 	    }
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
-	    	xMessage.pcMessage = "ERROR: REC MUTEX";
+	    	pcStatusMessage = "An error has been detected in the Mutex test/demo.";
 	    }
-
-		/* Send the message to the OLED gatekeeper for display.  The
-		xHigherPriorityTaskWoken parameter is not actually used here
-		as this function is running in the tick interrupt anyway - but
-		it must still be supplied. */
-		xHigherPriorityTaskWoken = pdFALSE;
-		xQueueSendFromISR( xLCDQueue, &xMessage, &xHigherPriorityTaskWoken );
-
-		/* Also toggle and LED.  This can be done from here because in this port
-		the LED toggling functions don't use critical sections. */
-        vParTestToggleLED( mainCHECK_TASK_LED );
 	}
+}
+/*-----------------------------------------------------------*/
+
+char *pcGetTaskStatusMessage( void )
+{
+	/* Not bothered about a critical section here. */
+	return pcStatusMessage;
 }
 /*-----------------------------------------------------------*/
 
@@ -372,7 +302,7 @@ const unsigned long TCR_COUNT_RESET = 2, CTCR_CTM_TIMER = 0x00, TCR_COUNT_ENABLE
 	collecting run time statistical information - basically the percentage
 	of CPU time that each task is utilising.  It is called automatically when
 	the scheduler is started (assuming configGENERATE_RUN_TIME_STATS is set
-	to 1. */
+	to 1). */
 
 	/* Power up and feed the timer. */
 	SC->PCONP |= 0x02UL;

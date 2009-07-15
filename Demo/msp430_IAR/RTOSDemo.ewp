@@ -666,7 +666,7 @@
         </option>
         <option>
           <name>SuppressDiags</name>
-          <state></state>
+          <state>w6</state>
         </option>
         <option>
           <name>TreatAsWarn</name>

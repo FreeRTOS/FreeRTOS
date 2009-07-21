@@ -132,7 +132,9 @@ to exclude the API function. */
 /* Priority 5, or 160 as only the top three bits are implemented. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << (8 - configPRIO_BITS) )
 
-
+/* Priorities passed to NVIC_SetPriority() do not require shifting as the
+function does the shifting itself. */
+#define configEMAC_INTERRUPT_PRIORITY		5
 
 
 

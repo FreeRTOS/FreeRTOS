@@ -142,7 +142,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 		/* Set the interrupt priority to the max permissible to cause some
 		interrupt nesting. */
-		NVIC_SetPriority( ENET_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
+		NVIC_SetPriority( ENET_IRQn, configEMAC_INTERRUPT_PRIORITY );
 
 		/* Enable the interrupt. */
 		NVIC_EnableIRQ( ENET_IRQn );

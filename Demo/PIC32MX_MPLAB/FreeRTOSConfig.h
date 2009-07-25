@@ -69,7 +69,7 @@
 #define configCPU_CLOCK_HZ				( ( unsigned portLONG ) 80000000UL )  
 #define configPERIPHERAL_CLOCK_HZ		( ( unsigned portLONG ) 40000000UL )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE		( 200 )
+#define configMINIMAL_STACK_SIZE		( 190 )
 #define configISR_STACK_SIZE			( 400 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 28000 )
 #define configMAX_TASK_NAME_LEN			( 8 )

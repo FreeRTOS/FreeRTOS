@@ -1,5 +1,5 @@
 ;/*
-;	FreeRTOS V5.4.0 - Copyright (C) 2003-2009 Richard Barry.
+;	FreeRTOS V5.4.1 - Copyright (C) 2009 Real Time Engineers Ltd.
 ;
 ;	This file is part of the FreeRTOS distribution.
 ;

@@ -3,14 +3,14 @@
 
 	This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
+	FreeRTOS is free software; you can redistribute it and/or modify it	under
+	the terms of the GNU General Public License (version 2) as published by the
 	Free Software Foundation and modified by the FreeRTOS exception.
 	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
+	combined work that includes FreeRTOS without being obliged to provide the
+	source code for proprietary components outside of the FreeRTOS kernel.
+	Alternative commercial license and support terms are also available upon
+	request.  See the licensing section of http://www.FreeRTOS.org for full
 	license details.
 
 	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
@@ -387,7 +387,7 @@ tskTCB * pxNewTCB;
 		required by the port. */
 		#if portSTACK_GROWTH < 0
 		{
-			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 ) - ( ( usStackDepth - 1 ) % portBYTE_ALIGNMENT );			
+			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 ) - ( ( usStackDepth - 1 ) % portBYTE_ALIGNMENT );
 		}
 		#else
 		{
@@ -528,8 +528,8 @@ tskTCB * pxNewTCB;
 			/* Increment the uxTaskNumberVariable also so kernel aware debuggers
 			can detect that the task lists need re-generating. */
 			uxTaskNumber++;
-			
-			traceTASK_DELETE( pxTCB );			
+
+			traceTASK_DELETE( pxTCB );
 		}
 		taskEXIT_CRITICAL();
 
@@ -1469,7 +1469,7 @@ void vTaskIncrementTick( void )
 		portENTER_CRITICAL();
 			xReturn = xTCB->pxTaskTag;
 		portEXIT_CRITICAL();
-		
+
 		return xReturn;
 	}
 
@@ -1693,7 +1693,7 @@ portBASE_TYPE xReturn;
 			else /* We are not blocking indefinitely, perform the checks below. */
 		#endif
 
-		if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xTickCount >= pxTimeOut->xTimeOnEntering ) )
+		if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( ( portTickType ) xTickCount >= ( portTickType ) pxTimeOut->xTimeOnEntering ) )
 		{
 			/* The tick count is greater than the time at which vTaskSetTimeout()
 			was called, but has also overflowed since vTaskSetTimeOut() was called.
@@ -1701,10 +1701,10 @@ portBASE_TYPE xReturn;
 			passed since vTaskSetTimeout() was called. */
 			xReturn = pdTRUE;
 		}
-		else if( ( xTickCount - pxTimeOut->xTimeOnEntering ) < *pxTicksToWait )
+		else if( ( ( portTickType ) xTickCount - ( portTickType ) pxTimeOut->xTimeOnEntering ) < ( portTickType ) *pxTicksToWait )
 		{
 			/* Not a genuine timeout. Adjust parameters for time remaining. */
-			*pxTicksToWait -= ( xTickCount - pxTimeOut->xTimeOnEntering );
+			*pxTicksToWait -= ( ( portTickType ) xTickCount - ( portTickType ) pxTimeOut->xTimeOnEntering );
 			vTaskSetTimeOutState( pxTimeOut );
 			xReturn = pdFALSE;
 		}

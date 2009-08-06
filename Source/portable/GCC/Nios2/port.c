@@ -205,7 +205,7 @@ int alt_irq_register( alt_u32 id, void* context, void (*handler)(void*, alt_u32)
 	{
 		/* 
 		 * interrupts are disabled while the handler tables are updated to ensure
-		 * that an interrupt doesn't occur while the tables are in an inconsistant
+		 * that an interrupt doesn't occur while the tables are in an inconsistent
 		 * state.
 		 */
 	

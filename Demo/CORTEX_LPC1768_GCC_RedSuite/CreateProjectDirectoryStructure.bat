@@ -1,6 +1,6 @@
 REM This file should be executed from the command line prior to the first
 REM build.  It will be necessary to refresh the Eclipse project once the
-REM .bat file has been executed (normally just press F5 to refresh.
+REM .bat file has been executed (normally just press F5 to refresh).
 
 REM Copies all the required files from their location within the standard
 REM FreeRTOS directory structure to under the Eclipse project directory.
@@ -8,7 +8,7 @@ REM This permits the Eclipse project to be used in 'managed' mode and without
 REM having to setup any linked resources.
 
 REM Have the files already been copied?
-IF EXIST FreeRTOS Goto END
+IF EXIST src\FreeRTOS Goto END
 
 	REM Create the required directory structure.
 	MD src\FreeRTOS

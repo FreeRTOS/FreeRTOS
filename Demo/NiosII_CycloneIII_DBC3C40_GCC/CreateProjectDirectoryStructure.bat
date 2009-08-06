@@ -31,7 +31,7 @@ IF EXIST RTOSDemo\FreeRTOS Goto END
 	copy ..\..\Source\portable\GCC\NiosII\*.* RTOSDemo\FreeRTOS\portable\GCC\NiosII
 	
 	REM Copy the basic memory allocation files
-	copy ..\..\Source\portable\MemMang\*.* RTOSDemo\FreeRTOS\portable\MemMang
+	copy ..\..\Source\portable\MemMang\heap_2.c RTOSDemo\FreeRTOS\portable\MemMang
 
 	REM Copy the files that define the Common_Demo_Tasks.
 	copy ..\Common\minimal\BlockQ.c "RTOSDemo\Common_Demo_Tasks"

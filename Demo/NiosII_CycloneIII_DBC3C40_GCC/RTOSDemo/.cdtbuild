@@ -7,7 +7,7 @@
 <toolChain id="com.altera.nj.ui.exe.Debug.241068812" name="com.altera.nj.ui.exe.Debug" superClass="com.altera.nj.ui.exe.Debug">
 <tool id="com.altera.nj.ui.tool.compiler.exe.debug.238740427" name="Nios II Compiler" superClass="com.altera.nj.ui.tool.compiler.exe.debug">
 <option id="nios2.compiler.general.include.paths.1954487624" superClass="nios2.compiler.general.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS/portable/GCC/Nios2}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS/portable/GCC/NiosII}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Common_Demo_Tasks/include}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS/include}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>

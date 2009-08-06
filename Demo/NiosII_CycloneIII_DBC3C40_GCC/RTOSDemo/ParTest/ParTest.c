@@ -52,6 +52,7 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+#include "task.h"
 
 /* Demo app includes. */
 #include "system.h"

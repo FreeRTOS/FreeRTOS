@@ -34,50 +34,10 @@
 #include "usbdebug.h"
 #include "usbhw_lpc.h"
 #include "usbapi.h"
-//  Configure LED pin functions
-//
-//  LED pin functions
-//
-//  Function            Pin Port	Bits	Pin Select Register
-//  ------------------- --- -----	----	-------------------
-//  P2.0 GPIO Port 2.0	xx	P2.0	1:0		PINSEL4
-//  P2.1 GPIO Port 2.1	xx	P2.1	3:2		PINSEL4
-//  P2.2 GPIO Port 2.2  xx  P2.2	5:4		PINSEL4
-//  P2.3 GPIO Port 2.3  xx  P2.3	7:6		PINSEL4
-//  P2.4 GPIO Port 2.4	xx	P2.4	9:8		PINSEL4
-//  P2.5 GPIO Port 2.5	xx	P2.5  11:10		PINSEL4
-//  P2.6 GPIO Port 2.6	xx	P2.6  13:12		PINSEL4
-//  P2.7 GPIO Port 2.7	xx	P2.7  15:14		PINSEL4
-//
-// OFF - LED state 0
-// ON  - LED state 1
-//
-//  '*' as GPIO
-
-#define NO_LEDS		8
-
-#define LED_0		(1 << 0)
-#define LED_1		(1 << 1)
-#define LED_2		(1 << 2)
-#define LED_3		(1 << 3)
-#define LED_4		(1 << 4)
-#define LED_5		(1 << 5)
-#define LED_6		(1 << 6)
-#define LED_7		(1 << 7)
 
 #ifdef DEBUG
 // comment out the following line if you don't want to use debug LEDs
 //#define DEBUG_LED
-#endif
-
-#ifdef DEBUG_LED
-#define DEBUG_LED_ON(x)		FIO2SET = (1 << x);
-#define DEBUG_LED_OFF(x)	FIO2CLR = (1 << x);
-#define DEBUG_LED_INIT(x)	PINSEL2 &= ~(0x3 << (2*x)); FIO2DIR |= (1 << x); DEBUG_LED_OFF(x);
-#else
-#define DEBUG_LED_INIT(x)	/**< LED initialisation macro */
-#define DEBUG_LED_ON(x)		/**< turn LED on */
-#define DEBUG_LED_OFF(x)	/**< turn LED off */
 #endif
 
 /** Installed device interrupt handler */
@@ -458,9 +418,6 @@ void USBHwISR(void)
 	int i;
 	unsigned short	wFrame;
 
-	// LED9 monitors total time in interrupt routine
-	DEBUG_LED_ON(6);
-
 	// handle device interrupts
 	dwStatus = USB->USBDevIntSt;
 	
@@ -490,9 +447,7 @@ void USBHwISR(void)
 					((bDevStat & RST) ? DEV_STATUS_RESET : 0);
 			// call handler
 			if (_pfnDevIntHandler != NULL) {
-				DEBUG_LED_ON(5);		
 				_pfnDevIntHandler(bStat);
-				DEBUG_LED_OFF(5);		
 			}
 		}
 	}
@@ -517,15 +472,11 @@ void USBHwISR(void)
 						((bEPStat & EPSTAT_PO) ? EP_STATUS_ERROR : 0);
 				// call handler
 				if (_apfnEPIntHandlers[i / 2] != NULL) {
-					DEBUG_LED_ON(7);		
 					_apfnEPIntHandlers[i / 2](IDX2EP(i), bStat);
-					DEBUG_LED_OFF(7);
 				}
 			}
 		}
 	}
-	
-	DEBUG_LED_OFF(6);		
 }
 
 
@@ -533,13 +484,6 @@ void USBHwISR(void)
 /**
 	Initialises the USB hardware
 		
-	This function assumes that the hardware is connected as shown in
-	section 10.1 of the LPC2148 data sheet:
-	* P0.31 controls a switch to connect a 1.5k pull-up to D+ if low.
-	* P0.23 is connected to USB VCC.
-	
-	Embedded artists board: make sure to disconnect P0.23 LED as it
-	acts as a pull-up and so prevents detection of USB disconnect.
 		
 	@return TRUE if the hardware was successfully initialised
  */

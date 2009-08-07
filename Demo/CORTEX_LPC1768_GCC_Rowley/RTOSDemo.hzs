@@ -22,6 +22,9 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;LPCUSB" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;System Files" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1]" binaryNodes="" unsignedNodes="" visibleGroups="CPU" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -52,7 +55,7 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="10" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" y="304" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" left="0" selected="1" name="unnamed" top="0" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" y="141" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" left="0" selected="1" name="unnamed" top="138" />
  </Files>
- <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Uart" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
+ <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\LPCUSB" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

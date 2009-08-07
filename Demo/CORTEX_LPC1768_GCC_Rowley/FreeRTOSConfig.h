@@ -64,7 +64,7 @@
 #define configUSE_IDLE_HOOK			0
 #define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
 #define configUSE_TICK_HOOK			1
-#define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 64000000 )
+#define configCPU_CLOCK_HZ			( ( unsigned portLONG ) 99000000 )
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned portSHORT ) 80 )
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 19 * 1024 ) )
@@ -133,9 +133,12 @@ to exclude the API function. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << (8 - configPRIO_BITS) )
 
 /* Priorities passed to NVIC_SetPriority() do not require shifting as the
-function does the shifting itself. */
+function does the shifting itself.  Note these priorities need to be equal to
+or lower than configMAX_SYSCALL_INTERRUPT_PRIORITY - therefore the numeric
+value needs to be equal to or greater than 5 (on the Cortex M3 the lower the
+numeric value the higher the interrupt priority). */
 #define configEMAC_INTERRUPT_PRIORITY		5
-
+#define configUSB_INTERRUPT_PRIORITY		6
 
 
 

@@ -46,7 +46,7 @@
 */
 
 
-#error The batch file Demo\CORTEX_LPC1768_GCC_RedSuite\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
+//#error The batch file Demo\CORTEX_LPC1768_GCC_RedSuite\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
 
 
 
@@ -66,6 +66,11 @@
  *
  * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
  * processing is performed in this task.
+ * 
+ * "USB" task - Enumerates the USB device as a CDC class, then echoes back all
+ * received characters with a configurable offset (for example, if the offset
+ * is 1 and 'A' is received then 'B' will be sent back).  A dumb terminal such
+ * as Hyperterminal can be used to talk to the USB task.
  */
 
 /* Standard includes. */
@@ -128,6 +133,11 @@ static void prvSetupHardware( void );
 extern void vuIP_Task( void *pvParameters );
 
 /*
+ * The task that handles the USB stack.
+ */
+extern void vUSBTask( void *pvParameters );
+
+/*
  * Simply returns the current status message for display on served WEB pages.
  */
 char *pcGetTaskStatusMessage( void );
@@ -158,6 +168,9 @@ char cIPAddress[ 16 ]; /* Enough space for "xxx.xxx.xxx.xxx\0". */
     vStartRecursiveMutexTasks();
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 
+    /* Create the USB task. */
+    xTaskCreate( vUSBTask, ( signed char * ) "USB", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+	
 	/* Display the IP address, then create the uIP task.  The WEB server runs 
 	in this task. */
 	LCDdriver_initialisation();
@@ -246,48 +259,83 @@ void prvSetupHardware( void )
 	/* Disable TPIU. */
 	PINCON->PINSEL10 = 0;
 
-	/* Disconnect the main PLL. */
-	SC->PLL0CON &= ~PLLCON_PLLC;
+	if ( SC->PLL0STAT & ( 1 << 25 ) )
+	{
+		/* Enable PLL, disconnected. */
+		SC->PLL0CON = 1;			
+		SC->PLL0FEED = PLLFEED_FEED1;
+		SC->PLL0FEED = PLLFEED_FEED2;
+	}
+	
+	/* Disable PLL, disconnected. */
+	SC->PLL0CON = 0;				
 	SC->PLL0FEED = PLLFEED_FEED1;
 	SC->PLL0FEED = PLLFEED_FEED2;
-	while ((SC->PLL0STAT & PLLSTAT_PLLC) != 0);
-
-	/* Turn off the main PLL. */
-	SC->PLL0CON &= ~PLLCON_PLLE;
+	    
+	/* Enable main OSC. */
+	SC->SCS |= 0x20;			
+	while( !( SC->SCS & 0x40 ) );
+	
+	/* select main OSC, 12MHz, as the PLL clock source. */
+	SC->CLKSRCSEL = 0x1;		
+	
+	SC->PLL0CFG = 0x0b;
 	SC->PLL0FEED = PLLFEED_FEED1;
 	SC->PLL0FEED = PLLFEED_FEED2;
-	while ((SC->PLL0STAT & PLLSTAT_PLLE) != 0);
-
-	/* No CPU clock divider. */
-	SC->CCLKCFG = 0;
-
-	/* OSCEN. */
-	SC->SCS = 0x20;
-	while ((SC->SCS & 0x40) == 0);
-
-	/* Use main oscillator. */
-	SC->CLKSRCSEL = 1;
-	SC->PLL0CFG = (PLLCFG_MUL16 | PLLCFG_DIV1);
-
+	      
+	/* Enable PLL, disconnected. */
+	SC->PLL0CON = 1;				
 	SC->PLL0FEED = PLLFEED_FEED1;
 	SC->PLL0FEED = PLLFEED_FEED2;
-
-	/*  Activate the PLL by turning it on then feeding the correct
-	sequence of bytes. */
-	SC->PLL0CON  = PLLCON_PLLE;
+	
+	/* Set clock divider. */
+	SC->CCLKCFG = 0x03;
+	
+	/* Configure flash accelerator. */
+	SC->FLASHCFG = 0x303a;
+	
+	/* Check lock bit status. */
+	while( ( ( SC->PLL0STAT & ( 1 << 26 ) ) == 0 ) );	
+	    
+	/* Enable and connect. */
+	SC->PLL0CON = 3;				
 	SC->PLL0FEED = PLLFEED_FEED1;
 	SC->PLL0FEED = PLLFEED_FEED2;
+	while( ( ( SC->PLL0STAT & ( 1 << 25 ) ) == 0 ) );	
 
-	/* 6x CPU clock divider (64 MHz) */
-	SC->CCLKCFG = 5;
-
-	/*  Wait for the PLL to lock. */
-	while ((SC->PLL0STAT & PLLSTAT_PLOCK) == 0);
-
-	/*  Connect the PLL. */
-	SC->PLL0CON  = PLLCON_PLLC | PLLCON_PLLE;
-	SC->PLL0FEED = PLLFEED_FEED1;
-	SC->PLL0FEED = PLLFEED_FEED2;
+	
+	
+	
+	/* Configure the clock for the USB. */
+	  
+	if( SC->PLL1STAT & ( 1 << 9 ) )
+	{
+		/* Enable PLL, disconnected. */
+		SC->PLL1CON = 1;			
+		SC->PLL1FEED = PLLFEED_FEED1;
+		SC->PLL1FEED = PLLFEED_FEED2;
+	}
+	
+	/* Disable PLL, disconnected. */
+	SC->PLL1CON = 0;				
+	SC->PLL1FEED = PLLFEED_FEED1;
+	SC->PLL1FEED = PLLFEED_FEED2;
+	
+	SC->PLL1CFG = 0x23;
+	SC->PLL1FEED = PLLFEED_FEED1;
+	SC->PLL1FEED = PLLFEED_FEED2;
+	      
+	/* Enable PLL, disconnected. */
+	SC->PLL1CON = 1;				
+	SC->PLL1FEED = PLLFEED_FEED1;
+	SC->PLL1FEED = PLLFEED_FEED2;
+	while( ( ( SC->PLL1STAT & ( 1 << 10 ) ) == 0 ) );
+	
+	/* Enable and connect. */
+	SC->PLL1CON = 3;				
+	SC->PLL1FEED = PLLFEED_FEED1;
+	SC->PLL1FEED = PLLFEED_FEED2;
+	while( ( ( SC->PLL1STAT & ( 1 << 9 ) ) == 0 ) );
 
 	/*  Setup the peripheral bus to be the same as the PLL output (64 MHz). */
 	SC->PCLKSEL0 = 0x05555555;

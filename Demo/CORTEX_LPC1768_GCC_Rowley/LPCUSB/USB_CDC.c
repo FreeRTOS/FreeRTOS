@@ -1,5 +1,5 @@
 /*
-	LPCUSB, an USB device driver for LPC microcontrollers	
+	LPCUSB, an USB device driver for LPC microcontrollers
 	Copyright (C) 2006 Bertrik Sikken (bertrik@sikken.nl)
 
 	Redistribution and use in source and binary forms, with or without
@@ -16,7 +16,7 @@
 	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
 	IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, 
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
 	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
 	NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -46,6 +46,7 @@
 */
 
 #include "FreeRTOS.h"
+#include "task.h"
 #include "queue.h"
 
 #include <stdio.h>
@@ -186,7 +187,7 @@ static const unsigned char abDescriptors[] = {
 	0x02,						// bmAttributes = bulk
 	LE_WORD(MAX_PACKET_SIZE),	// wMaxPacketSize
 	0x00,						// bInterval
-	
+
 	// string descriptors
 	0x04,
 	DESC_STRING,
@@ -211,7 +212,7 @@ static const unsigned char abDescriptors[] = {
 
 /**
 	Local function to handle incoming bulk data
-		
+
 	@param [in] bEP
 	@param [in] bEPStatus
  */
@@ -221,21 +222,21 @@ static void BulkOut(unsigned char bEP, unsigned char bEPStatus)
 	long lHigherPriorityTaskWoken = pdFALSE;
 
 	( void ) bEPStatus;
-	
+
 	// get data from USB into intermediate buffer
 	iLen = USBHwEPRead(bEP, abBulkBuf, sizeof(abBulkBuf));
 	for (i = 0; i < iLen; i++) {
 		// put into queue
-		xQueueSendFromISR( xRxedChars, &( abBulkBuf[ i ] ), &lHigherPriorityTaskWoken ); 
+		xQueueSendFromISR( xRxedChars, &( abBulkBuf[ i ] ), &lHigherPriorityTaskWoken );
 	}
-	
+
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }
 
 
 /**
 	Local function to handle outgoing bulk data
-		
+
 	@param [in] bEP
 	@param [in] bEPStatus
  */
@@ -245,7 +246,7 @@ static void BulkIn(unsigned char bEP, unsigned char bEPStatus)
 	long lHigherPriorityTaskWoken = pdFALSE;
 
 	( void ) bEPStatus;
-	
+
 	if (uxQueueMessagesWaitingFromISR( xCharsForTx ) == 0) {
 		// no more data, disable further NAK interrupts until next USB frame
 		USBHwNakIntEnable(0);
@@ -260,19 +261,19 @@ static void BulkIn(unsigned char bEP, unsigned char bEPStatus)
 		}
 	}
 	iLen = i;
-	
+
 	// send over USB
 	if (iLen > 0) {
 		USBHwEPWrite(bEP, abBulkBuf, iLen);
 	}
-	
+
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }
 
 
 /**
 	Local function to handle the USB-CDC class requests
-		
+
 	@param [in] pSetup
 	@param [out] piLen
 	@param [out] ppbData
@@ -315,7 +316,7 @@ DBG("SET_CONTROL_LINE_STATE %X\n", pSetup->wValue);
 
 /**
 	Writes one character to VCOM port
-	
+
 	@param [in] c character to write
 	@returns character written, or EOF if character could not be written
  */
@@ -336,13 +337,13 @@ char cc = ( char ) c;
 
 /**
 	Reads one character from VCOM port
-	
+
 	@returns character read, or EOF if character could not be read
  */
 int VCOM_getchar(void)
 {
 	unsigned char c;
-	
+
 	/* Block the task until a character is available. */
 	xQueueReceive( xRxedChars, &c, portMAX_DELAY );
 	return c;
@@ -351,7 +352,7 @@ int VCOM_getchar(void)
 
 /**
 	Interrupt handler
-	
+
 	Simply calls the USB ISR
  */
 //void USBIntHandler(void)
@@ -364,7 +365,7 @@ void USB_IRQHandler(void)
 static void USBFrameHandler(unsigned short wFrame)
 {
 	( void ) wFrame;
-	
+
 	if( uxQueueMessagesWaitingFromISR( xCharsForTx ) > 0 )
 	{
 		// data available, enable NAK interrupt on bulk in
@@ -398,7 +399,7 @@ unsigned long CPUcpsie(void)
 void vUSBTask( void *pvParameters )
 {
 	int c;
-	
+
 	/* Just to prevent compiler warnings about the unused parameter. */
 	( void ) pvParameters;
 	DBG("Initialising USB stack\n");
@@ -412,8 +413,8 @@ void vUSBTask( void *pvParameters )
 		anything so just delete ourselves. */
 		vTaskDelete( NULL );
 	}
-	
-	
+
+
 	// initialise stack
 	USBInit();
 
@@ -427,7 +428,7 @@ void vUSBTask( void *pvParameters )
 	USBHwRegisterEPIntHandler(INT_IN_EP, NULL);
 	USBHwRegisterEPIntHandler(BULK_IN_EP, BulkIn);
 	USBHwRegisterEPIntHandler(BULK_OUT_EP, BulkOut);
-	
+
 	// register frame handler
 	USBHwRegisterFrameHandler(USBFrameHandler);
 
@@ -438,9 +439,9 @@ void vUSBTask( void *pvParameters )
 
 	NVIC_SetPriority( USB_IRQn, configUSB_INTERRUPT_PRIORITY );
 	NVIC_EnableIRQ( USB_IRQn );
-		
+
 	// connect to bus
-		
+
 	DBG("Connecting to USB bus\n");
 	USBHwConnect(TRUE);
 
@@ -448,7 +449,7 @@ void vUSBTask( void *pvParameters )
 	for( ;; )
 	{
 		c = VCOM_getchar();
-		if (c != EOF) 
+		if (c != EOF)
 		{
 			// Echo character back with INCREMENT_ECHO_BY offset, so for example if
 			// INCREMENT_ECHO_BY is 1 and 'A' is received, 'B' will be echoed back.

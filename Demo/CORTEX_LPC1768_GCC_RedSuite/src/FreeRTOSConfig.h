@@ -150,10 +150,4 @@ extern void vConfigureTimerForRunTimeStats( void );
 #define portGET_RUN_TIME_COUNTER_VALUE() TIM0->TC
 
 
-/* The structure that is passed on the xLCDQueue.  Put here for convenience. */
-typedef struct
-{
-	char *pcMessage;
-} xLCDMessage;
-
 #endif /* FREERTOS_CONFIG_H */

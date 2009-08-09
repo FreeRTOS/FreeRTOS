@@ -3,14 +3,14 @@
 
 	This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
+	FreeRTOS is free software; you can redistribute it and/or modify it	under
+	the terms of the GNU General Public License (version 2) as published by the
 	Free Software Foundation and modified by the FreeRTOS exception.
 	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
+	combined work that includes FreeRTOS without being obliged to provide the
+	source code for proprietary components outside of the FreeRTOS kernel.
+	Alternative commercial license and support terms are also available upon
+	request.  See the licensing section of http://www.FreeRTOS.org for full
 	license details.
 
 	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
@@ -65,7 +65,7 @@
 #define emacLINK_ESTABLISHED		( 0x0001 )
 #define emacFULL_DUPLEX_ENABLED		( 0x0004 )
 #define emac10BASE_T_MODE			( 0x0002 )
-#define emacPINSEL2_VALUE 0x50150105
+#define emacPINSEL2_VALUE			( 0x50150105 )
 
 /* If no buffers are available, then wait this long before looking again.... */
 #define emacBUFFER_WAIT_DELAY	( 3 / portTICK_RATE_MS )

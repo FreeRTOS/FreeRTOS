@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <stf>
-	<project ptf="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\NiosII_CycloneIII_DBC3C40_GCC\cpu.ptf" target="Nios II System Library">
+	<project ptf="..\cpu.ptf" target="Nios II System Library">
 	</project>
 	<cpu name="cpu_0">
 	</cpu>

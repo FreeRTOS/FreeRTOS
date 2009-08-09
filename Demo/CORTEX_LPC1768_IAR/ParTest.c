@@ -1,5 +1,5 @@
 /*
-	FreeRTOS V5.4.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 
 	This file is part of the FreeRTOS distribution.
 
@@ -55,16 +55,18 @@
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-#define partstNUM_LEDS			( 1 )
-#define partstLED_OUTPUT		( 1 << 25 )
+#define partstLED1_OUTPUT		( 1 << 25 )
+#define partstLED2_OUTPUT		( 1 << 4 )
 
 void vParTestInitialise( void )
 {
-	/* Only one LED on P1.25. */
-    GPIO1->FIODIR  = partstLED_OUTPUT;
+	/* Set LEDs to output. */
+    GPIO1->FIODIR = partstLED1_OUTPUT;
+	GPIO0->FIODIR = partstLED2_OUTPUT;
 
 	/* Start with LED off. */
-    GPIO1->FIOSET = partstLED_OUTPUT;
+    GPIO1->FIOSET = partstLED1_OUTPUT;
+	GPIO0->FIOSET = partstLED2_OUTPUT;
 }
 /*-----------------------------------------------------------*/
 
@@ -72,18 +74,30 @@ void vParTestSetLED( unsigned long ulLEDIn, signed long xValue )
 {
 	/* Used to set and clear LEDs on FIO2. */
 
-	if( ulLEDIn < partstNUM_LEDS )
+	if( ulLEDIn == 0 )
 	{
 		/* Set of clear the output. */
 		if( xValue )
 		{
-			GPIO1->FIOCLR = partstLED_OUTPUT;
+			GPIO1->FIOCLR = partstLED1_OUTPUT;
 		}
 		else
 		{
-			GPIO1->FIOSET = partstLED_OUTPUT;
+			GPIO1->FIOSET = partstLED1_OUTPUT;
 		}
 	}
+	else if( ulLEDIn == 1 )
+	{
+		/* Set of clear the output. */
+		if( xValue )
+		{
+			GPIO0->FIOCLR = partstLED2_OUTPUT;
+		}
+		else
+		{
+			GPIO0->FIOSET = partstLED2_OUTPUT;
+		}
+	}	
 }
 /*-----------------------------------------------------------*/
 
@@ -93,25 +107,38 @@ unsigned long ulCurrentState;
 
 	/* Used to toggle LEDs on FIO2. */
 
-	if( ulLEDIn < partstNUM_LEDS )
+	if( ulLEDIn == 0 )
 	{
 		/* If this bit is already set, clear it, and visa versa. */
 		ulCurrentState = GPIO1->FIOPIN;
-		if( ulCurrentState & partstLED_OUTPUT )
+		if( ulCurrentState & partstLED1_OUTPUT )
 		{
-			GPIO1->FIOCLR = partstLED_OUTPUT;
+			GPIO1->FIOCLR = partstLED1_OUTPUT;
 		}
 		else
 		{
-			GPIO1->FIOSET = partstLED_OUTPUT;
+			GPIO1->FIOSET = partstLED1_OUTPUT;
 		}
 	}
+	else if( ulLEDIn == 1 )
+	{
+		/* If this bit is already set, clear it, and visa versa. */
+		ulCurrentState = GPIO1->FIOPIN;
+		if( ulCurrentState & partstLED1_OUTPUT )
+		{
+			GPIO0->FIOCLR = partstLED2_OUTPUT;
+		}
+		else
+		{
+			GPIO0->FIOSET = partstLED2_OUTPUT;
+		}
+	}	
 }
 /*-----------------------------------------------------------*/
 
 long lParTestGetLEDState( void )
 {
-	if( ( GPIO1->FIOPIN & partstLED_OUTPUT ) != 0 )
+	if( ( GPIO0->FIOPIN & partstLED2_OUTPUT ) == 0 )
 	{
 		return pdFALSE;
 	}
@@ -127,11 +154,11 @@ void vParTestSetLEDState( long lState )
 	/* Used to set and clear the LEDs on FIO1. */
 	if( lState != pdFALSE )
 	{
-		GPIO1->FIOSET = partstLED_OUTPUT;
+		GPIO0->FIOCLR = partstLED2_OUTPUT;
 	}
 	else
 	{
-		GPIO1->FIOCLR = partstLED_OUTPUT;
+		GPIO0->FIOSET = partstLED2_OUTPUT;
 	}
 }
 /*-----------------------------------------------------------*/

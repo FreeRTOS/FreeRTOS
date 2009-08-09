@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V5.4.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     This file is part of the FreeRTOS distribution.
 
@@ -94,6 +94,10 @@
 #include "countsem.h"
 #include "recmutex.h"
 #include "death.h"
+
+/*-----------------------------------------------------------*/
+
+#error The batch file Demo\NiosII_CycloneIII_DBC3C40_GCC\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
 
 /*-----------------------------------------------------------*/
 

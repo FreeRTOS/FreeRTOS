@@ -688,6 +688,8 @@ uip_process(u8_t flag)
 {
   register struct uip_conn *uip_connr = uip_conn;
 
+  ( void ) all_ones_addr;
+
 #if UIP_UDP
   if(flag == UIP_UDP_SEND_CONN) {
     goto udp_send;

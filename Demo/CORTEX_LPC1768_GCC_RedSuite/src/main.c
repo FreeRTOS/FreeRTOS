@@ -279,7 +279,7 @@ void prvSetupHardware( void )
 	/* select main OSC, 12MHz, as the PLL clock source. */
 	SC->CLKSRCSEL = 0x1;		
 	
-	SC->PLL0CFG = 0x0b;
+	SC->PLL0CFG = 0x20031;
 	SC->PLL0FEED = PLLFEED_FEED1;
 	SC->PLL0FEED = PLLFEED_FEED2;
 	      
@@ -292,7 +292,7 @@ void prvSetupHardware( void )
 	SC->CCLKCFG = 0x03;
 	
 	/* Configure flash accelerator. */
-	SC->FLASHCFG = 0x303a;
+	SC->FLASHCFG = 0x403a;
 	
 	/* Check lock bit status. */
 	while( ( ( SC->PLL0STAT & ( 1 << 26 ) ) == 0 ) );	

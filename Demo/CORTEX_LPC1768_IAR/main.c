@@ -91,11 +91,15 @@
 tick hook). */
 #define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
 
+/* The toggle rate for the LED. */
+#define mainLED_TOGGLE_RATE					( ( portTickType ) 1000 / portTICK_RATE_MS )
+
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainUIP_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
@@ -126,6 +130,11 @@ extern void vuIP_Task( void *pvParameters );
 extern void vUSBTask( void *pvParameters );
 
 /*
+ * Very basic task that does nothing but use delays to flash an LED.
+ */
+static void prvFlashTask( void *pvParameters );
+
+/*
  * Simply returns the current status message for display on served WEB pages.
  */
 char *pcGetTaskStatusMessage( void );
@@ -153,8 +162,11 @@ int main( void )
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
 
+	/* Create the simple LED flash task. */
+	xTaskCreate( prvFlashTask, ( signed char * ) "Flash", configMINIMAL_STACK_SIZE, ( void * ) NULL, mainFLASH_TASK_PRIORITY, NULL );
+	
     /* Create the USB task. */
-//    xTaskCreate( vUSBTask, ( signed char * ) "USB", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vUSBTask, ( signed char * ) "USB", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 	
 	/* Create the uIP task.  The WEB server runs in this task. */
     xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL );
@@ -217,7 +229,22 @@ static unsigned portLONG ulTicksSinceLastDisplay = 0;
 	    {
 	    	pcStatusMessage = "An error has been detected in the Mutex test/demo.";
 	    }
-		
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvFlashTask( void *pvParameters )
+{
+portTickType xLastFlashTime;
+
+	/* We need to initialise xLastFlashTime prior to the first call to
+	vTaskDelayUntil(). */
+	xLastFlashTime = xTaskGetTickCount();
+
+	for(;;)
+	{
+		/* Simply toggle the LED between delays. */
+		vTaskDelayUntil( &xLastFlashTime, mainLED_TOGGLE_RATE );
 		vParTestToggleLED( 0 );
 	}
 }
@@ -261,10 +288,10 @@ void prvSetupHardware( void )
 	/* select main OSC, 12MHz, as the PLL clock source. */
 	SC->CLKSRCSEL = 0x1;		
 	
-	SC->PLL0CFG = 0x0b;
+	SC->PLL0CFG = 0x20031;
 	SC->PLL0FEED = PLLFEED_FEED1;
 	SC->PLL0FEED = PLLFEED_FEED2;
-	
+	      
 	/* Enable PLL, disconnected. */
 	SC->PLL0CON = 1;				
 	SC->PLL0FEED = PLLFEED_FEED1;
@@ -274,7 +301,7 @@ void prvSetupHardware( void )
 	SC->CCLKCFG = 0x03;
 	
 	/* Configure flash accelerator. */
-	SC->FLASHCFG = 0x303a;
+	SC->FLASHCFG = 0x403a;
 	
 	/* Check lock bit status. */
 	while( ( ( SC->PLL0STAT & ( 1 << 26 ) ) == 0 ) );	

@@ -97,7 +97,7 @@
 
 /*-----------------------------------------------------------*/
 
-#error The batch file Demo\NiosII_CycloneIII_DBC3C40_GCC\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
+#error The batch file Demo\NiosII_CycloneIII_DBC3C40_GCC\CreateProjectDirectoryStructure.bat must be executed before the project is imported into the workspace.  Failure to do this will result in the include paths stored in the project being deleted.  Remove this line after CreateProjectDirectoryStructure.bat has been executed.
 
 /*-----------------------------------------------------------*/
 

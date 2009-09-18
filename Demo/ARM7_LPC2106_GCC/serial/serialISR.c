@@ -96,7 +96,7 @@ void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle 
 void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
 
 /* UART0 interrupt service routine handler. */
-void vUART_ISR_Handler( void );
+void vUART_ISR_Handler( void ) __attribute__ ((noinline));
 
 /*-----------------------------------------------------------*/
 void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, 
@@ -124,7 +124,7 @@ void vUART_ISR_Wrapper( void )
 
 	/* Call the handler.  This must be a separate function from the wrapper
 	to ensure the correct stack frame is set up. */
-	vUART_ISR_Handler();
+	__asm volatile ("bl vUART_ISR_Handler");
 
 	/* Restore the context of whichever task is going to run next. */
 	portRESTORE_CONTEXT();

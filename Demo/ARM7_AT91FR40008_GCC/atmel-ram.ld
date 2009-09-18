@@ -35,6 +35,12 @@ SECTIONS
 		*(.bss)
 	} >ram
 
+	. = ALIGN(4);
+	.eh_frame :
+	{
+		 KEEP (*(.eh_frame))
+	} > ram
+	
 	/* Align here to ensure that the .bss section occupies space up to
 	_end.  Align after .bss to ensure correct alignment even if the
 	.bss section disappears because there are no input sections.  */

@@ -93,7 +93,7 @@ void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
 
 /* The ISR function that actually performs the work.  This must be separate 
 from the wrapper to ensure the correct stack frame is set up. */
-void vUART_ISR_Handler( void );
+void vUART_ISR_Handler( void ) __attribute__ ((noinline));
 
 /*-----------------------------------------------------------*/
 void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx )
@@ -116,7 +116,7 @@ void vUART_ISR_Wrapper( void )
 
 	/* Call the handler.  This must be a separate function to ensure the 
 	stack frame is correctly set up. */
-	vUART_ISR_Handler();
+	__asm volatile( "bl vUART_ISR_Handler" );
 
 	/* Restore the context of whichever task will run next. */
 	portRESTORE_CONTEXT();

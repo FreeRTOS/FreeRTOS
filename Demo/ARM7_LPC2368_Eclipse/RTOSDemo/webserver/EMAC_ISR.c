@@ -6,7 +6,7 @@
 void vEMAC_ISR_Wrapper( void ) __attribute__((naked));
 
 /* The handler that does the actual work. */
-void vEMAC_ISR_Handler( void );
+void vEMAC_ISR_Handler( void ) __attribute__((noinline));
 
 extern xSemaphoreHandle xEMACSemaphore;
 
@@ -37,7 +37,7 @@ void vEMAC_ISR_Wrapper( void )
     
     /* Call the handler.  This must be a separate function unless you can
     guarantee that no stack will be used. */
-    vEMAC_ISR_Handler();
+    __asm volatile ( "bl vEMAC_ISR_Handler" );
     
     /* Restore the context of whichever task is going to run next. */
     portRESTORE_CONTEXT();

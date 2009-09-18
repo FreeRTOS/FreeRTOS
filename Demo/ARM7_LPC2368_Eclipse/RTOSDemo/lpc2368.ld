@@ -8,8 +8,10 @@ MEMORY
 
 __stack_end__ = 0x40000000 + 32K - 4;
 
+
 SECTIONS 
 {
+
 	. = 0;
 	startup : { *(.startup)} >flash
 
@@ -20,6 +22,7 @@ SECTIONS
 		*(.rodata*)
 		*(.glue_7)
 		*(.glue_7t)
+		KEEP(*(.eh_frame))		
 	} >flash
 
 	__end_of_text__ = .;
@@ -38,6 +41,7 @@ SECTIONS
 		*(.bss)
 	} >ram
 
+	
 	/* Align here to ensure that the .bss section occupies space up to
 	_end.  Align after .bss to ensure correct alignment even if the
 	.bss section disappears because there are no input sections.  */

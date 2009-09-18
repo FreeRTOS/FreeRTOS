@@ -77,7 +77,7 @@ CFLAGS= $(DEBUG) \
 		-D ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\) \
 		-fomit-frame-pointer \
 		-mthumb-interwork
-										
+		
 THUMB_SOURCE= \
 		main.c \
 		./ParTest/ParTest.c \
@@ -103,7 +103,8 @@ THUMB_SOURCE= \
 		$(RTOS_SOURCE_DIR)/queue.c \
 		$(RTOS_SOURCE_DIR)/tasks.c \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM7_LPC23xx/port.c \
-		$(RTOS_SOURCE_DIR)/portable/MemMang/heap_2.c
+		$(RTOS_SOURCE_DIR)/portable/MemMang/heap_2.c \
+		syscalls.c
 
 ARM_SOURCE= \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM7_LPC23xx/portISR.c \

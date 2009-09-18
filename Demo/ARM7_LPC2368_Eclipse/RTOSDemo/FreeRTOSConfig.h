@@ -67,7 +67,7 @@
 //#define configPINSEL2_VALUE	0x50151105
 
 /* Value to use on rev 'A' and newer devices. */
-//#define configPINSEL2_VALUE 	0x50150105
+#define configPINSEL2_VALUE 	0x50150105
 
 #ifndef configPINSEL2_VALUE
 	#error Please uncomment one of the two configPINSEL2_VALUE definitions above, depending on the revision of the LPC2000 device being used.

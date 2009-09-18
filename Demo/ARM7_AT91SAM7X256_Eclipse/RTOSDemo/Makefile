@@ -105,7 +105,8 @@ THUMB_SOURCE= \
 		$(RTOS_SOURCE_DIR)/tasks.c \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM7_AT91SAM7S/port.c \
 		$(RTOS_SOURCE_DIR)/portable/MemMang/heap_2.c \
-		./USB/USBSample.c
+		./USB/USBSample.c \
+		syscalls.c
 
 ARM_SOURCE= \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM7_AT91SAM7S/portISR.c \

@@ -83,7 +83,7 @@ void vUSB_ISR_Wrapper( void ) __attribute__((naked));
  * Actual ISR handler.  This must be separate from the entry point as the stack
  * is used.
  */
-void vUSB_ISR_Handler( void );
+void vUSB_ISR_Handler( void ) __attribute__((noinline));
 
 /*-----------------------------------------------------------*/
 
@@ -182,7 +182,7 @@ void vUSB_ISR_Wrapper( void )
 
 	/* Call the handler itself.  This must be a separate function as it uses
 	the stack. */
-	vUSB_ISR_Handler();
+	__asm volatile ("bl vUSB_ISR_Handler");
 
 	/* Restore the context of the task that is going to 
 	execute next. This might not be the same as the originally 

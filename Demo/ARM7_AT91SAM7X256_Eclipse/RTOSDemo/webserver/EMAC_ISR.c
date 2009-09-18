@@ -54,7 +54,7 @@ void vEMACISR_Wrapper( void ) __attribute__((naked));
 
 /* Handler called by the ISR wrapper.  This must be kept a separate
 function to ensure the stack frame is correctly set up. */
-void vEMACISR_Handler( void );
+void vEMACISR_Handler( void ) __attribute__((noinline));
 
 static xSemaphoreHandle xEMACSemaphore;
 
@@ -103,7 +103,7 @@ void vEMACISR_Wrapper( void )
 	
 	/* Call the handler task to do the actual work.  This must be a separate
 	function to ensure the stack frame is correctly set up. */
-	vEMACISR_Handler();
+	__asm volatile ("bl vEMACISR_Handler");
 	
 	/* Restore the context of whichever task is the next to run. */
 	portRESTORE_CONTEXT();

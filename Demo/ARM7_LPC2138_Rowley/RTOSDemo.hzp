@@ -1,9 +1,9 @@
 <!DOCTYPE CrossStudio_Project_File>
-<solution Name="RTOSDemo" version="1">
+<solution Name="RTOSDemo" version="2">
   <project Name="RTOSDemo">
-    <configuration Name="Common" Target="LPC2138" arm_architecture="v4T" arm_core_type="ARM7TDMI-S" arm_simulator_memory_simulation_filename="$(StudioDir)/targets/Philips_LPC210X/LPC2000SimulatorMemory.dll" arm_simulator_memory_simulation_parameter="LPC21;0x80000;0x10000" arm_target_debug_interface_type="ARM7TDI" arm_target_loader_parameter="14745600" gcc_entry_point="reset_handler" link_include_startup_code="No" linker_additional_files="$(StudioDir)/lib/liblpc2000$(LibExt)$(LIB)" linker_memory_map_file="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC2138_MemoryMap.xml" oscillator_frequency="14.7456MHz" project_directory="" project_type="Executable" property_groups_file_path="$(StudioDir)/targets/Philips_LPC210X/propertyGroups.xml"/>
+    <configuration Name="Common" Target="LPC2138" arm_architecture="v4T" arm_core_type="ARM7TDMI-S" arm_simulator_memory_simulation_filename="$(TargetsDir)/Philips_LPC210X/LPC2000SimulatorMemory.dll" arm_simulator_memory_simulation_parameter="LPC21;0x80000;0x10000" arm_target_debug_interface_type="ARM7TDI" arm_target_loader_parameter="14745600" c_only_additional_options="-Wall;-Wextra" gcc_entry_point="reset_handler" link_include_startup_code="No" linker_additional_files="$(PackagesDir)/lib/liblpc2000$(LibExt)$(LIB)" linker_memory_map_file="$(TargetsDir)/Philips_LPC210X/Philips_LPC2138_MemoryMap.xml" oscillator_frequency="14.7456MHz" project_directory="" project_type="Executable" property_groups_file_path="$(TargetsDir)/Philips_LPC210X/propertyGroups.xml"/>
     <configuration Name="RAM" Placement="RAM" linker_section_placement_file="$(StudioDir)/targets/sram_placement.xml" target_reset_script="SRAMReset()"/>
-    <configuration Name="Flash" Placement="Flash" arm_target_flash_loader_file_path="$(StudioDir)/targets/Philips_LPC210X/Release/Loader.elf" arm_target_flash_loader_type="Comms Channel Loader" linker_section_placement_file="$(StudioDir)/targets/flash_placement.xml" target_reset_script="FLASHReset()"/>
+    <configuration Name="Flash" Placement="Flash" arm_target_flash_loader_file_path="$(TargetsDir)/Philips_LPC210X/Release/Loader.elf" arm_target_flash_loader_type="Comms Channel Loader" linker_section_placement_file="$(StudioDir)/targets/flash_placement.xml" target_reset_script="FLASHReset()"/>
     <folder Name="Source Files">
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc"/>
       <folder Name="RTOS Source">
@@ -35,13 +35,14 @@
     </folder>
     <folder Name="System Files">
       <file Name="crt0.s" file_name="$(StudioDir)/source/crt0.s"/>
-      <file Name="Philips_LPC210X_Startup.s" file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Startup.s"/>
-      <file Name="Philips_LPC210X_Target.js" file_name="$(StudioDir)/targets/Philips_LPC210X/Philips_LPC210X_Target.js">
+      <file Name="Philips_LPC210X_Startup.s" file_name="$(TargetsDir)/Philips_LPC210X/Philips_LPC210X_Startup.s"/>
+      <file Name="Philips_LPC210X_Target.js" file_name="$(TargetsDir)/Philips_LPC210X/Philips_LPC210X_Target.js">
         <configuration Name="Common" file_type="Reset Script"/>
       </file>
     </folder>
     <file Name="threads.js" file_name="threads.js"/>
-    <configuration Name="THUMB Flash Debug" build_quietly="No"/>
+    <configuration Name="THUMB Flash Debug" build_quietly="No" c_only_additional_options=""/>
+    <configuration Name="Release" gcc_optimization_level="Level 3"/>
   </project>
   <configuration Name="ARM Flash Debug" inherited_configurations="ARM;Flash;Debug"/>
   <configuration Name="ARM" arm_instruction_set="ARM" arm_library_instruction_set="ARM" c_preprocessor_definitions="__ARM" hidden="Yes"/>

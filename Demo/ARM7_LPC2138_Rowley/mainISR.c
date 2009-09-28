@@ -57,7 +57,7 @@
  * you are absolutely sure that no stack space is used.
  */
 void vButtonISRWrapper( void ) __attribute__ ((naked));
-void vButtonHandler( void );
+void vButtonHandler( void ) __attribute__ ((noinline));
 
 void vButtonHandler( void )
 {
@@ -86,7 +86,7 @@ void vButtonISRWrapper( void )
 
 	/* Call the handler to do the work.  This must be a separate function to
 	the wrapper to ensure the correct stack frame is set up. */
-	vButtonHandler();
+	__asm volatile( "bl vButtonHandler" );
 
 	/* Restore the context of whichever task is going to run once the interrupt
 	completes. */

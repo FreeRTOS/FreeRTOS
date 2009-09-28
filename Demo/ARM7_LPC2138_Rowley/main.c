@@ -199,10 +199,10 @@ int main( void )
     vStartRecursiveMutexTasks();
 
 	/* Start the tasks defined within this file. */
-	xTaskCreate( vLEDTask, "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
-    xTaskCreate( vCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-    xTaskCreate( vPrintTask, "Print", configMINIMAL_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
-    xTaskCreate( vButtonHandlerTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vLEDTask, ( signed char * ) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
+    xTaskCreate( vCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    xTaskCreate( vPrintTask, ( signed char * ) "Print", configMINIMAL_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
+    xTaskCreate( vButtonHandlerTask, ( signed char * ) "Button", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -216,6 +216,9 @@ int main( void )
 
 static void vLEDTask( void *pvParameters )
 {
+	/* Just to remove compiler warnings. */
+	( void ) pvParameters;
+
 	/* Configure IO. */
 	IO0DIR |= mainLED_BIT;
 	IO0SET = mainLED_BIT;
@@ -243,6 +246,9 @@ portBASE_TYPE xErrorOccurred = pdFALSE;
 portTickType xLastExecutionTime;
 const portCHAR * const pcPassMessage = "PASS\n";
 const portCHAR * const pcFailMessage = "FAIL\n";
+
+	/* Just to remove compiler warnings. */
+	( void ) pvParameters;
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -315,6 +321,9 @@ static void vPrintTask( void *pvParameters )
 {
 portCHAR *pcMessage;
 
+	/* Just to stop compiler warnings. */
+	( void ) pvParameters;
+
 	for( ;; )
 	{
 		/* Wait for a message to arrive. */
@@ -330,10 +339,13 @@ portCHAR *pcMessage;
 
 static void vButtonHandlerTask( void *pvParameters )
 {
-static portCHAR cListBuffer[ mainLIST_BUFFER_SIZE ];
-const portCHAR *pcList = &( cListBuffer[ 0 ] );
+static signed portCHAR cListBuffer[ mainLIST_BUFFER_SIZE ];
+const signed portCHAR *pcList = &( cListBuffer[ 0 ] );
 const portCHAR * const pcHeader = "\nTask          State  Priority  Stack	#\n************************************************";
 extern void (vButtonISRWrapper) ( void );
+
+	/* Just to stop compiler warnings. */
+	( void ) pvParameters;
 
 	/* Configure the interrupt. */
 	portENTER_CRITICAL();
@@ -372,6 +384,14 @@ extern void (vButtonISRWrapper) ( void );
 }
 /*-----------------------------------------------------------*/
 
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+{
+	/* Check pcTaskName for the name of the offending task, or pxCurrentTCB
+	if pcTaskName has itself been corrupted. */
+	( void ) pxTask;
+	( void ) pcTaskName;
+	for( ;; );
+}
 
 
 

@@ -78,7 +78,9 @@ CFLAGS= $(DEBUG) \
 		-D PACK_STRUCT_END=__attribute\(\(packed\)\) \
 		-D ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\) \
 		-fomit-frame-pointer \
-		-mthumb-interwork
+		-mthumb-interwork \
+		-fno-strict-aliasing \
+		-fno-dwarf2-cfi-asm
 										
 THUMB_SOURCE= \
 		main.c \

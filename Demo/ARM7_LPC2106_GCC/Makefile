@@ -45,10 +45,6 @@
 #	licensing and training services.
 #*/
 
-# Changes from V2.4.2
-#
-#	+ Replaced source/portable/gcc/arm7/portheap.c with source/portable/memmang/heap_2.c.
-
 CC=arm-elf-gcc
 OBJCOPY=arm-elf-objcopy
 ARCH=arm-elf-ar
@@ -61,7 +57,7 @@ WARNINGS=-Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align
 #
 CFLAGS=$(WARNINGS) -D $(RUN_MODE) -D GCC_ARM7 -I. -I../../Source/include \
 		-I../Common/include $(DEBUG) -mcpu=arm7tdmi -T$(LDSCRIPT) \
-		 $(OPTIM) -fomit-frame-pointer -fno-strict-aliasing
+		 $(OPTIM) -fomit-frame-pointer -fno-strict-aliasing -fno-dwarf2-cfi-asm
 
 ifeq ($(USE_THUMB_MODE),YES)
 	CFLAGS += -mthumb-interwork -D THUMB_INTERWORK

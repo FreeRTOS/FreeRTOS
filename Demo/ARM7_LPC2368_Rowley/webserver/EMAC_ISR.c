@@ -7,7 +7,7 @@ void vEMAC_ISR_Wrapper( void ) __attribute__((naked));
 
 /* The function that actually performs the interrupt processing.  This must be 
 separate to the wrapper to ensure the correct stack frame is set up. */
-void vEMAC_ISR_Handler( void );
+void vEMAC_ISR_Handler( void ) __attribute__((noinline));
 
 extern xSemaphoreHandle xEMACSemaphore;
 
@@ -39,7 +39,7 @@ void vEMAC_ISR_Wrapper( void )
 
 	/* Call the handler function.  This must be separate from the wrapper
 	function to ensure the correct stack frame is set up. */
-	vEMAC_ISR_Handler();
+	__asm volatile( "bl vEMAC_ISR_Handler" );
 
 	/* Restore the context of whichever task is going to run next. */
 	portRESTORE_CONTEXT();

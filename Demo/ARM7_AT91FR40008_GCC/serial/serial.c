@@ -206,6 +206,7 @@ signed portCHAR *pxNext;
 
 	/* The port handle is not required as this driver only supports UART0. */
 	( void ) pxPort;
+	( void ) usStringLength;
 
 	/* Send each character in the string, one at a time. */
 	pxNext = ( signed portCHAR * ) pcString;
@@ -219,6 +220,8 @@ signed portCHAR *pxNext;
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
 {
+	( void ) pxPort;
+
 	/* Place the character in the queue of characters to be transmitted. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 	{
@@ -238,6 +241,7 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOut
 void vSerialClose( xComPortHandle xPort )
 {
 	/* Not supported as not required by the demo application. */
+	( void ) xPort;
 }
 /*-----------------------------------------------------------*/
 

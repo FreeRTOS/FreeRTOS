@@ -53,9 +53,10 @@ CRT0=boot.s
 #
 # CFLAGS common to both the THUMB and ARM mode builds
 #
-CFLAGS=-Wall -D $(RUN_MODE) -D GCC_AT91FR40008 -I. -I../../Source/include \
+CFLAGS=-Wall -Wextra -D $(RUN_MODE) -D GCC_AT91FR40008 -I. -I../../Source/include \
 		-I../Common/include $(DEBUG) -mcpu=arm7tdmi -T$(LDSCRIPT) \
-		-Wcast-align $(OPTIM) -fomit-frame-pointer -fno-strict-aliasing
+		-Wcast-align $(OPTIM) -fomit-frame-pointer -fno-strict-aliasing \
+		-fno-dwarf2-cfi-asm
 
 ifeq ($(USE_THUMB_MODE),YES)
 	CFLAGS += -mthumb-interwork -D THUMB_INTERWORK
@@ -113,4 +114,6 @@ $(ARM_OBJ) : %.o : %.c $(LDSCRIPT) Makefile
 
 clean :
 	touch Makefile
+	rm $(ARM_OBJ)
+	rm $(THUMB_OBJ)
 

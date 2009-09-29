@@ -19,7 +19,7 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;RTOS Source" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;Demo Source" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow openNodes="CPU - Current Mode;CPU - Current Mode/cpsr" binaryNodes="" unsignedNodes="" visibleGroups="CPU - Current Mode" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -56,7 +56,7 @@
   </Watches>
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="21" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_LPC2138_Rowley\main.c" y="391" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_LPC2138_Rowley\main.c" left="0" selected="1" name="unnamed" top="43" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_LPC2138_Rowley\main.c" y="391" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_LPC2138_Rowley\main.c" left="0" selected="1" name="unnamed" top="42" />
  </Files>
  <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\Demo\Common\Minimal" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388479" debugSearchPath="" buildConfiguration="ARM Flash Debug" />
 </session>

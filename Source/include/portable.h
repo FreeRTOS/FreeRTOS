@@ -301,9 +301,35 @@ to find the path to the correct portmacro.h file. */
 	#include "portmacro.h"	
 #endif
 	
+#if portBYTE_ALIGNMENT == 8
+	#define portBYTE_ALIGNMENT_MASK ( 0x0007 )
+#endif
+
+#if portBYTE_ALIGNMENT == 4
+	#define portBYTE_ALIGNMENT_MASK	( 0x0003 )
+#endif
+
+#if portBYTE_ALIGNMENT == 2
+	#define portBYTE_ALIGNMENT_MASK	( 0x0001 )
+#endif
+
+#if portBYTE_ALIGNMENT == 1
+	#define portBYTE_ALIGNMENT_MASK	( 0x0000 )
+#endif
+
+#ifndef portBYTE_ALIGNMENT_MASK
+	#error "Invalid portBYTE_ALIGNMENT definition"
+#endif
+
+#ifndef portNUM_CONFIGURABLE_REGIONS
+	#define portNUM_CONFIGURABLE_REGIONS 1
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "mpu_wrappers.h"
 
 /*
  * Setup the stack of a new task so it is ready to be placed under the
@@ -311,14 +337,18 @@ extern "C" {
  * the order that the port expects to find them.
  *
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters );
+#if( portUSING_MPU_WRAPPERS == 1 )
+	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters, portBASE_TYPE xRunPrivileged );
+#else
+	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters );
+#endif
 
 /*
  * Map to the memory management routines required for the port.
  */
-void *pvPortMalloc( size_t xSize );
-void vPortFree( void *pv );
-void vPortInitialiseBlocks( void );
+void *pvPortMalloc( size_t xSize ) PRIVILEGED_FUNCTION;
+void vPortFree( void *pv ) PRIVILEGED_FUNCTION;
+void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Setup the hardware ready for the scheduler to take control.  This generally
@@ -332,6 +362,18 @@ portBASE_TYPE xPortStartScheduler( void );
  * executing.
  */
 void vPortEndScheduler( void );
+
+/*
+ * The structures and methods of manipulating the MPU are contained within the
+ * port layer.
+ *
+ * Fills the xMPUSettings structure with the memory region information
+ * contained in xRegions.
+ */
+#if( portUSING_MPU_WRAPPERS == 1 ) 
+	struct xMEMORY_REGION;
+	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, portSTACK_TYPE *pxBottomOfStack, unsigned portSHORT usStackDepth );
+#endif
 
 #ifdef __cplusplus
 }

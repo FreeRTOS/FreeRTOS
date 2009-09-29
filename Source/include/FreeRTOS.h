@@ -394,5 +394,21 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configUSE_MALLOC_FAILED_HOOK 0
 #endif
 
+#ifndef portPRIVILEGE_BIT
+	#define portPRIVILEGE_BIT ( ( unsigned portBASE_TYPE ) 0x00 )
+#endif
+
+#ifndef portYIELD_WITHIN_API
+	#define portYIELD_WITHIN_API portYIELD
+#endif
+
+#ifndef pvPortMallocAligned
+	#define pvPortMallocAligned( xSize, pvBuffer ) pvPortMalloc( xSize ); ( void ) pvBuffer
+#endif
+
+#ifndef vPortFreeAligned
+	#define vPortFreeAligned( pvBlockToFree ) vPortFree( pvBlockToFree )
+#endif
+
 #endif /* INC_FREERTOS_H */
 

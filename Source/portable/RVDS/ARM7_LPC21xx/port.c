@@ -153,12 +153,11 @@ portSTACK_TYPE *pxOriginalTOS;
 	system mode, with interrupts enabled. */
 	*pxTopOfStack = ( portSTACK_TYPE ) portINITIAL_SPSR;
 
-	#ifdef KEIL_THUMB_INTERWORK
-	{		
+	if( ( ( unsigned long ) pxCode & 0x01UL ) != 0x00UL )
+	{
 		/* We want the task to start in thumb mode. */
 		*pxTopOfStack |= portTHUMB_MODE_BIT;
 	}
-	#endif
 
 	pxTopOfStack--;
 

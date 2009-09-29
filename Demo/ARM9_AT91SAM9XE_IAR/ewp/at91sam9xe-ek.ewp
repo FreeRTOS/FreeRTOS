@@ -29,7 +29,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>9</version>
+          <version>11</version>
           <state>12</state>
         </option>
         <option>
@@ -561,7 +561,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>7</version>
+        <version>8</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -705,10 +705,6 @@
           <state>resetHandler</state>
         </option>
         <option>
-          <name>IlinkNXPLPCChecksum</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>DoFill</name>
           <state>0</state>
         </option>
@@ -775,6 +771,10 @@
           <name>CrcFullSize</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkIElfToolPostProcess</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -831,7 +831,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>9</version>
+          <version>11</version>
           <state>12</state>
         </option>
         <option>
@@ -1364,7 +1364,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>7</version>
+        <version>8</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1508,10 +1508,6 @@
           <state>resetHandler</state>
         </option>
         <option>
-          <name>IlinkNXPLPCChecksum</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>DoFill</name>
           <state>0</state>
         </option>
@@ -1576,6 +1572,10 @@
         </option>
         <option>
           <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIElfToolPostProcess</name>
           <state>0</state>
         </option>
       </data>

@@ -22,11 +22,11 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\Devtools\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "C:\Devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "C:\Devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "C:\Devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --macro "C:\E\temp\V5.1.2\FreeRTOS\Demo\ARM9_AT91SAM9XE_IAR\ewp\at91sam9xe-ek-sdram.mac" --backend -B "--endian=little" "--cpu=ARM926EJ-S" "--fpu=None" "-p" "C:\Devtools\IAR Systems\Embedded Workbench 5.4\arm\CONFIG\debugger\Atmel\ioAT91SAM9XE512.ddf" "--drv_verify_download" "--semihosting=none" "--device=AT91SAM9XE512" "-d" "jlink" "--drv_communication=USB0" "--jlink_speed=adaptive" "--drv_catch_exceptions=0x000" 
+"C:\devtools\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --macro "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM9_AT91SAM9XE_IAR\ewp\at91sam9xe-ek-sdram.mac" --backend -B "--endian=little" "--cpu=ARM926EJ-S" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\CONFIG\debugger\Atmel\ioAT91SAM9XE512.ddf" "--drv_verify_download" "--semihosting=none" "--device=AT91SAM9XE512" "-d" "jlink" "--drv_communication=USB0" "--jlink_speed=adaptive" "--drv_catch_exceptions=0x000" 
 
 
 @REM Loaded plugins:
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armlibsupport.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.4\common\plugins\CodeCoverage\CodeCoverage.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.4\common\plugins\stack\stack.dll
-@REM    C:\Devtools\IAR Systems\Embedded Workbench 5.4\common\plugins\SymList\SymList.dll
+@REM    C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armlibsupport.dll
+@REM    C:\devtools\IAR Systems\Embedded Workbench 5.4\common\plugins\CodeCoverage\CodeCoverage.dll
+@REM    C:\devtools\IAR Systems\Embedded Workbench 5.4\common\plugins\stack\stack.dll
+@REM    C:\devtools\IAR Systems\Embedded Workbench 5.4\common\plugins\SymList\SymList.dll

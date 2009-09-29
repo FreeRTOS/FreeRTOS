@@ -41,7 +41,6 @@ SECTIONS
 		*(.bss)
 	} >ram
 
-	
 	/* Align here to ensure that the .bss section occupies space up to
 	_end.  Align after .bss to ensure correct alignment even if the
 	.bss section disappears because there are no input sections.  */

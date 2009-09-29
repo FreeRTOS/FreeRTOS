@@ -58,7 +58,7 @@ LDSCRIPT=lpc2368.ld
 LINKER_FLAGS=-mthumb -nostartfiles -Xlinker -oRTOSDemo.elf -Xlinker -M -Xlinker -Map=rtosdemo.map
 
 DEBUG=-g
-OPTIM=-O1
+OPTIM=-O0
 
 
 CFLAGS= $(DEBUG) \
@@ -76,7 +76,9 @@ CFLAGS= $(DEBUG) \
 		-D PACK_STRUCT_END=__attribute\(\(packed\)\) \
 		-D ALIGN_STRUCT_END=__attribute\(\(aligned\(4\)\)\) \
 		-fomit-frame-pointer \
-		-mthumb-interwork
+		-mthumb-interwork \
+		-fno-dwarf2-cfi-asm \
+		-fno-strict-aliasing
 		
 THUMB_SOURCE= \
 		main.c \

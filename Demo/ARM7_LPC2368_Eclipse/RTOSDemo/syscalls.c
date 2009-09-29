@@ -101,11 +101,11 @@ int _close_r (struct _reent *r, int file)
 /***************************************************************************/
 
 /* Register name faking - works in collusion with the linker.  */
-register char * stack_ptr asm ("sp");
+register char * stack_ptr __asm ("sp");
 
 caddr_t _sbrk_r (struct _reent *r, int incr)
 {
-  extern char   end asm ("end"); /* Defined by the linker.  */
+  extern char   end __asm ("end"); /* Defined by the linker.  */
   static char * heap_end;
   char *        prev_heap_end;
 

@@ -3,14 +3,14 @@
 
 	This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
+	FreeRTOS is free software; you can redistribute it and/or modify it	under
+	the terms of the GNU General Public License (version 2) as published by the
 	Free Software Foundation and modified by the FreeRTOS exception.
 	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
+	combined work that includes FreeRTOS without being obliged to provide the
+	source code for proprietary components outside of the FreeRTOS kernel.
+	Alternative commercial license and support terms are also available upon
+	request.  See the licensing section of http://www.FreeRTOS.org for full
 	license details.
 
 	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
@@ -46,7 +46,7 @@
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the ST STR71x ARM7 
+ * Implementation of functions defined in portable.h for the ST STR71x ARM7
  * port.
  *----------------------------------------------------------*/
 
@@ -62,7 +62,8 @@
 #include "task.h"
 
 /* Constants required to setup the initial stack. */
-#define portINITIAL_SPSR				( ( portSTACK_TYPE ) 0x3f ) /* System mode, THUMB mode, interrupts enabled. */
+#define portINITIAL_SPSR				( ( portSTACK_TYPE ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
+#define portTHUMB_MODE_BIT				( ( portSTACK_TYPE ) 0x20 )
 #define portINSTRUCTION_SIZE			( ( portSTACK_TYPE ) 4 )
 
 /* Constants required to handle critical sections. */
@@ -80,7 +81,7 @@ cannot be initialised to 0 as this will cause interrupts to be enabled
 during the kernel initialisation process. */
 unsigned portLONG ulCriticalNesting = ( unsigned portLONG ) 9999;
 
-/* Tick interrupt routines for cooperative and preemptive operation 
+/* Tick interrupt routines for cooperative and preemptive operation
 respectively.  The preemptive version is not defined as __irq as it is called
 from an asm wrapper function. */
 __arm __irq void vPortNonPreemptiveTick( void );
@@ -145,6 +146,13 @@ portSTACK_TYPE *pxOriginalTOS;
 
 	/* The status register is set for system mode, with interrupts enabled. */
 	*pxTopOfStack = ( portSTACK_TYPE ) portINITIAL_SPSR;
+	
+	if( ( ( unsigned long ) pxCode & 0x01UL ) != 0x00UL )
+	{
+		/* We want the task to start in thumb mode. */
+		*pxTopOfStack |= portTHUMB_MODE_BIT;
+	}		
+	
 	pxTopOfStack--;
 
 	/* Interrupt flags cannot always be stored on the stack and will
@@ -202,7 +210,7 @@ void vPortPreemptiveTick( void )
 	vTaskIncrementTick();
 
 	/* The new tick value might unblock a task.  Ensure the highest task that
-	is ready to execute is the task that will execute when the tick ISR 
+	is ready to execute is the task that will execute when the tick ISR
 	exits. */
 	vTaskSwitchContext();
 

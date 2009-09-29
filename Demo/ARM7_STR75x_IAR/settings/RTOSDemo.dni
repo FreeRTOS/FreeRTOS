@@ -35,10 +35,10 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[TraceHelper]
+Enabled=0
+ShowSource=1
 [Disassemble mode]
 mode=0
 [Breakpoints]
 Count=0
-[TraceHelper]
-Enabled=0
-ShowSource=1

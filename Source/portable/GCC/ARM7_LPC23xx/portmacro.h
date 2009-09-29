@@ -106,8 +106,8 @@ extern "C" {
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
-#define portBYTE_ALIGNMENT			4
-#define portNOP()					asm volatile ( "NOP" );
+#define portBYTE_ALIGNMENT			8
+#define portNOP()					__asm volatile ( "NOP" );
 /*-----------------------------------------------------------*/	
 
 
@@ -126,7 +126,7 @@ extern volatile void * volatile pxCurrentTCB;							\
 extern volatile unsigned portLONG ulCriticalNesting;					\
 																		\
 	/* Set the LR to the task stack. */									\
-	asm volatile (														\
+	__asm volatile (													\
 	"LDR		R0, =pxCurrentTCB								\n\t"	\
 	"LDR		R0, [R0]										\n\t"	\
 	"LDR		LR, [R0]										\n\t"	\
@@ -163,7 +163,7 @@ extern volatile void * volatile pxCurrentTCB;							\
 extern volatile unsigned portLONG ulCriticalNesting;					\
 																		\
 	/* Push R0 as we are going to use the register. */					\
-	asm volatile (														\
+	__asm volatile (													\
 	"STMDB	SP!, {R0}											\n\t"	\
 																		\
 	/* Set R0 to point to the task stack pointer. */					\
@@ -205,7 +205,7 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 
 
 #define portYIELD_FROM_ISR()		vTaskSwitchContext()
-#define portYIELD()					asm volatile ( "SWI" )
+#define portYIELD()					__asm volatile ( "SWI" )
 /*-----------------------------------------------------------*/
 
 
@@ -229,7 +229,7 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 #else
 
 	#define portDISABLE_INTERRUPTS()											\
-		asm volatile (															\
+		__asm volatile (															\
 			"STMDB	SP!, {R0}		\n\t"	/* Push R0.						*/	\
 			"MRS	R0, CPSR		\n\t"	/* Get CPSR.					*/	\
 			"ORR	R0, R0, #0xC0	\n\t"	/* Disable IRQ, FIQ.			*/	\
@@ -237,7 +237,7 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 			"LDMIA	SP!, {R0}			" )	/* Pop R0.						*/
 			
 	#define portENABLE_INTERRUPTS()												\
-		asm volatile (															\
+		__asm volatile (															\
 			"STMDB	SP!, {R0}		\n\t"	/* Push R0.						*/	\
 			"MRS	R0, CPSR		\n\t"	/* Get CPSR.					*/	\
 			"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.				*/	\

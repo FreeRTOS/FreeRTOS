@@ -73,7 +73,6 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-#include "task.h"
 
 /* Constants required to handle interrupts. */
 #define portTIMER_MATCH_ISR_BIT		( ( unsigned portCHAR ) 0x01 )
@@ -116,13 +115,13 @@ void vPortYieldProcessor( void )
 	/* Within an IRQ ISR the link register has an offset from the true return 
 	address, but an SWI ISR does not.  Add the offset manually so the same 
 	ISR return code can be used in both cases. */
-	asm volatile ( "ADD		LR, LR, #4" );
+	__asm volatile ( "ADD		LR, LR, #4" );
 
 	/* Perform the context switch.  First save the context of the current task. */
 	portSAVE_CONTEXT();
 
 	/* Find the highest priority task that is ready to run. */
-	vTaskSwitchContext();
+	__asm volatile ( "bl vTaskSwitchContext" );
 
 	/* Restore the context of the new task. */
 	portRESTORE_CONTEXT();	
@@ -140,10 +139,10 @@ void vTickISR( void )
 
 	/* Increment the RTOS tick count, then look for the highest priority 
 	task that is ready to run. */
-	vTaskIncrementTick();
+	__asm volatile( "bl vTaskIncrementTick" );
 
 	#if configUSE_PREEMPTION == 1
-		vTaskSwitchContext();
+		__asm volatile( "bl vTaskSwitchContext" );
 	#endif
 
 	/* Ready for the next interrupt. */
@@ -168,7 +167,7 @@ void vTickISR( void )
 
 	void vPortDisableInterruptsFromThumb( void )
 	{
-		asm volatile ( 
+		__asm volatile ( 
 			"STMDB	SP!, {R0}		\n\t"	/* Push R0.									*/
 			"MRS	R0, CPSR		\n\t"	/* Get CPSR.								*/
 			"ORR	R0, R0, #0xC0	\n\t"	/* Disable IRQ, FIQ.						*/
@@ -179,7 +178,7 @@ void vTickISR( void )
 			
 	void vPortEnableInterruptsFromThumb( void )
 	{
-		asm volatile ( 
+		__asm volatile ( 
 			"STMDB	SP!, {R0}		\n\t"	/* Push R0.									*/	
 			"MRS	R0, CPSR		\n\t"	/* Get CPSR.								*/	
 			"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.							*/	
@@ -197,7 +196,7 @@ in a variable, which is then saved as part of the stack context. */
 void vPortEnterCritical( void )
 {
 	/* Disable interrupts as per portDISABLE_INTERRUPTS(); 							*/
-	asm volatile ( 
+	__asm volatile ( 
 		"STMDB	SP!, {R0}			\n\t"	/* Push R0.								*/
 		"MRS	R0, CPSR			\n\t"	/* Get CPSR.							*/
 		"ORR	R0, R0, #0xC0		\n\t"	/* Disable IRQ, FIQ.					*/
@@ -222,7 +221,7 @@ void vPortExitCritical( void )
 		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
 			/* Enable interrupts as per portEXIT_CRITICAL().					*/
-			asm volatile ( 
+			__asm volatile ( 
 				"STMDB	SP!, {R0}		\n\t"	/* Push R0.						*/	
 				"MRS	R0, CPSR		\n\t"	/* Get CPSR.					*/	
 				"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.				*/	

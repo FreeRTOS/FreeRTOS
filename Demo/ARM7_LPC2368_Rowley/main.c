@@ -122,7 +122,8 @@ int main (void)
 	/* Create the lwIP task.  This uses the lwIP RTOS abstraction layer.*/
     xTaskCreate( vuIP_Task, ( signed portCHAR * ) "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
 
-	/* Start the standard demo tasks. */
+	/* Start the standard demo tasks - these serve no useful purpose other than
+	to demonstrate the FreeRTOS API being used and to test the port. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
     vCreateBlockTimeTasks();
     vStartLEDFlashTasks( mainFLASH_PRIORITY );

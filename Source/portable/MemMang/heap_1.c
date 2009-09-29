@@ -54,30 +54,16 @@
  * management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
+
+/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
+all the API functions to use the MPU wrappers.  That should only be done when
+task.h is included from an application file. */
+#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Setup the correct byte alignment mask for the defined byte alignment. */
-
-#if portBYTE_ALIGNMENT == 8
-	#define heapBYTE_ALIGNMENT_MASK ( ( size_t ) 0x0007 )
-#endif
-
-#if portBYTE_ALIGNMENT == 4
-	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0003 )
-#endif
-
-#if portBYTE_ALIGNMENT == 2
-	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0001 )
-#endif
-
-#if portBYTE_ALIGNMENT == 1 
-	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0000 )
-#endif
-
-#ifndef heapBYTE_ALIGNMENT_MASK
-	#error "Invalid portBYTE_ALIGNMENT definition"
-#endif
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* Allocate the memory for the heap.  The struct is used to force byte
 alignment without using any non-portable code. */
@@ -100,10 +86,10 @@ void *pvReturn = NULL;
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if portBYTE_ALIGNMENT != 1
-		if( xWantedSize & heapBYTE_ALIGNMENT_MASK )
+		if( xWantedSize & portBYTE_ALIGNMENT_MASK )
 		{
 			/* Byte alignment required. */
-			xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & heapBYTE_ALIGNMENT_MASK ) );
+			xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
 		}
 	#endif
 

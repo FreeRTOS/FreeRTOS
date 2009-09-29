@@ -3,14 +3,14 @@
 
 	This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
+	FreeRTOS is free software; you can redistribute it and/or modify it	under
+	the terms of the GNU General Public License (version 2) as published by the
 	Free Software Foundation and modified by the FreeRTOS exception.
 	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
+	combined work that includes FreeRTOS without being obliged to provide the
+	source code for proprietary components outside of the FreeRTOS kernel.
+	Alternative commercial license and support terms are also available upon
+	request.  See the licensing section of http://www.FreeRTOS.org for full
 	license details.
 
 	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
@@ -24,10 +24,10 @@
 
 
 	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
+	*																		 *
+	* Looking for a quick start?  Then check out the FreeRTOS eBook!		  *
+	* See http://www.FreeRTOS.org/Documentation for details				   *
+	*																		 *
 	***************************************************************************
 
 	1 tab == 4 spaces!
@@ -55,30 +55,15 @@
  */
 #include <stdlib.h>
 
+/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
+all the API functions to use the MPU wrappers.  That should only be done when
+task.h is included from an application file. */
+#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Setup the correct byte alignment mask for the defined byte alignment. */
-
-#if portBYTE_ALIGNMENT == 8
-	#define heapBYTE_ALIGNMENT_MASK ( ( size_t ) 0x0007 )
-#endif
-
-#if portBYTE_ALIGNMENT == 4
-	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0003 )
-#endif
-
-#if portBYTE_ALIGNMENT == 2
-	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0001 )
-#endif
-
-#if portBYTE_ALIGNMENT == 1
-	#define heapBYTE_ALIGNMENT_MASK	( ( size_t ) 0x0000 )
-#endif
-
-#ifndef heapBYTE_ALIGNMENT_MASK
-	#error "Invalid portBYTE_ALIGNMENT definition"
-#endif
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* Allocate the memory for the heap.  The struct is used to force byte
 alignment without using any non-portable code. */
@@ -88,7 +73,7 @@ static union xRTOS_HEAP
 		volatile portDOUBLE dDummy;
 	#else
 		volatile unsigned portLONG ulDummy;
-	#endif	
+	#endif
 	unsigned portCHAR ucHeap[ configTOTAL_HEAP_SIZE ];
 } xHeap;
 
@@ -179,10 +164,10 @@ void *pvReturn = NULL;
 			xWantedSize += heapSTRUCT_SIZE;
 
 			/* Ensure that blocks are always aligned to the required number of bytes. */
-			if( xWantedSize & heapBYTE_ALIGNMENT_MASK )
+			if( xWantedSize & portBYTE_ALIGNMENT_MASK )
 			{
 				/* Byte alignment required. */
-				xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & heapBYTE_ALIGNMENT_MASK ) );
+				xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
 			}
 		}
 
@@ -216,12 +201,12 @@ void *pvReturn = NULL;
 					following the number of bytes requested. The void cast is
 					used to prevent byte alignment warnings from the compiler. */
 					pxNewBlockLink = ( void * ) ( ( ( unsigned portCHAR * ) pxBlock ) + xWantedSize );
-					
+
 					/* Calculate the sizes of two blocks split from the single
 					block. */
-					pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;	
-					pxBlock->xBlockSize = xWantedSize;			
-					
+					pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+					pxBlock->xBlockSize = xWantedSize;
+
 					/* Insert the new block into the list of free blocks. */
 					prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
 				}
@@ -239,7 +224,7 @@ void *pvReturn = NULL;
 		}
 	}
 	#endif
-	
+
 	return pvReturn;
 }
 /*-----------------------------------------------------------*/
@@ -259,7 +244,7 @@ xBlockLink *pxLink;
 		pxLink = ( void * ) puc;
 
 		vTaskSuspendAll();
-		{				
+		{
 			/* Add this block to the list of free blocks. */
 			prvInsertBlockIntoFreeList( ( ( xBlockLink * ) pxLink ) );
 		}

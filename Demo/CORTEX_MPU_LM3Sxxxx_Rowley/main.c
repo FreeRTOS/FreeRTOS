@@ -217,12 +217,12 @@ access to the debug variables that form part of the Rowley library, and are
 accessed within the debug_printf() function. */
 extern unsigned long dbgCntrlWord_mempoll;
 static const xMemoryRegion xAltRegions[ portNUM_CONFIGURABLE_REGIONS ] =
-	{											
-		/* Base address						Length		Parameters */
-        { ( void * ) &dbgCntrlWord_mempoll,	32,			portMPU_REGION_READ_WRITE },
-        { 0,								0,			0 },
-        { 0,								0,			0 }
-	};
+{											
+	/* Base address						Length		Parameters */
+	{ ( void * ) &dbgCntrlWord_mempoll,	32,			portMPU_REGION_READ_WRITE },
+	{ 0,								0,			0 },
+	{ 0,								0,			0 }
+};
 
 
 

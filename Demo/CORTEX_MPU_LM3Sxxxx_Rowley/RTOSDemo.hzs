@@ -19,7 +19,6 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS MPU" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1];Interrupt_Type" binaryNodes="" unsignedNodes="" visibleGroups="CPU;Interrupt_Type" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -50,7 +49,7 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\Trial\FreeRTOS_MPU\FreeRTOS\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" y="701" path="C:\E\Dev\FreeRTOS\Trial\FreeRTOS_MPU\FreeRTOS\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" left="0" selected="1" name="unnamed" top="682" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" y="0" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" left="0" selected="1" name="unnamed" top="0" />
  </Files>
  <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Luminary USB Debug" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\GCC\ARM_CM3_MPU" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

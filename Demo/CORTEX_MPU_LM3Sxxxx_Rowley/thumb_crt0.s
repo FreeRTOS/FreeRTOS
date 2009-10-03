@@ -119,7 +119,7 @@ _start:
   mov r2, #0
   bl memory_set
 
-  /* Zereo the privileged data. */
+  /* Zero the privileged data. */
   ldr r0, =__privileged_data_start__
   ldr r1, =__privileged_data_end__
   mov r2, #0

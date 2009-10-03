@@ -502,12 +502,14 @@ void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMOR
 {
 extern unsigned long __SRAM_segment_start__[];
 extern unsigned long __SRAM_segment_end__[];
+extern unsigned long __privileged_data_start__[];
+extern unsigned long __privileged_data_end__[];
 long lIndex;
 unsigned long ul;
 
 	if( xRegions == NULL )
 	{
-		/* No MPU regions are specified to allow access to all RAM. */
+		/* No MPU regions are specified so allow access to all RAM. */
         xMPUSettings->xRegion[ 0 ].ulRegionBaseAddress =	
 				( ( unsigned long ) __SRAM_segment_start__ ) | /* Base address. */
 				( portMPU_REGION_VALID ) |
@@ -519,9 +521,22 @@ unsigned long ul;
 				( prvGetMPURegionSizeSetting( ( unsigned long ) __SRAM_segment_end__ - ( unsigned long ) __SRAM_segment_start__ ) ) |
 				( portMPU_REGION_ENABLE );
 
+		/* Re-instate the privileged only RAM region as xRegion[ 0 ] will have
+		just removed the privileged only parameters. */
+		xMPUSettings->xRegion[ 1 ].ulRegionBaseAddress =	
+				( ( unsigned long ) __privileged_data_start__ ) | /* Base address. */
+				( portMPU_REGION_VALID ) |
+				( portSTACK_REGION + 1 );
+
+		xMPUSettings->xRegion[ 1 ].ulRegionAttribute =		
+				( portMPU_REGION_PRIVILEGED_READ_WRITE ) |
+				( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
+				prvGetMPURegionSizeSetting( ( unsigned long ) __privileged_data_end__ - ( unsigned long ) __privileged_data_start__ ) |
+				( portMPU_REGION_ENABLE );
+				
 		/* Invalidate all other regions. */
-		for( ul = 1; ul <= portNUM_CONFIGURABLE_REGIONS; ul++ )
-		{
+		for( ul = 2; ul <= portNUM_CONFIGURABLE_REGIONS; ul++ )
+		{ 
 			xMPUSettings->xRegion[ ul ].ulRegionBaseAddress = ( portSTACK_REGION + ul ) | portMPU_REGION_VALID;	
 			xMPUSettings->xRegion[ ul ].ulRegionAttribute = 0UL;
 		}

@@ -192,7 +192,7 @@ PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned po
 	PRIVILEGED_DATA static signed portCHAR *pcTraceBufferStart;
 	PRIVILEGED_DATA static signed portCHAR *pcTraceBufferEnd;
 	PRIVILEGED_DATA static signed portBASE_TYPE xTracing = pdFALSE;
-	PRIVILEGED_DATA static unsigned portBASE_TYPE uxPreviousTask = 255;
+	static unsigned portBASE_TYPE uxPreviousTask = 255;
 	PRIVILEGED_DATA static portCHAR pcStatusString[ 50 ];
 
 #endif
@@ -410,7 +410,8 @@ portBASE_TYPE xRunPrivileged;
 		required by the port. */
 		#if( portSTACK_GROWTH < 0 )
 		{
-			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 ) - ( ( usStackDepth - 1 ) % portBYTE_ALIGNMENT );
+			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 );
+			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( unsigned portLONG ) pxTopOfStack ) & ( ( unsigned portLONG ) ~portBYTE_ALIGNMENT_MASK  ) );
 		}
 		#else
 		{

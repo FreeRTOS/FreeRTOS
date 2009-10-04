@@ -54,19 +54,6 @@
  * to ARM mode are contained in portISR.c.
  *----------------------------------------------------------*/
 
-/*
-	Changes from V2.5.2
-		
-	+ ulCriticalNesting is now saved as part of the task context, as is 
-	  therefore added to the initial task stack during pxPortInitialiseStack.
-
-	Changes from V3.2.2
-
-	+ Bug fix - The prescale value for the timer setup is now written to T0_PR 
-	  instead of T0_PC.  This bug would have had no effect unless a prescale 
-	  value was actually used.
-*/
-
 
 /* Standard includes. */
 #include <stdlib.h>

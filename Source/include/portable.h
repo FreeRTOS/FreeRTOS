@@ -338,7 +338,7 @@ extern "C" {
  *
  */
 #if( portUSING_MPU_WRAPPERS == 1 )
-	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters, portBASE_TYPE xRunPrivileged );
+	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters, portBASE_TYPE xRunPrivileged ) PRIVILEGED_FUNCTION;
 #else
 	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters );
 #endif
@@ -354,14 +354,14 @@ void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION;
  * Setup the hardware ready for the scheduler to take control.  This generally
  * sets up a tick interrupt and sets timers for the correct tick frequency.
  */
-portBASE_TYPE xPortStartScheduler( void );
+portBASE_TYPE xPortStartScheduler( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Undo any hardware/ISR setup that was performed by xPortStartScheduler() so
  * the hardware is left in its original condition after the scheduler stops
  * executing.
  */
-void vPortEndScheduler( void );
+void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
 
 /*
  * The structures and methods of manipulating the MPU are contained within the
@@ -372,7 +372,7 @@ void vPortEndScheduler( void );
  */
 #if( portUSING_MPU_WRAPPERS == 1 ) 
 	struct xMEMORY_REGION;
-	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, portSTACK_TYPE *pxBottomOfStack, unsigned portSHORT usStackDepth );
+	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, portSTACK_TYPE *pxBottomOfStack, unsigned portSHORT usStackDepth ) PRIVILEGED_FUNCTION;
 #endif
 
 #ifdef __cplusplus

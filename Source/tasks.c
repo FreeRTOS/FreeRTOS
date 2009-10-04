@@ -84,7 +84,7 @@ typedef struct tskTaskControlBlock
 	xListItem				xEventListItem;		/*< List item used to place the TCB in event lists. */
 	unsigned portBASE_TYPE	uxPriority;			/*< The priority of the task where 0 is the lowest priority. */
 	portSTACK_TYPE			*pxStack;			/*< Points to the start of the stack. */
-	signed portCHAR			pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */
+	signed char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */
 
 	#if ( portSTACK_GROWTH > 0 )
 		portSTACK_TYPE *pxEndOfStack;			/*< Used for stack overflow checking on architectures where the stack grows up from low memory. */
@@ -107,7 +107,7 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if ( configGENERATE_RUN_TIME_STATS == 1 )
-		unsigned portLONG ulRunTimeCounter;		/*< Used for calculating how much CPU time each task is utilising. */
+		unsigned long ulRunTimeCounter;		/*< Used for calculating how much CPU time each task is utilising. */
 	#endif
 
 } tskTCB;
@@ -160,9 +160,9 @@ PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned po
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
-	PRIVILEGED_DATA static portCHAR pcStatsString[ 50 ] ;
-	PRIVILEGED_DATA static unsigned portLONG ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
-	static void prvGenerateRunTimeStatsForTasksInList( const signed portCHAR *pcWriteBuffer, xList *pxList, unsigned portLONG ulTotalRunTime ) PRIVILEGED_FUNCTION;
+	PRIVILEGED_DATA static char pcStatsString[ 50 ] ;
+	PRIVILEGED_DATA static unsigned long ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
+	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTime ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -177,23 +177,23 @@ PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned po
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */
-#define tskBLOCKED_CHAR		( ( signed portCHAR ) 'B' )
-#define tskREADY_CHAR		( ( signed portCHAR ) 'R' )
-#define tskDELETED_CHAR		( ( signed portCHAR ) 'D' )
-#define tskSUSPENDED_CHAR	( ( signed portCHAR ) 'S' )
+#define tskBLOCKED_CHAR		( ( signed char ) 'B' )
+#define tskREADY_CHAR		( ( signed char ) 'R' )
+#define tskDELETED_CHAR		( ( signed char ) 'D' )
+#define tskSUSPENDED_CHAR	( ( signed char ) 'S' )
 
 /*
  * Macros and private variables used by the trace facility.
  */
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	#define tskSIZE_OF_EACH_TRACE_LINE			( ( unsigned portLONG ) ( sizeof( unsigned portLONG ) + sizeof( unsigned portLONG ) ) )
-	PRIVILEGED_DATA static volatile signed portCHAR * volatile pcTraceBuffer;
-	PRIVILEGED_DATA static signed portCHAR *pcTraceBufferStart;
-	PRIVILEGED_DATA static signed portCHAR *pcTraceBufferEnd;
+	#define tskSIZE_OF_EACH_TRACE_LINE			( ( unsigned long ) ( sizeof( unsigned long ) + sizeof( unsigned long ) ) )
+	PRIVILEGED_DATA static volatile signed char * volatile pcTraceBuffer;
+	PRIVILEGED_DATA static signed char *pcTraceBufferStart;
+	PRIVILEGED_DATA static signed char *pcTraceBufferEnd;
 	PRIVILEGED_DATA static signed portBASE_TYPE xTracing = pdFALSE;
 	static unsigned portBASE_TYPE uxPreviousTask = 255;
-	PRIVILEGED_DATA static portCHAR pcStatusString[ 50 ];
+	PRIVILEGED_DATA static char pcStatusString[ 50 ];
 
 #endif
 
@@ -216,10 +216,10 @@ PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned po
 				if( ( pcTraceBuffer + tskSIZE_OF_EACH_TRACE_LINE ) < pcTraceBufferEnd )				\
 				{																					\
 					uxPreviousTask = pxCurrentTCB->uxTCBNumber;										\
-					*( unsigned portLONG * ) pcTraceBuffer = ( unsigned portLONG ) xTickCount;		\
-					pcTraceBuffer += sizeof( unsigned portLONG );									\
-					*( unsigned portLONG * ) pcTraceBuffer = ( unsigned portLONG ) uxPreviousTask;	\
-					pcTraceBuffer += sizeof( unsigned portLONG );									\
+					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) xTickCount;		\
+					pcTraceBuffer += sizeof( unsigned long );									\
+					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) uxPreviousTask;	\
+					pcTraceBuffer += sizeof( unsigned long );									\
 				}																					\
 				else																				\
 				{																					\
@@ -297,7 +297,7 @@ register tskTCB *pxTCB;																								\
  * Utility to ready a TCB for a given task.  Mainly just copies the parameters
  * into the TCB structure.
  */
-static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned portSHORT usStackDepth ) PRIVILEGED_FUNCTION;
+static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
@@ -342,7 +342,7 @@ static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
  * Allocates memory from the heap for a TCB and associated stack.  Checks the
  * allocation was successful.
  */
-static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth, portSTACK_TYPE *puxStackBuffer ) PRIVILEGED_FUNCTION;
+static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer ) PRIVILEGED_FUNCTION;
 
 /*
  * Called from vTaskList.  vListTasks details all the tasks currently under
@@ -355,7 +355,7 @@ static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth, portSTAC
  */
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	static void prvListTaskWithinSingleList( const signed portCHAR *pcWriteBuffer, xList *pxList, signed portCHAR cStatus ) PRIVILEGED_FUNCTION;
+	static void prvListTaskWithinSingleList( const signed char *pcWriteBuffer, xList *pxList, signed char cStatus ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -366,7 +366,7 @@ static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth, portSTAC
  */
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
-	static unsigned portSHORT usTaskCheckFreeStackSpace( const unsigned portCHAR * pucStackByte ) PRIVILEGED_FUNCTION;
+	static unsigned short usTaskCheckFreeStackSpace( const unsigned char * pucStackByte ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -379,7 +379,7 @@ static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth, portSTAC
  * TASK CREATION API documented in task.h
  *----------------------------------------------------------*/
 
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed portCHAR * const pcName, unsigned portSHORT usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
 {
 signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
@@ -411,7 +411,7 @@ portBASE_TYPE xRunPrivileged;
 		#if( portSTACK_GROWTH < 0 )
 		{
 			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 );
-			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( unsigned portLONG ) pxTopOfStack ) & ( ( unsigned portLONG ) ~portBYTE_ALIGNMENT_MASK  ) );
+			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( unsigned long ) pxTopOfStack ) & ( ( unsigned long ) ~portBYTE_ALIGNMENT_MASK  ) );
 		}
 		#else
 		{
@@ -1017,7 +1017,7 @@ void vTaskStartScheduler( void )
 portBASE_TYPE xReturn;
 
 	/* Add the idle task at the lowest priority. */
-	xReturn = xTaskCreate( prvIdleTask, ( signed portCHAR * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), ( xTaskHandle * ) NULL );
+	xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), ( xTaskHandle * ) NULL );
 
 	if( xReturn == pdPASS )
 	{
@@ -1180,7 +1180,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	void vTaskList( signed portCHAR *pcWriteBuffer )
+	void vTaskList( signed char *pcWriteBuffer )
 	{
 	unsigned portBASE_TYPE uxQueue;
 
@@ -1192,8 +1192,8 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 			/* Run through all the lists that could potentially contain a TCB and
 			report the task name, state and stack high water mark. */
 
-			pcWriteBuffer[ 0 ] = ( signed portCHAR ) 0x00;
-			strcat( ( portCHAR * ) pcWriteBuffer, ( const portCHAR * ) "\r\n" );
+			pcWriteBuffer[ 0 ] = ( signed char ) 0x00;
+			strcat( ( char * ) pcWriteBuffer, ( const char * ) "\r\n" );
 
 			uxQueue = uxTopUsedPriority + 1;
 
@@ -1205,7 +1205,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 				{
 					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), tskREADY_CHAR );
 				}
-			}while( uxQueue > ( unsigned portSHORT ) tskIDLE_PRIORITY );
+			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
 			if( !listLIST_IS_EMPTY( pxDelayedTaskList ) )
 			{
@@ -1243,10 +1243,10 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
-	void vTaskGetRunTimeStats( signed portCHAR *pcWriteBuffer )
+	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
 	{
 	unsigned portBASE_TYPE uxQueue;
-	unsigned portLONG ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+	unsigned long ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
 
 		/* This is a VERY costly function that should be used for debug only.
 		It leaves interrupts disabled for a LONG time. */
@@ -1257,8 +1257,8 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 			generating a table of run timer percentages in the provided
 			buffer. */
 
-			pcWriteBuffer[ 0 ] = ( signed portCHAR ) 0x00;
-			strcat( ( portCHAR * ) pcWriteBuffer, ( const portCHAR * ) "\r\n" );
+			pcWriteBuffer[ 0 ] = ( signed char ) 0x00;
+			strcat( ( char * ) pcWriteBuffer, ( const char * ) "\r\n" );
 
 			uxQueue = uxTopUsedPriority + 1;
 
@@ -1270,7 +1270,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 				{
 					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), ulTotalRunTime );
 				}
-			}while( uxQueue > ( unsigned portSHORT ) tskIDLE_PRIORITY );
+			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
 			if( !listLIST_IS_EMPTY( pxDelayedTaskList ) )
 			{
@@ -1308,11 +1308,11 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	void vTaskStartTrace( signed portCHAR * pcBuffer, unsigned portLONG ulBufferSize )
+	void vTaskStartTrace( signed char * pcBuffer, unsigned long ulBufferSize )
 	{
 		portENTER_CRITICAL();
 		{
-			pcTraceBuffer = ( signed portCHAR * )pcBuffer;
+			pcTraceBuffer = ( signed char * )pcBuffer;
 			pcTraceBufferStart = pcBuffer;
 			pcTraceBufferEnd = pcBuffer + ( ulBufferSize - tskSIZE_OF_EACH_TRACE_LINE );
 			xTracing = pdTRUE;
@@ -1325,15 +1325,15 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	unsigned portLONG ulTaskEndTrace( void )
+	unsigned long ulTaskEndTrace( void )
 	{
-	unsigned portLONG ulBufferLength;
+	unsigned long ulBufferLength;
 
 		portENTER_CRITICAL();
 			xTracing = pdFALSE;
 		portEXIT_CRITICAL();
 
-		ulBufferLength = ( unsigned portLONG ) ( pcTraceBuffer - pcTraceBufferStart );
+		ulBufferLength = ( unsigned long ) ( pcTraceBuffer - pcTraceBufferStart );
 
 		return ulBufferLength;
 	}
@@ -1408,10 +1408,10 @@ void vTaskIncrementTick( void )
 
 	void vTaskCleanUpResources( void )
 	{
-	unsigned portSHORT usQueue;
+	unsigned short usQueue;
 	volatile tskTCB *pxTCB;
 
-		usQueue = ( unsigned portSHORT ) uxTopUsedPriority + ( unsigned portSHORT ) 1;
+		usQueue = ( unsigned short ) uxTopUsedPriority + ( unsigned short ) 1;
 
 		/* Remove any TCB's from the ready queues. */
 		do
@@ -1425,7 +1425,7 @@ void vTaskIncrementTick( void )
 
 				prvDeleteTCB( ( tskTCB * ) pxTCB );
 			}
-		}while( usQueue > ( unsigned portSHORT ) tskIDLE_PRIORITY );
+		}while( usQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
 		/* Remove any TCB's from the delayed queue. */
 		while( !listLIST_IS_EMPTY( &xDelayedTaskList1 ) )
@@ -1558,7 +1558,7 @@ void vTaskSwitchContext( void )
 
 	#if ( configGENERATE_RUN_TIME_STATS == 1 )
 	{
-		unsigned portLONG ulTempCounter = portGET_RUN_TIME_COUNTER_VALUE();
+		unsigned long ulTempCounter = portGET_RUN_TIME_COUNTER_VALUE();
 
 			/* Add the amount of time the task has been running to the accumulated
 			time so far.  The time the task started running was stored in
@@ -1836,16 +1836,16 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 
 
-static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed portCHAR * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned portSHORT usStackDepth )
+static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
 {
 	/* Store the function name in the TCB. */
 	#if configMAX_TASK_NAME_LEN > 1
 	{
 		/* Don't bring strncpy into the build unnecessarily. */
-		strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned portSHORT ) configMAX_TASK_NAME_LEN );
+		strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned short ) configMAX_TASK_NAME_LEN );
 	}
 	#endif
-	pxTCB->pcTaskName[ ( unsigned portSHORT ) configMAX_TASK_NAME_LEN - ( unsigned portSHORT ) 1 ] = '\0';
+	pxTCB->pcTaskName[ ( unsigned short ) configMAX_TASK_NAME_LEN - ( unsigned short ) 1 ] = '\0';
 
 	/* This is used as an array index so must ensure it's not too large.  First
 	remove the privilege bit if one is present. */
@@ -1989,7 +1989,7 @@ static void prvCheckTasksWaitingTermination( void )
 }
 /*-----------------------------------------------------------*/
 
-static tskTCB *prvAllocateTCBAndStack( unsigned portSHORT usStackDepth, portSTACK_TYPE *puxStackBuffer )
+static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer )
 {
 tskTCB *pxNewTCB;
 
@@ -2023,19 +2023,19 @@ tskTCB *pxNewTCB;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	static void prvListTaskWithinSingleList( const signed portCHAR *pcWriteBuffer, xList *pxList, signed portCHAR cStatus )
+	static void prvListTaskWithinSingleList( const signed char *pcWriteBuffer, xList *pxList, signed char cStatus )
 	{
 	volatile tskTCB *pxNextTCB, *pxFirstTCB;
-	unsigned portSHORT usStackRemaining;
+	unsigned short usStackRemaining;
 
 		/* Write the details of all the TCB's in pxList into the buffer. */
 		listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
 		do
 		{
 			listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
-			usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned portCHAR * ) pxNextTCB->pxStack );
-			sprintf( pcStatusString, ( portCHAR * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxNextTCB->pcTaskName, cStatus, ( unsigned int ) pxNextTCB->uxPriority, usStackRemaining, ( unsigned int ) pxNextTCB->uxTCBNumber );
-			strcat( ( portCHAR * ) pcWriteBuffer, ( portCHAR * ) pcStatusString );
+			usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxStack );
+			sprintf( pcStatusString, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxNextTCB->pcTaskName, cStatus, ( unsigned int ) pxNextTCB->uxPriority, usStackRemaining, ( unsigned int ) pxNextTCB->uxTCBNumber );
+			strcat( ( char * ) pcWriteBuffer, ( char * ) pcStatusString );
 
 		} while( pxNextTCB != pxFirstTCB );
 	}
@@ -2045,10 +2045,10 @@ tskTCB *pxNewTCB;
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
-	static void prvGenerateRunTimeStatsForTasksInList( const signed portCHAR *pcWriteBuffer, xList *pxList, unsigned portLONG ulTotalRunTime )
+	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTime )
 	{
 	volatile tskTCB *pxNextTCB, *pxFirstTCB;
-	unsigned portLONG ulStatsAsPercentage;
+	unsigned long ulStatsAsPercentage;
 
 		/* Write the run time stats of all the TCB's in pxList into the buffer. */
 		listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
@@ -2064,7 +2064,7 @@ tskTCB *pxNewTCB;
 				if( pxNextTCB->ulRunTimeCounter == 0 )
 				{
 					/* The task has used no CPU time at all. */
-					sprintf( pcStatsString, ( portCHAR * ) "%s\t\t0\t\t0%%\r\n", pxNextTCB->pcTaskName );
+					sprintf( pcStatsString, ( char * ) "%s\t\t0\t\t0%%\r\n", pxNextTCB->pcTaskName );
 				}
 				else
 				{
@@ -2074,17 +2074,17 @@ tskTCB *pxNewTCB;
 
 					if( ulStatsAsPercentage > 0UL )
 					{
-						sprintf( pcStatsString, ( portCHAR * ) "%s\t\t%u\t\t%u%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+						sprintf( pcStatsString, ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
 					}
 					else
 					{
 						/* If the percentage is zero here then the task has
 						consumed less than 1% of the total run time. */
-						sprintf( pcStatsString, ( portCHAR * ) "%s\t\t%u\t\t<1%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter );
+						sprintf( pcStatsString, ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter );
 					}
 				}
 
-				strcat( ( portCHAR * ) pcWriteBuffer, ( portCHAR * ) pcStatsString );
+				strcat( ( char * ) pcWriteBuffer, ( char * ) pcStatsString );
 			}
 
 		} while( pxNextTCB != pxFirstTCB );
@@ -2095,9 +2095,9 @@ tskTCB *pxNewTCB;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
-	static unsigned portSHORT usTaskCheckFreeStackSpace( const unsigned portCHAR * pucStackByte )
+	static unsigned short usTaskCheckFreeStackSpace( const unsigned char * pucStackByte )
 	{
-	register unsigned portSHORT usCount = 0;
+	register unsigned short usCount = 0;
 
 		while( *pucStackByte == tskSTACK_FILL_BYTE )
 		{
@@ -2118,18 +2118,18 @@ tskTCB *pxNewTCB;
 	unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask )
 	{
 	tskTCB *pxTCB;
-	unsigned portCHAR *pcEndOfStack;
+	unsigned char *pcEndOfStack;
 	unsigned portBASE_TYPE uxReturn;
 
 		pxTCB = prvGetTCBFromHandle( xTask );
 
 		#if portSTACK_GROWTH < 0
 		{
-			pcEndOfStack = ( unsigned portCHAR * ) pxTCB->pxStack;
+			pcEndOfStack = ( unsigned char * ) pxTCB->pxStack;
 		}
 		#else
 		{
-			pcEndOfStack = ( unsigned portCHAR * ) pxTCB->pxEndOfStack;
+			pcEndOfStack = ( unsigned char * ) pxTCB->pxEndOfStack;
 		}
 		#endif
 

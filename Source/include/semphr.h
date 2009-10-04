@@ -56,8 +56,8 @@
 
 typedef xQueueHandle xSemaphoreHandle;
 
-#define semBINARY_SEMAPHORE_QUEUE_LENGTH	( ( unsigned portCHAR ) 1 )
-#define semSEMAPHORE_QUEUE_ITEM_LENGTH		( ( unsigned portCHAR ) 0 )
+#define semBINARY_SEMAPHORE_QUEUE_LENGTH	( ( unsigned char ) 1 )
+#define semSEMAPHORE_QUEUE_ITEM_LENGTH		( ( unsigned char ) 0 )
 #define semGIVE_BLOCK_TIME					( ( portTickType ) 0 )
 
 
@@ -502,7 +502,7 @@ typedef xQueueHandle xSemaphoreHandle;
  // Timer ISR
  void vTimerISR( void * pvParameters )
  {
- static unsigned portCHAR ucLocalTickCount = 0;
+ static unsigned char ucLocalTickCount = 0;
  static portBASE_TYPE xHigherPriorityTaskWoken;
 
     // A timer tick has occurred.

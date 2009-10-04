@@ -95,8 +95,8 @@ typedef struct xTIME_OUT
 typedef struct xMEMORY_REGION
 {
 	void *pvBaseAddress;
-	unsigned portLONG ulLengthInBytes;
-	unsigned portLONG ulParameters;
+	unsigned long ulLengthInBytes;
+	unsigned long ulParameters;
 } xMemoryRegion;
 
 /*
@@ -105,8 +105,8 @@ typedef struct xMEMORY_REGION
 typedef struct xTASK_PARAMTERS
 {
 	pdTASK_CODE pvTaskCode;
-	const signed portCHAR * const pcName;
-	unsigned portSHORT usStackDepth;
+	const signed char * const pcName;
+	unsigned short usStackDepth;
 	void *pvParameters;
 	unsigned portBASE_TYPE uxPriority;
 	portSTACK_TYPE *puxStackBuffer;
@@ -192,8 +192,8 @@ typedef struct xTASK_PARAMTERS
  *<pre>
  portBASE_TYPE xTaskCreate(
 							  pdTASK_CODE pvTaskCode,
-							  const portCHAR * const pcName,
-							  unsigned portSHORT usStackDepth,
+							  const char * const pcName,
+							  unsigned short usStackDepth,
 							  void *pvParameters,
 							  unsigned portBASE_TYPE uxPriority,
 							  xTaskHandle *pvCreatedTask
@@ -894,7 +894,7 @@ void vTaskSuspendAll( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>portCHAR xTaskResumeAll( void );</pre>
+ * <pre>char xTaskResumeAll( void );</pre>
  *
  * Resumes real time kernel activity following a call to vTaskSuspendAll ().
  * After a call to vTaskSuspendAll () the kernel will take control of which
@@ -972,7 +972,7 @@ portTickType xTaskGetTickCount( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>unsigned portSHORT uxTaskGetNumberOfTasks( void );</PRE>
+ * <PRE>unsigned short uxTaskGetNumberOfTasks( void );</PRE>
  *
  * @return The number of tasks that the real time kernel is currently managing.
  * This includes all ready, blocked and suspended tasks.  A task that
@@ -986,7 +986,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>void vTaskList( portCHAR *pcWriteBuffer );</PRE>
+ * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
  *
  * configUSE_TRACE_FACILITY must be defined as 1 for this function to be
  * available.  See the configuration section for more information.
@@ -1008,11 +1008,11 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
  * \page vTaskList vTaskList
  * \ingroup TaskUtils
  */
-void vTaskList( signed portCHAR *pcWriteBuffer ) PRIVILEGED_FUNCTION;
+void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>void vTaskGetRunTimeStats( portCHAR *pcWriteBuffer );</PRE>
+ * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer );</PRE>
  *
  * configGENERATE_RUN_TIME_STATS must be defined as 1 for this function
  * to be available.  The application must also then provide definitions
@@ -1040,11 +1040,11 @@ void vTaskList( signed portCHAR *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * \page vTaskGetRunTimeStats vTaskGetRunTimeStats
  * \ingroup TaskUtils
  */
-void vTaskGetRunTimeStats( signed portCHAR *pcWriteBuffer ) PRIVILEGED_FUNCTION;
+void vTaskGetRunTimeStats( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>void vTaskStartTrace( portCHAR * pcBuffer, unsigned portBASE_TYPE uxBufferSize );</PRE>
+ * <PRE>void vTaskStartTrace( char * pcBuffer, unsigned portBASE_TYPE uxBufferSize );</PRE>
  *
  * Starts a real time kernel activity trace.  The trace logs the identity of
  * which task is running when.
@@ -1061,11 +1061,11 @@ void vTaskGetRunTimeStats( signed portCHAR *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * \page vTaskStartTrace vTaskStartTrace
  * \ingroup TaskUtils
  */
-void vTaskStartTrace( signed portCHAR * pcBuffer, unsigned portLONG ulBufferSize ) PRIVILEGED_FUNCTION;
+void vTaskStartTrace( signed char * pcBuffer, unsigned long ulBufferSize ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>unsigned portLONG ulTaskEndTrace( void );</PRE>
+ * <PRE>unsigned long ulTaskEndTrace( void );</PRE>
  *
  * Stops a kernel activity trace.  See vTaskStartTrace ().
  *
@@ -1074,7 +1074,7 @@ void vTaskStartTrace( signed portCHAR * pcBuffer, unsigned portLONG ulBufferSize
  * \page usTaskEndTrace usTaskEndTrace
  * \ingroup TaskUtils
  */
-unsigned portLONG ulTaskEndTrace( void ) PRIVILEGED_FUNCTION;
+unsigned long ulTaskEndTrace( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task.h
@@ -1250,7 +1250,7 @@ void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUN
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateProtected() macros.
  */
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed portCHAR * const pcName, unsigned portSHORT usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
 
 #ifdef __cplusplus
 }

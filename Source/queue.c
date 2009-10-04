@@ -91,11 +91,11 @@ zero. */
  */
 typedef struct QueueDefinition
 {
-	signed portCHAR *pcHead;				/*< Points to the beginning of the queue storage area. */
-	signed portCHAR *pcTail;				/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
+	signed char *pcHead;				/*< Points to the beginning of the queue storage area. */
+	signed char *pcTail;				/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
 
-	signed portCHAR *pcWriteTo;				/*< Points to the free next place in the storage area. */
-	signed portCHAR *pcReadFrom;			/*< Points to the last place that a queued item was read from. */
+	signed char *pcWriteTo;				/*< Points to the free next place in the storage area. */
+	signed char *pcReadFrom;			/*< Points to the last place that a queued item was read from. */
 
 	xList xTasksWaitingToSend;				/*< List of tasks that are blocked waiting to post onto this queue.  Stored in priority order. */
 	xList xTasksWaitingToReceive;			/*< List of tasks that are blocked waiting to read from this queue.  Stored in priority order. */
@@ -161,7 +161,7 @@ unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue
 	more user friendly. */
 	typedef struct QUEUE_REGISTRY_ITEM
 	{
-		signed portCHAR *pcQueueName;
+		signed char *pcQueueName;
 		xQueueHandle xHandle;
 	} xQueueRegistryItem;
 
@@ -173,7 +173,7 @@ unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue
 	/* Removes a queue from the registry by simply setting the pcQueueName
 	member to NULL. */
 	static void vQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
-	void vQueueAddToRegistry( xQueueHandle xQueue, signed portCHAR *pcQueueName ) PRIVILEGED_FUNCTION;
+	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcQueueName ) PRIVILEGED_FUNCTION;
 #endif
 
 /*
@@ -253,7 +253,7 @@ size_t xQueueSizeInBytes;
 			longer than asked for to make wrap checking easier/faster. */
 			xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ) + ( size_t ) 1;
 
-			pxNewQueue->pcHead = ( signed portCHAR * ) pvPortMalloc( xQueueSizeInBytes );
+			pxNewQueue->pcHead = ( signed char * ) pvPortMalloc( xQueueSizeInBytes );
 			if( pxNewQueue->pcHead != NULL )
 			{
 				/* Initialise the queue members as described above where the
@@ -638,7 +638,7 @@ xTimeOutType xTimeOut;
 	{
 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 	xTimeOutType xTimeOut;
-	signed portCHAR *pcOriginalReadPosition;
+	signed char *pcOriginalReadPosition;
 
 		for( ;; )
 		{
@@ -815,7 +815,7 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pv
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
-signed portCHAR *pcOriginalReadPosition;
+signed char *pcOriginalReadPosition;
 
 	/* This function relaxes the coding standard somewhat to allow return
 	statements within the function itself.  This is done in the interest
@@ -1414,7 +1414,7 @@ signed portBASE_TYPE xReturn;
 
 #if configQUEUE_REGISTRY_SIZE > 0
 
-	void vQueueAddToRegistry( xQueueHandle xQueue, signed portCHAR *pcQueueName )
+	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcQueueName )
 	{
 	unsigned portBASE_TYPE ux;
 

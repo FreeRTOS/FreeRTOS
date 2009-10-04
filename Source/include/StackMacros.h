@@ -87,7 +87,7 @@
 	/* Only the current stack state is to be checked. */
 	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
 	{																									\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );		\
+	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );		\
 																										\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
@@ -104,7 +104,7 @@
 	/* Only the current stack state is to be checked. */
 	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
 	{																									\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );		\
+	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );		\
 																										\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack >= pxCurrentTCB->pxEndOfStack )									\
@@ -120,8 +120,8 @@
 
 	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																									\
 	{																																				\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );													\
-	static const unsigned portCHAR ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
+	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );													\
+	static const unsigned char ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
@@ -142,9 +142,9 @@
 
 	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																									\
 	{																																				\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName );													\
-	portCHAR *pcEndOfStack = ( portCHAR * ) pxCurrentTCB->pxEndOfStack;																				\
-	static const unsigned portCHAR ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
+	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );													\
+	char *pcEndOfStack = ( char * ) pxCurrentTCB->pxEndOfStack;																				\
+	static const unsigned char ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\

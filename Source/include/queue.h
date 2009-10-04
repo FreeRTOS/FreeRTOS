@@ -98,8 +98,8 @@ typedef void * xQueueHandle;
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  };
 
  void vATask( void *pvParameters )
@@ -107,7 +107,7 @@ typedef void * xQueueHandle;
  xQueueHandle xQueue1, xQueue2;
 
 	// Create a queue capable of containing 10 unsigned long values.
-	xQueue1 = xQueueCreate( 10, sizeof( unsigned portLONG ) );
+	xQueue1 = xQueueCreate( 10, sizeof( unsigned long ) );
 	if( xQueue1 == 0 )
 	{
 		// Queue was not created and must not be used.
@@ -165,11 +165,11 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
- unsigned portLONG ulVar = 10UL;
+ unsigned long ulVar = 10UL;
 
  void vATask( void *pvParameters )
  {
@@ -177,7 +177,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  struct AMessage *pxMessage;
 
 	// Create a queue capable of containing 10 unsigned long values.
-	xQueue1 = xQueueCreate( 10, sizeof( unsigned portLONG ) );
+	xQueue1 = xQueueCreate( 10, sizeof( unsigned long ) );
 
 	// Create a queue capable of containing 10 pointers to AMessage structures.
 	// These should be passed by pointer as they contain a lot of data.
@@ -247,11 +247,11 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
- unsigned portLONG ulVar = 10UL;
+ unsigned long ulVar = 10UL;
 
  void vATask( void *pvParameters )
  {
@@ -259,7 +259,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  struct AMessage *pxMessage;
 
 	// Create a queue capable of containing 10 unsigned long values.
-	xQueue1 = xQueueCreate( 10, sizeof( unsigned portLONG ) );
+	xQueue1 = xQueueCreate( 10, sizeof( unsigned long ) );
 
 	// Create a queue capable of containing 10 pointers to AMessage structures.
 	// These should be passed by pointer as they contain a lot of data.
@@ -331,11 +331,11 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
- unsigned portLONG ulVar = 10UL;
+ unsigned long ulVar = 10UL;
 
  void vATask( void *pvParameters )
  {
@@ -343,7 +343,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  struct AMessage *pxMessage;
 
 	// Create a queue capable of containing 10 unsigned long values.
-	xQueue1 = xQueueCreate( 10, sizeof( unsigned portLONG ) );
+	xQueue1 = xQueueCreate( 10, sizeof( unsigned long ) );
 
 	// Create a queue capable of containing 10 pointers to AMessage structures.
 	// These should be passed by pointer as they contain a lot of data.
@@ -419,11 +419,11 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
- unsigned portLONG ulVar = 10UL;
+ unsigned long ulVar = 10UL;
 
  void vATask( void *pvParameters )
  {
@@ -431,7 +431,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  struct AMessage *pxMessage;
 
 	// Create a queue capable of containing 10 unsigned long values.
-	xQueue1 = xQueueCreate( 10, sizeof( unsigned portLONG ) );
+	xQueue1 = xQueueCreate( 10, sizeof( unsigned long ) );
 
 	// Create a queue capable of containing 10 pointers to AMessage structures.
 	// These should be passed by pointer as they contain a lot of data.
@@ -506,8 +506,8 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
  xQueueHandle xQueue;
@@ -599,8 +599,8 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
  xQueueHandle xQueue;
@@ -698,8 +698,8 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
    <pre>
  struct AMessage
  {
-	portCHAR ucMessageID;
-	portCHAR ucData[ 20 ];
+	char ucMessageID;
+	char ucData[ 20 ];
  } xMessage;
 
  xQueueHandle xQueue;
@@ -820,7 +820,7 @@ void vQueueDelete( xQueueHandle xQueue );
    <pre>
  void vBufferISR( void )
  {
- portCHAR cIn;
+ char cIn;
  portBASE_TYPE xHigherPrioritTaskWoken;
 
 	// We have not woken a task at the start of the ISR.
@@ -891,7 +891,7 @@ void vQueueDelete( xQueueHandle xQueue );
    <pre>
  void vBufferISR( void )
  {
- portCHAR cIn;
+ char cIn;
  portBASE_TYPE xHigherPriorityTaskWoken;
 
 	// We have not woken a task at the start of the ISR.
@@ -964,7 +964,7 @@ void vQueueDelete( xQueueHandle xQueue );
    <pre>
  void vBufferISR( void )
  {
- portCHAR cIn;
+ char cIn;
  portBASE_TYPE xHigherPriorityTaskWoken;
 
 	// We have not woken a task at the start of the ISR.
@@ -1042,7 +1042,7 @@ void vQueueDelete( xQueueHandle xQueue );
    <pre>
  void vBufferISR( void )
  {
- portCHAR cIn;
+ char cIn;
  portBASE_TYPE xHigherPriorityTaskWokenByPost;
 
 	// We have not woken a task at the start of the ISR.
@@ -1108,11 +1108,11 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
  // Function to create a queue and post some values.
  void vAFunction( void *pvParameters )
  {
- portCHAR cValueToPost;
+ char cValueToPost;
  const portTickType xBlockTime = ( portTickType )0xff;
 
 	// Create a queue capable of containing 10 characters.
-	xQueue = xQueueCreate( 10, sizeof( portCHAR ) );
+	xQueue = xQueueCreate( 10, sizeof( char ) );
 	if( xQueue == 0 )
 	{
 		// Failed to create the queue.
@@ -1138,7 +1138,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
  void vISR_Routine( void )
  {
  portBASE_TYPE xTaskWokenByReceive = pdFALSE;
- portCHAR cRxedChar;
+ char cRxedChar;
 
 	while( xQueueReceiveFromISR( xQueue, ( void * ) &cRxedChar, &xTaskWokenByReceive) )
 	{
@@ -1151,7 +1151,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 		// task will be woken.
 	}
 
-	if( cTaskWokenByPost != ( portCHAR ) pdFALSE;
+	if( cTaskWokenByPost != ( char ) pdFALSE;
 	{
 		taskYIELD ();
 	}
@@ -1241,7 +1241,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
  * name that the kernel aware debugger will display.
  */
 #if configQUEUE_REGISTRY_SIZE > 0
-	void vQueueAddToRegistry( xQueueHandle xQueue, signed portCHAR *pcName );
+	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName );
 #endif
 
 

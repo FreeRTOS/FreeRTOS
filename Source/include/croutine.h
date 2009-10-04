@@ -76,7 +76,7 @@ typedef struct corCoRoutineControlBlock
 	xListItem				xEventListItem;		/*< List item used to place the CRCB in event lists. */
 	unsigned portBASE_TYPE 	uxPriority;			/*< The priority of the co-routine in relation to other co-routines. */
 	unsigned portBASE_TYPE 	uxIndex;			/*< Used to distinguish between co-routines when multiple co-routines use the same co-routine function. */
-	unsigned portSHORT 		uxState;			/*< Used internally by the co-routine implementation. */
+	unsigned short 		uxState;			/*< Used internally by the co-routine implementation. */
 } corCRCB; /* Co-routine control block.  Note must be identical in size down to uxPriority with tskTCB. */
 
 /**
@@ -208,7 +208,7 @@ void vCoRoutineSchedule( void );
  void vACoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
- static portLONG ulAVariable;
+ static long ulAVariable;
 
      // Must start every co-routine with a call to crSTART();
      crSTART( xHandle );
@@ -239,7 +239,7 @@ void vCoRoutineSchedule( void );
  void vACoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
- static portLONG ulAVariable;
+ static long ulAVariable;
 
      // Must start every co-routine with a call to crSTART();
      crSTART( xHandle );
@@ -553,7 +553,7 @@ void vCoRoutineSchedule( void );
  // A co-routine that blocks on a queue waiting for characters to be received.
  static void vReceivingCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
  {
- portCHAR cRxedChar;
+ char cRxedChar;
  portBASE_TYPE xResult;
 
      // All co-routines must start with a call to crSTART().
@@ -580,7 +580,7 @@ void vCoRoutineSchedule( void );
  // a co-routine.
  void vUART_ISR( void )
  {
- portCHAR cRxedChar;
+ char cRxedChar;
  portBASE_TYPE xCRWokenByPost = pdFALSE;
 
      // We loop around reading characters until there are none left in the UART.
@@ -653,7 +653,7 @@ void vCoRoutineSchedule( void );
  {
  // cChar holds its value while this co-routine is blocked and must therefore
  // be declared static.
- static portCHAR cCharToTx = 'a';
+ static char cCharToTx = 'a';
  portBASE_TYPE xResult;
 
      // All co-routines must start with a call to crSTART().
@@ -696,7 +696,7 @@ void vCoRoutineSchedule( void );
  // An ISR that uses a queue to receive characters to send on a UART.
  void vUART_ISR( void )
  {
- portCHAR cCharToTx;
+ char cCharToTx;
  portBASE_TYPE xCRWokenByPost = pdFALSE;
 
      while( UART_TX_REG_EMPTY() )

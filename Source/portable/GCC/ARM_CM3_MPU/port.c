@@ -62,18 +62,18 @@ task.h is included from an application file. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* Constants required to access and manipulate the NVIC. */
-#define portNVIC_SYSTICK_CTRL					( ( volatile unsigned portLONG * ) 0xe000e010 )
-#define portNVIC_SYSTICK_LOAD					( ( volatile unsigned portLONG * ) 0xe000e014 )
-#define portNVIC_SYSPRI2						( ( volatile unsigned portLONG * ) 0xe000ed20 )
-#define portNVIC_SYSPRI1						( ( volatile unsigned portLONG * ) 0xe000ed1c )
-#define portNVIC_SYS_CTRL_STATE					( ( volatile unsigned portLONG * ) 0xe000ed24 )
+#define portNVIC_SYSTICK_CTRL					( ( volatile unsigned long * ) 0xe000e010 )
+#define portNVIC_SYSTICK_LOAD					( ( volatile unsigned long * ) 0xe000e014 )
+#define portNVIC_SYSPRI2						( ( volatile unsigned long * ) 0xe000ed20 )
+#define portNVIC_SYSPRI1						( ( volatile unsigned long * ) 0xe000ed1c )
+#define portNVIC_SYS_CTRL_STATE					( ( volatile unsigned long * ) 0xe000ed24 )
 #define portNVIC_MEM_FAULT_ENABLE				( 1UL << 16UL )
 
 /* Constants required to access and manipulate the MPU. */
-#define portMPU_TYPE							( ( volatile unsigned portLONG * ) 0xe000ed90 )
-#define portMPU_REGION_BASE_ADDRESS				( ( volatile unsigned portLONG * ) 0xe000ed9C )
-#define portMPU_REGION_ATTRIBUTE				( ( volatile unsigned portLONG * ) 0xe000edA0 )
-#define portMPU_CTRL							( ( volatile unsigned portLONG * ) 0xe000ed94 )
+#define portMPU_TYPE							( ( volatile unsigned long * ) 0xe000ed90 )
+#define portMPU_REGION_BASE_ADDRESS				( ( volatile unsigned long * ) 0xe000ed9C )
+#define portMPU_REGION_ATTRIBUTE				( ( volatile unsigned long * ) 0xe000edA0 )
+#define portMPU_CTRL							( ( volatile unsigned long * ) 0xe000ed94 )
 #define portEXPECTED_MPU_TYPE_VALUE				( 8UL << 8UL ) /* 8 regions, unified. */
 #define portMPU_ENABLE							( 0x01UL )
 #define portMPU_BACKGROUND_ENABLE				( 1UL << 2UL )
@@ -87,9 +87,9 @@ task.h is included from an application file. */
 #define portNVIC_SYSTICK_CLK					( 0x00000004UL )
 #define portNVIC_SYSTICK_INT					( 0x00000002UL )
 #define portNVIC_SYSTICK_ENABLE					( 0x00000001UL )
-#define portNVIC_PENDSV_PRI						( ( ( unsigned portLONG ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
-#define portNVIC_SYSTICK_PRI					( ( ( unsigned portLONG ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
-#define portNVIC_SVC_PRI						( ( ( unsigned portLONG ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
+#define portNVIC_PENDSV_PRI						( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
+#define portNVIC_SYSTICK_PRI					( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
+#define portNVIC_SVC_PRI						( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 #define portNVIC_TEMP_SVC_PRI					( 0x01UL << 24UL )
 
 /* Constants required to set up the initial stack. */
@@ -111,44 +111,44 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 /*
  * Setup the timer to generate the tick interrupts.
  */
-static void prvSetupTimerInterrupt( void );
+static void prvSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Configure a number of standard MPU regions that are used by all tasks.
  */
-static void prvSetupMPU( void );
+static void prvSetupMPU( void ) PRIVILEGED_FUNCTION;
 
 /* 
  * Return the smallest MPU region size that a given number of bytes will fit
  * into.  The region size is returned as the value that should be programmed
  * into the region attribute register for that region.
  */
-static unsigned long prvGetMPURegionSizeSetting( unsigned long ulActualSizeInBytes );
+static unsigned long prvGetMPURegionSizeSetting( unsigned long ulActualSizeInBytes ) PRIVILEGED_FUNCTION;
 
 /* 
  * Checks to see if being called from the context of an unprivileged task, and
  * if so raises the privilege level and returns false - otherwise does nothing
  * other than return true.
  */
-portBASE_TYPE prvRaisePrivilege( void ) __attribute__(( naked ));
+static portBASE_TYPE prvRaisePrivilege( void ) __attribute__(( naked ));
 
 /*
  * Standard FreeRTOS exception handlers.
  */
-void xPortPendSVHandler( void ) __attribute__ (( naked ));
-void xPortSysTickHandler( void )  __attribute__ ((optimize("3")));
-void vPortSVCHandler( void ) __attribute__ (( naked ));
+void xPortPendSVHandler( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
+void xPortSysTickHandler( void )  __attribute__ ((optimize("3"))) PRIVILEGED_FUNCTION;
+void vPortSVCHandler( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
 
 /*
  * Starts the scheduler by restoring the context of the first task to run.
  */
-static void prvRestoreContextOfFirstTask( void ) __attribute__(( naked ));
+static void prvRestoreContextOfFirstTask( void ) __attribute__(( naked )) PRIVILEGED_FUNCTION;
 
 /*
  * C portion of the SVC handler.  The SVC handler is split between an asm entry
  * and a C wrapper for simplicity of coding and maintenance.
  */
-static void prvSVCHandler(	unsigned long *pulRegisters ) __attribute__ ((optimize("3")));
+static void prvSVCHandler(	unsigned long *pulRegisters ) __attribute__ ((optimize("3"))) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -366,7 +366,7 @@ void xPortPendSVHandler( void )
 
 void xPortSysTickHandler( void )
 {
-unsigned portLONG ulDummy;
+unsigned long ulDummy;
 
 	/* If using preemption, also force a context switch. */
 	#if configUSE_PREEMPTION == 1
@@ -480,7 +480,7 @@ unsigned long ulRegionSize, ulReturnValue = 4;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE prvRaisePrivilege( void )
+static portBASE_TYPE prvRaisePrivilege( void )
 {
 	__asm volatile
 	( 
@@ -498,7 +498,7 @@ portBASE_TYPE prvRaisePrivilege( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, portSTACK_TYPE *pxBottomOfStack, unsigned portSHORT usStackDepth )
+void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, portSTACK_TYPE *pxBottomOfStack, unsigned short usStackDepth )
 {
 extern unsigned long __SRAM_segment_start__[];
 extern unsigned long __SRAM_segment_end__[];
@@ -594,7 +594,7 @@ unsigned long ul;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed portCHAR * const pcName, unsigned portSHORT usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
+signed portBASE_TYPE MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
 {
 signed portBASE_TYPE xReturn;
 portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
@@ -748,7 +748,7 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
-void MPU_vTaskList( signed portCHAR *pcWriteBuffer )
+void MPU_vTaskList( signed char *pcWriteBuffer )
 {
 portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
@@ -759,7 +759,7 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
-	void MPU_vTaskGetRunTimeStats( signed portCHAR *pcWriteBuffer )
+	void MPU_vTaskGetRunTimeStats( signed char *pcWriteBuffer )
 	{
     portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
@@ -770,7 +770,7 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
-	void MPU_vTaskStartTrace( signed portCHAR * pcBuffer, unsigned portLONG ulBufferSize )
+	void MPU_vTaskStartTrace( signed char * pcBuffer, unsigned long ulBufferSize )
 	{
     portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
@@ -781,9 +781,9 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
-	unsigned portLONG MPU_ulTaskEndTrace( void )
+	unsigned long MPU_ulTaskEndTrace( void )
 	{
-	unsigned portLONG ulReturn;
+	unsigned long ulReturn;
     portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
 		ulReturn = ulTaskEndTrace();
@@ -992,7 +992,7 @@ signed portBASE_TYPE xReturn;
 /*-----------------------------------------------------------*/
 
 #if configQUEUE_REGISTRY_SIZE > 0
-	void MPU_vQueueAddToRegistry( xQueueHandle xQueue, signed portCHAR *pcName )
+	void MPU_vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName )
 	{
 	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 

@@ -215,6 +215,9 @@ portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 unsigned portLONG ulMemCheckTaskRunningCount;
 xTaskHandle xCreatedTask;
 
+	/* Just to stop compiler warnings. */
+	( void ) pvParameters;
+
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error.  If an error is detected then the delay period
 	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so

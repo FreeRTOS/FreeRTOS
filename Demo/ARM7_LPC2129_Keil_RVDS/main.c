@@ -82,7 +82,6 @@
 /* Demo application includes. */
 #include "partest.h"
 #include "flash.h"
-#include "integer.h"
 #include "comtest2.h"
 #include "serial.h"
 #include "PollQ.h"
@@ -103,12 +102,12 @@
 #define mainCOM_TEST_LED		( 3 )
 
 /* Priorities for the demo application tasks. */
-#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
+#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
+#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
 
 /* Constants used by the "check" task.  As described at the head of this file
 the check task toggles an LED.  The rate at which the LED flashes is used to
@@ -155,7 +154,6 @@ int main( void )
 	prvSetupHardware();
 
 	/* Start the demo/test application tasks. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -240,11 +238,6 @@ portLONG lReturn = pdPASS;
 	/* Check all the demo tasks (other than the flash tasks) to ensure
 	that they are all still running, and that none of them have detected
 	an error. */
-	if( xAreIntegerMathsTaskStillRunning() != pdPASS )
-	{
-		lReturn = pdFAIL;
-	}
-
 	if( xAreComTestTasksStillRunning() != pdPASS )
 	{
 		lReturn = pdFAIL;

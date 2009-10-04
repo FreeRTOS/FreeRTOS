@@ -20,7 +20,6 @@ File 2,1,<..\..\Source\portable\RVDS\ARM7_LPC21xx\port.c><port.c>
 File 2,1,<..\..\Source\portable\MemMang\heap_2.c><heap_2.c>
 File 2,2,<..\..\Source\portable\RVDS\ARM7_LPC21xx\portASM.s><portASM.s>
 File 3,1,<..\Common\Minimal\flash.c><flash.c>
-File 3,1,<..\Common\Minimal\integer.c><integer.c>
 File 3,1,<..\Common\Minimal\comtest.c><comtest.c>
 File 3,1,<..\Common\Minimal\BlockQ.c><BlockQ.c>
 File 3,1,<..\Common\Minimal\dynamic.c><dynamic.c>
@@ -201,7 +200,7 @@ Options 2,0,0  // Target 'RTOSDemo_THUMB'
  ADSLDIF ()
  ADSLDDW ()
   OPTDL (SARM.DLL)(-cLPC2100)(DARMP.DLL)(-pLPC21x9)(SARM.DLL)()(TARMP.DLL)(-pLPC21x9)
-  OPTDBG 49149,0,()()()()()()()()()() (BIN\UL2ARM.DLL)()()()
+  OPTDBG 49150,0,()()()()()()()()()() (BIN\UL2ARM.DLL)()()()
  FLASH1 { 1,0,0,0,1,0,0,0,0,16,0,0,0,0,0,0,0,0,0,0 }
  FLASH2 (BIN\UL2ARM.DLL)
  FLASH3 ("LPC210x_ISP.EXE" ("#H" ^X $D COM1: 9600 1))

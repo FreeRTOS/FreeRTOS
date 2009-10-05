@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /**
@@ -102,7 +103,7 @@ Changed from V1.2.5
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 	+ Slight modification to task priorities.
 
 */
@@ -126,7 +127,7 @@ interval.  This is the maximum and minimum block time between sends. */
 
 #define comMAX_CONSECUTIVE_ERRORS	( 2 )
 
-#define comSTACK_SIZE				( ( unsigned portSHORT ) 256 )
+#define comSTACK_SIZE				( ( unsigned short ) 256 )
 
 #define comRX_RELATIVE_PRIORITY		( 1 )
 
@@ -143,12 +144,12 @@ static void vComRxTask( void *pvParameters );
 static void vSemTestTask( void * pvParameters );
 
 /* The string that is repeatedly transmitted. */
-const portCHAR * const pcMessageToExchange = 	"Send this message over and over again to check communications interrupts. "
+const char * const pcMessageToExchange = 	"Send this message over and over again to check communications interrupts. "
 									   			"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\r\n";
 
 /* Variables that are incremented on each cycle of each task.  These are used to 
 check that both tasks are still executing. */
-volatile portSHORT sTxCount = 0, sRxCount = 0, sSemCount = 0;
+volatile short sTxCount = 0, sRxCount = 0, sSemCount = 0;
 
 /* The handle to the semaphore test task. */
 static xTaskHandle xSemTestTaskHandle = NULL;
@@ -169,7 +170,7 @@ const unsigned portBASE_TYPE uxBufferLength = 255;
 
 static void vComTxTask( void *pvParameters )
 {
-const portCHAR * const pcTaskStartMsg = "COM Tx task started.\r\n";
+const char * const pcTaskStartMsg = "COM Tx task started.\r\n";
 portTickType xTimeToWait;
 
 	/* Stop warnings. */
@@ -206,15 +207,15 @@ portTickType xTimeToWait;
 
 static void vComRxTask( void *pvParameters )
 {
-const portCHAR * const pcTaskStartMsg = "COM Rx task started.\r\n";
-const portCHAR * const pcTaskErrorMsg = "COM read error\r\n";
-const portCHAR * const pcTaskRestartMsg = "COM resynced\r\n";
-const portCHAR * const pcTaskTimeoutMsg = "COM Rx timed out\r\n";
+const char * const pcTaskStartMsg = "COM Rx task started.\r\n";
+const char * const pcTaskErrorMsg = "COM read error\r\n";
+const char * const pcTaskRestartMsg = "COM resynced\r\n";
+const char * const pcTaskTimeoutMsg = "COM Rx timed out\r\n";
 const portTickType xBlockTime = ( portTickType ) 0xffff / portTICK_RATE_MS;
-const portCHAR *pcExpectedChar;
+const char *pcExpectedChar;
 portBASE_TYPE xGotChar;
-portCHAR cRxedChar;
-portSHORT sResyncRequired, sConsecutiveErrors, sLatchedError;
+char cRxedChar;
+short sResyncRequired, sConsecutiveErrors, sLatchedError;
 
 	/* Stop warnings. */
 	( void ) pvParameters;
@@ -303,7 +304,7 @@ portSHORT sResyncRequired, sConsecutiveErrors, sLatchedError;
 
 static void vSemTestTask( void * pvParameters )
 {
-const portCHAR * const pcTaskStartMsg = "ISR Semaphore test started.\r\n";
+const char * const pcTaskStartMsg = "ISR Semaphore test started.\r\n";
 portBASE_TYPE xError = pdFALSE;
 
  	/* Stop warnings. */
@@ -332,7 +333,7 @@ portBASE_TYPE xError = pdFALSE;
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreComTestTasksStillRunning( void )
 {
-static portSHORT sLastTxCount = 0, sLastRxCount = 0, sLastSemCount = 0;
+static short sLastTxCount = 0, sLastRxCount = 0, sLastSemCount = 0;
 portBASE_TYPE xReturn;
 
 	/* Not too worried about mutual exclusion on these variables as they are 16 

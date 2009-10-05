@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /**
@@ -83,7 +84,7 @@ Changes from V1.2.0:
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 
 Changes from V2.1.1
 
@@ -103,8 +104,8 @@ Changes from V2.1.1
 #include "print.h"
 
 /* The value to which the shared variables are counted. */
-#define semtstBLOCKING_EXPECTED_VALUE		( ( unsigned portLONG ) 0xfff )
-#define semtstNON_BLOCKING_EXPECTED_VALUE	( ( unsigned portLONG ) 0xff  )
+#define semtstBLOCKING_EXPECTED_VALUE		( ( unsigned long ) 0xfff )
+#define semtstNON_BLOCKING_EXPECTED_VALUE	( ( unsigned long ) 0xff  )
 
 #define semtstSTACK_SIZE			configMINIMAL_STACK_SIZE
 
@@ -119,17 +120,17 @@ static void prvSemaphoreTest( void *pvParameters );
 typedef struct SEMAPHORE_PARAMETERS
 {
 	xSemaphoreHandle xSemaphore;
-	volatile unsigned portLONG *pulSharedVariable;
+	volatile unsigned long *pulSharedVariable;
 	portTickType xBlockTime;
 } xSemaphoreParameters;
 
 /* Variables used to check that all the tasks are still running without errors. */
-static volatile portSHORT sCheckVariables[ semtstNUM_TASKS ] = { 0 };
-static volatile portSHORT sNextCheckVariable = 0;
+static volatile short sCheckVariables[ semtstNUM_TASKS ] = { 0 };
+static volatile short sNextCheckVariable = 0;
 
 /* Strings to print if USE_STDIO is defined. */
-const portCHAR * const pcPollingSemaphoreTaskError = "Guarded shared variable in unexpected state.\r\n";
-const portCHAR * const pcSemaphoreTaskStart = "Guarded shared variable task started.\r\n";
+const char * const pcPollingSemaphoreTaskError = "Guarded shared variable in unexpected state.\r\n";
+const char * const pcSemaphoreTaskStart = "Guarded shared variable task started.\r\n";
 
 /*-----------------------------------------------------------*/
 
@@ -149,7 +150,7 @@ const portTickType xBlockTime = ( portTickType ) 100;
 		if( pxFirstSemaphoreParameters->xSemaphore != NULL )
 		{
 			/* Create the variable which is to be shared by the first two tasks. */
-			pxFirstSemaphoreParameters->pulSharedVariable = ( unsigned portLONG * ) pvPortMalloc( sizeof( unsigned portLONG ) );
+			pxFirstSemaphoreParameters->pulSharedVariable = ( unsigned long * ) pvPortMalloc( sizeof( unsigned long ) );
 
 			/* Initialise the share variable to the value the tasks expect. */
 			*( pxFirstSemaphoreParameters->pulSharedVariable ) = semtstNON_BLOCKING_EXPECTED_VALUE;
@@ -172,7 +173,7 @@ const portTickType xBlockTime = ( portTickType ) 100;
 
 		if( pxSecondSemaphoreParameters->xSemaphore != NULL )
 		{
-			pxSecondSemaphoreParameters->pulSharedVariable = ( unsigned portLONG * ) pvPortMalloc( sizeof( unsigned portLONG ) );
+			pxSecondSemaphoreParameters->pulSharedVariable = ( unsigned long * ) pvPortMalloc( sizeof( unsigned long ) );
 			*( pxSecondSemaphoreParameters->pulSharedVariable ) = semtstBLOCKING_EXPECTED_VALUE;
 			pxSecondSemaphoreParameters->xBlockTime = xBlockTime / portTICK_RATE_MS;
 
@@ -186,9 +187,9 @@ const portTickType xBlockTime = ( portTickType ) 100;
 static void prvSemaphoreTest( void *pvParameters )
 {
 xSemaphoreParameters *pxParameters;
-volatile unsigned portLONG *pulSharedVariable, ulExpectedValue;
-unsigned portLONG ulCounter;
-portSHORT sError = pdFALSE, sCheckVariableToUse;
+volatile unsigned long *pulSharedVariable, ulExpectedValue;
+unsigned long ulCounter;
+short sError = pdFALSE, sCheckVariableToUse;
 
 	/* See which check variable to use.  sNextCheckVariable is not semaphore 
 	protected! */
@@ -233,7 +234,7 @@ portSHORT sError = pdFALSE, sCheckVariableToUse;
 			/* Clear the variable, then count it back up to the expected value
 			before releasing the semaphore.  Would expect a context switch or
 			two during this time. */
-			for( ulCounter = ( unsigned portLONG ) 0; ulCounter <= ulExpectedValue; ulCounter++ )
+			for( ulCounter = ( unsigned long ) 0; ulCounter <= ulExpectedValue; ulCounter++ )
 			{
 				*pulSharedVariable = ulCounter;
 				if( *pulSharedVariable != ulCounter )
@@ -286,7 +287,7 @@ portSHORT sError = pdFALSE, sCheckVariableToUse;
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreSemaphoreTasksStillRunning( void )
 {
-static portSHORT sLastCheckVariables[ semtstNUM_TASKS ] = { 0 };
+static short sLastCheckVariables[ semtstNUM_TASKS ] = { 0 };
 portBASE_TYPE xTask, xReturn = pdTRUE;
 
 	for( xTask = 0; xTask < semtstNUM_TASKS; xTask++ )

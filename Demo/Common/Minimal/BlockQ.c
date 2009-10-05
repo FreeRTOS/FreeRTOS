@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -96,7 +97,7 @@ typedef struct BLOCKING_QUEUE_PARAMETERS
 {
 	xQueueHandle xQueue;					/*< The queue to be used by the task. */
 	portTickType xBlockTime;				/*< The block time to use on queue reads/writes. */
-	volatile portSHORT *psCheckVariable;	/*< Incremented on each successful cycle to check the task is still running. */
+	volatile short *psCheckVariable;	/*< Incremented on each successful cycle to check the task is still running. */
 } xBlockingQueueParameters;
 
 /* Task function that creates an incrementing number and posts it on a queue. */
@@ -109,11 +110,11 @@ static portTASK_FUNCTION_PROTO( vBlockingQueueConsumer, pvParameters );
 /* Variables which are incremented each time an item is removed from a queue, and
 found to be the expected value.
 These are used to check that the tasks are still running. */
-static volatile portSHORT sBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0 };
+static volatile short sBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
 
 /* Variable which are incremented each time an item is posted on a queue.   These
 are used to check that the tasks are still running. */
-static volatile portSHORT sBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0 };
+static volatile short sBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
 
 /*-----------------------------------------------------------*/
 
@@ -133,7 +134,7 @@ const portTickType xDontBlock = ( portTickType ) 0;
 
 	/* Create the queue used by the first two tasks to pass the incrementing number.
 	Pass a pointer to the queue in the parameter structure. */
-	pxQueueParameters1->xQueue = xQueueCreate( uxQueueSize1, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
+	pxQueueParameters1->xQueue = xQueueCreate( uxQueueSize1, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 
 	/* The consumer is created first so gets a block time as described above. */
 	pxQueueParameters1->xBlockTime = xBlockTime;
@@ -159,8 +160,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 
 	/* Note the producer has a lower priority than the consumer when the tasks are
 	spawned. */
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
 
 	
 
@@ -168,7 +169,7 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	the same mechanism but reverses the task priorities. */
 
 	pxQueueParameters3 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-	pxQueueParameters3->xQueue = xQueueCreate( uxQueueSize1, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
+	pxQueueParameters3->xQueue = xQueueCreate( uxQueueSize1, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 	pxQueueParameters3->xBlockTime = xDontBlock;
 	pxQueueParameters3->psCheckVariable = &( sBlockingProducerCount[ 1 ] );
 
@@ -177,15 +178,15 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters4->xBlockTime = xBlockTime;
 	pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
 
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
 
 
 
 	/* Create the last two tasks as described above.  The mechanism is again just
 	the same.  This time both parameter structures are given a block time. */
 	pxQueueParameters5 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-	pxQueueParameters5->xQueue = xQueueCreate( uxQueueSize5, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
+	pxQueueParameters5->xQueue = xQueueCreate( uxQueueSize5, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 	pxQueueParameters5->xBlockTime = xBlockTime;
 	pxQueueParameters5->psCheckVariable = &( sBlockingProducerCount[ 2 ] );
 
@@ -194,16 +195,16 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters6->xBlockTime = xBlockTime;
 	pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );	
 
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vBlockingQueueProducer, pvParameters )
 {
-unsigned portSHORT usValue = 0;
+unsigned short usValue = 0;
 xBlockingQueueParameters *pxQueueParameters;
-portSHORT sErrorEverOccurred = pdFALSE;
+short sErrorEverOccurred = pdFALSE;
 
 	pxQueueParameters = ( xBlockingQueueParameters * ) pvParameters;
 
@@ -232,9 +233,9 @@ portSHORT sErrorEverOccurred = pdFALSE;
 
 static portTASK_FUNCTION( vBlockingQueueConsumer, pvParameters )
 {
-unsigned portSHORT usData, usExpectedValue = 0;
+unsigned short usData, usExpectedValue = 0;
 xBlockingQueueParameters *pxQueueParameters;
-portSHORT sErrorEverOccurred = pdFALSE;
+short sErrorEverOccurred = pdFALSE;
 
 	pxQueueParameters = ( xBlockingQueueParameters * ) pvParameters;
 
@@ -270,8 +271,8 @@ portSHORT sErrorEverOccurred = pdFALSE;
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreBlockingQueuesStillRunning( void )
 {
-static portSHORT sLastBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0 };
-static portSHORT sLastBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0, ( unsigned portSHORT ) 0 };
+static short sLastBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
+static short sLastBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdPASS, xTasks;
 
 	/* Not too worried about mutual exclusion on these variables as they are 16

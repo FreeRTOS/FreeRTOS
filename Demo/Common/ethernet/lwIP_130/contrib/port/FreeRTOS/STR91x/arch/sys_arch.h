@@ -46,7 +46,7 @@ typedef xTaskHandle sys_thread_t;
 
 /* Message queue constants. */
 #define archMESG_QUEUE_LENGTH	( 6 )
-#define archPOST_BLOCK_TIME_MS	( ( unsigned portLONG ) 10000 )
+#define archPOST_BLOCK_TIME_MS	( ( unsigned long ) 10000 )
 
 #endif /* __SYS_RTXC_H__ */
 

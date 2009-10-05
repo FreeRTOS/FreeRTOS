@@ -58,7 +58,7 @@
 #define MS_TO_TICKS( ms )           \
     ( portTickType )( ( portTickType ) ( ms ) / portTICK_RATE_MS )
 #define TICKS_TO_MS( ticks )        \
-    ( unsigned portLONG )( ( portTickType ) ( ticks ) * portTICK_RATE_MS )
+    ( unsigned long )( ( portTickType ) ( ticks ) * portTICK_RATE_MS )
 #define THREAD_STACK_SIZE           ( 256 /*FSL:1024*/ )
 #define THREAD_NAME                 "lwIP"
 

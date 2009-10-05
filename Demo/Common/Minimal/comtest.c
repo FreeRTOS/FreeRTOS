@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 
@@ -133,21 +134,21 @@ static volatile unsigned portBASE_TYPE uxRxLoops = comINITIAL_RX_COUNT_VALUE;
 
 /*-----------------------------------------------------------*/
 
-void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned portLONG ulBaudRate, unsigned portBASE_TYPE uxLED )
+void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulBaudRate, unsigned portBASE_TYPE uxLED )
 {
 	/* Initialise the com port then spawn the Rx and Tx tasks. */
 	uxBaseLED = uxLED;
 	xSerialPortInitMinimal( ulBaudRate, comBUFFER_LEN );
 
 	/* The Tx task is spawned with a lower priority than the Rx task. */
-	xTaskCreate( vComTxTask, ( signed portCHAR * ) "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( xTaskHandle * ) NULL );
-	xTaskCreate( vComRxTask, ( signed portCHAR * ) "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vComTxTask, ( signed char * ) "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( xTaskHandle * ) NULL );
+	xTaskCreate( vComRxTask, ( signed char * ) "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vComTxTask, pvParameters )
 {
-signed portCHAR cByteToSend;
+signed char cByteToSend;
 portTickType xTimeToWait;
 
 	/* Just to stop compiler warnings. */
@@ -189,7 +190,7 @@ portTickType xTimeToWait;
 
 static portTASK_FUNCTION( vComRxTask, pvParameters )
 {
-signed portCHAR cExpectedByte, cByteRxed;
+signed char cExpectedByte, cByteRxed;
 portBASE_TYPE xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 
 	/* Just to stop compiler warnings. */

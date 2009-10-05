@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -72,7 +73,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -110,7 +111,7 @@ void vStartPolledQueueTasks( unsigned portBASE_TYPE uxPriority )
 static xQueueHandle xPolledQueue;
 
 	/* Create the queue used by the producer and consumer. */
-	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
+	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware 
@@ -118,17 +119,17 @@ static xQueueHandle xPolledQueue;
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( xPolledQueue, ( signed portCHAR * ) "Poll_Test_Queue" );
+	vQueueAddToRegistry( xPolledQueue, ( signed char * ) "Poll_Test_Queue" );
 
 	/* Spawn the producer and consumer. */
-	xTaskCreate( vPolledQueueConsumer, ( signed portCHAR * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
-	xTaskCreate( vPolledQueueProducer, ( signed portCHAR * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vPolledQueueConsumer, ( signed char * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vPolledQueueProducer, ( signed char * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vPolledQueueProducer, pvParameters )
 {
-unsigned portSHORT usValue = ( unsigned portSHORT ) 0;
+unsigned short usValue = ( unsigned short ) 0;
 signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 	for( ;; )
@@ -167,7 +168,7 @@ signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 static portTASK_FUNCTION( vPolledQueueConsumer, pvParameters )
 {
-unsigned portSHORT usData, usExpectedValue = ( unsigned portSHORT ) 0;
+unsigned short usData, usExpectedValue = ( unsigned short ) 0;
 signed portBASE_TYPE xError = pdFALSE;
 
 	for( ;; )

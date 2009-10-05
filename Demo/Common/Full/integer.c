@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -85,7 +86,7 @@ Changes from V1.2.1
 /* Demo program include files. */
 #include "integer.h"
 
-#define intgSTACK_SIZE		( ( unsigned portSHORT ) 256 )
+#define intgSTACK_SIZE		( ( unsigned short ) 256 )
 #define intgNUMBER_OF_TASKS  ( 8 )
 
 /* Four tasks, each of which performs a different calculation on four byte 
@@ -97,7 +98,7 @@ static void vCompeteingIntMathTask4( void *pvParameters );
 
 /* These variables are used to check that all the tasks are still running.  If a 
 task gets a calculation wrong it will stop incrementing its check variable. */
-static volatile unsigned portSHORT usTaskCheck[ intgNUMBER_OF_TASKS ] = { ( unsigned portSHORT ) 0 };
+static volatile unsigned short usTaskCheck[ intgNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 /*-----------------------------------------------------------*/
 
 void vStartIntegerMathTasks( unsigned portBASE_TYPE uxPriority )
@@ -115,26 +116,26 @@ void vStartIntegerMathTasks( unsigned portBASE_TYPE uxPriority )
 
 static void vCompeteingIntMathTask1( void *pvParameters )
 {
-portLONG l1, l2, l3, l4;
-portSHORT sError = pdFALSE;
-volatile unsigned portSHORT *pusTaskCheckVariable;
-const portLONG lAnswer = ( ( portLONG ) 74565L + ( portLONG ) 1234567L ) * ( portLONG ) -918L;
-const portCHAR * const pcTaskStartMsg = "Integer math task 1 started.\r\n";
-const portCHAR * const pcTaskFailMsg = "Integer math task 1 failed.\r\n";
+long l1, l2, l3, l4;
+short sError = pdFALSE;
+volatile unsigned short *pusTaskCheckVariable;
+const long lAnswer = ( ( long ) 74565L + ( long ) 1234567L ) * ( long ) -918L;
+const char * const pcTaskStartMsg = "Integer math task 1 started.\r\n";
+const char * const pcTaskFailMsg = "Integer math task 1 failed.\r\n";
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
 	{
-		l1 = ( portLONG ) 74565L;
-		l2 = ( portLONG ) 1234567L;
-		l3 = ( portLONG ) -918L;
+		l1 = ( long ) 74565L;
+		l2 = ( long ) 1234567L;
+		l3 = ( long ) -918L;
 
 		l4 = ( l1 + l2 ) * l3;
 
@@ -160,19 +161,19 @@ const portCHAR * const pcTaskFailMsg = "Integer math task 1 failed.\r\n";
 
 static void vCompeteingIntMathTask2( void *pvParameters )
 {
-portLONG l1, l2, l3, l4;
-portSHORT sError = pdFALSE;
-volatile unsigned portSHORT *pusTaskCheckVariable;
-const portLONG lAnswer = ( ( portLONG ) -389000L / ( portLONG ) 329999L ) * ( portLONG ) -89L;
-const portCHAR * const pcTaskStartMsg = "Integer math task 2 started.\r\n";
-const portCHAR * const pcTaskFailMsg = "Integer math task 2 failed.\r\n";
+long l1, l2, l3, l4;
+short sError = pdFALSE;
+volatile unsigned short *pusTaskCheckVariable;
+const long lAnswer = ( ( long ) -389000L / ( long ) 329999L ) * ( long ) -89L;
+const char * const pcTaskStartMsg = "Integer math task 2 started.\r\n";
+const char * const pcTaskFailMsg = "Integer math task 2 failed.\r\n";
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -205,36 +206,36 @@ const portCHAR * const pcTaskFailMsg = "Integer math task 2 failed.\r\n";
 
 static void vCompeteingIntMathTask3( void *pvParameters )
 {
-portLONG *plArray, lTotal1, lTotal2;
-portSHORT sError = pdFALSE;
-volatile unsigned portSHORT *pusTaskCheckVariable;
-const unsigned portSHORT usArraySize = ( unsigned portSHORT ) 250;
-unsigned portSHORT usPosition;
-const portCHAR * const pcTaskStartMsg = "Integer math task 3 started.\r\n";
-const portCHAR * const pcTaskFailMsg = "Integer math task 3 failed.\r\n";
+long *plArray, lTotal1, lTotal2;
+short sError = pdFALSE;
+volatile unsigned short *pusTaskCheckVariable;
+const unsigned short usArraySize = ( unsigned short ) 250;
+unsigned short usPosition;
+const char * const pcTaskStartMsg = "Integer math task 3 started.\r\n";
+const char * const pcTaskFailMsg = "Integer math task 3 failed.\r\n";
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Create the array we are going to use for our check calculation. */
-	plArray = ( portLONG * ) pvPortMalloc( ( size_t ) 250 * sizeof( portLONG ) );
+	plArray = ( long * ) pvPortMalloc( ( size_t ) 250 * sizeof( long ) );
 
 	/* Keep filling the array, keeping a running total of the values placed in the
 	array.  Then run through the array adding up all the values.  If the two totals
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
-		lTotal1 = ( portLONG ) 0;
-		lTotal2 = ( portLONG ) 0;
+		lTotal1 = ( long ) 0;
+		lTotal2 = ( long ) 0;
 
 		for( usPosition = 0; usPosition < usArraySize; usPosition++ )
 		{
-			plArray[ usPosition ] = ( portLONG ) usPosition + ( portLONG ) 5;
-			lTotal1 += ( portLONG ) usPosition + ( portLONG ) 5;
+			plArray[ usPosition ] = ( long ) usPosition + ( long ) 5;
+			lTotal1 += ( long ) usPosition + ( long ) 5;
 		}
 
 		taskYIELD();
@@ -264,36 +265,36 @@ const portCHAR * const pcTaskFailMsg = "Integer math task 3 failed.\r\n";
 
 static void vCompeteingIntMathTask4( void *pvParameters )
 {
-portLONG *plArray, lTotal1, lTotal2;
-portSHORT sError = pdFALSE;
-volatile unsigned portSHORT *pusTaskCheckVariable;
-const unsigned portSHORT usArraySize = 250;
-unsigned portSHORT usPosition;
-const portCHAR * const pcTaskStartMsg = "Integer math task 4 started.\r\n";
-const portCHAR * const pcTaskFailMsg = "Integer math task 4 failed.\r\n";
+long *plArray, lTotal1, lTotal2;
+short sError = pdFALSE;
+volatile unsigned short *pusTaskCheckVariable;
+const unsigned short usArraySize = 250;
+unsigned short usPosition;
+const char * const pcTaskStartMsg = "Integer math task 4 started.\r\n";
+const char * const pcTaskFailMsg = "Integer math task 4 failed.\r\n";
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Create the array we are going to use for our check calculation. */
-	plArray = ( portLONG * ) pvPortMalloc( ( size_t ) 250 * sizeof( portLONG ) );
+	plArray = ( long * ) pvPortMalloc( ( size_t ) 250 * sizeof( long ) );
 
 	/* Keep filling the array, keeping a running total of the values placed in the 
 	array.  Then run through the array adding up all the values.  If the two totals 
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
-		lTotal1 = ( portLONG ) 0;
-		lTotal2 = ( portLONG ) 0;
+		lTotal1 = ( long ) 0;
+		lTotal2 = ( long ) 0;
 
 		for( usPosition = 0; usPosition < usArraySize; usPosition++ )
 		{
-			plArray[ usPosition ] = ( portLONG ) usPosition * ( portLONG ) 12;
-			lTotal1 += ( portLONG ) usPosition * ( portLONG ) 12;	
+			plArray[ usPosition ] = ( long ) usPosition * ( long ) 12;
+			lTotal1 += ( long ) usPosition * ( long ) 12;	
 		}
 
 		taskYIELD();
@@ -327,7 +328,7 @@ portBASE_TYPE xAreIntegerMathsTaskStillRunning( void )
 {
 /* Keep a history of the check variables so we know if they have been incremented 
 since the last call. */
-static unsigned portSHORT usLastTaskCheck[ intgNUMBER_OF_TASKS ] = { ( unsigned portSHORT ) 0 };
+static unsigned short usLastTaskCheck[ intgNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdTRUE, xTask;
 
 	/* Check the maths tasks are still running by ensuring their check variables 

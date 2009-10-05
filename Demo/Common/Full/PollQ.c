@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 
@@ -76,7 +77,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -90,7 +91,7 @@ Changes from V2.0.0
 /* Demo program include files. */
 #include "PollQ.h"
 
-#define pollqSTACK_SIZE		( ( unsigned portSHORT ) configMINIMAL_STACK_SIZE )
+#define pollqSTACK_SIZE		( ( unsigned short ) configMINIMAL_STACK_SIZE )
 
 /* The task that posts the incrementing number onto the queue. */
 static void vPolledQueueProducer( void *pvParameters );
@@ -99,7 +100,7 @@ static void vPolledQueueProducer( void *pvParameters );
 static void vPolledQueueConsumer( void *pvParameters );
 
 /* Variables that are used to check that the tasks are still running with no errors. */
-static volatile portSHORT sPollingConsumerCount = 0, sPollingProducerCount = 0;
+static volatile short sPollingConsumerCount = 0, sPollingProducerCount = 0;
 /*-----------------------------------------------------------*/
 
 void vStartPolledQueueTasks( unsigned portBASE_TYPE uxPriority )
@@ -108,7 +109,7 @@ static xQueueHandle xPolledQueue;
 const unsigned portBASE_TYPE uxQueueSize = 10;
 
 	/* Create the queue used by the producer and consumer. */
-	xPolledQueue = xQueueCreate( uxQueueSize, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
+	xPolledQueue = xQueueCreate( uxQueueSize, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 
 	/* Spawn the producer and consumer. */
 	xTaskCreate( vPolledQueueConsumer, "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, NULL );
@@ -118,13 +119,13 @@ const unsigned portBASE_TYPE uxQueueSize = 10;
 
 static void vPolledQueueProducer( void *pvParameters )
 {
-unsigned portSHORT usValue = 0, usLoop;
+unsigned short usValue = 0, usLoop;
 xQueueHandle *pxQueue;
 const portTickType xDelay = ( portTickType ) 200 / portTICK_RATE_MS;
-const unsigned portSHORT usNumToProduce = 3;
-const portCHAR * const pcTaskStartMsg = "Polled queue producer started.\r\n";
-const portCHAR * const pcTaskErrorMsg = "Could not post on polled queue.\r\n";
-portSHORT sError = pdFALSE;
+const unsigned short usNumToProduce = 3;
+const char * const pcTaskStartMsg = "Polled queue producer started.\r\n";
+const char * const pcTaskErrorMsg = "Could not post on polled queue.\r\n";
+short sError = pdFALSE;
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
@@ -166,12 +167,12 @@ portSHORT sError = pdFALSE;
 
 static void vPolledQueueConsumer( void *pvParameters )
 {
-unsigned portSHORT usData, usExpectedValue = 0;
+unsigned short usData, usExpectedValue = 0;
 xQueueHandle *pxQueue;
 const portTickType xDelay = ( portTickType ) 200 / portTICK_RATE_MS;
-const portCHAR * const pcTaskStartMsg = "Polled queue consumer started.\r\n";
-const portCHAR * const pcTaskErrorMsg = "Incorrect value received on polled queue.\r\n";
-portSHORT sError = pdFALSE;
+const char * const pcTaskStartMsg = "Polled queue consumer started.\r\n";
+const char * const pcTaskErrorMsg = "Incorrect value received on polled queue.\r\n";
+short sError = pdFALSE;
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
@@ -219,7 +220,7 @@ portSHORT sError = pdFALSE;
 /* This is called to check that all the created tasks are still running with no errors. */
 portBASE_TYPE xArePollingQueuesStillRunning( void )
 {
-static portSHORT sLastPollingConsumerCount = 0, sLastPollingProducerCount = 0;
+static short sLastPollingConsumerCount = 0, sLastPollingProducerCount = 0;
 portBASE_TYPE xReturn;
 
 	if( ( sLastPollingConsumerCount == sPollingConsumerCount ) ||

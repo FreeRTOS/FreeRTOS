@@ -74,14 +74,14 @@ infinite. */
 /*-----------------------------------------------------------*/
 
 /* The DMA descriptors.  This is a char array to allow us to align it correctly. */
-static unsigned portCHAR xFECTxDescriptors_unaligned[ ( configNUM_FEC_TX_BUFFERS * sizeof( FECBD ) ) + 16 ];
-static unsigned portCHAR xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_BUFFERS * sizeof( FECBD ) ) + 16 ];
+static unsigned char xFECTxDescriptors_unaligned[ ( configNUM_FEC_TX_BUFFERS * sizeof( FECBD ) ) + 16 ];
+static unsigned char xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_BUFFERS * sizeof( FECBD ) ) + 16 ];
 static FECBD *xFECTxDescriptors;
 static FECBD *xFECRxDescriptors;
 
 /* The DMA buffers.  These are char arrays to allow them to be alligned correctly. */
-static unsigned portCHAR ucFECTxBuffers[ ( configNUM_FEC_TX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
-static unsigned portCHAR ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
+static unsigned char ucFECTxBuffers[ ( configNUM_FEC_TX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
+static unsigned char ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
 static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxNextTxBuffer = 0;
 
 /* Semaphore used by the FEC interrupt handler to wake the handler task. */
@@ -370,8 +370,8 @@ int fec_vbase;
  */
 static void low_level_init( struct netif *netif )
 {
-unsigned portSHORT usData;
-const unsigned portCHAR ucMACAddress[6] = 
+unsigned short usData;
+const unsigned char ucMACAddress[6] = 
 {
 	configMAC_0, configMAC_1,configMAC_2,configMAC_3,configMAC_4,configMAC_5
 };
@@ -478,10 +478,10 @@ const unsigned portCHAR ucMACAddress[6] =
 	MCF_FEC_EMRBR = (uint16)configFEC_BUFFER_SIZE;
 
 	/* Point to the start of the circular Rx buffer descriptor queue */
-	MCF_FEC_ERDSR = ( volatile unsigned portLONG ) &( xFECRxDescriptors[ 0 ] );
+	MCF_FEC_ERDSR = ( volatile unsigned long ) &( xFECRxDescriptors[ 0 ] );
 
 	/* Point to the start of the circular Tx buffer descriptor queue */
-	MCF_FEC_ETSDR = ( volatile unsigned portLONG ) &( xFECTxDescriptors[ 0 ] );
+	MCF_FEC_ETSDR = ( volatile unsigned long ) &( xFECTxDescriptors[ 0 ] );
 
 	/* Mask all FEC interrupts */
 	MCF_FEC_EIMR = MCF_FEC_EIMR_MASK_ALL;
@@ -501,7 +501,7 @@ const unsigned portCHAR ucMACAddress[6] =
 	#endif
 
 	/* Create the task that handles the EMAC. */
-	xTaskCreate( ethernetif_input, ( signed portCHAR * ) "ETH_INT", configETHERNET_INPUT_TASK_STACK_SIZE, (void *)netif, configETHERNET_INPUT_TASK_PRIORITY, &xEthIntTask );
+	xTaskCreate( ethernetif_input, ( signed char * ) "ETH_INT", configETHERNET_INPUT_TASK_STACK_SIZE, (void *)netif, configETHERNET_INPUT_TASK_PRIORITY, &xEthIntTask );
 	
 	fec_irq_enable();
 	MCF_FEC_ECR = MCF_FEC_ECR_ETHER_EN;
@@ -527,7 +527,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
 struct pbuf *q;
 u32_t l = 0;
-unsigned portCHAR *pcTxData = NULL;
+unsigned char *pcTxData = NULL;
 portBASE_TYPE i;
 
 	( void ) netif;
@@ -806,10 +806,10 @@ err_t ethernetif_init(struct netif *netif)
 static void prvInitialiseFECBuffers( void )
 {
 unsigned portBASE_TYPE ux;
-unsigned portCHAR *pcBufPointer;
+unsigned char *pcBufPointer;
 
 	pcBufPointer = &( xFECTxDescriptors_unaligned[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -817,7 +817,7 @@ unsigned portCHAR *pcBufPointer;
 	xFECTxDescriptors = ( FECBD * ) pcBufPointer;
 	
 	pcBufPointer = &( xFECRxDescriptors_unaligned[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -827,7 +827,7 @@ unsigned portCHAR *pcBufPointer;
 
 	/* Setup the buffers and descriptors. */
 	pcBufPointer = &( ucFECTxBuffers[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -841,7 +841,7 @@ unsigned portCHAR *pcBufPointer;
 	}
 
 	pcBufPointer = &( ucFECRxBuffers[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -865,7 +865,7 @@ unsigned portCHAR *pcBufPointer;
 
 __declspec(interrupt:0) void vFECISRHandler( void )
 {
-unsigned portLONG ulEvent;
+unsigned long ulEvent;
 portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
    
 	ulEvent = MCF_FEC_EIR & MCF_FEC_EIMR;

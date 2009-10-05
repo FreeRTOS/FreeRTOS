@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /* 
@@ -187,7 +188,7 @@ void vSetErrorLED( void );
 /*
  * Thread safe write to the PDC.
  */
-static void prvPDCWrite( portCHAR cAddress, portCHAR cData );
+static void prvPDCWrite( char cAddress, char cData );
 
 /*
  * Sets up the hardware used by the demo.
@@ -200,7 +201,7 @@ static void prvSetupHardware( void );
 /* The structure that is passed on the LCD message queue. */
 typedef struct
 {
-	portCHAR **ppcMessageToDisplay; /*<< Points to a char* pointing to the message to display. */
+	char **ppcMessageToDisplay; /*<< Points to a char* pointing to the message to display. */
 	portBASE_TYPE xRow;				/*<< The row on which the message should be displayed. */
 } xLCDMessage;
 
@@ -252,7 +253,7 @@ void main( void )
 static void prvLCDMessageTask( void * pvParameters )
 {
 /* The strings that are written to the LCD. */
-portCHAR *pcStringsToDisplay[] = {										
+char *pcStringsToDisplay[] = {										
 									"IAR             ",
 									"Stellaris       ",
 									"Demo            ",
@@ -302,8 +303,8 @@ void prvLCDTask( void * pvParameters )
 unsigned portBASE_TYPE uxIndex;
 xQueueHandle *pxLCDQueue;
 xLCDMessage xReceivedMessage;
-portCHAR *pcString;
-const unsigned portCHAR ucCFGData[] = {	
+char *pcString;
+const unsigned char ucCFGData[] = {	
 											0x30,   /* Set data bus to 8-bits. */
 											0x30,
 											0x30,
@@ -362,9 +363,9 @@ const unsigned portCHAR ucCFGData[] = {
 
 static void prvADCCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
 {
-static unsigned portLONG ulADCValue;
-static portCHAR cMessageBuffer[ mainMAX_ADC_STRING_LEN ];
-static portCHAR *pcMessage;
+static unsigned long ulADCValue;
+static char cMessageBuffer[ mainMAX_ADC_STRING_LEN ];
+static char *pcMessage;
 static xLCDMessage xMessageToSend;
 
 	/* Co-routines MUST start with a call to crSTART(). */
@@ -386,7 +387,7 @@ static xLCDMessage xMessageToSend;
 		pcMessage = cMessageBuffer;
 
 		/* Configure the message we are going to send for display. */
-		xMessageToSend.ppcMessageToDisplay = ( portCHAR** ) &pcMessage;
+		xMessageToSend.ppcMessageToDisplay = ( char** ) &pcMessage;
 		xMessageToSend.xRow = mainBOTTOM_ROW;
 		
 		/* Send the string to the LCD task for display.  We are sending
@@ -421,7 +422,7 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvPDCWrite( portCHAR cAddress, portCHAR cData )
+static void prvPDCWrite( char cAddress, char cData )
 {
 	vTaskSuspendAll();
 	{

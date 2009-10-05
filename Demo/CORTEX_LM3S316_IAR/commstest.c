@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -85,8 +86,8 @@ characters from commsFIRST_TX_CHAR to commsLAST_TX_CHAR. */
 
 /* Just used to walk through the program memory in order that some random data
 can be generated. */
-#define commsTOTAL_PROGRAM_MEMORY ( ( unsigned portLONG * ) ( 8 * 1024 ) )
-#define commsFIRST_PROGRAM_BYTES ( ( unsigned portLONG * ) 4 )
+#define commsTOTAL_PROGRAM_MEMORY ( ( unsigned long * ) ( 8 * 1024 ) )
+#define commsFIRST_PROGRAM_BYTES ( ( unsigned long * ) 4 )
 
 /* The time between transmissions of the string on UART 0.   This is pseudo
 random in order to generate a bit or randomness to when the interrupts occur.*/
@@ -107,7 +108,7 @@ static unsigned portBASE_TYPE uxCommsErrorStatus = pdPASS;
 static xQueueHandle xCommsQueue;
 
 /* The next character to transmit. */
-static portCHAR cNextChar;
+static char cNextChar;
 
 /*-----------------------------------------------------------*/
 
@@ -115,7 +116,7 @@ void vSerialInit( void )
 {
 	/* Create the queue used to communicate between the UART ISR and the Comms
 	Rx task. */
-	xCommsQueue = xQueueCreate( commsRX_QUEUE_LEN, sizeof( portCHAR ) );
+	xCommsQueue = xQueueCreate( commsRX_QUEUE_LEN, sizeof( char ) );
 
 	/* Enable the UART.  GPIOA has already been initialised. */
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
@@ -141,7 +142,7 @@ void vSerialInit( void )
 void vSerialTxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
 {
 portTickType xDelayPeriod;
-static unsigned portLONG *pulRandomBytes = commsFIRST_PROGRAM_BYTES;
+static unsigned long *pulRandomBytes = commsFIRST_PROGRAM_BYTES;
 
 	/* Co-routine MUST start with a call to crSTART. */
 	crSTART( xHandle );
@@ -205,8 +206,8 @@ static unsigned portLONG *pulRandomBytes = commsFIRST_PROGRAM_BYTES;
 
 void vUART_ISR( void )
 {
-unsigned portLONG ulStatus;
-portCHAR cRxedChar;
+unsigned long ulStatus;
+char cRxedChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt. */
@@ -223,7 +224,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			/* Get the char from the buffer and post it onto the queue of
 			Rxed chars.  Posting the character should wake the task that is
 			blocked on the queue waiting for characters. */
-			cRxedChar = ( portCHAR ) HWREG( UART0_BASE + UART_O_DR );
+			cRxedChar = ( char ) HWREG( UART0_BASE + UART_O_DR );
 			xQueueSendFromISR( xCommsQueue, &cRxedChar, &xHigherPriorityTaskWoken );
 		}		
 	}
@@ -252,7 +253,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 void vCommsRxTask( void * pvParameters )
 {
-static portCHAR cRxedChar, cExpectedChar;
+static char cRxedChar, cExpectedChar;
 
 	/* Set the char we expect to receive to the start of the string. */
 	cExpectedChar = commsFIRST_TX_CHAR;

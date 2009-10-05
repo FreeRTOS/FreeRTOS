@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /**
@@ -68,7 +69,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -81,7 +82,7 @@ Changes from V2.0.0
 #include "death.h"
 #include "print.h"
 
-#define deathSTACK_SIZE		( ( unsigned portSHORT ) 512 )
+#define deathSTACK_SIZE		( ( unsigned short ) 512 )
 
 /* The task originally created which is responsible for periodically dynamically 
 creating another four tasks. */
@@ -92,7 +93,7 @@ static void vSuicidalTask( void *pvParameters );
 
 /* A variable which is incremented every time the dynamic tasks are created.  This 
 is used to check that the task is still running. */
-static volatile portSHORT sCreationCount = 0;
+static volatile short sCreationCount = 0;
 
 /* Used to store the number of tasks that were originally running so the creator 
 task can tell if any of the suicidal tasks have failed to die. */
@@ -165,7 +166,7 @@ static void vCreateTasks( void *pvParameters )
 {
 const portTickType xDelay = ( portTickType ) 1000 / portTICK_RATE_MS;
 unsigned portBASE_TYPE uxPriority;
-const portCHAR * const pcTaskStartMsg = "Create task started.\r\n";
+const char * const pcTaskStartMsg = "Create task started.\r\n";
 
 	/* Queue a message for printing to say the task has started. */
 	vPrintDisplayMessage( &pcTaskStartMsg );
@@ -193,8 +194,8 @@ const portCHAR * const pcTaskStartMsg = "Create task started.\r\n";
 are not any more than four extra tasks. */
 portBASE_TYPE xIsCreateTaskStillRunning( void )
 {
-static portSHORT sLastCreationCount = 0;
-portSHORT sReturn = pdTRUE;
+static short sLastCreationCount = 0;
+short sReturn = pdTRUE;
 unsigned portBASE_TYPE uxTasksRunningNow;
 
 	if( sLastCreationCount == sCreationCount )

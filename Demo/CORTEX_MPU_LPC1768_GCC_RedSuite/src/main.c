@@ -525,6 +525,7 @@ xQueueHandle xQueue = xFileScopeCheckQueue;
 			"		BNE	prvDeleteMe			\n"
 			"		CMP	R12, #112			\n"
 			"		BNE	prvDeleteMe			\n"
+			:::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
 		);
 
 		/* Send mainREG_TEST_1_STILL_EXECUTING to the check task to indicate that this 
@@ -588,6 +589,7 @@ xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
 			"		BNE	prvDeleteMe			\n"
 			"		CMP	R12, #12			\n"
 			"		BNE	prvDeleteMe			\n"
+            :::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
 		);
 
 		/* Send mainREG_TEST_2_STILL_EXECUTING to the check task to indicate that this 

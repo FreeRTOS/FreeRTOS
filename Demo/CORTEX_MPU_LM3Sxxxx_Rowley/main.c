@@ -298,6 +298,12 @@ int main( void )
     xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
 
+	/* Print out the amount of free heap space so configTOTAL_HEAP_SIZE can be
+	tuned.  The heap size is set to be very small in this example and will need
+	to be increased before many more tasks, queues or semaphores can be 
+	created. */
+	debug_printf( "There are %d bytes of unused heap space, although the idle task is yet to be created.\r\n", xPortGetFreeHeapSize() );
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -513,6 +519,7 @@ xQueueHandle xQueue = xFileScopeCheckQueue;
 			"		BNE	prvDeleteMe			\n"
 			"		CMP	R12, #112			\n"
 			"		BNE	prvDeleteMe			\n"
+			:::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
 		);
 
 		/* Send mainREG_TEST_1_STILL_EXECUTING to the check task to indicate that this 
@@ -576,6 +583,7 @@ xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
 			"		BNE	prvDeleteMe			\n"
 			"		CMP	R12, #12			\n"
 			"		BNE	prvDeleteMe			\n"
+            :::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
 		);
 
 		/* Send mainREG_TEST_2_STILL_EXECUTING to the check task to indicate that this 
@@ -684,14 +692,14 @@ int uipprintf( const char *fmt, ... )
 
 void hard_fault_handler(unsigned int * hardfault_args)
 {
-unsigned int stacked_r0;
-unsigned int stacked_r1;
-unsigned int stacked_r2;
-unsigned int stacked_r3;
-unsigned int stacked_r12;
-unsigned int stacked_lr;
-unsigned int stacked_pc;
-unsigned int stacked_psr;
+volatile unsigned int stacked_r0;
+volatile unsigned int stacked_r1;
+volatile unsigned int stacked_r2;
+volatile unsigned int stacked_r3;
+volatile unsigned int stacked_r12;
+volatile unsigned int stacked_lr;
+volatile unsigned int stacked_pc;
+volatile unsigned int stacked_psr;
 
 	stacked_r0 = ((unsigned long) hardfault_args[0]);
 	stacked_r1 = ((unsigned long) hardfault_args[1]);

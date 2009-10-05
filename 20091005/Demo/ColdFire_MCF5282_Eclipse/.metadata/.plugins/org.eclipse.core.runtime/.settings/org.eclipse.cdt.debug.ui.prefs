@@ -1,0 +1,10 @@
+#Fri Aug 08 13:44:18 BST 2008
+org.eclipse.debug.ui.DebugView.org.eclipse.cdt.debug.ui.cDebug.show_full_paths=true
+columnOrderKeyEXE=0,1,2,3,4,5
+visibleColumnsKeySF=1,1,0,0,0,0
+org.eclipse.debug.ui.BreakpointView.org.eclipse.cdt.debug.ui.cDebug.show_full_paths=true
+visibleColumnsKeyEXE=1,1,1,0,0,0
+columnSortDirectionKeyEXE=128
+eclipse.preferences.version=1
+columnOrderKeySF=0,1,2,3,4,5
+columnSortDirectionKeySF=128

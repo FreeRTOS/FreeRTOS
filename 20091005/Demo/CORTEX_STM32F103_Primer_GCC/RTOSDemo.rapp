@@ -1,0 +1,129 @@
+
+<ApplicationBuild Header="RTOSDemo" Extern=".\RTOSDemo.rapp" Path=".\RTOSDemo.rapp" OutputFile=".\RTOSDemo.elf" sate="98" >
+	<Group Header="ST_Library" Marker="-1" OutputFile="" sate="96" >
+		<NodeC Path=".\ST_Code\led.c" Header="led.c" Marker="-1" OutputFile=".\led.o" sate="0" >
+			<Options>										</Options>
+																				
+		</NodeC>
+		<NodeC Path=".\ST_Code\crt0_STM32x.c" Header="crt0_STM32x.c" Marker="-1" OutputFile=".\crt0_STM32x.o" sate="0" >
+			<Options>										</Options>
+																				
+		</NodeC>
+		<NodeC Path=".\ST_Code\lcd.c" Header="lcd.c" Marker="-1" OutputFile=".\lcd.o" sate="0" >
+			<Options>										</Options>
+																				
+		</NodeC>
+		<NodeC Path=".\ST_Code\Util.c" Header="Util.c" Marker="-1" OutputFile=".\Util.o" sate="0" >
+			<Options>										</Options>
+																				
+		</NodeC>
+		<NodeC Path=".\ST_Code\draw.c" Header="draw.c" Marker="-1" OutputFile=".\draw.o" sate="0" >
+			<Options>										</Options>
+																				
+		</NodeC>
+		<NodeC Path=".\ST_Code\mems.c" Header="mems.c" Marker="-1" OutputFile=".\mems.o" sate="0" />
+		<NodeH Path=".\ST_Code\stm32f10x_conf.h" Header="stm32f10x_conf.h" Marker="-1" OutputFile="" sate="0" />
+		<NodeC Path=".\ST_Code\buzzer.c" Header="buzzer.c" Marker="-1" OutputFile=".\buzzer.o" sate="0" />
+		<NodeC Path=".\ST_Code\pointer.c" Header="pointer.c" Marker="-1" OutputFile=".\pointer.o" sate="0" />
+																																	
+	</Group>
+	<Group Header="Demo_Source" Marker="-1" OutputFile="" sate="96" >
+		<NodeC Path=".\main.c" Header="main.c" Marker="-1" OutputFile=".\main.o" sate="0" />
+		<NodeC Path=".\ParTest\ParTest.c" Header="ParTest.c" Marker="-1" OutputFile=".\ParTest.o" sate="0" />
+		<NodeH Path=".\FreeRTOSConfig.h" Header="FreeRTOSConfig.h" Marker="-1" OutputFile="" sate="0" />
+		<NodeC Path=".\timertest.c" Header="timertest.c" Marker="-1" OutputFile=".\timertest.o" sate="0" />
+		<NodeC Path=".\printf-stdarg.c" Header="printf-stdarg.c" Marker="0" OutputFile=".\printf-stdarg.o" sate="0" >
+			<Options>
+				<Config Header="Standard" >
+					<Set Header="NodeC" >
+						<Section Header="Build" >
+							<Property Header="Exclude" Value="No" Removable="1" />
+									
+						</Section>
+							
+					</Set>
+				</Config>
+			</Options>
+										
+		</NodeC>
+		<NodeC Path="..\Common\Minimal\GenQTest.c" Header="GenQTest.c" Marker="-1" OutputFile=".\GenQTest.o" sate="0" />
+		<NodeC Path="..\Common\Minimal\BlockQ.c" Header="BlockQ.c" Marker="-1" OutputFile=".\BlockQ.o" sate="0" />
+		<NodeC Path="..\Common\Minimal\blocktim.c" Header="blocktim.c" Marker="-1" OutputFile=".\blocktim.o" sate="0" />
+		<NodeC Path="..\Common\Minimal\QPeek.c" Header="QPeek.c" Marker="-1" OutputFile=".\QPeek.o" sate="0" />
+		<NodeC Path="..\Common\Minimal\PollQ.c" Header="PollQ.c" Marker="-1" OutputFile=".\PollQ.o" sate="0" />
+		<NodeC Path=".\syscalls.c" Header="syscalls.c" Marker="-1" OutputFile=".\syscalls.o" sate="0" />
+																																	
+	</Group>
+	<Group Header="FreeRTOS.org_Source" Marker="-1" OutputFile="" sate="96" >
+		<NodeC Path="..\..\Source\tasks.c" Header="tasks.c" Marker="-1" OutputFile=".\tasks.o" sate="0" >
+			<Options/>
+																																								
+		</NodeC>
+		<NodeC Path="..\..\Source\list.c" Header="list.c" Marker="-1" OutputFile=".\list.o" sate="0" >
+			<Options/>
+																				
+		</NodeC>
+		<NodeC Path="..\..\Source\queue.c" Header="queue.c" Marker="-1" OutputFile=".\queue.o" sate="0" >
+			<Options/>
+																				
+		</NodeC>
+		<NodeC Path="..\..\Source\portable\GCC\ARM_CM3\port.c" Header="port.c" Marker="-1" OutputFile=".\port.o" sate="0" />
+		<NodeC Path="..\..\Source\portable\MemMang\heap_2.c" Header="heap_2.c" Marker="-1" OutputFile=".\heap_2.o" sate="0" />
+																								
+	</Group>
+	<Options>
+		<Config Header="Standard" >
+			<Set Header="ApplicationBuild" >
+				<Section Header="General" >
+					<Property Header="TargetFamily" Value="ARM" />
+																																																																																																										
+				</Section>
+				<Section Header="Directories" >
+					<Property Header="IncDir" Value="$(ApplicationDir)\..\..\Source\include;$(ApplicationDir)\..\Common\include;$(ApplicationDir)\ST_Code;$(RkitLib)\ARM\include;." Removable="1" />
+																																																																															
+				</Section>
+																																																													
+			</Set>
+			<Set Header="Target" >
+				<Section Header="ProcessorARM" >
+					<Property Header="Processor" Value="STM32F103RBT6" />
+																																																																																																										
+				</Section>
+				<Section Header="ToolSetARM" >
+					<Property Header="BuildToolSetARM" Value="ARM\\GNU.config" Removable="1" />
+																																																																																																										
+				</Section>
+																																																																																		
+			</Set>
+			<Set Header="LD" >
+				<Section Header="Startup" >
+					<Property Header="DEFAULTSTARTUP" Value="No" Removable="1" />
+					<Property Header="File" Value="" Removable="1" />
+																																																																															
+				</Section>
+				<Section Header="LIB" >
+					<Property Header="STLIB" Value="1" Removable="1" />
+					<Property Header="UART0PUTC" Value="0" Removable="1" />
+					<Property Header="SMALLP" Value="1" Removable="1" />
+							
+				</Section>
+					
+			</Set>
+			<Set Header="GCC" >
+				<Section Header="Defines" >
+					<Property Header="Defines" Value="GCC_ARMCM3" Removable="1" />
+																																																																															
+				</Section>
+				<Section Header="OPTIMIZE" >
+					<Property Header="Optimize" Value="-O1" Removable="1" />
+							
+				</Section>
+				<Section Header="More" >
+					<Property Header="More" Value="" />
+							
+				</Section>
+					
+			</Set>
+		</Config>
+	</Options>
+</ApplicationBuild>

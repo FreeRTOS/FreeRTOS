@@ -1,0 +1,41 @@
+!SESSION 2008-11-20 09:48:45.515 -----------------------------------------------
+eclipse.buildId=I20080617-2000
+java.version=1.6.0_03
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.cdt.core 1 0 2008-11-20 09:54:33.890
+!MESSAGE Indexed 'RTOSDemo' (10 sources, 34 headers) in 1.83 sec: 1,553 declarations; 1,814 references; 42 unresolved inclusions; 54 syntax errors; 368 unresolved names (9.85%)
+!SESSION 2008-11-20 10:20:54.484 -----------------------------------------------
+eclipse.buildId=I20080617-2000
+java.version=1.6.0_03
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.cdt.core 1 0 2008-11-20 10:21:12.484
+!MESSAGE Indexed 'RTOSDemo' (100 sources, 129 headers) in 5.02 sec: 6,569 declarations; 21,643 references; 52 unresolved inclusions; 259 syntax errors; 522 unresolved names (1.82%)
+
+!ENTRY org.eclipse.cdt.debug.gdbremote.core 4 104 2008-11-20 10:29:11.531
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\FREERTOS_ROOT\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\bin\RTOSDemo.elf not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate.verifyProgramPath(AbstractCLaunchDelegate.java:383)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:52)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:764)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:614)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:880)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1083)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.cdt.debug.gdbremote.core 4 104 2008-11-20 10:29:11.531
+!MESSAGE C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\FREERTOS_ROOT\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\bin\RTOSDemo.elf not found
+!STACK 0
+java.io.FileNotFoundException: C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\FREERTOS_ROOT\Demo\ColdFire_MCF52233_Eclipse\RTOSDemo\bin\RTOSDemo.elf not found
+	at org.eclipse.cdt.launch.AbstractCLaunchDelegate.verifyProgramPath(AbstractCLaunchDelegate.java:383)
+	at org.eclipse.cdt.debug.gdbjtag.core.GDBJtagLaunchConfigurationDelegate.launch(GDBJtagLaunchConfigurationDelegate.java:52)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:764)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:614)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:880)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$8.run(DebugUIPlugin.java:1083)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)

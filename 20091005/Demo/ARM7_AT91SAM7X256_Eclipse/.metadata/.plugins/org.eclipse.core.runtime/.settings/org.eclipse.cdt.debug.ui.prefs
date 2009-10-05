@@ -1,0 +1,5 @@
+#Tue Oct 23 21:13:09 BST 2007
+pref_state_memento.org.eclipse.cdt.debug.ui.ModulesView=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<ModulesViewMemento org.eclipse.cdt.debug.ui.SASH_DETAILS_PART\="570" org.eclipse.cdt.debug.ui.SASH_VIEW_PART\="429"/>
+eclipse.preferences.version=1
+org.eclipse.debug.ui.DebugView.org.eclipse.cdt.debug.ui.cDebug.show_full_paths=true
+org.eclipse.debug.ui.BreakpointView.org.eclipse.cdt.debug.ui.cDebug.show_full_paths=true

@@ -1,0 +1,24 @@
+// $Id: 18f452.lkr,v 1.4 2003/03/13 05:02:23 sealep Exp $
+// File: 18f452.lkr
+// Sample linker script for the PIC18F452 processor
+
+LIBPATH .
+
+FILES c018i.o
+FILES clib.lib
+FILES p18f452.lib
+
+CODEPAGE   NAME=vectors    START=0x0            END=0x39           PROTECTED
+CODEPAGE   NAME=page       START=0x3A           END=0x7FFF
+CODEPAGE   NAME=idlocs     START=0x200000       END=0x200007       PROTECTED
+CODEPAGE   NAME=config     START=0x300000       END=0x30000D       PROTECTED
+CODEPAGE   NAME=devid      START=0x3FFFFE       END=0x3FFFFF       PROTECTED
+CODEPAGE   NAME=eedata     START=0xF00000       END=0xF000FF       PROTECTED
+
+ACCESSBANK NAME=accessram  START=0x0            END=0x7F
+DATABANK   NAME=BIG_BLOCK  START=0x80          END=0x5FF
+ACCESSBANK NAME=accesssfr  START=0xF80          END=0xFFF          PROTECTED
+
+SECTION    NAME=CONFIG     ROM=config
+
+STACK SIZE=0x60 RAM=BIG_BLOCK

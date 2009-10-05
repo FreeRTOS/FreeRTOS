@@ -1,0 +1,14 @@
+#Tue Aug 05 14:13:37 BST 2008
+useQuickDiffPrefPage=true
+closeBrackets=false
+useAnnotationsPrefPage=true
+spelling_locale=en_GB
+sourceHoverBackgroundColor=255,255,225
+org.eclipse.cdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+closeAngularBrackets=false
+spelling_locale_initialized=true
+eclipse.preferences.version=1
+org.eclipse.cdt.ui.text.templates.custom=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+content_assist_disabled_computers=org.eclipse.cdt.ui.cdtNoTypeProposalCategory\u0000org.eclipse.cdt.ui.cdtTypeProposalCategory\u0000org.eclipse.cdt.ui.textProposalCategory\u0000org.eclipse.cdt.ui.templateProposalCategory\u0000
+closeBraces=false
+closeStrings=false

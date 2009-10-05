@@ -1,0 +1,126 @@
+/*
+	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+
+	This file is part of the FreeRTOS distribution.
+
+	FreeRTOS is free software; you can redistribute it and/or modify it	under 
+	the terms of the GNU General Public License (version 2) as published by the 
+	Free Software Foundation and modified by the FreeRTOS exception.
+	**NOTE** The exception to the GPL is included to allow you to distribute a
+	combined work that includes FreeRTOS without being obliged to provide the 
+	source code for proprietary components outside of the FreeRTOS kernel.  
+	Alternative commercial license and support terms are also available upon 
+	request.  See the licensing section of http://www.FreeRTOS.org for full 
+	license details.
+
+	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+	more details.
+
+	You should have received a copy of the GNU General Public License along
+	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+
+
+	***************************************************************************
+	*                                                                         *
+	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
+	* See http://www.FreeRTOS.org/Documentation for details                   *
+	*                                                                         *
+	***************************************************************************
+
+	1 tab == 4 spaces!
+
+	Please ensure to read the configuration and relevant port sections of the
+	online documentation.
+
+	http://www.FreeRTOS.org - Documentation, latest information, license and
+	contact details.
+
+	http://www.SafeRTOS.com - A version that is certified for use in safety
+	critical systems.
+
+	http://www.OpenRTOS.com - Commercial support, development, porting,
+	licensing and training services.
+*/
+#include "FreeRTOSConfig.h"
+#include "portasm.h"
+
+	IMPORT vTaskIncrementTick
+	IMPORT vTaskSwitchContext
+	IMPORT vPortSetupTimerInterrupt
+
+	EXPORT vTickISR
+	EXPORT vPortYield
+	EXPORT xPortStartScheduler
+	
+	RSEG CODE
+
+/*
+ * The RTOS tick ISR.
+ *
+ * If the cooperative scheduler is in use this simply increments the tick
+ * count.
+ *
+ * If the preemptive scheduler is in use a context switch can also occur.
+ */
+vTickISR:
+	portSAVE_CONTEXT
+				
+	call	#vTaskIncrementTick
+
+	#if configUSE_PREEMPTION == 1
+		call	#vTaskSwitchContext
+	#endif
+		
+	portRESTORE_CONTEXT
+/*-----------------------------------------------------------*/
+
+
+/*
+ * Manual context switch called by the portYIELD() macro.
+ */
+vPortYield:
+
+	/* Mimic an interrupt by pushing the SR. */
+	push	SR			
+
+	/* Now the SR is stacked we can disable interrupts. */
+	dint			
+				
+	/* Save the context of the current task. */
+	portSAVE_CONTEXT			
+
+	/* Switch to the highest priority task that is ready to run. */
+	call	#vTaskSwitchContext		
+
+	/* Restore the context of the new task. */
+	portRESTORE_CONTEXT
+/*-----------------------------------------------------------*/
+
+
+/*
+ * Start off the scheduler by initialising the RTOS tick timer, then restoring
+ * the context of the first task.
+ */
+xPortStartScheduler:
+
+	/* Setup the hardware to generate the tick.  Interrupts are disabled
+	when this function is called. */
+	call	#vPortSetupTimerInterrupt
+
+	/* Restore the context of the first task that is going to run. */
+	portRESTORE_CONTEXT
+/*-----------------------------------------------------------*/
+      		
+
+	/* Install vTickISR as the timer A0 interrupt. */
+	ASEG
+	ORG 0xFFE0 + TIMERA0_VECTOR
+	
+	_vTickISR_: DC16 vTickISR
+	
+
+	END
+		

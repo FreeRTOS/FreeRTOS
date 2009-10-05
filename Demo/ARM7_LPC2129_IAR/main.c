@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 
@@ -104,29 +105,29 @@
 #define mainCHECK_TASK_LED			( 7 )
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE		( ( unsigned portLONG ) 115200 )
+#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
 #define mainCOM_TEST_LED			( 4 )
-#define mainTX_ENABLE				( ( unsigned portLONG ) 0x0001 )
-#define mainRX_ENABLE				( ( unsigned portLONG ) 0x0004 )
+#define mainTX_ENABLE				( ( unsigned long ) 0x0001 )
+#define mainRX_ENABLE				( ( unsigned long ) 0x0004 )
 
 /* Constants to setup the PLL. */
-#define mainPLL_MUL_5				( ( unsigned portCHAR ) 0x0004 )
-#define mainPLL_DIV_1				( ( unsigned portCHAR ) 0x0000 )
-#define mainPLL_ENABLE				( ( unsigned portCHAR ) 0x0001 )
-#define mainPLL_CONNECT				( ( unsigned portCHAR ) 0x0003 )
-#define mainPLL_FEED_BYTE1			( ( unsigned portCHAR ) 0xaa )
-#define mainPLL_FEED_BYTE2			( ( unsigned portCHAR ) 0x55 )
-#define mainPLL_LOCK				( ( unsigned portLONG ) 0x0400 )
+#define mainPLL_MUL_5				( ( unsigned char ) 0x0004 )
+#define mainPLL_DIV_1				( ( unsigned char ) 0x0000 )
+#define mainPLL_ENABLE				( ( unsigned char ) 0x0001 )
+#define mainPLL_CONNECT				( ( unsigned char ) 0x0003 )
+#define mainPLL_FEED_BYTE1			( ( unsigned char ) 0xaa )
+#define mainPLL_FEED_BYTE2			( ( unsigned char ) 0x55 )
+#define mainPLL_LOCK				( ( unsigned long ) 0x0400 )
 
 /* Constants to setup the MAM. */
-#define mainMAM_TIM_3				( ( unsigned portCHAR ) 0x03 )
-#define mainMAM_MODE_FULL			( ( unsigned portCHAR ) 0x02 )
+#define mainMAM_TIM_3				( ( unsigned char ) 0x03 )
+#define mainMAM_MODE_FULL			( ( unsigned char ) 0x02 )
 
 /* Constants to setup the peripheral bus. */
-#define mainBUS_CLK_FULL			( ( unsigned portCHAR ) 0x01 )
+#define mainBUS_CLK_FULL			( ( unsigned char ) 0x01 )
 
 /* And finally, constant to setup the port for the LED's. */
-#define mainLED_TO_OUTPUT			( ( unsigned portLONG ) 0xff0000 )
+#define mainLED_TO_OUTPUT			( ( unsigned long ) 0xff0000 )
 
 /*
  * The task that executes at the highest priority and calls
@@ -144,7 +145,7 @@ static void prvSetupHardware( void );
  * Checks that all the demo application tasks are still executing without error
  * - as described at the top of the file.
  */
-static portLONG prvCheckOtherTasksAreStillRunning( void );
+static long prvCheckOtherTasksAreStillRunning( void );
 
 
 /*-----------------------------------------------------------*/
@@ -254,9 +255,9 @@ portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 }
 /*-----------------------------------------------------------*/
 
-static portLONG prvCheckOtherTasksAreStillRunning( void )
+static long prvCheckOtherTasksAreStillRunning( void )
 {
-portLONG lReturn = ( portLONG ) pdPASS;
+long lReturn = ( long ) pdPASS;
 
 	/* Check all the demo tasks (other than the flash tasks) to ensure
 	that they are all still running, and that none of them have detected
@@ -264,32 +265,32 @@ portLONG lReturn = ( portLONG ) pdPASS;
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreComTestTasksStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	return lReturn;

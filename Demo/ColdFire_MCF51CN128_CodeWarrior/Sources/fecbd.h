@@ -29,9 +29,9 @@
 #pragma options align= packed
 typedef struct
 {
-    unsigned portSHORT status;  /* control and status */
-    unsigned portSHORT length;  /* transfer length */
-    unsigned portCHAR  *data;   /* buffer address */
+    unsigned short status;  /* control and status */
+    unsigned short length;  /* transfer length */
+    unsigned char  *data;   /* buffer address */
 } FECBD;
 
 /*
@@ -85,7 +85,7 @@ typedef struct
 int     fecbd_init(int, int, int);
 void    fecbd_flush(int);
 void    fecbd_dump( void );
-unsigned portLONG  fecbd_get_start(int, int);
+unsigned long  fecbd_get_start(int, int);
 FECBD*  fecbd_rx_alloc(int);
 FECBD*  fecbd_tx_alloc(int);
 FECBD*  fecbd_tx_free(int);

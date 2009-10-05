@@ -137,7 +137,7 @@ void ENET_MACControlConfig(ENET_MACConfig *MAC_Config)
 *******************************************************************************/
 portBASE_TYPE ENET_SetOperatingMode( void )
 {
-unsigned portLONG ulStatusReg, ulControlReg, ulLinkAbilityReg;
+unsigned long ulStatusReg, ulControlReg, ulLinkAbilityReg;
 
 	/* Link status is latched, so read twice to get current value */
 	ulStatusReg = ENET_MIIReadReg(0, STE100P_STATUS_REG);

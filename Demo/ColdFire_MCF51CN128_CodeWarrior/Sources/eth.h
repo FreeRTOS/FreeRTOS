@@ -30,10 +30,10 @@
 #define ETH_MTU         (ETH_HDR_LEN + ETH_MAX_DATA)
 
 /* Ethernet Addresses */
-typedef unsigned portCHAR ETH_ADDR[ETH_ADDR_LEN];
+typedef unsigned char ETH_ADDR[ETH_ADDR_LEN];
 
 /* 16-bit Ethernet Frame Type, ie. Protocol */
-typedef unsigned portSHORT ETH_FRM_TYPE;
+typedef unsigned short ETH_FRM_TYPE;
 
 /* Ethernet Frame Header definition */
 typedef struct
@@ -47,7 +47,7 @@ typedef struct
 typedef struct
 {
     ETH_HDR head;
-    unsigned portCHAR*  data;
+    unsigned char*  data;
 } ETH_FRAME;
 
 /*******************************************************************/

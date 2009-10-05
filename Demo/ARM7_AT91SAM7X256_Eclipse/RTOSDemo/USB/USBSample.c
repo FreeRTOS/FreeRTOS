@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -126,7 +127,7 @@ little odd. */
 
 /* Misc application definitions. */
 #define usbINTERRUPT_PRIORITY				( 3 )
-#define usbFIFO_LENGTH						( ( unsigned portLONG ) 8 )
+#define usbFIFO_LENGTH						( ( unsigned long ) 8 )
 #define usbXUP								( 1 )
 #define usbXDOWN							( 2 )
 #define usbYUP								( 3 )
@@ -136,9 +137,9 @@ little odd. */
 #define usbSHORTEST_DELAY					( ( portTickType ) 1 )
 #define usbINIT_DELAY						( ( portTickType ) 1000 / portTICK_RATE_MS )
 #define usbSHORT_DELAY						( ( portTickType ) 50 / portTICK_RATE_MS )
-#define usbEND_POINT_RESET_MASK				( ( unsigned portLONG ) 0x0f )
-#define usbDATA_INC							( ( portCHAR ) 5 )
-#define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned portLONG ) 8 )
+#define usbEND_POINT_RESET_MASK				( ( unsigned long ) 0x0f )
+#define usbDATA_INC							( ( char ) 5 )
+#define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned long ) 8 )
 
 /* Control request types. */
 #define usbSTANDARD_DEVICE_REQUEST			( 0 )
@@ -149,11 +150,11 @@ little odd. */
 /* Structure used to hold the received requests. */
 typedef struct 
 {
-	unsigned portCHAR ucReqType;
-	unsigned portCHAR ucRequest;
-	unsigned portSHORT usValue;
-	unsigned portSHORT usIndex;
-	unsigned portSHORT usLength;
+	unsigned char ucReqType;
+	unsigned char ucRequest;
+	unsigned short usValue;
+	unsigned short usIndex;
+	unsigned short usLength;
 } xUSB_REQUEST;
 
 typedef enum
@@ -169,9 +170,9 @@ typedef enum
 /* Structure used to control the data being sent to the host. */
 typedef struct
 {
-	unsigned portCHAR ucTxBuffer[ usbMAX_TX_MESSAGE_SIZE ];
-	unsigned portLONG ulNextCharIndex;
-	unsigned portLONG ulTotalDataLength;
+	unsigned char ucTxBuffer[ usbMAX_TX_MESSAGE_SIZE ];
+	unsigned long ulNextCharIndex;
+	unsigned long ulTotalDataLength;
 } xTX_MESSAGE;
 
 /*-----------------------------------------------------------*/
@@ -244,7 +245,7 @@ static void prvHandleClassInterfaceRequest( xUSB_REQUEST *pxRequest );
  * in response to TXCOMP interrupts until the entire buffer has been
  * sent.
  */
-static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT usRequestedLength, unsigned portLONG ulLengthLeftToSend, portLONG lSendingDescriptor );
+static void prvSendControlData( unsigned char *pucData, unsigned short usRequestedLength, unsigned long ulLengthLeftToSend, long lSendingDescriptor );
 
 /*
  * Examine the Tx buffer to see if there is any more data to be transmitted.
@@ -291,7 +292,7 @@ static void vUSBDemoTask( void *pvParameters );
  * Simple algorithm to ramp up the mouse cursor speed to make it easier to
  * use.
  */
-static void prvControlCursorSpeed( signed portCHAR *cVal, unsigned portLONG ulInput, unsigned portLONG ulSwitch1, unsigned portLONG ulSwitch2 );
+static void prvControlCursorSpeed( signed char *cVal, unsigned long ulInput, unsigned long ulSwitch1, unsigned long ulSwitch2 );
 /*-----------------------------------------------------------*/
 
 /*
@@ -307,14 +308,14 @@ These take the form:
 	Data
 }
 */
-const portCHAR pxLanguageStringDescriptor[] =
+const char pxLanguageStringDescriptor[] =
 {
 	4,
 	usbDESCRIPTOR_TYPE_STRING,
 	0x09, 0x04
 };
 
-const portCHAR pxManufacturerStringDescriptor[] = 
+const char pxManufacturerStringDescriptor[] = 
 {
 	18,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -329,7 +330,7 @@ const portCHAR pxManufacturerStringDescriptor[] =
 	'S', 0x00	
 };
 
-const portCHAR pxProductStringDescriptor[] = 
+const char pxProductStringDescriptor[] = 
 {
 	38,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -354,7 +355,7 @@ const portCHAR pxProductStringDescriptor[] =
 	'e', 0x00
 };
 
-const portCHAR pxConfigurationStringDescriptor[] = 
+const char pxConfigurationStringDescriptor[] = 
 {
 	38,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -379,7 +380,7 @@ const portCHAR pxConfigurationStringDescriptor[] =
 	'e', 0x00
 };
 
-const portCHAR pxInterfaceStringDescriptor[] = 
+const char pxInterfaceStringDescriptor[] = 
 {
 	30,
 	usbDESCRIPTOR_TYPE_STRING,
@@ -401,7 +402,7 @@ const portCHAR pxInterfaceStringDescriptor[] =
 };
 
 /* Enumeration descriptors. */
-const portCHAR pxReportDescriptor[] =
+const char pxReportDescriptor[] =
 {
 	0x05, 0x01,						/* USAGE_PAGE (Generic Desktop)			*/
 	0x09, 0x02,						/* USAGE (Mouse)						*/
@@ -496,8 +497,8 @@ const char pxConfigDescriptor[] = {
 /*-----------------------------------------------------------*/
 
 /* File scope state variables. */
-static unsigned portCHAR ucUSBConfig = ( unsigned portCHAR ) 0;
-static unsigned portLONG ulReceivedAddress = ( unsigned portLONG ) 0;
+static unsigned char ucUSBConfig = ( unsigned char ) 0;
+static unsigned long ulReceivedAddress = ( unsigned long ) 0;
 static eDRIVER_STATE eDriverState = eNOTHING;
 
 /* Structure used to control the characters being sent to the host. */
@@ -563,9 +564,9 @@ xISRStatus *pxMessage;
 }
 /*-----------------------------------------------------------*/
 
-static void prvControlCursorSpeed( signed portCHAR *cVal, unsigned portLONG ulInput, unsigned portLONG ulSwitch1, unsigned portLONG ulSwitch2 )
+static void prvControlCursorSpeed( signed char *cVal, unsigned long ulInput, unsigned long ulSwitch1, unsigned long ulSwitch2 )
 {
-const portCHAR cSpeed = 20;
+const char cSpeed = 20;
 
 	if( !( ulInput & ulSwitch1 ) )
 	{
@@ -609,8 +610,8 @@ const portCHAR cSpeed = 20;
 static void prvTransmitSampleValues( void )
 {
 /* Variables to hold dummy x, y and z joystick axis data. */
-static signed portCHAR x = 0, y = 0, z = 0;
-unsigned portLONG ulStatus;
+static signed char x = 0, y = 0, z = 0;
+unsigned long ulStatus;
 
 	ulStatus = 	AT91C_BASE_PIOA->PIO_PDSR;
 
@@ -642,7 +643,7 @@ unsigned portLONG ulStatus;
 
 static void prvUSBTransmitNull( void )
 {
-unsigned portLONG ulStatus;
+unsigned long ulStatus;
 
 	/* Wait until the FIFO is free - even though we are not going to use it.
 	THERE IS NO TIMEOUT HERE! */
@@ -669,7 +670,7 @@ unsigned portLONG ulStatus;
 
 static void prvSendStall( void )
 {
-unsigned portLONG ulStatus;
+unsigned long ulStatus;
 
 	portENTER_CRITICAL();
 	{
@@ -684,13 +685,13 @@ unsigned portLONG ulStatus;
 
 static void prvResetEndPoints( void )
 {
-unsigned portLONG ulTemp;
+unsigned long ulTemp;
 
 	eDriverState = eJUST_RESET;
 
 	/* Reset all the end points. */
 	AT91C_BASE_UDP->UDP_RSTEP  = usbEND_POINT_RESET_MASK;
-	AT91C_BASE_UDP->UDP_RSTEP  = ( unsigned portLONG ) 0x00;
+	AT91C_BASE_UDP->UDP_RSTEP  = ( unsigned long ) 0x00;
 
 	/* Enable data to be sent and received. */
 	AT91C_BASE_UDP->UDP_FADDR = AT91C_UDP_FEN;
@@ -699,7 +700,7 @@ unsigned portLONG ulTemp;
 	portENTER_CRITICAL();
 	{
 		ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ];
-		usbCSR_SET_BIT( &ulTemp, ( ( unsigned portLONG ) ( AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_CTRL ) ) );
+		usbCSR_SET_BIT( &ulTemp, ( ( unsigned long ) ( AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_CTRL ) ) );
 		AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] = ulTemp;
 		AT91C_BASE_UDP->UDP_IER = AT91C_UDP_EPINT0;
 	}
@@ -731,7 +732,7 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 			/* Read the end point for data transfer. */
 			portENTER_CRITICAL();
 			{
-				unsigned portLONG ulTemp;
+				unsigned long ulTemp;
 
 				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];					
 				usbCSR_SET_BIT( &ulTemp, AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_INT_IN );
@@ -746,7 +747,7 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 		{
 			/* We sent an acknowledgement of a SET_ADDRESS request.  Move
 			to the addressed state. */
-			if( ulReceivedAddress != ( unsigned portLONG ) 0 )
+			if( ulReceivedAddress != ( unsigned long ) 0 )
 			{			
 				AT91C_BASE_UDP->UDP_GLBSTATE = AT91C_UDP_FADDEN;
 			}
@@ -769,8 +770,8 @@ static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 	if( pxMessage->ulCSR0 & AT91C_UDP_RXSETUP )
 	{
 		xUSB_REQUEST xRequest;
-		unsigned portCHAR ucRequest;
-		unsigned portLONG ulRxBytes;
+		unsigned char ucRequest;
+		unsigned long ulRxBytes;
 
 		/* A data packet is available. */	
 		ulRxBytes = pxMessage->ulCSR0 >> 16;
@@ -840,11 +841,11 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 	switch( ( pxRequest->usValue & 0xff00 ) >> 8 )
 	{
 	    case usbDESCRIPTOR_TYPE_DEVICE:
-			prvSendControlData( ( unsigned portCHAR * ) &pxDeviceDescriptor, pxRequest->usLength, sizeof( pxDeviceDescriptor ), pdTRUE );
+			prvSendControlData( ( unsigned char * ) &pxDeviceDescriptor, pxRequest->usLength, sizeof( pxDeviceDescriptor ), pdTRUE );
 		    break;
 	
 	    case usbDESCRIPTOR_TYPE_CONFIGURATION:
-			prvSendControlData( ( unsigned portCHAR * ) &( pxConfigDescriptor ), pxRequest->usLength, sizeof( pxConfigDescriptor ), pdTRUE );
+			prvSendControlData( ( unsigned char * ) &( pxConfigDescriptor ), pxRequest->usLength, sizeof( pxConfigDescriptor ), pdTRUE );
 		    break;
 
 	    case usbDESCRIPTOR_TYPE_STRING:
@@ -853,23 +854,23 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 		    switch( pxRequest->usValue & 0xff )
 			{			
 		        case usbLANGUAGE_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxLanguageStringDescriptor, pxRequest->usLength, sizeof(pxLanguageStringDescriptor), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxLanguageStringDescriptor, pxRequest->usLength, sizeof(pxLanguageStringDescriptor), pdTRUE );
 			        break;
 
 		        case usbMANUFACTURER_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxManufacturerStringDescriptor, pxRequest->usLength, sizeof( pxManufacturerStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxManufacturerStringDescriptor, pxRequest->usLength, sizeof( pxManufacturerStringDescriptor ), pdTRUE );
 			        break;
 
 		        case usbPRODUCT_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxProductStringDescriptor, pxRequest->usLength, sizeof( pxProductStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxProductStringDescriptor, pxRequest->usLength, sizeof( pxProductStringDescriptor ), pdTRUE );
 			        break;
 
 		        case usbCONFIGURATION_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxConfigurationStringDescriptor, pxRequest->usLength, sizeof( pxConfigurationStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxConfigurationStringDescriptor, pxRequest->usLength, sizeof( pxConfigurationStringDescriptor ), pdTRUE );
 			        break;
 
 		        case usbINTERFACE_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxInterfaceStringDescriptor, pxRequest->usLength, sizeof( pxInterfaceStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxInterfaceStringDescriptor, pxRequest->usLength, sizeof( pxInterfaceStringDescriptor ), pdTRUE );
 			        break;
 
 		        default:
@@ -890,13 +891,13 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 
 static void prvHandleStandardDeviceRequest( xUSB_REQUEST *pxRequest )
 {
-unsigned portSHORT usStatus = 0;
+unsigned short usStatus = 0;
 
 	switch( pxRequest->ucRequest )
 	{
 	    case usbGET_STATUS_REQUEST:
 			/* Just send two byte dummy status. */
-			prvSendControlData( ( unsigned portCHAR * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
+			prvSendControlData( ( unsigned char * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
 		    break;
 
 	    case usbGET_DESCRIPTOR_REQUEST:
@@ -906,7 +907,7 @@ unsigned portSHORT usStatus = 0;
 
 	    case usbGET_CONFIGURATION_REQUEST:
 			/* Send selected device configuration */
-			prvSendControlData( ( unsigned portCHAR * ) &ucUSBConfig, sizeof( ucUSBConfig ), sizeof( ucUSBConfig ), pdFALSE );
+			prvSendControlData( ( unsigned char * ) &ucUSBConfig, sizeof( ucUSBConfig ), sizeof( ucUSBConfig ), pdFALSE );
 		    break;
 
 		case usbSET_FEATURE_REQUEST:
@@ -921,7 +922,7 @@ unsigned portSHORT usStatus = 0;
 			address and set our state so we know we have received the address. */
 	    	prvUSBTransmitNull();			
 			eDriverState = eJUST_GOT_ADDRESS;	    	
-			ulReceivedAddress = ( unsigned portLONG ) pxRequest->usValue;
+			ulReceivedAddress = ( unsigned long ) pxRequest->usValue;
 		    break;
 
 	    case usbSET_CONFIGURATION_REQUEST:
@@ -930,7 +931,7 @@ unsigned portSHORT usStatus = 0;
 			we cannot actually move to the configured state until we get a 
 			TXCOMP interrupt from this NULL packet.  Therefore we just remember the
 			config and set our state so we know we have received the go ahead. */			
-			ucUSBConfig = ( unsigned portCHAR ) ( pxRequest->usValue & 0xff );
+			ucUSBConfig = ( unsigned char ) ( pxRequest->usValue & 0xff );
 			eDriverState = eJUST_GOT_CONFIG;
 			prvUSBTransmitNull();
 		    break;
@@ -968,10 +969,10 @@ static void prvHandleClassInterfaceRequest( xUSB_REQUEST *pxRequest )
 
 static void prvGetStandardInterfaceDescriptor( xUSB_REQUEST *pxRequest )
 {
-	switch( ( pxRequest->usValue & ( unsigned portSHORT ) 0xff00 ) >> 8 )
+	switch( ( pxRequest->usValue & ( unsigned short ) 0xff00 ) >> 8 )
 	{
 	    case usbHID_REPORT_DESCRIPTOR:
-			prvSendControlData( ( unsigned portCHAR * ) pxReportDescriptor, pxRequest->usLength, sizeof( pxReportDescriptor ), pdTRUE );
+			prvSendControlData( ( unsigned char * ) pxReportDescriptor, pxRequest->usLength, sizeof( pxReportDescriptor ), pdTRUE );
 		    break;
 
 	    default:
@@ -985,13 +986,13 @@ static void prvGetStandardInterfaceDescriptor( xUSB_REQUEST *pxRequest )
 
 static void prvHandleStandardInterfaceRequest( xUSB_REQUEST *pxRequest )
 {
-unsigned portSHORT usStatus = 0;
+unsigned short usStatus = 0;
 
 	switch( pxRequest->ucRequest )
 	{
 	    case usbGET_STATUS_REQUEST:
 			/* Send dummy 2 bytes. */
-			prvSendControlData( ( unsigned portCHAR * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
+			prvSendControlData( ( unsigned char * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
 			break;
 
 	    case usbGET_DESCRIPTOR_REQUEST:
@@ -1028,11 +1029,11 @@ static void prvHandleStandardEndPointRequest( xUSB_REQUEST *pxRequest )
 
 static void vInitUSBInterface( void )
 {
-volatile unsigned portLONG ulTemp;
+volatile unsigned long ulTemp;
 
 	/* Initialise a few state variables. */
-	pxCharsForTx.ulNextCharIndex = ( unsigned portLONG ) 0;
-	ucUSBConfig = ( unsigned portCHAR ) 0;
+	pxCharsForTx.ulNextCharIndex = ( unsigned long ) 0;
+	ucUSBConfig = ( unsigned char ) 0;
 	eDriverState = eNOTHING;
 
 	/* HARDWARE SETUP */
@@ -1056,10 +1057,10 @@ volatile unsigned portLONG ulTemp;
 	/* When using the USB debugger the peripheral registers do not always get
 	set to the correct default values.  To make sure set the relevant registers
 	manually here. */
-	AT91C_BASE_UDP->UDP_IDR = ( unsigned portLONG ) 0xffffffff;
-	AT91C_BASE_UDP->UDP_ICR = ( unsigned portLONG ) 0xffffffff;
-	AT91C_BASE_UDP->UDP_CSR[ 0 ] = ( unsigned portLONG ) 0x00;
-	AT91C_BASE_UDP->UDP_CSR[ 1 ] = ( unsigned portLONG ) 0x00;
+	AT91C_BASE_UDP->UDP_IDR = ( unsigned long ) 0xffffffff;
+	AT91C_BASE_UDP->UDP_ICR = ( unsigned long ) 0xffffffff;
+	AT91C_BASE_UDP->UDP_CSR[ 0 ] = ( unsigned long ) 0x00;
+	AT91C_BASE_UDP->UDP_CSR[ 1 ] = ( unsigned long ) 0x00;
 	AT91C_BASE_UDP->UDP_GLBSTATE = 0;
 	AT91C_BASE_UDP->UDP_FADDR = 0;
 
@@ -1077,14 +1078,14 @@ volatile unsigned portLONG ulTemp;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT usRequestedLength, unsigned portLONG ulLengthToSend, portLONG lSendingDescriptor )
+static void prvSendControlData( unsigned char *pucData, unsigned short usRequestedLength, unsigned long ulLengthToSend, long lSendingDescriptor )
 {
-	if( ( ( unsigned portLONG ) usRequestedLength < ulLengthToSend ) )
+	if( ( ( unsigned long ) usRequestedLength < ulLengthToSend ) )
 	{
 		/* Cap the data length to that requested. */
-		ulLengthToSend = ( unsigned portSHORT ) usRequestedLength;
+		ulLengthToSend = ( unsigned short ) usRequestedLength;
 	}
-	else if( ( ulLengthToSend < ( unsigned portLONG ) usRequestedLength ) && lSendingDescriptor )
+	else if( ( ulLengthToSend < ( unsigned long ) usRequestedLength ) && lSendingDescriptor )
 	{
 		/* We are sending a descriptor.  If the descriptor is an exact 
 		multiple of the FIFO length then it will have to be terminated
@@ -1106,7 +1107,7 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 	/* Reinitialise the buffer index so we start sending from the start of 
 	the data. */
 	pxCharsForTx.ulTotalDataLength = ulLengthToSend;
-	pxCharsForTx.ulNextCharIndex = ( unsigned portLONG ) 0;
+	pxCharsForTx.ulNextCharIndex = ( unsigned long ) 0;
 
 	/* Send the first 8 bytes now.  The rest will get sent in response to 
 	TXCOMP interrupts. */
@@ -1116,7 +1117,7 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 
 static void prvSendNextSegment( void )
 {
-volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
+volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 
 	/* Is there any data to send? */
 	if( pxCharsForTx.ulTotalDataLength > pxCharsForTx.ulNextCharIndex )
@@ -1141,7 +1142,7 @@ volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
 		}
 
 		/* Write the data to the FIFO. */
-		while( ulNextLength > ( unsigned portLONG ) 0 )
+		while( ulNextLength > ( unsigned long ) 0 )
 		{
 			AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ] = pxCharsForTx.ucTxBuffer[ pxCharsForTx.ulNextCharIndex ];
 	
@@ -1153,7 +1154,7 @@ volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
 		portENTER_CRITICAL();
 		{
 			ulStatus = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ];
-			usbCSR_SET_BIT( &ulStatus, ( ( unsigned portLONG ) 0x10 ) );
+			usbCSR_SET_BIT( &ulStatus, ( ( unsigned long ) 0x10 ) );
 			AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] = ulStatus;
 		}
 		portEXIT_CRITICAL();

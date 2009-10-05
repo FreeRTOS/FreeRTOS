@@ -40,7 +40,7 @@
 
 /* Message queue constants. */
 #define archMESG_QUEUE_LENGTH	( 6 )
-#define archPOST_BLOCK_TIME_MS	( ( unsigned portLONG ) 10000 )
+#define archPOST_BLOCK_TIME_MS	( ( unsigned long ) 10000 )
 
 struct timeoutlist
 {
@@ -329,7 +329,7 @@ sys_thread_t sys_thread_new(void (* thread)(void *arg), void *arg, int prio)
 xTaskHandle CreatedTask;
 int result;
 
-	result = xTaskCreate(thread, ( signed portCHAR * ) s_sys_arch_state.cTaskName, s_sys_arch_state.nStackDepth, arg, prio, &CreatedTask );
+	result = xTaskCreate(thread, ( signed char * ) s_sys_arch_state.cTaskName, s_sys_arch_state.nStackDepth, arg, prio, &CreatedTask );
 
 	// For each task created, store the task handle (pid) in the timers array.
 	// This scheme doesn't allow for threads to be deleted
@@ -384,7 +384,7 @@ void sys_set_default_state()
 	sprintf(s_sys_arch_state.cTaskName, "thread%d", s_sys_arch_state.nTaskCount);
 }
 
-void sys_set_state(signed portCHAR *pTaskName, unsigned portSHORT nStackSize)
+void sys_set_state(signed char *pTaskName, unsigned short nStackSize)
 {
 	s_sys_arch_state.nStackDepth = nStackSize;
 	sprintf(s_sys_arch_state.cTaskName, "%s", pTaskName);

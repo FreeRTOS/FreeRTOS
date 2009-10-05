@@ -37,7 +37,7 @@
 void vInitFEC( void );
 
 /* Receive any data into the uip_buf array. */
-unsigned portLONG ulFECRx( void );
+unsigned long ulFECRx( void );
 
 /* Transmit the uip_buf array. */
 void vFECTx( void );

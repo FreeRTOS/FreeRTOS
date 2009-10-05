@@ -65,7 +65,7 @@
 #define configPBA_CLOCK_HZ        ( FOSC0 )
 #define configTICK_RATE_HZ        ( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES      ( ( unsigned portBASE_TYPE ) 8 )
-#define configMINIMAL_STACK_SIZE  ( ( unsigned portSHORT ) 128 )
+#define configMINIMAL_STACK_SIZE  ( ( unsigned short ) 128 )
 /* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
 #define configTOTAL_HEAP_SIZE     ( ( size_t ) ( 1024*25 ) )
 #define configMAX_TASK_NAME_LEN   ( 16 )

@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -130,7 +131,7 @@
 #define mainLCD_DELAY				( 20 / portTICK_RATE_MS )
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE		( ( unsigned portLONG ) 115200 )
+#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
 #define mainCOM_TEST_LED			( 3 )
 
 /* The maximum number of messages that can be pending to be written to the LCD. */
@@ -142,7 +143,7 @@
 /* The structure that is passed on the LCD message queue. */
 typedef struct
 {
-	portCHAR **ppcMessageToDisplay; /*<< Points to a char* pointing to the message to display. */
+	char **ppcMessageToDisplay; /*<< Points to a char* pointing to the message to display. */
 	portBASE_TYPE xRow;				/*<< The row on which the message should be displayed. */
 } xLCDMessage;
 /*-----------------------------------------------------------*/
@@ -190,7 +191,7 @@ static void prvLCDMessageTask( void * pvParameters );
 static xQueueHandle xLCDQueue;
 
 /* Error status flag. */
-static unsigned portLONG ulErrorFlags = 0;
+static unsigned long ulErrorFlags = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -235,7 +236,7 @@ void main( void )
 	#ifdef STACK_LWIP	
 		/* Create the lwIP task.  This uses the lwIP RTOS abstraction layer.*/
 	  	vlwIPInit();
-		sys_set_state(	( signed portCHAR * ) "httpd", lwipBASIC_SERVER_STACK_SIZE );
+		sys_set_state(	( signed char * ) "httpd", lwipBASIC_SERVER_STACK_SIZE );
 	  	sys_thread_new( vBasicWEBServer, ( void * ) NULL, basicwebWEBSERVER_PRIORITY );
 		sys_set_default_state();
 	#endif
@@ -293,11 +294,11 @@ static void prvSetupHardware( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-static portCHAR cCheckVal[ mainMAX_FLAG_STRING_LEN ];
-portCHAR *pcFlagString;
+static char cCheckVal[ mainMAX_FLAG_STRING_LEN ];
+char *pcFlagString;
 xLCDMessage xMessageToSend;
 portTickType xLastWakeTime;
-portCHAR *pcStringsToDisplay[] = {										
+char *pcStringsToDisplay[] = {										
 									"Check status flag"
 								 };
 
@@ -393,7 +394,7 @@ xLCDMessage xMessageToSend;
 portBASE_TYPE xIndex = 0;
 
 /* The strings that are written to the LCD. */
-portCHAR *pcStringsToDisplay[] = {										
+char *pcStringsToDisplay[] = {										
 									"IAR             ",
 									"STR912          ",
 									"Demo            ",
@@ -436,7 +437,7 @@ void prvLCDTask( void * pvParameters )
 {
 xQueueHandle *pxLCDQueue;
 xLCDMessage xReceivedMessage;
-portCHAR *pcString;
+char *pcString;
 
 	/* To test the parameter passing mechanism, the queue on which messages are
 	received is passed in as a parameter even though it is available as a file

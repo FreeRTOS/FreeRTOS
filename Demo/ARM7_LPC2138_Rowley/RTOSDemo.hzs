@@ -50,9 +50,9 @@
  </Watch3>
  <Watch4>
   <Watches active="0" update="Never" >
-   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="16" name="pxMutex" expression="pxMutex" filename="" />
-   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="pxCurrentTCB" expression="pxCurrentTCB" filename="" />
    <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="(xQUEUE *)xMutex" expression="(xQUEUE *)xMutex" filename="" />
+   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="-1" name="pxCurrentTCB" expression="pxCurrentTCB" filename="" />
+   <Watchpoint evalMode="1" linenumber="0" evalType="1" radix="16" name="pxMutex" expression="pxMutex" filename="" />
   </Watches>
  </Watch4>
  <Files>

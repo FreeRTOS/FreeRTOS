@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 
@@ -64,27 +65,27 @@
 /*-----------------------------------------------------------*/
 
 /* Constants to setup and access the UART. */
-#define serDLAB							( ( unsigned portCHAR ) 0x80 )
-#define serENABLE_INTERRUPTS			( ( unsigned portCHAR ) 0x03 )
-#define serNO_PARITY					( ( unsigned portCHAR ) 0x00 )
-#define ser1_STOP_BIT					( ( unsigned portCHAR ) 0x00 )
-#define ser8_BIT_CHARS					( ( unsigned portCHAR ) 0x03 )
-#define serFIFO_ON						( ( unsigned portCHAR ) 0x01 )
-#define serCLEAR_FIFO					( ( unsigned portCHAR ) 0x06 )
-#define serWANTED_CLOCK_SCALING			( ( unsigned portLONG ) 16 )
+#define serDLAB							( ( unsigned char ) 0x80 )
+#define serENABLE_INTERRUPTS			( ( unsigned char ) 0x03 )
+#define serNO_PARITY					( ( unsigned char ) 0x00 )
+#define ser1_STOP_BIT					( ( unsigned char ) 0x00 )
+#define ser8_BIT_CHARS					( ( unsigned char ) 0x03 )
+#define serFIFO_ON						( ( unsigned char ) 0x01 )
+#define serCLEAR_FIFO					( ( unsigned char ) 0x06 )
+#define serWANTED_CLOCK_SCALING			( ( unsigned long ) 16 )
 
 /* Constants to setup and access the VIC. */
-#define serU0VIC_CHANNEL				( ( unsigned portLONG ) 0x0006 )
-#define serU0VIC_CHANNEL_BIT			( ( unsigned portLONG ) 0x0040 )
-#define serU0VIC_ENABLE					( ( unsigned portLONG ) 0x0020 )
-#define serCLEAR_VIC_INTERRUPT			( ( unsigned portLONG ) 0 )
+#define serU0VIC_CHANNEL				( ( unsigned long ) 0x0006 )
+#define serU0VIC_CHANNEL_BIT			( ( unsigned long ) 0x0040 )
+#define serU0VIC_ENABLE					( ( unsigned long ) 0x0020 )
+#define serCLEAR_VIC_INTERRUPT			( ( unsigned long ) 0 )
 
 /* Constants to determine the ISR source. */
-#define serSOURCE_THRE					( ( unsigned portCHAR ) 0x02 )
-#define serSOURCE_RX_TIMEOUT			( ( unsigned portCHAR ) 0x0c )
-#define serSOURCE_ERROR					( ( unsigned portCHAR ) 0x06 )
-#define serSOURCE_RX					( ( unsigned portCHAR ) 0x04 )
-#define serINTERRUPT_SOURCE_MASK		( ( unsigned portCHAR ) 0x0f )
+#define serSOURCE_THRE					( ( unsigned char ) 0x02 )
+#define serSOURCE_RX_TIMEOUT			( ( unsigned char ) 0x0c )
+#define serSOURCE_ERROR					( ( unsigned char ) 0x06 )
+#define serSOURCE_RX					( ( unsigned char ) 0x04 )
+#define serINTERRUPT_SOURCE_MASK		( ( unsigned char ) 0x0f )
 
 /* Misc. */
 #define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
@@ -97,7 +98,7 @@
 transmitted. */
 static xQueueHandle xRxedChars;
 static xQueueHandle xCharsForTx;
-static volatile portLONG lTHREEmpty = pdFALSE;
+static volatile long lTHREEmpty = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -108,15 +109,15 @@ __arm void vSerialISR( void );
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-unsigned portLONG ulDivisor, ulWantedClock;
+unsigned long ulDivisor, ulWantedClock;
 xComPortHandle xReturn = serHANDLE;
 extern void ( vSerialISREntry) ( void );
 
 	/* Create the queues used to hold Rx and Tx characters. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 	/* Initialise the THRE empty flag. */
 	lTHREEmpty = pdTRUE;
@@ -124,7 +125,7 @@ extern void ( vSerialISREntry) ( void );
 	if(
 		( xRxedChars != serINVALID_QUEUE ) &&
 		( xCharsForTx != serINVALID_QUEUE ) &&
-		( ulWantedBaud != ( unsigned portLONG ) 0 )
+		( ulWantedBaud != ( unsigned long ) 0 )
 	  )
 	{
 		portENTER_CRITICAL();
@@ -137,9 +138,9 @@ extern void ( vSerialISREntry) ( void );
 			U0LCR |= serDLAB;
 
 			/* Setup the divisor. */
-			U0DLL = ( unsigned portCHAR ) ( ulDivisor & ( unsigned portLONG ) 0xff );
+			U0DLL = ( unsigned char ) ( ulDivisor & ( unsigned long ) 0xff );
 			ulDivisor >>= 8;
-			U0DLM = ( unsigned portCHAR ) ( ulDivisor & ( unsigned portLONG ) 0xff );
+			U0DLM = ( unsigned char ) ( ulDivisor & ( unsigned long ) 0xff );
 
 			/* Turn on the FIFO's and clear the buffers. */
 			U0FCR = ( serFIFO_ON | serCLEAR_FIFO );
@@ -150,7 +151,7 @@ extern void ( vSerialISREntry) ( void );
 			/* Setup the VIC for the UART. */
 			VICIntSelect &= ~( serU0VIC_CHANNEL_BIT );
 			VICIntEnable |= serU0VIC_CHANNEL_BIT;
-			VICVectAddr1 = ( unsigned portLONG ) vSerialISREntry;
+			VICVectAddr1 = ( unsigned long ) vSerialISREntry;
 			VICVectCntl1 = serU0VIC_CHANNEL | serU0VIC_ENABLE;
 
 			/* Enable UART0 interrupts. */
@@ -169,7 +170,7 @@ extern void ( vSerialISREntry) ( void );
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* The port handle is not required as this driver only supports UART0. */
 	( void ) pxPort;
@@ -187,9 +188,9 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed portCHAR * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
-signed portCHAR *pxNext;
+signed char *pxNext;
 
 	/* NOTE: This implementation does not handle the queue being full as no
 	block time is used! */
@@ -199,7 +200,7 @@ signed portCHAR *pxNext;
 	( void ) usStringLength;
 
 	/* Send each character in the string, one at a time. */
-	pxNext = ( signed portCHAR * ) pcString;
+	pxNext = ( signed char * ) pcString;
 	while( *pxNext )
 	{
 		xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
@@ -208,7 +209,7 @@ signed portCHAR *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 
@@ -218,7 +219,7 @@ signed portBASE_TYPE xReturn;
 	portENTER_CRITICAL();
 	{
 		/* Is there space to write directly to the UART? */
-		if( lTHREEmpty == ( portLONG ) pdTRUE )
+		if( lTHREEmpty == ( long ) pdTRUE )
 		{
 			/* We wrote the character directly to the UART, so was
 			successful. */
@@ -238,7 +239,7 @@ signed portBASE_TYPE xReturn;
 			were blocked waiting to post interrupts were not disabled.  It is
 			possible that the serial ISR has emptied the Tx queue, in which
 			case we need to start the Tx off again. */
-			if( lTHREEmpty == ( portLONG ) pdTRUE )
+			if( lTHREEmpty == ( long ) pdTRUE )
 			{
 				xQueueReceive( xCharsForTx, &cOutChar, serNO_BLOCK );
 				lTHREEmpty = pdFALSE;
@@ -254,7 +255,7 @@ signed portBASE_TYPE xReturn;
 
 __arm void vSerialISR( void )
 {
-signed portCHAR cChar;
+signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */

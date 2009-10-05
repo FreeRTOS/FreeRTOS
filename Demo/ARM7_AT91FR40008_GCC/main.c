@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /* 
@@ -105,7 +106,7 @@
 /*-----------------------------------------------------------*/
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE	( ( unsigned portLONG ) 115200 )
+#define mainCOM_TEST_BAUD_RATE	( ( unsigned long ) 115200 )
 #define mainCOM_TEST_LED		( 5 )
 
 /* Priorities for the demo application tasks. */
@@ -120,10 +121,10 @@
 error. */
 #define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
-#define mainON_BOARD_LED_BIT		( ( unsigned portLONG ) 7 )
+#define mainON_BOARD_LED_BIT		( ( unsigned long ) 7 )
 
 /* Constants used by the vMemCheckTask() task. */
-#define mainCOUNT_INITIAL_VALUE		( ( unsigned portLONG ) 0 )
+#define mainCOUNT_INITIAL_VALUE		( ( unsigned long ) 0 )
 #define mainNO_TASK					( 0 )
 
 /* The size of the memory blocks allocated by the vMemCheckTask() task. */
@@ -132,7 +133,7 @@ error. */
 #define mainMEM_CHECK_SIZE_3		( ( size_t ) 151 )
 
 #define MAX_WAIT_STATES  8
-static const unsigned portLONG ululCSRWaitValues[ MAX_WAIT_STATES + 1 ] =
+static const unsigned long ululCSRWaitValues[ MAX_WAIT_STATES + 1 ] =
 {
 	WaitState1,/* There is no "zero wait state" value, so use one wait state */
 	WaitState1,
@@ -150,7 +151,7 @@ static const unsigned portLONG ululCSRWaitValues[ MAX_WAIT_STATES + 1 ] =
  * Checks that all the demo application tasks are still executing without error
  * - as described at the top of the file.
  */
-static portLONG prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount );
+static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount );
 
 /*
  * The task that executes at the highest priority and calls 
@@ -193,7 +194,7 @@ int main( void )
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
 	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Now all the tasks have been started - start the scheduler.
 
@@ -212,7 +213,7 @@ int main( void )
 static void vErrorChecks( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
-unsigned portLONG ulMemCheckTaskRunningCount;
+unsigned long ulMemCheckTaskRunningCount;
 xTaskHandle xCreatedTask;
 
 	/* Just to stop compiler warnings. */
@@ -238,7 +239,7 @@ xTaskHandle xCreatedTask;
 		/* Dynamically create a task - passing ulMemCheckTaskRunningCount as a 
 		parameter. */
 		ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;		
-		if( xTaskCreate( vMemCheckTask, ( signed portCHAR * ) "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
+		if( xTaskCreate( vMemCheckTask, ( signed char * ) "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
 		{
 			/* Could not create the task - we have probably run out of heap. */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
@@ -271,13 +272,13 @@ xTaskHandle xCreatedTask;
 
 static void prvSetupHardware( void )
 {
-portLONG lCount;
+long lCount;
 
 	#ifdef RUN_FROM_ROM
 	{
 	portFLOAT nsecsPerClockTick;
-	portLONG lNumWaitStates;
-	unsigned portLONG ulCSRWaitValue;
+	long lNumWaitStates;
+	unsigned long ulCSRWaitValue;
 
 		/* We are compiling to run from ROM (either on-chip or off-chip flash).
 		Leave the RAM/flash mapped the way they are on reset
@@ -289,7 +290,7 @@ portLONG lCount;
 		based on constants.  But the compiler should still produce
 		a correct wait state register value. */
 		nsecsPerClockTick = ( portFLOAT ) 1000000000 / configCPU_CLOCK_HZ;
-		lNumWaitStates = ( portLONG )( ( configFLASH_SPEED_NSEC / nsecsPerClockTick ) + 0.5 ) - 1;
+		lNumWaitStates = ( long )( ( configFLASH_SPEED_NSEC / nsecsPerClockTick ) + 0.5 ) - 1;
 
 		if( lNumWaitStates < 0 )
 		{
@@ -346,9 +347,9 @@ portLONG lCount;
 }
 /*-----------------------------------------------------------*/
 
-static portLONG prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount )
+static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount )
 {
-portLONG lReturn = ( portLONG ) pdPASS;
+long lReturn = ( long ) pdPASS;
 
 	/* Check all the demo tasks (other than the flash tasks) to ensure
 	that they are all still running, and that none of them have detected
@@ -356,44 +357,44 @@ portLONG lReturn = ( portLONG ) pdPASS;
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreComTestTasksStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreMathsTaskStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	if( ulMemCheckTaskCount == mainCOUNT_INITIAL_VALUE )
 	{
 		/* The vMemCheckTask did not increment the counter - it must
 		have failed. */
-		lReturn = ( portLONG ) pdFAIL;
+		lReturn = ( long ) pdFAIL;
 	}
 
 	return lReturn;
@@ -402,9 +403,9 @@ portLONG lReturn = ( portLONG ) pdPASS;
 
 static void vMemCheckTask( void *pvParameters )
 {
-unsigned portLONG *pulMemCheckTaskRunningCounter;
+unsigned long *pulMemCheckTaskRunningCounter;
 void *pvMem1, *pvMem2, *pvMem3;
-static portLONG lErrorOccurred = pdFALSE;
+static long lErrorOccurred = pdFALSE;
 
 	/* This task is dynamically created then deleted during each cycle of the
 	vErrorChecks task to check the operation of the memory allocator.  Each time
@@ -417,7 +418,7 @@ static portLONG lErrorOccurred = pdFALSE;
 	pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
 	vErrorChecks() task that this task is still executing without error. */
 
-	pulMemCheckTaskRunningCounter = ( unsigned portLONG * ) pvParameters;
+	pulMemCheckTaskRunningCounter = ( unsigned long * ) pvParameters;
 
 	for( ;; )
 	{

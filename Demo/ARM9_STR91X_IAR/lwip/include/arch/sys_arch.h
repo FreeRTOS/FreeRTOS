@@ -48,15 +48,15 @@ typedef xTaskHandle sys_thread_t;
 typedef struct _sys_arch_state_t
 {
 	// Task creation data.
-	portCHAR cTaskName[configMAX_TASK_NAME_LEN];
-	unsigned portSHORT nStackDepth;
+	char cTaskName[configMAX_TASK_NAME_LEN];
+	unsigned short nStackDepth;
 	unsigned short nTaskCount;
 } sys_arch_state_t;
 
 //extern sys_arch_state_t s_sys_arch_state;
 
 void sys_set_default_state();
-void sys_set_state(signed portCHAR *pTaskName, unsigned portSHORT nStackSize);
+void sys_set_state(signed char *pTaskName, unsigned short nStackSize);
 
 #endif /* __SYS_RTXC_H__ */
 

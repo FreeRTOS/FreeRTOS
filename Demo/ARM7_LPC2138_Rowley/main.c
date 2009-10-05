@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -96,7 +97,7 @@
 #include "semtest.h"
 
 /* Hardware configuration definitions. */
-#define mainBUS_CLK_FULL					( ( unsigned portCHAR ) 0x01 )
+#define mainBUS_CLK_FULL					( ( unsigned char ) 0x01 )
 #define mainLED_BIT							0x80000000
 #define mainP0_14__EINT_1					( 2 << 28 )
 #define mainEINT_1_EDGE_SENSITIVE			2
@@ -175,7 +176,7 @@ int main( void )
 	VPBDIV = mainBUS_CLK_FULL;
 
 	/* Create the queue used to pass message to vPrintTask. */
-	xPrintQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( portCHAR * ) );
+	xPrintQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( char * ) );
 
 	/* Create the semaphore used to wake vButtonHandlerTask(). */
 	vSemaphoreCreateBinary( xButtonSemaphore );
@@ -244,8 +245,8 @@ static void vCheckTask( void *pvParameters )
 {
 portBASE_TYPE xErrorOccurred = pdFALSE;
 portTickType xLastExecutionTime;
-const portCHAR * const pcPassMessage = "PASS\n";
-const portCHAR * const pcFailMessage = "FAIL\n";
+const char * const pcPassMessage = "PASS\n";
+const char * const pcFailMessage = "FAIL\n";
 
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
@@ -319,7 +320,7 @@ const portCHAR * const pcFailMessage = "FAIL\n";
 
 static void vPrintTask( void *pvParameters )
 {
-portCHAR *pcMessage;
+char *pcMessage;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
@@ -339,9 +340,9 @@ portCHAR *pcMessage;
 
 static void vButtonHandlerTask( void *pvParameters )
 {
-static signed portCHAR cListBuffer[ mainLIST_BUFFER_SIZE ];
-const signed portCHAR *pcList = &( cListBuffer[ 0 ] );
-const portCHAR * const pcHeader = "\nTask          State  Priority  Stack	#\n************************************************";
+static signed char cListBuffer[ mainLIST_BUFFER_SIZE ];
+const signed char *pcList = &( cListBuffer[ 0 ] );
+const char * const pcHeader = "\nTask          State  Priority  Stack	#\n************************************************";
 extern void (vButtonISRWrapper) ( void );
 
 	/* Just to stop compiler warnings. */
@@ -358,7 +359,7 @@ extern void (vButtonISRWrapper) ( void );
 		/* Setup the VIC for EINT 1. */
 		VICIntSelect &= ~mainEINT_1_VIC_CHANNEL_BIT;
 		VICIntEnable |= mainEINT_1_VIC_CHANNEL_BIT;
-		VICVectAddr1 = ( portLONG ) vButtonISRWrapper;
+		VICVectAddr1 = ( long ) vButtonISRWrapper;
 		VICVectCntl1 = mainEINT_1_ENABLE_BIT | mainEINT_1_CHANNEL;
 	}
 	portEXIT_CRITICAL();
@@ -384,7 +385,7 @@ extern void (vButtonISRWrapper) ( void );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
 	/* Check pcTaskName for the name of the offending task, or pxCurrentTCB
 	if pcTaskName has itself been corrupted. */

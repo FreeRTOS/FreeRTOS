@@ -131,7 +131,7 @@ static void low_level_init(struct netif *netif)
   portEXIT_CRITICAL();
 
   /* Create the task that handles the EMAC. */
-  xTaskCreate( ethernetif_input, ( signed portCHAR * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
+  xTaskCreate( ethernetif_input, ( signed char * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
 }	
 
 

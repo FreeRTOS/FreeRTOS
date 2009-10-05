@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under
-	the terms of the GNU General Public License (version 2) as published by the
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the
-	source code for proprietary components outside of the FreeRTOS kernel.
-	Alternative commercial license and support terms are also available upon
-	request.  See the licensing section of http://www.FreeRTOS.org for full
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /* Kernel includes. */
@@ -87,16 +88,16 @@ xSemaphoreHandle xMACInterruptSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers. */
-unsigned portCHAR *uip_buf;
+unsigned char *uip_buf;
 
 /* Buffers into which Rx data is placed. */
-static unsigned portCHAR ucRxBuffers[ emacNUM_RX_BUFFERS ][ UIP_BUFSIZE + ( 4 * emacFRAM_SIZE_BYTES ) ] __attribute__((aligned(4)));
+static unsigned char ucRxBuffers[ emacNUM_RX_BUFFERS ][ UIP_BUFSIZE + ( 4 * emacFRAM_SIZE_BYTES ) ] __attribute__((aligned(4)));
 
 /* The length of the data within each of the Rx buffers. */
-static unsigned portLONG ulRxLength[ emacNUM_RX_BUFFERS ];
+static unsigned long ulRxLength[ emacNUM_RX_BUFFERS ];
 
 /* Used to keep a track of the number of bytes to transmit. */
-static unsigned portLONG ulNextTxSpace;
+static unsigned long ulNextTxSpace;
 
 /*-----------------------------------------------------------*/
 
@@ -127,7 +128,7 @@ portBASE_TYPE xReturn;
 	task level. */
 	vSemaphoreCreateBinary( xMACInterruptSemaphore );
 	xSemaphoreTake( xMACInterruptSemaphore, 0 );
-	xReturn = xTaskCreate( vMACHandleTask, ( signed portCHAR * ) "MAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+	xReturn = xTaskCreate( vMACHandleTask, ( signed char * ) "MAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 	vTaskDelay( macNEGOTIATE_DELAY );
 
 	/* We are only interested in Rx interrupts. */
@@ -172,7 +173,7 @@ void vInitialiseSend( void )
 }
 /*-----------------------------------------------------------*/
 
-void vIncrementTxLength( unsigned portLONG ulLength )
+void vIncrementTxLength( unsigned long ulLength )
 {
 	ulNextTxSpace += ulLength;
 }
@@ -181,11 +182,11 @@ void vIncrementTxLength( unsigned portLONG ulLength )
 void vSendBufferToMAC( void )
 {
 unsigned long *pulSource;
-unsigned portSHORT * pus;
-unsigned portLONG ulNextWord;
+unsigned short * pus;
+unsigned long ulNextWord;
 
 	/* Locate the data to be send. */
-	pus = ( unsigned portSHORT * ) uip_buf;
+	pus = ( unsigned short * ) uip_buf;
 
 	/* Add in the size of the data. */
 	pus--;
@@ -197,9 +198,9 @@ unsigned portLONG ulNextWord;
 		vTaskDelay( macWAIT_SEND_TIME );
     }
 
-	pulSource = ( unsigned portLONG * ) pus;
+	pulSource = ( unsigned long * ) pus;
 
-	for( ulNextWord = 0; ulNextWord < ulNextTxSpace; ulNextWord += sizeof( unsigned portLONG ) )
+	for( ulNextWord = 0; ulNextWord < ulNextTxSpace; ulNextWord += sizeof( unsigned long ) )
 	{
        	HWREG(ETH_BASE + MAC_O_DATA) = *pulSource;
 		pulSource++;
@@ -213,7 +214,7 @@ unsigned portLONG ulNextWord;
 void vEMAC_ISR( void )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-unsigned portLONG ulTemp;
+unsigned long ulTemp;
 
 	/* Clear the interrupt. */
 	ulTemp = EthernetIntStatus( ETH_BASE, pdFALSE );
@@ -234,9 +235,9 @@ unsigned portLONG ulTemp;
 void vMACHandleTask( void *pvParameters )
 {
 unsigned long ulLen = 0, i;
-unsigned portLONG ulLength, ulInt;
+unsigned long ulLength, ulInt;
 unsigned long *pulBuffer;
-static unsigned portLONG ulNextRxBuffer = 0;
+static unsigned long ulNextRxBuffer = 0;
 portBASE_TYPE xSwitchRequired = pdFALSE;
 
 	for( ;; )
@@ -268,7 +269,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 				}
 
 				/* Read out the data into our buffer. */
-				for( i = 0; i < ulLength; i += sizeof( unsigned portLONG ) )
+				for( i = 0; i < ulLength; i += sizeof( unsigned long ) )
 				{
 					*pulBuffer = HWREG( ETH_BASE + MAC_O_DATA );
 					pulBuffer++;

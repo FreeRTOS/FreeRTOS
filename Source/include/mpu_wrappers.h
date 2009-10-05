@@ -99,6 +99,8 @@ only for ports that are using the MPU. */
 
 		#define pvPortMalloc					MPU_pvPortMalloc
 		#define vPortFree						MPU_vPortFree
+		#define xPortGetFreeHeapSize			MPU_xPortGetFreeHeapSize
+		#define vPortInitialiseBlocks			MPU_vPortInitialiseBlocks
 
 		/* Remove the privileged function macro. */
 		#define PRIVILEGED_FUNCTION

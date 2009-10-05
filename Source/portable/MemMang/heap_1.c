@@ -136,5 +136,12 @@ void vPortInitialiseBlocks( void )
 	/* Only required when static memory is not cleared. */
 	xNextFreeByte = ( size_t ) 0;
 }
+/*-----------------------------------------------------------*/
+
+size_t xPortGetFreeHeapSize( void )
+{
+	return ( configTOTAL_HEAP_SIZE - xNextFreeByte );
+}
+
 
 

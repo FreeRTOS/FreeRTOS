@@ -1025,3 +1025,27 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
 	portRESET_PRIVILEGE( xRunningPrivileged );
 }
+/*-----------------------------------------------------------*/
+
+void MPU_vPortInitialiseBlocks( void )
+{
+portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+	vPortInitialiseBlocks();
+
+	portRESET_PRIVILEGE( xRunningPrivileged );
+}
+/*-----------------------------------------------------------*/
+
+size_t MPU_xPortGetFreeHeapSize( void )
+{
+size_t xReturn;
+portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+	xReturn = xPortGetFreeHeapSize();
+
+	portRESET_PRIVILEGE( xRunningPrivileged );
+	
+	return xReturn;
+}
+

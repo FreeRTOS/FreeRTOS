@@ -93,6 +93,10 @@ static const unsigned short  heapSTRUCT_SIZE	= ( sizeof( xBlockLink ) + portBYTE
 /* Create a couple of list links to mark the start and end of the list. */
 static xBlockLink xStart, xEnd;
 
+/* Keeps track of the number of free bytes remaining, but says nothing about
+fragmentation. */
+static size_t xFreeBytesRemaining = configTOTAL_HEAP_SIZE;
+
 /* STATIC FUNCTIONS ARE DEFINED AS MACROS TO MINIMIZE THE FUNCTION CALL DEPTH. */
 
 /*
@@ -211,6 +215,8 @@ void *pvReturn = NULL;
 					/* Insert the new block into the list of free blocks. */
 					prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
 				}
+				
+				xFreeBytesRemaining -= xWantedSize;
 			}
 		}
 	}
@@ -248,9 +254,16 @@ xBlockLink *pxLink;
 		{
 			/* Add this block to the list of free blocks. */
 			prvInsertBlockIntoFreeList( ( ( xBlockLink * ) pxLink ) );
+			xFreeBytesRemaining += pxLink->xBlockSize;
 		}
 		xTaskResumeAll();
 	}
+}
+/*-----------------------------------------------------------*/
+
+size_t xPortGetFreeHeapSize( void )
+{
+	return xFreeBytesRemaining;
 }
 /*-----------------------------------------------------------*/
 

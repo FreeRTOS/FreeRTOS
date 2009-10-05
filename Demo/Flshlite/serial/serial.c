@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -90,7 +91,7 @@ Changes from V2.0.0
 #include "portasm.h"
 #include "semphr.h"
 
-#define serMAX_PORTS			( ( unsigned portSHORT ) 2 )
+#define serMAX_PORTS			( ( unsigned short ) 2 )
 
 #define serPORT_0_INT_REG		( 0xff44 )
 #define serPORT_0_BAUD_REG		( 0xff88 )
@@ -108,19 +109,19 @@ Changes from V2.0.0
 #define serPORT_1_CTRL_REG		( 0xff10 )
 #define serPORT_1_IRQ			( 0x11 )
 
-#define serTX_EMPTY				( ( unsigned portSHORT ) 0x40 )
-#define serRX_READY				( ( unsigned portSHORT ) 0x80 )
+#define serTX_EMPTY				( ( unsigned short ) 0x40 )
+#define serRX_READY				( ( unsigned short ) 0x80 )
 
-#define serRESET_PIC( usEOI_TYPE )	portOUTPUT_WORD( ( unsigned portSHORT ) 0xff22, usEOI_TYPE )
-#define serTX_HOLD_EMPTY_INT		( ( unsigned portSHORT ) 0x100 )
+#define serRESET_PIC( usEOI_TYPE )	portOUTPUT_WORD( ( unsigned short ) 0xff22, usEOI_TYPE )
+#define serTX_HOLD_EMPTY_INT		( ( unsigned short ) 0x100 )
 
-#define serENABLE_INTERRUPTS		( ( unsigned portSHORT ) 0x80 )
-#define serMODE						( ( unsigned portSHORT ) 0x01 )
-#define serENABLE_TX_MACHINES		( ( unsigned portSHORT ) 0x40 )
-#define serENABLE_RX_MACHINES		( ( unsigned portSHORT ) 0x20 )
-#define serINTERRUPT_MASK			( ( unsigned portSHORT ) 0x08 )
-#define serCLEAR_ALL_STATUS_BITS	( ( unsigned portSHORT ) 0x00 )
-#define serINTERRUPT_PRIORITY		( ( unsigned portSHORT ) 0x01 ) /*< Just below the scheduler priority. */
+#define serENABLE_INTERRUPTS		( ( unsigned short ) 0x80 )
+#define serMODE						( ( unsigned short ) 0x01 )
+#define serENABLE_TX_MACHINES		( ( unsigned short ) 0x40 )
+#define serENABLE_RX_MACHINES		( ( unsigned short ) 0x20 )
+#define serINTERRUPT_MASK			( ( unsigned short ) 0x08 )
+#define serCLEAR_ALL_STATUS_BITS	( ( unsigned short ) 0x00 )
+#define serINTERRUPT_PRIORITY		( ( unsigned short ) 0x01 ) /*< Just below the scheduler priority. */
 
 #define serDONT_BLOCK				( ( portTickType ) 0 )
 
@@ -181,7 +182,7 @@ typedef enum
 } eBaud;
 
 /* Must be same order as eBaud definitions. */
-static const unsigned portSHORT usBaudRateDivisor[] = 
+static const unsigned short usBaudRateDivisor[] = 
 {
 	0, /* Not sure if the first 6 are correct.  First cannot be used. */
 	29127,
@@ -206,15 +207,15 @@ static const unsigned portSHORT usBaudRateDivisor[] =
 typedef struct xCOM_PORT
 {
 	/* Hardware parameters for this port. */
-	portSHORT sTxInterruptOn;
-	unsigned portSHORT usIntReg;
-	unsigned portSHORT usBaudReg;
-	unsigned portSHORT usRxReg;
-	unsigned portSHORT usTxReg;
-	unsigned portSHORT usStatusReg;
-	unsigned portSHORT usCtrlReg;
+	short sTxInterruptOn;
+	unsigned short usIntReg;
+	unsigned short usBaudReg;
+	unsigned short usRxReg;
+	unsigned short usTxReg;
+	unsigned short usStatusReg;
+	unsigned short usCtrlReg;
 
-	unsigned portSHORT usIRQVector;
+	unsigned short usIRQVector;
 
 	/* Queues used for communications with com test task. */
 	xQueueHandle xRxedChars; 
@@ -237,17 +238,17 @@ typedef xComPort * xComPortHandle;
 /* These prototypes are repeated here so we don't have to include the serial header.  This allows
 the xComPortHandle structure details to be private to this file. */
 xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned portBASE_TYPE uxBufferLength );
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portTickType xBlockTime );
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, portCHAR cOutChar, portTickType xBlockTime );
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime );
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime );
 void vSerialClose( xComPortHandle xPort );
-portSHORT sSerialWaitForSemaphore( xComPortHandle xPort );
+short sSerialWaitForSemaphore( xComPortHandle xPort );
 /*-----------------------------------------------------------*/
 
-static portSHORT xComPortISR( xComPort * const pxPort );
+static short xComPortISR( xComPort * const pxPort );
 
 #define vInterruptOn( pxPort, usInterrupt )										\
 {																				\
-unsigned portSHORT usIn;														\
+unsigned short usIn;														\
 																				\
 	portENTER_CRITICAL();														\
 	{																			\
@@ -265,7 +266,7 @@ unsigned portSHORT usIn;														\
 
 #define vInterruptOff( pxPort, usInterrupt )									\
 {																				\
-	unsigned portSHORT usIn = portINPUT_WORD( pxPort->usCtrlReg );				\
+	unsigned short usIn = portINPUT_WORD( pxPort->usCtrlReg );				\
 	if( usIn & usInterrupt )													\
 	{																			\
 		portOUTPUT_WORD( pxPort->usCtrlReg, usIn & ~usInterrupt);				\
@@ -300,7 +301,7 @@ static pxISR xISRs[ serMAX_PORTS ] =
 
 xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned portBASE_TYPE uxBufferLength )
 {
-unsigned portSHORT usPort;
+unsigned short usPort;
 xComPortHandle pxPort = NULL;
 
 /* BAUDDIV = ( Microprocessor Clock / Baud Rate ) / 16 */
@@ -313,7 +314,7 @@ xComPortHandle pxPort = NULL;
 
 	/* Currently only n,8,1 is supported. */
 
-	usPort = ( unsigned portSHORT ) ePort;
+	usPort = ( unsigned short ) ePort;
 	
 	if( usPort < serMAX_PORTS )
 	{
@@ -321,17 +322,17 @@ xComPortHandle pxPort = NULL;
 
 		portENTER_CRITICAL();
 		{
-			unsigned portSHORT usInWord;
+			unsigned short usInWord;
 
 			/* Create the queues used by the com test task. */
-			pxPort->xRxedChars = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( portCHAR ) );
-			pxPort->xCharsForTx = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( portCHAR ) );
+			pxPort->xRxedChars = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
+			pxPort->xCharsForTx = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
 
 			/* Create the test semaphore.  This does nothing useful except test a feature of the scheduler. */
 			vSemaphoreCreateBinary( pxPort->xTestSem );
 
 			/* There is no ISR here already to restore later. */
-			_dos_setvect( ( portSHORT ) pxPort->usIRQVector, xISRs[ usPort ] );
+			_dos_setvect( ( short ) pxPort->usIRQVector, xISRs[ usPort ] );
 
 			usInWord = portINPUT_WORD( pxPort->usIntReg );
 			usInWord &= ~serINTERRUPT_MASK;
@@ -350,12 +351,12 @@ xComPortHandle pxPort = NULL;
 } /*lint !e715 Some parameters are not used as only a subset of the serial port functionality is currently implemented. */
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const portCHAR * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const char * const pcString, unsigned short usStringLength )
 {
-unsigned portSHORT usByte;
-portCHAR *pcNextChar;
+unsigned short usByte;
+char *pcNextChar;
 
-	pcNextChar = ( portCHAR * ) pcString;
+	pcNextChar = ( char * ) pcString;
 
 	for( usByte = 0; usByte < usStringLength; usByte++ )
 	{
@@ -367,7 +368,7 @@ portCHAR *pcNextChar;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Get the next character from the buffer, note that this routine is only 
 	called having checked that the is (at least) one to get */
@@ -382,7 +383,7 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portT
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, portCHAR cOutChar, portTickType xBlockTime )
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime )
 {
 	if( xQueueSend( pxPort->xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 	{
@@ -407,7 +408,7 @@ const portTickType xBlockTime = ( portTickType ) 0xffff;
 
 void vSerialClose( xComPortHandle xPort )
 {
-unsigned portSHORT usOutput;
+unsigned short usOutput;
 
 	/* Turn off the interrupts.  We may also want to delete the queues and/or
 	re-install the original ISR. */
@@ -431,8 +432,8 @@ unsigned portSHORT usOutput;
 
 static portBASE_TYPE xComPortISR( xComPort * const pxPort )
 {
-unsigned portSHORT usStatusRegister;
-portCHAR cChar;
+unsigned short usStatusRegister;
+char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, xContinue = pdTRUE;
 
 	/* NOTE:  THIS IS NOT AN EFFICIENT ISR AS IT IS DESIGNED SOLELY TO TEST
@@ -447,7 +448,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, xContinue = pdTRUE;
 
 		if( usStatusRegister & serRX_READY )
 		{
-			cChar = ( portCHAR ) portINPUT_WORD( pxPort->usRxReg );
+			cChar = ( char ) portINPUT_WORD( pxPort->usRxReg );
 			xQueueSendFromISR( pxPort->xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
 			/* Also release the semaphore - this does nothing interesting and is just a test. */
@@ -461,7 +462,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, xContinue = pdTRUE;
 		{
 			if( xQueueReceiveFromISR( pxPort->xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 			{
-				portOUTPUT_WORD( pxPort->usTxReg, ( unsigned portSHORT ) cChar );
+				portOUTPUT_WORD( pxPort->usTxReg, ( unsigned short ) cChar );
 
 				/* We have performed an action this cycle - there may be others to perform. */
 				xContinue = pdTRUE;

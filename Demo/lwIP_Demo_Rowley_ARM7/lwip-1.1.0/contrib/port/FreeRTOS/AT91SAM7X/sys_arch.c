@@ -38,7 +38,7 @@
 
 /* Message queue constants. */
 #define archMESG_QUEUE_LENGTH	( 6 )
-#define archPOST_BLOCK_TIME_MS	( ( unsigned portLONG ) 10000 )
+#define archPOST_BLOCK_TIME_MS	( ( unsigned long ) 10000 )
 
 struct timeoutlist 
 {
@@ -330,12 +330,12 @@ static int iCall = 0;
 	if( iCall == 0 )
 	{
 		/* The first time this is called we are creating the lwIP handler. */
-		result = xTaskCreate( thread, ( signed portCHAR * ) "lwIP", lwipTCP_STACK_SIZE, arg, prio, &CreatedTask );
+		result = xTaskCreate( thread, ( signed char * ) "lwIP", lwipTCP_STACK_SIZE, arg, prio, &CreatedTask );
 		iCall++;
 	}
 	else
 	{
-		result = xTaskCreate( thread, ( signed portCHAR * ) "WEBSvr", lwipBASIC_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
+		result = xTaskCreate( thread, ( signed char * ) "WEBSvr", lwipBASIC_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
 	}
 
 	// For each task created, store the task handle (pid) in the timers array.

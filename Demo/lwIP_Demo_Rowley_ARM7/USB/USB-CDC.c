@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -99,7 +100,7 @@ static void prvHandleStandardEndPointRequest( xUSB_REQUEST *pxRequest );
 static void prvHandleClassInterfaceRequest( xUSB_REQUEST *pxRequest );
 
 /* Prepare control data transfer.  prvSendNextSegment starts transfer. */
-static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT usRequestedLength, unsigned portLONG ulLengthLeftToSend, portLONG lSendingDescriptor );
+static void prvSendControlData( unsigned char *pucData, unsigned short usRequestedLength, unsigned long ulLengthLeftToSend, long lSendingDescriptor );
 
 /* Send next segment of data for the control transfer */
 static void prvSendNextSegment( void );
@@ -116,8 +117,8 @@ static void prvGetStandardInterfaceDescriptor( xUSB_REQUEST *pxRequest );
 /*------------------------------------------------------------*/
 
 /* File scope static variables */
-static unsigned portCHAR ucUSBConfig = ( unsigned portCHAR ) 0;
-static unsigned portLONG ulReceivedAddress = ( unsigned portLONG ) 0;
+static unsigned char ucUSBConfig = ( unsigned char ) 0;
+static unsigned long ulReceivedAddress = ( unsigned long ) 0;
 static eDRIVER_STATE eDriverState = eNOTHING;
 
 /* Incoming and outgoing control data structures */
@@ -133,10 +134,10 @@ static xQueueHandle xRxCDC;
 static xQueueHandle xTxCDC; 
 
 /* Line coding - 115,200 baud, N-8-1 */
-static const unsigned portCHAR pxLineCoding[] = { 0x00, 0xC2, 0x01, 0x00, 0x00, 0x00, 0x08 };
+static const unsigned char pxLineCoding[] = { 0x00, 0xC2, 0x01, 0x00, 0x00, 0x00, 0x08 };
 
 /* Status variables. */
-static unsigned portCHAR ucControlState;
+static unsigned char ucControlState;
 static unsigned int uiCurrentBank;
 
 
@@ -146,9 +147,9 @@ static unsigned int uiCurrentBank;
 void vUSBCDCTask( void *pvParameters )
 {
 xISRStatus *pxMessage;
-unsigned portLONG ulStatus;
-unsigned portLONG ulRxBytes;
-unsigned portCHAR ucByte;
+unsigned long ulStatus;
+unsigned long ulRxBytes;
+unsigned char ucByte;
 portBASE_TYPE xByte;
 
 	( void ) pvParameters;
@@ -251,7 +252,7 @@ portBASE_TYPE xByte;
 }
 /*------------------------------------------------------------*/
 
-void vUSBSendByte( portCHAR cByte )
+void vUSBSendByte( char cByte )
 {
 	/* Queue the byte to be sent.  The USB task will send it. */
 	xQueueSend( xTxCDC, &cByte, usbNO_BLOCK );
@@ -260,7 +261,7 @@ void vUSBSendByte( portCHAR cByte )
 
 static void prvSendZLP( void )
 {
-unsigned portLONG ulStatus;
+unsigned long ulStatus;
 
 	/* Wait until the FIFO is free - even though we are not going to use it.
 	THERE IS NO TIMEOUT HERE! */
@@ -285,7 +286,7 @@ unsigned portLONG ulStatus;
 
 static void prvSendStall( void )
 {
-	unsigned portLONG ulStatus;
+	unsigned long ulStatus;
 
 	portENTER_CRITICAL();
 	{
@@ -300,14 +301,14 @@ static void prvSendStall( void )
 
 static void prvResetEndPoints( void )
 {
-unsigned portLONG ulTemp;
+unsigned long ulTemp;
 
 	eDriverState = eJUST_RESET;
 	ucControlState = 0;
 
 	/* Reset all the end points. */
 	AT91C_BASE_UDP->UDP_RSTEP  = usbEND_POINT_RESET_MASK;
-	AT91C_BASE_UDP->UDP_RSTEP  = ( unsigned portLONG ) 0x00;
+	AT91C_BASE_UDP->UDP_RSTEP  = ( unsigned long ) 0x00;
 
 	/* Enable data to be sent and received. */
 	AT91C_BASE_UDP->UDP_FADDR = AT91C_UDP_FEN;
@@ -316,7 +317,7 @@ unsigned portLONG ulTemp;
 	portENTER_CRITICAL();
 	{
 		ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ];
-		usbCSR_SET_BIT( &ulTemp, ( ( unsigned portLONG ) ( AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_CTRL ) ) );
+		usbCSR_SET_BIT( &ulTemp, ( ( unsigned long ) ( AT91C_UDP_EPEDS | AT91C_UDP_EPTYPE_CTRL ) ) );
 		AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] = ulTemp;
 		AT91C_BASE_UDP->UDP_IER = AT91C_UDP_EPINT0;
 	}
@@ -328,7 +329,7 @@ unsigned portLONG ulTemp;
 static void prvProcessEndPoint0Interrupt( xISRStatus *pxMessage )
 {
 static xUSB_REQUEST xRequest;
-unsigned portLONG ulRxBytes;
+unsigned long ulRxBytes;
 
 	/* Get number of bytes received, if any */
 	ulRxBytes = pxMessage->ulCSR0 >> 16;
@@ -351,7 +352,7 @@ unsigned portLONG ulRxBytes;
 			/* Set up endpoints */
 			portENTER_CRITICAL();
 			{
-				unsigned portLONG ulTemp;
+				unsigned long ulTemp;
 
 				/* Set endpoint 1 to bulk-out */
 				ulTemp = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_1 ];					
@@ -377,7 +378,7 @@ unsigned portLONG ulRxBytes;
 		{
 			/* We sent an acknowledgement of a SET_ADDRESS request.  Move
 			to the addressed state. */
-			if( ulReceivedAddress != ( unsigned portLONG ) 0 )
+			if( ulReceivedAddress != ( unsigned long ) 0 )
 			{			
 				AT91C_BASE_UDP->UDP_GLBSTATE = AT91C_UDP_FADDEN;
 			}
@@ -400,7 +401,7 @@ unsigned portLONG ulRxBytes;
 	if( pxMessage->ulCSR0 & AT91C_UDP_RX_DATA_BK0 )
 	{
 		/* Received a control data packet.  May be a 0-length ACK or a data stage. */
-		unsigned portCHAR ucBytesToGet;
+		unsigned char ucBytesToGet;
 	 
 		/* Got data.  Cancel any outgoing data. */
 		pxControlTx.ulNextCharIndex = pxControlTx.ulTotalDataLength;
@@ -470,7 +471,7 @@ unsigned portLONG ulRxBytes;
 	if( ( pxMessage->ulCSR0 & ( AT91C_UDP_RX_DATA_BK0 | AT91C_UDP_RXSETUP ) ) 
 		&& ( pxControlRx.ulNextCharIndex >= pxControlRx.ulTotalDataLength ) )
 	{
-		unsigned portCHAR ucRequest;
+		unsigned char ucRequest;
 
 		/* Manipulate the ucRequestType and the ucRequest parameters to 
 		generate a zero based request selection.  This is just done to 
@@ -515,11 +516,11 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 	switch( ( pxRequest->usValue & 0xff00 ) >> 8 )
 	{
 		case usbDESCRIPTOR_TYPE_DEVICE:
-			prvSendControlData( ( unsigned portCHAR * ) &pxDeviceDescriptor, pxRequest->usLength, sizeof( pxDeviceDescriptor ), pdTRUE );
+			prvSendControlData( ( unsigned char * ) &pxDeviceDescriptor, pxRequest->usLength, sizeof( pxDeviceDescriptor ), pdTRUE );
 			break;
 
 		case usbDESCRIPTOR_TYPE_CONFIGURATION:
-			prvSendControlData( ( unsigned portCHAR * ) &( pxConfigDescriptor ), pxRequest->usLength, sizeof( pxConfigDescriptor ), pdTRUE );
+			prvSendControlData( ( unsigned char * ) &( pxConfigDescriptor ), pxRequest->usLength, sizeof( pxConfigDescriptor ), pdTRUE );
 			break;
 
 		case usbDESCRIPTOR_TYPE_STRING:
@@ -528,23 +529,23 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 			switch( pxRequest->usValue & 0xff )
 			{			
 				case usbLANGUAGE_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxLanguageStringDescriptor, pxRequest->usLength, sizeof(pxLanguageStringDescriptor), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxLanguageStringDescriptor, pxRequest->usLength, sizeof(pxLanguageStringDescriptor), pdTRUE );
 					break;
 
 				case usbMANUFACTURER_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxManufacturerStringDescriptor, pxRequest->usLength, sizeof( pxManufacturerStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxManufacturerStringDescriptor, pxRequest->usLength, sizeof( pxManufacturerStringDescriptor ), pdTRUE );
 					break;
 
 				case usbPRODUCT_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxProductStringDescriptor, pxRequest->usLength, sizeof( pxProductStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxProductStringDescriptor, pxRequest->usLength, sizeof( pxProductStringDescriptor ), pdTRUE );
 					break;
 
 				case usbCONFIGURATION_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxConfigurationStringDescriptor, pxRequest->usLength, sizeof( pxConfigurationStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxConfigurationStringDescriptor, pxRequest->usLength, sizeof( pxConfigurationStringDescriptor ), pdTRUE );
 					break;
 
 				case usbINTERFACE_STRING:
-					prvSendControlData( ( unsigned portCHAR * ) &pxInterfaceStringDescriptor, pxRequest->usLength, sizeof( pxInterfaceStringDescriptor ), pdTRUE );
+					prvSendControlData( ( unsigned char * ) &pxInterfaceStringDescriptor, pxRequest->usLength, sizeof( pxInterfaceStringDescriptor ), pdTRUE );
 					break;
 
 				default:
@@ -562,13 +563,13 @@ static void prvGetStandardDeviceDescriptor( xUSB_REQUEST *pxRequest )
 
 static void prvHandleStandardDeviceRequest( xUSB_REQUEST *pxRequest )
 {
-unsigned portSHORT usStatus = 0;
+unsigned short usStatus = 0;
 
 	switch( pxRequest->ucRequest )
 	{
 		case usbGET_STATUS_REQUEST:
 			/* Just send two byte dummy status. */
-			prvSendControlData( ( unsigned portCHAR * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
+			prvSendControlData( ( unsigned char * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
 			break;
 
 		case usbGET_DESCRIPTOR_REQUEST:
@@ -578,7 +579,7 @@ unsigned portSHORT usStatus = 0;
 
 		case usbGET_CONFIGURATION_REQUEST:
 			/* Send selected device configuration */
-			prvSendControlData( ( unsigned portCHAR * ) &ucUSBConfig, sizeof( ucUSBConfig ), sizeof( ucUSBConfig ), pdFALSE );
+			prvSendControlData( ( unsigned char * ) &ucUSBConfig, sizeof( ucUSBConfig ), sizeof( ucUSBConfig ), pdFALSE );
 			break;
 
 		case usbSET_FEATURE_REQUEST:
@@ -589,12 +590,12 @@ unsigned portSHORT usStatus = 0;
 			/* Get assigned address and send ack, but don't implement new address until we get a TXCOMP */
 			prvSendZLP();			
 			eDriverState = eJUST_GOT_ADDRESS;			
-			ulReceivedAddress = ( unsigned portLONG ) pxRequest->usValue;
+			ulReceivedAddress = ( unsigned long ) pxRequest->usValue;
 			break;
 
 		case usbSET_CONFIGURATION_REQUEST:
 			/* Ack SET_CONFIGURATION request, but don't implement until TXCOMP */
-			ucUSBConfig = ( unsigned portCHAR ) ( pxRequest->usValue & 0xff );
+			ucUSBConfig = ( unsigned char ) ( pxRequest->usValue & 0xff );
 			eDriverState = eJUST_GOT_CONFIG;
 			prvSendZLP();
 			break;
@@ -627,7 +628,7 @@ static void prvHandleClassInterfaceRequest( xUSB_REQUEST *pxRequest )
 
 		case usbGET_LINE_CODING:
 			/* Get line coding */
-			prvSendControlData( (unsigned portCHAR *) &pxLineCoding, pxRequest->usLength, sizeof( pxLineCoding ), pdFALSE );
+			prvSendControlData( (unsigned char *) &pxLineCoding, pxRequest->usLength, sizeof( pxLineCoding ), pdFALSE );
 			break;
 
 		case usbSET_CONTROL_LINE_STATE:
@@ -645,7 +646,7 @@ static void prvHandleClassInterfaceRequest( xUSB_REQUEST *pxRequest )
 
 static void prvGetStandardInterfaceDescriptor( xUSB_REQUEST *pxRequest )
 {
-	switch( ( pxRequest->usValue & ( unsigned portSHORT ) 0xff00 ) >> 8 )
+	switch( ( pxRequest->usValue & ( unsigned short ) 0xff00 ) >> 8 )
 	{
 		default:
 			prvSendStall();
@@ -656,13 +657,13 @@ static void prvGetStandardInterfaceDescriptor( xUSB_REQUEST *pxRequest )
 
 static void prvHandleStandardInterfaceRequest( xUSB_REQUEST *pxRequest )
 {
-unsigned portSHORT usStatus = 0;
+unsigned short usStatus = 0;
 
 	switch( pxRequest->ucRequest )
 	{
 		case usbGET_STATUS_REQUEST:
 			/* Send dummy 2 bytes. */
-			prvSendControlData( ( unsigned portCHAR * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
+			prvSendControlData( ( unsigned char * ) &usStatus, sizeof( usStatus ), sizeof( usStatus ), pdFALSE );
 			break;
 
 		case usbGET_DESCRIPTOR_REQUEST:
@@ -717,8 +718,8 @@ extern void ( vUSB_ISR_Wrapper )( void );
 	xUSBInterruptQueue = xQueueCreate( usbQUEUE_LENGTH + 1, sizeof( xISRStatus * ) );
 	
 	/* Create the queues used to hold Rx and Tx characters. */
-	xRxCDC = xQueueCreate( USB_CDC_QUEUE_SIZE, ( unsigned portCHAR ) sizeof( signed portCHAR ) );
-	xTxCDC = xQueueCreate( USB_CDC_QUEUE_SIZE + 1, ( unsigned portCHAR ) sizeof( signed portCHAR ) );
+	xRxCDC = xQueueCreate( USB_CDC_QUEUE_SIZE, ( unsigned char ) sizeof( signed char ) );
+	xTxCDC = xQueueCreate( USB_CDC_QUEUE_SIZE + 1, ( unsigned char ) sizeof( signed char ) );
 
 	if( (!xUSBInterruptQueue) || (!xRxCDC) || (!xTxCDC) )
 	{	
@@ -727,9 +728,9 @@ extern void ( vUSB_ISR_Wrapper )( void );
 	}
 	
 	/* Initialise a few state variables. */
-	pxControlTx.ulNextCharIndex = ( unsigned portLONG ) 0;
-	pxControlRx.ulNextCharIndex = ( unsigned portLONG ) 0;
-	ucUSBConfig = ( unsigned portCHAR ) 0;
+	pxControlTx.ulNextCharIndex = ( unsigned long ) 0;
+	pxControlRx.ulNextCharIndex = ( unsigned long ) 0;
+	ucUSBConfig = ( unsigned char ) 0;
 	eDriverState = eNOTHING;
 	ucControlState = 0;
 	uiCurrentBank = AT91C_UDP_RX_DATA_BK0;
@@ -757,12 +758,12 @@ extern void ( vUSB_ISR_Wrapper )( void );
 	/* When using the USB debugger the peripheral registers do not always get
 	set to the correct default values.  To make sure set the relevant registers
 	manually here. */
-	AT91C_BASE_UDP->UDP_IDR = ( unsigned portLONG ) 0xffffffff;
-	AT91C_BASE_UDP->UDP_ICR = ( unsigned portLONG ) 0xffffffff;
-	AT91C_BASE_UDP->UDP_CSR[ 0 ] = ( unsigned portLONG ) 0x00;
-	AT91C_BASE_UDP->UDP_CSR[ 1 ] = ( unsigned portLONG ) 0x00;
-	AT91C_BASE_UDP->UDP_CSR[ 2 ] = ( unsigned portLONG ) 0x00;
-	AT91C_BASE_UDP->UDP_CSR[ 3 ] = ( unsigned portLONG ) 0x00;
+	AT91C_BASE_UDP->UDP_IDR = ( unsigned long ) 0xffffffff;
+	AT91C_BASE_UDP->UDP_ICR = ( unsigned long ) 0xffffffff;
+	AT91C_BASE_UDP->UDP_CSR[ 0 ] = ( unsigned long ) 0x00;
+	AT91C_BASE_UDP->UDP_CSR[ 1 ] = ( unsigned long ) 0x00;
+	AT91C_BASE_UDP->UDP_CSR[ 2 ] = ( unsigned long ) 0x00;
+	AT91C_BASE_UDP->UDP_CSR[ 3 ] = ( unsigned long ) 0x00;
 	AT91C_BASE_UDP->UDP_GLBSTATE = 0;
 	AT91C_BASE_UDP->UDP_FADDR = 0;
 
@@ -781,14 +782,14 @@ extern void ( vUSB_ISR_Wrapper )( void );
 }
 /*-----------------------------------------------------------*/
 
-static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT usRequestedLength, unsigned portLONG ulLengthToSend, portLONG lSendingDescriptor )
+static void prvSendControlData( unsigned char *pucData, unsigned short usRequestedLength, unsigned long ulLengthToSend, long lSendingDescriptor )
 {
-	if( ( ( unsigned portLONG ) usRequestedLength < ulLengthToSend ) )
+	if( ( ( unsigned long ) usRequestedLength < ulLengthToSend ) )
 	{
 		/* Cap the data length to that requested. */
-		ulLengthToSend = ( unsigned portSHORT ) usRequestedLength;
+		ulLengthToSend = ( unsigned short ) usRequestedLength;
 	}
-	else if( ( ulLengthToSend < ( unsigned portLONG ) usRequestedLength ) && lSendingDescriptor )
+	else if( ( ulLengthToSend < ( unsigned long ) usRequestedLength ) && lSendingDescriptor )
 	{
 		/* We are sending a descriptor.  If the descriptor is an exact 
 		multiple of the FIFO length then it will have to be terminated
@@ -810,7 +811,7 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 	/* Reinitialise the buffer index so we start sending from the start of 
 	the data. */
 	pxControlTx.ulTotalDataLength = ulLengthToSend;
-	pxControlTx.ulNextCharIndex = ( unsigned portLONG ) 0;
+	pxControlTx.ulNextCharIndex = ( unsigned long ) 0;
 
 	/* Send the first 8 bytes now.  The rest will get sent in response to 
 	TXCOMP interrupts. */
@@ -820,7 +821,7 @@ static void prvSendControlData( unsigned portCHAR *pucData, unsigned portSHORT u
 
 static void prvSendNextSegment( void )
 {
-volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
+volatile unsigned long ulNextLength, ulStatus, ulLengthLeftToSend;
 
 	/* Is there any data to send? */
 	if( pxControlTx.ulTotalDataLength > pxControlTx.ulNextCharIndex )
@@ -845,7 +846,7 @@ volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
 		}
 
 		/* Write the data to the FIFO. */
-		while( ulNextLength > ( unsigned portLONG ) 0 )
+		while( ulNextLength > ( unsigned long ) 0 )
 		{
 			AT91C_BASE_UDP->UDP_FDR[ usbEND_POINT_0 ] = pxControlTx.ucBuffer[ pxControlTx.ulNextCharIndex ];
 	
@@ -857,7 +858,7 @@ volatile unsigned portLONG ulNextLength, ulStatus, ulLengthLeftToSend;
 		portENTER_CRITICAL();
 		{
 			ulStatus = AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ];
-			usbCSR_SET_BIT( &ulStatus, ( ( unsigned portLONG ) 0x10 ) );
+			usbCSR_SET_BIT( &ulStatus, ( ( unsigned long ) 0x10 ) );
 			AT91C_BASE_UDP->UDP_CSR[ usbEND_POINT_0 ] = ulStatus;
 		}
 		portEXIT_CRITICAL();

@@ -62,8 +62,8 @@
 
 /* ------------------------ Prototypes ------------------------------------ */
 void vSerialPutStringNOISR( xComPortHandle pxPort,
-                            const signed portCHAR * const pcString,
-                            unsigned portSHORT usStringLength );
+                            const signed char * const pcString,
+                            unsigned short usStringLength );
 
 /* ------------------------ Start implementation -------------------------- */
 void
@@ -109,13 +109,13 @@ write( int fd, const void *buf, size_t nbytes )
     {
         case STDERR_FILENO:
             vSerialPutStringNOISR( xSTDComPort,
-                                   ( const signed portCHAR * const )buf,
-                                   ( unsigned portSHORT )nbytes );
+                                   ( const signed char * const )buf,
+                                   ( unsigned short )nbytes );
             break;
         case STDOUT_FILENO:
             vSerialPutString( xSTDComPort,
-                              ( const signed portCHAR * const)buf,
-                              ( unsigned portSHORT )nbytes );
+                              ( const signed char * const)buf,
+                              ( unsigned short )nbytes );
             break;
         default:
             errno = EIO;

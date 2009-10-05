@@ -126,11 +126,11 @@ static void     vProcessConnection( struct netconn *pxNetCon );
 static void
 vProcessConnection( struct netconn *pxNetCon )
 {
-    static portCHAR cDynamicPage[webMAX_PAGE_SIZE], cPageHits[11];
+    static char cDynamicPage[webMAX_PAGE_SIZE], cPageHits[11];
     struct netbuf  *pxRxBuffer;
-    portCHAR       *pcRxString;
-    unsigned portSHORT usLength;
-    static unsigned portLONG ulPageHits = 0;
+    char       *pcRxString;
+    unsigned short usLength;
+    static unsigned long ulPageHits = 0;
 
     /* We expect to immediately get data. */
     pxRxBuffer = netconn_recv( pxNetCon );
@@ -161,7 +161,7 @@ vProcessConnection( struct netconn *pxNetCon )
             strcat( cDynamicPage,
                     "<p><pre>Task          State  Priority  Stack #<br>************************************************<br>" );
             /* ... Then the list of tasks and their status... */
-            vTaskList( ( signed portCHAR * )cDynamicPage + strlen( cDynamicPage ) );
+            vTaskList( ( signed char * )cDynamicPage + strlen( cDynamicPage ) );
             /* ... Finally the page footer. */
             strcat( cDynamicPage, webHTML_END );
 

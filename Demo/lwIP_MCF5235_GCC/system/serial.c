@@ -82,7 +82,7 @@ static xComPortIF_t xComPortIF[ COM_NIFACE ];
 
 /* ------------------------ Begin implementation -------------------------- */
 xComPortHandle
-xSerialPortInitMinimal( unsigned portLONG ulWantedBaud,
+xSerialPortInitMinimal( unsigned long ulWantedBaud,
                         unsigned portBASE_TYPE uxQueueLength )
 {
     extern void     ( *__RAMVEC[] ) (  );
@@ -91,9 +91,9 @@ xSerialPortInitMinimal( unsigned portLONG ulWantedBaud,
 
     /* Create the queues used to hold Rx and Tx characters. */
     xComPortIF[ 0 ].xRXChars =
-        xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE )sizeof( signed portCHAR ) );
+        xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE )sizeof( signed char ) );
     xComPortIF[ 0 ].xTXChars =
-        xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE )sizeof( signed portCHAR ) );
+        xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE )sizeof( signed char ) );
 
     /* If the queues were created correctly then setup the serial port hardware. */
     if( ( xComPortIF[ 0 ].xRXChars != 0 ) && ( xComPortIF[ 0 ].xTXChars != 0 ) )
@@ -144,7 +144,7 @@ xSerialPortInitMinimal( unsigned portLONG ulWantedBaud,
 }
 
 signed          portBASE_TYPE
-xSerialGetChar( xComPortHandle pxPort, signed portCHAR * pcRxedChar,
+xSerialGetChar( xComPortHandle pxPort, signed char * pcRxedChar,
                 portTickType xBlockTime )
 {
     int i;
@@ -172,14 +172,14 @@ xSerialGetChar( xComPortHandle pxPort, signed portCHAR * pcRxedChar,
 }
 
 void
-vSerialPutString( xComPortHandle pxPort, const signed portCHAR *
-                  const pcString, unsigned portSHORT usStringLength )
+vSerialPutString( xComPortHandle pxPort, const signed char *
+                  const pcString, unsigned short usStringLength )
 {
     int i;
-    signed portCHAR *pChNext;
+    signed char *pChNext;
 
     /* Send each character in the string, one at a time. */
-    pChNext = ( signed portCHAR * )pcString;
+    pChNext = ( signed char * )pcString;
     for( i = 0; i < usStringLength; i++ )
     {
         /* Block until character has been transmitted. */
@@ -188,7 +188,7 @@ vSerialPutString( xComPortHandle pxPort, const signed portCHAR *
 }
 
 signed          portBASE_TYPE
-xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar,
+xSerialPutChar( xComPortHandle pxPort, signed char cOutChar,
                 portTickType xBlockTime )
 {
     int i;
@@ -218,7 +218,7 @@ xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar,
 }
 
 signed          portBASE_TYPE
-xSerialPutCharNOISR( xComPortHandle pxPort, signed portCHAR cOutChar )
+xSerialPutCharNOISR( xComPortHandle pxPort, signed char cOutChar )
 {
     int i;
     portBASE_TYPE xResult = pdFALSE;
@@ -245,15 +245,15 @@ xSerialPutCharNOISR( xComPortHandle pxPort, signed portCHAR cOutChar )
 }
 
 void
-vSerialPutStringNOISR( xComPortHandle pxPort, const signed portCHAR *
-                       const pcString, unsigned portSHORT usStringLength )
+vSerialPutStringNOISR( xComPortHandle pxPort, const signed char *
+                       const pcString, unsigned short usStringLength )
 {
     int i;
-    signed portCHAR *pChNext;
+    signed char *pChNext;
     portBASE_TYPE xOldIPL = portSET_IPL( portIPL_MAX );
 
     /* Send each character in the string, one at a time. */
-    pChNext = ( signed portCHAR * )pcString;
+    pChNext = ( signed char * )pcString;
     for( i = 0; i < usStringLength; i++ )
     {
         /* Block until character has been transmitted. */
@@ -272,7 +272,7 @@ vSerialClose( xComPortHandle xPort )
 void
 prvSerialISR( void )
 {
-    static signed portCHAR cChar;
+    static signed char cChar;
     static portBASE_TYPE xHigherPriorityTaskWoken;
 
     /* We have to remvoe the effect of the GCC. Please note that the

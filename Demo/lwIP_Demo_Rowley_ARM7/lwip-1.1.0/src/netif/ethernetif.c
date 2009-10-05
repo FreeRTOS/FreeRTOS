@@ -105,7 +105,7 @@ unsigned portBASE_TYPE uxPriority;
 	vTaskPrioritySet( NULL, uxPriority );
 
 	/* Create the task that handles the EMAC. */
-	xTaskCreate( ethernetif_input, ( signed portCHAR * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
+	xTaskCreate( ethernetif_input, ( signed char * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 

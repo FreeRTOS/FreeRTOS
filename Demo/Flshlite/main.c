@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -96,7 +97,7 @@ Changes from V1.2.5
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -126,12 +127,12 @@ Changes from V2.0.0
 #define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 3 )
 #define mainSEMAPHORE_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
-#define mainPRINT_STACK_SIZE		( ( unsigned portSHORT ) 256 )
-#define mainDEBUG_LOG_BUFFER_SIZE	( ( unsigned portSHORT ) 20480 )
+#define mainPRINT_STACK_SIZE		( ( unsigned short ) 256 )
+#define mainDEBUG_LOG_BUFFER_SIZE	( ( unsigned short ) 20480 )
 
 /* Constant definitions for accessing the build in LED on the Flashlite 186. */
-#define mainLED_REG_DIR 			( ( unsigned portSHORT ) 0xff78 )
-#define mainLED_REG 				( ( unsigned portSHORT ) 0xff7a )
+#define mainLED_REG_DIR 			( ( unsigned short ) 0xff78 )
+#define mainLED_REG 				( ( unsigned short ) 0xff7a )
 
 /* If an error is detected in a task then the vErrorChecks() task will enter
 an infinite loop flashing the LED at this rate. */
@@ -153,10 +154,10 @@ the scheduler. */
 static void	prvCheckForKeyPresses( void );
 
 /* Buffer used by the trace visualisation utility. */
-static portCHAR pcWriteBuffer[ mainDEBUG_LOG_BUFFER_SIZE ];
+static char pcWriteBuffer[ mainDEBUG_LOG_BUFFER_SIZE ];
 
 /*-----------------------------------------------------------*/
-portSHORT main( void )
+short main( void )
 {
 	/* Initialise hardware and utilities. */
 	vParTestInitialise();
@@ -191,11 +192,11 @@ static void vErrorChecks( void *pvParameters )
 {
 portTickType xExpectedWakeTime;
 const portTickType xPrintRate = ( portTickType ) 5000 / portTICK_RATE_MS;
-const portLONG lMaxAllowableTimeDifference = ( portLONG ) 0;
+const long lMaxAllowableTimeDifference = ( long ) 0;
 portTickType xWakeTime;
-portLONG lTimeDifference;
-const portCHAR *pcReceivedMessage;
-const portCHAR * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
+long lTimeDifference;
+const char *pcReceivedMessage;
+const char * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
 
 	/* Stop warnings. */
     ( void ) pvParameters;
@@ -226,11 +227,11 @@ const portCHAR * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r
 			time we should have unblocked. */
 			if( xWakeTime > xExpectedWakeTime )
 			{
-				lTimeDifference = ( portLONG ) ( xWakeTime - xExpectedWakeTime );
+				lTimeDifference = ( long ) ( xWakeTime - xExpectedWakeTime );
 			}
 			else
 			{
-				lTimeDifference = ( portLONG ) ( xExpectedWakeTime - xWakeTime );
+				lTimeDifference = ( long ) ( xExpectedWakeTime - xWakeTime );
 			}
 
 			if( lTimeDifference > lMaxAllowableTimeDifference )
@@ -261,7 +262,7 @@ static void	 prvCheckForKeyPresses( void )
 {
 	#ifdef USE_STDIO
 
-	portSHORT sIn;
+	short sIn;
 
 	
 		taskENTER_CRITICAL();
@@ -270,7 +271,7 @@ static void	 prvCheckForKeyPresses( void )
 
 		if( sIn )
 		{
-			unsigned portLONG ulBufferLength;
+			unsigned long ulBufferLength;
 
 			/* Key presses can be used to start/stop the trace utility, or end the
 			program. */
@@ -305,7 +306,7 @@ static void	 prvCheckForKeyPresses( void )
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
-portSHORT sErrorHasOccurred = pdFALSE;
+short sErrorHasOccurred = pdFALSE;
 
 	if( xAreComTestTasksStillRunning() != pdTRUE )
 	{
@@ -365,8 +366,8 @@ portSHORT sErrorHasOccurred = pdFALSE;
 
 static void prvInitLED( void )
 {
-unsigned portSHORT usPortDirection;
-const unsigned portSHORT usLEDOut = 0x400;
+unsigned short usPortDirection;
+const unsigned short usLEDOut = 0x400;
 
 	/* Set the LED bit to an output. */
 
@@ -378,9 +379,9 @@ const unsigned portSHORT usLEDOut = 0x400;
 
 static void prvToggleLED( void )
 {
-static portSHORT sLED = pdTRUE;
-unsigned portSHORT usLEDState;
-const unsigned portSHORT usLEDBit = 0x400;
+static short sLED = pdTRUE;
+unsigned short usLEDState;
+const unsigned short usLEDBit = 0x400;
 
 	/* Flip the state of the LED. */
 	usLEDState = inpw( mainLED_REG );

@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -103,26 +104,26 @@
 #define mainINTEGER_PRIORITY		tskIDLE_PRIORITY
 
 /* Constants required to disable the watchdog. */
-#define mainDISABLE_BYTE_1			( ( unsigned portCHAR ) 0xde )
-#define mainDISABLE_BYTE_2			( ( unsigned portCHAR ) 0xad )
+#define mainDISABLE_BYTE_1			( ( unsigned char ) 0xde )
+#define mainDISABLE_BYTE_2			( ( unsigned char ) 0xad )
 
 /* Constants to setup and use the on board LED. */
-#define ucLED_BIT					( ( unsigned portCHAR ) 0x40 )
-#define mainPORT_1_BIT_6			( ( unsigned portCHAR ) 0x40 )
-#define mainENABLE_CROSS_BAR		( ( unsigned portCHAR ) 0x40 )
+#define ucLED_BIT					( ( unsigned char ) 0x40 )
+#define mainPORT_1_BIT_6			( ( unsigned char ) 0x40 )
+#define mainENABLE_CROSS_BAR		( ( unsigned char ) 0x40 )
 
 /* Constants to set the clock frequency. */
-#define mainSELECT_INTERNAL_OSC		( ( unsigned portCHAR ) 0x80 )
-#define mainDIVIDE_CLOCK_BY_1		( ( unsigned portCHAR ) 0x03 )
-#define mainPLL_USES_INTERNAL_OSC	( ( unsigned portCHAR ) 0x04 )
-#define mainFLASH_READ_TIMING		( ( unsigned portCHAR ) 0x30 )
-#define mainPLL_POWER_ON			( ( unsigned portCHAR ) 0x01 )
-#define mainPLL_NO_PREDIVIDE		( ( unsigned portCHAR ) 0x01 )
-#define mainPLL_FILTER				( ( unsigned portCHAR ) 0x01 )
-#define mainPLL_MULTIPLICATION		( ( unsigned portCHAR ) 0x04 )
-#define mainENABLE_PLL				( ( unsigned portCHAR ) 0x02 )
-#define mainPLL_LOCKED				( ( unsigned portCHAR ) 0x10 )
-#define mainSELECT_PLL_AS_SOURCE	( ( unsigned portCHAR ) 0x02 )
+#define mainSELECT_INTERNAL_OSC		( ( unsigned char ) 0x80 )
+#define mainDIVIDE_CLOCK_BY_1		( ( unsigned char ) 0x03 )
+#define mainPLL_USES_INTERNAL_OSC	( ( unsigned char ) 0x04 )
+#define mainFLASH_READ_TIMING		( ( unsigned char ) 0x30 )
+#define mainPLL_POWER_ON			( ( unsigned char ) 0x01 )
+#define mainPLL_NO_PREDIVIDE		( ( unsigned char ) 0x01 )
+#define mainPLL_FILTER				( ( unsigned char ) 0x01 )
+#define mainPLL_MULTIPLICATION		( ( unsigned char ) 0x04 )
+#define mainENABLE_PLL				( ( unsigned char ) 0x02 )
+#define mainPLL_LOCKED				( ( unsigned char ) 0x10 )
+#define mainSELECT_PLL_AS_SOURCE	( ( unsigned char ) 0x02 )
 
 /* Toggle rate for the on board LED - which is dependent on whether or not
 an error has been detected. */
@@ -130,7 +131,7 @@ an error has been detected. */
 #define mainERROR_FLASH_PERIOD		( ( portTickType ) 250 )
 
 /* Baud rate used by the serial port tasks. */
-#define mainCOM_TEST_BAUD_RATE		( ( unsigned portLONG ) 115200 )
+#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
 
 /* Pass an invalid LED number to the COM test task as we don't want it to flash
 an LED.  There are only 8 LEDs (excluding the on board LED) wired in and these
@@ -138,11 +139,11 @@ are all used by the flash tasks. */
 #define mainCOM_TEST_LED			( 200 )
 
 /* We want the Cygnal to act as much as possible as a standard 8052. */
-#define mainAUTO_SFR_OFF			( ( unsigned portCHAR ) 0 )
+#define mainAUTO_SFR_OFF			( ( unsigned char ) 0 )
 
 /* Constants required to setup the IO pins for serial comms. */
-#define mainENABLE_COMS 			( ( unsigned portCHAR ) 0x04 )
-#define mainCOMS_LINES_TO_PUSH_PULL ( ( unsigned portCHAR ) 0x03 )
+#define mainENABLE_COMS 			( ( unsigned char ) 0x04 )
+#define mainCOMS_LINES_TO_PUSH_PULL ( ( unsigned char ) 0x03 )
 
 /* Pointer passed as a parameter to vRegisterCheck() just so it has some know
 values to check for in the DPH, DPL and B registers. */
@@ -246,7 +247,7 @@ void main( void )
  */
 static void prvSetupHardware( void )
 {
-unsigned portCHAR ucOriginalSFRPage;
+unsigned char ucOriginalSFRPage;
 
 	/* Remember the SFR page before it is changed so it can get set back
 	before the function exits. */
@@ -284,9 +285,9 @@ unsigned portCHAR ucOriginalSFRPage;
 
 static void prvSetupSystemClock( void )
 {
-volatile unsigned portSHORT usWait;
-const unsigned portSHORT usWaitTime = ( unsigned portSHORT ) 0x2ff;
-unsigned portCHAR ucOriginalSFRPage;
+volatile unsigned short usWait;
+const unsigned short usWaitTime = ( unsigned short ) 0x2ff;
+unsigned char ucOriginalSFRPage;
 
 	/* Remember the SFR page so we can set it back at the end. */
 	ucOriginalSFRPage = SFRPAGE;

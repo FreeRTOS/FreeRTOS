@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -99,7 +100,7 @@ tasks just use the idle priority. */
 #define mainBLOCK_Q_PRIORITY			( tskIDLE_PRIORITY + 2 )
 
 /* Baud rate used by the serial port tasks (ComTest tasks). */
-#define mainCOM_TEST_BAUD_RATE			( ( unsigned portLONG ) 115200 )
+#define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 115200 )
 
 /* LED used by the serial port tasks.  This is toggled on each character Tx,
 and mainCOM_TEST_LED + 1 is toggles on each character Rx. */
@@ -114,7 +115,7 @@ the the toggle rate increases to mainERROR_CHECK_PERIOD. */
 #define mainERROR_CHECK_PERIOD			( ( portTickType ) 500 / portTICK_RATE_MS )
 
 /* Constants used by the vMemCheckTask() task. */
-#define mainCOUNT_INITIAL_VALUE		( ( unsigned portLONG ) 0 )
+#define mainCOUNT_INITIAL_VALUE		( ( unsigned long ) 0 )
 #define mainNO_TASK					( 0 )
 
 /* The size of the memory blocks allocated by the vMemCheckTask() task. */
@@ -130,7 +131,7 @@ static void vErrorChecks( void *pvParameters );
 /*
  * Checks the unique counts of other tasks to ensure they are still operational.
  */
-static portLONG prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount );
+static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount );
 
 /*
  * Dynamically created and deleted during each cycle of the vErrorChecks()
@@ -160,7 +161,7 @@ int main( void )
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
 	/* Start the 'Check' task. */
-	xTaskCreate( vErrorChecks, ( signed portCHAR * )"Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, ( signed char * )"Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION 
 	as 1 in portmacro.h.  To use the cooperative scheduler define 
@@ -188,7 +189,7 @@ int main( void )
 static void vErrorChecks( void *pvParameters )
 {
 portTickType xDelayPeriod = mainCHECK_PERIOD;
-volatile unsigned portLONG ulMemCheckTaskRunningCount;
+volatile unsigned long ulMemCheckTaskRunningCount;
 xTaskHandle xCreatedTask;
 portTickType xLastWakeTime;
 
@@ -205,7 +206,7 @@ portTickType xLastWakeTime;
 		/* Dynamically create a task - passing ulMemCheckTaskRunningCount as a 
 		parameter. */		
 		xCreatedTask = mainNO_TASK;
-		if( xTaskCreate( vMemCheckTask, ( signed portCHAR * ) "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
+		if( xTaskCreate( vMemCheckTask, ( signed char * ) "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
 		{
 			/* Could not create the task - we have probably run out of heap. */
 			xDelayPeriod = mainERROR_CHECK_PERIOD;
@@ -241,9 +242,9 @@ portTickType xLastWakeTime;
  * 	Check each set of tasks in turn to see if they have experienced any
  *	error conditions. 
  */
-static portLONG prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount )
+static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount )
 {
-portLONG lNoErrorsDiscovered = ( portLONG ) pdTRUE;
+long lNoErrorsDiscovered = ( long ) pdTRUE;
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
@@ -293,9 +294,9 @@ portLONG lNoErrorsDiscovered = ( portLONG ) pdTRUE;
 
 static void vMemCheckTask( void *pvParameters )
 {
-unsigned portLONG *pulMemCheckTaskRunningCounter;
+unsigned long *pulMemCheckTaskRunningCounter;
 void *pvMem1, *pvMem2, *pvMem3;
-static portLONG lErrorOccurred = pdFALSE;
+static long lErrorOccurred = pdFALSE;
 
 	/* This task is dynamically created then deleted during each cycle of the
 	vErrorChecks task to check the operation of the memory allocator.  Each time
@@ -308,7 +309,7 @@ static portLONG lErrorOccurred = pdFALSE;
 	pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
 	vErrorChecks() task that this task is still executing without error. */
 
-	pulMemCheckTaskRunningCounter = ( unsigned portLONG * ) pvParameters;
+	pulMemCheckTaskRunningCounter = ( unsigned long * ) pvParameters;
 
 	for( ;; )
 	{

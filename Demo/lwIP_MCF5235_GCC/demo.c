@@ -80,7 +80,7 @@
 #include "flop.h"
 
 /* ------------------------ Defines --------------------------------------- */
-#define mainCOM_TEST_BAUD_RATE      ( ( unsigned portLONG ) 38400 )
+#define mainCOM_TEST_BAUD_RATE      ( ( unsigned long ) 38400 )
 
 /* Priorities for the demo application tasks. */
 #define mainLED_TASK_PRIORITY       ( tskIDLE_PRIORITY + 3 )
@@ -96,7 +96,7 @@
 #define mainCHECK_PERIOD            ( ( portTickType ) 2000 / portTICK_RATE_MS  )
 
 /* Constants used by the vMemCheckTask() task. */
-#define mainCOUNT_INITIAL_VALUE     ( ( unsigned portLONG ) 0 )
+#define mainCOUNT_INITIAL_VALUE     ( ( unsigned long ) 0 )
 #define mainNO_TASK                 ( 0 )
 
 /* The size of the memory blocks allocated by the vMemCheckTask() task. */
@@ -109,7 +109,7 @@ xComPortHandle  xSTDComPort = NULL;
 
 /* ------------------------ Static functions ------------------------------ */
 static          portTASK_FUNCTION( vErrorChecks, pvParameters );
-static portLONG prvCheckOtherTasksAreStillRunning( unsigned portLONG
+static long prvCheckOtherTasksAreStillRunning( unsigned long
                                                    ulMemCheckTaskCount );
 static          portTASK_FUNCTION( vMemCheckTask, pvParameters );
 
@@ -134,7 +134,7 @@ main( int argc, char *argv[] )
     ( void )sys_thread_new( vBasicWEBServer, NULL, mainWEB_TASK_PRIORITY );
 
     /* Start the check task - which is defined in this file. */
-    xTaskCreate( vErrorChecks, ( signed portCHAR * )"Check", 512, NULL,
+    xTaskCreate( vErrorChecks, ( signed char * )"Check", 512, NULL,
                  mainCHECK_TASK_PRIORITY, NULL );
         /* Now all the tasks have been started - start the scheduler. */
     vTaskStartScheduler(  );
@@ -146,7 +146,7 @@ main( int argc, char *argv[] )
 static
 portTASK_FUNCTION( vErrorChecks, pvParameters )
 {
-    unsigned portLONG ulMemCheckTaskRunningCount;
+    unsigned long ulMemCheckTaskRunningCount;
     xTaskHandle     xCreatedTask;
 
     /* The parameters are not used in this function. */
@@ -156,7 +156,7 @@ portTASK_FUNCTION( vErrorChecks, pvParameters )
     {
         ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
         xCreatedTask = mainNO_TASK;
-        if( xTaskCreate( vMemCheckTask, ( signed portCHAR * )"MEM",
+        if( xTaskCreate( vMemCheckTask, ( signed char * )"MEM",
                          configMINIMAL_STACK_SIZE, ( void * )&ulMemCheckTaskRunningCount,
                          tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
         {
@@ -182,10 +182,10 @@ portTASK_FUNCTION( vErrorChecks, pvParameters )
     }
 }
 
-static portLONG
-prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount )
+static long
+prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount )
 {
-    portLONG        lReturn = ( portLONG ) pdPASS;
+    long        lReturn = ( long ) pdPASS;
 
     /* Check all the demo tasks (other than the flash tasks) to ensure
      * that they are all still running, and that none of them have detected
@@ -193,27 +193,27 @@ prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount )
      */
     if( xAreIntegerMathsTaskStillRunning(  ) != pdTRUE )
     {
-        lReturn = ( portLONG ) pdFAIL;
+        lReturn = ( long ) pdFAIL;
     }
 
     if( xArePollingQueuesStillRunning(  ) != pdTRUE )
     {
-        lReturn = ( portLONG ) pdFAIL;
+        lReturn = ( long ) pdFAIL;
     }
 
     if( xAreSemaphoreTasksStillRunning(  ) != pdTRUE )
     {
-        lReturn = ( portLONG ) pdFAIL;
+        lReturn = ( long ) pdFAIL;
     }
 
     if( xAreDynamicPriorityTasksStillRunning(  ) != pdTRUE )
     {
-        lReturn = ( portLONG ) pdFAIL;
+        lReturn = ( long ) pdFAIL;
     }
 
     if( xAreBlockingQueuesStillRunning(  ) != pdTRUE )
     {
-        lReturn = ( portLONG ) pdFAIL;
+        lReturn = ( long ) pdFAIL;
     }
 
     if( ulMemCheckTaskCount == mainCOUNT_INITIAL_VALUE )
@@ -221,7 +221,7 @@ prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount )
         /* The vMemCheckTask did not increment the counter - it must
          * have failed.
          */
-        lReturn = ( portLONG ) pdFAIL;
+        lReturn = ( long ) pdFAIL;
     }
     return lReturn;
 }
@@ -229,9 +229,9 @@ prvCheckOtherTasksAreStillRunning( unsigned portLONG ulMemCheckTaskCount )
 static void
 vMemCheckTask( void *pvParameters )
 {
-    unsigned portLONG *pulMemCheckTaskRunningCounter;
+    unsigned long *pulMemCheckTaskRunningCounter;
     void           *pvMem1, *pvMem2, *pvMem3;
-    static portLONG lErrorOccurred = pdFALSE;
+    static long lErrorOccurred = pdFALSE;
 
     /* This task is dynamically created then deleted during each cycle of the
        vErrorChecks task to check the operation of the memory allocator.  Each time
@@ -244,7 +244,7 @@ vMemCheckTask( void *pvParameters )
        pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
        vErrorChecks() task that this task is still executing without error. */
 
-    pulMemCheckTaskRunningCounter = ( unsigned portLONG * )pvParameters;
+    pulMemCheckTaskRunningCounter = ( unsigned long * )pvParameters;
 
     for( ;; )
     {

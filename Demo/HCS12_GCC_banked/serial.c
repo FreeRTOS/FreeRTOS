@@ -37,22 +37,22 @@ static xQueueHandle xCharsForTx;
 /*
  * Initialise port for interrupt driven communications.
  */
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 	/* Hardware setup is performed by the Processor Expert generated code.  
 	This function just creates the queues used to communicate between the 
 	interrupt code and the task code - then sets the required baud rate. */
 
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
-	SCI_SetBaudRateMode( ( portCHAR ) ulWantedBaud );
+	SCI_SetBaudRateMode( ( char ) ulWantedBaud );
 
 	return NULL;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Get the next character from the buffer queue.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -67,7 +67,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 	/* Place the character in the queue of characters to be transmitted. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
@@ -102,7 +102,7 @@ void ATTR_INT ATTR_NEAR vCOM_ISR( void );
 
 void vCOM_ISR( void )
 {
-volatile unsigned portCHAR ucByte, ucStatus;
+volatile unsigned char ucByte, ucStatus;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */

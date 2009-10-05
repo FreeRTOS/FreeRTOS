@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -102,15 +103,15 @@ to use an MII interface. */
 /* The buffer addresses written into the descriptors must be aligned so the
 last few bits are zero.  These bits have special meaning for the EMAC
 peripheral and cannot be used as part of the address. */
-#define emacADDRESS_MASK			( ( unsigned portLONG ) 0xFFFFFFFC )
+#define emacADDRESS_MASK			( ( unsigned long ) 0xFFFFFFFC )
 
 /* Bit used within the address stored in the descriptor to mark the last
 descriptor in the array. */
-#define emacRX_WRAP_BIT				( ( unsigned portLONG ) 0x02 )
+#define emacRX_WRAP_BIT				( ( unsigned long ) 0x02 )
 
 /* Bit used within the Tx descriptor status to indicate whether the
 descriptor is under the control of the EMAC or the software. */
-#define emacTX_BUF_USED				( ( unsigned portLONG ) 0x80000000 )
+#define emacTX_BUF_USED				( ( unsigned long ) 0x80000000 )
 
 /* A short delay is used to wait for a buffer to become available, should
 one not be immediately available when trying to transmit a frame. */
@@ -121,32 +122,32 @@ one not be immediately available when trying to transmit a frame. */
 #define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( portTickType ) 100 )
 
 /* Peripheral setup for the EMAC. */
-#define emacPERIPHERAL_A_SETUP 		( ( unsigned portLONG ) AT91C_PB2_ETX0			) | \
-									( ( unsigned portLONG ) AT91C_PB12_ETXER		) | \
-									( ( unsigned portLONG ) AT91C_PB16_ECOL			) | \
-									( ( unsigned portLONG ) AT91C_PB11_ETX3			) | \
-									( ( unsigned portLONG ) AT91C_PB6_ERX1			) | \
-									( ( unsigned portLONG ) AT91C_PB15_ERXDV		) | \
-									( ( unsigned portLONG ) AT91C_PB13_ERX2			) | \
-									( ( unsigned portLONG ) AT91C_PB3_ETX1			) | \
-									( ( unsigned portLONG ) AT91C_PB8_EMDC			) | \
-									( ( unsigned portLONG ) AT91C_PB5_ERX0			) | \
-									( ( unsigned portLONG ) AT91C_PB14_ERX3			) | \
-									( ( unsigned portLONG ) AT91C_PB4_ECRS_ECRSDV	) | \
-									( ( unsigned portLONG ) AT91C_PB1_ETXEN			) | \
-									( ( unsigned portLONG ) AT91C_PB10_ETX2			) | \
-									( ( unsigned portLONG ) AT91C_PB0_ETXCK_EREFCK	) | \
-									( ( unsigned portLONG ) AT91C_PB9_EMDIO			) | \
-									( ( unsigned portLONG ) AT91C_PB7_ERXER			) | \
-									( ( unsigned portLONG ) AT91C_PB17_ERXCK		);
+#define emacPERIPHERAL_A_SETUP 		( ( unsigned long ) AT91C_PB2_ETX0			) | \
+									( ( unsigned long ) AT91C_PB12_ETXER		) | \
+									( ( unsigned long ) AT91C_PB16_ECOL			) | \
+									( ( unsigned long ) AT91C_PB11_ETX3			) | \
+									( ( unsigned long ) AT91C_PB6_ERX1			) | \
+									( ( unsigned long ) AT91C_PB15_ERXDV		) | \
+									( ( unsigned long ) AT91C_PB13_ERX2			) | \
+									( ( unsigned long ) AT91C_PB3_ETX1			) | \
+									( ( unsigned long ) AT91C_PB8_EMDC			) | \
+									( ( unsigned long ) AT91C_PB5_ERX0			) | \
+									( ( unsigned long ) AT91C_PB14_ERX3			) | \
+									( ( unsigned long ) AT91C_PB4_ECRS_ECRSDV	) | \
+									( ( unsigned long ) AT91C_PB1_ETXEN			) | \
+									( ( unsigned long ) AT91C_PB10_ETX2			) | \
+									( ( unsigned long ) AT91C_PB0_ETXCK_EREFCK	) | \
+									( ( unsigned long ) AT91C_PB9_EMDIO			) | \
+									( ( unsigned long ) AT91C_PB7_ERXER			) | \
+									( ( unsigned long ) AT91C_PB17_ERXCK		);
 
 /* Misc defines. */
 #define emacINTERRUPT_LEVEL			( 5 )
 #define emacNO_DELAY				( 0 )
 #define emacTOTAL_FRAME_HEADER_SIZE	( 54 )
 #define emacPHY_INIT_DELAY			( 5000 / portTICK_RATE_MS )
-#define emacRESET_KEY				( ( unsigned portLONG ) 0xA5000000 )
-#define emacRESET_LENGTH			( ( unsigned portLONG ) ( 0x01 << 8 ) )
+#define emacRESET_KEY				( ( unsigned long ) 0xA5000000 )
+#define emacRESET_LENGTH			( ( unsigned long ) ( 0x01 << 8 ) )
 
 /* The Atmel header file only defines the TX frame length mask. */
 #define emacRX_LENGTH_FRAME			( 0xfff )
@@ -155,11 +156,11 @@ one not be immediately available when trying to transmit a frame. */
 
 /* Buffer written to by the EMAC DMA.  Must be aligned as described by the
 comment above the emacADDRESS_MASK definition. */
-static volatile portCHAR pcRxBuffer[ NB_RX_BUFFERS * ETH_RX_BUFFER_SIZE ] __attribute__ ((aligned (8)));
+static volatile char pcRxBuffer[ NB_RX_BUFFERS * ETH_RX_BUFFER_SIZE ] __attribute__ ((aligned (8)));
 
 /* Buffer read by the EMAC DMA.  Must be aligned as described by the comment
 above the emacADDRESS_MASK definition. */
-static portCHAR pcTxBuffer[ NB_TX_BUFFERS * ETH_TX_BUFFER_SIZE ] __attribute__ ((aligned (8)));
+static char pcTxBuffer[ NB_TX_BUFFERS * ETH_TX_BUFFER_SIZE ] __attribute__ ((aligned (8)));
 
 /* Descriptors used to communicate between the program and the EMAC peripheral.
 These descriptors hold the locations and state of the Rx and Tx buffers. */
@@ -167,7 +168,7 @@ static volatile AT91S_TxTdDescriptor xTxDescriptors[ NB_TX_BUFFERS ];
 static volatile AT91S_RxTdDescriptor xRxDescriptors[ NB_RX_BUFFERS ];
 
 /* The IP and Ethernet addresses are read from the header files. */
-const portCHAR cMACAddress[ 6 ] = { emacETHADDR0, emacETHADDR1, emacETHADDR2, emacETHADDR3, emacETHADDR4, emacETHADDR5 };
+const char cMACAddress[ 6 ] = { emacETHADDR0, emacETHADDR1, emacETHADDR2, emacETHADDR3, emacETHADDR4, emacETHADDR5 };
 const unsigned char ucIPAddress[ 4 ]  = { emacIPADDR0, emacIPADDR1, emacIPADDR2, emacIPADDR3 };
 
 /*-----------------------------------------------------------*/
@@ -197,11 +198,11 @@ static void prvSetupEMACInterrupt( void );
 /*
  * Some initialisation functions taken from the Atmel EMAC sample code.
  */
-static void vReadPHY( unsigned portCHAR ucPHYAddress, unsigned portCHAR ucAddress, unsigned portLONG *pulValue );
+static void vReadPHY( unsigned char ucPHYAddress, unsigned char ucAddress, unsigned long *pulValue );
 static portBASE_TYPE xGetLinkSpeed( void );
 static portBASE_TYPE prvProbePHY( void );
 #if USE_RMII_INTERFACE != 1
-	static void vWritePHY( unsigned portCHAR ucPHYAddress, unsigned portCHAR ucAddress, unsigned portLONG ulValue);
+	static void vWritePHY( unsigned char ucPHYAddress, unsigned char ucAddress, unsigned long ulValue);
 #endif
 
 
@@ -209,18 +210,18 @@ static portBASE_TYPE prvProbePHY( void );
 static xSemaphoreHandle xSemaphore = NULL;
 
 /* Holds the index to the next buffer from which data will be read. */
-static volatile unsigned portLONG ulNextRxBuffer = 0;
+static volatile unsigned long ulNextRxBuffer = 0;
 
 /*-----------------------------------------------------------*/
 
 /* See the header file for descriptions of public functions. */
-portLONG lEMACSend( portCHAR *pcFrom, unsigned portLONG ulLength, portLONG lEndOfFrame )
+long lEMACSend( char *pcFrom, unsigned long ulLength, long lEndOfFrame )
 {
 static unsigned portBASE_TYPE uxTxBufferIndex = 0;
 portBASE_TYPE xWaitCycles = 0;
-portLONG lReturn = pdPASS;
-portCHAR *pcBuffer;
-unsigned portLONG ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthToSend;
+long lReturn = pdPASS;
+char *pcBuffer;
+unsigned long ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLengthToSend;
 
 	/* If the length of data to be transmitted is greater than each individual
 	transmit buffer then the data will be split into more than one buffer.
@@ -252,7 +253,7 @@ unsigned portLONG ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLen
 			{
 				/* Get the address of the buffer from the descriptor, then copy 
 				the data into the buffer. */
-				pcBuffer = ( portCHAR * ) xTxDescriptors[ uxTxBufferIndex ].addr;
+				pcBuffer = ( char * ) xTxDescriptors[ uxTxBufferIndex ].addr;
 
 				/* How much can we write to the buffer? */
 				ulDataRemainingToSend = ulLength - ulDataBuffered;
@@ -288,14 +289,14 @@ unsigned portLONG ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLen
 				then move to the next descriptor, wrapping if necessary. */
 				if( uxTxBufferIndex >= ( NB_TX_BUFFERS - 1 ) )
 				{				
-					xTxDescriptors[ uxTxBufferIndex ].U_Status.status = 	( ulLengthToSend & ( unsigned portLONG ) AT91C_LENGTH_FRAME )
+					xTxDescriptors[ uxTxBufferIndex ].U_Status.status = 	( ulLengthToSend & ( unsigned long ) AT91C_LENGTH_FRAME )
 																			| ulLastBuffer
 																			| AT91C_TRANSMIT_WRAP;
 					uxTxBufferIndex = 0;
 				}
 				else
 				{
-					xTxDescriptors[ uxTxBufferIndex ].U_Status.status = 	( ulLengthToSend & ( unsigned portLONG ) AT91C_LENGTH_FRAME )
+					xTxDescriptors[ uxTxBufferIndex ].U_Status.status = 	( ulLengthToSend & ( unsigned long ) AT91C_LENGTH_FRAME )
 																			| ulLastBuffer;
 					uxTxBufferIndex++;
 				}
@@ -320,9 +321,9 @@ unsigned portLONG ulLastBuffer, ulDataBuffered = 0, ulDataRemainingToSend, ulLen
 /*-----------------------------------------------------------*/
 
 /* See the header file for descriptions of public functions. */
-unsigned portLONG ulEMACInputLength( void )
+unsigned long ulEMACInputLength( void )
 {
-register unsigned portLONG ulIndex, ulLength = 0;
+register unsigned long ulIndex, ulLength = 0;
 
 	/* Skip any fragments.  We are looking for the first buffer that contains
 	data and has the SOF (start of frame) bit set. */
@@ -361,11 +362,11 @@ register unsigned portLONG ulIndex, ulLength = 0;
 /*-----------------------------------------------------------*/
 
 /* See the header file for descriptions of public functions. */
-void vEMACRead( portCHAR *pcTo, unsigned portLONG ulSectionLength, unsigned portLONG ulTotalFrameLength )
+void vEMACRead( char *pcTo, unsigned long ulSectionLength, unsigned long ulTotalFrameLength )
 {
-static unsigned portLONG ulSectionBytesReadSoFar = 0, ulBufferPosition = 0, ulFameBytesReadSoFar = 0;
-static portCHAR *pcSource;
-register unsigned portLONG ulBytesRemainingInBuffer, ulRemainingSectionBytes;
+static unsigned long ulSectionBytesReadSoFar = 0, ulBufferPosition = 0, ulFameBytesReadSoFar = 0;
+static char *pcSource;
+register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 
 	/* Read ulSectionLength bytes from the Rx buffers.  This is not necessarily any
 	correspondence between the length of our Rx buffers, and the length of the
@@ -390,9 +391,9 @@ register unsigned portLONG ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 		than one buffer. */
 
 		/* Reset our state variables ready for the next read from this buffer. */
-        pcSource = ( portCHAR * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
-        ulFameBytesReadSoFar = ( unsigned portLONG ) 0;
-		ulBufferPosition = ( unsigned portLONG ) 0;
+        pcSource = ( char * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
+        ulFameBytesReadSoFar = ( unsigned long ) 0;
+		ulBufferPosition = ( unsigned long ) 0;
 	}
 	else
 	{
@@ -425,12 +426,12 @@ register unsigned portLONG ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 				ulNextRxBuffer++;
 				if( ulNextRxBuffer >= NB_RX_BUFFERS )
 				{
-					ulNextRxBuffer = ( unsigned portLONG ) 0;
+					ulNextRxBuffer = ( unsigned long ) 0;
 				}
 
 				/* Reset the variables for the new buffer. */
-				pcSource = ( portCHAR * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
-				ulBufferPosition = ( unsigned portLONG ) 0;
+				pcSource = ( char * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
+				ulBufferPosition = ( unsigned long ) 0;
 			}
 			else
 			{
@@ -457,7 +458,7 @@ register unsigned portLONG ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 						ulNextRxBuffer = 0;
 					}
 	
-					pcSource = ( portCHAR * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
+					pcSource = ( char * )( xRxDescriptors[ ulNextRxBuffer ].addr & emacADDRESS_MASK );
 					ulBufferPosition = 0;
 				}
 			}
@@ -514,7 +515,7 @@ xSemaphoreHandle xEMACInit( void )
 	/* PHY configuration. */
 	#if USE_RMII_INTERFACE != 1
 	{
-		unsigned portLONG ulControl;
+		unsigned long ulControl;
 
 		/* PHY has internal pull down : disable MII isolate. */
 		vReadPHY( AT91C_PHY_ADDR, MII_BMCR, &ulControl );
@@ -600,13 +601,13 @@ static unsigned portBASE_TYPE uxNextBufferToClear = 0;
 static void prvSetupDescriptors(void)
 {
 unsigned portBASE_TYPE xIndex;
-unsigned portLONG ulAddress;
+unsigned long ulAddress;
 
 	/* Initialise xRxDescriptors descriptor. */
 	for( xIndex = 0; xIndex < NB_RX_BUFFERS; ++xIndex )
 	{
 		/* Calculate the address of the nth buffer within the array. */
-		ulAddress = ( unsigned portLONG )( pcRxBuffer + ( xIndex * ETH_RX_BUFFER_SIZE ) );
+		ulAddress = ( unsigned long )( pcRxBuffer + ( xIndex * ETH_RX_BUFFER_SIZE ) );
 
 		/* Write the buffer address into the descriptor.  The DMA will place
 		the data at this address when this descriptor is being used.  Mask off
@@ -622,7 +623,7 @@ unsigned portLONG ulAddress;
 	for( xIndex = 0; xIndex < NB_TX_BUFFERS; ++xIndex )
 	{
 		/* Calculate the address of the nth buffer within the array. */
-		ulAddress = ( unsigned portLONG )( pcTxBuffer + ( xIndex * ETH_TX_BUFFER_SIZE ) );
+		ulAddress = ( unsigned long )( pcTxBuffer + ( xIndex * ETH_TX_BUFFER_SIZE ) );
 
 		/* Write the buffer address into the descriptor.  The DMA will read
 		data from here when the descriptor is being used. */
@@ -635,8 +636,8 @@ unsigned portLONG ulAddress;
 	xTxDescriptors[ NB_TX_BUFFERS - 1 ].U_Status.status = AT91C_TRANSMIT_WRAP | AT91C_TRANSMIT_OK;
 
 	/* Tell the EMAC where to find the descriptors. */
-	AT91C_BASE_EMAC->EMAC_RBQP = ( unsigned portLONG ) xRxDescriptors;
-	AT91C_BASE_EMAC->EMAC_TBQP = ( unsigned portLONG ) xTxDescriptors;
+	AT91C_BASE_EMAC->EMAC_RBQP = ( unsigned long ) xRxDescriptors;
+	AT91C_BASE_EMAC->EMAC_TBQP = ( unsigned long ) xTxDescriptors;
 	
 	/* Clear all the bits in the receive status register. */
 	AT91C_BASE_EMAC->EMAC_RSR = ( AT91C_EMAC_OVR | AT91C_EMAC_REC | AT91C_EMAC_BNA );
@@ -653,12 +654,12 @@ unsigned portLONG ulAddress;
 static void prvSetupMACAddress( void )
 {
 	/* Must be written SA1L then SA1H. */
-	AT91C_BASE_EMAC->EMAC_SA1L =	( ( unsigned portLONG ) cMACAddress[ 3 ] << 24 ) |
-									( ( unsigned portLONG ) cMACAddress[ 2 ] << 16 ) |
-									( ( unsigned portLONG ) cMACAddress[ 1 ] << 8  ) |
+	AT91C_BASE_EMAC->EMAC_SA1L =	( ( unsigned long ) cMACAddress[ 3 ] << 24 ) |
+									( ( unsigned long ) cMACAddress[ 2 ] << 16 ) |
+									( ( unsigned long ) cMACAddress[ 1 ] << 8  ) |
 									cMACAddress[ 0 ];
 
-	AT91C_BASE_EMAC->EMAC_SA1H =	( ( unsigned portLONG ) cMACAddress[ 5 ] << 8 ) |
+	AT91C_BASE_EMAC->EMAC_SA1H =	( ( unsigned long ) cMACAddress[ 5 ] << 8 ) |
 									cMACAddress[ 4 ];
 }
 /*-----------------------------------------------------------*/
@@ -697,7 +698,7 @@ static void prvSetupEMACInterrupt( void )
 
 static portBASE_TYPE prvProbePHY( void )
 {
-unsigned portLONG ulPHYId1, ulPHYId2, ulStatus;
+unsigned long ulPHYId1, ulPHYId2, ulStatus;
 portBASE_TYPE xReturn = pdPASS;
 	
 	/* Code supplied by Atmel (reformatted) -----------------*/
@@ -740,7 +741,7 @@ portBASE_TYPE xReturn = pdPASS;
 }
 /*-----------------------------------------------------------*/
 
-static void vReadPHY( unsigned portCHAR ucPHYAddress, unsigned portCHAR ucAddress, unsigned portLONG *pulValue )
+static void vReadPHY( unsigned char ucPHYAddress, unsigned char ucAddress, unsigned long *pulValue )
 {
 	/* Code supplied by Atmel (reformatted) ----------------------*/
 
@@ -762,7 +763,7 @@ static void vReadPHY( unsigned portCHAR ucPHYAddress, unsigned portCHAR ucAddres
 /*-----------------------------------------------------------*/
 
 #if USE_RMII_INTERFACE != 1
-static void vWritePHY( unsigned portCHAR ucPHYAddress, unsigned portCHAR ucAddress, unsigned portLONG ulValue )
+static void vWritePHY( unsigned char ucPHYAddress, unsigned char ucAddress, unsigned long ulValue )
 {
 	/* Code supplied by Atmel (reformatted) ----------------------*/
 
@@ -785,7 +786,7 @@ static void vWritePHY( unsigned portCHAR ucPHYAddress, unsigned portCHAR ucAddre
 
 static portBASE_TYPE xGetLinkSpeed( void )
 {
-	unsigned portLONG ulBMSR, ulBMCR, ulLPA, ulMACCfg, ulSpeed, ulDuplex;
+	unsigned long ulBMSR, ulBMCR, ulLPA, ulMACCfg, ulSpeed, ulDuplex;
 
 	/* Code supplied by Atmel (reformatted) -----------------*/
 

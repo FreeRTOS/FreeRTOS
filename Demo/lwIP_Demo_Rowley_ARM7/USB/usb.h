@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /* Descriptor type definitions. */
@@ -100,20 +101,20 @@
 /* Misc application definitions. */
 #define usbINTERRUPT_PRIORITY				( 3 )
 #define usbQUEUE_LENGTH						( 0x3 )	/* Must have all bits set! */
-#define usbFIFO_LENGTH						( ( unsigned portLONG ) 8 )
+#define usbFIFO_LENGTH						( ( unsigned long ) 8 )
 #define usbEND_POINT_0						( 0 )
 #define usbEND_POINT_1						( 1 )
 #define usbEND_POINT_2						( 2 )
 #define usbEND_POINT_3						( 3 )
 #define usbMAX_CONTROL_MESSAGE_SIZE			( 128 )
-#define usbRX_COUNT_MASK					( ( unsigned portLONG ) 0x7ff )
+#define usbRX_COUNT_MASK					( ( unsigned long ) 0x7ff )
 #define AT91C_UDP_STALLSENT					AT91C_UDP_ISOERROR
 #define usbSHORTEST_DELAY					( ( portTickType ) 1 )
 #define usbINIT_DELAY						( ( portTickType ) 1000 / portTICK_RATE_MS )
 #define usbSHORT_DELAY						( ( portTickType ) 50 / portTICK_RATE_MS )
-#define usbEND_POINT_RESET_MASK				( ( unsigned portLONG ) 0x0f )
-#define usbDATA_INC							( ( portCHAR ) 5 )
-#define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned portLONG ) 8 )
+#define usbEND_POINT_RESET_MASK				( ( unsigned long ) 0x0f )
+#define usbDATA_INC							( ( char ) 5 )
+#define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned long ) 8 )
 
 /* Control request types. */
 #define usbSTANDARD_DEVICE_REQUEST			( 0 )
@@ -133,14 +134,14 @@ unchanged by writing with a 1. */
 	/* Set TXCOMP, RX_DATA_BK0, RXSETUP, */												\
 	/* STALLSENT and RX_DATA_BK1 to 1 so the */											\
 	/* write has no effect. */															\
-	( * ( ( unsigned portLONG * ) pulValueNow ) ) |= ( unsigned portLONG ) 0x4f;		\
+	( * ( ( unsigned long * ) pulValueNow ) ) |= ( unsigned long ) 0x4f;		\
 																						\
 	/* Clear the FORCE_STALL and TXPKTRDY bits */										\
 	/* so the write has no effect. */													\
-	( * ( ( unsigned portLONG * ) pulValueNow ) ) &= ( unsigned portLONG ) 0xffffffcf;	\
+	( * ( ( unsigned long * ) pulValueNow ) ) &= ( unsigned long ) 0xffffffcf;	\
 																						\
 	/* Set whichever bit we want set. */												\
-	( * ( ( unsigned portLONG * ) pulValueNow ) ) |= ( ulBit );							\
+	( * ( ( unsigned long * ) pulValueNow ) ) |= ( ulBit );							\
 }
 
 #define usbCSR_CLEAR_BIT( pulValueNow, ulBit )											\
@@ -148,12 +149,12 @@ unchanged by writing with a 1. */
 	/* Set TXCOMP, RX_DATA_BK0, RXSETUP, */												\
 	/* STALLSENT and RX_DATA_BK1 to 1 so the */											\
 	/* write has no effect. */															\
-	( * ( ( unsigned portLONG * ) pulValueNow ) ) |= ( unsigned portLONG ) 0x4f;		\
+	( * ( ( unsigned long * ) pulValueNow ) ) |= ( unsigned long ) 0x4f;		\
 																						\
 	/* Clear the FORCE_STALL and TXPKTRDY bits */										\
 	/* so the write has no effect. */													\
-	( * ( ( unsigned portLONG * ) pulValueNow ) ) &= ( unsigned portLONG ) 0xffffffcf;	\
+	( * ( ( unsigned long * ) pulValueNow ) ) &= ( unsigned long ) 0xffffffcf;	\
 																						\
 	/* Clear whichever bit we want clear. */											\
-	( * ( ( unsigned portLONG * ) pulValueNow ) ) &= ( ~ulBit );						\
+	( * ( ( unsigned long * ) pulValueNow ) ) &= ( ~ulBit );						\
 }

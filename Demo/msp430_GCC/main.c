@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -87,8 +88,8 @@
 #include "PollQ.h"
 
 /* Constants required for hardware setup. */
-#define mainALL_BITS_OUTPUT		( ( unsigned portCHAR ) 0xff )
-#define mainMAX_FREQUENCY		( ( unsigned portCHAR ) 121 )
+#define mainALL_BITS_OUTPUT		( ( unsigned char ) 0xff )
+#define mainMAX_FREQUENCY		( ( unsigned char ) 121 )
 
 /* Constants that define the LED's used by the various tasks. [in this case
 the '*' characters on the LCD represent LED's] */
@@ -102,7 +103,7 @@ the '*' characters on the LCD represent LED's] */
 #define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 
 /* Baud rate used by the COM test tasks. */
-#define mainCOM_TEST_BAUD_RATE			( ( unsigned portLONG ) 19200 )
+#define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 19200 )
 
 /* The frequency at which the 'Check' tasks executes.  See the comments at the 
 top of the page.  When the system is operating error free the 'Check' task
@@ -122,7 +123,7 @@ static void vErrorChecks( void *pvParameters );
  * Called by the Check task.  Returns pdPASS if all the other tasks are found
  * to be operating without error - otherwise returns pdFAIL.
  */
-static portSHORT prvCheckOtherTasksAreStillRunning( void );
+static short prvCheckOtherTasksAreStillRunning( void );
 
 /* 
  * Perform the hardware setup required by the ES449 in order to run the demo
@@ -131,7 +132,7 @@ static portSHORT prvCheckOtherTasksAreStillRunning( void );
 static void prvSetupHardware( void );
 
 /* Used to detect the idle hook function stalling. */
-static volatile unsigned portLONG ulIdleLoops = 0UL;
+static volatile unsigned long ulIdleLoops = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -164,7 +165,7 @@ int main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-static volatile unsigned portLONG ulDummyVariable = 3UL;
+static volatile unsigned long ulDummyVariable = 3UL;
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
@@ -199,10 +200,10 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 }
 /*-----------------------------------------------------------*/
 
-static portSHORT prvCheckOtherTasksAreStillRunning( void )
+static short prvCheckOtherTasksAreStillRunning( void )
 {
-static portSHORT sNoErrorFound = pdTRUE;
-static unsigned portLONG ulLastIdleLoops = 0UL;
+static short sNoErrorFound = pdTRUE;
+static unsigned long ulLastIdleLoops = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 

@@ -46,7 +46,7 @@
  * Watchdog function declarations 
  */
 void InitWatchdog (void);
-void vStartWatchdogTask(unsigned portSHORT);
+void vStartWatchdogTask(unsigned short);
 
 #endif
 

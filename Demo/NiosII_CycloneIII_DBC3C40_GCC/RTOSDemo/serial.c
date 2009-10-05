@@ -1,19 +1,19 @@
 /*
-    FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     This file is part of the FreeRTOS distribution.
 
-    FreeRTOS is free software; you can redistribute it and/or modify it under 
-    the terms of the GNU General Public License (version 2) as published by the 
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation and modified by the FreeRTOS exception.
     **NOTE** The exception to the GPL is included to allow you to distribute a
-    combined work that includes FreeRTOS without being obliged to provide the 
-    source code for proprietary components outside of the FreeRTOS kernel.  
-    Alternative commercial license and support terms are also available upon 
-    request.  See the licensing section of http://www.FreeRTOS.org for full 
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
     license details.
 
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
     more details.
@@ -25,8 +25,9 @@
 
     ***************************************************************************
     *                                                                         *
-    * Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-    * See http://www.FreeRTOS.org/Documentation for details                   *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
     *                                                                         *
     ***************************************************************************
 
@@ -73,11 +74,11 @@ static void vUARTReceiveHandler( alt_u32 status );
 static void vUARTTransmitHandler( alt_u32 status );
 /*---------------------------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 	/* Create the queues used to hold Rx and Tx characters. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 	/* If the queues were created correctly then setup the serial port hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
@@ -106,7 +107,7 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*---------------------------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -127,7 +128,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*---------------------------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 signed portBASE_TYPE lReturn = pdPASS;
 
@@ -147,9 +148,9 @@ signed portBASE_TYPE lReturn = pdPASS;
 }
 /*---------------------------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed portCHAR * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
-signed portCHAR *pxNext;
+signed char *pxNext;
 
 	/* A couple of parameters that this port does not use. */
 	( void ) usStringLength;
@@ -161,7 +162,7 @@ signed portCHAR *pxNext;
 	( void ) pxPort;
 
 	/* Send each character in the string, one at a time. */
-	pxNext = ( signed portCHAR * ) pcString;
+	pxNext = ( signed char * ) pcString;
 	while( *pxNext )
 	{
 		xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
@@ -197,7 +198,7 @@ static void vUARTInterruptHandler( void* context, alt_u32 id )
 
 static void vUARTReceiveHandler( alt_u32 status )
 {
-signed portCHAR cChar;
+signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* If there was an error, discard the data */
@@ -223,7 +224,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void vUARTTransmitHandler( alt_u32 status )
 {
-signed portCHAR cChar;
+signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Transfer data if there is some ready to be transferred */
 	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )

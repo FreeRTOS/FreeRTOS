@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /**
@@ -118,8 +119,8 @@
 #define mainSEMAPHORE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
 #define mainGENERIC_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
-#define mainPRINT_STACK_SIZE		( ( unsigned portSHORT ) 512 )
-#define mainDEBUG_LOG_BUFFER_SIZE	( ( unsigned portSHORT ) 20480 )
+#define mainPRINT_STACK_SIZE		( ( unsigned short ) 512 )
+#define mainDEBUG_LOG_BUFFER_SIZE	( ( unsigned short ) 20480 )
 
 /* The number of flash co-routines to create. */
 #define mainNUM_FLASH_CO_ROUTINES	( 8 )
@@ -138,11 +139,11 @@ static void	prvCheckForKeyPresses( void );
 /* Buffer used by the trace visualisation utility so only needed if the trace
 being used. */
 #if configUSE_TRACE_FACILITY == 1
-	static portCHAR pcWriteBuffer[ mainDEBUG_LOG_BUFFER_SIZE ];
+	static char pcWriteBuffer[ mainDEBUG_LOG_BUFFER_SIZE ];
 #endif
 
 /* Constant definition used to turn on/off the pre-emptive scheduler. */
-static const portSHORT sUsingPreemption = configUSE_PREEMPTION;
+static const short sUsingPreemption = configUSE_PREEMPTION;
 
 /* Start the math tasks appropriate to the build.  The Borland port does
 not yet support floating point so uses the integer equivalent. */
@@ -156,12 +157,12 @@ static portBASE_TYPE prvExampleTaskHook( void * pvParameter );
 
 /* Just used to count the number of times the example task callback function is
 called, and the number of times a queue send passes. */
-static unsigned portLONG portLONG uxCheckTaskHookCallCount = 0;
-static unsigned portLONG portLONG uxQueueSendPassedCount = 0;
+static unsigned long long uxCheckTaskHookCallCount = 0;
+static unsigned long long uxQueueSendPassedCount = 0;
 
 /*-----------------------------------------------------------*/
 
-portSHORT main( void )
+short main( void )
 {
 	/* Initialise hardware and utilities. */
 	vParTestInitialise();
@@ -235,12 +236,12 @@ static void vErrorChecks( void *pvParameters )
 {
 portTickType xExpectedWakeTime;
 const portTickType xPrintRate = ( portTickType ) 5000 / portTICK_RATE_MS;
-const portLONG lMaxAllowableTimeDifference = ( portLONG ) 0;
+const long lMaxAllowableTimeDifference = ( long ) 0;
 portTickType xWakeTime;
-portLONG lTimeDifference;
-const portCHAR *pcReceivedMessage;
-const portCHAR * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
-const portCHAR * const pcUnexpectedHookValueMsg = "Task hook has unexpected value!\r\n";
+long lTimeDifference;
+const char *pcReceivedMessage;
+const char * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";
+const char * const pcUnexpectedHookValueMsg = "Task hook has unexpected value!\r\n";
 
 	( void ) pvParameters;
 
@@ -279,11 +280,11 @@ const portCHAR * const pcUnexpectedHookValueMsg = "Task hook has unexpected valu
 			time we should have unblocked. */
 			if( xWakeTime > xExpectedWakeTime )
 			{
-				lTimeDifference = ( portLONG ) ( xWakeTime - xExpectedWakeTime );
+				lTimeDifference = ( long ) ( xWakeTime - xExpectedWakeTime );
 			}
 			else
 			{
-				lTimeDifference = ( portLONG ) ( xExpectedWakeTime - xWakeTime );
+				lTimeDifference = ( long ) ( xExpectedWakeTime - xWakeTime );
 			}
 
 			if( lTimeDifference > lMaxAllowableTimeDifference )
@@ -317,7 +318,7 @@ const portCHAR * const pcUnexpectedHookValueMsg = "Task hook has unexpected valu
 
 static void	prvCheckForKeyPresses( void )
 {
-portSHORT sIn;
+short sIn;
 
 	taskENTER_CRITICAL();
 		#ifdef DEBUG_BUILD
@@ -346,7 +347,7 @@ portSHORT sIn;
 							break;
 
 				case 'e' :	{
-								unsigned portLONG ulBufferLength;
+								unsigned long ulBufferLength;
 								ulBufferLength = ulTaskEndTrace();
 								vWriteBufferToDisk( pcWriteBuffer, ulBufferLength );
 							}
@@ -362,8 +363,8 @@ portSHORT sIn;
 
 static void prvCheckOtherTasksAreStillRunning( void )
 {
-static portSHORT sErrorHasOccurred = pdFALSE;
-static unsigned portLONG portLONG uxLastHookCallCount = 0, uxLastQueueSendCount = 0;
+static short sErrorHasOccurred = pdFALSE;
+static unsigned long long uxLastHookCallCount = 0, uxLastQueueSendCount = 0;
 
 	if( prvCheckMathTasksAreStillRunning() != pdTRUE )
 	{

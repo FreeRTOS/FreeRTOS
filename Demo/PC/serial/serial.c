@@ -3,75 +3,56 @@
 	simplified it by removing a lot of the functionality (hardware 
 	flow control, etc.).  For more details and the full version see
 	http://dzcomm.sourceforge.net
-
-
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
-
-	This file is part of the FreeRTOS distribution.
-
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
-
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
-
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
-
-
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
-
-	1 tab == 4 spaces!
-
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
-
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
-
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
-
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
 */
 
 /*
-Changes from V1.00:
-	
-	+ Call to the more efficient portSWITCH_CONTEXT() replaces the call to 
-	  taskYIELD() in the ISR.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-Changes from V1.2.0:
+    This file is part of the FreeRTOS distribution.
 
-	+ Added vSerialPutString().
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-Changes from V1.2.3
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	+ The function xPortInitMinimal() has been renamed to 
-	  xSerialPortInitMinimal() and the function xPortInit() has been renamed
-	  to xSerialPortInit().
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
-Changes From V2.0.0
 
-	+ Use portTickType in place of unsigned pdLONG for delay periods.
-	+ cQueueReieveFromISR() used in place of xQueueReceive() in ISR.
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
+
+    1 tab == 4 spaces!
+
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
+
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
+
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
+
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
+
 
 
 #include <stdlib.h>
@@ -84,16 +65,16 @@ Changes From V2.0.0
 
 #define serMAX_IRQs						( 16 )
 #define serTRANSMIT_HOLD_EMPTY_INT		( 0x02 )
-#define serCOM1_STANDARD_IRQ			( ( unsigned portCHAR ) 4 )
-#define serCOM2_STANDARD_IRQ			( ( unsigned portCHAR ) 3 )
+#define serCOM1_STANDARD_IRQ			( ( unsigned char ) 4 )
+#define serCOM2_STANDARD_IRQ			( ( unsigned char ) 3 )
 
 
-#define	serIMR_8259_0					( ( unsigned portCHAR ) 0x21 )
-#define	serIMR_8259_1					( ( unsigned portCHAR ) 0xa1 )
-#define	serISR_8259_0					( ( unsigned portCHAR ) 0x20 )
-#define	serISR_8259_1					( ( unsigned portCHAR ) 0xa0 )
-#define	serALL_COMS_INTERRUPTS			( ( unsigned portCHAR ) 0x0f )
-#define	serALL_MODEM_CTRL_INTERRUPTS	( ( unsigned portCHAR ) 0x0f )
+#define	serIMR_8259_0					( ( unsigned char ) 0x21 )
+#define	serIMR_8259_1					( ( unsigned char ) 0xa1 )
+#define	serISR_8259_0					( ( unsigned char ) 0x20 )
+#define	serISR_8259_1					( ( unsigned char ) 0xa0 )
+#define	serALL_COMS_INTERRUPTS			( ( unsigned char ) 0x0f )
+#define	serALL_MODEM_CTRL_INTERRUPTS	( ( unsigned char ) 0x0f )
 
 #define serTRANSMIT_HOLD_OFFSET					( 0 )
 #define serRECEIVE_DATA_OFFSET					( 0 )
@@ -108,13 +89,13 @@ Changes From V2.0.0
 #define serMODEM_STATUS_OFFSET					( 6 )
 #define serSCR_OFFSET							( 7 )
 
-#define serMAX_BAUD			( ( unsigned portLONG ) 115200UL )
+#define serMAX_BAUD			( ( unsigned long ) 115200UL )
 
 #define serNO_INTERRUPTS	( 0x00 )
 
 #define vInterruptOn( pxPort, ucInterrupt )										\
 {																				\
-	unsigned portCHAR ucIn = portINPUT_BYTE( pxPort->usInterruptEnableReg );	\
+	unsigned char ucIn = portINPUT_BYTE( pxPort->usInterruptEnableReg );	\
 	if( !( ucIn & ucInterrupt ) )												\
 	{																			\
 		portOUTPUT_BYTE( pxPort->usInterruptEnableReg, ucIn | ucInterrupt );	\
@@ -124,7 +105,7 @@ Changes From V2.0.0
 
 #define vInterruptOff( pxPort, ucInterrupt )									\
 {																				\
-	unsigned portCHAR ucIn = portINPUT_BYTE( pxPort->usInterruptEnableReg );	\
+	unsigned char ucIn = portINPUT_BYTE( pxPort->usInterruptEnableReg );	\
 	if( ucIn & ucInterrupt )													\
 	{																			\
 		portOUTPUT_BYTE( pxPort->usInterruptEnableReg, ucIn & ~ucInterrupt);	\
@@ -189,37 +170,37 @@ typedef enum
 } eBaud;
 
 /* This *MUST* match the order in the eBaud definition. */
-unsigned portLONG ulBaudFromEnum[] = 
+unsigned long ulBaudFromEnum[] = 
 { 
-	( unsigned portLONG ) 50, 
-	( unsigned portLONG ) 75, 
-	( unsigned portLONG ) 110, 
-	( unsigned portLONG ) 134, 
-	( unsigned portLONG ) 150,	
-	( unsigned portLONG ) 200, 
-	( unsigned portLONG ) 300, 
-	( unsigned portLONG ) 600, 
-	( unsigned portLONG ) 1200, 
-	( unsigned portLONG ) 1800, 
-	( unsigned portLONG ) 2400,   
-	( unsigned portLONG ) 4800,   
-	( unsigned portLONG ) 9600,  
-	( unsigned portLONG ) 19200,  
-	( unsigned portLONG ) 38400UL,
-	( unsigned portLONG ) 57600UL,
-	( unsigned portLONG ) 115200UL
+	( unsigned long ) 50, 
+	( unsigned long ) 75, 
+	( unsigned long ) 110, 
+	( unsigned long ) 134, 
+	( unsigned long ) 150,	
+	( unsigned long ) 200, 
+	( unsigned long ) 300, 
+	( unsigned long ) 600, 
+	( unsigned long ) 1200, 
+	( unsigned long ) 1800, 
+	( unsigned long ) 2400,   
+	( unsigned long ) 4800,   
+	( unsigned long ) 9600,  
+	( unsigned long ) 19200,  
+	( unsigned long ) 38400UL,
+	( unsigned long ) 57600UL,
+	( unsigned long ) 115200UL
 };
 
 typedef struct xCOM_PORT
 { 
-	unsigned portSHORT sPort;   /* comm port address eg. 0x3f8    */
-	unsigned portCHAR ucIRQ;    /* comm IRQ eg. 3                 */
+	unsigned short sPort;   /* comm port address eg. 0x3f8    */
+	unsigned char ucIRQ;    /* comm IRQ eg. 3                 */
 
 	/* Next two fields used for setting up the IRQ routine and
 	* (un)masking the interrupt in certain circumstances.
 	*/
-	unsigned portSHORT usIRQVector;
-	unsigned portCHAR ucInterruptEnableMast;
+	unsigned short usIRQVector;
+	unsigned char ucInterruptEnableMast;
 
 	/* Read/Write buffers. */
 	xQueueHandle xRxedChars; 
@@ -228,20 +209,20 @@ typedef struct xCOM_PORT
 	/* This lot are set up to minimise CPU time where accessing the comm
 	* port's registers.
 	*/
-	unsigned portSHORT usTransmitHoldReg; 
-	unsigned portSHORT usReceiveDataRegister;
-	unsigned portSHORT usBaudRateDivisorLow; 
-	unsigned portSHORT usBaudRateDivisorHigh;
-	unsigned portSHORT usInterruptEnableReg;
-	unsigned portSHORT usInterruptIDReg;
-	unsigned portSHORT usFIFOCtrlReg;
-	unsigned portSHORT usLineCtrlReg;
-	unsigned portSHORT usModemCtrlReg;
-	unsigned portSHORT usLineStatusReg;
-	unsigned portSHORT usModemStatusReg;
-	unsigned portSHORT usSCRReg;
-	unsigned portSHORT us8259InterruptServiceReg;
-	unsigned portSHORT us8259InterruptMaskReg;
+	unsigned short usTransmitHoldReg; 
+	unsigned short usReceiveDataRegister;
+	unsigned short usBaudRateDivisorLow; 
+	unsigned short usBaudRateDivisorHigh;
+	unsigned short usInterruptEnableReg;
+	unsigned short usInterruptIDReg;
+	unsigned short usFIFOCtrlReg;
+	unsigned short usLineCtrlReg;
+	unsigned short usModemCtrlReg;
+	unsigned short usLineStatusReg;
+	unsigned short usModemStatusReg;
+	unsigned short usSCRReg;
+	unsigned short us8259InterruptServiceReg;
+	unsigned short us8259InterruptMaskReg;
 
 	/* This semaphore does nothing useful except test a feature of the
 	scheduler. */
@@ -260,12 +241,12 @@ xComPort *xPortStatus[ serMAX_IRQs ] = { NULL, NULL, NULL, NULL, NULL, NULL, NUL
 /* These prototypes are repeated here so we don't have to include the serial header.  This allows
 the xComPortHandle structure details to be private to this file. */
 xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned portBASE_TYPE uxBufferLength );
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portTickType xBlockTime );
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, portCHAR cOutChar, portTickType xBlockTime );
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime );
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime );
 portBASE_TYPE xSerialWaitForSemaphore( xComPortHandle xPort );
 
 static void prvSetupPortHardware( xComPort *pxPort, eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits );
-static portSHORT sComPortISR( const xComPort * const pxPort );
+static short sComPortISR( const xComPort * const pxPort );
 
 /*-----------------------------------------------------------*/
 
@@ -333,8 +314,8 @@ xComPort *pxPort;
 	if( pxPort != NULL )
 	{
 		/* Create the queues used by the comtest task. */
-		pxPort->xRxedChars = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( portCHAR ) );
-		pxPort->xCharsForTx = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( portCHAR ) );
+		pxPort->xRxedChars = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
+		pxPort->xCharsForTx = xQueueCreate( uxBufferLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
 
 		/* Create the test semaphore.  This does nothing useful except test a feature of the scheduler. */
 		vSemaphoreCreateBinary( pxPort->xTestSem );
@@ -350,11 +331,11 @@ xComPort *pxPort;
 
 static void prvSetupPortHardware( xComPort *pxPort, eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits )
 {
-portSHORT sIn;
-unsigned portLONG ulDivisor;
-unsigned portCHAR ucDivisorLow;
-unsigned portCHAR ucDivisorHigh;
-unsigned portCHAR ucCommParam;
+short sIn;
+unsigned long ulDivisor;
+unsigned char ucDivisorLow;
+unsigned char ucDivisorHigh;
+unsigned char ucCommParam;
 
 	/* IRQ numbers - standard */
 	if( ( ePort == serCOM1 ) || ( ePort == serCOM3 ) || ( ePort == serCOM5 ) || ( ePort == serCOM7 ) )
@@ -384,8 +365,8 @@ unsigned portCHAR ucCommParam;
 
 	/* Set communication parameters. */
 	ulDivisor = serMAX_BAUD / ulBaudFromEnum[ eWantedBaud ];
-	ucDivisorLow = ( unsigned portCHAR ) ulDivisor & ( unsigned portCHAR ) 0xff;
-	ucDivisorHigh = ( unsigned portCHAR ) ( ( ( unsigned portSHORT ) ulDivisor >> 8 ) & 0xff );
+	ucDivisorLow = ( unsigned char ) ulDivisor & ( unsigned char ) 0xff;
+	ucDivisorHigh = ( unsigned char ) ( ( ( unsigned short ) ulDivisor >> 8 ) & 0xff );
 	
 	switch( eWantedParity )
 	{	
@@ -507,10 +488,10 @@ unsigned portCHAR ucCommParam;
 }
 /*-----------------------------------------------------------*/
 
-static portSHORT sComPortISR( const xComPort * const pxPort )
+static short sComPortISR( const xComPort * const pxPort )
 {
-portSHORT sInterruptID;
-portCHAR cIn, cOut;
+short sInterruptID;
+char cIn, cOut;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 extern void vComTestUnsuspendTask( void );
 
@@ -533,7 +514,7 @@ extern void vComTestUnsuspendTask( void );
 						description. */
 						do
 						{
-							cIn = ( portCHAR ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
+							cIn = ( char ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
 							xQueueSendFromISR( pxPort->xRxedChars, &cIn, &xHigherPriorityTaskWoken );
 
 							/* Also release the semaphore - this does nothing interesting and is just a test.
@@ -556,7 +537,7 @@ extern void vComTestUnsuspendTask( void );
 						must be at least one to read by virtue of having got here.) */
 						do
 						{
-							cIn = ( portCHAR ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
+							cIn = ( char ) portINPUT_BYTE( pxPort->usReceiveDataRegister );						
 							xQueueSendFromISR( pxPort->xRxedChars, &cIn, &xHigherPriorityTaskWoken );
 
 							/* Also release the semaphore - this does nothing interesting and is just a test.
@@ -576,7 +557,7 @@ extern void vComTestUnsuspendTask( void );
 						}																						
 						else																					
 						{																						
-							portOUTPUT_BYTE( pxPort->usTransmitHoldReg, ( portSHORT ) cOut );					
+							portOUTPUT_BYTE( pxPort->usTransmitHoldReg, ( short ) cOut );					
 						}
 						break;
 
@@ -609,7 +590,7 @@ extern void vComTestUnsuspendTask( void );
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Get the next character from the buffer, note that this routine is only 
 	called having checked that the is (at least) one to get */
@@ -624,7 +605,7 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portT
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, portCHAR cOutChar, portTickType xBlockTime )
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime )
 {
 	if( xQueueSend( pxPort->xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 	{
@@ -637,15 +618,15 @@ portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, portCHAR cOutChar, portTick
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const portCHAR * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const char * const pcString, unsigned short usStringLength )
 {
-portCHAR * pcNextChar;
+char * pcNextChar;
 const portTickType xNoBlock = ( portTickType ) 0;
 
 	/* Stop warnings. */
 	( void ) usStringLength;
 
-	pcNextChar = ( portCHAR * ) pcString;
+	pcNextChar = ( char * ) pcString;
 	while( *pcNextChar )
 	{
 		xSerialPutChar( pxPort, *pcNextChar, xNoBlock );

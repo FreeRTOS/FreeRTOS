@@ -1,19 +1,19 @@
 /*
-    FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     This file is part of the FreeRTOS distribution.
 
-    FreeRTOS is free software; you can redistribute it and/or modify it under 
-    the terms of the GNU General Public License (version 2) as published by the 
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation and modified by the FreeRTOS exception.
     **NOTE** The exception to the GPL is included to allow you to distribute a
-    combined work that includes FreeRTOS without being obliged to provide the 
-    source code for proprietary components outside of the FreeRTOS kernel.  
-    Alternative commercial license and support terms are also available upon 
-    request.  See the licensing section of http://www.FreeRTOS.org for full 
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
     license details.
 
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
     more details.
@@ -25,8 +25,9 @@
 
     ***************************************************************************
     *                                                                         *
-    * Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-    * See http://www.FreeRTOS.org/Documentation for details                   *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
     *                                                                         *
     ***************************************************************************
 
@@ -222,7 +223,7 @@ void vApplicationStackOverflowHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void _general_exception_handler( unsigned portLONG ulCause, unsigned portLONG ulStatus )
+void _general_exception_handler( unsigned long ulCause, unsigned long ulStatus )
 {
 	/* This overrides the definition provided by the kernel.  Other exceptions 
 	should be handled here. */
@@ -237,7 +238,7 @@ static void prvCheckTask( void *pvParameters )
 {
 portTickType xLastExecutionTime, ulTicksToWait = mainNO_ERROR_PERIOD;
 unsigned long ulLastRegTest1 = 0UL, ulLastRegTest2 = 0UL;
-const portCHAR * pcMessage;
+const char * pcMessage;
 
 	/* Initialise the variable used to control our iteration rate prior to
 	its first use. */

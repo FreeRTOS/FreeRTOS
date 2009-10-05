@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*-----------------------------------------------------------
@@ -73,28 +74,28 @@
 
 /* Constants required to access the "LED's".  The LED segments are turned on
 and off to generate '*' characters. */
-#define partstNUM_LEDS			( ( unsigned portCHAR ) 6 )
-#define partstSEGMENTS_ON		( ( unsigned portCHAR ) 0x0f )
-#define partstSEGMENTS_OFF		( ( unsigned portCHAR ) 0x00 )
+#define partstNUM_LEDS			( ( unsigned char ) 6 )
+#define partstSEGMENTS_ON		( ( unsigned char ) 0x0f )
+#define partstSEGMENTS_OFF		( ( unsigned char ) 0x00 )
 
 /* The LED number of the real on board LED, rather than a simulated LED. */
 #define partstON_BOARD_LED		( ( unsigned portBASE_TYPE ) 10 )
-#define mainON_BOARD_LED_BIT	( ( unsigned portCHAR ) 0x01 )
+#define mainON_BOARD_LED_BIT	( ( unsigned char ) 0x01 )
 
 /* The LCD segments used to generate the '*' characters for LED's 0 to 5. */
-unsigned portCHAR * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned portCHAR * )0xa4, 
-																( unsigned portCHAR * )0xa2, 
-																( unsigned portCHAR * )0xa0, 
-																( unsigned portCHAR * )0x9e,
-																( unsigned portCHAR * )0x9c,
-																( unsigned portCHAR * )0x9a };
+unsigned char * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa4, 
+																( unsigned char * )0xa2, 
+																( unsigned char * )0xa0, 
+																( unsigned char * )0x9e,
+																( unsigned char * )0x9c,
+																( unsigned char * )0x9a };
 
-unsigned portCHAR * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned portCHAR * )0xa3, 
-																( unsigned portCHAR * )0xa1, 
-																( unsigned portCHAR * )0x9f, 
-																( unsigned portCHAR * )0x9d,
-																( unsigned portCHAR * )0x9b,
-																( unsigned portCHAR * )0x99 };
+unsigned char * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa3, 
+																( unsigned char * )0xa1, 
+																( unsigned char * )0x9f, 
+																( unsigned char * )0x9d,
+																( unsigned char * )0x9b,
+																( unsigned char * )0x99 };
 
 /*
  * Toggle the single genuine built in LED.
@@ -206,7 +207,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 
 static void prvToggleOnBoardLED( void )
 {
-static unsigned portSHORT sState = pdFALSE;
+static unsigned short sState = pdFALSE;
 
 	/* Toggle the state of the single genuine on board LED. */
 	if( sState )	

@@ -106,6 +106,7 @@ void portENABLE_INTERRUPTS( void );
 #define portTICK_RATE_MS        ( ( portTickType ) 1000 / configTICK_RATE_HZ )
 #define portTICKS_PER_DOS_TICK	( ( unsigned portSHORT ) ( ( ( portDOUBLE ) configTICK_RATE_HZ / portDOS_TICK_RATE ) + 0.5 ) )
 #define portINITIAL_SW			( ( portSTACK_TYPE ) 0x0202 )	/* Start the tasks with interrupts enabled. */
+#define portBYTE_ALIGNMENT		( 2 )
 /*-----------------------------------------------------------*/
 
 /* Compiler specifics. */

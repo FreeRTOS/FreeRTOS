@@ -86,11 +86,11 @@ typedef volatile unsigned char vuint8;
 #define MCF_INTC0_ICRn_IP(x)            ( ( ( x ) & 0x07 ) << 0 )
 #define MCF_INTC0_ICRn_IL(x)            ( ( ( x ) & 0x07 ) << 3 )
 
-#define portNO_CRITICAL_NESTING         ( ( unsigned portLONG ) 0 )
-#define portINITIAL_CRITICAL_NESTING    ( ( unsigned portLONG ) 10 )
+#define portNO_CRITICAL_NESTING         ( ( unsigned long ) 0 )
+#define portINITIAL_CRITICAL_NESTING    ( ( unsigned long ) 10 )
 
 /* ------------------------ Static variables ------------------------------ */
-volatile unsigned portLONG              ulCriticalNesting = portINITIAL_CRITICAL_NESTING;
+volatile unsigned long              ulCriticalNesting = portINITIAL_CRITICAL_NESTING;
 
 /* ------------------------ Static functions ------------------------------ */
 #if configUSE_PREEMPTION == 0

@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*-----------------------------------------------------------
@@ -79,12 +80,12 @@
 #define port1SECOND_IN_uS				( 1000000.0 )
 
 /* Constants required to handle critical sections. */
-#define portNO_CRITICAL_NESTING 		( ( unsigned portLONG ) 0 )
+#define portNO_CRITICAL_NESTING 		( ( unsigned long ) 0 )
 
 
 #define portINT_LEVEL_SENSITIVE  0
-#define portPIT_ENABLE      	( ( unsigned portSHORT ) 0x1 << 24 )
-#define portPIT_INT_ENABLE     	( ( unsigned portSHORT ) 0x1 << 25 )
+#define portPIT_ENABLE      	( ( unsigned short ) 0x1 << 24 )
+#define portPIT_INT_ENABLE     	( ( unsigned short ) 0x1 << 25 )
 /*-----------------------------------------------------------*/
 
 /* Setup the PIT to generate the tick interrupts. */
@@ -96,7 +97,7 @@ static void vPortTickISR( void );
 /* ulCriticalNesting will get set to zero when the first task starts.  It
 cannot be initialised to 0 as this will cause interrupts to be enabled
 during the kernel initialisation process. */
-unsigned portLONG ulCriticalNesting = ( unsigned portLONG ) 9999;
+unsigned long ulCriticalNesting = ( unsigned long ) 9999;
 
 /*-----------------------------------------------------------*/
 
@@ -201,7 +202,7 @@ void vPortEndScheduler( void )
 
 static __arm void vPortTickISR( void )
 {
-volatile unsigned portLONG ulDummy;
+volatile unsigned long ulDummy;
 	
 	/* Increment the tick count - which may wake some tasks but as the
 	preemptive scheduler is not being used any woken task is not given
@@ -224,7 +225,7 @@ volatile unsigned portLONG ulDummy;
 
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned portLONG ulPeriodIn_uS = ( 1.0 / ( double ) configTICK_RATE_HZ ) * port1SECOND_IN_uS;
+const unsigned long ulPeriodIn_uS = ( 1.0 / ( double ) configTICK_RATE_HZ ) * port1SECOND_IN_uS;
 
 	/* Setup the PIT for the required frequency. */
 	PIT_Init( ulPeriodIn_uS, BOARD_MCK / port1MHz_IN_Hz );

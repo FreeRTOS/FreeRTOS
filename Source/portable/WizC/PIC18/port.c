@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -107,7 +108,7 @@ extern volatile tskTCB * volatile pxCurrentTCB;
 #define portSTACK_MINIMAL_CALLRETURN_DEPTH	( 10 )
 #define portSTACK_OTHER_BYTES				( 20 )
 
-unsigned portSHORT usCalcMinStackSize		= 0;
+unsigned short usCalcMinStackSize		= 0;
 
 /*-----------------------------------------------------------*/
 
@@ -117,7 +118,7 @@ unsigned portSHORT usCalcMinStackSize		= 0;
  * and portEXIT_CRITICAL() can be called without interrupts
  * being enabled before the scheduler starts.
  */
-register unsigned portCHAR ucCriticalNesting = 0x7F;
+register unsigned char ucCriticalNesting = 0x7F;
 
 /*-----------------------------------------------------------*/
 
@@ -127,7 +128,7 @@ register unsigned portCHAR ucCriticalNesting = 0x7F;
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned portCHAR ucScratch;
+unsigned char ucScratch;
 	/*
 	 * Get the size of the RAMarea in page 0 used by the compiler
 	 * We do this here already to avoid W-register conflicts.
@@ -155,8 +156,8 @@ unsigned portCHAR ucScratch;
 	 * First store the function parameters.  This is where the task expects
 	 * to find them when it starts running.
 	 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) ( (( unsigned portSHORT ) pvParameters >> 8) & 0x00ff );
-	*pxTopOfStack-- = ( portSTACK_TYPE ) (  ( unsigned portSHORT ) pvParameters       & 0x00ff );
+	*pxTopOfStack-- = ( portSTACK_TYPE ) ( (( unsigned short ) pvParameters >> 8) & 0x00ff );
+	*pxTopOfStack-- = ( portSTACK_TYPE ) (  ( unsigned short ) pvParameters       & 0x00ff );
 
 	/*
 	 * Next are all the registers that form part of the task context.
@@ -198,8 +199,8 @@ unsigned portCHAR ucScratch;
 #if _ROMSIZE > 0x8000
 	*pxTopOfStack-- = ( portSTACK_TYPE ) 0;
 #endif
-	*pxTopOfStack-- = ( portSTACK_TYPE ) ( ( ( unsigned portSHORT ) pxCode >> 8 ) & 0x00ff );
-	*pxTopOfStack-- = ( portSTACK_TYPE ) ( (   unsigned portSHORT ) pxCode        & 0x00ff );
+	*pxTopOfStack-- = ( portSTACK_TYPE ) ( ( ( unsigned short ) pxCode >> 8 ) & 0x00ff );
+	*pxTopOfStack-- = ( portSTACK_TYPE ) ( (   unsigned short ) pxCode        & 0x00ff );
 
 	/*
 	 * Store the number of return addresses on the hardware stack.
@@ -220,7 +221,7 @@ unsigned portCHAR ucScratch;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portSHORT usPortCALCULATE_MINIMAL_STACK_SIZE( void )
+unsigned short usPortCALCULATE_MINIMAL_STACK_SIZE( void )
 {
 	/*
 	 * Fetch the size of compiler's scratchspace.
@@ -302,7 +303,7 @@ void vPortYield( void )
 
 /*-----------------------------------------------------------*/
 
-void *pvPortMalloc( unsigned portSHORT usWantedSize )
+void *pvPortMalloc( unsigned short usWantedSize )
 {
 void *pvReturn;
 

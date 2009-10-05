@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*-----------------------------------------------------------
@@ -84,7 +85,7 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = portINITIAL_NESTING_VALUE;
 
 /* To limit the amount of stack required by each task, this port uses a
 separate stack for interrupts. */
-unsigned portLONG *pulISRStack;
+unsigned long *pulISRStack;
 
 /*-----------------------------------------------------------*/
 
@@ -104,8 +105,8 @@ static void prvSetupTimerInterrupt( void );
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 extern void *_SDA2_BASE_, *_SDA_BASE_;
-const unsigned portLONG ulR2 = ( unsigned portLONG ) &_SDA2_BASE_;
-const unsigned portLONG ulR13 = ( unsigned portLONG ) &_SDA_BASE_;
+const unsigned long ulR2 = ( unsigned long ) &_SDA2_BASE_;
+const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is essential for the Microblaze port and these lines must
@@ -214,7 +215,7 @@ extern void ( vStartFirstTask )( void );
 	prvSetupTimerInterrupt();
 
 	/* Allocate the stack to be used by the interrupt handler. */
-	pulISRStack = ( unsigned portLONG * ) pvPortMalloc( configMINIMAL_STACK_SIZE * sizeof( portSTACK_TYPE ) );
+	pulISRStack = ( unsigned long * ) pvPortMalloc( configMINIMAL_STACK_SIZE * sizeof( portSTACK_TYPE ) );
 
 	/* Restore the context of the first task that is going to run. */
 	if( pulISRStack != NULL )
@@ -263,7 +264,7 @@ extern void VPortYieldASM( void );
 static void prvSetupTimerInterrupt( void )
 {
 XTmrCtr xTimer;
-const unsigned portLONG ulCounterValue = configCPU_CLOCK_HZ / configTICK_RATE_HZ;
+const unsigned long ulCounterValue = configCPU_CLOCK_HZ / configTICK_RATE_HZ;
 unsigned portBASE_TYPE uxMask;
 
 	/* The OPB timer1 is used to generate the tick.  Use the provided library
@@ -293,7 +294,7 @@ unsigned portBASE_TYPE uxMask;
  */
 void vTaskISRHandler( void )
 {
-static unsigned portLONG ulPending;    
+static unsigned long ulPending;    
 
 	/* Which interrupts are pending? */
 	ulPending = XIntc_In32( ( XPAR_INTC_SINGLE_BASEADDR + XIN_IVR_OFFSET ) );
@@ -302,12 +303,12 @@ static unsigned portLONG ulPending;
 	{
 		static XIntc_VectorTableEntry *pxTablePtr;
 		static XIntc_Config *pxConfig;
-		static unsigned portLONG ulInterruptMask;
+		static unsigned long ulInterruptMask;
 
-		ulInterruptMask = ( unsigned portLONG ) 1 << ulPending;
+		ulInterruptMask = ( unsigned long ) 1 << ulPending;
 
 		/* Get the configuration data using the device ID */
-		pxConfig = &XIntc_ConfigTable[ ( unsigned portLONG ) XPAR_INTC_SINGLE_DEVICE_ID ];
+		pxConfig = &XIntc_ConfigTable[ ( unsigned long ) XPAR_INTC_SINGLE_DEVICE_ID ];
 
 		pxTablePtr = &( pxConfig->HandlerTable[ ulPending ] );
 		if( pxConfig->AckBeforeService & ( ulInterruptMask  ) )
@@ -329,7 +330,7 @@ static unsigned portLONG ulPending;
  */
 void vTickISR( void *pvBaseAddress )
 {
-unsigned portLONG ulCSR;
+unsigned long ulCSR;
 
 	/* Increment the RTOS tick - this might cause a task to unblock. */
 	vTaskIncrementTick();

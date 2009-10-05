@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /* Scheduler includes. */
@@ -61,12 +62,12 @@
 #define portINITIAL_CCR			( ( portSTACK_TYPE ) 0x00 )
 
 /* Hardware specific constants used to generate the RTOS tick from the TPU. */
-#define portCLEAR_ON_TGRA_COMPARE_MATCH ( ( unsigned portCHAR ) 0x20 )
-#define portCLOCK_DIV_64				( ( unsigned portCHAR ) 0x03 )
-#define portCLOCK_DIV					( ( unsigned portLONG ) 64 )
-#define portTGRA_INTERRUPT_ENABLE		( ( unsigned portCHAR ) 0x01 )
-#define portTIMER_CHANNEL				( ( unsigned portCHAR ) 0x02 )
-#define portMSTP13						( ( unsigned portSHORT ) 0x2000 )
+#define portCLEAR_ON_TGRA_COMPARE_MATCH ( ( unsigned char ) 0x20 )
+#define portCLOCK_DIV_64				( ( unsigned char ) 0x03 )
+#define portCLOCK_DIV					( ( unsigned long ) 64 )
+#define portTGRA_INTERRUPT_ENABLE		( ( unsigned char ) 0x01 )
+#define portTIMER_CHANNEL				( ( unsigned char ) 0x02 )
+#define portMSTP13						( ( unsigned short ) 0x2000 )
 
 /*
  * Setup TPU channel one for the RTOS tick at the requested frequency.
@@ -85,10 +86,10 @@ void vPortYield( void ) __attribute__ ( ( saveall, interrupt_handler ) );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned portLONG ulValue;
+unsigned long ulValue;
 
 	/* This requires an even address. */
-	ulValue = ( unsigned portLONG ) pxTopOfStack;
+	ulValue = ( unsigned long ) pxTopOfStack;
 	if( ulValue & 1UL )
 	{
 		pxTopOfStack = pxTopOfStack - 1;
@@ -107,7 +108,7 @@ unsigned portLONG ulValue;
 
 	/* The initial stack mimics an interrupt stack.  First there is the program
 	counter (24 bits). */
-	ulValue = ( unsigned portLONG ) pxCode;
+	ulValue = ( unsigned long ) pxCode;
 
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
@@ -137,7 +138,7 @@ unsigned portLONG ulValue;
 	*pxTopOfStack = 0x66;
 	
 	/* ER0 */
-	ulValue = ( unsigned portLONG ) pvParameters;
+	ulValue = ( unsigned long ) pvParameters;
 
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
@@ -299,7 +300,7 @@ void vPortYield( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned portLONG ulCompareMatch = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) / portCLOCK_DIV;
+const unsigned long ulCompareMatch = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) / portCLOCK_DIV;
 
 	/* Turn the module on. */
 	MSTPCR &= ~portMSTP13;

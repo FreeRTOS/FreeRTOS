@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -80,15 +81,15 @@ Changes from V2.6.1
 /*lint -e950 Non ANSI reserved words okay in this file only. */
 
 #define portTIMER_EOI_TYPE		( 8 )
-#define portRESET_PIC()			portOUTPUT_WORD( ( unsigned portSHORT ) 0xff22, portTIMER_EOI_TYPE )
+#define portRESET_PIC()			portOUTPUT_WORD( ( unsigned short ) 0xff22, portTIMER_EOI_TYPE )
 #define portTIMER_INT_NUMBER	0x12
 
-#define portTIMER_1_CONTROL_REGISTER	( ( unsigned portSHORT ) 0xff5e )
-#define portTIMER_0_CONTROL_REGISTER	( ( unsigned portSHORT ) 0xff56 )
-#define portTIMER_INTERRUPT_ENABLE		( ( unsigned portSHORT ) 0x2000 )
+#define portTIMER_1_CONTROL_REGISTER	( ( unsigned short ) 0xff5e )
+#define portTIMER_0_CONTROL_REGISTER	( ( unsigned short ) 0xff56 )
+#define portTIMER_INTERRUPT_ENABLE		( ( unsigned short ) 0x2000 )
 
 /* Setup the hardware to generate the required tick frequency. */
-static void prvSetTickFrequency( unsigned portLONG ulTickRateHz );
+static void prvSetTickFrequency( unsigned long ulTickRateHz );
 
 /* Set the hardware back to the state as per before the scheduler started. */
 static void prvExitFunction( void );
@@ -109,7 +110,7 @@ static void __interrupt __far prvYieldProcessor( void );
 /*lint -e956 File scopes necessary here. */
 
 /* Set true when the vectors are set so the scheduler will service the tick. */
-static portSHORT sSchedulerRunning = pdFALSE;
+static short sSchedulerRunning = pdFALSE;
 
 /* Points to the original routine installed on the vector we use for manual context switches.  This is then used to restore the original routine during prvExitFunction(). */
 static void ( __interrupt __far *pxOldSwitchISR )();
@@ -207,8 +208,8 @@ void vPortEndScheduler( void )
 
 static void prvExitFunction( void )
 {
-const unsigned portSHORT usTimerDisable = 0x0000;
-unsigned portSHORT usTimer0Control;
+const unsigned short usTimerDisable = 0x0000;
+unsigned short usTimer0Control;
 
 	/* Interrupts should be disabled here anyway - but no 
 	harm in making sure. */
@@ -240,23 +241,23 @@ unsigned portSHORT usTimer0Control;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetTickFrequency( unsigned portLONG ulTickRateHz )
+static void prvSetTickFrequency( unsigned long ulTickRateHz )
 {
-const unsigned portSHORT usMaxCountRegister = 0xff5a;
-const unsigned portSHORT usTimerPriorityRegister = 0xff32;
-const unsigned portSHORT usTimerEnable = 0xC000;
-const unsigned portSHORT usRetrigger = 0x0001;
-const unsigned portSHORT usTimerHighPriority = 0x0000;
-unsigned portSHORT usTimer0Control;
+const unsigned short usMaxCountRegister = 0xff5a;
+const unsigned short usTimerPriorityRegister = 0xff32;
+const unsigned short usTimerEnable = 0xC000;
+const unsigned short usRetrigger = 0x0001;
+const unsigned short usTimerHighPriority = 0x0000;
+unsigned short usTimer0Control;
 
 /* ( CPU frequency / 4 ) / clock 2 max count [inpw( 0xff62 ) = 7] */
 
-const unsigned portLONG ulClockFrequency = 0x7f31a0;
+const unsigned long ulClockFrequency = 0x7f31a0;
 
-unsigned portLONG ulTimerCount = ulClockFrequency / ulTickRateHz;
+unsigned long ulTimerCount = ulClockFrequency / ulTickRateHz;
 
 	portOUTPUT_WORD( portTIMER_1_CONTROL_REGISTER, usTimerEnable | portTIMER_INTERRUPT_ENABLE | usRetrigger );
-	portOUTPUT_WORD( usMaxCountRegister, ( unsigned portSHORT ) ulTimerCount );
+	portOUTPUT_WORD( usMaxCountRegister, ( unsigned short ) ulTimerCount );
 	portOUTPUT_WORD( usTimerPriorityRegister, usTimerHighPriority );
 
 	/* Stop the DOS tick - don't do this if you want to maintain a TOD clock. */

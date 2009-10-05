@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*-----------------------------------------------------------
@@ -57,10 +58,10 @@
 #include "task.h"
 
 /* Constants required to setup timer 2 to produce the RTOS tick. */
-#define portCLOCK_DIVISOR				( ( unsigned portLONG ) 12 )
-#define portMAX_TIMER_VALUE				( ( unsigned portLONG ) 0xffff )
-#define portENABLE_TIMER				( ( unsigned portCHAR ) 0x04 )
-#define portTIMER_2_INTERRUPT_ENABLE	( ( unsigned portCHAR ) 0x20 )
+#define portCLOCK_DIVISOR				( ( unsigned long ) 12 )
+#define portMAX_TIMER_VALUE				( ( unsigned long ) 0xffff )
+#define portENABLE_TIMER				( ( unsigned char ) 0x04 )
+#define portTIMER_2_INTERRUPT_ENABLE	( ( unsigned char ) 0x20 )
 
 /* The value used in the IE register when a task first starts. */
 #define portGLOBAL_INTERRUPT_BIT	( ( portSTACK_TYPE ) 0x80 )
@@ -73,7 +74,7 @@
 
 /* Used during a context switch to store the size of the stack being copied
 to or from XRAM. */
-data static unsigned portCHAR ucStackBytes;
+data static unsigned char ucStackBytes;
 
 /* Used during a context switch to point to the next byte in XRAM from/to which
 a RAM byte is to be copied. */
@@ -155,7 +156,7 @@ static void prvSetupTimerInterrupt( void );
 	} while( ucStackBytes );																	\
 																								\
 	/* Restore the stack pointer ready to use the restored stack. */							\
-	SP = ( unsigned portCHAR ) pxRAMStack;														\
+	SP = ( unsigned char ) pxRAMStack;														\
 }
 /*-----------------------------------------------------------*/
 
@@ -234,7 +235,7 @@ static void prvSetupTimerInterrupt( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned portLONG ulAddress;
+unsigned long ulAddress;
 portSTACK_TYPE *pxStartOfStack;
 
 	/* Leave space to write the size of the stack as the first byte. */
@@ -255,7 +256,7 @@ portSTACK_TYPE *pxStartOfStack;
 	ISR. 
 
 	The return address that would have been pushed by the MCU. */
-	ulAddress = ( unsigned portLONG ) pxCode;
+	ulAddress = ( unsigned long ) pxCode;
 	*pxTopOfStack = ( portSTACK_TYPE ) ulAddress;
 	ulAddress >>= 8;
 	pxTopOfStack++;
@@ -272,7 +273,7 @@ portSTACK_TYPE *pxStartOfStack;
 
 	/* The function parameters will be passed in the DPTR and B register as
 	a three byte generic pointer is used. */
-	ulAddress = ( unsigned portLONG ) pvParameters;
+	ulAddress = ( unsigned long ) pvParameters;
 	*pxTopOfStack = ( portSTACK_TYPE ) ulAddress;	/* DPL */
 	ulAddress >>= 8;
 	*pxTopOfStack++;
@@ -399,14 +400,14 @@ void vPortYield( void ) _naked
 
 static void prvSetupTimerInterrupt( void )
 {
-unsigned portCHAR ucOriginalSFRPage;
+unsigned char ucOriginalSFRPage;
 
 /* Constants calculated to give the required timer capture values. */
-const unsigned portLONG ulTicksPerSecond = configCPU_CLOCK_HZ / portCLOCK_DIVISOR;
-const unsigned portLONG ulCaptureTime = ulTicksPerSecond / configTICK_RATE_HZ;
-const unsigned portLONG ulCaptureValue = portMAX_TIMER_VALUE - ulCaptureTime;
-const unsigned portCHAR ucLowCaptureByte = ( unsigned portCHAR ) ( ulCaptureValue & ( unsigned portLONG ) 0xff );
-const unsigned portCHAR ucHighCaptureByte = ( unsigned portCHAR ) ( ulCaptureValue >> ( unsigned portLONG ) 8 );
+const unsigned long ulTicksPerSecond = configCPU_CLOCK_HZ / portCLOCK_DIVISOR;
+const unsigned long ulCaptureTime = ulTicksPerSecond / configTICK_RATE_HZ;
+const unsigned long ulCaptureValue = portMAX_TIMER_VALUE - ulCaptureTime;
+const unsigned char ucLowCaptureByte = ( unsigned char ) ( ulCaptureValue & ( unsigned long ) 0xff );
+const unsigned char ucHighCaptureByte = ( unsigned char ) ( ulCaptureValue >> ( unsigned long ) 8 );
 
 	/* NOTE:  This uses a timer only present on 8052 architecture. */
 
@@ -416,7 +417,7 @@ const unsigned portCHAR ucHighCaptureByte = ( unsigned portCHAR ) ( ulCaptureVal
 	SFRPAGE = 0;
 
 	/* TMR2CF can be left in its default state. */	
-	TMR2CF = ( unsigned portCHAR ) 0;
+	TMR2CF = ( unsigned char ) 0;
 
 	/* Setup the overflow reload value. */
 	RCAP2L = ucLowCaptureByte;

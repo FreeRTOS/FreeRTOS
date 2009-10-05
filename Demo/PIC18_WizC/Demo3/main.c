@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -95,20 +96,20 @@ has been discovered.  If an error has been discovered the check task runs
 more frequently - increasing the LED flash rate. */
 #define mainNO_ERROR_CHECK_PERIOD		( ( portTickType ) 10000 / portTICK_RATE_MS )
 #define mainERROR_CHECK_PERIOD			( ( portTickType )  1000 / portTICK_RATE_MS )
-#define mainCHECK_TASK_LED				( ( unsigned portCHAR ) 3 )
+#define mainCHECK_TASK_LED				( ( unsigned char ) 3 )
 
 /* Priority definitions for some of the tasks.  Other tasks just use the idle
 priority. */
-#define mainCHECK_TASK_PRIORITY	( tskIDLE_PRIORITY + ( unsigned portCHAR ) 3 )
-#define mainLED_FLASH_PRIORITY	( tskIDLE_PRIORITY + ( unsigned portCHAR ) 2 )
-#define mainBLOCK_Q_PRIORITY	( tskIDLE_PRIORITY + ( unsigned portCHAR ) 1 )
-#define mainINTEGER_PRIORITY	( tskIDLE_PRIORITY + ( unsigned portCHAR ) 0 )
+#define mainCHECK_TASK_PRIORITY	( tskIDLE_PRIORITY + ( unsigned char ) 3 )
+#define mainLED_FLASH_PRIORITY	( tskIDLE_PRIORITY + ( unsigned char ) 2 )
+#define mainBLOCK_Q_PRIORITY	( tskIDLE_PRIORITY + ( unsigned char ) 1 )
+#define mainINTEGER_PRIORITY	( tskIDLE_PRIORITY + ( unsigned char ) 0 )
 
 /* Constants required for the communications.  Only one character is ever 
 transmitted. */
-#define mainCOMMS_QUEUE_LENGTH			( ( unsigned portCHAR ) 5 )
+#define mainCOMMS_QUEUE_LENGTH			( ( unsigned char ) 5 )
 #define mainNO_BLOCK					( ( portTickType ) 0 )
-#define mainBAUD_RATE					( ( unsigned portLONG ) 57600 )
+#define mainBAUD_RATE					( ( unsigned long ) 57600 )
 
 /*
  * The task function for the "Check" task.
@@ -119,7 +120,7 @@ static portTASK_FUNCTION_PROTO( vErrorChecks, pvParameters );
  * Checks the unique counts of other tasks to ensure they are still operational.
  * Returns pdTRUE if an error is detected, otherwise pdFALSE.
  */
-static portCHAR prvCheckOtherTasksAreStillRunning( void );
+static char prvCheckOtherTasksAreStillRunning( void );
 
 /*-----------------------------------------------------------*/
 
@@ -139,7 +140,7 @@ void main( void )
 	vStartLEDFlashTasks( mainLED_FLASH_PRIORITY );
 
 	/* Start the check task defined in this file. */
-	xTaskCreate( vErrorChecks, ( const portCHAR * const ) "Check", portMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, ( const char * const ) "Check", portMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler.  Will never return here. */
 	vTaskStartScheduler( );
@@ -154,7 +155,7 @@ static portTASK_FUNCTION( vErrorChecks, pvParameters )
 {
 	portTickType xLastCheckTime;
 	portTickType xDelayTime = mainNO_ERROR_CHECK_PERIOD;
-	portCHAR cErrorOccurred;
+	char cErrorOccurred;
 
 	/* We need to initialise xLastCheckTime prior to the first call to 
 	vTaskDelayUntil(). */
@@ -184,18 +185,18 @@ static portTASK_FUNCTION( vErrorChecks, pvParameters )
 
 /*-----------------------------------------------------------*/
 
-static portCHAR prvCheckOtherTasksAreStillRunning( void )
+static char prvCheckOtherTasksAreStillRunning( void )
 {
-	portCHAR cErrorHasOccurred = ( portCHAR ) pdFALSE;
+	char cErrorHasOccurred = ( char ) pdFALSE;
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
-		cErrorHasOccurred = ( portCHAR ) pdTRUE;
+		cErrorHasOccurred = ( char ) pdTRUE;
 	}
 
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
-		cErrorHasOccurred = ( portCHAR ) pdTRUE;
+		cErrorHasOccurred = ( char ) pdTRUE;
 	}
 
 	return cErrorHasOccurred;

@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /* 
@@ -73,14 +74,14 @@
 #define httpTX_WAIT 2
 
 /* Network address configuration. */
-const unsigned portCHAR ucMacAddress[] =			{ 12, 128, 12, 34, 56, 78 };
-const unsigned portCHAR ucGatewayAddress[] =		{ 192, 168, 2, 1 };
-const unsigned portCHAR ucIPAddress[] =				{ 172, 25, 218, 210 };
-const unsigned portCHAR ucSubnetMask[] =			{ 255, 255, 255, 0 };
+const unsigned char ucMacAddress[] =			{ 12, 128, 12, 34, 56, 78 };
+const unsigned char ucGatewayAddress[] =		{ 192, 168, 2, 1 };
+const unsigned char ucIPAddress[] =				{ 172, 25, 218, 210 };
+const unsigned char ucSubnetMask[] =			{ 255, 255, 255, 0 };
 
 /* The number of sockets this task is going to handle. */
 #define httpSOCKET_NUM                       3
-unsigned portCHAR ucConnection[ httpSOCKET_NUM ];
+unsigned char ucConnection[ httpSOCKET_NUM ];
 
 /* The maximum data buffer size we can handle. */
 #define httpSOCKET_BUFFER_SIZE	2048
@@ -116,16 +117,16 @@ static void prvNetifInit( void );
  * Generate the dynamic components of the served WEB page and transmit the 
  * entire page through the socket.
  */
-static void prvTransmitHTTP( unsigned portCHAR socket );
+static void prvTransmitHTTP( unsigned char socket );
 /*-----------------------------------------------------------*/
 
 /* This variable is simply incremented by the idle task hook so the number of
 iterations the idle task has performed can be displayed as part of the served
 page. */
-unsigned portLONG ulIdleLoops = 0UL;
+unsigned long ulIdleLoops = 0UL;
 
 /* Data buffer shared by sockets. */
-unsigned portCHAR ucSocketBuffer[ httpSOCKET_BUFFER_SIZE ];
+unsigned char ucSocketBuffer[ httpSOCKET_BUFFER_SIZE ];
 
 /* The semaphore used by the Ethernet ISR to signal that the task should wake
 and process whatever caused the interrupt. */
@@ -134,8 +135,8 @@ xSemaphoreHandle xTCPSemaphore = NULL;
 /*-----------------------------------------------------------*/
 void vHTTPTask( void * pvParameters )
 {
-portSHORT i, sLen;
-unsigned portCHAR ucState;
+short i, sLen;
+unsigned char ucState;
 
 	( void ) pvParameters;
 
@@ -202,7 +203,7 @@ unsigned portCHAR ucState;
 
 static void prvHTTPInit( void )
 {
-unsigned portCHAR ucIndex;
+unsigned char ucIndex;
 
 	/* There are 4 total sockets available; we will claim 3 for HTTP. */
 	for(ucIndex = 0; ucIndex < httpSOCKET_NUM; ucIndex++)
@@ -219,10 +220,10 @@ static void prvNetifInit( void )
 	i2chip_init();
 	initW3100A();
 
-	setMACAddr( ( unsigned portCHAR * ) ucMacAddress );
-	setgateway( ( unsigned portCHAR * ) ucGatewayAddress );
-	setsubmask( ( unsigned portCHAR * ) ucSubnetMask );
-	setIP( ( unsigned portCHAR * ) ucIPAddress );
+	setMACAddr( ( unsigned char * ) ucMacAddress );
+	setgateway( ( unsigned char * ) ucGatewayAddress );
+	setsubmask( ( unsigned char * ) ucSubnetMask );
+	setIP( ( unsigned char * ) ucIPAddress );
 
 	/* See definition of 'sysinit' in socket.c
 	 - 8 KB transmit buffer, and 8 KB receive buffer available.  These buffers
@@ -233,41 +234,41 @@ static void prvNetifInit( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvTransmitHTTP(unsigned portCHAR socket)
+static void prvTransmitHTTP(unsigned char socket)
 {
-extern portSHORT usCheckStatus;
+extern short usCheckStatus;
 
 	/* Send the http and html headers. */
-	send( socket, ( unsigned portCHAR * ) httpOUTPUT_OK, strlen( httpOUTPUT_OK ) );
-	send( socket, ( unsigned portCHAR * ) HTML_OUTPUT_BEGIN, strlen( HTML_OUTPUT_BEGIN ) );
+	send( socket, ( unsigned char * ) httpOUTPUT_OK, strlen( httpOUTPUT_OK ) );
+	send( socket, ( unsigned char * ) HTML_OUTPUT_BEGIN, strlen( HTML_OUTPUT_BEGIN ) );
 
 	/* Generate then send the table showing the status of each task. */
 	vTaskList( ucSocketBuffer );
- 	send( socket, ( unsigned portCHAR * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
+ 	send( socket, ( unsigned char * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
 
 	/* Send the number of times the idle task has looped. */
     sprintf( ucSocketBuffer, "</pre></font><p><br>The idle task has looped 0x%08lx times<br>", ulIdleLoops );
-	send( socket, ( unsigned portCHAR * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
+	send( socket, ( unsigned char * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
 
 	/* Send the tick count. */
     sprintf( ucSocketBuffer, "The tick count is 0x%08lx<br>", xTaskGetTickCount() );
-	send( socket, ( unsigned portCHAR * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
+	send( socket, ( unsigned char * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
 
 	/* Show a message indicating whether or not the check task has discovered 
 	an error in any of the standard demo tasks. */
     if( usCheckStatus == 0 )
     {
 	    sprintf( ucSocketBuffer, "No errors detected." );
-		send( socket, ( unsigned portCHAR * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
+		send( socket, ( unsigned char * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
     }
     else
     {
 	    sprintf( ucSocketBuffer, "<font color=\"red\">An error has been detected in at least one task %x.</font><p>", usCheckStatus );
-		send( socket, ( unsigned portCHAR * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
+		send( socket, ( unsigned char * ) ucSocketBuffer, strlen( ucSocketBuffer ) );
     }
 
 	/* Finish the page off. */
-	send( socket, (unsigned portCHAR*)HTML_OUTPUT_END, strlen(HTML_OUTPUT_END));
+	send( socket, (unsigned char*)HTML_OUTPUT_END, strlen(HTML_OUTPUT_END));
 
 	/* Must make sure the data is gone before closing the socket. */
 	while( !tx_empty( socket ) )

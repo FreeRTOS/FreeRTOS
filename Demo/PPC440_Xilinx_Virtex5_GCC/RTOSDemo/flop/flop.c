@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -84,13 +85,13 @@ static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 
 /* These variables are used to check that all the tasks are still running.  If a 
 task gets a calculation wrong it will stop incrementing its check variable. */
-static volatile unsigned portSHORT usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned portSHORT ) 0 };
+static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 
 /* Buffers into which the flop registers will be saved.  There is a buffer for 
 each task created within this file.  Zeroing out this array is the normal and
 safe option as this will cause the task to start with all zeros in its flop
 context. */
-static unsigned portLONG ulFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
+static unsigned long ulFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
 
 /*-----------------------------------------------------------*/
 
@@ -118,7 +119,7 @@ portBASE_TYPE x, y;
 	/* Create the first task - passing it the address of the check variable
 	that it is going to increment.  This check variable is used as an 
 	indication that the task is still running. */
-	xTaskCreate( vCompetingMathTask1, ( signed portCHAR * ) "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, &xTaskJustCreated );
+	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, &xTaskJustCreated );
 
 	/* The task	tag value is a value that can be associated with a task, but 
 	is not used by the scheduler itself.  Its use is down to the application so
@@ -128,25 +129,25 @@ portBASE_TYPE x, y;
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 0 ][ 0 ] ) );
 
 	/* Create another 7 tasks, allocating a buffer for each. */
-	xTaskCreate( vCompetingMathTask2, ( signed portCHAR * ) "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 1 ][ 0 ] ) );
 
-	xTaskCreate( vCompetingMathTask3, ( signed portCHAR * ) "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 2 ][ 0 ] ) );
 
-	xTaskCreate( vCompetingMathTask4, ( signed portCHAR * ) "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 3 ][ 0 ] ) );
 
-	xTaskCreate( vCompetingMathTask1, ( signed portCHAR * ) "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 4 ][ 0 ] ) );
 
-	xTaskCreate( vCompetingMathTask2, ( signed portCHAR * ) "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 5 ][ 0 ] ) );
 
-	xTaskCreate( vCompetingMathTask3, ( signed portCHAR * ) "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 6 ][ 0 ] ) );
 
-	xTaskCreate( vCompetingMathTask4, ( signed portCHAR * ) "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, &xTaskJustCreated  );
+	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, &xTaskJustCreated  );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 7 ][ 0 ] ) );
 }
 /*-----------------------------------------------------------*/
@@ -154,9 +155,9 @@ portBASE_TYPE x, y;
 static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
 {
 volatile portFLOAT ff1, ff2, ff3, ff4;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 volatile portFLOAT fAnswer;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	ff1 = 123.4567F;
 	ff2 = 2345.6789F;
@@ -166,7 +167,7 @@ portSHORT sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
@@ -206,9 +207,9 @@ portSHORT sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
 {
 volatile portFLOAT ff1, ff2, ff3, ff4;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 volatile portFLOAT fAnswer;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	ff1 = -389.38F;
 	ff2 = 32498.2F;
@@ -219,7 +220,7 @@ portSHORT sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -259,14 +260,14 @@ portSHORT sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
 {
 volatile portFLOAT *pfArray, fTotal1, fTotal2, fDifference;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
@@ -316,14 +317,14 @@ portSHORT sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
 {
 volatile portFLOAT *pfArray, fTotal1, fTotal2, fDifference;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
@@ -375,7 +376,7 @@ portBASE_TYPE xAreMathsTaskStillRunning( void )
 {
 /* Keep a history of the check variables so we know if they have been incremented 
 since the last call. */
-static unsigned portSHORT usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned portSHORT ) 0 };
+static unsigned short usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdTRUE, xTask;
 
 	/* Check the maths tasks are still running by ensuring their check variables 

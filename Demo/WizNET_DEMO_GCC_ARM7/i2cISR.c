@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 
@@ -61,10 +62,10 @@
 /*-----------------------------------------------------------*/
 
 /* Bit definitions within the I2CONCLR register. */
-#define i2cSTA_BIT		( ( unsigned portCHAR ) 0x20 )
-#define i2cSI_BIT		( ( unsigned portCHAR ) 0x08 )
-#define i2cSTO_BIT		( ( unsigned portCHAR ) 0x10 )
-#define i2cAA_BIT		( ( unsigned portCHAR ) 0x04 )
+#define i2cSTA_BIT		( ( unsigned char ) 0x20 )
+#define i2cSI_BIT		( ( unsigned char ) 0x08 )
+#define i2cSTO_BIT		( ( unsigned char ) 0x10 )
+#define i2cAA_BIT		( ( unsigned char ) 0x04 )
 
 /* Status codes for the I2STAT register. */
 #define i2cSTATUS_START_TXED			( 0x08 )
@@ -110,16 +111,16 @@ volatile xI2CMessage *pxCurrentMessage = NULL;
 static xQueueHandle xMessagesForTx;
 
 /* Flag used to indicate whether or not the ISR is amid sending a message. */
-unsigned portLONG ulBusFree = ( unsigned portLONG ) pdTRUE;
+unsigned long ulBusFree = ( unsigned long ) pdTRUE;
 
 /* Setting this to true will cause the TCP task to think a message is 
 complete and thus restart.  It can therefore be used under error states
 to force a restart. */
-volatile portLONG lTransactionCompleted = pdTRUE;
+volatile long lTransactionCompleted = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
-void vI2CISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxTxMessages, unsigned portLONG **ppulBusFree )
+void vI2CISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxTxMessages, unsigned long **ppulBusFree )
 {
 	/* Create the queues used to hold Rx and Tx characters. */
 	xMessagesForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( xI2CMessage * ) );
@@ -158,9 +159,9 @@ void vI2C_ISR_Handler( void )
 {
 /* Holds the current transmission state. */							
 static I2C_STATE eCurrentState = eSentStart;
-static portLONG lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
+static long lMessageIndex = -i2cBUFFER_ADDRESS_BYTES; /* There are two address bytes to send prior to the data. */
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-portLONG lBytesLeft;
+long lBytesLeft;
 
 	/* The action taken for this interrupt depends on our current state. */
 	switch( eCurrentState )
@@ -256,7 +257,7 @@ portLONG lBytesLeft;
 
 					/* How many more bytes are we expecting to receive? */
 					lBytesLeft = pxCurrentMessage->lMessageLength - lMessageIndex;
-					if( lBytesLeft == ( unsigned portLONG ) 0 )
+					if( lBytesLeft == ( unsigned long ) 0 )
 					{
 						/* This was the last byte in the message. */
 						i2cEND_TRANSMISSION( pdPASS );
@@ -280,7 +281,7 @@ portLONG lBytesLeft;
 						{
 							/* No more messages were found to be waiting for
 							transaction so the bus is free. */
-							ulBusFree = ( unsigned portLONG ) pdTRUE;			
+							ulBusFree = ( unsigned long ) pdTRUE;			
 						}						
 					}
 					else
@@ -347,7 +348,7 @@ portLONG lBytesLeft;
 						{
 							/* No more message were queues for transaction so 
 							the bus is free. */
-							ulBusFree = ( unsigned portLONG ) pdTRUE;			
+							ulBusFree = ( unsigned long ) pdTRUE;			
 						}
 					}
 				}

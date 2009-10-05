@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 #ifndef I2C_H
@@ -53,17 +54,17 @@
  */
 typedef struct AN_I2C_MESSAGE
 {
-	portLONG lMessageLength;					/*< How many bytes of data to send or received - excluding the buffer address. */
-	unsigned portCHAR ucSlaveAddress;			/*< The slave address of the WIZnet on the I2C bus. */
-	unsigned portCHAR ucBufferAddressLowByte;	/*< The address within the WIZnet device to which data should be read from / written to. */
-	unsigned portCHAR ucBufferAddressHighByte;	/*< As above, high byte. */
+	long lMessageLength;					/*< How many bytes of data to send or received - excluding the buffer address. */
+	unsigned char ucSlaveAddress;			/*< The slave address of the WIZnet on the I2C bus. */
+	unsigned char ucBufferAddressLowByte;	/*< The address within the WIZnet device to which data should be read from / written to. */
+	unsigned char ucBufferAddressHighByte;	/*< As above, high byte. */
 	xSemaphoreHandle xMessageCompleteSemaphore;	/*< Contains a reference to a semaphore if the application tasks wants notifying when the message has been transacted. */
-	unsigned portCHAR *pucBuffer;				/*< Pointer to the buffer from where data will be read for transmission, or into which received data will be placed. */
+	unsigned char *pucBuffer;				/*< Pointer to the buffer from where data will be read for transmission, or into which received data will be placed. */
 } xI2CMessage;
 
 /* Constants to use as the ulDirection parameter of i2cMessage(). */
-#define i2cWRITE				( ( unsigned portLONG ) 0 )
-#define i2cREAD					( ( unsigned portLONG ) 1 )
+#define i2cWRITE				( ( unsigned long ) 0 )
+#define i2cREAD					( ( unsigned long ) 1 )
 
 /**
  * Must be called once before any calls to i2cMessage.
@@ -95,7 +96,7 @@ void i2cInit( void );
  *						 become available should one not be available 
  *						 immediately.
  */
-void i2cMessage( const unsigned portCHAR * const pucMessage, portLONG lMessageLength, unsigned portCHAR ucSlaveAddress, unsigned portSHORT usBufferAddress, unsigned portLONG ulDirection, xSemaphoreHandle xMessageCompleteSemaphore, portTickType xBlockTime );
+void i2cMessage( const unsigned char * const pucMessage, long lMessageLength, unsigned char ucSlaveAddress, unsigned short usBufferAddress, unsigned long ulDirection, xSemaphoreHandle xMessageCompleteSemaphore, portTickType xBlockTime );
 
 #endif
 

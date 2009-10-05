@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -149,7 +150,7 @@ discover an unexpected value. */
 static volatile unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 
 /* Counters used to ensure the regtest tasks are still running. */
-static volatile unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
+static volatile unsigned long ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -190,9 +191,9 @@ int main( void )
 	#endif
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvRegTestTask1, ( signed portCHAR * ) "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTestTask2, ( signed portCHAR * ) "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask1, ( signed char * ) "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask2, ( signed char * ) "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* The suicide tasks must be started last as they record the number of other
 	tasks that exist within the system.  The value is then used to ensure at run
@@ -214,7 +215,7 @@ int main( void )
 static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
-static unsigned portLONG ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
+static unsigned long ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -679,12 +680,12 @@ static void prvRegTestTask2( void *pvParameters )
 /* This hook function will get called if there is a suspected stack overflow.
 An overflow can cause the task name to be corrupted, in which case the task
 handle needs to be used to determine the offending task. */
-void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName );
-void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName )
 {
 /* To prevent the optimiser removing the variables. */
 volatile xTaskHandle xTaskIn = xTask;
-volatile signed portCHAR *pcTaskNameIn = pcTaskName;
+volatile signed char *pcTaskNameIn = pcTaskName;
 
 	/* Remove compiler warnings. */
 	( void ) xTaskIn;

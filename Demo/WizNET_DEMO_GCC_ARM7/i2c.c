@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 
@@ -60,25 +61,25 @@
 /*-----------------------------------------------------------*/
 
 /* Constants to setup the microcontroller IO. */
-#define mainSDA_ENABLE			( ( unsigned portLONG ) 0x0040 )
-#define mainSCL_ENABLE			( ( unsigned portLONG ) 0x0010 )
+#define mainSDA_ENABLE			( ( unsigned long ) 0x0040 )
+#define mainSCL_ENABLE			( ( unsigned long ) 0x0010 )
 
 /* Bit definitions within the I2CONCLR register. */
-#define i2cSTA_BIT				( ( unsigned portCHAR ) 0x20 )
-#define i2cSI_BIT				( ( unsigned portCHAR ) 0x08 )
-#define i2cSTO_BIT				( ( unsigned portCHAR ) 0x10 )
+#define i2cSTA_BIT				( ( unsigned char ) 0x20 )
+#define i2cSI_BIT				( ( unsigned char ) 0x08 )
+#define i2cSTO_BIT				( ( unsigned char ) 0x10 )
 
 /* Constants required to setup the VIC. */
-#define i2cI2C_VIC_CHANNEL		( ( unsigned portLONG ) 0x0009 )
-#define i2cI2C_VIC_CHANNEL_BIT	( ( unsigned portLONG ) 0x0200 )
-#define i2cI2C_VIC_ENABLE		( ( unsigned portLONG ) 0x0020 )
+#define i2cI2C_VIC_CHANNEL		( ( unsigned long ) 0x0009 )
+#define i2cI2C_VIC_CHANNEL_BIT	( ( unsigned long ) 0x0200 )
+#define i2cI2C_VIC_ENABLE		( ( unsigned long ) 0x0020 )
 
 /* Misc constants. */
 #define i2cNO_BLOCK				( ( portTickType ) 0 )
-#define i2cQUEUE_LENGTH			( ( unsigned portCHAR ) 5 )
-#define i2cEXTRA_MESSAGES		( ( unsigned portCHAR ) 2 )
-#define i2cREAD_TX_LEN			( ( unsigned portLONG ) 2 )
-#define i2cACTIVE_MASTER_MODE	( ( unsigned portCHAR ) 0x40 )
+#define i2cQUEUE_LENGTH			( ( unsigned char ) 5 )
+#define i2cEXTRA_MESSAGES		( ( unsigned char ) 2 )
+#define i2cREAD_TX_LEN			( ( unsigned long ) 2 )
+#define i2cACTIVE_MASTER_MODE	( ( unsigned char ) 0x40 )
 #define i2cTIMERL				( 200 )
 #define i2cTIMERH				( 200 )
 
@@ -90,19 +91,19 @@ can be left free. */
 static xI2CMessage xTxMessages[ i2cQUEUE_LENGTH + i2cEXTRA_MESSAGES ];
 
 /* Function in the ARM part of the code used to create the queues. */
-extern void vI2CISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxTxMessages, unsigned portLONG **ppulBusFree );
+extern void vI2CISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxTxMessages, unsigned long **ppulBusFree );
 
 /* Index to the next free message in the xTxMessages array. */
-unsigned portLONG ulNextFreeMessage = ( unsigned portLONG ) 0;
+unsigned long ulNextFreeMessage = ( unsigned long ) 0;
 
 /* Queue of messages that are waiting transmission. */
 static xQueueHandle xMessagesForTx;
 
 /* Flag to indicate the state of the I2C ISR state machine. */
-static unsigned portLONG *pulBusFree;
+static unsigned long *pulBusFree;
 
 /*-----------------------------------------------------------*/
-void i2cMessage( const unsigned portCHAR * const pucMessage, portLONG lMessageLength, unsigned portCHAR ucSlaveAddress, unsigned portSHORT usBufferAddress, unsigned portLONG ulDirection, xSemaphoreHandle xMessageCompleteSemaphore, portTickType xBlockTime )
+void i2cMessage( const unsigned char * const pucMessage, long lMessageLength, unsigned char ucSlaveAddress, unsigned short usBufferAddress, unsigned long ulDirection, xSemaphoreHandle xMessageCompleteSemaphore, portTickType xBlockTime )
 {
 extern volatile xI2CMessage *pxCurrentMessage;
 xI2CMessage *pxNextFreeMessage;
@@ -121,11 +122,11 @@ signed portBASE_TYPE xReturn;
 		actual data is not copied, so the data being pointed to must still
 		be valid when the message eventually gets sent (it may be queued for
 		a while. */
-		pxNextFreeMessage->pucBuffer = ( unsigned portCHAR * ) pucMessage;		
+		pxNextFreeMessage->pucBuffer = ( unsigned char * ) pucMessage;		
 
 		/* This is the address of the I2C device we are going to transmit this
 		message to. */
-		pxNextFreeMessage->ucSlaveAddress = ucSlaveAddress | ( unsigned portCHAR ) ulDirection;
+		pxNextFreeMessage->ucSlaveAddress = ucSlaveAddress | ( unsigned char ) ulDirection;
 
 		/* A semaphore can be used to allow the I2C ISR to indicate that the
 		message has been sent.  This can be NULL if you don't want to wait for
@@ -138,21 +139,21 @@ signed portBASE_TYPE xReturn;
 		/* The address within the WIZnet device to which the data will be 
 		written.  This could be the address of a register, or alternatively
 		a location within the WIZnet Tx buffer. */
-		pxNextFreeMessage->ucBufferAddressLowByte = ( unsigned portCHAR ) ( usBufferAddress & 0xff );
+		pxNextFreeMessage->ucBufferAddressLowByte = ( unsigned char ) ( usBufferAddress & 0xff );
 
 		/* Second byte of the address. */
 		usBufferAddress >>= 8;
-		pxNextFreeMessage->ucBufferAddressHighByte = ( unsigned portCHAR ) ( usBufferAddress & 0xff );
+		pxNextFreeMessage->ucBufferAddressHighByte = ( unsigned char ) ( usBufferAddress & 0xff );
 
 		/* Increment to the next message in the array - with a wrap around check. */
 		ulNextFreeMessage++;
 		if( ulNextFreeMessage >= ( i2cQUEUE_LENGTH + i2cEXTRA_MESSAGES ) )
 		{
-			ulNextFreeMessage = ( unsigned portLONG ) 0;
+			ulNextFreeMessage = ( unsigned long ) 0;
 		}
 
 		/* Is the I2C interrupt in the middle of transmitting a message? */
-		if( *pulBusFree == ( unsigned portLONG ) pdTRUE )
+		if( *pulBusFree == ( unsigned long ) pdTRUE )
 		{
 			/* No message is currently being sent or queued to be sent.  We
 			can start the ISR sending this message immediately. */
@@ -161,7 +162,7 @@ signed portBASE_TYPE xReturn;
 			I2C_I2CONCLR = i2cSI_BIT;	
 			I2C_I2CONSET = i2cSTA_BIT;
 			
-			*pulBusFree = ( unsigned portLONG ) pdFALSE;
+			*pulBusFree = ( unsigned long ) pdFALSE;
 		}
 		else
 		{
@@ -173,7 +174,7 @@ signed portBASE_TYPE xReturn;
 			was the case then the interrupt would have been enabled and we may
 			now find that the I2C interrupt routine is no longer sending a
 			message. */
-			if( ( *pulBusFree == ( unsigned portLONG ) pdTRUE ) && ( xReturn == pdPASS ) )
+			if( ( *pulBusFree == ( unsigned long ) pdTRUE ) && ( xReturn == pdPASS ) )
 			{
 				/* Get the next message in the queue (this should be the 
 				message we just posted) and start off the transmission
@@ -184,7 +185,7 @@ signed portBASE_TYPE xReturn;
 				I2C_I2CONCLR = i2cSI_BIT;	
 				I2C_I2CONSET = i2cSTA_BIT;
 				
-				*pulBusFree = ( unsigned portLONG ) pdFALSE;
+				*pulBusFree = ( unsigned long ) pdFALSE;
 			}
 		}
 	}
@@ -215,7 +216,7 @@ extern void ( vI2C_ISR_Wrapper )( void );
 		/* Setup the VIC for the i2c interrupt. */
 		VICIntSelect &= ~( i2cI2C_VIC_CHANNEL_BIT );
 		VICIntEnable |= i2cI2C_VIC_CHANNEL_BIT;
-		VICVectAddr2 = ( portLONG ) vI2C_ISR_Wrapper;
+		VICVectAddr2 = ( long ) vI2C_ISR_Wrapper;
 
 		VICVectCntl2 = i2cI2C_VIC_CHANNEL | i2cI2C_VIC_ENABLE;
 	}

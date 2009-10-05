@@ -13,12 +13,12 @@ xSemaphoreHandle xEMACInit( void );
  * Send the current uIP buffer.  This copies the uIP buffer to one of the
  * EMAC Tx buffers, then indicates to the EMAC that the buffer is ready.
  */
-portLONG lEMACSend( void );
+long lEMACSend( void );
 
 /*
  * Called in response to an EMAC Rx interrupt.  Copies the received frame
  * into the uIP buffer.
  */
-unsigned portLONG ulEMACPoll( void );
+unsigned long ulEMACPoll( void );
 
 #endif

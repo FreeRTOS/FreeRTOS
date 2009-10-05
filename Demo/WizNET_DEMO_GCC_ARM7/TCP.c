@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -76,37 +77,37 @@
 /*-----------------------------------------------------------*/
 
 /* Hardwired i2c address of the WIZNet device. */
-#define tcpDEVICE_ADDRESS 				( ( unsigned portCHAR ) 0x00 )
+#define tcpDEVICE_ADDRESS 				( ( unsigned char ) 0x00 )
 
 /* Constants used to configure the Tx and Rx buffer sizes within the WIZnet
 device. */
-#define tcp8K_RX						( ( unsigned portCHAR ) 0x03 )
-#define tcp8K_TX						( ( unsigned portCHAR ) 0x03 )
+#define tcp8K_RX						( ( unsigned char ) 0x03 )
+#define tcp8K_TX						( ( unsigned char ) 0x03 )
 
 /* Constants used to generate the WIZnet internal buffer addresses. */
-#define tcpSINGLE_SOCKET_ADDR_MASK		( ( unsigned portLONG ) 0x1fff )
-#define tcpSINGLE_SOCKET_ADDR_OFFSET	( ( unsigned portLONG ) 0x4000 )
+#define tcpSINGLE_SOCKET_ADDR_MASK		( ( unsigned long ) 0x1fff )
+#define tcpSINGLE_SOCKET_ADDR_OFFSET	( ( unsigned long ) 0x4000 )
 
 /* Bit definitions of the commands that can be sent to the command register. */
-#define tcpRESET_CMD					( ( unsigned portCHAR ) 0x80 )
-#define tcpSYS_INIT_CMD					( ( unsigned portCHAR ) 0x01 )
-#define tcpSOCK_STREAM					( ( unsigned portCHAR ) 0x01 )
-#define tcpSOCK_INIT					( ( unsigned portCHAR ) 0x02 )
-#define tcpLISTEN_CMD					( ( unsigned portCHAR ) 0x08 )
-#define tcpRECEIVE_CMD					( ( unsigned portCHAR ) 0x40 )
-#define tcpDISCONNECT_CMD				( ( unsigned portCHAR ) 0x10 )
-#define tcpSEND_CMD						( ( unsigned portCHAR ) 0x20 )
+#define tcpRESET_CMD					( ( unsigned char ) 0x80 )
+#define tcpSYS_INIT_CMD					( ( unsigned char ) 0x01 )
+#define tcpSOCK_STREAM					( ( unsigned char ) 0x01 )
+#define tcpSOCK_INIT					( ( unsigned char ) 0x02 )
+#define tcpLISTEN_CMD					( ( unsigned char ) 0x08 )
+#define tcpRECEIVE_CMD					( ( unsigned char ) 0x40 )
+#define tcpDISCONNECT_CMD				( ( unsigned char ) 0x10 )
+#define tcpSEND_CMD						( ( unsigned char ) 0x20 )
 
 /* Constants required to handle the interrupts. */
 #define tcpCLEAR_EINT0					( 1 )
-#define i2cCLEAR_ALL_INTERRUPTS			( ( unsigned portCHAR ) 0xff )
-#define i2cCHANNEL_0_ISR_ENABLE			( ( unsigned portCHAR ) 0x01 )
-#define i2cCHANNEL_0_ISR_DISABLE		( ( unsigned portCHAR ) 0x00 )
+#define i2cCLEAR_ALL_INTERRUPTS			( ( unsigned char ) 0xff )
+#define i2cCHANNEL_0_ISR_ENABLE			( ( unsigned char ) 0x01 )
+#define i2cCHANNEL_0_ISR_DISABLE		( ( unsigned char ) 0x00 )
 #define tcpWAKE_ON_EINT0				( 1 )
-#define tcpENABLE_EINT0_FUNCTION		( ( unsigned portLONG ) 0x01 )
-#define tcpEINT0_VIC_CHANNEL_BIT		( ( unsigned portLONG ) 0x4000 )
-#define tcpEINT0_VIC_CHANNEL			( ( unsigned portLONG ) 14 )
-#define tcpEINT0_VIC_ENABLE				( ( unsigned portLONG ) 0x0020 )
+#define tcpENABLE_EINT0_FUNCTION		( ( unsigned long ) 0x01 )
+#define tcpEINT0_VIC_CHANNEL_BIT		( ( unsigned long ) 0x4000 )
+#define tcpEINT0_VIC_CHANNEL			( ( unsigned long ) 14 )
+#define tcpEINT0_VIC_ENABLE				( ( unsigned long ) 0x0020 )
 
 /* Various delays used in the driver. */
 #define tcpRESET_DELAY					( ( portTickType ) 16 / portTICK_RATE_MS )
@@ -117,49 +118,49 @@ device. */
 #define tcpNO_DELAY						( ( portTickType ) 0 )
 
 /* Length of the data to read for various register reads. */
-#define tcpSTATUS_READ_LEN				( ( unsigned portLONG ) 1 )
-#define tcpSHADOW_READ_LEN				( ( unsigned portLONG ) 1 )
+#define tcpSTATUS_READ_LEN				( ( unsigned long ) 1 )
+#define tcpSHADOW_READ_LEN				( ( unsigned long ) 1 )
 	
 /* Register addresses within the WIZnet device. */
-#define tcpCOMMAND_REG					( ( unsigned portSHORT ) 0x0000 )
-#define tcpGATEWAY_ADDR_REG				( ( unsigned portSHORT ) 0x0080 )
-#define tcpSUBNET_MASK_REG				( ( unsigned portSHORT ) 0x0084 )
-#define tcpSOURCE_HA_REG				( ( unsigned portSHORT ) 0x0088 )
-#define tpcSOURCE_IP_REG				( ( unsigned portSHORT ) 0x008E )
-#define tpcSOCKET_OPT_REG				( ( unsigned portSHORT ) 0x00A1 )
-#define tcpSOURCE_PORT_REG				( ( unsigned portSHORT ) 0x00AE )
-#define tcpTX_WRITE_POINTER_REG			( ( unsigned portSHORT ) 0x0040 )
-#define tcpTX_READ_POINTER_REG			( ( unsigned portSHORT ) 0x0044 )
-#define tcpTX_ACK_POINTER_REG			( ( unsigned portSHORT ) 0x0018 )
-#define tcpTX_MEM_SIZE_REG				( ( unsigned portSHORT ) 0x0096 )
-#define tcpRX_MEM_SIZE_REG				( ( unsigned portSHORT ) 0x0095 )
-#define tcpINTERRUPT_STATUS_REG			( ( unsigned portSHORT ) 0x0004 )
-#define tcpTX_WRITE_SHADOW_REG			( ( unsigned portSHORT ) 0x01F0 )
-#define tcpTX_ACK_SHADOW_REG			( ( unsigned portSHORT ) 0x01E2 )
-#define tcpISR_MASK_REG					( ( unsigned portSHORT ) 0x0009 )
-#define tcpINTERRUPT_REG				( ( unsigned portSHORT ) 0x0008 )
-#define tcpSOCKET_STATE_REG				( ( unsigned portSHORT ) 0x00a0 )
+#define tcpCOMMAND_REG					( ( unsigned short ) 0x0000 )
+#define tcpGATEWAY_ADDR_REG				( ( unsigned short ) 0x0080 )
+#define tcpSUBNET_MASK_REG				( ( unsigned short ) 0x0084 )
+#define tcpSOURCE_HA_REG				( ( unsigned short ) 0x0088 )
+#define tpcSOURCE_IP_REG				( ( unsigned short ) 0x008E )
+#define tpcSOCKET_OPT_REG				( ( unsigned short ) 0x00A1 )
+#define tcpSOURCE_PORT_REG				( ( unsigned short ) 0x00AE )
+#define tcpTX_WRITE_POINTER_REG			( ( unsigned short ) 0x0040 )
+#define tcpTX_READ_POINTER_REG			( ( unsigned short ) 0x0044 )
+#define tcpTX_ACK_POINTER_REG			( ( unsigned short ) 0x0018 )
+#define tcpTX_MEM_SIZE_REG				( ( unsigned short ) 0x0096 )
+#define tcpRX_MEM_SIZE_REG				( ( unsigned short ) 0x0095 )
+#define tcpINTERRUPT_STATUS_REG			( ( unsigned short ) 0x0004 )
+#define tcpTX_WRITE_SHADOW_REG			( ( unsigned short ) 0x01F0 )
+#define tcpTX_ACK_SHADOW_REG			( ( unsigned short ) 0x01E2 )
+#define tcpISR_MASK_REG					( ( unsigned short ) 0x0009 )
+#define tcpINTERRUPT_REG				( ( unsigned short ) 0x0008 )
+#define tcpSOCKET_STATE_REG				( ( unsigned short ) 0x00a0 )
 
 /* Constants required for hardware setup. */
-#define tcpRESET_ACTIVE_LOW 			( ( unsigned portLONG ) 0x20 )
-#define tcpRESET_ACTIVE_HIGH 			( ( unsigned portLONG ) 0x10 )
+#define tcpRESET_ACTIVE_LOW 			( ( unsigned long ) 0x20 )
+#define tcpRESET_ACTIVE_HIGH 			( ( unsigned long ) 0x10 )
 
 /* Constants defining the source of the WIZnet ISR. */
-#define tcpISR_SYS_INIT					( ( unsigned portCHAR ) 0x01 )
-#define tcpISR_SOCKET_INIT				( ( unsigned portCHAR ) 0x02 )
-#define tcpISR_ESTABLISHED				( ( unsigned portCHAR ) 0x04 )
-#define tcpISR_CLOSED					( ( unsigned portCHAR ) 0x08 )
-#define tcpISR_TIMEOUT					( ( unsigned portCHAR ) 0x10 )
-#define tcpISR_TX_COMPLETE				( ( unsigned portCHAR ) 0x20 )
-#define tcpISR_RX_COMPLETE				( ( unsigned portCHAR ) 0x40 )
+#define tcpISR_SYS_INIT					( ( unsigned char ) 0x01 )
+#define tcpISR_SOCKET_INIT				( ( unsigned char ) 0x02 )
+#define tcpISR_ESTABLISHED				( ( unsigned char ) 0x04 )
+#define tcpISR_CLOSED					( ( unsigned char ) 0x08 )
+#define tcpISR_TIMEOUT					( ( unsigned char ) 0x10 )
+#define tcpISR_TX_COMPLETE				( ( unsigned char ) 0x20 )
+#define tcpISR_RX_COMPLETE				( ( unsigned char ) 0x40 )
 
 /* Constants defining the socket status bits. */
-#define tcpSTATUS_ESTABLISHED			( ( unsigned portCHAR ) 0x06 )
-#define tcpSTATUS_LISTEN				( ( unsigned portCHAR ) 0x02 )
+#define tcpSTATUS_ESTABLISHED			( ( unsigned char ) 0x06 )
+#define tcpSTATUS_LISTEN				( ( unsigned char ) 0x02 )
 
 /* Misc constants. */
-#define tcpNO_STATUS_BITS				( ( unsigned portCHAR ) 0x00 )
-#define i2cNO_ADDR_REQUIRED				( ( unsigned portSHORT ) 0x0000 )
+#define tcpNO_STATUS_BITS				( ( unsigned char ) 0x00 )
+#define i2cNO_ADDR_REQUIRED				( ( unsigned short ) 0x0000 )
 #define i2cNO_DATA_REQUIRED				( 0x0000 )
 #define tcpISR_QUEUE_LENGTH				( ( unsigned portBASE_TYPE ) 10 )
 #define tcpISR_QUEUE_ITEM_SIZE			( ( unsigned portBASE_TYPE ) 0 )
@@ -170,29 +171,29 @@ device. */
 
 /* Message definitions.  The IP address, MAC address, gateway address, etc.
 is set here! */
-const unsigned portCHAR const ucDataGAR[]				= { 172, 25, 218, 3 };	/* Gateway address. */
-const unsigned portCHAR const ucDataMSR[]				= { 255, 255, 255, 0 };	/* Subnet mask.		*/
-const unsigned portCHAR const ucDataSIPR[]				= { 172, 25, 218, 201 };/* IP address.		*/
-const unsigned portCHAR const ucDataSHAR[]				= { 00, 23, 30, 41, 15, 26 }; /* MAC address - DO NOT USE THIS ON A PUBLIC NETWORK! */
+const unsigned char const ucDataGAR[]				= { 172, 25, 218, 3 };	/* Gateway address. */
+const unsigned char const ucDataMSR[]				= { 255, 255, 255, 0 };	/* Subnet mask.		*/
+const unsigned char const ucDataSIPR[]				= { 172, 25, 218, 201 };/* IP address.		*/
+const unsigned char const ucDataSHAR[]				= { 00, 23, 30, 41, 15, 26 }; /* MAC address - DO NOT USE THIS ON A PUBLIC NETWORK! */
 
 /* Other fixed messages. */
-const unsigned portCHAR const ucDataReset[]				= { tcpRESET_CMD }; 
-const unsigned portCHAR const ucDataInit[]				= { tcpSYS_INIT_CMD }; 
-const unsigned portCHAR const ucDataProtocol[]			= { tcpSOCK_STREAM };
-const unsigned portCHAR const ucDataPort[]				= { 0xBA, 0xCC };
-const unsigned portCHAR const ucDataSockInit[]			= { tcpSOCK_INIT };
-const unsigned portCHAR const ucDataTxWritePointer[]	= { 0x11, 0x22, 0x00, 0x00 };
-const unsigned portCHAR const ucDataTxAckPointer[]		= { 0x11, 0x22, 0x00, 0x00 };
-const unsigned portCHAR const ucDataTxReadPointer[]		= { 0x11, 0x22, 0x00, 0x00 };
-const unsigned portCHAR const ucDataListen[]			= { tcpLISTEN_CMD };
-const unsigned portCHAR const ucDataReceiveCmd[]		= { tcpRECEIVE_CMD };
-const unsigned portCHAR const ucDataSetTxBufSize[]		= { tcp8K_TX };
-const unsigned portCHAR const ucDataSetRxBufSize[] 		= { tcp8K_RX };
-const unsigned portCHAR const ucDataSend[]				= { tcpSEND_CMD };
-const unsigned portCHAR const ucDataDisconnect[]		= { tcpDISCONNECT_CMD };
-const unsigned portCHAR const ucDataEnableISR[]			= { i2cCHANNEL_0_ISR_ENABLE };
-const unsigned portCHAR const ucDataDisableISR[]		= { i2cCHANNEL_0_ISR_DISABLE };
-const unsigned portCHAR const ucDataClearInterrupt[]	= { i2cCLEAR_ALL_INTERRUPTS };
+const unsigned char const ucDataReset[]				= { tcpRESET_CMD }; 
+const unsigned char const ucDataInit[]				= { tcpSYS_INIT_CMD }; 
+const unsigned char const ucDataProtocol[]			= { tcpSOCK_STREAM };
+const unsigned char const ucDataPort[]				= { 0xBA, 0xCC };
+const unsigned char const ucDataSockInit[]			= { tcpSOCK_INIT };
+const unsigned char const ucDataTxWritePointer[]	= { 0x11, 0x22, 0x00, 0x00 };
+const unsigned char const ucDataTxAckPointer[]		= { 0x11, 0x22, 0x00, 0x00 };
+const unsigned char const ucDataTxReadPointer[]		= { 0x11, 0x22, 0x00, 0x00 };
+const unsigned char const ucDataListen[]			= { tcpLISTEN_CMD };
+const unsigned char const ucDataReceiveCmd[]		= { tcpRECEIVE_CMD };
+const unsigned char const ucDataSetTxBufSize[]		= { tcp8K_TX };
+const unsigned char const ucDataSetRxBufSize[] 		= { tcp8K_RX };
+const unsigned char const ucDataSend[]				= { tcpSEND_CMD };
+const unsigned char const ucDataDisconnect[]		= { tcpDISCONNECT_CMD };
+const unsigned char const ucDataEnableISR[]			= { i2cCHANNEL_0_ISR_ENABLE };
+const unsigned char const ucDataDisableISR[]		= { i2cCHANNEL_0_ISR_DISABLE };
+const unsigned char const ucDataClearInterrupt[]	= { i2cCLEAR_ALL_INTERRUPTS };
 
 static xSemaphoreHandle xMessageComplete = NULL;
 xQueueHandle xTCPISRQueue = NULL;
@@ -201,23 +202,23 @@ xQueueHandle xTCPISRQueue = NULL;
 static void prvSendSamplePage( void );
 
 /* Read a register from the WIZnet device via the i2c interface. */
-static void prvReadRegister( unsigned portCHAR *pucDestination, unsigned portSHORT usAddress, unsigned portLONG ulLength );
+static void prvReadRegister( unsigned char *pucDestination, unsigned short usAddress, unsigned long ulLength );
 
 /* Send the entire Tx buffer (the Tx buffer within the WIZnet device). */
-static void prvFlushBuffer( unsigned portLONG ulTxAddress );
+static void prvFlushBuffer( unsigned long ulTxAddress );
 
 /* Write a string to the WIZnet Tx buffer. */
-static void prvWriteString( const portCHAR * const pucTxBuffer, portLONG lTxLen, unsigned portLONG *pulTxAddress );
+static void prvWriteString( const char * const pucTxBuffer, long lTxLen, unsigned long *pulTxAddress );
 
 /* Convert a number to a string. */
-void ultoa( unsigned portLONG ulVal, portCHAR *pcBuffer, portLONG lIgnore );
+void ultoa( unsigned long ulVal, char *pcBuffer, long lIgnore );
 
 /*-----------------------------------------------------------*/
 
-void ultoa( unsigned portLONG ulVal, portCHAR *pcBuffer, portLONG lIgnore )
+void ultoa( unsigned long ulVal, char *pcBuffer, long lIgnore )
 {
-unsigned portLONG lNibble;
-portLONG lIndex;
+unsigned long lNibble;
+long lIndex;
 
 	/* Simple routine to convert an unsigned long value into a string in hex 
 	format. */
@@ -249,9 +250,9 @@ portLONG lIndex;
 }
 /*-----------------------------------------------------------*/
 
-static void prvReadRegister( unsigned portCHAR *pucDestination, unsigned portSHORT usAddress, unsigned portLONG ulLength )
+static void prvReadRegister( unsigned char *pucDestination, unsigned short usAddress, unsigned long ulLength )
 {
-unsigned portCHAR ucRxBuffer[ tcpMAX_REGISTER_LEN ];
+unsigned char ucRxBuffer[ tcpMAX_REGISTER_LEN ];
 
 	/* Read a register value from the WIZnet device. */
 
@@ -259,7 +260,7 @@ unsigned portCHAR ucRxBuffer[ tcpMAX_REGISTER_LEN ];
 	i2cMessage( ucRxBuffer, i2cNO_DATA_REQUIRED, tcpDEVICE_ADDRESS, usAddress, i2cWRITE, NULL, portMAX_DELAY );
 	
 	/* Then read back from that address. */
-	i2cMessage( ( unsigned portCHAR * ) pucDestination, ulLength, tcpDEVICE_ADDRESS, i2cNO_ADDR_REQUIRED, i2cREAD, xMessageComplete, portMAX_DELAY );
+	i2cMessage( ( unsigned char * ) pucDestination, ulLength, tcpDEVICE_ADDRESS, i2cNO_ADDR_REQUIRED, i2cREAD, xMessageComplete, portMAX_DELAY );
 
 	/* I2C messages are queued so use the semaphore to wait for the read to 
 	complete - otherwise we will leave this function before the I2C 
@@ -315,7 +316,7 @@ void vTCPHardReset( void )
 		extern void ( vEINT0_ISR_Wrapper )( void );
 
 		VICIntSelect &= ~( tcpEINT0_VIC_CHANNEL_BIT );
-		VICVectAddr3 = ( portLONG ) vEINT0_ISR_Wrapper;
+		VICVectAddr3 = ( long ) vEINT0_ISR_Wrapper;
 
 		VICVectCntl3 = tcpEINT0_VIC_CHANNEL | tcpEINT0_VIC_ENABLE;
 	}
@@ -328,10 +329,10 @@ void vTCPHardReset( void )
 }
 /*-----------------------------------------------------------*/
 
-portLONG lTCPSoftReset( void )
+long lTCPSoftReset( void )
 {
-unsigned portCHAR ucStatus;
-extern volatile portLONG lTransactionCompleted;
+unsigned char ucStatus;
+extern volatile long lTransactionCompleted;
 
 	/* Send a message to the WIZnet device to tell it set all it's registers
 	back to their default states.  Then setup the WIZnet device as required. */
@@ -364,7 +365,7 @@ extern volatile portLONG lTransactionCompleted;
 	/* We should find that the sys init was successful. */
 	if( ucStatus != tcpISR_SYS_INIT )
 	{
-		return ( portLONG ) pdFAIL;
+		return ( long ) pdFAIL;
 	}
 
 	/* No i2c errors yet. */
@@ -372,13 +373,13 @@ extern volatile portLONG lTransactionCompleted;
 		lTransactionCompleted = pdTRUE;
 	portEXIT_CRITICAL();
 
-	return ( portLONG ) pdPASS;
+	return ( long ) pdPASS;
 }
 /*-----------------------------------------------------------*/
 
-portLONG lTCPCreateSocket( void )
+long lTCPCreateSocket( void )
 {
-unsigned portCHAR ucStatus;
+unsigned char ucStatus;
 
 	/* Create and configure a socket. */
 
@@ -393,7 +394,7 @@ unsigned portCHAR ucStatus;
 	{
 		/* For some reason the message was not transmitted within our block
 		period. */
-		return ( portLONG ) pdFAIL;
+		return ( long ) pdFAIL;
 	}
 
 	/* Allow the socket to initialise. */
@@ -405,7 +406,7 @@ unsigned portCHAR ucStatus;
 	/* We should find that the socket init was successful. */
 	if( ucStatus != tcpISR_SOCKET_INIT )
 	{
-		return ( portLONG ) pdFAIL;
+		return ( long ) pdFAIL;
 	}
 
 
@@ -417,13 +418,13 @@ unsigned portCHAR ucStatus;
 	i2cMessage( ucDataTxAckPointer,	  sizeof( ucDataTxAckPointer ),	  tcpDEVICE_ADDRESS, tcpTX_ACK_POINTER_REG, i2cWRITE, NULL, portMAX_DELAY );
 	vTaskDelay( tcpSHORT_DELAY );
 
-	return ( portLONG ) pdPASS;
+	return ( long ) pdPASS;
 }
 /*-----------------------------------------------------------*/
 
 void vTCPListen( void )
 {
-unsigned portCHAR ucISR;
+unsigned char ucISR;
 
 	/* Start a passive listen on the socket. */
 
@@ -455,12 +456,12 @@ unsigned portCHAR ucISR;
 }
 /*-----------------------------------------------------------*/
 
-portLONG lProcessConnection( void )
+long lProcessConnection( void )
 {
-unsigned portCHAR ucISR, ucState, ucLastState = 2, ucShadow;
-extern volatile portLONG lTransactionCompleted;
-portLONG lSameStateCount = 0, lDataSent = pdFALSE;
-unsigned portLONG ulWritePointer, ulAckPointer;
+unsigned char ucISR, ucState, ucLastState = 2, ucShadow;
+extern volatile long lTransactionCompleted;
+long lSameStateCount = 0, lDataSent = pdFALSE;
+unsigned long ulWritePointer, ulAckPointer;
 
 	/* No I2C errors can yet have occurred. */
 	portENTER_CRITICAL();
@@ -528,7 +529,7 @@ unsigned portLONG ulWritePointer, ulAckPointer;
 				vTaskDelay( tcpSHORT_DELAY );
 
 				/* Then we can read the real register. */
-				prvReadRegister( ( unsigned portCHAR * ) &ulWritePointer, tcpTX_WRITE_POINTER_REG, sizeof( ulWritePointer ) );
+				prvReadRegister( ( unsigned char * ) &ulWritePointer, tcpTX_WRITE_POINTER_REG, sizeof( ulWritePointer ) );
 
 				/* We cannot do anything more here but need to remember that 
 				this interrupt has occurred. */
@@ -560,7 +561,7 @@ unsigned portLONG ulWritePointer, ulAckPointer;
 				register. */
 				prvReadRegister( &ucShadow, tcpTX_ACK_SHADOW_REG, tcpSHADOW_READ_LEN );
 				vTaskDelay( tcpSHORT_DELAY );
-				prvReadRegister( ( unsigned portCHAR * ) &ulAckPointer, tcpTX_ACK_POINTER_REG, sizeof( ulWritePointer ) );
+				prvReadRegister( ( unsigned char * ) &ulAckPointer, tcpTX_ACK_POINTER_REG, sizeof( ulWritePointer ) );
 
 				if( ulAckPointer == ulWritePointer )
 				{
@@ -619,9 +620,9 @@ unsigned portLONG ulWritePointer, ulAckPointer;
 }
 /*-----------------------------------------------------------*/
 
-static void prvWriteString( const portCHAR * const pucTxBuffer, portLONG lTxLen, unsigned portLONG *pulTxAddress )
+static void prvWriteString( const char * const pucTxBuffer, long lTxLen, unsigned long *pulTxAddress )
 {
-unsigned portLONG ulSendAddress;
+unsigned long ulSendAddress;
 
 	/* Send a string to the Tx buffer internal to the WIZnet device. */
 
@@ -630,7 +631,7 @@ unsigned portLONG ulSendAddress;
 
 	/* Send the buffer to the calculated address.  Use the semaphore so we
 	can wait until the entire message has been transferred. */
-	i2cMessage( ( unsigned portCHAR * ) pucTxBuffer, lTxLen, tcpDEVICE_ADDRESS, ( unsigned portSHORT ) ulSendAddress, i2cWRITE, xMessageComplete, portMAX_DELAY );
+	i2cMessage( ( unsigned char * ) pucTxBuffer, lTxLen, tcpDEVICE_ADDRESS, ( unsigned short ) ulSendAddress, i2cWRITE, xMessageComplete, portMAX_DELAY );
 
 	/* Wait until the semaphore indicates that the message has been transferred. */
 	if( !xSemaphoreTake( xMessageComplete, tcpLONG_DELAY ) )
@@ -640,13 +641,13 @@ unsigned portLONG ulSendAddress;
 
 	/* Return the new address of the end of the buffer (within the WIZnet 
 	device). */
-	*pulTxAddress += ( unsigned portLONG ) lTxLen;
+	*pulTxAddress += ( unsigned long ) lTxLen;
 }
 /*-----------------------------------------------------------*/
 
-static void prvFlushBuffer( unsigned portLONG ulTxAddress )
+static void prvFlushBuffer( unsigned long ulTxAddress )
 {
-unsigned portCHAR ucTxBuffer[ tcpMAX_REGISTER_LEN ];
+unsigned char ucTxBuffer[ tcpMAX_REGISTER_LEN ];
 
 	/* We have written some data to the Tx buffer internal to the WIZnet
 	device.  Now we update the Tx pointer inside the WIZnet then send a
@@ -657,13 +658,13 @@ unsigned portCHAR ucTxBuffer[ tcpMAX_REGISTER_LEN ];
 	ulTxAddress = htonl( ulTxAddress );
 
 	/* Place the new Tx pointer in the string to be transmitted. */
-	ucTxBuffer[ 0 ] = ( unsigned portCHAR ) ( ulTxAddress & 0xff );
+	ucTxBuffer[ 0 ] = ( unsigned char ) ( ulTxAddress & 0xff );
 	ulTxAddress >>= 8;
-	ucTxBuffer[ 1 ] = ( unsigned portCHAR ) ( ulTxAddress & 0xff );
+	ucTxBuffer[ 1 ] = ( unsigned char ) ( ulTxAddress & 0xff );
 	ulTxAddress >>= 8;
-	ucTxBuffer[ 2 ] = ( unsigned portCHAR ) ( ulTxAddress & 0xff );
+	ucTxBuffer[ 2 ] = ( unsigned char ) ( ulTxAddress & 0xff );
 	ulTxAddress >>= 8;
-	ucTxBuffer[ 3 ] = ( unsigned portCHAR ) ( ulTxAddress & 0xff );
+	ucTxBuffer[ 3 ] = ( unsigned char ) ( ulTxAddress & 0xff );
 	ulTxAddress >>= 8;
 
 	/* And send it to the WIZnet device. */
@@ -688,12 +689,12 @@ unsigned portCHAR ucTxBuffer[ tcpMAX_REGISTER_LEN ];
 
 static void prvSendSamplePage( void )
 {
-extern portLONG lErrorInTask;
-unsigned portLONG ulTxAddress;
-unsigned portCHAR ucShadow;
-portLONG lIndex;
-static unsigned portLONG ulRefreshCount = 0x00;
-static portCHAR cPageBuffer[ tcpBUFFER_LEN ];
+extern long lErrorInTask;
+unsigned long ulTxAddress;
+unsigned char ucShadow;
+long lIndex;
+static unsigned long ulRefreshCount = 0x00;
+static char cPageBuffer[ tcpBUFFER_LEN ];
 
 
 	/* This function just generates a sample page of HTML which gets
@@ -709,7 +710,7 @@ static portCHAR cPageBuffer[ tcpBUFFER_LEN ];
 	vTaskDelay( tcpSHORT_DELAY );
 
 	/* Now we can read the real pointer value. */
-	prvReadRegister( ( unsigned portCHAR * ) &ulTxAddress, tcpTX_WRITE_POINTER_REG, sizeof( ulTxAddress ) );
+	prvReadRegister( ( unsigned char * ) &ulTxAddress, tcpTX_WRITE_POINTER_REG, sizeof( ulTxAddress ) );
 
 	/* Make sure endieness is correct. */
 	ulTxAddress = htonl( ulTxAddress );
@@ -724,13 +725,13 @@ static portCHAR cPageBuffer[ tcpBUFFER_LEN ];
 	ultoa( xTaskGetTickCount(), &( cPageBuffer[ lIndex ] ), 0 );
 	strcat( cPageBuffer, "<br>Number of tasks executing = ");
 	lIndex = strlen( cPageBuffer );
-	ultoa( ( unsigned portLONG ) uxTaskGetNumberOfTasks(), &( cPageBuffer[ lIndex ] ), 0 );
+	ultoa( ( unsigned long ) uxTaskGetNumberOfTasks(), &( cPageBuffer[ lIndex ] ), 0 );
 	strcat( cPageBuffer, "<br>IO port 0 state (used by flash tasks) = 0x" );
 	lIndex = strlen( cPageBuffer );
-	ultoa( ( unsigned portLONG ) GPIO0_IOPIN, &( cPageBuffer[ lIndex ] ), 0 );
+	ultoa( ( unsigned long ) GPIO0_IOPIN, &( cPageBuffer[ lIndex ] ), 0 );
 	strcat( cPageBuffer, "<br>Refresh = 0x" );
 	lIndex = strlen( cPageBuffer );
-	ultoa( ( unsigned portLONG ) ulRefreshCount, &( cPageBuffer[ lIndex ] ), 0 );
+	ultoa( ( unsigned long ) ulRefreshCount, &( cPageBuffer[ lIndex ] ), 0 );
 	
 	if( lErrorInTask )
 	{

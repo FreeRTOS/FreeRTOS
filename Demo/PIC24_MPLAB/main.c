@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -125,7 +126,7 @@ interrupt test" interrupt. */
 #define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ( configCPU_CLOCK_HZ / mainTEST_INTERRUPT_FREQUENCY )
 
 /* The number of nano seconds between each processor clock. */
-#define mainNS_PER_CLOCK ( ( unsigned portSHORT ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK ( ( unsigned short ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* Dimension the buffer used to hold the value of the maximum jitter time when
 it is converted to a string. */
@@ -166,7 +167,7 @@ int main( void )
 	vCreateBlockTimeTasks();
 
 	/* Create the test tasks defined within this file. */
-	xTaskCreate( vCheckTask, ( signed portCHAR * ) "Check", mainCHECK_TAKS_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vCheckTask, ( signed char * ) "Check", mainCHECK_TAKS_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the task that will control the LCD.  This returns the handle
 	to the queue used to write text out to the task. */
@@ -196,10 +197,10 @@ static void vCheckTask( void *pvParameters )
 portTickType xLastExecutionTime; 
 
 /* The maximum jitter time measured by the fast interrupt test. */
-extern unsigned portSHORT usMaxJitter ;
+extern unsigned short usMaxJitter ;
 
 /* Buffer into which the maximum jitter time is written as a string. */
-static portCHAR cStringBuffer[ mainMAX_STRING_LENGTH ];
+static char cStringBuffer[ mainMAX_STRING_LENGTH ];
 
 /* The message that is sent on the queue to the LCD task.  The first
 parameter is the minimum time (in ticks) that the message should be
@@ -208,7 +209,7 @@ to the message to display itself. */
 xLCDMessage xMessage = { 0, cStringBuffer };
 
 /* Set to pdTRUE should an error be detected in any of the standard demo tasks. */
-unsigned portSHORT usErrorDetected = pdFALSE;
+unsigned short usErrorDetected = pdFALSE;
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -249,7 +250,7 @@ unsigned portSHORT usErrorDetected = pdFALSE;
 		{
 			/* No errors have been discovered, so display the maximum jitter
 			timer discovered by the "fast interrupt test". */
-			sprintf( cStringBuffer, "%dns max jitter", ( portSHORT ) ( usMaxJitter - mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ) * mainNS_PER_CLOCK );
+			sprintf( cStringBuffer, "%dns max jitter", ( short ) ( usMaxJitter - mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ) * mainNS_PER_CLOCK );
 		}
 
 		/* Send the message to the LCD gatekeeper for display. */

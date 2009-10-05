@@ -1,48 +1,49 @@
 /*
-	FreeRTOS V5.4.2 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
 
-	This file is part of the FreeRTOS distribution.
+    This file is part of the FreeRTOS distribution.
 
-	FreeRTOS is free software; you can redistribute it and/or modify it	under 
-	the terms of the GNU General Public License (version 2) as published by the 
-	Free Software Foundation and modified by the FreeRTOS exception.
-	**NOTE** The exception to the GPL is included to allow you to distribute a
-	combined work that includes FreeRTOS without being obliged to provide the 
-	source code for proprietary components outside of the FreeRTOS kernel.  
-	Alternative commercial license and support terms are also available upon 
-	request.  See the licensing section of http://www.FreeRTOS.org for full 
-	license details.
+    FreeRTOS is free software; you can redistribute it and/or modify it    under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation and modified by the FreeRTOS exception.
+    **NOTE** The exception to the GPL is included to allow you to distribute a
+    combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    Alternative commercial license and support terms are also available upon
+    request.  See the licensing section of http://www.FreeRTOS.org for full
+    license details.
 
-	FreeRTOS is distributed in the hope that it will be useful,	but WITHOUT
-	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-	FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-	more details.
+    FreeRTOS is distributed in the hope that it will be useful,    but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details.
 
-	You should have received a copy of the GNU General Public License along
-	with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
-	Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+    You should have received a copy of the GNU General Public License along
+    with FreeRTOS; if not, write to the Free Software Foundation, Inc., 59
+    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 
 
-	***************************************************************************
-	*                                                                         *
-	* Looking for a quick start?  Then check out the FreeRTOS eBook!          *
-	* See http://www.FreeRTOS.org/Documentation for details                   *
-	*                                                                         *
-	***************************************************************************
+    ***************************************************************************
+    *                                                                         *
+    * The FreeRTOS eBook and reference manual are available to purchase for a *
+    * small fee. Help yourself get started quickly while also helping the     *
+    * FreeRTOS project! See http://www.FreeRTOS.org/Documentation for details *
+    *                                                                         *
+    ***************************************************************************
 
-	1 tab == 4 spaces!
+    1 tab == 4 spaces!
 
-	Please ensure to read the configuration and relevant port sections of the
-	online documentation.
+    Please ensure to read the configuration and relevant port sections of the
+    online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and
-	contact details.
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety
-	critical systems.
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting,
-	licensing and training services.
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
 */
 
 /*
@@ -82,13 +83,13 @@ portBASE_TYPE xHigherPriorityTaskWoken;
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portCHAR ucQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned char ucQueueLength )
 {
-	unsigned portSHORT usSPBRG;
+	unsigned short usSPBRG;
 	
 	/* Create the queues used by the ISR's to interface to tasks. */
-	xRxedChars = xQueueCreate( ucQueueLength, ( unsigned portBASE_TYPE ) sizeof( portCHAR ) );
-	xCharsForTx = xQueueCreate( ucQueueLength, ( unsigned portBASE_TYPE ) sizeof( portCHAR ) );
+	xRxedChars = xQueueCreate( ucQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
+	xCharsForTx = xQueueCreate( ucQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
 
 	portENTER_CRITICAL();
 
@@ -148,7 +149,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned 
 }
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned portCHAR ucBufferLength )
+xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned char ucBufferLength )
 {
 	/* This is not implemented in this port.
 	Use xSerialPortInitMinimal() instead. */
@@ -156,23 +157,23 @@ xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWant
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, portCHAR *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
 	if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
 	{
-		return ( portCHAR ) pdTRUE;
+		return ( char ) pdTRUE;
 	}
 
-	return ( portCHAR ) pdFALSE;
+	return ( char ) pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, portCHAR cOutChar, portTickType xBlockTime )
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime )
 {
 	/* Return false if after the block time there is no room on the Tx queue. */
-	if( xQueueSend( xCharsForTx, ( const void * ) &cOutChar, xBlockTime ) != ( portCHAR ) pdPASS )
+	if( xQueueSend( xCharsForTx, ( const void * ) &cOutChar, xBlockTime ) != ( char ) pdPASS )
 	{
 		return pdFAIL;
 	}

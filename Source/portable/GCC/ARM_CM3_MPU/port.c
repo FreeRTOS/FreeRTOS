@@ -81,8 +81,8 @@ task.h is included from an application file. */
 #define portPRIVILEGED_EXECUTION_START_ADDRESS	( 0UL )
 #define portMPU_REGION_VALID					( 0x10UL )
 #define portMPU_REGION_ENABLE					( 0x01UL )
-#define portPERIPHERALS_START_ADDRESS 0x40000000UL
-#define portPERIPHERALS_END_ADDRESS 0x5FFFFFFFUL
+#define portPERIPHERALS_START_ADDRESS			0x40000000UL
+#define portPERIPHERALS_END_ADDRESS				0x5FFFFFFFUL
 
 /* Constants required to access and manipulate the SysTick. */
 #define portNVIC_SYSTICK_CLK					( 0x00000004UL )
@@ -149,7 +149,7 @@ static void prvRestoreContextOfFirstTask( void ) __attribute__(( naked )) PRIVIL
  * C portion of the SVC handler.  The SVC handler is split between an asm entry
  * and a C wrapper for simplicity of coding and maintenance.
  */
-static void prvSVCHandler(	unsigned long *pulRegisters ) __attribute__ ((optimize("3"))) PRIVILEGED_FUNCTION;
+static void prvSVCHandler( unsigned long *pulRegisters ) __attribute__(( noinline )) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -196,6 +196,7 @@ void vPortSVCHandler( void )
 			"	mrs r0, psp						\n"
 		#endif
 			"	b prvSVCHandler					\n"
+			:::"r0"
 	);
 
 	/* This will never get executed, but is required to prevent prvSVCHandler
@@ -225,6 +226,7 @@ unsigned char ucSVCNumber;
 												"	mrs r1, control		\n" /* Obtain current control value. */
 												"	bic r1, #1			\n" /* Set privilege bit. */
 												"	msr control, r1		\n" /* Write back new control value. */
+												:::"r1"
 											);
 											break;
 

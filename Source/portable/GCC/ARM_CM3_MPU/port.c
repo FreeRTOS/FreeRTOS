@@ -426,7 +426,7 @@ extern unsigned long __privileged_data_end__[];
 
 		*portMPU_REGION_ATTRIBUTE =		( portMPU_REGION_PRIVILEGED_READ_ONLY ) |
 										( portMPU_REGION_CACHEABLE_BUFFERABLE ) | 
-										( prvGetMPURegionSizeSetting( __privileged_functions_end__ - __FLASH_segment_start__ ) ) | 
+										( prvGetMPURegionSizeSetting( ( unsigned long ) __privileged_functions_end__ - ( unsigned long ) __FLASH_segment_start__ ) ) | 
 										( portMPU_REGION_ENABLE );
 
 		/* Setup the privileged data RAM region.  This is where the kernel data
@@ -560,7 +560,7 @@ unsigned long ul;
 
 			xMPUSettings->xRegion[ 0 ].ulRegionAttribute =	
 					( portMPU_REGION_READ_WRITE ) | /* Read and write. */
-					( prvGetMPURegionSizeSetting( usStackDepth * sizeof( portSTACK_TYPE ) ) ) |
+					( prvGetMPURegionSizeSetting( ( unsigned long ) usStackDepth * ( unsigned long ) sizeof( portSTACK_TYPE ) ) ) |
 					( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
 					( portMPU_REGION_ENABLE );
 		}

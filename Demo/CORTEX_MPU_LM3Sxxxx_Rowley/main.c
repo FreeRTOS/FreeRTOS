@@ -107,7 +107,11 @@ static void prvRegTest2Task( void *pvParameters );
  */
 static void prvCheckTask( void *pvParameters );
 
-
+/*
+ * Prototype for the User mode task that is created using the original 
+ * vTaskCreate() API function.
+ */
+static void prvOldStyleUserModeTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 /* Prototypes for other misc functions.  --------------------*/
@@ -297,6 +301,16 @@ int main( void )
 	xTaskCreateRestricted( &xRegTest1Parameters, NULL );
     xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
+
+	/* Create the tasks that are created using the original xTaskCreate() API
+	function. */
+	xTaskCreate(	prvOldStyleUserModeTask,	/* The function that implements the task. */
+					( signed char * ) "Task1",	/* Text name for the task. */
+					100,						/* Stack depth in words. */
+					NULL,						/* Task parameters. */
+					3,							/* Priority. */
+					NULL						/* Handle. */
+				);
 
 	/* Print out the amount of free heap space so configTOTAL_HEAP_SIZE can be
 	tuned.  The heap size is set to be very small in this example and will need
@@ -593,6 +607,104 @@ xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
 		/* Go back to check all the register values again. */
 		__asm volatile( "		B reg2loop	" );
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+extern unsigned long __SRAM_segment_end__[];
+extern unsigned long __privileged_data_start__[];
+extern unsigned long __privileged_data_end__[];
+extern unsigned long __FLASH_segment_start__[];
+extern unsigned long __FLASH_segment_end__[];
+volatile unsigned long *pul;
+volatile unsigned long ulReadData;
+
+	/* The idle task, and therefore this function, run in Supervisor mode and
+	can therefore access all memory.  Try reading from corners of flash and
+	RAM to ensure a memory fault does not occur. 
+	
+	Start with the edges of the privileged data area. */
+	pul = __privileged_data_start__;
+	ulReadData = *pul;
+	pul = __privileged_data_end__ - 1;
+	ulReadData = *pul;
+
+	/* Next the standard SRAM area. */
+	pul = __SRAM_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* And the standard Flash area - the start of which is marked for
+	privileged access only. */
+	pul = __FLASH_segment_start__;
+	ulReadData = *pul;
+	pul = __FLASH_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Reading off the end of Flash or SRAM space should cause a fault.  
+	Uncomment one of the following two pairs of lines to test. */
+	
+	/* pul = __FLASH_segment_end__ + 4;
+	ulReadData = *pul; */
+
+	/* pul = __SRAM_segment_end__ + 1;
+	ulReadData = *pul; */
+}
+/*-----------------------------------------------------------*/
+
+static void prvOldStyleUserModeTask( void *pvParameters )
+{
+extern unsigned long __privileged_data_start__[];
+extern unsigned long __privileged_data_end__[];
+extern unsigned long __SRAM_segment_end__[];
+extern unsigned long __privileged_functions_end__[];
+extern unsigned long __FLASH_segment_start__[];
+extern unsigned long __FLASH_segment_end__[];
+volatile unsigned long *pul;
+volatile unsigned long ulReadData;
+
+/* The following line is commented out to prevent the unused variable compiler
+warning when the test that uses the variable is commented out.
+extern unsigned long __privileged_functions_start__[]; */
+
+	( void ) pvParameters;
+
+	/* This task is created in User mode using the original xTaskCreate() API
+	function.  It should have access to all Flash and RAM except that marked
+	as Privileged access only.  Reading from the start and end of the non-
+	privileged RAM should not cause a problem (the privileged RAM is the first
+	block at the bottom of the RAM memory). */
+	pul = __privileged_data_end__ + 1;
+	ulReadData = *pul;
+	pul = __SRAM_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Likewise reading from the start and end of the non-privileged Flash
+	should not be a problem (the privileged Flash is the first block at the
+	bottom of the Flash memory). */
+	pul = __privileged_functions_end__ + 1;
+	ulReadData = *pul;
+	pul = __FLASH_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Reading from anywhere inside the privileged Flash or RAM should cause a
+	fault.  This can be tested by uncommenting any of the following pairs of
+	lines. */
+
+	/* pul = __privileged_functions_start__;
+	ulReadData = *pul; */
+	
+	/* pul = __privileged_functions_end__ - 1;
+	ulReadData = *pul; */
+
+	/* pul = __privileged_data_start__;
+	ulReadData = *pul; */
+	
+	/* pul = __privileged_data_end__ - 1;
+	ulReadData = *pul; */
+
+	/* Must not just run off the end of a task function, so delete this task. */
+	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 

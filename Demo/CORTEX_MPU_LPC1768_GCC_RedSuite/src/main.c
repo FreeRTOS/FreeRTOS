@@ -46,8 +46,21 @@
     licensing and training services.
 */
 
+#error The batch file Demo\CORTEX_LPC1768_GCC_RedSuite\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
 
-//#error The batch file Demo\CORTEX_LPC1768_GCC_RedSuite\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
+
+/*
+ * This file demonstrates the use of FreeRTOS-MPU.  It creates tasks in both
+ * User mode and Privileged mode, and using both the original xTaskCreate() and
+ * the new xTaskCreateRestricted() API functions.  The purpose of each created
+ * task is documented in the comments above the task function prototype (in
+ * this file), with the task behaviour demonstrated and documented within the 
+ * task function itself.  In addition a queue is used to demonstrate passing
+ * data between protected/restricted tasks as well as passing data between an
+ * interrupt and a protected/restricted task.
+ */
+
+
 
 /* Library includes. */
 #include <string.h>
@@ -62,13 +75,6 @@
 #include "lcd_driver.h"
 #include "lcd.h"
 
-/*-----------------------------------------------------------*/
-
-/*
- * This file demonstrates the use of MPU using just three tasks - two 'reg test'
- * tasks and one 'check' task.  Read the comments above the
- * function prototypes for more information.
- */
 
 /*-----------------------------------------------------------*/
 
@@ -86,8 +92,10 @@
 /* Hardware specifics.  The start and end address are chosen to ensure the
 required GPIO are covered while also ensuring the necessary alignment is
 achieved. */
-#define mainGPIO_START_ADDRESS			( 0x2009c000UL )
+#define mainGPIO_START_ADDRESS			( ( unsigned long * ) 0x2009c000 )
 #define mainGPIO_END_ADDRESS			( mainGPIO_START_ADDRESS + ( 64 * 1024 ) )
+
+
 /*-----------------------------------------------------------*/
 /* Prototypes for functions that implement tasks. -----------*/
 /*-----------------------------------------------------------*/
@@ -97,23 +105,43 @@ achieved. */
  * registers with known values before checking that the registers still contain
  * the expected values.  Each of the two tasks use different values so an error
  * in the context switch mechanism can be caught.  Both reg test tasks execute
- * at the idle priority so will get preempted regularly.
+ * at the idle priority so will get preempted regularly.  Each task repeatedly
+ * sends a message on a queue so long as it remains functioning correctly.  If
+ * an error is detected within the task the task is simply deleted.
  */
 static void prvRegTest1Task( void *pvParameters );
 static void prvRegTest2Task( void *pvParameters );
 
 /*
  * Prototype for the check task.  The check task demonstrates various features
- * of the MPU before entering a loop where it waits for commands to arrive on a
+ * of the MPU before entering a loop where it waits for messages to arrive on a
  * queue.
  *
- * The check task will periodically be commanded to print out a status message.
- * If both the reg tests tasks are executing as expected the check task will
- * print "PASS" to the debug port, otherwise it will print 'FAIL'.  Debug port
- * messages can be viewed within the CrossWorks IDE.
+ * Two types of messages can be processes:
+ *
+ * 1) "I'm Alive" messages sent from the reg test tasks, indicating that the
+ *    task is still operational.
+ *
+ * 2) "Print Status commands" sent periodically by the tick hook function (and
+ *    therefore from within an interrupt) which command the check task to write
+ *    either pass or fail to the terminal, depending on the status of the reg
+ *    test tasks.
  */
 static void prvCheckTask( void *pvParameters );
 
+/*
+ * Prototype for a task created in User mode using the original vTaskCreate() 
+ * API function.  The task demonstrates the characteristics of such a task,
+ * before simply deleting itself.
+ */
+static void prvOldStyleUserModeTask( void *pvParameters );
+
+/*
+ * Prototype for a task created in Privileged mode using the original 
+ * vTaskCreate() API function.  The task demonstrates the characteristics of 
+ * such a task, before simply deleting itself.
+ */
+static void prvOldStylePrivilegedModeTask( void *pvParameters );
 
 
 /*-----------------------------------------------------------*/
@@ -134,7 +162,7 @@ static void prvDeleteMe( void ) __attribute__((noinline));
 
 /*
  * Used by both reg test tasks to send messages to the check task.  The message
- * just lets the check task know that the sending is still functioning correctly.
+ * just lets the check task know that the task is still functioning correctly.
  * If a reg test task detects an error it will delete itself, and in so doing
  * prevent itself from sending any more 'I'm Alive' messages to the check task.
  */
@@ -177,11 +205,14 @@ stack size is defined in words, not bytes. */
 static portSTACK_TYPE xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainCHECK_TASK_STACK_ALIGNMENT );
 
 /* Declare three arrays - an MPU region will be created for each array
- using the xTaskParameters structure below.  Note that the arrays allocate 
-slightly more RAM than is actually assigned to the MPU region.  This is to 
-permit writes off the end of the array to be detected even when the arrays are 
-placed in adjacent memory locations (with no gaps between them).  The align 
-size must be a power of two. */
+using the xTaskParameters structure below.  THIS IS JUST TO DEMONSTRATE THE
+MPU FUNCTIONALITY, the data is not used by the check tasks primary function
+of monitoring the reg test tasks and printing out status information.
+
+Note that the arrays allocate slightly more RAM than is actually assigned to 
+the MPU region.  This is to permit writes off the end of the array to be 
+detected even when the arrays are placed in adjacent memory locations (with no 
+gaps between them).  The align size must be a power of two. */
 #define mainREAD_WRITE_ARRAY_SIZE 130
 #define mainREAD_WRITE_ALIGN_SIZE 128
 char cReadWriteArray[ mainREAD_WRITE_ARRAY_SIZE ] mainALIGN_TO( mainREAD_WRITE_ALIGN_SIZE );
@@ -194,7 +225,8 @@ char cReadOnlyArray[ mainREAD_ONLY_ARRAY_SIZE ] mainALIGN_TO( mainREAD_ONLY_ALIG
 #define mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE 128
 char cPrivilegedOnlyAccessArray[ mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE ] mainALIGN_TO( mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE );
 
-/* Fill in a xTaskParameters structure to define the check task. */
+/* Fill in a xTaskParameters structure to define the check task - this is the
+structure passed to the xTaskCreateRestricted() function. */
 static const xTaskParameters xCheckTaskParameters =
 {
 	prvCheckTask,								/* pvTaskCode - the function that implements the task. */
@@ -206,7 +238,9 @@ static const xTaskParameters xCheckTaskParameters =
 
 	/* xRegions - In this case the xRegions array is used to create MPU regions
 	for all three of the arrays declared directly above.  Each MPU region is
-	created with different parameters. */
+	created with different parameters.  Again, THIS IS JUST TO DEMONSTRATE THE
+	MPU FUNCTIONALITY, the data is not used by the check tasks primary function
+	of monitoring the reg test tasks and printing out status information.*/
 	{											
 		/* Base address					Length									Parameters */
         { cReadWriteArray,				mainREAD_WRITE_ALIGN_SIZE,				portMPU_REGION_READ_WRITE },
@@ -257,7 +291,7 @@ static const xTaskParameters xRegTest1Parameters =
 	( void * ) 0x12345678,					/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
 	tskIDLE_PRIORITY | portPRIVILEGE_BIT,	/* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
 	xRegTest1Stack,							/* puxStackBuffer - the array to use as the task stack, as declared above. */
-	{										/* xRegions - this task does not use any non-stack data. */
+	{										/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
         { 0x00,				0x00,			0x00 },
         { 0x00,				0x00,			0x00 },
@@ -274,7 +308,7 @@ static xTaskParameters xRegTest2Parameters =
 	( void * ) NULL,				/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
 	tskIDLE_PRIORITY,				/* uxPriority		*/
 	xRegTest2Stack,					/* puxStackBuffer - the array to use as the task stack, as declared above. */
-	{								/* xRegions - this task does not use any non-stack data. */
+	{								/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
         { 0x00,				0x00,			0x00 },
         { 0x00,				0x00,			0x00 },
@@ -294,7 +328,7 @@ int main( void )
 	/* One check task uses the task parameter to receive the queue handle.
 	This allows the file scope variable to be accessed from within the task.
 	The pvParameters member of xRegTest2Parameters can only be set after the
-	queue has been created. */
+	queue has been created so is set here. */
 	xRegTest2Parameters.pvParameters = xFileScopeCheckQueue;
 
 	/* Create the three test tasks.  Handles to the created tasks are not
@@ -302,6 +336,24 @@ int main( void )
 	xTaskCreateRestricted( &xRegTest1Parameters, NULL );
     xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
+
+	/* Create the tasks that are created using the original xTaskCreate() API
+	function. */
+	xTaskCreate(	prvOldStyleUserModeTask,	/* The function that implements the task. */
+					( signed char * ) "Task1",	/* Text name for the task. */
+					100,						/* Stack depth in words. */
+					NULL,						/* Task parameters. */
+					3,							/* Priority and mode (user in this case). */
+					NULL						/* Handle. */
+				);
+
+	xTaskCreate(	prvOldStylePrivilegedModeTask,	/* The function that implements the task. */
+					( signed char * ) "Task2",		/* Text name for the task. */
+					100,							/* Stack depth in words. */
+					NULL,							/* Task parameters. */
+					( 3 | portPRIVILEGE_BIT ),		/* Priority and mode. */
+					NULL							/* Handle. */
+				);
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -395,8 +447,9 @@ static void prvTestMemoryRegions( void )
 long l;
 char cTemp;
 
-	/* The check task is created in the privileged mode.  The privileged array 
-	can be both read from and written to while this	task is privileged. */
+	/* The check task (from which this function is called) is created in the 
+	Privileged mode.  The privileged array can be both read from and written 
+	to while this task is privileged. */
 	cPrivilegedOnlyAccessArray[ 0 ] = 'a';
 	if( cPrivilegedOnlyAccessArray[ 0 ] != 'a' )
 	{
@@ -462,7 +515,7 @@ static void prvRegTest1Task( void *pvParameters )
 {
 /* This task is created in privileged mode so can access the file scope
 queue variable.  Take a stack copy of this before the task is set into user
-mode.  Once that task is in user mode the file scope queue variable will no
+mode.  Once this task is in user mode the file scope queue variable will no
 longer be accessible but the stack copy will. */
 xQueueHandle xQueue = xFileScopeCheckQueue;
 
@@ -541,7 +594,7 @@ xQueueHandle xQueue = xFileScopeCheckQueue;
 static void prvRegTest2Task( void *pvParameters )
 {
 /* The queue handle is passed in as the task parameter.  This is one method of
-passing data into a protected task, the other check task uses a different 
+passing data into a protected task, the other reg test task uses a different 
 method. */
 xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
 
@@ -599,6 +652,174 @@ xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
 		/* Go back to check all the register values again. */
 		__asm volatile( "		B reg2loop	" );
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+extern unsigned long __SRAM_segment_end__[];
+extern unsigned long __privileged_data_start__[];
+extern unsigned long __privileged_data_end__[];
+extern unsigned long __FLASH_segment_start__[];
+extern unsigned long __FLASH_segment_end__[];
+volatile unsigned long *pul;
+volatile unsigned long ulReadData;
+
+	/* The idle task, and therefore this function, run in Supervisor mode and
+	can therefore access all memory.  Try reading from corners of flash and
+	RAM to ensure a memory fault does not occur. 
+	
+	Start with the edges of the privileged data area. */
+	pul = __privileged_data_start__;
+	ulReadData = *pul;
+	pul = __privileged_data_end__ - 1;
+	ulReadData = *pul;
+
+	/* Next the standard SRAM area. */
+	pul = __SRAM_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* And the standard Flash area - the start of which is marked for
+	privileged access only. */
+	pul = __FLASH_segment_start__;
+	ulReadData = *pul;
+	pul = __FLASH_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Reading off the end of Flash or SRAM space should cause a fault.  
+	Uncomment one of the following two pairs of lines to test. */
+	
+	/* pul = __FLASH_segment_end__ + 4;
+	ulReadData = *pul; */
+
+	/* pul = __SRAM_segment_end__ + 1;
+	ulReadData = *pul; */
+}
+/*-----------------------------------------------------------*/
+
+static void prvOldStyleUserModeTask( void *pvParameters )
+{
+extern unsigned long __privileged_data_start__[];
+extern unsigned long __privileged_data_end__[];
+extern unsigned long __SRAM_segment_end__[];
+extern unsigned long __privileged_functions_end__[];
+extern unsigned long __FLASH_segment_start__[];
+extern unsigned long __FLASH_segment_end__[];
+const volatile unsigned long *pulStandardPeripheralRegister = ( volatile unsigned long * ) 0x400FC0C4; /* PCONP */
+volatile unsigned long *pul;
+volatile unsigned long ulReadData;
+
+/* The following lines are commented out to prevent the unused variable 
+compiler warnings when the tests that use the variable are also commented out.
+extern unsigned long __privileged_functions_start__[];
+const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned long * ) 0xe000e014; */
+
+	( void ) pvParameters;
+
+	/* This task is created in User mode using the original xTaskCreate() API
+	function.  It should have access to all Flash and RAM except that marked
+	as Privileged access only.  Reading from the start and end of the non-
+	privileged RAM should not cause a problem (the privileged RAM is the first
+	block at the bottom of the RAM memory). */
+	pul = __privileged_data_end__ + 1;
+	ulReadData = *pul;
+	pul = __SRAM_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Likewise reading from the start and end of the non-privileged Flash
+	should not be a problem (the privileged Flash is the first block at the
+	bottom of the Flash memory). */
+	pul = __privileged_functions_end__ + 1;
+	ulReadData = *pul;
+	pul = __FLASH_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Standard peripherals are accessible. */
+	ulReadData = *pulStandardPeripheralRegister;
+
+	/* System peripherals are not accessible.  Uncomment the following line
+	to test.  Also uncomment the declaration of pulSystemPeripheralRegister
+	at the top of this function. */
+    /* ulReadData = *pulSystemPeripheralRegister; */
+
+	/* Reading from anywhere inside the privileged Flash or RAM should cause a
+	fault.  This can be tested by uncommenting any of the following pairs of
+	lines.  Also uncomment the declaration of __privileged_functions_start__
+	at the top of this function. */
+
+	/* pul = __privileged_functions_start__;
+	ulReadData = *pul; */
+	
+	/* pul = __privileged_functions_end__ - 1;
+	ulReadData = *pul; */
+
+	/* pul = __privileged_data_start__;
+	ulReadData = *pul; */
+	
+	/* pul = __privileged_data_end__ - 1;
+	ulReadData = *pul; */
+
+	/* Must not just run off the end of a task function, so delete this task. 
+	Note that because this task was created using xTaskCreate() the stack was
+	allocated dynamically and I have not included any code to free it again. */
+	vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvOldStylePrivilegedModeTask( void *pvParameters )
+{
+extern unsigned long __privileged_data_start__[];
+extern unsigned long __privileged_data_end__[];
+extern unsigned long __SRAM_segment_end__[];
+extern unsigned long __privileged_functions_start__[];
+extern unsigned long __privileged_functions_end__[];
+extern unsigned long __FLASH_segment_start__[];
+extern unsigned long __FLASH_segment_end__[];
+volatile unsigned long *pul;
+volatile unsigned long ulReadData;
+const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned long * ) 0xe000e014; /* Systick */
+const volatile unsigned long *pulStandardPeripheralRegister = ( volatile unsigned long * ) 0x400FC0C4; /* PCONP */
+
+	( void ) pvParameters;
+
+	/* This task is created in Privileged mode using the original xTaskCreate() 
+	API	function.  It should have access to all Flash and RAM including that 
+	marked as Privileged access only.  So reading from the start and end of the 
+	non-privileged RAM should not cause a problem (the privileged RAM is the 
+	first block at the bottom of the RAM memory). */
+	pul = __privileged_data_end__ + 1;
+	ulReadData = *pul;
+	pul = __SRAM_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Likewise reading from the start and end of the non-privileged Flash
+	should not be a problem (the privileged Flash is the first block at the
+	bottom of the Flash memory). */
+	pul = __privileged_functions_end__ + 1;
+	ulReadData = *pul;
+	pul = __FLASH_segment_end__ - 1;
+	ulReadData = *pul;
+
+	/* Reading from anywhere inside the privileged Flash or RAM should also
+	not be a problem. */
+	pul = __privileged_functions_start__;
+	ulReadData = *pul;
+	pul = __privileged_functions_end__ - 1;
+	ulReadData = *pul;
+	pul = __privileged_data_start__;
+	ulReadData = *pul;	
+	pul = __privileged_data_end__ - 1;
+	ulReadData = *pul;
+
+	/* Finally, accessing both System and normal peripherals should both be
+	possible. */
+    ulReadData = *pulSystemPeripheralRegister;
+	ulReadData = *pulStandardPeripheralRegister;
+
+	/* Must not just run off the end of a task function, so delete this task. 
+	Note that because this task was created using xTaskCreate() the stack was
+	allocated dynamically and I have not included any code to free it again. */
+	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 

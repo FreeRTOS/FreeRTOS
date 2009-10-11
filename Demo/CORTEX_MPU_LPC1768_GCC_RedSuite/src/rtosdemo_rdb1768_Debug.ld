@@ -15,28 +15,41 @@ MEMORY
 	 AHBRAM1   : ORIGIN = 0x20080000, LENGTH = 0x4000
 }
 
-_vRamTop = 0x10000000 + 0x8000;
+_vRamTop = ORIGIN( SRAM ) + LENGTH( SRAM );
+
+/* Variables used by FreeRTOS-MPU. */
+_Privileged_Functions_Region_Size = 16K;
+_Privileged_Data_Region_Size = 256;
+
+__FLASH_segment_start__ = ORIGIN( FLASH );
+__FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( FLASH );
+
+__privileged_functions_start__ = ORIGIN( FLASH );
+__privileged_functions_end__ = __privileged_functions_start__ + _Privileged_Functions_Region_Size;
+
+__SRAM_segment_start__ = ORIGIN( SRAM );
+__SRAM_segment_end__ = __SRAM_segment_start__ + LENGTH( SRAM );
+
+__privileged_data_start__ = ORIGIN( SRAM );
+__privileged_data_end__ = ORIGIN( SRAM ) + _Privileged_Data_Region_Size;	
 
 ENTRY(ResetISR)
 
 SECTIONS
 {
-	__FLASH_segment_start__ = .;
-	
 	/* Privileged section at the start of the flash - vectors must be first
 	whatever. */
 	privileged_functions :
 	{
 		KEEP(*(.isr_vector))
 		*(privileged_functions)
-		__privileged_functions_end__ = .;
 	} > FLASH
 	
 	.text :
 	{
 		/* Non privileged code kept out of the first 16K or flash. */
-		. = 16K;
-		
+		. = __privileged_functions_start__ + _Privileged_Functions_Region_Size;
+	
 		*(.text*)
 		*(.rodata*)
 
@@ -59,20 +72,15 @@ SECTIONS
 
 	_etext = .;
 	
-	__FLASH_segment_end__ = .;		
-
 	/* zero initialized data */		
 	privileged_data :
 	{
 		_bss = .;
-		__privileged_data_start__ = .;
-		__SRAM_segment_start__ = .;
 		*(privileged_data)
-		__privileged_data_end__ = .;
+		/* Non kernel data is kept out of the first 256 bytes of SRAM. */
 	} > SRAM	
 
-	/* Non kernel data is kept out of the first 256 bytes of SRAM. */
-	. = 0x10000000 + 256;
+	. = ORIGIN( SRAM ) + _Privileged_Data_Region_Size;
 
 	.bss :
 	{
@@ -95,7 +103,6 @@ SECTIONS
 	{
 		end = .;
 		_pvHeapStart = .;
-		__SRAM_segment_end__ = .;
 	} > SRAM
 
 /*

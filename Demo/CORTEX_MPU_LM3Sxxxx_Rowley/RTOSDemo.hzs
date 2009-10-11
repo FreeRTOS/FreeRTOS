@@ -24,7 +24,7 @@
   <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1];Interrupt_Type" binaryNodes="" unsignedNodes="" visibleGroups="CPU;Interrupt_Type" decimalNodes="" octalNodes="" asciiNodes="" />
  </Register1>
  <Register2>
-  <RegisterWindow openNodes="MPU;MPU/MPU_Control;MPU/MPU_Region_Base_Address;MPU/MPU_Attribute_and_Size" binaryNodes="MPU/MPU_Attribute_and_Size/SIZE" unsignedNodes="" visibleGroups="MPU" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="MPU;MPU/MPU_Control;MPU/MPU_Region_Number;MPU/MPU_Region_Base_Address;MPU/MPU_Attribute_and_Size" binaryNodes="MPU/MPU_Attribute_and_Size/SIZE" unsignedNodes="" visibleGroups="MPU" decimalNodes="" octalNodes="" asciiNodes="" />
  </Register2>
  <Register3>
   <RegisterWindow openNodes="System_Control_Block;System_Control_Block/System_Handlers_8_11_Priority;System_Control_Block/System_Handler_Control_and_State" binaryNodes="" unsignedNodes="" visibleGroups="System_Control_Block" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -49,7 +49,7 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" y="0" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" left="0" selected="1" name="unnamed" top="370" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" y="5" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" left="0" selected="1" name="unnamed" top="0" />
  </Files>
  <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Luminary USB Debug" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\GCC\ARM_CM3_MPU" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

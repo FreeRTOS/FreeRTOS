@@ -751,14 +751,15 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
-void MPU_vTaskList( signed char *pcWriteBuffer )
-{
-portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
-
-	vTaskList( pcWriteBuffer );
-    portRESET_PRIVILEGE( xRunningPrivileged );
-}
-
+#if ( configUSE_TRACE_FACILITY == 1 )
+	void MPU_vTaskList( signed char *pcWriteBuffer )
+	{
+	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+	
+		vTaskList( pcWriteBuffer );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+	}
+#endif
 /*-----------------------------------------------------------*/
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )

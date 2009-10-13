@@ -94,13 +94,16 @@ only for ports that are using the MPU. */
 		#define xQueueGenericReceive			MPU_xQueueGenericReceive
 		#define uxQueueMessagesWaiting			MPU_uxQueueMessagesWaiting
 		#define vQueueDelete					MPU_vQueueDelete
-		#define vQueueAddToRegistry				MPU_vQueueAddToRegistry
-		#define vQueueUnregisterQueue			MPU_vQueueUnregisterQueue
 
 		#define pvPortMalloc					MPU_pvPortMalloc
 		#define vPortFree						MPU_vPortFree
 		#define xPortGetFreeHeapSize			MPU_xPortGetFreeHeapSize
 		#define vPortInitialiseBlocks			MPU_vPortInitialiseBlocks
+
+		#if configQUEUE_REGISTRY_SIZE > 0
+			#define vQueueAddToRegistry				MPU_vQueueAddToRegistry
+			#define vQueueUnregisterQueue			MPU_vQueueUnregisterQueue
+		#endif
 
 		/* Remove the privileged function macro. */
 		#define PRIVILEGED_FUNCTION

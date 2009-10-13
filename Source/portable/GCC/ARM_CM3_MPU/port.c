@@ -91,7 +91,6 @@ task.h is included from an application file. */
 #define portNVIC_PENDSV_PRI						( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
 #define portNVIC_SYSTICK_PRI					( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 #define portNVIC_SVC_PRI						( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
-#define portNVIC_TEMP_SVC_PRI					( 0x01UL << 24UL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR						( 0x01000000 )
@@ -270,10 +269,9 @@ static void prvRestoreContextOfFirstTask( void )
  */
 portBASE_TYPE xPortStartScheduler( void )
 {
-	/* Make PendSV, CallSV and SysTick the same priroity as the kernel. */
+	/* Make PendSV and SysTick the same priroity as the kernel. */
 	*(portNVIC_SYSPRI2) |= portNVIC_PENDSV_PRI;
 	*(portNVIC_SYSPRI2) |= portNVIC_SYSTICK_PRI;
-    *(portNVIC_SYSPRI1) |= portNVIC_TEMP_SVC_PRI;
 
 	/* Configure the regions in the MPU that are common to all tasks. */
 	prvSetupMPU();

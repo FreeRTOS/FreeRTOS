@@ -461,14 +461,14 @@ char cTemp;
 	/* Writing off the end of the RAM allocated to this task will *NOT* cause a
 	protection fault because the task is still executing in a privileged mode.  
 	Uncomment the following to test. */
-	/*cPrivilegedOnlyAccessArray[ mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE ] = 'a';*/
+	/* cPrivilegedOnlyAccessArray[ mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE ] = 'a'; */
 
 	/* Now set the task into user mode. */
 	portSWITCH_TO_USER_MODE();
 	 
 	/* Accessing the privileged only array will now cause a fault.  Uncomment 
 	the following line to test. */    
-	/*cPrivilegedOnlyAccessArray[ 0 ] = 'a';*/
+	/* cPrivilegedOnlyAccessArray[ 0 ] = 'a'; */
 
 	/* The read/write array can still be successfully read and written. */
 	for( l = 0; l < mainREAD_WRITE_ALIGN_SIZE; l++ )
@@ -754,7 +754,7 @@ const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned 
 	ulReadData = *pul; */
 
 	/* pul = __privileged_data_start__;
-	ulReadData = *pul; */
+	ulReadData = *pul; */ 
 	
 	/* pul = __privileged_data_end__ - 1;
 	ulReadData = *pul; */

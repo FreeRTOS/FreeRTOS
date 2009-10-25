@@ -140,7 +140,7 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 {												\
 unsigned portLONG ulStatus;						\
 												\
-	/* Unmask all interrupts. */				\
+	/* Trigger software interrupt. */			\
 	ulStatus = _CP0_GET_CAUSE();				\
 	ulStatus |= portSW0_BIT;					\
 	_CP0_SET_CAUSE( ulStatus );					\

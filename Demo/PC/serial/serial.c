@@ -6,7 +6,7 @@
 */
 
 /*
-    FreeRTOS V6.0.0 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     ***************************************************************************
     *                                                                         *

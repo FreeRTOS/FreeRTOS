@@ -389,7 +389,6 @@ signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed ch
 {
 signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
-portBASE_TYPE xRunPrivileged;
 
 	/* Allocate the memory required by the TCB and stack for the new task,
 	checking that the allocation was successful. */
@@ -399,16 +398,19 @@ portBASE_TYPE xRunPrivileged;
 	{
 		portSTACK_TYPE *pxTopOfStack;
 
-		/* Should the task be created in privileged mode? */
-		if( ( uxPriority & portPRIVILEGE_BIT ) != 0x00 )
-		{
-			xRunPrivileged = pdTRUE;
-		}
-		else
-		{
-			xRunPrivileged = pdFALSE;
-		}
-		uxPriority &= ~portPRIVILEGE_BIT;
+		#if( portUSING_MPU_WRAPPERS == 1 )
+			/* Should the task be created in privileged mode? */
+			portBASE_TYPE xRunPrivileged;
+			if( ( uxPriority & portPRIVILEGE_BIT ) != 0x00 )
+			{
+				xRunPrivileged = pdTRUE;
+			}
+			else
+			{
+				xRunPrivileged = pdFALSE;
+			}
+			uxPriority &= ~portPRIVILEGE_BIT;
+		#endif /* portUSING_MPU_WRAPPERS == 1 */
 
 		/* Calculate the top of stack address.  This depends on whether the
 		stack grows from high memory to low (as per the 80x86) or visa versa.
@@ -444,7 +446,6 @@ portBASE_TYPE xRunPrivileged;
 		#else
 		{
 			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
-			( void ) xRunPrivileged;
 		}
 		#endif
 

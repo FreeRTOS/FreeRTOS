@@ -131,7 +131,7 @@ typedef struct MPU_SETTINGS
 /* SVC numbers for various services. */
 #define portSVC_START_SCHEDULER				0
 #define portSVC_YIELD						1
-#define portSVC_prvRaisePrivilege			2
+#define portSVC_RAISE_PRIVILEGE				2
 
 /* Scheduler utilities. */
 

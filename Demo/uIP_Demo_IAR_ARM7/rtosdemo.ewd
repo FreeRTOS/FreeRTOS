@@ -37,7 +37,7 @@
         </option>
         <option>
           <name>MacFile</name>
-          <state>$PROJ_DIR$\resource\SAM7_FLASH.mac</state>
+          <state>$PROJ_DIR$\resource\at91sam7x-ek-flash.mac</state>
         </option>
         <option>
           <name>MemOverride</name>
@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>5.11.0.50615</state>
+          <state>5.40.2.51615</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -117,7 +117,7 @@
         </option>
         <option>
           <name>FlashLoadersV3</name>
-          <state></state>
+          <state>$TOOLKIT_DIR$\config\flashloader\Atmel\AT91SAM7X256-EK\at91sam7x256-flash.board</state>
         </option>
         <option>
           <name>OCImagesSuppressCheck1</name>
@@ -723,7 +723,7 @@
         </option>
         <option>
           <name>MacFile</name>
-          <state>$PROJ_DIR$\resource\SAM7.mac</state>
+          <state>$PROJ_DIR$\resource\at91sam7x-ek-flash.mac</state>
         </option>
         <option>
           <name>MemOverride</name>
@@ -775,7 +775,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>5.40.0.51529</state>
+          <state>5.40.2.51615</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>

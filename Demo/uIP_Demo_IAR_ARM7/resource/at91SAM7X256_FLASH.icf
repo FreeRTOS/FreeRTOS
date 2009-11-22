@@ -2,20 +2,20 @@
 /*-Editor annotation file-*/
 /* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\a_v1_0.xml" */
 /*-Specials-*/
-define symbol __ICFEDIT_intvec_start__      = 0x00000000;
+define symbol __ICFEDIT_intvec_start__ = 0x00100000;
 /*-Memory Regions-*/
-define symbol __ICFEDIT_region_ROM_start__  = 0x00000100;
-define symbol __ICFEDIT_region_ROM_end__    = 0x0003FFFF;
+define symbol __ICFEDIT_region_ROM_start__ = 0x00100040;
+define symbol __ICFEDIT_region_ROM_end__   = 0x0013FFFF;
 define symbol __ICFEDIT_region_RAM_start__  = 0x00200000;
 define symbol __ICFEDIT_region_RAM_end__    = 0x0020FFFF;
 /*-Sizes-*/
 define symbol __ICFEDIT_size_cstack__   = 0x400;
 define symbol __ICFEDIT_size_svcstack__ = 0x100;
 define symbol __ICFEDIT_size_irqstack__ = 0x100;
-define symbol __ICFEDIT_size_fiqstack__ = 0x40;
-define symbol __ICFEDIT_size_undstack__ = 0x40;
-define symbol __ICFEDIT_size_abtstack__ = 0x40;
-define symbol __ICFEDIT_size_heap__     = 0x400;
+define symbol __ICFEDIT_size_fiqstack__ = 0x0;
+define symbol __ICFEDIT_size_undstack__ = 0x0;
+define symbol __ICFEDIT_size_abtstack__ = 0x0;
+define symbol __ICFEDIT_size_heap__     = 0x0;
 /**** End of ICF editor section. ###ICF###*/
 
 

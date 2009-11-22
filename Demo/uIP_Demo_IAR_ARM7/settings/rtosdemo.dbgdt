@@ -8,14 +8,14 @@
           
           
           
-        <Column0>185</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>240</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Disassembly>
         
         
         
-      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><MixedMode>1</MixedMode><CodeCovEnabled>0</CodeCovEnabled><CodeCovShow>0</CodeCovShow></Disassembly>
-      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows></Debug-Log>
+      <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><CodeCovEnabled>0</CodeCovEnabled><MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow><InstrProfShow>0</InstrProfShow></Disassembly>
+      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1622</ColumnWidth1></Debug-Log>
       <Build><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window></Windows></PreferedWindows></Build>
       <Register>
         <PreferedWindows>
@@ -42,20 +42,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-25021-10902</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory><Session/></Tab><Tab><Identity>TabID-2772-9628</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs><SelectedTab>1</SelectedTab></Wnd1><Wnd2><Tabs><Tab><Identity>TabID-29748-16361</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd2></Windows>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd3><Tabs><Tab><Identity>TabID-25021-10902</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory><Session/></Tab><Tab><Identity>TabID-2772-9628</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs><SelectedTab>1</SelectedTab></Wnd3><Wnd4><Tabs><Tab><Identity>TabID-29748-16361</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-4669-14225</Identity><TabName>Disassembly</TabName><Factory>Disassembly</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
     <Editor>
       
       
       
       
-    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\uIP_Demo_IAR_ARM7\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\uIP_Demo_IAR_ARM7\SrcIAR\Cstartup.s</Filename><XPos>0</XPos><YPos>217</YPos><SelStart>8773</SelStart><SelEnd>8773</SelEnd></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-01284318><key>iaridepm.enu1</key></Toolbar-01284318><Toolbar-0952c950><key>debuggergui.enu1</key></Toolbar-0952c950></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>598</Bottom><Right>275</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>197857</sizeVertCX><sizeVertCY>610998</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>167</Bottom><Right>1402</Right><x>-2</x><y>-2</y><xscreen>1404</xscreen><yscreen>169</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>172098</sizeHorzCY><sizeVertCX>0</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd1></Sizes></Row0><Row1><Sizes><Wnd2><Rect><Top>165</Top><Left>-2</Left><Bottom>340</Bottom><Right>1402</Right><x>-2</x><y>165</y><xscreen>1404</xscreen><yscreen>175</yscreen><sizeHorzCX>1002857</sizeHorzCX><sizeHorzCY>178208</sizeHorzCY><sizeVertCX>124286</sizeVertCX><sizeVertCY>178208</sizeVertCY></Rect></Wnd2></Sizes></Row1></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00abb038><key>iaridepm.enu1</key></Toolbar-00abb038><Toolbar-05edea50><key>debuggergui.enu1</key></Toolbar-05edea50></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>598</Bottom><Right>330</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>197619</sizeVertCX><sizeVertCY>610998</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>598</Bottom><Right>564</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>119048</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>336905</sizeVertCX><sizeVertCY>610998</sizeVertCY></Rect></Wnd5></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>167</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>169</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>172098</sizeHorzCY><sizeVertCX>0</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd3></Sizes></Row0><Row1><Sizes><Wnd4><Rect><Top>165</Top><Left>-2</Left><Bottom>340</Bottom><Right>1682</Right><x>-2</x><y>165</y><xscreen>1684</xscreen><yscreen>175</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>178208</sizeHorzCY><sizeVertCX>124405</sizeVertCX><sizeVertCY>178208</sizeVertCY></Rect></Wnd4></Sizes></Row1></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

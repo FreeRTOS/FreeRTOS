@@ -115,7 +115,7 @@ typedef xQueueHandle xSemaphoreHandle;
 
 /**
  * semphr. h
- * xSemaphoreTake( 
+ * <pre>xSemaphoreTake( 
  *                   xSemaphoreHandle xSemaphore, 
  *                   portTickType xBlockTime 
  *               )</pre>
@@ -478,8 +478,8 @@ typedef xQueueHandle xSemaphoreHandle;
  *
  * Example usage:
  <pre>
- #define LONG_TIME 0xffff
- #define TICKS_TO_WAIT	10
+ \#define LONG_TIME 0xffff
+ \#define TICKS_TO_WAIT	10
  xSemaphoreHandle xSemaphore = NULL;
 
  // Repetitive task.

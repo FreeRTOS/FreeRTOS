@@ -1,0 +1,163 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"2.8" 
+[PROJECT_DETAILS]
+"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\RTOSDemo.hwp" "SuperH RISC engine" "Renesas SuperH Standard" "Application" "SH2A-FPU" "Other" 
+[INFORMATION]
+"No project information available" 
+[TOOL_CHAIN]
+"Renesas SuperH RISC engine Standard Toolchain" "9.3.2.0" 
+[CONFIGURATIONS]
+"Debug_SH7216_E10A-USB_SYSTEM__SH" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\Debug_SH7216_E10A-USB_SYSTEM__SH" 
+[BUILD_PHASES]
+"Renesas OptLinker" 1 
+"Renesas SH Assembler" 1 
+"Renesas SH C/C++ Compiler" 1 
+"Renesas SH C/C++ Library Generator" 1 
+[TOOL_ENVIRONMENT]
+[EXTENSIONS]
+"Absolute file" "ABS" 
+"Assembly include file" "INC" 
+"Assembly list file" "LIS" 
+"Assembly source file" "ASM" 
+"Assembly source file" "SRC" 
+"Binary file" "BIN" 
+"C header file" "H" 
+"C list file" "LST" 
+"C source file" "C" 
+"C++ header file" "HPP" 
+"C++ list file" "LPP" 
+"C++ source file" "CC" 
+"C++ source file" "CP" 
+"C++ source file" "CPP" 
+"CPU information file" "CPU" 
+"Calling information file" "CAL" 
+"Debug information file" "DBG" 
+"Expanded assembly source file" "EXP" 
+"Hex file" "HEX" 
+"Library file" "LIB" 
+"Library information file" "LBP" 
+"Linkage map file" "MAP" 
+"Linkage symbol file" "FSY" 
+"Object file" "OBJ" 
+"Optimize map file" "bls" 
+"Preprocessed C source file" "P" 
+"Preprocessed C++ source file" "PP" 
+"Profile file" "PRO" 
+"Relocatable file" "REL" 
+"Rts information file" "RTS" 
+"S-Record file" "MOT" 
+"Stack information file" "SNI" 
+"TD include object file" "RTI" 
+[FILE_GROUPS]
+"Absolute file" "BIN" "NONE" "" 
+"Assembly include file" "TEXT" "EDITOR" "" 
+"Assembly list file" "TEXT" "EDITOR" "" 
+"Assembly source file" "TEXT" "EDITOR" "" 
+"Binary file" "BIN" "NONE" "" 
+"C header file" "TEXT" "EDITOR" "" 
+"C list file" "TEXT" "EDITOR" "" 
+"C source file" "TEXT" "EDITOR" "" 
+"C++ header file" "TEXT" "EDITOR" "" 
+"C++ list file" "TEXT" "EDITOR" "" 
+"C++ source file" "TEXT" "EDITOR" "" 
+"CPU information file" "BIN" "NONE" "" 
+"Calling information file" "BIN" "NONE" "" 
+"Debug information file" "BIN" "NONE" "" 
+"Expanded assembly source file" "TEXT" "EDITOR" "" 
+"Hex file" "TEXT" "EDITOR" "" 
+"Library file" "BIN" "NONE" "" 
+"Library information file" "TEXT" "EDITOR" "" 
+"Linkage map file" "TEXT" "EDITOR" "" 
+"Linkage symbol file" "TEXT" "EDITOR" "" 
+"Object file" "BIN" "NONE" "" 
+"Optimize map file" "BIN" "NONE" "" 
+"Preprocessed C source file" "TEXT" "EDITOR" "" 
+"Preprocessed C++ source file" "TEXT" "EDITOR" "" 
+"Profile file" "BIN" "NONE" "" 
+"Relocatable file" "BIN" "NONE" "" 
+"Rts information file" "BIN" "NONE" "" 
+"S-Record file" "TEXT" "EDITOR" "" 
+"Stack information file" "BIN" "NONE" "" 
+"TD include object file" "BIN" "NONE" "" 
+[ASSOCIATED_APPLICATIONS]
+[TOOLCHAIN_PHASE]
+"Renesas OptLinker" 
+"Renesas SH Assembler" 
+"Renesas SH C/C++ Compiler" 
+"Renesas SH C/C++ Library Generator" 
+[UTILITY_PHASE]
+[CUSTOM_PHASES]
+[CUSTOM_PHASE_INPUT_GROUP]
+[CUSTOM_PHASE_OUTPUT_SYNTAX]
+[BUILD_ORDER]
+"Renesas SH C/C++ Library Generator" 1 
+"Renesas SH C/C++ Compiler" 1 
+"Renesas SH Assembler" 1 
+"Renesas OptLinker" 1 
+[BUILD_PHASE_DETAILS]
+"Renesas OptLinker" "Object file|Library file|Relocatable file" 0 
+"Renesas SH Assembler" "Assembly source file|Linkage symbol file" 1 
+"Renesas SH C/C++ Compiler" "C source file|C++ source file" 1 
+"Renesas SH C/C++ Library Generator" "" 0 
+[BUILD_FILE_ORDER_Assembly source file]
+"Renesas SH Assembler" 1 
+[BUILD_FILE_ORDER_C source file]
+"Renesas SH C/C++ Compiler" 1 
+[BUILD_FILE_ORDER_C++ source file]
+"Renesas SH C/C++ Compiler" 1 
+[BUILD_FILE_ORDER_Linkage symbol file]
+"Renesas SH Assembler" 1 
+[SCRAP]
+"Project Generator Setup File" "$(PROJDIR)\RTOSDemo.pgs" 
+[MAPPINGS]
+"Assembly source file" "Renesas SH Assembler" "Renesas SH C/C++ Compiler" 
+"Library file" "Renesas OptLinker" "Renesas SH C/C++ Library Generator" 
+"Object file" "Renesas OptLinker" "Renesas SH Assembler" 
+"Object file" "Renesas OptLinker" "Renesas SH C/C++ Compiler" 
+[PROJECT_FILES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\dbsct.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\intprg.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\resetprg.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\vecttbl.c" "User" "C source file" 2 
+[FOLDER]
+"C source file" "C source file" 
+[GENERAL_DATA_PROJECT]
+"USE_CUSTOM_LINKAGE_ORDER" "0" 
+[ON_DEMAND_COMPONENTS_LOADED]
+[SYNC_SESSION_NAMES]
+[SESSIONS]
+"SessionSH7216_E10A-USB_SYSTEM__SH" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\SessionSH7216_E10A-USB_SYSTEM__SH.hsf" 0 
+[GENERAL_DATA_SESSION_SessionSH7216_E10A-USB_SYSTEM__SH]
+[OPTIONS_Debug_SH7216_E10A-USB_SYSTEM__SH_Renesas OptLinker]
+"Single Shot" "00fbbc001d68ac10" 4 
+[OPTIONS_Debug_SH7216_E10A-USB_SYSTEM__SH_Renesas SH Assembler]
+"Assembly source file" "075d11aefc68ac10" 3 
+"Linkage symbol file" "075d11aefc68ac10" 3 
+[OPTIONS_Debug_SH7216_E10A-USB_SYSTEM__SH_Renesas SH C/C++ Compiler]
+"C source file" "075d11aefc68ac10" 2 
+"C++ source file" "075d11aefc68ac10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\dbsct.c" "075d11aefc68ac10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\intprg.c" "075d11aefc68ac10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" "01407c001d68ac10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\resetprg.c" "075d11aefc68ac10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\vecttbl.c" "075d11aefc68ac10" 2 
+[OPTIONS_Debug_SH7216_E10A-USB_SYSTEM__SH_Renesas SH C/C++ Library Generator]
+"Single Shot" "075d11aefc68ac10" 1 
+[OPTIONS_Debug_SH7216_E10A-USB_SYSTEM__SH]
+"" 0 
+"[S|OUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [V|VERSION|7] [S|CPU|SH2AFPU] [S|ENDIAN|BIG] [S|ROUND|ZERO] [B|DENORMALIZE|0] [B|SPEED|0] [B|RUNTIME|1] [B|NEW|0] [B|CTYPE|0] [B|MATH|0] [B|MATHF|0] [B|STDARG|0] [B|STDIO|0] [B|STDLIB|1] [B|STRING|1] [B|IOS|0] [B|COMPLEX|0] [B|CPPSTRING|0] [S|MODE|BUILD/CHANGED]" 1 
+"[V|VERSION|6] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|LIST|0] [B|CHGINCPATH|1] [B|ERRORPATH|1] [S|CPU|SH2AFPU] [S|ENDIAN|BIG] [S|ROUND|ZERO] [B|DENORMALIZE|0]" 3 
+"[V|VERSION|6] [B|OPTIMIZE|0] [B|DEBUG|1] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).abs^"] [S|ROM|(D,R)] [B|LIST|1] [S|LIST|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|FORM|STYPE] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).mot^"] [S|START|DVECTTBL,DINTTBL(000000000)|PResetPRG,PIntPRG(000000800)|P,C,C$BSEC,C$DSEC,D(000001000)|B,R(0FFF80000)|S(0FFFBFC00)]" 4 
+"[V|VERSION|7] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|LIST|0] [B|CHGINCPATH|1] [B|ERRORPATH|1] [S|CPU|SH2AFPU] [S|ENDIAN|BIG] [S|ROUND|ZERO] [B|DENORMALIZE|0]" 2 
+[EXCLUDED_FILES_Debug_SH7216_E10A-USB_SYSTEM__SH]
+[LINKAGE_ORDER_Debug_SH7216_E10A-USB_SYSTEM__SH]
+[GENERAL_DATA_CONFIGURATION_Debug_SH7216_E10A-USB_SYSTEM__SH]
+[GENERAL_DATA_CONFIGURATION_SESSION_Debug_SH7216_E10A-USB_SYSTEM__SH_SessionSH7216_E10A-USB_SYSTEM__SH]
+[SESSION_DATA_CONFIGURATION_SESSION_Debug_SH7216_E10A-USB_SYSTEM__SH_SessionSH7216_E10A-USB_SYSTEM__SH]
+"MEMORY_MAPPING_OPTIONS" "Unknown Options" 
+[EXT_DEBUGGER_INFO]
+0 "" "" "" "" 
+[END]

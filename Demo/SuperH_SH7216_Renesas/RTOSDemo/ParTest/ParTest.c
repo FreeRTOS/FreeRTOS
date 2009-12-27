@@ -51,110 +51,82 @@
     licensing and training services.
 */
 
+/*-----------------------------------------------------------
+ * Simple IO routines to control the LEDs.
+ *-----------------------------------------------------------*/
+
+/* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Demo includes. */
 #include "partest.h"
 
-#define mainFRQCR_VALUE 					( 0x0303 )	/* Input = 12.5MHz, I Clock = 200MHz, B Clock = 50MHz, P Clock = 50MHz */
+#define partestNUM_LEDS ( 6 )
+#define partestALL_LEDS ( usLEDMasks[ 0 ] | usLEDMasks[ 1 ] | usLEDMasks[ 2 ] | usLEDMasks[ 3 ] | usLEDMasks[ 4 ] | usLEDMasks[ 5 ] )
 
-void vApplicationMallocFailedHook( void );
-void vApplicationIdleHook( void );
-static void prvSetupHardware( void );
-
+static const unsigned short usLEDMasks[ partestNUM_LEDS ] = { ( 1 << 9 ), ( 1 << 11 ), ( 1 << 12 ), ( 1 << 13 ), ( 1 << 14 ), ( 1 << 15 ) };
 /*-----------------------------------------------------------*/
 
-void main(void)
+void vParTestInitialise( void )
 {
-	prvSetupHardware();
+	/* Select port functions for PE9 to PE15. */
+	PFC.PECRL3.WORD &= ~partestALL_LEDS;
+
+	/* Turn all LEDs off. */
+	PE.DR.WORD &= ~partestALL_LEDS;
 	
-	vTaskStartScheduler();
-	taskENABLE_INTERRUPTS();
-	for( ;; );
+	/* Set all LEDs to output. */
+	PFC.PEIORL.WORD |= partestALL_LEDS;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationMallocFailedHook( void )
+void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-	/* A call to vPortMalloc() failed, probably during the creation of a task,
-	queue or semaphore.  Inspect pxCurrentTCB to find which task is currently
-	executing. */
-	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationIdleHook( void )
-{
-	/* Code can be added to the idle task here.  This function must *NOT* attempt
-	to block.  Also, if the application uses the vTaskDelete() API function then
-	this function must return regularly to ensure the idle task gets a chance to
-	clean up the memory used by deleted tasks. */
-}
-/*-----------------------------------------------------------*/
-
-static void prvSetupHardware( void )
-{
-volatile unsigned long ul;
-
-	/* Set the CPU and peripheral clocks. */
-	CPG.FRQCR.WORD = mainFRQCR_VALUE;
-	
-	/* Wait for the clock to settle. */
-	for( ul = 0; ul < 99; ul++ )
+	if( uxLED < partestNUM_LEDS )
 	{
-		nop();
+		if( xValue )
+		{
+			/* Turn the LED on. */
+			taskENTER_CRITICAL();
+			{
+				PE.DR.WORD |= usLEDMasks[ uxLED ];
+			}
+			taskEXIT_CRITICAL();
+		}
+		else
+		{
+			/* Turn the LED off. */
+			taskENTER_CRITICAL();
+			{
+				PE.DR.WORD &= ~usLEDMasks[ uxLED ];
+			}
+			taskEXIT_CRITICAL();
+		}
 	}
-	
-	/* Initialise the ports used to toggle LEDs. */
-	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationSetupTimerInterrupt( void )
+void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-/* The peripheral clock is divided by 32 before feeding the compare match
-periphersl (CMT). */
-unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_HZ * 32 ) ) + 1;
-
-	/* Configure a timer to create the RTOS tick interrupt.  This example uses
-	the compare match timer, but the multi function timer or possible even the
-	watchdog timer could also be used.  Ensure vPortTickInterrupt() is installed
-	as the interrupt handler for whichever peripheral is used. */
-	
-	/* Turn the CMT on. */
-	STB.CR4.BIT._CMT = 0;
-	
-	/* Set the compare match value for the required tick frequency. */
-	CMT0.CMCOR = ( unsigned short ) ulCompareMatch;
-	
-	/* Divide the peripheral clock by 32. */
-	CMT0.CMCSR.BIT.CKS = 0x01;
-	
-	/* Set the CMT interrupt priority - the interrupt priority must be
-	configKERNEL_INTERRUPT_PRIORITY no matter which peripheral is used to generate
-	the tick interrupt. */
-	INTC.IPR08.BIT._CMT0 = configKERNEL_INTERRUPT_PRIORITY;
-	
-	/* Clear the interrupt flag. */
-	CMT0.CMCSR.BIT.CMF = 0;
-	
-	/* Enable the compare match interrupt. */
-	CMT0.CMCSR.BIT.CMIE = 0x01;
-	
-	/* Start the timer. */
-	CMT.CMSTR.BIT.STR0 = 0x01;
+	if( uxLED < partestNUM_LEDS )
+	{
+		taskENTER_CRITICAL();
+		{
+			if( ( PE.DR.WORD & usLEDMasks[ uxLED ] ) != 0x00 )
+			{
+				PE.DR.WORD &= ~usLEDMasks[ uxLED ];
+			}
+			else
+			{
+				PE.DR.WORD |= usLEDMasks[ uxLED ];
+			}
+		}
+		taskEXIT_CRITICAL();
+	}
 }
-/*-----------------------------------------------------------*/
-
-//#pragma interrupt (vTempISR)
-//void vTempISR( void );
-
-void xINT_CMT_CMI0( void )
-{
-	CMT0.CMCSR.BIT.CMF = 0;
-}
+							
 
 
 
-
-
+							

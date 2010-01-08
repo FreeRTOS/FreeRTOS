@@ -274,7 +274,7 @@ typedef struct xTASK_PARAMTERS
 /**
  * task. h
  *<pre>
- portBASE_TYPE xTaskCreateRestricted( xTaskParameters *pxTaskDefinition, xTaskHandle pxCreatedTask );</pre>
+ portBASE_TYPE xTaskCreateRestricted( xTaskParameters *pxTaskDefinition, xTaskHandle *pxCreatedTask );</pre>
  *
  * xTaskCreateRestricted() should only be used in systems that include an MPU
  * implementation.
@@ -287,10 +287,6 @@ typedef struct xTASK_PARAMTERS
  * for each of the normal xTaskCreate() parameters (see the xTaskCreate() API
  * documentation) plus an optional stack buffer and the memory region 
  * definitions.
- *
- * @param pcName A descriptive name for the task.  This is mainly used to
- * facilitate debugging.  Max length defined by tskMAX_TASK_NAME_LEN - default
- * is 16.
  *
  * @param pxCreatedTask Used to pass back a handle by which the created task
  * can be referenced.
@@ -1254,7 +1250,7 @@ void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUN
 
 /*
  * Generic version of the task creation function which is in turn called by the
- * xTaskCreate() and xTaskCreateProtected() macros.
+ * xTaskCreate() and xTaskCreateRestricted() macros.
  */
 signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
 

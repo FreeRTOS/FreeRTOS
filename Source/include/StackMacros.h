@@ -93,7 +93,7 @@
 	/* Only the current stack state is to be checked. */
 	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
 	{																									\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );		\
+	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );			\
 																										\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
@@ -102,7 +102,7 @@
 		}																								\
 	}
 
-#endif /* configCHECK_FOR_STACK_OVERFLOW == 1 */
+#endif /* configCHECK_FOR_STACK_OVERFLOW > 0 */
 /*-----------------------------------------------------------*/
 
 #if( ( configCHECK_FOR_STACK_OVERFLOW > 0 ) && ( portSTACK_GROWTH > 0 ) )

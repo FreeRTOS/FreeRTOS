@@ -15,7 +15,7 @@
         
         
       <PreferedWindows><Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows><MixedMode>1</MixedMode><CodeCovEnabled>0</CodeCovEnabled><CodeCovShow>0</CodeCovShow></Disassembly>
-      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows></Debug-Log>
+      <Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1622</ColumnWidth1></Debug-Log>
       <Build><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window></Windows></PreferedWindows></Build>
       <Register>
         <PreferedWindows>
@@ -30,7 +30,7 @@
       
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-22256-14845</Identity>
@@ -42,20 +42,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-18517-20319</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-18517-20319</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>25</YPos><SelStart>1726</SelStart><SelEnd>1726</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s79</Filename><XPos>0</XPos><YPos>19</YPos><SelStart>1527</SelStart><SelEnd>1527</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s</Filename><XPos>0</XPos><YPos>52</YPos><SelStart>3250</SelStart><SelEnd>3250</SelEnd></Tab><ActiveTab>2</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\Source\portable\IAR\AtmelSAM7S64\port.c</Filename><XPos>0</XPos><YPos>217</YPos><SelStart>8345</SelStart><SelEnd>8345</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_AT91SAM7S64_IAR\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>880</SelStart><SelEnd>880</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s</Filename><XPos>0</XPos><YPos>49</YPos><SelStart>3250</SelStart><SelEnd>3250</SelEnd></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-01284260><key>iaridepm.enu1</key></Toolbar-01284260><Toolbar-070bd990><key>debuggergui.enu1</key></Toolbar-070bd990></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>278</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>166667</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>200</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00abb068><key>iaridepm.enu1</key></Toolbar-00abb068><Toolbar-04734888><key>debuggergui.enu1</key></Toolbar-04734888></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>278</Right><x>-2</x><y>-2</y><xscreen>0</xscreen><yscreen>0</yscreen><sizeHorzCX>0</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>166667</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>200</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

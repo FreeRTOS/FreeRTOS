@@ -454,7 +454,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * <pre>
  xSemaphoreGiveFromISR( 
                           xSemaphoreHandle xSemaphore, 
-                          portBASE_TYPE *pxHigherPriorityTaskWoken
+                          signed portBASE_TYPE *pxHigherPriorityTaskWoken
                       )</pre>
  *
  * <i>Macro</i> to  release a semaphore.  The semaphore must have previously been
@@ -509,7 +509,7 @@ typedef xQueueHandle xSemaphoreHandle;
  void vTimerISR( void * pvParameters )
  {
  static unsigned char ucLocalTickCount = 0;
- static portBASE_TYPE xHigherPriorityTaskWoken;
+ static signed portBASE_TYPE xHigherPriorityTaskWoken;
 
     // A timer tick has occurred.
 

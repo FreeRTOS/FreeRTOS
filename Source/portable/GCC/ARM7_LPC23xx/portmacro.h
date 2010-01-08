@@ -211,7 +211,7 @@ extern volatile unsigned portLONG ulCriticalNesting;					\
 
 
 #define portYIELD_FROM_ISR()		vTaskSwitchContext()
-#define portYIELD()					__asm volatile ( "SWI" )
+#define portYIELD()					__asm volatile ( "SWI 0" )
 /*-----------------------------------------------------------*/
 
 

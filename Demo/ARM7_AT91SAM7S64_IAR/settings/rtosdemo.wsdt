@@ -3,7 +3,7 @@
 <Workspace>
   <ConfigDictionary>
     
-  <CurrentConfigs><Project>rtosdemo/Flash Bin</Project></CurrentConfigs></ConfigDictionary>
+  <CurrentConfigs><Project>rtosdemo/Flash Debug</Project></CurrentConfigs></ConfigDictionary>
   <Desktop>
     <Static>
       <Workspace>
@@ -36,7 +36,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode><ExpandedNode>rtosdemo/Demo Source</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>rtosdemo</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
@@ -62,14 +62,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_AT91SAM7S64_IAR\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>880</SelStart><SelEnd>880</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_AT91SAM7S64_IAR\SrcIAR\Cstartup.s</Filename><XPos>0</XPos><YPos>49</YPos><SelStart>3250</SelStart><SelEnd>3250</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_AT91SAM7S64_IAR\resource\at91SAM7S64_FLASH.icf</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>1038</SelStart><SelEnd>1045</SelEnd></Tab><ActiveTab>2</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>C:\E\Dev\FreeRTOS\WorkingCopy\Demo\ARM7_AT91SAM7S64_IAR\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>880</SelStart><SelEnd>880</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00abb068><key>iaridepm.enu1</key></Toolbar-00abb068></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>576</Bottom><Right>310</Right><x>-2</x><y>-2</y><xscreen>32</xscreen><yscreen>26</yscreen><sizeHorzCX>19048</sizeHorzCX><sizeHorzCY>26477</sizeHorzCY><sizeVertCX>185714</sizeVertCX><sizeVertCY>588595</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>362</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>364</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>370672</sizeHorzCY><sizeVertCX>19048</sizeVertCX><sizeVertCY>26477</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00abb198><key>iaridepm.enu1</key></Toolbar-00abb198></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>576</Bottom><Right>310</Right><x>-2</x><y>-2</y><xscreen>32</xscreen><yscreen>26</yscreen><sizeHorzCX>19048</sizeHorzCX><sizeHorzCY>26477</sizeHorzCY><sizeVertCX>185714</sizeVertCX><sizeVertCY>588595</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>362</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>364</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>370672</sizeHorzCY><sizeVertCX>19048</sizeVertCX><sizeVertCY>26477</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

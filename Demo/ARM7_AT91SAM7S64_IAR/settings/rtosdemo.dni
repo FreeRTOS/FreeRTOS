@@ -27,7 +27,7 @@ ByteLimit=50
 Enabled=0
 ShowSource=1
 [DebugChecksum]
-Checksum=-39238073
+Checksum=-1701609349
 [InstructionProfiling]
 Enabled=_ 0
 [Log file]

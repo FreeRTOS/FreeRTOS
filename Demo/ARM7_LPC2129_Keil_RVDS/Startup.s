@@ -64,15 +64,15 @@ FIQ_Stack_Size  EQU     0x00000008
 IRQ_Stack_Size  EQU     0x00000300
 USR_Stack_Size	EQU		0x00000008
 
-ISR_Stack_Size  EQU     (UND_Stack_Size + SVC_Stack_Size + ABT_Stack_Size + \
-                         FIQ_Stack_Size + IRQ_Stack_Size)
+Stack_Size   	EQU     (UND_Stack_Size + SVC_Stack_Size + ABT_Stack_Size + \
+                         FIQ_Stack_Size + IRQ_Stack_Size + USR_Stack_Size )
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
+Stack_Mem       SPACE   Stack_Size
 
-Stack_Mem       SPACE   USR_Stack_Size
-__initial_sp    SPACE   ISR_Stack_Size
+;__initial_sp    SPACE   ISR_Stack_Size
 
-Stack_Top
+Stack_Top		EQU  Stack_Mem + Stack_Size
 
 
 ;// <h> Heap Configuration
@@ -419,8 +419,8 @@ MEMMAP          EQU     0xE01FC040      ; Memory Mapping Control
 __user_initial_stackheap
 
                 LDR     R0, =  Heap_Mem
-                LDR     R1, =(Stack_Mem + USR_Stack_Size)
-                LDR     R2, = (Heap_Mem +      Heap_Size)
+                LDR     R1, = (Stack_Mem + IRQ_Stack_Size + USR_Stack_Size)
+                LDR     R2, = (Heap_Mem + Heap_Size)
                 LDR     R3, = Stack_Mem
                 BX      LR
                 ENDIF

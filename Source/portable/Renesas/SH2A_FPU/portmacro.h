@@ -93,7 +93,7 @@ extern "C" {
 #define portBYTE_ALIGNMENT			4
 #define portSTACK_GROWTH			-1
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
-#define portYIELD()					trapa( 0 )
+#define portYIELD()					trapa( 33 )
 #define portNOP()					nop()
 /*-----------------------------------------------------------*/
 

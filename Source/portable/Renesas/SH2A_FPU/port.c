@@ -51,15 +51,15 @@
     licensing and training services.
 */
 
+/*-----------------------------------------------------------
+ * Implementation of functions defined in portable.h for the SH2A port.
+ *----------------------------------------------------------*/
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
-
-/*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the SH2A port.
- *----------------------------------------------------------*/
+#define portINITIAL_SR		0UL /* No interrupts masked. */
 
 
 /*-----------------------------------------------------------*/
@@ -74,6 +74,16 @@ static void prvSetupTimerInterrupt( void );
  */
 void vPortYield( void );
 
+/*
+ * Function to start the first task executing - defined in portasm.src.
+ */
+extern void vPortStartFirstTask( void );
+
+/*
+ * Obtains the current GBR value - defined in portasm.src.
+ */
+extern unsigned long ulPortGetGBR( void );
+
 /*-----------------------------------------------------------*/
 
 /* 
@@ -81,16 +91,88 @@ void vPortYield( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
+*pxTopOfStack = 0x11111111UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x22222222UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x33333333UL;
+pxTopOfStack--;
 
+	/* SR. */
+	*pxTopOfStack = portINITIAL_SR; 
+	pxTopOfStack--;
+	
+	/* PC then MACL, MACH. */
+//	*pxTopOfStack = ( unsigned long ) pxCode;
+//	pxTopOfStack -= 3;
+*pxTopOfStack = ( unsigned long ) pxCode;
+pxTopOfStack--;
+*pxTopOfStack = 0xffffUL;
+pxTopOfStack--;
+*pxTopOfStack = 0xeeeeUL;
+pxTopOfStack--;
+	
+	/* GBR then PR, R14-R5. */
+//	*pxTopOfStack = ulPortGetGBR();
+//	pxTopOfStack -= 12;
+*pxTopOfStack = 0x00UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x11UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x22UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x33UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x44UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x55UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x66UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x77UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x88UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x99UL;
+pxTopOfStack--;
+*pxTopOfStack = 0xaaUL;
+pxTopOfStack--;
+*pxTopOfStack = 0xbbUL;
+pxTopOfStack--;
+
+		
+	/* Parameters in R4 then R3-R0. */
+//	*pxTopOfStack = ( unsigned long ) pvParameters;
+//	pxTopOfStack -= 5;
+
+*pxTopOfStack = 0x1UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x2UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x3UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x4UL;
+pxTopOfStack--;
+*pxTopOfStack = 0x5UL;
+//pxTopOfStack--;
+
+
+	/* GBR = global base register.
+	   VBR = vector base register.
+	   TBR = jump table base register.
+	   R15 is the stack pointer. */
+
+	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
 portBASE_TYPE xPortStartScheduler( void )
 {
 	/* Start the tick interrupt. */
-	prvSetupTimerInterrupt();
+//	prvSetupTimerInterrupt();
 	
 	/* Start the first task. */
+	trapa( 32 );
 
 	/* Should not get here. */
 	return pdFAIL;
@@ -100,11 +182,6 @@ portBASE_TYPE xPortStartScheduler( void )
 void vPortEndScheduler( void )
 {
 	/* Not implemented as there is nothing to return to. */
-}
-/*-----------------------------------------------------------*/
-
-void vPortYield( void )
-{
 }
 /*-----------------------------------------------------------*/
 

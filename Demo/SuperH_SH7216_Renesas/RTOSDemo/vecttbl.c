@@ -13,6 +13,9 @@
 
 #include "vect.h"
 
+extern void vPortStartFirstTask( void );
+extern void vPortYield( void );
+
 #pragma section VECTTBL
 
 void *RESET_Vectors[] = {
@@ -89,9 +92,11 @@ void *INT_Vectors[] = {
 // 31 Reserved
     (void*) Dummy,
 // 32 TRAPA (User Vecter)
-    (void*) INT_TRAPA32,
+//   (void*) INT_TRAPA32,
+	(void*) vPortStartFirstTask,
 // 33 TRAPA (User Vecter)
-    (void*) INT_TRAPA33,
+//    (void*) INT_TRAPA33,
+	(void*) vPortYield,
 // 34 TRAPA (User Vecter)
     (void*) INT_TRAPA34,
 // 35 TRAPA (User Vecter)

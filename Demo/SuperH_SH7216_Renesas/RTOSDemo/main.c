@@ -62,14 +62,22 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 static void prvSetupHardware( void );
 
+extern void vRegTest1Task( void *pvParameters );
+extern void vRegTest2Task( void *pvParameters );
+
+unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
+
 /*-----------------------------------------------------------*/
 
 void main(void)
 {
 	prvSetupHardware();
-	
+
+	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, ( void * ) 0x12345678UL, 1, NULL );
+	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, ( void * ) 0x11223344UL, 1, NULL );
+	 
 	vTaskStartScheduler();
-	taskENABLE_INTERRUPTS();
+
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -146,15 +154,26 @@ unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_H
 }
 /*-----------------------------------------------------------*/
 
-//#pragma interrupt (vTempISR)
-//void vTempISR( void );
-
-void xINT_CMT_CMI0( void )
+void INT_CMT_CMI0( void )
 {
+static unsigned long ul = 0;
+
+	ul++;
+	if( ul >= 1000 )
+	{
+		if( PE.DR.WORD & ( 0x01 << 9 ) )
+		{
+			PE.DR.WORD &= ~( 0x01 << 9 );
+		}
+		else
+		{
+			PE.DR.WORD |= ( 0x01 << 9 );
+		}
+		
+		ul = 0;
+	}
+
 	CMT0.CMCSR.BIT.CMF = 0;
 }
-
-
-
-
+/*-----------------------------------------------------------*/
 

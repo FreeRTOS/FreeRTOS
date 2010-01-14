@@ -1,0 +1,176 @@
+;/*
+;    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+;
+;    ***************************************************************************
+;    *                                                                         *
+;    * If you are:                                                             *
+;    *                                                                         *
+;    *    + New to FreeRTOS,                                                   *
+;    *    + Wanting to learn FreeRTOS or multitasking in general quickly       *
+;    *    + Looking for basic training,                                        *
+;    *    + Wanting to improve your FreeRTOS skills and productivity           *
+;    *                                                                         *
+;    * then take a look at the FreeRTOS eBook                                  *
+;    *                                                                         *
+;    *        "Using the FreeRTOS Real Time Kernel - a Practical Guide"        *
+;    *                  http://www.FreeRTOS.org/Documentation                  *
+;    *                                                                         *
+;    * A pdf reference manual is also available.  Both are usually delivered   *
+;    * to your inbox within 20 minutes to two hours when purchased between 8am *
+;    * and 8pm GMT (although please allow up to 24 hours in case of            *
+;    * exceptional circumstances).  Thank you for your support!                *
+;    *                                                                         *
+;    ***************************************************************************
+;
+;    This file is part of the FreeRTOS distribution.
+;
+;    FreeRTOS is free software; you can redistribute it and/or modify it under
+;    the terms of the GNU General Public License (version 2) as published by the
+;    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+;    ***NOTE*** The exception to the GPL is included to allow you to distribute
+;    a combined work that includes FreeRTOS without being obliged to provide the
+;    source code for proprietary components outside of the FreeRTOS kernel.
+;    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
+;    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;    more details. You should have received a copy of the GNU General Public 
+;    License and the FreeRTOS license exception along with FreeRTOS; if not it 
+;    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+;    by writing to Richard Barry, contact details for whom are available on the
+;    FreeRTOS WEB site.
+;
+;    1 tab == 4 spaces!
+;
+;    http://www.FreeRTOS.org - Documentation, latest information, license and
+;    contact details.
+;
+;    http://www.SafeRTOS.com - A version that is certified for use in safety
+;    critical systems.
+;
+;    http://www.OpenRTOS.com - Commercial support, development, porting,
+;    licensing and training services.
+;*/
+
+	.import _pxCurrentTCB
+	.import _vTaskSwitchContext
+	.import _ulRegTest1CycleCount
+	.import _ulRegTest2CycleCount
+
+	.export _vRegTest1Task
+	.export _vRegTest2Task
+
+    .section    P
+	
+_vRegTest1Task:
+
+	mov		#3, r2
+	mov		#4, r3
+	mov		#5, r4
+	mov		#6, r5
+	mov		#7, r6
+	mov		#8, r7
+	mov		#9, r8
+	mov		#10, r9
+	mov		#11, r10
+	mov		#12, r11
+	mov		#13, r12
+	mov		#14, r13
+
+	mov		#15, r0
+	lds		r0, macl
+	mov		#16, r0
+	lds		r0, mach
+	mov		#17, r0
+	ldc		r0, gbr
+	
+_vRegTest1Loop:
+
+	; Reset r1 which was used in the tests.
+	mov		#2, r1
+	
+	mov		#2, r0
+	cmp/eq	r0, r1
+	bf		_vRegTestError
+	
+	mov		#3, r0
+	cmp/eq	r0, r2
+	bf		_vRegTestError
+
+	mov		#4, r0
+	cmp/eq	r0, r3
+	bf		_vRegTestError
+
+	mov		#5, r0
+	cmp/eq	r0, r4
+	bf		_vRegTestError
+
+	mov		#6, r0
+	cmp/eq	r0, r5
+	bf		_vRegTestError
+
+	mov		#7, r0
+	cmp/eq	r0, r6
+	bf		_vRegTestError
+
+	mov		#8, r0
+	cmp/eq	r0, r7
+	bf		_vRegTestError
+
+	mov		#9, r0
+	cmp/eq	r0, r8
+	bf		_vRegTestError
+
+	mov		#10, r0
+	cmp/eq	r0, r9
+	bf		_vRegTestError
+
+	mov		#11, r0
+	cmp/eq	r0, r10
+	bf		_vRegTestError
+
+	mov		#12, r0
+	cmp/eq	r0, r11
+	bf		_vRegTestError
+
+	mov		#13, r0
+	cmp/eq	r0, r12
+	bf		_vRegTestError
+
+	mov		#14, r0
+	cmp/eq	r0, r13
+	bf		_vRegTestError
+
+	sts		macl, r0
+	mov		#15, r1
+	cmp/eq	r0, r1
+	bf		_vRegTestError
+
+	sts		mach, r0
+	mov		#16, r1
+	cmp/eq	r0, r1
+	bf		_vRegTestError
+
+	stc		gbr, r0
+	mov		#17, r1
+	cmp/eq	r0, r1
+	bf		_vRegTestError
+
+	mov.l	#_ulRegTest1CycleCount, r0
+	mov.l	@r0, r1
+	add		#1, r1
+	mov.l	r1, @r0
+
+	bra		_vRegTest1Task
+	nop
+
+_vRegTest2Task:
+
+	trapa	#33
+	bra		_vRegTest2Task
+	nop
+	
+_vRegTestError:
+	bra		_vRegTestError
+
+	.end
+		

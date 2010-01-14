@@ -7,23 +7,17 @@
 [GENERAL_DATA]
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\FreeRTOSConfig.h" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\intprg.c" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\resetprg.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\regtest.src" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\vecttbl.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\include\list.h" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\port.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portmacro.h" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 
 [WORKSPACE_FILE_STATES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\FreeRTOSConfig.h" 88 88 1216 383 0 2 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\intprg.c" 0 0 1132 383 0 7 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" -4 -23 1316 445 1 0 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\resetprg.c" 110 110 1216 383 0 5 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\vecttbl.c" 154 154 1132 383 0 6 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\include\list.h" 66 66 1216 383 0 1 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\port.c" 0 0 1400 586 0 3 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portmacro.h" 132 132 1216 383 0 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 0 0 918 659 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\regtest.src" -4 -23 1016 659 1 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\vecttbl.c" 0 0 712 434 0 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\port.c" 0 0 1400 586 0 1 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 0 0 805 659 0 2 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

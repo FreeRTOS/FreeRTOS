@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     ***************************************************************************
     *                                                                         *
@@ -102,61 +102,85 @@ pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_SR; 
 	pxTopOfStack--;
 	
-	/* PC then MACL, MACH. */
-//	*pxTopOfStack = ( unsigned long ) pxCode;
-//	pxTopOfStack -= 3;
-*pxTopOfStack = ( unsigned long ) pxCode;
-pxTopOfStack--;
-*pxTopOfStack = 0xffffUL;
-pxTopOfStack--;
-*pxTopOfStack = 0xeeeeUL;
-pxTopOfStack--;
+	/* PC. */
+	*pxTopOfStack = ( unsigned long ) pxCode;
+	pxTopOfStack--;
 	
-	/* GBR then PR, R14-R5. */
-//	*pxTopOfStack = ulPortGetGBR();
-//	pxTopOfStack -= 12;
-*pxTopOfStack = 0x00UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x11UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x22UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x33UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x44UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x55UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x66UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x77UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x88UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x99UL;
-pxTopOfStack--;
-*pxTopOfStack = 0xaaUL;
-pxTopOfStack--;
-*pxTopOfStack = 0xbbUL;
-pxTopOfStack--;
+	/* PR. */
+	*pxTopOfStack = 15;
+	pxTopOfStack--;
+	
+	/* 14. */
+	*pxTopOfStack = 14;
+	pxTopOfStack--;
 
-		
-	/* Parameters in R4 then R3-R0. */
-//	*pxTopOfStack = ( unsigned long ) pvParameters;
-//	pxTopOfStack -= 5;
+	/* R13. */
+	*pxTopOfStack = 13;
+	pxTopOfStack--;
 
-*pxTopOfStack = 0x1UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x2UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x3UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x4UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x5UL;
-//pxTopOfStack--;
+	/* R12. */
+	*pxTopOfStack = 12;
+	pxTopOfStack--;
 
+	/* R11. */
+	*pxTopOfStack = 11;
+	pxTopOfStack--;
 
+	/* R10. */
+	*pxTopOfStack = 10;
+	pxTopOfStack--;
+
+	/* R9. */
+	*pxTopOfStack = 9;
+	pxTopOfStack--;
+
+	/* R8. */
+	*pxTopOfStack = 8;
+	pxTopOfStack--;
+
+	/* R7. */
+	*pxTopOfStack = 7;
+	pxTopOfStack--;
+
+	/* R6. */
+	*pxTopOfStack = 6;
+	pxTopOfStack--;
+
+	/* R5. */
+	*pxTopOfStack = 5;
+	pxTopOfStack--;
+
+	/* R4. */
+	*pxTopOfStack = ( unsigned long ) pvParameters;
+	pxTopOfStack--;
+
+	/* R3. */
+	*pxTopOfStack = 3;
+	pxTopOfStack--;
+
+	/* R2. */
+	*pxTopOfStack = 2;
+	pxTopOfStack--;
+
+	/* R1. */
+	*pxTopOfStack = 1;
+	pxTopOfStack--;
+	
+	/* R0 */
+	*pxTopOfStack = 0;
+	pxTopOfStack--;
+	
+	/* MACL. */
+	*pxTopOfStack = 16;
+	pxTopOfStack--;
+	
+	/* MACH. */
+	*pxTopOfStack = 17;
+	pxTopOfStack--;
+	
+	/* GBR. */
+	*pxTopOfStack = ulPortGetGBR();
+	
 	/* GBR = global base register.
 	   VBR = vector base register.
 	   TBR = jump table base register.
@@ -169,7 +193,7 @@ pxTopOfStack--;
 portBASE_TYPE xPortStartScheduler( void )
 {
 	/* Start the tick interrupt. */
-//	prvSetupTimerInterrupt();
+	prvSetupTimerInterrupt();
 	
 	/* Start the first task. */
 	trapa( 32 );
@@ -204,6 +228,9 @@ extern void vApplicationSetupTimerInterrupt( void );
 	vApplicationSetupTimerInterrupt();
 }
 /*-----------------------------------------------------------*/
+
+
+
 
 
 

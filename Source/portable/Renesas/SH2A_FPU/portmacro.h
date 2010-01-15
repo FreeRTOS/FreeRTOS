@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     ***************************************************************************
     *                                                                         *
@@ -98,14 +98,15 @@ extern "C" {
 /*-----------------------------------------------------------*/
 
 #define portENABLE_INTERRUPTS() 	set_imask( 0x00 )
-#define portDISABLE_INTERRUPTS() 	set_imask( 0x0F )
+#define portDISABLE_INTERRUPTS() 	set_imask( configMAX_SYSCALL_INTERRUPT_PRIORITY )
 
 /* Critical section handling. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-#define portENTER_CRITICAL()  		vTaskEnterCritical();
-#define  portEXIT_CRITICAL()    	vTaskExitCritical();
+#define portENTER_CRITICAL()	vTaskEnterCritical();
+#define portEXIT_CRITICAL()		vTaskExitCritical();
+
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

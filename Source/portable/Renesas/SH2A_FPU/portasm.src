@@ -1,5 +1,5 @@
 ;/*
-;    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+;    FreeRTOS V6.0.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 ;
 ;    ***************************************************************************
 ;    *                                                                         *
@@ -53,43 +53,25 @@
 
 	.import _pxCurrentTCB
 	.import _vTaskSwitchContext
+	.import _vTaskIncrementTick
 
 	.export _vPortStartFirstTask
 	.export _ulPortGetGBR
 	.export _vPortYield
+	.export _vPortPreemptiveTick
+	.export _vPortCooperativeTick
 
     .section    P
+
+	.macro portSAVE_CONTEXT
+
+	; Save r0 to r14 and pr.
+	movml.l r15, @-r15
 	
-_vPortStartFirstTask:
-		
-	; Get the address of the pxCurrentTCB variable.
-	mov.l	#_pxCurrentTCB, r15
-
-	; Get the address of the task stack from pxCurrentTCB.
-	mov.l	@r15, r15
-
-	; Get the task stack itself into the stack pointer. 
-	mov.l	@r15, r15		
-
-	; Restore r0 to PR (PR is used in place of r15).
-	movml.l	@r15+, r15
-	
-	; Restore system registers.
-	ldc.l	@r15+, gbr
-	lds.l	@r15+, mach
-	lds.l	@r15+, macl
-	
-	; Pop the SR and PC to jump to the start of the task.
-	rte
-	nop
-
-_vPortYield:
-
-	; Save registers in the same order used by the CPU itself.
+	; Save mac1, mach and gbr
 	sts.l	macl, @-r15
 	sts.l	mach, @-r15
 	stc.l	gbr, @-r15
-	movml.l	r15, @-r15
 	
 	; Get the address of pxCurrentTCB
 	mov.l	#_pxCurrentTCB, r0
@@ -100,31 +82,93 @@ _vPortYield:
 	; Save the stack pointer in pxTopOfStack.
 	mov.l	r15, @r0
 
-	mov.l	#_vTaskSwitchContext, r0
-	jsr		@r0
-	nop
+	.endm
+
+;-----------------------------------------------------------
+
+	.macro portRESTORE_CONTEXT
 
 	; Get the address of the pxCurrentTCB variable.
-	mov.l	#_pxCurrentTCB, r15
+	mov.l	#_pxCurrentTCB, r0
 
 	; Get the address of the task stack from pxCurrentTCB.
-	mov.l	@r15, r15
+	mov.l	@r0, r0
 
 	; Get the task stack itself into the stack pointer. 
-	mov.l	@r15, r15		
+	mov.l	@r0, r15		
 
-	; Restore r0 to PR (PR is used in place of r15).
-	movml.l	@r15+, r15
-	
 	; Restore system registers.
 	ldc.l	@r15+, gbr
 	lds.l	@r15+, mach
 	lds.l	@r15+, macl
+
+	; Restore r0 to r14 and PR
+	movml.l	@r15+, r15
 	
 	; Pop the SR and PC to jump to the start of the task.
 	rte
 	nop
 
+	.endm
+;-----------------------------------------------------------
+	
+_vPortStartFirstTask:
+		
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_vPortYield:
+
+	; Push r0 so it can be used.
+	mov.l	r0, @-r15
+	
+	; Set the interrupt mask in the status register.
+	stc		sr, r0
+	or		#240,r0
+	ldc		r0, sr
+	
+	; Restore r0 so its original value can be saved by the movml.l instruction 
+	; below, without ending up with two copies on the stack.
+	mov.l	@r15+, r0
+
+	portSAVE_CONTEXT
+
+	mov.l	#_vTaskSwitchContext, r0
+	jsr		@r0
+	nop
+
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_vPortPreemptiveTick
+
+	portSAVE_CONTEXT
+	
+	mov.l	#_vTaskIncrementTick, r0
+	jsr		@r0
+	nop
+
+	mov.l	#_vTaskSwitchContext, r0
+	jsr		@r0
+	nop
+
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_vPortCooperativeTick
+
+	portSAVE_CONTEXT
+	
+	mov.l	#_vTaskIncrementTick, r0
+	jsr		@r0
+	nop
+
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
 
 _ulPortGetGBR:
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+    FreeRTOS V6.0.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 
     ***************************************************************************
     *                                                                         *
@@ -51,21 +51,56 @@
     licensing and training services.
 */
 
+/* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Demo application includes. */
+#include "BlockQ.h"
+#include "death.h"
+#include "integer.h"
+#include "blocktim.h"
+#include "flash.h"
 #include "partest.h"
+#include "semtest.h"
+#include "PollQ.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "recmutex.h"
 
+/* Constants required to configure the hardware. */
 #define mainFRQCR_VALUE 					( 0x0303 )	/* Input = 12.5MHz, I Clock = 200MHz, B Clock = 50MHz, P Clock = 50MHz */
+
+/* Task priorities. */
+#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
+#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+
+/* The LED toggle by the check task. */
+#define mainCHECK_LED						( 5 )
+
+/* The rate at which mainCHECK_LED will toggle when all the tasks are running
+without error. */
+#define mainNO_ERROR_CYCLE_TIME				( 5000 / portTICK_RATE_MS )
+
+/* The rate at which mainCHECK_LED will toggle when an error has been reported
+by at least one task. */
+#define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
 
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 static void prvSetupHardware( void );
+static void prvCheckTask( void *pvParameters );
 
 extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
 
-unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
+volatile unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -73,12 +108,113 @@ void main(void)
 {
 	prvSetupHardware();
 
-	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, ( void * ) 0x12345678UL, 1, NULL );
-	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, ( void * ) 0x11223344UL, 1, NULL );
-	 
+	/* Start the reg test tasks which test the context switching mechanism. */
+	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, ( void * ) 0x12345678UL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, ( void * ) 0x11223344UL, tskIDLE_PRIORITY, NULL );
+
+	/* Start the check task as described at the top of this file. */
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+	/* Start the standard demo tasks.  These don't perform any particular useful
+	functionality, other than to demonstrate the FreeRTOS API being used. */
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+	vCreateBlockTimeTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+    vStartQueuePeekTasks();
+    vStartRecursiveMutexTasks();
+
+	/* The suicide tasks must be created last as they need to know how many
+	tasks were running prior to their creation in order to ascertain whether
+	or not the correct/expected number of tasks are running at any given time. */
+//    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+
+	/* Start the tasks running. */
 	vTaskStartScheduler();
 
+	/* Will only get here if there was insufficient heap memory to create the idle
+    task.  Increase the configTOTAL_HEAP_SIZE setting in FreeRTOSConfig.h. */
 	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+static void prvCheckTask( void *pvParameter )
+{
+portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
+unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
+
+	/* Initialise xNextWakeTime - this only needs to be done once. */
+	xNextWakeTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		/* Place this task in the blocked state until it is time to run again. */
+		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+		
+		/* Inspect all the other tasks to esnure none have experienced any errors. */
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			/* Increase the rate at which this task cycles, which will increase the
+			rate at which mainCHECK_LED flashes to give visual feedback that an error
+			has occurred. */
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+	    else if( xArePollingQueuesStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+//	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+//	    {
+//	        xCycleFrequency = mainERROR_CYCLE_TIME;
+//	    }
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+
+		/* Check the reg test tasks are still cycling.  They will stop incrementing
+		their loop counters if they encounter an error. */
+		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+
+		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		
+		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
+		ulLastRegTest2CycleCount = ulRegTest2CycleCount;
+		
+		/* Toggle the check LED to give an indication of the system status.  If the
+		LED toggles every 5 seconds then everything is ok.  A faster toggle indicates
+		an error. */
+		vParTestToggleLED( mainCHECK_LED );
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -97,6 +233,12 @@ void vApplicationIdleHook( void )
 	to block.  Also, if the application uses the vTaskDelete() API function then
 	this function must return regularly to ensure the idle task gets a chance to
 	clean up the memory used by deleted tasks. */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+{
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -154,25 +296,8 @@ unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_H
 }
 /*-----------------------------------------------------------*/
 
-void INT_CMT_CMI0( void )
+void vApplicationTickHook( void )
 {
-static unsigned long ul = 0;
-
-	ul++;
-	if( ul >= 1000 )
-	{
-		if( PE.DR.WORD & ( 0x01 << 9 ) )
-		{
-			PE.DR.WORD &= ~( 0x01 << 9 );
-		}
-		else
-		{
-			PE.DR.WORD |= ( 0x01 << 9 );
-		}
-		
-		ul = 0;
-	}
-
 	CMT0.CMCSR.BIT.CMF = 0;
 }
 /*-----------------------------------------------------------*/

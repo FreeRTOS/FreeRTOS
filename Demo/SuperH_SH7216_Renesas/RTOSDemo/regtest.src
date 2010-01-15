@@ -1,5 +1,5 @@
 ;/*
-;    FreeRTOS V6.0.1 - Copyright (C) 2009 Real Time Engineers Ltd.
+;    FreeRTOS V6.0.2 - Copyright (C) 2009 Real Time Engineers Ltd.
 ;
 ;    ***************************************************************************
 ;    *                                                                         *
@@ -59,10 +59,18 @@
 	.export _vRegTest1Task
 	.export _vRegTest2Task
 
-    .section    P
+    .section    P, code, align=4
+	
+	
+_vRegTest1Error:
+	bra		_vRegTest1Error	
+	nop
+
+;-----------------------------------------------------------
 	
 _vRegTest1Task:
 
+	; Fill the registers with known values.
 	mov		#3, r2
 	mov		#4, r3
 	mov		#5, r4
@@ -85,92 +93,212 @@ _vRegTest1Task:
 	
 _vRegTest1Loop:
 
+	; Perform a yield, just for extra test coverage.
+	trapa	#33
+	
 	; Reset r1 which was used in the tests.
 	mov		#2, r1
-	
+
+	; Test that the registers still contain the expected values.  If not, jump to
+	; vRegTestError, which will stop this function looping and so cause it to stop
+	; incrementing its loop counter.	
 	mov		#2, r0
 	cmp/eq	r0, r1
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 	
 	mov		#3, r0
 	cmp/eq	r0, r2
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#4, r0
 	cmp/eq	r0, r3
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#5, r0
 	cmp/eq	r0, r4
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#6, r0
 	cmp/eq	r0, r5
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#7, r0
 	cmp/eq	r0, r6
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#8, r0
 	cmp/eq	r0, r7
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#9, r0
 	cmp/eq	r0, r8
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#10, r0
 	cmp/eq	r0, r9
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#11, r0
 	cmp/eq	r0, r10
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#12, r0
 	cmp/eq	r0, r11
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#13, r0
 	cmp/eq	r0, r12
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	mov		#14, r0
 	cmp/eq	r0, r13
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	sts		macl, r0
 	mov		#15, r1
 	cmp/eq	r0, r1
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	sts		mach, r0
 	mov		#16, r1
 	cmp/eq	r0, r1
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
 	stc		gbr, r0
 	mov		#17, r1
 	cmp/eq	r0, r1
-	bf		_vRegTestError
+	bf		_vRegTest1Error
 
+	; Increment the loop counter to indicate that this task is still running and
+	; still healthy.
 	mov.l	#_ulRegTest1CycleCount, r0
 	mov.l	@r0, r1
 	add		#1, r1
 	mov.l	r1, @r0
 
-	bra		_vRegTest1Task
+	; Jump back to test all the registers again.
+	bra		_vRegTest1Loop
 	nop
+
+;-----------------------------------------------------------
+
+_vRegTest2Error:
+
+	bra		_vRegTest2Error
+	nop	
+
+;-----------------------------------------------------------
 
 _vRegTest2Task:
 
-	trapa	#33
-	bra		_vRegTest2Task
-	nop
+	; Fill the registers with known values.
+	mov		#13, r2
+	mov		#14, r3
+	mov		#15, r4
+	mov		#16, r5
+	mov		#17, r6
+	mov		#18, r7
+	mov		#19, r8
+	mov		#110, r9
+	mov		#111, r10
+	mov		#112, r11
+	mov		#113, r12
+	mov		#114, r13
+
+	mov		#115, r0
+	lds		r0, macl
+	mov		#116, r0
+	lds		r0, mach
+	mov		#117, r0
+	ldc		r0, gbr
 	
-_vRegTestError:
-	bra		_vRegTestError
+_vRegTest2Loop:
+
+	; Reset r1 which was used in the tests.
+	mov		#12, r1
+
+	; Test that the registers still contain the expected values.  If not, jump to
+	; vRegTestError, which will stop this function looping and so cause it to stop
+	; incrementing its loop counter.	
+	mov		#12, r0
+	cmp/eq	r0, r1
+	bf		_vRegTest2Error
+	
+	mov		#13, r0
+	cmp/eq	r0, r2
+	bf		_vRegTest2Error
+
+	mov		#14, r0
+	cmp/eq	r0, r3
+	bf		_vRegTest2Error
+
+	mov		#15, r0
+	cmp/eq	r0, r4
+	bf		_vRegTest2Error
+
+	mov		#16, r0
+	cmp/eq	r0, r5
+	bf		_vRegTest2Error
+
+	mov		#17, r0
+	cmp/eq	r0, r6
+	bf		_vRegTest2Error
+
+	mov		#18, r0
+	cmp/eq	r0, r7
+	bf		_vRegTest2Error
+
+	mov		#19, r0
+	cmp/eq	r0, r8
+	bf		_vRegTest2Error
+
+	mov		#110, r0
+	cmp/eq	r0, r9
+	bf		_vRegTest2Error
+
+	mov		#111, r0
+	cmp/eq	r0, r10
+	bf		_vRegTest2Error
+
+	mov		#112, r0
+	cmp/eq	r0, r11
+	bf		_vRegTest2Error
+
+	mov		#113, r0
+	cmp/eq	r0, r12
+	bf		_vRegTest2Error
+
+	mov		#114, r0
+	cmp/eq	r0, r13
+	bf		_vRegTest2Error
+
+	sts		macl, r0
+	mov		#115, r1
+	cmp/eq	r0, r1
+	bf		_vRegTest2Error
+
+	sts		mach, r0
+	mov		#116, r1
+	cmp/eq	r0, r1
+	bf		_vRegTest2Error
+
+	stc		gbr, r0
+	mov		#117, r1
+	cmp/eq	r0, r1
+	bf		_vRegTest2Error
+
+	; Increment the loop counter to indicate that this task is still running and
+	; still healthy.
+	mov.l	#_ulRegTest2CycleCount, r0
+	mov.l	@r0, r1
+	add		#1, r1
+	mov.l	r1, @r0
+
+	; Jump back to test all the registers again.
+	bra		_vRegTest2Loop
+	nop
+
+
 
 	.end
 		

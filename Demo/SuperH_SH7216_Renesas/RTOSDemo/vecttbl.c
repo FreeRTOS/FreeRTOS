@@ -15,6 +15,7 @@
 
 extern void vPortStartFirstTask( void );
 extern void vPortYield( void );
+extern void vPortPreemptiveTick( void );
 
 #pragma section VECTTBL
 
@@ -310,7 +311,8 @@ void *INT_Vectors[] = {
 // 139 Reserved
     (void*) Dummy,
 // 140 CMT CMI0
-	(void*) INT_CMT_CMI0,
+//	(void*) INT_CMT_CMI0,
+	(void*) vPortPreemptiveTick,
 // 141 Reserved
     (void*) Dummy,
 // 142 Reserved

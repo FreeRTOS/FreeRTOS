@@ -16,7 +16,14 @@
 #pragma section IntPRG
 
 // 4 Illegal code
-void INT_Illegal_code(void){for( ;; ); /* sleep(); */}
+#pragma interrupt (INT_Illegal_code)
+void INT_Illegal_code(void)
+{
+volatile int i = 0;
+
+	while( i == 0 );
+}
+
 // 5 Reserved
 
 // 6 Illegal slot

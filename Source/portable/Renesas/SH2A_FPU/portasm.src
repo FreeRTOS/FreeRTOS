@@ -125,7 +125,7 @@ _vPortYield:
 	
 	; Set the interrupt mask in the status register.
 	stc		sr, r0
-	or		#240,r0
+	or		#H'70, r0
 	ldc		r0, sr
 	
 	; Restore r0 so its original value can be saved by the movml.l instruction 

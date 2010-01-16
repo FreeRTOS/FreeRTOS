@@ -409,7 +409,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 #ifndef pvPortMallocAligned
-	#define pvPortMallocAligned( xSize, pvBuffer ) pvPortMalloc( xSize ); ( void ) pvBuffer
+	#define pvPortMallocAligned( x, puxStackBuffer ) ( ( puxStackBuffer == NULL ) ? ( pvPortMalloc( x ) ) : ( puxStackBuffer ) )
 #endif
 
 #ifndef vPortFreeAligned

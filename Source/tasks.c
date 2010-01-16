@@ -72,8 +72,6 @@ task.h is included from an application file. */
  */
 #define tskIDLE_STACK_SIZE	configMINIMAL_STACK_SIZE
 
-#define tskIDLE_PRIORITY			( ( unsigned portBASE_TYPE ) 0 )
-
 /*
  * Task control block.  A task control block (TCB) is allocated to each task,
  * and stores the context of the task.

@@ -7,23 +7,25 @@
 [GENERAL_DATA]
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\FreeRTOSConfig.h" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\intprg.c" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\port.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\regtest.src" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\MemMang\heap_2.c" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portmacro.h" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" 
 [WORKSPACE_FILE_STATES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" 44 44 838 434 0 2 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\FreeRTOSConfig.h" 132 132 838 434 0 6 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\intprg.c" 22 22 838 434 0 1 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 0 0 1075 659 0 0 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\port.c" 66 66 838 434 0 3 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 88 88 838 434 0 4 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" -4 -23 1044 659 1 7 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" 110 110 838 434 0 5 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" 132 132 860 400 0 6 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" 0 0 904 312 0 7 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\FreeRTOSConfig.h" 66 66 838 434 0 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 0 0 1044 659 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\regtest.src" -4 -23 1044 471 1 8 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\MemMang\heap_2.c" 198 198 838 434 0 1 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 0 0 838 434 0 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portmacro.h" 88 88 838 434 0 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" 110 110 860 400 0 5 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

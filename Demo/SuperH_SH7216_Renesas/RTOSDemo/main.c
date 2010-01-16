@@ -130,7 +130,7 @@ void main(void)
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
-//    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
@@ -182,10 +182,10 @@ unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
 	    }
-//	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-//	    {
-//	        xCycleFrequency = mainERROR_CYCLE_TIME;
-//	    }
+	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;

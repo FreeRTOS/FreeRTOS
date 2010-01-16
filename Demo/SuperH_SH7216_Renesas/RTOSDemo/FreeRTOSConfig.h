@@ -79,7 +79,7 @@
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
-#define configIDLE_SHOULD_YIELD			0
+#define configIDLE_SHOULD_YIELD			1
 #define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
 #define configCHECK_FOR_STACK_OVERFLOW	0
@@ -102,12 +102,10 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil				1
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
+#define INCLUDE_xTaskGetSchedulerState		1
 
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( 1 )
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 0xff )
-
-#define pvPortMallocAligned( x, puxStackBuffer ) ( ( puxStackBuffer == NULL ) ? ( pvPortMalloc( x ) ) : ( puxStackBuffer ) )
-#define vPortFreeAligned( x ) ( void ) x
 
 #endif /* FREERTOS_CONFIG_H */

@@ -59,8 +59,16 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define portINITIAL_SR		0UL /* No interrupts masked. */
+/* Library includes. */
+#include "string.h"
 
+#define portINITIAL_SR			0UL /* No interrupts masked. */
+
+/* Allocate enough space for FPR0 to FPR15, FPUL and FPSCR, each of which is 4
+bytes big.  If this number is changed then the 72 in portasm.src also needs
+changing. */
+#define portFLOP_REGISTERS_TO_STORE	( 18 )
+#define portFLOP_STORAGE_SIZE 		( portFLOP_REGISTERS_TO_STORE * 4 )
 
 /*-----------------------------------------------------------*/
 
@@ -196,7 +204,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	prvSetupTimerInterrupt();
 	
 	/* Start the first task. */
-	trapa( 32 );
+	trapa( portSTART_SCHEDULER_TRAP_NO );
 
 	/* Should not get here. */
 	return pdFAIL;
@@ -228,6 +236,58 @@ extern void vApplicationSetupTimerInterrupt( void );
 	vApplicationSetupTimerInterrupt();
 }
 /*-----------------------------------------------------------*/
+
+void vPortYield( void )
+{
+long lInterruptMask;
+
+	lInterruptMask = get_imask();
+
+	/* taskYIELD() can only be called from a task, not an interrupt, so the
+	current interrupt mask can only be 0 or portKERNEL_INTERRUPT_PRIORITY and
+	the mask can be set without risk of accidentally lowering the mask value. */	
+	set_imask( portKERNEL_INTERRUPT_PRIORITY );
+	
+	trapa( portYIELD_TRAP_NO );
+	
+	set_imask( ( int ) lInterruptMask );
+}
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE xPortUsesFloatingPoint( xTaskHandle xTask )
+{
+unsigned long *pulFlopBuffer;
+portBASE_TYPE xReturn;
+extern void * volatile pxCurrentTCB;
+
+	if( xTask == NULL )
+	{
+		xTask = pxCurrentTCB;
+	}
+
+	/* Allocate a buffer large enough to hold all the flop registers. */
+	pulFlopBuffer = ( unsigned long * ) pvPortMalloc( portFLOP_STORAGE_SIZE );
+	
+	if( pulFlopBuffer != NULL )
+	{
+		memset( ( void * ) pulFlopBuffer, 0x00, portFLOP_STORAGE_SIZE );
+		
+		*pulFlopBuffer = get_fpscr();
+		
+		/* Use the task tag to point to the flop buffer.  Pass pointer to just above
+		the buffer because the flop save routine uses a pre-decrement. */
+		vTaskSetApplicationTaskTag( xTask, ( void * ) ( pulFlopBuffer + portFLOP_REGISTERS_TO_STORE ) );		
+		xReturn = pdPASS;
+	}
+	else
+	{
+		xReturn = pdFAIL;
+	}
+	
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
 
 
 

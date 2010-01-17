@@ -57,9 +57,11 @@
 
 	.export _vPortStartFirstTask
 	.export _ulPortGetGBR
-	.export _vPortYield
+	.export _vPortYieldHandler
 	.export _vPortPreemptiveTick
 	.export _vPortCooperativeTick
+	.export _vPortSaveFlopRegisters
+	.export _vPortRestoreFlopRegisters
 
     .section    P
 
@@ -118,19 +120,7 @@ _vPortStartFirstTask:
 	
 ;-----------------------------------------------------------
 
-_vPortYield:
-
-	; Push r0 so it can be used.
-	mov.l	r0, @-r15
-	
-	; Set the interrupt mask in the status register.
-	stc		sr, r0
-	or		#H'70, r0
-	ldc		r0, sr
-	
-	; Restore r0 so its original value can be saved by the movml.l instruction 
-	; below, without ending up with two copies on the stack.
-	mov.l	@r15+, r0
+_vPortYieldHandler:
 
 	portSAVE_CONTEXT
 
@@ -176,5 +166,58 @@ _ulPortGetGBR:
 	rts
 	nop
 
+;-----------------------------------------------------------
+
+_vPortSaveFlopRegisters:
+
+	fmov.s	fr0, @-r4
+	fmov.s	fr1, @-r4
+	fmov.s	fr2, @-r4
+	fmov.s	fr3, @-r4
+	fmov.s	fr4, @-r4
+	fmov.s	fr5, @-r4
+	fmov.s	fr6, @-r4
+	fmov.s	fr7, @-r4
+	fmov.s	fr8, @-r4
+	fmov.s	fr9, @-r4
+	fmov.s	fr10, @-r4
+	fmov.s	fr11, @-r4
+	fmov.s	fr12, @-r4
+	fmov.s	fr13, @-r4
+	fmov.s	fr14, @-r4
+	fmov.s	fr15, @-r4	
+	sts.l   fpul, @-r4
+	sts.l   fpscr, @-r4
+	
+	rts
+	nop
+
+;-----------------------------------------------------------
+	
+_vPortRestoreFlopRegisters:
+
+	add.l  #-72, r4
+	lds.l  @r4+, fpscr
+	lds.l  @r4+, fpul	
+	fmov.s @r4+, fr15
+	fmov.s @r4+, fr14
+	fmov.s @r4+, fr13
+	fmov.s @r4+, fr12
+	fmov.s @r4+, fr11
+	fmov.s @r4+, fr10
+	fmov.s @r4+, fr9
+	fmov.s @r4+, fr8
+	fmov.s @r4+, fr7
+	fmov.s @r4+, fr6
+	fmov.s @r4+, fr5
+	fmov.s @r4+, fr4
+	fmov.s @r4+, fr3
+	fmov.s @r4+, fr2
+	fmov.s @r4+, fr1
+	fmov.s @r4+, fr0
+	
+	rts
+	nop
+	
 	.end
 		

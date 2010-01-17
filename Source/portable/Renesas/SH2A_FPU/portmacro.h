@@ -90,15 +90,27 @@ extern "C" {
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
-#define portBYTE_ALIGNMENT			4
-#define portSTACK_GROWTH			-1
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
-#define portYIELD()					trapa( 33 )
-#define portNOP()					nop()
+#define portBYTE_ALIGNMENT				4
+#define portSTACK_GROWTH				-1
+#define portTICK_RATE_MS				( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portNOP()						nop()
+#define portSTART_SCHEDULER_TRAP_NO		( 32 )
+#define portYIELD_TRAP_NO				( 33 )
+#define portKERNEL_INTERRUPT_PRIORITY	( 1 )
+
+void vPortYield( void );
+#define portYIELD()						vPortYield()
+
+portBASE_TYPE xPortUsesFloatingPoint( void* xTask );
+void vPortSaveFlopRegisters( void *pulBuffer );
+void vPortRestoreFlopRegisters( void *pulBuffer );
+#define traceTASK_SWITCHED_OUT() if( pxCurrentTCB->pxTaskTag != NULL ) vPortSaveFlopRegisters( pxCurrentTCB->pxTaskTag )
+#define traceTASK_SWITCHED_IN() if( pxCurrentTCB->pxTaskTag != NULL ) vPortRestoreFlopRegisters( pxCurrentTCB->pxTaskTag )
+
 /*-----------------------------------------------------------*/
 
 #define portENABLE_INTERRUPTS() 	set_imask( 0x00 )
-#define portDISABLE_INTERRUPTS() 	set_imask( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portDISABLE_INTERRUPTS() 	set_imask( portKERNEL_INTERRUPT_PRIORITY )
 
 /* Critical section handling. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )

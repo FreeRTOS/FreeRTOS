@@ -67,6 +67,7 @@
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
+#include "flop.h"
 
 /* Constants required to configure the hardware. */
 #define mainFRQCR_VALUE 					( 0x0303 )	/* Input = 12.5MHz, I Clock = 200MHz, B Clock = 50MHz, P Clock = 50MHz */
@@ -80,6 +81,7 @@
 #define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
 
 /* The LED toggle by the check task. */
 #define mainCHECK_LED						( 5 )
@@ -106,11 +108,16 @@ volatile unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 void main(void)
 {
+xTaskHandle xCreatedTask;
+
 	prvSetupHardware();
 
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, ( void * ) 0x12345678UL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, ( void * ) 0x11223344UL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, ( void * ) 0x12345678UL, tskIDLE_PRIORITY, &xCreatedTask );
+	xPortUsesFloatingPoint( xCreatedTask );
+	
+	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, ( void * ) 0x11223344UL, tskIDLE_PRIORITY, &xCreatedTask );
+	xPortUsesFloatingPoint( xCreatedTask );
 
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -126,6 +133,7 @@ void main(void)
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
@@ -145,6 +153,9 @@ static void prvCheckTask( void *pvParameter )
 {
 portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
+
+	/* Just to remove compiler warning. */
+	( void ) pvParameter;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -194,6 +205,10 @@ unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 	    {
 	    	xCycleFrequency = mainERROR_CYCLE_TIME;
 	    }
+		else if( xAreMathsTaskStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
 		their loop counters if they encounter an error. */
@@ -238,6 +253,10 @@ void vApplicationIdleHook( void )
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
+	/* Just to remove compiler warnings. */
+	( void ) pxTask;
+	( void ) pcTaskName;
+	
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -283,7 +302,7 @@ unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_H
 	/* Set the CMT interrupt priority - the interrupt priority must be
 	configKERNEL_INTERRUPT_PRIORITY no matter which peripheral is used to generate
 	the tick interrupt. */
-	INTC.IPR08.BIT._CMT0 = configKERNEL_INTERRUPT_PRIORITY;
+	INTC.IPR08.BIT._CMT0 = portKERNEL_INTERRUPT_PRIORITY;
 	
 	/* Clear the interrupt flag. */
 	CMT0.CMCSR.BIT.CMF = 0;

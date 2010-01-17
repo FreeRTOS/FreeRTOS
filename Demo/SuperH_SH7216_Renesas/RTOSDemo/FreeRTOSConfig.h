@@ -87,8 +87,9 @@
 #define configQUEUE_REGISTRY_SIZE		0
 #define configGENERATE_RUN_TIME_STATS	0
 #define configUSE_MALLOC_FAILED_HOOK	1
+#define configUSE_APPLICATION_TASK_TAG	1	/* Must be set to one for floating point support in this port. */
 
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
@@ -104,8 +105,5 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 
-
-#define configKERNEL_INTERRUPT_PRIORITY 		( 1 )
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 0xff )
 
 #endif /* FREERTOS_CONFIG_H */

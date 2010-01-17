@@ -14,7 +14,7 @@
 #include "vect.h"
 
 extern void vPortStartFirstTask( void );
-extern void vPortYield( void );
+extern void vPortYieldHandler( void );
 extern void vPortPreemptiveTick( void );
 
 #pragma section VECTTBL
@@ -97,7 +97,7 @@ void *INT_Vectors[] = {
 	(void*) vPortStartFirstTask,
 // 33 TRAPA (User Vecter)
 //    (void*) INT_TRAPA33,
-	(void*) vPortYield,
+	(void*) vPortYieldHandler,
 // 34 TRAPA (User Vecter)
     (void*) INT_TRAPA34,
 // 35 TRAPA (User Vecter)

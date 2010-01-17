@@ -71,13 +71,13 @@ static const unsigned short usLEDMasks[ partestNUM_LEDS ] = { ( 1 << 9 ), ( 1 <<
 void vParTestInitialise( void )
 {
 	/* Select port functions for PE9 to PE15. */
-	PFC.PECRL3.WORD &= ~partestALL_LEDS;
+	PFC.PECRL3.WORD &= ( unsigned short ) ~partestALL_LEDS;
 
 	/* Turn all LEDs off. */
-	PE.DR.WORD &= ~partestALL_LEDS;
+	PE.DR.WORD &= ( unsigned short ) ~partestALL_LEDS;
 	
 	/* Set all LEDs to output. */
-	PFC.PEIORL.WORD |= partestALL_LEDS;
+	PFC.PEIORL.WORD |= ( unsigned short ) partestALL_LEDS;
 }
 /*-----------------------------------------------------------*/
 
@@ -99,7 +99,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 			/* Turn the LED off. */
 			taskENTER_CRITICAL();
 			{
-				PE.DR.WORD &= ~usLEDMasks[ uxLED ];
+				PE.DR.WORD &= ( unsigned short ) ~usLEDMasks[ uxLED ];
 			}
 			taskEXIT_CRITICAL();
 		}
@@ -115,7 +115,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		{
 			if( ( PE.DR.WORD & usLEDMasks[ uxLED ] ) != 0x00 )
 			{
-				PE.DR.WORD &= ~usLEDMasks[ uxLED ];
+				PE.DR.WORD &= ( unsigned short ) ~usLEDMasks[ uxLED ];
 			}
 			else
 			{

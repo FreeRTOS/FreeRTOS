@@ -71,7 +71,8 @@ extern "C" {
  *-----------------------------------------------------------
  */
 
-/* Type definitions. */
+/* Type definitions - these are a bit legacy and not really used now, other than
+portSTACK_TYPE and portBASE_TYPE. */
 #define portCHAR		char
 #define portFLOAT		float
 #define portDOUBLE		double
@@ -90,7 +91,7 @@ extern "C" {
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
-#define portBYTE_ALIGNMENT				4
+#define portBYTE_ALIGNMENT				8
 #define portSTACK_GROWTH				-1
 #define portTICK_RATE_MS				( ( portTickType ) 1000 / configTICK_RATE_HZ )		
 #define portNOP()						nop()
@@ -101,19 +102,39 @@ extern "C" {
 void vPortYield( void );
 #define portYIELD()						vPortYield()
 
+/* 
+ * This function tells the kernel that the task referenced by xTask is going to 
+ * use the floating point registers and therefore requires the floating point 
+ * registers saved as part of its context. 
+ */
 portBASE_TYPE xPortUsesFloatingPoint( void* xTask );
+
+/*
+ * The flop save and restore functions are defined in portasm.src and called by
+ * the trace "task switched in" and "trace task switched out" macros. 
+ */
 void vPortSaveFlopRegisters( void *pulBuffer );
 void vPortRestoreFlopRegisters( void *pulBuffer );
+
+/*
+ * pxTaskTag is used to point to the buffer into which the floating point 
+ * context should be saved.  If pxTaskTag is NULL then the task does not use
+ * a floating point context.
+ */
 #define traceTASK_SWITCHED_OUT() if( pxCurrentTCB->pxTaskTag != NULL ) vPortSaveFlopRegisters( pxCurrentTCB->pxTaskTag )
 #define traceTASK_SWITCHED_IN() if( pxCurrentTCB->pxTaskTag != NULL ) vPortRestoreFlopRegisters( pxCurrentTCB->pxTaskTag )
 
-/*-----------------------------------------------------------*/
-
+/*
+ * These macros should be called directly, but through the taskENTER_CRITICAL()
+ * and taskEXIT_CRITICAL() macros.
+ */
 #define portENABLE_INTERRUPTS() 	set_imask( 0x00 )
 #define portDISABLE_INTERRUPTS() 	set_imask( portKERNEL_INTERRUPT_PRIORITY )
 
-/* Critical section handling. */
+/* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )
+
+/* The critical nesting functions defined within tasks.c. */
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
 #define portENTER_CRITICAL()	vTaskEnterCritical();

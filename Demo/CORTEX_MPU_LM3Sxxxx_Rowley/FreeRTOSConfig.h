@@ -110,7 +110,4 @@ to exclude the API function. */
 #define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned char ) 7 << configUNUSED_PRIO_BITS )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned char ) 5 << configUNUSED_PRIO_BITS )  /* Priority 5, or 160 as only the top three bits are implemented. */
 
-#define pvPortMallocAligned( x, puxStackBuffer ) ( ( puxStackBuffer == NULL ) ? ( pvPortMalloc( x ) ) : ( puxStackBuffer ) )
-#define vPortFreeAligned( x ) ( void ) x
-
 #endif /* FREERTOS_CONFIG_H */

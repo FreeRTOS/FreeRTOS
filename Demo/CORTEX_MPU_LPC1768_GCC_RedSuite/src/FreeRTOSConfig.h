@@ -116,7 +116,5 @@ to exclude the API function. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << (8 - configPRIO_BITS) )
 
 
-#define pvPortMallocAligned( x, puxStackBuffer ) ( ( puxStackBuffer == NULL ) ? ( pvPortMalloc( x ) ) : ( puxStackBuffer ) )
-#define vPortFreeAligned( x ) ( void ) x
 
 #endif /* FREERTOS_CONFIG_H */

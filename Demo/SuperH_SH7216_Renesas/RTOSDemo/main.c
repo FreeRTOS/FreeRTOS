@@ -51,6 +51,57 @@
     licensing and training services.
 */
 
+
+
+/*
+ * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * documentation provides more details of the standard demo application tasks,
+ * which provide no particular functionality but do provide a good example of
+ * how to use the FreeRTOS API.  In addition to the standard demo tasks, the 
+ * following tasks and tests are defined and/or created within this file:
+ *
+ * "Reg test" tasks - These fill the registers with known values, then check
+ * that each register still contains its expected value.  Each task uses
+ * different values.  The tasks run with very low priority so get preempted very
+ * frequently.  A register containing an unexpected value is indicative of an
+ * error in the context switching mechanism.  Both standard and floating point
+ * registers are checked.  The nature of the reg test tasks necessitates that
+ * they are written in assembly code.  They are defined in regtest.src.
+ *
+ * "math" tasks - These are a set of 8 tasks that perform various double
+ * precision floating point calculations in order to check that the tasks 
+ * floating point registers are being correctly saved and restored during
+ * context switches.  The math tasks are defined in flop.c.
+ *
+ * "Check" task - This only executes every five seconds but has a high priority
+ * to ensure it gets processor time.  Its main function is to check that all the
+ * standard demo tasks are still operational.  While no errors have been
+ * discovered the check task will toggle an LED every 5 seconds - the toggle
+ * rate increasing to 500ms being a visual indication that at least one task has
+ * reported unexpected behaviour.
+ *
+ * *NOTE 1* If LED5 is toggling every 5 seconds then all the demo application
+ * tasks are executing as expected and no errors have been reported in any 
+ * tasks.  The toggle rate increasing to 200ms indicates that at least one task
+ * has reported unexpected behaviour.
+ * 
+ * *NOTE 2* This file and flop.c both demonstrate the use of 
+ * xPortUsesFloatingPoint() which informs the kernel that a task should maintain
+ * a floating point context.
+ *
+ * *NOTE 3* vApplicationSetupTimerInterrupt() is called by the kernel to let
+ * the application set up a timer to generate the tick interrupt.  In this
+ * example a compare match timer is used for this purpose.  
+ * vApplicationTickHook() is used to clear the timer interrupt and relies on
+ * configUSE_TICK_HOOK being set to 1 in FreeRTOSConfig.h.
+ *
+ * *NOTE 4* The traceTASK_SWITCHED_IN and traceTASK_SWITCHED_OUT trace hooks
+ * are used to save and restore the floating point context respectively for
+ * those tasks that require it (those for which xPortUsesFloatingPoint() has
+ * been called).
+ * 
+ */
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -94,18 +145,58 @@ without error. */
 by at least one task. */
 #define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
 
+/*
+ * vApplicationMallocFailedHook() will only be called if
+ * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+ * function that will execute if a call to pvPortMalloc() fails.
+ * pvPortMalloc() is called internally by the kernel whenever a task, queue or
+ * semaphore is created.  It is also called by various parts of the demo
+ * application.  
+ */
 void vApplicationMallocFailedHook( void );
+
+/*
+ * vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set to 1
+ * in FreeRTOSConfig.h.  It is a hook function that is called on each iteration
+ * of the idle task.  It is essential that code added to this hook function
+ * never attempts to block in any way (for example, call xQueueReceive() with
+ * a block time specified).  If the application makes use of the vTaskDelete()
+ * API function (as this demo application does) then it is also important that
+ * vApplicationIdleHook() is permitted to return to its calling function because
+ * it is the responsibility of the idle task to clean up memory allocated by the
+ * kernel to any task that has since been deleted.
+ */
 void vApplicationIdleHook( void );
+
+/*
+ * Just sets up clocks, ports, etc. used by the demo application.
+ */
 static void prvSetupHardware( void );
+
+/*
+ * The check task as described at the top of this file.
+ */
 static void prvCheckTask( void *pvParameters );
 
+/*
+ * The reg test tasks as described at the top of this file.
+ */
 extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
 
+/*-----------------------------------------------------------*/
+
+/* Variables that are incremented on each iteration of the reg test tasks - 
+provided the tasks have not reported any errors.  The check task inspects these
+variables to ensure they are still incrementing as expected. */
 volatile unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 /*-----------------------------------------------------------*/
 
+/*
+ * Creates the majority of the demo application tasks before starting the
+ * scheduler.
+ */
 void main(void)
 {
 xTaskHandle xCreatedTask;
@@ -113,10 +204,10 @@ xTaskHandle xCreatedTask;
 	prvSetupHardware();
 
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, ( void * ) 0x12345678UL, tskIDLE_PRIORITY, &xCreatedTask );
+	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, ( void * ) 0x11223344UL, tskIDLE_PRIORITY, &xCreatedTask );
+	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 
 	/* Start the check task as described at the top of this file. */
@@ -133,6 +224,8 @@ xTaskHandle xCreatedTask;
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
+	
+	/* Start the math tasks as described at the top of this file. */
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
@@ -165,7 +258,7 @@ unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 		/* Place this task in the blocked state until it is time to run again. */
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 		
-		/* Inspect all the other tasks to esnure none have experienced any errors. */
+		/* Inspect all the other tasks to ensure none have experienced any errors. */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			/* Increase the rate at which this task cycles, which will increase the
@@ -253,7 +346,10 @@ void vApplicationIdleHook( void )
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
-	/* Just to remove compiler warnings. */
+	/* Just to remove compiler warnings.  This function will only actually
+	get called if configCHECK_FOR_STACK_OVERFLOW is set to a non zero value.
+	By default this demo does not use the stack overflow checking functionality
+	as the SuperH will normally execute an exception if the stack overflows. */
 	( void ) pxTask;
 	( void ) pcTaskName;
 	
@@ -282,7 +378,7 @@ volatile unsigned long ul;
 void vApplicationSetupTimerInterrupt( void )
 {
 /* The peripheral clock is divided by 32 before feeding the compare match
-periphersl (CMT). */
+peripheral (CMT). */
 unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_HZ * 32 ) ) + 1;
 
 	/* Configure a timer to create the RTOS tick interrupt.  This example uses

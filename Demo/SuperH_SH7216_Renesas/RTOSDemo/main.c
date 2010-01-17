@@ -100,6 +100,8 @@
  * those tasks that require it (those for which xPortUsesFloatingPoint() has
  * been called).
  * 
+ * *NOTE 5* Any task that can cause a context switch requires an asm wrapper
+ * and must be assigned an interrupt priority of portKERNEL_INTERRUPT_PRIORITY.
  */
 
 /* Kernel includes. */

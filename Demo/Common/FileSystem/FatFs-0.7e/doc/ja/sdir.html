@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - DIR</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>DIR</h2>
+<p><tt>DIR</tt>構造体は、f_opendir(), f_readdir()のワーク・エリアとして使用されます。アプリケーションから変更可能なメンバはありません。</p>
+<pre>
+typedef struct _DIR_ {
+    FATFS*  fs;        /* Pointer to the owner file system object */
+    WORD    id;        /* Owner file system mount ID */
+    WORD    index;     /* Current index number */
+    DWORD   sclust;    /* Table start cluster (0:Static table) */
+    DWORD   clust;     /* Current cluster */
+    DWORD   sect;      /* Current sector */
+    BYTE*   dir;       /* Pointer to the current SFN entry in the win[] */
+    BYTE*   fn;        /* Pointer to the SFN (in/out) {file[8],ext[3],status[1]} */
+#if _USE_LFN
+    WCHAR*  lfn;       /* Pointer to the LFN working buffer */
+    WORD    lfn_idx;   /* Last matched LFN index (0xFFFF:No LFN) */
+#endif
+} DIR;
+</pre>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

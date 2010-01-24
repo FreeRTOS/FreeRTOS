@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_e.html">
+<link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_read</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_read</h2>
+<p>The f_read function reads data from a file.</p>
+<pre>
+FRESULT f_read (
+  FIL* <em>FileObject</em>,    /* Pointer to the file object structure */
+  void* <em>Buffer</em>,       /* Pointer to the buffer to store read data */
+  UINT <em>ByteToRead</em>,    /* Number of bytes to read */
+  UINT* <em>ByteRead</em>      /* Pointer to the variable to return number of bytes read */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>Parameters</h4>
+<dl class="par">
+<dt>FileObject</dt>
+<dd>Pointer to the open file object.</dd>
+<dt>Buffer</dt>
+<dd>Pointer to the buffer to store read data</dd>
+<dt>ByteToRead</dt>
+<dd>Number of bytes to read in range of UINT.</dd>
+<dt>ByteRead</dt>
+<dd>Pointer to the UINT variable to return number of bytes read. The value is always valid after the function call regardless of the result.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Return Values</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>The function succeeded.</dd>
+<dt>FR_DENIED</dt>
+<dd>The function denied due to the file has been opened in non-read mode.</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>The function failed due to an error in the disk function.</dd>
+<dt>FR_INT_ERR</dt>
+<dd>The function failed due to a wrong FAT structure or an internal error.</dd>
+<dt>FR_NOT_READY</dt>
+<dd>The disk drive cannot work due to no medium in the drive or any other reason.</dd>
+<dt>FR_INVALID_OBJECT</dt>
+<dd>The file object is invalid.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Description</h4>
+<p>The file pointer of the file object increases in number of bytes read. After the function succeeded, <tt>*ByteRead</tt> should be checked to detect the end of file. In case of <tt>*ByteRead &lt; ByteToRead</tt>, it means the R/W pointer reached end of the file during read operation.</p>
+</div>
+
+
+<div class="para">
+<h4>QuickInfo</h4>
+<p>Always available.</p>
+</div>
+
+
+<div class="para">
+<h4>See Also</h4>
+<p><tt><a href="open.html">f_open</a>, <a href="gets.html">fgets</a>, <a href="write.html">f_write</a>, <a href="close.html">f_close</a>, <a href="sfile.html">FIL</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
+</body>
+</html>

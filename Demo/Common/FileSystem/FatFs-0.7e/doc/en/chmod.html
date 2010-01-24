@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_e.html">
+<link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_chmod</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_chmod</h2>
+<p>The f_chmod function changes the attribute of a file or directory.</p>
+<pre>
+FRESULT f_chmod (
+  const XCHAR* <em>FileName</em>, /* Pointer to the file or directory */
+  BYTE <em>Attribute</em>,        /* Attribute flags */
+  BYTE <em>AttributeMask</em>     /* Attribute masks */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>Parameters</h4>
+<dl class="par">
+<dt>FileName</dt>
+<dd>Pointer to the null-terminated string that specifies a <a href="filename.html">file or directory</a> to be changed</dd>
+<dt>Attribute</dt>
+<dd>Attribute flags to be set in one or more combination of the following flags. The specified flags are set and others are cleard.<br>
+<table class="lst">
+<tr><th>Attribute</th><th>Description</th></tr>
+<tr><td>AM_RDO</td><td>Read only</td></tr>
+<tr><td>AM_ARC</td><td>Archive</td></tr>
+<tr><td>AM_SYS</td><td>System</td></tr>
+<tr><td>AM_HID</td><td>Hidden</td></tr>
+</table>
+</dd>
+<dt>AttributeMask</dt>
+<dd>Attribute mask that specifies which attribute is changed. The specified aattributes are set or cleard.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Return Values</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>The function succeeded.</dd>
+<dt>FR_NO_FILE</dt>
+<dd>Could not find the file.</dd>
+<dt>FR_NO_PATH</dt>
+<dd>Could not find the path.</dd>
+<dt>FR_INVALID_NAME</dt>
+<dd>The file name is invalid.</dd>
+<dt>FR_INVALID_DRIVE</dt>
+<dd>The drive number is invalid.</dd>
+<dt>FR_NOT_READY</dt>
+<dd>The disk drive cannot work due to no medium in the drive or any other reason.</dd>
+<dt>FR_WRITE_PROTECTED</dt>
+<dd>The medium is write protected.</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>The function failed due to an error in the disk function.</dd>
+<dt>FR_INT_ERR</dt>
+<dd>The function failed due to a wrong FAT structure or an internal error.</dd>
+<dt>FR_NOT_ENABLED</dt>
+<dd>The logical drive has no work area.</dd>
+<dt>FR_NO_FILESYSTEM</dt>
+<dd>There is no valid FAT volume on the disk.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Description</h4>
+<p>The f_chmod function changes the attribute of a file or directory.</p>
+</div>
+
+
+<div class="para">
+<h4>QuickInfo</h4>
+<p>Available when <tt>_FS_READONLY == 0</tt> and <tt>_FS_MINIMIZE == 0</tt>.</p>
+</div>
+
+
+<div class="para">
+<h4>Example</h4>
+<pre>
+    // Set read-only flag, clear archive flag and others are retained.
+    f_chmod("file.txt", AR_RDO, AR_RDO | AR_ARC);
+</pre>
+</div>
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
+</body>
+</html>

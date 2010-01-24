@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="alternate" hreflang="en" title="英文" href="00index_e.html">
+<link rel="stylesheet" href="css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>ELM - 汎用FATファイルシステム・モジュール</title>
+</head>
+
+<body>
+<h1>FATファイルシステム・モジュール</h1>
+<hr>
+
+<div class="abst">
+<img src="img/layers.png" class="rset" width="245" height="255" alt="layer">
+<p>FatFsは小規模な組み込みシステム向けの汎用FATファイルシステム・モジュールです。ANSI C準拠でハードウェア・アーキテクチャには依存しないので、必要なワーク・エリアが確保できれば、8051, PIC, AVR, SH, Z80, H8, ARMなど安価なマイコンでも使用可能です。FatFsをシュリンクした<a href="00index_p.html">ぷちFatFs</a>もあります。</p>
+<h4>FatFsモジュールの特徴</h4>
+<ul>
+ <li>Windows互換 FAT12/16/32ファイル・システム</li>
+ <li>プラットフォーム非依存</li>
+ <li>コンパクトなコード・サイズとRAM使用量</li>
+ <li>多くの構成オプション:
+  <ul>
+   <li>複数のボリューム(物理ドライブ・区画)</li>
+   <li>DBCSを含む複数のOEMコード・ページ</li>
+   <li>長いファイル名(LFN)対応 (Unicode APIも選択可)</li>
+   <li>マルチタスク対応</li>
+   <li>マルチ・セクタ・サイズ対応</li>
+   <li>リード・オンリー、一部APIの削除、バッファ構成、その他…</li>
+  </ul>
+ </li>
+</ul>
+</div>
+
+
+<div class="para">
+<h3>上位レイヤI/F</h3>
+<p>FatFsモジュールは、次のファイル操作関数を提供しています。</p>
+<ul>
+<li><a href="ja/mount.html">f_mount</a> - ワークエリアの登録・削除</li>
+<li><a href="ja/open.html">f_open</a> - ファイルのオープン・作成</li>
+<li><a href="ja/close.html">f_close</a> - ファイルのクローズ</li>
+<li><a href="ja/read.html">f_read</a> - ファイルの読み込み</li>
+<li><a href="ja/write.html">f_write</a> - ファイルの書き込み</li>
+<li><a href="ja/lseek.html">f_lseek</a> - R/Wポインタの移動, ファイル・サイズの拡張</li>
+<li><a href="ja/truncate.html">f_truncate</a> - ファイル・サイズの切り詰め</li>
+<li><a href="ja/sync.html">f_sync</a> - キャッシュされたデータのフラッシュ</li>
+<li><a href="ja/opendir.html">f_opendir</a> - ディレクトリのオープン</li>
+<li><a href="ja/readdir.html">f_readdir</a> - ディレクトリの読み出し</li>
+<li><a href="ja/getfree.html">f_getfree</a> - ディスク空き領域の取得</li>
+<li><a href="ja/stat.html">f_stat</a> - ファイル・ステータスの取得</li>
+<li><a href="ja/mkdir.html">f_mkdir</a> - ディレクトリの作成</li>
+<li><a href="ja/unlink.html">f_unlink</a> - ファイル/ディレクトリの削除</li>
+<li><a href="ja/chmod.html">f_chmod</a> - ファイル/ディレクトリの属性の変更</li>
+<li><a href="ja/utime.html">f_utime</a> - ファイル/ディレクトリのタイムスタンプの変更</li>
+<li><a href="ja/rename.html">f_rename</a> - ファイル/ディレクトリの名前変更・移動</li>
+<li><a href="ja/mkfs.html">f_mkfs</a> - ディスクのフォーマット</li>
+<li><a href="ja/chdir.html">f_chdir</a> - カレント・ディレクトリの変更</li>
+<li><a href="ja/chdrive.html">f_chdrive</a> - カレント・ドライブの変更</li>
+<li><a href="ja/forward.html">f_forward</a> - ファイル・データをストリーム関数に直接転送する</li>
+<li><a href="ja/gets.html">f_gets</a> - 文字列の読み込み</li>
+<li><a href="ja/putc.html">f_putc</a> - 文字の書き込み</li>
+<li><a href="ja/puts.html">f_puts</a> - 文字列の書き込み</li>
+<li><a href="ja/printf.html">f_printf</a> - 書式化文字列の書き込み</li>
+</ul>
+</div>
+
+
+<div class="para">
+<h3>下位レイヤI/F</h3>
+<p>FatFsモジュールは、物理ドライブ等へのアクセスのため、下位レイヤに次のインターフェースを要求します。それぞれの記録メディアに対応したディスクI/Oモジュールは、ユーザによって用意される必要があります。資料にドライバを含むサンプル・プロジェクトあり。</p>
+<ul>
+<li><a href="ja/dinit.html">disk_initialize</a> - ディスク・ドライブの初期化</li>
+<li><a href="ja/dstat.html">disk_status</a> - ディスク・ドライブの状態取得</li>
+<li><a href="ja/dread.html">disk_read</a> - ディスクからの読み込み</li>
+<li><a href="ja/dwrite.html">disk_write</a> - ディスクへの書き込み</li>
+<li><a href="ja/dioctl.html">disk_ioctl</a> - その他のドライブ制御</li>
+<li><a href="ja/fattime.html">get_fattime</a> - 日付・時刻の取得</li>
+</ul>
+</div>
+
+
+<div class="para">
+<h3>資料</h3>
+<p>FatFsモジュールはフリー・ソフトウェアとして教育・研究・開発用に公開しています。どのような利用目的（個人・非商用・商用）でも使用・改変・配布について一切の制限はありませんが、全て利用者の責任の下での利用とします。</p>
+<ul>
+<li><a href="http://elm-chan.org/fsw/ff/bd/"><em>FatFsユーザ・フォーラム</em></a></li>
+<li><a href="ja/appnote.html">FatFsモジュール・アプリケーション・ノート</a></li>
+<li><a href="http://www.siwawi.arubi.uni-kl.de/avr_projects/arm_projects/">ARM-Projects by Martin THOMAS</a> (examples for LPC2000, AT91SAM and STM32)</li>
+<li><a href="http://www.microsoft.com/whdc/system/platform/firmware/fatgen.mspx">FATファイル・システム仕様書 by Microsoft</a> (FATの理解・実装に必要な唯一のリファレンス)</li>
+<li><a href="http://elm-chan.org/docs/fat.html">FATファイル・システム概要</a></li>
+<li><a href="http://elm-chan.org/docs/mmc/mmc.html">MMCの使いかた</a></li>
+<li><a href="img/rwtest.png">パフォーマンス・テスト1</a> (ATmega64/9.2MHz with MMC via SPI, HDD/CFC via GPIO)</li>
+<li><a href="img/rwtest2.png">パフォーマンス・テスト2</a> (LPC2368/72MHz with MMC via MCI)</li>
+</ul>
+</div>
+
+
+<hr>
+</body>
+</html>

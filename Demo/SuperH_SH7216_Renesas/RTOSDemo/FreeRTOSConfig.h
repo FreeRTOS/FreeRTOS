@@ -75,17 +75,17 @@
 #define configPERIPHERAL_CLOCK_HZ		( 50000000UL )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 32 * 1024 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 36 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY	1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
-#define configCHECK_FOR_STACK_OVERFLOW	0
+#define configGENERATE_RUN_TIME_STATS	1
+#define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	0
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	1	/* Must be set to one for floating point support in this port. */
 
@@ -105,5 +105,31 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
+#define portGET_RUN_TIME_COUNTER_VALUE() 0
+
+/*-----------------------------------------------------------
+ * Ethernet configuration.
+ *-----------------------------------------------------------*/
+
+/* MAC address configuration. */
+#define configMAC_ADDR0	0x00
+#define configMAC_ADDR1	0x12
+#define configMAC_ADDR2	0x13
+#define configMAC_ADDR3	0x10
+#define configMAC_ADDR4	0x15
+#define configMAC_ADDR5	0x11
+
+/* IP address configuration. */
+#define configIP_ADDR0		192
+#define configIP_ADDR1		168
+#define configIP_ADDR2		0
+#define configIP_ADDR3		201
+
+/* Netmask configuration. */
+#define configNET_MASK0		255
+#define configNET_MASK1		255
+#define configNET_MASK2		255
+#define configNET_MASK3		0
 
 #endif /* FREERTOS_CONFIG_H */

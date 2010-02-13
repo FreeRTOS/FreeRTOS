@@ -51,10 +51,9 @@
 ;    licensing and training services.
 ;*/
 
-	.import _pxCurrentTCB
-	.import _vTaskSwitchContext
 	.import _ulRegTest1CycleCount
 	.import _ulRegTest2CycleCount
+	.import _vPortYield
 
 	.export _vRegTest1Task
 	.export _vRegTest2Task
@@ -120,18 +119,6 @@ _vRegTest1Task:
 	
 _vRegTest1Loop:
 
-	; Set FPUL to a known value before the yield.
-	mov		#123, r0
-	lds		r0, fpul
-
-	; Perform a yield, just for extra test coverage.
-	trapa	#33
-	
-	; Check fpul still contains the expected value.
-	sts		fpul, r1
-	cmp/eq	r0, r1
-	bf		_vRegTest1Error
-	
 	; Reset r1 which was used in the tests.
 	mov		#2, r1
 
@@ -338,7 +325,7 @@ _vRegTest2Task:
 	fsts	fpul, fr13
 	lds		r14, fpul
 	fsts	fpul, fr14
-	
+
 _vRegTest2Loop:
 
 	; Reset r1 which was used in the tests.

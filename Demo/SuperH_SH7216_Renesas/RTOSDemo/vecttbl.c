@@ -16,6 +16,7 @@
 extern void vPortStartFirstTask( void );
 extern void vPortYieldHandler( void );
 extern void vPortPreemptiveTick( void );
+extern void vEMAC_ISR_Wrapper( void );
 
 #pragma section VECTTBL
 
@@ -338,7 +339,7 @@ void *INT_Vectors[] = {
 // 152 WDT ITI
 	(void*) INT_WDT_ITI,
 // 153 E-DMAC EINT0
-    (void*) INT_EDMAC_EINT0,
+    (void*) vEMAC_ISR_Wrapper,
 // 154 USB EP1FULL
     (void*) INT_USB_EP1FULL,
 // 155 USB EP2EMPTY

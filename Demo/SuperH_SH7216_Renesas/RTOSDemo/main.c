@@ -132,9 +132,12 @@
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainuIP_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
+
+#define mainuIP_STACK_SIZE					( configMINIMAL_STACK_SIZE * 3 )
 
 /* The LED toggle by the check task. */
 #define mainCHECK_LED						( 5 )
@@ -186,6 +189,8 @@ static void prvCheckTask( void *pvParameters );
 extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
 
+extern void vuIP_Task( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* Variables that are incremented on each iteration of the reg test tasks - 
@@ -206,11 +211,13 @@ xTaskHandle xCreatedTask;
 	prvSetupHardware();
 
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCreatedTask );
+	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCreatedTask );
+	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
+
+	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -225,7 +232,7 @@ xTaskHandle xCreatedTask;
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
     vStartQueuePeekTasks();
-    vStartRecursiveMutexTasks();
+	vStartRecursiveMutexTasks();
 	
 	/* Start the math tasks as described at the top of this file. */
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
@@ -355,6 +362,7 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	( void ) pxTask;
 	( void ) pcTaskName;
 	
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -371,9 +379,9 @@ volatile unsigned long ul;
 	{
 		nop();
 	}
-	
+
 	/* Initialise the ports used to toggle LEDs. */
-	vParTestInitialise();
+	vParTestInitialise();	
 }
 /*-----------------------------------------------------------*/
 
@@ -419,3 +427,9 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
+char *pcGetTaskStatusMessage( void )
+{
+	/* Not bothered about a critical section here. */
+	return "Need to implement status message!";
+}
+/*-----------------------------------------------------------*/

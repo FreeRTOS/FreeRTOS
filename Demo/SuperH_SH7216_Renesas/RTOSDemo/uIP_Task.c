@@ -101,13 +101,6 @@ clock_time_t clock_time( void );
 /* The semaphore used by the ISR to wake the uIP task. */
 xSemaphoreHandle xEMACSemaphore = NULL;
 
-const struct uip_eth_addr xMACAddress = { 	configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2,
-											configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
-
-//_RB_ this should be made into a no copy driver.
-unsigned char uip_buf[ UIP_BUFSIZE + 2 ];
-//unsigned char* uip_buf = &( uip_buf_array[ 0 ] );
-
 /*-----------------------------------------------------------*/
 
 void clock_init(void)
@@ -146,20 +139,18 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	vSemaphoreCreateBinary( xEMACSemaphore );
 
 	/* Initialise the MAC. */
-	R_Ether_Open( 0, ( void * ) &xMACAddress );
+	vInitEmac();
 
-	while( !phyStatus() )
+	while( lEMACWaitForLink() != pdPASS )
     {
         vTaskDelay( uipINIT_WAIT );
     }
 
-	R_Ether_EnableEx(0, 1);
-
 	for( ;; )
 	{
 		/* Is there received data ready to be processed? */
-		uip_len = R_Ether_Read( 0, uip_buf );
-
+		uip_len = ( unsigned short ) ulEMACRead();
+		
 		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 		{
 			/* Standard uIP loop taken from the uIP manual. */
@@ -174,8 +165,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 				if( uip_len > 0 )
 				{
 					uip_arp_out();
-					R_Ether_Write( 0, uip_buf, uip_len );
-					R_Ether_Write( 0, uip_buf, uip_len );
+					vEMACWrite();
 				}
 			}
 			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
@@ -187,8 +177,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 				uip_len is set to a value > 0. */
 				if( uip_len > 0 )
 				{
-					R_Ether_Write( 0, uip_buf, uip_len );
-					R_Ether_Write( 0, uip_buf, uip_len );
+					vEMACWrite();
 				}
 			}
 		}
@@ -207,8 +196,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 					if( uip_len > 0 )
 					{
 						uip_arp_out();
-						R_Ether_Write( 0, uip_buf, uip_len );
-						R_Ether_Write( 0, uip_buf, uip_len );
+						vEMACWrite();
 					}
 				}
 

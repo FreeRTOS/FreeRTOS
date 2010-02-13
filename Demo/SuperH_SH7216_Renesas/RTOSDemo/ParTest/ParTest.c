@@ -125,7 +125,15 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		taskEXIT_CRITICAL();
 	}
 }
+/*-----------------------------------------------------------*/
 							
+long lParTestGetLEDState( void )
+{
+	/* Returns the state of the fifth LED. */
+	return PE.DR.WORD & usLEDMasks[ 4 ];
+}
+/*-----------------------------------------------------------*/
+
 
 
 

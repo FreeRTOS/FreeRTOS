@@ -53,6 +53,7 @@
 
 /* Hardware specific includes. */
 #include "iodefine.h"
+#include "typedefine.h"
 #include "hwEthernet.h"
 #include "hwEthernetPhy.h"
 
@@ -296,6 +297,8 @@ long lReturn;
 		/* Enable EDMAC receive */
 		EDMAC.EDRRR.LONG = 0x1;
 	}
+	
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 

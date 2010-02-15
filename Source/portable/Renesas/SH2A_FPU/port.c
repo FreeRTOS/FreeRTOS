@@ -241,7 +241,7 @@ long lInterruptMask;
 	trapa( portYIELD_TRAP_NO );
 	
 	/* Restore the interrupt mask to whatever it was previously (when the
-	function was entered. */
+	function was entered). */
 	set_imask( ( int ) lInterruptMask );
 }
 /*-----------------------------------------------------------*/
@@ -288,10 +288,5 @@ extern void * volatile pxCurrentTCB;
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
-
-
-
-
-
 
 

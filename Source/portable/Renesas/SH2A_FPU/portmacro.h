@@ -102,6 +102,9 @@ portSTACK_TYPE and portBASE_TYPE. */
 void vPortYield( void );
 #define portYIELD()						vPortYield()
 
+extern void vTaskSwitchContext( void );
+#define portYIELD_FROM_ISR( x )			if( x != pdFALSE ) vTaskSwitchContext()
+
 /* 
  * This function tells the kernel that the task referenced by xTask is going to 
  * use the floating point registers and therefore requires the floating point 

@@ -54,10 +54,10 @@
  * $Id: httpd.c,v 1.2 2006/06/11 21:46:38 adam Exp $
  */
 #include "net/uip.h"
-#include "net/httpd.h"
-#include "net/httpd-fs.h"
-#include "net/httpd-cgi.h"
-#include "net/http-strings.h"
+#include "apps/httpd/httpd.h"
+#include "apps/httpd/httpd-fs.h"
+#include "apps/httpd/httpd-cgi.h"
+#include "apps/httpd/http-strings.h"
 
 #include <string.h>
 

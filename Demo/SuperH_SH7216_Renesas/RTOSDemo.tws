@@ -7,7 +7,27 @@
 [GENERAL_DATA]
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\flop.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\regtest.src" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\webserver\EMAC_ISR.src" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\webserver\httpd-fsdata.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\ISR_Support.inc" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" 
 [WORKSPACE_FILE_STATES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" 66 66 1088 472 0 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" 44 44 1154 336 0 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\flop.c" 0 0 1316 450 0 1 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\main.c" 22 22 1172 324 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\regtest.src" -4 -23 1316 513 1 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\webserver\EMAC_ISR.src" 132 132 1154 336 0 8 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\SuperH_SH7216_Renesas\RTOSDemo\webserver\httpd-fsdata.c" 66 66 1242 143 0 9 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\ISR_Support.inc" 110 110 1154 336 0 7 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\SH2A_FPU\portasm.src" 88 88 1154 336 0 6 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" 66 66 1154 336 0 5 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

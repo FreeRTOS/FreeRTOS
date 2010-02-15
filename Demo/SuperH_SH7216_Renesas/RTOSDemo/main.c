@@ -189,6 +189,9 @@ static void prvCheckTask( void *pvParameters );
 extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
 
+/*
+ * Contains the implementation of the WEB server.
+ */
 extern void vuIP_Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
@@ -197,6 +200,13 @@ extern void vuIP_Task( void *pvParameters );
 provided the tasks have not reported any errors.  The check task inspects these
 variables to ensure they are still incrementing as expected. */
 volatile unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
+
+/* The status message that is displayed at the bottom of the "task stats" WEB
+page, which is served by the uIP task. */
+const char *pcStatusMessage = "All tasks executing without error.";
+
+/* The time use for the run time stats. */
+unsigned long ulRunTime = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -274,42 +284,52 @@ unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 			rate at which mainCHECK_LED flashes to give visual feedback that an error
 			has occurred. */
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in GenQ test.";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in Queue Peek test.";
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in Blocking Queue test.";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in BlockTim test.";
 		}
 	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in Semaphore test.";
 	    }
 	    else if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in Polling Queue test.";
 	    }
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in Create test.";
 	    }
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in integer Math test.";
 	    }
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
 	    	xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in recursive mutex test.";
 	    }
 		else if( xAreMathsTaskStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in floating point Math test.";
 		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
@@ -317,11 +337,13 @@ unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in RegTest.";
 		}
 
 		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
+			pcStatusMessage = "Error in RegTest.";
 		}
 		
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -389,7 +411,7 @@ void vApplicationSetupTimerInterrupt( void )
 {
 /* The peripheral clock is divided by 32 before feeding the compare match
 peripheral (CMT). */
-unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_HZ * 32 ) ) + 1;
+const unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_HZ * 32 ) ) + 1;
 
 	/* Configure a timer to create the RTOS tick interrupt.  This example uses
 	the compare match timer, but the multi function timer or possible even the
@@ -423,13 +445,56 @@ unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_RATE_H
 
 void vApplicationTickHook( void )
 {
+	/* Clear the inerrupt. */
 	CMT0.CMCSR.BIT.CMF = 0;
+}
+/*-----------------------------------------------------------*/
+
+void vSetupClockForRunTimeStats( void )
+{
+	/* Turn the MTU2 on. */
+	STB.CR3.BIT._MTU2 = 0;
+		
+	/* Clear counter on compare match A. */
+	MTU20.TCR.BIT.CCLR = 0x01;
+	
+	/* Compare match value to give very approximately 10 interrupts per 
+	millisecond. */
+	MTU20.TGRA = 5000;
+	
+	/* Ensure the interrupt is clear. */
+	MTU20.TSR.BIT.TGFA = 0;
+		
+	/* Enable the compare match interrupt. */
+	MTU20.TIER.BIT.TGIEA = 0x01;	
+	
+	/* Set the interrupt priority. */
+	INTC.IPR09.BIT._MTU20G = portKERNEL_INTERRUPT_PRIORITY + 1;
+	
+	/* Start the count. */
+	MTU2.TSTR.BIT.CST0 = 1;
+}
+/*-----------------------------------------------------------*/
+
+#pragma interrupt MTU_Match
+void MTU_Match( void );
+
+void MTU_Match( void )
+{
+volatile unsigned char ucStatus;
+
+	/* Increment the run time stats time base. */
+	ulRunTime++;
+
+	/* Clear the interrupt. */
+	ucStatus = MTU20.TSR.BYTE;
+	MTU20.TSR.BIT.TGFA = 0;
 }
 /*-----------------------------------------------------------*/
 
 char *pcGetTaskStatusMessage( void )
 {
 	/* Not bothered about a critical section here. */
-	return "Need to implement status message!";
+	return pcStatusMessage;
 }
 /*-----------------------------------------------------------*/

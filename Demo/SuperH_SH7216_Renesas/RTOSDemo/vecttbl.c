@@ -17,6 +17,7 @@ extern void vPortStartFirstTask( void );
 extern void vPortYieldHandler( void );
 extern void vPortPreemptiveTick( void );
 extern void vEMAC_ISR_Wrapper( void );
+extern void MTU_Match( void );
 
 #pragma section VECTTBL
 
@@ -345,7 +346,8 @@ void *INT_Vectors[] = {
 // 155 USB EP2EMPTY
     (void*) INT_USB_EP2EMPTY,
 // 156 MTU2 MTU0 TGI0A
-	(void*) INT_MTU2_MTU0_TGI0A,
+//	(void*) INT_MTU2_MTU0_TGI0A,
+	(void*) MTU_Match,
 // 157 MTU2 MTU0 TGI0B
 	(void*) INT_MTU2_MTU0_TGI0B,
 // 158 MTU2 MTU0 TGI0C

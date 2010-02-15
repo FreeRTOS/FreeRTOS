@@ -5,37 +5,43 @@
   </head>
   <BODY>
 <font face="arial">
-<a href="index.shtml">Task Stats</a> <b>|</b> <a href="runtime.shtml">Run Time Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a>
+<a href="index.shtml">Task Stats</a> <b>|</b> <a href="runtime.shtml">Run Time Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS Homepage</a> <b>|</b> <a href="io.shtml">IO</a> <b>|</b> <a href="logo.jpg">37K jpg</a>
 <br><p>
 <hr>
 <br><p>
 <h2>Network statistics</h2>
 <table width="300" border="0">
 <tr><td align="left"><font face="courier"><pre>
-IP           Packets dropped
-             Packets received
+IP           Packets received
              Packets sent
+             Forwaded
+             Dropped
 IP errors    IP version/header length
              IP length, high byte
              IP length, low byte
              IP fragments
              Header checksum
              Wrong protocol
-ICMP	     Packets dropped
-             Packets received
+ICMP	     Packets received
              Packets sent
+             Packets dropped
              Type errors
-TCP          Packets dropped
-             Packets received
+             Checksum errors
+TCP          Packets received
              Packets sent
+             Packets dropped
              Checksum errors
              Data packets without ACKs
              Resets
-             Retransmissions
+             Retransmissionsa
+             Syn to closed port
+UDP          Packets dropped
+             Packets received
+             Packets sent
+             Packets chkerr
 	     No connection avaliable
-	     Connection attempts to closed ports
-</pre></font></td><td><pre>%! net-stats
-</pre></table>
+</pre></font></td><td><font face="courier"><pre>%! net-stats
+</pre></font></td></table>
 </font>
 </body>
 </html>

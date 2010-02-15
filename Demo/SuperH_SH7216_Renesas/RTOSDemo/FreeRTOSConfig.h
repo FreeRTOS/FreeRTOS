@@ -105,8 +105,12 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
-#define portGET_RUN_TIME_COUNTER_VALUE() 0
+
+void vSetupClockForRunTimeStats( void );
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vSetupClockForRunTimeStats()
+
+extern unsigned long ulRunTime;
+#define portGET_RUN_TIME_COUNTER_VALUE() ulRunTime
 
 /*-----------------------------------------------------------
  * Ethernet configuration.

@@ -297,6 +297,15 @@ static PT_THREAD( handle_input ( struct httpd_state *s ) )
 	else
 	{
 		s->inputbuf[PSOCK_DATALEN( &s->sin ) - 1] = 0;
+		
+		/* Process any form input being sent to the server. */
+		#if UIP_CONF_PROCESS_HTTPD_FORMS == 1
+		{
+			extern void vApplicationProcessFormInput( char *pcInputString );
+			vApplicationProcessFormInput( s->inputbuf );
+		}
+		#endif
+		
 		strncpy( s->filename, &s->inputbuf[0], sizeof(s->filename) );
 	}
 

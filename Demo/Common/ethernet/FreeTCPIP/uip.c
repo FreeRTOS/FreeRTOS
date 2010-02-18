@@ -766,9 +766,9 @@ void uip_process( u8_t flag )
 		uip_slen = 0;
 
 		/* Check if the connection is in a state in which we simply wait
-       for the connection to time out. If so, we increase the
-       connection's timer and remove the connection if it times
-       out. */
+		for the connection to time out. If so, we increase the
+		connection's timer and remove the connection if it times
+		out. */
 		if( uip_connr->tcpstateflags == UIP_TIME_WAIT || uip_connr->tcpstateflags == UIP_FIN_WAIT_2 )
 		{
 			++( uip_connr->timer );
@@ -780,9 +780,9 @@ void uip_process( u8_t flag )
 		else if( uip_connr->tcpstateflags != UIP_CLOSED )
 		{
 			/* If the connection has outstanding data, we increase the
-	 connection's timer and see if it has reached the RTO value
-	 in which case we retransmit. */
-			if( uip_outstanding(uip_connr) )
+			connection's timer and see if it has reached the RTO value
+			in which case we retransmit. */
+				if( uip_outstanding(uip_connr) )
 			{
 				if( uip_connr->timer-- == 0 )
 				{
@@ -798,9 +798,9 @@ void uip_process( u8_t flag )
 						uip_connr->tcpstateflags = UIP_CLOSED;
 
 						/* We call UIP_APPCALL() with uip_flags set to
-	       UIP_TIMEDOUT to inform the application that the
-	       connection has timed out. */
-						uip_flags = UIP_TIMEDOUT;
+						UIP_TIMEDOUT to inform the application that the
+						connection has timed out. */
+									uip_flags = UIP_TIMEDOUT;
 						UIP_APPCALL();
 
 						/* We also send a reset packet to the remote host. */
@@ -813,17 +813,17 @@ void uip_process( u8_t flag )
 					++( uip_connr->nrtx );
 
 					/* Ok, so we need to retransmit. We do this differently
-	     depending on which state we are in. In ESTABLISHED, we
-	     call upon the application so that it may prepare the
-	     data for the retransmit. In SYN_RCVD, we resend the
-	     SYNACK that we sent earlier and in LAST_ACK we have to
-	     retransmit our FINACK. */
-					UIP_STAT( ++uip_stat.tcp.rexmit );
+					depending on which state we are in. In ESTABLISHED, we
+					call upon the application so that it may prepare the
+					data for the retransmit. In SYN_RCVD, we resend the
+					SYNACK that we sent earlier and in LAST_ACK we have to
+					retransmit our FINACK. */
+							UIP_STAT( ++uip_stat.tcp.rexmit );
 					switch( uip_connr->tcpstateflags & UIP_TS_MASK )
 					{
 						case UIP_SYN_RCVD:
 							/* In the SYN_RCVD state, we should retransmit our
-               SYNACK. */
+               				SYNACK. */
 							goto tcp_send_synack;
 
 	#if UIP_ACTIVE_OPEN
@@ -836,9 +836,9 @@ void uip_process( u8_t flag )
 
 						case UIP_ESTABLISHED:
 							/* In the ESTABLISHED state, we call upon the application
-               to do the actual retransmit after which we jump into
-               the code for sending out the packet (the apprexmit
-               label). */
+							to do the actual retransmit after which we jump into
+							the code for sending out the packet (the apprexmit
+							label). */
 							uip_flags = UIP_REXMIT;
 							UIP_APPCALL();
 							goto apprexmit;
@@ -854,7 +854,7 @@ void uip_process( u8_t flag )
 			else if( (uip_connr->tcpstateflags & UIP_TS_MASK) == UIP_ESTABLISHED )
 			{
 				/* If there was no need for a retransmission, we poll the
-           application for new data. */
+				application for new data. */
 				uip_flags = UIP_POLL;
 				UIP_APPCALL();
 				goto appsend;

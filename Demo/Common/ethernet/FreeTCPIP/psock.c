@@ -187,7 +187,7 @@ PT_THREAD(psock_send(register struct psock *s, const char *buf,
   /* Save the length of and a pointer to the data that is to be
      sent. */
   s->sendptr = (unsigned char*)buf;
-  s->sendlen = len;
+  s->sendlen = (unsigned short)len;
 
   s->state = STATE_NONE;
 

@@ -212,9 +212,9 @@ long x;
 	}
 	
 	/* Setup both descriptors to transmit the frame. */
-	xTxDescriptors[ 0 ].buf_p = uip_buf;
+	xTxDescriptors[ 0 ].buf_p = ( char * ) uip_buf;
 	xTxDescriptors[ 0 ].bufsize = uip_len;	
-	xTxDescriptors[ 1 ].buf_p = uip_buf;
+	xTxDescriptors[ 1 ].buf_p = ( char * ) uip_buf;
 	xTxDescriptors[ 1 ].bufsize = uip_len;
 
 	/* uip_buf is being sent by the Tx descriptor.  Allocate a new buffer
@@ -316,7 +316,7 @@ long x;
 	/* Initialise the Rx descriptors. */
 	for( x = 0; x < emacNUM_RX_DESCRIPTORS; x++ )
 	{
-		pxDescriptor = &xRxDescriptors[ x ];
+		pxDescriptor = &( xRxDescriptors[ x ] );
 		pxDescriptor->buf_p = &( xEthernetBuffers[ x ][ 0 ] );
 
 		pxDescriptor->bufsize = UIP_BUFSIZE;

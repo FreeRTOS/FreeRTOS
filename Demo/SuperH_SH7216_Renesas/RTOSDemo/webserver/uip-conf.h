@@ -56,6 +56,7 @@
 #define __UIP_CONF_H__
 
 #define UIP_CONF_EXTERNAL_BUFFER
+#define UIP_CONF_PROCESS_HTTPD_FORMS 1
 
 /**
  * 8 bit datatype

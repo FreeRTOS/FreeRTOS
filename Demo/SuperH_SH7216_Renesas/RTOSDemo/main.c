@@ -60,6 +60,14 @@
  * how to use the FreeRTOS API.  In addition to the standard demo tasks, the 
  * following tasks and tests are defined and/or created within this file:
  *
+ * Webserver ("uIP") task - This serves a number of dynamically generated WEB
+ * pages to a standard WEB browser.  The IP and MAC addresses are configured by
+ * constants defined at the bottom of FreeRTOSConfig.h.  Use either a standard
+ * Ethernet cable to connect through a hug, or a cross over (point to point)
+ * cable to connect directly.  Ensure the IP address used is compatible with the
+ * IP address of the machine running the browser - the easiest way to achieve
+ * this is to ensure the first three octets of the IP addresses are the same.
+ *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
  * different values.  The tasks run with very low priority so get preempted very
@@ -100,8 +108,17 @@
  * those tasks that require it (those for which xPortUsesFloatingPoint() has
  * been called).
  * 
- * *NOTE 5* Any task that can cause a context switch requires an asm wrapper
- * and must be assigned an interrupt priority of portKERNEL_INTERRUPT_PRIORITY.
+ * *NOTE 5* Any interrupt that can cause a context switch requires an asm 
+ * wrapper and must be assigned an interrupt priority of 
+ * portKERNEL_INTERRUPT_PRIORITY.
+ *
+ * *NOTE 6* vSetupClockForRunTimeStats() is called by the kernel (via the 
+ * portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()) macro to configure an MTU channel
+ * to produce a time base that is used to log how much processor time each task
+ * is consuming.  The MTU is used to generate a high(ish) frequency interrupt,
+ * and so also provides an example of how interrupts that don't make use of the
+ * FreeRTOS kernel can be assigned a priority above any priority used by the
+ * kernel itself.
  */
 
 /* Kernel includes. */
@@ -137,9 +154,11 @@
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
 
+/* The WEB server uses string handling functions, which in turn use a bit more
+stack than most of the other tasks. */
 #define mainuIP_STACK_SIZE					( configMINIMAL_STACK_SIZE * 3 )
 
-/* The LED toggle by the check task. */
+/* The LED toggled by the check task. */
 #define mainCHECK_LED						( 5 )
 
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
@@ -193,6 +212,13 @@ extern void vRegTest2Task( void *pvParameters );
  * Contains the implementation of the WEB server.
  */
 extern void vuIP_Task( void *pvParameters );
+
+/*
+ * The interrupt handler for the MTU - which is used to maintain the time base
+ * used by the run time stats.
+ */
+#pragma interrupt MTU_Match
+void MTU_Match( void );
 
 /*-----------------------------------------------------------*/
 
@@ -445,13 +471,17 @@ const unsigned long ulCompareMatch = ( configPERIPHERAL_CLOCK_HZ / ( configTICK_
 
 void vApplicationTickHook( void )
 {
-	/* Clear the inerrupt. */
+	/* Clear the tick inerrupt.  This is called from an interrupt context. */
 	CMT0.CMCSR.BIT.CMF = 0;
 }
 /*-----------------------------------------------------------*/
 
 void vSetupClockForRunTimeStats( void )
 {
+	/* Configure an MTU channel to generate a periodic interrupt that is used
+	as the run time stats time base.  The run time stats keep a track of how
+	much processing time each task is using. */
+
 	/* Turn the MTU2 on. */
 	STB.CR3.BIT._MTU2 = 0;
 		
@@ -476,9 +506,6 @@ void vSetupClockForRunTimeStats( void )
 }
 /*-----------------------------------------------------------*/
 
-#pragma interrupt MTU_Match
-void MTU_Match( void );
-
 void MTU_Match( void )
 {
 volatile unsigned char ucStatus;
@@ -494,7 +521,8 @@ volatile unsigned char ucStatus;
 
 char *pcGetTaskStatusMessage( void )
 {
-	/* Not bothered about a critical section here. */
+	/* Not bothered about a critical section here.  This just returns a string
+	that is displaed on the "Task Stats" WEB page served by this demo. */
 	return pcStatusMessage;
 }
 /*-----------------------------------------------------------*/

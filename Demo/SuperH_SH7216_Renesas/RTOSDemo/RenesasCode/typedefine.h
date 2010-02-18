@@ -12,12 +12,6 @@
 ******************************************************************************/
 
 /******************************************************************************
-  WARNING!  IN ACCORDANCE WITH THE USER LICENCE THIS CODE MUST NOT BE CONVEYED
-  OR REDISTRIBUTED IN COMBINATION WITH ANY SOFTWARE LICENSED UNDER TERMS THE
-  SAME AS OR SIMILAR TO THE GNU GENERAL PUBLIC LICENCE
-******************************************************************************/
-
-/******************************************************************************
 * DISCLAIMER
 * This software is supplied by Renesas Technology Corp. and is only
 * intended for use with Renesas products. No other uses are authorized.

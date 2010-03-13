@@ -76,7 +76,7 @@
  * is the highest priority task in the system, so while it is executing no other
  * task will execute.  If the check task places the processor into a low power
  * mode without blocking then the energy consumption as viewed on the Energy
- * Micro Gecko board will go down noticibly as in effect no tasks will be running.
+ * Micro Gecko board will go down noticeably as in effect no tasks will be running.
  * The check task places the processor into low power mode for two out of every
  * five seconds.  The current use of low power modes is very basic.  Future
  * FreeRTOS releases will aim to make significant improvements.

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V6.0.3 - Copyright (C) 2010 Real Time Engineers Ltd.
+    FreeRTOS V6.0.4 - Copyright (C) 2010 Real Time Engineers Ltd.
 
     ***************************************************************************
     *                                                                         *
@@ -72,7 +72,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V6.0.3"
+#define tskKERNEL_VERSION_NUMBER "V6.0.4"
 
 /**
  * task. h

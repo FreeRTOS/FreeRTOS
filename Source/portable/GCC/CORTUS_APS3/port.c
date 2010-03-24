@@ -200,7 +200,7 @@ void interrupt_handler( IRQ_COUNTER1 )
 			" stb		r3, [r2]+2		\n"		/* Set the CPL to the previous CPL. */
 			" add		r1, #4			"
 			:
-			:"i"(PORT_SYSTEM_INTERRUPT_PRIORITY_LEVEL+1)
+			:"i"( portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1 )
 			:"r2","r3" /* Fix the stack. */
 	);	
 

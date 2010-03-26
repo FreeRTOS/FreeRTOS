@@ -71,10 +71,6 @@
 #define comBLOCK_RETRY_TIME				10
 /*-----------------------------------------------------------*/
 
-void vUARTInterruptHandlerTxWrapper(void) __attribute((naked));
-void vUARTInterruptHandlerRxWrapper(void) __attribute((naked));
-/*-----------------------------------------------------------*/
-
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
 static xQueueHandle xRxedChars;
@@ -99,6 +95,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 		irq[IRQ_UART1_RX].ien = 1;
 		irq[IRQ_UART1_RX].ipl = portSYSTEM_INTERRUPT_PRIORITY_LEVEL;
 	}
+
 	return ( xComPortHandle ) 0;
 }
 /*-----------------------------------------------------------*/

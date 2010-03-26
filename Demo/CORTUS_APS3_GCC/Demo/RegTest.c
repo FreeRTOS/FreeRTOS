@@ -86,6 +86,7 @@ static void vRegTest1( void *pvParameters )
 		"	mov		r15, #0x0f							\n"
 		"												\n"
 		"reg_check_loop_1:								\n"
+		"	trap	#31									\n"
 		"	cmp		r2, #0x02							\n" /* Check that each register still contains the expected value, jump to an infinite loop if an error is found. */
 		"	bne.s	reg_check_error_1					\n"
 		"	cmp		r3, #0x03							\n"

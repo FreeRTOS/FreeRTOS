@@ -68,7 +68,7 @@
 #include "serial.h"
 /*-----------------------------------------------------------*/
 
-#define COM_BLOCK_RETRYTIME				10
+#define comBLOCK_RETRY_TIME				10
 /*-----------------------------------------------------------*/
 
 void vUARTInterruptHandlerTxWrapper(void) __attribute((naked));
@@ -132,7 +132,7 @@ void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString
 	for( i = 0; i < usStringLength; i++ )
 	{
 		/* Block until character has been transmitted. */
-		while( xSerialPutChar( pxPort, *pChNext, COM_BLOCK_RETRYTIME ) != pdTRUE ); pChNext++;
+		while( xSerialPutChar( pxPort, *pChNext, comBLOCK_RETRY_TIME ) != pdTRUE ); pChNext++;
 	}
 }
 

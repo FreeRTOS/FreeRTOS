@@ -96,6 +96,7 @@
 #include "serial.h"
 #include "demoGpio.h"
 #include "7seg.h"
+#include "RegTest.h"
 
 /*-----------------------------------------------------------*/
 
@@ -144,6 +145,7 @@ static void vErrorChecks( void *pvParameters );
  */
 static void prvSetupHardware( void );
 
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -163,6 +165,7 @@ int main( void )
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStart7SegTasks( main7SEG_TASK_PRIORITY );
+	vStartRegTestTasks();
 
 	/* Start the check task - which is defined in this file. */
 	xTaskCreate( vErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -248,6 +251,11 @@ long lReturn = pdPASS;
 	}
 
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
+
+	if( xAreRegTestTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}

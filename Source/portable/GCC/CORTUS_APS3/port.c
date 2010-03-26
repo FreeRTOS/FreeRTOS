@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -64,14 +64,14 @@
 /*-----------------------------------------------------------*/
 
 /* The initial PSR has the Previous Interrupt Enabled (PIEN) flag set. */
-#define portINITIAL_PSR			( 0x00020000 )		
+#define portINITIAL_PSR			( 0x00020000 )
 
 /*-----------------------------------------------------------*/
 
 /*
  * Perform any hardware configuration necessary to generate the tick interrupt.
  */
-static void prvSetupTickInterrupt( void );
+static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
 /* Variables used to hold interrupt and critical nesting depths, with variables
@@ -84,20 +84,20 @@ const volatile unsigned portBASE_TYPE *puxTopOfInterruptStack = &( uxInterruptSt
 
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-	/* For the time being, mimic the stack when using the 
+	/* For the time being, mimic the stack when using the
 	__attribute__((interrupt)) plus the extra caller saved registers. */
 	pxTopOfStack -= 17;
-	
+
 	/* RTT */
 	pxTopOfStack[ 16 ] = ( portSTACK_TYPE )pxCode;
-	
+
 	/* PSR */
 	pxTopOfStack[ 15 ] = portINITIAL_PSR;
-	
+
 	/* R14 and R15 aka FuncSP and LR, respectively */
 	pxTopOfStack[ 14 ] = 0x00000000;
 	pxTopOfStack[ 13 ] = ( portSTACK_TYPE )( pxTopOfStack + 17 );
-	
+
 	/* R7 to R2 */
 	pxTopOfStack[ 12 ] = 0x07070707;
 	pxTopOfStack[ 11 ] = 0x06060606;
@@ -105,10 +105,10 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 	pxTopOfStack[ 9 ] = 0x04040404;
 	pxTopOfStack[ 8 ] = 0x03030303;
 	pxTopOfStack[ 7 ] = ( portSTACK_TYPE )pvParameters;
-	
+
 	/* Set the Interrupt Priority on Task entry. */
 	pxTopOfStack[ 6 ] = portKERNEL_INTERRUPT_PRIORITY_LEVEL;
-	
+
 	/* R13 to R8. */
 	pxTopOfStack[ 5 ] = 0x0D0D0D0D;
 	pxTopOfStack[ 4 ] = 0x0C0C0C0C;
@@ -123,8 +123,8 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 
 portBASE_TYPE xPortStartScheduler( void )
 {
-	/* Set-up the Tick Interrupt. */
-	prvSetupTickInterrupt();
+	/* Set-up the timer interrupt. */
+	prvSetupTimerInterrupt();
 
 	/* Enable the TRAP yield. */
 	irq[ portIRQ_TRAP_YIELD ].ien = 1;
@@ -137,7 +137,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Restore calleree saved registers. */
 	portRESTORE_CONTEXT_REDUCED();
 
-	/* Mimic an ISR epiplogue to start the task executing. */
+	/* Mimic an ISR epilogue to start the task executing. */
 	asm __volatile__(						\
 		"mov	r1, r14					\n"	\
 		"ldd	r6, [r1]+0x20			\n"	\
@@ -155,7 +155,7 @@ portBASE_TYPE xPortStartScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupTickInterrupt( void )
+static void prvSetupTimerInterrupt( void )
 {
 	/* Enable timer interrupts */
 	counter1->reload = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1;
@@ -202,7 +202,7 @@ void interrupt_handler( IRQ_COUNTER1 )
 			:
 			:"i"( portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1 )
 			:"r2","r3" /* Fix the stack. */
-	);	
+	);
 
 	#if configUSE_PREEMPTION == 1
 		portYIELD_FROM_ISR();

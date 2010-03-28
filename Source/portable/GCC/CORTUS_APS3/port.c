@@ -74,19 +74,12 @@
 static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
-/* Variables used to hold interrupt and critical nesting depths, with variables
-that provide a convenient method of obtaining their addresses. */
-volatile unsigned portBASE_TYPE uxInterruptNestingCount = 999UL;
-const volatile unsigned portBASE_TYPE *puxInterruptNestingCount = &uxInterruptNestingCount;
-volatile unsigned portBASE_TYPE uxInterruptStack[ configMINIMAL_STACK_SIZE ];
-const volatile unsigned portBASE_TYPE *puxTopOfInterruptStack = &( uxInterruptStack[ configMINIMAL_STACK_SIZE - 1 ] );
-/*-----------------------------------------------------------*/
-
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* For the time being, mimic the stack when using the
 	__attribute__((interrupt)) plus the extra caller saved registers. */
-	pxTopOfStack -= 17;
+	This leaves a buffer of two works unused. */
+	pxTopOfStack -= 18;
 
 	/* RTT */
 	pxTopOfStack[ 16 ] = ( portSTACK_TYPE )pxCode;
@@ -132,14 +125,12 @@ portBASE_TYPE xPortStartScheduler( void )
 
 	/* Integrated Interrupt Controller: Enable all interrupts. */
 	ic->ien = 1;
-	uxInterruptNestingCount = 1UL;
 
-	/* Restore calleree saved registers. */
-	portRESTORE_CONTEXT_REDUCED();
+	/* Restore callee saved registers. */
+	portRESTORE_CONTEXT();
 
 	/* Mimic an ISR epilogue to start the task executing. */
 	asm __volatile__(						\
-		"mov	r1, r14					\n"	\
 		"ldd	r6, [r1]+0x20			\n"	\
 		"mov	psr, r6					\n"	\
 		"mov	rtt, r7					\n"	\
@@ -171,49 +162,31 @@ static void prvSetupTimerInterrupt( void )
 void interrupt_handler( portIRQ_TRAP_YIELD )
 {
 	/* Save remaining registers. */
-	portSAVE_CONTEXT_REDUCED();
+	portSAVE_CONTEXT();
 
-	/* Perform the actual Yield. */
-	portYIELD_FROM_ISR();
+	vTaskSwitchContext();
 
-	/* Restore the first lot of registers, the remains will be resotred when
+	/* Restore the first lot of registers, the remains will be restored when
 	this function exits. */
-	portRESTORE_CONTEXT_REDUCED();
+	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 
 /* Timer tick interrupt handler */
 void interrupt_handler( IRQ_COUNTER1 )
 {
-	portSAVE_CONTEXT_REDUCED();
+	portSAVE_CONTEXT();
 
-	asm __volatile__(
-			" sub		r1, #4			\n"		/* Make space on the stack.  r1 is stack pointer. */
-			" movhi		r2, #16384		\n"		/* Load the pointer to the IC. */
-			" ldub		r3, [r2]+2		\n"		/* Copy the Current Priority Level. */
-			" st		r3, [r1]		\n"		/* Store it on the stack. */
-			" mov 		r3, #%0			\n"		/* Load the highest priority level. */
-			" stb		r3, [r2]+2		\n"		/* Set the CPL to the highest level. */
-			" call		vTaskIncrementTick	\n"	/* Increment the tick. */
-			" ld		r3, [r1]		\n"		/* Load the previous CPL from the stack. */
-			" movhi		r2, #16384		\n"		/* Load the pointer to the IC. */
-			" stb		r3, [r2]+2		\n"		/* Set the CPL to the previous CPL. */
-			" add		r1, #4			"
-			:
-			:"i"( portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1 )
-			:"r2","r3" /* Fix the stack. */
-	);
+	vTaskIncrementTick();
 
 	#if configUSE_PREEMPTION == 1
-		portYIELD_FROM_ISR();
+		vTaskSwitchContext();
 	#endif
 
-	{
-		/* Clear the Tick Interrupt. */
-		counter1->expired = 0;
-	}
+	/* Clear the Tick Interrupt. */
+	counter1->expired = 0;
 
-	portRESTORE_CONTEXT_REDUCED();
+	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 

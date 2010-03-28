@@ -54,10 +54,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-static void vRegTest1( void *pvParameters );// __attribute__((naked));
-static void vRegTest2( void *pvParameters );// __attribute__((naked));
+static void vRegTest1( void *pvParameters );
+static void vRegTest2( void *pvParameters );
 
 static volatile unsigned long ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
+
+/*-----------------------------------------------------------*/
 
 void vStartRegTestTasks( void )
 {

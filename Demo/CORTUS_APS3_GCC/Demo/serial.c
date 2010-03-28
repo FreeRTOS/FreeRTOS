@@ -167,7 +167,7 @@ void interrupt_handler( IRQ_UART1_TX )
 static signed char cChar;
 static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	portSAVE_CONTEXT_REDUCED();
+	portSAVE_CONTEXT();
 
 	/* The interrupt was caused by the transmit fifo having space for at least one
 	character. Are there any more characters to transmit? */
@@ -190,7 +190,7 @@ static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	{
 		portYIELD_FROM_ISR();
 	}
-	portRESTORE_CONTEXT_REDUCED();
+	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 
@@ -199,7 +199,7 @@ void interrupt_handler( IRQ_UART1_RX )
 static signed char cChar;
 static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	portSAVE_CONTEXT_REDUCED();
+	portSAVE_CONTEXT();
 
 	/* The interrupt was caused by the receiver getting data. */
 	cChar = uart1->rx_data;
@@ -215,7 +215,7 @@ static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		portYIELD_FROM_ISR();
 	}
 
-	portRESTORE_CONTEXT_REDUCED();
+	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 

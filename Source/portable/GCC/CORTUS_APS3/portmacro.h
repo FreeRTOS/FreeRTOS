@@ -92,7 +92,7 @@ extern "C" {
 #define portSTACK_GROWTH							( -1 )
 #define portTICK_RATE_MS							( ( portTickType ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT							4
-#define portNOP()									__asm__ volatile ( "mov r0,r0; nop" )
+#define portNOP()									__asm__ volatile ( "mov r0, r0" )
 #define portCRITICAL_NESTING_IN_TCB					1
 #define portIRQ_TRAP_YIELD							31
 #define portKERNEL_INTERRUPT_PRIORITY_LEVEL			0
@@ -120,36 +120,47 @@ extern void vTaskExitCritical( void );
 
 /*---------------------------------------------------------------------------*/
 
-#define portYIELD_FROM_ISR() vTaskSwitchContext()
+#define portYIELD_FROM_ISR( xHigherPriorityTaskWoken ) if( xHigherPriorityTaskWoken != pdFALSE ) vTaskSwitchContext()
 
 /*---------------------------------------------------------------------------*/
 
 #define portSAVE_CONTEXT()				\
-	asm __volatile__(						\
-		"sub	r1, #0x1c				\n"	/* Make space on the stack. */	\
-		"stq	r8, [r1]				\n"	/* Store the remaining context registers. */	\
-		"std	r12, [r1]+0x10			\n"	\
-		"movhi	r2, #16384				\n"	/* Set the pointer to the IC. */	\
-		"ldub	r3, [r2]+2				\n"	/* Load the current interrupt mask. */	\
-		"st		r3, [r1]+0x18			\n"	/* Store the interrupt mask on the stack. */ \
-		"ld		r2, [r0]+short(pxCurrentTCB)	\n"	/* Load the pointer to the TCB. */	\
-		"st		r1, [r2]				\n"	/* Save the stack pointer into the TCB. */	\
-		"mov	r14, r1					\n"	/* Compiler expects r14 to be set to the function stack. */	\
-		:::"r2","r3","r4","r5","r15"	);	/* Clobber list includes all of the caller saved registers so that they are saved as part of the Interrupt handler pre-amble. */
+	asm __volatile__																								\
+	(																												\
+		"sub	r1, #68					\n" /* Make space on the stack for the context. */							\
+		"std	r2, [r1] + 	0			\n"																			\
+		"stq	r4, [r1] +	8			\n"																			\
+		"stq	r8, [r1] +	24			\n"																			\
+		"stq	r12, [r1] +	40			\n"																			\
+		"mov	r6, rtt					\n"																			\
+		"mov	r7, psr					\n"																			\
+		"std	r6, [r1] +	56			\n"																			\
+		"movhi	r2, #16384				\n"	/* Set the pointer to the IC. */										\
+		"ldub	r3, [r2] + 2			\n"	/* Load the current interrupt mask. */									\
+		"st		r3, [r1]+ 64			\n"	/* Store the interrupt mask on the stack. */ 							\
+		"ld		r2, [r0]+short(pxCurrentTCB)	\n"	/* Load the pointer to the TCB. */								\
+		"st		r1, [r2]				\n"	/* Save the stack pointer into the TCB. */								\
+		"mov	r14, r1					\n"	/* Compiler expects r14 to be set to the function stack. */				\
+	);
 /*---------------------------------------------------------------------------*/
 
-#define portRESTORE_CONTEXT()		\
-	asm __volatile__(						\
-		"ld		r2, [r0]+short(pxCurrentTCB)	\n"	/* Load the TCB to find the stack pointer and context. */	\
-		"ld		r1, [r2]				\n"	\
-		"movhi	r2, #16384				\n"	/* Set the pointer to the IC. */	\
-		"ld		r3, [r1]+0x18			\n"	/* Load the previous interrupt mask. */	\
-		"stb	r3, [r2]+2  			\n"	/* Set the current interrupt mask to be the previous. */	\
-		"ldd	r12, [r1]+0x10			\n"	/* Restore the callee saved registers. Caller saved registers are restored by the function exit. */	\
-		"ldq	r8, [r1]				\n"	\
-		"add	r1, #0x1c				\n"	\
-		"mov	r14, r1					\n"	\
-		);
+#define portRESTORE_CONTEXT()																						\
+	asm __volatile__(																								\
+		"ld		r2, [r0]+short(pxCurrentTCB)	\n"	/* Load the TCB to find the stack pointer and context. */		\
+		"ld		r1, [r2]				\n"																			\
+		"movhi	r2, #16384				\n"	/* Set the pointer to the IC. */										\
+		"ld		r3, [r1] + 64			\n"	/* Load the previous interrupt mask. */									\
+		"stb	r3, [r2] + 2  			\n"	/* Set the current interrupt mask to be the previous. */				\
+		"ldd	r6, [r1] + 56			\n"	/* Restore context. */													\
+		"mov	rtt, r6					\n"																			\
+		"mov	psr, r7					\n"																			\
+		"ldd	r2, [r1] + 0			\n"																			\
+		"ldq	r4, [r1] +	8			\n"																			\
+		"ldq	r8, [r1] +	24			\n"																			\
+		"ldq	r12, [r1] +	40			\n"																			\
+		"add	r1, #68					\n"																			\
+		"rti							\n"																			\
+	 );
 
 /*---------------------------------------------------------------------------*/
 

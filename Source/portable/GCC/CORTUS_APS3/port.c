@@ -76,39 +76,28 @@ static void prvSetupTimerInterrupt( void );
 
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-	/* For the time being, mimic the stack when using the
-	__attribute__((interrupt)) plus the extra caller saved registers. */
-	This leaves a buffer of two works unused. */
-	pxTopOfStack -= 18;
+	/* Make space on the stack for the context - this leaves a couple of spaces
+	empty.  */
+	pxTopOfStack -= 20;
 
-	/* RTT */
-	pxTopOfStack[ 16 ] = ( portSTACK_TYPE )pxCode;
-
-	/* PSR */
+	/* Fill the registers with known values to assist debugging. */
+	pxTopOfStack[ 16 ] = portKERNEL_INTERRUPT_PRIORITY_LEVEL;
 	pxTopOfStack[ 15 ] = portINITIAL_PSR;
-
-	/* R14 and R15 aka FuncSP and LR, respectively */
-	pxTopOfStack[ 14 ] = 0x00000000;
-	pxTopOfStack[ 13 ] = ( portSTACK_TYPE )( pxTopOfStack + 17 );
-
-	/* R7 to R2 */
-	pxTopOfStack[ 12 ] = 0x07070707;
-	pxTopOfStack[ 11 ] = 0x06060606;
-	pxTopOfStack[ 10 ] = 0x05050505;
-	pxTopOfStack[ 9 ] = 0x04040404;
-	pxTopOfStack[ 8 ] = 0x03030303;
-	pxTopOfStack[ 7 ] = ( portSTACK_TYPE )pvParameters;
-
-	/* Set the Interrupt Priority on Task entry. */
-	pxTopOfStack[ 6 ] = portKERNEL_INTERRUPT_PRIORITY_LEVEL;
-
-	/* R13 to R8. */
-	pxTopOfStack[ 5 ] = 0x0D0D0D0D;
-	pxTopOfStack[ 4 ] = 0x0C0C0C0C;
-	pxTopOfStack[ 3 ] = 0x0B0B0B0B;
-	pxTopOfStack[ 2 ] = 0x0A0A0A0A;
-	pxTopOfStack[ 1 ] = 0x09090909;
-	pxTopOfStack[ 0 ] = 0x08080808;
+	pxTopOfStack[ 14 ] = ( unsigned long ) pxCode;
+	pxTopOfStack[ 13 ] = 0x00000000UL; /* R15. */
+	pxTopOfStack[ 12 ] = 0x00000000UL; /* R14. */
+	pxTopOfStack[ 11 ] = 0x0d0d0d0dUL;
+	pxTopOfStack[ 10 ] = 0x0c0c0c0cUL;
+	pxTopOfStack[ 9 ] = 0x0b0b0b0bUL;
+	pxTopOfStack[ 8 ] = 0x0a0a0a0aUL;
+	pxTopOfStack[ 7 ] = 0x09090909UL;
+	pxTopOfStack[ 6 ] = 0x08080808UL;
+	pxTopOfStack[ 5 ] = 0x07070707UL;
+	pxTopOfStack[ 4 ] = 0x06060606UL;
+	pxTopOfStack[ 3 ] = 0x05050505UL;
+	pxTopOfStack[ 2 ] = 0x04040404UL;
+	pxTopOfStack[ 1 ] = 0x03030303UL;
+	pxTopOfStack[ 0 ] = ( unsigned long ) pvParameters;
 
 	return pxTopOfStack;
 }
@@ -129,18 +118,6 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Restore callee saved registers. */
 	portRESTORE_CONTEXT();
 
-	/* Mimic an ISR epilogue to start the task executing. */
-	asm __volatile__(						\
-		"ldd	r6, [r1]+0x20			\n"	\
-		"mov	psr, r6					\n"	\
-		"mov	rtt, r7					\n"	\
-		"ldd	r14, [r1]+0x18			\n"	\
-		"ldq	r4, [r1]+0x8			\n"	\
-		"ldd	r2, [r1]				\n"	\
-		"add	r1, #0x28				\n"	\
-		"rti							\n"	\
-		);									\
-
 	/* Should not get here. */
 	return 0;
 }
@@ -159,24 +136,19 @@ static void prvSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-void interrupt_handler( portIRQ_TRAP_YIELD )
+/* Trap 31 handler. */
+void interrupt31_handler( void ) __attribute__((naked));
+void interrupt31_handler( void )
 {
-	/* Save remaining registers. */
 	portSAVE_CONTEXT();
-
-	vTaskSwitchContext();
-
-	/* Restore the first lot of registers, the remains will be restored when
-	this function exits. */
+	__asm volatile ( "call vTaskSwitchContext" );
 	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 
-/* Timer tick interrupt handler */
-void interrupt_handler( IRQ_COUNTER1 )
+static void prvProcessTick( void ) __attribute__((noinline));
+static void prvProcessTick( void )
 {
-	portSAVE_CONTEXT();
-
 	vTaskIncrementTick();
 
 	#if configUSE_PREEMPTION == 1
@@ -185,7 +157,15 @@ void interrupt_handler( IRQ_COUNTER1 )
 
 	/* Clear the Tick Interrupt. */
 	counter1->expired = 0;
+}
+/*-----------------------------------------------------------*/
 
+/* Timer 1 interrupt handler, used for tick interrupt. */
+void interrupt7_handler( void ) __attribute__((naked));
+void interrupt7_handler( void )
+{
+	portSAVE_CONTEXT();
+	prvProcessTick();
 	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/

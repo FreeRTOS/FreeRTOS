@@ -103,8 +103,21 @@ We use --gc-sections when linking, so there is no harm is setting all of these t
 
 #define BLOCKQ_1						1
 
+
+
+
+/* A task is created to test the behaviour of the interrupt controller during
+context switches.  This macro is just used to set a variable to true each time
+the test task is switched out - the task itself needs to know when this happens
+in order to complete its tests.  This macro will slow down the context switch
+and can normally be removed (just delete the whole macro, although doing so will
+cause the test task to indicate an error). */
+extern void *xICTestTask;
+extern volatile unsigned long ulTaskSwitchedOut;
+#define traceTASK_SWITCHED_OUT() if( pxCurrentTCB == xICTestTask ) ulTaskSwitchedOut = pdTRUE
+
+
+
 #endif /* FREERTOS_CONFIG_H */
 
-// Local Variables:
-// tab-width:4
-// End:
+

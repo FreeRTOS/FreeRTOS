@@ -71,6 +71,16 @@
 #define comBLOCK_RETRY_TIME				10
 /*-----------------------------------------------------------*/
 
+/* The interrupt handlers are naked functions that call C handlers.  The C
+handlers are marked as noinline to ensure they work correctly when the
+optimiser is on. */
+void interrupt5_handler( void ) __attribute__((naked));
+static void prvTxHandler( void ) __attribute__((noinline));
+void interrupt6_handler( void ) __attribute__((naked));
+static void prvRxHandler( void ) __attribute__((noinline));
+
+/*-----------------------------------------------------------*/
+
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
 static xQueueHandle xRxedChars;
@@ -116,7 +126,6 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 		return pdFALSE;
 	}
 }
-
 /*-----------------------------------------------------------*/
 
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
@@ -132,7 +141,6 @@ void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString
 		while( xSerialPutChar( pxPort, *pChNext, comBLOCK_RETRY_TIME ) != pdTRUE ); pChNext++;
 	}
 }
-
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
@@ -162,12 +170,20 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
-void interrupt_handler( IRQ_UART1_TX )
+/* UART Tx interrupt handler. */
+void interrupt5_handler( void )
 {
-static signed char cChar;
-static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-
+	/* This is a naked function. */
 	portSAVE_CONTEXT();
+	prvTxHandler();
+	portRESTORE_CONTEXT();
+}
+/*-----------------------------------------------------------*/
+
+static void prvTxHandler( void )
+{
+signed char cChar;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* The interrupt was caused by the transmit fifo having space for at least one
 	character. Are there any more characters to transmit? */
@@ -186,36 +202,34 @@ static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	ensure that the unblocked task is the task that executes when the interrupt
 	completes if the unblocked task has a priority higher than the interrupted
 	task. */
-	if( xHigherPriorityTaskWoken )
-	{
-		portYIELD_FROM_ISR();
-	}
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+}
+/*-----------------------------------------------------------*/
+
+/* UART Rx interrupt. */
+void interrupt6_handler( void )
+{
+	portSAVE_CONTEXT();
+	prvRxHandler();
 	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 
-void interrupt_handler( IRQ_UART1_RX )
+static void prvRxHandler( void )
 {
-static signed char cChar;
-static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-
-	portSAVE_CONTEXT();
+signed char cChar;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* The interrupt was caused by the receiver getting data. */
 	cChar = uart1->rx_data;
 
-	(void)xQueueSendFromISR(xRxedChars, &cChar, &xHigherPriorityTaskWoken);
+	xQueueSendFromISR(xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 
 	/* If an event caused a task to unblock then we call "Yield from ISR" to
 	ensure that the unblocked task is the task that executes when the interrupt
 	completes if the unblocked task has a priority higher than the interrupted
 	task. */
-	if( xHigherPriorityTaskWoken )
-	{
-		portYIELD_FROM_ISR();
-	}
-
-	portRESTORE_CONTEXT();
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

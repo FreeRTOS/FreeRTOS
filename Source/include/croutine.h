@@ -119,7 +119,7 @@ typedef struct corCoRoutineControlBlock
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  // This may not be necessary for const variables.
  static const char cLedToFlash[ 2 ] = { 5, 6 };
- static const portTickType xTimeToDelay[ 2 ] = { 200, 400 };
+ static const portTickType uxFlashRates[ 2 ] = { 200, 400 };
 
      // Must start every co-routine with a call to crSTART();
      crSTART( xHandle );

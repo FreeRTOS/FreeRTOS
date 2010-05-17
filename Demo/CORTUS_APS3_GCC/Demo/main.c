@@ -284,5 +284,11 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
+/* Provide an exit function to prevent a whole load of standard library functions
+being brought into the build. */
+void exit( int status )
+{
+	for( ;; );
+}
 
 

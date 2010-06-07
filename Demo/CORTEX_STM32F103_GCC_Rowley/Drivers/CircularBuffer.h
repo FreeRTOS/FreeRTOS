@@ -51,86 +51,65 @@
     licensing and training services.
 */
 
-/*-----------------------------------------------------------
- * Simple parallel port IO routines.
- *-----------------------------------------------------------*/
+#ifndef CIRCULAR_BUFFER_H
+#define CIRCULAR_BUFFER_H
 
-/* FreeRTOS.org includes. */
-#include "FreeRTOS.h"
-#include "task.h"
-#include "partest.h"
-
-/* Standard includes. */
-#include <string.h>
-
-/* Library includes. */
-#include "stm32f10x_lib.h"
-
-#define partstNUM_LEDs		8
-
-/* Holds the current output state for each of the LEDs. */
-static unsigned char ucBitStates[ partstNUM_LEDs ];
-
-/*-----------------------------------------------------------*/
-
-void vParTestInitialise( void )
+/* Structure that holds the state of the circular buffer. */
+typedef struct
 {
-GPIO_InitTypeDef GPIO_InitStructure;
+	unsigned char *pucDataBuffer;
+	unsigned long ulBufferSizeInBytes;
+	unsigned char *pucNextByteToRead;
+	unsigned char *pucNextByteToWrite;
+	unsigned long ulDataSizeInBytes;
+	void *pvTag;
+} xCircularBuffer;
 
-	/* Configure PE14, PD13, PD3 and PD4 output push-pull */
-	GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init( GPIOB, &GPIO_InitStructure );
 
-	memset( ucBitStates, 0x00, sizeof( ucBitStates ) );
-}
-/*-----------------------------------------------------------*/
+/*
+ * Setup a circular buffer ready for use.
+ *
+ * pxBuffer : The xCicularBuffer structure being initialised.
+ *
+ * pucDataBuffer : The buffer to be used by the xCicularBuffer object.
+ *
+ * ulBufferSizeInBytes : The dimention of pucDataBuffer in bytes.
+ *
+ * ulDataSizeInBytes : The size of the data that is to be stored in the
+ *		circular buffer.  For example, 4 if the buffer is used to hold
+ *		unsigned longs, 1 if the buffer is used to hold chars.
+ *
+ * pvTag : Can be used for anything, although normally used in conjunction with
+ *         a DMA register.
+ */
+void vInitialiseCircularBuffer( xCircularBuffer *pxBuffer,
+							   	unsigned char *pucDataBuffer,
+								unsigned long ulBufferSizeInBytes,
+								unsigned long ulDataSizeInBytes,
+								void *pvTag
+							  );
+/*
+ * Returns the number of bytes that are currently available within the
+ * buffer.
+ */
+unsigned long ulBytesInCircularBuffer( const xCircularBuffer * const pxBuffer );
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{
-	if( uxLED < partstNUM_LEDs )
-	{
-		portENTER_CRITICAL();
-		{
-			if( xValue != pdFALSE )
-			{
-				ucBitStates[ uxLED ] = pdTRUE;
-			}
-			else
-			{
-				ucBitStates[ uxLED ] = pdFALSE;
-			}
+/*
+ * Obtain bytes from the circular buffer.  Data may have been placed in
+ * the circular buffer by a DMA transfer or simply written to the buffer by
+ * the application code.
+ *
+ * pxBuffer : The circular buffer from which data is to be read.
+ *
+ * pucBuffer : The buffer into which the received bytes should be copied.
+ *
+ * ulWantedBytes : The number of bytes we are going to attempt to receive
+ *		from the circular buffer.
+ *
+ * return : The actual number of bytes received from the circular buffer.
+ *		This might be less than the number of bytes we attempted to receive.
+ */
+unsigned long ulCopyReceivedBytes( xCircularBuffer *pxBuffer, unsigned char * pucBuffer, unsigned long ulWantedBytes );
 
-            GPIO_WriteBit( GPIOB, ( GPIO_Pin_8 << uxLED ), ucBitStates[ uxLED ] );
-		}
-		portEXIT_CRITICAL();
-	}
-}
-/*-----------------------------------------------------------*/
+#endif
 
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-	if( uxLED < partstNUM_LEDs )
-	{
-		portENTER_CRITICAL();
-		{
-			ucBitStates[ uxLED ] = !ucBitStates[ uxLED ];
-            GPIO_WriteBit( GPIOB, ( GPIO_Pin_8 << uxLED ), ucBitStates[ uxLED ] );
-		}
-		portEXIT_CRITICAL();
-	}
-}
-/*-----------------------------------------------------------*/
-
-portBASE_TYPE xGetLEDState( unsigned portBASE_TYPE uxLED )
-{
-	if( uxLED < partstNUM_LEDs )
-	{
-		return ( portBASE_TYPE ) ucBitStates[ uxLED ];
-	}
-	else
-	{
-		return 0;
-	}
-}

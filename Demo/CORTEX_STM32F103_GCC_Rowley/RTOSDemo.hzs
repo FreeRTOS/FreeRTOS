@@ -18,6 +18,10 @@
  <Project>
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;Drivers" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS Source" name="unnamed" />
+  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;ST Library" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;System Files" name="unnamed" />
  </Project>
  <Register1>
@@ -49,11 +53,11 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\STM32F10x_Startup.s" y="148" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\STM32F10x_Startup.s" left="0" selected="0" name="unnamed" top="27" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="46" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\main.c" y="142" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\main.c" left="0" selected="1" name="unnamed" top="0" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="29" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\FreeRTOSConfig.h" y="88" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\FreeRTOSConfig.h" left="0" selected="0" name="unnamed" top="63" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" y="1385" path="C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" left="0" selected="0" name="unnamed" top="1365" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ST Library\src\stm32f10x_gpio.c" y="53" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ST Library\src\stm32f10x_gpio.c" left="0" selected="0" name="unnamed" top="38" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ParTest\ParTest.c" y="0" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ParTest\ParTest.c" left="0" selected="0" name="unnamed" top="39" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ParTest\ParTest_ST_Eval.c" y="80" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ParTest\ParTest_ST_Eval.c" left="0" selected="0" name="unnamed" top="60" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\stm32f10x_conf.h" y="83" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\stm32f10x_conf.h" left="0" selected="0" name="unnamed" top="63" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="15" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\main.c" y="266" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\main.c" left="0" selected="0" name="unnamed" top="235" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\STM32F10x_Startup.s" y="0" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\STM32F10x_Startup.s" left="0" selected="1" name="unnamed" top="0" />
  </Files>
- <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\serial" fileDialogDefaultFilter="*.c" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
+ <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_STM32F103_GCC_Rowley\ST Library\src" fileDialogDefaultFilter="*.c" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

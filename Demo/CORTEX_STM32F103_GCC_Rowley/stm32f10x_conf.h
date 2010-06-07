@@ -81,7 +81,7 @@
 #define _GPIO
 #define _GPIOA
 #define _GPIOB
-//#define _GPIOC
+#define _GPIOC
 #define _GPIOD
 #define _GPIOE
 //#define _GPIOF
@@ -134,7 +134,7 @@
 /************************************* USART **********************************/
 #define _USART
 #define _USART1
-//#define _USART2
+#define _USART2
 //#define _USART3
 //#define _UART4
 //#define _UART5

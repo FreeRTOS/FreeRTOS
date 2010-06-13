@@ -72,7 +72,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V6.0.4"
+#define tskKERNEL_VERSION_NUMBER "V6.0.5"
 
 /**
  * task. h

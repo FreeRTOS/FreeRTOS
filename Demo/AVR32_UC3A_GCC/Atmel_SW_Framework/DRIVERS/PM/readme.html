@@ -1,0 +1,108 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+   <head>
+      <link rel="stylesheet" type="text/css" href="../../.docsrc/AVR32_ns.css">
+   </head>
+   <body>
+   <div id="wrapper">
+<p align="left" class="whs2"><a href="../DRIVERS_Readme.html"<font color="red"></font>Back to DRIVERS page</a></p>
+<h1 align="center" class="whs1">AVR UC3 Series Software Framework: Power Manager Driver<br>
+</h1>
+
+<p align="center" class="whs2">Copyright &copy; 2007 Atmel Corporation</p>
+
+<h2>Introduction</h2>
+<h3>UC3A0/1, UC3B, UC3A3</h3>
+    <p>The Power Manager (PM) controls the oscillators and PLLs, and generates the clocks and
+resets in the device. The PM controls two fast crystal oscillators, as well as two PLLs, which can
+multiply the clock from either oscillator to provide higher frequencies. Additionally, a low-power
+32 KHz oscillator is used to generate the real-time counter clock for high accuracy real-time
+measurements. The PM also contains a low-power RC oscillator with fast start-up time, which
+can be used to clock the digital logic.</p>
+
+<h3> UC3L, UC3C </h3>
+    <p>The Power Manager (PM) provides synchronous clocks used to clock the main digital logic in the
+device, namely the CPU, and the modules and peripherals connected to the HSB and PBx buses. The PM also
+contains advanced power-saving features and a Reset Controller.</p>
+
+
+<p>&nbsp;</p>
+
+<h2>Power Manager Driver</h2>
+<h3>UC3A0/1, UC3B, UC3A3</h3>
+    <p>The driver is composed of <a href="pm.c">pm.c</a> and <a href="pm.h">pm.h</a>.</p>
+    <p>&nbsp;</p>
+    <p>This driver provides interfaces for PM main hardware features:
+
+       <li>oscillator source setup: external or crystal;
+       <li>oscillator startup;
+       <li>PLL setup;
+       <li>main clock source setup.
+    </p>
+    <p>&nbsp;</p>
+    <p>Two examples are available:<p>
+       <a href=" EXAMPLE1/readme.html">EXAMPLE1:</a> how to configure the Power Manager to use Oscillator 0 as source of main clock, generic clock configuration and switch to a sleep mode<p>
+       <a href=" EXAMPLE2/readme.html">EXAMPLE2:</a> how to configure a PLL and switch the main clock to PLL output and do a generic clock configuration.</p>
+<p>&nbsp;</p>
+
+<p>
+  The file <a href="pm_conf_clocks.c">pm_conf_clocks.c</a> provides functions to simplify the usage of this driver.
+  It is used to configure all clocks at once by specifying frequencies needed.
+</p>
+
+<p>
+  The file <a href="power_clocks_lib.c">power_clocks_lib.c</a> (and <a href="power_clocks_lib.h">power_clocks_lib.h</a>)
+  provides functions to abstract features such as oscillators/pll/dfll configuration, clock configuration, System-sensible
+  parameters configuration, buses clocks configuration, sleep mode, reset.
+</p>
+<p></p>
+
+<h3>UC3L</h3>
+    <p>The driver is composed of <a href="pm_uc3l.c">pm_uc3l.c</a> and <a href="pm_uc3l.h">pm_uc3l.h</a>.</p>
+    <p>&nbsp;</p>
+    <p>This driver provides interfaces for PM main hardware features:
+       <li>main clock source setup,
+       <li>clock domains setup,
+       <li>peripheral modules setup,
+       <li>Sleep modes setup,
+       <li>reset,
+       <li>PM interrupts setup.
+    </p>
+    <p>&nbsp;</p>
+    <p>Three examples are available:<p>
+       <a href=" EXAMPLE1/readme.html">EXAMPLE1:</a> how to configure the Power Manager to use Oscillator 0 as source of main clock, generic clock configuration and switch to a sleep mode. This example is not applicable to the AT32UC3L-EK board because no external crystal/clock is connected to OSC0 on that board.<p>
+       <a href=" EXAMPLE2/readme.html">EXAMPLE2:</a> how to configure a DFLL and switch the main clock to the DFLL output and do a generic clock configuration.</p>
+       <a href=" EXAMPLE3/readme.html">EXAMPLE2:</a> how to use the RC120M internal oscillator as main clock source and do a Generic clock configuration.</p>
+<p>&nbsp;</p>
+
+<h3>UC3C</h3>
+    <p>The driver is composed of <a href="pm_uc3c.c">pm_uc3c.c</a> and <a href="pm_uc3c.h">pm_uc3c.h</a>.</p>
+    <p>&nbsp;</p>
+    <p>This driver provides interfaces for PM main hardware features:
+       <li>main clock source setup,
+       <li>clock domains setup,
+       <li>peripheral modules setup,
+       <li>Sleep modes setup,
+       <li>reset,
+       <li>PM interrupts setup.
+    </p>
+    <p>&nbsp;</p>
+    <p>Two examples are available:<p>
+       <a href=" EXAMPLE1/readme.html">EXAMPLE1:</a> how to configure the Power Manager to use Oscillator 0 as source of main clock, generic clock configuration and switch to a sleep mode<p>
+       <a href=" EXAMPLE2/readme.html">EXAMPLE2:</a> how to configure a PLL and switch the main clock to PLL output and do a generic clock configuration.</p>
+<p>&nbsp;</p>
+
+<p>
+  The file <a href="power_clocks_lib.c">power_clocks_lib.c</a> (and <a href="power_clocks_lib.h">power_clocks_lib.h</a>)
+  provides functions to abstract features such as oscillators/pll/dfll configuration, clock configuration, System-sensible
+  parameters configuration, buses clocks configuration, sleep mode, reset.
+</p>
+
+
+<hr align="center" width="50%" class="whs4">
+
+    <p class=legalfooter>AVR is a registered trademark of
+    Atmel Corporation.</p>
+</div>
+   </body>
+</html>

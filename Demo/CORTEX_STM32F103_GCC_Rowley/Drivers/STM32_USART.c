@@ -63,15 +63,12 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+#include "task.h"
 #include "queue.h"
 #include "semphr.h"
 
-/* Driver includes. */
-#include "CircularBuffer.h"
-
 /* Library includes. */
 #include "stm32f10x_lib.h"
-#include "stm32f10x_rcc.h"
 
 /* Driver includes. */
 #include "STM32_USART.h"
@@ -80,40 +77,43 @@
 /* The number of COM ports that can be controlled at the same time. */
 #define serNUM_COM_PORTS				( 2 )
 
-/* Indexes into the xCOMBufferDefinitions array for the Rx and Tx buffers. */
-#define serRX_BUFFER_INDEX				( 0 )
-#define serTX_BUFFER_INDEX				( 1 )
+/* Queues are used to hold characters that are waiting to be transmitted.  This
+constant sets the maximum number of characters that can be contained in such a
+queue at any one time. */
+#define serTX_QUEUE_LEN					( 100 )
 
-/* A counting semaphore is used to allows tasks to block to wait for characters
-to be received.  This constant defines the max count.  Making this value higher
-does not change the amount of RAM used by the semaphore, so its worth making it
-quite high. */
-#define serSEMAPHORE_MAX_COUNT			( 100 )
+/* Queues are used to hold characters that have been received but not yet 
+processed.  This constant sets the maximum number of characters that can be 
+contained in such a queue. */
+#define serRX_QUEUE_LEN					( 100 )
 
-/*-----------------------------------------------------------*/
-
-/* An Rx and a Tx buffer structure for each COM port. */
-static xCircularBuffer xCOMBufferDefinitions[ serNUM_COM_PORTS ][ 2 ];
-
-/* The buffers themselves. */
-static unsigned char ucCOM0_Rx_Buffer[ configCOM0_RX_BUFFER_LENGTH ];
-static unsigned char ucCOM0_Tx_Buffer[ configCOM0_TX_BUFFER_LENGTH ];
-static unsigned char ucCOM1_Rx_Buffer[ configCOM1_RX_BUFFER_LENGTH ];
-static unsigned char ucCOM1_Tx_Buffer[ configCOM1_TX_BUFFER_LENGTH ];
-
-/* Semaphores used to block tasks that are waiting for characters to be
-received. */
-static xSemaphoreHandle xCOM0RxSemaphore, xCOM1RxSemaphore;
+/* The maximum amount of time that calls to lSerialPutString() should wait for
+there to be space to post each character to the queue of characters waiting
+transmission.  NOTE!  This is the time to wait per character - not the time to
+wait for the entire string. */
+#define serPUT_STRING_CHAR_DELAY		( 5 / portTICK_RATE_MS )
 
 /*-----------------------------------------------------------*/
 
-/* UART interrupt handler. */
-void vUARTInterruptHandler( void );
+/* References to the USART peripheral addresses themselves. */
+static USART_TypeDef * const xUARTS[ serNUM_COM_PORTS ] = { ( ( USART_TypeDef * ) USART1_BASE ), ( ( USART_TypeDef * ) USART2_BASE ) };
+
+/* Queues used to hold characters waiting to be transmitted - one queue per port. */
+static xQueueHandle xCharsForTx[ serNUM_COM_PORTS ] = { 0 };
+
+/* Queues holding received characters - one queue per port. */
+static xQueueHandle xRxedChars[ serNUM_COM_PORTS ] = { 0 };
+
+/*-----------------------------------------------------------*/
+
+/* UART interrupt handlers, as named in the vector table. */
+void USART1_IRQHandler( void );
+void USART2_IRQHandler( void );
 
 /*-----------------------------------------------------------*/
 
 /*
- * See serial.h in this project for parameter descriptions.
+ * See header file for parameter descriptions.
  */
 long lCOMPortInit( unsigned long ulPort, unsigned long ulWantedBaud )
 {
@@ -141,26 +141,13 @@ GPIO_InitTypeDef GPIO_InitStructure;
 		does not check to see if the COM port has already been initialised. */
 		if( ulPort == 0 )
 		{
-			/* Create the semaphore used to enable tasks to block to wait for
-			characters to be received. */
-            xCOM0RxSemaphore = xSemaphoreCreateCounting( serSEMAPHORE_MAX_COUNT, 0 );
+			/* Create the queue of chars that are waiting to be sent to COM0. */
+			xCharsForTx[ 0 ] = xQueueCreate( serTX_QUEUE_LEN, sizeof( char ) );
 
-			vInitialiseCircularBuffer(	&( xCOMBufferDefinitions[ ulPort ][ serRX_BUFFER_INDEX ] ),
-										ucCOM0_Rx_Buffer,
-										configCOM0_RX_BUFFER_LENGTH,
-										sizeof( unsigned char ),
-										NULL
-									);
+			/* Create the queue used to hold characters received from COM0. */
+			xRxedChars[ 0 ] = xQueueCreate( serRX_QUEUE_LEN, sizeof( char ) );
 
-			vInitialiseCircularBuffer(	&( xCOMBufferDefinitions[ ulPort ][ serTX_BUFFER_INDEX ] ),
-										ucCOM0_Tx_Buffer,
-										configCOM0_TX_BUFFER_LENGTH,
-										sizeof( unsigned char ),
-										NULL
-									);
-
-			/* Enable COM1 clock - the ST libraries start numbering from UART1, 
-			making this UART 2. */
+			/* Enable COM0 clock - the ST libraries start numbering from UART1. */
 			RCC_APB2PeriphClockCmd( RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA, ENABLE );	
 
 			/* Configure USART1 Rx (PA10) as input floating */
@@ -182,26 +169,17 @@ GPIO_InitTypeDef GPIO_InitStructure;
 			
             USART_DMACmd( USART1, ( USART_DMAReq_Tx | USART_DMAReq_Rx ), ENABLE );
 			USART_Cmd( USART1, ENABLE );	
+
+			/* Everything is ok. */
+			lReturn = pdPASS;
 		}
-		else
+		else if( ulPort == 1 )
 		{
-			/* Create the semaphore used to enable tasks to block to wait for
-			characters to be received. */
-            xCOM1RxSemaphore = xSemaphoreCreateCounting( serSEMAPHORE_MAX_COUNT, 0 );
+			/* Create the queue of chars that are waiting to be sent to COM1. */
+			xCharsForTx[ 1 ] = xQueueCreate( serTX_QUEUE_LEN, sizeof( char ) );
 
-			vInitialiseCircularBuffer(	&( xCOMBufferDefinitions[ ulPort ][ serRX_BUFFER_INDEX ] ),
-										ucCOM1_Rx_Buffer,
-										configCOM1_RX_BUFFER_LENGTH,
-										sizeof( unsigned char ),
-										NULL
-									);
-
-			vInitialiseCircularBuffer(	&( xCOMBufferDefinitions[ ulPort ][ serTX_BUFFER_INDEX ] ),
-										ucCOM1_Tx_Buffer,
-										configCOM1_TX_BUFFER_LENGTH,
-										sizeof( unsigned char ),
-										NULL
-									);
+			/* Create the queue used to hold characters received from COM0. */
+			xRxedChars[ 1 ] = xQueueCreate( serRX_QUEUE_LEN, sizeof( char ) );
 
 			/* Enable COM0 clock - the ST libraries start numbering from 1. */
 			RCC_APB2PeriphClockCmd( RCC_APB1Periph_USART2 | RCC_APB2Periph_GPIOA, ENABLE );	
@@ -225,34 +203,89 @@ GPIO_InitTypeDef GPIO_InitStructure;
 			
             USART_DMACmd( USART2, ( USART_DMAReq_Tx | USART_DMAReq_Rx ), ENABLE );
 			USART_Cmd( USART2, ENABLE );	
+
+			/* Everything is ok. */
+			lReturn = pdPASS;
 		}	
-			
-		/* Everything is ok. */
-		lReturn = pdPASS;
+		else
+		{
+			/* Nothing to do unless more than two ports are supported. */
+		}
 	}
 	
 	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed long xUSARTGetChar( long lPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed long xSerialGetChar( long lPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
-	return pdFALSE;
+long lReturn = pdFAIL;
+
+	if( lPort < serNUM_COM_PORTS ) 
+	{
+		if( xQueueReceive( xRxedChars[ lPort ], pcRxedChar, xBlockTime ) == pdPASS )
+		{
+			lReturn = pdPASS;
+		}
+	}
+
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( long lPort, const signed char * const pcString, unsigned portSHORT usStringLength )
+long lSerialPutString( long lPort, const char * const pcString, unsigned long ulStringLength )
 {
+long lReturn;
+unsigned long ul;
+
+	if( lPort < serNUM_COM_PORTS )
+	{
+		lReturn = pdPASS;
+
+		for( ul = 0; ul < ulStringLength; ul++ )
+		{
+			if( xQueueSend( xCharsForTx[ lPort ], &( pcString[ ul ] ), serPUT_STRING_CHAR_DELAY ) != pdPASS )
+			{
+				/* Cannot fit any more in the queue.  Try turning the Tx on to 
+				clear some space. */
+				USART_ITConfig( xUARTS[ lPort ], USART_IT_TXE, ENABLE );
+				vTaskDelay( serPUT_STRING_CHAR_DELAY );
+
+				/* Go back and try again. */
+				continue;
+			}
+		}
+
+        USART_ITConfig( xUARTS[ lPort ], USART_IT_TXE, ENABLE );
+	}
+	else
+	{
+		lReturn = pdFAIL;
+	}
+
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
 signed long xSerialPutChar( long lPort, signed char cOutChar, portTickType xBlockTime )
 {
-	return pdFALSE;
+long lReturn;
+
+	if( xQueueSend( xCharsForTx[ lPort ], &cOutChar, xBlockTime ) == pdPASS )
+	{
+		lReturn = pdPASS;
+		USART_ITConfig( xUARTS[ lPort ], USART_IT_TXE, ENABLE );
+	}
+	else
+	{
+		lReturn = pdFAIL;
+	}
+
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vUARTInterruptHandler( void )
+void USART1_IRQHandler( void )
 {
 long xHigherPriorityTaskWoken = pdFALSE;
 char cChar;
@@ -261,9 +294,9 @@ char cChar;
 	{
 		/* The interrupt was caused by the THR becoming empty.  Are there any
 		more characters to transmit? */
-if( 0 )//		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx[ 0 ], &cChar, &xHigherPriorityTaskWoken ) )
 		{
-			/* A character was retrieved from the queue so can be sent to the
+			/* A character was retrieved from the buffer so can be sent to the
 			THR now. */
 			USART_SendData( USART1, cChar );
 		}
@@ -276,12 +309,16 @@ if( 0 )//		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWo
 	if( USART_GetITStatus( USART1, USART_IT_RXNE ) == SET )
 	{
 		cChar = USART_ReceiveData( USART1 );
-//		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
+		xQueueSendFromISR( xRxedChars[ 0 ], &cChar, &xHigherPriorityTaskWoken );
 	}	
 	
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
+/*-----------------------------------------------------------*/
 
+void USART2_IRQHandler( void )
+{
+}
 
 
 

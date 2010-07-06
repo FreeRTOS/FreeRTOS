@@ -61,27 +61,28 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Check" task -  This only executes every five seconds but has the highest
+ * "Check" task - This only executes every five seconds but has the highest
  * priority so is guaranteed to get processor time.  Its main function is to 
  * check that all the standard demo tasks are still operational. The check task
- * will toggle LED 7 (PB15) every five seconds so long as no errors have been
+ * will toggle LED 3 (PB11) every five seconds so long as no errors have been
  * detected.  The toggle rate will increase to half a second if an error has 
  * been found in any task.
  *
+ * "Echo" task - This is a very basic task that simply echoes any characters 
+ * received on COM0 (USART1).  This can be tested by transmitting a text file
+ * from a dumb terminal to the STM32 USART.
  */
 
 /* Standard includes. */
-#include <stdio.h>
+#include <string.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-#include "semphr.h"
 
 /* Library includes. */
 #include "stm32f10x_it.h"
-#include "stm32f10x_tim.h"
 
 /* Demo app includes. */
 #include "BlockQ.h"
@@ -92,6 +93,9 @@
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
+
+/* Driver includes. */
+#include "STM32_USART.h"
 
 
 /* The time between cycles of the 'check' task - which depends on whether the
@@ -107,8 +111,13 @@ check task has detected an error or not. */
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainECHO_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+
+/* COM port and baud rate used by the echo task. */
+#define mainCOM0							( 0 )
+#define mainBAUD_RATE						( 115200 )
 
 /*-----------------------------------------------------------*/
 
@@ -119,6 +128,10 @@ static void prvSetupHardware( void );
 
 /* The 'check' task as described at the top of this file. */
 static void prvCheckTask( void *pvParameters );
+
+/* A simple task that echoes all the characters that are received on COM0 
+(USART1). */
+static void prvUSARTEchoTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -141,7 +154,10 @@ int main( void )
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
 
-	/* Create the 'check' task, which is defined within this file. */
+	/* Create the 'echo' task, which is also defined within this file. */
+	xTaskCreate( prvUSARTEchoTask, ( signed char * ) "Echo", configMINIMAL_STACK_SIZE, NULL, mainECHO_TASK_PRIORITY, NULL );
+
+	/* Create the 'check' task, which is also defined within this file. */
 	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
     /* Start the scheduler. */
@@ -153,6 +169,7 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
+/* Described at the top of this file. */
 static void prvCheckTask( void *pvParameters )
 {
 portTickType xLastExecutionTime;
@@ -200,6 +217,49 @@ unsigned long ulTicksToWait = mainCHECK_DELAY_NO_ERROR;
 	    }
 
 		vParTestToggleLED( mainCHECK_LED );
+	}
+}
+/*-----------------------------------------------------------*/
+
+/* Described at the top of this file. */
+static void prvUSARTEchoTask( void *pvParameters )
+{
+signed char cChar;
+
+/* String declared static to ensure it does not end up on the stack, no matter
+what the optimisation level. */
+static const char *pcLongishString = 
+"ABBA was a Swedish pop music group formed in Stockholm in 1972, consisting of Anni-Frid Frida Lyngstad, "
+"Björn Ulvaeus, Benny Andersson and Agnetha Fältskog. Throughout the band's existence, Fältskog and Ulvaeus "
+"were a married couple, as were Lyngstad and Andersson - although both couples later divorced. They became one "
+"of the most commercially successful acts in the history of popular music, and they topped the charts worldwide "
+"from 1972 to 1983.  ABBA gained international popularity employing catchy song hooks, simple lyrics, sound "
+"effects (reverb, phasing) and a Wall of Sound achieved by overdubbing the female singers' voices in multiple "
+"harmonies. As their popularity grew, they were sought after to tour Europe, Australia, and North America, drawing "
+"crowds of ardent fans, notably in Australia. Touring became a contentious issue, being particularly cumbersome for "
+"Fältskog, but they continued to release studio albums to widespread commercial success. At the height of their "
+"popularity, however, both relationships began suffering strain that led ultimately to the collapse of first the "
+"Ulvaeus-Fältskog marriage (in 1979) and then of the Andersson-Lyngstad marriage in 1981. In the late 1970s and early "
+"1980s these relationship changes began manifesting in the group's music, as they produced more thoughtful, "
+"introspective lyrics with different compositions.";
+
+	/* Just to avoid compiler warnings. */
+	( void ) pvParameters;
+
+	/* Initialise COM0, which is USART1 according to the STM32 libraries. */
+	lCOMPortInit( mainCOM0, mainBAUD_RATE );
+
+	/* Try sending out a string all in one go, as a very basic test of the
+    lSerialPutString() function. */
+    lSerialPutString( mainCOM0, pcLongishString, strlen( pcLongishString ) );
+
+	for( ;; )
+	{
+		/* Block to wait for a character to be received on COM0. */
+		xSerialGetChar( mainCOM0, &cChar, portMAX_DELAY );
+
+		/* Write the received character back to COM0. */
+		xSerialPutChar( mainCOM0, cChar, 0 );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -262,9 +322,6 @@ static void prvSetupHardware( void )
 
 	/* SPI2 Periph clock enable */
 	RCC_APB1PeriphClockCmd( RCC_APB1Periph_SPI2, ENABLE );
-
-	/* Initialize the SPI FLASH driver */
-	SPI_FLASH_Init();
 }
 /*-----------------------------------------------------------*/
 

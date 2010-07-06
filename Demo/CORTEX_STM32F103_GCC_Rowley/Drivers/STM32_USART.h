@@ -55,6 +55,9 @@
 #define STM_32_SERIAL_COMMS_H
 
 long lCOMPortInit( unsigned long ulPort, unsigned long ulWantedBaud );
+signed long xSerialPutChar( long lPort, signed char cOutChar, portTickType xBlockTime );
+signed long xSerialGetChar( long lPort, signed char *pcRxedChar, portTickType xBlockTime );
+long lSerialPutString( long lPort, const char * const pcString, unsigned long ulStringLength );
 
 #endif
 

@@ -70,7 +70,21 @@
  *
  * "Echo" task - This is a very basic task that simply echoes any characters 
  * received on COM0 (USART1).  This can be tested by transmitting a text file
- * from a dumb terminal to the STM32 USART.
+ * from a dumb terminal to the STM32 USART then observing or capturing the text
+ * that is echoed back.  Missing characters will be all the more obvious if the 
+ * file contains a simple repeating string of fixed width.
+ *
+ * Currently this demo does not include interrupt nesting examples.  High 
+ * frequency timer and simpler nesting examples can be found in most Cortex M3
+ * demo applications.
+ *
+ * The functions used to initialise, set and clear LED outputs are normally 
+ * defined in partest.c.  This demo includes two partest files, one that is 
+ * configured for use with the Keil MCBSTM32 evaluation board (called 
+ * ParTest_MCBSTM32.c) and one that is configured for use with the official
+ * ST Eval board (called ParTest_ST_Eval.c).  One one of these files should be
+ * included in the build at any one time, as appropriate for the hardware 
+ * actually being used.
  */
 
 /* Standard includes. */

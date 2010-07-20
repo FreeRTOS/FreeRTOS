@@ -221,7 +221,7 @@ void *pvReturn = NULL;
 					prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
 				}
 				
-				xFreeBytesRemaining -= xWantedSize;
+				xFreeBytesRemaining -= pxBlock->xBlockSize;
 			}
 		}
 	}

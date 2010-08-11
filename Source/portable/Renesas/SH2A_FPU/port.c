@@ -99,12 +99,13 @@ extern unsigned long ulPortGetGBR( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-*pxTopOfStack = 0x11111111UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x22222222UL;
-pxTopOfStack--;
-*pxTopOfStack = 0x33333333UL;
-pxTopOfStack--;
+	/* Mark the end of the stack - used for debugging only and can be removed. */
+	*pxTopOfStack = 0x11111111UL;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x22222222UL;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x33333333UL;
+	pxTopOfStack--;
 
 	/* SR. */
 	*pxTopOfStack = portINITIAL_SR; 

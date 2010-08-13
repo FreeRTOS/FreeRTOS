@@ -96,8 +96,6 @@ static void prvStartFirstTask( void );
 
 extern void *pxCurrentTCB;
 
-unsigned char ucIPLToRestore = 0;
-
 /*-----------------------------------------------------------*/
 
 /* 
@@ -197,29 +195,6 @@ void vTickISR( void )
 	#if( configUSE_PREEMPTION == 1 )
 		taskYIELD();
 	#endif
-}
-/*-----------------------------------------------------------*/
-
-void vPortSetInterruptMask( void )
-{
-unsigned char ucPreviousIPL;
-
-	/* Store the current IPL to ensure it is restored correctly later if it is
-	not currently 0.  This is a stack variable, so there should not be a race
-	condition even if there is an interrupt or context switch before the new
-	IPL value gets set. */
-	ucPreviousIPL = get_ipl();
-	
-	/* Set the mask up to the max syscall priority. */
-	set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY );
-	
-	/* Now the mask is set there will not be a context switch, so the previous
-	and current IPL values can be compared.  This ensures against the IPL being
-	set back to zero too early when critical sections nest. */
-	if( ucPreviousIPL < configMAX_SYSCALL_INTERRUPT_PRIORITY )
-	{
-		ucIPLToRestore = ucPreviousIPL;
-	}
 }
 /*-----------------------------------------------------------*/
 

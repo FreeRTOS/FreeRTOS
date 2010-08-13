@@ -109,9 +109,11 @@ extern void vTaskSwitchContext( void );
  * These macros should be called directly, but through the taskENTER_CRITICAL()
  * and taskEXIT_CRITICAL() macros.
  */
-extern unsigned char ucIPLToRestore;
-#define portENABLE_INTERRUPTS() 	set_ipl( ucIPLToRestore )
-#define portDISABLE_INTERRUPTS() 	vPortSetInterruptMask()
+#define portENABLE_INTERRUPTS() 	set_ipl( 0 )
+#define portDISABLE_INTERRUPTS() 	set_ipl( configKERNEL_INTERRUPT_PRIORITY )
+
+#define portSET_INTERRUPT_MASK_FROM_ISR() get_ipl(); set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) set_ipl( uxSavedInterruptStatus )
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )

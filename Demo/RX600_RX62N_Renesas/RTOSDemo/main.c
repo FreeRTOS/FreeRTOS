@@ -51,6 +51,16 @@
     licensing and training services.
 */
 
+/*
+ * NOTE 1: The CPU must be in Supervisor mode when the scheduler is started.
+ * The PowerON_Reset_PC() supplied in resetprg.c with this demo has 
+ * Change_PSW_PM_to_UserMode() commented out to ensure this is the case.
+*/
+
+/* Hardware specific includes. */
+#include "iodefine.h"
+#include "rskrx62ndef.h"
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -87,26 +97,66 @@ void vApplicationIdleHook( void );
  */
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
 
+/*
+ * The reg test tasks as described at the top of this file.
+ */
+void vRegTest1Task( void *pvParameters );
+void vRegTest2Task( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 void main(void)
 {
-unsigned long i = 0;
 extern void HardwareSetup( void );
 
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
 	HardwareSetup();
 	
-	for( ;; )
-	{
-		i++;
-	}
+	/* Start the reg test tasks which test the context switching mechanism. */
+	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	
+	/* Start the tasks running. */
+	vTaskStartScheduler();
+	
+	/* If all is well we will never reach here as the scheduler will now be
+	running.  If we do reach here then it is likely that there was insufficient
+	heap available for the idle task to be created. */
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationSetupTimerInterrupt( void )
 {
+	/* Cascade two 8bit timer channels to generate the tick interrupt. */
+	
+	/* Enable the timer. */
+	SYSTEM.MSTPCRA.BIT.MSTPA5 = 0;  
+	
+	/* Enable compare match A interrupt request. */
+	TMR0.TCR.BIT.CMIEA = 1;         
+	
+	/* Clear the timer on compare match A. */
+	TMR0.TCR.BIT.CCLR = 1;          
+	
+	/* Set the compare match value. */
+	TMR01.TCORA = ( unsigned short ) ( ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 ); 
+	
+	/* 16 bit operation (count from timer 1). */
+	TMR0.TCCR.BIT.CSS = 3;          
+	
+	/* Use PCLK as the input. */
+	TMR1.TCCR.BIT.CSS = 1;          
+	
+	/* Divide PCLK by 8. */
+	TMR1.TCCR.BIT.CKS = 2;          
+	
+	/* Enable TMR 0 */
+	ICU.IER[15].BIT.IEN6 = 1;         
+	
+	/* Ensure the timer interrupt is using the configured kernel priority. */
+	ICU.IPR[68].BIT.IPR = configKERNEL_INTERRUPT_PRIORITY;  
 }
 /*-----------------------------------------------------------*/
 
@@ -130,8 +180,33 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
+	taskENTER_CRITICAL();
+	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
+
+void vRegTest1Task( void *pvParameters )
+{
+volatile unsigned long ul = 0;
+
+	for( ;; )
+	{
+		ul += 2;
+		ul -= 1;
+	}		
+}
+/*-----------------------------------------------------------*/
+
+void vRegTest2Task( void *pvParameters )
+{
+volatile unsigned long ul = 0;
+
+	for( ;; )
+	{
+		ul += 4;
+		ul -= 2;
+	}		
+}
 
 
 

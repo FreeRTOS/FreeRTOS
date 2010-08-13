@@ -75,7 +75,7 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 36 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY	1
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_CO_ROUTINES 			0
@@ -89,6 +89,20 @@
 
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+
+/* The interrupt priority used by the kernel itself for the tick interrupt and
+the pended interrupt.  This would normally be the lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY         1
+
+/* The maximum interrupt priority from which FreeRTOS API calls can be made.
+Interrupts that use a priority above this will not be effected by anything the
+kernel is doing. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
+
+/* The peripheral used to generate the tick interrupt is configured as part of
+the application code.  This constant should be set to the vector number of the
+peripheral chosen.  As supplied this is TMR0. */
+#define configTICK_VECTOR						174
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

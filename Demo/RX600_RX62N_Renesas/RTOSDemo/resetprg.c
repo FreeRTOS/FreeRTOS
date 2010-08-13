@@ -103,7 +103,8 @@ void PowerON_Reset_PC(void)
 //	_CALL_INIT();					// Remove the comment when you use global class object
 
 	set_psw(PSW_init);				// Set Ubit & Ibit for PSW
-	Change_PSW_PM_to_UserMode();	// Change PSW PMbit (SuperVisor->User)
+//	Change_PSW_PM_to_UserMode();	// Change PSW PMbit (SuperVisor->User)
+	( void ) Change_PSW_PM_to_UserMode;
 
 	main();
 

@@ -64,16 +64,15 @@
 
 /*-----------------------------------------------------------*/
 
-/* Dimensions the array into which the floating point context is saved.  
-Allocate enough space for FPR0 to FPR15, FPUL and FPSCR, each of which is 4
-bytes big.  If this number is changed then the 72 in portasm.src also needs
-changing. */
-#define portFLOP_REGISTERS_TO_STORE	( 18 )
-#define portFLOP_STORAGE_SIZE 		( portFLOP_REGISTERS_TO_STORE * 4 )
-
 /* Tasks should start with interrupts enabled, therefore PSW is set with U,I,PM 
 flags set and IPL clear. */
-#define portINITIAL_PSW      ( ( portSTACK_TYPE ) 0x00130000 )
+/* 
+ U = 1 User stack pointer.
+ I = 1 Interrupts enabled.
+ PM = 0 Supervisor mode.
+ IPL = 0 All interrupt priorities enabled.
+*/
+#define portINITIAL_PSW      ( ( portSTACK_TYPE ) 0x00030000 )
 #define portINITIAL_FPSW     ( ( portSTACK_TYPE ) 0x00000100 )
 
 
@@ -88,6 +87,16 @@ void vPortYield( void );
  * Function to start the first task executing.
  */
 void vPortStartFirstTask( void );
+
+void vPortPendContextSwitch( void );
+
+static void prvStartFirstTask( void );
+
+/*-----------------------------------------------------------*/
+
+extern void *pxCurrentTCB;
+
+unsigned char ucIPLToRestore = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -148,17 +157,17 @@ portBASE_TYPE xPortStartScheduler( void )
 {
 extern void vApplicationSetupTimerInterrupt( void );
 
-	/* Call an application function to set up the timer that will generate the
-	tick interrupt.  This way the application can decide which peripheral to 
-	use.  A demo application is provided to show a suitable example. */
-	vApplicationSetupTimerInterrupt();
+	/* Use pxCurrentTCB just so it does not get optimised away. */
+	if( pxCurrentTCB != NULL )
+	{
+		/* Call an application function to set up the timer that will generate the
+		tick interrupt.  This way the application can decide which peripheral to 
+		use.  A demo application is provided to show a suitable example. */
+		vApplicationSetupTimerInterrupt();
 
-	/* Start the first task.  This will only restore the standard registers and
-	not the flop registers.  This does not really matter though because the only
-	flop register that is initialised to a particular value is fpscr, and it is
-	only initialised to the current value, which will still be the current value
-	when the first task starts executing. */
-	//trapa( portSTART_SCHEDULER_TRAP_NO );
+		/* Start the first task. */
+		prvStartFirstTask();
+	}
 
 	/* Should not get here. */
 	return pdFAIL;
@@ -176,3 +185,68 @@ void vPortYield( void )
 }
 /*-----------------------------------------------------------*/
 
+#pragma interrupt (vTickISR(vect=configTICK_VECTOR,enable))
+void vTickISR( void )
+{
+	/* Restore previous IPL on exit. */
+	//set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+	
+	/* Clear the interrupt. */
+	vTaskIncrementTick();
+	
+	#if( configUSE_PREEMPTION == 1 )
+		taskYIELD();
+	#endif
+}
+/*-----------------------------------------------------------*/
+
+void vPortSetInterruptMask( void )
+{
+unsigned char ucPreviousIPL;
+
+	/* Store the current IPL to ensure it is restored correctly later if it is
+	not currently 0.  This is a stack variable, so there should not be a race
+	condition even if there is an interrupt or context switch before the new
+	IPL value gets set. */
+	ucPreviousIPL = get_ipl();
+	
+	/* Set the mask up to the max syscall priority. */
+	set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+	
+	/* Now the mask is set there will not be a context switch, so the previous
+	and current IPL values can be compared.  This ensures against the IPL being
+	set back to zero too early when critical sections nest. */
+	if( ucPreviousIPL < configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	{
+		ucIPLToRestore = ucPreviousIPL;
+	}
+}
+/*-----------------------------------------------------------*/
+
+#pragma inline_asm prvStartFirstTask
+static void prvStartFirstTask( void )
+{
+	/* When starting the scheduler there is nothing that needs moving to the
+	interrupt stack because the function is not called from an interrupt.
+	Just ensure the current stack is the user stack. */
+	SETPSW      U
+
+	/* Obtain the location of the stack associated with which ever task 
+	pxCurrentTCB is currently pointing to. */
+	MOV.L       #_pxCurrentTCB,R15
+	MOV.L       [R15],R15
+	MOV.L       [R15],R0
+
+	/* Restore the registers from the stack of the task pointed to by 
+	pxCurrentTCB. */
+    POP		R15
+    MVTACLO	R15 		/* Accumulator low 32 bits. */
+    POP		R15
+    MVTACHI	R15 		/* Accumulator high 32 bits. */
+    POP		R15
+    MVTC	R15,FPSW 	/* Floating point status word. */
+    POPM	R1-R15 		/* R1 to R15 - R0 is not included as it is the SP. */
+    RTE					/* This pops the remaining registers. */
+    NOP
+    NOP
+}

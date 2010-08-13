@@ -59,6 +59,9 @@
 extern "C" {
 #endif
 
+/* Hardware specifics. */
+#include "machine.h"
+
 /*-----------------------------------------------------------
  * Port specific definitions.  
  *
@@ -106,8 +109,9 @@ extern void vTaskSwitchContext( void );
  * These macros should be called directly, but through the taskENTER_CRITICAL()
  * and taskEXIT_CRITICAL() macros.
  */
-#define portENABLE_INTERRUPTS() 	
-#define portDISABLE_INTERRUPTS() 	
+extern unsigned char ucIPLToRestore;
+#define portENABLE_INTERRUPTS() 	set_ipl( ucIPLToRestore )
+#define portDISABLE_INTERRUPTS() 	vPortSetInterruptMask()
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )

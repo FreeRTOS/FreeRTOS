@@ -102,28 +102,6 @@ void vPortYield( void );
 extern void vTaskSwitchContext( void );
 #define portYIELD_FROM_ISR( x )			if( x != pdFALSE ) vTaskSwitchContext()
 
-/* 
- * This function tells the kernel that the task referenced by xTask is going to 
- * use the floating point registers and therefore requires the floating point 
- * registers saved as part of its context. 
- */
-portBASE_TYPE xPortUsesFloatingPoint( void* xTask );
-
-/*
- * The flop save and restore functions are defined in portasm.src and called by
- * the trace "task switched in" and "trace task switched out" macros. 
- */
-void vPortSaveFlopRegisters( void *pulBuffer );
-void vPortRestoreFlopRegisters( void *pulBuffer );
-
-/*
- * pxTaskTag is used to point to the buffer into which the floating point 
- * context should be saved.  If pxTaskTag is NULL then the task does not use
- * a floating point context.
- */
-#define traceTASK_SWITCHED_OUT() if( pxCurrentTCB->pxTaskTag != NULL ) vPortSaveFlopRegisters( pxCurrentTCB->pxTaskTag )
-#define traceTASK_SWITCHED_IN() if( pxCurrentTCB->pxTaskTag != NULL ) vPortRestoreFlopRegisters( pxCurrentTCB->pxTaskTag )
-
 /*
  * These macros should be called directly, but through the taskENTER_CRITICAL()
  * and taskEXIT_CRITICAL() macros.

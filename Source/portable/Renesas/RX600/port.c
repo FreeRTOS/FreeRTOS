@@ -71,6 +71,12 @@ changing. */
 #define portFLOP_REGISTERS_TO_STORE	( 18 )
 #define portFLOP_STORAGE_SIZE 		( portFLOP_REGISTERS_TO_STORE * 4 )
 
+/* Tasks should start with interrupts enabled, therefore PSW is set with U,I,PM 
+flags set and IPL clear. */
+#define portINITIAL_PSW      ( ( portSTACK_TYPE ) 0x00130000 )
+#define portINITIAL_FPSW     ( ( portSTACK_TYPE ) 0x00000100 )
+
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -90,6 +96,50 @@ void vPortStartFirstTask( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
+	/* R0 is not included as it is the stack pointer. */
+	
+	*pxTopOfStack = 0xdeadbeef;
+	pxTopOfStack--;
+ 	*pxTopOfStack = portINITIAL_PSW;
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	pxTopOfStack--;
+	*pxTopOfStack = 0xffffffff;	/* r15. */
+	pxTopOfStack--;
+	*pxTopOfStack = 0xeeeeeeee;
+	pxTopOfStack--;
+	*pxTopOfStack = 0xdddddddd;
+	pxTopOfStack--;
+	*pxTopOfStack = 0xcccccccc;
+	pxTopOfStack--;
+	*pxTopOfStack = 0xbbbbbbbb;
+	pxTopOfStack--;
+	*pxTopOfStack = 0xaaaaaaaa;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x99999999;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x88888888;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x77777777;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x66666666;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x55555555;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x44444444;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x33333333;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x22222222;
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R1 */
+	pxTopOfStack--;				
+	*pxTopOfStack = portINITIAL_FPSW;
+	pxTopOfStack--;
+	*pxTopOfStack = 0x12345678; /* Accumulator. */
+	pxTopOfStack--;
+	*pxTopOfStack = 0x87654321; /* Accumulator. */
+
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -122,59 +172,6 @@ void vPortEndScheduler( void )
 /*-----------------------------------------------------------*/
 
 void vPortYield( void )
-{
-}
-/*-----------------------------------------------------------*/
-
-portBASE_TYPE xPortUsesFloatingPoint( xTaskHandle xTask )
-{
-unsigned long *pulFlopBuffer;
-portBASE_TYPE xReturn;
-extern void * volatile pxCurrentTCB;
-
-	/* This function tells the kernel that the task referenced by xTask is
-	going to use the floating point registers and therefore requires the
-	floating point registers saved as part of its context. */
-
-	/* Passing NULL as xTask is used to indicate that the calling task is the
-	subject task - so pxCurrentTCB is the task handle. */
-	if( xTask == NULL )
-	{
-		xTask = ( xTaskHandle ) pxCurrentTCB;
-	}
-
-	/* Allocate a buffer large enough to hold all the flop registers. */
-	pulFlopBuffer = ( unsigned long * ) pvPortMalloc( portFLOP_STORAGE_SIZE );
-	
-	if( pulFlopBuffer != NULL )
-	{
-		/* Start with the registers in a benign state. */
-		memset( ( void * ) pulFlopBuffer, 0x00, portFLOP_STORAGE_SIZE );
-		
-		/* The first thing to get saved in the buffer is the FPSCR value -
-		initialise this to the current FPSCR value. */
-//_RB_		*pulFlopBuffer = get_fpscr();
-		
-		/* Use the task tag to point to the flop buffer.  Pass pointer to just 
-		above the buffer because the flop save routine uses a pre-decrement. */
-		vTaskSetApplicationTaskTag( xTask, ( void * ) ( pulFlopBuffer + portFLOP_REGISTERS_TO_STORE ) );		
-		xReturn = pdPASS;
-	}
-	else
-	{
-		xReturn = pdFAIL;
-	}
-	
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-void vPortSaveFlopRegisters( void *pvBuffer )
-{
-}
-/*-----------------------------------------------------------*/
-
-void vPortRestoreFlopRegisters( void *pvBuffer )
 {
 }
 /*-----------------------------------------------------------*/

@@ -69,8 +69,8 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( 200000000UL )
-#define configPERIPHERAL_CLOCK_HZ		( 50000000UL )
+#define configCPU_CLOCK_HZ				( PCLK_FREQUENCY )
+#define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 36 * 1024 ) )
@@ -85,7 +85,7 @@
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configQUEUE_REGISTRY_SIZE		0
 #define configUSE_MALLOC_FAILED_HOOK	1
-#define configUSE_APPLICATION_TASK_TAG	1	/* Must be set to one for floating point support in this port. */
+#define configUSE_APPLICATION_TASK_TAG	0
 
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

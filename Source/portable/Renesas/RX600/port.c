@@ -62,6 +62,9 @@
 /* Library includes. */
 #include "string.h"
 
+/* Hardware specifics. */
+#include "iodefine.h"
+
 /*-----------------------------------------------------------*/
 
 /* Tasks should start with interrupts enabled, therefore PSW is set with U,I,PM 
@@ -72,8 +75,8 @@ flags set and IPL clear. */
  PM = 0 Supervisor mode.
  IPL = 0 All interrupt priorities enabled.
 */
-#define portINITIAL_PSW      ( ( portSTACK_TYPE ) 0x00030000 )
-#define portINITIAL_FPSW     ( ( portSTACK_TYPE ) 0x00000100 )
+#define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
+#define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
 
 
 /*-----------------------------------------------------------*/
@@ -163,6 +166,15 @@ extern void vApplicationSetupTimerInterrupt( void );
 		use.  A demo application is provided to show a suitable example. */
 		vApplicationSetupTimerInterrupt();
 
+		/* Enable the software interrupt. */		
+		_IEN( _ICU_SWINT ) = 1;
+		
+		/* Ensure the software interrupt is clear. */
+		_IR( _ICU_SWINT ) = 0;
+		
+		/* Ensure the software interrupt is set to the kernel priority. */
+		_IPR( _ICU_SWINT ) = configKERNEL_INTERRUPT_PRIORITY;
+	
 		/* Start the first task. */
 		prvStartFirstTask();
 	}
@@ -178,25 +190,29 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( void )
-{
-}
-/*-----------------------------------------------------------*/
-
-#pragma interrupt (vTickISR(vect=configTICK_VECTOR,enable))
+#pragma interrupt ( vTickISR( vect = _VECT( configTICK_VECTOR ), enable ) )
 void vTickISR( void )
 {
-	/* Restore previous IPL on exit. */
-	//set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+static volatile unsigned long ul = 0;
+
+	ul++;
 	
 	/* Clear the interrupt. */
-	vTaskIncrementTick();
+//	vTaskIncrementTick();
 	
 	#if( configUSE_PREEMPTION == 1 )
-		taskYIELD();
+//		taskYIELD();
 	#endif
 }
 /*-----------------------------------------------------------*/
+
+#pragma interrupt ( vSoftwareInterruptISR( vect = _VECT( _ICU_SWINT ), enable ) )
+void vSoftwareInterruptISR( void )
+{
+static volatile unsigned long ul = 0;
+
+	ul++;
+}
 
 #pragma inline_asm prvStartFirstTask
 static void prvStartFirstTask( void )
@@ -225,3 +241,5 @@ static void prvStartFirstTask( void )
     NOP
     NOP
 }
+
+

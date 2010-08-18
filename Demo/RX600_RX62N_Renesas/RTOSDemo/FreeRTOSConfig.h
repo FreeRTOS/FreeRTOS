@@ -54,6 +54,9 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+/* Board specifics. */
+#include "rskrx62ndef.h"
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -67,7 +70,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
+#define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( PCLK_FREQUENCY )
 #define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY )
@@ -101,8 +104,8 @@ kernel is doing. */
 
 /* The peripheral used to generate the tick interrupt is configured as part of
 the application code.  This constant should be set to the vector number of the
-peripheral chosen.  As supplied this is TMR0. */
-#define configTICK_VECTOR						174
+peripheral chosen.  As supplied this is CMT0. */
+#define configTICK_VECTOR						_CMT0_CMI0
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

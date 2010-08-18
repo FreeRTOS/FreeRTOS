@@ -113,10 +113,13 @@ extern void HardwareSetup( void );
 	here. */
 	HardwareSetup();
 	
+	/* Turn all LEDs off. */
+	vParTestInitialise();
+	
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	
+
 	/* Start the tasks running. */
 	vTaskStartScheduler();
 	
@@ -129,34 +132,26 @@ extern void HardwareSetup( void );
 
 void vApplicationSetupTimerInterrupt( void )
 {
-	/* Cascade two 8bit timer channels to generate the tick interrupt. */
+	/* Enable compare match timer 0. */
+	MSTP( CMT0 ) = 0;
 	
-	/* Enable the timer. */
-	SYSTEM.MSTPCRA.BIT.MSTPA5 = 0;  
-	
-	/* Enable compare match A interrupt request. */
-	TMR0.TCR.BIT.CMIEA = 1;         
-	
-	/* Clear the timer on compare match A. */
-	TMR0.TCR.BIT.CCLR = 1;          
+	/* Interrupt on compare match. */
+	CMT0.CMCR.BIT.CMIE = 1;
 	
 	/* Set the compare match value. */
-	TMR01.TCORA = ( unsigned short ) ( ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 ); 
+	CMT0.CMCOR = ( unsigned short ) ( ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 );
 	
-	/* 16 bit operation (count from timer 1). */
-	TMR0.TCCR.BIT.CSS = 3;          
+	/* Divide the PCLK by 8. */
+	CMT0.CMCR.BIT.CKS = 0;
 	
-	/* Use PCLK as the input. */
-	TMR1.TCCR.BIT.CSS = 1;          
+	/* Enable the interrupt... */
+	_IEN(_CMT0_CMI0) = 1;
 	
-	/* Divide PCLK by 8. */
-	TMR1.TCCR.BIT.CKS = 2;          
+	/* ...and set its priority to the application defined kernel priority. */
+	_IPR(_CMT0_CMI0) = configKERNEL_INTERRUPT_PRIORITY;
 	
-	/* Enable TMR 0 */
-	ICU.IER[15].BIT.IEN6 = 1;         
-	
-	/* Ensure the timer interrupt is using the configured kernel priority. */
-	ICU.IPR[68].BIT.IPR = configKERNEL_INTERRUPT_PRIORITY;  
+	/* Start the timer. */
+	CMT.CMSTR0.BIT.STR0 = 1;
 }
 /*-----------------------------------------------------------*/
 

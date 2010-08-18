@@ -63,6 +63,7 @@
 #include "string.h"
 
 /* Hardware specifics. */
+#include <machine.h>
 #include "iodefine.h"
 
 /*-----------------------------------------------------------*/
@@ -77,7 +78,6 @@ flags set and IPL clear. */
 */
 #define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
 #define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
-
 
 /*-----------------------------------------------------------*/
 
@@ -94,6 +94,10 @@ void vPortStartFirstTask( void );
 void vPortPendContextSwitch( void );
 
 static void prvStartFirstTask( void );
+
+static void prvYieldHandler( void );
+
+void vSoftwareInterruptISR( void );
 
 /*-----------------------------------------------------------*/
 
@@ -179,40 +183,13 @@ extern void vApplicationSetupTimerInterrupt( void );
 		prvStartFirstTask();
 	}
 
+	/* Just to make sure the function is not optimised away. */
+	( void ) vSoftwareInterruptISR();
+
 	/* Should not get here. */
 	return pdFAIL;
 }
 /*-----------------------------------------------------------*/
-
-void vPortEndScheduler( void )
-{
-	/* Not implemented as there is nothing to return to. */
-}
-/*-----------------------------------------------------------*/
-
-#pragma interrupt ( vTickISR( vect = _VECT( configTICK_VECTOR ), enable ) )
-void vTickISR( void )
-{
-static volatile unsigned long ul = 0;
-
-	ul++;
-	
-	/* Clear the interrupt. */
-//	vTaskIncrementTick();
-	
-	#if( configUSE_PREEMPTION == 1 )
-//		taskYIELD();
-	#endif
-}
-/*-----------------------------------------------------------*/
-
-#pragma interrupt ( vSoftwareInterruptISR( vect = _VECT( _ICU_SWINT ), enable ) )
-void vSoftwareInterruptISR( void )
-{
-static volatile unsigned long ul = 0;
-
-	ul++;
-}
 
 #pragma inline_asm prvStartFirstTask
 static void prvStartFirstTask( void )
@@ -224,9 +201,9 @@ static void prvStartFirstTask( void )
 
 	/* Obtain the location of the stack associated with which ever task 
 	pxCurrentTCB is currently pointing to. */
-	MOV.L       #_pxCurrentTCB,R15
-	MOV.L       [R15],R15
-	MOV.L       [R15],R0
+	MOV.L       #_pxCurrentTCB, R15
+	MOV.L       [R15], R15
+	MOV.L       [R15], R0
 
 	/* Restore the registers from the stack of the task pointed to by 
 	pxCurrentTCB. */
@@ -241,5 +218,113 @@ static void prvStartFirstTask( void )
     NOP
     NOP
 }
+/*-----------------------------------------------------------*/
+
+#pragma interrupt ( vTickISR( vect = _VECT( configTICK_VECTOR ), enable ) )
+void vTickISR( void )
+{
+	/* Clear the interrupt. */
+	vTaskIncrementTick();
+	
+	#if( configUSE_PREEMPTION == 1 )
+		taskYIELD();
+	#endif
+}
+/*-----------------------------------------------------------*/
+
+void vSoftwareInterruptISR( void )
+{
+	prvYieldHandler();
+}
+/*-----------------------------------------------------------*/
+
+#pragma inline_asm prvYieldHandler
+static void prvYieldHandler( void )
+{
+	/* Install as the software interrupt handler. */
+	.RVECTOR    _VECT( _ICU_SWINT ), _vSoftwareInterruptISR
+
+	/* Re-enable interrupts. */
+	SETPSW	I
+
+	/* Move the data that was automatically pushed onto the interrupt stack when
+	the interrupt occurred from the interrupt stack to the user stack.  
+	
+	R15 is saved before it is used. */
+	PUSH.L	R15
+	
+	/* Read the user stack pointer. */
+	MVFC	USP, R15
+	
+	/* Move the address down to the data being moved. */
+	SUB		#12, R15
+	MVTC	R15, USP
+	
+	/* Copy the data accross. */
+	MOV.L	[ R0 ], [ R15 ] ; R15
+	MOV.L 	4[ R0 ], 4[ R15 ]  ; PC
+	MOV.L	8[ R0 ], 8[ R15 ]  ; PSW
+
+	/* Move the interrupt stack pointer to its new correct position. */
+	ADD	#12, R0
+	
+	/* All the rest of the registers are saved directly to the user stack. */
+	SETPSW	U
+
+	/* Save the rest of the registers (R15 has been saved already. */
+	PUSHM	R1-R14 		; General purpose registers. 
+	MVFC	FPSW, R15 	; Floating point status word.
+	PUSH.L	R15
+	MVFACHI	R15 		; Accumulator
+	PUSH.L	R15
+	MVFACMI	R15 		; Accumulator
+	SHLL	#16, R15
+	PUSH.L	R15
+
+	/* Save the stack pointer to the TCB. */
+	MOV.L	#_pxCurrentTCB, R15
+	MOV.L	[ R15 ], R15
+	MOV.L	R0, [ R15 ]
+			
+	/* Ensure the interrupt mask is set to the syscall priority while the kernel
+	structures are being accessed. */
+	MVTIPL	#configMAX_SYSCALL_INTERRUPT_PRIORITY
+
+	/* Select the next task to run. */
+	BSR.A	_vTaskSwitchContext
+
+	/* Reset the interrupt mask. */
+	MVTIPL	#configKERNEL_INTERRUPT_PRIORITY
+
+	/* Load the stack pointer of the task that is now selected as the Running
+	state task from its TCB. */
+	MOV.L	#_pxCurrentTCB,R15
+	MOV.L	[ R15 ], R15
+	MOV.L	[ R15 ], R0
+
+	/* Restore the context of the new task.  The PSW (Program Status Word) and
+	PC will be popped by the RTE instruction. */
+	POP		R15
+	MVTACLO	R15
+	POP		R15
+	MVTACHI	R15
+	POP		R15
+	MVTC	R15,FPSW
+	POPM	R1-R15
+	RTE
+	NOP
+	NOP
+}
+/*-----------------------------------------------------------*/
+
+void vPortEndScheduler( void )
+{
+	/* Not implemented as there is nothing to return to. */
+	
+	/* The following line is just to prevent the symbol getting optimised away. */
+	( void ) vTaskSwitchContext();
+}
+/*-----------------------------------------------------------*/
+
 
 

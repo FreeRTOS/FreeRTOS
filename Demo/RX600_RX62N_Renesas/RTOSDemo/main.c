@@ -65,6 +65,31 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Standard demo includes. */
+#include "partest.h"
+#include "flash.h"
+#include "IntQueue.h"
+
+/* Values that are passed into the reg test tasks using the task parameter.  The 
+tasks then check that the values are passed in correctly. */
+#define mainREG_TEST_1_PARAMETER	( 0x12121212UL )
+#define mainREG_TEST_2_PARAMETER	( 0x12345678UL )
+
+/* Priorities at which the tasks are created. */
+#define mainFLASH_TASK_PRIORITY		1
+#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+
+/* The LED toggled by the check task. */
+#define mainCHECK_LED						( 5 )
+
+/* The rate at which mainCHECK_LED will toggle when all the tasks are running
+without error. */
+#define mainNO_ERROR_CYCLE_TIME				( 5000 / portTICK_RATE_MS )
+
+/* The rate at which mainCHECK_LED will toggle when an error has been reported
+by at least one task. */
+#define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
+
 /*
  * vApplicationMallocFailedHook() will only be called if
  * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
@@ -103,6 +128,23 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 void vRegTest1Task( void *pvParameters );
 void vRegTest2Task( void *pvParameters );
 
+/*
+ * The actual implementatio of the reg test functionality, which, because of
+ * the direct register access, have to be in assembly.
+ */
+static void prvRegTest1Implementation( void );
+static void prvRegTest2Implementation( void );
+
+/*
+ * The check task as described at the top of this file.
+ */
+static void prvCheckTask( void *pvParameters );
+
+/* Variables that are incremented on each iteration of the reg test tasks - 
+provided the tasks have not reported any errors.  The check task inspects these
+variables to ensure they are still incrementing as expected. */
+unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
+
 /*-----------------------------------------------------------*/
 
 void main(void)
@@ -116,9 +158,16 @@ extern void HardwareSetup( void );
 	/* Turn all LEDs off. */
 	vParTestInitialise();
 	
+	/* Start the common demo tasks. */
+	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+	vStartInterruptQueueTasks();
+	
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+
+	/* Start the check task as described at the top of this file. */
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
@@ -127,6 +176,48 @@ extern void HardwareSetup( void );
 	running.  If we do reach here then it is likely that there was insufficient
 	heap available for the idle task to be created. */
 	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+static void prvCheckTask( void *pvParameters )
+{
+static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
+portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
+
+	/* Initialise xNextWakeTime - this only needs to be done once. */
+	xNextWakeTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		/* Place this task in the blocked state until it is time to run again. */
+		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+
+		/* Check the standard demo tasks are running without error. */
+		if( xAreIntQueueTasksStillRunning() != pdPASS )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+
+		/* Check the reg test tasks are still cycling.  They will stop incrementing
+		their loop counters if they encounter an error. */
+		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+
+		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		
+		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
+		ulLastRegTest2CycleCount = ulRegTest2CycleCount;
+		
+		/* Toggle the check LED to give an indication of the system status.  If the
+		LED toggles every 5 seconds then everything is ok.  A faster toggle indicates
+		an error. */
+		vParTestToggleLED( mainCHECK_LED );
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -145,10 +236,10 @@ void vApplicationSetupTimerInterrupt( void )
 	CMT0.CMCR.BIT.CKS = 0;
 	
 	/* Enable the interrupt... */
-	_IEN(_CMT0_CMI0) = 1;
+	_IEN( _CMT0_CMI0 ) = 1;
 	
 	/* ...and set its priority to the application defined kernel priority. */
-	_IPR(_CMT0_CMI0) = configKERNEL_INTERRUPT_PRIORITY;
+	_IPR( _CMT0_CMI0 ) = configKERNEL_INTERRUPT_PRIORITY;
 	
 	/* Start the timer. */
 	CMT.CMSTR0.BIT.STR0 = 1;
@@ -175,32 +266,205 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
-	taskENTER_CRITICAL();
-	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
 void vRegTest1Task( void *pvParameters )
 {
-volatile unsigned long ul = 0;
-
-	for( ;; )
+	if( ( ( unsigned long ) pvParameters ) != mainREG_TEST_1_PARAMETER )
 	{
-		ul += 2;
-		ul -= 1;
-	}		
+		/* The parameter did not contain the expected value. */
+		for( ;; )
+		{
+			/* Stop the tick interrupt so its obvious something has gone wrong. */
+			taskDISABLE_INTERRUPTS();
+		}
+	}
+	
+	/* This is an inline asm function that never returns. */
+	prvRegTest1Implementation();		
 }
 /*-----------------------------------------------------------*/
 
 void vRegTest2Task( void *pvParameters )
 {
-volatile unsigned long ul = 0;
-
-	for( ;; )
+	if( ( ( unsigned long ) pvParameters ) != mainREG_TEST_2_PARAMETER )
 	{
-		ul += 4;
-		ul -= 2;
-	}		
+		/* The parameter did not contain the expected value. */
+		for( ;; )
+		{
+			/* Stop the tick interrupt so its obvious something has gone wrong. */
+			taskDISABLE_INTERRUPTS();
+		}
+	}
+	
+	/* This is an inline asm function that never returns. */
+	prvRegTest2Implementation();		
+}
+/*-----------------------------------------------------------*/
+
+#pragma inline_asm prvRegTest1Implementation
+static void prvRegTest1Implementation( void )
+{
+	; Put a known value in each register.
+	MOV.L	#1, R1
+	MOV.L	#2, R2
+	MOV.L	#3, R3
+	MOV.L	#4, R4
+	MOV.L	#5, R5
+	MOV.L	#6, R6
+	MOV.L	#7, R7
+	MOV.L	#8, R8
+	MOV.L	#9, R9
+	MOV.L	#10, R10
+	MOV.L	#11, R11
+	MOV.L	#12, R12
+	MOV.L	#13, R13
+	MOV.L	#14, R14
+	MOV.L	#15, R15
+	
+	; Loop, checking each itteration that each register still contains the
+	; expected value.
+TestLoop1:	
+
+	; Push the registers that are going to get clobbered.
+	PUSHM	R14-R15
+	
+	; Increment the loop counter to show this task is still getting CPU time.
+	MOV.L	#_ulRegTest1CycleCount, R14
+	MOV.L	[ R14 ], R15
+	ADD		#1, R15
+	MOV.L	R15, [ R14 ]
+	
+	; Yield to extend the text coverage.  Set the bit in the ITU SWINTR register.
+	MOV.L	#1, R14
+	MOV.L 	#0872E0H, R15
+	MOV.B	R14, [R15]
+	NOP
+	NOP
+	
+	; Restore the clobbered registers.
+	POPM	R14-R15
+	
+	; Now compare each register to ensure it still contains the value that was
+	; set before this loop was entered.
+	CMP		#1, R1
+	BNE		RegTest2Error
+	CMP		#2, R2
+	BNE		RegTest2Error
+	CMP		#3, R3
+	BNE		RegTest2Error
+	CMP		#4, R4
+	BNE		RegTest2Error
+	CMP		#5, R5
+	BNE		RegTest2Error
+	CMP		#6, R6
+	BNE		RegTest2Error
+	CMP		#7, R7
+	BNE		RegTest2Error
+	CMP		#8, R8
+	BNE		RegTest2Error
+	CMP		#9, R9
+	BNE		RegTest2Error
+	CMP		#10, R10
+	BNE		RegTest2Error
+	CMP		#11, R11
+	BNE		RegTest2Error
+	CMP		#12, R12
+	BNE		RegTest2Error
+	CMP		#13, R13
+	BNE		RegTest2Error
+	CMP		#14, R14
+	BNE		RegTest2Error
+	CMP		#15, R15
+	BNE		RegTest2Error
+
+	; All comparisons passed, start a new itteratio of this loop.
+	BRA		TestLoop1
+	
+RegTest1Error:
+	; A compare failed, something has gone wrong.  Stop the tick and any other 
+	; interrupts to make it obvious that things have halted.
+	CLRPSW	I
+	BRA RegTest1Error
+}
+/*-----------------------------------------------------------*/
+
+#pragma inline_asm prvRegTest2Implementation
+static void prvRegTest2Implementation( void )
+{
+	; Put a known value in each register.
+	MOV.L	#10, R1
+	MOV.L	#20, R2
+	MOV.L	#30, R3
+	MOV.L	#40, R4
+	MOV.L	#50, R5
+	MOV.L	#60, R6
+	MOV.L	#70, R7
+	MOV.L	#80, R8
+	MOV.L	#90, R9
+	MOV.L	#100, R10
+	MOV.L	#110, R11
+	MOV.L	#120, R12
+	MOV.L	#130, R13
+	MOV.L	#140, R14
+	MOV.L	#150, R15
+	
+	; Loop, checking on each itteration that each register still contains the
+	; expected value.
+TestLoop2:	
+	
+	; Push the registers that are going to get clobbered.
+	PUSHM	R14-R15
+	
+	; Increment the loop counter to show this task is still getting CPU time.
+	MOV.L	#_ulRegTest2CycleCount, R14
+	MOV.L	[ R14 ], R15
+	ADD		#1, R15
+	MOV.L	R15, [ R14 ]
+	
+	; Restore the clobbered registers.
+	POPM	R14-R15	
+	
+	CMP		#10, R1
+	BNE		RegTest2Error
+	CMP		#20, R2
+	BNE		RegTest2Error
+	CMP		#30, R3
+	BNE		RegTest2Error
+	CMP		#40, R4
+	BNE		RegTest2Error
+	CMP		#50, R5
+	BNE		RegTest2Error
+	CMP		#60, R6
+	BNE		RegTest2Error
+	CMP		#70, R7
+	BNE		RegTest2Error
+	CMP		#80, R8
+	BNE		RegTest2Error
+	CMP		#90, R9
+	BNE		RegTest2Error
+	CMP		#100, R10
+	BNE		RegTest2Error
+	CMP		#110, R11
+	BNE		RegTest2Error
+	CMP		#120, R12
+	BNE		RegTest2Error
+	CMP		#130, R13
+	BNE		RegTest2Error
+	CMP		#140, R14
+	BNE		RegTest2Error
+	CMP		#150, R15
+	BNE		RegTest2Error
+
+	; All comparisons passed, start a new itteratio of this loop.
+	BRA		TestLoop2
+	
+RegTest2Error:
+	; A compare failed, something went wrong.  Stop the tick and any other 
+	; interrupts to make it obvious that things have halted.
+	CLRPSW	I
+	BRA RegTest2Error
 }
 
 

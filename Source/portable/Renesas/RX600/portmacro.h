@@ -105,7 +105,7 @@ vector 27. */
 #define portYIELD()				*portITU_SWINTR = 0x01; nop(); nop(); nop(); nop(); nop()
 
 extern void vTaskSwitchContext( void );
-#define portYIELD_FROM_ISR( x )			if( x != pdFALSE ) vTaskSwitchContext()
+#define portYIELD_FROM_ISR( x )			if( x != pdFALSE ) portYIELD()
 
 /*
  * These macros should be called directly, but through the taskENTER_CRITICAL()

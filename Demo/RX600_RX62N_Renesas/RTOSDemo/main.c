@@ -69,6 +69,16 @@
 #include "partest.h"
 #include "flash.h"
 #include "IntQueue.h"
+#include "BlockQ.h"
+#include "death.h"
+#include "integer.h"
+#include "blocktim.h"
+#include "semtest.h"
+#include "PollQ.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "recmutex.h"
+#include "flop.h"
 
 /* Values that are passed into the reg test tasks using the task parameter.  The 
 tasks then check that the values are passed in correctly. */
@@ -76,8 +86,15 @@ tasks then check that the values are passed in correctly. */
 #define mainREG_TEST_2_PARAMETER	( 0x12345678UL )
 
 /* Priorities at which the tasks are created. */
-#define mainFLASH_TASK_PRIORITY		1
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
 /* The LED toggled by the check task. */
 #define mainCHECK_LED						( 5 )
@@ -150,17 +167,18 @@ unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 void main(void)
 {
 extern void HardwareSetup( void );
+unsigned long ulResetCatcher = 0;
 
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
 	HardwareSetup();
 	
+	/* This is just to allow a soak test to be left with a bit of confidence
+	that the CPU has not unknowingly reset. */
+	while( ulResetCatcher == 0 );
+
 	/* Turn all LEDs off. */
 	vParTestInitialise();
-	
-	/* Start the common demo tasks. */
-	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
-	vStartInterruptQueueTasks();
 	
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -168,6 +186,26 @@ extern void HardwareSetup( void );
 
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+	/* Create the standard demo tasks. */
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+	vCreateBlockTimeTasks();
+    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+    vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+    vStartQueuePeekTasks();
+	vStartRecursiveMutexTasks();
+	vStartInterruptQueueTasks();
+	
+	/* Start the math tasks as described at the top of this file. */
+	//vStartMathTasks( mainFLOP_TASK_PRIORITY );
+
+	/* The suicide tasks must be created last as they need to know how many
+	tasks were running prior to their creation in order to ascertain whether
+	or not the correct/expected number of tasks are running at any given time. */
+    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
@@ -193,7 +231,46 @@ portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
 		/* Check the standard demo tasks are running without error. */
-		if( xAreIntQueueTasksStillRunning() != pdPASS )
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			/* Increase the rate at which this task cycles, which will increase the
+			rate at which mainCHECK_LED flashes to give visual feedback that an error
+			has occurred. */
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+	    else if( xArePollingQueuesStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+	    else if( xIsCreateTaskStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+	        xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+	    	xCycleFrequency = mainERROR_CYCLE_TIME;
+	    }
+		else if( xAreIntQueueTasksStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
 		}

@@ -1,0 +1,41 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"11.0" 
+[WORKSPACE_DETAILS]
+"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas\RTOSDemo.hws" "RX" "Renesas RX Standard" 
+[SHARED_WORKSPACE_CONTROL_STATUS]
+"" "" "" 
+"" "" "" 
+[PROJECTS]
+"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas\RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas\RTOSDemo\RTOSDemo.hwp" 0 
+[INFORMATION]
+"No workspace information available" 
+[SCRAP]
+[PROJECT_DEPENDENCY]
+[WORKSPACE_PROPERTIES]
+[HELP_FILES]
+"c:\devtools\renesas\hew\tools\renesas\rx\1_0_0\hew\stdlib.chm" "C/C++ Standard Library Help" 1 
+[GENERAL_DATA_PROJECT]
+[USERMENUTOOLS]
+[CUSTOMPLACEHOLDERS]
+[MAKEFILE_BUILD_INFO]
+"$(WORKSPDIR)\make\$(PROJECTNAME)_$(CONFIGNAME).mak" "" "$(WORKSPDIR)\make" 0 0 0 
+[VD_CONFIGURATION_OPTIONS]
+"ACTIVE_DESKTOP" "0" 
+[VD_CONFIGURATIONS]
+"0" "Default1" "1" 
+"1" "Default2" "1" 
+"2" "Default3" "1" 
+"3" "Default4" "1" 
+[OPTIONS_DEBUG_TAB]
+0 0 0 0 0 
+[VCS]
+"" "" "" 0 
+[VCS_PROJECT]
+[MAKEFILE_ENV_STRINGS]
+[MAKEFILE_ENV_FLAGS]
+1 0 0 
+[MAKEFILE_CLEAN_INFO]
+"" 
+[END]

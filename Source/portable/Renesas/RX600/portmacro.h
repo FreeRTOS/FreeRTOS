@@ -92,20 +92,16 @@ portSTACK_TYPE and portBASE_TYPE. */
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
-#define portBYTE_ALIGNMENT				8
+#define portBYTE_ALIGNMENT				8	/* Could make four, according to manual. */
 #define portSTACK_GROWTH				-1
 #define portTICK_RATE_MS				( ( portTickType ) 1000 / configTICK_RATE_HZ )		
 #define portNOP()						nop()
-#define portSTART_SCHEDULER_TRAP_NO		( 32 )
-#define portKERNEL_INTERRUPT_PRIORITY	( 1 )
 
 /* The location of the software interrupt register.  Software interrupts use
 vector 27. */
 #define portITU_SWINTR			( ( unsigned char * ) 0x000872E0 )
 #define portYIELD()				*portITU_SWINTR = 0x01; nop(); nop(); nop(); nop(); nop()
-
-extern void vTaskSwitchContext( void );
-#define portYIELD_FROM_ISR( x )			if( x != pdFALSE ) portYIELD()
+#define portYIELD_FROM_ISR( x )	if( x != pdFALSE ) portYIELD()
 
 /*
  * These macros should be called directly, but through the taskENTER_CRITICAL()
@@ -113,9 +109,6 @@ extern void vTaskSwitchContext( void );
  */
 #define portENABLE_INTERRUPTS() 	set_ipl( 0 )
 #define portDISABLE_INTERRUPTS() 	set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY )
-
-#define portSET_INTERRUPT_MASK_FROM_ISR() get_ipl(); set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY )
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) set_ipl( uxSavedInterruptStatus )
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )
@@ -126,6 +119,9 @@ extern void vTaskExitCritical( void );
 #define portENTER_CRITICAL()	vTaskEnterCritical();
 #define portEXIT_CRITICAL()		vTaskExitCritical();
 
+/* As this port allows interrupt nesting... */
+#define portSET_INTERRUPT_MASK_FROM_ISR() get_ipl(); set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) set_ipl( uxSavedInterruptStatus )
 
 /*-----------------------------------------------------------*/
 

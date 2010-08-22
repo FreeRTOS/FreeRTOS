@@ -63,45 +63,44 @@
 #include "string.h"
 
 /* Hardware specifics. */
-#include <machine.h>
 #include "iodefine.h"
 
 /*-----------------------------------------------------------*/
 
-/* Tasks should start with interrupts enabled, therefore PSW is set with U,I,PM 
-flags set and IPL clear. */
-/* 
- U = 1 User stack pointer.
- I = 1 Interrupts enabled.
- PM = 0 Supervisor mode.
- IPL = 0 All interrupt priorities enabled.
-*/
+/* Tasks should start with interrupts enabled and in Supervisor mode, therefore 
+PSW is set with U and I set, and PM and IPL clear. */
 #define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
 #define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
 
 /*-----------------------------------------------------------*/
 
 /*
- * 
+ * Function to start the first task executing - written in asm code as direct
+ * access to registers is required. 
  */
-void vPortYield( void );
-
-/*
- * Function to start the first task executing.
- */
-void vPortStartFirstTask( void );
-
-void vPortPendContextSwitch( void );
-
 static void prvStartFirstTask( void );
 
+/*
+ * Software interrupt handler.  Performs the actual context switch (saving and
+ * restoring of registers).  Written in asm code as direct register access is
+ * required.
+ */
 static void prvYieldHandler( void );
 
+/*
+ * The entry point for the software interrupt handler.  This is the function
+ * that calls the inline asm function prvYieldHandler().  It is installed in 
+ * the vector table, but the code that installs it is in prvYieldHandler rather
+ * than using a #pragma.
+ */
 void vSoftwareInterruptISR( void );
 
 /*-----------------------------------------------------------*/
 
+/* This is accessed by the inline assembler functions so is file scope for
+convenience. */
 extern void *pxCurrentTCB;
+extern void vTaskSwitchContext( void );
 
 /*-----------------------------------------------------------*/
 
@@ -117,35 +116,48 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
-	pxTopOfStack--;
-	*pxTopOfStack = 0xffffffff;	/* r15. */
-	pxTopOfStack--;
-	*pxTopOfStack = 0xeeeeeeee;
-	pxTopOfStack--;
-	*pxTopOfStack = 0xdddddddd;
-	pxTopOfStack--;
-	*pxTopOfStack = 0xcccccccc;
-	pxTopOfStack--;
-	*pxTopOfStack = 0xbbbbbbbb;
-	pxTopOfStack--;
-	*pxTopOfStack = 0xaaaaaaaa;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x99999999;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x88888888;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x77777777;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x66666666;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x55555555;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x44444444;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x33333333;
-	pxTopOfStack--;
-	*pxTopOfStack = 0x22222222;
-	pxTopOfStack--;
+	
+	/* When debugging it can be useful if every register is set to a known
+	value.  Otherwise code space can be saved by just setting the registers
+	that need to be set. */
+	#ifdef USE_FULL_REGISTER_INITIALISATION
+	{
+		pxTopOfStack--;
+		*pxTopOfStack = 0xffffffff;	/* r15. */
+		pxTopOfStack--;
+		*pxTopOfStack = 0xeeeeeeee;
+		pxTopOfStack--;
+		*pxTopOfStack = 0xdddddddd;
+		pxTopOfStack--;
+		*pxTopOfStack = 0xcccccccc;
+		pxTopOfStack--;
+		*pxTopOfStack = 0xbbbbbbbb;
+		pxTopOfStack--;
+		*pxTopOfStack = 0xaaaaaaaa;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x99999999;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x88888888;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x77777777;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x66666666;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x55555555;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x44444444;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x33333333;
+		pxTopOfStack--;
+		*pxTopOfStack = 0x22222222;
+		pxTopOfStack--;
+	}
+	#else
+	{
+		pxTopOfStack -= 15;
+	}
+	#endif
+	
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R1 */
 	pxTopOfStack--;				
 	*pxTopOfStack = portINITIAL_FPSW;
@@ -197,13 +209,13 @@ static void prvStartFirstTask( void )
 	/* When starting the scheduler there is nothing that needs moving to the
 	interrupt stack because the function is not called from an interrupt.
 	Just ensure the current stack is the user stack. */
-	SETPSW      U
+	SETPSW	U
 
 	/* Obtain the location of the stack associated with which ever task 
 	pxCurrentTCB is currently pointing to. */
-	MOV.L       #_pxCurrentTCB, R15
-	MOV.L       [R15], R15
-	MOV.L       [R15], R0
+	MOV.L	#_pxCurrentTCB, R15
+	MOV.L	[R15], R15
+	MOV.L	[R15], R0
 
 	/* Restore the registers from the stack of the task pointed to by 
 	pxCurrentTCB. */
@@ -223,9 +235,11 @@ static void prvStartFirstTask( void )
 #pragma interrupt ( vTickISR( vect = _VECT( configTICK_VECTOR ), enable ) )
 void vTickISR( void )
 {
-	/* Clear the interrupt. */
+	/* Increment the tick, and perform any processing the new tick value
+	necessitates. */
 	vTaskIncrementTick();
 	
+	/* Only select a new task if the preemptive scheduler is being used. */
 	#if( configUSE_PREEMPTION == 1 )
 		taskYIELD();
 	#endif
@@ -250,7 +264,7 @@ static void prvYieldHandler( void )
 	/* Move the data that was automatically pushed onto the interrupt stack when
 	the interrupt occurred from the interrupt stack to the user stack.  
 	
-	R15 is saved before it is used. */
+	R15 is saved before it is clobbered. */
 	PUSH.L	R15
 	
 	/* Read the user stack pointer. */
@@ -260,7 +274,7 @@ static void prvYieldHandler( void )
 	SUB		#12, R15
 	MVTC	R15, USP
 	
-	/* Copy the data accross. */
+	/* Copy the data across. */
 	MOV.L	[ R0 ], [ R15 ] ; R15
 	MOV.L 	4[ R0 ], 4[ R15 ]  ; PC
 	MOV.L	8[ R0 ], 8[ R15 ]  ; PSW
@@ -271,14 +285,16 @@ static void prvYieldHandler( void )
 	/* All the rest of the registers are saved directly to the user stack. */
 	SETPSW	U
 
-	/* Save the rest of the registers (R15 has been saved already. */
-	PUSHM	R1-R14 		; General purpose registers. 
-	MVFC	FPSW, R15 	; Floating point status word.
+	/* Save the rest of the general registers (R15 has been saved already). */
+	PUSHM	R1-R14
+	
+	/* Save the FPSW and accumulator. */
+	MVFC	FPSW, R15
 	PUSH.L	R15
-	MVFACHI	R15 		; Accumulator
+	MVFACHI	R15
 	PUSH.L	R15
-	MVFACMI	R15 		; Accumulator
-	SHLL	#16, R15
+	MVFACMI	R15	; Middle order word.
+	SHLL	#16, R15 ; Shifted left as it is restored to the low order word.
 	PUSH.L	R15
 
 	/* Save the stack pointer to the TCB. */
@@ -293,7 +309,7 @@ static void prvYieldHandler( void )
 	/* Select the next task to run. */
 	BSR.A	_vTaskSwitchContext
 
-	/* Reset the interrupt mask. */
+	/* Reset the interrupt mask as no more data structure access is required. */
 	MVTIPL	#configKERNEL_INTERRUPT_PRIORITY
 
 	/* Load the stack pointer of the task that is now selected as the Running

@@ -51,7 +51,9 @@
     licensing and training services.
 */
 
-/* High speed timer test as described in main.c. */
+/* 
+ * High frequency timer test as described in main.c. 
+ */
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"

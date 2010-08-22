@@ -51,6 +51,12 @@
     licensing and training services.
 */
 
+/*
+ * This file contains the non-portable and therefore RX62N specific parts of
+ * the IntQueue standard demo task - namely the configuration of the timers
+ * that generate the interrupts and the interrupt entry points.
+ */
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"

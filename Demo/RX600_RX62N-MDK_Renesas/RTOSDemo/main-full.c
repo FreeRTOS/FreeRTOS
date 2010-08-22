@@ -51,15 +51,66 @@
     licensing and training services.
 */
 
-/*
- * NOTE 1: The CPU must be in Supervisor mode when the scheduler is started.
+/* 
+ * This project includes a lot of tasks and tests and is therefore complex.
+ * If you would prefer a much simpler project to get started with then select
+ * the 'Blinky' build configuration within the HEW IDE.
+ *
+ * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * documentation provides more details of the standard demo application tasks,
+ * which provide no particular functionality but do provide a good example of
+ * how to use the FreeRTOS API.  The tasks defined in flop.c are included in the
+ * set of standard demo tasks to ensure the floating point unit gets some
+ * exercise. 
+ *
+ * In addition to the standard demo tasks, the following tasks and tests are 
+ * defined and/or created within this file:
+ *
+ * "Reg test" tasks - These fill the registers with known values, then check
+ * that each register still contains its expected value.  Each task uses
+ * different values.  The tasks run with very low priority so get preempted very
+ * frequently.  A register containing an unexpected value is indicative of an
+ * error in the context switching mechanism and will result in interrupts being
+ * disabled and a branch to a null loop.  This has the effect of stopping 
+ * execution of all the tests and tasks, which in turn results in all LED
+ * activity stopping too.  The nature of the reg test tasks necessitates that 
+ * they are written in assembly code.  The check task (described below) checks 
+ * that the reg test tasks are still executing and will indicate an error if
+ * either reg test task is found to have stalled.
+ *
+ * "Check" task - This only executes every five seconds but has a high priority
+ * to ensure it gets processor time.  Its main function is to check that all the
+ * standard demo tasks are still operational.  While no errors have been
+ * discovered the check task will toggle LED 5 every 5 seconds - the toggle
+ * rate increasing to 200ms being a visual indication that at least one task has
+ * reported unexpected behaviour.
+ *
+ * "High frequency timer test" - A high frequency periodic interrupt is 
+ * generated using a timer - the interrupt is assigned a priority above 
+ * configMAX_SYSCALL_INTERRUPT_PRIORITY so should not be effected by anything
+ * the kernel is doing.  The interrupt service routine measures the number of 
+ * counts a separate timer performs between each interrupt to determine the 
+ * jitter in the interrupt timing.
+ *
+ * *NOTE 1* If LED5 is toggling every 5 seconds then all the demo application
+ * tasks are executing as expected and no errors have been reported in any 
+ * tasks.  The toggle rate increasing to 200ms indicates that at least one task
+ * has reported unexpected behaviour.
+ * 
+ * *NOTE 2* vApplicationSetupTimerInterrupt() is called by the kernel to let
+ * the application set up a timer to generate the tick interrupt.  In this
+ * example a compare match timer is used for this purpose.  
+ *
+ * *NOTE 3* The CPU must be in Supervisor mode when the scheduler is started.
  * The PowerON_Reset_PC() supplied in resetprg.c with this demo has 
  * Change_PSW_PM_to_UserMode() commented out to ensure this is the case.
+ *
+ * *NOTE 4* The IntQueue common demo tasks test interrupt nesting and make use
+ * of all the 8bit timers (as two cascaded 16bit units).
 */
 
 /* Hardware specific includes. */
 #include "iodefine.h"
-#include "rskrx62ndef.h"
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -81,7 +132,7 @@
 #include "flop.h"
 
 /* Values that are passed into the reg test tasks using the task parameter.  The 
-tasks then check that the values are passed in correctly. */
+tasks check that the values are passed in correctly. */
 #define mainREG_TEST_1_PARAMETER	( 0x12121212UL )
 #define mainREG_TEST_2_PARAMETER	( 0x12345678UL )
 
@@ -101,16 +152,19 @@ tasks then check that the values are passed in correctly. */
 #define mainCHECK_LED						( 5 )
 
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
-without error. */
+without error.  Controlled by the check task as described at the top of this
+file. */
 #define mainNO_ERROR_CYCLE_TIME				( 5000 / portTICK_RATE_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
-by at least one task. */
+by at least one task.  Controlled by the check task as described at the top of 
+this file. */
 #define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
 
-/* The period of the system clock in nano seconds.  This is used to calculate
-the jitter time in nano seconds as part of the high frequency timer test. */
-#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 / ( double ) configPERIPHERAL_CLOCK_HZ ) * 1000000000.0 ) )
+/* The period of the peripheral clock in nano seconds.  This is used to calculate
+the jitter time in nano seconds as part of the high frequency timer test.  The
+clock driving the timer is divided by 8. */
+#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 /  ( ( double ) configPERIPHERAL_CLOCK_HZ ) / 8.0 ) * 1000000000.0 ) )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -147,11 +201,11 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 /*
  * The reg test tasks as described at the top of this file.
  */
-void vRegTest1Task( void *pvParameters );
-void vRegTest2Task( void *pvParameters );
+static void prvRegTest1Task( void *pvParameters );
+static void prvRegTest2Task( void *pvParameters );
 
 /*
- * The actual implementatio of the reg test functionality, which, because of
+ * The actual implementation of the reg test functionality, which, because of
  * the direct register access, have to be in assembly.
  */
 static void prvRegTest1Implementation( void );
@@ -164,7 +218,8 @@ static void prvCheckTask( void *pvParameters );
 
 /* Variables that are incremented on each iteration of the reg test tasks - 
 provided the tasks have not reported any errors.  The check task inspects these
-variables to ensure they are still incrementing as expected. */
+variables to ensure they are still incrementing as expected.  If a variable 
+stops incrementing then it is likely that its associate task has stalled. */
 unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 /*-----------------------------------------------------------*/
@@ -181,8 +236,8 @@ extern void HardwareSetup( void );
 	vParTestInitialise();
 	
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( vRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -221,12 +276,15 @@ static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2Cycl
 portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 extern void vSetupHighFrequencyTimer( void );
 extern volatile unsigned short usMaxJitter;
-static char cTempBuf[ 15 ]; /* To be deleted when debug console is working. */
 volatile unsigned long ulActualJitter = 0;
 
 	/* If this is being executed then the kernel has been started.  Start the high
-	frequency timer test as described at the top of this file. */
-	vSetupHighFrequencyTimer();
+	frequency timer test as described at the top of this file.  This is only 
+	included in the optimised build configuration - otherwise it takes up too much
+	CPU time. */
+	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
+		vSetupHighFrequencyTimer();
+	#endif
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -300,20 +358,22 @@ volatile unsigned long ulActualJitter = 0;
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
 		ulLastRegTest2CycleCount = ulRegTest2CycleCount;
 		
-		/* Toggle the check LED to give an indication of the system status.  If the
-		LED toggles every 5 seconds then everything is ok.  A faster toggle indicates
-		an error. */
+		/* Toggle the check LED to give an indication of the system status.  If 
+		the LED toggles every 5 seconds then everything is ok.  A faster toggle 
+		indicates an error. */
 		vParTestToggleLED( mainCHECK_LED );
 		
-		/* Calculate the maximum jitter experienced by the high frequency timer test
-		and print it out.  It is ok to use printf without worrying about mutual 
-		exclusion as it is not used anywhere else in this demo. */
+		/* Calculate the maximum jitter experienced by the high frequency timer 
+		test and print it out.  It is ok to use printf without worrying about 
+		mutual exclusion as it is not used anywhere else in this demo. */
 		//sprintf( cTempBuf, "%s [%fns]\n", "Max Jitter = ", ( ( float ) usMaxJitter ) * mainNS_PER_CLOCK );
 		ulActualJitter = ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK;
 	}
 }
 /*-----------------------------------------------------------*/
 
+/* The RX port uses this callback function to configure its tick interrupt.  
+This allows the application to choose the tick interrupt source. */
 void vApplicationSetupTimerInterrupt( void )
 {
 	/* Enable compare match timer 0. */
@@ -362,7 +422,8 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vRegTest1Task( void *pvParameters )
+/* This function is explained in the comments at the top of this file. */
+static void prvRegTest1Task( void *pvParameters )
 {
 	if( ( ( unsigned long ) pvParameters ) != mainREG_TEST_1_PARAMETER )
 	{
@@ -379,7 +440,8 @@ void vRegTest1Task( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-void vRegTest2Task( void *pvParameters )
+/* This function is explained in the comments at the top of this file. */
+static void prvRegTest2Task( void *pvParameters )
 {
 	if( ( ( unsigned long ) pvParameters ) != mainREG_TEST_2_PARAMETER )
 	{
@@ -396,6 +458,7 @@ void vRegTest2Task( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
+/* This function is explained in the comments at the top of this file. */
 #pragma inline_asm prvRegTest1Implementation
 static void prvRegTest1Implementation( void )
 {
@@ -483,6 +546,7 @@ RegTest1Error:
 }
 /*-----------------------------------------------------------*/
 
+/* This function is explained in the comments at the top of this file. */
 #pragma inline_asm prvRegTest2Implementation
 static void prvRegTest2Implementation( void )
 {

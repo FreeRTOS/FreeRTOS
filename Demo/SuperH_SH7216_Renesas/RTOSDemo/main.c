@@ -85,7 +85,7 @@
  * to ensure it gets processor time.  Its main function is to check that all the
  * standard demo tasks are still operational.  While no errors have been
  * discovered the check task will toggle an LED every 5 seconds - the toggle
- * rate increasing to 500ms being a visual indication that at least one task has
+ * rate increasing to 200ms being a visual indication that at least one task has
  * reported unexpected behaviour.
  *
  * *NOTE 1* If LED5 is toggling every 5 seconds then all the demo application

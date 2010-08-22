@@ -51,86 +51,109 @@
     licensing and training services.
 */
 
+/* High speed timer test as described in main.c. */
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-#include "task.h"
-
-/* Demo includes. */
-#include "IntQueueTimer.h"
-#include "IntQueue.h"
 
 /* Hardware specifics. */
 #include "iodefine.h"
 
-#define tmrTIMER_0_1_FREQUENCY	( 2000UL )
-#define tmrTIMER_2_3_FREQUENCY	( 2001UL )
+/* The set frequency of the interrupt.  Deviations from this are measured as
+the jitter. */
+#define timerINTERRUPT_FREQUENCY		( 20000UL )
 
-void vInitialiseTimerForIntQueueTest( void )
+/* The expected time between each of the timer interrupts - if the jitter was
+zero. */
+#define timerEXPECTED_DIFFERENCE_VALUE	( ( unsigned short ) ( ( configPERIPHERAL_CLOCK_HZ / 8UL ) / timerINTERRUPT_FREQUENCY ) )
+
+/* The highest available interrupt priority. */
+#define timerHIGHEST_PRIORITY			( 15 )
+
+/* Misc defines. */
+#define timerTIMER_3_COUNT_VALUE		( *( ( unsigned short * ) 0x8801a ) ) /*( CMT3.CMCNT )*/
+
+/*-----------------------------------------------------------*/
+
+/* Interrupt handler in which the jitter is measured. */
+static void prvTimer2IntHandler( void );
+
+/* Stores the value of the maximum recorded jitter between interrupts. */
+volatile unsigned short usMaxJitter = 0;
+
+/*-----------------------------------------------------------*/
+
+void vSetupHighFrequencyTimer( void )
 {
-	/* Ensure interrupts do not start until full configuration is complete. */
-	portENTER_CRITICAL();
+	/* Timer CMT2 is used to generate the interrupts, and CMT3 is used
+	to measure the jitter. */
+
+	/* Enable compare match timer 2 and 3. */
+	MSTP( CMT2 ) = 0;
+	MSTP( CMT3 ) = 0;
+	
+	/* Interrupt on compare match. */
+	CMT2.CMCR.BIT.CMIE = 1;
+	
+	/* Set the compare match value. */
+	CMT2.CMCOR = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT_FREQUENCY ) -1 ) / 8 );
+	
+	/* Divide the PCLK by 8. */
+	CMT2.CMCR.BIT.CKS = 0;
+	CMT3.CMCR.BIT.CKS = 0;
+	
+	/* Enable the interrupt... */
+	_IEN( _CMT2_CMI2 ) = 1;
+	
+	/* ...and set its priority to the maximum possible, this is above the priority
+	set by configMAX_SYSCALL_INTERRUPT_PRIORITY so will nest. */
+	_IPR( _CMT2_CMI2 ) = timerHIGHEST_PRIORITY;
+	
+	/* Start the timers. */
+	CMT.CMSTR1.BIT.STR2 = 1;
+	CMT.CMSTR1.BIT.STR3 = 1;
+}
+/*-----------------------------------------------------------*/
+
+#pragma interrupt ( prvTimer2IntHandler( vect = _VECT( _CMT2_CMI2 ), enable ) )
+static void prvTimer2IntHandler( void )
+{
+volatile unsigned short usCurrentCount;
+static unsigned short usMaxCount = 0;
+static unsigned long ulErrorCount = 0UL;
+
+	/* We use the timer 1 counter value to measure the clock cycles between
+	the timer 0 interrupts.  First stop the clock. */
+	CMT.CMSTR1.BIT.STR3 = 0;
+	nop();
+	nop();
+	usCurrentCount = timerTIMER_3_COUNT_VALUE;
+
+	/* Is this the largest count we have measured yet? */
+	if( usCurrentCount > usMaxCount )
 	{
-		/* Cascade two 8bit timer channels to generate the interrupts. 
-		8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
-		utilised for this test. */
-
-		/* Enable the timers. */
-		SYSTEM.MSTPCRA.BIT.MSTPA5 = 0;
-		SYSTEM.MSTPCRA.BIT.MSTPA4 = 0;
-
-		/* Enable compare match A interrupt request. */
-		TMR0.TCR.BIT.CMIEA = 1;
-		TMR2.TCR.BIT.CMIEA = 1;
-
-		/* Clear the timer on compare match A. */
-		TMR0.TCR.BIT.CCLR = 1;
-		TMR2.TCR.BIT.CCLR = 1;
-
-		/* Set the compare match value. */
-		TMR01.TCORA = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / tmrTIMER_0_1_FREQUENCY ) -1 ) / 8 );
-		TMR23.TCORA = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / tmrTIMER_0_1_FREQUENCY ) -1 ) / 8 );
-
-		/* 16 bit operation ( count from timer 1,2 ). */
-		TMR0.TCCR.BIT.CSS = 3;
-		TMR2.TCCR.BIT.CSS = 3;
-	
-		/* Use PCLK as the input. */
-		TMR1.TCCR.BIT.CSS = 1;
-		TMR3.TCCR.BIT.CSS = 1;
-	
-		/* Divide PCLK by 8. */
-		TMR1.TCCR.BIT.CKS = 2;
-		TMR3.TCCR.BIT.CKS = 2;
-	
-		/* Enable TMR 0, 2 interrupts. */
-		IEN( TMR0, CMIA0 ) = 1;
-		IEN( TMR2, CMIA2 ) = 1;
-
-		/* Set the timer interrupts to be above the kernel.  The interrupts are
-		assigned different priorities so they nest with each other. */
-		IPR( TMR0, CMIA0 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
-		IPR( TMR2, CMIA2 ) = ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 2 );
+		if( usCurrentCount > timerEXPECTED_DIFFERENCE_VALUE )
+		{
+			usMaxJitter = usCurrentCount - timerEXPECTED_DIFFERENCE_VALUE;
+		}
+		else
+		{
+			/* This should not happen! */
+			ulErrorCount++;
+		}
+		
+		usMaxCount = usCurrentCount;
 	}
-	portEXIT_CRITICAL();
+		
+	/* Clear the timer. */
+	timerTIMER_3_COUNT_VALUE = 0;
 	
-	/* Ensure the interrupts are clear as they are edge detected. */
-	IR( TMR0, CMIA0 ) = 0;
-	IR( TMR2, CMIA2 ) = 0;
+	/* Then start the clock again. */
+	CMT.CMSTR1.BIT.STR3 = 1;
 }
-/*-----------------------------------------------------------*/
 
-#pragma interrupt ( vT0_1InterruptHandler( vect = VECT_TMR0_CMIA0, enable ) )
-void vT0_1InterruptHandler( void )
-{
-	portYIELD_FROM_ISR( xFirstTimerHandler() );
-}
-/*-----------------------------------------------------------*/
 
-#pragma interrupt ( vT2_3InterruptHandler( vect = VECT_TMR2_CMIA2, enable ) )
-void vT2_3InterruptHandler( void )
-{
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
-}
+
 
 
 

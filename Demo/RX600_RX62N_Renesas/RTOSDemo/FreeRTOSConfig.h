@@ -72,11 +72,11 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( PCLK_FREQUENCY )
-#define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY )
+#define configCPU_CLOCK_HZ				( ICLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
+#define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 36 * 1024 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 45 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0

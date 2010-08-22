@@ -95,6 +95,7 @@ tasks then check that the values are passed in correctly. */
 #define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The LED toggled by the check task. */
 #define mainCHECK_LED						( 5 )
@@ -106,6 +107,10 @@ without error. */
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task. */
 #define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
+
+/* The period of the system clock in nano seconds.  This is used to calculate
+the jitter time in nano seconds as part of the high frequency timer test. */
+#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 / ( double ) configPERIPHERAL_CLOCK_HZ ) * 1000000000.0 ) )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -167,16 +172,11 @@ unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 void main(void)
 {
 extern void HardwareSetup( void );
-unsigned long ulResetCatcher = 0;
 
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
 	HardwareSetup();
 	
-	/* This is just to allow a soak test to be left with a bit of confidence
-	that the CPU has not unknowingly reset. */
-	while( ulResetCatcher == 0 );
-
 	/* Turn all LEDs off. */
 	vParTestInitialise();
 	
@@ -185,7 +185,7 @@ unsigned long ulResetCatcher = 0;
 	xTaskCreate( vRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -198,9 +198,7 @@ unsigned long ulResetCatcher = 0;
     vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vStartInterruptQueueTasks();
-	
-	/* Start the math tasks as described at the top of this file. */
-	//vStartMathTasks( mainFLOP_TASK_PRIORITY );
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
@@ -221,6 +219,14 @@ static void prvCheckTask( void *pvParameters )
 {
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
+extern void vSetupHighFrequencyTimer( void );
+extern volatile unsigned short usMaxJitter;
+static char cTempBuf[ 15 ]; /* To be deleted when debug console is working. */
+volatile unsigned long ulActualJitter = 0;
+
+	/* If this is being executed then the kernel has been started.  Start the high
+	frequency timer test as described at the top of this file. */
+	vSetupHighFrequencyTimer();
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -274,6 +280,10 @@ portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
 		}
+		else if( xAreMathsTaskStillRunning() != pdPASS )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
 		their loop counters if they encounter an error. */
@@ -294,6 +304,12 @@ portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 		LED toggles every 5 seconds then everything is ok.  A faster toggle indicates
 		an error. */
 		vParTestToggleLED( mainCHECK_LED );
+		
+		/* Calculate the maximum jitter experienced by the high frequency timer test
+		and print it out.  It is ok to use printf without worrying about mutual 
+		exclusion as it is not used anywhere else in this demo. */
+		//sprintf( cTempBuf, "%s [%fns]\n", "Max Jitter = ", ( ( float ) usMaxJitter ) * mainNS_PER_CLOCK );
+		ulActualJitter = ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -307,7 +323,7 @@ void vApplicationSetupTimerInterrupt( void )
 	CMT0.CMCR.BIT.CMIE = 1;
 	
 	/* Set the compare match value. */
-	CMT0.CMCOR = ( unsigned short ) ( ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 );
+	CMT0.CMCOR = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 );
 	
 	/* Divide the PCLK by 8. */
 	CMT0.CMCR.BIT.CKS = 0;

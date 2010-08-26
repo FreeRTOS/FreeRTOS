@@ -71,18 +71,18 @@ _start:
 	nop
 
 /* setup PSW */
-	mvtc	#10000h, psw			/* Set Ubit & Ibit for PSW */
+//	mvtc	#10000h, psw			/* Set Ubit & Ibit for PSW */
 
 /* change PSW PM to user-mode */
-	MVFC   PSW,R1
-	OR     #00100000h,R1
-	PUSH.L R1
-	MVFC   PC,R1
-	ADD    #10,R1
-	PUSH.L R1
-	RTE
-	NOP
-	NOP
+//	MVFC   PSW,R1
+//	OR     #00100000h,R1
+//	PUSH.L R1
+//	MVFC   PC,R1
+//	ADD    #10,R1
+//	PUSH.L R1
+//	RTE
+//	NOP
+//	NOP
 
 /* start user program */
 	bsr.a	_main		

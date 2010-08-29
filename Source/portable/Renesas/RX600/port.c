@@ -237,7 +237,11 @@ void vTickISR( void )
 {
 	/* Increment the tick, and perform any processing the new tick value
 	necessitates. */
-	vTaskIncrementTick();
+	set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+	{
+		vTaskIncrementTick();
+	}
+	set_ipl( configKERNEL_INTERRUPT_PRIORITY );
 	
 	/* Only select a new task if the preemptive scheduler is being used. */
 	#if( configUSE_PREEMPTION == 1 )

@@ -17,6 +17,10 @@
 typedef void (*fp) (void);
 extern void start(void);
 extern void stack (void);
+extern void vTickISR( void );
+extern void vSoftwareInterruptISR( void );
+extern void vT0_1InterruptHandler( void );
+extern void vT2_3InterruptHandler( void );
 
 #define FVECT_SECT          __attribute__ ((section (".fvectors")))
 
@@ -148,9 +152,9 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x0068  Reserved
     (fp)0,
 //;0x006C  Reserved
-    (fp)0,
+    (fp)vSoftwareInterruptISR,
 //;0x0070  CMTU0_CMT0
-	(fp)INT_Excep_CMTU0_CMT0,
+	(fp)vTickISR,
 //;0x0074  CMTU0_CMT1
 	(fp)INT_Excep_CMTU0_CMT1,
 //;0x0078  CMTU1_CMT2
@@ -442,7 +446,7 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x02B4  Reserved
     (fp)0,
 //;0x02B8  TMR0_CMI0A
-    (fp)INT_Excep_TMR0_CMI0A,
+    (fp)vT0_1InterruptHandler,
 //;0x02BC  TMR0_CMI0B
     (fp)INT_Excep_TMR0_CMI0B,
 //;0x02C0  TMR0_OV0I
@@ -454,7 +458,7 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x02CC  TMR1_OV1I
     (fp)INT_Excep_TMR1_OV1I,
 //;0x02D0 TMR2_CMI2A
-    (fp)INT_Excep_TMR2_CMI2A,
+    (fp)vT2_3InterruptHandler,
 //;0x02D4  TMR2_CMI2B
     (fp)INT_Excep_TMR2_CMI2B,
 //;0x02D8  TMR2_OV2I

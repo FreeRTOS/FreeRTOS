@@ -56,7 +56,7 @@
  * If you would prefer a much simpler project to get started with then select
  * the 'Blinky' build configuration within the HEW IDE.
  *
- * Creates all the demo application tasks, then starts the scheduler.  The WEB
+ * Creates all the demo application tasks, then starts the scheduler.  The web
  * documentation provides more details of the standard demo application tasks,
  * which provide no particular functionality but do provide a good example of
  * how to use the FreeRTOS API.  The tasks defined in flop.c are included in the
@@ -68,15 +68,14 @@
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
- * different values.  The tasks run with very low priority so get preempted very
- * frequently.  A register containing an unexpected value is indicative of an
- * error in the context switching mechanism and will result in interrupts being
- * disabled and a branch to a null loop.  This has the effect of stopping 
- * execution of all the tests and tasks, which in turn results in all LED
- * activity stopping too.  The nature of the reg test tasks necessitates that 
- * they are written in assembly code.  The check task (described below) checks 
- * that the reg test tasks are still executing and will indicate an error if
- * either reg test task is found to have stalled.
+ * different values.  The tasks run with very low priority so get preempted 
+ * very frequently.  A check variable is incremented on each iteration of the 
+ * test loop.  A register containing an unexpected value is indicative of an 
+ * error in the context switching mechanism and will result in a branch to a 
+ * null loop - which in turn will prevent the check variable from incrementing
+ * any further and allow the check task (described below) to determine that an
+ * error has occurred.  The nature of the reg test tasks necessitates that they 
+ * are written in assembly code.
  *
  * "Check" task - This only executes every five seconds but has a high priority
  * to ensure it gets processor time.  Its main function is to check that all the
@@ -108,6 +107,9 @@
  * *NOTE 4* The IntQueue common demo tasks test interrupt nesting and make use
  * of all the 8bit timers (as two cascaded 16bit units).
 */
+
+/* Standard includes. */
+#include "string.h"
 
 /* Hardware specific includes. */
 #include "iodefine.h"
@@ -149,22 +151,22 @@ tasks check that the values are passed in correctly. */
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The LED toggled by the check task. */
-#define mainCHECK_LED						( 5 )
+#define mainCHECK_LED				( 5 )
 
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error.  Controlled by the check task as described at the top of this
 file. */
-#define mainNO_ERROR_CYCLE_TIME				( 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CYCLE_TIME		( 5000 / portTICK_RATE_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task.  Controlled by the check task as described at the top of 
 this file. */
-#define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
+#define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
 
 /* The period of the peripheral clock in nano seconds.  This is used to calculate
 the jitter time in nano seconds as part of the high frequency timer test.  The
 clock driving the timer is divided by 8. */
-#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 /  ( ( double ) configPERIPHERAL_CLOCK_HZ ) / 8.0 ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK			( ( unsigned long ) ( ( 1.0 /  ( ( double ) configPERIPHERAL_CLOCK_HZ ) / 8.0 ) * 1000000000.0 ) )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -208,8 +210,9 @@ static void prvRegTest2Task( void *pvParameters );
  * The actual implementation of the reg test functionality, which, because of
  * the direct register access, have to be in assembly.
  */
-static void prvRegTest1Implementation( void );
-static void prvRegTest2Implementation( void );
+extern void prvRegTest1Implementation( void );
+extern void prvRegTest2Implementation( void );
+
 
 /*
  * The check task as described at the top of this file.
@@ -231,10 +234,10 @@ extern void HardwareSetup( void );
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
 	HardwareSetup();
-	
+
 	/* Turn all LEDs off. */
 	vParTestInitialise();
-	
+
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -245,12 +248,12 @@ extern void HardwareSetup( void );
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
-    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-    vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-    vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
-    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
-    vStartQueuePeekTasks();
+	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vStartInterruptQueueTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
@@ -258,7 +261,7 @@ extern void HardwareSetup( void );
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
-    vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
@@ -302,57 +305,57 @@ static char cErrorText[ 100 ];
 			rate at which mainCHECK_LED flashes to give visual feedback that an error
 			has occurred. */
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: GenQueue" );
+			strcpy( cErrorText, "Error: GenQueue" );
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: QueuePeek" );
+			strcpy( cErrorText, "Error: QueuePeek" );
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: BlockQueue" );
+			strcpy( cErrorText, "Error: BlockQueue" );
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: BlockTime" );
+			strcpy( cErrorText, "Error: BlockTime" );
 		}
 	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: SemTest" );
+			strcpy( cErrorText, "Error: SemTest" );
 	    }
 	    else if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: PollQueue" );
+			strcpy( cErrorText, "Error: PollQueue" );
 	    }
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: Death" );
+			strcpy( cErrorText, "Error: Death" );
 	    }
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: IntMath" );
+			strcpy( cErrorText, "Error: IntMath" );
 	    }
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
 	    	xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: RecMutex" );
+			strcpy( cErrorText, "Error: RecMutex" );
 	    }
 		else if( xAreIntQueueTasksStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: IntQueue" );
+			strcpy( cErrorText, "Error: IntQueue" );
 		}
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: Flop" );
+			strcpy( cErrorText, "Error: Flop" );
 		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
@@ -360,13 +363,13 @@ static char cErrorText[ 100 ];
 		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: RegTest1" );
+			strcpy( cErrorText, "Error: RegTest1" );
 		}
 
 		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strncpy( cErrorText, "Error: RegTest2" );
+			strcpy( cErrorText, "Error: RegTest2" );
 		}
 		
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -385,7 +388,8 @@ static char cErrorText[ 100 ];
 		
 		if( xCycleFrequency == mainERROR_CYCLE_TIME )
 		{
-			nop();
+			/* Just for break point. */
+			portNOP();
 		}
 	}
 }
@@ -438,6 +442,9 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
+static volatile unsigned long ulIdleLoopCount = 0UL;
+
+	ulIdleLoopCount++;
 }
 /*-----------------------------------------------------------*/
 
@@ -454,7 +461,7 @@ static void prvRegTest1Task( void *pvParameters )
 		}
 	}
 	
-	/* This is an inline asm function that never returns. */
+	/* This is an asm function that never returns. */
 	prvRegTest1Implementation();		
 }
 /*-----------------------------------------------------------*/
@@ -471,177 +478,11 @@ static void prvRegTest2Task( void *pvParameters )
 			taskDISABLE_INTERRUPTS();
 		}
 	}
-	
-	/* This is an inline asm function that never returns. */
-	prvRegTest2Implementation();		
+
+	/* This is an asm function that never returns. */
+	prvRegTest2Implementation();
 }
 /*-----------------------------------------------------------*/
-
-/* This function is explained in the comments at the top of this file. */
-#pragma inline_asm prvRegTest1Implementation
-static void prvRegTest1Implementation( void )
-{
-	; Put a known value in each register.
-	MOV.L	#1, R1
-	MOV.L	#2, R2
-	MOV.L	#3, R3
-	MOV.L	#4, R4
-	MOV.L	#5, R5
-	MOV.L	#6, R6
-	MOV.L	#7, R7
-	MOV.L	#8, R8
-	MOV.L	#9, R9
-	MOV.L	#10, R10
-	MOV.L	#11, R11
-	MOV.L	#12, R12
-	MOV.L	#13, R13
-	MOV.L	#14, R14
-	MOV.L	#15, R15
-	
-	; Loop, checking each itteration that each register still contains the
-	; expected value.
-TestLoop1:	
-
-	; Push the registers that are going to get clobbered.
-	PUSHM	R14-R15
-	
-	; Increment the loop counter to show this task is still getting CPU time.
-	MOV.L	#_ulRegTest1CycleCount, R14
-	MOV.L	[ R14 ], R15
-	ADD		#1, R15
-	MOV.L	R15, [ R14 ]
-	
-	; Yield to extend the text coverage.  Set the bit in the ITU SWINTR register.
-	MOV.L	#1, R14
-	MOV.L 	#0872E0H, R15
-	MOV.B	R14, [R15]
-	NOP
-	NOP
-	
-	; Restore the clobbered registers.
-	POPM	R14-R15
-	
-	; Now compare each register to ensure it still contains the value that was
-	; set before this loop was entered.
-	CMP		#1, R1
-	BNE		RegTest2Error
-	CMP		#2, R2
-	BNE		RegTest2Error
-	CMP		#3, R3
-	BNE		RegTest2Error
-	CMP		#4, R4
-	BNE		RegTest2Error
-	CMP		#5, R5
-	BNE		RegTest2Error
-	CMP		#6, R6
-	BNE		RegTest2Error
-	CMP		#7, R7
-	BNE		RegTest2Error
-	CMP		#8, R8
-	BNE		RegTest2Error
-	CMP		#9, R9
-	BNE		RegTest2Error
-	CMP		#10, R10
-	BNE		RegTest2Error
-	CMP		#11, R11
-	BNE		RegTest2Error
-	CMP		#12, R12
-	BNE		RegTest2Error
-	CMP		#13, R13
-	BNE		RegTest2Error
-	CMP		#14, R14
-	BNE		RegTest2Error
-	CMP		#15, R15
-	BNE		RegTest2Error
-
-	; All comparisons passed, start a new itteratio of this loop.
-	BRA		TestLoop1
-	
-RegTest1Error:
-	; A compare failed, something has gone wrong.  Stop the tick and any other 
-	; interrupts to make it obvious that things have halted.
-	CLRPSW	I
-	BRA RegTest1Error
-}
-/*-----------------------------------------------------------*/
-
-/* This function is explained in the comments at the top of this file. */
-#pragma inline_asm prvRegTest2Implementation
-static void prvRegTest2Implementation( void )
-{
-	; Put a known value in each register.
-	MOV.L	#10, R1
-	MOV.L	#20, R2
-	MOV.L	#30, R3
-	MOV.L	#40, R4
-	MOV.L	#50, R5
-	MOV.L	#60, R6
-	MOV.L	#70, R7
-	MOV.L	#80, R8
-	MOV.L	#90, R9
-	MOV.L	#100, R10
-	MOV.L	#110, R11
-	MOV.L	#120, R12
-	MOV.L	#130, R13
-	MOV.L	#140, R14
-	MOV.L	#150, R15
-	
-	; Loop, checking on each itteration that each register still contains the
-	; expected value.
-TestLoop2:	
-	
-	; Push the registers that are going to get clobbered.
-	PUSHM	R14-R15
-	
-	; Increment the loop counter to show this task is still getting CPU time.
-	MOV.L	#_ulRegTest2CycleCount, R14
-	MOV.L	[ R14 ], R15
-	ADD		#1, R15
-	MOV.L	R15, [ R14 ]
-	
-	; Restore the clobbered registers.
-	POPM	R14-R15	
-	
-	CMP		#10, R1
-	BNE		RegTest2Error
-	CMP		#20, R2
-	BNE		RegTest2Error
-	CMP		#30, R3
-	BNE		RegTest2Error
-	CMP		#40, R4
-	BNE		RegTest2Error
-	CMP		#50, R5
-	BNE		RegTest2Error
-	CMP		#60, R6
-	BNE		RegTest2Error
-	CMP		#70, R7
-	BNE		RegTest2Error
-	CMP		#80, R8
-	BNE		RegTest2Error
-	CMP		#90, R9
-	BNE		RegTest2Error
-	CMP		#100, R10
-	BNE		RegTest2Error
-	CMP		#110, R11
-	BNE		RegTest2Error
-	CMP		#120, R12
-	BNE		RegTest2Error
-	CMP		#130, R13
-	BNE		RegTest2Error
-	CMP		#140, R14
-	BNE		RegTest2Error
-	CMP		#150, R15
-	BNE		RegTest2Error
-
-	; All comparisons passed, start a new itteratio of this loop.
-	BRA		TestLoop2
-	
-RegTest2Error:
-	; A compare failed, something went wrong.  Stop the tick and any other 
-	; interrupts to make it obvious that things have halted.
-	CLRPSW	I
-	BRA RegTest2Error
-}
 
 
 

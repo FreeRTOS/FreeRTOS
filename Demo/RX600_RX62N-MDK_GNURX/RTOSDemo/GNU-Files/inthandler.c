@@ -41,7 +41,7 @@ void INT_Excep_FCU_FCUERR(void){ }
 // FCU_FRDYI
 void INT_Excep_FCU_FRDYI(void){ }
 
-// CMTU0_CMT0
+// CMTU0_CMT0 - (RB) NOTE This has been replaced in the vector table with vTickISR().
 void INT_Excep_CMTU0_CMT0(void){ }
 
 // CMTU0_CMT1

@@ -70,7 +70,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ICLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
 #define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
@@ -78,7 +78,7 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 45 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		1
+#define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_CO_ROUTINES 			0
@@ -101,11 +101,6 @@ the pended interrupt.  This would normally be the lowest priority. */
 Interrupts that use a priority above this will not be effected by anything the
 kernel is doing. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
-
-/* The peripheral used to generate the tick interrupt is configured as part of
-the application code.  This constant should be set to the vector number of the
-peripheral chosen.  As supplied this is CMT0. */
-#define configTICK_VECTOR						_CMT0_CMI0
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

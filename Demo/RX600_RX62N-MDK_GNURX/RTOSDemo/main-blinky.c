@@ -71,8 +71,8 @@
 #include "queue.h"
 
 /* Priorities at which the tasks are created. */
-#define 	configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define		configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define 	configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
+#define		configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds. */
 #define mainQUEUE_SEND_FREQUENCY_MS				( 500 / portTICK_RATE_MS )
@@ -215,3 +215,10 @@ void vApplicationIdleHook( void )
 {
 }
 /*-----------------------------------------------------------*/
+
+/* The following two functions are here just to allow all three build 
+configurations to use the same vector table.  They are not used in this
+demo, but linker errors will result if they are not defined.  They can
+be ignored. */
+void vT0_1InterruptHandler( void ) {}
+void vT2_3InterruptHandler( void ) {}

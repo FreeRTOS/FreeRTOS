@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -172,7 +172,7 @@ static unsigned portBASE_TYPE uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0
 /* Any unexpected behaviour sets xErrorStatus to fail and log the line that
 caused the error in xErrorLine. */
 static portBASE_TYPE xErrorStatus = pdPASS;
-static unsigned portBASE_TYPE xErrorLine = ( unsigned portBASE_TYPE ) 0;
+static volatile unsigned portBASE_TYPE xErrorLine = ( unsigned portBASE_TYPE ) 0;
 
 /* Used for sequencing between tasks. */
 static portBASE_TYPE xWasSuspended = pdFALSE;
@@ -392,14 +392,13 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorC
 static void prvLowerPriorityNormallyEmptyTask( void *pvParameters )
 {
 unsigned portBASE_TYPE uxValue, uxRxed;
-portBASE_TYPE xQueueStatus;
 
 	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
 
 	for( ;; )
 	{
-		if( ( xQueueStatus = xQueueReceive( xNormallyEmptyQueue, &uxRxed, intqONE_TICK_DELAY ) ) != errQUEUE_EMPTY )
+		if( xQueueReceive( xNormallyEmptyQueue, &uxRxed, intqONE_TICK_DELAY ) != errQUEUE_EMPTY )
 		{
 			/* We should only obtain a value when the high priority task is
 			suspended. */
@@ -441,7 +440,6 @@ portBASE_TYPE xQueueStatus;
 static void prv1stHigherPriorityNormallyFullTask( void *pvParameters )
 {
 unsigned portBASE_TYPE uxValueToTx, ux;
-portBASE_TYPE xQueueStatus;
 
 	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
@@ -469,7 +467,7 @@ portBASE_TYPE xQueueStatus;
 		}
 		portEXIT_CRITICAL();
 
-		if( ( xQueueStatus = xQueueSend( xNormallyFullQueue, &uxValueToTx, intqSHORT_DELAY ) ) != pdPASS )
+		if( xQueueSend( xNormallyFullQueue, &uxValueToTx, intqSHORT_DELAY ) != pdPASS )
 		{
 			/* intqHIGH_PRIORITY_TASK2 is never suspended so we would not
 			expect it to ever time out. */
@@ -531,7 +529,6 @@ portBASE_TYPE xQueueStatus;
 static void prv2ndHigherPriorityNormallyFullTask( void *pvParameters )
 {
 unsigned portBASE_TYPE uxValueToTx, ux;
-portBASE_TYPE xQueueStatus;
 
 	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
@@ -559,7 +556,7 @@ portBASE_TYPE xQueueStatus;
 		}
 		portEXIT_CRITICAL();
 
-		if( ( xQueueStatus = xQueueSend( xNormallyFullQueue, &uxValueToTx, intqSHORT_DELAY ) ) != pdPASS )
+		if( xQueueSend( xNormallyFullQueue, &uxValueToTx, intqSHORT_DELAY ) != pdPASS )
 		{
 			if( xWasSuspended != pdTRUE )
 			{
@@ -578,14 +575,13 @@ portBASE_TYPE xQueueStatus;
 static void prvLowerPriorityNormallyFullTask( void *pvParameters )
 {
 unsigned portBASE_TYPE uxValue, uxTxed = 9999;
-portBASE_TYPE xQueueStatus;
 
 	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
 
 	for( ;; )
 	{
-		if( ( xQueueStatus = xQueueSend( xNormallyFullQueue, &uxTxed, intqONE_TICK_DELAY ) ) != errQUEUE_FULL )
+		if( xQueueSend( xNormallyFullQueue, &uxTxed, intqONE_TICK_DELAY ) != errQUEUE_FULL )
 		{
 			/* We would only expect to succeed when the higher priority task
 			is suspended. */

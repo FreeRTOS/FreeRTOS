@@ -92,7 +92,7 @@ portSTACK_TYPE and portBASE_TYPE. */
 #define portBYTE_ALIGNMENT			8	/* Could make four, according to manual. */
 #define portSTACK_GROWTH			-1
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
-#define portNOP()					__asm( "NOP" )
+#define portNOP()					__asm volatile( "NOP" )
 
 /* The location of the software interrupt register.  Software interrupts use
 vector 27. */
@@ -104,8 +104,8 @@ vector 27. */
  * These macros should be called directly, but through the taskENTER_CRITICAL()
  * and taskEXIT_CRITICAL() macros.
  */
-#define portENABLE_INTERRUPTS() 	__asm ( "MVTIPL	#0" );
-#define portDISABLE_INTERRUPTS() 	__asm ( "MVTIPL	%0" ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) )
+#define portENABLE_INTERRUPTS() 	__asm volatile ( "MVTIPL	#0" );
+#define portDISABLE_INTERRUPTS() 	__asm volatile ( "MVTIPL	%0" ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) )
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )
@@ -117,8 +117,8 @@ extern void vTaskExitCritical( void );
 #define portEXIT_CRITICAL()		vTaskExitCritical();
 
 /* As this port allows interrupt nesting... */
-unsigned long ulPortGetIPL( void ) __attribute__((naked));
-void vPortSetIPL( unsigned long ulNewIPL ) __attribute__((naked));
+unsigned long ulPortGetIPL( void );
+void vPortSetIPL( unsigned long ulNewIPL );
 #define portSET_INTERRUPT_MASK_FROM_ISR() ulPortGetIPL(); portDISABLE_INTERRUPTS()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) vPortSetIPL( uxSavedInterruptStatus )
 

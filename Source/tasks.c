@@ -2282,7 +2282,7 @@ tskTCB *pxNewTCB;
 
 		if( xSchedulerRunning != pdFALSE )
 		{
-			pxCurrentTCB->uxCriticalNesting++;
+			( pxCurrentTCB->uxCriticalNesting )++;
 		}
 	}
 
@@ -2297,7 +2297,7 @@ void vTaskExitCritical( void )
 	{
 		if( pxCurrentTCB->uxCriticalNesting > 0 )
 		{
-			pxCurrentTCB->uxCriticalNesting--;
+			( pxCurrentTCB->uxCriticalNesting )--;
 
 			if( pxCurrentTCB->uxCriticalNesting == 0 )
 			{

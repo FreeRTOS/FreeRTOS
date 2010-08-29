@@ -233,7 +233,7 @@ extern void HardwareSetup( void );
 
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
-	//_RB_reSetup();
+	HardwareSetup();
 
 	/* Turn all LEDs off. */
 	vParTestInitialise();
@@ -279,8 +279,8 @@ static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2Cycl
 portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 extern void vSetupHighFrequencyTimer( void );
 extern volatile unsigned short usMaxJitter;
-//volatile unsigned long ulActualJitter = 0;
-//static char cErrorText[ 100 ];
+volatile unsigned long ulActualJitter = 0;
+static char cErrorText[ 100 ];
 
 	/* If this is being executed then the kernel has been started.  Start the high
 	frequency timer test as described at the top of this file.  This is only
@@ -305,57 +305,57 @@ extern volatile unsigned short usMaxJitter;
 			rate at which mainCHECK_LED flashes to give visual feedback that an error
 			has occurred. */
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: GenQueue" );
+			strcpy( cErrorText, "Error: GenQueue" );
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: QueuePeek" );
+			strcpy( cErrorText, "Error: QueuePeek" );
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: BlockQueue" );
+			strcpy( cErrorText, "Error: BlockQueue" );
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: BlockTime" );
+			strcpy( cErrorText, "Error: BlockTime" );
 		}
 	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: SemTest" );
+			strcpy( cErrorText, "Error: SemTest" );
 	    }
 	    else if( xArePollingQueuesStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: PollQueue" );
+			strcpy( cErrorText, "Error: PollQueue" );
 	    }
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: Death" );
+			strcpy( cErrorText, "Error: Death" );
 	    }
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 	        xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: IntMath" );
+			strcpy( cErrorText, "Error: IntMath" );
 	    }
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
 	    	xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: RecMutex" );
+			strcpy( cErrorText, "Error: RecMutex" );
 	    }
 		else if( xAreIntQueueTasksStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: IntQueue" );
+			strcpy( cErrorText, "Error: IntQueue" );
 		}
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: Flop" );
+			strcpy( cErrorText, "Error: Flop" );
 		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
@@ -363,13 +363,13 @@ extern volatile unsigned short usMaxJitter;
 		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: RegTest1" );
+			strcpy( cErrorText, "Error: RegTest1" );
 		}
 
 		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-//			strcpy( cErrorText, "Error: RegTest2" );
+			strcpy( cErrorText, "Error: RegTest2" );
 		}
 		
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;

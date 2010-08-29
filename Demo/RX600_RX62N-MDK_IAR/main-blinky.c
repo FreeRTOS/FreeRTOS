@@ -102,7 +102,7 @@ extern void HardwareSetup( void );
 
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
-//	HardwareSetup();
+	HardwareSetup();
 	
 	/* Turn all LEDs off. */
 	vParTestInitialise();

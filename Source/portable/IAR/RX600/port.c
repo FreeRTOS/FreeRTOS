@@ -69,8 +69,8 @@
 
 /* Tasks should start with interrupts enabled and in Supervisor mode, therefore
 PSW is set with U and I set, and PM and IPL clear. */
-#define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
-#define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
+#define portINITIAL_PSW	 ( ( portSTACK_TYPE ) 0x00030000 )
+#define portINITIAL_FPSW	( ( portSTACK_TYPE ) 0x00000100 )
 
 /*-----------------------------------------------------------*/
 
@@ -188,7 +188,7 @@ extern void vApplicationSetupTimerInterrupt( void );
 }
 /*-----------------------------------------------------------*/
 
-#pragma vector = VECT_CMT0_CMI0
+#pragma vector = configTICK_VECTOR
 __interrupt void vTickISR( void )
 {
 	/* Re-enable interrupts. */

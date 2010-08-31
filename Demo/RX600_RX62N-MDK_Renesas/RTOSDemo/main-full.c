@@ -231,9 +231,6 @@ extern void HardwareSetup( void );
 	here. */
 	HardwareSetup();
 
-	/* Turn all LEDs off. */
-	vParTestInitialise();
-
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );

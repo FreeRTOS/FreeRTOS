@@ -75,14 +75,6 @@ void vParTestInitialise( void )
 {
 	/* Port pin configuration is done by the low level set up prior to this 
 	function being called. */
-
-	/* Start with all LEDs off. */
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
 }
 /*-----------------------------------------------------------*/
 
@@ -149,11 +141,11 @@ void vParTestToggleLED( unsigned long ulLED )
 		{
 			if( lParTestGetLEDState( ulLED ) != 0x00 )
 			{
-				vParTestSetLED( ulLED, 1 );
+				vParTestSetLED( ulLED, 0 );
 			}
 			else
 			{
-				vParTestSetLED( ulLED, 0 );
+				vParTestSetLED( ulLED, 1 );
 			}
 		}
 		taskEXIT_CRITICAL();
@@ -163,7 +155,7 @@ void vParTestToggleLED( unsigned long ulLED )
 							
 long lParTestGetLEDState( unsigned long ulLED )
 {
-long lReturn = pdFALSE;
+long lReturn = pdTRUE;
 
 	if( ulLED < partestNUM_LEDS )
 	{
@@ -171,32 +163,32 @@ long lReturn = pdFALSE;
 		{
 			case 0	:	if( LED0 != 0 )
 						{
-							lReturn =  pdTRUE;
+							lReturn =  pdFALSE;
 						}
 						break;					
 			case 1	:	if( LED1 != 0 )
 						{
-							lReturn =  pdTRUE;
+							lReturn =  pdFALSE;
 						}
 						break;					
 			case 2	:	if( LED2 != 0 )
 						{
-							lReturn =  pdTRUE;
+							lReturn =  pdFALSE;
 						}
 						break;					
 			case 3	:	if( LED3 != 0 )
 						{
-							lReturn =  pdTRUE;
+							lReturn =  pdFALSE;
 						}
 						break;					
 			case 4	:	if( LED4 != 0 )
 						{
-							lReturn =  pdTRUE;
+							lReturn =  pdFALSE;
 						}
 						break;					
 			case 5	:	if( LED5 != 0 )
 						{
-							lReturn =  pdTRUE;
+							lReturn =  pdFALSE;
 						}
 						break;					
 		}

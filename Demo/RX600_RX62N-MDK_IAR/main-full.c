@@ -235,9 +235,6 @@ extern void HardwareSetup( void );
 	here. */
 	HardwareSetup();
 
-	/* Turn all LEDs off. */
-	vParTestInitialise();
-
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -265,7 +262,7 @@ extern void HardwareSetup( void );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
-	
+
 	/* If all is well we will never reach here as the scheduler will now be
 	running.  If we do reach here then it is likely that there was insufficient
 	heap available for the idle task to be created. */
@@ -322,31 +319,31 @@ static char cErrorText[ 100 ];
 			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: BlockTime" );
 		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-	        xCycleFrequency = mainERROR_CYCLE_TIME;
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: SemTest" );
-	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
-	    {
-	        xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: PollQueue" );
-	    }
-	    else if( xIsCreateTaskStillRunning() != pdTRUE )
-	    {
-	        xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xIsCreateTaskStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: Death" );
-	    }
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
-	        xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: IntMath" );
-	    }
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
-	    	xCycleFrequency = mainERROR_CYCLE_TIME;
+		}
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
+			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: RecMutex" );
-	    }
+		}
 		else if( xAreIntQueueTasksStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
@@ -371,21 +368,21 @@ static char cErrorText[ 100 ];
 			xCycleFrequency = mainERROR_CYCLE_TIME;
 			strcpy( cErrorText, "Error: RegTest2" );
 		}
-		
+
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
 		ulLastRegTest2CycleCount = ulRegTest2CycleCount;
-		
+
 		/* Toggle the check LED to give an indication of the system status.  If
 		the LED toggles every 5 seconds then everything is ok.  A faster toggle
 		indicates an error. */
 		vParTestToggleLED( mainCHECK_LED );
-		
+
 		/* Calculate the maximum jitter experienced by the high frequency timer
 		test and print it out.  It is ok to use printf without worrying about
 		mutual exclusion as it is not used anywhere else in this demo. */
 		//sprintf( cTempBuf, "%s [%fns]\n", "Max Jitter = ", ( ( float ) usMaxJitter ) * mainNS_PER_CLOCK );
 		//ulActualJitter = ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK;
-		
+
 		if( xCycleFrequency == mainERROR_CYCLE_TIME )
 		{
 			/* Just for break point. */
@@ -401,22 +398,22 @@ void vApplicationSetupTimerInterrupt( void )
 {
 	/* Enable compare match timer 0. */
 	MSTP( CMT0 ) = 0;
-	
+
 	/* Interrupt on compare match. */
 	CMT0.CMCR.BIT.CMIE = 1;
-	
+
 	/* Set the compare match value. */
 	CMT0.CMCOR = ( unsigned short ) ( ( ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) -1 ) / 8 );
-	
+
 	/* Divide the PCLK by 8. */
 	CMT0.CMCR.BIT.CKS = 0;
-	
+
 	/* Enable the interrupt... */
 	_IEN( _CMT0_CMI0 ) = 1;
-	
+
 	/* ...and set its priority to the application defined kernel priority. */
 	_IPR( _CMT0_CMI0 ) = configKERNEL_INTERRUPT_PRIORITY;
-	
+
 	/* Start the timer. */
 	CMT.CMSTR0.BIT.STR0 = 1;
 }
@@ -460,9 +457,9 @@ static void prvRegTest1Task( void *pvParameters )
 			taskDISABLE_INTERRUPTS();
 		}
 	}
-	
+
 	/* This is an asm function that never returns. */
-	prvRegTest1Implementation();		
+	prvRegTest1Implementation();
 }
 /*-----------------------------------------------------------*/
 

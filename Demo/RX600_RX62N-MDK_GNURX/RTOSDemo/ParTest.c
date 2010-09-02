@@ -78,11 +78,11 @@ void vParTestInitialise( void )
 
 	/* Start with all LEDs off. */
 	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
-	LED0 = LED_OFF;
+	LED1 = LED_OFF;
+	LED2 = LED_OFF;
+	LED3 = LED_OFF;
+	LED4 = LED_OFF;
+	LED5 = LED_OFF;
 }
 /*-----------------------------------------------------------*/
 

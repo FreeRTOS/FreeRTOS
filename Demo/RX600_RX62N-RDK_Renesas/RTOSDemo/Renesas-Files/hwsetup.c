@@ -73,7 +73,6 @@ Private global variables and functions
 ******************************************************************************/
 void HardwareSetup(void)
 {
-
 	uint32_t sckcr = 0;
 
 	/* Configure system clocks based on header */
@@ -82,11 +81,50 @@ void HardwareSetup(void)
 	sckcr += (PCLK_MUL==8) ? (0ul <<  8) : (PCLK_MUL==4) ? (1ul <<  8) : (PCLK_MUL==2) ? (2ul <<  8) : (3ul <<  8);
 	SYSTEM.SCKCR.LONG = sckcr;
 
-	/* Configure LED pins as outputs */
-	LED0_DDR = 1; 
-	LED1_DDR = 1;
-	LED2_DDR = 1;
-	LED3_DDR = 1;
+	/* Module standby clear - EtherC, EDMAC */
+	SYSTEM.MSTPCRB.BIT.MSTPB15 = 0;
+
+	PORT0.DDR.BYTE = 0x00 ;     // Port 0: inputs (IRQ's from ethernet & WiFi)
+	PORT1.DDR.BYTE = 0x00 ;     // Port 1: inputs (IIC and USB settings will override these later)
+	PORT2.DDR.BYTE = 0x1A ;     // Port 2: USB signals
+	PORT3.DDR.BYTE = 0x04 ;     // Port 3: JTAG (P30, P31, P34), CAN (P32=Tx, P33=Rx), NMI (P35)
+	PORT4.DDR.BYTE = 0x00 ;     // Port 4: Switches (P40-P42), AIN (P43-P47)
+	PORT5.DDR.BYTE = 0x3B ;     // Port 5: Audio (P55,P54), BCLK (P53), SCI (P52=Rx, P50=Tx), LCD-RS (P51)
+
+	PORTA.DR.BYTE = 0x00 ;      // Port A outputs all LOW to start
+	PORTA.DDR.BYTE = 0xFF ;     // Port A: Expansion (PA0-PA2), Ether (PA3-PA5), Audio (PA6-PA7)
+
+	PORTB.DR.BYTE = 0x00 ;
+	PORTB.DDR.BYTE = 0x70 ;     // Port B: Ether
+
+	PORTC.DR.BYTE = 0xF7 ;      // Port C: Chip selects, clock = high; IO reset = low (not reset, needed by Ether PHY)
+	PORTC.DDR.BYTE = 0x7F ;     // Port C: SPI (PC0-2, PC4-7), IO reset (PC3)                
+
+	// Ethernet settings
+	IOPORT.PFENET.BYTE = 0x82;  // Enable Ether poins, RMII mode, enable LINKSTA
+	PORTA.ICR.BIT.B5 = 1;       // ET_LINKSTA 
+	PORTA.ICR.BIT.B3 = 1;       // ET_MDIO
+	PORTB.ICR.BIT.B0 = 1;       // RMII_RXD1
+	PORTB.ICR.BIT.B1 = 1;       // RMII_RXD0
+	PORTB.ICR.BIT.B2 = 1;       // REF50CLK
+	PORTB.ICR.BIT.B3 = 1;       // RMII_RX_ER
+	PORTB.ICR.BIT.B7 = 1;       // RMII_CRS_DV
+
+
+	/* Configure LEDs */
+	LED4 = LED_OFF;
+	LED5 = LED_OFF;
+	LED6 = LED_OFF;
+	LED7 = LED_OFF;
+	LED8 = LED_OFF;
+	LED9 = LED_OFF;
+	LED10 = LED_OFF;
+	LED11 = LED_OFF;
+	LED12 = LED_OFF;
+	LED13 = LED_OFF;
+	LED14 = LED_OFF;
+	LED15 = LED_OFF;
+
 	LED4_DDR = 1;
 	LED5_DDR = 1;
 	LED6_DDR = 1;
@@ -95,13 +133,18 @@ void HardwareSetup(void)
 	LED9_DDR = 1;
 	LED10_DDR = 1;
 	LED11_DDR = 1;
-	
-	/* Configure LCD pins as outputs - uncomment this if an LCD is present.
-	LCD_RS_DDR = 1;
-	LCD_EN_DDR = 1;
-	LCD_DATA_DDR = 0xF0; */
+	LED12_DDR = 1;
+	LED13_DDR = 1;
+	LED14_DDR = 1;
+	LED15_DDR = 1;
 
-	/* Initialize display - uncomment this if an LCD is present.
-	InitialiseDisplay(); */
+	/* Configure push button switches */
+	SW1_DDR = 0;
+	SW2_DDR = 0;
+	SW3_DDR = 0;
+	SW1_ICR = 1;
+	SW2_ICR = 1;
+	SW3_ICR = 1;
 }
+
 

@@ -75,20 +75,6 @@ void vParTestInitialise( void )
 {
 	/* Port pin configuration is done by the low level set up prior to this
 	function being called. */
-
-	/* Start with all LEDs off. */
-	LED0 = LED_OFF;
-	LED1 = LED_OFF;
-	LED2 = LED_OFF;
-	LED3 = LED_OFF;
-	LED4 = LED_OFF;
-	LED5 = LED_OFF;
-	LED6 = LED_OFF;
-	LED7 = LED_OFF;
-	LED8 = LED_OFF;
-	LED9 = LED_OFF;
-	LED10 = LED_OFF;
-	LED11 = LED_OFF;
 }
 /*-----------------------------------------------------------*/
 
@@ -103,29 +89,29 @@ void vParTestSetLED( unsigned long ulLED, signed long xValue )
 			{
 				switch( ulLED )
 				{
-					case 0:	LED0 = LED_ON;
+					case 0:	LED4 = LED_ON;
 							break;
-					case 1:	LED1 = LED_ON;
+					case 1:	LED5 = LED_ON;
 							break;
-					case 2:	LED2 = LED_ON;
+					case 2:	LED6 = LED_ON;
 							break;
-					case 3:	LED3 = LED_ON;
+					case 3:	LED7 = LED_ON;
 							break;
-					case 4:	LED4 = LED_ON;
+					case 4:	LED8 = LED_ON;
 							break;
-					case 5:	LED5 = LED_ON;
+					case 5:	LED9 = LED_ON;
 							break;
-					case 6:	LED6 = LED_ON;
+					case 6:	LED10 = LED_ON;
 							break;
-					case 7:	LED7 = LED_ON;
+					case 7:	LED11 = LED_ON;
 							break;
-					case 8:	LED8 = LED_ON;
+					case 8:	LED12 = LED_ON;
 							break;
-					case 9:	LED9 = LED_ON;
+					case 9:	LED13 = LED_ON;
 							break;
-					case 10:LED10 = LED_ON;
+					case 10:LED14 = LED_ON;
 							break;
-					case 11:LED11 = LED_ON;
+					case 11:LED15 = LED_ON;
 							break;
 				}
 			}
@@ -138,29 +124,29 @@ void vParTestSetLED( unsigned long ulLED, signed long xValue )
 			{
 				switch( ulLED )
 				{
-					case 0:	LED0 = LED_OFF;
+					case 0:	LED4 = LED_OFF;
 							break;
-					case 1:	LED1 = LED_OFF;
+					case 1:	LED5 = LED_OFF;
 							break;
-					case 2:	LED2 = LED_OFF;
+					case 2:	LED6 = LED_OFF;
 							break;
-					case 3:	LED3 = LED_OFF;
+					case 3:	LED7 = LED_OFF;
 							break;
-					case 4:	LED4 = LED_OFF;
+					case 4:	LED8 = LED_OFF;
 							break;
-					case 5:	LED5 = LED_OFF;
+					case 5:	LED9 = LED_OFF;
 							break;
-					case 6:	LED6 = LED_OFF;
+					case 6:	LED10 = LED_OFF;
 							break;
-					case 7:	LED7 = LED_OFF;
+					case 7:	LED11 = LED_OFF;
 							break;
-					case 8:	LED8 = LED_OFF;
+					case 8:	LED12 = LED_OFF;
 							break;
-					case 9:	LED9 = LED_OFF;
+					case 9:	LED13 = LED_OFF;
 							break;
-					case 10:LED10 = LED_OFF;
+					case 10:LED14 = LED_OFF;
 							break;
-					case 11:LED11 = LED_OFF;
+					case 11:LED15 = LED_OFF;
 							break;
 				}
 
@@ -199,62 +185,62 @@ long lReturn = pdFALSE;
 	{
 		switch( ulLED )
 		{
-			case 0	:	if( LED0 != 0 )
+			case 0	:	if( LED4 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 1	:	if( LED1 != 0 )
+			case 1	:	if( LED5 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 2	:	if( LED2 != 0 )
+			case 2	:	if( LED6 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 3	:	if( LED3 != 0 )
+			case 3	:	if( LED7 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 4	:	if( LED4 != 0 )
+			case 4	:	if( LED8 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 5	:	if( LED5 != 0 )
+			case 5	:	if( LED9 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 6	:	if( LED6 != 0 )
+			case 6	:	if( LED10 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 7	:	if( LED7 != 0 )
+			case 7	:	if( LED11 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 8	:	if( LED8 != 0 )
+			case 8	:	if( LED12 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 9	:	if( LED9 != 0 )
+			case 9	:	if( LED13 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 10	:	if( LED10 != 0 )
+			case 10	:	if( LED14 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 11	:	if( LED11 != 0 )
+			case 11	:	if( LED15 != 0 )
 						{
 							lReturn =  pdTRUE;
 						}

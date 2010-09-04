@@ -69,9 +69,6 @@
 /* Demo includes. */
 #include "ParTest.h"
 
-/* Hardware includes. */
-#include "hwEthernet.h"
-
 /*-----------------------------------------------------------*/
 
 /* How long to wait before attempting to connect the MAC again. */

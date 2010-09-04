@@ -135,10 +135,10 @@ to exclude the API function. */
 #define configMAC_ADDR5	0x11
 
 /* IP address configuration. */
-#define configIP_ADDR0		192
-#define configIP_ADDR1		168
-#define configIP_ADDR2		0
-#define configIP_ADDR3		201
+#define configIP_ADDR0		172
+#define configIP_ADDR1		25
+#define configIP_ADDR2		218
+#define configIP_ADDR3		200
 
 /* Netmask configuration. */
 #define configNET_MASK0		255

@@ -54,8 +54,8 @@
 /* Hardware specific includes. */
 #include "iodefine.h"
 #include "typedefine.h"
-#include "hwEthernet.h"
-#include "hwEthernetPhy.h"
+#include "r_ether.h"
+#include "phy.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -96,16 +96,27 @@ become free. */
 /*-----------------------------------------------------------*/
 
 /* The buffers and descriptors themselves. */
-#pragma section RX_DESCR
-	ethfifo xRxDescriptors[ emacNUM_RX_DESCRIPTORS ];
-#pragma section TX_DESCR
-	ethfifo xTxDescriptors[ emacNUM_TX_BUFFERS ];
-#pragma section _ETHERNET_BUFFERS
-	char xEthernetBuffers[ emacNUM_BUFFERS ][ UIP_BUFSIZE ];
-#pragma section
+static union x_RX_Desc
+{
+	unsigned long long ullAlignmentVariable;
+	ethfifo xDescriptorArray[ emacNUM_RX_DESCRIPTORS ];
+} xRxDescriptors;
+
+static union x_TX_Desc
+{
+	unsigned long long ullAlignmentVariable;
+	ethfifo xDescriptorArray[ emacNUM_TX_BUFFERS ];
+} xTxDescriptors;
+
+static union x_ETH_Buffers
+{
+	unsigned long long ullAlignmentVariable;
+	char xDataBuffers[ emacNUM_BUFFERS ][ UIP_BUFSIZE ];
+} xEthernetBuffers;
+
 
 /* Used to indicate which buffers are free and which are in use.  If an index
-contains 0 then the corresponding buffer in xEthernetBuffers is free, otherwise 
+contains 0 then the corresponding buffer in xEthernetBuffers.xDataBuffers is free, otherwise 
 the buffer is in use or about to be used. */
 static unsigned char ucBufferInUse[ emacNUM_BUFFERS ];
 
@@ -117,7 +128,7 @@ static unsigned char ucBufferInUse[ emacNUM_BUFFERS ];
 static void prvInitialiseDescriptors( void );
 
 /*
- * Return a pointer to a free buffer within xEthernetBuffers.
+ * Return a pointer to a free buffer within xEthernetBuffers.xDataBuffers.
  */
 static unsigned char *prvGetNextBuffer( void );
 
@@ -134,7 +145,7 @@ static unsigned long prvCheckRxFifoStatus( void );
 /*
  * Setup the microcontroller for communication with the PHY.
  */
-static void prvSetupPortPinsAndReset( void );
+static void prvResetMAC( void );
 
 /*
  * Configure the Ethernet interface peripherals.
@@ -160,19 +171,19 @@ unsigned char *uip_buf = NULL;
 
 void vInitEmac( void )
 {
-	/* Setup the SH hardware for MII communications. */
-	prvSetupPortPinsAndReset();
+	/* Software reset. */
+	prvResetMAC();
 	
 	/* Set the Rx and Tx descriptors into their initial state. */
 	prvInitialiseDescriptors();
 
 	/* Set the MAC address into the ETHERC */
-	EtherC.MAHR = 	( ( unsigned long ) configMAC_ADDR0 << 24UL ) | 
+	ETHERC.MAHR = 	( ( unsigned long ) configMAC_ADDR0 << 24UL ) | 
 					( ( unsigned long ) configMAC_ADDR1 << 16UL ) | 
 					( ( unsigned long ) configMAC_ADDR2 << 8UL ) | 
 					( unsigned long ) configMAC_ADDR3;
 					
-	EtherC.MALR.BIT.MA = ( ( unsigned long ) configMAC_ADDR4 << 8UL ) |
+	ETHERC.MALR.BIT.MA = ( ( unsigned long ) configMAC_ADDR4 << 8UL ) |
 						 ( unsigned long ) configMAC_ADDR5;
 
 	/* Perform rest of interface hardware configuration. */
@@ -182,7 +193,7 @@ void vInitEmac( void )
 	uip_buf = NULL;
 
 	/* Initialize the PHY */
-	phyReset();
+	phy_init();
 }
 /*-----------------------------------------------------------*/
 
@@ -193,7 +204,7 @@ long x;
 	/* Wait until the second transmission of the last packet has completed. */
 	for( x = 0; x < emacTX_WAIT_ATTEMPTS; x++ )
 	{
-		if( ( xTxDescriptors[ 1 ].status & ACT ) != 0 )
+		if( ( xTxDescriptors.xDescriptorArray[ 1 ].status & ACT ) != 0 )
 		{
 			/* Descriptor is still active. */
 			vTaskDelay( emacTX_WAIT_DELAY_ms );
@@ -205,27 +216,27 @@ long x;
 	}
 	
 	/* Is the descriptor free after waiting for it? */
-	if( ( xTxDescriptors[ 1 ].status & ACT ) != 0 )
+	if( ( xTxDescriptors.xDescriptorArray[ 1 ].status & ACT ) != 0 )
 	{
 		/* Something has gone wrong. */
 		prvResetEverything();
 	}
 	
 	/* Setup both descriptors to transmit the frame. */
-	xTxDescriptors[ 0 ].buf_p = ( char * ) uip_buf;
-	xTxDescriptors[ 0 ].bufsize = uip_len;	
-	xTxDescriptors[ 1 ].buf_p = ( char * ) uip_buf;
-	xTxDescriptors[ 1 ].bufsize = uip_len;
+	xTxDescriptors.xDescriptorArray[ 0 ].buf_p = ( char * ) uip_buf;
+	xTxDescriptors.xDescriptorArray[ 0 ].bufsize = uip_len;	
+	xTxDescriptors.xDescriptorArray[ 1 ].buf_p = ( char * ) uip_buf;
+	xTxDescriptors.xDescriptorArray[ 1 ].bufsize = uip_len;
 
 	/* uip_buf is being sent by the Tx descriptor.  Allocate a new buffer
 	for use by the stack. */
 	uip_buf = prvGetNextBuffer();
 
 	/* Clear previous settings and go. */
-	xTxDescriptors[0].status &= ~( FP1 | FP0 );
-	xTxDescriptors[0].status |= ( FP1 | FP0 | ACT );
-	xTxDescriptors[1].status &= ~( FP1 | FP0 );
-	xTxDescriptors[1].status |= ( FP1 | FP0 | ACT );
+	xTxDescriptors.xDescriptorArray[0].status &= ~( FP1 | FP0 );
+	xTxDescriptors.xDescriptorArray[0].status |= ( FP1 | FP0 | ACT );
+	xTxDescriptors.xDescriptorArray[1].status &= ~( FP1 | FP0 );
+	xTxDescriptors.xDescriptorArray[1].status |= ( FP1 | FP0 | ACT );
 
 	EDMAC.EDTRR.LONG = 0x00000001;
 }
@@ -267,19 +278,19 @@ long lEMACWaitForLink( void )
 long lReturn;
 
 	/* Set the link status. */
-	switch( phyStatus() )
+	switch( phy_set_autonegotiate() )
 	{
 		/* Half duplex link */
 		case PHY_LINK_100H:
 		case PHY_LINK_10H:
-								EtherC.ECMR.BIT.DM = 0;
+								ETHERC.ECMR.BIT.DM = 0;
 								lReturn = pdPASS;
 								break;
 
 		/* Full duplex link */
 		case PHY_LINK_100F:
 		case PHY_LINK_10F:
-								EtherC.ECMR.BIT.DM = 1;
+								ETHERC.ECMR.BIT.DM = 1;
 								lReturn = pdPASS;
 								break;
 
@@ -291,8 +302,8 @@ long lReturn;
 	if( lReturn == pdPASS )
 	{
 		/* Enable receive and transmit. */
-		EtherC.ECMR.BIT.RE = 1;
-		EtherC.ECMR.BIT.TE = 1;
+		ETHERC.ECMR.BIT.RE = 1;
+		ETHERC.ECMR.BIT.TE = 1;
 
 		/* Enable EDMAC receive */
 		EDMAC.EDRRR.LONG = 0x1;
@@ -316,13 +327,13 @@ long x;
 	/* Initialise the Rx descriptors. */
 	for( x = 0; x < emacNUM_RX_DESCRIPTORS; x++ )
 	{
-		pxDescriptor = &( xRxDescriptors[ x ] );
-		pxDescriptor->buf_p = &( xEthernetBuffers[ x ][ 0 ] );
+		pxDescriptor = &( xRxDescriptors.xDescriptorArray[ x ] );
+		pxDescriptor->buf_p = &( xEthernetBuffers.xDataBuffers[ x ][ 0 ] );
 
 		pxDescriptor->bufsize = UIP_BUFSIZE;
 		pxDescriptor->size = 0;
 		pxDescriptor->status = ACT;
-		pxDescriptor->next = &xRxDescriptors[ x + 1 ];	
+		pxDescriptor->next = &xRxDescriptors.xDescriptorArray[ x + 1 ];	
 		
 		/* Mark this buffer as in use. */
 		ucBufferInUse[ x ] = pdTRUE;
@@ -330,12 +341,12 @@ long x;
 
 	/* The last descriptor points back to the start. */
 	pxDescriptor->status |= DL;
-	pxDescriptor->next = &xRxDescriptors[ 0 ];
+	pxDescriptor->next = &xRxDescriptors.xDescriptorArray[ 0 ];
 	
 	/* Initialise the Tx descriptors. */
 	for( x = 0; x < emacNUM_TX_BUFFERS; x++ )
 	{
-		pxDescriptor = &( xTxDescriptors[ x ] );
+		pxDescriptor = &( xTxDescriptors.xDescriptorArray[ x ] );
 		
 		/* A buffer is not allocated to the Tx descriptor until a send is
 		actually required. */
@@ -344,15 +355,15 @@ long x;
 		pxDescriptor->bufsize = UIP_BUFSIZE;
 		pxDescriptor->size = 0;
 		pxDescriptor->status = 0;
-		pxDescriptor->next = &xTxDescriptors[ x + 1 ];	
+		pxDescriptor->next = &xTxDescriptors.xDescriptorArray[ x + 1 ];	
 	}
 
 	/* The last descriptor points back to the start. */
 	pxDescriptor->status |= DL;
-	pxDescriptor->next = &( xTxDescriptors[ 0 ] );
+	pxDescriptor->next = &( xTxDescriptors.xDescriptorArray[ 0 ] );
 	
 	/* Use the first Rx descriptor to start with. */
-	xCurrentRxDesc = &( xRxDescriptors[ 0 ] );
+	xCurrentRxDesc = &( xRxDescriptors.xDescriptorArray[ 0 ] );
 }
 /*-----------------------------------------------------------*/
 
@@ -371,7 +382,7 @@ unsigned long ulAttempts = 0;
 			if( ucBufferInUse[ x ] == pdFALSE )
 			{
 				ucBufferInUse[ x ] = pdTRUE;
-				pucReturn = ( unsigned char * ) &( xEthernetBuffers[ x ][ 0 ] );
+				pucReturn = ( unsigned char * ) &( xEthernetBuffers.xDataBuffers[ x ][ 0 ] );
 				break;
 			}
 		}
@@ -402,7 +413,7 @@ unsigned long ul;
 	/* Return a buffer to the pool of free buffers. */
 	for( ul = 0; ul < emacNUM_BUFFERS; ul++ )
 	{
-		if( &( xEthernetBuffers[ ul ][ 0 ] ) == ( void * ) pucBuffer )
+		if( &( xEthernetBuffers.xDataBuffers[ ul ][ 0 ] ) == ( void * ) pucBuffer )
 		{
 			ucBufferInUse[ ul ] = pdFALSE;
 			break;
@@ -461,33 +472,12 @@ unsigned long ulReturn = 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupPortPinsAndReset( void )
+static void prvResetMAC( void )
 {
-	/* Initialisation code taken from Renesas example project. */
+	/* Ensure the EtherC and EDMAC are enabled. */
+	SYSTEM.MSTPCRB.BIT.MSTPB15 = 0;
+	vTaskDelay( 100 / portTICK_RATE_MS );
 	
-	PFC.PACRL4.BIT.PA12MD = 0x7;		/* Set TX_CLK input      (EtherC) */
-	PFC.PACRL3.BIT.PA11MD = 0x7;		/* Set TX_EN output      (EtherC) */
-	PFC.PACRL3.BIT.PA10MD = 0x7;		/* Set MII_TXD0 output   (EtherC) */
-	PFC.PACRL3.BIT.PA9MD  = 0x7;		/* Set MII_TXD1 output   (EtherC) */
-	PFC.PACRL3.BIT.PA8MD  = 0x7;		/* Set MII_TXD2 output   (EtherC) */
-	PFC.PACRL2.BIT.PA7MD  = 0x7;		/* Set MII_TXD3 output   (EtherC) */
-	PFC.PACRL2.BIT.PA6MD  = 0x7;		/* Set TX_ER output      (EtherC) */
-	PFC.PDCRH4.BIT.PD31MD = 0x7;		/* Set RX_DV input       (EtherC) */
-	PFC.PDCRH4.BIT.PD30MD = 0x7;		/* Set RX_ER input       (EtherC) */
-	PFC.PDCRH4.BIT.PD29MD = 0x7;		/* Set MII_RXD3 input    (EtherC) */
-	PFC.PDCRH4.BIT.PD28MD = 0x7;		/* Set MII_RXD2 input    (EtherC) */
-	PFC.PDCRH3.BIT.PD27MD = 0x7;		/* Set MII_RXD1 input    (EtherC) */
-	PFC.PDCRH3.BIT.PD26MD = 0x7;		/* Set MII_RXD0 input    (EtherC) */
-	PFC.PDCRH3.BIT.PD25MD = 0x7;		/* Set RX_CLK input      (EtherC) */
-	PFC.PDCRH3.BIT.PD24MD = 0x7;		/* Set CRS input         (EtherC) */
-	PFC.PDCRH2.BIT.PD23MD = 0x7;		/* Set COL input         (EtherC) */
-	PFC.PDCRH2.BIT.PD22MD = 0x7;		/* Set WOL output        (EtherC) */
-	PFC.PDCRH2.BIT.PD21MD = 0x7;		/* Set EXOUT output      (EtherC) */
-	PFC.PDCRH2.BIT.PD20MD = 0x7;		/* Set MDC output        (EtherC) */
-	PFC.PDCRH1.BIT.PD19MD = 0x7;		/* Set LINKSTA input     (EtherC) */
-	PFC.PDCRH1.BIT.PD18MD = 0x7;		/* Set MDIO input/output (EtherC) */
-	
-	STB.CR4.BIT._ETHER = 0x0;	
 	EDMAC.EDMR.BIT.SWR = 1;	
 	
 	/* Crude wait for reset to complete. */
@@ -500,33 +490,29 @@ static void prvConfigureEtherCAndEDMAC( void )
 	/* Initialisation code taken from Renesas example project. */
 	
 	/* TODO:    Check   bit 5   */
-	EtherC.ECSR.LONG = 0x00000037;				/* Clear all EtherC statuS BFR, PSRTO, LCHNG, MPD, ICD */
+	ETHERC.ECSR.LONG = 0x00000037;				/* Clear all ETHERC statuS BFR, PSRTO, LCHNG, MPD, ICD */
+
+	/* Set the EDMAC interrupt priority. */
+	_IPR( _ETHER_EINT ) = configKERNEL_INTERRUPT_PRIORITY;
 
 	/* TODO:    Check   bit 5   */
-	EtherC.ECSIPR.LONG = 0x00000020;			/* Disable EtherC status change interrupt */
-	EtherC.RFLR.LONG = 1518;					/* Ether payload is 1500+ CRC */
-	EtherC.IPGR.LONG = 0x00000014;				/* Intergap is 96-bit time */
+	/* Enable interrupts of interest only. */
+	EDMAC.EESIPR.LONG = emacTX_END_INTERRUPT | emacRX_END_INTERRUPT;
+	ETHERC.RFLR.LONG = 1518;					/* Ether payload is 1500+ CRC */
+	ETHERC.IPGR.LONG = 0x00000014;				/* Intergap is 96-bit time */
 
 	/* EDMAC */
-	EDMAC.EESR.LONG = 0x47FF0F9F;				/* Clear all EtherC and EDMAC status bits */
+	EDMAC.EESR.LONG = 0x47FF0F9F;				/* Clear all ETHERC and EDMAC status bits */
 	EDMAC.RDLAR = ( void * ) xCurrentRxDesc;	/* Initialaize Rx Descriptor List Address */
-	EDMAC.TDLAR = &( xTxDescriptors[ 0 ] );		/* Initialaize Tx Descriptor List Address */
+	EDMAC.TDLAR = &( xTxDescriptors.xDescriptorArray[ 0 ] );		/* Initialaize Tx Descriptor List Address */
 	EDMAC.TRSCER.LONG = 0x00000000;				/* Copy-back status is RFE & TFE only   */
 	EDMAC.TFTR.LONG = 0x00000000;				/* Threshold of Tx_FIFO */
 	EDMAC.FDR.LONG = 0x00000000;				/* Transmit fifo & receive fifo is 256 bytes */
 	EDMAC.RMCR.LONG = 0x00000003;				/* Receive function is normal mode(continued) */
-
-	/* Set the EDMAC interrupt priority - the interrupt priority must be
-	configKERNEL_INTERRUPT_PRIORITY no matter which peripheral is used to 
-	generate the tick interrupt. */
-	INTC.IPR19.BIT._EDMAC = portKERNEL_INTERRUPT_PRIORITY;
-	EDMAC.EESIPR.LONG = emacTX_END_INTERRUPT | emacRX_END_INTERRUPT;	/* Enable Rx and Tx end interrupts. */
-
-	/* Clear the interrupt flag. */
-	CMT0.CMCSR.BIT.CMF = 0;
 }
 /*-----------------------------------------------------------*/
 
+#pragma interrupt ( vEMAC_ISR_Handler( vect = VECT_ETHER_EINT, enable ) )
 void vEMAC_ISR_Handler( void )
 {
 unsigned long ul = EDMAC.EESR.LONG;
@@ -541,7 +527,7 @@ static long ulTxEndInts = 0;
 		if( ulTxEndInts >= 2 )
 		{
 			/* Only return the buffer to the pool once both Txes have completed. */
-			prvReturnBuffer( ( void * ) xTxDescriptors[ 0 ].buf_p );
+			prvReturnBuffer( ( void * ) xTxDescriptors.xDescriptorArray[ 0 ].buf_p );
 			ulTxEndInts = 0;
 		}
 		EDMAC.EESR.LONG = emacTX_END_INTERRUPT;

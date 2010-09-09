@@ -13,7 +13,7 @@
 "Debug_with_optimisation" 
 "SimDebug_RX600" 
 [CURRENT_CONFIGURATION]
-"Debug" 
+"Debug_with_optimisation" 
 [CURRENT_SESSION]
 "SessionRX600_E1_E20_SYSTEM" 
 [GENERAL_DATA_PROJECT]
@@ -24,7 +24,7 @@
 "SessionRX600_E1_E20_SYSTEM" 
 "SimSessionRX600" 
 [GENERAL_DATA_CONFIGURATION_Debug]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
 [SESSIONS_Debug]
 "DefaultSession" 
 "SessionRX600_E1_E20_SYSTEM" 

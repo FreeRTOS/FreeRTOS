@@ -115,7 +115,7 @@ clock_time_t clock_time( void )
 
 void vuIP_Task( void *pvParameters )
 {
-portBASE_TYPE i;
+portBASE_TYPE i, xDoneSomething;
 uip_ipaddr_t xIPAddr;
 struct timer periodic_timer, arp_timer;
 
@@ -145,6 +145,8 @@ struct timer periodic_timer, arp_timer;
 
 	for( ;; )
 	{
+		xDoneSomething = pdFALSE;
+		
 		/* Is there received data ready to be processed? */
 		uip_len = ( unsigned short ) ulEMACRead();
 		
@@ -164,6 +166,8 @@ struct timer periodic_timer, arp_timer;
 					uip_arp_out();
 					vEMACWrite();
 				}
+				
+				xDoneSomething = pdTRUE;
 			}
 			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
 			{
@@ -176,42 +180,45 @@ struct timer periodic_timer, arp_timer;
 				{
 					vEMACWrite();
 				}
+				
+				xDoneSomething = pdTRUE;
 			}
 		}
-		else
+
+		if( timer_expired( &periodic_timer ) && ( uip_buf != NULL ) )
 		{
-			if( timer_expired( &periodic_timer ) && ( uip_buf != NULL ) )
+			timer_reset( &periodic_timer );
+			for( i = 0; i < UIP_CONNS; i++ )
 			{
-				timer_reset( &periodic_timer );
-				for( i = 0; i < UIP_CONNS; i++ )
-				{
-					uip_periodic( i );
+				uip_periodic( i );
 
-					/* If the above function invocation resulted in data that
-					should be sent out on the network, the global variable
-					uip_len is set to a value > 0. */
-					if( uip_len > 0 )
-					{
-						uip_arp_out();
-						vEMACWrite();
-					}
-				}
-
-				/* Call the ARP timer function every 10 seconds. */
-				if( timer_expired( &arp_timer ) )
+				/* If the above function invocation resulted in data that
+				should be sent out on the network, the global variable
+				uip_len is set to a value > 0. */
+				if( uip_len > 0 )
 				{
-					timer_reset( &arp_timer );
-					uip_arp_timer();
+					uip_arp_out();
+					vEMACWrite();
 				}
 			}
-			else
+
+			/* Call the ARP timer function every 10 seconds. */
+			if( timer_expired( &arp_timer ) )
 			{
-				/* We did not receive a packet, and there was no periodic
-				processing to perform.  Block for a fixed period.  If a packet
-				is received during this period we will be woken by the ISR
-				giving us the Semaphore. */
-				xSemaphoreTake( xEMACSemaphore, configTICK_RATE_HZ / 20 );
+				timer_reset( &arp_timer );
+				uip_arp_timer();
 			}
+			
+			xDoneSomething = pdTRUE;
+		}
+		
+		if( xDoneSomething == pdFALSE )
+		{
+			/* We did not receive a packet, and there was no periodic
+			processing to perform.  Block for a fixed period.  If a packet
+			is received during this period we will be woken by the ISR
+			giving us the Semaphore. */
+			xSemaphoreTake( xEMACSemaphore, configTICK_RATE_HZ / 20 );
 		}
 	}
 }

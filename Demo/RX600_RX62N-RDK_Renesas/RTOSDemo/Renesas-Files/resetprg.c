@@ -91,10 +91,10 @@ void PowerON_Reset_PC(void)
 
 	_INITSCT();
 
-//	_INIT_IOLIB();					// Use SIM I/O
+//	_INIT_IOLIB();					// Remove the comment when you use SIM I/O
 
 //	errno=0;						// Remove the comment when you use errno
-//	srand((_UINT)1);					// Remove the comment when you use rand()
+//	srand((_UINT)1);				// Remove the comment when you use rand()
 //	_s1ptr=NULL;					// Remove the comment when you use strtok()
 		
 //	HardwareSetup();				// Use Hardware Setup
@@ -103,8 +103,8 @@ void PowerON_Reset_PC(void)
 //	_CALL_INIT();					// Remove the comment when you use global class object
 
 	set_psw(PSW_init);				// Set Ubit & Ibit for PSW
-//	Change_PSW_PM_to_UserMode();	// Change PSW PMbit (SuperVisor->User)
-	( void ) Change_PSW_PM_to_UserMode;
+//	Change_PSW_PM_to_UserMode();	// DO NOT CHANGE TO USER MODE IF USING FREERTOS!
+	( void ) Change_PSW_PM_to_UserMode; // Just to avoid compiler warnings.
 
 	main();
 

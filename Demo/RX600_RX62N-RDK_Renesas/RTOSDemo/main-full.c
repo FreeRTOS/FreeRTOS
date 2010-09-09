@@ -51,10 +51,11 @@
     licensing and training services.
 */
 
-/*
+/* ****************************************************************************
  * This project includes a lot of tasks and tests and is therefore complex.
  * If you would prefer a much simpler project to get started with then select
  * the 'Blinky' build configuration within the HEW IDE.
+ * ****************************************************************************
  *
  * Creates all the demo application tasks, then starts the scheduler.  The web
  * documentation provides more details of the standard demo application tasks,
@@ -65,6 +66,14 @@
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
+ *
+ * Webserver ("uIP") task - This serves a number of dynamically generated WEB
+ * pages to a standard WEB browser.  The IP and MAC addresses are configured by
+ * constants defined at the bottom of FreeRTOSConfig.h.  Use either a standard
+ * Ethernet cable to connect through a hug, or a cross over (point to point)
+ * cable to connect directly.  Ensure the IP address used is compatible with the
+ * IP address of the machine running the browser - the easiest way to achieve
+ * this is to ensure the first three octets of the IP addresses are the same.
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
@@ -80,16 +89,19 @@
  * "Check" task - This only executes every five seconds but has a high priority
  * to ensure it gets processor time.  Its main function is to check that all the
  * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will toggle LED 5 every 5 seconds - the toggle
- * rate increasing to 200ms being a visual indication that at least one task has
- * reported unexpected behaviour.
+ * discovered the check task will toggle LED 5 (marked LED 9 on the silk 
+ * screen!) every 5 seconds - the toggle rate increasing to 200ms being a visual 
+ * indication that at least one task has reported unexpected behaviour.
  *
  * "High frequency timer test" - A high frequency periodic interrupt is
  * generated using a timer - the interrupt is assigned a priority above
  * configMAX_SYSCALL_INTERRUPT_PRIORITY so should not be effected by anything
- * the kernel is doing.  The interrupt service routine measures the number of
- * counts a separate timer performs between each interrupt to determine the
- * jitter in the interrupt timing.
+ * the kernel is doing.  The frequency and priority of the interrupt, in
+ * combination with other standard tests executed in this demo, should result
+ * in interrupts nesting at least 3 and probably 4 deep.  This test is only
+ * included in build configurations that have the optimiser switched on.  In
+ * optimised builds the count of high frequency ticks is used as the time base
+ * for the run time stats.
  *
  * *NOTE 1* If LED5 is toggling every 5 seconds then all the demo application
  * tasks are executing as expected and no errors have been reported in any
@@ -152,7 +164,7 @@ stack than most of the other tasks. */
 #define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
 
 /* The LED toggled by the check task. */
-#define mainCHECK_LED				( 5 )
+#define mainCHECK_LED				( 5 ) /* Marked LED 9 on the RDK silk screen. */
 
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error.  Controlled by the check task as described at the top of this
@@ -163,11 +175,6 @@ file. */
 by at least one task.  Controlled by the check task as described at the top of
 this file. */
 #define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
-
-/* The period of the peripheral clock in nano seconds.  This is used to calculate
-the jitter time in nano seconds as part of the high frequency timer test.  The
-clock driving the timer is divided by 8. */
-#define mainNS_PER_CLOCK			( ( unsigned long ) ( ( 1.0 /  ( ( double ) configPERIPHERAL_CLOCK_HZ ) / 8.0 ) * 1000000000.0 ) )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -233,7 +240,8 @@ stops incrementing then it is likely that its associate task has stalled. */
 unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 /* The status message that is displayed at the bottom of the "task stats" web
-page, which is served by the uIP task. */
+page, which is served by the uIP task.  This will report any errors picked up
+by the reg test task. */
 const char *pcStatusMessage = "All tasks executing without error.";
 
 /*-----------------------------------------------------------*/
@@ -292,13 +300,11 @@ static void prvCheckTask( void *pvParameters )
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 extern void vSetupHighFrequencyTimer( void );
-extern volatile unsigned short usMaxJitter;
-volatile unsigned long ulActualJitter = 0;
 
 	/* If this is being executed then the kernel has been started.  Start the high
 	frequency timer test as described at the top of this file.  This is only
 	included in the optimised build configuration - otherwise it takes up too much
-	CPU time. */
+	CPU time and can disrupt other tests. */
 	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
 		vSetupHighFrequencyTimer();
 	#endif
@@ -392,12 +398,6 @@ volatile unsigned long ulActualJitter = 0;
 		the LED toggles every 5 seconds then everything is ok.  A faster toggle
 		indicates an error. */
 		vParTestToggleLED( mainCHECK_LED );
-
-		/* Calculate the maximum jitter experienced by the high frequency timer
-		test and print it out.  It is ok to use printf without worrying about
-		mutual exclusion as it is not used anywhere else in this demo. */
-		//sprintf( cTempBuf, "%s [%fns]\n", "Max Jitter = ", ( ( float ) usMaxJitter ) * mainNS_PER_CLOCK );
-		ulActualJitter = ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -655,8 +655,9 @@ RegTest2Error:
 
 char *pcGetTaskStatusMessage( void )
 {
-	/* Not bothered about a critical section here.  This just returns a string
-	that is displaed on the "Task Stats" WEB page served by this demo. */
+	/* Not bothered about a critical section here although technically because of
+	the task priorities the pointer could change it will be atomic if not near
+	atomic and its not critical. */
 	return ( char * ) pcStatusMessage;
 }
 /*-----------------------------------------------------------*/

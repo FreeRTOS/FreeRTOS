@@ -175,12 +175,6 @@ int16_t phy_set_autonegotiate( void )
   }
   else
   {
-	  /* National DP83640 fix */
-	  _phy_write(0x13, 0x0006);
-	  reg = _phy_read(0x14);
-	  _phy_write(0x14, (reg&0x7FFF)); 
-      _phy_write(0x13, 0x0000);
-	  
       /* Get the link partner response */
 	  reg = (int16_t)_phy_read(AN_LINK_PARTNER_ABILITY_REG);
 	  

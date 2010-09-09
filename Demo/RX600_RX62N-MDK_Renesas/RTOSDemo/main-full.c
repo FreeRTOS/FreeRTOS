@@ -147,6 +147,10 @@ tasks check that the values are passed in correctly. */
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
+/* The WEB server uses string handling functions, which in turn use a bit more
+stack than most of the other tasks. */
+#define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
+
 /* The LED toggled by the check task. */
 #define mainCHECK_LED				( 5 )
 
@@ -215,11 +219,22 @@ static void prvRegTest2Implementation( void );
  */
 static void prvCheckTask( void *pvParameters );
 
+/*
+ * Contains the implementation of the WEB server.
+ */
+extern void vuIP_Task( void *pvParameters );
+
+/*-----------------------------------------------------------*/
+
 /* Variables that are incremented on each iteration of the reg test tasks -
 provided the tasks have not reported any errors.  The check task inspects these
 variables to ensure they are still incrementing as expected.  If a variable
 stops incrementing then it is likely that its associate task has stalled. */
 unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
+
+/* The status message that is displayed at the bottom of the "task stats" web
+page, which is served by the uIP task. */
+const char *pcStatusMessage = "All tasks executing without error.";
 
 /*-----------------------------------------------------------*/
 
@@ -231,9 +246,15 @@ extern void HardwareSetup( void );
 	here. */
 	HardwareSetup();
 
+	/* Turn all LEDs off. */
+	vParTestInitialise();
+
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+
+	/* The web server task. */
+	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -273,7 +294,6 @@ portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 extern void vSetupHighFrequencyTimer( void );
 extern volatile unsigned short usMaxJitter;
 volatile unsigned long ulActualJitter = 0;
-static char cErrorText[ 100 ];
 
 	/* If this is being executed then the kernel has been started.  Start the high
 	frequency timer test as described at the top of this file.  This is only
@@ -298,57 +318,57 @@ static char cErrorText[ 100 ];
 			rate at which mainCHECK_LED flashes to give visual feedback that an error
 			has occurred. */
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: GenQueue" );
+			pcStatusMessage = "Error: GenQueue";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: QueuePeek" );
+			pcStatusMessage = "Error: QueuePeek";
 		}
 		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: BlockQueue" );
+			pcStatusMessage = "Error: BlockQueue";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: BlockTime" );
+			pcStatusMessage = "Error: BlockTime";
 		}
 		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: SemTest" );
+			pcStatusMessage = "Error: SemTest";
 		}
 		else if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: PollQueue" );
+			pcStatusMessage = "Error: PollQueue";
 		}
 		else if( xIsCreateTaskStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: Death" );
+			pcStatusMessage = "Error: Death";
 		}
 		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: IntMath" );
+			pcStatusMessage = "Error: IntMath";
 		}
 		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: RecMutex" );
+			pcStatusMessage = "Error: RecMutex";
 		}
 		else if( xAreIntQueueTasksStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: IntQueue" );
+			pcStatusMessage = "Error: IntQueue";
 		}
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: Flop" );
+			pcStatusMessage = "Error: Flop";
 		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
@@ -356,13 +376,13 @@ static char cErrorText[ 100 ];
 		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: RegTest1" );
+			pcStatusMessage = "Error: RegTest1";
 		}
 
 		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 		{
 			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: RegTest2" );
+			pcStatusMessage = "Error: RegTest2";
 		}
 
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -631,8 +651,14 @@ RegTest2Error:
 	; - causing the check task to indicate the error.
 	BRA RegTest2Error
 }
+/*-----------------------------------------------------------*/
 
-
-
+char *pcGetTaskStatusMessage( void )
+{
+	/* Not bothered about a critical section here.  This just returns a string
+	that is displaed on the "Task Stats" WEB page served by this demo. */
+	return ( char * ) pcStatusMessage;
+}
+/*-----------------------------------------------------------*/
 
 

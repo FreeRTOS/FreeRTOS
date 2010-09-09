@@ -15,7 +15,8 @@
 [PROJECT_DEPENDENCY]
 [WORKSPACE_PROPERTIES]
 [HELP_FILES]
-"c:\devtools\renesas\hew\tools\renesas\rx\1_0_0\hew\stdlib.chm" "C/C++ Standard Library Help" 1 
+"c:\devtools\renesas\hew\tools\renesas\rx\1_0_0\hew\stdlib.chm" "C/C++ Standard Library Help" 0 
+"c:\devtools\renesas\hew\tools\renesas\rx\1_0_1\hew\stdlib.chm" "C/C++ Standard Library Help" 1 
 [GENERAL_DATA_PROJECT]
 [USERMENUTOOLS]
 [CUSTOMPLACEHOLDERS]

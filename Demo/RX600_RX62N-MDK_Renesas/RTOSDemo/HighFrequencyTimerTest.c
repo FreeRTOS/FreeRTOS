@@ -83,6 +83,10 @@ static void prvTimer2IntHandler( void );
 /* Stores the value of the maximum recorded jitter between interrupts. */
 volatile unsigned short usMaxJitter = 0;
 
+/* Counts the number of high frequency interrupts - used to generate the run
+time stats. */
+volatile unsigned long ulHighFrequencyTickCount = 0UL;
+
 /*-----------------------------------------------------------*/
 
 void vSetupHighFrequencyTimer( void )
@@ -146,7 +150,10 @@ static unsigned long ulErrorCount = 0UL;
 		
 		usMaxCount = usCurrentCount;
 	}
-		
+
+	/* Used to generate the run time stats. */
+	ulHighFrequencyTickCount++;
+	
 	/* Clear the timer. */
 	timerTIMER_3_COUNT_VALUE = 0;
 	

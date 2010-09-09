@@ -1,7 +1,19 @@
 #ifdef __GNUC__
-__attribute__( (packed) );
+	__attribute__( (packed) );
 #endif
-#ifdef __RENESAS__
-;
-#pragma unpack
+
+#ifdef _SH
+	#ifdef __RENESAS__
+		;
+		#pragma unpack
+	#endif
 #endif
+
+#ifdef __RX
+	#ifdef __RENESAS__
+		;
+		/* Nothing to do. */
+	#endif
+#endif
+
+

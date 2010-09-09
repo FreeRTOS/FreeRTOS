@@ -73,7 +73,7 @@ up on attempting to obtain a free buffer all together. */
 #define emacBUFFER_WAIT_ATTEMPTS	( 30 )
 
 /* The number of Rx descriptors. */
-#define emacNUM_RX_DESCRIPTORS	3
+#define emacNUM_RX_DESCRIPTORS	8
 
 /* The number of Tx descriptors.  When using uIP there is not point in having
 more than two. */
@@ -87,7 +87,7 @@ more than two. */
 
 /* The total number of times to wait emacTX_WAIT_DELAY_ms for the Tx descriptor to
 become free. */
-#define emacTX_WAIT_ATTEMPTS ( 5 )
+#define emacTX_WAIT_ATTEMPTS ( 50 )
 
 /* Only Rx end and Tx end interrupts are used by this driver. */
 #define emacTX_END_INTERRUPT	( 1UL << 21UL )
@@ -466,7 +466,7 @@ unsigned long ulReturn = 0;
 	{
 		/* The descriptor contains a frame.  Because of the size of the buffers
 		the frame should always be complete. */
-		if( (xCurrentRxDesc->status & FP0) == FP0 )
+		if( ( xCurrentRxDesc->status & FP0 ) == FP0 )
 		{
 			ulReturn = xCurrentRxDesc->size;
 		}

@@ -150,7 +150,6 @@ struct timer periodic_timer, arp_timer;
 		
 		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 		{
-taskENTER_CRITICAL();
 			/* Standard uIP loop taken from the uIP manual. */
 			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 			{
@@ -178,7 +177,6 @@ taskENTER_CRITICAL();
 					vEMACWrite();
 				}
 			}
-taskEXIT_CRITICAL();
 		}
 		else
 		{
@@ -212,7 +210,7 @@ taskEXIT_CRITICAL();
 				processing to perform.  Block for a fixed period.  If a packet
 				is received during this period we will be woken by the ISR
 				giving us the Semaphore. */
-				xSemaphoreTake( xEMACSemaphore, configTICK_RATE_HZ / 2 );
+				xSemaphoreTake( xEMACSemaphore, configTICK_RATE_HZ / 20 );
 			}
 		}
 	}

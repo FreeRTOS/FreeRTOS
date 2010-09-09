@@ -80,7 +80,8 @@ zero. */
 /* Interrupt handler in which the jitter is measured. */
 static void prvTimer2IntHandler( void );
 
-/* Stores the value of the maximum recorded jitter between interrupts. */
+/* Stores the value of the maximum recorded jitter between interrupts.  This is
+displayed on one of the served web pages. */
 volatile unsigned short usMaxJitter = 0;
 
 /* Counts the number of high frequency interrupts - used to generate the run

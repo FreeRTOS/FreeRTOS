@@ -3,12 +3,12 @@
 [DATABASE_VERSION]
 "11.0" 
 [WORKSPACE_DETAILS]
-"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX_MDK_TEMP" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX_MDK_TEMP\RTOSDemo.hws" "RX" "Renesas RX Standard" 
+"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas\RTOSDemo.hws" "RX" "Renesas RX Standard" 
 [SHARED_WORKSPACE_CONTROL_STATUS]
 "" "" "" 
 "" "" "" 
 [PROJECTS]
-"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX_MDK_TEMP\RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX_MDK_TEMP\RTOSDemo\RTOSDemo.hwp" 0 
+"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas\RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-MDK_Renesas\RTOSDemo\RTOSDemo.hwp" 0 
 [INFORMATION]
 "No workspace information available" 
 [SCRAP]

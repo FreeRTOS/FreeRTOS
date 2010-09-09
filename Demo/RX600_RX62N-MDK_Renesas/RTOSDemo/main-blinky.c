@@ -71,16 +71,16 @@
 #include "queue.h"
 
 /* Priorities at which the tasks are created. */
-#define 	configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
-#define		configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
+#define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds. */
-#define mainQUEUE_SEND_FREQUENCY_MS				( 500 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			( 500 / portTICK_RATE_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added so the send task should always find the
 queue empty. */
-#define mainQUEUE_LENGTH						( 1 )
+#define mainQUEUE_LENGTH					( 1 )
 
 /*
  * The tasks as defined at the top of this file.
@@ -91,6 +91,9 @@ static void prvQueueSendTask( void *pvParameters );
 /* The queue used by both tasks. */
 static xQueueHandle xQueue = NULL;
 
+/* This variable is not used by this simple Blinky example.  It is defined 
+purely to allow the project to link as it is used by the full project. */
+volatile unsigned long ulHighFrequencyTickCount = 0UL;
 /*-----------------------------------------------------------*/
 
 void main(void)
@@ -213,5 +216,7 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
+	/* Just to prevent the variable getting optimised away. */
+	( void ) ulHighFrequencyTickCount;
 }
 /*-----------------------------------------------------------*/

@@ -27,13 +27,14 @@ foreach $file (@files) {
 	print "Adding file $file\n";
 	
 	open(FILE, $file) || die "Could not open file $file\n";
+	binmode FILE;
 
 	$file =~ s-^-/-;
 	$fvar = $file;
 	$fvar =~ s-/-_-g;
 	$fvar =~ s-\.-_-g;
 	# for AVR, add PROGMEM here
-	print(OUTPUT "static const unsigned char data".$fvar."[] = {\n");
+	print(OUTPUT "static const char data".$fvar."[] = {\n");
 	print(OUTPUT "\t/* $file */\n\t");
 	for($j = 0; $j < length($file); $j++) {
 	    printf(OUTPUT "%#02x, ", unpack("C", substr($file, $j, 1)));

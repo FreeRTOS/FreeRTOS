@@ -65,6 +65,7 @@
 #include "apps/httpd/httpd.h"
 #include "sys/timer.h"
 #include "net/clock-arch.h"
+#include "r_ether.h"
 
 /* Demo includes. */
 #include "ParTest.h"
@@ -117,7 +118,6 @@ void vuIP_Task( void *pvParameters )
 portBASE_TYPE i;
 uip_ipaddr_t xIPAddr;
 struct timer periodic_timer, arp_timer;
-extern void ( vEMAC_ISR_Wrapper )( void );
 
 	( void ) pvParameters;
 
@@ -150,6 +150,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 		
 		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 		{
+taskENTER_CRITICAL();
 			/* Standard uIP loop taken from the uIP manual. */
 			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 			{
@@ -177,6 +178,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 					vEMACWrite();
 				}
 			}
+taskEXIT_CRITICAL();
 		}
 		else
 		{
@@ -241,16 +243,22 @@ char *c;
 	c = strstr( pcInputString, "?" );
     if( c )
     {
-		/* Turn the FIO1 LED's on or off in accordance with the check box status. */
+		/* Turn the LED's on or off in accordance with the check box status. */
 		if( strstr( c, "LED0=1" ) != NULL )
 		{
-			/* Turn LED 4 on. */
-			vParTestSetLED( 4, 1 );
+			/* Turn LEDs on. */
+			vParTestSetLED( 7, 1 );
+			vParTestSetLED( 8, 1 );
+			vParTestSetLED( 9, 1 );
+			vParTestSetLED( 10, 1 );
 		}
 		else
 		{
 			/* Turn LED 4 off. */
-			vParTestSetLED( 4, 0 );
+			vParTestSetLED( 7, 0 );
+			vParTestSetLED( 8, 0 );
+			vParTestSetLED( 9, 0 );
+			vParTestSetLED( 10, 0 );
 		}
     }
 }

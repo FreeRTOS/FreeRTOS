@@ -202,17 +202,17 @@ unsigned long	ulString;
 
 static unsigned short generate_io_state( void *arg )
 {
-	extern long lParTestGetLEDState( void );
+	extern long lParTestGetLEDState( unsigned long ulLED );
 	( void ) arg;
 
-	/* Get the state of the LEDs that are on the FIO1 port. */
-	if( lParTestGetLEDState() )
+	/* Are the dynamically setable LEDs currently on or off? */
+	if( lParTestGetLEDState( 8 ) )
 	{
-		pcStatus = "";
+		pcStatus = "checked";
 	}
 	else
 	{
-		pcStatus = "checked";
+		pcStatus = "";
 	}
 
 	sprintf( uip_appdata, "<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED<p><p>", pcStatus );
@@ -227,7 +227,17 @@ static unsigned short generate_runtime_stats( void *arg )
 	( void ) arg;
 	lRefreshCount++;
 	sprintf( cCountBuf, "<p><br>Refresh count = %d", ( int ) lRefreshCount );
-	vTaskGetRunTimeStats( uip_appdata );
+	
+	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
+	{
+		vTaskGetRunTimeStats( uip_appdata );
+	}
+	#else
+	{
+		strcpy( uip_appdata, "<p>Run time stats are only available in the debug_with_optimisation build configuration.<p>" );
+	}
+	#endif	
+
 	strcat( uip_appdata, cCountBuf );
 
 	return strlen( uip_appdata );

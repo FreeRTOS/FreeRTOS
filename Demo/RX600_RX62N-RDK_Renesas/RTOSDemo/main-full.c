@@ -653,17 +653,11 @@ RegTest2Error:
 }
 /*-----------------------------------------------------------*/
 
-void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
-{
-	/* Not implemented yet, so put here to keep the linker happy. */
-}
-/*-----------------------------------------------------------*/
-
 char *pcGetTaskStatusMessage( void )
 {
 	/* Not bothered about a critical section here.  This just returns a string
 	that is displaed on the "Task Stats" WEB page served by this demo. */
-	return pcStatusMessage;
+	return ( char * ) pcStatusMessage;
 }
 /*-----------------------------------------------------------*/
 

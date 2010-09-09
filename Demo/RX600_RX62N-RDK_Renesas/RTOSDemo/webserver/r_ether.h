@@ -108,6 +108,33 @@ int32_t R_Ether_Close(uint32_t ch);
 int32_t R_Ether_Write(uint32_t ch, void *buf, uint32_t len);
 int32_t R_Ether_Read(uint32_t ch, void *buf);
 
+/**
+ * FreeRTOS Ethernet API prototypes.
+ */
+
+/*
+ * Configure all the ethernet components (MAC, DMA, PHY) ready for communication.
+ */
+void vInitEmac( void );
+
+/*
+ * Auto negotiate the link, returning pass or fail depending on whether a link
+ * was established or not.
+ */
+long lEMACWaitForLink( void );
+
+/*
+ * Check the Rx status, and return the number of bytes received if any.
+ */
+unsigned long ulEMACRead( void );
+
+/*
+ * Send uip_len bytes from uip_buf to the Tx descriptors and initiate a Tx.
+ */
+void vEMACWrite( void );
+
+
+
 
 /****************************************************/
 /* Ethernet statistic collection data */

@@ -108,7 +108,7 @@ void PowerON_Reset_PC(void)
 
 	main();
 
-	_CLOSEALL();					// Use SIM I/O
+//	_CLOSEALL();					// Use SIM I/O
 	
 //	_CALL_END();					// Remove the comment when you use global class object
 

@@ -55,6 +55,7 @@
 #include "iodefine.h"
 #include "typedefine.h"
 #include "r_ether.h"
+#include "phy.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"

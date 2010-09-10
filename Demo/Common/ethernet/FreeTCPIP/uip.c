@@ -19,13 +19,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *	notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ *	notice, this list of conditions and the following disclaimer in the
+ *	documentation and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote
- *    products derived from this software without specific prior
- *    written permission.
+ *	products derived from this software without specific prior
+ *	written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -712,7 +712,7 @@ void uip_process( u8_t flag )
 	uip_sappdata = uip_appdata = &uip_buf[UIP_IPTCPH_LEN + UIP_LLH_LEN];
 
 	/* Check if we were invoked because of a poll request for a
-     particular connection. */
+	 particular connection. */
 	if( flag == UIP_POLL_REQUEST )
 	{
 		if( (uip_connr->tcpstateflags & UIP_TS_MASK) == UIP_ESTABLISHED && !uip_outstanding(uip_connr) )
@@ -809,7 +809,7 @@ void uip_process( u8_t flag )
 					{
 						case UIP_SYN_RCVD:
 							/* In the SYN_RCVD state, we should retransmit our
-               				SYNACK. */
+			   				SYNACK. */
 							goto tcp_send_synack;
 
 						#if UIP_ACTIVE_OPEN
@@ -895,24 +895,24 @@ void uip_process( u8_t flag )
 	#endif /* UIP_CONF_IPV6 */
 
 	/* Check the size of the packet. If the size reported to us in
-     uip_len is smaller the size reported in the IP header, we assume
-     that the packet has been corrupted in transit. If the size of
-     uip_len is larger than the size reported in the IP packet header,
-     the packet has been padded and we set uip_len to the correct
-     value.. */
+	uip_len is smaller the size reported in the IP header, we assume
+	that the packet has been corrupted in transit. If the size of
+	uip_len is larger than the size reported in the IP packet header,
+	the packet has been padded and we set uip_len to the correct
+	value.. */
 	if( (BUF->len[ 0 ] << 8) + BUF->len[ 1 ] <= uip_len )
 	{
 		uip_len = ( BUF->len[ 0 ] << 8 ) + BUF->len[ 1 ];
 		#if UIP_CONF_IPV6
 			/* The length reported in the IPv6 header is the
-		    length of the payload that follows the
-		    header. However, uIP uses the uip_len variable
-		    for holding the size of the entire packet,
-		    including the IP header. For IPv4 this is not a
-		    problem as the length field in the IPv4 header
-		    contains the length of the entire packet. But
-		    for IPv6 we need to add the size of the IPv6
-		    header (40 bytes). */
+			length of the payload that follows the
+			header. However, uIP uses the uip_len variable
+			for holding the size of the entire packet,
+			including the IP header. For IPv4 this is not a
+			problem as the length field in the IPv4 header
+			contains the length of the entire packet. But
+			for IPv6 we need to add the size of the IPv6
+			header (40 bytes). */
 			uip_len += 40;
 		#endif /* UIP_CONF_IPV6 */
 	}
@@ -1313,9 +1313,9 @@ udp_send:
 	}
 
 	/* If we didn't find and active connection that expected the packet,
-     either this packet is an old duplicate, or this is a SYN packet
-     destined for a connection in LISTEN. If the SYN flag isn't set,
-     it is an old packet and we send a RST. */
+	either this packet is an old duplicate, or this is a SYN packet
+	destined for a connection in LISTEN. If the SYN flag isn't set,
+	it is an old packet and we send a RST. */
 	if( (BUF->flags & TCP_CTL) != TCP_SYN )
 	{
 		goto reset;
@@ -1366,8 +1366,8 @@ reset:
 	BUF->ackno[ 0 ] = c;
 
 	/* We also have to increase the sequence number we are
-     acknowledging. If the least significant byte overflowed, we need
-     to propagate the carry to the other bytes as well. */
+	acknowledging. If the least significant byte overflowed, we need
+	to propagate the carry to the other bytes as well. */
 	if( ++BUF->ackno[ 3 ] == 0 )
 	{
 		if( ++BUF->ackno[ 2 ] == 0 )
@@ -1392,15 +1392,15 @@ reset:
 	goto tcp_send_noconn;
 
 	/* This label will be jumped to if we matched the incoming packet
-     with a connection in LISTEN. In that case, we should create a new
-     connection and send a SYNACK in return. */
+	with a connection in LISTEN. In that case, we should create a new
+	connection and send a SYNACK in return. */
 found_listen:
 	/* First we check if there are any connections avaliable. Unused
-     connections are kept in the same table as used connections, but
-     unused ones have the tcpstate set to CLOSED. Also, connections in
-     TIME_WAIT are kept track of and we'll use the oldest one if no
-     CLOSED connections are found. Thanks to Eddie C. Dost for a very
-     nice algorithm for the TIME_WAIT search. */
+	connections are kept in the same table as used connections, but
+	unused ones have the tcpstate set to CLOSED. Also, connections in
+	TIME_WAIT are kept track of and we'll use the oldest one if no
+	CLOSED connections are found. Thanks to Eddie C. Dost for a very
+	nice algorithm for the TIME_WAIT search. */
 	uip_connr = 0;
 	for( c = 0; c < UIP_CONNS; ++c )
 	{
@@ -1506,7 +1506,7 @@ tcp_send_syn:
 	#endif /* UIP_ACTIVE_OPEN */
 
 	/* We send out the TCP Maximum Segment Size option with our
-    SYNACK. */
+	SYNACK. */
 	BUF->optdata[ 0 ] = TCP_OPT_MSS;
 	BUF->optdata[ 1 ] = TCP_OPT_MSS_LEN;
 	BUF->optdata[ 2 ] = ( UIP_TCP_MSS ) / 256;
@@ -1521,9 +1521,9 @@ found:
 	uip_flags = 0;
 
 	/* We do a very naive form of TCP reset processing; we just accept
-    any RST and kill our connection. We should in fact check if the
-    sequence number of this reset is wihtin our advertised window
-    before we accept the reset. */
+	any RST and kill our connection. We should in fact check if the
+	sequence number of this reset is wihtin our advertised window
+	before we accept the reset. */
 	if( BUF->flags & TCP_RST )
 	{
 		uip_connr->tcpstateflags = UIP_CLOSED;
@@ -1534,17 +1534,17 @@ found:
 	}
 
 	/* Calculate the length of the data, if the application has sent
-    any data to us. */
+	any data to us. */
 	c = ( BUF->tcpoffset >> 4 ) << 2;
 
 	/* uip_len will contain the length of the actual TCP data. This is
-    calculated by subtracing the length of the TCP header (in
-    c) and the length of the IP header (20 bytes). */
+	calculated by subtracing the length of the TCP header (in
+	c) and the length of the IP header (20 bytes). */
 	uip_len = uip_len - c - UIP_IPH_LEN;
 
 	/* First, check if the sequence number of the incoming packet is
-    what we're expecting next. If not, we send out an ACK with the
-    correct numbers in. */
+	what we're expecting next. If not, we send out an ACK with the
+	correct numbers in. */
 	if( !(((uip_connr->tcpstateflags & UIP_TS_MASK) == UIP_SYN_SENT) && ((BUF->flags & TCP_CTL) == (TCP_SYN | TCP_ACK))) )
 	{
 		if
@@ -1563,9 +1563,9 @@ found:
 	}
 
 	/* Next, check if the incoming segment acknowledges any outstanding
-    data. If so, we update the sequence number, reset the length of
-    the outstanding data, calculate RTT estimations, and reset the
-    retransmission timer. */
+	data. If so, we update the sequence number, reset the length of
+	the outstanding data, calculate RTT estimations, and reset the
+	retransmission timer. */
 	if( (BUF->flags & TCP_ACK) && uip_outstanding(uip_connr) )
 	{
 		uip_add32( uip_connr->snd_nxt, uip_connr->len );
@@ -1623,9 +1623,9 @@ found:
 		ESTABLISHED to LAST_ACK). */
 		case UIP_SYN_RCVD:
 			/* In SYN_RCVD we have sent out a SYNACK in response to a SYN, and
-       		we are waiting for an ACK that acknowledges the data we sent
-       		out the last time. Therefore, we want to have the UIP_ACKDATA
-       		flag set. If so, we enter the ESTABLISHED state. */
+	   		we are waiting for an ACK that acknowledges the data we sent
+	   		out the last time. Therefore, we want to have the UIP_ACKDATA
+	   		flag set. If so, we enter the ESTABLISHED state. */
 			if( uip_flags & UIP_ACKDATA )
 			{
 				uip_connr->tcpstateflags = UIP_ESTABLISHED;
@@ -1864,22 +1864,22 @@ appsend:
 					if( uip_connr->len == 0 )
 					{
 						/* The application cannot send more than what is allowed by
-	     				the mss (the minumum of the MSS and the available
-	     				window). */
+		 				the mss (the minumum of the MSS and the available
+		 				window). */
 						if( uip_slen > uip_connr->mss )
 						{
 							uip_slen = uip_connr->mss;
 						}
 
 						/* Remember how much data we send out now so that we know
-	     				when everything has been acknowledged. */
+		 				when everything has been acknowledged. */
 						uip_connr->len = uip_slen;
 					}
 					else
 					{
 						/* If the application already had unacknowledged data, we
-	     				make sure that the application does not send (i.e.,
-	     				retransmit) out more than it previously sent out. */
+		 				make sure that the application does not send (i.e.,
+		 				retransmit) out more than it previously sent out. */
 						uip_slen = uip_connr->len;
 					}
 				}
@@ -1889,7 +1889,7 @@ apprexmit:
 				uip_appdata = uip_sappdata;
 
 				/* If the application has data to be sent, or if the incoming
-         		packet had new data in it, we must send out a packet. */
+		 		packet had new data in it, we must send out a packet. */
 				if( uip_slen > 0 && uip_connr->len > 0 )
 				{
 					/* Add the length of the IP and TCP headers. */
@@ -2004,7 +2004,7 @@ apprexmit:
 	goto drop;
 
 	/* We jump here when we are ready to send the packet, and just want
-     to set the appropriate TCP sequence numbers in the TCP header. */
+	 to set the appropriate TCP sequence numbers in the TCP header. */
 tcp_send_ack:
 	BUF->flags = TCP_ACK;
 
@@ -2015,9 +2015,9 @@ tcp_send_noopts:
 	BUF->tcpoffset = ( UIP_TCPH_LEN / 4 ) << 4;
 
 	/* We're done with the input processing. We are now ready to send a
-     reply. Our job is to fill in all the fields of the TCP and IP
-     headers before calculating the checksum and finally send the
-     packet. */
+	reply. Our job is to fill in all the fields of the TCP and IP
+	headers before calculating the checksum and finally send the
+	packet. */
 tcp_send:
 	BUF->ackno[ 0 ] = uip_connr->rcv_nxt[ 0 ];
 	BUF->ackno[ 1 ] = uip_connr->rcv_nxt[ 1 ];

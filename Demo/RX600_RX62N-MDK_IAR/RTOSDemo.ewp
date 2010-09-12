@@ -115,11 +115,11 @@
         </option>
         <option>
           <name>IStackSize</name>
-          <state>0x100</state>
+          <state>0x200</state>
         </option>
         <option>
           <name>HeapSize</name>
-          <state>0x400</state>
+          <state>0x4</state>
         </option>
         <option>
           <name>GenSubnormalNumbers</name>
@@ -235,7 +235,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>DEBUG_BUILD</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -275,7 +275,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa082</state>
+          <state>Pa082, Pe1644, Pa050, Pa039</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -308,6 +308,8 @@
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\RX600</state>
           <state>$PROJ_DIR$\include</state>
+          <state>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP</state>
+          <state>$PROJ_DIR$\webserver</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -790,7 +792,7 @@
         </option>
         <option>
           <name>IlinkCspyBufferedWrite</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkLogAutoLibSelect</name>
@@ -1139,6 +1141,7 @@
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\RX600</state>
           <state>$PROJ_DIR$\include</state>
+          <state>$PROJ_DIR$\webserver</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1777,11 +1780,11 @@
         </option>
         <option>
           <name>IStackSize</name>
-          <state>0x100</state>
+          <state>0x200</state>
         </option>
         <option>
           <name>HeapSize</name>
-          <state>0x400</state>
+          <state>0x4</state>
         </option>
         <option>
           <name>GenSubnormalNumbers</name>
@@ -1842,21 +1845,21 @@
         </option>
         <option>
           <name>IccOptLevel</name>
-          <state>3</state>
+          <state>1</state>
         </option>
         <option>
           <name>IccOptStrategy</name>
           <version>0</version>
-          <state>0</state>
+          <state>2</state>
         </option>
         <option>
           <name>IccOptLevelSlave</name>
-          <state>3</state>
+          <state>1</state>
         </option>
         <option>
           <name>IccOptAllowList</name>
           <version>1</version>
-          <state>1111101</state>
+          <state>0000000</state>
         </option>
         <option>
           <name>IccGenerateDebugInfo</name>
@@ -1897,7 +1900,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>INCLUDE_HIGH_FREQUENCY_TIMER_TEST</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1937,7 +1940,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa082</state>
+          <state>Pa082, Pe1644, Pa050, Pa039</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -1970,6 +1973,8 @@
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\RX600</state>
           <state>$PROJ_DIR$\include</state>
+          <state>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP</state>
+          <state>$PROJ_DIR$\webserver</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -2562,6 +2567,78 @@
     </file>
   </group>
   <group>
+    <name>FreeTCPIP (based on uIP)</name>
+    <group>
+      <name>webserver</name>
+      <group>
+        <name>Common</name>
+        <file>
+          <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c</name>
+          <excluded>
+            <configuration>Blinky</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c</name>
+          <excluded>
+            <configuration>Blinky</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c</name>
+          <excluded>
+            <configuration>Blinky</configuration>
+          </excluded>
+        </file>
+      </group>
+      <group>
+        <name>Port specific</name>
+        <file>
+          <name>$PROJ_DIR$\webserver\EMAC.c</name>
+          <excluded>
+            <configuration>Blinky</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\webserver\httpd-cgi.c</name>
+          <excluded>
+            <configuration>Blinky</configuration>
+          </excluded>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\webserver\phy.c</name>
+          <excluded>
+            <configuration>Blinky</configuration>
+          </excluded>
+        </file>
+      </group>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\psock.c</name>
+      <excluded>
+        <configuration>Blinky</configuration>
+      </excluded>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\timer.c</name>
+      <excluded>
+        <configuration>Blinky</configuration>
+      </excluded>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\uip.c</name>
+      <excluded>
+        <configuration>Blinky</configuration>
+      </excluded>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\uip_arp.c</name>
+      <excluded>
+        <configuration>Blinky</configuration>
+      </excluded>
+    </file>
+  </group>
+  <group>
     <name>Renesas Files</name>
     <file>
       <name>$PROJ_DIR$\Renesas-Files\hwsetup.c</name>
@@ -2597,6 +2674,12 @@
   </file>
   <file>
     <name>$PROJ_DIR$\RegTest.s</name>
+    <excluded>
+      <configuration>Blinky</configuration>
+    </excluded>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\uIP_Task.c</name>
     <excluded>
       <configuration>Blinky</configuration>
     </excluded>

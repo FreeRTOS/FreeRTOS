@@ -1,7 +1,7 @@
 [E20]
-TimeConnected=1283271959
-ComuniDllSave=76087296
-FfwnsdDllSave=82116608
+TimeConnected=1284324893
+ComuniDllSave=56033280
+FfwnsdDllSave=303235072
 ChipName=R5F562N8
 CpuMode=0
 InputClock=12.500000
@@ -11,7 +11,7 @@ DebugFlags=0,0
 EmulatorMode=0
 NeedInit=1
 [DebugChecksum]
-Checksum=-1379247853
+Checksum=-2144813599
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1

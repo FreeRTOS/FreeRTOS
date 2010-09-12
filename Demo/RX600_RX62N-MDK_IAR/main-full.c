@@ -51,10 +51,11 @@
     licensing and training services.
 */
 
-/*
+/* ****************************************************************************
  * This project includes a lot of tasks and tests and is therefore complex.
  * If you would prefer a much simpler project to get started with then select
  * the 'Blinky' build configuration within the HEW IDE.
+ * ****************************************************************************
  *
  * Creates all the demo application tasks, then starts the scheduler.  The web
  * documentation provides more details of the standard demo application tasks,
@@ -65,6 +66,14 @@
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
+ *
+ * Webserver ("uIP") task - This serves a number of dynamically generated WEB
+ * pages to a standard WEB browser.  The IP and MAC addresses are configured by
+ * constants defined at the bottom of FreeRTOSConfig.h.  Use either a standard
+ * Ethernet cable to connect through a hug, or a cross over (point to point)
+ * cable to connect directly.  Ensure the IP address used is compatible with the
+ * IP address of the machine running the browser - the easiest way to achieve
+ * this is to ensure the first three octets of the IP addresses are the same.
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
@@ -87,9 +96,12 @@
  * "High frequency timer test" - A high frequency periodic interrupt is
  * generated using a timer - the interrupt is assigned a priority above
  * configMAX_SYSCALL_INTERRUPT_PRIORITY so should not be effected by anything
- * the kernel is doing.  The interrupt service routine measures the number of
- * counts a separate timer performs between each interrupt to determine the
- * jitter in the interrupt timing.
+ * the kernel is doing.  The frequency and priority of the interrupt, in
+ * combination with other standard tests executed in this demo, should result
+ * in interrupts nesting at least 3 and probably 4 deep.  This test is only
+ * included in build configurations that have the optimiser switched on.  In
+ * optimised builds the count of high frequency ticks is used as the time base
+ * for the run time stats.
  *
  * *NOTE 1* If LED5 is toggling every 5 seconds then all the demo application
  * tasks are executing as expected and no errors have been reported in any
@@ -109,7 +121,8 @@
 */
 
 /* Standard includes. */
-#include "string.h"
+#include <string.h>
+#include <stdio.h>
 
 /* Hardware specific includes. */
 #include <iorx62n.h>
@@ -150,6 +163,10 @@ tasks check that the values are passed in correctly. */
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
+/* The WEB server uses string handling functions, which in turn use a bit more
+stack than most of the other tasks. */
+#define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
+
 /* The LED toggled by the check task. */
 #define mainCHECK_LED				( 5 )
 
@@ -163,10 +180,12 @@ by at least one task.  Controlled by the check task as described at the top of
 this file. */
 #define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
 
-/* The period of the peripheral clock in nano seconds.  This is used to calculate
-the jitter time in nano seconds as part of the high frequency timer test.  The
-clock driving the timer is divided by 8. */
-#define mainNS_PER_CLOCK			( ( unsigned long ) ( ( 1.0 /  ( ( double ) configPERIPHERAL_CLOCK_HZ ) / 8.0 ) * 1000000000.0 ) )
+/* For outputing debug console messages - just maps to printf. */
+#ifdef DEBUG_BUILD
+	#define xPrintf( x )	printf( x )
+#else
+	#define xPrintf( x ) 	( void ) x
+#endif
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -219,11 +238,23 @@ extern void prvRegTest2Implementation( void );
  */
 static void prvCheckTask( void *pvParameters );
 
+/*
+ * Contains the implementation of the WEB server.
+ */
+extern void vuIP_Task( void *pvParameters );
+
+/*-----------------------------------------------------------*/
+
 /* Variables that are incremented on each iteration of the reg test tasks -
 provided the tasks have not reported any errors.  The check task inspects these
 variables to ensure they are still incrementing as expected.  If a variable
 stops incrementing then it is likely that its associate task has stalled. */
 unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
+
+/* The status message that is displayed at the bottom of the "task stats" web
+page, which is served by the uIP task.  This will report any errors picked up
+by the reg test task. */
+static const char *pcStatusMessage = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -234,10 +265,15 @@ extern void HardwareSetup( void );
 	/* Renesas provided CPU configuration routine.  The clocks are configured in
 	here. */
 	HardwareSetup();
+	
+	xPrintf( "http://www.FreeRTOS.org\r\n" );
 
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+
+	/* The web server task. */
+	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -275,9 +311,6 @@ static void prvCheckTask( void *pvParameters )
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 extern void vSetupHighFrequencyTimer( void );
-extern volatile unsigned short usMaxJitter;
-volatile unsigned long ulActualJitter = 0;
-static char cErrorText[ 100 ];
 
 	/* If this is being executed then the kernel has been started.  Start the high
 	frequency timer test as described at the top of this file.  This is only
@@ -300,73 +333,83 @@ static char cErrorText[ 100 ];
 		{
 			/* Increase the rate at which this task cycles, which will increase the
 			rate at which mainCHECK_LED flashes to give visual feedback that an error
-			has occurred. */
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: GenQueue" );
+			has occurred. */			
+			pcStatusMessage = "Error: GenQueue";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		
+		if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: QueuePeek" );
+			pcStatusMessage = "Error: QueuePeek\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		
+		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: BlockQueue" );
+			pcStatusMessage = "Error: BlockQueue\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		
+		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: BlockTime" );
+			pcStatusMessage = "Error: BlockTime\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		
+		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: SemTest" );
+			pcStatusMessage = "Error: SemTest\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		
+		if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: PollQueue" );
+			pcStatusMessage = "Error: PollQueue\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xIsCreateTaskStillRunning() != pdTRUE )
+		
+		if( xIsCreateTaskStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: Death" );
+			pcStatusMessage = "Error: Death\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		
+		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: IntMath" );
+			pcStatusMessage = "Error: IntMath\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		
+		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: RecMutex" );
+			pcStatusMessage = "Error: RecMutex\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreIntQueueTasksStillRunning() != pdPASS )
+		
+		if( xAreIntQueueTasksStillRunning() != pdPASS )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: IntQueue" );
+			pcStatusMessage = "Error: IntQueue\r\n";
+			xPrintf( pcStatusMessage );
 		}
-		else if( xAreMathsTaskStillRunning() != pdPASS )
+		
+		if( xAreMathsTaskStillRunning() != pdPASS )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: Flop" );
+			pcStatusMessage = "Error: Flop\r\n";
+			xPrintf( pcStatusMessage );
 		}
 
 		/* Check the reg test tasks are still cycling.  They will stop incrementing
 		their loop counters if they encounter an error. */
 		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: RegTest1" );
+			pcStatusMessage = "Error: RegTest1\r\n";
+			xPrintf( pcStatusMessage );
 		}
 
 		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			strcpy( cErrorText, "Error: RegTest2" );
+			pcStatusMessage = "Error: RegTest2\r\n";
+			xPrintf( pcStatusMessage );
 		}
 
 		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -376,17 +419,11 @@ static char cErrorText[ 100 ];
 		the LED toggles every 5 seconds then everything is ok.  A faster toggle
 		indicates an error. */
 		vParTestToggleLED( mainCHECK_LED );
-
-		/* Calculate the maximum jitter experienced by the high frequency timer
-		test and print it out.  It is ok to use printf without worrying about
-		mutual exclusion as it is not used anywhere else in this demo. */
-		//sprintf( cTempBuf, "%s [%fns]\n", "Max Jitter = ", ( ( float ) usMaxJitter ) * mainNS_PER_CLOCK );
-		//ulActualJitter = ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK;
-
-		if( xCycleFrequency == mainERROR_CYCLE_TIME )
+		
+		/* Ensure the LED toggles at a faster rate if an error has occurred. */
+		if( pcStatusMessage != NULL )
 		{
-			/* Just for break point. */
-			portNOP();
+			xCycleFrequency = mainERROR_CYCLE_TIME;
 		}
 	}
 }
@@ -439,9 +476,6 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
-static volatile unsigned long ulIdleLoopCount = 0UL;
-
-	ulIdleLoopCount++;
 }
 /*-----------------------------------------------------------*/
 
@@ -481,7 +515,20 @@ static void prvRegTest2Task( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-
-
+char *pcGetTaskStatusMessage( void )
+{
+	/* Not bothered about a critical section here although technically because of
+	the task priorities the pointer could change it will be atomic if not near
+	atomic and its not critical. */
+	if( pcStatusMessage == NULL )
+	{
+		return "All tasks running without error";
+	}
+	else
+	{
+		return ( char * ) pcStatusMessage;
+	}
+}
+/*-----------------------------------------------------------*/
 
 

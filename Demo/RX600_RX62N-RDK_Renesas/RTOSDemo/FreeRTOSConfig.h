@@ -90,7 +90,7 @@
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* The interrupt priority used by the kernel itself for the tick interrupt and
@@ -123,6 +123,14 @@ to exclude the API function. */
 extern volatile unsigned long ulHighFrequencyTickCount;
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() nop() /* Run time stats use the same timer as the high frequency timer test. */
 #define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTickCount
+
+
+/* Override some of the priorities set in the common demo tasks.  This is
+required to ensure flase positive timing errors are not reported. */
+#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 2 )
+#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 3 )
+
+
 /*-----------------------------------------------------------
  * Ethernet configuration.
  *-----------------------------------------------------------*/

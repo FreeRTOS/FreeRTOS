@@ -157,7 +157,7 @@ static void prvResetEverything( void );
 /*-----------------------------------------------------------*/
 
 /* Points to the Rx descriptor currently in use. */
-static ethfifo *xCurrentRxDesc = NULL;
+static ethfifo *pxCurrentRxDesc = NULL;
 
 /* The buffer used by the uIP stack to both receive and send.  This points to
 one of the Ethernet buffers when its actually in use. */
@@ -246,8 +246,8 @@ unsigned long ulBytesReceived;
 
 	if( ulBytesReceived > 0 )
 	{
-		xCurrentRxDesc->status &= ~( FP1 | FP0 );
-		xCurrentRxDesc->status |= ACT;			
+		pxCurrentRxDesc->status &= ~( FP1 | FP0 );
+		pxCurrentRxDesc->status |= ACT;			
 
 		if( EDMAC.EDRRR.LONG == 0x00000000L )
 		{
@@ -259,10 +259,10 @@ unsigned long ulBytesReceived;
 		the buffer that contains the received data. */
 		prvReturnBuffer( uip_buf );
 		
-		uip_buf = ( void * ) xCurrentRxDesc->buf_p;
+		uip_buf = ( void * ) pxCurrentRxDesc->buf_p;
 
 		/* Move onto the next buffer in the ring. */
-		xCurrentRxDesc = xCurrentRxDesc->next;
+		pxCurrentRxDesc = pxCurrentRxDesc->next;
 	}
 
 	return ulBytesReceived;
@@ -372,7 +372,7 @@ long x;
 	pxDescriptor->next = &( xTxDescriptors[ 0 ] );
 	
 	/* Use the first Rx descriptor to start with. */
-	xCurrentRxDesc = &( xRxDescriptors[ 0 ] );
+	pxCurrentRxDesc = &( xRxDescriptors[ 0 ] );
 }
 /*-----------------------------------------------------------*/
 
@@ -444,17 +444,17 @@ static unsigned long prvCheckRxFifoStatus( void )
 {
 unsigned long ulReturn = 0;
 
-	if( ( xCurrentRxDesc->status & ACT ) != 0 )
+	if( ( pxCurrentRxDesc->status & ACT ) != 0 )
 	{
 		/* Current descriptor is still active. */
 	}
-	else if( ( xCurrentRxDesc->status & FE ) != 0 )
+	else if( ( pxCurrentRxDesc->status & FE ) != 0 )
 	{
 		/* Frame error.  Clear the error. */
-		xCurrentRxDesc->status &= ~( FP1 | FP0 | FE );
-		xCurrentRxDesc->status &= ~( RMAF | RRF | RTLF | RTSF | PRE | CERF );
-		xCurrentRxDesc->status |= ACT;
-		xCurrentRxDesc = xCurrentRxDesc->next;
+		pxCurrentRxDesc->status &= ~( FP1 | FP0 | FE );
+		pxCurrentRxDesc->status &= ~( RMAF | RRF | RTLF | RTSF | PRE | CERF );
+		pxCurrentRxDesc->status |= ACT;
+		pxCurrentRxDesc = pxCurrentRxDesc->next;
 
 		if( EDMAC.EDRRR.LONG == 0x00000000UL )
 		{
@@ -466,9 +466,9 @@ unsigned long ulReturn = 0;
 	{
 		/* The descriptor contains a frame.  Because of the size of the buffers
 		the frame should always be complete. */
-		if( ( xCurrentRxDesc->status & FP0 ) == FP0 )
+		if( ( pxCurrentRxDesc->status & FP0 ) == FP0 )
 		{
-			ulReturn = xCurrentRxDesc->size;
+			ulReturn = pxCurrentRxDesc->size;
 		}
 		else
 		{
@@ -515,7 +515,7 @@ static void prvConfigureEtherCAndEDMAC( void )
 	#ifdef __LIT
 		EDMAC.EDMR.BIT.DE = 1;
 	#endif
-	EDMAC.RDLAR = ( void * ) xCurrentRxDesc;	/* Initialaize Rx Descriptor List Address */
+	EDMAC.RDLAR = ( void * ) pxCurrentRxDesc;	/* Initialaize Rx Descriptor List Address */
 	EDMAC.TDLAR = &( xTxDescriptors[ 0 ] );		/* Initialaize Tx Descriptor List Address */
 	EDMAC.TRSCER.LONG = 0x00000000;				/* Copy-back status is RFE & TFE only   */
 	EDMAC.TFTR.LONG = 0x00000000;				/* Threshold of Tx_FIFO */

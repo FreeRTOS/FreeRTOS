@@ -17,3 +17,7 @@
 #endif
 
 
+#ifdef __ICCRX__
+	;
+	#pragma pack()
+#endif

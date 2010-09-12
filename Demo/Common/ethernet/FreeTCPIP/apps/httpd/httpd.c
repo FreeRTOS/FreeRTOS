@@ -96,6 +96,8 @@ static PT_THREAD( send_file ( struct httpd_state *s ) )
 {
 	PSOCK_BEGIN( &s->sout );
 
+	( void ) PT_YIELD_FLAG;
+	
 	do
 	{
 		PSOCK_GENERATOR_SEND( &s->sout, generate_part_of_file, s );
@@ -110,7 +112,8 @@ static PT_THREAD( send_file ( struct httpd_state *s ) )
 static PT_THREAD( send_part_of_file ( struct httpd_state *s ) )
 {
 	PSOCK_BEGIN( &s->sout );
-
+	( void ) PT_YIELD_FLAG;
+	
 	PSOCK_SEND( &s->sout, s->file.data, s->len );
 
 	PSOCK_END( &s->sout );
@@ -131,7 +134,7 @@ static PT_THREAD( handle_script ( struct httpd_state *s ) )
 	char	*ptr;
 
 	PT_BEGIN( &s->scriptpt );
-
+	( void ) PT_YIELD_FLAG;
 	while( s->file.len > 0 )
 	{
 		/* Check if we should start executing a script. */
@@ -202,7 +205,7 @@ static PT_THREAD( send_headers ( struct httpd_state *s, const char *statushdr ) 
 	char	*ptr;
 
 	PSOCK_BEGIN( &s->sout );
-
+	( void ) PT_YIELD_FLAG;
 	PSOCK_SEND_STR( &s->sout, statushdr );
 
 	ptr = strrchr( s->filename, ISO_period );
@@ -244,7 +247,7 @@ static PT_THREAD( handle_output ( struct httpd_state *s ) )
 	char	*ptr;
 
 	PT_BEGIN( &s->outputpt );
-
+	( void ) PT_YIELD_FLAG;
 	if( !httpd_fs_open(s->filename, &s->file) )
 	{
 		httpd_fs_open( http_404_html, &s->file );
@@ -275,7 +278,7 @@ static PT_THREAD( handle_output ( struct httpd_state *s ) )
 static PT_THREAD( handle_input ( struct httpd_state *s ) )
 {
 	PSOCK_BEGIN( &s->sin );
-
+	( void ) PT_YIELD_FLAG;
 	PSOCK_READTO( &s->sin, ISO_space );
 
 	if( strncmp(s->inputbuf, http_get, 4) != 0 )

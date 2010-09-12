@@ -160,7 +160,7 @@ struct uip_eth_addr
 
  uip_ipaddr(&addr, 192,168,1,2);
  uip_sethostaddr(&addr);
- 
+
  \endcode
  * \param addr A pointer to an IP address of type uip_ipaddr_t;
  *
@@ -842,7 +842,7 @@ CCIF void	uip_send( const void *data, int len );
  \code
  uip_ipaddr_t addr;
  struct uip_udp_conn *c;
- 
+
  uip_ipaddr(&addr, 192,168,2,1);
  c = uip_udp_new(&addr, HTONS(12345));
  if(c != NULL) {
@@ -929,7 +929,7 @@ CCIF void	uip_send( const void *data, int len );
  \code
  uip_ipaddr_t ipaddr;
  struct uip_conn *c;
- 
+
  uip_ipaddr(&ipaddr, 192,168,1,2);
  c = uip_connect(&ipaddr, HTONS(80));
  \endcode
@@ -1017,7 +1017,7 @@ CCIF void	uip_send( const void *data, int len );
  * \hideinitializer
  */
 #ifndef uip_ipaddr_copy
-#define uip_ipaddr_copy( dest, src )	( *(dest) = *(src) )
+	#define uip_ipaddr_copy( dest, src )	( ((unsigned long*)dest)[ 0 ] = ((unsigned long *)src)[ 0 ] )
 #endif
 
 			/**
@@ -1443,7 +1443,7 @@ struct uip_stats
 			     layer. */
 		uip_stats_t sent;		/**< Number of sent packets at the IP
 			     layer. */
-		uip_stats_t forwarded;	/**< Number of forwarded packets at the IP 
+		uip_stats_t forwarded;	/**< Number of forwarded packets at the IP
 			     layer. */
 		uip_stats_t drop;		/**< Number of dropped packets at the IP
 			     layer. */
@@ -1635,7 +1635,6 @@ struct uip_tcpip_hdr
 	u8_t			urgp[2];
 	u8_t			optdata[4];
 }
-
 #include "net/pack_struct_end.h"
 
 /* The ICMP and IP headers. */

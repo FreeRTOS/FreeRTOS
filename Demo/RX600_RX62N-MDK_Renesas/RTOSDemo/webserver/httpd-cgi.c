@@ -70,6 +70,7 @@ static PT_THREAD( nullfunction ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 	( void ) ptr;
+	( void ) PT_YIELD_FLAG;
 	PSOCK_END( &s->sout );
 }
 
@@ -102,6 +103,8 @@ static PT_THREAD( file_stats ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 
+	( void ) PT_YIELD_FLAG;
+	
 	PSOCK_GENERATOR_SEND( &s->sout, generate_file_stats, strchr(ptr, ' ') + 1 );
 
 	PSOCK_END( &s->sout );
@@ -126,11 +129,11 @@ static unsigned short generate_tcp_stats( void *arg )
 	struct httpd_state	*s = ( struct httpd_state * ) arg;
 
 	conn = &uip_conns[s->count];
-	return sprintf( ( char * ) uip_appdata, 
+	return sprintf( ( char * ) uip_appdata,
 					 "<tr><td>%d</td><td>%u.%u.%u.%u:%u</td><td>%s</td><td>%u</td><td>%u</td><td>%c %c</td></tr>\r\n", htons(conn->lport),
 					 htons(conn->ripaddr.u16[0]) >> 8, htons(conn->ripaddr.u16[0]) & 0xff, htons(conn->ripaddr.u16[1]) >> 8,
 					 htons(conn->ripaddr.u16[1]) & 0xff, htons(conn->rport), states[conn->tcpstateflags & UIP_TS_MASK], conn->nrtx, conn->timer,
-					 (uip_outstanding(conn)) ? '*' : ' ', (uip_stopped(conn)) ? '!' : ' ' ); 
+					 (uip_outstanding(conn)) ? '*' : ' ', (uip_stopped(conn)) ? '!' : ' ' );
 }
 
 /*---------------------------------------------------------------------------*/
@@ -138,6 +141,7 @@ static PT_THREAD( tcp_stats ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 	( void ) ptr;
+	( void ) PT_YIELD_FLAG;
 	for( s->count = 0; s->count < UIP_CONNS; ++s->count )
 	{
 		if( (uip_conns[s->count].tcpstateflags & UIP_TS_MASK) != UIP_CLOSED )
@@ -160,6 +164,7 @@ static PT_THREAD( net_stats ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 	( void ) ptr;
+	( void ) PT_YIELD_FLAG;
 #if UIP_STATISTICS
 	for( s->count = 0; s->count < sizeof(uip_stat) / sizeof(uip_stats_t); ++s->count )
 	{
@@ -192,6 +197,7 @@ static PT_THREAD( rtos_stats ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 	( void ) ptr;
+	( void ) PT_YIELD_FLAG;
 	PSOCK_GENERATOR_SEND( &s->sout, generate_rtos_stats, NULL );
 	PSOCK_END( &s->sout );
 }
@@ -223,7 +229,7 @@ static unsigned short generate_io_state( void *arg )
 /*---------------------------------------------------------------------------*/
 extern void vTaskGetRunTimeStats( signed char *pcWriteBuffer );
 extern unsigned short usMaxJitter;
-static char cJitterBuffer;
+static char cJitterBuffer[ 200 ];
 static unsigned short generate_runtime_stats( void *arg )
 {
 	( void ) arg;
@@ -238,6 +244,7 @@ static unsigned short generate_runtime_stats( void *arg )
 	}
 	#else
 	{
+		( void ) cJitterBuffer;
 		strcpy( uip_appdata, "<p>Run time stats are only available in the debug_with_optimisation build configuration.<p>" );
 	}
 	#endif	
@@ -252,6 +259,7 @@ static PT_THREAD( run_time ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 	( void ) ptr;
+	( void ) PT_YIELD_FLAG;
 	PSOCK_GENERATOR_SEND( &s->sout, generate_runtime_stats, NULL );
 	PSOCK_END( &s->sout );
 }
@@ -261,6 +269,7 @@ static PT_THREAD( led_io ( struct httpd_state *s, char *ptr ) )
 {
 	PSOCK_BEGIN( &s->sout );
 	( void ) ptr;
+	( void ) PT_YIELD_FLAG;
 	PSOCK_GENERATOR_SEND( &s->sout, generate_io_state, NULL );
 	PSOCK_END( &s->sout );
 }

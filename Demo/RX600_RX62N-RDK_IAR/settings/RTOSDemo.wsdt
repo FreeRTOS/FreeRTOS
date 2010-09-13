@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>RTOSDemo/Debug-with-optimisation</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>277</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1216</ColumnWidth1><ColumnWidth2>324</ColumnWidth2><ColumnWidth3>81</ColumnWidth3></Build>
+      <TerminalIO/>
+    <Debug-Log><ColumnWidth0>18</ColumnWidth0><ColumnWidth1>1624</ColumnWidth1></Debug-Log></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-10758-3386</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-16801-3477</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-414-15843</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab><Tab><Identity>TabID-3320-15993</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main-full.c</Filename><XPos>0</XPos><YPos>325</YPos><SelStart>12555</SelStart><SelEnd>12555</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ParTest.c</Filename><XPos>0</XPos><YPos>52</YPos><SelStart>3409</SelStart><SelEnd>3409</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\IntQueueTimer.c</Filename><XPos>0</XPos><YPos>36</YPos><SelStart>3472</SelStart><SelEnd>3492</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Renesas-Files\hwsetup.c</Filename><XPos>0</XPos><YPos>22</YPos><SelStart>2119</SelStart><SelEnd>2119</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\webserver\phy.c</Filename><XPos>0</XPos><YPos>22</YPos><SelStart>2148</SelStart><SelEnd>2148</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Common\Minimal\flop.c</Filename><XPos>0</XPos><YPos>214</YPos><SelStart>9058</SelStart><SelEnd>9058</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\queue.c</Filename><XPos>0</XPos><YPos>398</YPos><SelStart>37351</SelStart><SelEnd>37351</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00a2ab40><key>iaridepm.enu1</key></Toolbar-00a2ab40></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>706</Bottom><Right>351</Right><x>-2</x><y>-2</y><xscreen>331</xscreen><yscreen>284</yscreen><sizeHorzCX>197024</sizeHorzCX><sizeHorzCY>289206</sizeHorzCY><sizeVertCX>210119</sizeVertCX><sizeVertCY>720978</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>232</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>234</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>238289</sizeHorzCY><sizeVertCX>197024</sizeVertCX><sizeVertCY>289206</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

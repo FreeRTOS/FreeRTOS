@@ -1,5 +1,5 @@
 [E20]
-TimeConnected=1284472550
+TimeConnected=1284472849
 ComuniDllSave=101515264
 FfwnsdDllSave=303235072
 ChipName=R5F562N8
@@ -31,11 +31,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[Breakpoints]
-Count=0
-[Monitor Execution]
-Leave target running=0
-Release target=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -43,13 +38,18 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[DriverProfiling]
+Enabled=0
+Source=2
+Graph=0
+[Breakpoints]
+Count=0
+[Monitor Execution]
+Leave target running=0
+Release target=0
 [Aliases]
 Count=0
 SuppressDialog=0
 [TraceHelper]
 Enabled=0
 ShowSource=1
-[DriverProfiling]
-Enabled=0
-Source=2
-Graph=0

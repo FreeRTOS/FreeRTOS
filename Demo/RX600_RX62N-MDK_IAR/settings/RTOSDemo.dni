@@ -1,6 +1,6 @@
 [E20]
-TimeConnected=1284471055
-ComuniDllSave=53280768
+TimeConnected=1284472550
+ComuniDllSave=101515264
 FfwnsdDllSave=303235072
 ChipName=R5F562N8
 CpuMode=0
@@ -11,7 +11,7 @@ DebugFlags=0,0
 EmulatorMode=0
 NeedInit=1
 [DebugChecksum]
-Checksum=-1431944137
+Checksum=1020766678
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -31,6 +31,11 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[Breakpoints]
+Count=0
+[Monitor Execution]
+Leave target running=0
+Release target=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -38,18 +43,13 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[DriverProfiling]
-Enabled=0
-Source=2
-Graph=0
-[Breakpoints]
-Count=0
-[Monitor Execution]
-Leave target running=0
-Release target=0
 [Aliases]
 Count=0
 SuppressDialog=0
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[DriverProfiling]
+Enabled=0
+Source=2
+Graph=0

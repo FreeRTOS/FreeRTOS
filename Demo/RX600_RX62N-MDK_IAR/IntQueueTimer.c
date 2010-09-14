@@ -132,6 +132,7 @@ void vInitialiseTimerForIntQueueTest( void )
 #pragma vector = VECT_TMR0_CMIA0
 __interrupt void vT0_1InterruptHandler( void )
 {
+	__enable_interrupt();
 	portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
@@ -139,6 +140,7 @@ __interrupt void vT0_1InterruptHandler( void )
 #pragma vector = VECT_TMR2_CMIA2
 __interrupt void vT2_3InterruptHandler( void )
 {
+	__enable_interrupt();
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 

@@ -54,7 +54,7 @@
 /* ****************************************************************************
  * This project includes a lot of tasks and tests and is therefore complex.
  * If you would prefer a much simpler project to get started with then select
- * the 'Blinky' build configuration within the HEW IDE.
+ * the 'Blinky' build configuration within the Embedded Workbench IDE.
  * ****************************************************************************
  *
  * Creates all the demo application tasks, then starts the scheduler.  The web

@@ -59,7 +59,8 @@
  * (causing the first task to toggle the LED).
  *
  * For a much more complete and complex example select either the Debug or
- * Debug_with_optimisation build configurations within the HEW IDE.
+ * Debug_with_optimisation build configurations within the Embedded Workbench
+ * IDE.
 */
 
 /* Hardware specific includes. */
@@ -94,7 +95,7 @@ static void prvQueueSendTask( void *pvParameters );
 /* The queue used by both tasks. */
 static xQueueHandle xQueue = NULL;
 
-/* This variable is not used by this simple Blinky example.  It is defined 
+/* This variable is not used by this simple Blinky example.  It is defined
 purely to allow the project to link as it is used by the full project. */
 volatile unsigned long ulHighFrequencyTickCount = 0UL;
 /*-----------------------------------------------------------*/

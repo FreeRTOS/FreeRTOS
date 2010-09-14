@@ -530,6 +530,8 @@ long lHigherPriorityTaskWoken = pdFALSE;
 extern xSemaphoreHandle xEMACSemaphore;
 static long ulTxEndInts = 0;
 
+	__enable_interrupt();
+
 	/* Has a Tx end occurred? */
 	if( ul & emacTX_END_INTERRUPT )
 	{

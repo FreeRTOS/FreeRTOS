@@ -17,7 +17,7 @@
 #define Board_h
 
 #include <AT91SAM7X256.h>
-#define __inline inline
+#define __inline static inline
 #include <lib_AT91SAM7X256.h>
 
 #define true	-1

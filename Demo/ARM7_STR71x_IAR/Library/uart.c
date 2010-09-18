@@ -19,6 +19,8 @@
 
 #include "uart.h"
 
+extern u16 UART_FlagStatus(UART_TypeDef *UARTx);
+
 /*******************************************************************************
 * Function Name  : UART_Init
 * Description    : This function initializes the selected UART.

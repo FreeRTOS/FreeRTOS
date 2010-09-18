@@ -57,9 +57,6 @@ static ENET_DMADSCRBase  dmaTxDscrBase, dmaRxDscrBase[ ENET_NUM_RX_BUFFERS ];
 static u8 RxBuff[ ENET_NUM_RX_BUFFERS ][ENET_BUFFER_SIZE];
 u8 TxBuff[ENET_BUFFER_SIZE];
 
-/* Private function prototypes -----------------------------------------------*/
-extern MEMCOPY_L2S_BY4();
-
 /* Interface functions -------------------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 

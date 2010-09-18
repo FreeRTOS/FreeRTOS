@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-2026095219
+Checksum=-543380751
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -55,6 +55,12 @@ SWOInfo_ITMPortsEnabled=0x00000001
 SWOInfo_ITMPortsTermIO=0x00000001
 SWOInfo_ITMPortsLogFile=0x00000000
 SWOInfo_ITMLogFile=$PROJ_DIR$\ITM.log
+[DataLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -62,11 +68,11 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[DataLog]
+[PowerLog]
 LogEnabled=0
-SumEnabled=0
+GraphEnabled=0
 ShowTimeLog=1
-ShowTimeSum=1
+Stripe=1 0 1000 2 1 0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -74,14 +80,44 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
 [TraceHelperExtra]
 Enabled=0
 ShowSource=1
+[SWOTraceHWSettings]
+CpuClock=72000000
+ClockAutoDetect=0
+ClockWanted=2000000
+JtagSpeed=2000000
+Prescaler=36
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+DataLogMode=0
+ITMportsEnable=1
+ITMportsTermIO=1
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
+[CallStackLog]
+Enabled=0
 [DriverProfiling]
 Enabled=0
-Source=4
+Mode=3
 Graph=0
+Symbiont=0
 [Disassemble mode]
 mode=0
 [Breakpoints]
 Count=0
+[Aliases]
+Count=0
+SuppressDialog=0

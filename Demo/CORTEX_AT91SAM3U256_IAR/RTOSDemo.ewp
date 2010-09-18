@@ -29,8 +29,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>9</version>
-          <state>33</state>
+          <version>17</version>
+          <state>37</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -60,7 +60,7 @@
         </option>
         <option>
           <name>FPU</name>
-          <version>0</version>
+          <version>1</version>
           <state>0</state>
         </option>
         <option>
@@ -141,7 +141,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>21</version>
+        <version>22</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -333,6 +333,18 @@
           <version>0</version>
           <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
+        <option>
+          <name>CCPosIndRopi</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPosIndRwpi</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPosIndNoDynInit</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -556,7 +568,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>7</version>
+        <version>9</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -700,10 +712,6 @@
           <state>__iar_program_start</state>
         </option>
         <option>
-          <name>IlinkNXPLPCChecksum</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>DoFill</name>
           <state>0</state>
         </option>
@@ -770,6 +778,22 @@
           <name>CrcFullSize</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkIElfToolPostProcess</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogAutoLibSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogRedirSymbols</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogUnusedFragments</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -826,8 +850,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>9</version>
-          <state>33</state>
+          <version>17</version>
+          <state>37</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -857,7 +881,7 @@
         </option>
         <option>
           <name>FPU</name>
-          <version>0</version>
+          <version>1</version>
           <state>0</state>
         </option>
         <option>
@@ -938,7 +962,7 @@
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>21</version>
+        <version>22</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1130,6 +1154,18 @@
           <version>0</version>
           <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
         </option>
+        <option>
+          <name>CCPosIndRopi</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPosIndRwpi</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPosIndNoDynInit</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1353,7 +1389,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>7</version>
+        <version>9</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1497,10 +1533,6 @@
           <state>__iar_program_start</state>
         </option>
         <option>
-          <name>IlinkNXPLPCChecksum</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>DoFill</name>
           <state>0</state>
         </option>
@@ -1565,6 +1597,22 @@
         </option>
         <option>
           <name>CrcFullSize</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkIElfToolPostProcess</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogAutoLibSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogRedirSymbols</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkLogUnusedFragments</name>
           <state>0</state>
         </option>
       </data>

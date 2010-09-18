@@ -22,7 +22,7 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --macro "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_AT91SAM3U256_IAR\system\at91sam3u-ek-flash.mac" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\CONFIG\debugger\Atmel\ioAT91SAM3U4.ddf" "--drv_verify_download" "--semihosting" "--device=AT91SAM3U4" "-d" "jlink" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" 
+"C:\devtools\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --macro "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_AT91SAM3U256_IAR\system\at91sam3u-ek-flash.mac" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\config\flashloader\Atmel\AT91SAM3U4-EK\at91sam3u4-flash.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 5.4\arm\CONFIG\debugger\Atmel\ioAT91SAM3U4.ddf" "--drv_verify_download" "--semihosting" "--device=AT91SAM3U4" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" 
 
 
 @REM Loaded plugins:

@@ -1,3 +1,17 @@
+/*This file has been prepared for Doxygen automatic documentation generation.*/
+/*! \file *********************************************************************
+ *
+ * \brief FreeRTOS port source for AVR32 UC3.
+ *
+ * - Compiler:           GNU GCC for AVR32
+ * - Supported devices:  All AVR32 devices can be used.
+ * - AppNote:
+ *
+ * \author               Atmel Corporation: http://www.atmel.com \n
+ *                       Support and FAQ: http://support.atmel.no/
+ *
+ *****************************************************************************/
+
 /*
     FreeRTOS V6.0.5 - Copyright (C) 2010 Real Time Engineers Ltd.
 
@@ -85,6 +99,8 @@ extern "C" {
 #define TASK_DELAY_MS(x)   ( (x)        /portTICK_RATE_MS )
 #define TASK_DELAY_S(x)    ( (x)*1000   /portTICK_RATE_MS )
 #define TASK_DELAY_MIN(x)  ( (x)*60*1000/portTICK_RATE_MS )
+
+#define configTICK_TC_IRQ             ATPASTE2(AVR32_TC_IRQ, configTICK_TC_CHANNEL)
 
 #if( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned portSHORT portTickType;
@@ -182,7 +198,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
     "st.w    r8[0], r0																	\n\t"\
 																						\
     /* Restore R0..R7 */																\
-    "ldm     sp++, r0-r7 																\n\t"\
+    "ldm     sp++, r0-r7																\n\t"\
     /* R0-R7 should not be used below this line */										\
     /* Skip PC and SR (will do it at the end) */										\
     "sub     sp, -2*4																	\n\t"\

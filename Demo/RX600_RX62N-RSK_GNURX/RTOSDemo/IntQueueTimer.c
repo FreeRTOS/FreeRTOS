@@ -72,8 +72,8 @@
 #define tmrTIMER_2_3_FREQUENCY	( 2001UL )
 
 /* Handlers for the two timers used. */
-void vT0_1InterruptHandler( void ) __attribute((interrupt));
-void vT2_3InterruptHandler( void ) __attribute((interrupt));
+void vT0_1InterruptHandler( void ) __attribute((naked));
+void vT2_3InterruptHandler( void ) __attribute((naked));
 
 void vInitialiseTimerForIntQueueTest( void )
 {
@@ -131,13 +131,27 @@ void vInitialiseTimerForIntQueueTest( void )
 
 void vT0_1InterruptHandler( void )
 {
+	/* This is a naked function.  This macro saves registers then re-enables
+	interrupts. */
+	portENTER_INTERRUPT();
+	
 	portYIELD_FROM_ISR( xFirstTimerHandler() );
+	
+	/* Restore registers, then return. */
+	portEXIT_INTERRUPT();
 }
 /*-----------------------------------------------------------*/
 
 void vT2_3InterruptHandler( void )
 {
+	/* This is a naked function.  This macro saves registers then re-enables
+	interrupts. */
+	portENTER_INTERRUPT();
+	
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
+	
+	/* Restore registers, then return. */
+	portEXIT_INTERRUPT();
 }
 
 

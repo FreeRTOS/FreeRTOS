@@ -117,10 +117,14 @@ extern void vTaskExitCritical( void );
 #define portEXIT_CRITICAL()		vTaskExitCritical();
 
 /* As this port allows interrupt nesting... */
-unsigned long ulPortGetIPL( void );
-void vPortSetIPL( unsigned long ulNewIPL );
+unsigned long ulPortGetIPL( void ) __attribute__((naked));
+void vPortSetIPL( unsigned long ulNewIPL ) __attribute__((naked));
 #define portSET_INTERRUPT_MASK_FROM_ISR() ulPortGetIPL(); portDISABLE_INTERRUPTS()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) vPortSetIPL( uxSavedInterruptStatus )
+
+#define portENTER_INTERRUPT() __asm volatile( "PUSHM	R1-R15 \t\n SETPSW	I" )
+#define portEXIT_INTERRUPT() __asm volatile( "POPM R1-R15 \t\n  RTE" )
+
 
 /*-----------------------------------------------------------*/
 

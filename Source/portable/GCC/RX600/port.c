@@ -86,20 +86,19 @@ which would require the old IPL to be read first and stored in a local variable.
  * Function to start the first task executing - written in asm code as direct
  * access to registers is required. 
  */
-extern void prvStartFirstTask( void );
+static void prvStartFirstTask( void ) __attribute__((naked));
 
 /*
  * Software interrupt handler.  Performs the actual context switch (saving and
  * restoring of registers).  Written in asm code as direct register access is
  * required.
  */
-static void prvYieldHandler( void );
+void vSoftwareInterruptISR( void ) __attribute__((naked));
 
 /*
- * The tick ISR handler.  The peripheral used is configured by the application
- * via a hook/callback function.
+ * The tick interrupt handler.
  */
-void vTickISR( void ) __attribute__((interrupt));
+void vTickISR( void ) __attribute__((naked));
 
 /*-----------------------------------------------------------*/
 
@@ -203,10 +202,143 @@ extern void vApplicationSetupTimerInterrupt( void );
 }
 /*-----------------------------------------------------------*/
 
+void vPortEndScheduler( void )
+{
+	/* Not implemented as there is nothing to return to. */
+}
+/*-----------------------------------------------------------*/
+
+static void prvStartFirstTask( void )
+{
+	__asm volatile
+	(	
+		/* When starting the scheduler there is nothing that needs moving to the
+		interrupt stack because the function is not called from an interrupt.
+		Just ensure the current stack is the user stack. */
+		"SETPSW	U						\n" \
+
+		/* Obtain the location of the stack associated with which ever task 
+		pxCurrentTCB is currently pointing to. */
+		"MOV.L	#_pxCurrentTCB, R15		\n" \
+		"MOV.L	[R15], R15				\n" \
+		"MOV.L	[R15], R0				\n" \
+
+		/* Restore the registers from the stack of the task pointed to by 
+		pxCurrentTCB. */
+	    "POP		R15					\n" \
+		
+		/* Accumulator low 32 bits. */
+	    "MVTACLO	R15 				\n" \
+	    "POP		R15					\n" \
+		
+		/* Accumulator high 32 bits. */
+	    "MVTACHI	R15 				\n" \
+	    "POP		R15					\n" \
+		
+		/* Floating point status word. */
+	    "MVTC		R15, FPSW 			\n" \
+		
+		/* R1 to R15 - R0 is not included as it is the SP. */
+	    "POPM		R1-R15 				\n" \
+		
+		/* This pops the remaining registers. */
+	    "RTE							\n" \
+	    "NOP							\n" \
+	    "NOP							\n"
+	);
+}
+/*-----------------------------------------------------------*/
+
+void vSoftwareInterruptISR( void )
+{
+	__asm volatile
+	(
+		/* Re-enable interrupts. */
+		"SETPSW		I							\n" \
+
+		/* Move the data that was automatically pushed onto the interrupt stack when
+		the interrupt occurred from the interrupt stack to the user stack.  
+	
+		R15 is saved before it is clobbered. */
+		"PUSH.L		R15							\n" \
+	
+		/* Read the user stack pointer. */
+		"MVFC		USP, R15					\n" \
+	
+		/* Move the address down to the data being moved. */
+		"SUB		#12, R15					\n" \
+		"MVTC		R15, USP					\n" \
+	
+		/* Copy the data across, R15, then PC, then PSW. */
+		"MOV.L		[ R0 ], [ R15 ]				\n" \
+		"MOV.L 		4[ R0 ], 4[ R15 ]			\n" \
+		"MOV.L		8[ R0 ], 8[ R15 ]			\n" \
+
+		/* Move the interrupt stack pointer to its new correct position. */
+		"ADD		#12, R0						\n" \
+	
+		/* All the rest of the registers are saved directly to the user stack. */
+		"SETPSW		U							\n" \
+
+		/* Save the rest of the general registers (R15 has been saved already). */
+		"PUSHM		R1-R14						\n" \
+	
+		/* Save the FPSW and accumulator. */
+		"MVFC		FPSW, R15					\n" \
+		"PUSH.L		R15							\n" \
+		"MVFACHI 	R15							\n" \
+		"PUSH.L		R15							\n" \
+		
+		/* Middle word. */
+		"MVFACMI	R15							\n" \
+		
+		/* Shifted left as it is restored to the low order word. */
+		"SHLL		#16, R15					\n" \
+		"PUSH.L		R15							\n" \
+
+		/* Save the stack pointer to the TCB. */
+		"MOV.L		#_pxCurrentTCB, R15			\n" \
+		"MOV.L		[ R15 ], R15				\n" \
+		"MOV.L		R0, [ R15 ]					\n" \
+			
+		/* Ensure the interrupt mask is set to the syscall priority while the kernel
+		structures are being accessed. */
+		"MVTIPL		%0 							\n" \
+
+		/* Select the next task to run. */
+		"BSR.A		_vTaskSwitchContext			\n" \
+
+		/* Reset the interrupt mask as no more data structure access is required. */
+		"MVTIPL		%1							\n" \
+
+		/* Load the stack pointer of the task that is now selected as the Running
+		state task from its TCB. */
+		"MOV.L		#_pxCurrentTCB,R15			\n" \
+		"MOV.L		[ R15 ], R15				\n" \
+		"MOV.L		[ R15 ], R0					\n" \
+
+		/* Restore the context of the new task.  The PSW (Program Status Word) and
+		PC will be popped by the RTE instruction. */
+		"POP		R15							\n" \
+		"MVTACLO 	R15							\n" \
+		"POP		R15							\n" \
+		"MVTACHI 	R15							\n" \
+		"POP		R15							\n" \
+		"MVTC		R15, FPSW					\n" \
+		"POPM		R1-R15						\n" \
+		"RTE									\n" \
+		"NOP									\n" \
+		"NOP									  "
+		:: "i"(configMAX_SYSCALL_INTERRUPT_PRIORITY), "i"(configKERNEL_INTERRUPT_PRIORITY)
+	);
+}
+/*-----------------------------------------------------------*/
+
 void vTickISR( void )
 {
-	/* Re-enable interrupts. */
-	__asm volatile( "SETPSW		I" );
+	/* This is a naked function.  This macro saves registers then re-enables
+	interrupts. */
+	portENTER_INTERRUPT();
 	
 	/* Increment the tick, and perform any processing the new tick value
 	necessitates.  Ensure IPL is at the max syscall value first. */
@@ -220,14 +352,34 @@ void vTickISR( void )
 	#if( configUSE_PREEMPTION == 1 )
 		taskYIELD();
 	#endif
+	
+	/* Retore registers, then return. */
+	portEXIT_INTERRUPT();
 }
 /*-----------------------------------------------------------*/
 
-void vPortEndScheduler( void )
+unsigned long ulPortGetIPL( void )
 {
-	/* Not implemented as there is nothing to return to. */
+	__asm volatile
+	( 
+		"MVFC	PSW, R1			\n"	\
+		"SHLR	#24, R1			\n"	\
+		"RTS					  "
+	);
 }
 /*-----------------------------------------------------------*/
 
-
-
+void vPortSetIPL( unsigned long ulNewIPL )
+{
+	__asm volatile
+	( 
+		"PUSH	R5				\n" \
+		"MVFC	PSW, R5			\n"	\
+		"SHLL	#24, R1			\n" \
+		"AND	#-0F000001H, R5 \n" \
+		"OR		R1, R5			\n" \
+		"MVTC	R5, PSW			\n" \
+		"POP	R5				\n" \
+		"RTS					  "
+	 );
+}

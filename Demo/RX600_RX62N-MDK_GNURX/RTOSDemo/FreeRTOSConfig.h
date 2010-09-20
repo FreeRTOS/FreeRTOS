@@ -70,7 +70,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
+#define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ICLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
 #define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
@@ -78,19 +78,19 @@
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 45 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
-#define configGENERATE_RUN_TIME_STATS	0
+#define configGENERATE_RUN_TIME_STATS	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configQUEUE_REGISTRY_SIZE		0
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* The interrupt priority used by the kernel itself for the tick interrupt and
@@ -115,6 +115,15 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 
+extern volatile unsigned long ulHighFrequencyTickCount;
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() nop() /* Run time stats use the same timer as the high frequency timer test. */
+#define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTickCount
+
+
+/* Override some of the priorities set in the common demo tasks.  This is
+required to ensure flase positive timing errors are not reported. */
+#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 2 )
+#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 3 )
 
 
 /*-----------------------------------------------------------
@@ -133,7 +142,7 @@ to exclude the API function. */
 #define configIP_ADDR0		192
 #define configIP_ADDR1		168
 #define configIP_ADDR2		0
-#define configIP_ADDR3		201
+#define configIP_ADDR3		200
 
 /* Netmask configuration. */
 #define configNET_MASK0		255

@@ -115,6 +115,10 @@ static u8_t							tmpage;
 
 #define BUF		( ( struct arp_hdr * ) &uip_buf[0] )
 #define IPBUF	( ( struct ethip_hdr * ) &uip_buf[0] )
+
+#ifdef DEBUG
+	#undef DEBUG
+#endif
 #define DEBUG	0
 #if DEBUG
 #include <stdio.h>

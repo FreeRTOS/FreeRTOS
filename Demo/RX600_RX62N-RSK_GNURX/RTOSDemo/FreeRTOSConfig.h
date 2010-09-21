@@ -115,9 +115,9 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 
-//extern volatile unsigned long ulHighFrequencyTickCount;
+extern volatile unsigned long ulHighFrequencyTickCount;
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() portNOP() /* Run time stats use the same timer as the high frequency timer test. */
-#define portGET_RUN_TIME_COUNTER_VALUE() 0 /*ulHighFrequencyTickCount*/
+#define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTickCount
 
 
 /* Override some of the priorities set in the common demo tasks.  This is

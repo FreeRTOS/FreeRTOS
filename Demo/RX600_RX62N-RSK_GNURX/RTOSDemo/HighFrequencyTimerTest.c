@@ -77,11 +77,17 @@ zero. */
 
 /*-----------------------------------------------------------*/
 
-/* Interrupt handler in which the jitter is measured. */
-static void prvTimer2IntHandler( void );
+/* Interrupt wrapper and handler in which the jitter is measured. */
+void vTimer2_ISR_Wrapper( void ) __attribute__((naked));
+static void prvTimer2_ISR_Handler( void ) __attribute__((noinline));
 
-/* Stores the value of the maximum recorded jitter between interrupts. */
+/* Stores the value of the maximum recorded jitter between interrupts.  This is
+displayed on one of the served web pages. */
 volatile unsigned short usMaxJitter = 0;
+
+/* Counts the number of high frequency interrupts - used to generate the run
+time stats. */
+volatile unsigned long ulHighFrequencyTickCount = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -117,8 +123,15 @@ void vSetupHighFrequencyTimer( void )
 }
 /*-----------------------------------------------------------*/
 
-#pragma interrupt ( prvTimer2IntHandler( vect = _VECT( _CMT2_CMI2 ), enable ) )
-static void prvTimer2IntHandler( void )
+void vTimer2_ISR_Wrapper( void )
+{
+	portENTER_INTERRUPT();
+	prvTimer2_ISR_Handler();
+	portEXIT_INTERRUPT();
+}
+/*-----------------------------------------------------------*/
+
+static void prvTimer2_ISR_Handler( void )
 {
 volatile unsigned short usCurrentCount;
 static unsigned short usMaxCount = 0;
@@ -146,7 +159,10 @@ static unsigned long ulErrorCount = 0UL;
 		
 		usMaxCount = usCurrentCount;
 	}
-		
+
+	/* Used to generate the run time stats. */
+	ulHighFrequencyTickCount++;
+	
 	/* Clear the timer. */
 	timerTIMER_3_COUNT_VALUE = 0;
 	

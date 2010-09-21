@@ -18,7 +18,7 @@
 void INT_Excep_SuperVisorInst(void){/* brk(); */}
 
 // Exception(Undefined Instruction)
-void INT_Excep_UndefinedInst(void){/* brk(); */}
+void INT_Excep_UndefinedInst(void){ __asm volatile ("brk"); }
 
 // Exception(Floating Point)
 void INT_Excep_FloatingPoint(void){/* brk(); */}

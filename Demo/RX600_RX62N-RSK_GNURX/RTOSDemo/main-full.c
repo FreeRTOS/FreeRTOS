@@ -120,10 +120,6 @@
  * of all the 8bit timers (as two cascaded 16bit units).
 */
 
-/* Standard includes. */
-#include <string.h>
-#include <stdio.h>
-
 /* Hardware specific includes. */
 #include "iodefine.h"
 
@@ -268,10 +264,10 @@ extern void HardwareSetup( void );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* The web server task. */
-//	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -325,10 +321,7 @@ extern void vSetupHighFrequencyTimer( void );
 
 		/* Check the standard demo tasks are running without error. */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			/* Increase the rate at which this task cycles, which will increase the
-			rate at which mainCHECK_LED flashes to give visual feedback that an error
-			has occurred. */
+		{			
 			pcStatusMessage = "Error: GenQueue";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
@@ -395,6 +388,9 @@ extern void vSetupHighFrequencyTimer( void );
 		/* Ensure the LED toggles at a faster rate if an error has occurred. */
 		if( pcStatusMessage != NULL )
 		{
+			/* Increase the rate at which this task cycles, which will increase the
+			rate at which mainCHECK_LED flashes to give visual feedback that an error
+			has occurred. */
 			xCycleFrequency = mainERROR_CYCLE_TIME;
 		}
 	}

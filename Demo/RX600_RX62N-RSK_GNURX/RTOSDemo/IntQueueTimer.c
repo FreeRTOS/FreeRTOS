@@ -71,9 +71,11 @@
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
 #define tmrTIMER_2_3_FREQUENCY	( 2001UL )
 
-/* Handlers for the two timers used. */
-void vT0_1InterruptHandler( void ) __attribute((naked));
-void vT2_3InterruptHandler( void ) __attribute((naked));
+/* Wrappers and handlers for the two timers used.  See the documentation page
+for this port on http://www.FreeRTOS.org for more information on writing
+interrupt handlers. */
+void vT0_1_ISR_Wrapper( void ) __attribute((naked));
+void vT2_3_ISR_Wrapper( void ) __attribute((naked));
 
 void vInitialiseTimerForIntQueueTest( void )
 {
@@ -129,30 +131,39 @@ void vInitialiseTimerForIntQueueTest( void )
 }
 /*-----------------------------------------------------------*/
 
-void vT0_1InterruptHandler( void )
+void vT0_1_ISR_Wrapper( void )
 {
 	/* This is a naked function.  This macro saves registers then re-enables
-	interrupts. */
+	interrupts.  See the documentation for htis port on http://www.FreeRTOS.org
+	for more information on writing interrupts. */
 	portENTER_INTERRUPT();
-	
-	portYIELD_FROM_ISR( xFirstTimerHandler() );
-	
+
+	/* Call the handler that is part of the common code - this is where the
+	non-portable code ends and the actual test is performed. */
+	portYIELD_FROM_ISR( xFirstTimerHandler() );	
+
 	/* Restore registers, then return. */
 	portEXIT_INTERRUPT();
 }
 /*-----------------------------------------------------------*/
 
-void vT2_3InterruptHandler( void )
+void vT2_3_ISR_Wrapper( void )
 {
 	/* This is a naked function.  This macro saves registers then re-enables
-	interrupts. */
+	interrupts.  See the documentation for htis port on http://www.FreeRTOS.org
+	for more information on writing interrupts. */
 	portENTER_INTERRUPT();
-	
-	portYIELD_FROM_ISR( xSecondTimerHandler() );
-	
+
+	/* Call the handler that is part of the common code - this is where the
+	non-portable code ends and the actual test is performed. */
+	portYIELD_FROM_ISR( xSecondTimerHandler() );	
+
 	/* Restore registers, then return. */
 	portEXIT_INTERRUPT();
 }
+/*-----------------------------------------------------------*/
+
+
 
 
 

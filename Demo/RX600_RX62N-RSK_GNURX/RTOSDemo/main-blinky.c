@@ -216,9 +216,12 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-/* The following two functions are here just to allow all three build 
+/* The following four functions are here just to allow all three build 
 configurations to use the same vector table.  They are not used in this
 demo, but linker errors will result if they are not defined.  They can
 be ignored. */
-void vT0_1InterruptHandler( void ) {}
-void vT2_3InterruptHandler( void ) {}
+void vT0_1_ISR_Wrapper( void ) {}
+void vT2_3_ISR_Wrapper( void ) {}
+void vEMAC_ISR_Wrapper( void ) {}
+void vTimer2_ISR_Wrapper( void ) {}
+volatile unsigned long ulHighFrequencyTickCount = 0;

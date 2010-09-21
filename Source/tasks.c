@@ -447,6 +447,14 @@ tskTCB * pxNewTCB;
 		}
 		#endif
 
+		if( ( void * ) pxCreatedTask != NULL )
+		{
+			/* Pass the TCB out - in an anonymous way.  The calling function/
+			task can use this as a handle to delete the task later if
+			required.*/
+			*pxCreatedTask = ( xTaskHandle ) pxNewTCB;
+		}
+		
 		/* We are going to manipulate the task queues to add this task to a
 		ready list, so must make sure no interrupts occur. */
 		portENTER_CRITICAL();
@@ -506,14 +514,6 @@ tskTCB * pxNewTCB;
 
 	if( xReturn == pdPASS )
 	{
-		if( ( void * ) pxCreatedTask != NULL )
-		{
-			/* Pass the TCB out - in an anonymous way.  The calling function/
-			task can use this as a handle to delete the task later if
-			required.*/
-			*pxCreatedTask = ( xTaskHandle ) pxNewTCB;
-		}
-
 		if( xSchedulerRunning != pdFALSE )
 		{
 			/* If the created task is of a higher priority than the current task

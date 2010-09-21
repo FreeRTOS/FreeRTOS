@@ -215,36 +215,36 @@ static void prvStartFirstTask( void )
 		/* When starting the scheduler there is nothing that needs moving to the
 		interrupt stack because the function is not called from an interrupt.
 		Just ensure the current stack is the user stack. */
-		"SETPSW	U						\n" \
+		"SETPSW		U						\n" \
 
 		/* Obtain the location of the stack associated with which ever task 
 		pxCurrentTCB is currently pointing to. */
-		"MOV.L	#_pxCurrentTCB, R15		\n" \
-		"MOV.L	[R15], R15				\n" \
-		"MOV.L	[R15], R0				\n" \
+		"MOV.L		#_pxCurrentTCB, R15		\n" \
+		"MOV.L		[R15], R15				\n" \
+		"MOV.L		[R15], R0				\n" \
 
 		/* Restore the registers from the stack of the task pointed to by 
 		pxCurrentTCB. */
-	    "POP		R15					\n" \
+	    "POP		R15						\n" \
 		
 		/* Accumulator low 32 bits. */
-	    "MVTACLO	R15 				\n" \
-	    "POP		R15					\n" \
+	    "MVTACLO	R15 					\n" \
+	    "POP		R15						\n" \
 		
 		/* Accumulator high 32 bits. */
-	    "MVTACHI	R15 				\n" \
-	    "POP		R15					\n" \
+	    "MVTACHI	R15 					\n" \
+	    "POP		R15						\n" \
 		
 		/* Floating point status word. */
-	    "MVTC		R15, FPSW 			\n" \
+	    "MVTC		R15, FPSW 				\n" \
 		
 		/* R1 to R15 - R0 is not included as it is the SP. */
-	    "POPM		R1-R15 				\n" \
+	    "POPM		R1-R15 					\n" \
 		
 		/* This pops the remaining registers. */
-	    "RTE							\n" \
-	    "NOP							\n" \
-	    "NOP							\n"
+	    "RTE								\n" \
+	    "NOP								\n" \
+	    "NOP								\n"
 	);
 }
 /*-----------------------------------------------------------*/

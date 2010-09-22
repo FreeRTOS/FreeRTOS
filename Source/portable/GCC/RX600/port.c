@@ -366,6 +366,9 @@ unsigned long ulPortGetIPL( void )
 		"SHLR	#24, R1			\n"	\
 		"RTS					  "
 	);
+	
+	/* This will never get executed, but keeps the compiler from complaining. */
+	return 0;
 }
 /*-----------------------------------------------------------*/
 

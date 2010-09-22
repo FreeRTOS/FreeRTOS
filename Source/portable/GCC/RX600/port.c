@@ -98,7 +98,7 @@ void vSoftwareInterruptISR( void ) __attribute__((naked));
 /*
  * The tick interrupt handler.
  */
-void vTickISR( void ) __attribute__((naked));
+void vTickISR( void ) __attribute__((interrupt));
 
 /*-----------------------------------------------------------*/
 
@@ -336,9 +336,8 @@ void vSoftwareInterruptISR( void )
 
 void vTickISR( void )
 {
-	/* This is a naked function.  This macro saves registers then re-enables
-	interrupts. */
-	portENTER_INTERRUPT();
+	/* Re-enabled interrupts. */
+	__asm volatile( "SETPSW	I" );
 	
 	/* Increment the tick, and perform any processing the new tick value
 	necessitates.  Ensure IPL is at the max syscall value first. */
@@ -352,9 +351,6 @@ void vTickISR( void )
 	#if( configUSE_PREEMPTION == 1 )
 		taskYIELD();
 	#endif
-	
-	/* Retore registers, then return. */
-	portEXIT_INTERRUPT();
 }
 /*-----------------------------------------------------------*/
 

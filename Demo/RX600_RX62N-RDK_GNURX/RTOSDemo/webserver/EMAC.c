@@ -144,12 +144,11 @@ static void prvConfigureEtherCAndEDMAC( void );
 static void prvResetEverything( void );
 
 /*
- * Wrapper and handler for the EMAC peripheral.  See the documentation for this
+ * Handler for the EMAC peripheral.  See the documentation for this
  * port on http://www.FreeRTOS.org for more information on defining interrupt
  * handlers.
  */
-void vEMAC_ISR_Wrapper( void ) __attribute__((naked));
-static void vEMAC_ISR_Handler( void ) __attribute__((noinline));
+void vEMAC_ISR_Handler( void ) __attribute__((interrupt));
 
 /*-----------------------------------------------------------*/
 
@@ -524,28 +523,15 @@ static void prvConfigureEtherCAndEDMAC( void )
 }
 /*-----------------------------------------------------------*/
 
-void vEMAC_ISR_Wrapper( void )
-{
-	/* This is a naked function.  See the documentation for this port on
-	http://www.FreeRTOS.org for more information on writing interrupts. 
-	
-	/* Save the registers and enable interrupts. */
-	portENTER_INTERRUPT();
-	
-	/* Perform the actual EMAC processing. */
-	vEMAC_ISR_Handler();
-	
-	/* Restore the registers and return. */
-	portEXIT_INTERRUPT();
-}
-/*-----------------------------------------------------------*/
-
-static void vEMAC_ISR_Handler( void )
+void vEMAC_ISR_Handler( void )
 {
 unsigned long ul = EDMAC.EESR.LONG;
 long lHigherPriorityTaskWoken = pdFALSE;
 extern xSemaphoreHandle xEMACSemaphore;
 static long ulTxEndInts = 0;
+
+	/* Re-enabled interrupts. */
+	__asm volatile( "SETPSW	I" );
 
 	/* Has a Tx end occurred? */
 	if( ul & emacTX_END_INTERRUPT )

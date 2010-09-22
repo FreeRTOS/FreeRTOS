@@ -248,7 +248,7 @@ static const char *pcStatusMessage = NULL;
 
 /*-----------------------------------------------------------*/
 
-void main(void)
+int main(void)
 {
 extern void HardwareSetup( void );
 
@@ -260,14 +260,14 @@ extern void HardwareSetup( void );
 	vParTestInitialise();
 
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest1Task, ( signed char * ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest2Task, ( signed char * ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* The web server task. */
-	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+	xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -294,6 +294,8 @@ extern void HardwareSetup( void );
 	running.  If we do reach here then it is likely that there was insufficient
 	heap available for the idle task to be created. */
 	for( ;; );
+	
+	return 0;
 }
 /*-----------------------------------------------------------*/
 

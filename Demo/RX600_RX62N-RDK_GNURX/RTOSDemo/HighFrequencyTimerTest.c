@@ -77,9 +77,8 @@ zero. */
 
 /*-----------------------------------------------------------*/
 
-/* Interrupt wrapper and handler in which the jitter is measured. */
-void vTimer2_ISR_Wrapper( void ) __attribute__((naked));
-static void prvTimer2_ISR_Handler( void ) __attribute__((noinline));
+/* Interrupt handler in which the jitter is measured. */
+void vTimer2_ISR_Handler( void ) __attribute__((interrupt));
 
 /* Stores the value of the maximum recorded jitter between interrupts.  This is
 displayed on one of the served web pages. */
@@ -123,21 +122,16 @@ void vSetupHighFrequencyTimer( void )
 }
 /*-----------------------------------------------------------*/
 
-void vTimer2_ISR_Wrapper( void )
-{
-	portENTER_INTERRUPT();
-	prvTimer2_ISR_Handler();
-	portEXIT_INTERRUPT();
-}
-/*-----------------------------------------------------------*/
-
-static void prvTimer2_ISR_Handler( void )
+void vTimer2_ISR_Handler( void )
 {
 volatile unsigned short usCurrentCount;
 static unsigned short usMaxCount = 0;
 static unsigned long ulErrorCount = 0UL;
 
-	/* We use the timer 1 counter value to measure the clock cycles between
+	/* This is the highest priority interrupt in the system, so there is no
+	advantage to re-enabling interrupts here.
+	
+	We use the timer 1 counter value to measure the clock cycles between
 	the timer 0 interrupts.  First stop the clock. */
 	CMT.CMSTR1.BIT.STR3 = 0;
 	portNOP();

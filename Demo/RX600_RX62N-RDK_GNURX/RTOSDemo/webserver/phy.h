@@ -20,7 +20,6 @@
 /******************************************************************************
 Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
-#include <stdint.h>
 
 /******************************************************************************
 Typedef definitions
@@ -75,10 +74,10 @@ Functions Prototypes
 /**
  * External prototypes
  **/
-int16_t	phy_init( void );
+short	phy_init( void );
 void	phy_set_100full( void );
 void	phy_set_10half( void );
-int16_t	phy_set_autonegotiate( void );
+short	phy_set_autonegotiate( void );
 
 #endif /* PHY_H */
 

@@ -40,7 +40,7 @@
 /******************************************************************************
 Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
-#include <iorx62n.h>
+#include <iodefine.h>
 #include "r_ether.h"
 #include "phy.h"
 
@@ -65,12 +65,12 @@ Exported global variables and functions (to be accessed by other files)
 /******************************************************************************
 Private global variables and functions
 ******************************************************************************/
-uint16_t  _phy_read( uint16_t reg_addr );
-void  _phy_write( uint16_t reg_addr, uint16_t data );
+unsigned short  _phy_read( unsigned short reg_addr );
+void  _phy_write( unsigned short reg_addr, unsigned short data );
 void  _phy_preamble( void );
-void  _phy_reg_set( uint16_t reg_addr, int32_t option );
-void  _phy_reg_read( uint16_t *data );
-void  _phy_reg_write( uint16_t data );
+void  _phy_reg_set( unsigned short reg_addr, long option );
+void  _phy_reg_read( unsigned short *data );
+void  _phy_reg_write( unsigned short data );
 void  _phy_ta_z0( void );
 void  _phy_ta_10( void );
 void  _phy_mii_write_1( void );
@@ -86,10 +86,10 @@ void  _phy_mii_write_0( void );
 * Arguments    : none
 * Return Value : none
 ******************************************************************************/
-int16_t  phy_init( void )
+short  phy_init( void )
 {
-  uint16_t reg;
-  uint32_t count;
+  unsigned short reg;
+  unsigned long count;
 
   /* Reset PHY */
   _phy_write(BASIC_MODE_CONTROL_REG, 0x8000);
@@ -145,10 +145,10 @@ void phy_set_10half( void )
 *              : bit 4:0 - Always set to 00001 (IEEE 802.3)
 *              : -1 if error
 ******************************************************************************/
-int16_t phy_set_autonegotiate( void )
+short phy_set_autonegotiate( void )
 {
-  uint16_t reg;
-  uint32_t count;
+  unsigned short reg;
+  unsigned long count;
 
   _phy_write(AN_ADVERTISEMENT_REG, 0x01E1);
   _phy_write(BASIC_MODE_CONTROL_REG, 0x1200);
@@ -182,7 +182,7 @@ int16_t phy_set_autonegotiate( void )
       _phy_write(0x13, 0x0000);
 	
       /* Get the link partner response */
-	  reg = (int16_t)_phy_read(AN_LINK_PARTNER_ABILITY_REG);
+	  reg = (short)_phy_read(AN_LINK_PARTNER_ABILITY_REG);
 	
 	  if (reg & ( 1 << 8 ) )
 	  {
@@ -216,9 +216,9 @@ int16_t phy_set_autonegotiate( void )
 * Arguments    : reg_addr - address of the PHY register
 * Return Value : read value
 ******************************************************************************/
-uint16_t _phy_read( uint16_t reg_addr )
+unsigned short _phy_read( unsigned short reg_addr )
 {
-  uint16_t data;
+  unsigned short data;
 
   _phy_preamble();
   _phy_reg_set( reg_addr, PHY_READ );
@@ -236,7 +236,7 @@ uint16_t _phy_read( uint16_t reg_addr )
 *              : data - value
 * Return Value : none
 ******************************************************************************/
-void  _phy_write( uint16_t reg_addr, uint16_t data )
+void  _phy_write( unsigned short reg_addr, unsigned short data )
 {
   _phy_preamble();
   _phy_reg_set( reg_addr, PHY_WRITE );
@@ -254,7 +254,7 @@ void  _phy_write( uint16_t reg_addr, uint16_t data )
 ******************************************************************************/
 void  _phy_preamble( void )
 {
-  int16_t i;
+  short i;
 
   i = 32;
   while( i > 0 )
@@ -271,10 +271,10 @@ void  _phy_preamble( void )
 *              : option - mode
 * Return Value : none
 ******************************************************************************/
-void  _phy_reg_set( uint16_t reg_addr, int32_t option )
+void  _phy_reg_set( unsigned short reg_addr, long option )
 {
-  int32_t    i;
-  uint16_t data;
+  long    i;
+  unsigned short data;
 
   data = 0;
   data = (PHY_ST << 14);        /* ST code    */
@@ -313,10 +313,10 @@ void  _phy_reg_set( uint16_t reg_addr, int32_t option )
 * Arguments    : data - pointer to store the data read
 * Return Value : none
 ******************************************************************************/
-void  _phy_reg_read( uint16_t *data )
+void  _phy_reg_read( unsigned short *data )
 {
-  int32_t      i, j;
-  uint16_t   reg_data;
+  long      i, j;
+  unsigned short   reg_data;
 
   reg_data = 0;
   i = 16;
@@ -332,7 +332,7 @@ void  _phy_reg_read( uint16_t *data )
     }
 
 	reg_data <<= 1;
-    reg_data |= (uint16_t)((ETHERC.PIR.LONG & 0x00000008) >> 3);  /* MDI read  */
+    reg_data |= (unsigned short)((ETHERC.PIR.LONG & 0x00000008) >> 3);  /* MDI read  */
 
     for(j = MDC_WAIT; j > 0; j--)
   	{
@@ -353,9 +353,9 @@ void  _phy_reg_read( uint16_t *data )
 * Arguments    : data - value to write
 * Return Value : none
 ******************************************************************************/
-void  _phy_reg_write( uint16_t data )
+void  _phy_reg_write( unsigned short data )
 {
-  int32_t  i;
+  long  i;
 
   i = 16;
   while( i > 0 )
@@ -382,7 +382,7 @@ void  _phy_reg_write( uint16_t data )
 ******************************************************************************/
 void  _phy_ta_z0( void )
 {
-    int32_t j;
+    long j;
 
     for(j = MDC_WAIT; j > 0; j--)
 	{
@@ -423,7 +423,7 @@ void _phy_ta_10(void)
 ******************************************************************************/
 void  _phy_mii_write_1( void )
 {
-    int32_t j;
+    long j;
 
     for(j = MDC_WAIT; j > 0; j--)
 	{
@@ -451,7 +451,7 @@ void  _phy_mii_write_1( void )
 ******************************************************************************/
 void  _phy_mii_write_0( void )
 {
-    int32_t j;
+    long j;
 
     for(j = MDC_WAIT; j > 0; j--)
 	{

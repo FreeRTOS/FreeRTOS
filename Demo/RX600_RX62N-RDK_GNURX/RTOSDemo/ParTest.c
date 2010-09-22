@@ -63,7 +63,7 @@
 #include "partest.h"
 
 /* Hardware specifics. */
-#include <iorx62n.h>
+#include <iodefine.h>
 
 #define partestNUM_LEDS ( 12 )
 

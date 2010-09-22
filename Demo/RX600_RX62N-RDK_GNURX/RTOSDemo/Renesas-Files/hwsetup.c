@@ -39,8 +39,8 @@
 /******************************************************************************
 Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
-#include <iorx62n.h>
-#include "rskrx62ndef.h"
+#include <iodefine.h>
+#include "yrdkrx62ndef.h"
 // #include "lcd.h" Uncomment this if an LCD is present.
 #include "r_ether.h"
 

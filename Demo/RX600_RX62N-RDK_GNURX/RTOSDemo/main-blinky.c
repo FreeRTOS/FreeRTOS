@@ -70,6 +70,9 @@
 #include "task.h"
 #include "queue.h"
 
+/* Demo includes. */
+#include "ParTest.h"
+
 /* Priorities at which the tasks are created. */
 #define 	configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define		configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -93,7 +96,7 @@ static xQueueHandle xQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
-void main(void)
+int main(void)
 {
 extern void HardwareSetup( void );
 
@@ -110,8 +113,8 @@ extern void HardwareSetup( void );
 	if( xQueue != NULL )
 	{
 		/* Start the two tasks as described at the top of this file. */
-		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Start the tasks running. */
 		vTaskStartScheduler();

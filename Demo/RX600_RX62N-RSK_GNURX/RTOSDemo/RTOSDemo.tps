@@ -31,7 +31,7 @@
 "DefaultSession" 
 "SessionRX600_E1_E20_SYSTEM" 
 [GENERAL_DATA_CONFIGURATION_Debug_with_optimisation]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
 [SESSIONS_Debug_with_optimisation]
 "DefaultSession" 
 "SessionRX600_E1_E20_SYSTEM" 

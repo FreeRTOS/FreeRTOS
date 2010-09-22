@@ -7,17 +7,13 @@
 [GENERAL_DATA]
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\HighFrequencyTimerTest.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\ParTest.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\Renesas-Files\hwsetup.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\webserver\phy.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\webserver\phy.h" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\GNU-Files\start.asm" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\main-full.c" 
 [WORKSPACE_FILE_STATES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\HighFrequencyTimerTest.c" -4 -23 1314 608 1 4 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\ParTest.c" 0 0 1126 401 0 0 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\Renesas-Files\hwsetup.c" 22 22 1126 401 0 1 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\webserver\phy.c" 66 66 1130 405 0 3 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\webserver\phy.h" 44 44 1126 401 0 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" -4 -23 1314 626 1 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\GNU-Files\start.asm" 44 44 1130 405 0 1 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX62N-RDK_GNURX\RTOSDemo\main-full.c" 0 0 1314 608 0 0 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -894,7 +894,7 @@ tskTCB * pxNewTCB;
 		portEXIT_CRITICAL();
 
 		/* We may have just suspended the current task. */
-		if( ( void * ) pxTaskToSuspend == NULL )
+		if( ( ( void * ) pxTaskToSuspend == NULL ) && ( xSchedulerRunning != pdFALSE ) )
 		{
 			portYIELD_WITHIN_API();
 		}
@@ -1172,6 +1172,12 @@ portTickType xTicks;
 	portEXIT_CRITICAL();
 
 	return xTicks;
+}
+/*-----------------------------------------------------------*/
+
+portTickType xTaskGetTickCountFromISR( void )
+{
+	return xTickCount;
 }
 /*-----------------------------------------------------------*/
 

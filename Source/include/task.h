@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -206,10 +206,10 @@ typedef struct xTASK_PARAMTERS
 						  );</pre>
  *
  * Create a new task and add it to the list of tasks that are ready to run.
- * 
+ *
  * xTaskCreate() can only be used to create a task that has unrestricted
  * access to the entire microcontroller memory map.  Systems that include MPU
- * support can alternatively create an MPU constrained task using 
+ * support can alternatively create an MPU constrained task using
  * xTaskCreateRestricted().
  *
  * @param pvTaskCode Pointer to the task entry function.  Tasks
@@ -285,7 +285,7 @@ typedef struct xTASK_PARAMTERS
  *
  * @param pxTaskDefinition Pointer to a structure that contains a member
  * for each of the normal xTaskCreate() parameters (see the xTaskCreate() API
- * documentation) plus an optional stack buffer and the memory region 
+ * documentation) plus an optional stack buffer and the memory region
  * definitions.
  *
  * @param pxCreatedTask Used to pass back a handle by which the created task
@@ -348,7 +348,7 @@ xTaskHandle xHandle;
  * Memory regions are assigned to a restricted task when the task is created by
  * a call to xTaskCreateRestricted().  These regions can be redefined using
  * vTaskAllocateMPURegions().
- * 
+ *
  * @param xTask The handle of the task being updated.
  *
  * @param xRegions A pointer to an xMemoryRegion structure that contains the
@@ -371,7 +371,7 @@ static const xMemoryRegion xAltRegions[ portNUM_CONFIGURABLE_REGIONS ] =
 void vATask( void *pvParameters )
 {
 	// This task was created such that it has access to certain regions of
-	// memory as defined by the MPU configuration.  At some point it is 
+	// memory as defined by the MPU configuration.  At some point it is
 	// desired that these MPU regions are replaced with that defined in the
 	// xAltRegions const struct above.  Use a call to vTaskAllocateMPURegions()
 	// for this purpose.  NULL is used as the task handle to indicate that this
@@ -963,7 +963,7 @@ signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask ) PRIVILEGED_FUNCTI
 
 /**
  * task. h
- * <PRE>volatile portTickType xTaskGetTickCount( void );</PRE>
+ * <PRE>portTickType xTaskGetTickCount( void );</PRE>
  *
  * @return The count of ticks since vTaskStartScheduler was called.
  *
@@ -971,6 +971,22 @@ signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask ) PRIVILEGED_FUNCTI
  * \ingroup TaskUtils
  */
 portTickType xTaskGetTickCount( void ) PRIVILEGED_FUNCTION;
+
+/**
+ * task. h
+ * <PRE>portTickType xTaskGetTickCountFromISR( void );</PRE>
+ *
+ * @return The count of ticks since vTaskStartScheduler was called.
+ *
+ * This is a version of xTaskGetTickCount() that is safe to be called from an
+ * ISR - provided that portTickType is the natural word size of the
+ * microcontroller being used or interrupt nesting is either not supported or
+ * not being used.
+ *
+ * \page xTaskGetTickCount xTaskGetTickCount
+ * \ingroup TaskUtils
+ */
+portTickType xTaskGetTickCountFromISR( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h

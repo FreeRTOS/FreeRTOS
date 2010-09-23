@@ -434,6 +434,7 @@
         <option>
           <name>AsmIncludePath</name>
           <state>$TOOLKIT_DIR$\INC\</state>
+          <state>$PROJ_DIR$</state>
         </option>
         <option>
           <name>AsmDefines</name>
@@ -1266,6 +1267,7 @@
         <option>
           <name>AsmIncludePath</name>
           <state>$TOOLKIT_DIR$\INC\</state>
+          <state>$PROJ_DIR$</state>
         </option>
         <option>
           <name>AsmDefines</name>
@@ -2099,6 +2101,7 @@
         <option>
           <name>AsmIncludePath</name>
           <state>$TOOLKIT_DIR$\INC\</state>
+          <state>$PROJ_DIR$</state>
         </option>
         <option>
           <name>AsmDefines</name>

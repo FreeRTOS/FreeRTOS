@@ -93,14 +93,20 @@
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
-/* The interrupt priority used by the kernel itself for the tick interrupt and
-the pended interrupt.  This would normally be the lowest priority. */
-#define configKERNEL_INTERRUPT_PRIORITY         1
 
-/* The maximum interrupt priority from which FreeRTOS API calls can be made.
-Interrupts that use a priority above this will not be effected by anything the
-kernel is doing. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    4
+/* 
+The interrupt priority used by the kernel itself for the tick interrupt and
+the pended interrupt is set by configKERNEL_INTERRUPT_PRIORITY.  This would 
+normally be the lowest priority (1 in this case).  The maximum interrupt 
+priority from which FreeRTOS API calls can be made is set by
+configMAX_SYSCALL_INTERRUPT_PRIORITY.  Interrupts that use a priority above this 
+will not be effected by anything the kernel is doing.  Interrupts at or below
+this priority can use FreeRTOS API functions - but *only* those that end in
+"FromISR".  Both these constants are defined in 'PriorityDefinitions.h' so they
+can also be included in assembly source files.
+*/
+#include "PriorityDefinitions.h"
+
 
 /* The peripheral used to generate the tick interrupt is configured as part of
 the application code.  This constant should be set to the vector number of the

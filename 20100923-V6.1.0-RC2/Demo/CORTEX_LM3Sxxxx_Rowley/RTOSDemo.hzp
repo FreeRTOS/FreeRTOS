@@ -1,0 +1,119 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution Name="RTOSDemo" version="2">
+  <project Name="RTOSDemo">
+    <configuration Name="Common" Target="LM3S8962" arm_architecture="v7M" arm_core_type="Cortex-M3" arm_linker_fiq_stack_size="0" arm_linker_heap_size="0" arm_linker_irq_stack_size="0" arm_linker_stack_size="512" arm_simulator_memory_simulation_filename="$(PackagesDir)/targets/Luminary_LM3S/LM3SSimulatorMemory.dll" arm_simulator_memory_simulation_parameter="0x40000;0x10000" arm_target_debug_interface_type="ADIv5" arm_target_flash_loader_type="LIBMEM RPC Loader" build_remove_unused_symbols="No" c_preprocessor_definitions="PACK_STRUCT_END=__attribute((packed));ALIGN_STRUCT_END=__attribute((aligned(4)));sprintf=usprintf;snprintf=usnprintf;printf=uipprintf" c_user_include_directories="..\\Common\\ethernet\\uIP\\uip-1.0\\uip;..\\..\\Source\\include;..\\..\\Source\\portable\\GCC\\ARM_CM3;..\\Common\\include;..\\Common\\drivers\\LuminaryMicro;.\\webserver;.;$(SamplesDir)/Luminary_Stellaris_Driver_Library" linker_additional_files="" linker_memory_map_file="$(PackagesDir)/targets/Luminary_LM3S/LM3S8962_MemoryMap.xml" linker_output_format="None" linker_printf_fmt_level="int" linker_printf_width_precision_supported="No" linker_scanf_fmt_level="int" project_directory="" project_type="Executable" property_groups_file_path="$(PackagesDir)/targets/Luminary_LM3S/propertyGroups.xml"/>
+    <configuration Name="Flash" Placement="Flash" arm_target_flash_loader_file_path="$(PackagesDir)/targets/Luminary_LM3S/Release/Loader.elf" linker_section_placement_file="$(PackagesDir)/targets/Luminary_LM3S/flash_placement.xml" target_reset_script="FLASHReset()"/>
+    <configuration Name="RAM" Placement="RAM" linker_section_placement_file="$(PackagesDir)/targets/Luminary_LM3S/ram_placement.xml" target_reset_script="RAMReset()"/>
+    <folder Name="Source Files">
+      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc"/>
+      <folder Name="FreeRTOS">
+        <folder Name="include">
+          <file file_name="../../Source/portable/GCC/ARM_CM3/portmacro.h"/>
+          <file file_name="../../Source/include/task.h"/>
+          <file file_name="../../Source/include/FreeRTOS.h"/>
+          <file file_name="../../Source/include/list.h"/>
+          <file file_name="../../Source/include/portable.h"/>
+          <file file_name="../../Source/include/projdefs.h"/>
+          <file file_name="../../Source/include/queue.h"/>
+          <file file_name="../../Source/include/semphr.h"/>
+          <file file_name="../../Source/include/StackMacros.h"/>
+        </folder>
+        <file file_name="../../Source/tasks.c"/>
+        <file file_name="../../Source/list.c"/>
+        <file file_name="../../Source/queue.c"/>
+        <file file_name="../../Source/portable/GCC/ARM_CM3/port.c"/>
+        <file file_name="../../Source/portable/MemMang/heap_2.c"/>
+      </folder>
+      <file file_name="main.c"/>
+      <file file_name="timertest.c"/>
+      <file file_name="formike128x128x16.c"/>
+      <file file_name="IntQueueTimer.c"/>
+      <folder Name="include">
+        <file file_name="bitmap.h"/>
+        <file file_name="formike128x128x16.h"/>
+        <file file_name="FreeRTOSConfig.h"/>
+        <file file_name="IntQueueTimer.h"/>
+        <file file_name="lcd_message.h"/>
+        <file file_name="osram128x64x4.h"/>
+      </folder>
+      <folder Name="Common Demo Tasks">
+        <file file_name="../Common/Minimal/IntQueue.c"/>
+        <file file_name="../Common/Minimal/PollQ.c"/>
+        <file file_name="../Common/Minimal/QPeek.c"/>
+        <file file_name="../Common/Minimal/recmutex.c"/>
+        <file file_name="../Common/Minimal/semtest.c"/>
+        <file file_name="../Common/Minimal/BlockQ.c"/>
+        <file file_name="../Common/Minimal/blocktim.c"/>
+        <file file_name="../Common/Minimal/death.c"/>
+        <file file_name="../Common/Minimal/GenQTest.c"/>
+        <file file_name="../Common/Minimal/integer.c"/>
+        <folder Name="include">
+          <file file_name="../Common/include/IntQueue.h"/>
+          <file file_name="../Common/include/PollQ.h"/>
+          <file file_name="../Common/include/QPeek.h"/>
+          <file file_name="../Common/include/recmutex.h"/>
+          <file file_name="../Common/include/semtest.h"/>
+          <file file_name="../Common/include/BlockQ.h"/>
+          <file file_name="../Common/include/blocktim.h"/>
+          <file file_name="../Common/include/death.h"/>
+          <file file_name="../Common/include/GenQTest.h"/>
+          <file file_name="../Common/include/integer.h"/>
+        </folder>
+      </folder>
+      <folder Name="WEB Server">
+        <file file_name="webserver/uIP_Task.c"/>
+        <file file_name="webserver/emac.c"/>
+        <file file_name="webserver/httpd.c"/>
+        <file file_name="webserver/httpd-cgi.c"/>
+        <file file_name="webserver/httpd-fs.c"/>
+        <file file_name="webserver/http-strings.c"/>
+        <folder Name="include">
+          <file file_name="webserver/webserver.h"/>
+          <file file_name="webserver/clock-arch.h"/>
+          <file file_name="webserver/emac.h"/>
+          <file file_name="webserver/httpd.h"/>
+          <file file_name="webserver/httpd-cgi.h"/>
+          <file file_name="webserver/httpd-fs.h"/>
+          <file file_name="webserver/httpd-fsdata.h"/>
+          <file file_name="webserver/http-strings.h"/>
+          <file file_name="webserver/uip-conf.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/clock.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/psock.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/pt.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/timer.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip_arch.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip_arp.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uiplib.h"/>
+          <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uipopt.h"/>
+        </folder>
+        <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip.c"/>
+        <file file_name="../Common/ethernet/uIP/uip-1.0/uip/uip_arp.c"/>
+        <file file_name="../Common/ethernet/uIP/uip-1.0/uip/psock.c"/>
+        <file file_name="../Common/ethernet/uIP/uip-1.0/uip/timer.c"/>
+      </folder>
+      <folder Name="Libraries">
+        <file file_name="../Common/drivers/LuminaryMicro/Rowley/libgr.a"/>
+        <file file_name="../Common/drivers/LuminaryMicro/Rowley/libdriver.a"/>
+      </folder>
+      <file file_name="ParTest/ParTest.c"/>
+      <file file_name="rit128x96x4.c"/>
+      <file file_name="osram128x64x4.c"/>
+      <file file_name="../Common/drivers/LuminaryMicro/ustdlib.c"/>
+    </folder>
+    <folder Name="System Files">
+      <file file_name="thumb_crt0.s"/>
+      <file file_name="LM3S_Startup.s"/>
+      <file file_name="LM3S_Target.js">
+        <configuration Name="Common" build_exclude_from_build="Yes" file_type="Reset Script"/>
+        <configuration Name="THUMB Flash Debug" build_exclude_from_build="No"/>
+      </file>
+    </folder>
+  </project>
+  <configuration Name="THUMB Flash Debug" inherited_configurations="THUMB;Flash;Debug"/>
+  <configuration Name="THUMB" Platform="ARM" arm_instruction_set="THUMB" arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB" hidden="Yes"/>
+  <configuration Name="Flash" c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes"/>
+  <configuration Name="Debug" build_debug_information="Yes" c_preprocessor_definitions="DEBUG" gcc_optimization_level="None" hidden="Yes" link_include_startup_code="No"/>
+  <configuration Name="THUMB Flash Release" inherited_configurations="THUMB;Flash;Release"/>
+  <configuration Name="Release" build_debug_information="No" c_additional_options="-g1" c_preprocessor_definitions="NDEBUG" gcc_optimization_level="Level 1" hidden="Yes" link_include_startup_code="No"/>
+</solution>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - disk_status</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>disk_status</h2>
+<p>ディスク・ドライブの状態を取得します。</p>
+<pre>
+DSTATUS disk_status (
+  BYTE <em>Drive</em>           /* 物理ドライブ番号 */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>Drive</dt>
+<dd>ステータスを取得する物理ドライブ番号を指定します。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>戻り値</h4>
+<p>物理ドライブの状態が次のフラグの組み合わせの値で返されます。</p>
+<dl class="ret">
+<dt>STA_NOINIT</dt>
+<dd>ドライブが初期化されていないことを示すフラグ。システム・リセットやメディアの取り外し等でセットされ、disk_initialize() の正常終了でクリア、失敗でセットされます。</dd>
+<dt>STA_NODISK</dt>
+<dd>メディアがセットされていないことを示すフラグ。メディアが取り外されている間はセットされ、メディアがセットされている間はクリアされます。固定ディスクでは常にクリアされています。</dd>
+<dt>STA_PROTECTED</dt>
+<dd>メディアがライト・プロテクトされていることを示すフラグ。ライト・プロテクト機能をサポートしないメディアでは常にクリアされています。</dd>
+</dl>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

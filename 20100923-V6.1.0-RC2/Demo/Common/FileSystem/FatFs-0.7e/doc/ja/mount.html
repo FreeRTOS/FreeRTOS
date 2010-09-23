@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_mount</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_mount</h2>
+<p>論理ドライブ(ボリューム)のワーク・エリアを登録・抹消します。</p>
+<pre>
+FRESULT f_mount (
+  BYTE  <em>Drive</em>,               /* 論理ドライブ番号 */
+  FATFS*  <em>FileSystemObject</em>   /* ワーク・エリアへのポインタ */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>Drive</dt>
+<dd>論理ドライブ番号(0-9)。</dd>
+<dt>FileSystemObject</dt>
+<dd>登録するワーク・エリア(ファイル・システム・オブジェクト)へのポインタ。</dd>
+</dl>
+</div>
+
+<div class="para">
+<h4>戻り値</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>正常終了。</dd>
+<dt>FR_INVALID_DRIVE</dt>
+<dd>ドライブ番号が無効。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>解説</h4>
+<p>FatFsモジュールではそれぞれの論理ドライブにファイル・システム・オブジェクトというワーク・エリアが必要です。この関数は論理ドライブにそのワーク・エリアを登録したり抹消したりします。何らかのファイル関数を使用する前にこの関数でその論理ドライブのワーク・エリアを与えておかなければなりません。<tt>FileSystemObject</tt>にヌル・ポインタを指定するとその論理ドライブのワーク・エリアの登録は抹消され、登録されていたワーク・エリアは破棄できます。</p>
+<p>この関数内では物理ドライブへのアクセスは発生せず、ワーク・エリアを初期化して内部配列にそのアドレスを登録するだけです。実際のマウント動作は、f_mount()またはメディア交換後、最初のファイル・アクセスのときに行われます。</p>
+</div>
+
+
+<div class="para">
+<h4>対応情報</h4>
+<p>全ての構成で使用可能です。</p>
+</div>
+
+
+<div class="para">
+<h4>参照</h4>
+<p><tt><a href="sfatfs.html">FATFS</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

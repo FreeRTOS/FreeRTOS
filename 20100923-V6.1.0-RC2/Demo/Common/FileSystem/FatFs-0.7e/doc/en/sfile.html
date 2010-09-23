@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_e.html">
+<link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - FIL</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>FIL</h2>
+<p>The FIL structure (file object) holds state of an open file. It is initialzed by f_open function and discarded by f_close function. There is no member that can be changed by the application program.</p>
+
+<pre>
+typedef struct _FIL_ {
+    FATFS*  fs;         /* Pointer to the owner file system object */
+    WORD    id;         /* Owner file system mount ID */
+    BYTE    flag;       /* File status flags */
+    BYTE    csect;      /* Sector address in the cluster */
+    DWORD   fptr;       /* File R/W pointer */
+    DWORD   fsize;      /* File size */
+    DWORD   org_clust;  /* File start cluster */
+    DWORD   curr_clust; /* Current cluster */
+    DWORD   dsect;      /* Current data sector */
+#if !_FS_READONLY
+    DWORD   dir_sect;   /* Sector containing the directory entry */
+    BYTE*   dir_ptr;    /* Ponter to the directory entry in the window */
+#endif
+#if !_FS_TINY
+    BYTE    buf[_MAX_SS];/* File R/W buffer */
+#endif
+} FIL;
+</pre>
+
+</div>
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
+</body>
+</html>

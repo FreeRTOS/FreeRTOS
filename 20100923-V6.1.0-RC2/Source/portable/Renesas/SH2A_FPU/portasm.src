@@ -1,0 +1,176 @@
+;/*
+;    FreeRTOS V6.1.0 - Copyright (C) 2010 Real Time Engineers Ltd.
+;
+;    ***************************************************************************
+;    *                                                                         *
+;    * If you are:                                                             *
+;    *                                                                         *
+;    *    + New to FreeRTOS,                                                   *
+;    *    + Wanting to learn FreeRTOS or multitasking in general quickly       *
+;    *    + Looking for basic training,                                        *
+;    *    + Wanting to improve your FreeRTOS skills and productivity           *
+;    *                                                                         *
+;    * then take a look at the FreeRTOS books - available as PDF or paperback  *
+;    *                                                                         *
+;    *        "Using the FreeRTOS Real Time Kernel - a Practical Guide"        *
+;    *                  http://www.FreeRTOS.org/Documentation                  *
+;    *                                                                         *
+;    * A pdf reference manual is also available.  Both are usually delivered   *
+;    * to your inbox within 20 minutes to two hours when purchased between 8am *
+;    * and 8pm GMT (although please allow up to 24 hours in case of            *
+;    * exceptional circumstances).  Thank you for your support!                *
+;    *                                                                         *
+;    ***************************************************************************
+;
+;    This file is part of the FreeRTOS distribution.
+;
+;    FreeRTOS is free software; you can redistribute it and/or modify it under
+;    the terms of the GNU General Public License (version 2) as published by the
+;    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+;    ***NOTE*** The exception to the GPL is included to allow you to distribute
+;    a combined work that includes FreeRTOS without being obliged to provide the
+;    source code for proprietary components outside of the FreeRTOS kernel.
+;    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
+;    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;    more details. You should have received a copy of the GNU General Public 
+;    License and the FreeRTOS license exception along with FreeRTOS; if not it 
+;    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+;    by writing to Richard Barry, contact details for whom are available on the
+;    FreeRTOS WEB site.
+;
+;    1 tab == 4 spaces!
+;
+;    http://www.FreeRTOS.org - Documentation, latest information, license and
+;    contact details.
+;
+;    http://www.SafeRTOS.com - A version that is certified for use in safety
+;    critical systems.
+;
+;    http://www.OpenRTOS.com - Commercial support, development, porting,
+;    licensing and training services.
+;*/
+
+	.import _pxCurrentTCB
+	.import _vTaskSwitchContext
+	.import _vTaskIncrementTick
+
+	.export _vPortStartFirstTask
+	.export _ulPortGetGBR
+	.export _vPortYieldHandler
+	.export _vPortPreemptiveTick
+	.export _vPortCooperativeTick
+	.export _vPortSaveFlopRegisters
+	.export _vPortRestoreFlopRegisters
+
+    .section    P
+
+	.INCLUDE "ISR_Support.inc"
+	
+_vPortStartFirstTask:
+		
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_vPortYieldHandler:
+
+	portSAVE_CONTEXT
+
+	mov.l	#_vTaskSwitchContext, r0
+	jsr		@r0
+	nop
+
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_vPortPreemptiveTick
+
+	portSAVE_CONTEXT
+	
+	mov.l	#_vTaskIncrementTick, r0
+	jsr		@r0
+	nop
+
+	mov.l	#_vTaskSwitchContext, r0
+	jsr		@r0
+	nop
+
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_vPortCooperativeTick
+
+	portSAVE_CONTEXT
+	
+	mov.l	#_vTaskIncrementTick, r0
+	jsr		@r0
+	nop
+
+	portRESTORE_CONTEXT
+	
+;-----------------------------------------------------------
+
+_ulPortGetGBR:
+
+	stc.l	gbr, r0
+	rts
+	nop
+
+;-----------------------------------------------------------
+
+_vPortSaveFlopRegisters:
+
+	fmov.s	fr0, @-r4
+	fmov.s	fr1, @-r4
+	fmov.s	fr2, @-r4
+	fmov.s	fr3, @-r4
+	fmov.s	fr4, @-r4
+	fmov.s	fr5, @-r4
+	fmov.s	fr6, @-r4
+	fmov.s	fr7, @-r4
+	fmov.s	fr8, @-r4
+	fmov.s	fr9, @-r4
+	fmov.s	fr10, @-r4
+	fmov.s	fr11, @-r4
+	fmov.s	fr12, @-r4
+	fmov.s	fr13, @-r4
+	fmov.s	fr14, @-r4
+	fmov.s	fr15, @-r4	
+	sts.l   fpul, @-r4
+	sts.l   fpscr, @-r4
+	
+	rts
+	nop
+
+;-----------------------------------------------------------
+	
+_vPortRestoreFlopRegisters:
+
+	add.l  #-72, r4
+	lds.l  @r4+, fpscr
+	lds.l  @r4+, fpul	
+	fmov.s @r4+, fr15
+	fmov.s @r4+, fr14
+	fmov.s @r4+, fr13
+	fmov.s @r4+, fr12
+	fmov.s @r4+, fr11
+	fmov.s @r4+, fr10
+	fmov.s @r4+, fr9
+	fmov.s @r4+, fr8
+	fmov.s @r4+, fr7
+	fmov.s @r4+, fr6
+	fmov.s @r4+, fr5
+	fmov.s @r4+, fr4
+	fmov.s @r4+, fr3
+	fmov.s @r4+, fr2
+	fmov.s @r4+, fr1
+	fmov.s @r4+, fr0
+	
+	rts
+	nop
+	
+	.end
+		

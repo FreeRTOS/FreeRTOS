@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\RTOSDemo.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All Examples</name>
+      <member>
+        <project>driverlib</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>bitband</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>gpio_jtag</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>hello</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>interrupts</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>pwmgen</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>qs_ev-lm3s811</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>timers</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>uart_echo</project>
+        <configuration>Debug</configuration>
+      </member>
+      <member>
+        <project>watchdog</project>
+        <configuration>Debug</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>
+
+

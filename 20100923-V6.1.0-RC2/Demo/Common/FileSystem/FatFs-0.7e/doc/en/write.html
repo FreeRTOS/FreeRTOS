@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_e.html">
+<link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_write</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_write</h2>
+<p>The f_write writes data to a file.</p>
+<pre>
+FRESULT f_write (
+  FIL* <em>FileObject</em>,     /* Pointer to the file object structure */
+  const void* <em>Buffer</em>,  /* Pointer to the data to be written */
+  UINT <em>ByteToWrite</em>,    /* Number of bytes to write */
+  UINT* <em>ByteWritten</em>    /* Pointer to the variable to return number of bytes written */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>Parameters</h4>
+<dl class="par">
+<dt>FileObject</dt>
+<dd>Pointer to the open file object structure.</dd>
+<dt>Buffer</dt>
+<dd>Pointer to the data to be written.</dd>
+<dt>ByteToWrite</dt>
+<dd>Specifies number of bytes to write in range of UINT.</dd>
+<dt>ByteWritten</dt>
+<dd>Pointer to the UINT variable to return the number of bytes written. The value is always valid after the function call regardless of the result.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Return Values</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>The function succeeded.</dd>
+<dt>FR_DENIED</dt>
+<dd>The function denied due to the file has been opened in non-write mode.</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>The function failed due to an error in the disk function.</dd>
+<dt>FR_INT_ERR</dt>
+<dd>The function failed due to a wrong FAT structure or an internal error.</dd>
+<dt>FR_NOT_READY</dt>
+<dd>The disk drive cannot work due to no medium in the drive or any other reason.</dd>
+<dt>FR_INVALID_OBJECT</dt>
+<dd>The file object is invalid.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Description</h4>
+<p>The R/W pointer in the file object is increased in number of bytes written. After the function succeeded, <tt>*ByteWritten</tt> should be checked to detect the disk full. In case of <tt>*ByteWritten &lt; ByteToWrite</tt>, it means the volume got full during the write operation.</p>
+</div>
+
+
+<div class="para">
+<h4>QuickInfo</h4>
+<p>Available when <tt>_FS_READONLY == 0</tt>.</p>
+</div>
+
+
+<div class="para">
+<h4>See Also</h4>
+<p><tt><a href="open.html">f_open</a>, <a href="read.html">f_read</a>, <a href="putc.html">fputc</a>, <a href="puts.html">fputs</a>, <a href="printf.html">fprintf</a>, <a href="close.html">f_close</a>, <a href="sfile.html">FIL</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
+</body>
+</html>

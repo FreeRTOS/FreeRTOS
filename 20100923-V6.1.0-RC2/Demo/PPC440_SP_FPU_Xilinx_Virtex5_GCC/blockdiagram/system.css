@@ -1,0 +1,446 @@
+
+	text.bif_label {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   6pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.debug_label {
+		fill:        #555555;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Times Arial Helvetica sans-serif;
+	}
+
+	text.ionum_label {
+		fill:        #555555;
+		stroke:      none;
+		font-size:   10pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.iogrp_label {
+		fill:        #000088;
+		stroke:      none;
+		font-size:   10pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	tspan.iogrp_label_super {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		baseline-shift:super;
+		font-family: Arial Courier san-serif;
+	}
+
+	text.p2pbus_label {
+		fill:         #000000;
+		stroke:       none;
+		font-size:    10pt; 
+		font-style:   italic;
+		font-weight:  bold; 
+		text-anchor:  start;
+		writing-mode: tb;
+		font-family:  Verdana Arial Helvetica sans-serif;
+	}
+
+	text.multip_label {
+		fill:         #000000;
+		stroke:       none;
+		font-size:    6pt; 
+		font-style:   italic;
+		font-weight:  bold; 
+		text-anchor:  start;
+		writing-mode: tb;
+		font-family:  Verdana Arial Helvetica sans-serif;
+	}
+
+
+
+	text.bc_iplabel {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   6pt; 
+		font-style:  italic;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Courier Arial Helvetica sans-serif;
+	}
+		
+	text.bc_iptype {
+		fill:        #AA0017;
+		stroke:      none;
+		font-size:   6pt; 
+		font-style:  italic;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.splitbus_label {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   6pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: sans-serif;
+	}
+	
+	text.sharedbus_label {
+		fill:         #000000;
+		stroke:       none;
+		font-size:    10pt; 
+		font-style:   italic;
+		font-weight:  bold; 
+		text-anchor:  start;
+		font-family:  Verdana Arial Helvetica sans-serif;
+	}
+
+
+	text.p2pbus_label_horiz {
+		fill:         #000000;
+		stroke:       none;
+		font-size:    6pt; 
+		font-style:   italic;
+		font-weight:  bold; 
+		text-anchor:  start;
+		font-family:  Verdana Arial Helvetica sans-serif;
+	}
+
+
+
+	text.key_title {
+		fill:        #AA0017;
+		stroke:      none;
+		font-size:   12pt; 
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Arial Helvetica sans-serif;
+	}
+
+	text.key_header {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   10pt; 
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Arial Helvetica sans-serif;
+	}
+
+	text.key_label {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic; 
+		font-weight: bold;
+		text-anchor: start;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.key_label_ul {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic; 
+		font-weight: bold;
+		text-anchor: start;
+		text-decoration: underline;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.specs_header {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   10pt; 
+		font-weight: bold;
+		text-anchor: start;
+		font-family: Arial Helvetica sans-serif;
+	}
+
+	text.specs_start {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic; 
+		font-weight: bold;
+		text-anchor: start;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.specs_middle {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic; 
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.intr_symbol {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-weight: bold;
+		text-anchor: start;
+		font-family: Arial Helvetica sans-serif;
+	}
+
+	text.busintlabel {
+		fill:        #810017;
+		stroke:      none;
+		font-size:   7pt; 
+		font-style:  italic;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.mpmctitle {
+		fill:        #FFFFFF;
+		stroke:      none;
+		font-size:   16pt; 
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Arial Verdana Helvetica sans-serif;
+	}
+	
+	text.mpmcbiflabel {
+		fill:        #FFFFFF;
+		stroke:      none;
+		font-size:   6pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+
+	}
+
+	text.buslabel {
+		fill:        #CC3333;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+			
+	text.iplabel {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic;
+		font-weight: 800;
+		text-anchor: middle;
+		font-family: Courier Arial Helvetica sans-serif;
+	}
+		
+	text.iptype {
+		fill:        #AA0017;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.ipclass {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   7pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: start;
+		font-family: Times Arial Helvetica sans-serif;
+	}
+
+	text.procclass {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   7pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Times Arial Helvetica sans-serif;
+	}
+		
+		
+	text.portlabel {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.ipdbiflbl {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  normal;
+		font-weight: bold;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+		
+	text.mmMHeader {
+		fill:        #FFFFFF;
+		stroke:      none;
+		font-size:   10pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.mmSHeader {
+		fill:        #810017;
+		stroke:      none;
+		font-size:   10pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.busintlabel {
+		fill:        #810017;
+		stroke:      none;
+		font-size:   7pt; 
+		font-style:  italic;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.mpmctitle {
+		fill:        #FFFFFF;
+		stroke:      none;
+		font-size:   16pt; 
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Arial Verdana Helvetica sans-serif;
+	}
+	
+	text.mpmcbiflabel {
+		fill:        #FFFFFF;
+		stroke:      none;
+		font-size:   6pt; 
+		font-style:  normal;
+		font-weight: 900;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+
+	}
+
+	text.buslabel {
+		fill:        #CC3333;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+			
+	text.iplabel {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic;
+		font-weight: 800;
+		text-anchor: middle;
+		font-family: Courier Arial Helvetica sans-serif;
+	}
+		
+	text.iptype {
+		fill:        #AA0017;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  italic;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.ipclass {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   7pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: start;
+		font-family: Times Arial Helvetica sans-serif;
+	}
+
+	text.procclass {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   7pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Times Arial Helvetica sans-serif;
+	}
+		
+		
+	text.portlabel {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.ipdbiflbl {
+		fill:        #000000;
+		stroke:      none;
+		font-size:   8pt; 
+		font-style:  normal;
+		font-weight: bold;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+		
+	text.mmMHeader {
+		fill:        #FFFFFF;
+		stroke:      none;
+		font-size:   10pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+
+	text.mmSHeader {
+		fill:        #810017;
+		stroke:      none;
+		font-size:   10pt; 
+		font-style:  normal;
+		font-weight: bold;
+		text-anchor: middle;
+		font-family: Verdana Arial Helvetica sans-serif;
+	}
+

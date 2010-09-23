@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>FreeRTOS.org uIP WEB server demo</title>
+  </head>
+  <BODY bgcolor="#CCCCff">
+<font face="arial">
+<a href="index.shtml">RTOS Stats</a> <b>|</b> <a href="stats.shtml">TCP Stats</a> <b>|</b> <a href="tcp.shtml">Connections</a> <b>|</b> <a href="http://www.freertos.org/">FreeRTOS.org Homepage</a> <b>|</b> <a href="io.shtml">IO</a>
+<br><p>
+<hr>
+<br><p>
+<h2>Network statistics</h2>
+<table width="300" border="0">
+<tr><td align="left"><font face="courier"><pre>
+IP           Packets dropped
+             Packets received
+             Packets sent
+IP errors    IP version/header length
+             IP length, high byte
+             IP length, low byte
+             IP fragments
+             Header checksum
+             Wrong protocol
+ICMP	     Packets dropped
+             Packets received
+             Packets sent
+             Type errors
+TCP          Packets dropped
+             Packets received
+             Packets sent
+             Checksum errors
+             Data packets without ACKs
+             Resets
+             Retransmissions
+	     No connection avaliable
+	     Connection attempts to closed ports
+</pre></font></td><td><pre>%! net-stats
+</pre></table>
+</font>
+</body>
+</html>

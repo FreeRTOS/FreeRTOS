@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_readdir</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_readdir</h2>
+<p>ディレクトリ項目を読み出します</p>
+<pre>
+FRESULT f_readdir (
+  DIR* <em>DirObject</em>,    /* ディレクトリ・ブジェクト構造体へのポインタ */
+  FILINFO* <em>FileInfo</em>  /* ファイル情報構造体へのポインタ */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>DirObject</dt>
+<dd>ディレクトリ・オブジェクト構造体へのポインタを指定します。</dd>
+<dt>FileInfo</dt>
+<dd>読み出したディレクトリ項目を格納するファイル情報構造体へのポインタを指定します。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>戻り値</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>正常終了。</dd>
+<dt>FR_NOT_READY</dt>
+<dd>メディアがセットされていないなど、物理ドライブが動作不能状態。</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>ディスク・エラーによる失敗。</dd>
+<dt>FR_INT_ERR</dt>
+<dd>不正なFAT構造または内部エラーによる失敗。</dd>
+<dt>FR_INVALID_OBJECT</dt>
+<dd>無効なディレクトリ・オブジェクト。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>解説</h4>
+<p>ディレクトリ項目を順次読み出します。この関数を繰り返し実行することによりディレクトリの全ての項目を読み出すことができます。全ての項目を読み出し、読み出す項目がもう無いときは、<tt>f_name[]</tt>メンバにヌル文字列が返されます。ボリューム名は読み出すときに棄てられ、現れることはありません。"."、".."は、相対パスが有効なとき(<tt>_FS_RPATH == 1</tt>)にのみ現れます。得られるファイル情報の詳細については <tt>FILINFO</tt>構造体を参照してください。FileInfoにヌル・ポインタを指定すると、そのディレクトリのリード・インデックスを巻き戻します。</p>
+<p>LFN機能が有効な時は、f_readdir関数の呼び出しに先立ってFILINFO構造体の<tt>lfname</tt>と<tt>lfsize</tt>が有効な値で初期化されていなければなりません。<tt>lfname</tt>はLFNを格納するバッファで、<tt>lfsize</tt>はそのバッファ・サイズ(文字数)です。次の条件に一つでも該当する場合は、LFN格納バッファにヌル文字列が返されます。</p>
+<ul>
+<li>そのディレクトリ項目にLFNが存在しない。</li>
+<li>LFNの長さに対してLFN格納バッファまたはLFN操作バッファのサイズが不十分。</li>
+<li>LFNにOEMコードに存在しない文字が含まれている。(Unicode APIではないとき)</li>
+</ul>
+<p>また、<tt>lfname</tt>にヌル・ポインタを指定した場合は、LFNに関して何も返されません。LFNが存在しないときは、<tt>f_name[]</tt>メンバのSFNにASCII英小文字が含まれる場合があります。</p>
+</div>
+
+
+<div class="para">
+<h4>対応情報</h4>
+<p><tt>_FS_MINIMIZE &lt;= 1</tt>のときに使用可能です。</p>
+</div>
+
+
+<div class="para">
+<h4>使用例</h4>
+<pre>
+FRESULT scan_files (char* path)
+{
+    FRESULT res;
+    FILINFO fno;
+    DIR dir;
+    int i;
+    char *fn;
+#if _USE_LFN
+    static char lfn[_MAX_LFN * (_DF1S ? 2 : 1) + 1];
+    fno.lfname = lfn;
+    fno.lfsize = sizeof(lfn);
+#endif
+
+
+    res = f_opendir(&amp;dir, path);
+    if (res == FR_OK) {
+        i = strlen(path);
+        for (;;) {
+            res = f_readdir(&amp;dir, &amp;fno);
+            if (res != FR_OK || fno.fname[0] == 0) break;
+            if (fno.fname[0] == '.') continue;
+#if _USE_LFN
+            fn = *fno.lfname ? fno.lfname : fno.fname;
+#else
+            fn = fno.fname;
+#endif
+            if (fno.fattrib &amp; AM_DIR) {
+                sprintf(&amp;path[i], "/%s", fn);
+                res = scan_files(path);
+                if (res != FR_OK) break;
+                path[i] = 0;
+            } else {
+                printf("%s/%s\n", path, fn);
+            }
+        }
+    }
+
+    return res;
+}
+</pre>
+</div>
+
+
+<div class="para">
+<h4>参照</h4>
+<p><tt><a href="opendir.html">f_opendir</a>, <a href="stat.html">f_stat</a>, <a href="sfileinfo.html">FILINFO</a>, <a href="sdir.html">DIR</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

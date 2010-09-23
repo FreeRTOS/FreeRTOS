@@ -1,0 +1,76 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution Name="RTOSDemo" version="2">
+  <project Name="RTOSDemo">
+    <configuration Name="Common" Target="STM32F107VC" arm_architecture="v7M" arm_core_type="Cortex-M3" arm_linker_fiq_stack_size="0" arm_linker_heap_size="128" arm_linker_irq_stack_size="0" arm_linker_jtag_pad_pre_dr="1" arm_linker_jtag_pad_pre_ir="5" arm_linker_stack_size="128" arm_simulator_memory_simulation_filename="$(TargetsDir)/STM32/STM32SimulatorMemory.dll" arm_simulator_memory_simulation_parameter="0x40000;0xC000" arm_target_debug_interface_type="ADIv5" arm_target_loader_parameter="25000000" c_additional_options="-Wall;-Wextra" c_preprocessor_definitions="PACK_STRUCT_END=__attribute((packed));ALIGN_STRUCT_END=__attribute((aligned(4)))" c_system_include_directories="$(StudioDir)/include;$(StudioDir)/include/targets" c_user_include_directories=".;..\\..\\Source\\include;..\\..\\Source\\portable\\GCC\\ARM_CM3;..\\Common\\Include;..\\Common\\drivers\\ST\\STM32F10xFWLib\\inc;..\\Common\\ethernet\\uIP\\uip-1.0\\uip;webserver;LCD" link_include_startup_code="No" linker_memory_map_file="$(TargetsDir)/STM32/STM32F107VC_MemoryMap.xml" linker_printf_width_precision_supported="No" linker_scanf_fmt_level="int" oscillator_frequency="25MHz" project_directory="" project_type="Executable" property_groups_file_path="$(TargetsDir)/STM32/propertyGroups.xml"/>
+    <configuration Name="RAM" Placement="RAM" linker_section_placement_file="$(StudioDir)/targets/Cortex_M/ram_placement.xml" target_reset_script="SRAMReset()"/>
+    <configuration Name="Flash" Placement="Flash" arm_target_flash_loader_file_path="$(TargetsDir)/STM32/Release/Loader_rpc.elf" arm_target_flash_loader_type="LIBMEM RPC Loader" linker_section_placement_file="$(StudioDir)/targets/Cortex_M/flash_placement.xml" target_reset_script="FLASHReset()"/>
+    <folder Name="Source Files">
+      <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc"/>
+      <folder Name="Common Demo Source" file_name="">
+        <file Name="flash.c" file_name="../Common/Minimal/flash.c"/>
+        <file Name="recmutex.c" file_name="../Common/Minimal/recmutex.c"/>
+        <file Name="semtest.c" file_name="../Common/Minimal/semtest.c"/>
+        <file Name="BlockQ.c" file_name="../Common/Minimal/BlockQ.c"/>
+        <file Name="GenQTest.c" file_name="../Common/Minimal/GenQTest.c"/>
+        <file Name="integer.c" file_name="../Common/Minimal/integer.c"/>
+        <file Name="PollQ.c" file_name="../Common/Minimal/PollQ.c"/>
+        <file Name="QPeek.c" file_name="../Common/Minimal/QPeek.c"/>
+      </folder>
+      <folder Name="Kernel Source">
+        <file Name="tasks.c" file_name="../../Source/tasks.c"/>
+        <file Name="list.c" file_name="../../Source/list.c"/>
+        <file Name="queue.c" file_name="../../Source/queue.c"/>
+        <file Name="heap_2.c" file_name="../../Source/portable/MemMang/heap_2.c"/>
+        <file Name="port.c" file_name="../../Source/portable/GCC/ARM_CM3/port.c">
+          <configuration Name="Common" c_enforce_ansi_checking="No"/>
+        </file>
+      </folder>
+      <file Name="main.c" file_name="main.c"/>
+      <file Name="ParTest.c" file_name="ParTest/ParTest.c"/>
+      <folder Name="Library">
+        <file Name="stm32f10x_usart.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_usart.c"/>
+        <file Name="stm32f10x_gpio.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_gpio.c"/>
+        <file Name="stm32f10x_lib.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_lib.c"/>
+        <file Name="stm32f10x_nvic.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_nvic.c"/>
+        <file Name="stm32f10x_rcc.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_rcc.c"/>
+        <file Name="stm32f10x_systick.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_systick.c"/>
+        <file Name="stm32fxxx_eth.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32fxxx_eth.c"/>
+        <file Name="printf-stdarg.c" file_name="printf-stdarg.c"/>
+        <file Name="stm32f10x_tim.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_tim.c"/>
+        <file Name="lcd.c" file_name="LCD/lcd.c"/>
+        <file Name="stm32f10x_spi.c" file_name="../Common/drivers/ST/STM32F10xFWLib/src/stm32f10x_spi.c"/>
+      </folder>
+      <folder Name="uIP">
+        <file Name="timer.c" file_name="../Common/ethernet/uIP/uip-1.0/uip/timer.c"/>
+        <file Name="uip.c" file_name="../Common/ethernet/uIP/uip-1.0/uip/uip.c"/>
+        <file Name="uip_arp.c" file_name="../Common/ethernet/uIP/uip-1.0/uip/uip_arp.c"/>
+        <file Name="psock.c" file_name="../Common/ethernet/uIP/uip-1.0/uip/psock.c"/>
+      </folder>
+      <folder Name="webserver">
+        <file Name="uIP_Task.c" file_name="webserver/uIP_Task.c"/>
+        <file Name="httpd.c" file_name="webserver/httpd.c"/>
+        <file Name="httpd-cgi.c" file_name="webserver/httpd-cgi.c"/>
+        <file Name="httpd-fs.c" file_name="webserver/httpd-fs.c"/>
+        <file Name="http-strings.c" file_name="webserver/http-strings.c"/>
+        <file Name="emac.c" file_name="webserver/emac.c"/>
+      </folder>
+      <file Name="timertest.c" file_name="timertest.c"/>
+    </folder>
+    <folder Name="System Files">
+      <file Name="thumb_crt0.s" file_name="$(StudioDir)/source/thumb_crt0.s"/>
+      <file Name="STM32F10x_Target.js" file_name="$(TargetsDir)/ST_STM32F10x/STM32F10x_Target.js">
+        <configuration Name="Common" file_type="Reset Script"/>
+      </file>
+      <file Name="STM32F10x_Startup.s" file_name="STM32F10x_Startup.s"/>
+    </folder>
+    <configuration Name="THUMB Flash Debug" Target="STM32F107VC" arm_simulator_memory_simulation_parameter="0x40000;0xC000" build_quietly="Yes" gcc_optimization_level="None" linker_memory_map_file="$(TargetsDir)/STM32/STM32F107VC_MemoryMap.xml"/>
+    <configuration Name="THUMB Flash Release" asm_additional_options="" build_quietly="Yes"/>
+    <configuration Name="Release" c_preprocessor_definitions="STARTUP_FROM_RESET" gcc_optimization_level="Level 1"/>
+  </project>
+  <configuration Name="THUMB Flash Debug" inherited_configurations="THUMB;Flash;Debug"/>
+  <configuration Name="THUMB" arm_instruction_set="THUMB" arm_library_instruction_set="THUMB" c_preprocessor_definitions="__THUMB" hidden="Yes"/>
+  <configuration Name="Flash" c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes"/>
+  <configuration Name="Debug" build_debug_information="Yes" c_preprocessor_definitions="DEBUG" gcc_optimization_level="None" hidden="Yes" link_include_startup_code="No"/>
+  <configuration Name="THUMB Flash Release" inherited_configurations="THUMB;Flash;Release"/>
+  <configuration Name="Release" build_debug_information="No" c_preprocessor_definitions="NDEBUG" gcc_optimization_level="Level 1" hidden="Yes" link_include_startup_code="No"/>
+</solution>

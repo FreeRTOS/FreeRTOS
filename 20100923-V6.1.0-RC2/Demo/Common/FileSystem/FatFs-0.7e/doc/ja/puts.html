@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_puts</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_puts</h2>
+<p>ファイルに文字列を書き込みます。</p>
+<pre>
+int f_puts (
+  const char* <em>Str</em>,  /* 文字列 */
+  FIL* <em>FileObject</em>   /* ファイル・オブジェクト */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>Str</dt>
+<dd>書き込む'\0'で終わる文字列を指すポインタを指定します。'\0'は書き込まれません。</dd>
+<dt>FileObject</dt>
+<dd>ファイル・オブジェクト構造体へのポインタを指定します。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>戻り値</h4>
+<p>文字列が正常に書き込まれると書き込んだ文字数が返されます。ディスクが満杯またはその他エラーにより正常に書き込まれなかったときは<tt>EOF</tt>が返されます。</p>
+</div>
+
+
+<div class="para">
+<h4>解説</h4>
+<p>文字列をファイルに書き込みます。この関数は<a href="putc.html">f_putc()</a>のラッパー関数です。</p>
+</div>
+
+
+<div class="para">
+<h4>対応情報</h4>
+<p><tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が 1または 2のとき使用可能です。2を指定すると、文字列に含まれる<tt>'\n'</tt>は<tt>"\r\n"</tt>に展開されてファイルに書き込まれます。</p>
+</div>
+
+
+<div class="para">
+<h4>参照</h4>
+<p><tt><a href="open.html">f_open</a>, <a href="putc.html">f_putc</a>, <a href="printf.html">f_printf</a>, <a href="gets.html">f_gets</a>, <a href="close.html">f_close</a>, <a href="sfile.html">FIL</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

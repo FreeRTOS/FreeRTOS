@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - FIL</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>FIL</h2>
+<p><tt>FIL</tt>構造体は、f_open()で作成され、そのファイルの状態を保持します。アプリケーションから書き換え可能なメンバはありません。</p>
+
+<pre>
+typedef struct _FIL_ {
+    FATFS*  fs;           /* Pointer to the owner file system object */
+    WORD    id;           /* Owner file system mount ID */
+    BYTE    flag;         /* File status flags */
+    BYTE    csect;        /* Sector address in the cluster */
+    DWORD   fptr;         /* File R/W pointer */
+    DWORD   fsize;        /* File size */
+    DWORD   org_clust;    /* File start cluster */
+    DWORD   curr_clust;   /* Current cluster */
+    DWORD   dsect;        /* Current data sector */
+#if _FS_READONLY == 0
+    DWORD   dir_sect;     /* Sector containing the directory entry */
+    BYTE*   dir_ptr;      /* Ponter to the directory entry in the window */
+#endif
+#if !_FS_TINY
+    BYTE    buf[_MAX_SS];  /* File R/W buffer */
+#endif
+} FIL;
+</pre>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

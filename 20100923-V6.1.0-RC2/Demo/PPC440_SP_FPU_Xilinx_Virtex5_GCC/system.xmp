@@ -1,0 +1,69 @@
+#Please do not modify this file by hand
+XmpVersion: 11.2
+VerMgmt: 11.2
+IntStyle: default
+MHS File: system.mhs
+MSS File: system.mss
+Architecture: virtex5
+Device: xc5vfx70t
+Package: ff1136
+SpeedGrade: -1
+UserCmd1: 
+UserCmd1Type: 0
+UserCmd2: 
+UserCmd2Type: 0
+GenSimTB: 0
+SdkExportBmmBit: 1
+SdkExportDir: SDK/SDK_Export
+InsertNoPads: 0
+WarnForEAArch: 1
+HdlLang: VHDL
+SimModel: BEHAVIORAL
+UcfFile: data/system.ucf
+EnableParTimingError: 1
+ShowLicenseDialog: 1
+Processor: ppc440_0
+BootLoop: 1
+XmdStub: 0
+SwProj: RTOSDemo
+Processor: ppc440_0
+Executable: RTOSDemo/executable.elf
+Source: RTOSDemo/../../Common/Minimal/BlockQ.c
+Source: RTOSDemo/../../Common/Minimal/blocktim.c
+Source: RTOSDemo/../../Common/Minimal/comtest.c
+Source: RTOSDemo/../../Common/Minimal/countsem.c
+Source: RTOSDemo/../../Common/Minimal/death.c
+Source: RTOSDemo/../../Common/Minimal/dynamic.c
+Source: RTOSDemo/../../Common/Minimal/flash.c
+Source: RTOSDemo/../../Common/Minimal/GenQTest.c
+Source: RTOSDemo/../../Common/Minimal/integer.c
+Source: RTOSDemo/../../Common/Minimal/QPeek.c
+Source: RTOSDemo/../../Common/Minimal/recmutex.c
+Source: RTOSDemo/../../Common/Minimal/semtest.c
+Source: RTOSDemo/../../../Source/tasks.c
+Source: RTOSDemo/../../../Source/list.c
+Source: RTOSDemo/../../../Source/queue.c
+Source: RTOSDemo/../../../Source/croutine.c
+Source: RTOSDemo/../../../Source/portable/GCC/PPC440_Xilinx/portasm.S
+Source: RTOSDemo/../../../Source/portable/GCC/PPC440_Xilinx/port.c
+Source: RTOSDemo/../../../Source/portable/MemMang/heap_2.c
+Source: RTOSDemo/flop/flop-reg-test.c
+Source: RTOSDemo/flop/flop.c
+Source: RTOSDemo/partest/partest.c
+Source: RTOSDemo/serial/serial.c
+Source: RTOSDemo/main.c
+DefaultInit: EXECUTABLE
+InitBram: 0
+Active: 1
+CompilerOptLevel: 0
+GlobPtrOpt: 0
+DebugSym: 1
+ProfileFlag: 0
+SearchIncl: ../../Source/include ../../Source/portable/GCC/PPC440_Xilinx ../Common/include ./RTOSDemo ./RTOSDemo/flop
+ProgStart: 
+StackSize: 
+HeapSize: 
+LinkerScript: RTOSDemo/RTOSDemo_linker_script.ld
+ProgCCFlags: -D GCC_PPC440 -mregnames
+CompileInXps: 1
+NonXpsApp: 0

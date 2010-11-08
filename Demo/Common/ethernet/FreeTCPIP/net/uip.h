@@ -73,9 +73,6 @@
 	{
 		u8_t	u8[4];	/* Initializer, must come first!!! */
 		u16_t	u16[2];
-		#if 0
-			u32_t	u32;
-		#endif
 	} uip_ip4addr_t;
 	typedef uip_ip4addr_t	uip_ipaddr_t;
 #endif /* UIP_CONF_IPV6 */
@@ -1017,7 +1014,14 @@ CCIF void	uip_send( const void *data, int len );
  * \hideinitializer
  */
 #ifndef uip_ipaddr_copy
-	#define uip_ipaddr_copy( dest, src )	( ((unsigned long*)dest)[ 0 ] = ((unsigned long *)src)[ 0 ] )
+	#define uip_ipaddr_copy( dest, src ) 	\
+	do										\
+	{										\
+		(dest)->u8[0] = (src)->u8[0];		\
+		(dest)->u8[1] = (src)->u8[1];		\
+		(dest)->u8[2] = (src)->u8[2];		\
+		(dest)->u8[3] = (src)->u8[3];		\
+	} while( 0 )	
 #endif
 
 			/**

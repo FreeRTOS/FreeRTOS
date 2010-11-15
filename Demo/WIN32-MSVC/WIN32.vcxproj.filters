@@ -23,15 +23,18 @@
       <UniqueIdentifier>{34567deb-d5ab-4a56-8640-0aaec609521a}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
+    <Filter Include="Demo App Source\Common Demo Tasks">
+      <UniqueIdentifier>{2d4a700c-06e3-4dd2-afbe-ab1be71ebe2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS Source\Source\Portable">
+      <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\list.c">
-      <Filter>FreeRTOS Source\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\portable\WIN32\port.c">
       <Filter>FreeRTOS Source\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\queue.c">
@@ -42,6 +45,36 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c">
       <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\portable\MSVC-MingW\port.c">
+      <Filter>FreeRTOS Source\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\flop.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\GenQTest.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\integer.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\PollQ.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\QPeek.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\recmutex.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\semtest.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\BlockQ.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\blocktim.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -51,13 +51,38 @@
     licensing and training services.
 */
 
+/* Standard includes. */
 #include <stdio.h>
+
+/* Kernel includes. */
 #include <FreeRTOS.h>
 #include "task.h"
 #include "queue.h"
 
-/* Task priorities. */
-#define mainSTDOUT_TASK_PRIORITY	tskIDLE_PRIORITY
+/* Standard demo includes. */
+#include "partest.h"
+#include "BlockQ.h"
+#include "death.h"
+#include "integer.h"
+//#include "blocktim.h"
+#include "semtest.h"
+#include "PollQ.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "recmutex.h"
+#include "flop.h"
+
+/* Priorities at which the tasks are created. */
+#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
 /* Stack sizes. */
 #define mainSTDOUT_TASK_STACK_SIZE		( configMINIMAL_STACK_SIZE * 4 )
@@ -67,9 +92,7 @@ static volatile unsigned long ul1 = 0, ul2 = 0;
 static xQueueHandle xStdoutQueue = NULL;
 
 /* Task function prototypes. */
-static void prvTask1( void *pvParameters );
-static void prvTask2( void *pvParameters );
-static void prvStdoutTask( void *pvParameters );
+static void prvCheckTask( void *pvParameters );
 
 /* Create a queue on which console output strings can be posted, then start the
 task that processes the queue - printf()'ing each string that is received. */
@@ -79,14 +102,25 @@ static void prvStartStdoutTask( void );
 pointed to by pcTextToPrint for output to stdout in a thread safe manner. */
 void vMainConsolePrint( const char *pcTextToPrint, portTickType xTicksToWait );
 
-volatile unsigned long ulIdleCount = 0UL, ulT1Count = 0UL, ulT2Count = 0UL, ulTicks = 0UL;
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-	prvStartStdoutTask();
-	xTaskCreate( prvTask1, "t1", 100, NULL, 0, NULL );
-	xTaskCreate( prvTask2, "t2", 100, NULL, 0, NULL );
+	/* Start the check task as described at the top of this file. */
+	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+	/* Create the standard demo tasks. */
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+//	vCreateBlockTimeTasks();
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
+	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartQueuePeekTasks();
+	vStartRecursiveMutexTasks();
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
+
+	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
     /* Should never get here unless there was not enough heap space to create 
@@ -95,102 +129,97 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void vMainConsolePrint( const char *pcTextToPrint, portTickType xTicksToWait )
+static void prvCheckTask( void *pvParameters )
 {
-	if( xStdoutQueue != NULL )
-	{
-		xQueueSend( xStdoutQueue, &pcTextToPrint, xTicksToWait );
-	}
-}
-/*-----------------------------------------------------------*/
+portTickType xNextWakeTime;
+const portTickType xCycleFrequency = 5000 / portTICK_RATE_MS;
+char *pcStatusMessage = "OK";
+long lCycleCount = 0;
 
-static void prvStartStdoutTask( void )
-{
-const unsigned long ulQueueLength = 20;
-
-	/* Create the queue on which starings for output will be stored. */
-	xStdoutQueue = xQueueCreate( ulQueueLength, ( unsigned portBASE_TYPE ) sizeof( char * ) );
-
-	if( xStdoutQueue != NULL )
-	{
-		/* Create the task that processes the stdout messages. */
-		xTaskCreate( prvStdoutTask, "stdout task", mainSTDOUT_TASK_STACK_SIZE, NULL, mainSTDOUT_TASK_PRIORITY, NULL );
-	}
-}
-/*-----------------------------------------------------------*/
-
-static void prvStdoutTask( void *pvParameters )
-{
-char *pcString;
-
-	/* Just to remove compiler warnings. */
+	/* Just to remove compiler warning. */
 	( void ) pvParameters;
+
+	/* Initialise xNextWakeTime - this only needs to be done once. */
+	xNextWakeTime = xTaskGetTickCount();
 
 	for( ;; )
 	{
-		/* This task would not have been created if the queue had not been created
-		successfully too.  Also, because of the FreeRTOSConfig.h settings using
-		portMAX_DELAY in this case means wait forever, so when this function returns
-		we know there is a string to print. */
-		xQueueReceive( xStdoutQueue, &pcString, portMAX_DELAY );
-		printf( "%s", pcString );
-		//fflush( stdout );
+		/* Place this task in the blocked state until it is time to run again. */
+		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+
+		/* Check the standard demo tasks are running without error. */
+	    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	    {
+			pcStatusMessage = "Error: IntMath";
+	    }	
+		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{			
+			pcStatusMessage = "Error: GenQueue";
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: QueuePeek";
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: BlockQueue";
+		}
+//		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+//		{
+//			pcStatusMessage = "Error: BlockTime";
+//		}
+	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	    {
+			pcStatusMessage = "Error: SemTest";
+	    }
+	    else if( xArePollingQueuesStillRunning() != pdTRUE )
+	    {
+			pcStatusMessage = "Error: PollQueue";
+	    }
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+			pcStatusMessage = "Error: RecMutex";
+	    }
+		else if( xAreMathsTaskStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Flop";
+		}
+
+		/* This is the only task that uses stdout so its ok to call printf() 
+		directly. */
+		printf( "%s - %d\r\n", pcStatusMessage, xTaskGetTickCount() );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvTask1( void *pvParameters )
+void vApplicationIdleHook( void )
 {
-const char *pcTask1Message = "Task 1 running\r\n";
-const portTickType xTicksToDelay = 1000 / portTICK_RATE_MS;
-
-	/* Just to remove compiler warnings. */
-	( void ) pvParameters;
-
-	for( ;; )
-	{
-//		ul1++;
-		vMainConsolePrint( pcTask1Message, 0 );
-		vTaskDelay( xTicksToDelay );
-		ulT1Count++;
-	}
-}
-/*-----------------------------------------------------------*/
-
-static void prvTask2( void *pvParameters )
-{
-const char *pcTask2Message = "Task 2 running\r\n";
-const portTickType xTicksToDelay = 500 / portTICK_RATE_MS;
-
-	/* Just to remove compiler warnings. */
-	( void ) pvParameters;
-
-	for( ;; )
-	{
-//		ul2++;
-		vMainConsolePrint( pcTask2Message, 0 );
-		vTaskDelay( xTicksToDelay );
-		ulT2Count++;
-//		taskYIELD();
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationIdleHook()
-{
-const unsigned long ulMSToSleep = 5;
-
 	/* Sleep to reduce CPU load, but don't sleep indefinitely if not using 
 	preemption as as nothing will cause	a task switch. */
-	#if configUSE_PREEMPTION != 0
+	#if( configUSE_PREEMPTION != 0 )
 	{
 		SleepEx( INFINITE, TRUE );
 	}
 	#else
 	{
+		const unsigned long ulMSToSleep = 5;
+
 		SleepEx( ulMSToSleep, TRUE );
 	}
 	#endif
-
-	ulIdleCount++;
 }
+/*-----------------------------------------------------------*/
+
+void vApplicationMallocFailedHook( void )
+{
+	/* Can be implemented if required, but probably not required in this 
+	environment and running this demo. */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( void )
+{
+	/* Can be implemented if required, but not required in this 
+	environment and running this demo. */
+}
+

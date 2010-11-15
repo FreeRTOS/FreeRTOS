@@ -55,7 +55,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\Include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0400;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -66,6 +66,7 @@
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -78,6 +79,7 @@
       <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -122,6 +124,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c" />
+    <ClCompile Include="..\Common\Minimal\BlockQ.c" />
+    <ClCompile Include="..\Common\Minimal\blocktim.c" />
+    <ClCompile Include="..\Common\Minimal\flop.c" />
+    <ClCompile Include="..\Common\Minimal\GenQTest.c" />
+    <ClCompile Include="..\Common\Minimal\integer.c" />
+    <ClCompile Include="..\Common\Minimal\PollQ.c" />
+    <ClCompile Include="..\Common\Minimal\QPeek.c" />
+    <ClCompile Include="..\Common\Minimal\recmutex.c" />
+    <ClCompile Include="..\Common\Minimal\semtest.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>

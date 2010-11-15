@@ -137,40 +137,20 @@ extern void *pxCurrentTCB;
 
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 {
-void *pvTimer;
-LARGE_INTEGER liDueTime;
-void *pvObjectList[ 2 ];
-const long long ll_ms_In_100ns_units = ( long long ) -1000;
-
 	/* Just to prevent compiler warnings. */
 	( void ) lpParameter;
-
-	/* The timer is created as a one shot timer even though we want it to repeat
-	at a given frequency.  This is because Windows is not a real time environment,
-	and attempting to set a high frequency periodic timer will result in event
-	overruns.  Therefore the timer is just reset after each time the pseudo 
-	interrupt handler has processed each tick event. */
-	pvTimer = CreateWaitableTimer( NULL, TRUE, NULL );
-	
-	liDueTime.QuadPart = ( long long ) portTICK_RATE_MS * ll_ms_In_100ns_units;
-
-	/* Block on the timer itself and the event mutex that grants access to the 
-	interrupt variables. */
-	pvObjectList[ 0 ] = pvInterruptEventMutex;
-	pvObjectList[ 1 ] = pvTimer;
 
 	for(;;)
 	{
 		/* The timer is reset on each itteration of this loop rather than being set
 		to function periodicallys - this is for the reasons stated in the comments
 		where the timer is created. */
-		vPortTrace( "prvSimulatedPeripheralTimer: Tick acked, setting new tick timer\r\n" );
-		SetWaitableTimer( pvTimer, &liDueTime, 0, NULL, NULL, TRUE );
+		vPortTrace( "prvSimulatedPeripheralTimer: Tick acked, re-Sleeping()\r\n" );
 
 		/* Wait until the timer expires and we can access the pseudo interrupt 
 		variables. */
-		//WaitForMultipleObjects( ( sizeof( pvObjectList ) / sizeof( void * ) ), pvObjectList, TRUE, INFINITE );
-		WaitForSingleObject( pvTimer, INFINITE );
+		Sleep( portTICK_RATE_MS );
+
 		vPortTrace( "prvSimulatedPeripheralTimer: Timer signalled, waiting interrupt event mutex\r\n" );
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 		vPortTrace( "prvSimulatedPeripheralTimer: Got interrupt event mutex\r\n" );

@@ -56,59 +56,7 @@
 #include "task.h"
 #include <stdio.h>
 
-
-
-
-
-typedef struct xTaskControlBlock
-{
-	volatile portSTACK_TYPE	*pxTopOfStack;		/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE STRUCT. */
-
-	#if ( portUSING_MPU_WRAPPERS == 1 )
-		xMPU_SETTINGS xMPUSettings;				/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE STRUCT. */
-	#endif	
-	
-	xListItem				xGenericListItem;	/*< List item used to place the TCB in ready and blocked queues. */
-	xListItem				xEventListItem;		/*< List item used to place the TCB in event lists. */
-	unsigned portBASE_TYPE	uxPriority;			/*< The priority of the task where 0 is the lowest priority. */
-	portSTACK_TYPE			*pxStack;			/*< Points to the start of the stack. */
-	signed char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */
-
-	#if ( portSTACK_GROWTH > 0 )
-		portSTACK_TYPE *pxEndOfStack;			/*< Used for stack overflow checking on architectures where the stack grows up from low memory. */
-	#endif
-
-	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
-		unsigned portBASE_TYPE uxCriticalNesting;
-	#endif
-
-	#if ( configUSE_TRACE_FACILITY == 1 )
-		unsigned portBASE_TYPE	uxTCBNumber;	/*< This is used for tracing the scheduler and making debugging easier only. */
-	#endif
-
-	#if ( configUSE_MUTEXES == 1 )
-		unsigned portBASE_TYPE uxBasePriority;	/*< The priority last assigned to the task - used by the priority inheritance mechanism. */
-	#endif
-
-	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-		pdTASK_HOOK_CODE pxTaskTag;
-	#endif
-
-	#if ( configGENERATE_RUN_TIME_STATS == 1 )
-		unsigned long ulRunTimeCounter;		/*< Used for calculating how much CPU time each task is utilising. */
-	#endif
-
-} xTCB;
-
-
-
-
-
-
-
-
-
-FILE *pfTraceFile = NULL;
+//FILE *pfTraceFile = NULL;
 //#define vPortTrace( x ) if( pfTraceFile == NULL ) pfTraceFile = fopen( "c:/temp/trace.txt", "w" ); if( pfTraceFile != NULL ) fprintf( pfTraceFile, x )
 #define vPortTrace( x ) ( void ) x
 
@@ -137,16 +85,17 @@ the only thing it will ever hold.  The structure indirectly maps the task handle
 to a thread handle. */
 typedef struct
 {
-	portSTACK_TYPE ulCriticalNesting;	/* Critical nesting count of the task. */
-	void * pvThread;					/* Handle of the thread that executes the task. */
-} xThreadState;
+	/* Set to true for tasks that call the generate psuedo interrupt function,
+	as the event handler needs to know whether to signal the interrupt ack
+	event when the task next runs. */
+	long lWaitingInterruptAck;			
 
-/* The parameters passed to a thread when it is created. */
-typedef struct XPARAMS
-{
-	pdTASK_CODE pxCode;		/* The entry point of the task (rather than thread) code. */
-	void *pvParameters;		/* The parameters that are passed to the task (rather than thread. */
-} xParams;
+	/* Critical nesting count of the task - each task has its own. */
+	portSTACK_TYPE ulCriticalNesting;
+
+	/* Handle of the thread that executes the task. */
+	void * pvThread;					
+} xThreadState;
 
 /* Pseudo interrupts waiting to be processed.  This is a bit mask where each
 bit represents one interrupt, so a maximum of 32 interrupts can be simulated. */
@@ -192,7 +141,6 @@ void *pvTimer;
 LARGE_INTEGER liDueTime;
 void *pvObjectList[ 2 ];
 const long long ll_ms_In_100ns_units = ( long long ) -1000;
-extern volatile unsigned long ulTicks;
 
 	/* Just to prevent compiler warnings. */
 	( void ) lpParameter;
@@ -213,8 +161,6 @@ extern volatile unsigned long ulTicks;
 
 	for(;;)
 	{
-		ulTicks++;
-
 		/* The timer is reset on each itteration of this loop rather than being set
 		to function periodicallys - this is for the reasons stated in the comments
 		where the timer is created. */
@@ -258,29 +204,20 @@ extern volatile unsigned long ulTicks;
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 xThreadState *pxThreadState = NULL;
-xParams *pxThreadParams = ( void * ) pvPortMalloc( sizeof( xParams ) );
 
-	if( pxThreadParams != NULL )
-	{
-		/* In this simulated case a stack is not initialised, but instead a thread
-		is created that will execute the task being created.  The thread handles
-		the context switching itself.  The xThreadState object is placed onto
-		the stack that was created for the task - so the stack buffer is still
-		used, just not in the conventional way.  It will not be used for anything
-		other than holding this structure. */
-		pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
-
-		/* The parameters that are passed into the thread so it knows how to
-		start the task executing. */
-		pxThreadParams->pxCode = pxCode;
-		pxThreadParams->pvParameters = pvParameters;
+	/* In this simulated case a stack is not initialised, but instead a thread
+	is created that will execute the task being created.  The thread handles
+	the context switching itself.  The xThreadState object is placed onto
+	the stack that was created for the task - so the stack buffer is still
+	used, just not in the conventional way.  It will not be used for anything
+	other than holding this structure. */
+	pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
 
 		/* Create the thread itself. */
-		//pxThreadState->pvThread = ( void * ) CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) prvThreadEntryPoint, pxThreadParams, CREATE_SUSPENDED, NULL );
 		pxThreadState->pvThread = ( void * ) CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
 		pxThreadState->ulCriticalNesting = portNO_CRITICAL_NESTING;
+		pxThreadState->lWaitingInterruptAck = pdFALSE;
 		SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
-	}
 	
 	return ( portSTACK_TYPE * ) pxThreadState;
 }
@@ -347,11 +284,11 @@ xThreadState *pxThreadState;
 
 static void prvProcessEvents( void )
 {
-long lSwitchRequired, lAcknowledgeTick, lAcknowledgeInterrupt;
+long lSwitchRequired;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
 unsigned long i;
-char cTraceBuffer[ 256 ];
+//char cTraceBuffer[ 256 ];
 
 	vPortTrace( "Entering prvProcessEvents\r\n" );
 
@@ -372,8 +309,6 @@ char cTraceBuffer[ 256 ];
 		//WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
 		lSwitchRequired = pdFALSE;
-		lAcknowledgeTick = pdFALSE;
-		lAcknowledgeInterrupt = pdFALSE;
 
 		/* For each interrupt we are interested in processing, each of which is 
 		represented by a bit in the 32bit ulPendingInterrupts variable. */
@@ -392,8 +327,6 @@ char cTraceBuffer[ 256 ];
 
 						/* Clear the interrupt pending bit. */
 						ulPendingInterrupts &= ~( 1UL << portINTERRUPT_YIELD );
-
-						lAcknowledgeInterrupt = pdTRUE;
 						break;
 
 					case portINTERRUPT_TICK:
@@ -415,7 +348,8 @@ char cTraceBuffer[ 256 ];
 							}
 							#endif
 							
-							lAcknowledgeTick = pdTRUE;
+							vPortTrace( "prvProcessEvents: Acking tick\r\n" );
+							SetEvent( pvTickAcknowledgeEvent );
 
 							/* Clear the interrupt pending bit. */
 							ulPendingInterrupts &= ~( 1UL << portINTERRUPT_TICK );
@@ -435,7 +369,8 @@ char cTraceBuffer[ 256 ];
 							/* Clear the interrupt pending bit. */
 							ulPendingInterrupts &= ~( 1UL << i );
 
-							lAcknowledgeInterrupt = pdTRUE;
+							/* TODO:  Need to have some sort of handshake event here for non-tick
+							and none yield interrupts. */
 						}
 						break;
 				}
@@ -461,27 +396,21 @@ char cTraceBuffer[ 256 ];
 			{
 				/* Suspend the old thread. */
 				SuspendThread( pxThreadState->pvThread );
-				sprintf( cTraceBuffer, "Event processor: suspending %s, resuming %s\r\n", ((xTCB*)pvOldCurrentTCB)->pcTaskName, ((xTCB*)pxCurrentTCB)->pcTaskName );
-				vPortTrace( cTraceBuffer );
+				//sprintf( cTraceBuffer, "Event processor: suspending %s, resuming %s\r\n", ((xTCB*)pvOldCurrentTCB)->pcTaskName, ((xTCB*)pxCurrentTCB)->pcTaskName );
+				//vPortTrace( cTraceBuffer );
 
 				/* Obtain the state of the task now selected to enter the Running state. */
 				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
 				ulCriticalNesting = pxThreadState->ulCriticalNesting;
 				ResumeThread( pxThreadState->pvThread );
+
+				if( pxThreadState->lWaitingInterruptAck == pdTRUE )
+				{
+					pxThreadState->lWaitingInterruptAck = pdFALSE;
+					vPortTrace( "prvProcessEvents: Acking interrupt\r\n" );
+					SetEvent( pvInterruptAcknowledgeEvent );
+				}
 			}
-		}
-
-		/* Was a tick processed? */
-		if( lAcknowledgeTick != pdFALSE )
-		{
-			vPortTrace( "prvProcessEvents: Acking tick\r\n" );
-			SetEvent( pvTickAcknowledgeEvent );
-		}
-
-		if( lAcknowledgeInterrupt != pdFALSE )
-		{
-			vPortTrace( "prvProcessEvents: Acking interrupt\r\n" );
-			SetEvent( pvInterruptAcknowledgeEvent );
 		}
 
 		ReleaseMutex( pvInterruptEventMutex );
@@ -496,23 +425,26 @@ void vPortEndScheduler( void )
 
 void vPortGeneratePseudoInterrupt( unsigned long ulInterruptNumber )
 {
+xThreadState *pxThreadState;
+
 	if( ( ulInterruptNumber < portMAX_INTERRUPTS ) && ( pvInterruptEventMutex != NULL ) )
 	{
 		/* Yield interrupts are processed even when critical nesting is non-zero. */
 		if( ( ulCriticalNesting == 0 ) || ( ulInterruptNumber == portINTERRUPT_YIELD ) )
 		{
-			/* In case this task has just started running, reset the interrupt
-			acknowledge event as it might have been set due to the activities
-			of a thread that has already been executed and suspended. */
-			ResetEvent( pvInterruptAcknowledgeEvent );
-
 			WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 			ulPendingInterrupts |= ( 1 << ulInterruptNumber );
+
+			/* The event handler needs to know to signal the interrupt acknowledge event
+			the next time this task runs. */
+			pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+			pxThreadState->lWaitingInterruptAck = pdTRUE;
+
 			vPortTrace( "vPortGeneratePseudoInterrupt: Got interrupt mutex, about to signal interrupt event\r\n" );
 			SetEvent( pvInterruptEvent );
 			vPortTrace( "vPortGeneratePseudoInterrupt: About to release interrupt event mutex\r\n" );
 			ReleaseMutex( pvInterruptEventMutex );
-			vPortTrace( "vPortGeneratePseudoInterrupt: Interrupt event mutex released, going to wait for next interrupt input\r\n" );
+			vPortTrace( "vPortGeneratePseudoInterrupt: Interrupt event mutex released, going to wait for interrupt ack\r\n" );
 
 			WaitForSingleObject( pvInterruptAcknowledgeEvent, INFINITE );
 			vPortTrace( "vPortGeneratePseudoInterrupt: Interrupt acknowledged, leaving vPortGeneratePseudoInterrupt()\r\n" );
@@ -547,6 +479,8 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+xThreadState *pxThreadState;
+
 	if( ulCriticalNesting > portNO_CRITICAL_NESTING )
 	{
 		ulCriticalNesting--;
@@ -560,16 +494,17 @@ void vPortExitCritical( void )
 				WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 				vPortTrace( "vPortExitCritical:  Setting interrupt event\r\n" );
 				SetEvent( pvInterruptEvent );
+
+				/* The event handler needs to know to signal the interrupt acknowledge event
+				the next time this task runs. */
+				pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+				pxThreadState->lWaitingInterruptAck = pdTRUE;
+
 				ReleaseMutex( pvInterruptEventMutex );
 
 				vPortTrace( "vPortExitCritical:  Waiting interrupt ack\r\n" );
 				WaitForSingleObject( pvInterruptAcknowledgeEvent, INFINITE );
 				vPortTrace( "vPortExitCritical: Interrupt acknowledged, leaving critical section code\r\n" );
-
-				/* Just in case the Yield does not happen immediately.  This
-				line could be dangerious if not all interrupts are being
-				processed. */
-//				while( ulPendingInterrupts != 0UL );
 			}
 		}
 	}

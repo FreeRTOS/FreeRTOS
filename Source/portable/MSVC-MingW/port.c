@@ -66,7 +66,8 @@
 /*
  * Created as a high priority thread, this function uses a timer to simulate
  * a tick interrupt being generated on an embedded target.  In this Windows
- * environment the timer does not achieve real time performance though.
+ * environment the timer does not achieve anything approaching real time 
+ * performance though.
  */
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter );
 
@@ -74,7 +75,7 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter );
  * Process all the simulated interrupts - each represented by a bit in 
  * ulPendingInterrupts variable.
  */
-static void prvProcessEvents( void );
+static void prvProcessPseudoInterrupts( void );
 
 /*-----------------------------------------------------------*/
 
@@ -85,9 +86,9 @@ the only thing it will ever hold.  The structure indirectly maps the task handle
 to a thread handle. */
 typedef struct
 {
-	/* Set to true for tasks that call the generate pseudo interrupt function,
-	as the event handler needs to know whether to signal the interrupt ack
-	event when the task next runs. */
+	/* Set to true if the task run by the thread yielded control to the pseudo
+	interrupt handler manually - either by yielding or when exiting a critical
+	section while pseudo interrupts were pending. */
 	long lWaitingInterruptAck;			
 
 	/* Critical nesting count of the task - each task has its own. */
@@ -101,17 +102,14 @@ typedef struct
 bit represents one interrupt, so a maximum of 32 interrupts can be simulated. */
 static volatile unsigned long ulPendingInterrupts = 0UL;
 
-/* An event used to inform the interrupt dispatch thread (a high priority thread
-that simulated interrupt processing) that an IRQ or SWI type interrupt is
+/* An event used to inform the pseudo interrupt processing thread (a high 
+priority thread that simulated interrupt processing) that an interrupt is
 pending. */
 static void *pvInterruptEvent = NULL;
 
-/* Mutex used to protect all the pseudo interrupt variables that are accessed by
-multiple threads. */
+/* Mutex used to protect all the pseudo interrupt variables that are accessed 
+by multiple threads. */
 static void *pvInterruptEventMutex = NULL;
-
-/* The main thread, which also acts as the pseudo interrupt handler. */
-static void *pvMainThreadAndInterruptHandler;
 
 /* Events used to manage sequencing. */
 static void *pvTickAcknowledgeEvent = NULL, *pvInterruptAcknowledgeEvent = NULL;
@@ -121,8 +119,8 @@ initialised to a non-zero value so interrupts do not become enabled during
 the initialisation phase.  As each task has its own critical nesting value 
 ulCriticalNesting will get set to zero when the first task runs.  This 
 initialisation is probably not critical in this simulated environment as the
-pseudo interrupt handlers/dispatchers do not get created until the FreeRTOS
-scheduler is started. */
+pseudo interrupt handlers do not get created until the FreeRTOS scheduler is 
+started anyway. */
 static unsigned long ulCriticalNesting = 9999UL;
 
 /* Handlers for all the simulated software interrupts.  The first two positions
@@ -142,41 +140,41 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 
 	for(;;)
 	{
-		/* The timer is reset on each iteration of this loop rather than being set
-		to function periodically - this is for the reasons stated in the comments
-		where the timer is created. */
 		vPortTrace( "prvSimulatedPeripheralTimer: Tick acked, re-Sleeping()\r\n" );
 
 		/* Wait until the timer expires and we can access the pseudo interrupt 
-		variables. */
+		variables.  *NOTE* this is not a 'real time' way of generating tick 
+		events as the next wake time should be relative to the previous wake 
+		time, not the time that Sleep() is called.  It is done this way to 
+		prevent overruns in this very non real time simulated/emulated 
+		environment. */
 		Sleep( portTICK_RATE_MS );
 
-		vPortTrace( "prvSimulatedPeripheralTimer: Timer signalled, waiting interrupt event mutex\r\n" );
+		vPortTrace( "prvSimulatedPeripheralTimer: Sleep expired, waiting interrupt event mutex\r\n" );
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 		vPortTrace( "prvSimulatedPeripheralTimer: Got interrupt event mutex\r\n" );
 		
 		/* The timer has expired, generate the simulated tick event. */
 		ulPendingInterrupts |= ( 1 << portINTERRUPT_TICK );
-		if( pvInterruptEvent != NULL )
+
+		/* The interrupt is now pending - but should only be processed if
+		interrupts are actually enabled. */
+		if( ulCriticalNesting == 0UL )
 		{
 			vPortTrace( "prvSimulatedPeripheralTimer: Setting interrupt event to signal tick\r\n" );
 			SetEvent( pvInterruptEvent );
-		}
 
-		/* Give back the mutex so the pseudo interrupt handler unblocks and can
-		access the interrupt handler variables.  This high priority task will then
-		loop back round to wait for the lower priority pseudo interrupt handler 
-		thread to acknowledge the tick. */
-		if( pvInterruptEventMutex != NULL )
-		{
+			/* Give back the mutex so the pseudo interrupt handler unblocks 
+			and can	access the interrupt handler variables.  This high priority
+			task will then loop back round after waiting for the lower priority 
+			pseudo interrupt handler thread to acknowledge the tick. */
 			vPortTrace( "prvSimulatedPeripheralTimer: Releasing interrupt event mutex so tick can be processed\r\n" );
+			SignalObjectAndWait( pvInterruptEventMutex, pvTickAcknowledgeEvent, INFINITE, FALSE );
+		}
+		else
+		{
 			ReleaseMutex( pvInterruptEventMutex );
 		}
-
-		/* Wait for the previous tick to be acknowledged before resetting the timer.
-		As mentioned above this is done to prevent timer overruns in the non real-
-		time environment.  THIS IS NOT HOW A REAL PORT SHOULD USE TIMERS! */
-		WaitForSingleObject( pvTickAcknowledgeEvent, INFINITE );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -193,11 +191,12 @@ xThreadState *pxThreadState = NULL;
 	other than holding this structure. */
 	pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
 
-		/* Create the thread itself. */
-		pxThreadState->pvThread = ( void * ) CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
-		pxThreadState->ulCriticalNesting = portNO_CRITICAL_NESTING;
-		pxThreadState->lWaitingInterruptAck = pdFALSE;
-		SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
+	/* Create the thread itself. */
+	pxThreadState->pvThread = ( void * ) CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
+	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
+	pxThreadState->ulCriticalNesting = portNO_CRITICAL_NESTING;
+	pxThreadState->lWaitingInterruptAck = pdFALSE;
+	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
 	
 	return ( portSTACK_TYPE * ) pxThreadState;
 }
@@ -209,10 +208,22 @@ void *pvHandle;
 long lSuccess = pdPASS;
 xThreadState *pxThreadState;
 
-	/* Set the priority of this thread such that it is above the priority of the
-	threads that run tasks, but below the priority of the thread that generates
-	the pseudo tick interrupts.  This priority is chosen because this is the
-	thread that actually handles the pseudo interrupts. */
+	/* Create the events and mutexes that are used to synchronise all the
+	threads. */
+	pvInterruptEventMutex = CreateMutex( NULL, FALSE, NULL );
+	pvInterruptEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+	pvTickAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+	pvInterruptAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+
+	if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) || ( pvTickAcknowledgeEvent == NULL ) || ( pvInterruptAcknowledgeEvent == NULL ) )
+	{
+		lSuccess = pdFAIL;
+	}
+
+	/* Set the priority of this thread such that it is above the priority of 
+	the threads that run tasks.  This higher priority is required to ensure
+	pseudo interrupts take priority over tasks. */
+	SetPriorityClass( GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS );
 	pvHandle = GetCurrentThread();
 	if( pvHandle == NULL )
 	{
@@ -221,48 +232,49 @@ xThreadState *pxThreadState;
 	
 	if( lSuccess == pdPASS )
 	{
-		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_BELOW_NORMAL ) == 0 )
+		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_HIGHEST ) == 0 )
 		{
 			lSuccess = pdFAIL;
 		}
+		SetThreadPriorityBoost( pvHandle, TRUE );
 	}
 
 	if( lSuccess == pdPASS )
 	{
-		/* Create the events and mutexes that are used to synchronise all the
-		threads. */
-		pvInterruptEventMutex = CreateMutex( NULL, FALSE, NULL );
-		pvInterruptEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-		pvTickAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-		pvInterruptAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-
 		/* Start the thread that simulates the timer peripheral to generate
 		tick interrupts. */
 		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, 0, NULL );
 		if( pvHandle != NULL )
 		{
-			SetThreadPriority( pvHandle, THREAD_PRIORITY_ABOVE_NORMAL );
+			SetThreadPriority( pvHandle, THREAD_PRIORITY_HIGHEST );
+			SetThreadPriorityBoost( pvHandle, TRUE );
 		}
 		
-		/* Start the highest priority task by obtaining its associated thread state
-		structure, in which is stored the thread handle. */
+		/* Start the highest priority task by obtaining its associated thread 
+		state structure, in which is stored the thread handle. */
 		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
 		vPortTrace( "Created system threads, starting task" );
 
+		/* Bump up the priority of the thread that is going to run, in the
+		hope that this will asist in getting the Windows thread scheduler to
+		behave as an embedded engineer might expect. */
+		SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_ABOVE_NORMAL );
 		ResumeThread( pxThreadState->pvThread );
+
+		/* Handle all pseudo interrupts - including yield requests and 
+		simulated ticks. */
+		prvProcessPseudoInterrupts();
 	}	
 	
-	/* Handle all pseudo interrupts - including yield requests and simulated ticks. */
-	prvProcessEvents();
-
-	/* Would not expect to return from prvProcessEvents(), so should not get here. */
+	/* Would not expect to return from prvProcessPseudoInterrupts(), so should 
+	not get here. */
 	return 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvProcessEvents( void )
+static void prvProcessPseudoInterrupts( void )
 {
 long lSwitchRequired;
 xThreadState *pxThreadState;
@@ -270,27 +282,25 @@ void *pvObjectList[ 2 ];
 unsigned long i;
 //char cTraceBuffer[ 256 ];
 
-	vPortTrace( "Entering prvProcessEvents\r\n" );
+	vPortTrace( "Entering prvProcessPseudoInterrupts\r\n" );
 
 	/* Going to block on the mutex that ensured exclusive access to the pseudo 
-	interrupt objects, and the event that signals that an interrupt is waiting
-	to be processed. */
+	interrupt objects, and the event that signals that a pseudo interrupt
+	should be processed. */
 	pvObjectList[ 0 ] = pvInterruptEventMutex;
 	pvObjectList[ 1 ] = pvInterruptEvent;
 
 	for(;;)
 	{
-		vPortTrace( "prvProcessEvents: Waiting for next interrupt event\r\n" );
+		vPortTrace( "prvProcessPseudoInterrupts: Waiting for next interrupt event\r\n" );
 		WaitForMultipleObjects( sizeof( pvObjectList ) / sizeof( void * ), pvObjectList, TRUE, INFINITE );
-		vPortTrace( "prvProcessEvents: Got interrupt event and mutex\r\n" );
-		//vPortTrace( "prvProcessEvents: Waiting for next interrupt event\r\n" );
-		//WaitForSingleObject( pvInterruptEvent, INFINITE );
-		//vPortTrace( "prvProcessEvents: Waiting interrupt event mutex to access interrupt data\r\n" );
-		//WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+		vPortTrace( "prvProcessPseudoInterrupts: Got interrupt event and mutex\r\n" );
 
+		/* Used to indicate whether the pseudo interrupt processing has
+		necessitated a context switch to another task/thread. */
 		lSwitchRequired = pdFALSE;
 
-		/* For each interrupt we are interested in processing, each of which is 
+		/* For each interrupt we are interested in processing, each of which is
 		represented by a bit in the 32bit ulPendingInterrupts variable. */
 		for( i = 0; i < portMAX_INTERRUPTS; i++ )
 		{
@@ -301,8 +311,7 @@ unsigned long i;
 				{
 					case portINTERRUPT_YIELD:
 
-						vPortTrace( "prvProcessEvents: Processing Yield\r\n" );
-						/* Yield interrupts occur no matter what the critical nesting count. */
+						vPortTrace( "prvProcessPseudoInterrupts: Processing Yield\r\n" );
 						lSwitchRequired = pdTRUE;
 
 						/* Clear the interrupt pending bit. */
@@ -311,46 +320,64 @@ unsigned long i;
 
 					case portINTERRUPT_TICK:
 					
-						/* Tick interrupts should only be processed if the critical nesting count
-						is zero.  The critical nesting count represents the interrupt mask on 
-						real target hardware. */
-						vPortTrace( "prvProcessEvents: Processing tick event\r\n" );
-						if( ulCriticalNesting == 0 )
+						/* Tick interrupts should only be processed if the 
+						critical nesting count is zero.  The critical nesting 
+						count represents the interrupt mask on real target 
+						hardware.  The thread that genereates ticks will not
+						actually ask for the tick to be processed unless the
+						critical nesting count is zero anyway, but it is 
+						possible that a tick is pending when a yield is 
+						performed (depending on if the simulation/emulation is
+						set up to process yields while within a critical 
+						section. */
+						vPortTrace( "prvProcessPseudoInterrupts: Processing tick event\r\n" );
+						if( ulCriticalNesting == 0UL )
 						{
 							/* Process the tick itself. */
-							vPortTrace( "prvProcessEvents: Incrementing tick\r\n" );
+							vPortTrace( "prvProcessPseudoInterrupts: Incrementing tick\r\n" );
 							vTaskIncrementTick();
 							#if( configUSE_PREEMPTION != 0 )
 							{
-								/* A context switch is only automatically performed from the tick
-								interrupt if the pre-emptive scheduler is being used. */
+								/* A context switch is only automatically 
+								performed from the tick	interrupt if the 
+								pre-emptive scheduler is being used. */
 								lSwitchRequired = pdTRUE;
 							}
 							#endif
 							
-							vPortTrace( "prvProcessEvents: Acking tick\r\n" );
-							SetEvent( pvTickAcknowledgeEvent );
-
 							/* Clear the interrupt pending bit. */
 							ulPendingInterrupts &= ~( 1UL << portINTERRUPT_TICK );
+
+							vPortTrace( "prvProcessPseudoInterrupts: Acking tick\r\n" );
+							SetEvent( pvTickAcknowledgeEvent );
+						}
+						else
+						{
+							/* The tick is held pending in ulCriticalNesting
+							until such time that pseudo interrupts are enabled
+							again. */
 						}
 						break;
 
 					default:
 
-						/* Is a handler installed? */
-						if( vIsrHandler[ i ] != NULL )
+						if( ulCriticalNesting == 0UL )
 						{
-							lSwitchRequired = pdTRUE;
+							/* Is a handler installed? */
+							if( vIsrHandler[ i ] != NULL )
+							{
+								lSwitchRequired = pdTRUE;
 
-							/* Run the actual handler. */
-							vIsrHandler[ i ]();
+								/* Run the actual handler. */
+								vIsrHandler[ i ]();
 
-							/* Clear the interrupt pending bit. */
-							ulPendingInterrupts &= ~( 1UL << i );
+								/* Clear the interrupt pending bit. */
+								ulPendingInterrupts &= ~( 1UL << i );
 
-							/* TODO:  Need to have some sort of handshake event here for non-tick
-							and none yield interrupts. */
+								/* TODO:  Need to have some sort of handshake 
+								event here for non-tick and none yield 
+								interrupts. */
+							}
 						}
 						break;
 				}
@@ -375,21 +402,37 @@ unsigned long i;
 			if( pvOldCurrentTCB != pxCurrentTCB )
 			{
 				/* Suspend the old thread. */
+				SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
 				SuspendThread( pxThreadState->pvThread );
+
 				//sprintf( cTraceBuffer, "Event processor: suspending %s, resuming %s\r\n", ((xTCB*)pvOldCurrentTCB)->pcTaskName, ((xTCB*)pxCurrentTCB)->pcTaskName );
 				//vPortTrace( cTraceBuffer );
 
 				/* Obtain the state of the task now selected to enter the Running state. */
 				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
 				ulCriticalNesting = pxThreadState->ulCriticalNesting;
+				SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_ABOVE_NORMAL );
 				ResumeThread( pxThreadState->pvThread );
 
 				if( pxThreadState->lWaitingInterruptAck == pdTRUE )
 				{
 					pxThreadState->lWaitingInterruptAck = pdFALSE;
-					vPortTrace( "prvProcessEvents: Acking interrupt\r\n" );
+					vPortTrace( "prvProcessPseudoInterrupts: Acking interrupt\r\n" );
 					SetEvent( pvInterruptAcknowledgeEvent );
 				}
+			}
+		}
+		else
+		{
+			/* On exiting a critical section a task may have blocked on the
+			interrupt event when only a tick needed processing, in which case
+			it will not have been released from waiting on the event yet. */
+			pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
+			if( pxThreadState->lWaitingInterruptAck == pdTRUE )
+			{
+				pxThreadState->lWaitingInterruptAck = pdFALSE;
+				vPortTrace( "prvProcessPseudoInterrupts: Acking interrupt even though a yield has not been performed.\r\n" );
+				SetEvent( pvInterruptAcknowledgeEvent );
 			}
 		}
 
@@ -410,11 +453,11 @@ xThreadState *pxThreadState;
 	if( ( ulInterruptNumber < portMAX_INTERRUPTS ) && ( pvInterruptEventMutex != NULL ) )
 	{
 		/* Yield interrupts are processed even when critical nesting is non-zero. */
-		if( ( ulCriticalNesting == 0 ) || ( ulInterruptNumber == portINTERRUPT_YIELD ) )
-		{
-			WaitForSingleObject( pvInterruptEventMutex, INFINITE );
-			ulPendingInterrupts |= ( 1 << ulInterruptNumber );
+		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+		ulPendingInterrupts |= ( 1 << ulInterruptNumber );
 
+		if( ulCriticalNesting == 0 ) //|| ( ulInterruptNumber == portINTERRUPT_YIELD ) )
+		{
 			/* The event handler needs to know to signal the interrupt acknowledge event
 			the next time this task runs. */
 			pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
@@ -431,12 +474,17 @@ xThreadState *pxThreadState;
 				__asm { NOP };
 			}
 
+			SignalObjectAndWait( pvInterruptEventMutex, pvInterruptAcknowledgeEvent, INFINITE, FALSE );
 			vPortTrace( "vPortGeneratePseudoInterrupt: About to release interrupt event mutex\r\n" );
-			ReleaseMutex( pvInterruptEventMutex );
+//			ReleaseMutex( pvInterruptEventMutex );
 			vPortTrace( "vPortGeneratePseudoInterrupt: Interrupt event mutex released, going to wait for interrupt ack\r\n" );
 
-			WaitForSingleObject( pvInterruptAcknowledgeEvent, INFINITE );
+//			WaitForSingleObject( pvInterruptAcknowledgeEvent, INFINITE );
 			vPortTrace( "vPortGeneratePseudoInterrupt: Interrupt acknowledged, leaving vPortGeneratePseudoInterrupt()\r\n" );
+		}
+		else
+		{
+			ReleaseMutex( pvInterruptEventMutex );
 		}
 	}
 }
@@ -462,7 +510,17 @@ void vPortSetInterruptHandler( unsigned long ulInterruptNumber, void (*pvHandler
 
 void vPortEnterCritical( void )
 {
-	ulCriticalNesting++;
+	if( xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED )
+	{
+		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+//		SuspendThread( pvSimulatedTimerThread );
+		ulCriticalNesting++;
+		ReleaseMutex( pvInterruptEventMutex );
+	}
+	else
+	{
+		ulCriticalNesting++;
+	}	
 }
 /*-----------------------------------------------------------*/
 
@@ -472,37 +530,59 @@ xThreadState *pxThreadState;
 
 	if( ulCriticalNesting > portNO_CRITICAL_NESTING )
 	{
-		ulCriticalNesting--;
-
-		if( ulCriticalNesting == 0 )
+		if( ulCriticalNesting == ( portNO_CRITICAL_NESTING + 1 ) )
 		{
+			/* Wait for the interrupt event mutex prior to manipulating or 
+			testing the pseudo interrupt control variables. */
+			WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+			vPortTrace( "vPortExitCritical:  Got interrupt event mutex\r\n" );
+
+//			ResumeThread( pvSimulatedTimerThread );
+
+			/* Now it is safe to decrement the critical nesting count as no
+			tick events will be processed until the interrupt event mutex is
+			given back. */
+			ulCriticalNesting--;
+
 			/* Were any interrupts set to pending while interrupts were 
 			(pseudo) disabled? */
 			if( ulPendingInterrupts != 0UL )
 			{
-				WaitForSingleObject( pvInterruptEventMutex, INFINITE );
-				vPortTrace( "vPortExitCritical:  Setting interrupt event\r\n" );
 				SetEvent( pvInterruptEvent );
 
-			/* The interrupt ack event should not be signaled yet - if it is then 
-			there is an error in the logical simulation. */
-			if( WaitForSingleObject( pvInterruptAcknowledgeEvent, 0 ) != WAIT_TIMEOUT )
+				/* The interrupt ack event should not be signaled yet - if it 
+				is then there is an error in the logical simulation. */
+				if( WaitForSingleObject( pvInterruptAcknowledgeEvent, 0 ) != WAIT_TIMEOUT )
+				{
+					/* This line is for a break point only. */
+					__asm { NOP };
+				}
+
+				/* The event handler needs to know to signal the interrupt 
+				acknowledge event the next time this task runs. */
+				pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+				pxThreadState->lWaitingInterruptAck = pdTRUE;
+
+				SignalObjectAndWait( pvInterruptEventMutex, pvInterruptAcknowledgeEvent, INFINITE, FALSE );
+				/* Give back the interrupt event mutex so the event can be processed. */
+//				ReleaseMutex( pvInterruptEventMutex );
+
+//				vPortTrace( "vPortExitCritical:  Waiting interrupt ack\r\n" );
+//				WaitForSingleObject( pvInterruptAcknowledgeEvent, INFINITE );
+				vPortTrace( "vPortExitCritical: Interrupt acknowledged, leaving critical section code\r\n" );
+			}
+			else
 			{
-				/* This line is for a break point only. */
-				__asm { NOP };
+				/* Can't leave here without giving back the interrupt event
+				mutex. */
+				ReleaseMutex( pvInterruptEventMutex );
 			}
-
-			/* The event handler needs to know to signal the interrupt acknowledge 
-			event the next time this task runs. */
-			pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
-			pxThreadState->lWaitingInterruptAck = pdTRUE;
-
-			ReleaseMutex( pvInterruptEventMutex );
-
-			vPortTrace( "vPortExitCritical:  Waiting interrupt ack\r\n" );
-			WaitForSingleObject( pvInterruptAcknowledgeEvent, INFINITE );
-			vPortTrace( "vPortExitCritical: Interrupt acknowledged, leaving critical section code\r\n" );
-			}
+		}
+		else
+		{
+			/* Tick interrupts will still not be processed as the critical
+			nesting depth will not be zero. */
+			ulCriticalNesting--;
 		}
 	}
 }

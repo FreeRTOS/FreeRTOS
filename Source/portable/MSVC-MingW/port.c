@@ -56,10 +56,6 @@
 #include "task.h"
 #include <stdio.h>
 
-//FILE *pfTraceFile = NULL;
-//#define vPortTrace( x ) if( pfTraceFile == NULL ) pfTraceFile = fopen( "c:/temp/trace.txt", "w" ); if( pfTraceFile != NULL ) fprintf( pfTraceFile, x )
-#define vPortTrace( x ) ( void ) x
-
 #define portMAX_INTERRUPTS				( ( unsigned long ) sizeof( unsigned long ) * 8UL ) /* The number of bits in an unsigned long. */
 #define portNO_CRITICAL_NESTING 		( ( unsigned long ) 0 )
 
@@ -137,8 +133,6 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 
 	for(;;)
 	{
-		vPortTrace( "prvSimulatedPeripheralTimer: Tick acked, re-Sleeping()\r\n" );
-
 		/* Wait until the timer expires and we can access the pseudo interrupt 
 		variables.  *NOTE* this is not a 'real time' way of generating tick 
 		events as the next wake time should be relative to the previous wake 
@@ -147,9 +141,7 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 		environment. */
 		Sleep( portTICK_RATE_MS );
 
-		vPortTrace( "prvSimulatedPeripheralTimer: Sleep expired, waiting interrupt event mutex\r\n" );
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
-		vPortTrace( "prvSimulatedPeripheralTimer: Got interrupt event mutex\r\n" );
 
 		/* A thread will hold the interrupt event mutex while in a critical
 		section, so ulCriticalSection should be zero for this tick event to be
@@ -165,14 +157,12 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 
 		/* The interrupt is now pending - notify the simulated interrupt 
 		handler thread. */
-		vPortTrace( "prvSimulatedPeripheralTimer: Setting interrupt event to signal tick\r\n" );
 		SetEvent( pvInterruptEvent );
 
 		/* Give back the mutex so the pseudo interrupt handler unblocks 
 		and can	access the interrupt handler variables.  This high priority
 		task will then loop back round after waiting for the lower priority 
 		pseudo interrupt handler thread to acknowledge the tick. */
-		vPortTrace( "prvSimulatedPeripheralTimer: Releasing interrupt event mutex so tick can be processed\r\n" );
 		SignalObjectAndWait( pvInterruptEventMutex, pvTickAcknowledgeEvent, INFINITE, FALSE );
 	}
 }
@@ -253,8 +243,6 @@ xThreadState *pxThreadState;
 		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
-		vPortTrace( "Created system threads, starting task" );
-
 		/* Bump up the priority of the thread that is going to run, in the
 		hope that this will asist in getting the Windows thread scheduler to
 		behave as an embedded engineer might expect. */
@@ -278,9 +266,6 @@ long lSwitchRequired;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
 unsigned long i;
-//char cTraceBuffer[ 256 ];
-
-	vPortTrace( "Entering prvProcessPseudoInterrupts\r\n" );
 
 	/* Going to block on the mutex that ensured exclusive access to the pseudo 
 	interrupt objects, and the event that signals that a pseudo interrupt
@@ -290,9 +275,7 @@ unsigned long i;
 
 	for(;;)
 	{
-		vPortTrace( "prvProcessPseudoInterrupts: Waiting for next interrupt event\r\n" );
 		WaitForMultipleObjects( sizeof( pvObjectList ) / sizeof( void * ), pvObjectList, TRUE, INFINITE );
-		vPortTrace( "prvProcessPseudoInterrupts: Got interrupt event and mutex\r\n" );
 
 		/* A thread will hold the interrupt event mutex while in a critical
 		section, so this pseudo interrupt handler should only run when
@@ -318,7 +301,6 @@ unsigned long i;
 				{
 					case portINTERRUPT_YIELD:
 
-						vPortTrace( "prvProcessPseudoInterrupts: Processing Yield\r\n" );
 						lSwitchRequired = pdTRUE;
 
 						/* Clear the interrupt pending bit. */
@@ -327,19 +309,7 @@ unsigned long i;
 
 					case portINTERRUPT_TICK:
 					
-						/* Tick interrupts should only be processed if the 
-						critical nesting count is zero.  The critical nesting 
-						count represents the interrupt mask on real target 
-						hardware.  The thread that genereates ticks will not
-						actually ask for the tick to be processed unless the
-						critical nesting count is zero anyway, but it is 
-						possible that a tick is pending when a yield is 
-						performed (depending on if the simulation/emulation is
-						set up to process yields while within a critical 
-						section. */
-						vPortTrace( "prvProcessPseudoInterrupts: Processing tick event\r\n" );
 						/* Process the tick itself. */
-						vPortTrace( "prvProcessPseudoInterrupts: Incrementing tick\r\n" );
 						vTaskIncrementTick();
 						#if( configUSE_PREEMPTION != 0 )
 						{
@@ -352,8 +322,6 @@ unsigned long i;
 							
 						/* Clear the interrupt pending bit. */
 						ulPendingInterrupts &= ~( 1UL << portINTERRUPT_TICK );
-
-						vPortTrace( "prvProcessPseudoInterrupts: Acking tick\r\n" );
 						SetEvent( pvTickAcknowledgeEvent );
 						break;
 
@@ -387,7 +355,7 @@ unsigned long i;
 
 			/* Select the next task to run. */
 			vTaskSwitchContext();
-			
+
 			/* If the task selected to enter the running state is not the task
 			that is already in the running state. */
 			if( pvOldCurrentTCB != pxCurrentTCB )
@@ -411,9 +379,6 @@ unsigned long i;
 				
 
 
-				//sprintf( cTraceBuffer, "Event processor: suspending %s, resuming %s\r\n", ((xTCB*)pvOldCurrentTCB)->pcTaskName, ((xTCB*)pxCurrentTCB)->pcTaskName );
-				//vPortTrace( cTraceBuffer );
-
 				/* Obtain the state of the task now selected to enter the 
 				Running state. */
 				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
@@ -434,7 +399,6 @@ unsigned long i;
 		if( pxThreadState->lWaitingInterruptAck == pdTRUE )
 		{
 			pxThreadState->lWaitingInterruptAck = pdFALSE;
-			vPortTrace( "prvProcessPseudoInterrupts: Acking interrupt even though a yield has not been performed.\r\n" );
 			SetEvent( pvInterruptAcknowledgeEvent );
 		}
 
@@ -468,7 +432,6 @@ xThreadState *pxThreadState;
 			pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 			pxThreadState->lWaitingInterruptAck = pdTRUE;
 
-			vPortTrace( "vPortGeneratePseudoInterrupt: Got interrupt mutex, about to signal interrupt event\r\n" );
 			SetEvent( pvInterruptEvent );
 
 			/* The interrupt ack event should not be signaled yet - if it is then there
@@ -480,7 +443,6 @@ xThreadState *pxThreadState;
 			}
 
 			SignalObjectAndWait( pvInterruptEventMutex, pvInterruptAcknowledgeEvent, INFINITE, FALSE );
-			vPortTrace( "vPortGeneratePseudoInterrupt: Interrupt event mutex released, going to wait for interrupt ack\r\n" );
 		}
 		else
 		{
@@ -555,7 +517,6 @@ long lMutexNeedsReleasing;
 				on function exit. */
 				lMutexNeedsReleasing = pdFALSE;
 				SignalObjectAndWait( pvInterruptEventMutex, pvInterruptAcknowledgeEvent, INFINITE, FALSE );
-				vPortTrace( "vPortExitCritical: Interrupt acknowledged, leaving critical section code\r\n" );
 			}
 		}
 		else
@@ -571,3 +532,4 @@ long lMutexNeedsReleasing;
 		ReleaseMutex( pvInterruptEventMutex );
 	}
 }
+

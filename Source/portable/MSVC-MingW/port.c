@@ -88,7 +88,12 @@ typedef struct
 	long lWaitingInterruptAck;			
 
 	/* Handle of the thread that executes the task. */
-	void * pvThread;					
+	void *pvThread;
+
+	/* Used to check that the thread that is supposed to be running in indeed
+	the thread that is running. */
+	unsigned long ulThreadId;
+
 } xThreadState;
 
 /* Pseudo interrupts waiting to be processed.  This is a bit mask where each
@@ -181,7 +186,7 @@ xThreadState *pxThreadState = NULL;
 	pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
 
 	/* Create the thread itself. */
-	pxThreadState->pvThread = ( void * ) CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
+	pxThreadState->pvThread = CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, &( pxThreadState->ulThreadId ) );
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 	pxThreadState->lWaitingInterruptAck = pdFALSE;
 	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
@@ -536,15 +541,20 @@ long lMutexNeedsReleasing;
 
 void vPortCheckCorrectThreadIsRunning( void )
 {
-xThreadState *pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+xThreadState *pxThreadState;
 
 	/* When switching threads, Windows does not always seem to run the selected
 	thread immediately.  This function can be called to check if the thread
 	that is currently running is the thread that is responsible for executing
 	the task selected by the real time scheduler. */
-	if( GetCurrentThread() != pxThreadState->pvThread )
+	if( xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED )
 	{
-		SwitchToThread();
+		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+
+		if( GetCurrentThreadId() != pxThreadState->ulThreadId )
+		{
+			SwitchToThread();
+		}
 	}
 }
 

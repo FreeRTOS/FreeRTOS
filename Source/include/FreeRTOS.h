@@ -288,6 +288,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceTAKE_MUTEX_RECURSIVE( pxMutex )
 #endif
 
+#ifndef traceTAKE_MUTEX_RECURSIVE_FAILED
+	#define traceTAKE_MUTEX_RECURSIVE_FAILED( pxMutex )
+#endif
+
 #ifndef traceCREATE_COUNTING_SEMAPHORE
 	#define traceCREATE_COUNTING_SEMAPHORE()
 #endif

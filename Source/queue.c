@@ -415,6 +415,10 @@ size_t xQueueSizeInBytes;
 			{
 				( pxMutex->uxRecursiveCallCount )++;
 			}
+			else
+			{
+				traceTAKE_MUTEX_RECURSIVE_FAILED( pxMutex );
+			}
 		}
 
 		return xReturn;

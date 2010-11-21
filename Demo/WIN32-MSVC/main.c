@@ -116,13 +116,6 @@
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
-/* Stack sizes. */
-#define mainSTDOUT_TASK_STACK_SIZE		( configMINIMAL_STACK_SIZE * 4 )
-
-/* File scope variables. */
-static volatile unsigned long ul1 = 0, ul2 = 0;
-static xQueueHandle xStdoutQueue = NULL;
-
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
 

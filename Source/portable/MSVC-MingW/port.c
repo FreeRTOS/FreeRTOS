@@ -546,9 +546,16 @@ xThreadState *pxThreadState;
 	/* When switching threads, Windows does not always seem to run the selected
 	thread immediately.  This function can be called to check if the thread
 	that is currently running is the thread that is responsible for executing
-	the task selected by the real time scheduler. */
+	the task selected by the real time scheduler.  The demo project for the Win32
+	port calls this function from the trace macros which are seeded throughout 
+	the real time kernel code at points where something significant occurs.
+	Adding this functionality allows all the standard tests to pass, but users
+	should still be aware that extra calls to this function could be required
+	if their application requires absolute fixes and predictable sequencing (as
+	the port tests do).  This is still a simulation - not the real thing! */
 	if( xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED )
 	{
+		/* Obtain the real time task to Win32 mapping state information. */
 		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 
 		if( GetCurrentThreadId() != pxThreadState->ulThreadId )

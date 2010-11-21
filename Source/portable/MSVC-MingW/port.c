@@ -532,4 +532,19 @@ long lMutexNeedsReleasing;
 		ReleaseMutex( pvInterruptEventMutex );
 	}
 }
+/*-----------------------------------------------------------*/
+
+void vPortCheckCorrectThreadIsRunning( void )
+{
+xThreadState *pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+
+	/* When switching threads, Windows does not always seem to run the selected
+	thread immediately.  This function can be called to check if the thread
+	that is currently running is the thread that is responsible for executing
+	the task selected by the real time scheduler. */
+	if( GetCurrentThread() != pxThreadState->pvThread )
+	{
+		SwitchToThread();
+	}
+}
 

@@ -82,17 +82,8 @@ the only thing it will ever hold.  The structure indirectly maps the task handle
 to a thread handle. */
 typedef struct
 {
-	/* Set to true if the task run by the thread yielded control to the pseudo
-	interrupt handler manually - either by yielding or when exiting a critical
-	section while pseudo interrupts were pending. */
-	long lWaitingInterruptAck;			
-
 	/* Handle of the thread that executes the task. */
 	void *pvThread;
-
-	/* Used to check that the thread that is supposed to be running in indeed
-	the thread that is running. */
-	unsigned long ulThreadId;
 
 } xThreadState;
 
@@ -110,7 +101,7 @@ by multiple threads. */
 static void *pvInterruptEventMutex = NULL;
 
 /* Events used to manage sequencing. */
-static void *pvTickAcknowledgeEvent = NULL, *pvInterruptAcknowledgeEvent = NULL;
+static void *pvTickAcknowledgeEvent = NULL;
 
 /* The critical nesting count for the currently executing task.  This is 
 initialised to a non-zero value so interrupts do not become enabled during 
@@ -148,15 +139,6 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
-		/* A thread will hold the interrupt event mutex while in a critical
-		section, so ulCriticalSection should be zero for this tick event to be
-		possible. */
-		if( ulCriticalNesting != 0 )
-		{
-			/* For a break point only. */
-			__asm{ NOP };
-		}
-
 		/* The timer has expired, generate the simulated tick event. */
 		ulPendingInterrupts |= ( 1 << portINTERRUPT_TICK );
 
@@ -170,6 +152,9 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 		pseudo interrupt handler thread to acknowledge the tick. */
 		SignalObjectAndWait( pvInterruptEventMutex, pvTickAcknowledgeEvent, INFINITE, FALSE );
 	}
+
+	/* Should never reach here. */
+	return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -186,9 +171,9 @@ xThreadState *pxThreadState = NULL;
 	pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
 
 	/* Create the thread itself. */
-	pxThreadState->pvThread = CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, &( pxThreadState->ulThreadId ) );
+	pxThreadState->pvThread = CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
+	SetThreadAffinityMask( pxThreadState->pvThread, 0x01 );
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
-	pxThreadState->lWaitingInterruptAck = pdFALSE;
 	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
 	
 	return ( portSTACK_TYPE * ) pxThreadState;
@@ -206,9 +191,8 @@ xThreadState *pxThreadState;
 	pvInterruptEventMutex = CreateMutex( NULL, FALSE, NULL );
 	pvInterruptEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 	pvTickAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-	pvInterruptAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 
-	if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) || ( pvTickAcknowledgeEvent == NULL ) || ( pvInterruptAcknowledgeEvent == NULL ) )
+	if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) || ( pvTickAcknowledgeEvent == NULL ) )
 	{
 		lSuccess = pdFAIL;
 	}
@@ -230,6 +214,7 @@ xThreadState *pxThreadState;
 			lSuccess = pdFAIL;
 		}
 		SetThreadPriorityBoost( pvHandle, TRUE );
+		SetThreadAffinityMask( pvHandle, 0x01 );
 	}
 
 	if( lSuccess == pdPASS )
@@ -241,6 +226,7 @@ xThreadState *pxThreadState;
 		{
 			SetThreadPriority( pvHandle, THREAD_PRIORITY_HIGHEST );
 			SetThreadPriorityBoost( pvHandle, TRUE );
+			SetThreadAffinityMask( pvHandle, 0x01 );
 		}
 		
 		/* Start the highest priority task by obtaining its associated thread 
@@ -281,15 +267,6 @@ unsigned long i;
 	for(;;)
 	{
 		WaitForMultipleObjects( sizeof( pvObjectList ) / sizeof( void * ), pvObjectList, TRUE, INFINITE );
-
-		/* A thread will hold the interrupt event mutex while in a critical
-		section, so this pseudo interrupt handler should only run when
-		critical nesting is zero. */
-		if( ulCriticalNesting != 0 )
-		{
-			/* For a break point only. */
-			__asm{ NOP };
-		}
 
 		/* Used to indicate whether the pseudo interrupt processing has
 		necessitated a context switch to another task/thread. */
@@ -397,16 +374,6 @@ unsigned long i;
 			}
 		}
 
-		/* On exiting a critical section a task may have blocked on the
-		interrupt event when only a tick needed processing, in which case
-		it will not have been released from waiting on the event yet. */
-		pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
-		if( pxThreadState->lWaitingInterruptAck == pdTRUE )
-		{
-			pxThreadState->lWaitingInterruptAck = pdFALSE;
-			SetEvent( pvInterruptAcknowledgeEvent );
-		}
-
 		ReleaseMutex( pvInterruptEventMutex );
 	}
 }
@@ -435,24 +402,10 @@ xThreadState *pxThreadState;
 			/* The event handler needs to know to signal the interrupt acknowledge event
 			the next time this task runs. */
 			pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
-			pxThreadState->lWaitingInterruptAck = pdTRUE;
-
-			SetEvent( pvInterruptEvent );
-
-			/* The interrupt ack event should not be signaled yet - if it is then there
-			is an error in the logical simulation. */
-			if( WaitForSingleObject( pvInterruptAcknowledgeEvent, 0 ) != WAIT_TIMEOUT )
-			{
-				/* This line is for a break point only. */
-				__asm { NOP };
-			}
-
-			SignalObjectAndWait( pvInterruptEventMutex, pvInterruptAcknowledgeEvent, INFINITE, FALSE );
+			SetEvent( pvInterruptEvent );			
 		}
-		else
-		{
-			ReleaseMutex( pvInterruptEventMutex );
-		}
+
+		ReleaseMutex( pvInterruptEventMutex );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -516,12 +469,11 @@ long lMutexNeedsReleasing;
 				/* The event handler needs to know to signal the interrupt 
 				acknowledge event the next time this task runs. */
 				pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
-				pxThreadState->lWaitingInterruptAck = pdTRUE;
 
 				/* Mutex will be released now, so does not require releasing
 				on function exit. */
 				lMutexNeedsReleasing = pdFALSE;
-				SignalObjectAndWait( pvInterruptEventMutex, pvInterruptAcknowledgeEvent, INFINITE, FALSE );
+				ReleaseMutex( pvInterruptEventMutex );
 			}
 		}
 		else
@@ -538,30 +490,4 @@ long lMutexNeedsReleasing;
 	}
 }
 /*-----------------------------------------------------------*/
-
-void vPortCheckCorrectThreadIsRunning( void )
-{
-xThreadState *pxThreadState;
-
-	/* When switching threads, Windows does not always seem to run the selected
-	thread immediately.  This function can be called to check if the thread
-	that is currently running is the thread that is responsible for executing
-	the task selected by the real time scheduler.  The demo project for the Win32
-	port calls this function from the trace macros which are seeded throughout 
-	the real time kernel code at points where something significant occurs.
-	Adding this functionality allows all the standard tests to pass, but users
-	should still be aware that extra calls to this function could be required
-	if their application requires absolute fixes and predictable sequencing (as
-	the port tests do).  This is still a simulation - not the real thing! */
-	if( xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED )
-	{
-		/* Obtain the real time task to Win32 mapping state information. */
-		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
-
-		if( GetCurrentThreadId() != pxThreadState->ulThreadId )
-		{
-			SwitchToThread();
-		}
-	}
-}
 

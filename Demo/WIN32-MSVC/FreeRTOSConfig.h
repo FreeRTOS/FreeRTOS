@@ -106,47 +106,4 @@ to exclude the API function. */
 #define INCLUDE_xTaskGetSchedulerState		1
 
 
-/* When switching threads, Windows does not always seem to run the selected
-thread immediately.  This function can be called to check if the thread
-that is currently running is the thread that is responsible for executing
-the task selected by the real time scheduler.  If not then a yield is performed
-which will try and force the running thread to block on a semaphore, and hence
-allow the thread that should be running to take over.  The trace macros are a
-convenient way of lacing the code with these checking calls. */
-void vPortCheckCorrectThreadIsRunning( void );
-
-#define	traceBLOCKING_ON_QUEUE_RECEIVE(pxQueue)			vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceBLOCKING_ON_QUEUE_SEND(pxQueue)			vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceGIVE_MUTEX_RECURSIVE(pxMutex)				vPortCheckCorrectThreadIsRunning();(void)pxMutex
-#define	traceQUEUE_CREATE(pxNewQueue)					vPortCheckCorrectThreadIsRunning();(void)pxNewQueue
-#define	traceQUEUE_CREATE_FAILED()						vPortCheckCorrectThreadIsRunning()
-#define	traceCREATE_MUTEX(pxNewMutex)					vPortCheckCorrectThreadIsRunning();(void)pxNewMutex
-#define	traceCREATE_MUTEX_FAILED()						vPortCheckCorrectThreadIsRunning()
-#define	traceGIVE_MUTEX_RECURSIVE(pxMutex)				vPortCheckCorrectThreadIsRunning();(void)pxMutex
-#define	traceGIVE_MUTEX_RECURSIVE_FAILED(pxMutex)		vPortCheckCorrectThreadIsRunning();(void)pxMutex
-#define	traceTAKE_MUTEX_RECURSIVE(pxMutex)				vPortCheckCorrectThreadIsRunning();(void)pxMutex
-#define traceTAKE_MUTEX_RECURSIVE_FAILED(pxMutex)		vPortCheckCorrectThreadIsRunning();(void)pxMutex
-#define	traceCREATE_COUNTING_SEMAPHORE()				vPortCheckCorrectThreadIsRunning()
-#define	traceCREATE_COUNTING_SEMAPHORE_FAILED()			vPortCheckCorrectThreadIsRunning()
-#define	traceQUEUE_SEND(pxQueue)						vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_SEND_FAILED(pxQueue)					vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_RECEIVE(pxQueue)						vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_RECEIVE_FAILED(pxQueue)				vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_PEEK(pxQueue)						vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_SEND_FROM_ISR(pxQueue)				vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_SEND_FROM_ISR_FAILED(pxQueue)		vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_RECEIVE_FROM_ISR(pxQueue)			vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_RECEIVE_FROM_ISR_FAILED(pxQueue)		vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceQUEUE_DELETE(pxQueue)						vPortCheckCorrectThreadIsRunning();(void)pxQueue
-#define	traceTASK_CREATE(pxTask)						vPortCheckCorrectThreadIsRunning();(void)pxTask
-#define	traceTASK_CREATE_FAILED(pxNewTCB)				vPortCheckCorrectThreadIsRunning();(void)pxNewTCB
-#define	traceTASK_DELETE(pxTask)						vPortCheckCorrectThreadIsRunning();(void)pxTask
-#define	traceTASK_DELAY_UNTIL()							vPortCheckCorrectThreadIsRunning()
-#define	traceTASK_DELAY()								vPortCheckCorrectThreadIsRunning()
-#define	traceTASK_PRIORITY_SET(pxTask,uxNewPriority)	vPortCheckCorrectThreadIsRunning();(void)pxTask;(void)uxNewPriority
-#define	traceTASK_SUSPEND(pxTask)						vPortCheckCorrectThreadIsRunning();(void)pxTask
-#define	traceTASK_RESUME(pxTask)						vPortCheckCorrectThreadIsRunning();(void)pxTask
-#define	traceTASK_RESUME_FROM_ISR(pxTask)				vPortCheckCorrectThreadIsRunning();(void)pxTask
-
-
 #endif /* FREERTOS_CONFIG_H */

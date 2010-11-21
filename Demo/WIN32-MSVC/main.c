@@ -93,9 +93,7 @@
 #include "queue.h"
 
 /* Standard demo includes. */
-#include "partest.h"
 #include "BlockQ.h"
-#include "death.h"
 #include "integer.h"
 #include "semtest.h"
 #include "PollQ.h"

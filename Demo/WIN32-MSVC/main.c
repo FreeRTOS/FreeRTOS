@@ -51,6 +51,39 @@
     licensing and training services.
 */
 
+/*
+ *******************************************************************************
+ * -NOTE- The Win32 port is a simulation (or is that emulation?) only!  Do not
+ * expect to get real time behaviour from the Win32 port or this demo
+ * application.  It is provided as a convenient development and demonstration
+ * test bed only.  Also, at the time of writing, a method of deleting theads 
+ * has not been implemented, although doing so would be trivial so this
+ * functionality might be added in at a later date.  At present, calling 
+ * vTaskDelete() will delete the real time task from FreeRTOS but not the Win32
+ * thread in which the task was executing.  DO NOT CALL vTaskDelete() when using 
+ * the Win32 port!  This was tested using Windows XP on a dual core laptop.
+ *
+ * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
+ *******************************************************************************
+ *
+ * main() creates all the demo application tasks, then starts the scheduler.  
+ * The web documentation provides more details of the standard demo application 
+ * tasks, which provide no particular functionality but do provide a good 
+ * example of how to use the FreeRTOS API.
+ *
+ * In addition to the standard demo tasks, the following tasks and tests are
+ * defined and/or created within this file:
+ *
+ * "Check" task - This only executes every five seconds but has a high priority
+ * to ensure it gets processor time.  Its main function is to check that all the
+ * standard demo tasks are still operational.  While no errors have been
+ * discovered the check task will print out "OK" and the current simulated tick
+ * time.  If an error is discovered in the execution of a task then the check
+ * task will print out an appropriate error message.
+ *
+ */
+
+
 /* Standard includes. */
 #include <stdio.h>
 
@@ -64,7 +97,6 @@
 #include "BlockQ.h"
 #include "death.h"
 #include "integer.h"
-//#include "blocktim.h"
 #include "semtest.h"
 #include "PollQ.h"
 #include "GenQTest.h"
@@ -94,14 +126,6 @@ static xQueueHandle xStdoutQueue = NULL;
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
 
-/* Create a queue on which console output strings can be posted, then start the
-task that processes the queue - printf()'ing each string that is received. */
-static void prvStartStdoutTask( void );
-
-/* Post a message for output by the stdout task.  Basically queues the message
-pointed to by pcTextToPrint for output to stdout in a thread safe manner. */
-void vMainConsolePrint( const char *pcTextToPrint, portTickType xTicksToWait );
-
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -111,14 +135,13 @@ int main( void )
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-//	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
-	vStartRecursiveMutexTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
+	vStartRecursiveMutexTasks();
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -134,7 +157,6 @@ static void prvCheckTask( void *pvParameters )
 portTickType xNextWakeTime;
 const portTickType xCycleFrequency = 5000 / portTICK_RATE_MS;
 char *pcStatusMessage = "OK";
-long lCycleCount = 0;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -164,10 +186,6 @@ long lCycleCount = 0;
 		{
 			pcStatusMessage = "Error: BlockQueue";
 		}
-//		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-//		{
-//			pcStatusMessage = "Error: BlockTime";
-//		}
 	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	    {
 			pcStatusMessage = "Error: SemTest";
@@ -176,13 +194,13 @@ long lCycleCount = 0;
 	    {
 			pcStatusMessage = "Error: PollQueue";
 	    }
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: RecMutex";
-	    }
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Flop";
+		}
+	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	    {
+			pcStatusMessage = "Error: RecMutex";
 		}
 
 		/* This is the only task that uses stdout so its ok to call printf() 

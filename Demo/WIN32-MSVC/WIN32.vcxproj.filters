@@ -29,6 +29,9 @@
     <Filter Include="FreeRTOS Source\Source\Portable">
       <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Demo App Source\Common Demo Tasks\ModifiedForLowTickRate">
+      <UniqueIdentifier>{143cf5a3-f134-4439-9f71-a201ae23b44b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -64,9 +67,6 @@
     <ClCompile Include="..\Common\Minimal\QPeek.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Minimal\recmutex.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Minimal\semtest.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
@@ -75,6 +75,9 @@
     </ClCompile>
     <ClCompile Include="..\Common\Minimal\blocktim.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c">
+      <Filter>Demo App Source\Common Demo Tasks\ModifiedForLowTickRate</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

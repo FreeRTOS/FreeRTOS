@@ -96,7 +96,6 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "flop.h"
-#include "death.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
@@ -129,11 +128,6 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartRecursiveMutexTasks();
-
-	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -189,10 +183,6 @@ char *pcStatusMessage = "OK";
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Flop";
-		}
-		else if( xIsCreateTaskStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Create";
 		}
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {

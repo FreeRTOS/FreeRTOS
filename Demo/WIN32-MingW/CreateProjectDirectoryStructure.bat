@@ -43,7 +43,6 @@ IF EXIST FreeRTOS Goto END
 	copy ..\Common\include\QPeek.h DemoTasks\include
 	copy ..\Common\include\flop.h DemoTasks\include
 	copy ..\Common\include\recmutex.h DemoTasks\include
-	copy ..\Common\include\death.h DemoTasks\include
 	copy ..\Common\Minimal\BlockQ.c DemoTasks
 	copy ..\Common\Minimal\integer.c DemoTasks
 	copy ..\Common\Minimal\semtest.c DemoTasks
@@ -51,6 +50,5 @@ IF EXIST FreeRTOS Goto END
 	copy ..\Common\Minimal\GenQTest.c DemoTasks
 	copy ..\Common\Minimal\QPeek.c DemoTasks
 	copy ..\Common\Minimal\flop.c DemoTasks
-	copy ..\Common\Minimal\death.c DemoTasks
 	
 : END

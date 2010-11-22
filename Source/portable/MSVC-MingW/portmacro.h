@@ -55,7 +55,6 @@
 #define PORTMACRO_H
 
 #include <Windows.h>
-//#include <tchar.h>
 
 /******************************************************************************
 	Defines
@@ -83,6 +82,9 @@
 #define portBYTE_ALIGNMENT			4
 
 #define portYIELD()					vPortGeneratePseudoInterrupt( portINTERRUPT_YIELD )
+
+void vPortDeleteThread( void *pvThreadToDelete );
+#define traceTASK_DELETE( pxTCB )	vPortDeleteThread( pxTCB )
 #define portDISABLE_INTERRUPTS()
 #define portENABLE_INTERRUPTS()
 
@@ -100,6 +102,7 @@ void vPortExitCritical( void );
 
 #define portINTERRUPT_YIELD				( 0UL )
 #define portINTERRUPT_TICK				( 1UL )
+#define portINTERRUPT_DELETE_THREAD		( 2UL )
 
 /* 
  * Raise a simulated interrupt represented by the bit mask in ulInterruptMask.

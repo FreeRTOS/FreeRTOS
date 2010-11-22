@@ -153,8 +153,11 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 		SignalObjectAndWait( pvInterruptEventMutex, pvTickAcknowledgeEvent, INFINITE, FALSE );
 	}
 
-	/* Should never reach here. */
-	return 0;
+	#ifdef __GNUC__
+		/* Should never reach here - MingW complains if you leave this line out,
+		MSVC complains if you put it in. */
+		return 0;
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -200,7 +203,6 @@ xThreadState *pxThreadState;
 	/* Set the priority of this thread such that it is above the priority of 
 	the threads that run tasks.  This higher priority is required to ensure
 	pseudo interrupts take priority over tasks. */
-	SetPriorityClass( GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS );
 	pvHandle = GetCurrentThread();
 	if( pvHandle == NULL )
 	{
@@ -209,7 +211,7 @@ xThreadState *pxThreadState;
 	
 	if( lSuccess == pdPASS )
 	{
-		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_HIGHEST ) == 0 )
+		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_BELOW_NORMAL ) == 0 )
 		{
 			lSuccess = pdFAIL;
 		}
@@ -224,7 +226,7 @@ xThreadState *pxThreadState;
 		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, 0, NULL );
 		if( pvHandle != NULL )
 		{
-			SetThreadPriority( pvHandle, THREAD_PRIORITY_HIGHEST );
+			SetThreadPriority( pvHandle, THREAD_PRIORITY_NORMAL );
 			SetThreadPriorityBoost( pvHandle, TRUE );
 			SetThreadAffinityMask( pvHandle, 0x01 );
 		}
@@ -237,7 +239,6 @@ xThreadState *pxThreadState;
 		/* Bump up the priority of the thread that is going to run, in the
 		hope that this will asist in getting the Windows thread scheduler to
 		behave as an embedded engineer might expect. */
-		SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_ABOVE_NORMAL );
 		ResumeThread( pxThreadState->pvThread );
 
 		/* Handle all pseudo interrupts - including yield requests and 
@@ -253,7 +254,7 @@ xThreadState *pxThreadState;
 
 static void prvProcessPseudoInterrupts( void )
 {
-long lSwitchRequired;
+long lSwitchRequired, lCurrentTaskBeingDeleted;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
 unsigned long i;
@@ -271,6 +272,7 @@ unsigned long i;
 		/* Used to indicate whether the pseudo interrupt processing has
 		necessitated a context switch to another task/thread. */
 		lSwitchRequired = pdFALSE;
+		lCurrentTaskBeingDeleted = pdFALSE;
 
 		/* For each interrupt we are interested in processing, each of which is
 		represented by a bit in the 32bit ulPendingInterrupts variable. */
@@ -307,6 +309,14 @@ unsigned long i;
 						SetEvent( pvTickAcknowledgeEvent );
 						break;
 
+					case portINTERRUPT_DELETE_THREAD:
+
+						lCurrentTaskBeingDeleted = pdTRUE;
+
+						/* Clear the interrupt pending bit. */
+						ulPendingInterrupts &= ~( 1UL << portINTERRUPT_DELETE_THREAD );
+						break;
+
 					default:
 
 						/* Is a handler installed? */
@@ -329,7 +339,7 @@ unsigned long i;
 			}
 		}
 
-		if( lSwitchRequired != pdFALSE )
+		if( ( lSwitchRequired != pdFALSE ) || ( lCurrentTaskBeingDeleted != pdFALSE ) )
 		{
 			void *pvOldCurrentTCB;
 
@@ -344,32 +354,19 @@ unsigned long i;
 			{
 				/* Suspend the old thread. */
 				pxThreadState = ( xThreadState *) *( ( unsigned long * ) pvOldCurrentTCB );
-				SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
-				SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
-				SuspendThread( pxThreadState->pvThread );
-							
 
-
-				/* NOTE! - Here lies a problem when the preemptive scheduler is 
-				used.  It would seem Win32 threads do not stop as soon as a
-				call to suspend them is made.  The co-operative scheduler gets
-				around this by having the thread block on a semaphore 
-				immediately after yielding so it cannot execute any more task
-				code until it is once again scheduled to run.  This cannot be
-				done if the task is pre-empted though, and I have not found an
-				equivalent work around for the preemptive situation. */
-				
-
+				if( lCurrentTaskBeingDeleted != pdFALSE )
+				{
+					TerminateThread( pxThreadState->pvThread, 0 );
+				}
+				else
+				{
+					SuspendThread( pxThreadState->pvThread );
+				}							
 
 				/* Obtain the state of the task now selected to enter the 
 				Running state. */
 				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
-
-				/* Boost the priority of the thread selected to run a little 
-				in an attempt to get the Windows thread scheduler to act a 
-				little more like an embedded engineer might expect. */
-				SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_ABOVE_NORMAL );
-				SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 				ResumeThread( pxThreadState->pvThread );
 			}
 		}
@@ -379,8 +376,34 @@ unsigned long i;
 }
 /*-----------------------------------------------------------*/
 
+void vPortDeleteThread( void *pvTaskToDelete )
+{
+xThreadState *pxThreadState;
+
+	if( pvTaskToDelete == pxCurrentTCB )
+	{
+		/* The task is deleting itself, and so the thread that is running now
+		is also to be deleted.  This has to be deferred until this thread is
+		no longer running, so its done in the pseudo interrupt handler thread. */
+		vPortGeneratePseudoInterrupt( portINTERRUPT_DELETE_THREAD );
+	}
+	else
+	{
+		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+
+		/* Find the handle of the thread being deleted. */
+		pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
+		TerminateThread( pxThreadState->pvThread, 0 );
+
+		ReleaseMutex( pvInterruptEventMutex );
+	}
+}
+/*-----------------------------------------------------------*/
+
 void vPortEndScheduler( void )
 {
+	/* This function IS NOT TESTED! */
+	TerminateProcess( GetCurrentProcess(), 0 );
 }
 /*-----------------------------------------------------------*/
 

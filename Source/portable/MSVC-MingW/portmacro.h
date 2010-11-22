@@ -111,5 +111,15 @@ void vPortExitCritical( void );
 */
 void vPortGeneratePseudoInterrupt( unsigned long ulInterruptNumber );
 
+/*
+ * Install an interrupt handler to be called by the pseudo interrupt handler 
+ * thread.  The interrupt number must be above any used by the kernel itself
+ * (at the time of writing the kernel was using interrupt numbers 0, 1, and 2
+ * as defined above).  The number must also be lower than 32. 
+ *
+ * Interrupt handler functions must return a non-zero value if executing the
+ * handler resulted in a task switch being required. 
+ */
+void vPortSetInterruptHandler( unsigned long ulInterruptNumber, unsigned long (*pvHandler)( void ) );
 
 #endif

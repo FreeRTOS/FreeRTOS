@@ -73,6 +73,14 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter );
  */
 static void prvProcessPseudoInterrupts( void );
 
+/*
+ * Interrupt handlers used by the kernel itself.  These are executed from the
+ * pseudo interrupt handler thread.
+ */
+static unsigned long prvProcessDeleteThreadInterrupt( void );
+static unsigned long prvProcessYieldInterrupt( void );
+static unsigned long prvProcessTickInterrupt( void );
+
 /*-----------------------------------------------------------*/
 
 /* The WIN32 simulator runs each task in a thread.  The context switching is
@@ -100,9 +108,6 @@ static void *pvInterruptEvent = NULL;
 by multiple threads. */
 static void *pvInterruptEventMutex = NULL;
 
-/* Events used to manage sequencing. */
-static void *pvTickAcknowledgeEvent = NULL;
-
 /* The critical nesting count for the currently executing task.  This is 
 initialised to a non-zero value so interrupts do not become enabled during 
 the initialisation phase.  As each task has its own critical nesting value 
@@ -115,7 +120,7 @@ static unsigned long ulCriticalNesting = 9999UL;
 /* Handlers for all the simulated software interrupts.  The first two positions
 are used for the Yield and Tick interrupts so are handled slightly differently,
 all the other interrupts can be user defined. */
-static void (*vIsrHandler[ portMAX_INTERRUPTS ])( void ) = { 0 };
+static unsigned long (*ulIsrHandler[ portMAX_INTERRUPTS ])( void ) = { 0 };
 
 /* Pointer to the TCB of the currently executing task. */
 extern void *pxCurrentTCB;
@@ -147,10 +152,8 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 		SetEvent( pvInterruptEvent );
 
 		/* Give back the mutex so the pseudo interrupt handler unblocks 
-		and can	access the interrupt handler variables.  This high priority
-		task will then loop back round after waiting for the lower priority 
-		pseudo interrupt handler thread to acknowledge the tick. */
-		SignalObjectAndWait( pvInterruptEventMutex, pvTickAcknowledgeEvent, INFINITE, FALSE );
+		and can	access the interrupt handler variables. */
+		ReleaseMutex( pvInterruptEventMutex );
 	}
 
 	#ifdef __GNUC__
@@ -189,13 +192,17 @@ void *pvHandle;
 long lSuccess = pdPASS;
 xThreadState *pxThreadState;
 
+	/* Install the interrupt handlers used by the scheduler itself. */
+	vPortSetInterruptHandler( portINTERRUPT_YIELD, prvProcessYieldInterrupt );
+	vPortSetInterruptHandler( portINTERRUPT_TICK, prvProcessTickInterrupt );
+	vPortSetInterruptHandler( portINTERRUPT_DELETE_THREAD, prvProcessDeleteThreadInterrupt );
+
 	/* Create the events and mutexes that are used to synchronise all the
 	threads. */
 	pvInterruptEventMutex = CreateMutex( NULL, FALSE, NULL );
 	pvInterruptEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-	pvTickAcknowledgeEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 
-	if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) || ( pvTickAcknowledgeEvent == NULL ) )
+	if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) )
 	{
 		lSuccess = pdFAIL;
 	}
@@ -211,7 +218,7 @@ xThreadState *pxThreadState;
 	
 	if( lSuccess == pdPASS )
 	{
-		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_BELOW_NORMAL ) == 0 )
+		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_NORMAL ) == 0 )
 		{
 			lSuccess = pdFAIL;
 		}
@@ -222,11 +229,13 @@ xThreadState *pxThreadState;
 	if( lSuccess == pdPASS )
 	{
 		/* Start the thread that simulates the timer peripheral to generate
-		tick interrupts. */
+		tick interrupts.  The priority is set below that of the pseudo 
+		interrupt handler so the interrupt event mutex is used for the
+		handshake / overrun protection. */
 		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, 0, NULL );
 		if( pvHandle != NULL )
 		{
-			SetThreadPriority( pvHandle, THREAD_PRIORITY_NORMAL );
+			SetThreadPriority( pvHandle, THREAD_PRIORITY_BELOW_NORMAL );
 			SetThreadPriorityBoost( pvHandle, TRUE );
 			SetThreadAffinityMask( pvHandle, 0x01 );
 		}
@@ -252,12 +261,45 @@ xThreadState *pxThreadState;
 }
 /*-----------------------------------------------------------*/
 
+static unsigned long prvProcessDeleteThreadInterrupt( void )
+{
+	return pdTRUE;
+}
+/*-----------------------------------------------------------*/
+
+static unsigned long prvProcessYieldInterrupt( void )
+{
+	return pdTRUE;
+}
+/*-----------------------------------------------------------*/
+
+static unsigned long prvProcessTickInterrupt( void )
+{
+unsigned long ulSwitchRequired;
+
+	/* Process the tick itself. */
+	vTaskIncrementTick();
+	#if( configUSE_PREEMPTION != 0 )
+	{
+		/* A context switch is only automatically performed from the tick
+		interrupt if the pre-emptive scheduler is being used. */
+		ulSwitchRequired = pdTRUE;
+	}
+	#else
+	{
+		ulSwitchRequired = pdFALSE;
+	}
+	#endif
+
+	return ulSwitchRequired;
+}
+/*-----------------------------------------------------------*/
+
 static void prvProcessPseudoInterrupts( void )
 {
-long lSwitchRequired, lCurrentTaskBeingDeleted;
+unsigned long ulSwitchRequired, i;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
-unsigned long i;
 
 	/* Going to block on the mutex that ensured exclusive access to the pseudo 
 	interrupt objects, and the event that signals that a pseudo interrupt
@@ -271,8 +313,7 @@ unsigned long i;
 
 		/* Used to indicate whether the pseudo interrupt processing has
 		necessitated a context switch to another task/thread. */
-		lSwitchRequired = pdFALSE;
-		lCurrentTaskBeingDeleted = pdFALSE;
+		ulSwitchRequired = pdFALSE;
 
 		/* For each interrupt we are interested in processing, each of which is
 		represented by a bit in the 32bit ulPendingInterrupts variable. */
@@ -281,65 +322,22 @@ unsigned long i;
 			/* Is the pseudo interrupt pending? */
 			if( ulPendingInterrupts & ( 1UL << i ) )
 			{
-				switch( i )
+				/* Is a handler installed? */
+				if( ulIsrHandler[ i ] != NULL )
 				{
-					case portINTERRUPT_YIELD:
-
-						lSwitchRequired = pdTRUE;
-
-						/* Clear the interrupt pending bit. */
-						ulPendingInterrupts &= ~( 1UL << portINTERRUPT_YIELD );
-						break;
-
-					case portINTERRUPT_TICK:
-					
-						/* Process the tick itself. */
-						vTaskIncrementTick();
-						#if( configUSE_PREEMPTION != 0 )
-						{
-							/* A context switch is only automatically 
-							performed from the tick	interrupt if the 
-							pre-emptive scheduler is being used. */
-							lSwitchRequired = pdTRUE;
-						}
-						#endif
-							
-						/* Clear the interrupt pending bit. */
-						ulPendingInterrupts &= ~( 1UL << portINTERRUPT_TICK );
-						SetEvent( pvTickAcknowledgeEvent );
-						break;
-
-					case portINTERRUPT_DELETE_THREAD:
-
-						lCurrentTaskBeingDeleted = pdTRUE;
-
-						/* Clear the interrupt pending bit. */
-						ulPendingInterrupts &= ~( 1UL << portINTERRUPT_DELETE_THREAD );
-						break;
-
-					default:
-
-						/* Is a handler installed? */
-						if( vIsrHandler[ i ] != NULL )
-						{
-							lSwitchRequired = pdTRUE;
-
-							/* Run the actual handler. */
-							vIsrHandler[ i ]();
-
-							/* Clear the interrupt pending bit. */
-							ulPendingInterrupts &= ~( 1UL << i );
-
-							/* TODO:  Need to have some sort of handshake 
-							event here for non-tick and none yield 
-							interrupts. */
-						}
-						break;
+					/* Run the actual handler. */
+					if( ulIsrHandler[ i ]() != pdFALSE )
+					{
+						ulSwitchRequired |= ( 1 << i );
+					}
 				}
+
+				/* Clear the interrupt pending bit. */
+				ulPendingInterrupts &= ~( 1UL << i );
 			}
 		}
 
-		if( ( lSwitchRequired != pdFALSE ) || ( lCurrentTaskBeingDeleted != pdFALSE ) )
+		if( ulSwitchRequired != pdFALSE )
 		{
 			void *pvOldCurrentTCB;
 
@@ -355,7 +353,7 @@ unsigned long i;
 				/* Suspend the old thread. */
 				pxThreadState = ( xThreadState *) *( ( unsigned long * ) pvOldCurrentTCB );
 
-				if( lCurrentTaskBeingDeleted != pdFALSE )
+				if( ( ulSwitchRequired & ( 1 << portINTERRUPT_DELETE_THREAD ) ) != pdFALSE )
 				{
 					TerminateThread( pxThreadState->pvThread, 0 );
 				}
@@ -433,19 +431,19 @@ xThreadState *pxThreadState;
 }
 /*-----------------------------------------------------------*/
 
-void vPortSetInterruptHandler( unsigned long ulInterruptNumber, void (*pvHandler)( void ) )
+void vPortSetInterruptHandler( unsigned long ulInterruptNumber, unsigned long (*pvHandler)( void ) )
 {
 	if( ulInterruptNumber < portMAX_INTERRUPTS )
 	{
 		if( pvInterruptEventMutex != NULL )
 		{
 			WaitForSingleObject( pvInterruptEventMutex, INFINITE );
-			vIsrHandler[ ulInterruptNumber ] = pvHandler;
+			ulIsrHandler[ ulInterruptNumber ] = pvHandler;
 			ReleaseMutex( pvInterruptEventMutex );
 		}
 		else
 		{
-			vIsrHandler[ ulInterruptNumber ] = pvHandler;
+			ulIsrHandler[ ulInterruptNumber ] = pvHandler;
 		}
 	}
 }

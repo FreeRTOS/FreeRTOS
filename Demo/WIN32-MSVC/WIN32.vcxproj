@@ -161,7 +161,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h" />
+    <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="..\..\Source\include\croutine.h" />
     <ClInclude Include="..\..\Source\include\FreeRTOS.h" />

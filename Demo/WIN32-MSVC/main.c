@@ -56,12 +56,7 @@
  * -NOTE- The Win32 port is a simulation (or is that emulation?) only!  Do not
  * expect to get real time behaviour from the Win32 port or this demo
  * application.  It is provided as a convenient development and demonstration
- * test bed only.  Also, at the time of writing, a method of deleting theads 
- * has not been implemented, although doing so would be trivial so this
- * functionality might be added in at a later date.  At present, calling 
- * vTaskDelete() will delete the real time task from FreeRTOS but not the Win32
- * thread in which the task was executing.  DO NOT CALL vTaskDelete() when using 
- * the Win32 port!  This was tested using Windows XP on a dual core laptop.
+ * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *******************************************************************************
@@ -101,6 +96,7 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "flop.h"
+#include "death.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
@@ -133,6 +129,11 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartRecursiveMutexTasks();
+
+	/* The suicide tasks must be created last as they need to know how many
+	tasks were running prior to their creation in order to ascertain whether
+	or not the correct/expected number of tasks are running at any given time. */
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -189,6 +190,10 @@ char *pcStatusMessage = "OK";
 		{
 			pcStatusMessage = "Error: Flop";
 		}
+		else if( xIsCreateTaskStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Create";
+		}
 	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	    {
 			pcStatusMessage = "Error: RecMutex";
@@ -203,19 +208,11 @@ char *pcStatusMessage = "OK";
 
 void vApplicationIdleHook( void )
 {
-	/* Sleep to reduce CPU load, but don't sleep indefinitely if not using 
-	preemption as as nothing will cause	a task switch. */
-	#if( configUSE_PREEMPTION != 0 )
-	{
-		SleepEx( INFINITE, TRUE );
-	}
-	#else
-	{
-		const unsigned long ulMSToSleep = 5;
+const unsigned long ulMSToSleep = 5;
 
-		SleepEx( ulMSToSleep, TRUE );
-	}
-	#endif
+	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
+	tasks waiting to be terminated by the idle task. */
+	Sleep( ulMSToSleep );
 }
 /*-----------------------------------------------------------*/
 

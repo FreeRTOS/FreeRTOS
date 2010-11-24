@@ -5,7 +5,7 @@
 //     |     |  
 //   +-+--+  |   
 //   | +--+--+  
-//   +----+    Copyright (c) 2009 Code Red Technologies Ltd. 
+//   +----+    Copyright (c) 2009-10 Code Red Technologies Ltd.
 //
 // Microcontroller Startup code for use with Red Suite
 //
@@ -25,22 +25,53 @@
 // CODE RED TECHNOLOGIES LTD. 
 //
 //*****************************************************************************
+#if defined (__cplusplus)
+#ifdef __REDLIB__
+#error Redlib does not support C++
+#else
+//*****************************************************************************
+//
+// The entry point for the C++ library startup
+//
+//*****************************************************************************
+extern "C" {
+	extern void __libc_init_array(void);
+}
+#endif
+#endif
+
 #define WEAK __attribute__ ((weak))
 #define ALIAS(f) __attribute__ ((weak, alias (#f)))
 
+// Code Red - if CMSIS is being used, then SystemInit() routine
+// will be called by startup code rather than in application's main()
+#if defined (__USE_CMSIS)
+#include "system_LPC17xx.h"
+#endif
+
+//*****************************************************************************
+#if defined (__cplusplus)
+extern "C" {
+#endif
+
 //*****************************************************************************
 //
-// Forward declaration of the default handlers.
+// Forward declaration of the default handlers. These are aliased.
+// When the application defines a handler (with the same name), this will 
+// automatically take precedence over these weak definitions
 //
 //*****************************************************************************
-void Reset_Handler(void);
-void ResetISR(void) ALIAS(Reset_Handler);
-static void NMI_Handler(void);
-static void HardFault_Handler(void);
-static void MemManage_Handler(void);
-static void BusFault_Handler(void);
-static void UsageFault_Handler(void);
-static void DebugMon_Handler(void);
+     void ResetISR(void);
+WEAK void NMI_Handler(void);
+WEAK void HardFault_Handler(void);
+WEAK void MemManage_Handler(void);
+WEAK void BusFault_Handler(void);
+WEAK void UsageFault_Handler(void);
+WEAK void SVCall_Handler(void);
+WEAK void DebugMon_Handler(void);
+WEAK void PendSV_Handler(void);
+WEAK void SysTick_Handler(void);
+WEAK void IntDefaultHandler(void);
 
 //*****************************************************************************
 //
@@ -83,48 +114,49 @@ void RIT_IRQHandler(void) ALIAS(IntDefaultHandler);
 void MCPWM_IRQHandler(void) ALIAS(IntDefaultHandler);
 void QEI_IRQHandler(void) ALIAS(IntDefaultHandler);
 void PLL1_IRQHandler(void) ALIAS(IntDefaultHandler);
+void USBActivity_IRQHandler(void) ALIAS(IntDefaultHandler);
+void CANActivity_IRQHandler(void) ALIAS(IntDefaultHandler);
 
 extern void xPortSysTickHandler(void);
 extern void xPortPendSVHandler(void);
 extern void vPortSVCHandler( void );
 extern void vEMAC_ISR( void );
 
-
-//*****************************************************************************
-//
-// The entry point for the C++ library startup
-//
-//*****************************************************************************
-extern WEAK void __libc_init_array(void);
-
 //*****************************************************************************
 //
 // The entry point for the application.
-// __main() is the entry point for redlib based applications
-// main() is the entry point for newlib based applications
+// __main() is the entry point for Redlib based applications
+// main() is the entry point for Newlib based applications
 //
 //*****************************************************************************
-extern WEAK void __main(void);
-extern WEAK void main(void);
+#if defined (__REDLIB__)
+extern void __main(void);
+#endif
+extern int main(void);
 //*****************************************************************************
 //
 // External declaration for the pointer to the stack top from the Linker Script
 //
 //*****************************************************************************
-extern void _vStackTop;
+extern void _vStackTop(void);
 
+//*****************************************************************************
+#if defined (__cplusplus)
+} // extern "C"
+#endif
 //*****************************************************************************
 //
 // The vector table.
 // This relies on the linker script to place at correct location in memory.
 //
 //*****************************************************************************
+extern void (* const g_pfnVectors[])(void);
 __attribute__ ((section(".isr_vector")))
 void (* const g_pfnVectors[])(void) =
 {
 	// Core Level - CM3
 	(void *)&_vStackTop,					// The initial stack pointer
-	Reset_Handler,							// The reset handler
+	ResetISR,								// The reset handler
 	NMI_Handler,							// The NMI handler
 	HardFault_Handler,						// The hard fault handler
 	MemManage_Handler,						// The MPU fault handler
@@ -174,6 +206,8 @@ void (* const g_pfnVectors[])(void) =
 	MCPWM_IRQHandler,						// 46, 0xb8 - Motor Control PWM
 	QEI_IRQHandler,							// 47, 0xbc - Quadrature Encoder
 	PLL1_IRQHandler,						// 48, 0xc0 - PLL1 (USB PLL)
+	USBActivity_IRQHandler,					// 49, 0xc4 - USB Activity interrupt to wakeup
+	CANActivity_IRQHandler, 				// 50, 0xc8 - CAN Activity interrupt to wakeup
 };
 
 //*****************************************************************************
@@ -196,7 +230,7 @@ extern unsigned long _ebss;
 //
 //*****************************************************************************
 void Reset_Handler(void)
-{
+ResetISR(void) {
     unsigned long *pulSrc, *pulDest;
 
     //
@@ -222,21 +256,23 @@ void Reset_Handler(void)
           "        strlt   r2, [r0], #4\n"
           "        blt     zero_loop");
 
-    //
-    // Call C++ library initilisation, if present
-    //
-	if (__libc_init_array)
-		__libc_init_array() ;
+#ifdef __USE_CMSIS
+	SystemInit();
+#endif
 
+#if defined (__cplusplus)
 	//
-	// Call the application's entry point.
-	// __main() is the entry point for redlib based applications (which calls main())
-	// main() is the entry point for newlib based applications
+	// Call C++ library initialisation
 	//
-	if (__main)
-		__main() ;
-	else
-		main() ;
+	__libc_init_array();
+#endif
+
+#if defined (__REDLIB__)
+	// Call the Redlib library, which in turn calls main()
+	__main() ;
+#else
+	main();
+#endif
 
 	//
 	// main() shouldn't return, but if it does, we'll just enter an infinite loop 
@@ -253,42 +289,43 @@ void Reset_Handler(void)
 // by a debugger.
 //
 //*****************************************************************************
-static void NMI_Handler(void)
+void NMI_Handler(void)
 {
     while(1)
     {
     }
 }
 
-static void HardFault_Handler(void)
+void HardFault_Handler(void)
 {
     while(1)
     {
     }
 }
 
-static void MemManage_Handler(void)
+void MemManage_Handler(void)
 {
     while(1)
     {
     }
 }
 
-static void BusFault_Handler(void)
+void BusFault_Handler(void)
 {
     while(1)
     {
     }
 }
 
-static void UsageFault_Handler(void)
+void UsageFault_Handler(void)
 {
     while(1)
     {
     }
 }
 
-static void DebugMon_Handler(void)
+
+void DebugMon_Handler(void)
 {
     while(1)
     {
@@ -301,7 +338,7 @@ static void DebugMon_Handler(void)
 // is not present in the application code.
 //
 //*****************************************************************************
-static void IntDefaultHandler(void)
+void IntDefaultHandler(void)
 {
     //
     // Go into an infinite loop.

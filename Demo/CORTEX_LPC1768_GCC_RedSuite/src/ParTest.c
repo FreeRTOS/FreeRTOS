@@ -74,10 +74,10 @@ static unsigned long ulLEDs[] = { LED_3, LED_2, LED_5, LED_4 };
 void vParTestInitialise( void )
 {
 	/* LEDs on port 1. */
-	GPIO1->FIODIR  = partstFIO1_BITS;
+	LPC_GPIO1->FIODIR  = partstFIO1_BITS;
 	
 	/* Start will all LEDs off. */
-	GPIO1->FIOCLR = partstFIO1_BITS;
+	LPC_GPIO1->FIOCLR = partstFIO1_BITS;
 }
 /*-----------------------------------------------------------*/
 
@@ -88,11 +88,11 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		/* Set of clear the output. */
 		if( xValue )
 		{
-			GPIO1->FIOCLR = ulLEDs[ uxLED ];
+			LPC_GPIO1->FIOCLR = ulLEDs[ uxLED ];
 		}
 		else
 		{
-			GPIO1->FIOSET = ulLEDs[ uxLED ];
+			LPC_GPIO1->FIOSET = ulLEDs[ uxLED ];
 		}
 	}
 }
@@ -102,13 +102,13 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	if( uxLED < partstNUM_LEDS )
 	{
-		if( GPIO1->FIOPIN & ulLEDs[ uxLED ] )
+		if( LPC_GPIO1->FIOPIN & ulLEDs[ uxLED ] )
 		{
-			GPIO1->FIOCLR = ulLEDs[ uxLED ];
+			LPC_GPIO1->FIOCLR = ulLEDs[ uxLED ];
 		}
 		else
 		{
-			GPIO1->FIOSET = ulLEDs[ uxLED ];
+			LPC_GPIO1->FIOSET = ulLEDs[ uxLED ];
 		}
 	}
 }
@@ -118,7 +118,7 @@ unsigned portBASE_TYPE uxParTextGetLED( unsigned portBASE_TYPE uxLED )
 {
 	if( uxLED < partstNUM_LEDS )
 	{
-		return ( GPIO1->FIOPIN & ulLEDs[ uxLED ] );
+		return ( LPC_GPIO1->FIOPIN & ulLEDs[ uxLED ] );
 	}
 	else
 	{

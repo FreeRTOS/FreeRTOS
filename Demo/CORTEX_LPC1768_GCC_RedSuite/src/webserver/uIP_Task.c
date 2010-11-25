@@ -144,7 +144,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 
 	portENTER_CRITICAL();
 	{
-		EMAC->IntEnable = ( INT_RX_DONE | INT_TX_DONE );
+		LPC_EMAC->IntEnable = ( INT_RX_DONE | INT_TX_DONE );
 
 		/* Set the interrupt priority to the max permissible to cause some
 		interrupt nesting. */

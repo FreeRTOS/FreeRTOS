@@ -229,7 +229,7 @@ extern unsigned long _ebss;
 // library.
 //
 //*****************************************************************************
-void Reset_Handler(void)
+void
 ResetISR(void) {
     unsigned long *pulSrc, *pulDest;
 

@@ -53,7 +53,7 @@
 
 
 #ifndef INC_FREERTOS_H
-	#error "#include FreeRTOS.h" must appear in source files before "#include task.h"
+	#error "include FreeRTOS.h must appear in source files before include task.h"
 #endif
 
 
@@ -1102,9 +1102,9 @@ unsigned long ulTaskEndTrace( void ) PRIVILEGED_FUNCTION;
  * this function to be available.
  *
  * Returns the high water mark of the stack associated with xTask.  That is,
- * the minimum free stack space there has been (in bytes) since the task
- * started.  The smaller the returned number the closer the task has come
- * to overflowing its stack.
+ * the minimum free stack space there has been (in words, so on a 32 bit machine
+ * a value of 1 means 4 bytes) since the task started.  The smaller the returned 
+ * number the closer the task has come to overflowing its stack.
  *
  * @param xTask Handle of the task associated with the stack to be checked.
  * Set xTask to NULL to check the stack of the calling task.
@@ -1114,23 +1114,33 @@ unsigned long ulTaskEndTrace( void ) PRIVILEGED_FUNCTION;
  */
 unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
-/**
- * task.h
- * <pre>void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
- *
- * Sets pxHookFunction to be the task hook function used by the task xTask.
- * Passing xTask as NULL has the effect of setting the calling tasks hook
- * function.
- */
-void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction ) PRIVILEGED_FUNCTION;
+/* When using trace macros it is sometimes necessary to include tasks.h before
+FreeRTOS.h.  When this is done pdTASK_HOOK_CODE will not yet have been defined,
+so the following two prototypes will cause a compilation error.  This can be
+fixed by simply guarding against the inclusion of these two prototypes unless
+they are explicitly required by the configUSE_APPLICATION_TASK_TAG configuration
+constant. */
+#ifdef configUSE_APPLICATION_TASK_TAG
+	#if configUSE_APPLICATION_TASK_TAG == 1
+		/**
+		 * task.h
+		 * <pre>void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
+		 *
+		 * Sets pxHookFunction to be the task hook function used by the task xTask.
+		 * Passing xTask as NULL has the effect of setting the calling tasks hook
+		 * function.
+		 */
+		void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction ) PRIVILEGED_FUNCTION;
 
-/**
- * task.h
- * <pre>void xTaskGetApplicationTaskTag( xTaskHandle xTask );</pre>
- *
- * Returns the pxHookFunction value assigned to the task xTask.
- */
-pdTASK_HOOK_CODE xTaskGetApplicationTaskTag( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
+		/**
+		 * task.h
+		 * <pre>void xTaskGetApplicationTaskTag( xTaskHandle xTask );</pre>
+		 *
+		 * Returns the pxHookFunction value assigned to the task xTask.
+		 */
+		pdTASK_HOOK_CODE xTaskGetApplicationTaskTag( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
+	#endif /* configUSE_APPLICATION_TASK_TAG ==1 */
+#endif /* ifdef configUSE_APPLICATION_TASK_TAG */
 
 /**
  * task.h

@@ -345,7 +345,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 #ifndef traceTASK_CREATE_FAILED
-	#define traceTASK_CREATE_FAILED( pxNewTCB )
+	#define traceTASK_CREATE_FAILED()
 #endif
 
 #ifndef traceTASK_DELETE

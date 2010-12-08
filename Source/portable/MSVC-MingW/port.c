@@ -71,11 +71,11 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter );
  * Process all the simulated interrupts - each represented by a bit in 
  * ulPendingInterrupts variable.
  */
-static void prvProcessPseudoInterrupts( void );
+static void prvProcessSimulatedInterrupts( void );
 
 /*
  * Interrupt handlers used by the kernel itself.  These are executed from the
- * pseudo interrupt handler thread.
+ * simulated interrupt handler thread.
  */
 static unsigned long prvProcessDeleteThreadInterrupt( void );
 static unsigned long prvProcessYieldInterrupt( void );
@@ -95,16 +95,16 @@ typedef struct
 
 } xThreadState;
 
-/* Pseudo interrupts waiting to be processed.  This is a bit mask where each
+/* Simulated interrupts waiting to be processed.  This is a bit mask where each
 bit represents one interrupt, so a maximum of 32 interrupts can be simulated. */
 static volatile unsigned long ulPendingInterrupts = 0UL;
 
-/* An event used to inform the pseudo interrupt processing thread (a high 
+/* An event used to inform the simulated interrupt processing thread (a high 
 priority thread that simulated interrupt processing) that an interrupt is
 pending. */
 static void *pvInterruptEvent = NULL;
 
-/* Mutex used to protect all the pseudo interrupt variables that are accessed 
+/* Mutex used to protect all the simulated interrupt variables that are accessed 
 by multiple threads. */
 static void *pvInterruptEventMutex = NULL;
 
@@ -113,7 +113,7 @@ initialised to a non-zero value so interrupts do not become enabled during
 the initialisation phase.  As each task has its own critical nesting value 
 ulCriticalNesting will get set to zero when the first task runs.  This 
 initialisation is probably not critical in this simulated environment as the
-pseudo interrupt handlers do not get created until the FreeRTOS scheduler is 
+simulated interrupt handlers do not get created until the FreeRTOS scheduler is 
 started anyway. */
 static unsigned long ulCriticalNesting = 9999UL;
 
@@ -134,7 +134,7 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 
 	for(;;)
 	{
-		/* Wait until the timer expires and we can access the pseudo interrupt 
+		/* Wait until the timer expires and we can access the simulated interrupt 
 		variables.  *NOTE* this is not a 'real time' way of generating tick 
 		events as the next wake time should be relative to the previous wake 
 		time, not the time that Sleep() is called.  It is done this way to 
@@ -151,7 +151,7 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 		handler thread. */
 		SetEvent( pvInterruptEvent );
 
-		/* Give back the mutex so the pseudo interrupt handler unblocks 
+		/* Give back the mutex so the simulated interrupt handler unblocks 
 		and can	access the interrupt handler variables. */
 		ReleaseMutex( pvInterruptEventMutex );
 	}
@@ -209,7 +209,7 @@ xThreadState *pxThreadState;
 
 	/* Set the priority of this thread such that it is above the priority of 
 	the threads that run tasks.  This higher priority is required to ensure
-	pseudo interrupts take priority over tasks. */
+	simulated interrupts take priority over tasks. */
 	pvHandle = GetCurrentThread();
 	if( pvHandle == NULL )
 	{
@@ -229,7 +229,7 @@ xThreadState *pxThreadState;
 	if( lSuccess == pdPASS )
 	{
 		/* Start the thread that simulates the timer peripheral to generate
-		tick interrupts.  The priority is set below that of the pseudo 
+		tick interrupts.  The priority is set below that of the simulated 
 		interrupt handler so the interrupt event mutex is used for the
 		handshake / overrun protection. */
 		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, 0, NULL );
@@ -250,12 +250,12 @@ xThreadState *pxThreadState;
 		behave as an embedded engineer might expect. */
 		ResumeThread( pxThreadState->pvThread );
 
-		/* Handle all pseudo interrupts - including yield requests and 
+		/* Handle all simulated interrupts - including yield requests and 
 		simulated ticks. */
-		prvProcessPseudoInterrupts();
+		prvProcessSimulatedInterrupts();
 	}	
 	
-	/* Would not expect to return from prvProcessPseudoInterrupts(), so should 
+	/* Would not expect to return from prvProcessSimulatedInterrupts(), so should 
 	not get here. */
 	return 0;
 }
@@ -295,14 +295,14 @@ unsigned long ulSwitchRequired;
 }
 /*-----------------------------------------------------------*/
 
-static void prvProcessPseudoInterrupts( void )
+static void prvProcessSimulatedInterrupts( void )
 {
 unsigned long ulSwitchRequired, i;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
 
-	/* Going to block on the mutex that ensured exclusive access to the pseudo 
-	interrupt objects, and the event that signals that a pseudo interrupt
+	/* Going to block on the mutex that ensured exclusive access to the simulated 
+	interrupt objects, and the event that signals that a simulated interrupt
 	should be processed. */
 	pvObjectList[ 0 ] = pvInterruptEventMutex;
 	pvObjectList[ 1 ] = pvInterruptEvent;
@@ -311,7 +311,7 @@ void *pvObjectList[ 2 ];
 	{
 		WaitForMultipleObjects( sizeof( pvObjectList ) / sizeof( void * ), pvObjectList, TRUE, INFINITE );
 
-		/* Used to indicate whether the pseudo interrupt processing has
+		/* Used to indicate whether the simulated interrupt processing has
 		necessitated a context switch to another task/thread. */
 		ulSwitchRequired = pdFALSE;
 
@@ -319,7 +319,7 @@ void *pvObjectList[ 2 ];
 		represented by a bit in the 32bit ulPendingInterrupts variable. */
 		for( i = 0; i < portMAX_INTERRUPTS; i++ )
 		{
-			/* Is the pseudo interrupt pending? */
+			/* Is the simulated interrupt pending? */
 			if( ulPendingInterrupts & ( 1UL << i ) )
 			{
 				/* Is a handler installed? */
@@ -382,8 +382,8 @@ xThreadState *pxThreadState;
 	{
 		/* The task is deleting itself, and so the thread that is running now
 		is also to be deleted.  This has to be deferred until this thread is
-		no longer running, so its done in the pseudo interrupt handler thread. */
-		vPortGeneratePseudoInterrupt( portINTERRUPT_DELETE_THREAD );
+		no longer running, so its done in the simulated interrupt handler thread. */
+		vPortGenerateSimulatedInterrupt( portINTERRUPT_DELETE_THREAD );
 	}
 	else
 	{
@@ -405,7 +405,7 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortGeneratePseudoInterrupt( unsigned long ulInterruptNumber )
+void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber )
 {
 xThreadState *pxThreadState;
 
@@ -415,7 +415,7 @@ xThreadState *pxThreadState;
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 		ulPendingInterrupts |= ( 1 << ulInterruptNumber );
 
-		/* The pseudo interrupt is now held pending, but don't actually process it
+		/* The simulated interrupt is now held pending, but don't actually process it
 		yet if this call is within a critical section.  It is possible for this to
 		be in a critical section as calls to wait for mutexes are accumulative. */
 		if( ulCriticalNesting == 0 )
@@ -454,7 +454,7 @@ void vPortEnterCritical( void )
 	if( xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED )
 	{
 		/* The interrupt event mutex is held for the entire critical section,
-		effectively disabling (pseudo) interrupts. */
+		effectively disabling (simulated) interrupts. */
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 		ulCriticalNesting++;
 	}
@@ -482,7 +482,7 @@ long lMutexNeedsReleasing;
 			ulCriticalNesting--;
 
 			/* Were any interrupts set to pending while interrupts were 
-			(pseudo) disabled? */
+			(simulated) disabled? */
 			if( ulPendingInterrupts != 0UL )
 			{
 				SetEvent( pvInterruptEvent );

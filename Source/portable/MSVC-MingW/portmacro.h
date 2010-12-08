@@ -81,7 +81,7 @@
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )	
 #define portBYTE_ALIGNMENT			4
 
-#define portYIELD()					vPortGeneratePseudoInterrupt( portINTERRUPT_YIELD )
+#define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
 void vPortDeleteThread( void *pvThreadToDelete );
 #define traceTASK_DELETE( pxTCB )	vPortDeleteThread( pxTCB )
@@ -109,10 +109,10 @@ void vPortExitCritical( void );
  * Each bit can be used to represent an individual interrupt - with the first
  * two bits being used for the Yield and Tick interrupts respectively.
 */
-void vPortGeneratePseudoInterrupt( unsigned long ulInterruptNumber );
+void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber );
 
 /*
- * Install an interrupt handler to be called by the pseudo interrupt handler 
+ * Install an interrupt handler to be called by the simulated interrupt handler 
  * thread.  The interrupt number must be above any used by the kernel itself
  * (at the time of writing the kernel was using interrupt numbers 0, 1, and 2
  * as defined above).  The number must also be lower than 32. 

@@ -513,7 +513,7 @@ tskTCB * pxNewTCB;
 	else
 	{
 		xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
-		traceTASK_CREATE_FAILED( pxNewTCB );
+		traceTASK_CREATE_FAILED();
 	}
 
 	if( xReturn == pdPASS )

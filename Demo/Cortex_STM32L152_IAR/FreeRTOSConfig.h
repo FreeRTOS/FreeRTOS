@@ -66,18 +66,20 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION		1
-#define configUSE_IDLE_HOOK			0
-#define configUSE_TICK_HOOK			1
-#define configCPU_CLOCK_HZ			( 32000000UL )	
-#define configTICK_RATE_HZ			( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 128 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 10 * 1024 ) )
-#define configMAX_TASK_NAME_LEN		( 16 )
-#define configUSE_TRACE_FACILITY	0
-#define configUSE_16_BIT_TICKS		0
-#define configIDLE_SHOULD_YIELD		1
+#define configUSE_PREEMPTION			1
+#define configUSE_IDLE_HOOK				0
+#define configUSE_TICK_HOOK				1
+#define configCPU_CLOCK_HZ				( 32000000UL )	
+#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
+#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
+#define configMAX_TASK_NAME_LEN			( 16 )
+#define configUSE_TRACE_FACILITY		0
+#define configUSE_16_BIT_TICKS			0
+#define configIDLE_SHOULD_YIELD			1
+#define configQUEUE_REGISTRY_SIZE		1
+#define configGENERATE_RUN_TIME_STATS	1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0
@@ -94,17 +96,29 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
-/* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
-(lowest) to 0 (1?) (highest). */
-#define configKERNEL_INTERRUPT_PRIORITY 		255
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	191 /* equivalent to 0xb0, or priority 11. */
+/* Use the system definition, if there is one */
+#ifdef __NVIC_PRIO_BITS
+	#define configPRIO_BITS       __NVIC_PRIO_BITS
+#else
+	#define configPRIO_BITS       4        /* 32 priority levels */
+#endif
 
+/* The lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY 	( 15 << (8 - configPRIO_BITS) )
+/* Priority 5, or 160 as only the top three bits are implemented. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << (8 - configPRIO_BITS) )
 
-/* This is the value being used as per the ST library which permits 16
-priority values, 0 to 15.  This must correspond to the
-configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
-NVIC value of 255. */
-#define configLIBRARY_KERNEL_INTERRUPT_PRIORITY	15
+/* Prevent the following definitions being included when FreeRTOSConfig.h
+is included from an asm file. */
+#ifdef __ICCARM__
+	#include "stm32l1xx_tim.h"
+	extern void vConfigureTimerForRunTimeStats( void );
+	extern unsigned long ulTIM6_OverflowCount;
+#endif /* __ICCARM__ */
+
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT )
+
 
 #endif /* FREERTOS_CONFIG_H */
 

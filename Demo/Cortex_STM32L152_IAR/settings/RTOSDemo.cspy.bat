@@ -10,6 +10,6 @@
 @REM 
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\config\flashloader\ST\FlashSTM32L15xxB.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\CONFIG\debugger\ST\iostm32l152xx.ddf" "--semihosting" "--device=STM32L152xB" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--drv_catch_exceptions=0x000" 
+"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armjlink.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\config\flashloader\ST\FlashSTM32L15xxB.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\CONFIG\debugger\ST\iostm32l152xx.ddf" "--semihosting" "--device=STM32L152xB" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" 
 
 

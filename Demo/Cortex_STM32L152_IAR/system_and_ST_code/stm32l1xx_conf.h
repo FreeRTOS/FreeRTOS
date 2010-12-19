@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32L1xx_StdPeriph_Template/stm32l1xx_conf.h 
+  * @file    Project/STM32L1xx_StdPeriph_Template/stm32l1xx_conf.h
   * @author  MCD Application Team
   * @version V1.0.0RC1
   * @date    07/02/2010
@@ -16,7 +16,7 @@
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32L1xx_CONF_H
@@ -41,14 +41,14 @@
 #include "stm32l1xx_rcc.h"
 /* #include "stm32l1xx_rtc.h" */
 #include "stm32l1xx_spi.h"
-/* #include "stm32l1xx_tim.h" */
+#include "stm32l1xx_tim.h"
 #include "stm32l1xx_usart.h"
 /* #include "stm32l1xx_wwdg.h" */
 #include "misc.h"  /* High level functions for NVIC and SysTick (add-on to CMSIS functions) */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-/* Uncomment the line below to expanse the "assert_param" macro in the 
+/* Uncomment the line below to expanse the "assert_param" macro in the
    Standard Peripheral Library drivers code */
 /* #define USE_FULL_ASSERT    1 */
 
@@ -57,8 +57,8 @@
 
 /**
   * @brief  The assert_param macro is used for function's parameters check.
-  * @param  expr: If expr is false, it calls assert_failed function which reports 
-  *         the name of the source file and the source line number of the call 
+  * @param  expr: If expr is false, it calls assert_failed function which reports
+  *         the name of the source file and the source line number of the call
   *         that failed. If expr is true, it returns no value.
   * @retval None
   */

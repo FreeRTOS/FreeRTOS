@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=685534858
+Checksum=1195579230
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -22,13 +22,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[InterruptLog]
-LogEnabled=0
-SumEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-SumSortOrder=0
 [Interrupts]
 Enabled=1
 [MemoryMap]
@@ -41,10 +34,47 @@ ActionState=1
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[SWOTraceHWSettings]
+CpuClock=32000000
+ClockAutoDetect=1
+ClockWanted=6000000
+JtagSpeed=2000000
+Prescaler=16
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+PcSampIndex=0
+DataLogMode=0
+ITMportsEnable=1
+ITMportsTermIO=1
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
+[DataLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[PowerLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=0
+Title0=Power [mA]
+Setup0=0 1 0 500 2 0 4 1 0
 [Disassemble mode]
 mode=0
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\main.c}.152.2@1" 1 0 0 0 "" 0 "" 0
+Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -55,10 +85,22 @@ LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[TraceHelperExtra]
+Enabled=0
+ShowSource=1
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=995247177
+Mode=3
 Graph=0
 Symbiont=0

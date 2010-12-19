@@ -93,6 +93,8 @@ static void prvSetupHardware( void );
 static void prvLCDTask( void *pvParameters );
 static void vTempTask( void *pv );
 
+unsigned long ulTIM6_OverflowCount = 0UL;
+
 static xQueueHandle xLCDQueue = NULL;
 
 typedef struct
@@ -111,6 +113,7 @@ void main( void )
 	
 	if( xLCDQueue != NULL )
 	{
+		vQueueAddToRegistry( xLCDQueue, "LCDQueue" );
 		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", mainLCD_TASK_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
 		xTaskCreate( vTempTask, ( signed char * ) "Temp", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		vStartDynamicPriorityTasks();
@@ -122,13 +125,13 @@ void main( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-
+unsigned long ulTempArray[ 10 ], ulx = 0;
 static void prvLCDTask( void *pvParameters )
 {
 xQueueMessage xReceivedMessage;
 long lLine = Line1;
 const long lFontHeight = (((sFONT *)LCD_GetFont())->Height);
-static char cBuffer[ 32 ];
+static char cBuffer[ 256 ];
 
 	for( ;; )
 	{
@@ -140,6 +143,15 @@ static char cBuffer[ 32 ];
 			lLine = 0;
 		}
 		
+if( ulx < 10 )
+{
+	ulTempArray[ ulx++ ] = portGET_RUN_TIME_COUNTER_VALUE();
+}
+else
+{
+	ulx = 0;
+}
+		
 		switch( xReceivedMessage.cMessageID )
 		{
 			case mainMESSAGE_BUTTON_UP		:	sprintf( cBuffer, "Button up = %d", xReceivedMessage.lMessageValue );
@@ -150,7 +162,10 @@ static char cBuffer[ 32 ];
 												break;
 			case mainMESSAGE_BUTTON_RIGHT	:	sprintf( cBuffer, "Button right = %d", xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_BUTTON_SEL		:	sprintf( cBuffer, "Select interrupt!" );
+			case mainMESSAGE_BUTTON_SEL		:	printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************\n" );
+												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
+												printf( cBuffer );
+												sprintf( cBuffer, "Select interrupt!" );
 												break;
 			case mainMESSAGE_STATUS			:	sprintf( cBuffer, "Task status = %s", ( ( xReceivedMessage.lMessageValue ) ? "PASS" : "FAIL" ) );
 												break;
@@ -214,7 +229,6 @@ xQueueMessage xMessage;
 			vTaskDelay( 10 );
 		}
 	}
-
 }
 /*-----------------------------------------------------------*/
 
@@ -260,4 +274,44 @@ USART_InitTypeDef USART_InitStructure;
 	LCD_DisplayStringLine(Line0, "  www.FreeRTOS.org");
 }
 /*-----------------------------------------------------------*/
+
+void vConfigureTimerForRunTimeStats( void )
+{
+TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+NVIC_InitTypeDef NVIC_InitStructure;
+
+	/* TIM6 clock enable */
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
+
+	/* The 32MHz clock divided by 5000 should tick (very) approximately every
+	150uS and overflow a 16bit timer (very) approximately every 10 seconds. */
+	TIM_TimeBaseStructure.TIM_Period = 65535;
+	TIM_TimeBaseStructure.TIM_Prescaler = 5000;
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	
+	TIM_TimeBaseInit( TIM6, &TIM_TimeBaseStructure );
+	
+	/* Only interrupt on overflow events. */
+	TIM_UpdateRequestConfig( TIM6, TIM_UpdateSource_Regular );
+	
+	TIM_ITConfig( TIM6, TIM_IT_Update, ENABLE );
+	
+	/* Enable the TIM6 gloabal Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0f;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0f;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	
+	NVIC_Init(&NVIC_InitStructure);
+	TIM_Cmd( TIM6, ENABLE );
+}
+/*-----------------------------------------------------------*/
+
+void TIM6_IRQHandler( void )
+{
+	ulTIM6_OverflowCount++;
+	TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
+}
+
 

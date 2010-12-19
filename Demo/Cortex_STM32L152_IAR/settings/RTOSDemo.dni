@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1807629591
+Checksum=685534858
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -41,6 +41,10 @@ ActionState=1
 [TraceHelper]
 Enabled=0
 ShowSource=1
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -48,6 +52,9 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Aliases]
+Count=0
+SuppressDialog=0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -55,10 +62,3 @@ Enabled=0
 Mode=995247177
 Graph=0
 Symbiont=0
-[Disassemble mode]
-mode=0
-[Breakpoints]
-Count=0
-[Aliases]
-Count=0
-SuppressDialog=0

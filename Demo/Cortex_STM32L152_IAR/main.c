@@ -62,6 +62,7 @@
 /* Demo application includes. */
 #include "partest.h"
 #include "flash.h"
+#include "dynamic.h"
 
 /* ST driver includes. */
 #include "stm32l1xx_usart.h"
@@ -82,6 +83,7 @@
 #define mainMESSAGE_BUTTON_LEFT			( 3 )
 #define mainMESSAGE_BUTTON_RIGHT		( 4 )
 #define mainMESSAGE_BUTTON_SEL			( 5 )
+#define mainMESSAGE_STATUS				( 6 )
 
 /*
  * System configuration is performed prior to main() being called, this function
@@ -111,11 +113,11 @@ void main( void )
 	{
 		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", mainLCD_TASK_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
 		xTaskCreate( vTempTask, ( signed char * ) "Temp", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+		vStartDynamicPriorityTasks();
+		vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+		
+		vTaskStartScheduler();
 	}
-	
-	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
-	
-	vTaskStartScheduler();
 	
 	for( ;; );
 }
@@ -132,7 +134,7 @@ static char cBuffer[ 32 ];
 	{
 		xQueueReceive( xLCDQueue, &xReceivedMessage, portMAX_DELAY );
 
-		if( lLine >= Line9 )
+		if( lLine > Line9 )
 		{
 			LCD_Clear( Blue );
 			lLine = 0;
@@ -142,13 +144,15 @@ static char cBuffer[ 32 ];
 		{
 			case mainMESSAGE_BUTTON_UP		:	sprintf( cBuffer, "Button up = %d", xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_BUTTON_DOWN	:
+			case mainMESSAGE_BUTTON_DOWN	:	sprintf( cBuffer, "Button down = %d", xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_BUTTON_LEFT	:
+			case mainMESSAGE_BUTTON_LEFT	:	sprintf( cBuffer, "Button left = %d", xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_BUTTON_RIGHT	:
+			case mainMESSAGE_BUTTON_RIGHT	:	sprintf( cBuffer, "Button right = %d", xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_BUTTON_SEL		:
+			case mainMESSAGE_BUTTON_SEL		:	sprintf( cBuffer, "Select interrupt!" );
+												break;
+			case mainMESSAGE_STATUS			:	sprintf( cBuffer, "Task status = %s", ( ( xReceivedMessage.lMessageValue ) ? "PASS" : "FAIL" ) );
 												break;
 			default							:	sprintf( cBuffer, "Unknown message" );
 												break;
@@ -160,9 +164,41 @@ static char cBuffer[ 32 ];
 }
 /*-----------------------------------------------------------*/
 
+void EXTI9_5_IRQHandler( void )
+{
+const xQueueMessage xMessage = { mainMESSAGE_BUTTON_SEL, 0 };
+long lHigherPriorityTaskWoken = pdFALSE;
+
+	xQueueSendFromISR( xLCDQueue, &xMessage, &lHigherPriorityTaskWoken );
+	EXTI_ClearITPendingBit( SEL_BUTTON_EXTI_LINE );
+	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+static unsigned long ulCounter = 0;
+static const unsigned long ulCheckFrequency = 5000UL / portTICK_RATE_MS;
+static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
+long lHigherPriorityTaskWoken = pdFALSE; /* Not used in this case as this is the tick hook. */
+
+	ulCounter++;
+	if( ulCounter >= ulCheckFrequency )
+	{
+		if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+		{
+			xStatusMessage.lMessageValue = pdFAIL;
+		}
+		
+		xQueueSendFromISR( xLCDQueue, &xStatusMessage, &lHigherPriorityTaskWoken );
+		ulCounter = 0;
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void vTempTask( void *pv )
 {
-long lLastState = pdFALSE;
+long lLastState = pdTRUE;
 long lState;
 xQueueMessage xMessage;
 
@@ -187,13 +223,20 @@ static void prvSetupHardware( void )
 	/* Initialise the LEDs. */
 	vParTestInitialise();
 
-	//BUTTON_MODE_EXTI
+	//
 	/* Initialise the joystick inputs. */
 	STM_EVAL_PBInit( BUTTON_UP, BUTTON_MODE_GPIO );
 	STM_EVAL_PBInit( BUTTON_DOWN, BUTTON_MODE_GPIO );
 	STM_EVAL_PBInit( BUTTON_LEFT, BUTTON_MODE_GPIO );
 	STM_EVAL_PBInit( BUTTON_RIGHT, BUTTON_MODE_GPIO );
-	STM_EVAL_PBInit( BUTTON_SEL, BUTTON_MODE_GPIO );
+	
+	/* The select button in the middle of the joystick is configured to generate
+	an interrupt.  The Eval board library will configure the interrupt
+	priority to be the lowest priority available - this is important as the
+	interrupt service routine makes use of a FreeRTOS API function so must
+	therefore use a priority equal to or below that set by the
+	configMAX_SYSCALL_INTERRUPT_PRIORITY() value set in FreeRTOSConfig.h. */
+	STM_EVAL_PBInit( BUTTON_SEL, BUTTON_MODE_EXTI );
 
 #if 0	
 USART_InitTypeDef USART_InitStructure;

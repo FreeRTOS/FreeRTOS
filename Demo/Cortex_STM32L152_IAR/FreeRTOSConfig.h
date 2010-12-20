@@ -113,11 +113,12 @@ is included from an asm file. */
 #ifdef __ICCARM__
 	#include "stm32l1xx_tim.h"
 	extern void vConfigureTimerForRunTimeStats( void );
+	unsigned long ulGetRunTimeStatsCounterValue( void );
 	extern unsigned long ulTIM6_OverflowCount;
 #endif /* __ICCARM__ */
 
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT )
+#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeStatsCounterValue()
 
 
 #endif /* FREERTOS_CONFIG_H */

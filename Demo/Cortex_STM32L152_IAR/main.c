@@ -142,16 +142,7 @@ static char cBuffer[ 256 ];
 			LCD_Clear( Blue );
 			lLine = 0;
 		}
-		
-if( ulx < 10 )
-{
-	ulTempArray[ ulx++ ] = portGET_RUN_TIME_COUNTER_VALUE();
-}
-else
-{
-	ulx = 0;
-}
-		
+				
 		switch( xReceivedMessage.cMessageID )
 		{
 			case mainMESSAGE_BUTTON_UP		:	sprintf( cBuffer, "Button up = %d", xReceivedMessage.lMessageValue );
@@ -165,7 +156,10 @@ else
 			case mainMESSAGE_BUTTON_SEL		:	printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************\n" );
 												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
 												printf( cBuffer );
-												sprintf( cBuffer, "Select interrupt!" );
+												
+												/* The select button passes its
+												own string to print out. */
+												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.lMessageValue );
 												break;
 			case mainMESSAGE_STATUS			:	sprintf( cBuffer, "Task status = %s", ( ( xReceivedMessage.lMessageValue ) ? "PASS" : "FAIL" ) );
 												break;
@@ -181,7 +175,7 @@ else
 
 void EXTI9_5_IRQHandler( void )
 {
-const xQueueMessage xMessage = { mainMESSAGE_BUTTON_SEL, 0 };
+const xQueueMessage xMessage = { mainMESSAGE_BUTTON_SEL, ( unsigned long ) "Select Interrupt!" };
 long lHigherPriorityTaskWoken = pdFALSE;
 
 	xQueueSendFromISR( xLCDQueue, &xMessage, &lHigherPriorityTaskWoken );
@@ -237,7 +231,6 @@ static void prvSetupHardware( void )
 	/* Initialise the LEDs. */
 	vParTestInitialise();
 
-	//
 	/* Initialise the joystick inputs. */
 	STM_EVAL_PBInit( BUTTON_UP, BUTTON_MODE_GPIO );
 	STM_EVAL_PBInit( BUTTON_DOWN, BUTTON_MODE_GPIO );
@@ -293,7 +286,8 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseInit( TIM6, &TIM_TimeBaseStructure );
 	
 	/* Only interrupt on overflow events. */
-	TIM_UpdateRequestConfig( TIM6, TIM_UpdateSource_Regular );
+	TIM6->CR1 |= TIM_CR1_URS;
+	//TIM6->CR1 &= (uint16_t)~((uint16_t)TIM_CR1_URS);
 	
 	TIM_ITConfig( TIM6, TIM_IT_Update, ENABLE );
 	
@@ -303,15 +297,31 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0f;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	
+	TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
 	NVIC_Init(&NVIC_InitStructure);
 	TIM_Cmd( TIM6, ENABLE );
 }
 /*-----------------------------------------------------------*/
 
+unsigned long ulGetRunTimeStatsCounterValue( void )
+{
+unsigned long ulReturn;
+
+	TIM6->CR1 &= (uint16_t)(~((uint16_t)TIM_CR1_CEN));
+	ulReturn = ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT );
+	TIM6->CR1 |= TIM_CR1_CEN;
+	
+	return ulReturn;
+}
+/*-----------------------------------------------------------*/
+
 void TIM6_IRQHandler( void )
 {
-	ulTIM6_OverflowCount++;
-	TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
+	if( TIM_GetITStatus( TIM6, TIM_IT_Update) != RESET)
+	{
+		ulTIM6_OverflowCount++;
+		TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
+	}
 }
 
 

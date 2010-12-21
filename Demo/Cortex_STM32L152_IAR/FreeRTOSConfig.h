@@ -72,7 +72,7 @@
 #define configCPU_CLOCK_HZ				( 32000000UL )	
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
@@ -80,6 +80,7 @@
 #define configIDLE_SHOULD_YIELD			1
 #define configQUEUE_REGISTRY_SIZE		1
 #define configGENERATE_RUN_TIME_STATS	1
+#define configCHECK_FOR_STACK_OVERFLOW	2
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0
@@ -100,25 +101,34 @@ to exclude the API function. */
 #ifdef __NVIC_PRIO_BITS
 	#define configPRIO_BITS       __NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS       4        /* 32 priority levels */
+	#define configPRIO_BITS       4        /* 15 priority levels */
 #endif
 
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			15
+//#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	15
+
 /* The lowest priority. */
-#define configKERNEL_INTERRUPT_PRIORITY 	( 15 << (8 - configPRIO_BITS) )
+//#define configKERNEL_INTERRUPT_PRIORITY 	( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 /* Priority 5, or 160 as only the top three bits are implemented. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << (8 - configPRIO_BITS) )
+//#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+
+/* The lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY 	255
+/* Priority 5, or 160 as only the top three bits are implemented. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	255
+
 
 /* Prevent the following definitions being included when FreeRTOSConfig.h
 is included from an asm file. */
 #ifdef __ICCARM__
 	#include "stm32l1xx_tim.h"
 	extern void vConfigureTimerForRunTimeStats( void );
-	unsigned long ulGetRunTimeStatsCounterValue( void );
 	extern unsigned long ulTIM6_OverflowCount;
 #endif /* __ICCARM__ */
 
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeStatsCounterValue()
+#define portGET_RUN_TIME_COUNTER_VALUE() ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT )
 
 
 #endif /* FREERTOS_CONFIG_H */

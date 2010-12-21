@@ -63,6 +63,7 @@
 #include "partest.h"
 #include "flash.h"
 #include "dynamic.h"
+#include "comtest2.h"
 
 /* ST driver includes. */
 #include "stm32l1xx_usart.h"
@@ -73,6 +74,7 @@
 
 #define mainFLASH_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainLCD_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
+#define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
 
 #define mainLCD_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
 
@@ -84,6 +86,14 @@
 #define mainMESSAGE_BUTTON_RIGHT		( 4 )
 #define mainMESSAGE_BUTTON_SEL			( 5 )
 #define mainMESSAGE_STATUS				( 6 )
+
+/* Baud rate used by the comtest tasks. */
+#define mainCOM_TEST_BAUD_RATE		( 9600 )
+
+/* The LED used by the comtest tasks. See the comtest.c file for more
+information. */
+#define mainCOM_TEST_LED			( 3 )
+
 
 /*
  * System configuration is performed prior to main() being called, this function
@@ -118,6 +128,7 @@ void main( void )
 		xTaskCreate( vTempTask, ( signed char * ) "Temp", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		vStartDynamicPriorityTasks();
 		vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 		
 		vTaskStartScheduler();
 	}
@@ -125,13 +136,19 @@ void main( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-unsigned long ulTempArray[ 10 ], ulx = 0;
+
 static void prvLCDTask( void *pvParameters )
 {
 xQueueMessage xReceivedMessage;
 long lLine = Line1;
 const long lFontHeight = (((sFONT *)LCD_GetFont())->Height);
 static char cBuffer[ 256 ];
+
+	/* This function is the only function that uses printf().  If printf() is
+	used from any other function then some sort of mutual exclusion on stdout
+	will be necessary. */
+
+	printf( "%d bytes of heap space remain unallocated\n", xPortGetFreeHeapSize() );
 
 	for( ;; )
 	{
@@ -153,7 +170,7 @@ static char cBuffer[ 256 ];
 												break;
 			case mainMESSAGE_BUTTON_RIGHT	:	sprintf( cBuffer, "Button right = %d", xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_BUTTON_SEL		:	printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************\n" );
+			case mainMESSAGE_BUTTON_SEL		:	printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************" );
 												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
 												printf( cBuffer );
 												
@@ -199,6 +216,11 @@ long lHigherPriorityTaskWoken = pdFALSE; /* Not used in this case as this is the
 			xStatusMessage.lMessageValue = pdFAIL;
 		}
 		
+		if( xAreComTestTasksStillRunning() != pdPASS )
+		{
+			xStatusMessage.lMessageValue = pdFAIL;
+		}
+		
 		xQueueSendFromISR( xLCDQueue, &xStatusMessage, &lHigherPriorityTaskWoken );
 		ulCounter = 0;
 	}
@@ -228,6 +250,8 @@ xQueueMessage xMessage;
 
 static void prvSetupHardware( void )
 {
+	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+	
 	/* Initialise the LEDs. */
 	vParTestInitialise();
 
@@ -245,19 +269,6 @@ static void prvSetupHardware( void )
 	configMAX_SYSCALL_INTERRUPT_PRIORITY() value set in FreeRTOSConfig.h. */
 	STM_EVAL_PBInit( BUTTON_SEL, BUTTON_MODE_EXTI );
 
-#if 0	
-USART_InitTypeDef USART_InitStructure;
-
-	USART_InitStructure.USART_BaudRate = 115200;
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;
-	USART_InitStructure.USART_Parity = USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-	
-	STM_EVAL_COMInit( COM1, &USART_InitStructure );
-#endif
-	
 	/* Initialize the LCD */
 	STM32L152_LCD_Init();
 	
@@ -287,31 +298,18 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	
 	/* Only interrupt on overflow events. */
 	TIM6->CR1 |= TIM_CR1_URS;
-	//TIM6->CR1 &= (uint16_t)~((uint16_t)TIM_CR1_URS);
 	
 	TIM_ITConfig( TIM6, TIM_IT_Update, ENABLE );
 	
 	/* Enable the TIM6 gloabal Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0f;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0f;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_LOWEST_INTERRUPT_PRIORITY;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x00; /* Not used as 4 bits are used for the pre-emption priority. */
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	
 	TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
 	NVIC_Init(&NVIC_InitStructure);
 	TIM_Cmd( TIM6, ENABLE );
-}
-/*-----------------------------------------------------------*/
-
-unsigned long ulGetRunTimeStatsCounterValue( void )
-{
-unsigned long ulReturn;
-
-	TIM6->CR1 &= (uint16_t)(~((uint16_t)TIM_CR1_CEN));
-	ulReturn = ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT );
-	TIM6->CR1 |= TIM_CR1_CEN;
-	
-	return ulReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -323,5 +321,15 @@ void TIM6_IRQHandler( void )
 		TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
 	}
 }
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
+	
+	for( ;; );
+}
+
 
 

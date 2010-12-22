@@ -185,62 +185,62 @@ long lReturn = pdFALSE;
 	{
 		switch( ulLED )
 		{
-			case 0	:	if( LED4 != 0 )
+			case 0	:	if( LED4 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 1	:	if( LED5 != 0 )
+			case 1	:	if( LED5 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 2	:	if( LED6 != 0 )
+			case 2	:	if( LED6 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 3	:	if( LED7 != 0 )
+			case 3	:	if( LED7 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 4	:	if( LED8 != 0 )
+			case 4	:	if( LED8 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 5	:	if( LED9 != 0 )
+			case 5	:	if( LED9 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 6	:	if( LED10 != 0 )
+			case 6	:	if( LED10 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 7	:	if( LED11 != 0 )
+			case 7	:	if( LED11 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 8	:	if( LED12 != 0 )
+			case 8	:	if( LED12 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 9	:	if( LED13 != 0 )
+			case 9	:	if( LED13 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 10	:	if( LED14 != 0 )
+			case 10	:	if( LED14 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}
 						break;
-			case 11	:	if( LED15 != 0 )
+			case 11	:	if( LED15 != LED_OFF )
 						{
 							lReturn =  pdTRUE;
 						}

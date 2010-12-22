@@ -243,28 +243,41 @@ void vApplicationProcessFormInput( char *pcInputString )
 {
 char *c;
 
-	/* Process the form input sent by the IO page of the served HTML. */
-
-	c = strstr( pcInputString, "?" );
-    if( c )
-    {
-		/* Turn the LED's on or off in accordance with the check box status. */
-		if( strstr( c, "LED0=1" ) != NULL )
-		{
-			/* Turn LEDs on. */
-			vParTestSetLED( 7, 1 );
-			vParTestSetLED( 8, 1 );
-			vParTestSetLED( 9, 1 );
-			vParTestSetLED( 10, 1 );
-		}
+	/* Only interested in processing form input if this is the IO page. */
+	c = strstr( pcInputString, "io.shtml" );
+	
+	if( c )
+	{
+		/* Is there a command in the string? */
+		c = strstr( pcInputString, "?" );
+	    if( c )
+	    {
+			/* Turn the LED's on or off in accordance with the check box status. */
+			if( strstr( c, "LED0=1" ) != NULL )
+			{
+				/* Turn the LEDs on. */
+				vParTestSetLED( 7, 1 );
+				vParTestSetLED( 8, 1 );
+				vParTestSetLED( 9, 1 );
+				vParTestSetLED( 10, 1 );
+			}
+			else
+			{
+				/* Turn the LEDs off. */
+				vParTestSetLED( 7, 0 );
+				vParTestSetLED( 8, 0 );
+				vParTestSetLED( 9, 0 );
+				vParTestSetLED( 10, 0 );
+			}
+	    }
 		else
 		{
-			/* Turn LED 4 off. */
+			/* Commands to turn LEDs off are not always explicit. */
 			vParTestSetLED( 7, 0 );
 			vParTestSetLED( 8, 0 );
 			vParTestSetLED( 9, 0 );
 			vParTestSetLED( 10, 0 );
 		}
-    }
+	}
 }
 

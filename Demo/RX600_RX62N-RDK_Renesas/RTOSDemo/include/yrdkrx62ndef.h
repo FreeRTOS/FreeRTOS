@@ -40,8 +40,14 @@ Macro definitions
 #define     CMT0_CLK_SELECT (512)
 
 /* General Values */
-#define		LED_ON          (1)
-#define 	LED_OFF			(0)
+#ifdef LED_POSITIVE_LOGIC
+	#define		LED_ON          (1) 
+	#define 	LED_OFF			(0)
+#else
+/* LEDs are using NEGATIVE LOGIC... */
+	#define		LED_ON          (0)
+	#define 	LED_OFF			(1)
+#endif
 #define 	SET_BIT_HIGH	(1)
 #define 	SET_BIT_LOW		(0)
 #define 	SET_BYTE_HIGH	(0xFF)

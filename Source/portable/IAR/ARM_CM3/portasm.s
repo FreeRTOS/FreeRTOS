@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -49,13 +49,6 @@
 
     http://www.OpenRTOS.com - Commercial support, development, porting,
     licensing and training services.
-*/
-
-/*
-	Change from V4.2.1:
-
-	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
-	  interrupt priority used by the kernel.
 */
 
 #include <FreeRTOSConfig.h>
@@ -157,6 +150,7 @@ vPortStartFirstTask
 	/* Set the msp back to the start of the stack. */
 	msr msp, r0
 	/* Call SVC to start the first task. */
+	cpsie i
 	svc 0
 
 	END

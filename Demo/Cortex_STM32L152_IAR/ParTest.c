@@ -68,6 +68,8 @@
 
 void vParTestInitialise( void )
 {
+	/* Configure the output LEDs.   Note that JP18 and JP19 must be closed on
+	the Eval board for LED3 and LED4 to work. */
 	STM_EVAL_LEDInit( LED1 );
 	STM_EVAL_LEDInit( LED2 );
 	STM_EVAL_LEDInit( LED3 );

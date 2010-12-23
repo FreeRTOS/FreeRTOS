@@ -53,6 +53,15 @@
 
 /*
 	BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR UART0.
+	
+	***Note*** This example uses queues to send each character into an interrupt
+	service routine and out of an interrupt service routine individually.  This
+	is done to demonstrate queues being used in an interrupt, and to deliberately
+	load the system to test the FreeRTOS port.  It is *NOT* meant to be an 
+	example of an efficient implementation.  An efficient implementation should
+	use FIFO's or DMA if available, and only use FreeRTOS API functions when 
+	enough has been received to warrant a task being unblocked to process the
+	data.
 */
 
 /* Scheduler includes. */
@@ -71,7 +80,6 @@
 /* Misc defines. */
 #define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
 #define serNO_BLOCK						( ( portTickType ) 0 )
-#define serTX_BLOCK_TIME				( 40 / portTICK_RATE_MS )
 
 /*-----------------------------------------------------------*/
 
@@ -94,7 +102,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 	
-	/* If the queue/semaphore was created correctly then setup the serial port
+	/* If the queues were created correctly then setup the serial port
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
 	{
@@ -200,12 +208,12 @@ portCHAR cChar;
 
 	if( USART_GetITStatus( USART3, USART_IT_TXE ) == SET )
 	{
-		/* The interrupt was caused by the THR becoming empty.  Are there any
-		more characters to transmit? */
+		/* The interrupt was caused by the TX register becoming empty.  Are 
+		there any more characters to transmit? */
 		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* A character was retrieved from the queue so can be sent to the
-			THR now. */
+			USART now. */
 			USART_SendData( USART3, cChar );
 		}
 		else
@@ -216,10 +224,18 @@ portCHAR cChar;
 	
 	if( USART_GetITStatus( USART3, USART_IT_RXNE ) == SET )
 	{
+		/* A character has been received on the USART, send it to the Rx
+		handler task. */
 		cChar = USART_ReceiveData( USART3 );
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}	
 
+	/* If sending or receiving from a queue has caused a task to unblock, and
+	the unblocked task has a priority equal to or higher than the currently 
+	running task (the task this ISR interrupted), then xHigherPriorityTaskWoken 
+	will have automatically been set to pdTRUE within the queue send or receive 
+	function.  portEND_SWITCHING_ISR() will then ensure that this ISR returns 
+	directly to the higher priority unblocked task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 

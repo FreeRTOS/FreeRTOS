@@ -64,6 +64,7 @@
 #include "flash.h"
 #include "dynamic.h"
 #include "comtest2.h"
+#include "GenQTest.h"
 
 /* ST driver includes. */
 #include "stm32l1xx_usart.h"
@@ -75,6 +76,7 @@
 #define mainFLASH_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainLCD_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainGENERIC_QUEUE_TEST_PRIORITY	( tskIDLE_PRIORITY )
 
 #define mainLCD_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
 
@@ -86,6 +88,10 @@
 #define mainMESSAGE_BUTTON_RIGHT		( 4 )
 #define mainMESSAGE_BUTTON_SEL			( 5 )
 #define mainMESSAGE_STATUS				( 6 )
+
+#define mainERROR_DYNAMIC_TASKS			( 2 )
+#define mainERROR_COM_TEST				( 3 )
+#define mainERROR_GEN_QUEUE_TEST		( 4 )
 
 /* Baud rate used by the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE		( 9600 )
@@ -102,6 +108,7 @@ information. */
 static void prvSetupHardware( void );
 static void prvLCDTask( void *pvParameters );
 static void vTempTask( void *pv );
+static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue );
 
 unsigned long ulTIM6_OverflowCount = 0UL;
 
@@ -129,6 +136,7 @@ void main( void )
 		vStartDynamicPriorityTasks();
 		vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+		vStartGenericQueueTasks( mainGENERIC_QUEUE_TEST_PRIORITY );
 		
 		vTaskStartScheduler();
 	}
@@ -142,7 +150,7 @@ static void prvLCDTask( void *pvParameters )
 xQueueMessage xReceivedMessage;
 long lLine = Line1;
 const long lFontHeight = (((sFONT *)LCD_GetFont())->Height);
-static char cBuffer[ 256 ];
+static char cBuffer[ 512 ];
 
 	/* This function is the only function that uses printf().  If printf() is
 	used from any other function then some sort of mutual exclusion on stdout
@@ -178,7 +186,7 @@ static char cBuffer[ 256 ];
 												own string to print out. */
 												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.lMessageValue );
 												break;
-			case mainMESSAGE_STATUS			:	sprintf( cBuffer, "Task status = %s", ( ( xReceivedMessage.lMessageValue ) ? "PASS" : "FAIL" ) );
+			case mainMESSAGE_STATUS			:	prvGenerateStatusMessage( cBuffer, xReceivedMessage.lMessageValue );
 												break;
 			default							:	sprintf( cBuffer, "Unknown message" );
 												break;
@@ -186,6 +194,24 @@ static char cBuffer[ 256 ];
 		
 		LCD_DisplayStringLine( lLine, ( uint8_t * ) cBuffer );
 		lLine += lFontHeight;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue )
+{
+	switch( lStatusValue )
+	{
+		case pdPASS						:	sprintf( pcBuffer, "Task status = PASS" );
+											break;
+		case mainERROR_DYNAMIC_TASKS	:	sprintf( pcBuffer, "Error: Dynamic tasks" );
+											break;
+		case mainERROR_COM_TEST			:	sprintf( pcBuffer, "Error: COM test" );
+											break;
+		case mainERROR_GEN_QUEUE_TEST 	:	sprintf( pcBuffer, "Error: Gen Q test" );
+											break;
+		default							:	sprintf( pcBuffer, "Unknown status" );
+											break;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -213,12 +239,17 @@ long lHigherPriorityTaskWoken = pdFALSE; /* Not used in this case as this is the
 	{
 		if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 		{
-			xStatusMessage.lMessageValue = pdFAIL;
+			xStatusMessage.lMessageValue = mainERROR_DYNAMIC_TASKS;
 		}
 		
 		if( xAreComTestTasksStillRunning() != pdPASS )
 		{
-			xStatusMessage.lMessageValue = pdFAIL;
+			xStatusMessage.lMessageValue = mainERROR_COM_TEST;
+		}
+		
+		if( xAreGenericQueueTasksStillRunning() != pdPASS )
+		{
+			xStatusMessage.lMessageValue = mainERROR_GEN_QUEUE_TEST;
 		}
 		
 		xQueueSendFromISR( xLCDQueue, &xStatusMessage, &lHigherPriorityTaskWoken );
@@ -330,6 +361,11 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
 
+void vApplicationMallocFailedHook( void )
+{
+	for( ;; );
+}
 
 

@@ -1762,6 +1762,9 @@
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\flash.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+    </file>
   </group>
   <group>
     <name>System_and_ST_Code</name>

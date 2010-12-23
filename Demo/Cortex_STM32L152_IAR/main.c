@@ -58,9 +58,9 @@
  *
  * main() creates all the demo application tasks, then starts the scheduler.
  * A lot of the created tasks are from the pool of "standard demo" tasks.  The
- * web documentation provides more details of the standard demo application
- * tasks, which provide no particular functionality but do provide a good
- * example of how to use the FreeRTOS API.
+ * web documentation provides more details of the standard demo tasks, which
+ * provide no particular functionality but do provide good examples of how to
+ * use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks, interrupts and
  * tests are defined and/or created within this file:
@@ -73,7 +73,7 @@
  * the actual LCD output.  This mechanism also allows interrupts to, in effect,
  * write to the LCD by sending messages to the LCD task.
  *
- * The LCD task is also a demonstration of a controller task design pattern.
+ * The LCD task is also a demonstration of a 'controller' task design pattern.
  * Some tasks do not actually send a string to the LCD task directly, but
  * instead send a command that is interpreted by the LCD task.  In a normal
  * application these commands can be control values or set points, in this
@@ -145,18 +145,16 @@
 to send messages from tasks and interrupts the the LCD task. */
 #define mainQUEUE_LENGTH				( 5 )
 
-/* Codes sent within message to the LCD task so the LCD task can interrupt
+/* Codes sent within messages to the LCD task so the LCD task can interpret
 exactly what the message it just received was.  These are sent in the
 cMessageID member of the message structure (defined below). */
 #define mainMESSAGE_BUTTON_UP			( 1 )
 #define mainMESSAGE_BUTTON_SEL			( 2 )
 #define mainMESSAGE_STATUS				( 3 )
 
-/* When cMessageID member of the message sent to the LCD task is
+/* When the cMessageID member of the message sent to the LCD task is
 mainMESSAGE_STATUS then these definitions are sent in the lMessageValue member
-of the same message to indicate what the status actually is.  The value 1 is not
-used as this is globally defined as pdPASS, and indicates that no errors have
-been reported (the system is running as expected). */
+of the same message and indicate what the status actually is. */
 #define mainERROR_DYNAMIC_TASKS			( pdPASS + 1 )
 #define mainERROR_COM_TEST				( pdPASS + 2 )
 #define mainERROR_GEN_QUEUE_TEST		( pdPASS + 3 )
@@ -240,7 +238,7 @@ void main( void )
 		/* Create the LCD and button poll tasks, as described at the top of this
 		file. */
 		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
-		xTaskCreate( vButtonPollTask, ( signed char * ) "Temp", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( vButtonPollTask, ( signed char * ) "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		
 		/* Create a subset of the standard demo tasks. */
 		vStartDynamicPriorityTasks();
@@ -284,13 +282,14 @@ static char cBuffer[ 512 ];
 
 	for( ;; )
 	{
-		/* Wait for a message to be received.  This will wait indefinitely if
-		INCLUDE_vTaskSuspend is set to 1 in FreeRTOSConfig.h, therefore there
-		is no need to check the function return value. */
+		/* Wait for a message to be received.  Using portMAX_DELAY as the block
+		time will result in an indefinite wait provided INCLUDE_vTaskSuspend is
+		set to 1 in FreeRTOSConfig.h, therefore there is no need to check the
+		function return value and the function will only return when a value
+		has been received. */
 		xQueueReceive( xLCDQueue, &xReceivedMessage, portMAX_DELAY );
 
-		/* Clear the LCD if the last LCD message was output to the last
-		available line on the LCD. */
+		/* Clear the LCD if no room remains for any more text output. */
 		if( lLine > Line9 )
 		{
 			LCD_Clear( Blue );
@@ -515,7 +514,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	automatically at the appropriate time. */
 
 	/* TIM6 clock enable */
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
+	RCC_APB1PeriphClockCmd( RCC_APB1Periph_TIM6, ENABLE );
 
 	/* The 32MHz clock divided by 5000 should tick (very) approximately every
 	150uS and overflow a 16bit timer (very) approximately every 10 seconds. */

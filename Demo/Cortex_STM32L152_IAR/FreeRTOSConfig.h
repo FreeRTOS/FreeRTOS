@@ -109,19 +109,12 @@ to exclude the API function. */
 #endif
 
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			15
-//#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	15
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
 
 /* The lowest priority. */
-//#define configKERNEL_INTERRUPT_PRIORITY 	( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+#define configKERNEL_INTERRUPT_PRIORITY 	( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 /* Priority 5, or 160 as only the top three bits are implemented. */
-//#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-
-/* The lowest priority. */
-#define configKERNEL_INTERRUPT_PRIORITY 	255
-/* Priority 5, or 160 as only the top three bits are implemented. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	255
-
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
 /* Prevent the following definitions being included when FreeRTOSConfig.h
 is included from an asm file. */

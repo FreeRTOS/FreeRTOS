@@ -1282,8 +1282,17 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
 	{
 	unsigned portBASE_TYPE uxQueue;
-	unsigned long ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+	unsigned long ulTotalRunTime;
 
+		/* A critical section is used because portGET_RUN_TIME_COUNTER_VALUE()
+		is implemented differently on different ports, so its not known if a
+		critical section is needed or not. */
+		taskENTER_CRITICAL();
+		{
+			ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+		}
+		taskEXIT_CRITICAL();
+	
 		/* This is a VERY costly function that should be used for debug only.
 		It leaves interrupts disabled for a LONG time. */
 

@@ -37,7 +37,7 @@
 /* #include "stm32l1xx_i2c.h" */
 /* #include "stm32l1xx_iwdg.h" */
 /* #include "stm32l1xx_lcd.h" */
-/* #include "stm32l1xx_pwr.h" */
+#include "stm32l1xx_pwr.h"
 #include "stm32l1xx_rcc.h"
 /* #include "stm32l1xx_rtc.h" */
 #include "stm32l1xx_spi.h"

@@ -1789,6 +1789,9 @@
         <name>$PROJ_DIR$\system_and_ST_code\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_gpio.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\system_and_ST_code\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_pwr.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\system_and_ST_code\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_rcc.c</name>
       </file>
       <file>

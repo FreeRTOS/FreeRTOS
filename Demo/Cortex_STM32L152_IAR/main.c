@@ -367,5 +367,12 @@ void vApplicationMallocFailedHook( void )
 {
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+	PWR_EnterSleepMode( PWR_Regulator_ON, PWR_SLEEPEntry_WFI );
+}
+
 
 

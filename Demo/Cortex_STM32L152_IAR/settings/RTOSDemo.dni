@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-72575356
+Checksum=818382432
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -70,6 +70,10 @@ ShowTimeLog=1
 ShowTimeSum=0
 Title0=Power [mA]
 Setup0=0 1 0 500 2 0 4 1 0
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -77,6 +81,9 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Aliases]
+Count=0
+SuppressDialog=0
 [SWOTraceWindow]
 PcSampling=0
 InterruptLogs=0
@@ -96,10 +103,3 @@ Enabled=0
 Mode=3
 Graph=0
 Symbiont=0
-[Disassemble mode]
-mode=0
-[Breakpoints]
-Count=0
-[Aliases]
-Count=0
-SuppressDialog=0

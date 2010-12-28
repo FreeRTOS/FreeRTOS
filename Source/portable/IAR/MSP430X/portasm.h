@@ -54,34 +54,24 @@
 #ifndef PORTASM_H
 #define PORTASM_H
 
-portSAVE_CONTEXT macro
-
 		IMPORT pxCurrentTCB
 		IMPORT usCriticalNesting
 
+portSAVE_CONTEXT macro
+
 		/* Save the remaining registers. */
-		push	r4
-		push	r5
-		push	r6
-		push	r7
-		push	r8
-		push	r9
-		push	r10
-		push	r11
-		push	r12
-		push	r13
-		push	r14
-		push	r15
-		mov.w	&usCriticalNesting, r14
-		push	r14
-		mov.w	&pxCurrentTCB, r12
-		mov.w	r1, 0(r12)
+		pushm.a	#12, r15
+		movx.w	&usCriticalNesting, r14
+		pushx.a r14
+		movx.a	&pxCurrentTCB, r12
+		movx.a	sp, 0( r12 )
 		endm
 /*-----------------------------------------------------------*/
 		
 portRESTORE_CONTEXT macro
+
 		movx.a	&pxCurrentTCB, r12
-		movx.a	@r12, r1
+		movx.a	@r12, sp
 		popx.a	r15
 		movx.w	r15, &usCriticalNesting
 		popm.a	#12, r15

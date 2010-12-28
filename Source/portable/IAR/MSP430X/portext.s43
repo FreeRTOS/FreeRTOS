@@ -90,16 +90,23 @@ vTickISR:
  */
 vPortYield:
 
-	/* Mimic an interrupt by pushing the SR. */
-	push	SR			
+	/* Mimic an interrupt by combining the SR and the PC, the latter having
+	already been pushed onto the stack.  R14 is a scratch registers. */
+	popx.a	r14 		/* r14 will hold the 20 bit PC. */
+	push.w	r14 		/* Push just 16 bits of the 20bit PC back onto the stack. */
+	rram.a	#4, r14 	/* Move the top 4 bits of the PC down ready to be combined with the SP. */
+	and.w	#0xf000, r14/* Ensure other bits are clear. */
+	add.w	sr, r14		/* Combine the top 4 bits of the PC with the SR. */
+	push.w	r14			/* Push the generated combined value onto the stack. */
 
 	/* Now the SR is stacked we can disable interrupts. */
-	dint			
+	dint	
+	nop
 				
 	/* Save the context of the current task. */
 	portSAVE_CONTEXT			
 
-	/* Switch to the highest priority task that is ready to run. */
+	/* Select the next task to run. */
 	calla	#vTaskSwitchContext		
 
 	/* Restore the context of the new task. */

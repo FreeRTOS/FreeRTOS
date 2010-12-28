@@ -143,7 +143,7 @@ unsigned long ulSP_PC_Combined;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xdddddd;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xcccccc;
+	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xbbbbbb;
 	pxTopOfStack--;

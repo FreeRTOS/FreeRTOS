@@ -98,8 +98,8 @@ void vPortSetupTimerInterrupt( void );
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 unsigned short usNibble;
-unsigned short *pus16BitPointer;
 unsigned long ulSP_PC_Combined;
+unsigned short *pusTopOfStack;
 
 	/*
 		Place a few bytes of known values on the bottom of the stack.
@@ -117,17 +117,11 @@ unsigned long ulSP_PC_Combined;
 	executing an ISR.  We want the stack to look just as if this has happened
 	so place a pointer to the start of the task on the stack first - followed
 	by the flags we want the task to use when it starts up. */
-//	pus16BitPointer = ( unsigned short * ) pxTopOfStack;
-//	*pus16BitPointer = ( unsigned short ) pxCode;
-//	pus16BitPointer--;
 	
 	/* When placed on the stack, the top four bits of the status register
 	contain bits 19:16 of the 20 bit return address (pxCode). */
+#ifdef GENERATE_ISR_STACK_FRAME
 	usNibble = ( unsigned short ) ( ( ( unsigned long ) pxCode >> 15UL ) & 0x0fUL );
-//	*pus16BitPointer = ( usNibble | portFLAGS_INT_ENABLED );
-//	pus16BitPointer--;
-
-//	pxTopOfStack = ( portSTACK_TYPE * ) pus16BitPointer;
 
 	ulSP_PC_Combined = ( unsigned long ) pxCode;
 	ulSP_PC_Combined <<= 16;
@@ -135,7 +129,14 @@ unsigned long ulSP_PC_Combined;
 	ulSP_PC_Combined |= portFLAGS_INT_ENABLED;
 	*pxTopOfStack = ulSP_PC_Combined;
 	pxTopOfStack--;
-
+#else
+	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	pusTopOfStack = ( unsigned short * ) pxTopOfStack;
+	pusTopOfStack--;
+	*pusTopOfStack = portFLAGS_INT_ENABLED;
+	pusTopOfStack -= 2;
+	pxTopOfStack = ( portSTACK_TYPE * ) pusTopOfStack;
+#endif
 	/* Next the general purpose registers. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xffffff;
 	pxTopOfStack--;
@@ -193,5 +194,12 @@ void vPortSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
+#pragma vector=configTICK_INTERRUPT_VECTOR
+__interrupt void vISR( void )
+{
+extern void vTickISR( void );
+
+	vTickISR();
+}
 
 	

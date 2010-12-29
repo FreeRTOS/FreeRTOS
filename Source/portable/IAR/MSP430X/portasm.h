@@ -79,9 +79,10 @@ portRESTORE_CONTEXT macro
 		/* The last thing on the stack will be the status register.
         Ensure the power down bits are clear ready for the next
         time this power down register is popped from the stack. */
-		bic.w   #0xf0, 0( SP )
-
-		reti
+		bic.w   #0xf0, 0( sp )
+			
+		pop.w	sr
+		reta
 		endm
 /*-----------------------------------------------------------*/
 

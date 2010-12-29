@@ -184,7 +184,7 @@ static void prvLCDTask( void *pvParameters );
  * Definition of the button poll task described in the comments at the top of
  * this file.
  */
-static void vButtonPollTask( void *pvParameters );
+static void prvButtonPollTask( void *pvParameters );
 
 /*
  * Converts a status message value into an appropriate string for display on
@@ -238,7 +238,7 @@ void main( void )
 		/* Create the LCD and button poll tasks, as described at the top of this
 		file. */
 		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
-		xTaskCreate( vButtonPollTask, ( signed char * ) "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( prvButtonPollTask, ( signed char * ) "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		
 		/* Create a subset of the standard demo tasks. */
 		vStartDynamicPriorityTasks();
@@ -436,7 +436,7 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 }
 /*-----------------------------------------------------------*/
 
-static void vButtonPollTask( void *pvParameters )
+static void prvButtonPollTask( void *pvParameters )
 {
 long lLastState = pdTRUE;
 long lState;

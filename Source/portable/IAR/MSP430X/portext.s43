@@ -71,8 +71,13 @@
  *
  * If the preemptive scheduler is in use a context switch can also occur.
  */
+	
 	RSEG ISR_CODE
+	
 vTickISR:
+	
+	/* The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
+	to save it manually before it gets modified (interrupts get disabled). */
 	push.w sr
 	portSAVE_CONTEXT
 				
@@ -92,15 +97,9 @@ vTickISR:
  */
 vPortYield:
 
-	/* Mimic an interrupt by combining the SR and the PC, the latter having
-	already been pushed onto the stack.  R14 is a scratch registers. */
-//	popx.a	r14 		/* r14 will hold the 20 bit PC. */
-//	push.w	r14 		/* Push just 16 bits of the 20bit PC back onto the stack. */
-//	rram.a	#4, r14 	/* Move the top 4 bits of the PC down ready to be combined with the SP. */
-//	and.w	#0xf000, r14/* Ensure other bits are clear. */
-//	add.w	sr, r14		/* Combine the top 4 bits of the PC with the SR. */
-//	push.w	r14			/* Push the generated combined value onto the stack. */
+	/* The sr needs saving before it is modified. */
 	push.w	sr
+	
 	/* Now the SR is stacked we can disable interrupts. */
 	dint	
 	nop
@@ -130,15 +129,5 @@ xPortStartScheduler:
 	portRESTORE_CONTEXT
 /*-----------------------------------------------------------*/
       		
-
-	/* Install vTickISR as the interrupt on the vector specified by the
-	application code. */
-	/*COMMON INTVEC *./
-	/*ORG 0xFF80 + configTICK_INTERRUPT_VECTOR
-	ORG 0xFFEC
-	
-	__vTickISR__: DC16 0xabcd*/
-	
-
 	END
 		

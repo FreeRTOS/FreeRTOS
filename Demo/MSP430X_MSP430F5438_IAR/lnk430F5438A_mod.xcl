@@ -193,14 +193,22 @@
 // Code
 //
 
--P(CODE)CODE=5C00-FF7F,10000-45BFF
+// *** Modified to place code in high memory and insodoing, testing the port.
+// Original code
+//-P(CODE)CODE=5C00-FF7F,10000-45BFF
+// Modified code
+-P(CODE)CODE=10000-45BFF
 -Z(CODE)CODE_ID
 
 // ---------------------------
 // Constant data
 //
 
--Z(CONST)DATA20_C,DATA20_ID=5C00-FF7F,10000-45BFF
+// *** Modified to place code in high memory and insodoing, testing the port.
+// Original code
+//-Z(CONST)DATA20_C,DATA20_ID=5C00-FF7F,10000-45BFF
+// Modified code
+-Z(CONST)DATA20_C,DATA20_ID=10000-45BFF
 
 
 // -------------------------------------

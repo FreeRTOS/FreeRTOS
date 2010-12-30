@@ -59,16 +59,6 @@
 #include "msp430.h"
 #include "hal_MSP-EXP430F5438.h"
 
-/* The rate at which mainCHECK_LED will toggle when all the tasks are running
-without error.  Controlled by the check task as described at the top of this
-file. */
-#define mainNO_ERROR_CYCLE_TIME		( 5000 / portTICK_RATE_MS )
-
-/* The rate at which mainCHECK_LED will toggle when an error has been reported
-by at least one task.  Controlled by the check task as described at the top of
-this file. */
-#define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
-
 /* Codes sent within messages to the LCD task so the LCD task can interpret
 exactly what the message it just received was.  These are sent in the
 cMessageID member of the message structure (defined below). */
@@ -82,6 +72,7 @@ of the same message and indicate what the status actually is. */
 #define mainERROR_DYNAMIC_TASKS			( pdPASS + 1 )
 #define mainERROR_COM_TEST				( pdPASS + 2 )
 #define mainERROR_GEN_QUEUE_TEST		( pdPASS + 3 )
+#define mainERROR_REG_TEST				( pdPASS + 4 )
 
 /* The length of the queue (the number of items the queue can hold) that is used
 to send messages from tasks and interrupts the the LCD task. */
@@ -93,7 +84,6 @@ to send messages from tasks and interrupts the the LCD task. */
 
 extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
-static void prvCheckTask( void *pvParameters );
 static void prvSetupHardware( void );
 static void prvTerminalIOTask( void *pvParameters );
 static void prvButtonPollTask( void *pvParameters );
@@ -132,12 +122,11 @@ void main( void )
 
 		/* Create the terminal IO and button poll tasks, as described at the top
 		of this	file. */
-		xTaskCreate( prvTerminalIOTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
+		xTaskCreate( prvTerminalIOTask, ( signed char * ) "IO", configMINIMAL_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
 		xTaskCreate( prvButtonPollTask, ( signed char * ) "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 		xTaskCreate( vRegTest1Task, "RegTest1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 		xTaskCreate( vRegTest2Task, "RegTest2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
-		xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 		vTaskStartScheduler();
 	}
 	for( ;; );
@@ -209,7 +198,8 @@ static char cBuffer[ 512 ];
 		
 		/* Output the message that was placed into the cBuffer array within the
 		switch statement above. */
-		printf( "%s", cBuffer );
+		printf( "%s : %u\n", cBuffer, ( unsigned int ) xTaskGetTickCount() );
+		fflush( stdout );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -228,6 +218,8 @@ static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue )
 											break;
 		case mainERROR_GEN_QUEUE_TEST 	:	sprintf( pcBuffer, "Error: Gen Q test" );
 											break;
+		case mainERROR_REG_TEST			:	sprintf( pcBuffer, "Error: Reg test" );
+											break;
 		default							:	sprintf( pcBuffer, "Unknown status" );
 											break;
 	}
@@ -245,6 +237,12 @@ xQueueMessage xMessage;
 	{
 		/* Check the button state. */
 		ucState = ( halButtonsPressed() & BUTTON_UP );
+		
+		if( ucState != 0 )
+		{
+			ucState = pdTRUE;
+		}
+		
 		if( ucState != ucLastState )
 		{
 			/* The state has changed, send a message to the LCD task. */
@@ -267,42 +265,7 @@ static void prvSetupHardware( void )
 	halButtonsInit( BUTTON_ALL );
 	halButtonsInterruptEnable( BUTTON_SELECT );
 	LFXT_Start (XT1DRIVE_0);
-	Init_FLL_Settle( 25000, 488 );
-}
-/*-----------------------------------------------------------*/
-
-static void prvCheckTask( void *pvParameters )
-{
-volatile unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
-portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
-const char *pcStatusMessage = "OK";
-
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
-
-		/* Check the reg test tasks are still cycling.  They will stop incrementing
-		their loop counters if they encounter an error. */
-		if( usRegTest1Counter == usLastRegTest1Counter )
-		{
-			pcStatusMessage = "Error: RegTest1";
-		}
-
-		if( usRegTest2Counter == usLastRegTest2Counter )
-		{
-			pcStatusMessage = "Error: RegTest2";
-		}
-
-		usLastRegTest1Counter = usRegTest1Counter;
-		usLastRegTest2Counter = usRegTest2Counter;
-		
-		printf( "%s, tick count = %u\n", pcStatusMessage, ( unsigned int ) xTaskGetTickCount() );
-		fflush( stdout );
-	}
+	Init_FLL_Settle( 18000, 488 );
 }
 /*-----------------------------------------------------------*/
 
@@ -352,6 +315,81 @@ void vApplicationIdleHook( void )
 {
 	__bis_SR_register( LPM3_bits + GIE );
 }
+/*-----------------------------------------------------------*/
 
+void vApplicationTickHook( void )
+{
+static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
+static unsigned long ulCounter = 0;
+static const unsigned long ulCheckFrequency = 5000UL / portTICK_RATE_MS;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+/* Define the status message that is sent to the LCD task.  By default the
+status is PASS. */
+static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
+
+	/* This is called from within the tick interrupt and performs the 'check'
+	functionality as described in the comments at the top of this file.
+
+	Is it time to perform the 'check' functionality again? */
+	ulCounter++;
+	if( ulCounter >= ulCheckFrequency )
+	{
+		#ifdef LEFT_OVER_FROM_CUT_AND_PASTE
+			/* See if the standard demo tasks are executing as expected, changing
+			the message that is sent to the LCD task from PASS to an error code if
+			any tasks set reports an error. */
+			if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+			{
+				xStatusMessage.lMessageValue = mainERROR_DYNAMIC_TASKS;
+			}
+			
+			if( xAreComTestTasksStillRunning() != pdPASS )
+			{
+				xStatusMessage.lMessageValue = mainERROR_COM_TEST;
+			}
+			
+			if( xAreGenericQueueTasksStillRunning() != pdPASS )
+			{
+				xStatusMessage.lMessageValue = mainERROR_GEN_QUEUE_TEST;
+			}
+		#else
+			/* Check the reg test tasks are still cycling.  They will stop incrementing
+			their loop counters if they encounter an error. */
+			if( usRegTest1Counter == usLastRegTest1Counter )
+			{
+				xStatusMessage.cMessageValue = mainERROR_REG_TEST;
+			}
+	
+			if( usRegTest2Counter == usLastRegTest2Counter )
+			{
+				xStatusMessage.cMessageValue = mainERROR_REG_TEST;
+			}
+	
+			usLastRegTest1Counter = usRegTest1Counter;
+			usLastRegTest2Counter = usRegTest2Counter;
+		#endif
+		
+		/* As this is the tick hook the lHigherPriorityTaskWoken parameter is not
+		needed (a context switch is going to be performed anyway), but it must
+		still be provided. */
+		xQueueSendFromISR( xLCDQueue, &xStatusMessage, &xHigherPriorityTaskWoken );
+		ulCounter = 0;
+	}
+
+	if( ( ulCounter & 0xff ) == 0 )
+	{
+		if( ( LED_PORT_OUT & LED_1 ) == 0 )
+		{
+			LED_PORT_OUT |= LED_1;
+			LED_PORT_OUT &= ~LED_2;
+		}
+		else
+		{
+			LED_PORT_OUT &= ~LED_1;
+			LED_PORT_OUT |= LED_2;
+		}
+	}
+}
 
 

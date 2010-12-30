@@ -1785,6 +1785,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_PMM.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_PMM.h</name>
@@ -1827,6 +1830,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_adc.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_adc.h</name>
@@ -1845,12 +1851,18 @@
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd_fonts.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd_fonts.h</name>
@@ -1860,6 +1872,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rf.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rf.h</name>
@@ -1869,18 +1884,27 @@
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rtc.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rtc.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_tlv.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_tlv.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_usb.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_usb.h</name>
@@ -1896,30 +1920,45 @@
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\adcTemp.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\adcTemp.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\audio.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\audio.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\balanceBall.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\balanceBall.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\clock.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\clock.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\FFT.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\FFT.h</name>
@@ -1929,51 +1968,78 @@
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\FFT_430.s43</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\flashUtils.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\flashUtils.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\LPM.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\LPM.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\menuSetting.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\menuSetting.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\PMM.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\PMM.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\PowerTest.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\PowerTest.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\usbTest.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\usbTest.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\UserExperience_F5438A.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\UserExperience_F5438A.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\UserExperienceGraphics.c</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\UserExperienceGraphics.h</name>

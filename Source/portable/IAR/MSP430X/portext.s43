@@ -58,7 +58,7 @@
 	IMPORT vTaskSwitchContext
 	IMPORT vPortSetupTimerInterrupt
 
-	EXPORT vTickISR
+	EXPORT vPortTickISR
 	EXPORT vPortYield
 	EXPORT xPortStartScheduler
 
@@ -74,7 +74,7 @@
 	
 	RSEG ISR_CODE
 	
-vTickISR:
+vPortTickISR:
 	
 	/* The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
 	to save it manually before it gets modified (interrupts get disabled). */

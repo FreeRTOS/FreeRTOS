@@ -1911,6 +1911,12 @@
     </file>
   </group>
   <group>
+    <name>Standard_Demo_Tasks</name>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+    </file>
+  </group>
+  <group>
     <name>UserExperienceDemo</name>
     <file>
       <name>$PROJ_DIR$\UserExperienceDemo\5xx_ACTIVE_test.h</name>
@@ -2055,10 +2061,16 @@
     <name>$PROJ_DIR$\main.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\ParTest.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\readme.txt</name>
   </file>
   <file>
     <name>$PROJ_DIR$\RegTest.s43</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\serial.c</name>
   </file>
 </project>
 

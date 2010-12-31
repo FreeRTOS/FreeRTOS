@@ -158,7 +158,7 @@
         </option>
         <option>
           <name>EMUVerifyDownloadP7</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>EraseOptionSlaveP7</name>
@@ -240,7 +240,7 @@
         </option>
         <option>
           <name>TargetSettlingtime</name>
-          <state>0</state>
+          <state>10</state>
         </option>
         <option>
           <name>AllowAccessToBSL</name>

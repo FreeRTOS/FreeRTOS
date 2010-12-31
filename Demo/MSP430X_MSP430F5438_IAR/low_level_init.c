@@ -40,9 +40,10 @@
 int __low_level_init(void)
 {
   /* Insert your low-level initializations here */
-  
+  _DINT();
   WDTCTL = WDTPW+WDTHOLD;
-  
+
+
   /*
    * Return value:
    *

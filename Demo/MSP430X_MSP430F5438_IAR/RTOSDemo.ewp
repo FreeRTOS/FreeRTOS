@@ -1851,18 +1851,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd_fonts.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd_fonts.h</name>
@@ -1914,6 +1908,12 @@
     <name>Standard_Demo_Tasks</name>
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
     </file>
   </group>
   <group>

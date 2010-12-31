@@ -65,7 +65,9 @@
 
 /* Standard demo includes. */
 #include "ParTest.h"
+#include "dynamic.h"
 #include "comtest2.h"
+#include "GenQTest.h"
 
 /* Codes sent within messages to the LCD task so the LCD task can interpret
 exactly what the message it just received was.  These are sent in the
@@ -88,13 +90,15 @@ to send messages from tasks and interrupts the the LCD task. */
 
 #define mainLCD_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainGENERIC_QUEUE_TEST_PRIORITY	( tskIDLE_PRIORITY )
 
 /* The LED used by the comtest tasks. See the comtest.c file for more
 information.  In this case it is deliberately out of range as there are only
 two LEDs, and they are both already in use. */
-#define mainCOM_TEST_LED			( 3 )
+#define mainCOM_TEST_LED				( 3 )
 
-
+/* The baud rate used by the comtest tasks described at the top of this file. */
+#define mainCOM_TEST_BAUD_RATE			( 9600 )
 /*-----------------------------------------------------------*/
 
 extern void vRegTest1Task( void *pvParameters );
@@ -137,13 +141,16 @@ void main( void )
 		vQueueAddToRegistry( xLCDQueue, "LCDQueue" );
 
 		/* Create the standard demo tasks. */
-		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, 9600, mainCOM_TEST_LED );
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+		vStartDynamicPriorityTasks();
+		vStartGenericQueueTasks( mainGENERIC_QUEUE_TEST_PRIORITY );
 		
 		/* Create the terminal IO and button poll tasks, as described at the top
 		of this	file. */
 		xTaskCreate( prvTerminalIOTask, ( signed char * ) "IO", configMINIMAL_STACK_SIZE * 2, NULL, mainLCD_TASK_PRIORITY, NULL );
 		xTaskCreate( prvButtonPollTask, ( signed char * ) "BPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
+		/* Create the register test tasks as described at the top of this file. */
 		xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 		xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 		vTaskStartScheduler();
@@ -161,6 +168,8 @@ LCD.  Note this is a static variable to prevent it being allocated on the task
 stack, which is too small to hold such a variable.  The stack size is configured
 when the task is created. */
 static char cBuffer[ 512 ];
+unsigned char ucLine = 1;
+
 
 	/* This function is the only function that uses printf().  If printf() is
 	used from any other function then some sort of mutual exclusion on stdout
@@ -181,6 +190,13 @@ static char cBuffer[ 512 ];
 		has been received. */
 		xQueueReceive( xLCDQueue, &xReceivedMessage, portMAX_DELAY );
 
+		/* Clear the LCD if no room remains for any more text output. */
+		if( ucLine > 8 )
+		{
+			halLcdClearScreen();
+			ucLine = 0;
+		}
+		
 		/* What is this message?  What does it contain? */
 		switch( xReceivedMessage.cMessageID )
 		{
@@ -201,7 +217,18 @@ static char cBuffer[ 512 ];
 												printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************" );
 												fflush( stdout );
 												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
-//												printf( cBuffer );
+												printf( cBuffer );
+												fflush( stdout );
+												
+												/* Also print out a message to
+												the LCD - in this case the
+												pointer to the string to print
+												is sent directly in the
+												lMessageValue member of the
+												message.  This just demonstrates
+												a different communication
+												technique. */
+												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.ulMessageValue );
 												break;
 												
 			case mainMESSAGE_STATUS			:	/* The tick interrupt hook
@@ -216,10 +243,8 @@ static char cBuffer[ 512 ];
 												break;
 		}
 		
-		/* Output the message that was placed into the cBuffer array within the
-		switch statement above. */
-		printf( "%s : %u\n", cBuffer, ( unsigned int ) xTaskGetTickCount() );
-		fflush( stdout );
+		halLcdPrintLine( cBuffer, ucLine,  OVERWRITE_TEXT );
+		ucLine++;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -230,9 +255,9 @@ static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue )
 	string for output onto the LCD. */
 	switch( lStatusValue )
 	{
-		case pdPASS						:	sprintf( pcBuffer, "Task status = PASS" );
+		case pdPASS						:	sprintf( pcBuffer, "Status = PASS" );
 											break;
-		case mainERROR_DYNAMIC_TASKS	:	sprintf( pcBuffer, "Error: Dynamic tasks" );
+		case mainERROR_DYNAMIC_TASKS	:	sprintf( pcBuffer, "Err: Dynamic tsks" );
 											break;
 		case mainERROR_COM_TEST			:	sprintf( pcBuffer, "Err: COM test" ); /* Error in COM test - is the Loopback connector connected? */														
 											break;
@@ -284,10 +309,19 @@ static void prvSetupHardware( void )
 unsigned long ulCPU_Clock_KHz = ( configCPU_CLOCK_HZ / 1000UL );
 
 	halBoardInit();
-	halButtonsInit( BUTTON_ALL );
-	halButtonsInterruptEnable( BUTTON_SELECT );
+
 	LFXT_Start( XT1DRIVE_0 );
 	Init_FLL_Settle( ( unsigned short ) ulCPU_Clock_KHz, 488 );
+
+	halButtonsInit( BUTTON_ALL );
+	halButtonsInterruptEnable( BUTTON_SELECT );
+	halLcdInit();
+	halLcdBackLightInit();
+	halLcdSetBackLight( 0 );
+	halLcdSetContrast( 100 );
+	halLcdClearScreen();
+	
+	halLcdPrintLine( " www.FreeRTOS.org", 0,  OVERWRITE_TEXT );
 }
 /*-----------------------------------------------------------*/
 
@@ -358,44 +392,38 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 	ulCounter++;
 	if( ulCounter >= ulCheckFrequency )
 	{
-		#ifdef LEFT_OVER_FROM_CUT_AND_PASTE
-			/* See if the standard demo tasks are executing as expected, changing
-			the message that is sent to the LCD task from PASS to an error code if
-			any tasks set reports an error. */
-			if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
-			{
-				xStatusMessage.lMessageValue = mainERROR_DYNAMIC_TASKS;
-			}
-			
-			if( xAreGenericQueueTasksStillRunning() != pdPASS )
-			{
-				xStatusMessage.lMessageValue = mainERROR_GEN_QUEUE_TEST;
-			}
-		#else
-			/* See if the standard demo tasks are executing as expected, changing
-			the message that is sent to the LCD task from PASS to an error code if
-			any tasks set reports an error. */
-			if( xAreComTestTasksStillRunning() != pdPASS )
-			{
-				xStatusMessage.ulMessageValue = mainERROR_COM_TEST;
-			}
+		/* See if the standard demo tasks are executing as expected, changing
+		the message that is sent to the LCD task from PASS to an error code if
+		any tasks set reports an error. */
+		if( xAreComTestTasksStillRunning() != pdPASS )
+		{
+			xStatusMessage.ulMessageValue = mainERROR_COM_TEST;
+		}
 
+		if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+		{
+			xStatusMessage.ulMessageValue = mainERROR_DYNAMIC_TASKS;
+		}
+		
+		if( xAreGenericQueueTasksStillRunning() != pdPASS )
+		{
+			xStatusMessage.ulMessageValue = mainERROR_GEN_QUEUE_TEST;
+		}			
 
-			/* Check the reg test tasks are still cycling.  They will stop incrementing
-			their loop counters if they encounter an error. */
-			if( usRegTest1Counter == usLastRegTest1Counter )
-			{
-				xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
-			}
-	
-			if( usRegTest2Counter == usLastRegTest2Counter )
-			{
-				xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
-			}
-	
-			usLastRegTest1Counter = usRegTest1Counter;
-			usLastRegTest2Counter = usRegTest2Counter;
-		#endif
+		/* Check the reg test tasks are still cycling.  They will stop incrementing
+		their loop counters if they encounter an error. */
+		if( usRegTest1Counter == usLastRegTest1Counter )
+		{
+			xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
+		}
+
+		if( usRegTest2Counter == usLastRegTest2Counter )
+		{
+			xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
+		}
+
+		usLastRegTest1Counter = usRegTest1Counter;
+		usLastRegTest2Counter = usRegTest2Counter;
 		
 		/* As this is the tick hook the lHigherPriorityTaskWoken parameter is not
 		needed (a context switch is going to be performed anyway), but it must
@@ -424,7 +452,7 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 __interrupt static void prvSelectButtonInterrupt(void)
 {
 /* Define the message sent to the LCD task from this interrupt. */
-static const xQueueMessage xMessage = { mainMESSAGE_BUTTON_SEL, ( unsigned long ) "Select Interrupt!" };
+static const xQueueMessage xMessage = { mainMESSAGE_BUTTON_SEL, ( unsigned long ) "Select Interrupt" };
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* This is the interrupt handler for the joystick select button input.

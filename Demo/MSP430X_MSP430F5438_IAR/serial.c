@@ -102,54 +102,31 @@ unsigned portLONG ulBaudRateCount;
 		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 
-#if 0
+		USB_PORT_SEL |= USB_PIN_RXD + USB_PIN_TXD;
+		USB_PORT_DIR |= USB_PIN_TXD;
+		USB_PORT_DIR &= ~USB_PIN_RXD;
+
 		/* Reset UART. */
-		UCA0CTL1 |= UCSWRST;
+		UCA1CTL1 |= UCSWRST;
 
 		/* Use SMCLK. */
-		UCA0CTL1 = UCSSEL0 | UCSSEL1;
+		UCA1CTL1 = UCSSEL0 | UCSSEL1;
 		
 		/* Setup baud rate low byte. */
-		UCA0BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
+		UCA1BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
 
 		/* Setup baud rate high byte. */
 		ulBaudRateCount >>= 8UL;
-		UCA0BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
+		UCA1BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
 
 		/* UCLISTEN sets loopback mode! */
-		UCA0STAT = UCLISTEN;
+		UCA1STAT = UCLISTEN;
 
-		/* Clear interrupts. */
-//		UCA0IFG = 0;
-		
 		/* Enable interrupts. */
-		UCA0IE |= UCRXIE;
+		UCA1IE |= UCRXIE;
 		
 		/* Take out of reset. */
-		UCA0CTL1 &= ~UCSWRST;
-#else
-	USB_PORT_SEL |= USB_PIN_RXD + USB_PIN_TXD;
-	USB_PORT_DIR |= USB_PIN_TXD;
-	USB_PORT_DIR &= ~USB_PIN_RXD;
-	
-	UCA1CTL1 |= UCSWRST;                          //Reset State
-	UCA1CTL0 = UCMODE_0;
-	
-	UCA1CTL0 &= ~UC7BIT;                      // 8bit char
-	UCA1CTL1 |= UCSSEL_2;
-//	UCA1BR0 = 16;                             // 8Mhz/57600=138
-//	UCA1BR1 = 1;
-		/* Setup baud rate low byte. */
-		UCA0BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
-
-		/* Setup baud rate high byte. */
-		ulBaudRateCount >>= 8UL;
-		UCA0BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
-
-	UCA1MCTL = 0xE;
-	UCA1CTL1 &= ~UCSWRST;
-	UCA1IE |= UCRXIE;
-#endif
+		UCA1CTL1 &= ~UCSWRST;
 	}
 	portEXIT_CRITICAL();
 	
@@ -180,60 +157,46 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOut
 signed portBASE_TYPE xReturn;
 
 	xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
-	UCA0IE |= UCTXIE;
+	UCA1IE |= UCTXIE;
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
-char cTxedBytes[ 512 ];
-char cRxedBytes[ 512 ];
-volatile int xIndex = 0;
-volatile int xIndex2 = 0;
 
-#pragma vector=USCI_A0_VECTOR
+#pragma vector=USCI_A1_VECTOR
 static __interrupt void prvUSCI_A0_ISR( void )
 {
 signed portCHAR cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	while( UCA0IFG & UCRXIFG )
+	while( ( UCA1IFG & UCRXIFG ) != 0 )
 	{
 		/* Get the character from the UART and post it on the queue of Rxed
 		characters. */
-		cChar = UCA0RXBUF;
-
-if( xIndex2 < 500 )
-{
-	cRxedBytes[ xIndex2++ ] = cChar;
-}
-
+		cChar = UCA1RXBUF;
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 	}
 	
-	if( UCA0IFG & UCTXIFG )
+	/* If there is a Tx interrupt pending and the tx interrupts are enabled. */
+	if( ( UCA1IFG & UCTXIFG ) != 0 )
 	{
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */
 		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
 		{
-if( xIndex < 500 )
-{
-	cTxedBytes[ xIndex++ ] = cChar;
-}
-
 			/* There was another character queued - transmit it now. */
-			UCA0TXBUF = cChar;
+			UCA1TXBUF = cChar;
 		}
 		else
 		{
 			/* There were no other characters to transmit - disable the Tx
 			interrupt. */
-			UCA0IE &= ~UCTXIE;
+			UCA1IE &= ~UCTXIE;
 		}
 	}
 
-	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );	
+	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 

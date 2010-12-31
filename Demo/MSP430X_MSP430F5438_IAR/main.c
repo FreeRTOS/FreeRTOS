@@ -335,7 +335,8 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 
 void vApplicationIdleHook( void )
 {
-	__bis_SR_register( LPM3_bits + GIE );
+	/* Want to leave the SMCLK running so the COMTest tasks don't fail. */
+	__bis_SR_register( LPM1_bits + GIE );
 }
 /*-----------------------------------------------------------*/
 

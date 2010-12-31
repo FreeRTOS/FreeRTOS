@@ -145,10 +145,8 @@ extern void vPortYield( void );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
-#if configINTERRUPT_EXAMPLE_METHOD == 2
-	extern void vTaskSwitchContext( void );
-	#define portYIELD_FROM_ISR( x ) if( x ) vTaskSwitchContext()
-#endif /* configINTERRUPT_EXAMPLE_METHOD */
+extern void vTaskSwitchContext( void );
+#define portYIELD_FROM_ISR( x ) if( x ) vPortYield()
 	
 void vApplicationSetupTimerInterrupt( void );
 

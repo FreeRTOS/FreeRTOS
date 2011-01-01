@@ -70,9 +70,6 @@
 /* Demo application includes. */
 #include "serial.h"
 
-/* HAL includes. */
-#include "hal_usb.h"
-
 /* Constants required to setup the hardware. */
 #define serTX_AND_RX			( ( unsigned portCHAR ) 0x03 )
 
@@ -101,10 +98,6 @@ unsigned portLONG ulBaudRateCount;
 		/* Create the queues used by the com test task. */
 		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
 		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-
-		USB_PORT_SEL |= USB_PIN_RXD + USB_PIN_TXD;
-		USB_PORT_DIR |= USB_PIN_TXD;
-		USB_PORT_DIR &= ~USB_PIN_RXD;
 
 		/* Reset UART. */
 		UCA1CTL1 |= UCSWRST;

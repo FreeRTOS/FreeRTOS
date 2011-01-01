@@ -898,14 +898,14 @@
     <toolchain>
       <name>MSP430</name>
     </toolchain>
-    <debug>0</debug>
+    <debug>1</debug>
     <settings>
       <name>General</name>
       <archiveVersion>7</archiveVersion>
       <data>
         <version>27</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>ExePath</name>
           <state>Release\Exe</state>
@@ -941,42 +941,42 @@
         <option>
           <name>GRuntimeLibSelect</name>
           <version>0</version>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>RTDescription</name>
-          <state></state>
+          <state>Use the full configuration of the C/EC++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>xxx.h</state>
+          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xlff.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>xxx.r43</state>
+          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xlff.r43</state>
         </option>
         <option>
           <name>Input variant</name>
           <version>0</version>
-          <state>0</state>
+          <state>3</state>
         </option>
         <option>
           <name>Input description</name>
-          <state></state>
+          <state>No specifier n, no float or long long, no scan set, no assignment suppressing.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>0</state>
+          <state>4</state>
         </option>
         <option>
           <name>Output description</name>
-          <state></state>
+          <state>No specifier a or A, no specifier n, no float or long long, no flags.</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>OGCore</name>
@@ -992,7 +992,7 @@
         </option>
         <option>
           <name>OGChipSelectMenu</name>
-          <state></state>
+          <state>MSP430F5438A	MSP430F5438A</state>
         </option>
         <option>
           <name>GStackHeapOverride</name>
@@ -1000,19 +1000,19 @@
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>###Uninitialized###</state>
+          <state>160</state>
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>###Uninitialized###</state>
+          <state>160</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
-          <state>0</state>
+          <state>2</state>
         </option>
         <option>
           <name>GHeap20Size</name>
-          <state>###Uninitialized###</state>
+          <state>80</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -1048,10 +1048,10 @@
       <data>
         <version>30</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>NDEBUG</state>
+          <state></state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1091,7 +1091,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state></state>
+          <state>Pa082</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -1128,7 +1128,7 @@
         </option>
         <option>
           <name>CCDebugInfo</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IProcessor</name>
@@ -1164,7 +1164,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.r43</state>
         </option>
         <option>
           <name>CCLibConfigHeader</name>
@@ -1208,7 +1208,13 @@
         </option>
         <option>
           <name>newCCIncludePaths</name>
-          <state></state>
+          <state>$PROJ_DIR$\F5XX_6XX_Core_Lib</state>
+          <state>$PROJ_DIR$\MSP-EXP430F5438_HAL</state>
+          <state>$PROJ_DIR$\UserExperienceDemo</state>
+          <state>$PROJ_DIR$\..\Common\include</state>
+          <state>$PROJ_DIR$\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\MSP430X</state>
+          <state>$PROJ_DIR$</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1245,7 +1251,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>1</state>
+          <state>3</state>
         </option>
         <option>
           <name>CInput</name>
@@ -1293,7 +1299,7 @@
       <data>
         <version>13</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>AObjPrefix</name>
           <state>1</state>
@@ -1397,7 +1403,7 @@
         </option>
         <option>
           <name>ADebug</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ADebugType</name>
@@ -1417,7 +1423,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.r43</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -1445,7 +1451,7 @@
         </option>
         <option>
           <name>AUserIncludes</name>
-          <state></state>
+          <state>$PROJ_DIR$</state>
         </option>
       </data>
     </settings>
@@ -1476,14 +1482,14 @@
       <data>
         <version>22</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>XOutOverride</name>
           <state>0</state>
         </option>
         <option>
           <name>OutputFile</name>
-          <state></state>
+          <state>RTOSDemo.d43</state>
         </option>
         <option>
           <name>OutputFormat</name>
@@ -1497,7 +1503,7 @@
         </option>
         <option>
           <name>SecondaryOutputFile</name>
-          <state></state>
+          <state>(None for the selected format)</state>
         </option>
         <option>
           <name>XDefines</name>
@@ -1517,7 +1523,7 @@
         </option>
         <option>
           <name>XList</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>SegmentMap</name>
@@ -1537,7 +1543,7 @@
         </option>
         <option>
           <name>XIncludes</name>
-          <state>###Uninitialized###</state>
+          <state>$TOOLKIT_DIR$\LIB\</state>
         </option>
         <option>
           <name>ModuleStatus</name>
@@ -1545,11 +1551,11 @@
         </option>
         <option>
           <name>XclOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XclFile</name>
-          <state>lnk0t.xcl</state>
+          <state>$PROJ_DIR$\lnk430F5438A_mod.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -1595,7 +1601,7 @@
         </option>
         <option>
           <name>SuppressDiags</name>
-          <state></state>
+          <state>w6</state>
         </option>
         <option>
           <name>TreatAsWarn</name>
@@ -1637,11 +1643,11 @@
         </option>
         <option>
           <name>xcProgramEntryLabel</name>
-          <state></state>
+          <state>__program_start</state>
         </option>
         <option>
           <name>DebugInformation</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RuntimeControl</name>
@@ -1677,7 +1683,7 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state></state>
+          <state>RTOSDemo.a43</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -1757,7 +1763,7 @@
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>XAROutOverride</name>
           <state>0</state>
@@ -1781,22 +1787,7 @@
   <group>
     <name>F5XX_6XX_Core_Lib</name>
     <file>
-      <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_macros.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_PMM.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_PMM.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_UCS.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_UCS.h</name>
     </file>
   </group>
   <group>
@@ -1826,82 +1817,19 @@
   <group>
     <name>MSP-EXP430F5438_HAL</name>
     <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\cc2500.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_adc.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_adc.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_board.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_board.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_buttons.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_buttons.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd_fonts.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_lcd_fonts.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_MSP-EXP430F5438.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rf.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rf.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rf_settings.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rtc.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_rtc.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_tlv.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_tlv.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_usb.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\MSP-EXP430F5438_HAL\hal_usb.h</name>
     </file>
   </group>
   <group>
@@ -1914,141 +1842,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
-    </file>
-  </group>
-  <group>
-    <name>UserExperienceDemo</name>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\5xx_ACTIVE_test.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\5xx_ACTIVE_test.s43</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\adcTemp.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\adcTemp.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\audio.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\audio.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\balanceBall.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\balanceBall.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\clock.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\clock.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\FFT.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\FFT.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\FFT_430.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\FFT_430.s43</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\flashUtils.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\flashUtils.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\LPM.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\LPM.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\menuSetting.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\menuSetting.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\PMM.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\PMM.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\PowerTest.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\PowerTest.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\usbTest.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\usbTest.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\UserExperience_F5438A.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\UserExperience_F5438A.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\UserExperienceGraphics.c</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\UserExperienceDemo\UserExperienceGraphics.h</name>
     </file>
   </group>
   <file>

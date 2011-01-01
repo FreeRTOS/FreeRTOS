@@ -195,9 +195,10 @@
 
 // *** Modified to place code in high memory and insodoing, testing the port.
 // Original code
--P(CODE)CODE=5C00-FF7F,10000-45BFF
+//-P(CODE)CODE=5C00-FF7F,10000-45BFF
 // Modified code
-//-P(CODE)CODE=10000-45BFF
+-P(CODE)CODE=10000-45BFF
+
 -Z(CODE)CODE_ID
 
 // ---------------------------

@@ -155,6 +155,7 @@ void main( void )
 		xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 		vTaskStartScheduler();
 	}
+	
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -322,6 +323,8 @@ unsigned long ulCPU_Clock_KHz = ( configCPU_CLOCK_HZ / 1000UL );
 	halLcdClearScreen();
 	
 	halLcdPrintLine( " www.FreeRTOS.org", 0,  OVERWRITE_TEXT );
+	
+while( ( halButtonsPressed() & BUTTON_UP ) == 0 );
 }
 /*-----------------------------------------------------------*/
 

@@ -53,8 +53,16 @@
 #include "msp430.h"
 #include "FreeRTOSConfig.h"
 
+/*
+ * The definition of the "register test" tasks, as described at the top of
+ * main.c
+ */
+
+
+
 	IMPORT usRegTest1Counter
 	IMPORT usRegTest2Counter
+	IMPORT vPortYield
 	
 	EXPORT vRegTest1Task
 	EXPORT vRegTest2Task
@@ -63,6 +71,7 @@
 
 vRegTest1Task:
 
+	/* Fill each general purpose register with a known value. */
 	movx.a	#0x44444, r4
 	movx.a	#0x55555, r5
 	movx.a	#0x66666, r6
@@ -78,6 +87,9 @@ vRegTest1Task:
 	
 prvRegTest1Loop:
 
+	/* Test each general purpose register to check that it still contains the
+	expected known value, jumping to vRegTest1Error if any register contains
+	an unexpected value. */
 	cmpx.a	#0x44444, r4
 	jne		vRegTest1Error
 	cmpx.a	#0x55555, r5
@@ -102,7 +114,12 @@ prvRegTest1Loop:
 	jne		vRegTest1Error
 	cmpx.a	#0xfffff, r15
 	jne		vRegTest1Error
+	
+	/* This task is still running without jumping to vRegTest1Error, so increment
+	the loop counter so the check task knows the task is running error free. */
 	incx.w	&usRegTest1Counter
+	
+	/* Loop again, performing the same tests. */
 	jmp		prvRegTest1Loop
 	nop
 
@@ -110,49 +127,56 @@ prvRegTest1Loop:
 vRegTest1Error:
 	jmp vRegTest1Error
 	nop
+	
 /*-----------------------------------------------------------*/
 
+/* See the comments in vRegTest1Task.  This task is the same, it just uses
+different values in its registers. */
 vRegTest2Task:
 
-	movx.a	#0x44444, r4
-	movx.a	#0x55555, r5
-	movx.a	#0x66666, r6
-	movx.a	#0x77777, r7
-	movx.a	#0x88888, r8
-	movx.a	#0x99999, r9
-	movx.a	#0xaaaaa, r10
-	movx.a	#0xbbbbb, r11
-	movx.a	#0xccccc, r12
-	movx.a	#0xddddd, r13
-	movx.a	#0xeeeee, r14
-	movx.a	#0xfffff, r15
+	movx.a	#0x14441, r4
+	movx.a	#0x15551, r5
+	movx.a	#0x16661, r6
+	movx.a	#0x17771, r7
+	movx.a	#0x18881, r8
+	movx.a	#0x19991, r9
+	movx.a	#0x1aaa1, r10
+	movx.a	#0x1bbb1, r11
+	movx.a	#0x1ccc1, r12
+	movx.a	#0x1ddd1, r13
+	movx.a	#0x1eee1, r14
+	movx.a	#0x1fff1, r15
 	
 prvRegTest2Loop:
 
-	cmpx.a	#0x44444, r4
+	cmpx.a	#0x14441, r4
 	jne		vRegTest2Error
-	cmpx.a	#0x55555, r5
+	cmpx.a	#0x15551, r5
 	jne		vRegTest2Error
-	cmpx.a	#0x66666, r6
+	cmpx.a	#0x16661, r6
 	jne		vRegTest2Error
-	cmpx.a	#0x77777, r7
+	cmpx.a	#0x17771, r7
 	jne		vRegTest2Error
-	cmpx.a	#0x88888, r8
+	cmpx.a	#0x18881, r8
 	jne		vRegTest2Error
-	cmpx.a	#0x99999, r9
+	cmpx.a	#0x19991, r9
 	jne		vRegTest2Error
-	cmpx.a	#0xaaaaa, r10
+	cmpx.a	#0x1aaa1, r10
 	jne		vRegTest2Error
-	cmpx.a	#0xbbbbb, r11
+	cmpx.a	#0x1bbb1, r11
 	jne		vRegTest2Error
-	cmpx.a	#0xccccc, r12
+	cmpx.a	#0x1ccc1, r12
 	jne		vRegTest2Error
-	cmpx.a	#0xddddd, r13
+	cmpx.a	#0x1ddd1, r13
 	jne		vRegTest2Error
-	cmpx.a	#0xeeeee, r14
+	cmpx.a	#0x1eee1, r14
 	jne		vRegTest2Error
-	cmpx.a	#0xfffff, r15
+	cmpx.a	#0x1fff1, r15
 	jne		vRegTest2Error
+	
+	/* Also perform a manual yield, just to increase the scope of the test. */
+	calla 	#vPortYield
+	
 	incx.w	&usRegTest2Counter
 	jmp		prvRegTest2Loop
 	nop

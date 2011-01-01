@@ -1863,6 +1863,9 @@
     <name>$PROJ_DIR$\RegTest.s43</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\RunTimeStatsConfig.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\serial.c</name>
   </file>
 </project>

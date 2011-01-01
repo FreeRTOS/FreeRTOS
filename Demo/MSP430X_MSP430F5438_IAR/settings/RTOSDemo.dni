@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-802929519
+Checksum=283457804
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -14,7 +14,7 @@ Control Register=0
 NextState0=0
 NextState1=0
 [Action Register]
-Break=1
+Break=6
 State Storage=0
 [Profiling]
 Enabled=0
@@ -28,6 +28,10 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -35,13 +39,9 @@ LogFile=_ ""
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=303237632
+Mode=123810376
 Graph=0
 Symbiont=0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
 [Breakpoints]
 Count=0
 [FET]

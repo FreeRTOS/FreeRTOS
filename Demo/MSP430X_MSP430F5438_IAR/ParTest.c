@@ -74,6 +74,7 @@ void vParTestInitialise( void )
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
+	/* Only two LEDs are provided on the hardware. */
 	taskENTER_CRITICAL();
 	{
 		if( xValue != pdFALSE )
@@ -85,6 +86,9 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 	
 				case 1: LED_PORT_OUT |= LED_2;
 						break;
+						
+				default: /* Nothing to do here, there are only two LEDs. */
+						break;
 			}
 		}
 		else
@@ -95,6 +99,8 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 						break;
 	
 				case 1: LED_PORT_OUT &= ~LED_2;
+						break;
+				default: /* Nothing to do here, there are only two LEDs. */
 						break;
 			}
 		}
@@ -127,6 +133,8 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 					{
 						LED_PORT_OUT &= ~LED_2;
 					}
+					break;
+			default: /* Nothing to do here, there are only two LEDs. */
 					break;
 		}
 	}

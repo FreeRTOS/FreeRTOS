@@ -96,13 +96,13 @@ void vConfigureTimerForRunTimeStats( void )
 /*-----------------------------------------------------------*/
 
 #pragma vector=TIMER1_A0_VECTOR
-static __interrupt void prvRunTimeStatsOverflowISR( void )
+interrupt void prvRunTimeStatsOverflowISR( void )
 {
 	ulStatsOverflowCount++;
 }
 /*-----------------------------------------------------------*/
 
-inline unsigned long ulGetRunTimeStatsTime( void )
+unsigned long ulGetRunTimeStatsTime( void )
 {
 unsigned long ulReturn;
 

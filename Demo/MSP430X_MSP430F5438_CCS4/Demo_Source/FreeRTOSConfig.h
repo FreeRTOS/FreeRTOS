@@ -80,7 +80,7 @@
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		5
-#define configGENERATE_RUN_TIME_STATS	0
+#define configGENERATE_RUN_TIME_STATS	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		0
 #define configUSE_MALLOC_FAILED_HOOK	1
@@ -108,16 +108,12 @@ vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
 case configTICK_INTERRUPT_VECTOR is set to TIMER0_A0_VECTOR. */
 #define configTICK_INTERRUPT_VECTOR		TIMER0_A0_VECTOR
 
-/* Prevent the following definitions being included when FreeRTOSConfig.h
-is included from an asm file. */
-#ifdef __ICC430__
-	extern void vConfigureTimerForRunTimeStats( void );
-	extern inline unsigned long ulGetRunTimeStatsTime( void );
-	extern volatile unsigned long ulStatsOverflowCount;
-#endif /* __ICCARM__ */
+extern void vConfigureTimerForRunTimeStats( void );
+extern unsigned long ulGetRunTimeStatsTime( void );
+extern volatile unsigned long ulStatsOverflowCount;
 
-//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-//#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeStatsTime()
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeStatsTime()
 
 #endif /* FREERTOS_CONFIG_H */
 

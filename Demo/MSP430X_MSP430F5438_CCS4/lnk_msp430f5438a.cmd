@@ -106,7 +106,12 @@ SECTIONS
     .sysmem    : {} > RAM                /* DYNAMIC MEMORY ALLOCATION AREA    */
     .stack     : {} > RAM (HIGH)         /* SOFTWARE SYSTEM STACK             */
 
-    .text      : {}>> FLASH | FLASH2     /* CODE                              */
+/* Modified to test the use of high memory. */
+/* Original line. */
+/*    .text      : {}>> FLASH | FLASH2 */  /* CODE                              */
+/* Modified line. */
+    .text      : {}>> FLASH2              /* CODE                              */
+	.main      : {} > FLASH
     .text:_isr : {} > FLASH              /* ISR CODE SPACE                    */
     .cinit     : {} > FLASH              /* INITIALIZATION TABLES             */
 //#ifdef (__LARGE_DATA_MODEL__)

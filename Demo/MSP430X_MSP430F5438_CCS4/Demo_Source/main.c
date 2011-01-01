@@ -243,6 +243,10 @@ typedef struct
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
+/* The linker script tests the FreeRTOS ports use of 20bit addresses by
+locating all code in high memory.  The following pragma ensures that main
+remains in low memory. */
+#pragma CODE_SECTION(main,".main")
 void main( void )
 {
 	/* Configure the peripherals used by this demo application.  This includes
@@ -306,6 +310,7 @@ unsigned char ucLine = 1;
 	First print out the number of bytes that remain in the FreeRTOS heap.  This
 	can be viewed in the terminal IO window within the IAR Embedded Workbench. */
 	printf( "%d bytes of heap space remain unallocated\n", ( int ) xPortGetFreeHeapSize() );
+	fflush( stdout );
 
 	for( ;; )
 	{
@@ -342,9 +347,9 @@ unsigned char ucLine = 1;
 												embedded workbench. */
 												printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************" );
 												fflush( stdout );
-												//vTaskGetRunTimeStats( ( signed char * ) cBuffer );
-												//printf( cBuffer );
-												//fflush( stdout );
+												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
+												printf( cBuffer );
+												fflush( stdout );
 												
 												/* Also print out a message to
 												the LCD - in this case the

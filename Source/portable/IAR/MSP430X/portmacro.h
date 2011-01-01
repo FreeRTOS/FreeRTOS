@@ -87,8 +87,8 @@
 /*-----------------------------------------------------------*/	
 
 /* Interrupt control macros. */
-#define portDISABLE_INTERRUPTS()	_DINT();
-#define portENABLE_INTERRUPTS()		_EINT();
+#define portDISABLE_INTERRUPTS()	_DINT()
+#define portENABLE_INTERRUPTS()		_EINT()
 /*-----------------------------------------------------------*/
 
 /* Critical section control macros. */

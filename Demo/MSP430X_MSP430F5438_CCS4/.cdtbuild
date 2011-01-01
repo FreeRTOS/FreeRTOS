@@ -93,9 +93,6 @@
 <resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.Debug.1203657382./RTOSDemo/source/RegTest.s43" name="RegTest.s43" rcbsApplicability="disable" resourcePath="/RTOSDemo/Demo_Source/RegTest.asm" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.3.exe.compilerDebug.2087986398./RTOSDemo/source/RegTest.s43">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.3.exe.compilerDebug.2087986398./RTOSDemo/source/RegTest.s43" name="MSP430 Compiler" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.3.exe.compilerDebug.2087986398"/>
 </resourceConfiguration>
-<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.Debug.1203657382./RTOSDemo/FreeRTOS_Source/portable/CCS4/MSP430X/portext.s43" name="portext.s43" rcbsApplicability="disable" resourcePath="/RTOSDemo/FreeRTOS_Source/portable/CCS4/MSP430X/portext.asm" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.3.exe.compilerDebug.2087986398./RTOSDemo/FreeRTOS_Source/portable/CCS4/MSP430X/portext.s43">
-<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.3.exe.compilerDebug.2087986398./RTOSDemo/FreeRTOS_Source/portable/CCS4/MSP430X/portext.s43" name="MSP430 Compiler" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.3.exe.compilerDebug.2087986398"/>
-</resourceConfiguration>
 </configuration>
 <macros/>
 </project>

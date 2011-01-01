@@ -29,7 +29,7 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\..\Source\include\*.* FreeRTOS_Source\include
 	
 	REM Copy the portable layer files
-	copy ..\..\Source\portable\GCC\ARM_CM3\*.* FreeRTOS_Source\portable\CCS4\MSP430X
+	copy ..\..\Source\portable\CCS4\MSP430X\*.* FreeRTOS_Source\portable\CCS4\MSP430X
 	
 	REM Copy the basic memory allocation files
 	copy ..\..\Source\portable\MemMang\heap_1.c FreeRTOS_Source\portable\MemMang

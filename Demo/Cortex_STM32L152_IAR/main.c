@@ -212,7 +212,7 @@ task. */
 typedef struct
 {
 	char cMessageID;	/* << States what the message is. */
-	long lMessageValue; /* << States the message value (can be an integer, string pointer, etc. depending on the value of cMessageID. */
+	long lMessageValue; /* << States the message value (can be an integer, string pointer, etc. depending on the value of cMessageID). */
 } xQueueMessage;
 
 /*-----------------------------------------------------------*/
@@ -586,7 +586,7 @@ void vApplicationMallocFailedHook( void )
 
 void vApplicationIdleHook( void )
 {
-	/* Called on each itteration of the idle task.  In this case the idle task
+	/* Called on each iteration of the idle task.  In this case the idle task
 	just enters a low(ish) power mode. */
 	PWR_EnterSleepMode( PWR_Regulator_ON, PWR_SLEEPEntry_WFI );
 }

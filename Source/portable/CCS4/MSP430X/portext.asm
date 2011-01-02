@@ -127,7 +127,6 @@ vPortCooperativeTickISR:
 	portSAVE_CONTEXT
 				
 	calla	#vTaskIncrementTick
-	calla	#vTaskSwitchContext
 		
 	portRESTORE_CONTEXT
 ;-----------------------------------------------------------

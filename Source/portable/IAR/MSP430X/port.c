@@ -171,7 +171,7 @@ void vPortSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-#pragma vector=configTICK_INTERRUPT_VECTOR
+#pragma vector=configTICK_VECTOR
 __interrupt void vTickISREntry( void )
 {
 extern void vPortTickISR( void );

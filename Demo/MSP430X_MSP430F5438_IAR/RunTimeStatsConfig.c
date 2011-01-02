@@ -78,8 +78,8 @@ void vConfigureTimerForRunTimeStats( void )
 	/* Ensure the timer is stopped. */
 	TA1CTL = 0;
 
-	/* Run the timer from the ACLK/4. */
-	TA1CTL = TASSEL_1 | ID__4;
+	/* Run the timer from the ACLK/2. */
+	TA1CTL = TASSEL_1 | ID__2;
 
 	/* Clear everything to start with. */
 	TA1CTL |= TACLR;
@@ -90,6 +90,9 @@ void vConfigureTimerForRunTimeStats( void )
 	/* Start up clean. */
 	TA1CTL |= TACLR;
 
+	/* No overflows can have occurred yet. */
+	ulStatsOverflowCount = 0UL;
+	
 	/* Continuous mode. */
 	TA1CTL |= MC__CONTINOUS;
 }

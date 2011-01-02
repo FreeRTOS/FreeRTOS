@@ -559,10 +559,10 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 /* The MSP430X port uses this callback function to configure its tick interrupt.
 This allows the application to choose the tick interrupt source.
-configTICK_INTERRUPT_VECTOR must also be set in FreeRTOSConfig.h to the correct
+configTICK_VECTOR must also be set in FreeRTOSConfig.h to the correct
 interrupt vector for the chosen tick interrupt source.  This implementation of
 vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
-case configTICK_INTERRUPT_VECTOR is set to TIMER0_A0_VECTOR. */
+case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
 void vApplicationSetupTimerInterrupt( void )
 {
 const unsigned short usACLK_Frequency_Hz = 32768;

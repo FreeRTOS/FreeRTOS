@@ -183,6 +183,9 @@ information.  */
 
 /* The maximum number of lines of text that can be displayed on the LCD. */
 #define mainMAX_LCD_LINES				( 8 )
+
+/* Just used to ensure parameters are passed into tasks correctly. */
+#define mainTASK_PARAMETER_CHECK_VALUE	( ( void * ) 0xDEAD )
 /*-----------------------------------------------------------*/
 
 /*
@@ -265,7 +268,7 @@ void main( void )
 		
 		/* Create the LCD, button poll and register test tasks, as described at
 		the top	of this	file. */
-		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE * 2, NULL, mainLCD_TASK_PRIORITY, NULL );
+		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE * 2, mainTASK_PARAMETER_CHECK_VALUE, mainLCD_TASK_PRIORITY, NULL );
 		xTaskCreate( prvButtonPollTask, ( signed char * ) "BPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		xTaskCreate( vRegTest1Task, ( signed char * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 		xTaskCreate( vRegTest2Task, ( signed char * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
@@ -304,6 +307,14 @@ unsigned char ucLine = 1;
 	can be viewed in the terminal IO window within the IAR Embedded Workbench. */
 	printf( "%d bytes of heap space remain unallocated\n", ( int ) xPortGetFreeHeapSize() );
 	fflush( stdout );
+	
+	/* Just as a test of the port, and for no functional reason, check the task
+	parameter contains its expected value. */
+	if( pvParameters != mainTASK_PARAMETER_CHECK_VALUE )
+	{
+		halLcdPrintLine( "Invalid parameter", ucLine,  OVERWRITE_TEXT );
+		ucLine++;		
+	}
 
 	for( ;; )
 	{

@@ -111,11 +111,11 @@ to exclude the API function. */
 
 /* The MSP430X port uses a callback function to configure its tick interrupt.
 This allows the application to choose the tick interrupt source.
-configTICK_INTERRUPT_VECTOR must also be set in FreeRTOSConfig.h to the correct
-interrupt vector for the chosen tick interrupt source.  This implementation of
+configTICK_VECTOR must also be set in FreeRTOSConfig.h to the correct interrupt
+vector for the chosen tick interrupt source.  This implementation of
 vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
-case configTICK_INTERRUPT_VECTOR is set to TIMER0_A0_VECTOR. */
-#define configTICK_INTERRUPT_VECTOR		TIMER0_A0_VECTOR
+case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
+#define configTICK_VECTOR				TIMER0_A0_VECTOR
 
 extern void vConfigureTimerForRunTimeStats( void );
 extern unsigned long ulGetRunTimeStatsTime( void );

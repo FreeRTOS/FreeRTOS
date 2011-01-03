@@ -1,4 +1,3 @@
-;
 ;    FreeRTOS V6.1.0 - Copyright (C) 2010 Real Time Engineers Ltd.
 ;
 ;    ***************************************************************************
@@ -50,125 +49,31 @@
 ;    http://www.OpenRTOS.com - Commercial support, development, porting,
 ;    licensing and training services.
 
-; * The definition of the "register test" tasks, as described at the top of
-; * main.c
-
-	.include data_model.h
-
-	.global vTaskIncrementTick
-	.global vTaskSwitchContext
-	.global vPortSetupTimerInterrupt
-	.global pxCurrentTCB
-	.global usCriticalNesting
-
-	.def vPortPreemptiveTickISR
-	.def vPortCooperativeTickISR
-	.def vPortYield
-	.def xPortStartScheduler
-
-;-----------------------------------------------------------
-
-portSAVE_CONTEXT .macro
-
-	;Save the remaining registers.
-	pushm_x	#12, r15
-	mov.w	&usCriticalNesting, r14
-	push_x r14
-	mov_x	&pxCurrentTCB, r12
-	mov_x	sp, 0( r12 )
-	.endm
-;-----------------------------------------------------------
-		
-portRESTORE_CONTEXT .macro
-
-	mov_x	&pxCurrentTCB, r12
-	mov_x	@r12, sp
-	pop_x	r15
-	mov.w	r15, &usCriticalNesting
-	popm_x	#12, r15
-		
-	;The last thing on the stack will be the status register.
-    ;Ensure the power down bits are clear ready for the next
-    ;time this power down register is popped from the stack.
-	bic.w   #0xf0, 0( sp )
-		
-	pop.w	sr
-	ret_x
-	.endm
-;-----------------------------------------------------------
-
-;*
-;* The RTOS tick ISR.
-;*
-;* If the cooperative scheduler is in use this simply increments the tick
-;* count.
-;*
-;* If the preemptive scheduler is in use a context switch can also occur.
-;*/
+	.if $DEFINED( __LARGE_DATA_MODEL__ )
+		.define "pushm.a", pushm_x
+		.define "popm.a", popm_x
+		.define "push.a", push_x
+		.define "pop.a", pop_x
+		.define "mov.a", mov_x
+		.define "cmp.a", cmp_x
+	.else
+		.define "pushm.w", pushm_x
+		.define "popm.w", popm_x
+		.define "push.w", push_x
+		.define "pop.w", pop_x
+		.define "mov.w", mov_x
+		.define "cmp.w", cmp_x
+	.endif
 	
-	.text
+	.if $DEFINED( __LARGE_CODE_MODEL__ )
+		.define "calla", call_x
+		.define "reta", ret_x
+	.else
+		.define "call", call_x
+		.define "ret", ret_x
+	.endif
 	
-vPortPreemptiveTickISR:
-	
-	; The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
-	;to save it manually before it gets modified (interrupts get disabled).
-	push.w sr
-	portSAVE_CONTEXT
-				
-	call_x	#vTaskIncrementTick
-	call_x	#vTaskSwitchContext
-		
-	portRESTORE_CONTEXT
-;-----------------------------------------------------------
-
-vPortCooperativeTickISR:
-	
-	; The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
-	;to save it manually before it gets modified (interrupts get disabled).
-	push.w sr
-	portSAVE_CONTEXT
-				
-	call_x	#vTaskIncrementTick
-		
-	portRESTORE_CONTEXT
-;-----------------------------------------------------------
-
-;*
-;* Manual context switch called by the portYIELD() macro.
-;*/
-vPortYield:
-
-	; The sr needs saving before it is modified.
-	push.w	sr
-	
-	; Now the SR is stacked we can disable interrupts.
-	dint	
-	nop
-				
-	; Save the context of the current task.
-	portSAVE_CONTEXT			
-
-	; Select the next task to run.
-	call_x	#vTaskSwitchContext		
-
-	; Restore the context of the new task.
-	portRESTORE_CONTEXT
-;-----------------------------------------------------------
 
 
-;*
-;* Start off the scheduler by initialising the RTOS tick timer, then restoring
-;* the context of the first task.
-;*
-xPortStartScheduler:
 
-	; Setup the hardware to generate the tick.  Interrupts are disabled
-	; when this function is called.
-	call_x	#vPortSetupTimerInterrupt
 
-	; Restore the context of the first task that is going to run.
-	portRESTORE_CONTEXT
-;-----------------------------------------------------------
-      		
-	.end
-		

@@ -72,7 +72,6 @@
 #define configCPU_CLOCK_HZ				( 16000000UL )	
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
@@ -85,6 +84,12 @@
 #define configUSE_RECURSIVE_MUTEXES		0
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
+
+#if __DATA_MODEL__ == __DATA_MODEL_SMALL__
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
+#else
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
+#endif
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0

@@ -53,7 +53,7 @@
 ; * The definition of the "register test" tasks, as described at the top of
 ; * main.c
 
-
+	.include data_model.h
 
 
 	.global usRegTest1Counter
@@ -68,47 +68,47 @@
 vRegTest1Task:
 
 	; Fill each general purpose register with a known value.
-	movx.a	#0x44444, r4
-	movx.a	#0x55555, r5
-	movx.a	#0x66666, r6
-	movx.a	#0x77777, r7
-	movx.a	#0x88888, r8
-	movx.a	#0x99999, r9
-	movx.a	#0xaaaaa, r10
-	movx.a	#0xbbbbb, r11
-	movx.a	#0xccccc, r12
-	movx.a	#0xddddd, r13
-	movx.a	#0xeeeee, r14
-	movx.a	#0xfffff, r15
+	mov_x	#0x4444, r4
+	mov_x	#0x5555, r5
+	mov_x	#0x6666, r6
+	mov_x	#0x7777, r7
+	mov_x	#0x8888, r8
+	mov_x	#0x9999, r9
+	mov_x	#0xaaaa, r10
+	mov_x	#0xbbbb, r11
+	mov_x	#0xcccc, r12
+	mov_x	#0xdddd, r13
+	mov_x	#0xeeee, r14
+	mov_x	#0xffff, r15
 	
 prvRegTest1Loop:
 
 	; Test each general purpose register to check that it still contains the
 	; expected known value, jumping to vRegTest1Error if any register contains
 	; an unexpected value.
-	cmpx.a	#0x44444, r4
+	cmp_x	#0x4444, r4
 	jne		vRegTest1Error
-	cmpx.a	#0x55555, r5
+	cmp_x	#0x5555, r5
 	jne		vRegTest1Error
-	cmpx.a	#0x66666, r6
+	cmp_x	#0x6666, r6
 	jne		vRegTest1Error
-	cmpx.a	#0x77777, r7
+	cmp_x	#0x7777, r7
 	jne		vRegTest1Error
-	cmpx.a	#0x88888, r8
+	cmp_x	#0x8888, r8
 	jne		vRegTest1Error
-	cmpx.a	#0x99999, r9
+	cmp_x	#0x9999, r9
 	jne		vRegTest1Error
-	cmpx.a	#0xaaaaa, r10
+	cmp_x	#0xaaaa, r10
 	jne		vRegTest1Error
-	cmpx.a	#0xbbbbb, r11
+	cmp_x	#0xbbbb, r11
 	jne		vRegTest1Error
-	cmpx.a	#0xccccc, r12
+	cmp_x	#0xcccc, r12
 	jne		vRegTest1Error
-	cmpx.a	#0xddddd, r13
+	cmp_x	#0xdddd, r13
 	jne		vRegTest1Error
-	cmpx.a	#0xeeeee, r14
+	cmp_x	#0xeeee, r14
 	jne		vRegTest1Error
-	cmpx.a	#0xfffff, r15
+	cmp_x	#0xffff, r15
 	jne		vRegTest1Error
 	
 	; This task is still running without jumping to vRegTest1Error, so increment
@@ -130,48 +130,48 @@ vRegTest1Error:
 ; different values in its registers.
 vRegTest2Task:
 
-	movx.a	#0x14441, r4
-	movx.a	#0x15551, r5
-	movx.a	#0x16661, r6
-	movx.a	#0x17771, r7
-	movx.a	#0x18881, r8
-	movx.a	#0x19991, r9
-	movx.a	#0x1aaa1, r10
-	movx.a	#0x1bbb1, r11
-	movx.a	#0x1ccc1, r12
-	movx.a	#0x1ddd1, r13
-	movx.a	#0x1eee1, r14
-	movx.a	#0x1fff1, r15
+	mov_x	#0x4441, r4
+	mov_x	#0x5551, r5
+	mov_x	#0x6661, r6
+	mov_x	#0x7771, r7
+	mov_x	#0x8881, r8
+	mov_x	#0x9991, r9
+	mov_x	#0xaaa1, r10
+	mov_x	#0xbbb1, r11
+	mov_x	#0xccc1, r12
+	mov_x	#0xddd1, r13
+	mov_x	#0xeee1, r14
+	mov_x	#0xfff1, r15
 	
 prvRegTest2Loop:
 
-	cmpx.a	#0x14441, r4
+	cmp_x	#0x4441, r4
 	jne		vRegTest2Error
-	cmpx.a	#0x15551, r5
+	cmp_x	#0x5551, r5
 	jne		vRegTest2Error
-	cmpx.a	#0x16661, r6
+	cmp_x	#0x6661, r6
 	jne		vRegTest2Error
-	cmpx.a	#0x17771, r7
+	cmp_x	#0x7771, r7
 	jne		vRegTest2Error
-	cmpx.a	#0x18881, r8
+	cmp_x	#0x8881, r8
 	jne		vRegTest2Error
-	cmpx.a	#0x19991, r9
+	cmp_x	#0x9991, r9
 	jne		vRegTest2Error
-	cmpx.a	#0x1aaa1, r10
+	cmp_x	#0xaaa1, r10
 	jne		vRegTest2Error
-	cmpx.a	#0x1bbb1, r11
+	cmp_x	#0xbbb1, r11
 	jne		vRegTest2Error
-	cmpx.a	#0x1ccc1, r12
+	cmp_x	#0xccc1, r12
 	jne		vRegTest2Error
-	cmpx.a	#0x1ddd1, r13
+	cmp_x	#0xddd1, r13
 	jne		vRegTest2Error
-	cmpx.a	#0x1eee1, r14
+	cmp_x	#0xeee1, r14
 	jne		vRegTest2Error
-	cmpx.a	#0x1fff1, r15
+	cmp_x	#0xfff1, r15
 	jne		vRegTest2Error
 	
 	; Also perform a manual yield, just to increase the scope of the test.
-	calla 	#vPortYield
+	call_x 	#vPortYield
 	
 	incx.w	&usRegTest2Counter
 	jmp		prvRegTest2Loop

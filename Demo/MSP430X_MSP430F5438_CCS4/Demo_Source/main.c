@@ -126,7 +126,7 @@
  * error has occurred.  The nature of the reg test tasks necessitates that they
  * are written in assembly code.
  *
- * *NOTE 2* vApplicationSetupTimerInterrupt() is called by the kernel to let
+ * *NOTE 1* vApplicationSetupTimerInterrupt() is called by the kernel to let
  * the application set up a timer to generate the tick interrupt.  In this
  * example a timer A0 is used for this purpose.
  *
@@ -355,8 +355,16 @@ unsigned char ucLine = 1;
 												printf( cBuffer );
 												fflush( stdout );
 												
-												/* Also print out a message to
-												the LCD - in this case the
+												/* Also generate and output a
+												table of task states. */
+												printf( "\nTask\t\tState Priority\tStack\t#\n*****************************************" );
+												fflush( stdout );
+												vTaskList( ( signed char * ) cBuffer );
+												printf( cBuffer );
+												fflush( stdout );
+												
+												/* Finally print out a message 
+												to the LCD - in this case the
 												pointer to the string to print
 												is sent directly in the
 												ulMessageValue member of the

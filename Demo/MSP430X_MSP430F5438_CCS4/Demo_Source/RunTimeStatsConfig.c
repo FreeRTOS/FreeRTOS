@@ -105,9 +105,14 @@ interrupt void prvRunTimeStatsOverflowISR( void )
 unsigned long ulGetRunTimeStatsTime( void )
 {
 unsigned long ulReturn;
+unsigned short usCounterSnapshot;
 
 	TA1CTL &= ~MC__CONTINOUS;
-	ulReturn = ( ( ulStatsOverflowCount << 16UL ) | ( unsigned long ) TA1R );
+	_nop();
+	_nop();
+	ulReturn = ( ulStatsOverflowCount << 16UL );
+	usCounterSnapshot = TA1R;
+	ulReturn |= ( unsigned long ) usCounterSnapshot;
 	TA1CTL |= MC__CONTINOUS;
 	
 	return ulReturn;

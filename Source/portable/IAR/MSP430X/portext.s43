@@ -52,15 +52,46 @@
 */
 #include "msp430.h"
 #include "FreeRTOSConfig.h"
-#include "portasm.h"
+#include "data_model.h"
 
 	IMPORT vTaskIncrementTick
 	IMPORT vTaskSwitchContext
 	IMPORT vPortSetupTimerInterrupt
+	IMPORT pxCurrentTCB
+	IMPORT usCriticalNesting
 
 	EXPORT vPortTickISR
 	EXPORT vPortYield
 	EXPORT xPortStartScheduler
+
+portSAVE_CONTEXT macro
+
+	/* Save the remaining registers. */
+	pushm_x	#12, r15
+	mov.w	&usCriticalNesting, r14
+	push_x r14
+	mov_x	&pxCurrentTCB, r12
+	mov_x	sp, 0( r12 )
+	endm
+/*-----------------------------------------------------------*/
+		
+portRESTORE_CONTEXT macro
+
+	mov_x	&pxCurrentTCB, r12
+	mov_x	@r12, sp
+	pop_x	r15
+	mov.w	r15, &usCriticalNesting
+	popm_x	#12, r15
+		
+	/* The last thing on the stack will be the status register.
+	Ensure the power down bits are clear ready for the next
+	time this power down register is popped from the stack. */
+	bic.w   #0xf0, 0( sp )
+		
+	pop.w	sr
+	reta
+	endm
+/*-----------------------------------------------------------*/
 
 
 /*
@@ -72,7 +103,7 @@
  * If the preemptive scheduler is in use a context switch can also occur.
  */
 	
-	RSEG ISR_CODE
+	RSEG CODE
 	
 vPortTickISR:
 	
@@ -89,8 +120,6 @@ vPortTickISR:
 		
 	portRESTORE_CONTEXT
 /*-----------------------------------------------------------*/
-
-	RSEG CODE
 
 /*
  * Manual context switch called by the portYIELD() macro.

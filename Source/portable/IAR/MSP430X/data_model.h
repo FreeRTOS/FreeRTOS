@@ -51,40 +51,24 @@
     licensing and training services.
 */
 
-#ifndef PORTASM_H
-#define PORTASM_H
+#ifndef DATA_MODEL_H
+#define DATA_MODEL_H
 
-		IMPORT pxCurrentTCB
-		IMPORT usCriticalNesting
+#ifdef __DATA_MODEL_SMALL__
+	#define pushm_x pushm.w
+	#define popm_x popm.w
+	#define push_x push.w
+	#define pop_x pop.w
+	#define mov_x mov.w
+	#define cmp_x cmp.w
+#else /* DATA_MODEL_SMALL__ */
+	#define pushm_x pushm.a
+	#define popm_x popm.a
+	#define push_x pushx.a
+	#define pop_x popx.a
+	#define mov_x movx.a
+	#define cmp_x cmpx.a
+#endif /* __DATA_MODEL_SMALL__
 
-portSAVE_CONTEXT macro
-
-		/* Save the remaining registers. */
-		pushm.a	#12, r15
-		movx.w	&usCriticalNesting, r14
-		pushx.a r14
-		movx.a	&pxCurrentTCB, r12
-		movx.a	sp, 0( r12 )
-		endm
-/*-----------------------------------------------------------*/
-		
-portRESTORE_CONTEXT macro
-
-		movx.a	&pxCurrentTCB, r12
-		movx.a	@r12, sp
-		popx.a	r15
-		movx.w	r15, &usCriticalNesting
-		popm.a	#12, r15
-			
-		/* The last thing on the stack will be the status register.
-        Ensure the power down bits are clear ready for the next
-        time this power down register is popped from the stack. */
-		bic.w   #0xf0, 0( sp )
-			
-		pop.w	sr
-		reta
-		endm
-/*-----------------------------------------------------------*/
-
-#endif
+#endif /* DATA_MODEL_H */
 

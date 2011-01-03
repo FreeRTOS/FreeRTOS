@@ -98,50 +98,68 @@ void vPortSetupTimerInterrupt( void );
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 unsigned short *pusTopOfStack;
+unsigned long *pulTopOfStack;
 
 	/*
 		Place a few bytes of known values on the bottom of the stack.
 		This is just useful for debugging and can be included if required.
-
+	
 		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
 		pxTopOfStack--;
 		*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
 		pxTopOfStack--;
 		*pxTopOfStack = ( portSTACK_TYPE ) 0x3333;
-		pxTopOfStack--;
 	*/
 
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
-	pusTopOfStack = ( unsigned short * ) pxTopOfStack;
+	/* portSTACK_TYPE is either 16 bits or 32 bits depending on the data model.
+	Some stacked items do not change size depending on the data model so have
+	to be explicitly cast to the correct size so this function will work
+	whichever data model is being used. */
+	if( sizeof( portSTACK_TYPE ) == sizeof( unsigned short ) )
+	{
+		/* Make room for a 20 bit value stored as a 32 bit value. */
+		pusTopOfStack = ( unsigned short * ) pxTopOfStack;
+		pusTopOfStack--;
+		pulTopOfStack = ( unsigned long * ) pusTopOfStack;
+	}
+	else
+	{
+		pulTopOfStack = ( unsigned long * ) pxTopOfStack;
+	}
+	*pulTopOfStack = ( unsigned long ) pxCode;
+	
+	pusTopOfStack = ( unsigned short * ) pulTopOfStack;
 	pusTopOfStack--;
 	*pusTopOfStack = portFLAGS_INT_ENABLED;
-	pusTopOfStack -= 2;
+	pusTopOfStack -= ( sizeof( portSTACK_TYPE ) / 2 );
+	
+	/* From here on the size of stacked items depends on the memory model. */
 	pxTopOfStack = ( portSTACK_TYPE * ) pusTopOfStack;
 
 	/* Next the general purpose registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xffffff;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xfffff;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xeeeeee;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xeeeee;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xdddddd;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xddddd;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xbbbbbb;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xbbbbb;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaaaa;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaaa;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x999999;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x99999;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x888888;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x88888;
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x555555;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x55555;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x666666;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x66666;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x555555;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x55555;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x444444;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x44444;
 	pxTopOfStack--;
 
 	/* A variable is used to keep track of the critical section nesting.

@@ -73,8 +73,14 @@
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		int
-#define portSTACK_TYPE	unsigned portLONG
 #define portBASE_TYPE	portSHORT
+
+/* The stack type changes depending on the data model. */
+#if( __DATA_MODEL__ == __DATA_MODEL_SMALL__ )
+	#define portSTACK_TYPE unsigned short
+#else
+	#define portSTACK_TYPE unsigned long
+#endif
 
 #if( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned portSHORT portTickType;

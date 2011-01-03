@@ -110,7 +110,8 @@ inline unsigned long ulGetRunTimeStatsTime( void )
 unsigned long ulReturn;
 
 	TA1CTL &= ~MC__CONTINOUS;
-	ulReturn = ( ( ulStatsOverflowCount << 16UL ) | ( unsigned long ) TA1R );
+	ulReturn = ( ulStatsOverflowCount << 16UL );
+	ulReturn |= ( unsigned long ) TA1R;
 	TA1CTL |= MC__CONTINOUS;
 	
 	return ulReturn;

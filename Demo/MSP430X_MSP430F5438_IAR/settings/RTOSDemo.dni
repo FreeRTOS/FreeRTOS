@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-130781403
+Checksum=-557929919
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -14,7 +14,7 @@ Control Register=0
 NextState0=0
 NextState1=0
 [Action Register]
-Break=1
+Break=3
 State Storage=0
 [Profiling]
 Enabled=0
@@ -39,11 +39,12 @@ LogFile=_ ""
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=151407352
+Mode=604119078
 Graph=0
 Symbiont=0
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\Source\portable\IAR\MSP430X\portext.s43}.155.1@1" 1 0 0 0 "" 0 ""
+Count=1
 [FET]
 Clock mode=14
 Extended Clock mode=4047

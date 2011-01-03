@@ -126,7 +126,7 @@
  * error has occurred.  The nature of the reg test tasks necessitates that they
  * are written in assembly code.
  *
- * *NOTE 2* vApplicationSetupTimerInterrupt() is called by the kernel to let
+ * *NOTE 1* vApplicationSetupTimerInterrupt() is called by the kernel to let
  * the application set up a timer to generate the tick interrupt.  In this
  * example a timer A0 is used for this purpose.
  *

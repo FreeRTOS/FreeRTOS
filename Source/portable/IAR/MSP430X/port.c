@@ -137,30 +137,37 @@ unsigned long *pulTopOfStack;
 	pxTopOfStack = ( portSTACK_TYPE * ) pusTopOfStack;
 
 	/* Next the general purpose registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xfffff;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xeeeee;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xddddd;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xbbbbb;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaaa;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x99999;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x88888;
-	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x55555;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x66666;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x55555;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x44444;
-	pxTopOfStack--;
+	#ifdef PRELOAD_REGISTER_VALUES
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xffff;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xeeee;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xdddd;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xbbbb;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaa;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x9999;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x8888;
+		pxTopOfStack--;	
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x5555;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x6666;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x5555;
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x4444;
+		pxTopOfStack--;
+	#else
+		pxTopOfStack -= 3;
+		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+		pxTopOfStack -= 9;
+	#endif
+
 
 	/* A variable is used to keep track of the critical section nesting.
 	This variable has to be stored as part of the task context and is

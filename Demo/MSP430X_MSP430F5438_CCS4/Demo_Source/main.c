@@ -257,10 +257,6 @@ void main( void )
 	attempt to use the queue. */
 	if( xLCDQueue != NULL )
 	{
-		/* Add the created queue to the queue registry so it can be viewed in
-		the IAR FreeRTOS state viewer plug-in. */
-		vQueueAddToRegistry( xLCDQueue, ( signed char * ) "LCDQueue" );
-
 		/* Create the standard demo tasks. */
 		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 		vStartDynamicPriorityTasks();

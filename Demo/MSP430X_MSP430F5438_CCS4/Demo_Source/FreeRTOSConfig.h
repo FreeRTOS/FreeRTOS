@@ -87,7 +87,7 @@
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
-#define configQUEUE_REGISTRY_SIZE		5
+#define configQUEUE_REGISTRY_SIZE		0
 #define configGENERATE_RUN_TIME_STATS	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		0

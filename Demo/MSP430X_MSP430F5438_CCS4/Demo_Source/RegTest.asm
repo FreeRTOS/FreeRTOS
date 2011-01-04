@@ -55,6 +55,14 @@
 
 	.include data_model.h
 
+	.if $DEFINED( __LARGE_DATA_MODEL__ )
+		.define "cmp.a", cmp_x
+		.define "incx.w", inc_x
+	.else
+		.define "cmp.w", cmp_x
+		.define "inc.w", inc_x
+	.endif
+
 
 	.global usRegTest1Counter
 	.global usRegTest2Counter
@@ -113,7 +121,7 @@ prvRegTest1Loop:
 	
 	; This task is still running without jumping to vRegTest1Error, so increment
 	; the loop counter so the check task knows the task is running error free.
-	incx.w	&usRegTest1Counter
+	inc_x	&usRegTest1Counter
 	
 	; Loop again, performing the same tests.
 	jmp		prvRegTest1Loop
@@ -173,7 +181,7 @@ prvRegTest2Loop:
 	; Also perform a manual yield, just to increase the scope of the test.
 	call_x 	#vPortYield
 	
-	incx.w	&usRegTest2Counter
+	inc_x	&usRegTest2Counter
 	jmp		prvRegTest2Loop
 	nop
 

@@ -1,0 +1,226 @@
+/*
+    FreeRTOS V6.1.0 - Copyright (C) 2010 Real Time Engineers Ltd.
+
+    ***************************************************************************
+    *                                                                         *
+    * If you are:                                                             *
+    *                                                                         *
+    *    + New to FreeRTOS,                                                   *
+    *    + Wanting to learn FreeRTOS or multitasking in general quickly       *
+    *    + Looking for basic training,                                        *
+    *    + Wanting to improve your FreeRTOS skills and productivity           *
+    *                                                                         *
+    * then take a look at the FreeRTOS books - available as PDF or paperback  *
+    *                                                                         *
+    *        "Using the FreeRTOS Real Time Kernel - a Practical Guide"        *
+    *                  http://www.FreeRTOS.org/Documentation                  *
+    *                                                                         *
+    * A pdf reference manual is also available.  Both are usually delivered   *
+    * to your inbox within 20 minutes to two hours when purchased between 8am *
+    * and 8pm GMT (although please allow up to 24 hours in case of            *
+    * exceptional circumstances).  Thank you for your support!                *
+    *                                                                         *
+    ***************************************************************************
+
+    This file is part of the FreeRTOS distribution.
+
+    FreeRTOS is free software; you can redistribute it and/or modify it under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    ***NOTE*** The exception to the GPL is included to allow you to distribute
+    a combined work that includes FreeRTOS without being obliged to provide the
+    source code for proprietary components outside of the FreeRTOS kernel.
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details. You should have received a copy of the GNU General Public 
+    License and the FreeRTOS license exception along with FreeRTOS; if not it 
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    by writing to Richard Barry, contact details for whom are available on the
+    FreeRTOS WEB site.
+
+    1 tab == 4 spaces!
+
+    http://www.FreeRTOS.org - Documentation, latest information, license and
+    contact details.
+
+    http://www.SafeRTOS.com - A version that is certified for use in safety
+    critical systems.
+
+    http://www.OpenRTOS.com - Commercial support, development, porting,
+    licensing and training services.
+*/
+
+#include <device.h>
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "task.h"
+#include "serial.h"
+/*---------------------------------------------------------------------------*/
+
+#define serialSTRING_DELAY_TICKS		( portMAX_DELAY )
+/*---------------------------------------------------------------------------*/
+
+CY_ISR_PROTO(vUartRxISR);
+CY_ISR_PROTO(vUartTxISR);
+/*---------------------------------------------------------------------------*/
+
+static xQueueHandle xSerialTxQueue = NULL;
+static xQueueHandle xSerialRxQueue = NULL;
+/*---------------------------------------------------------------------------*/
+
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+{
+	/* Configure Rx. */
+	xSerialRxQueue = xQueueCreate( uxQueueLength, sizeof( signed char ) );	
+	isr_UART1_RX_BYTE_RECEIVED_ClearPending();
+	isr_UART1_RX_BYTE_RECEIVED_StartEx(vUartRxISR);
+
+	/* Configure Tx */
+	xSerialTxQueue = xQueueCreate( uxQueueLength, sizeof( signed char ) );
+	isr_UART1_TX_BYTE_COMPLETE_ClearPending() ;
+	isr_UART1_TX_BYTE_COMPLETE_StartEx(vUartTxISR);
+
+	/* Clear the interrupt modes for the Tx for the time being. */
+	UART_1_SetTxInterruptMode( 0 );
+
+	/* Both configured successfully. */
+	return (xComPortHandle)( xSerialTxQueue && xSerialRxQueue );
+}
+/*---------------------------------------------------------------------------*/
+
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
+{
+unsigned short usIndex = 0;
+	for ( usIndex = 0; usIndex < usStringLength; usIndex++ )
+	{
+		/* Check for pre-mature end of line. */
+		if ( '\0' == pcString[ usIndex ] )
+		{
+			break;
+		}
+		
+		/* Send out, one character at a time. */
+		if ( pdTRUE != xSerialPutChar( NULL, pcString[ usIndex ], serialSTRING_DELAY_TICKS ) )
+		{
+			/* Failed to send, this will be picked up in the receive comtest task. */
+		}
+	}
+}
+/*---------------------------------------------------------------------------*/
+
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+{
+portBASE_TYPE xReturn = pdFALSE;
+	if ( pdTRUE == xQueueReceive( xSerialRxQueue, pcRxedChar, xBlockTime ) )
+	{
+		/* Picked up a character. */
+		xReturn = pdTRUE;
+	}
+	return xReturn;
+}
+/*---------------------------------------------------------------------------*/
+
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+{
+portBASE_TYPE xReturn = pdFALSE;
+
+	/* The ISR is processing characters is so just add to the end of the queue. */
+	if ( pdTRUE == xQueueSend( xSerialTxQueue, &cOutChar, xBlockTime ) )
+	{	
+		xReturn = pdTRUE;
+	}
+	else
+	{
+		/* The queue is probably full. */
+		xReturn = pdFALSE;
+	}
+
+	/* Make sure that the interrupt will fire in the case where:
+	*     Currently sending so the Tx Complete will fire.
+	*     Not sending so the Empty will fire.
+	*/
+	taskENTER_CRITICAL();
+		UART_1_SetTxInterruptMode( UART_1_TX_STS_COMPLETE | UART_1_TX_STS_FIFO_EMPTY );
+	taskEXIT_CRITICAL();
+	
+	return xReturn;
+}
+/*---------------------------------------------------------------------------*/
+
+CY_ISR(vUartRxISR)
+{
+portBASE_TYPE xTaskWoken = pdFALSE;
+volatile unsigned char ucStatus = 0;
+signed char cInChar = 0;
+unsigned long ulMask = 0;
+
+	/* Read the status to acknowledge. */
+	ucStatus = UART_1_ReadRxStatus();
+
+	/* Only interested in a character being received. */
+	if ( 0 != ( ucStatus & UART_1_RX_STS_FIFO_NOTEMPTY ) )
+	{
+		/* Get the character. */
+		cInChar = UART_1_GetChar();
+		
+		/* Mask off the other RTOS interrupts to interact with the queue. */
+		ulMask = portSET_INTERRUPT_MASK_FROM_ISR();
+		{
+			/* Try to deliver the character. */
+			if ( pdTRUE != xQueueSendFromISR( xSerialRxQueue, &cInChar, &xTaskWoken ) )
+			{
+				/* Run out of space. */
+			}
+		}
+		portCLEAR_INTERRUPT_MASK_FROM_ISR( ulMask );
+	}
+
+	/* If we delivered the character then a context switch might be required. */
+	portEND_SWITCHING_ISR( xTaskWoken );
+}
+/*---------------------------------------------------------------------------*/
+
+CY_ISR(vUartTxISR)
+{
+portBASE_TYPE xTaskWoken = pdFALSE;
+volatile unsigned char ucStatus = 0;
+signed char cOutChar = 0;
+unsigned long ulMask = 0;
+
+	/* Read the status to acknowledge. */
+	ucStatus = UART_1_ReadTxStatus();
+	
+	/* Check to see whether this is a genuine interrupt. */
+	if ( ( 0 != ( ucStatus & UART_1_TX_STS_COMPLETE ) )
+		|| ( 0 != ( ucStatus & UART_1_TX_STS_FIFO_EMPTY ) ) )
+	{	
+		/* Mask off the other RTOS interrupts to interact with the queue. */
+		ulMask = portSET_INTERRUPT_MASK_FROM_ISR();
+		{
+			if ( pdTRUE == xQueueReceiveFromISR( xSerialTxQueue, &cOutChar, &xTaskWoken ) )
+			{
+				/* Send the next character. */
+				UART_1_PutChar( cOutChar );			
+
+				/* If we are firing, then the only interrupt we are interested in
+				* is the Complete. The application code will add the Empty interrupt
+				* when there is something else to be done.
+				*/
+				UART_1_SetTxInterruptMode( UART_1_TX_STS_COMPLETE );
+			}
+			else
+			{
+				/* There is no work left so disable the interrupt
+				 * until the application puts more into the queue.
+				 */
+				UART_1_SetTxInterruptMode( 0 );
+			}
+		}
+		portCLEAR_INTERRUPT_MASK_FROM_ISR( ulMask );
+	}
+
+	/* If we delivered the character then a context switch might be required. */
+	portEND_SWITCHING_ISR( xTaskWoken );
+}
+/*---------------------------------------------------------------------------*/

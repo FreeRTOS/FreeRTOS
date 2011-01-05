@@ -60,8 +60,8 @@ extern portBASE_TYPE xFirstTimerHandler( void );
 extern portBASE_TYPE xSecondTimerHandler( void );
 /*---------------------------------------------------------------------------*/
 
-CY_ISR_PROTO(vHighFrequencyFirstISR);
-CY_ISR_PROTO(vHighFrequencySecondISR);
+CY_ISR_PROTO( vHighFrequencyFirstISR );
+CY_ISR_PROTO( vHighFrequencySecondISR );
 /*---------------------------------------------------------------------------*/
 
 /**
@@ -73,11 +73,11 @@ void vInitialiseTimerForIntQueueTest( void )
 	{
 		/* Initialise and start the First Timer ISR. */
 		isr_High_Frequency_2000Hz_ClearPending();
-		isr_High_Frequency_2000Hz_StartEx((cyisraddress)vHighFrequencyFirstISR);
+		isr_High_Frequency_2000Hz_StartEx( ( cyisraddress ) vHighFrequencyFirstISR );
 
 		/* Initialise and start the Second Timer ISR. */
 		isr_High_Frequency_2001Hz_ClearPending();
-		isr_High_Frequency_2001Hz_StartEx((cyisraddress)vHighFrequencySecondISR);
+		isr_High_Frequency_2001Hz_StartEx( ( cyisraddress ) vHighFrequencySecondISR );
 	}
 	taskEXIT_CRITICAL();
 }

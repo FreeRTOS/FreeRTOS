@@ -148,8 +148,9 @@ __asm void vPortStartFirstTask( void )
 	ldr r0, [r0]
 	/* Set the msp back to the start of the stack. */
 	msr msp, r0
-	/* Call SVC to start the first task. */
+	/* Globally enable interrupts. */
 	cpsie i
+	/* Call SVC to start the first task. */
 	svc 0
 	nop
 }

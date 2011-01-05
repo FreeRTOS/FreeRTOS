@@ -55,14 +55,12 @@
 		.define "push.a", push_x
 		.define "pop.a", pop_x
 		.define "mov.a", mov_x
-		.define "cmp.a", cmp_x
 	.else
 		.define "pushm.w", pushm_x
 		.define "popm.w", popm_x
 		.define "push.w", push_x
 		.define "pop.w", pop_x
 		.define "mov.w", mov_x
-		.define "cmp.w", cmp_x
 	.endif
 	
 	.if $DEFINED( __LARGE_CODE_MODEL__ )

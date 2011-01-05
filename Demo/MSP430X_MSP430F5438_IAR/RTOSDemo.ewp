@@ -105,7 +105,7 @@
         </option>
         <option>
           <name>GStackHeapOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GStackSize2</name>
@@ -113,7 +113,7 @@
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>160</state>
+          <state>4</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
@@ -121,7 +121,7 @@
         </option>
         <option>
           <name>GHeap20Size</name>
-          <state>80</state>
+          <state>4</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>

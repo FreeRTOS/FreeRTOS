@@ -67,7 +67,8 @@ static volatile char cLedOutput[ partstMAX_LED ];
 void vParTestInitialise( void )
 {
 long lIndex;
-	for ( lIndex = 0; lIndex < partstMAX_LED; lIndex++ )
+
+	for( lIndex = 0; lIndex < partstMAX_LED; lIndex++ )
 	{
 		cLedOutput[ lIndex ] = 0;
 	}
@@ -78,7 +79,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
 	taskENTER_CRITICAL();
 	{
-		switch ( uxLED )
+		switch( uxLED )
 		{
 			case 0:
 				Pin_LED_0_Write( xValue & 0x1 );
@@ -100,7 +101,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 	taskEXIT_CRITICAL();
 	
 	/* Record the output for the sake of toggling. */
-	if ( uxLED < partstMAX_LED )
+	if( uxLED < partstMAX_LED )
 	{
 		cLedOutput[ uxLED ] = ( xValue & 0x1 );
 	}
@@ -109,7 +110,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	if ( uxLED < partstMAX_LED )
+	if( uxLED < partstMAX_LED )
 	{
 		vParTestSetLED( uxLED, !cLedOutput[ uxLED ] );
 	}

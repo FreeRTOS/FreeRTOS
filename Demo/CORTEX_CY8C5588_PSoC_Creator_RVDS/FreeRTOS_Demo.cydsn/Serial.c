@@ -61,8 +61,8 @@
 #define serialSTRING_DELAY_TICKS		( portMAX_DELAY )
 /*---------------------------------------------------------------------------*/
 
-CY_ISR_PROTO(vUartRxISR);
-CY_ISR_PROTO(vUartTxISR);
+CY_ISR_PROTO( vUartRxISR );
+CY_ISR_PROTO( vUartTxISR );
 /*---------------------------------------------------------------------------*/
 
 static xQueueHandle xSerialTxQueue = NULL;
@@ -85,23 +85,24 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 	UART_1_SetTxInterruptMode( 0 );
 
 	/* Both configured successfully. */
-	return (xComPortHandle)( xSerialTxQueue && xSerialRxQueue );
+	return ( xComPortHandle )( xSerialTxQueue && xSerialRxQueue );
 }
 /*---------------------------------------------------------------------------*/
 
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
 unsigned short usIndex = 0;
-	for ( usIndex = 0; usIndex < usStringLength; usIndex++ )
+
+	for( usIndex = 0; usIndex < usStringLength; usIndex++ )
 	{
 		/* Check for pre-mature end of line. */
-		if ( '\0' == pcString[ usIndex ] )
+		if( '\0' == pcString[ usIndex ] )
 		{
 			break;
 		}
 		
 		/* Send out, one character at a time. */
-		if ( pdTRUE != xSerialPutChar( NULL, pcString[ usIndex ], serialSTRING_DELAY_TICKS ) )
+		if( pdTRUE != xSerialPutChar( NULL, pcString[ usIndex ], serialSTRING_DELAY_TICKS ) )
 		{
 			/* Failed to send, this will be picked up in the receive comtest task. */
 		}
@@ -112,7 +113,8 @@ unsigned short usIndex = 0;
 signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 portBASE_TYPE xReturn = pdFALSE;
-	if ( pdTRUE == xQueueReceive( xSerialRxQueue, pcRxedChar, xBlockTime ) )
+
+	if( pdTRUE == xQueueReceive( xSerialRxQueue, pcRxedChar, xBlockTime ) )
 	{
 		/* Picked up a character. */
 		xReturn = pdTRUE;
@@ -126,7 +128,7 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 portBASE_TYPE xReturn = pdFALSE;
 
 	/* The ISR is processing characters is so just add to the end of the queue. */
-	if ( pdTRUE == xQueueSend( xSerialTxQueue, &cOutChar, xBlockTime ) )
+	if( pdTRUE == xQueueSend( xSerialTxQueue, &cOutChar, xBlockTime ) )
 	{	
 		xReturn = pdTRUE;
 	}
@@ -137,9 +139,8 @@ portBASE_TYPE xReturn = pdFALSE;
 	}
 
 	/* Make sure that the interrupt will fire in the case where:
-	*     Currently sending so the Tx Complete will fire.
-	*     Not sending so the Empty will fire.
-	*/
+	    Currently sending so the Tx Complete will fire.
+	    Not sending so the Empty will fire.	*/
 	taskENTER_CRITICAL();
 		UART_1_SetTxInterruptMode( UART_1_TX_STS_COMPLETE | UART_1_TX_STS_FIFO_EMPTY );
 	taskEXIT_CRITICAL();
@@ -150,7 +151,7 @@ portBASE_TYPE xReturn = pdFALSE;
 
 CY_ISR(vUartRxISR)
 {
-portBASE_TYPE xTaskWoken = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 volatile unsigned char ucStatus = 0;
 signed char cInChar = 0;
 unsigned long ulMask = 0;
@@ -159,7 +160,7 @@ unsigned long ulMask = 0;
 	ucStatus = UART_1_ReadRxStatus();
 
 	/* Only interested in a character being received. */
-	if ( 0 != ( ucStatus & UART_1_RX_STS_FIFO_NOTEMPTY ) )
+	if( 0 != ( ucStatus & UART_1_RX_STS_FIFO_NOTEMPTY ) )
 	{
 		/* Get the character. */
 		cInChar = UART_1_GetChar();
@@ -168,7 +169,7 @@ unsigned long ulMask = 0;
 		ulMask = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
 			/* Try to deliver the character. */
-			if ( pdTRUE != xQueueSendFromISR( xSerialRxQueue, &cInChar, &xTaskWoken ) )
+			if( pdTRUE != xQueueSendFromISR( xSerialRxQueue, &cInChar, &xHigherPriorityTaskWoken ) )
 			{
 				/* Run out of space. */
 			}
@@ -176,14 +177,20 @@ unsigned long ulMask = 0;
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( ulMask );
 	}
 
-	/* If we delivered the character then a context switch might be required. */
-	portEND_SWITCHING_ISR( xTaskWoken );
+	/* If we delivered the character then a context switch might be required.
+	xHigherPriorityTaskWoken was set to pdFALSE on interrupt entry.  If calling 
+	xQueueSendFromISR() caused a task to unblock, and the unblocked task has
+	a priority equal to or higher than the currently running task (the task this
+	ISR interrupted), then xHigherPriorityTaskWoken will have been set to pdTRUE and
+	portEND_SWITCHING_ISR() will request a context switch to the newly unblocked
+	task. */
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*---------------------------------------------------------------------------*/
 
 CY_ISR(vUartTxISR)
 {
-portBASE_TYPE xTaskWoken = pdFALSE;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 volatile unsigned char ucStatus = 0;
 signed char cOutChar = 0;
 unsigned long ulMask = 0;
@@ -192,35 +199,38 @@ unsigned long ulMask = 0;
 	ucStatus = UART_1_ReadTxStatus();
 	
 	/* Check to see whether this is a genuine interrupt. */
-	if ( ( 0 != ( ucStatus & UART_1_TX_STS_COMPLETE ) )
-		|| ( 0 != ( ucStatus & UART_1_TX_STS_FIFO_EMPTY ) ) )
+	if( ( 0 != ( ucStatus & UART_1_TX_STS_COMPLETE ) ) || ( 0 != ( ucStatus & UART_1_TX_STS_FIFO_EMPTY ) ) )
 	{	
 		/* Mask off the other RTOS interrupts to interact with the queue. */
 		ulMask = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
-			if ( pdTRUE == xQueueReceiveFromISR( xSerialTxQueue, &cOutChar, &xTaskWoken ) )
+			if( pdTRUE == xQueueReceiveFromISR( xSerialTxQueue, &cOutChar, &xHigherPriorityTaskWoken ) )
 			{
 				/* Send the next character. */
 				UART_1_PutChar( cOutChar );			
 
 				/* If we are firing, then the only interrupt we are interested in
-				* is the Complete. The application code will add the Empty interrupt
-				* when there is something else to be done.
-				*/
+				is the Complete. The application code will add the Empty interrupt
+				when there is something else to be done. */
 				UART_1_SetTxInterruptMode( UART_1_TX_STS_COMPLETE );
 			}
 			else
 			{
-				/* There is no work left so disable the interrupt
-				 * until the application puts more into the queue.
-				 */
+				/* There is no work left so disable the interrupt until the application 
+				puts more into the queue. */
 				UART_1_SetTxInterruptMode( 0 );
 			}
 		}
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( ulMask );
 	}
 
-	/* If we delivered the character then a context switch might be required. */
-	portEND_SWITCHING_ISR( xTaskWoken );
+	/* If we delivered the character then a context switch might be required.
+	xHigherPriorityTaskWoken was set to pdFALSE on interrupt entry.  If calling 
+	xQueueSendFromISR() caused a task to unblock, and the unblocked task has
+	a priority equal to or higher than the currently running task (the task this
+	ISR interrupted), then xHigherPriorityTaskWoken will have been set to pdTRUE and
+	portEND_SWITCHING_ISR() will request a context switch to the newly unblocked
+	task. */
+	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*---------------------------------------------------------------------------*/

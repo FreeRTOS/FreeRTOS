@@ -107,7 +107,7 @@ tick hook. */
 extern void vSetupTimerTest( void );
 /*---------------------------------------------------------------------------*/
 
-/**
+/*
  * The Check task periodical interrogates each of the running tests to
  * ensure that they are still executing correctly.
  * If all the tests pass, then the LCD is updated with Pass, the number of 
@@ -117,7 +117,7 @@ extern void vSetupTimerTest( void );
  */
 void vCheckTask( void *pvParameters );
 
-/**
+/*
  * Installs the RTOS interrupt handlers and starts the peripherals.
  */
 static void prvHardwareSetup( void );
@@ -130,25 +130,6 @@ unsigned long ulIteration = 0;
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
 	prvHardwareSetup();
-
-	/* Poll the switch connected to P1[7]
-	 * to prevent the Soak test from (re)starting.
-	 */
-	while ( 0 != Startup_Release_Switch_Read() )
-	{
-		if ( 100000 <= ulIteration++ )
-		{
-			vParTestToggleLED( ulLed++ );
-			ulLed = ulLed % 4;
-			ulIteration = 0;
-		}
-	}
-	
-	/* Reset the LEDS. */
-	for ( ulLed = 0; ulLed < 4; ulLed++ )
-	{
-		vParTestSetLED( ulLed, pdFALSE );
-	}
 
 	/* Start the standard demo tasks.  These are just here to exercise the
 	kernel port and provide examples of how the FreeRTOS API can be used. */
@@ -167,7 +148,7 @@ unsigned long ulIteration = 0;
 	vStartInterruptQueueTasks();
 
 	/* Start the error checking task. */
-  	(void)xTaskCreate( vCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+  	( void ) xTaskCreate( vCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Configure the timers used by the fast interrupt timer test. */
 	vSetupTimerTest();
@@ -181,8 +162,11 @@ unsigned long ulIteration = 0;
     task.  The idle task is created within vTaskStartScheduler(). */
 	vTaskStartScheduler();
 
-	/* Should never reach here. */
-	for (;;);
+	/* Should never reach here as the kernel will now be running.  If
+	vTaskStartScheduler() does return then it is very likely that there was
+	insufficient (FreeRTOS) heap space available to create all the tasks,
+	including the idle task that is created within vTaskStartScheduler() itself. */
+	for( ;; );
 }
 /*---------------------------------------------------------------------------*/
 
@@ -195,18 +179,18 @@ extern void vPortSVCHandler( void );
 extern cyisraddress CyRamVectors[];
 
 	/* Install the OS Interrupt Handlers. */
-	CyRamVectors[11] = (cyisraddress)vPortSVCHandler;
-	CyRamVectors[14] = (cyisraddress)xPortPendSVHandler;
-	CyRamVectors[15] = (cyisraddress)xPortSysTickHandler;
+	CyRamVectors[ 11 ] = ( cyisraddress ) vPortSVCHandler;
+	CyRamVectors[ 14 ] = ( cyisraddress ) xPortPendSVHandler;
+	CyRamVectors[ 15 ] = ( cyisraddress ) xPortSysTickHandler;
 
 	/* Start-up the peripherals. */
 
 	/* Enable and clear the LCD Display. */
 	LCD_Character_Display_Start();
 	LCD_Character_Display_ClearDisplay();
-	LCD_Character_Display_Position(0,0);
-	LCD_Character_Display_PrintString("www.FreeRTOS.org ");
-	LCD_Character_Display_Position(1,0);
+	LCD_Character_Display_Position( 0, 0 );
+	LCD_Character_Display_PrintString( "www.FreeRTOS.org " );
+	LCD_Character_Display_Position( 1, 0 );
 	LCD_Character_Display_PrintString("CY8C5588AX-060  ");
 
 	/* Start the UART. */
@@ -236,97 +220,97 @@ extern unsigned portSHORT usMaxJitter;
 	/* Intialise the sleeper. */
 	xDelay = xTaskGetTickCount();
 	
-	for ( ;; )
+	for( ;; )
 	{
 		/* Perform this check every mainCHECK_DELAY milliseconds. */
 		vTaskDelayUntil( &xDelay, mainCHECK_DELAY );
 		
 		/* Check that all of the Demo tasks are still running. */
-		if ( pdTRUE != xAreBlockingQueuesStillRunning() )
+		if( pdTRUE != xAreBlockingQueuesStillRunning() )
 		{
 			usErrorCode |= 0x1;
 		}
 		
-		if ( pdTRUE != xAreBlockTimeTestTasksStillRunning() )
+		if( pdTRUE != xAreBlockTimeTestTasksStillRunning() )
 		{
 			usErrorCode |= 0x2;
 		}
 		
-		if ( pdTRUE != xAreCountingSemaphoreTasksStillRunning() )
+		if( pdTRUE != xAreCountingSemaphoreTasksStillRunning() )
 		{
 			usErrorCode |= 0x4;
 		}
 		
-		if ( pdTRUE != xIsCreateTaskStillRunning() )
+		if( pdTRUE != xIsCreateTaskStillRunning() )
 		{
 			usErrorCode |= 0x8;
 		}
 		
-		if ( pdTRUE != xAreDynamicPriorityTasksStillRunning() )
+		if( pdTRUE != xAreDynamicPriorityTasksStillRunning() )
 		{
 			usErrorCode |= 0x10;
 		}
 		
-		if ( pdTRUE != xAreMathsTaskStillRunning() )
+		if( pdTRUE != xAreMathsTaskStillRunning() )
 		{
 			usErrorCode |= 0x20;
 		}
 		
-		if ( pdTRUE != xAreGenericQueueTasksStillRunning() )
+		if( pdTRUE != xAreGenericQueueTasksStillRunning() )
 		{
 			usErrorCode |= 0x40;
 		}
 		
-		if ( pdTRUE != xAreIntegerMathsTaskStillRunning() )
+		if( pdTRUE != xAreIntegerMathsTaskStillRunning() )
 		{
 			usErrorCode |= 0x80;
 		}
 		
-		if ( pdTRUE != xArePollingQueuesStillRunning() )
+		if( pdTRUE != xArePollingQueuesStillRunning() )
 		{
 			usErrorCode |= 0x100;
 		}
 		
-		if ( pdTRUE != xAreQueuePeekTasksStillRunning() )
+		if( pdTRUE != xAreQueuePeekTasksStillRunning() )
 		{
 			usErrorCode |= 0x200;
 		}
 				
-		if ( pdTRUE != xAreSemaphoreTasksStillRunning() )
+		if( pdTRUE != xAreSemaphoreTasksStillRunning() )
 		{
 			usErrorCode |= 0x400;
 		}
 		
-		if ( pdTRUE != xAreComTestTasksStillRunning() )
+		if( pdTRUE != xAreComTestTasksStillRunning() )
 		{
 			usErrorCode |= 0x800;
 		}
 		
-		if ( pdTRUE != xAreIntQueueTasksStillRunning() )
+		if( pdTRUE != xAreIntQueueTasksStillRunning() )
 		{
 			usErrorCode |= 0x1000;
 		}
 
 		/* Clear the display. */
 		LCD_Character_Display_ClearDisplay();
-		if ( 0 == usErrorCode )
+		if( 0 == usErrorCode )
 		{
-			LCD_Character_Display_Position( (ulRow) & 0x1, 0);
-			LCD_Character_Display_PrintString("Pass: ");
-			LCD_Character_Display_PrintNumber(ulIteration++);
-			LCD_Character_Display_Position( (++ulRow) & 0x1, 0);
-			LCD_Character_Display_PrintString("Jitter(ns):");
-			LCD_Character_Display_PrintNumber((usMaxJitter * mainNS_PER_CLOCK));
+			LCD_Character_Display_Position( ( ulRow ) & 0x1, 0);
+			LCD_Character_Display_PrintString( "Pass: " );
+			LCD_Character_Display_PrintNumber( ulIteration++ );
+			LCD_Character_Display_Position( ( ++ulRow ) & 0x1, 0 );
+			LCD_Character_Display_PrintString( "Jitter(ns):" );
+			LCD_Character_Display_PrintNumber( ( usMaxJitter * mainNS_PER_CLOCK ) );
 		}
 		else
 		{
 			/* Do something to indicate the failure. */
-			LCD_Character_Display_Position( (ulRow) & 0x1, 0);
-			LCD_Character_Display_PrintString("Fail at: ");
-			LCD_Character_Display_PrintNumber(ulIteration);
-			LCD_Character_Display_Position( (++ulRow) & 0x1, 0);
-			LCD_Character_Display_PrintString("Error: 0x");
-			LCD_Character_Display_PrintHexUint16(usErrorCode);
+			LCD_Character_Display_Position( ( ulRow ) & 0x1, 0 );
+			LCD_Character_Display_PrintString( "Fail at: " );
+			LCD_Character_Display_PrintNumber( ulIteration );
+			LCD_Character_Display_Position( ( ++ulRow ) & 0x1, 0 );
+			LCD_Character_Display_PrintString( "Error: 0x" );
+			LCD_Character_Display_PrintHexUint16( usErrorCode );
 		}
 	}
 }
@@ -335,13 +319,15 @@ extern unsigned portSHORT usMaxJitter;
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
 	/* The stack space has been execeeded for a task, considering allocating more. */
-	for (;;);
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*---------------------------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
 	/* The heap space has been execeeded. */
-	for (;;);
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*---------------------------------------------------------------------------*/

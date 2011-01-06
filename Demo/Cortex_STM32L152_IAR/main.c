@@ -160,11 +160,15 @@ of the same message and indicate what the status actually is. */
 #define mainERROR_GEN_QUEUE_TEST		( pdPASS + 3 )
 
 /* Baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE		( 115200 )
+#define mainCOM_TEST_BAUD_RATE			( 115200 )
 
 /* The LED used by the comtest tasks. See the comtest.c file for more
 information. */
-#define mainCOM_TEST_LED			( 3 )
+#define mainCOM_TEST_LED				( 3 )
+
+/* The LCD task uses printf() so requires more stack than most of the other
+tasks. */
+#define mainLCD_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
 
 /*-----------------------------------------------------------*/
 
@@ -237,7 +241,7 @@ void main( void )
 		
 		/* Create the LCD and button poll tasks, as described at the top of this
 		file. */
-		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
+		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", mainLCD_TASK_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
 		xTaskCreate( prvButtonPollTask, ( signed char * ) "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		
 		/* Create a subset of the standard demo tasks. */

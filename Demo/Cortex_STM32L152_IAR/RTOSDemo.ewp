@@ -48,11 +48,11 @@
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>3</state>
+          <state>2</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -873,14 +873,14 @@
     <toolchain>
       <name>ARM</name>
     </toolchain>
-    <debug>0</debug>
+    <debug>1</debug>
     <settings>
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
         <version>18</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>ExePath</name>
           <state>Release\Exe</state>
@@ -896,7 +896,7 @@
         <option>
           <name>Variant</name>
           <version>17</version>
-          <state>0</state>
+          <state>37</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -905,20 +905,20 @@
         <option>
           <name>Input variant</name>
           <version>1</version>
-          <state>0</state>
+          <state>3</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>Full formatting.</state>
+          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>0</state>
+          <state>2</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>Full formatting.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -931,7 +931,7 @@
         </option>
         <option>
           <name>OGCoreOrChip</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -953,7 +953,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>5.10.0.159</state>
+          <state>6.10.1.52170</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -965,23 +965,23 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>default	None</state>
+          <state>STM32L152xB	ST STM32L152xB</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GEndianModeBE</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OGBufferedTerminalOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenStdoutInterface</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -1009,10 +1009,11 @@
       <data>
         <version>26</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>NDEBUG</state>
+          <state>USE_STM32L152_EVAL</state>
+          <state>USE_STDPERIPH_DRIVER</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1052,7 +1053,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state></state>
+          <state>Pa082</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -1077,7 +1078,7 @@
         </option>
         <option>
           <name>CCDebugInfo</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IEndianMode</name>
@@ -1141,7 +1142,15 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state></state>
+          <state>$PROJ_DIR$\system_and_ST_code</state>
+          <state>$PROJ_DIR$\system_and_ST_code\CMSIS\CM3\DeviceSupport\ST\STM32L1xx</state>
+          <state>$PROJ_DIR$\system_and_ST_code\CMSIS\CM3\CoreSupport</state>
+          <state>$PROJ_DIR$\system_and_ST_code\STM32L1xx_StdPeriph_Driver\inc</state>
+          <state>$PROJ_DIR$\system_and_ST_code\STM32L152_EVAL</state>
+          <state>$PROJ_DIR$\..\Common\include</state>
+          <state>$PROJ_DIR$\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3</state>
+          <state>$PROJ_DIR$</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1153,7 +1162,7 @@
         </option>
         <option>
           <name>IInterwork2</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IProcessorMode2</name>
@@ -1238,7 +1247,7 @@
       <data>
         <version>8</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>AObjPrefix</name>
           <state>1</state>
@@ -1278,7 +1287,7 @@
         </option>
         <option>
           <name>ADebug</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>AltRegisterNames</name>
@@ -1382,7 +1391,8 @@
         </option>
         <option>
           <name>AUserIncludes</name>
-          <state></state>
+          <state>$PROJ_DIR$</state>
+          <state>$PROJ_DIR$\system_and_ST_code\CMSIS\CM3\DeviceSupport\ST\STM32L1xx</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -1400,7 +1410,7 @@
       <data>
         <version>1</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>OOCOutputFormat</name>
           <version>2</version>
@@ -1451,7 +1461,7 @@
       <data>
         <version>11</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>IlinkOutputFile</name>
           <state>c.out</state>
@@ -1526,11 +1536,11 @@
         </option>
         <option>
           <name>IlinkIcfOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\generic.icf</state>
+          <state>$PROJ_DIR$\system_and_ST_code\stm32l1xx_flash.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1590,7 +1600,7 @@
         </option>
         <option>
           <name>IlinkProgramEntryLabel</name>
-          <state></state>
+          <state>__iar_program_start</state>
         </option>
         <option>
           <name>DoFill</name>
@@ -1685,7 +1695,7 @@
         </option>
         <option>
           <name>IlinkOptInline</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkOptExceptionsAllow</name>
@@ -1703,7 +1713,7 @@
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>0</debug>
+        <debug>1</debug>
         <option>
           <name>IarchiveInputs</name>
           <state></state>

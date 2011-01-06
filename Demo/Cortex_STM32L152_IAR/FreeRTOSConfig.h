@@ -125,8 +125,12 @@ is included from an asm file. */
 #endif /* __ICCARM__ */
 
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT )
-
+#define portALT_GET_RUN_TIME_COUNTER_VALUE( ulCountValue )									\
+	{																						\
+		TIM_Cmd( TIM6, DISABLE );															\
+		ulCountValue = ( ( ulTIM6_OverflowCount << 16UL ) | ( unsigned long ) TIM6->CNT );	\
+		TIM_Cmd( TIM6, ENABLE );															\
+	}
 
 #endif /* FREERTOS_CONFIG_H */
 

@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1889325515
+Checksum=-11340307
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -22,18 +22,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[Interrupts]
-Enabled=1
-[MemoryMap]
-Enabled=0
-Base=0
-UseAuto=0
-TypeViolation=1
-UnspecRange=1
-ActionState=1
-[TraceHelper]
-Enabled=0
-ShowSource=1
 [SWOTraceHWSettings]
 CpuClock=32000000
 ClockAutoDetect=1
@@ -50,6 +38,18 @@ ITMportsEnable=1
 ITMportsTermIO=1
 ITMportsLogFile=0
 ITMlogFile=$PROJ_DIR$\ITM.log
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[TraceHelper]
+Enabled=0
+ShowSource=1
 [DataLog]
 LogEnabled=0
 SumEnabled=0

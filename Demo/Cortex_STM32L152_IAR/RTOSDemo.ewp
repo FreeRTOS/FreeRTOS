@@ -48,11 +48,11 @@
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>2</state>
+          <state>3</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -914,11 +914,11 @@
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>2</state>
+          <state>3</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A, no specifier n, no float nor long long.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
         </option>
         <option>
           <name>GOutputBinary</name>

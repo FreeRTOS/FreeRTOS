@@ -1284,20 +1284,17 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 	unsigned portBASE_TYPE uxQueue;
 	unsigned long ulTotalRunTime;
 
-		/* A critical section is used because portGET_RUN_TIME_COUNTER_VALUE()
-		is implemented differently on different ports, so its not known if a
-		critical section is needed or not. */
-		taskENTER_CRITICAL();
-		{
-			ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
-		}
-		taskEXIT_CRITICAL();
-	
 		/* This is a VERY costly function that should be used for debug only.
 		It leaves interrupts disabled for a LONG time. */
 
 		vTaskSuspendAll();
 		{
+			#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
+				portALT_GET_RUN_TIME_COUNTER_VALUE( ulTotalRunTime );
+			#else
+				ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+			#endif
+
 			/* Run through all the lists that could potentially contain a TCB,
 			generating a table of run timer percentages in the provided
 			buffer. */
@@ -1603,7 +1600,13 @@ void vTaskSwitchContext( void )
 
 	#if ( configGENERATE_RUN_TIME_STATS == 1 )
 	{
-		unsigned long ulTempCounter = portGET_RUN_TIME_COUNTER_VALUE();
+		unsigned long ulTempCounter;
+		
+			#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
+				portALT_GET_RUN_TIME_COUNTER_VALUE( ulTempCounter );
+			#else
+				ulTempCounter = portGET_RUN_TIME_COUNTER_VALUE();
+			#endif
 
 			/* Add the amount of time the task has been running to the accumulated
 			time so far.  The time the task started running was stored in

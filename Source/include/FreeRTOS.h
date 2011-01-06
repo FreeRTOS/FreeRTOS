@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -239,17 +239,17 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 #ifndef traceBLOCKING_ON_QUEUE_RECEIVE
-	/* Task is about to block because it cannot read from a 
+	/* Task is about to block because it cannot read from a
 	queue/mutex/semaphore.  pxQueue is a pointer to the queue/mutex/semaphore
-	upon which the read was attempted.  pxCurrentTCB points to the TCB of the 
+	upon which the read was attempted.  pxCurrentTCB points to the TCB of the
 	task that attempted the read. */
 	#define traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue )
 #endif
 
 #ifndef traceBLOCKING_ON_QUEUE_SEND
-	/* Task is about to block because it cannot write to a 
+	/* Task is about to block because it cannot write to a
 	queue/mutex/semaphore.  pxQueue is a pointer to the queue/mutex/semaphore
-	upon which the write was attempted.  pxCurrentTCB points to the TCB of the 
+	upon which the write was attempted.  pxCurrentTCB points to the TCB of the
 	task that attempted the write. */
 	#define traceBLOCKING_ON_QUEUE_SEND( pxQueue )
 #endif
@@ -391,7 +391,9 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#endif /* portCONFIGURE_TIMER_FOR_RUN_TIME_STATS */
 
 	#ifndef portGET_RUN_TIME_COUNTER_VALUE
-		#error If configGENERATE_RUN_TIME_STATS is defined then portGET_RUN_TIME_COUNTER_VALUE must also be defined.  portGET_RUN_TIME_COUNTER_VALUE should evaluate to the counter value of the timer/counter peripheral used as the run time counter time base.
+		#ifndef portALT_GET_RUN_TIME_COUNTER_VALUE
+			#error If configGENERATE_RUN_TIME_STATS is defined then either portGET_RUN_TIME_COUNTER_VALUE or portALT_GET_RUN_TIME_COUNTER_VALUE must also be defined.  See the examples provided and the FreeRTOS web site for more information.
+		#endif /* portALT_GET_RUN_TIME_COUNTER_VALUE */
 	#endif /* portGET_RUN_TIME_COUNTER_VALUE */
 
 #endif /* configGENERATE_RUN_TIME_STATS */

@@ -43,7 +43,7 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>230</YPos><SelStart>12197</SelStart><SelEnd>12197</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>116</YPos><SelStart>6468</SelStart><SelEnd>6468</SelEnd></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\RunTimeStatsConfig.c</Filename><XPos>0</XPos><YPos>76</YPos><SelStart>4634</SelStart><SelEnd>4634</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\tasks.c</Filename><XPos>0</XPos><YPos>1583</YPos><SelStart>50154</SelStart><SelEnd>50154</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\include\FreeRTOS.h</Filename><XPos>0</XPos><YPos>372</YPos><SelStart>12619</SelStart><SelEnd>12619</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>233</YPos><SelStart>16696</SelStart><SelEnd>16696</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       

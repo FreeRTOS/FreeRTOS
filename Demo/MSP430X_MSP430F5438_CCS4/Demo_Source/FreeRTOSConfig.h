@@ -57,7 +57,7 @@
  * executed from within CCS4!  Once it has been executed, re-open or refresh 
  * the CCS4 project and remove the #error line below.
  */
-#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
 
 #ifndef FREERTOS_CONFIG_H
@@ -122,12 +122,38 @@ vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
 case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
 #define configTICK_VECTOR				TIMER0_A0_VECTOR
 
-extern void vConfigureTimerForRunTimeStats( void );
-extern unsigned long ulGetRunTimeStatsTime( void );
-extern volatile unsigned long ulStatsOverflowCount;
+	extern void vConfigureTimerForRunTimeStats( void );
+	extern volatile unsigned long ulStatsOverflowCount;
 
+/* Configure a 16 bit timer to generate the time base for the run time stats.
+The timer is configured to interrupt each time it overflows so a count of
+overflows can be kept - that way a 32 bit time value can be constructed from
+the timers current count value and the number of overflows. */
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeStatsTime()
-
+	
+/* Construct a 32 bit time value for use as the run time stats time base.  This
+comes from the current value of a 16 bit timer combined with the number of times
+the timer has overflowed. */
+#define portALT_GET_RUN_TIME_COUNTER_VALUE( ulCountValue )						\
+	{																			\
+		/* Stop the counter counting temporarily. */							\
+		TA1CTL &= ~MC__CONTINOUS;												\
+																				\
+		/* Check to see if any counter overflow interrupts are pending. */		\
+		if( ( TA1CTL & TAIFG ) != 0 )											\
+		{																		\
+			/* An overflow has occurred but not yet been processed. */			\
+			ulStatsOverflowCount++;												\
+																				\
+			/* Clear the interrupt. */											\
+			TA1CTL &= ~TAIFG;													\
+		}																		\
+																				\
+		/* Generate a 32 bit counter value by combinging the current peripheral	\
+		counter value with the number of overflows. */							\
+		ulCountValue = ( ulStatsOverflowCount << 16UL );						\
+		ulCountValue |= ( unsigned long ) TA1R;									\
+		TA1CTL |= MC__CONTINOUS;												\
+	}
 #endif /* FREERTOS_CONFIG_H */
 

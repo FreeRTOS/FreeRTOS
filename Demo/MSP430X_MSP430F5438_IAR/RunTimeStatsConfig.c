@@ -102,29 +102,3 @@ static __interrupt void prvRunTimeStatsOverflowISR( void )
 }
 /*-----------------------------------------------------------*/
 
-inline unsigned long ulGetRunTimeStatsTime( void )
-{
-unsigned long ulReturn;
-
-	TA1CTL &= ~MC__CONTINOUS;
-	
-	if( ( TA1CTL & TAIFG ) != 0 )
-	{
-		/* An overflow has occurred but not yet been processed. */
-		ulStatsOverflowCount++;
-		
-		/* Clear the interrupt. */
-		TA1CTL &= ~TAIFG;
-	}
-	else
-	{
-		__no_operation();
-	}
-	
-	ulReturn = ( ulStatsOverflowCount << 16UL );
-	ulReturn |= ( unsigned long ) TA1R;
-	TA1CTL |= MC__CONTINOUS;
-
-	return ulReturn;
-}
-/*-----------------------------------------------------------*/

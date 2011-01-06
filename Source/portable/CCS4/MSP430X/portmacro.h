@@ -156,5 +156,9 @@ extern void vTaskSwitchContext( void );
 	
 void vApplicationSetupTimerInterrupt( void );
 
+/* sizeof( int ) != sizeof( long ) so a full printf() library is required if
+run time stats information is to be displayed. */
+#define portLU_PRINTF_SPECIFIER_REQUIRED
+
 #endif /* PORTMACRO_H */
 

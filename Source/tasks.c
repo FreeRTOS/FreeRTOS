@@ -2131,13 +2131,33 @@ tskTCB *pxNewTCB;
 
 					if( ulStatsAsPercentage > 0UL )
 					{
-						sprintf( pcStatsString, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter, ulStatsAsPercentage );
+						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
+						{
+							sprintf( pcStatsString, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter, ulStatsAsPercentage );							
+						}
+						#else
+						{
+							/* sizeof( int ) == sizeof( long ) so a smaller
+							printf() library can be used. */
+							sprintf( pcStatsString, ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+						}
+						#endif
 					}
 					else
 					{
 						/* If the percentage is zero here then the task has
 						consumed less than 1% of the total run time. */
-						sprintf( pcStatsString, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter );
+						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
+						{
+							sprintf( pcStatsString, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter );							
+						}
+						#else
+						{
+							/* sizeof( int ) == sizeof( long ) so a smaller
+							printf() library can be used. */
+							sprintf( pcStatsString, ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter );
+						}
+						#endif
 					}
 				}
 

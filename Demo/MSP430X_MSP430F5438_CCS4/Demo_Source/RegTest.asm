@@ -72,8 +72,9 @@
 	.def vRegTest2Task
 
 	.text
-
-vRegTest1Task:
+	
+	.align 2
+vRegTest1Task: .asmfunc
 
 	; Fill each general purpose register with a known value.
 	mov_x	#0x4444, r4
@@ -126,17 +127,17 @@ prvRegTest1Loop:
 	; Loop again, performing the same tests.
 	jmp		prvRegTest1Loop
 	nop
-
 	
 vRegTest1Error:
 	jmp vRegTest1Error
 	nop
-	
+	.endasmfunc	
 ; -----------------------------------------------------------
 
 ; See the comments in vRegTest1Task.  This task is the same, it just uses
 ; different values in its registers.
-vRegTest2Task:
+	.align 2
+vRegTest2Task: .asmfunc
 
 	mov_x	#0x4441, r4
 	mov_x	#0x5551, r5
@@ -189,6 +190,7 @@ prvRegTest2Loop:
 vRegTest2Error:
 	jmp vRegTest2Error
 	nop
+	.endasmfunc
 ; /*-----------------------------------------------------------
 
      		

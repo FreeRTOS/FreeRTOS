@@ -69,6 +69,8 @@
 	EXPORT vRegTest2Task
 
 	RSEG CODE
+	
+	EVEN
 
 vRegTest1Task:
 
@@ -124,6 +126,8 @@ prvRegTest1Loop:
 	jmp		prvRegTest1Loop
 	nop
 
+	
+	EVEN
 	
 vRegTest1Error:
 	jmp vRegTest1Error

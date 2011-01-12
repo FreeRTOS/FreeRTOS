@@ -78,7 +78,7 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 16000000UL )	
+#define configCPU_CLOCK_HZ				( 25000000UL )	
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 9 * 1024 ) )
@@ -122,8 +122,8 @@ vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
 case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
 #define configTICK_VECTOR				TIMER0_A0_VECTOR
 
-	extern void vConfigureTimerForRunTimeStats( void );
-	extern volatile unsigned long ulStatsOverflowCount;
+extern void vConfigureTimerForRunTimeStats( void );
+extern volatile unsigned long ulStatsOverflowCount;
 
 /* Configure a 16 bit timer to generate the time base for the run time stats.
 The timer is configured to interrupt each time it overflows so a count of
@@ -155,5 +155,5 @@ the timer has overflowed. */
 		ulCountValue |= ( unsigned long ) TA1R;									\
 		TA1CTL |= MC__CONTINOUS;												\
 	}
-#endif /* FREERTOS_CONFIG_H */
+#endif /*0*/	
 

@@ -55,7 +55,7 @@
 /* BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER.
  *
  * This is not a proper UART driver.  It only supports one port, uses loopback
- * mode, and is used to test interrupts that use the FreeRTOS API as part of 
+ * mode, and is used to test interrupts that use the FreeRTOS API as part of
  * a wider test suite.  Nor is it intended to show an efficient implementation
  * of a UART interrupt service routine as queues are used to pass individual
  * characters one at a time!
@@ -158,7 +158,7 @@ signed portBASE_TYPE xReturn;
 /*-----------------------------------------------------------*/
 
 #pragma vector=USCI_A1_VECTOR
-static __interrupt void prvUSCI_A0_ISR( void )
+static __interrupt void prvUSCI_A1_ISR( void )
 {
 signed portCHAR cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;
@@ -196,7 +196,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	has a priority equal to or above the task that this interrupt interrupted,
 	then lHigherPriorityTaskWoken will have been set to pdTRUE internally within
 	xQueuesendFromISR(), and portEND_SWITCHING_ISR() will ensure that this
-	interrupt returns directly to the higher priority unblocked task. 
+	interrupt returns directly to the higher priority unblocked task.
 	
 	THIS MUST BE THE LAST THING DONE IN THE ISR. */	
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );

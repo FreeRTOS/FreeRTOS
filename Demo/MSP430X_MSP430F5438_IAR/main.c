@@ -605,8 +605,8 @@ const unsigned short usACLK_Frequency_Hz = 32768;
 void vApplicationIdleHook( void )
 {
 	/* Called on each iteration of the idle task.  In this case the idle task
-	just enters a low(ish) power mode. */
-	__bis_SR_register( LPM1_bits + GIE );
+	just enters a low power mode. */
+	__bis_SR_register( LPM3_bits + GIE );
 }
 /*-----------------------------------------------------------*/
 

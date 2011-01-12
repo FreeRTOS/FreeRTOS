@@ -158,7 +158,7 @@ signed portBASE_TYPE xReturn;
 /*-----------------------------------------------------------*/
 
 #pragma vector=USCI_A1_VECTOR
-interrupt void prvUSCI_A0_ISR( void )
+interrupt void prvUSCI_A1_ISR( void )
 {
 signed portCHAR cChar;
 portBASE_TYPE xTaskWoken = pdFALSE;

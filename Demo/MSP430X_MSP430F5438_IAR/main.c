@@ -307,7 +307,6 @@ unsigned char ucLine = 1;
 	First print out the number of bytes that remain in the FreeRTOS heap.  This
 	can be viewed in the terminal IO window within the IAR Embedded Workbench. */
 	printf( "%d bytes of heap space remain unallocated\n", ( int ) xPortGetFreeHeapSize() );
-	fflush( stdout );
 	
 	/* Just as a test of the port, and for no functional reason, check the task
 	parameter contains its expected value. */
@@ -351,10 +350,8 @@ unsigned char ucLine = 1;
 												the terminal IO window in the IAR
 												embedded workbench. */
 												printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************" );
-												fflush( stdout );
 												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
 												printf( cBuffer );
-												fflush( stdout );
 												
 												/* Also print out a message to
 												the LCD - in this case the

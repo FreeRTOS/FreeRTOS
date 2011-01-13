@@ -86,9 +86,9 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 
 #if __DATA_MODEL__ == __DATA_MODEL_SMALL__
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 110 )
 #else
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
 #endif
 
 /* Co-routine definitions. */

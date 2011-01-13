@@ -1295,6 +1295,10 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 				ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
 			#endif
 
+			/* Divide ulTotalRunTime by 100 to make the percentage caluclations
+			simpler in the prvGenerateRunTimeStatsForTasksInList() function. */
+			ulTotalRunTime /= 100UL;
+			
 			/* Run through all the lists that could potentially contain a TCB,
 			generating a table of run timer percentages in the provided
 			buffer. */
@@ -2125,9 +2129,10 @@ tskTCB *pxNewTCB;
 				}
 				else
 				{
-					/* What percentage of the total run time as the task used?
-					This will always be rounded down to the nearest integer. */
-					ulStatsAsPercentage = ( 100UL * pxNextTCB->ulRunTimeCounter ) / ulTotalRunTime;
+					/* What percentage of the total run time has the task used?
+					This will always be rounded down to the nearest integer. 
+					ulTotalRunTime has already been divided by 100. */
+					ulStatsAsPercentage = pxNextTCB->ulRunTimeCounter / ulTotalRunTime;
 
 					if( ulStatsAsPercentage > 0UL )
 					{

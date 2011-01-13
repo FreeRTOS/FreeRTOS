@@ -107,8 +107,9 @@ portRESTORE_CONTEXT .macro
 ;*/
 	
 	.text
+	.align 2
 	
-vPortPreemptiveTickISR:
+vPortPreemptiveTickISR: .asmfunc
 	
 	; The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
 	;to save it manually before it gets modified (interrupts get disabled).
@@ -119,9 +120,12 @@ vPortPreemptiveTickISR:
 	call_x	#vTaskSwitchContext
 		
 	portRESTORE_CONTEXT
+	.endasmfunc
 ;-----------------------------------------------------------
 
-vPortCooperativeTickISR:
+	.align 2
+	
+vPortCooperativeTickISR: .asmfunc
 	
 	; The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
 	;to save it manually before it gets modified (interrupts get disabled).
@@ -131,12 +135,17 @@ vPortCooperativeTickISR:
 	call_x	#vTaskIncrementTick
 		
 	portRESTORE_CONTEXT
+	
+	.endasmfunc
 ;-----------------------------------------------------------
 
-;*
-;* Manual context switch called by the portYIELD() macro.
-;*/
-vPortYield:
+;
+; Manual context switch called by the portYIELD() macro.
+;
+
+	.align 2
+
+vPortYield: .asmfunc
 
 	; The sr needs saving before it is modified.
 	push.w	sr
@@ -153,14 +162,18 @@ vPortYield:
 
 	; Restore the context of the new task.
 	portRESTORE_CONTEXT
+	.endasmfunc
 ;-----------------------------------------------------------
 
 
-;*
-;* Start off the scheduler by initialising the RTOS tick timer, then restoring
-;* the context of the first task.
-;*
-xPortStartScheduler:
+;
+; Start off the scheduler by initialising the RTOS tick timer, then restoring
+; the context of the first task.
+;
+
+	.align 2
+	
+xPortStartScheduler: .asmfunc
 
 	; Setup the hardware to generate the tick.  Interrupts are disabled
 	; when this function is called.
@@ -168,6 +181,7 @@ xPortStartScheduler:
 
 	; Restore the context of the first task that is going to run.
 	portRESTORE_CONTEXT
+	.endasmfunc
 ;-----------------------------------------------------------
       		
 	.end

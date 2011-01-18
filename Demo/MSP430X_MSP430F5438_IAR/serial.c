@@ -160,8 +160,7 @@ signed portBASE_TYPE xReturn;
 #pragma vector=USCI_A1_VECTOR
 static __interrupt void prvUSCI_A1_ISR( void )
 {
-signed portCHAR cChar;
-portBASE_TYPE xTaskWoken = pdFALSE;
+signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	while( ( UCA1IFG & UCRXIFG ) != 0 )
@@ -177,7 +176,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	{
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* There was another character queued - transmit it now. */
 			UCA1TXBUF = cChar;

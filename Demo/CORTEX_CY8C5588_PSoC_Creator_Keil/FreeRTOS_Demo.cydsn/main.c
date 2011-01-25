@@ -125,9 +125,6 @@ static void prvHardwareSetup( void );
 
 void main( void )
 {
-unsigned long ulLed = 0;
-unsigned long ulIteration = 0;
-
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
 	prvHardwareSetup();
 

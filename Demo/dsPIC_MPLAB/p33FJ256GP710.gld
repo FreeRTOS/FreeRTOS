@@ -3,33 +3,48 @@
 */
 
 OUTPUT_ARCH("33FJ256GP710")
-EXTERN(__resetPRI)
-EXTERN(__resetALT)
+CRT0_STARTUP(crt0_standard.o)
+CRT1_STARTUP(crt1_standard.o)
 
+OPTIONAL(-lp33FJ256GP710)
 
 /*
 ** Memory Regions
 */
 MEMORY
 {
-  data  (a!xr) : ORIGIN = 0x800,         LENGTH = 0x7800
-  reset        : ORIGIN = 0x0,           LENGTH = 0x4
-  ivt          : ORIGIN = 0x4,           LENGTH = 0xFC
-  aivt         : ORIGIN = 0x104,         LENGTH = 0xFC
-  program (xr) : ORIGIN = 0x200,         LENGTH = 0x2AA00
-  FBS          : ORIGIN = 0xF80000,      LENGTH = 0x2
-  FSS          : ORIGIN = 0xF80002,      LENGTH = 0x2
-  FGS          : ORIGIN = 0xF80004,      LENGTH = 0x2
-  FOSCSEL      : ORIGIN = 0xF80006,      LENGTH = 0x2
-  FOSC         : ORIGIN = 0xF80008,      LENGTH = 0x2
-  FWDT         : ORIGIN = 0xF8000A,      LENGTH = 0x2
-  FPOR         : ORIGIN = 0xF8000C,      LENGTH = 0x2
-  CONFIG3      : ORIGIN = 0xF8000E,      LENGTH = 0x2
-  FUID0        : ORIGIN = 0xF80010,      LENGTH = 0x2
-  FUID1        : ORIGIN = 0xF80012,      LENGTH = 0x2
-  FUID2        : ORIGIN = 0xF80014,      LENGTH = 0x2
-  FUID3        : ORIGIN = 0xF80016,      LENGTH = 0x2
+  data  (a!xr)   : ORIGIN = 0x800,         LENGTH = 0x7800
+  reset          : ORIGIN = 0x0,           LENGTH = 0x4
+  ivt            : ORIGIN = 0x4,           LENGTH = 0xFC
+  aivt           : ORIGIN = 0x104,         LENGTH = 0xFC
+  program (xr)   : ORIGIN = 0x200,         LENGTH = 0x2AA00
+  FBS            : ORIGIN = 0xF80000,      LENGTH = 0x2
+  FSS            : ORIGIN = 0xF80002,      LENGTH = 0x2
+  FGS            : ORIGIN = 0xF80004,      LENGTH = 0x2
+  FOSCSEL        : ORIGIN = 0xF80006,      LENGTH = 0x2
+  FOSC           : ORIGIN = 0xF80008,      LENGTH = 0x2
+  FWDT           : ORIGIN = 0xF8000A,      LENGTH = 0x2
+  FPOR           : ORIGIN = 0xF8000C,      LENGTH = 0x2
+  FICD           : ORIGIN = 0xF8000E,      LENGTH = 0x2
+  FUID0          : ORIGIN = 0xF80010,      LENGTH = 0x2
+  FUID1          : ORIGIN = 0xF80012,      LENGTH = 0x2
+  FUID2          : ORIGIN = 0xF80014,      LENGTH = 0x2
+  FUID3          : ORIGIN = 0xF80016,      LENGTH = 0x2
 }
+
+__FBS = 0xF80000;
+__FSS = 0xF80002;
+__FGS = 0xF80004;
+__FOSCSEL = 0xF80006;
+__FOSC = 0xF80008;
+__FWDT = 0xF8000A;
+__FPOR = 0xF8000C;
+__FICD = 0xF8000E;
+__FUID0 = 0xF80010;
+__FUID1 = 0xF80012;
+__FUID2 = 0xF80014;
+__FUID3 = 0xF80016;
+
 __IVT_BASE  = 0x4;
 __AIVT_BASE = 0x104;
 __DATA_BASE = 0x800;
@@ -72,14 +87,63 @@ SECTIONS
 
   /*
   ** User Code and Library Code
+  **
+  ** This section must not be assigned to __CODE_BASE,
+  ** because CodeGuard(tm) sections may be located there.
+  **
+  ** Note that input sections *(.text) are not mapped here.
+  ** The best-fit allocator locates them, so that .text
+  ** may flow around PSV sections as needed.
   */
-  .text __CODE_BASE :
+  .text :
   {
+        *(.init);
+        *(.user_init);
         *(.handle);
         *(.libc) *(.libm) *(.libdsp);  /* keep together in this order */
         *(.lib*);
-        *(.text);
   } >program
+
+
+  /*
+  ** User-Defined Section in Program Memory
+  **
+  ** note: can specify an address using
+  **       the following syntax:
+  **
+  **       usercode 0x1234 :
+  **         {
+  **           *(usercode);
+  **         } >program
+  */
+  usercode :
+  {
+        *(usercode);
+  } >program
+
+
+  /*
+  ** User-Defined Constants in Program Memory
+  **
+  ** For PSV type sections, the Load Memory Address (LMA)
+  ** should be specified as follows:
+  **
+  **       userconst : AT(0x1234)
+  **         {
+  **           *(userconst);
+  **         } >program
+  **
+  ** Note that mapping PSV sections in linker scripts
+  ** is not generally recommended.
+  **
+  ** Because of page alignment restrictions, memory is
+  ** often used more efficiently when PSV sections
+  ** do not appear in the linker script.
+  **
+  ** For more information on memory allocation,
+  ** please refer to chapter 10, 'Linker Processing'
+  ** in the Assembler, Linker manual (DS51317).
+  */
 
 
   /*
@@ -99,6 +163,8 @@ SECTIONS
   { *(__FWDT.sec)    } >FWDT
   __FPOR :
   { *(__FPOR.sec)    } >FPOR
+  __FICD :
+  { *(__FICD.sec)    } >FICD
   __FUID0 :
   { *(__FUID0.sec)    } >FUID0
   __FUID1 :
@@ -329,7 +395,7 @@ SECTIONS
          ABSOLUTE(__DefaultInterrupt));
     LONG( DEFINED(__U2ErrInterrupt)    ? ABSOLUTE(__U2ErrInterrupt)    :
          ABSOLUTE(__DefaultInterrupt));
-    LONG( DEFINED(__Interrupt68)    ? ABSOLUTE(__Interrupt68)    :
+    LONG( DEFINED(__Interrupt67)    ? ABSOLUTE(__Interrupt67)    :
          ABSOLUTE(__DefaultInterrupt));
     LONG( DEFINED(__DMA6Interrupt)    ? ABSOLUTE(__DMA6Interrupt)    :
          ABSOLUTE(__DefaultInterrupt));
@@ -665,8 +731,8 @@ SECTIONS
     LONG( DEFINED(__AltU2ErrInterrupt)    ? ABSOLUTE(__AltU2ErrInterrupt)    :
          (DEFINED(__U2ErrInterrupt)       ? ABSOLUTE(__U2ErrInterrupt)       :
          ABSOLUTE(__DefaultInterrupt)));
-    LONG( DEFINED(__AltInterrupt68)    ? ABSOLUTE(__AltInterrupt68)    :
-         (DEFINED(__Interrupt68)       ? ABSOLUTE(__Interrupt68)       :
+    LONG( DEFINED(__AltInterrupt67)    ? ABSOLUTE(__AltInterrupt67)    :
+         (DEFINED(__Interrupt67)       ? ABSOLUTE(__Interrupt67)       :
          ABSOLUTE(__DefaultInterrupt)));
     LONG( DEFINED(__AltDMA6Interrupt)    ? ABSOLUTE(__AltDMA6Interrupt)    :
          (DEFINED(__DMA6Interrupt)       ? ABSOLUTE(__DMA6Interrupt)       :
@@ -1188,18 +1254,28 @@ _OC8CON       = 0x1AE;
 _OC8CONbits   = 0x1AE;
  I2C1RCV      = 0x200;
 _I2C1RCV      = 0x200;
+ I2CRCV       = 0x200;
+_I2CRCV       = 0x200;
  I2C1TRN      = 0x202;
 _I2C1TRN      = 0x202;
+ I2CTRN       = 0x202;
+_I2CTRN       = 0x202;
  I2C1BRG      = 0x204;
 _I2C1BRG      = 0x204;
  I2C1CON      = 0x206;
 _I2C1CON      = 0x206;
 _I2C1CONbits  = 0x206;
+ I2CCON       = 0x206;
+_I2CCON       = 0x206;
  I2C1STAT     = 0x208;
 _I2C1STAT     = 0x208;
 _I2C1STATbits = 0x208;
+ I2CSTAT      = 0x208;
+_I2CSTAT      = 0x208;
  I2C1ADD      = 0x20A;
 _I2C1ADD      = 0x20A;
+ I2CADD       = 0x20A;
+_I2CADD       = 0x20A;
  I2C1MSK      = 0x20C;
 _I2C1MSK      = 0x20C;
  I2C2RCV      = 0x210;
@@ -1367,6 +1443,8 @@ _LATG         = 0x2E8;
 _LATGbits     = 0x2E8;
  ADC1BUF0     = 0x300;
 _ADC1BUF0     = 0x300;
+ ADCBUF0      = 0x300;
+_ADCBUF0      = 0x300;
  AD1CON1      = 0x320;
 _AD1CON1      = 0x320;
 _AD1CON1bits  = 0x320;
@@ -1388,6 +1466,8 @@ _AD1PCFGHbits = 0x32A;
  AD1PCFGL     = 0x32C;
 _AD1PCFGL     = 0x32C;
 _AD1PCFGLbits = 0x32C;
+ ADPCFG       = 0x32C;
+_ADPCFG       = 0x32C;
  AD1CSSH      = 0x32E;
 _AD1CSSH      = 0x32E;
 _AD1CSSHbits  = 0x32E;
@@ -1955,6 +2035,10 @@ _RCONbits     = 0x740;
  OSCCON       = 0x742;
 _OSCCON       = 0x742;
 _OSCCONbits   = 0x742;
+ OSCCONL      = 0x742;
+_OSCCONL      = 0x742;
+ OSCCONH      = 0x743;
+_OSCCONH      = 0x743;
  CLKDIV       = 0x744;
 _CLKDIV       = 0x744;
 _CLKDIVbits   = 0x744;
@@ -1984,3 +2068,47 @@ _PMD2bits     = 0x772;
  PMD3         = 0x774;
 _PMD3         = 0x774;
 _PMD3bits     = 0x774;
+/*
+** ======= Base Addresses for Various Peripherals ======
+*/
+
+ IC1          = 0x140;
+_IC1          = 0x140;
+ IC2          = 0x144;
+_IC2          = 0x144;
+ IC3          = 0x148;
+_IC3          = 0x148;
+ IC4          = 0x14C;
+_IC4          = 0x14C;
+ IC5          = 0x150;
+_IC5          = 0x150;
+ IC6          = 0x154;
+_IC6          = 0x154;
+ IC7          = 0x158;
+_IC7          = 0x158;
+ IC8          = 0x15C;
+_IC8          = 0x15C;
+ OC1          = 0x180;
+_OC1          = 0x180;
+ OC2          = 0x186;
+_OC2          = 0x186;
+ OC3          = 0x18C;
+_OC3          = 0x18C;
+ OC4          = 0x192;
+_OC4          = 0x192;
+ OC5          = 0x198;
+_OC5          = 0x198;
+ OC6          = 0x19E;
+_OC6          = 0x19E;
+ OC7          = 0x1A4;
+_OC7          = 0x1A4;
+ OC8          = 0x1AA;
+_OC8          = 0x1AA;
+ SPI1         = 0x240;
+_SPI1         = 0x240;
+ SPI2         = 0x260;
+_SPI2         = 0x260;
+ UART1        = 0x220;
+_UART1        = 0x220;
+ UART2        = 0x230;
+_UART2        = 0x230;

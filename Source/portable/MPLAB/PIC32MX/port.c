@@ -85,11 +85,19 @@ portSTACK_TYPE xISRStack[ configISR_STACK_SIZE ] = { 0 };
 the callers stack, as some functions seem to want to do this. */
 const portBASE_TYPE * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 ] );
 
-/* Place the prototype here to ensure the interrupt vector is correctly installed. */
+/* 
+ * Place the prototype here to ensure the interrupt vector is correctly installed. 
+ * Note that because the interrupt is written in assembly, the IPL setting in the
+ * following line of code has no effect.  The interrupt priority is set by the
+ * call to ConfigIntTimer1() in prvSetupTimerInterrupt(). 
+ */
 extern void __attribute__( (interrupt(ipl1), vector(_TIMER_1_VECTOR))) vT1InterruptHandler( void );
 
 /*
- * The software interrupt handler that performs the yield.
+ * The software interrupt handler that performs the yield.  Note that, because
+ * the interrupt is written in assembly, the IPL setting in the following line of
+ * code has no effect.  The interrupt priority is set by the call to 
+ * mConfigIntCoreSW0() in xPortStartScheduler(). 
  */
 void __attribute__( (interrupt(ipl1), vector(_CORE_SOFTWARE_0_VECTOR))) vPortYieldISR( void );
 
@@ -155,7 +163,7 @@ extern void vPortStartFirstTask( void );
 extern void *pxCurrentTCB;
 
 	/* Setup the software interrupt. */
-	mConfigIntCoreSW0( CSW_INT_ON | CSW_INT_PRIOR_1 | CSW_INT_SUB_PRIOR_0 );
+	mConfigIntCoreSW0( CSW_INT_ON | configKERNEL_INTERRUPT_PRIORITY | CSW_INT_SUB_PRIOR_0 );
 
 	/* Setup the timer to generate the tick.  Interrupts will have been 
 	disabled by the time we get here. */

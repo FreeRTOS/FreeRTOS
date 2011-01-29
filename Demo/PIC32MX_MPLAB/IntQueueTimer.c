@@ -61,6 +61,9 @@
 void vT3InterruptHandler( void );
 void vT4InterruptHandler( void );
 
+/* As these interrupts use the FreeRTOS interrupt entry point, the IPL settings
+in the following prototypes have no effect.  The interrupt priorities are set
+by the ConfigIntTimerX() library calls in vInitialiseTimerForIntQueueTest(). */
 void __attribute__( (interrupt(ipl0), vector(_TIMER_3_VECTOR))) vT3InterruptWrapper( void );
 void __attribute__( (interrupt(ipl0), vector(_TIMER_4_VECTOR))) vT4InterruptWrapper( void );
 

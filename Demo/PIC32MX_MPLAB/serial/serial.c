@@ -82,7 +82,10 @@ static portBASE_TYPE xTxHasEnded;
 
 /*-----------------------------------------------------------*/
 
-/* The UART interrupt handler. */
+/* The UART interrupt handler.  As this uses the FreeRTOS assembly interrupt
+entry point the IPL setting in the following prototype has no effect.  The
+interrupt priority is set by the call to  ConfigIntUART2() in 
+xSerialPortInitMinimal(). */
 void __attribute__( (interrupt(ipl1), vector(_UART2_VECTOR))) vU2InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/

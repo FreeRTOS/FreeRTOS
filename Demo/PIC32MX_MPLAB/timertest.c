@@ -60,7 +60,9 @@
 /* The maximum value the 16bit timer can contain. */
 #define timerMAX_COUNT				0xffff
 
-/* The timer 2 interrupt handler. */
+/* The timer 2 interrupt handler.  As this interrupt uses the FreeRTOS assembly
+entry point the IPL setting in the following function prototype has no effect.
+The interrupt priority is set by ConfigIntTimer2() in vSetupTimerTest(). */
 void __attribute__( (interrupt(ipl0), vector(_TIMER_2_VECTOR))) vT2InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/

@@ -118,7 +118,7 @@ THUMB_SOURCE= \
 
 ARM_SOURCE= \
 		$(RTOS_SOURCE_DIR)/portable/GCC/ARM7_AT91SAM7S/portISR.c \
-		./webserver/emac_isr.c \
+		./webserver/EMAC_ISR.c \
 		./SrcAtmel/Cstartup_SAM7.c \
 		./USB/USB_ISR.c
 

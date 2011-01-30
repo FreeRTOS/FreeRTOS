@@ -92,7 +92,7 @@
 /* Demo application includes. */
 #include "partest.h"
 #include "USBSample.h"
-#include "uip_task.h"
+#include "uIP_Task.h"
 #include "BlockQ.h"
 #include "blocktim.h"
 #include "flash.h"

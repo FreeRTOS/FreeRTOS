@@ -135,7 +135,7 @@ portTickType xValueOfInsertion;
 		If you find your application is crashing here then likely causes are:
 			1) Stack overflow - 
 			   see http://www.freertos.org/Stacks-and-stack-overflow-checking.html
-			2) Incorrect interrupt priority assignment, especially on Cortex M3 
+			2) Incorrect interrupt priority assignment, especially on Cortex-M3 
 			   parts where numerically high priority values denote low actual 
 			   interrupt priories, which can seem counter intuitive.  See 
 			   configMAX_SYSCALL_INTERRUPT_PRIORITY on http://www.freertos.org/a00110.html

@@ -114,7 +114,7 @@
 //
 //*****************************************************************************
 #define SYSCTL_DC1_SYSDIV_MASK  0x0000F000  // Minimum system divider mask
-#define SYSCTL_DC1_MPU          0x00000080  // Cortex M3 MPU present
+#define SYSCTL_DC1_MPU          0x00000080  // Cortex-M3 MPU present
 #define SYSCTL_DC1_PLL          0x00000010  // PLL present
 #define SYSCTL_DC1_WDOG         0x00000008  // Watchdog present
 #define SYSCTL_DC1_SWO          0x00000004  // Serial wire output present

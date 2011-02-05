@@ -61,7 +61,7 @@ static unsigned long pulStack[STACK_SIZE];
 
 //*****************************************************************************
 //
-// The minimal vector table for a Cortex M3.  Note that the proper constructs
+// The minimal vector table for a Cortex-M3.  Note that the proper constructs
 // must be placed on this to ensure that it ends up at physical address
 // 0x0000.0000.
 //

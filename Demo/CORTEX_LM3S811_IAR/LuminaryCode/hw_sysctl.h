@@ -146,7 +146,7 @@
 #define SYSCTL_DC1_ADCSPD_500K  0x00000200  // 500Ksps ADC
 #define SYSCTL_DC1_ADCSPD_250K  0x00000100  // 250Ksps ADC
 #define SYSCTL_DC1_ADCSPD_125K  0x00000000  // 125Ksps ADC
-#define SYSCTL_DC1_MPU          0x00000080  // Cortex M3 MPU present
+#define SYSCTL_DC1_MPU          0x00000080  // Cortex-M3 MPU present
 #define SYSCTL_DC1_TEMP         0x00000020  // Temperature sensor present
 #define SYSCTL_DC1_PLL          0x00000010  // PLL present
 #define SYSCTL_DC1_WDOG         0x00000008  // Watchdog present

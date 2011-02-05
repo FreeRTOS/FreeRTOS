@@ -95,7 +95,7 @@ extern "C"
 #define SYSCTL_PERIPH_IEEE1588  0x20100100  // IEEE1588
 #define SYSCTL_PERIPH_PLL       0x30000010  // PLL
 #define SYSCTL_PERIPH_TEMP      0x30000020  // Temperature sensor
-#define SYSCTL_PERIPH_MPU       0x30000080  // Cortex M3 MPU
+#define SYSCTL_PERIPH_MPU       0x30000080  // Cortex-M3 MPU
 
 //*****************************************************************************
 //

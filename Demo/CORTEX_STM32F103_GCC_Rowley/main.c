@@ -75,7 +75,7 @@
  * file contains a simple repeating string of fixed width.
  *
  * Currently this demo does not include interrupt nesting examples.  High 
- * frequency timer and simpler nesting examples can be found in most Cortex M3
+ * frequency timer and simpler nesting examples can be found in most Cortex-M3
  * demo applications.
  *
  * The functions used to initialise, set and clear LED outputs are normally 

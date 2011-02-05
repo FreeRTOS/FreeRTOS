@@ -139,7 +139,7 @@ to exclude the API function. */
 /* Priorities passed to NVIC_SetPriority() do not require shifting as the
 function does the shifting itself.  Note these priorities need to be equal to
 or lower than configMAX_SYSCALL_INTERRUPT_PRIORITY - therefore the numeric
-value needs to be equal to or greater than 5 (on the Cortex M3 the lower the
+value needs to be equal to or greater than 5 (on the Cortex-M3 the lower the
 numeric value the higher the interrupt priority). */
 #define configEMAC_INTERRUPT_PRIORITY		5
 #define configUSB_INTERRUPT_PRIORITY		6

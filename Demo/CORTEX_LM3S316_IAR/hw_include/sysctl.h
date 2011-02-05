@@ -60,7 +60,7 @@ extern "C"
 #define SYSCTL_PERIPH_GPIOC     0x20000004  // GPIO C
 #define SYSCTL_PERIPH_GPIOD     0x20000008  // GPIO D
 #define SYSCTL_PERIPH_GPIOE     0x20000010  // GPIO E
-#define SYSCTL_PERIPH_MPU       0x30000080  // Cortex M3 MPU
+#define SYSCTL_PERIPH_MPU       0x30000080  // Cortex-M3 MPU
 #define SYSCTL_PERIPH_TEMP      0x30000020  // Temperature sensor
 #define SYSCTL_PERIPH_PLL       0x30000010  // PLL
 

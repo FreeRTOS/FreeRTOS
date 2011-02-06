@@ -222,7 +222,7 @@ static void prvCheckPendingReadyList( void )
 	/* Are there any co-routines waiting to get moved to the ready list?  These
 	are co-routines that have been readied by an ISR.  The ISR cannot access
 	the	ready lists itself. */
-	while( !listLIST_IS_EMPTY( &xPendingReadyCoRoutineList ) )
+	while( listLIST_IS_EMPTY( &xPendingReadyCoRoutineList ) == pdFALSE )
 	{
 		corCRCB *pxUnblockedCRCB;
 
@@ -263,8 +263,10 @@ corCRCB *pxCRCB;
 		}
 
 		/* See if this tick has made a timeout expire. */
-		while( ( pxCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedCoRoutineList ) ) != NULL )
-		{	
+		while( listLIST_IS_EMPTY( pxDelayedCoRoutineList ) == pdFALSE )
+		{
+			pxCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedCoRoutineList );
+
 			if( xCoRoutineTickCount < listGET_LIST_ITEM_VALUE( &( pxCRCB->xGenericListItem ) ) )				
 			{			
 				/* Timeout not yet expired. */																			
@@ -352,7 +354,8 @@ corCRCB *pxUnblockedCRCB;
 signed portBASE_TYPE xReturn;
 
 	/* This function is called from within an interrupt.  It can only access
-	event lists and the pending ready list. */
+	event lists and the pending ready list.  This function assumes that a
+	check has already been made to ensure pxEventList is not empty. */
 	pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
 	vListRemove( &( pxUnblockedCRCB->xEventListItem ) );
 	vListInsertEnd( ( xList * ) &( xPendingReadyCoRoutineList ), &( pxUnblockedCRCB->xEventListItem ) );

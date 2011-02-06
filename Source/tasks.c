@@ -161,6 +161,7 @@ PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxMissedTicks 			= ( unsi
 PRIVILEGED_DATA static volatile portBASE_TYPE xMissedYield 						= ( portBASE_TYPE ) pdFALSE;
 PRIVILEGED_DATA static volatile portBASE_TYPE xNumOfOverflows 					= ( portBASE_TYPE ) 0;
 PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned portBASE_TYPE ) 0;
+PRIVILEGED_DATA static portTickType xNextTaskUnblockTime						= ( portTickType ) portMAX_DELAY;
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
@@ -220,10 +221,10 @@ PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned po
 				if( ( pcTraceBuffer + tskSIZE_OF_EACH_TRACE_LINE ) < pcTraceBufferEnd )				\
 				{																					\
 					uxPreviousTask = pxCurrentTCB->uxTCBNumber;										\
-					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) xTickCount;		\
-					pcTraceBuffer += sizeof( unsigned long );									\
-					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) uxPreviousTask;	\
-					pcTraceBuffer += sizeof( unsigned long );									\
+					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) xTickCount;				\
+					pcTraceBuffer += sizeof( unsigned long );										\
+					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) uxPreviousTask;			\
+					pcTraceBuffer += sizeof( unsigned long );										\
 				}																					\
 				else																				\
 				{																					\
@@ -265,24 +266,57 @@ PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned po
  * once one tasks has been found whose timer has not expired we need not look
  * any further down the list.
  */
-#define prvCheckDelayedTasks()																						\
-{																													\
-register tskTCB *pxTCB;																								\
-																													\
-	while( ( pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList ) ) != NULL )						\
-	{																												\
-		if( xTickCount < listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) ) )									\
-		{																											\
-			break;																									\
-		}																											\
-		vListRemove( &( pxTCB->xGenericListItem ) );																\
-		/* Is the task waiting on an event also? */																	\
-		if( pxTCB->xEventListItem.pvContainer )																		\
-		{																											\
-			vListRemove( &( pxTCB->xEventListItem ) );																\
-		}																											\
-		prvAddTaskToReadyQueue( pxTCB );																			\
-	}																												\
+#define prvCheckDelayedTasks()															\
+{																						\
+register tskTCB *pxTCB;																	\
+portTickType xItemValue;																\
+																						\
+	/* Is the tick count greater than or equal to the wake time of the first			\
+	task referenced from the delayed tasks list? */										\
+	if( xTickCount >= xNextTaskUnblockTime )											\
+	{																					\
+		for( ;; )																		\
+		{																				\
+			if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )						\
+			{																			\
+				/* The delayed list is empty.  Set xNextTaskUnblockTime to the			\
+				maximum possible value so it is extremely unlikely that the				\
+				if( xTickCount >= xNextTaskUnblockTime ) test will pass next			\
+				time through. */														\
+				xNextTaskUnblockTime = portMAX_DELAY;									\
+				break;																	\
+			}																			\
+			else																		\
+			{																			\
+				/* The delayed list is not empty, get the value of the item at			\
+				the head of the delayed list.  This is the time at which the			\
+				task at the head of the delayed list should be removed from				\
+				the Blocked state. */													\
+				pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );	\
+				xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );	\
+																						\
+				if( xTickCount < xItemValue )											\
+				{																		\
+					/* It is not time to unblock this item yet, but the item			\
+					value is the time at which the task at the head of the				\
+					blocked list should be removed from the Blocked state -				\
+					so record the item value in xNextTaskUnblockTime. */				\
+					xNextTaskUnblockTime = xItemValue;									\
+					break;																\
+				}																		\
+																						\
+				/* It is time to remove the item from the Blocked state. */				\
+				vListRemove( &( pxTCB->xGenericListItem ) );							\
+																						\
+				/* Is the task waiting on an event also? */								\
+				if( pxTCB->xEventListItem.pvContainer )									\
+				{																		\
+					vListRemove( &( pxTCB->xEventListItem ) );							\
+				}																		\
+				prvAddTaskToReadyQueue( pxTCB );										\
+			}																			\
+		}																				\
+	}																					\
 }
 /*-----------------------------------------------------------*/
 
@@ -341,6 +375,12 @@ static portTASK_FUNCTION_PROTO( prvIdleTask, pvParameters );
  * and its TCB deleted.
  */
 static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
+
+/*
+ * The currently executing task is entering the Blocked state.  Add the task to
+ * either the current or the overflow delayed task list.
+ */
+static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake ) PRIVILEGED_FUNCTION;
 
 /*
  * Allocates memory from the heap for a TCB and associated stack.  Checks the
@@ -637,7 +677,7 @@ tskTCB * pxNewTCB;
 			/* Update the wake time ready for the next call. */
 			*pxPreviousWakeTime = xTimeToWake;
 
-			if( xShouldDelay )
+			if( xShouldDelay != pdFALSE )
 			{
 				traceTASK_DELAY_UNTIL();
 
@@ -645,22 +685,7 @@ tskTCB * pxNewTCB;
 				ourselves to the blocked list as the same list item is used for
 				both lists. */
 				vListRemove( ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-
-				/* The list item will be inserted in wake time order. */
-				listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
-
-				if( xTimeToWake < xTickCount )
-				{
-					/* Wake time has overflowed.  Place this item in the
-					overflow list. */
-					vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-				}
-				else
-				{
-					/* The wake time has not overflowed, so we can use the
-					current block list. */
-					vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-				}
+				prvAddCurrentTaskToDelayedList( xTimeToWake );
 			}
 		}
 		xAlreadyYielded = xTaskResumeAll();
@@ -706,22 +731,7 @@ tskTCB * pxNewTCB;
 				ourselves to the blocked list as the same list item is used for
 				both lists. */
 				vListRemove( ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-
-				/* The list item will be inserted in wake time order. */
-				listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
-
-				if( xTimeToWake < xTickCount )
-				{
-					/* Wake time has overflowed.  Place this item in the
-					overflow list. */
-					vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-				}
-				else
-				{
-					/* The wake time has not overflowed, so we can use the
-					current block list. */
-					vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-				}
+				prvAddCurrentTaskToDelayedList( xTimeToWake );
 			}
 			xAlreadyYielded = xTaskResumeAll();
 		}
@@ -1125,8 +1135,9 @@ signed portBASE_TYPE xAlreadyYielded = pdFALSE;
 
 				/* Move any readied tasks from the pending list into the
 				appropriate ready list. */
-				while( ( pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY(  ( ( xList * ) &xPendingReadyList ) ) ) != NULL )
+				while( listLIST_IS_EMPTY( ( xList * ) &xPendingReadyList ) == pdFALSE )
 				{
+					pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY(  ( ( xList * ) &xPendingReadyList ) );
 					vListRemove( &( pxTCB->xEventListItem ) );
 					vListRemove( &( pxTCB->xGenericListItem ) );
 					prvAddTaskToReadyQueue( pxTCB );
@@ -1413,6 +1424,25 @@ void vTaskIncrementTick( void )
 			pxDelayedTaskList = pxOverflowDelayedTaskList;
 			pxOverflowDelayedTaskList = pxTemp;
 			xNumOfOverflows++;
+			if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
+			{
+				/* The delayed list is empty.  Set xNextTaskUnblockTime to the 
+				maximum possible value so it is extremely unlikely that the 
+				if( xTickCount >= xNextTaskUnblockTime ) test will pass
+				until there is an item in the delayed list. */
+				xNextTaskUnblockTime = portMAX_DELAY;
+			}
+			else
+			{
+				tskTCB * pxTCB;
+
+				/* The delayed list is not empty, get the value of the item at 
+				the head of the delayed list.  This is the time at which the
+				task at the head of the delayed list should be removed from
+				the Blocked state. */
+				pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+				xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
+			}
 		}
 
 		/* See if this tick has made a timeout expire. */
@@ -1672,19 +1702,7 @@ portTickType xTimeToWake;
 			/* Calculate the time at which the task should be woken if the event does
 			not occur.  This may overflow but this doesn't matter. */
 			xTimeToWake = xTickCount + xTicksToWait;
-
-			listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
-
-			if( xTimeToWake < xTickCount )
-			{
-				/* Wake time has overflowed.  Place this item in the overflow list. */
-				vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-			}
-			else
-			{
-				/* The wake time has not overflowed, so we can use the current block list. */
-				vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-			}
+			prvAddCurrentTaskToDelayedList( xTimeToWake );
 		}
 	}
 	#else
@@ -1692,19 +1710,7 @@ portTickType xTimeToWake;
 			/* Calculate the time at which the task should be woken if the event does
 			not occur.  This may overflow but this doesn't matter. */
 			xTimeToWake = xTickCount + xTicksToWait;
-
-			listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
-
-			if( xTimeToWake < xTickCount )
-			{
-				/* Wake time has overflowed.  Place this item in the overflow list. */
-				vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-			}
-			else
-			{
-				/* The wake time has not overflowed, so we can use the current block list. */
-				vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
-			}
+			prvAddCurrentTaskToDelayedList( xTimeToWake );
 	}
 	#endif
 }
@@ -1724,7 +1730,10 @@ portBASE_TYPE xReturn;
 
 	If an event is for a queue that is locked then this function will never
 	get called - the lock count on the queue will get modified instead.  This
-	means we can always expect exclusive access to the event list here. */
+	means we can always expect exclusive access to the event list here. 
+	
+	This function assumes that a check has already been made to ensure that
+	pxEventList is not empty. */
 	pxUnblockedTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
 	vListRemove( &( pxUnblockedTCB->xEventListItem ) );
 
@@ -2020,7 +2029,7 @@ static void prvCheckTasksWaitingTermination( void )
 				xListIsEmpty = listLIST_IS_EMPTY( &xTasksWaitingTermination );
 			xTaskResumeAll();
 
-			if( !xListIsEmpty )
+			if( xListIsEmpty == pdFALSE )
 			{
 				tskTCB *pxTCB;
 
@@ -2038,6 +2047,32 @@ static void prvCheckTasksWaitingTermination( void )
 		}
 	}
 	#endif
+}
+/*-----------------------------------------------------------*/
+
+static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
+{
+	/* The list item will be inserted in wake time order. */
+	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
+
+	if( xTimeToWake < xTickCount )
+	{
+		/* Wake time has overflowed.  Place this item in the overflow list. */
+		vListInsert( ( xList * ) pxOverflowDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+	}
+	else
+	{
+		/* The wake time has not overflowed, so we can use the current block list. */
+		vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+
+		/* If the task entering the blocked state was placed at the head of the
+		list of blocked tasks then xNextTaskUnmblockTime needs to be updated
+		too. */
+		if( xTimeToWake < xNextTaskUnblockTime )
+		{
+			xNextTaskUnblockTime = xTimeToWake;
+		}
+	}
 }
 /*-----------------------------------------------------------*/
 

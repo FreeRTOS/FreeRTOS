@@ -214,7 +214,7 @@ xList * const pxConstList = pxList;														\
  * \page listGET_OWNER_OF_HEAD_ENTRY listGET_OWNER_OF_HEAD_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_OWNER_OF_HEAD_ENTRY( pxList )  ( ( pxList->uxNumberOfItems != ( unsigned portBASE_TYPE ) 0 ) ? ( (&( pxList->xListEnd ))->pxNext->pvOwner ) : ( NULL ) )
+#define listGET_OWNER_OF_HEAD_ENTRY( pxList )  ( (&( pxList->xListEnd ))->pxNext->pvOwner )
 
 /*
  * Check to see if a list item is within a list.  The list item maintains a

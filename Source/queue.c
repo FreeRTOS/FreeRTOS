@@ -697,7 +697,7 @@ xTimeOutType xTimeOut;
 
 						/* The data is being left in the queue, so see if there are
 						any other tasks waiting for the data. */
-						if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+						if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 						{
 							/* Tasks that are removed from the event list will get added to
 							the pending ready list as the scheduler is still suspended. */
@@ -790,7 +790,7 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 			be done when the queue is unlocked later. */
 			if( pxQueue->xTxLock == queueUNLOCKED )
 			{
-				if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 				{
 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 					{
@@ -880,7 +880,7 @@ signed char *pcOriginalReadPosition;
 
 					/* The data is being left in the queue, so see if there are
 					any other tasks waiting for the data. */
-					if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 					{
 						/* Tasks that are removed from the event list will get added to
 						the pending ready list as the scheduler is still suspended. */
@@ -988,7 +988,7 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 			that an ISR has removed data while the queue was locked. */
 			if( pxQueue->xRxLock == queueUNLOCKED )
 			{
-				if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
+				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 				{
 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 					{
@@ -1117,7 +1117,7 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 		{
 			/* Data was posted while the queue was locked.  Are any tasks
 			blocked waiting for data to become available? */
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 			{
 				/* Tasks that are removed from the event list will get added to
 				the pending ready list as the scheduler is still suspended. */
@@ -1145,7 +1145,7 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 	{
 		while( pxQueue->xRxLock > queueLOCKED_UNMODIFIED )
 		{
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 			{
 				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 				{

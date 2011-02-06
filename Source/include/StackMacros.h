@@ -93,8 +93,6 @@
 	/* Only the current stack state is to be checked. */
 	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
 	{																									\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );			\
-																										\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
 		{																								\
@@ -110,7 +108,6 @@
 	/* Only the current stack state is to be checked. */
 	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
 	{																									\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );			\
 																										\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack >= pxCurrentTCB->pxEndOfStack )									\
@@ -124,21 +121,20 @@
 
 #if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) && ( portSTACK_GROWTH < 0 ) )
 
-	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																									\
-	{																																				\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );														\
-	static const unsigned char ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,			\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE };	\
-																																					\
-																																					\
-		/* Has the extremity of the task stack ever been written over? */																			\
-		if( memcmp( ( void * ) pxCurrentTCB->pxStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )						\
-		{																																			\
-			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );												\
-		}																																			\
+	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																								\
+	{																																			\
+	static const unsigned char ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
+															tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
+															tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
+															tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
+															tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE };	\
+																																				\
+																																				\
+		/* Has the extremity of the task stack ever been written over? */																		\
+		if( memcmp( ( void * ) pxCurrentTCB->pxStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )					\
+		{																																		\
+			vApplicationStackOverflowHook( ( xTaskHandle ) pxCurrentTCB, pxCurrentTCB->pcTaskName );											\
+		}																																		\
 	}
 
 #endif /* #if( configCHECK_FOR_STACK_OVERFLOW > 1 ) */
@@ -148,7 +144,6 @@
 
 	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																									\
 	{																																				\
-	extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );														\
 	char *pcEndOfStack = ( char * ) pxCurrentTCB->pxEndOfStack;																						\
 	static const unsigned char ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,			\
 																tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\

@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -222,21 +222,19 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
  * Macro to mark a queue as locked.  Locking a queue prevents an ISR from
  * accessing the queue event lists.
  */
-#define prvLockQueue( pxQueue )							\
-{														\
-	taskENTER_CRITICAL();								\
-	{													\
-		if( pxQueue->xRxLock == queueUNLOCKED )			\
-		{												\
-			pxQueue->xRxLock = queueLOCKED_UNMODIFIED;	\
-		}												\
-		if( pxQueue->xTxLock == queueUNLOCKED )			\
-		{												\
-			pxQueue->xTxLock = queueLOCKED_UNMODIFIED;	\
-		}												\
-	}													\
-	taskEXIT_CRITICAL();								\
-}
+#define prvLockQueue( pxQueue )								\
+	taskENTER_CRITICAL();									\
+	{														\
+		if( ( pxQueue )->xRxLock == queueUNLOCKED )			\
+		{													\
+			( pxQueue )->xRxLock = queueLOCKED_UNMODIFIED;	\
+		}													\
+		if( ( pxQueue )->xTxLock == queueUNLOCKED )			\
+		{													\
+			( pxQueue )->xTxLock = queueLOCKED_UNMODIFIED;	\
+		}													\
+	}														\
+	taskEXIT_CRITICAL()
 /*-----------------------------------------------------------*/
 
 
@@ -248,6 +246,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
 {
 xQUEUE *pxNewQueue;
 size_t xQueueSizeInBytes;
+xQueueHandle xReturn = NULL;
 
 	/* Allocate the new queue structure. */
 	if( uxQueueLength > ( unsigned portBASE_TYPE ) 0 )
@@ -265,9 +264,9 @@ size_t xQueueSizeInBytes;
 				/* Initialise the queue members as described above where the
 				queue type is defined. */
 				pxNewQueue->pcTail = pxNewQueue->pcHead + ( uxQueueLength * uxItemSize );
-				pxNewQueue->uxMessagesWaiting = 0;
+				pxNewQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
 				pxNewQueue->pcWriteTo = pxNewQueue->pcHead;
-				pxNewQueue->pcReadFrom = pxNewQueue->pcHead + ( ( uxQueueLength - 1 ) * uxItemSize );
+				pxNewQueue->pcReadFrom = pxNewQueue->pcHead + ( ( uxQueueLength - ( unsigned portBASE_TYPE ) 1U ) * uxItemSize );
 				pxNewQueue->uxLength = uxQueueLength;
 				pxNewQueue->uxItemSize = uxItemSize;
 				pxNewQueue->xRxLock = queueUNLOCKED;
@@ -278,7 +277,7 @@ size_t xQueueSizeInBytes;
 				vListInitialise( &( pxNewQueue->xTasksWaitingToReceive ) );
 
 				traceQUEUE_CREATE( pxNewQueue );
-				return  pxNewQueue;
+				xReturn = pxNewQueue;
 			}
 			else
 			{
@@ -288,9 +287,7 @@ size_t xQueueSizeInBytes;
 		}
 	}
 
-	/* Will only reach here if we could not allocate enough memory or no memory
-	was required. */
-	return NULL;
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -316,9 +313,9 @@ size_t xQueueSizeInBytes;
 			/* Each mutex has a length of 1 (like a binary semaphore) and
 			an item size of 0 as nothing is actually copied into or out
 			of the mutex. */
-			pxNewQueue->uxMessagesWaiting = 0;
-			pxNewQueue->uxLength = 1;
-			pxNewQueue->uxItemSize = 0;
+			pxNewQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
+			pxNewQueue->uxLength = ( unsigned portBASE_TYPE ) 1U;
+			pxNewQueue->uxItemSize = ( unsigned portBASE_TYPE ) 0U;
 			pxNewQueue->xRxLock = queueUNLOCKED;
 			pxNewQueue->xTxLock = queueUNLOCKED;
 
@@ -327,7 +324,7 @@ size_t xQueueSizeInBytes;
 			vListInitialise( &( pxNewQueue->xTasksWaitingToReceive ) );
 
 			/* Start with the semaphore in the expected state. */
-			xQueueGenericSend( pxNewQueue, NULL, 0, queueSEND_TO_BACK );
+			xQueueGenericSend( pxNewQueue, NULL, ( portTickType ) 0U, queueSEND_TO_BACK );
 
 			traceCREATE_MUTEX( pxNewQueue );
 		}

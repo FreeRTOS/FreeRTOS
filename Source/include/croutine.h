@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -51,15 +51,12 @@
     licensing and training services.
 */
 
+#ifndef CO_ROUTINE_H
+#define CO_ROUTINE_H
+
 #ifndef INC_FREERTOS_H
 	#error "include FreeRTOS.h must appear in source files before include croutine.h"
 #endif
-
-
-
-
-#ifndef CO_ROUTINE_H
-#define CO_ROUTINE_H
 
 #include "list.h"
 
@@ -230,7 +227,7 @@ void vCoRoutineSchedule( void );
  * \defgroup crSTART crSTART
  * \ingroup Tasks
  */
-#define crSTART( pxCRCB ) switch( ( ( corCRCB * )pxCRCB )->uxState ) { case 0:
+#define crSTART( pxCRCB ) switch( ( ( corCRCB * )( pxCRCB ) )->uxState ) { case 0:
 
 /**
  * croutine. h
@@ -267,8 +264,8 @@ void vCoRoutineSchedule( void );
  * These macros are intended for internal use by the co-routine implementation
  * only.  The macros should not be used directly by application writers.
  */
-#define crSET_STATE0( xHandle ) ( ( corCRCB * )xHandle)->uxState = (__LINE__ * 2); return; case (__LINE__ * 2):
-#define crSET_STATE1( xHandle ) ( ( corCRCB * )xHandle)->uxState = ((__LINE__ * 2)+1); return; case ((__LINE__ * 2)+1):
+#define crSET_STATE0( xHandle ) ( ( corCRCB * )( xHandle ) )->uxState = (__LINE__ * 2); return; case (__LINE__ * 2):
+#define crSET_STATE1( xHandle ) ( ( corCRCB * )( xHandle ) )->uxState = ((__LINE__ * 2)+1); return; case ((__LINE__ * 2)+1):
 
 /**
  * croutine. h
@@ -317,11 +314,11 @@ void vCoRoutineSchedule( void );
  * \ingroup Tasks
  */
 #define crDELAY( xHandle, xTicksToDelay )												\
-	if( xTicksToDelay > 0 )																\
+	if( ( xTicksToDelay ) > 0 )															\
 	{																					\
-		vCoRoutineAddToDelayedList( xTicksToDelay, NULL );								\
+		vCoRoutineAddToDelayedList( ( xTicksToDelay ), NULL );							\
 	}																					\
-	crSET_STATE0( xHandle );
+	crSET_STATE0( ( xHandle ) );
 
 /**
  * <pre>
@@ -408,15 +405,15 @@ void vCoRoutineSchedule( void );
  */
 #define crQUEUE_SEND( xHandle, pxQueue, pvItemToQueue, xTicksToWait, pxResult )			\
 {																						\
-	*pxResult = xQueueCRSend( pxQueue, pvItemToQueue, xTicksToWait );					\
+	*( pxResult ) = xQueueCRSend( ( pxQueue) , ( pvItemToQueue) , ( xTicksToWait ) );	\
 	if( *pxResult == errQUEUE_BLOCKED )													\
 	{																					\
-		crSET_STATE0( xHandle );														\
-		*pxResult = xQueueCRSend( pxQueue, pvItemToQueue, 0 );							\
+		crSET_STATE0( ( xHandle ) );													\
+		*pxResult = xQueueCRSend( ( pxQueue ), ( pvItemToQueue ), 0 );					\
 	}																					\
 	if( *pxResult == errQUEUE_YIELD )													\
 	{																					\
-		crSET_STATE1( xHandle );														\
+		crSET_STATE1( ( xHandle ) );													\
 		*pxResult = pdPASS;																\
 	}																					\
 }
@@ -500,16 +497,16 @@ void vCoRoutineSchedule( void );
  */
 #define crQUEUE_RECEIVE( xHandle, pxQueue, pvBuffer, xTicksToWait, pxResult )			\
 {																						\
-	*pxResult = xQueueCRReceive( pxQueue, pvBuffer, xTicksToWait );						\
-	if( *pxResult == errQUEUE_BLOCKED ) 												\
+	*( pxResult ) = xQueueCRReceive( ( pxQueue) , ( pvBuffer ), ( xTicksToWait ) );		\
+	if( *( pxResult ) == errQUEUE_BLOCKED ) 											\
 	{																					\
-		crSET_STATE0( xHandle );														\
-		*pxResult = xQueueCRReceive( pxQueue, pvBuffer, 0 );							\
+		crSET_STATE0( ( xHandle ) );													\
+		*( pxResult ) = xQueueCRReceive( ( pxQueue) , ( pvBuffer ), 0 );				\
 	}																					\
-	if( *pxResult == errQUEUE_YIELD )													\
+	if( *( pxResult ) == errQUEUE_YIELD )												\
 	{																					\
-		crSET_STATE1( xHandle );														\
-		*pxResult = pdPASS;																\
+		crSET_STATE1( ( xHandle ) );													\
+		*( pxResult ) = pdPASS;															\
 	}																					\
 }
 
@@ -607,7 +604,7 @@ void vCoRoutineSchedule( void );
  * \defgroup crQUEUE_SEND_FROM_ISR crQUEUE_SEND_FROM_ISR
  * \ingroup Tasks
  */
-#define crQUEUE_SEND_FROM_ISR( pxQueue, pvItemToQueue, xCoRoutinePreviouslyWoken ) xQueueCRSendFromISR( pxQueue, pvItemToQueue, xCoRoutinePreviouslyWoken )
+#define crQUEUE_SEND_FROM_ISR( pxQueue, pvItemToQueue, xCoRoutinePreviouslyWoken ) xQueueCRSendFromISR( ( pxQueue ), ( pvItemToQueue ), ( xCoRoutinePreviouslyWoken ) )
 
 
 /**
@@ -720,7 +717,7 @@ void vCoRoutineSchedule( void );
  * \defgroup crQUEUE_RECEIVE_FROM_ISR crQUEUE_RECEIVE_FROM_ISR
  * \ingroup Tasks
  */
-#define crQUEUE_RECEIVE_FROM_ISR( pxQueue, pvBuffer, pxCoRoutineWoken ) xQueueCRReceiveFromISR( pxQueue, pvBuffer, pxCoRoutineWoken )
+#define crQUEUE_RECEIVE_FROM_ISR( pxQueue, pvBuffer, pxCoRoutineWoken ) xQueueCRReceiveFromISR( ( pxQueue ), ( pvBuffer ), ( pxCoRoutineWoken ) )
 
 /*
  * This function is intended for internal use by the co-routine macros only.

@@ -52,14 +52,12 @@
 */
 
 
+#ifndef TASK_H
+#define TASK_H
+
 #ifndef INC_FREERTOS_H
 	#error "include FreeRTOS.h must appear in source files before include task.h"
 #endif
-
-
-
-#ifndef TASK_H
-#define TASK_H
 
 #include "portable.h"
 #include "list.h"
@@ -427,8 +425,7 @@ void vTaskAllocateMPURegions( xTaskHandle xTask, const xMemoryRegion * const pxR
  * \defgroup vTaskDelete vTaskDelete
  * \ingroup Tasks
  */
-void vTaskDelete( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
-
+void vTaskDelete( xTaskHandle pxTaskToDelete ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------
  * TASK CONTROL API
@@ -1103,7 +1100,7 @@ unsigned long ulTaskEndTrace( void ) PRIVILEGED_FUNCTION;
  *
  * Returns the high water mark of the stack associated with xTask.  That is,
  * the minimum free stack space there has been (in words, so on a 32 bit machine
- * a value of 1 means 4 bytes) since the task started.  The smaller the returned 
+ * a value of 1 means 4 bytes) since the task started.  The smaller the returned
  * number the closer the task has come to overflowing its stack.
  *
  * @param xTask Handle of the task associated with the stack to be checked.
@@ -1278,7 +1275,7 @@ void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUN
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
 
 #ifdef __cplusplus
 }

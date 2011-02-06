@@ -99,15 +99,15 @@ portSTACK_TYPE and portBASE_TYPE. */
 /* The location of the software interrupt register.  Software interrupts use
 vector 27. */
 #define portITU_SWINTR			( ( unsigned char * ) 0x000872E0 )
-#define portYIELD()				*portITU_SWINTR = 0x01; portNOP(); portNOP(); portNOP(); portNOP(); portNOP()
-#define portYIELD_FROM_ISR( x )	if( x != pdFALSE ) portYIELD()
+#define portYIELD()				*portITU_SWINTR = ( unsigned char ) 0x01; portNOP(); portNOP(); portNOP(); portNOP(); portNOP()
+#define portYIELD_FROM_ISR( x )	if( ( x ) != pdFALSE ) portYIELD()
 
 /*
  * These macros should be called directly, but through the taskENTER_CRITICAL()
  * and taskEXIT_CRITICAL() macros.
  */
-#define portENABLE_INTERRUPTS() 	__set_interrupt_level( 0 )
-#define portDISABLE_INTERRUPTS() 	__set_interrupt_level( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portENABLE_INTERRUPTS() 	__set_interrupt_level( ( unsigned char ) 0 )
+#define portDISABLE_INTERRUPTS() 	__set_interrupt_level( ( unsigned char ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )
@@ -115,14 +115,14 @@ vector 27. */
 /* The critical nesting functions defined within tasks.c. */
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-#define portENTER_CRITICAL()	vTaskEnterCritical();
-#define portEXIT_CRITICAL()		vTaskExitCritical();
+#define portENTER_CRITICAL()	vTaskEnterCritical()
+#define portEXIT_CRITICAL()		vTaskExitCritical()
 
 /* As this port allows interrupt nesting... */
 unsigned long ulPortGetIPL( void );
 void vPortSetIPL( unsigned long ulNewIPL );
 #define portSET_INTERRUPT_MASK_FROM_ISR() __get_interrupt_level(); portDISABLE_INTERRUPTS()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) __set_interrupt_level( uxSavedInterruptStatus )
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) __set_interrupt_level( ( unsigned char ) ( uxSavedInterruptStatus ) )
 
 /*-----------------------------------------------------------*/
 

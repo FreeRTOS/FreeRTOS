@@ -469,7 +469,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  * \defgroup xQueueSend xQueueSend
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
+signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 
 /**
  * queue. h
@@ -784,7 +784,7 @@ unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue );
  * \page vQueueDelete vQueueDelete
  * \ingroup QueueManagement
  */
-void vQueueDelete( xQueueHandle xQueue );
+void vQueueDelete( xQueueHandle pxQueue );
 
 /**
  * queue. h
@@ -1223,8 +1223,8 @@ xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue,
  * For internal use only.  Use xSemaphoreTakeMutexRecursive() or
  * xSemaphoreGiveMutexRecursive() instead of calling these functions directly.
  */
-portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime );
-portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex );
+portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBlockTime );
+portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
 
 /*
  * The registry is provided as a means for kernel aware debuggers to

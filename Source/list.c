@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -76,7 +76,7 @@ void vListInitialise( xList *pxList )
 	pxList->xListEnd.pxNext = ( xListItem * ) &( pxList->xListEnd );
 	pxList->xListEnd.pxPrevious = ( xListItem * ) &( pxList->xListEnd );
 
-	pxList->uxNumberOfItems = 0;
+	pxList->uxNumberOfItems = ( unsigned portBASE_TYPE ) 0U;
 }
 /*-----------------------------------------------------------*/
 
@@ -121,9 +121,9 @@ portTickType xValueOfInsertion;
 	/* If the list already contains a list item with the same item value then
 	the new list item should be placed after it.  This ensures that TCB's which
 	are stored in ready lists (all of which have the same ulListItem value)
-	get an equal share of the CPU.  However, if the xItemValue is the same as 
+	get an equal share of the CPU.  However, if the xItemValue is the same as
 	the back marker the iteration loop below will not end.  This means we need
-	to guard against this by checking the value first and modifying the 
+	to guard against this by checking the value first and modifying the
 	algorithm slightly if necessary. */
 	if( xValueOfInsertion == portMAX_DELAY )
 	{
@@ -133,18 +133,18 @@ portTickType xValueOfInsertion;
 	{
 		/* *** NOTE ***********************************************************
 		If you find your application is crashing here then likely causes are:
-			1) Stack overflow - 
+			1) Stack overflow -
 			   see http://www.freertos.org/Stacks-and-stack-overflow-checking.html
-			2) Incorrect interrupt priority assignment, especially on Cortex-M3 
-			   parts where numerically high priority values denote low actual 
-			   interrupt priories, which can seem counter intuitive.  See 
+			2) Incorrect interrupt priority assignment, especially on Cortex-M3
+			   parts where numerically high priority values denote low actual
+			   interrupt priories, which can seem counter intuitive.  See
 			   configMAX_SYSCALL_INTERRUPT_PRIORITY on http://www.freertos.org/a00110.html
 			3) Calling an API function from within a critical section or when
 			   the scheduler is suspended.
 			4) Using a queue or semaphore before it has been initialised or
 			   before the scheduler has been started (are interrupts firing
 			   before vTaskStartScheduler() has been called?).
-		See http://www.freertos.org/FAQHelp.html for more tips. 
+		See http://www.freertos.org/FAQHelp.html for more tips.
 		**********************************************************************/
 		
 		for( pxIterator = ( xListItem * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue <= xValueOfInsertion; pxIterator = pxIterator->pxNext )

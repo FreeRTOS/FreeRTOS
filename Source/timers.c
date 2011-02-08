@@ -66,10 +66,10 @@ task.h is included from an application file. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* IDs for commands that can be sent/received on the timer queue. */
-#define tmrSTART		0
+#define tmrCOMMAND_START		0
 
 /* Misc definitions. */
-#define timerNO_DELAY	( portTickType ) 0U
+#define tmrNO_DELAY		( portTickType ) 0U
 
 /* The definition of the timers themselves. */
 typedef struct tmrTimerControl
@@ -108,16 +108,37 @@ PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
  */
 static void prvRemoveTimerFromActiveList( xTIMER *pxTimer ) PRIVILEGED_FUNCTION;
 
+/*
+ * Send pxMessage to xTimerQueue using a block time of xBlockTime if the 
+ * scheduler is running, or a block time of zero if the scheduler is not
+ * running.
+ */
+static portBASE_TYPE prvSendMessageToTimerServiceTask( xTIMER_MESSAGE *pxMessage, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
+
+/* 
+ * Initialise the infrustructure used by the timer service task if it has not
+ * been initialised already.
+ */
 static void prvCheckForValidListAndQueue( void ) PRIVILEGED_FUNCTION;
 
 /*
- * The timer service task (daemon).
+ * The timer service task (daemon).  Timer functionality is controlled by this
+ * task.  Other tasks communicate with the timer service task using the 
+ * xTimerQueue queue.
  */
 static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
 
+/* 
+ * The following functions handle the commands that are sent to the timer
+ * service task via the xTimerQueue queue.
+ */
+static void prvTimerStart( xTIMER *pxTimer ) PRIVILEGED_FUNCTION;
 
-/* Handlers for commands received on the timer queue. */
-static void prvTimerStart( xTIMER *pxTimer );
+/*
+ * Called by the timer service task to interpret and process a command it
+ * received on the timer queue. 
+ */
+static void	prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -126,12 +147,14 @@ portBASE_TYPE xTimerCreateTimerTask( void )
 portBASE_TYPE xReturn = pdFAIL;
 
 	/* This function is called when the scheduler is started if 
-	configUSE_TIMERS is set to 1. */
+	configUSE_TIMERS is set to 1.  Check that the infrustructure used by the
+	timer service task has been created/initialised.  If timers have already
+	been created then the initialisation will already have been performed. */
 	prvCheckForValidListAndQueue();
 
 	if( xTimerQueue != NULL )
 	{
-		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Timers", configMINIMAL_STACK_SIZE, NULL, configTIMER_TASK_PRIORITY, NULL );
+		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Timers", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL );
 	}
 
 	return xReturn;
@@ -146,9 +169,11 @@ xTIMER *pxNewTimer;
 	pxNewTimer = ( xTIMER * ) pvPortMalloc( sizeof( xTIMER ) );
 	if( pxNewTimer != NULL )
 	{
+		/* Ensure the infrustructure used by the timer service task has been
+		created/initialised. */
 		prvCheckForValidListAndQueue();
 
-		/* Initialise the timer structure members. */
+		/* Initialise the timer structure members using the function parameters. */
 		pxNewTimer->pcTimerName = pcTimerName;
 		pxNewTimer->xTimerPeriodInTicks = xTimerPeriodInTicks;
 		pxNewTimer->uxAutoReload = uxAutoReload;
@@ -166,68 +191,57 @@ portBASE_TYPE xTimerStart( xTimerHandle xTimer, portTickType xBlockTime )
 portBASE_TYPE xReturn = pdFAIL;
 xTIMER_MESSAGE xMessage;
 
+	/* A timer cannot be started unless it is created, and creating a timer
+	will have resulted in the timer queue also being created. */
 	if( xTimerQueue != NULL )
 	{
-		xMessage.xMessageID = tmrSTART;
+		/* Send a command to the timer service task to start the xTimer timer. */
+		xMessage.xMessageID = tmrCOMMAND_START;
 		xMessage.pxTimer = ( xTIMER * ) xTimer;
 
-		xReturn = xQueueSendToBack( xTimerQueue, &xMessage, xBlockTime );
+		prvSendMessageToTimerServiceTask( &xMessage, xBlockTime );
 	}
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-void *pvTimerGetTimerID( xTimerHandle xTimer )
-{
-xTIMER *pxTimer = ( xTIMER * ) xTimer;
-
-	return pxTimer->pvTimerID;
-}
-/*-----------------------------------------------------------*/
-
-static void prvRemoveTimerFromActiveList( xTIMER *pxTimer )
-{
-	/* Is the timer already in the list of active timers? */
-	if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
-	{
-		/* The timer is in the list, remove it. */
-		vListRemove( &( pxTimer->xTimerListItem ) );
-	}
-}
-/*-----------------------------------------------------------*/
-
 static void prvTimerTask( void *pvParameters )
 {
-portTickType xNextWakeTime, xTimeNow;
+portTickType xNextExpireTime, xTimeNow;
 xTIMER *pxTimer;
-xTIMER_MESSAGE xMessage;
 
 	/* Just to avoid compiler warnings. */
 	( void ) pvParameters;
 
 	for( ;; )
 	{
+		/* Timers are listed in expiry time order, with the head of the list
+		referencing the task that will expire first.  Obtain the time at which
+		the timer with the nearest expiry time will expire.  If there are no
+		active timers then just set the next expire time to the maximum possible
+		time to ensure this task does not run unnecessarily. */
 		if( listLIST_IS_EMPTY( &xActiveTimerList ) == pdFALSE )
 		{
-			xNextWakeTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( &xActiveTimerList );
+			xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( &xActiveTimerList );
 		}
 		else
 		{
-			xNextWakeTime = portMAX_DELAY;
+			xNextExpireTime = portMAX_DELAY;
 		}
 
-		if( xNextWakeTime <= xTaskGetTickCount() )
+		/* Has the timer expired? */
+		if( xNextExpireTime <= xTaskGetTickCount() )
 		{
-			/* Remove the timer from the list.  This functionality relies on
-			the list of active timers not being accessed from outside of this
-			task. */
+			/* Remove the timer from the list of active timers. */
 			pxTimer = listGET_OWNER_OF_HEAD_ENTRY( &xActiveTimerList );
 			vListRemove( &( pxTimer->xTimerListItem ) );
 
+			/* If the timer is an autoreload timer then calculate the next
+			expiry time and re-insert the timer in the list of active timers. */
 			if( pxTimer->uxAutoReload == pdTRUE )
 			{
-				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), ( xNextWakeTime + pxTimer->xTimerPeriodInTicks ) );
+				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ) );
 				vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
 			}
 
@@ -236,28 +250,57 @@ xTIMER_MESSAGE xMessage;
 		}
 		else
 		{
-			/* Calculate the block time. */
+			/* Block this task until the next timer expires, or a command is
+			received. */
 			taskENTER_CRITICAL();
 			{
 				xTimeNow = xTaskGetTickCount();
-				if( xTimeNow < xNextWakeTime )
+				if( xTimeNow < xNextExpireTime )
 				{
-					vQueueWaitForMessageRestricted( xTimerQueue, ( xNextWakeTime - xTimeNow ) );
+					/* This is a simple fast function - a yield will not be 
+					performed until	after this critical section exits. */
+					vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ) );
 				}
 			}
 			taskEXIT_CRITICAL();
+
+			/* Yield to wait for either a command to arrive, or the block time 
+			to expire.  If a command arrived between the critical section being 
+			exited and this yeild then the yield will just return to the same
+			task. */
 			portYIELD_WITHIN_API();
 
-			while( xQueueReceive( xTimerQueue, &xMessage, timerNO_DELAY ) != pdFAIL )
-			{
-				switch( xMessage.xMessageID )
-				{
-					case tmrSTART	:	prvTimerStart( xMessage.pxTimer );
+			/* Empty the command queue, if it contains any commands. */
+			prvProcessReceivedCommands();
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void	prvProcessReceivedCommands( void )
+{
+xTIMER_MESSAGE xMessage;
+portTickType xTimeToExpire;
+xTIMER *pxTimer;
+
+	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL )
+	{
+		pxTimer = xMessage.pxTimer;
+
+		/* Is the timer already in the list of active timers? */
+		prvRemoveTimerFromActiveList( pxTimer );
+
+		switch( xMessage.xMessageID )
+		{
+			case tmrCOMMAND_START	:	/* Start or restart a timer. */
+										xTimeToExpire = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
+										listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToExpire );
+										listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
+										vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
 										break;
-					default			:	/* Don't expect to get here. */
+
+			default			:			/* Don't expect to get here. */
 										break;
-				}
-			}
 		}
 	}
 }
@@ -280,24 +323,41 @@ static void prvCheckForValidListAndQueue( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvTimerStart( xTIMER *pxTimer )
+void *pvTimerGetTimerID( xTimerHandle xTimer )
 {
-portTickType xTimeToWake;
+xTIMER *pxTimer = ( xTIMER * ) xTimer;
 
-	if( pxTimer != NULL )
+	return pxTimer->pvTimerID;
+}
+/*-----------------------------------------------------------*/
+
+static void prvRemoveTimerFromActiveList( xTIMER *pxTimer )
+{
+	/* Is the timer already in the list of active timers? */
+	if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
 	{
-		/* Is the timer already in the list of active timers? */
-		prvRemoveTimerFromActiveList( pxTimer );
-
-		xTimeToWake = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
-		listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToWake );
-		listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
-		vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+		/* The timer is in the list, remove it. */
+		vListRemove( &( pxTimer->xTimerListItem ) );
 	}
 }
+/*-----------------------------------------------------------*/
 
+static portBASE_TYPE prvSendMessageToTimerServiceTask( xTIMER_MESSAGE *pxMessage, portTickType xBlockTime )
+{
+portBASE_TYPE xReturn;
 
+	if( xTaskGetSchedulerState() == taskSCHEDULER_RUNNING )
+	{
+		xReturn = xQueueSendToBack( xTimerQueue, pxMessage, xBlockTime );
+	}
+	else
+	{
+		xReturn = xQueueSendToBack( xTimerQueue, pxMessage, tmrNO_DELAY );
+	}
 
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
 
 
 

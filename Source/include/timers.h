@@ -66,6 +66,12 @@
 extern "C" {
 #endif
 
+/* IDs for commands that can be sent/received on the timer queue. */
+#define tmrCOMMAND_START			0
+#define tmrCOMMAND_STOP				1
+#define tmrCOMMAND_CHANGE_PERIOD	2
+#define tmrCOMMAND_DELETE			3
+
 /*-----------------------------------------------------------
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
@@ -77,9 +83,14 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
 
 portBASE_TYPE xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
 xTimerHandle xTimerCreate( const signed char *pcTimerName, portTickType xTimerPeriod, unsigned portBASE_TYPE uxAutoReload, void * pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xTimerStart( xTimerHandle xTimer, portTickType xBlockTime ); /* Must not attempt to block if scheduler not started. */
 void *pvTimerGetTimerID( xTimerHandle xTimer );
+portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portTickType xBlockTime );
+portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer );
 
+#define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, xBlockTime )
+#define xTimerStop( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, xBlockTime )
+#define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, xBlockTime )
+#define xTimerDelete( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_DELETE, 0, xBlockTime )
 
 #ifdef __cplusplus
 }

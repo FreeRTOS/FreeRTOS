@@ -63,6 +63,7 @@ task.h is included from an application file. */
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "StackMacros.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
@@ -747,6 +748,19 @@ tskTCB * pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
+void vTaskUnblockTask( xTaskHandle pxTask )
+{
+tskTCB *pxTCB = ( tskTCB * ) pxTask;
+
+	/* This function is not intended to be a public API function and definitely
+	is not for generic use as it assumes pxTask is not the running task and not
+	suspended, does not remove the task from any event lists it might be 
+	blocked on, and does not take care of mutual exclusion. */
+	vListRemove( &( pxTCB->xGenericListItem ) );
+	prvAddTaskToReadyQueue( pxTCB );
+}
+/*-----------------------------------------------------------*/
+
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
 	unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask )
@@ -1059,6 +1073,15 @@ portBASE_TYPE xReturn;
 
 	/* Add the idle task at the lowest priority. */
 	xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), ( xTaskHandle * ) NULL );
+
+	#if ( configUSE_TIMERS == 1 )
+	{
+		if( xReturn == pdPASS )
+		{
+			xReturn = xTimerCreateTimerTask();
+		}
+	}
+	#endif
 
 	if( xReturn == pdPASS )
 	{

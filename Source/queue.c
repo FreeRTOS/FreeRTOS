@@ -1440,7 +1440,7 @@ signed portBASE_TYPE xReturn;
 	}
 
 #endif
-	/*-----------------------------------------------------------*/
+/*-----------------------------------------------------------*/
 
 #if configQUEUE_REGISTRY_SIZE > 0
 
@@ -1460,6 +1460,29 @@ signed portBASE_TYPE xReturn;
 			}
 		}
 
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if configUSE_TIMERS == 1
+
+	void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait )
+	{
+		/* This function should not be called by application code hence the 
+		'Restricted' in its name.  It is not part of the public API.  It is designed
+		for use by kernel code, and has special calling requirements - it should be
+		called from a critical section, and then a yield performed after it is
+		called.  Also, the call tree makes use of vListInsert() which should normally
+		not be called from a critical section - so an assumption is made that the list
+		being inserted into is empty and therefore the insertion will be fast. */
+
+		/* Only do anything if there are no message in the queue. */
+		if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0U )
+		{
+			/* There is nothing in the queue, block for the specified period. */
+			vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
+		}
 	}
 
 #endif

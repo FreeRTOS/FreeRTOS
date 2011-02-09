@@ -96,6 +96,7 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "flop.h"
+#include "TimerDemo.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
@@ -108,6 +109,8 @@
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
+
+#define mainTIMER_FREQUENCY			( configTICK_RATE_HZ )
 
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
@@ -128,6 +131,7 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartRecursiveMutexTasks();
+	vStartTimerDemoTask( mainTIMER_FREQUENCY );
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -156,7 +160,11 @@ char *pcStatusMessage = "OK";
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
 		/* Check the standard demo tasks are running without error. */
-	    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		if( xAreTimerDemoTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: TimerDemo";
+		}
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 			pcStatusMessage = "Error: IntMath";
 	    }	

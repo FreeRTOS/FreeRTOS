@@ -69,7 +69,7 @@
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( 50 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
-#define configMINIMAL_STACK_SIZE		( ( unsigned portSHORT ) 50 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 50 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 0 ) /* This parameter has no effect when heap_3.c is included in the project. */
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
@@ -83,6 +83,11 @@
 #define configQUEUE_REGISTRY_SIZE		0
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
+
+#define configUSE_TIMERS				1
+#define configTIMER_TASK_PRIORITY		2
+#define configTIMER_QUEUE_LENGTH		3
+#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
 
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

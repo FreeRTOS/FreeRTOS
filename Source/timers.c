@@ -65,9 +65,6 @@ task.h is included from an application file. */
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
-/* IDs for commands that can be sent/received on the timer queue. */
-#define tmrCOMMAND_START		0
-
 /* Misc definitions. */
 #define tmrNO_DELAY		( portTickType ) 0U
 
@@ -86,9 +83,9 @@ typedef struct tmrTimerControl
 queue. */
 typedef struct tmrTimerQueueMessage
 {
-	portBASE_TYPE			xMessageID;
-	portTickType			xMessageValue;
-	xTIMER *				pxTimer;
+	portBASE_TYPE			xMessageID;			/*<< The command being sent to the timer service task. */
+	portTickType			xMessageValue;		/*<< An optional value used by a subset of commands, for example, when chaning the period of a timer. */
+	xTIMER *				pxTimer;			/*<< The timer to which the command will be applied. */
 } xTIMER_MESSAGE;
 
 
@@ -101,19 +98,6 @@ PRIVILEGED_DATA static xList xActiveTimerList;
 PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
 
 /*-----------------------------------------------------------*/
-
-/*
- * Called when a timer is about to be modified.  If the timer is already in the
- * list of active timers then it is removed prior to the modification.
- */
-static void prvRemoveTimerFromActiveList( xTIMER *pxTimer ) PRIVILEGED_FUNCTION;
-
-/*
- * Send pxMessage to xTimerQueue using a block time of xBlockTime if the 
- * scheduler is running, or a block time of zero if the scheduler is not
- * running.
- */
-static portBASE_TYPE prvSendMessageToTimerServiceTask( xTIMER_MESSAGE *pxMessage, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
 
 /* 
  * Initialise the infrustructure used by the timer service task if it has not
@@ -186,20 +170,28 @@ xTIMER *pxNewTimer;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xTimerStart( xTimerHandle xTimer, portTickType xBlockTime )
+portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portTickType xBlockTime )
 {
 portBASE_TYPE xReturn = pdFAIL;
 xTIMER_MESSAGE xMessage;
 
-	/* A timer cannot be started unless it is created, and creating a timer
-	will have resulted in the timer queue also being created. */
+	/* Send a message to the timer service task to perform a particular action
+	on a particular timer definition. */
 	if( xTimerQueue != NULL )
 	{
 		/* Send a command to the timer service task to start the xTimer timer. */
-		xMessage.xMessageID = tmrCOMMAND_START;
+		xMessage.xMessageID = xCommandID;
+		xMessage.xMessageValue = xOptionalValue;
 		xMessage.pxTimer = ( xTIMER * ) xTimer;
 
-		prvSendMessageToTimerServiceTask( &xMessage, xBlockTime );
+		if( xTaskGetSchedulerState() == taskSCHEDULER_RUNNING )
+		{
+			xReturn = xQueueSendToBack( xTimerQueue, &xMessage, xBlockTime );
+		}
+		else
+		{
+			xReturn = xQueueSendToBack( xTimerQueue, &xMessage, tmrNO_DELAY );
+		}
 	}
 
 	return xReturn;
@@ -288,19 +280,44 @@ xTIMER *pxTimer;
 		pxTimer = xMessage.pxTimer;
 
 		/* Is the timer already in the list of active timers? */
-		prvRemoveTimerFromActiveList( pxTimer );
+		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
+		{
+			/* The timer is in the list, remove it. */
+			vListRemove( &( pxTimer->xTimerListItem ) );
+		}
 
 		switch( xMessage.xMessageID )
 		{
-			case tmrCOMMAND_START	:	/* Start or restart a timer. */
-										xTimeToExpire = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
-										listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToExpire );
-										listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
-										vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
-										break;
+			case tmrCOMMAND_START :	
+				/* Start or restart a timer. */
+				xTimeToExpire = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
+				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToExpire );
+				listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
+				vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+				break;
 
-			default			:			/* Don't expect to get here. */
-										break;
+			case tmrCOMMAND_STOP :	
+				/* The timer has already been removed from the active list.
+				There is nothing to do here. */
+				break;
+
+			case tmrCOMMAND_CHANGE_PERIOD :
+				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
+				xTimeToExpire = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
+				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToExpire );
+				listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
+				vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+				break;
+
+			case tmrCOMMAND_DELETE :
+				/* The timer has already been removed from the active list,
+				just free up the memory. */
+				vPortFree( pxTimer );
+				break;
+
+			default	:			
+				/* Don't expect to get here. */
+				break;
 		}
 	}
 }
@@ -323,6 +340,22 @@ static void prvCheckForValidListAndQueue( void )
 }
 /*-----------------------------------------------------------*/
 
+portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer )
+{
+portBASE_TYPE xTimerIsInActiveList;
+xTIMER *pxTimer = ( xTIMER * ) xTimer;
+
+	/* Is the timer in the list of active timers? */
+	taskENTER_CRITICAL();
+	{
+		xTimerIsInActiveList = listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) );
+	}
+	taskEXIT_CRITICAL();
+
+	return xTimerIsInActiveList;
+}
+/*-----------------------------------------------------------*/
+
 void *pvTimerGetTimerID( xTimerHandle xTimer )
 {
 xTIMER *pxTimer = ( xTIMER * ) xTimer;
@@ -331,55 +364,3 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 }
 /*-----------------------------------------------------------*/
 
-static void prvRemoveTimerFromActiveList( xTIMER *pxTimer )
-{
-	/* Is the timer already in the list of active timers? */
-	if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
-	{
-		/* The timer is in the list, remove it. */
-		vListRemove( &( pxTimer->xTimerListItem ) );
-	}
-}
-/*-----------------------------------------------------------*/
-
-static portBASE_TYPE prvSendMessageToTimerServiceTask( xTIMER_MESSAGE *pxMessage, portTickType xBlockTime )
-{
-portBASE_TYPE xReturn;
-
-	if( xTaskGetSchedulerState() == taskSCHEDULER_RUNNING )
-	{
-		xReturn = xQueueSendToBack( xTimerQueue, pxMessage, xBlockTime );
-	}
-	else
-	{
-		xReturn = xQueueSendToBack( xTimerQueue, pxMessage, tmrNO_DELAY );
-	}
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-
-
-
-
-
-
-portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer )
-{
-	return pdFALSE;
-}
-
-void vTimerStop( xTimerHandle xTimer )
-{
-}
-
-
-void vTimerChangePeriod( xTimerHandle xTimer )
-{
-}
-
-void vTimerDelete( xTimerHandle xTimer )
-{
-}
-/*-----------------------------------------------------------*/

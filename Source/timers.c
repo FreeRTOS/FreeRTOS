@@ -348,7 +348,7 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 	/* Is the timer in the list of active timers? */
 	taskENTER_CRITICAL();
 	{
-		xTimerIsInActiveList = listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) );
+		xTimerIsInActiveList = listIS_CONTAINED_WITHIN( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
 	}
 	taskEXIT_CRITICAL();
 

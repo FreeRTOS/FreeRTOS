@@ -1250,7 +1250,8 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName );
 #endif
 
-
+/* Not a public API function, hence the 'Restricted' in the name. */
+void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );
 
 
 #ifdef __cplusplus

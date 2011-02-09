@@ -148,6 +148,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configUSE_MUTEXES 0
 #endif
 
+#ifndef configUSE_TIMERS
+	#define configUSE_TIMERS 0
+#endif
+
 #ifndef configUSE_COUNTING_SEMAPHORES
 	#define configUSE_COUNTING_SEMAPHORES 0
 #endif
@@ -176,6 +180,26 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #ifndef INCLUDE_xTaskResumeFromISR
 	#define INCLUDE_xTaskResumeFromISR 1
 #endif
+
+/* The timers module relies on xTaskGetSchedulerState(). */
+#if configUSE_TIMERS == 1
+
+	#undef INCLUDE_xTaskGetSchedulerState
+	#define INCLUDE_xTaskGetSchedulerState 1
+
+	#ifndef configTIMER_TASK_PRIORITY
+		#error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
+	#endif /* configTIMER_TASK_PRIORITY */
+
+	#ifndef configTIMER_QUEUE_LENGTH
+		#error If configUSE_TIMERS is set to 1 then configTIMER_QUEUE_LENGTH must also be defined.
+	#endif /* configTIMER_QUEUE_LENGTH */
+
+	#ifndef configTIMER_TASK_STACK_DEPTH
+		#error If configUSE_TIMERS is set to 1 then configTIMER_TASK_STACK_DEPTH must also be defined.
+	#endif /* configTIMER_TASK_STACK_DEPTH */
+
+#endif /* configUSE_TIMERS */
 
 #ifndef INCLUDE_xTaskGetSchedulerState
 	#define INCLUDE_xTaskGetSchedulerState 0

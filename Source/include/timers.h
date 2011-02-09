@@ -83,14 +83,15 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
 
 portBASE_TYPE xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
 xTimerHandle xTimerCreate( const signed char *pcTimerName, portTickType xTimerPeriod, unsigned portBASE_TYPE uxAutoReload, void * pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) PRIVILEGED_FUNCTION;
-void *pvTimerGetTimerID( xTimerHandle xTimer );
-portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portTickType xBlockTime );
-portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer );
+void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
 #define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, xBlockTime )
 #define xTimerStop( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, xBlockTime )
 #define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, xBlockTime )
 #define xTimerDelete( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_DELETE, 0, xBlockTime )
+#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, xBlockTime )
 
 #ifdef __cplusplus
 }

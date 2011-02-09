@@ -79,12 +79,6 @@
  * \ingroup FreeRTOSIntro
  */
 
-/*
-	Changes from V4.3.1
-
-	+ Included local const within listGET_OWNER_OF_NEXT_ENTRY() to assist
-	  compiler with optimisation.  Thanks B.R.
-*/
 
 #ifndef LIST_H
 #define LIST_H
@@ -150,6 +144,15 @@ typedef struct xLIST
  * \ingroup LinkedList
  */
 #define listGET_LIST_ITEM_VALUE( pxListItem )				( ( pxListItem )->xItemValue )
+
+/*
+ * Access macro the retrieve the value of the list item at the head of a given
+ * list.
+ *
+ * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
+ * \ingroup LinkedList
+ */
+#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )			( (&( ( pxList )->xListEnd ))->pxNext->xItemValue )
 
 /*
  * Access macro to determine if a list contains any items.  The macro will

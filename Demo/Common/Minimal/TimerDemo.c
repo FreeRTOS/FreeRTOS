@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -52,11 +52,13 @@
 */
 
 
-/* 
+/*
  * Tests the behaviour of timers.  Some timers are created before hte scheudler
  * is started, and some after.
  */
 
+/* Standard includes. */
+#include <string.h>
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -71,13 +73,21 @@
 #endif
 
 #define tmrdemoDONT_BLOCK				( ( portTickType ) 0 )
-#define tmrdemoONE_SHOT_TIMER_FREQUENCY ( xBaseFrequency * ( portTickType ) 3 )
+#define tmrdemoONE_SHOT_TIMER_PERIOD	( xBasePeriod * ( portTickType ) 3 )
 #define trmdemoNUM_TIMER_RESETS			( ( unsigned char ) 10 )
 
 /*-----------------------------------------------------------*/
 
-static void prvFreeRunningTimerCallback( xTimerHandle pxExpiredTimer );
+static void prvAutoReloadTimerCallback( xTimerHandle pxExpiredTimer );
 static void prvTimerControlTask( void *pvParameters );
+
+static void prvTest1_CreateTimersWithoutSchedulerRunning( void );
+static void	prvTest3_CheckAutoReloadExpireRates( void );
+static void prvTest2_CheckTaskAndTimersInitialState( void );
+static void prvTest4_CheckAutoReloadTimersCanBeStopped( void );
+static void prvTest5_CheckBasicOneShotTimerBehaviour( void );
+static void prvTest6_CheckAutoReloadResetBehaviour( void );
+static void prvResetStartConditionsForNextIteration( void );
 
 /*-----------------------------------------------------------*/
 
@@ -89,75 +99,28 @@ static volatile portBASE_TYPE xTestStatus = pdPASS;
 detect a stalled task - a test that is no longer running. */
 static volatile unsigned portLONG ulLoopCounter = 0;
 
-xTimerHandle xFreeRunningTimers[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
-unsigned char ucFreeRunningTimerCounters[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
-unsigned char ucOneShotTimerCounter = ( unsigned char ) 0;
+static xTimerHandle xAutoReloadTimers[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
+static unsigned char ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
+static unsigned char ucOneShotTimerCounter = ( unsigned char ) 0;
 
-static portTickType xBaseFrequency = 0;
+static xTimerHandle xOneShotTimer = NULL;
+
+static portTickType xBasePeriod = 0;
 
 /*-----------------------------------------------------------*/
 
-void vStartTimerDemoTask( portTickType xBaseFrequencyIn )
+void vStartTimerDemoTask( portTickType xBasePeriodIn )
 {
-portBASE_TYPE xTimer;
+	/* Store the period from which all the timer periods will be generated from
+	(multiples of). */
+	xBasePeriod = xBasePeriodIn;
 
-	xBaseFrequency = xBaseFrequencyIn;
+	/* Create a set of timers for use by this demo/test. */
+	prvTest1_CreateTimersWithoutSchedulerRunning();
 
-	for( xTimer = 0; xTimer < configTIMER_QUEUE_LENGTH; xTimer++ )
-	{
-		/* As the timer queue is not yet full, it should be possible to both create
-		and start a timer.  These timers are being started before the scheduler has
-		been started, so their block times should get set to zero within the timer
-		API itself. */
-		xFreeRunningTimers[ xTimer ] = xTimerCreate( "FR Timer",						/* Text name to facilitate debugging.  The kernel does not use this itself. */
-													( ( xTimer + 1 ) * xBaseFrequency ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
-													pdTRUE,								/* Autoreload is set to true. */
-													( void * ) xTimer,					/* An identifier for the timer as all the free running timers use the same callback. */
-													prvFreeRunningTimerCallback );		/* The callback to be called when the timer expires. */
-
-		if( xFreeRunningTimers[ xTimer ] == NULL )
-		{
-			xTestStatus = pdFAIL;
-		}
-		else
-		{
-			/* The scheduler has not yet started, so the block period of 
-			portMAX_DELAY should just get set to zero in xTimerStart().  Also,
-			the timer queue is not yet full so xTimerStart() should return
-			pdPASS. */
-			if( xTimerStart( xFreeRunningTimers[ xTimer ], portMAX_DELAY ) != pdPASS )
-			{
-				xTestStatus = pdFAIL;
-			}
-		}
-	}
-
-	/* The timers queue should now be full, so it should be possible to create
-	another timer, but not possible to start it (the timer queue will not get
-	drained until the scheduler has been started. */
-	xFreeRunningTimers[ configTIMER_QUEUE_LENGTH ] = xTimerCreate( "FR Timer",		/* Text name to facilitate debugging.  The kernel does not use this itself. */
-													( configTIMER_QUEUE_LENGTH * xBaseFrequency ),	/* The period for the timer. */
-													pdTRUE,							/* Autoreload is set to true. */
-													( void * ) xTimer,				/* An identifier for the timer as all the free running timers use the same callback. */
-													prvFreeRunningTimerCallback );	/* The callback to be called when the timer expires. */
-
-	if( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH ] == NULL )
-	{
-		xTestStatus = pdFAIL;
-	}
-	else
-	{
-		if( xTimerStart( xFreeRunningTimers[ xTimer ], portMAX_DELAY ) == pdPASS )
-		{
-			/* This time it would not be expected that the timer could be
-			started at this point. */
-			xTestStatus = pdFAIL;
-		}
-	}
-
-	/* Create the task that will control and monitor the timers.  This is 
+	/* Create the task that will control and monitor the timers.  This is
 	created at a lower priority than the timer service task to ensure, as
-	far as it is concerned, commands on timers are actioned immediately 
+	far as it is concerned, commands on timers are actioned immediately
 	(sending a command to the timer service task will unblock the timer service
 	task, which will then preempt this task). */
 	if( xTestStatus != pdFAIL )
@@ -167,14 +130,14 @@ portBASE_TYPE xTimer;
 }
 /*-----------------------------------------------------------*/
 
-static void prvFreeRunningTimerCallback( xTimerHandle pxExpiredTimer )
+static void prvAutoReloadTimerCallback( xTimerHandle pxExpiredTimer )
 {
 portBASE_TYPE xTimerID;
 
 	xTimerID = ( portBASE_TYPE ) pvTimerGetTimerID( pxExpiredTimer );
 	if( xTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
 	{
-		( ucFreeRunningTimerCounters[ xTimerID ] )++;
+		( ucAutoReloadTimerCounters[ xTimerID ] )++;
 	}
 	else
 	{
@@ -196,16 +159,11 @@ static void prvOneShotTimerCallback( xTimerHandle pxExpiredTimer )
 
 static void prvTimerControlTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
-unsigned char ucTimer;
-unsigned char ucMaxAllowableValue, ucMinAllowableValue;
-xTimerHandle xOneShotTimer = NULL;
-
 	( void ) pvParameters;
 
 	/* Create a one-shot timer for use later on in this test. */
 	xOneShotTimer = xTimerCreate(	"Oneshot Timer",				/* Text name to facilitate debugging.  The kernel does not use this itself. */
-									tmrdemoONE_SHOT_TIMER_FREQUENCY,/* The period for the timer. */
+									tmrdemoONE_SHOT_TIMER_PERIOD,/* The period for the timer. */
 									pdFALSE,						/* Don't autoreload - hence a one shot timer. */
 									( void * ) 0,					/* The timer identifier.  In this case this is not used as the timer has its own callback. */
 									prvOneShotTimerCallback );		/* The callback to be called when the timer expires. */
@@ -216,327 +174,28 @@ xTimerHandle xOneShotTimer = NULL;
 	}
 
 
-	/*-----------------------------------------------------------*/
-	/* Test 1 - ensure all the timers are in their expected initial state.  This
+	/* Ensure all the timers are in their expected initial state.  This
 	depends on the timer service task having a higher priority than this task. */
-
-	/* Free running timers 0 to ( configTIMER_QUEUE_LENGTH - 1 ) should now
-	be active, and free running timer configTIMER_QUEUE_LENGTH should not
-	yet be active (it could not be started prior to the scheduler being
-	started. */
-	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
-	{
-		if( xTimerIsTimerActive( xFreeRunningTimers[ ucTimer ] ) == pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-	}
-
-	if( xTimerIsTimerActive( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH ] ) != pdFALSE )
-	{
-		xTestStatus = pdFAIL;
-	}
+	prvTest2_CheckTaskAndTimersInitialState();
 
 	for( ;; )
 	{
-		/*-----------------------------------------------------------*/
-		/* Test 2 - Check the free running timers expire at the expcted rates. */
+		/* Check the auto reload timers expire at the expected/correct rates. */
+		prvTest3_CheckAutoReloadExpireRates();
 
-		/* Initialise the next wake time value before the call to 
-		vTaskDelayUntil() as this is not really a periodic task. */
-		xNextWakeTime = xTaskGetTickCount();
+		/* Check the auto reload timers can be stopped correctly, and correctly
+		report their state. */
+		prvTest4_CheckAutoReloadTimersCanBeStopped();
+				
+		/* Check the one shot timer only calls its callback once after it has been 
+		started, and that it reports its state correctly. */
+		prvTest5_CheckBasicOneShotTimerBehaviour();
 
-		/* Delaying for configTIMER_QUEUE_LENGTH * xBaseFrequency ticks 
-		should allow all the free running timers to expire at least once. */
-		vTaskDelayUntil( &xNextWakeTime, ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBaseFrequency );
+		/* Check timer reset behaviour. */
+		prvTest6_CheckAutoReloadResetBehaviour();
 
-		/* Check that all the free running timers have called their callback 
-		function the expected number of times. */
-		for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
-		{
-			/* The timer in array position 0 should elapse every xBaseFrequency 
-			ticks, the timer in array position 1 should elapse every
-			( 2 * xBaseFrequency ) ticks, etc.  This task blocked for 
-			configTIMER_QUEUE_LENGTH * xBaseFrequency, so the timer in array
-			position 0 should have elapsed configTIMER_QUEUE_LENGTH times, the
-			timer in array possition 1 should have elapsed 
-			( configTIMER_QUEUE_LENGTH - 1 ) times, etc. */
-			ucMaxAllowableValue = ( ( ( unsigned char ) configTIMER_QUEUE_LENGTH ) - ucTimer );
-			ucMinAllowableValue = ( ( ( unsigned char ) configTIMER_QUEUE_LENGTH ) - ucTimer ) - 1;
-
-			if( ( ucFreeRunningTimerCounters[ ucTimer ] < ucMinAllowableValue ) ||
-				( ucFreeRunningTimerCounters[ ucTimer ] > ucMaxAllowableValue )
-			  )
-			{
-				xTestStatus = pdFAIL;
-			}
-		}
-
-		if( xTestStatus == pdPASS )
-		{
-			/* No errors have been reported so increment the loop counter so
-			the check task knows this task is still running. */
-			ulLoopCounter++;
-		}
-
-
-
-
-		/*-----------------------------------------------------------*/
-		/* Test 3 - Check the free running timers can be stopped correctly, and
-		correctly report their state. */
-
-		/* Stop all the active timers. */
-		for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
-		{
-			/* The timer has not been stopped yet! */
-			if( xTimerIsTimerActive( xFreeRunningTimers[ ucTimer ] ) == pdFALSE )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			/* Now stop the timer.  This will appear to happen immediately to 
-			this task because this task is running at a priority below the 
-			timer service task. */
-			xTimerStop( xFreeRunningTimers[ ucTimer ], tmrdemoDONT_BLOCK );
-
-			/* The timer should now be inactive. */
-			if( xTimerIsTimerActive( xFreeRunningTimers[ ucTimer ] ) != pdFALSE )
-			{
-				xTestStatus = pdFAIL;
-			}
-		}
-
-		taskENTER_CRITICAL();
-		{
-			/* The timer in array position configTIMER_QUEUE_LENGTH should not 
-			be active.  The critical section is used to ensure the timer does 
-			not call its callback between the next line running and the array 
-			being cleared back to zero, as that would mask an error condition. */
-			if( ucFreeRunningTimerCounters[ configTIMER_QUEUE_LENGTH ] != ( unsigned char ) 0 )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			/* Clear the timer callback count. */
-			memset( ( void * ) ucFreeRunningTimerCounters, 0, sizeof( ucFreeRunningTimerCounters ) );
-		}
-		taskEXIT_CRITICAL();
-
-		/* The timers are now all inactive, so this time, after delaying, none
-		of the callback counters should have incremented. */
-		vTaskDelay( ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBaseFrequency );
-		for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
-		{
-			if( ucFreeRunningTimerCounters[ ucTimer ] != ( unsigned char ) 0 )
-			{
-				xTestStatus = pdFAIL;
-			}
-		}
-
-		if( xTestStatus == pdPASS )
-		{
-			/* No errors have been reported so increment the loop counter so
-			the check task knows this task is still running. */
-			ulLoopCounter++;
-		}
-
-
-
-		/*-----------------------------------------------------------*/
-		/* Test 4 - Check the one shot timer only calls its callback once after
-		it has been started, and that it reports its state correctly. */
-
-		/* The one shot timer should not be active yet. */
-		if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		if( ucOneShotTimerCounter != ( unsigned char ) 0 )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		/* Start the one shot timer and check that it reports its state
-		correctly. */
-		xTimerStart( xOneShotTimer, tmrdemoDONT_BLOCK );
-		if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		/* Delay for three times as long as the one shot timer period, then
-		check to ensure it has only called its callback once, and is now
-		not in the active state. */
-		vTaskDelay( tmrdemoONE_SHOT_TIMER_FREQUENCY * ( portTickType ) 3 );
-
-		if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		if( ucOneShotTimerCounter != ( unsigned char ) 1 )
-		{
-			xTestStatus = pdFAIL;
-		}
-		else
-		{
-			/* Reset the one shot timer callback count. */
-			ucOneShotTimerCounter = ( unsigned char ) 0;
-		}
-
-		if( xTestStatus == pdPASS )
-		{
-			/* No errors have been reported so increment the loop counter so
-			the check task knows this task is still running. */
-			ulLoopCounter++;
-		}
-
-
-
-
-		/*-----------------------------------------------------------*/
-		/* Test 5 - Check all the timers can be reset while they are running. */
-
-		/* Restart the one shot timer and check it reports its status 
-		correctly. */
-		xTimerStart( xOneShotTimer, tmrdemoDONT_BLOCK );
-		if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		/* Restart one of the free running timers and check that it reports its
-		status correctly. */
-		xTimerStart( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
-		if( xTimerIsTimerActive( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		for( ucTimer = 0; ucTimer < trmdemoNUM_TIMER_RESETS; ucTimer++ )
-		{
-			/* Delay for half as long as the one shot timer period, then
-			reset it.  It should never expire while this is done, so its callback
-			count should never increment. */
-			vTaskDelay( tmrdemoONE_SHOT_TIMER_FREQUENCY / 2 );
-
-			/* Check both running timers are still active, but have not called their
-			callback functions. */
-			if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			if( ucOneShotTimerCounter != ( unsigned char ) 0 )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			if( xTimerIsTimerActive( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) != pdFALSE )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			if( ucFreeRunningTimerCounters[ configTIMER_QUEUE_LENGTH - 1 ] != ( unsigned char ) 0 )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			/* Reset both running timers. */
-			xTimerReset( xOneShotTimer, tmrdemoDONT_BLOCK );
-			xTimerReset( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
-
-			if( xTestStatus == pdPASS )
-			{
-				/* No errors have been reported so increment the loop counter so
-				the check task knows this task is still running. */
-				ulLoopCounter++;
-			}
-		}
-
-		/* Finally delay long enough for both running timers to expire. */
-		vTaskDelay( ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBaseFrequency );
-
-		/* The timers were not reset during the above delay period so should now
-		both have called their callback functions. */
-		if( ucOneShotTimerCounter != ( unsigned char ) 1 )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		if( ucFreeRunningTimerCounters[ configTIMER_QUEUE_LENGTH - 1 ] == 0 )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		/* The one shot timer should no longer be active, while the free running
-		timer should still be active. */
-		if( xTimerIsTimerActive( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		if( xTimerIsTimerActive( xOneShotTimer ) == pdTRUE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		/* Stop the free running timer again. */
-		xTimerStop( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
-
-		if( xTimerIsTimerActive( xFreeRunningTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) != pdFALSE )
-		{
-			xTestStatus = pdFAIL;
-		}
-
-		/* Clear the timer callback counts, ready for another iteration of these
-		tests. */
-		ucFreeRunningTimerCounters[ configTIMER_QUEUE_LENGTH - 1 ] = ( unsigned char ) 0;
-		ucOneShotTimerCounter = ( unsigned char ) 0;
-
-		if( xTestStatus == pdPASS )
-		{
-			/* No errors have been reported so increment the loop counter so
-			the check task knows this task is still running. */
-			ulLoopCounter++;
-		}
-
-
-
-
-		/*-----------------------------------------------------------*/
-		/* Start the timers again to start all the tests over again. */
-
-
-		/* Start the timers again. */
-		for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
-		{
-			/* The timer has not been started yet! */
-			if( xTimerIsTimerActive( xFreeRunningTimers[ ucTimer ] ) != pdFALSE )
-			{
-				xTestStatus = pdFAIL;
-			}
-
-			/* Now start the timer.  This will appear to happen immediately to 
-			this task because this task is running at a priority below the 
-			timer service task. */
-			xTimerStart( xFreeRunningTimers[ ucTimer ], tmrdemoDONT_BLOCK );
-
-			/* The timer should now be active. */
-			if( xTimerIsTimerActive( xFreeRunningTimers[ ucTimer ] ) == pdFALSE )
-			{
-				xTestStatus = pdFAIL;
-			}
-		}
-
-		if( xTestStatus == pdPASS )
-		{
-			/* No errors have been reported so increment the loop counter so
-			the check task knows this task is still running. */
-			ulLoopCounter++;
-		}
+		/* Start the timers again to restart all the tests over again. */
+		prvResetStartConditionsForNextIteration();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -561,4 +220,397 @@ static unsigned portLONG ulLastLoopCounter = 0;
 
 	return xTestStatus;
 }
+/*-----------------------------------------------------------*/
+
+static void prvTest1_CreateTimersWithoutSchedulerRunning( void )
+{
+portBASE_TYPE xTimer;
+
+	for( xTimer = 0; xTimer < configTIMER_QUEUE_LENGTH; xTimer++ )
+	{
+		/* As the timer queue is not yet full, it should be possible to both create
+		and start a timer.  These timers are being started before the scheduler has
+		been started, so their block times should get set to zero within the timer
+		API itself. */
+		xAutoReloadTimers[ xTimer ] = xTimerCreate( "FR Timer",						/* Text name to facilitate debugging.  The kernel does not use this itself. */
+													( ( xTimer + 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
+													pdTRUE,								/* Autoreload is set to true. */
+													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
+													prvAutoReloadTimerCallback );		/* The callback to be called when the timer expires. */
+
+		if( xAutoReloadTimers[ xTimer ] == NULL )
+		{
+			xTestStatus = pdFAIL;
+		}
+		else
+		{
+			/* The scheduler has not yet started, so the block period of
+			portMAX_DELAY should just get set to zero in xTimerStart().  Also,
+			the timer queue is not yet full so xTimerStart() should return
+			pdPASS. */
+			if( xTimerStart( xAutoReloadTimers[ xTimer ], portMAX_DELAY ) != pdPASS )
+			{
+				xTestStatus = pdFAIL;
+			}
+		}
+	}
+
+	/* The timers queue should now be full, so it should be possible to create
+	another timer, but not possible to start it (the timer queue will not get
+	drained until the scheduler has been started. */
+	xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] = xTimerCreate( "FR Timer",		/* Text name to facilitate debugging.  The kernel does not use this itself. */
+													( configTIMER_QUEUE_LENGTH * xBasePeriod ),	/* The period for the timer. */
+													pdTRUE,							/* Autoreload is set to true. */
+													( void * ) xTimer,				/* An identifier for the timer as all the auto reload timers use the same callback. */
+													prvAutoReloadTimerCallback );	/* The callback to be called when the timer expires. */
+
+	if( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] == NULL )
+	{
+		xTestStatus = pdFAIL;
+	}
+	else
+	{
+		if( xTimerStart( xAutoReloadTimers[ xTimer ], portMAX_DELAY ) == pdPASS )
+		{
+			/* This time it would not be expected that the timer could be
+			started at this point. */
+			xTestStatus = pdFAIL;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvTest2_CheckTaskAndTimersInitialState( void )
+{
+unsigned char ucTimer;
+
+	/* Ensure all the timers are in their expected initial state.  This	depends 
+	on the timer service task having a higher priority than this task.
+
+	auto reload timers 0 to ( configTIMER_QUEUE_LENGTH - 1 ) should now be active,
+	and auto reload timer configTIMER_QUEUE_LENGTH should not yet be active (it 
+	could not be started prior to the scheduler being started when it was 
+	created). */
+	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
+	{
+		if( xTimerIsTimerActive( xAutoReloadTimers[ ucTimer ] ) == pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+	}
+
+	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] ) != pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void	prvTest3_CheckAutoReloadExpireRates( void )
+{
+unsigned char ucMaxAllowableValue, ucMinAllowableValue, ucTimer;
+portTickType xNextWakeTime;
+
+	/* Check the auto reload timers expire at the expcted rates. */
+
+	/* Initialise the next wake time value before the call to vTaskDelayUntil() 
+	as this is not really a periodic task. */
+	xNextWakeTime = xTaskGetTickCount();
+
+	/* Delaying for configTIMER_QUEUE_LENGTH * xBasePeriod ticks should allow 
+	all the auto reload timers to expire at least once. */
+	vTaskDelayUntil( &xNextWakeTime, ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
+
+	/* Check that all the auto reload timers have called their callback	
+	function the expected number of times. */
+	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
+	{
+		/* The timer in array position 0 should elapse every xBasePeriod ticks, 
+		the timer in array position 1 should elapse every ( 2 * xBasePeriod ) 
+		ticks, etc.  This task blocked for configTIMER_QUEUE_LENGTH * xBasePeriod, 
+		so the timer in array position 0 should have elapsed 
+		configTIMER_QUEUE_LENGTH times, the	timer in array possition 1 should 
+		have elapsed ( configTIMER_QUEUE_LENGTH - 1 ) times, etc. */
+		ucMaxAllowableValue = ( ( ( unsigned char ) configTIMER_QUEUE_LENGTH ) - ucTimer );
+		ucMinAllowableValue = ( ( ( unsigned char ) configTIMER_QUEUE_LENGTH ) - ucTimer ) - 1;
+
+		if( ( ucAutoReloadTimerCounters[ ucTimer ] < ucMinAllowableValue ) ||
+			( ucAutoReloadTimerCounters[ ucTimer ] > ucMaxAllowableValue )
+			)
+		{
+			xTestStatus = pdFAIL;
+		}
+	}
+
+	if( xTestStatus == pdPASS )
+	{
+		/* No errors have been reported so increment the loop counter so the 
+		check task knows this task is still running. */
+		ulLoopCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvTest4_CheckAutoReloadTimersCanBeStopped( void )
+{		
+unsigned char ucTimer;
+
+	/* Check the auto reload timers can be stopped correctly, and correctly 
+	report their state. */
+
+	/* Stop all the active timers. */
+	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
+	{
+		/* The timer has not been stopped yet! */
+		if( xTimerIsTimerActive( xAutoReloadTimers[ ucTimer ] ) == pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		/* Now stop the timer.  This will appear to happen immediately to
+		this task because this task is running at a priority below the
+		timer service task. */
+		xTimerStop( xAutoReloadTimers[ ucTimer ], tmrdemoDONT_BLOCK );
+
+		/* The timer should now be inactive. */
+		if( xTimerIsTimerActive( xAutoReloadTimers[ ucTimer ] ) != pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+	}
+
+	taskENTER_CRITICAL();
+	{
+		/* The timer in array position configTIMER_QUEUE_LENGTH should not
+		be active.  The critical section is used to ensure the timer does
+		not call its callback between the next line running and the array
+		being cleared back to zero, as that would mask an error condition. */
+		if( ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH ] != ( unsigned char ) 0 )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		/* Clear the timer callback count. */
+		memset( ( void * ) ucAutoReloadTimerCounters, 0, sizeof( ucAutoReloadTimerCounters ) );
+	}
+	taskEXIT_CRITICAL();
+
+	/* The timers are now all inactive, so this time, after delaying, none
+	of the callback counters should have incremented. */
+	vTaskDelay( ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
+	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
+	{
+		if( ucAutoReloadTimerCounters[ ucTimer ] != ( unsigned char ) 0 )
+		{
+			xTestStatus = pdFAIL;
+		}
+	}
+
+	if( xTestStatus == pdPASS )
+	{
+		/* No errors have been reported so increment the loop counter so
+		the check task knows this task is still running. */
+		ulLoopCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvTest5_CheckBasicOneShotTimerBehaviour( void )
+{
+	/* Check the one shot timer only calls its callback once after it has been 
+	started, and that it reports its state correctly. */
+
+	/* The one shot timer should not be active yet. */
+	if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	if( ucOneShotTimerCounter != ( unsigned char ) 0 )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	/* Start the one shot timer and check that it reports its state correctly. */
+	xTimerStart( xOneShotTimer, tmrdemoDONT_BLOCK );
+	if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	/* Delay for three times as long as the one shot timer period, then check 
+	to ensure it has only called its callback once, and is now not in the 
+	active state. */
+	vTaskDelay( tmrdemoONE_SHOT_TIMER_PERIOD * ( portTickType ) 3 );
+
+	if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	if( ucOneShotTimerCounter != ( unsigned char ) 1 )
+	{
+		xTestStatus = pdFAIL;
+	}
+	else
+	{
+		/* Reset the one shot timer callback count. */
+		ucOneShotTimerCounter = ( unsigned char ) 0;
+	}
+
+	if( xTestStatus == pdPASS )
+	{
+		/* No errors have been reported so increment the loop counter so the 
+		check task knows this task is still running. */
+		ulLoopCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvTest6_CheckAutoReloadResetBehaviour( void )
+{
+unsigned char ucTimer;
+
+	/* Check timer reset behaviour. */
+
+	/* Restart the one shot timer and check it reports its status correctly. */
+	xTimerStart( xOneShotTimer, tmrdemoDONT_BLOCK );
+	if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	/* Restart one of the auto reload timers and check that it reports its
+	status correctly. */
+	xTimerStart( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
+	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	for( ucTimer = 0; ucTimer < trmdemoNUM_TIMER_RESETS; ucTimer++ )
+	{
+		/* Delay for half as long as the one shot timer period, then reset it.  
+		It should never expire while this is done, so its callback count should 
+		never increment. */
+		vTaskDelay( tmrdemoONE_SHOT_TIMER_PERIOD / 2 );
+
+		/* Check both running timers are still active, but have not called their
+		callback functions. */
+		if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		if( ucOneShotTimerCounter != ( unsigned char ) 0 )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		if( ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH - 1 ] != ( unsigned char ) 0 )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		/* Reset both running timers. */
+		xTimerReset( xOneShotTimer, tmrdemoDONT_BLOCK );
+		xTimerReset( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
+
+		if( xTestStatus == pdPASS )
+		{
+			/* No errors have been reported so increment the loop counter so 
+			the check task knows this task is still running. */
+			ulLoopCounter++;
+		}
+	}
+
+	/* Finally delay long enough for both running timers to expire. */
+	vTaskDelay( ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
+
+	/* The timers were not reset during the above delay period so should now
+	both have called their callback functions. */
+	if( ucOneShotTimerCounter != ( unsigned char ) 1 )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	if( ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH - 1 ] == 0 )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	/* The one shot timer should no longer be active, while the auto reload
+	timer should still be active. */
+	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	if( xTimerIsTimerActive( xOneShotTimer ) == pdTRUE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	/* Stop the auto reload timer again. */
+	xTimerStop( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
+
+	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) != pdFALSE )
+	{
+		xTestStatus = pdFAIL;
+	}
+
+	/* Clear the timer callback counts, ready for another iteration of these
+	tests. */
+	ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH - 1 ] = ( unsigned char ) 0;
+	ucOneShotTimerCounter = ( unsigned char ) 0;
+
+	if( xTestStatus == pdPASS )
+	{
+		/* No errors have been reported so increment the loop counter so the check 
+		task knows this task is still running. */
+		ulLoopCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvResetStartConditionsForNextIteration( void )
+{
+unsigned char ucTimer;
+
+	/* Start the timers again to start all the tests over again. */
+
+	/* Start the timers again. */
+	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
+	{
+		/* The timer has not been started yet! */
+		if( xTimerIsTimerActive( xAutoReloadTimers[ ucTimer ] ) != pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+
+		/* Now start the timer.  This will appear to happen immediately to
+		this task because this task is running at a priority below the timer 
+		service task. */
+		xTimerStart( xAutoReloadTimers[ ucTimer ], tmrdemoDONT_BLOCK );
+
+		/* The timer should now be active. */
+		if( xTimerIsTimerActive( xAutoReloadTimers[ ucTimer ] ) == pdFALSE )
+		{
+			xTestStatus = pdFAIL;
+		}
+	}
+
+	if( xTestStatus == pdPASS )
+	{
+		/* No errors have been reported so increment the loop counter so the 
+		check task knows this task is still running. */
+		ulLoopCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
 

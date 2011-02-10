@@ -79,7 +79,7 @@ typedef struct tmrTimerControl
 	tmrTIMER_CALLBACK		pxCallbackFunction;	/*<< The function that will be called when the timer expires. */
 } xTIMER;
 
-/* The definition of messages that can be sent and received on the timer 
+/* The definition of messages that can be sent and received on the timer
 queue. */
 typedef struct tmrTimerQueueMessage
 {
@@ -99,7 +99,7 @@ PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * Initialise the infrustructure used by the timer service task if it has not
  * been initialised already.
  */
@@ -107,20 +107,14 @@ static void prvCheckForValidListAndQueue( void ) PRIVILEGED_FUNCTION;
 
 /*
  * The timer service task (daemon).  Timer functionality is controlled by this
- * task.  Other tasks communicate with the timer service task using the 
+ * task.  Other tasks communicate with the timer service task using the
  * xTimerQueue queue.
  */
 static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
 
-/* 
- * The following functions handle the commands that are sent to the timer
- * service task via the xTimerQueue queue.
- */
-static void prvTimerStart( xTIMER *pxTimer ) PRIVILEGED_FUNCTION;
-
 /*
  * Called by the timer service task to interpret and process a command it
- * received on the timer queue. 
+ * received on the timer queue.
  */
 static void	prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
 
@@ -130,7 +124,7 @@ portBASE_TYPE xTimerCreateTimerTask( void )
 {
 portBASE_TYPE xReturn = pdFAIL;
 
-	/* This function is called when the scheduler is started if 
+	/* This function is called when the scheduler is started if
 	configUSE_TIMERS is set to 1.  Check that the infrustructure used by the
 	timer service task has been created/initialised.  If timers have already
 	been created then the initialisation will already have been performed. */
@@ -138,7 +132,7 @@ portBASE_TYPE xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
-		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Timers", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL );
+		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Timer Service", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL );
 	}
 
 	return xReturn;
@@ -249,15 +243,15 @@ xTIMER *pxTimer;
 				xTimeNow = xTaskGetTickCount();
 				if( xTimeNow < xNextExpireTime )
 				{
-					/* This is a simple fast function - a yield will not be 
+					/* This is a simple fast function - a yield will not be
 					performed until	after this critical section exits. */
 					vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ) );
 				}
 			}
 			taskEXIT_CRITICAL();
 
-			/* Yield to wait for either a command to arrive, or the block time 
-			to expire.  If a command arrived between the critical section being 
+			/* Yield to wait for either a command to arrive, or the block time
+			to expire.  If a command arrived between the critical section being
 			exited and this yeild then the yield will just return to the same
 			task. */
 			portYIELD_WITHIN_API();
@@ -326,7 +320,7 @@ xTIMER *pxTimer;
 static void prvCheckForValidListAndQueue( void )
 {
 	/* Check that the list from which active timers are referenced, and the
-	queue used to communicate with the timer service, have been 
+	queue used to communicate with the timer service, have been
 	initialised. */
 	taskENTER_CRITICAL();
 	{

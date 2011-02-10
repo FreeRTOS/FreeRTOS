@@ -1197,6 +1197,21 @@ void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicks
  *
  * THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED.
  *
+ * This function performs nearly the same function as vTaskPlaceOnEventList().
+ * The difference being that this function does not permit tasks to block
+ * indefinitely, whereas vTaskPlaceOnEventList() does.
+ *
+ * @return pdTRUE if the task being removed has a higher priority than the task
+ * making the call, otherwise pdFALSE.
+ */
+void vTaskPlaceOnEventListRestricted( const xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+
+/*
+ * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
+ * INTERFACE WHICH IS FOR THE EXCLUSIVE USE OF THE SCHEDULER.
+ *
+ * THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED.
+ *
  * Removes a task from both the specified event list and the list of blocked
  * tasks, and places it on a ready queue.
  *

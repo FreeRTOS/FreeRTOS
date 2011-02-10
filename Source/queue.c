@@ -1481,7 +1481,7 @@ signed portBASE_TYPE xReturn;
 		if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0U )
 		{
 			/* There is nothing in the queue, block for the specified period. */
-			vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
+			vTaskPlaceOnEventListRestricted( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
 		}
 	}
 

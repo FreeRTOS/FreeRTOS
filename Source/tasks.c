@@ -1448,6 +1448,15 @@ void vTaskIncrementTick( void )
 			pxDelayedTaskList = pxOverflowDelayedTaskList;
 			pxOverflowDelayedTaskList = pxTemp;
 			xNumOfOverflows++;
+			
+			#if configUSE_TIMERS == 1
+			{
+				/* The timer service task needs to know to switch its lists
+				too. */
+				xTimerGenericCommand( NULL, trmCOMMAND_PROCESS_TIMER_OVERFLOW, 0, 0 );
+			}
+			#endif
+			
 			if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
 			{
 				/* The delayed list is empty.  Set xNextTaskUnblockTime to the
@@ -1739,6 +1748,38 @@ portTickType xTimeToWake;
 	}
 	#endif
 }
+/*-----------------------------------------------------------*/
+
+#if configUSE_TIMERS == 1
+
+	void vTaskPlaceOnEventListRestricted( const xList * const pxEventList, portTickType xTicksToWait )
+	{
+	portTickType xTimeToWake;
+
+		/* This function should not be called by application code hence the 
+		'Restricted' in its name.  It is not part of the public API.  It is 
+		designed for use by kernel code, and has special calling requirements - 
+		it should be called from a critical section. */
+
+	
+		/* Place the event list item of the TCB in the appropriate event list.
+		In this case it is assume that this is the only task that is going to
+		be waiting on this event list, so the faster vListInsertEnd() function
+		can be used in place of vListInsert. */
+		vListInsertEnd( ( xList * ) pxEventList, ( xListItem * ) &( pxCurrentTCB->xEventListItem ) );
+
+		/* We must remove this task from the ready list before adding it to the
+		blocked list as the same list item is used for both lists.  This 
+		function is called form a critical section. */
+		vListRemove( ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
+
+		/* Calculate the time at which the task should be woken if the event does
+		not occur.  This may overflow but this doesn't matter. */
+		xTimeToWake = xTickCount + xTicksToWait;
+		prvAddCurrentTaskToDelayedList( xTimeToWake );
+	}
+	
+#endif /* configUSE_TIMERS */
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xTaskRemoveFromEventList( const xList * const pxEventList )

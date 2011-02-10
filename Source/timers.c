@@ -1,4 +1,7 @@
-/* Need a method of switching to an overflow list. _RB_*/
+/* Need to consider the switching of timer lists, and the placement of tasks into
+the current and overflow timer lists very carefully.  For example, should the
+assessment as to which list a timer should be inserted into be relative the the
+tick count at the timer, or the tick count when the timer task unblocked, etc. */
 
 /*
     FreeRTOS V6.1.1 - Copyright (C) 2011 Real Time Engineers Ltd.
@@ -92,7 +95,10 @@ typedef struct tmrTimerQueueMessage
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
 timer service task is allowed to access xActiveTimerList. */
-PRIVILEGED_DATA static xList xActiveTimerList;
+PRIVILEGED_DATA static xList xActiveTimerList1;
+PRIVILEGED_DATA static xList xActiveTimerList2;
+PRIVILEGED_DATA static xList *pxCurrentTimerList;
+PRIVILEGED_DATA static xList *pxOverflowTimerList;
 
 /* A queue that is used to send commands to the timer service task. */
 PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
@@ -117,6 +123,12 @@ static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
  * received on the timer queue.
  */
 static void	prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
+
+/*
+ * Insert the timer into either xActiveTimerList1, or xActiveTimerList2, 
+ * depending on if the expire time causes a timer counter overflow. 
+ */
+static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime );
 
 /*-----------------------------------------------------------*/
 
@@ -207,9 +219,9 @@ xTIMER *pxTimer;
 		the timer with the nearest expiry time will expire.  If there are no
 		active timers then just set the next expire time to the maximum possible
 		time to ensure this task does not run unnecessarily. */
-		if( listLIST_IS_EMPTY( &xActiveTimerList ) == pdFALSE )
+		if( listLIST_IS_EMPTY( pxCurrentTimerList ) == pdFALSE )
 		{
-			xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( &xActiveTimerList );
+			xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
 		}
 		else
 		{
@@ -220,15 +232,14 @@ xTIMER *pxTimer;
 		if( xNextExpireTime <= xTaskGetTickCount() )
 		{
 			/* Remove the timer from the list of active timers. */
-			pxTimer = listGET_OWNER_OF_HEAD_ENTRY( &xActiveTimerList );
+			pxTimer = listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
 			vListRemove( &( pxTimer->xTimerListItem ) );
 
 			/* If the timer is an autoreload timer then calculate the next
 			expiry time and re-insert the timer in the list of active timers. */
 			if( pxTimer->uxAutoReload == pdTRUE )
 			{
-				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ) );
-				vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+				prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ) );				
 			}
 
 			/* Call the timer callback. */
@@ -263,31 +274,49 @@ xTIMER *pxTimer;
 }
 /*-----------------------------------------------------------*/
 
+static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime )
+{
+	listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xNextExpiryTime );
+	listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
+	
+	if( xNextExpiryTime < xTaskGetTickCount() )
+	{
+		vListInsert( pxOverflowTimerList, &( pxTimer->xTimerListItem ) );
+	}
+	else
+	{
+		vListInsert( pxCurrentTimerList, &( pxTimer->xTimerListItem ) );
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void	prvProcessReceivedCommands( void )
 {
 xTIMER_MESSAGE xMessage;
-portTickType xTimeToExpire;
 xTIMER *pxTimer;
+xList *pxTemp;
 
 	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL )
 	{
 		pxTimer = xMessage.pxTimer;
 
-		/* Is the timer already in the list of active timers? */
-		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
+		/* Is the timer already in the list of active timers?  When the command
+		is trmCOMMAND_PROCESS_TIMER_OVERFLOW, the timer will be NULL as the
+		command is to the task rather than to an individual timer. */
+		if( pxTimer != NULL )
 		{
-			/* The timer is in the list, remove it. */
-			vListRemove( &( pxTimer->xTimerListItem ) );
+			if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
+			{
+				/* The timer is in the list, remove it. */
+				vListRemove( &( pxTimer->xTimerListItem ) );
+			}
 		}
 
 		switch( xMessage.xMessageID )
 		{
 			case tmrCOMMAND_START :	
 				/* Start or restart a timer. */
-				xTimeToExpire = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
-				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToExpire );
-				listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
-				vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+				prvInsertTimerInActiveList( pxTimer,  xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks );
 				break;
 
 			case tmrCOMMAND_STOP :	
@@ -297,16 +326,21 @@ xTIMER *pxTimer;
 
 			case tmrCOMMAND_CHANGE_PERIOD :
 				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
-				xTimeToExpire = xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks;
-				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xTimeToExpire );
-				listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
-				vListInsert( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+				prvInsertTimerInActiveList( pxTimer, ( xTaskGetTickCount() + pxTimer->xTimerPeriodInTicks ) );
 				break;
 
 			case tmrCOMMAND_DELETE :
 				/* The timer has already been removed from the active list,
 				just free up the memory. */
 				vPortFree( pxTimer );
+				break;
+				
+			case trmCOMMAND_PROCESS_TIMER_OVERFLOW :
+				/* The tick count has overflowed.  The timer lists must be
+				switched. */
+				pxTemp = pxCurrentTimerList;
+				pxCurrentTimerList = pxOverflowTimerList;
+				pxOverflowTimerList = pxTemp;
 				break;
 
 			default	:			
@@ -326,7 +360,10 @@ static void prvCheckForValidListAndQueue( void )
 	{
 		if( xTimerQueue == NULL )
 		{
-			vListInitialise( &xActiveTimerList );
+			vListInitialise( &xActiveTimerList1 );
+			vListInitialise( &xActiveTimerList2 );
+			pxCurrentTimerList = &xActiveTimerList1;
+			pxOverflowTimerList = &xActiveTimerList2;
 			xTimerQueue = xQueueCreate( configTIMER_QUEUE_LENGTH, sizeof( xTIMER_MESSAGE ) );
 		}
 	}
@@ -342,7 +379,10 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 	/* Is the timer in the list of active timers? */
 	taskENTER_CRITICAL();
 	{
-		xTimerIsInActiveList = listIS_CONTAINED_WITHIN( &xActiveTimerList, &( pxTimer->xTimerListItem ) );
+		/* Checking to see if it is in the NULL list in effect checks to see if
+		it is referenced from either the current or the overflow timer lists in
+		one go, but the logic has to be reversed, hence the '!'. */
+		xTimerIsInActiveList = !( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) );
 	}
 	taskEXIT_CRITICAL();
 

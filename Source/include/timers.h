@@ -85,14 +85,19 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
 portBASE_TYPE xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
 xTimerHandle xTimerCreate( const signed char *pcTimerName, portTickType xTimerPeriod, unsigned portBASE_TYPE uxAutoReload, void * pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) PRIVILEGED_FUNCTION;
 void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portBASE_TYPE *pxHigherPriorityTaskWoken, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
-#define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, xBlockTime )
-#define xTimerStop( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, xBlockTime )
-#define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, xBlockTime )
-#define xTimerDelete( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_DELETE, 0, xBlockTime )
-#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, xBlockTime )
+#define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, NULL, xBlockTime )
+#define xTimerStop( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, NULL, xBlockTime )
+#define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, NULL, xBlockTime )
+#define xTimerDelete( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_DELETE, 0, NULL, xBlockTime )
+#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, NULL, xBlockTime )
+
+#define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, pxHigherPriorityTaskWoken, 0 )
+#define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, pxHigherPriorityTaskWoken, 0 )
+#define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, pxHigherPriorityTaskWoken, 0 )
+#define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, pxHigherPriorityTaskWoken, 0 )
 
 #ifdef __cplusplus
 }

@@ -129,6 +129,8 @@ extern void *pxCurrentTCB;
 
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 {
+portTickType xMinimumWindowsBlockTime = ( portTickType ) 20;
+
 	/* Just to prevent compiler warnings. */
 	( void ) lpParameter;
 
@@ -140,8 +142,15 @@ static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 		time, not the time that Sleep() is called.  It is done this way to 
 		prevent overruns in this very non real time simulated/emulated 
 		environment. */
-		Sleep( portTICK_RATE_MS );
-
+		if( portTICK_RATE_MS < xMinimumWindowsBlockTime )
+		{
+			Sleep( xMinimumWindowsBlockTime );
+		}
+		else
+		{
+			Sleep( portTICK_RATE_MS );
+		}
+	
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
 		/* The timer has expired, generate the simulated tick event. */

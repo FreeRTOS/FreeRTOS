@@ -287,6 +287,8 @@ xQueueHandle xReturn = NULL;
 		}
 	}
 
+	configASSERT( xReturn );
+
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -333,6 +335,7 @@ xQueueHandle xReturn = NULL;
 			traceCREATE_MUTEX_FAILED();
 		}
 
+		configASSERT( pxNewQueue );
 		return pxNewQueue;
 	}
 
@@ -344,6 +347,8 @@ xQueueHandle xReturn = NULL;
 	portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex )
 	{
 	portBASE_TYPE xReturn;
+
+		configASSERT( pxMutex );
 
 		/* If this is the task that holds the mutex then pxMutexHolder will not
 		change outside of this task.  If this task does not hold the mutex then
@@ -391,6 +396,8 @@ xQueueHandle xReturn = NULL;
 	portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBlockTime )
 	{
 	portBASE_TYPE xReturn;
+
+		configASSERT( pxMutex );
 
 		/* Comments regarding mutual exclusion as per those within
 		xQueueGiveMutexRecursive(). */
@@ -443,6 +450,7 @@ xQueueHandle xReturn = NULL;
 			traceCREATE_COUNTING_SEMAPHORE_FAILED();
 		}
 
+		configASSERT( pxHandle );
 		return pxHandle;
 	}
 
@@ -453,6 +461,9 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
+
+	configASSERT( pxQueue );
+	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
 	/* This function relaxes the coding standard somewhat to allow return
 	statements within the function itself.  This is done in the interest
@@ -572,6 +583,9 @@ xTimeOutType xTimeOut;
 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 	xTimeOutType xTimeOut;
 
+		configASSERT( pxQueue );
+		configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+
 		for( ;; )
 		{
 			taskENTER_CRITICAL();
@@ -646,6 +660,9 @@ xTimeOutType xTimeOut;
 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 	xTimeOutType xTimeOut;
 	signed char *pcOriginalReadPosition;
+
+		configASSERT( pxQueue );
+		configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
 		for( ;; )
 		{
@@ -770,6 +787,10 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
 
+	configASSERT( pxQueue );
+	configASSERT( pxHigherPriorityTaskWoken );
+	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+
 	/* Similar to xQueueGenericSend, except we don't block if there is no room
 	in the queue.  Also we don't directly wake a task that was blocked on a
 	queue read, instead we return a flag to say whether a context switch is
@@ -823,6 +844,9 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pv
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
 signed char *pcOriginalReadPosition;
+
+	configASSERT( pxQueue );
+	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
 	/* This function relaxes the coding standard somewhat to allow return
 	statements within the function itself.  This is done in the interest
@@ -970,6 +994,10 @@ signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pv
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
 
+	configASSERT( pxQueue );
+	configASSERT( pxTaskWoken );
+	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* We cannot block from an ISR, so check there is data available. */
@@ -1020,6 +1048,8 @@ unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue )
 {
 unsigned portBASE_TYPE uxReturn;
 
+	configASSERT( pxQueue );
+
 	taskENTER_CRITICAL();
 		uxReturn = pxQueue->uxMessagesWaiting;
 	taskEXIT_CRITICAL();
@@ -1032,6 +1062,8 @@ unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue
 {
 unsigned portBASE_TYPE uxReturn;
 
+	configASSERT( pxQueue );
+
 	uxReturn = pxQueue->uxMessagesWaiting;
 
 	return uxReturn;
@@ -1040,6 +1072,8 @@ unsigned portBASE_TYPE uxReturn;
 
 void vQueueDelete( xQueueHandle pxQueue )
 {
+	configASSERT( pxQueue );
+
 	traceQUEUE_DELETE( pxQueue );
 	vQueueUnregisterQueue( pxQueue );
 	vPortFree( pxQueue->pcHead );
@@ -1179,6 +1213,7 @@ signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue )
 {
 signed portBASE_TYPE xReturn;
 
+	configASSERT( pxQueue );
 	xReturn = ( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 );
 
 	return xReturn;
@@ -1201,6 +1236,7 @@ signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue )
 {
 signed portBASE_TYPE xReturn;
 
+	configASSERT( pxQueue );
 	xReturn = ( pxQueue->uxMessagesWaiting == pxQueue->uxLength );
 
 	return xReturn;

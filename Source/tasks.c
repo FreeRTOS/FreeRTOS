@@ -429,6 +429,9 @@ signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed ch
 signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
 
+	configASSERT( pxTaskCode );
+	configASSERT( ( uxPriority < configMAX_PRIORITIES ) );
+
 	/* Allocate the memory required by the TCB and stack for the new task,
 	checking that the allocation was successful. */
 	pxNewTCB = prvAllocateTCBAndStack( usStackDepth, puxStackBuffer );
@@ -451,6 +454,9 @@ tskTCB * pxNewTCB;
 			uxPriority &= ~portPRIVILEGE_BIT;
 		#endif /* portUSING_MPU_WRAPPERS == 1 */
 
+		/* Check the alignment of the stack buffer is correct. */
+		configASSERT( !( ( unsigned long ) pxNewTCB->pxStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
+
 		/* Calculate the top of stack address.  This depends on whether the
 		stack grows from high memory to low (as per the 80x86) or visa versa.
 		portSTACK_GROWTH is used to make the result positive or negative as
@@ -459,6 +465,9 @@ tskTCB * pxNewTCB;
 		{
 			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( unsigned short ) 1 );
 			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( unsigned long ) pxTopOfStack ) & ( ( unsigned long ) ~portBYTE_ALIGNMENT_MASK  ) );
+
+			/* Check the alignment of the calculated top of stack is correct. */
+			configASSERT( !( ( unsigned long ) pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
 		}
 		#else
 		{
@@ -487,6 +496,9 @@ tskTCB * pxNewTCB;
 			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
 		}
 		#endif
+
+		/* Check the alignment of the initialised stack. */
+		configASSERT( !( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
 
 		if( ( void * ) pxCreatedTask != NULL )
 		{
@@ -647,6 +659,9 @@ tskTCB * pxNewTCB;
 	portTickType xTimeToWake;
 	portBASE_TYPE xAlreadyYielded, xShouldDelay = pdFALSE;
 
+		configASSERT( pxPreviousWakeTime );
+		configASSERT( ( xTimeIncrement > 0 ) );
+
 		vTaskSuspendAll();
 		{
 			/* Generate the tick time at which the task wants to wake. */
@@ -748,19 +763,6 @@ tskTCB * pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
-void vTaskUnblockTask( xTaskHandle pxTask )
-{
-tskTCB *pxTCB = ( tskTCB * ) pxTask;
-
-	/* This function is not intended to be a public API function and definitely
-	is not for generic use as it assumes pxTask is not the running task and not
-	suspended, does not remove the task from any event lists it might be
-	blocked on, and does not take care of mutual exclusion. */
-	vListRemove( &( pxTCB->xGenericListItem ) );
-	prvAddTaskToReadyQueue( pxTCB );
-}
-/*-----------------------------------------------------------*/
-
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
 	unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask )
@@ -790,6 +792,8 @@ tskTCB *pxTCB = ( tskTCB * ) pxTask;
 	tskTCB *pxTCB;
 	unsigned portBASE_TYPE uxCurrentPriority;
 	portBASE_TYPE xYieldRequired = pdFALSE;
+
+		configASSERT( ( uxNewPriority < configMAX_PRIORITIES ) );
 
 		/* Ensure the new priority is valid. */
 		if( uxNewPriority >= configMAX_PRIORITIES )
@@ -960,6 +964,9 @@ tskTCB *pxTCB = ( tskTCB * ) pxTask;
 	portBASE_TYPE xReturn = pdFALSE;
 	const tskTCB * const pxTCB = ( tskTCB * ) xTask;
 
+		/* It does not make sense to check if the calling task is suspended. */
+		configASSERT( xTask );
+
 		/* Is the task we are attempting to resume actually in the
 		suspended list? */
 		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
@@ -989,6 +996,9 @@ tskTCB *pxTCB = ( tskTCB * ) pxTask;
 	void vTaskResume( xTaskHandle pxTaskToResume )
 	{
 	tskTCB *pxTCB;
+
+		/* It does not make sense to resume the calling task. */
+		configASSERT( pxTaskToResume );
 
 		/* Remove the task from whichever list it is currently in, and place
 		it in the ready list. */
@@ -1032,6 +1042,8 @@ tskTCB *pxTCB = ( tskTCB * ) pxTask;
 	{
 	portBASE_TYPE xYieldRequired = pdFALSE;
 	tskTCB *pxTCB;
+
+		configASSERT( pxTaskToResume );
 
 		pxTCB = ( tskTCB * ) pxTaskToResume;
 
@@ -1115,6 +1127,9 @@ portBASE_TYPE xReturn;
 			/* Should only reach here if a task calls xTaskEndScheduler(). */
 		}
 	}
+
+	/* This line will only be reached if the kernel could not be started. */
+	configASSERT( xReturn );
 }
 /*-----------------------------------------------------------*/
 
@@ -1141,6 +1156,10 @@ signed portBASE_TYPE xTaskResumeAll( void )
 {
 register tskTCB *pxTCB;
 signed portBASE_TYPE xAlreadyYielded = pdFALSE;
+
+	/* If uxSchedulerSuspended is zero then this function does not match a
+	previous call to vTaskSuspendAll(). */
+	configASSERT( uxSchedulerSuspended );
 
 	/* It is possible that an ISR caused a task to be removed from an event
 	list while the scheduler was suspended.  If this was the case then the
@@ -1237,7 +1256,14 @@ portTickType xTicks;
 
 portTickType xTaskGetTickCountFromISR( void )
 {
-	return xTickCount;
+portTickType xReturn;
+unsigned portBASE_TYPE uxSavedInterruptStatus;
+
+	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+	xReturn = xTickCount;
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -1391,6 +1417,9 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 	void vTaskStartTrace( signed char * pcBuffer, unsigned long ulBufferSize )
 	{
+		configASSERT( pcBuffer );
+		configASSERT( ulBufferSize );
+
 		taskENTER_CRITICAL();
 		{
 			pcTraceBuffer = ( signed char * )pcBuffer;
@@ -1685,6 +1714,7 @@ void vTaskSwitchContext( void )
 		/* Find the highest priority queue that contains ready tasks. */
 		while( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxTopReadyPriority ] ) ) )
 		{
+			configASSERT( uxTopReadyPriority );
 			--uxTopReadyPriority;
 		}
 	
@@ -1701,6 +1731,8 @@ void vTaskSwitchContext( void )
 void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicksToWait )
 {
 portTickType xTimeToWake;
+
+	configASSERT( pxEventList );
 
 	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
 	SCHEDULER SUSPENDED. */
@@ -1750,6 +1782,8 @@ portTickType xTimeToWake;
 	{
 	portTickType xTimeToWake;
 
+		configASSERT( pxEventList );
+
 		/* This function should not be called by application code hence the
 		'Restricted' in its name.  It is not part of the public API.  It is
 		designed for use by kernel code, and has special calling requirements -
@@ -1795,6 +1829,7 @@ portBASE_TYPE xReturn;
 	This function assumes that a check has already been made to ensure that
 	pxEventList is not empty. */
 	pxUnblockedTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
+	configASSERT( pxUnblockedTCB );
 	vListRemove( &( pxUnblockedTCB->xEventListItem ) );
 
 	if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
@@ -1828,6 +1863,7 @@ portBASE_TYPE xReturn;
 
 void vTaskSetTimeOutState( xTimeOutType * const pxTimeOut )
 {
+	configASSERT( pxTimeOut );
 	pxTimeOut->xOverflowCount = xNumOfOverflows;
 	pxTimeOut->xTimeOnEntering = xTickCount;
 }
@@ -1836,6 +1872,9 @@ void vTaskSetTimeOutState( xTimeOutType * const pxTimeOut )
 portBASE_TYPE xTaskCheckForTimeOut( xTimeOutType * const pxTimeOut, portTickType * const pxTicksToWait )
 {
 portBASE_TYPE xReturn;
+
+	configASSERT( pxTimeOut );
+	configASSERT( pxTicksToWait );
 
 	taskENTER_CRITICAL();
 	{
@@ -2030,6 +2069,8 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const 
 	{
 	tskTCB *pxTCB;
 	
+		configASSERT( xRegions );
+
 		if( xTaskToModify == pxCurrentTCB )
 		{
 			xTaskToModify = NULL;
@@ -2384,6 +2425,8 @@ tskTCB *pxNewTCB;
 	void vTaskPriorityInherit( xTaskHandle * const pxMutexHolder )
 	{
 	tskTCB * const pxTCB = ( tskTCB * ) pxMutexHolder;
+
+		configASSERT( pxMutexHolder );
 
 		if( pxTCB->uxPriority < pxCurrentTCB->uxPriority )
 		{

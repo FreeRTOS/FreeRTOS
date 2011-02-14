@@ -33,9 +33,9 @@
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -55,7 +55,8 @@
 #define TIMER_DEMO_H
 
 void vStartTimerDemoTask( portTickType xBaseFrequencyIn );
-portBASE_TYPE xAreTimerDemoTasksStillRunning( void );
+portBASE_TYPE xAreTimerDemoTasksStillRunning( portTickType xCycleFrequency );
+void vTimerPeriodicISRTests( void );
 
 #endif /* TIMER_DEMO_H */
 

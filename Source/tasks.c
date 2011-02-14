@@ -754,7 +754,7 @@ tskTCB *pxTCB = ( tskTCB * ) pxTask;
 
 	/* This function is not intended to be a public API function and definitely
 	is not for generic use as it assumes pxTask is not the running task and not
-	suspended, does not remove the task from any event lists it might be 
+	suspended, does not remove the task from any event lists it might be
 	blocked on, and does not take care of mutual exclusion. */
 	vListRemove( &( pxTCB->xGenericListItem ) );
 	prvAddTaskToReadyQueue( pxTCB );
@@ -1444,19 +1444,13 @@ void vTaskIncrementTick( void )
 			/* Tick count has overflowed so we need to swap the delay lists.
 			If there are any items in pxDelayedTaskList here then there is
 			an error! */
+			configASSERT( ( listLIST_IS_EMPTY( pxDelayedTaskList ) ) );
+			
 			pxTemp = pxDelayedTaskList;
 			pxDelayedTaskList = pxOverflowDelayedTaskList;
 			pxOverflowDelayedTaskList = pxTemp;
 			xNumOfOverflows++;
-			
-			#if configUSE_TIMERS == 1
-			{
-				/* The timer service task needs to know to switch its lists
-				too. */
-				xTimerGenericCommand( NULL, trmCOMMAND_PROCESS_TIMER_OVERFLOW, 0, 0 );
-			}
-			#endif
-			
+	
 			if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
 			{
 				/* The delayed list is empty.  Set xNextTaskUnblockTime to the
@@ -1756,9 +1750,9 @@ portTickType xTimeToWake;
 	{
 	portTickType xTimeToWake;
 
-		/* This function should not be called by application code hence the 
-		'Restricted' in its name.  It is not part of the public API.  It is 
-		designed for use by kernel code, and has special calling requirements - 
+		/* This function should not be called by application code hence the
+		'Restricted' in its name.  It is not part of the public API.  It is
+		designed for use by kernel code, and has special calling requirements -
 		it should be called from a critical section. */
 
 	
@@ -1769,7 +1763,7 @@ portTickType xTimeToWake;
 		vListInsertEnd( ( xList * ) pxEventList, ( xListItem * ) &( pxCurrentTCB->xEventListItem ) );
 
 		/* We must remove this task from the ready list before adding it to the
-		blocked list as the same list item is used for both lists.  This 
+		blocked list as the same list item is used for both lists.  This
 		function is called form a critical section. */
 		vListRemove( ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
 

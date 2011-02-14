@@ -117,25 +117,45 @@ static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
  * Called by the timer service task to interpret and process a command it
  * received on the timer queue.
  */
-static void	prvProcessReceivedCommands( portTickType xAssumedTimeNow ) PRIVILEGED_FUNCTION;
+static void	prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
 
 /*
- * Insert the timer into either xActiveTimerList1, or xActiveTimerList2, 
- * depending on if the expire time causes a timer counter overflow. 
+ * Insert the timer into either xActiveTimerList1, or xActiveTimerList2,
+ * depending on if the expire time causes a timer counter overflow.
  */
-static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xAssumedTimeNow ) PRIVILEGED_FUNCTION;
+static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow ) PRIVILEGED_FUNCTION;
 
 /*
  * An active timer has reached its expire time.  Reload the timer if it is an
  * auto reload timer, then call its callback.
  */
-static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xAssumedTimeNow ) PRIVILEGED_FUNCTION;
+static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xTimeNow ) PRIVILEGED_FUNCTION;
 
 /*
  * The tick count has overflowed.  Switch the timer lists after ensuring the
  * current timer list does not still reference some timers.
  */
-static void prvSwitchTimerLists( portTickType xAssumedTimeNow ) PRIVILEGED_FUNCTION;
+static void prvSwitchTimerLists( portTickType xTimeNow, portTickType xLastTime ) PRIVILEGED_FUNCTION;
+
+/*
+ * Obtain the current tick count, setting *pxTimerListsWereSwitched to pdTRUE
+ * if a tick count overflow occurred since prvSampleTimeNow() was last called.
+ */
+static portTickType prvSampleTimeNow( portBASE_TYPE *pxTimerListsWereSwitched ) PRIVILEGED_FUNCTION;
+
+/*
+ * If the timer list contains any active timers then return the expire time of
+ * the timer that will expire first and set *pxListWasEmpty to false.  If the
+ * timer list does not contain any timers then return 0 and set *pxListWasEmpty
+ * to pdTRUE.
+ */
+static portTickType prvLookForExpiredTimer( portBASE_TYPE *pxListWasEmpty ) PRIVILEGED_FUNCTION;
+
+/*
+ * If a timer has expired, process it.  Otherwise, block the timer service task
+ * until either a timer does expire or a command is received.
+ */
+static void prvProcessTimerOrBlockTask( portTickType xNextExpireTime, portBASE_TYPE xListWasEmpty ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -151,7 +171,7 @@ portBASE_TYPE xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
-		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Timer Service", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL );
+		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL);
 	}
 
 	return xReturn;
@@ -183,7 +203,7 @@ xTIMER *pxNewTimer;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portTickType xBlockTime )
+portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portBASE_TYPE *pxHigherPriorityTaskWoken, portTickType xBlockTime )
 {
 portBASE_TYPE xReturn = pdFAIL;
 xTIMER_MESSAGE xMessage;
@@ -197,13 +217,20 @@ xTIMER_MESSAGE xMessage;
 		xMessage.xMessageValue = xOptionalValue;
 		xMessage.pxTimer = ( xTIMER * ) xTimer;
 
-		if( xTaskGetSchedulerState() == taskSCHEDULER_RUNNING )
+		if( pxHigherPriorityTaskWoken == NULL )
 		{
-			xReturn = xQueueSendToBack( xTimerQueue, &xMessage, xBlockTime );
+			if( xTaskGetSchedulerState() == taskSCHEDULER_RUNNING )
+			{
+				xReturn = xQueueSendToBack( xTimerQueue, &xMessage, xBlockTime );
+			}
+			else
+			{
+				xReturn = xQueueSendToBack( xTimerQueue, &xMessage, tmrNO_DELAY );
+			}
 		}
 		else
 		{
-			xReturn = xQueueSendToBack( xTimerQueue, &xMessage, tmrNO_DELAY );
+			xReturn = xQueueSendToBackFromISR( xTimerQueue, &xMessage, pxHigherPriorityTaskWoken );
 		}
 	}
 
@@ -211,128 +238,155 @@ xTIMER_MESSAGE xMessage;
 }
 /*-----------------------------------------------------------*/
 
-static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xAssumedTimeNow )
+static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xTimeNow )
 {
 xTIMER *pxTimer;
 
-	if( listLIST_IS_EMPTY( pxCurrentTimerList ) == pdFALSE )
+	/* Remove the timer from the list of active timers.  A check has already
+	been performed to ensure the list is not empty. */
+	pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
+	vListRemove( &( pxTimer->xTimerListItem ) );
+
+	/* If the timer is an auto reload timer then calculate the next
+	expiry time and re-insert the timer in the list of active timers. */
+	if( pxTimer->uxAutoReload == pdTRUE )
 	{
-		/* Remove the timer from the list of active timers. */
-		pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
-		vListRemove( &( pxTimer->xTimerListItem ) );
-
-		/* If the timer is an auto reload timer then calculate the next
-		expiry time and re-insert the timer in the list of active timers. */
-		if( pxTimer->uxAutoReload == pdTRUE )
-		{
-			/* This is the only time a timer is inserted into a list using
-			a time relative to anything other than the current time.  It
-			will therefore be inserted into the correct list relative to
-			the time this task thinks it is now, even if a command to
-			switch lists due to a tick count overflow is already waiting in
-			the timer queue. */
-			prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xAssumedTimeNow );
-		}
-
-		/* Call the timer callback. */
-		pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+		/* This is the only time a timer is inserted into a list using
+		a time relative to anything other than the current time.  It
+		will therefore be inserted into the correct list relative to
+		the time this task thinks it is now, even if a command to
+		switch lists due to a tick count overflow is already waiting in
+		the timer queue. */
+		prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow );
 	}
+
+	/* Call the timer callback. */
+	pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
 }
 /*-----------------------------------------------------------*/
 
 static void prvTimerTask( void *pvParameters )
 {
-portTickType xNextExpireTime, xTimeNow, xFrozenTimeNow;
+portTickType xNextExpireTime;
+portBASE_TYPE xListWasEmpty;
 
 	/* Just to avoid compiler warnings. */
 	( void ) pvParameters;
 
 	for( ;; )
 	{
-		/* Take a snapshot of the time to use while assessing expiry and auto
-		reload times. */
-		xFrozenTimeNow = xTaskGetTickCount();
+		/* Query the timers list to see if it contains any timers, and if so,
+		obtain the time at which the next timer will expire. */
+		xNextExpireTime = prvLookForExpiredTimer( &xListWasEmpty );
 
-		/* Timers are listed in expiry time order, with the head of the list
-		referencing the task that will expire first.  Obtain the time at which
-		the timer with the nearest expiry time will expire.  If there are no
-		active timers then just set the next expire time to the maximum possible
-		time to ensure this task does not run unnecessarily.  */
-		if( listLIST_IS_EMPTY( pxCurrentTimerList ) == pdFALSE )
-		{
-			xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
-		}
-		else
-		{
-			xNextExpireTime = portMAX_DELAY;
-		}
-
-		/* Has the timer expired?  This expiry time is relative to the snapshot
-		of the time taken to be used in this loop iteration - so it doesn't 
-		matter at this point if a tick count overflows here. */
-		if( xNextExpireTime <= xFrozenTimeNow )
-		{
-			prvProcessExpiredTimer( xNextExpireTime, xFrozenTimeNow );
-		}
-		else
-		{
-			/* Block this task until the next timer expires, or a command is
-			received. */
-			vTaskSuspendAll();
-			{
-				/* Has the tick overflowed since a time snapshot was taken? */
-				xTimeNow = xTaskGetTickCount();
-				if( xTimeNow >= xFrozenTimeNow )
-				{
-					/* Has the expire not still not been met?  The tick count
-					may be greater now than when the time snapshot was taken. */
-					if( xNextExpireTime <= xTimeNow )
-					{
-						prvProcessExpiredTimer( xNextExpireTime, xFrozenTimeNow );
-					}
-					else
-					{
-						/* The tick count has not overflowed since the time 
-						snapshot, and the next expire time has not been reached
-						since the last snapshot was taken.  This task should
-						therefore block to wait for the next expire time. */
-						vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ) );
-					}
-				}
-				else
-				{
-					/* The tick count has overflowed since the time snapshot
-					was taken, therefore, the task should not block but continue
-					with another loop.  The command queue should contain a
-					command to switch lists. */
-				}
-			}
-			if( xTaskResumeAll() == pdFALSE )
-			{
-				/* Yield to wait for either a command to arrive, or the block time
-				to expire.  If a command arrived between the critical section being
-				exited and this yield then the yield will just return to the same
-				task. */
-				portYIELD_WITHIN_API();
-			}
-
-			/* Take a snapshot of the time now for use in this iteration of the
-			task loop. */
-			xFrozenTimeNow = xTaskGetTickCount();
-
-			/* Empty the command queue, if it contains any commands. */
-			prvProcessReceivedCommands( xFrozenTimeNow );
-		}
+		/* If a timer has expired, process it.  Otherwise, block this task
+		until either a timer does expire, or a command is received. */
+		prvProcessTimerOrBlockTask( xNextExpireTime, xListWasEmpty );
+		
+		/* Empty the command queue. */
+		prvProcessReceivedCommands();		
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xAssumedTimeNow )
+static void prvProcessTimerOrBlockTask( portTickType xNextExpireTime, portBASE_TYPE xListWasEmpty )
+{
+portTickType xTimeNow;
+portBASE_TYPE xTimerListsWereSwitched;
+
+	vTaskSuspendAll();
+	{
+		/* Obtain the time now to make an assessment as to whether the timer
+		has expired or not.  If obtaining the time causes the lists to switch
+		then don't process this timer as any timers that remained in the list
+		when the lists were switched will have been processed within the
+		prvSampelTimeNow() function. */
+		xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
+		if( xTimerListsWereSwitched == pdFALSE )
+		{
+			/* The tick count has not overflowed, has the timer expired? */
+			if( ( xListWasEmpty == pdFALSE ) && ( xNextExpireTime <= xTimeNow ) )
+			{
+				prvProcessExpiredTimer( xNextExpireTime, xTimeNow );
+			}
+			else
+			{
+				/* The tick count has not overflowed, and the next expire 
+				time has not been reached yet.  This task should therefore 
+				block to wait for the next expire time or a command to be 
+				received - whichever comes first.  The following line cannot
+				be reached unless xNextExpireTime > xTimeNow, except in the 
+				case when the current timer list is empty. */
+				vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ) );
+			}
+		}
+	}
+	if( xTaskResumeAll() == pdFALSE )
+	{
+		/* Yield to wait for either a command to arrive, or the block time
+		to expire.  If a command arrived between the critical section being
+		exited and this yield then the yield will not cause the task
+		to block. */
+		portYIELD_WITHIN_API();
+	}
+}
+/*-----------------------------------------------------------*/
+
+static portTickType prvLookForExpiredTimer( portBASE_TYPE *pxListWasEmpty )
+{
+portTickType xNextExpireTime;
+
+	/* Timers are listed in expiry time order, with the head of the list
+	referencing the task that will expire first.  Obtain the time at which
+	the timer with the nearest expiry time will expire.  If there are no
+	active timers then just set the next expire time to 0.  That will cause
+	this task to unblock when the tick count overflows, at which point the
+	timer lists will be switched and the next expiry time can be 
+	re-assessed.  */
+	*pxListWasEmpty = listLIST_IS_EMPTY( pxCurrentTimerList );
+	if( *pxListWasEmpty == pdFALSE )
+	{
+		xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
+	}
+	else
+	{
+		/* Ensure the task unblocks when the tick count rolls over. */
+		xNextExpireTime = ( portTickType ) 0U;
+	}
+
+	return xNextExpireTime;
+}
+/*-----------------------------------------------------------*/
+
+static portTickType prvSampleTimeNow( portBASE_TYPE *pxTimerListsWereSwitched )
+{
+portTickType xTimeNow;
+static portTickType xLastTime = ( portTickType ) 0U;
+
+	xTimeNow = xTaskGetTickCount();
+	
+	if( xTimeNow < xLastTime )
+	{
+		prvSwitchTimerLists( xTimeNow, xLastTime );
+		*pxTimerListsWereSwitched = pdTRUE;
+	}
+	else
+	{
+		*pxTimerListsWereSwitched = pdFALSE;
+	}
+	
+	xLastTime = xTimeNow;
+	
+	return xTimeNow;
+}
+/*-----------------------------------------------------------*/
+
+static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow )
 {
 	listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xNextExpiryTime );
 	listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
 	
-	if( xNextExpiryTime < xAssumedTimeNow )
+	if( xNextExpiryTime < xTimeNow )
 	{
 		vListInsert( pxOverflowTimerList, &( pxTimer->xTimerListItem ) );
 	}
@@ -343,11 +397,16 @@ static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpir
 }
 /*-----------------------------------------------------------*/
 
-static void	prvProcessReceivedCommands( portTickType xAssumedTimeNow )
+static void	prvProcessReceivedCommands( void )
 {
 xTIMER_MESSAGE xMessage;
 xTIMER *pxTimer;
-portBASE_TYPE xSwitchListsOnExit = pdFALSE;
+portBASE_TYPE xTimerListsWereSwitched;
+portTickType xTimeNow;
+
+	/* In this case the xTimerListsWereSwitched parameter is not used, but it
+	must be present in the function call. */
+	xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
 
 	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL )
 	{
@@ -369,7 +428,7 @@ portBASE_TYPE xSwitchListsOnExit = pdFALSE;
 		{
 			case tmrCOMMAND_START :	
 				/* Start or restart a timer. */
-				prvInsertTimerInActiveList( pxTimer,  xAssumedTimeNow + pxTimer->xTimerPeriodInTicks, xAssumedTimeNow );
+				prvInsertTimerInActiveList( pxTimer,  xTimeNow + pxTimer->xTimerPeriodInTicks, xTimeNow );
 				break;
 
 			case tmrCOMMAND_STOP :	
@@ -379,7 +438,7 @@ portBASE_TYPE xSwitchListsOnExit = pdFALSE;
 
 			case tmrCOMMAND_CHANGE_PERIOD :
 				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
-				prvInsertTimerInActiveList( pxTimer, ( xAssumedTimeNow + pxTimer->xTimerPeriodInTicks ), xAssumedTimeNow );
+				prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow );
 				break;
 
 			case tmrCOMMAND_DELETE :
@@ -387,39 +446,32 @@ portBASE_TYPE xSwitchListsOnExit = pdFALSE;
 				just free up the memory. */
 				vPortFree( pxTimer );
 				break;
-				
-			case trmCOMMAND_PROCESS_TIMER_OVERFLOW :
-				/* Hold this pending until all the other messages have been 
-				processed. */
-				xSwitchListsOnExit = pdTRUE;
-				break;
 
 			default	:			
 				/* Don't expect to get here. */
 				break;
 		}
 	}
-
-	if( xSwitchListsOnExit == pdTRUE )
-	{
-		prvSwitchTimerLists( xAssumedTimeNow );
-	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvSwitchTimerLists( portTickType xAssumedTimeNow )
+static void prvSwitchTimerLists( portTickType xTimeNow, portTickType xLastTime )
 {
 portTickType xNextExpireTime;
 xList *pxTemp;
 
-	/* The tick count has overflowed.  The timer lists must be switched.  
-	If there are any timers still referenced from the current timer list 
-	then they must have expired and should be processed before the lists 
+	/* Remove compiler warnings if configASSERT() is not defined. */
+	( void ) xLastTime;
+	
+	/* The tick count has overflowed.  The timer lists must be switched.
+	If there are any timers still referenced from the current timer list
+	then they must have expired and should be processed before the lists
 	are switched. */
 	while( listLIST_IS_EMPTY( pxCurrentTimerList ) == pdFALSE )
 	{
 		xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
-		prvProcessExpiredTimer( xNextExpireTime, xAssumedTimeNow );
+		configASSERT( ( xNextExpireTime >= xLastTime ) );
+		prvProcessExpiredTimer( xNextExpireTime, xTimeNow );
 	}
 
 	pxTemp = pxCurrentTimerList;

@@ -181,6 +181,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define INCLUDE_xTaskResumeFromISR 1
 #endif
 
+#ifndef configASSERT
+	#define configASSERT( x )
+#endif
+
 /* The timers module relies on xTaskGetSchedulerState(). */
 #if configUSE_TIMERS == 1
 

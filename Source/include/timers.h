@@ -67,11 +67,10 @@ extern "C" {
 #endif
 
 /* IDs for commands that can be sent/received on the timer queue. */
-#define trmCOMMAND_PROCESS_TIMER_OVERFLOW	0 /* For use by the kernel only! */
-#define tmrCOMMAND_START					1
-#define tmrCOMMAND_STOP						2
-#define tmrCOMMAND_CHANGE_PERIOD			3
-#define tmrCOMMAND_DELETE					4
+#define tmrCOMMAND_START					0
+#define tmrCOMMAND_STOP						1
+#define tmrCOMMAND_CHANGE_PERIOD			2
+#define tmrCOMMAND_DELETE					3
 
 /*-----------------------------------------------------------
  * MACROS AND DEFINITIONS

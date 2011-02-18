@@ -454,9 +454,6 @@ tskTCB * pxNewTCB;
 			uxPriority &= ~portPRIVILEGE_BIT;
 		#endif /* portUSING_MPU_WRAPPERS == 1 */
 
-		/* Check the alignment of the stack buffer is correct. */
-		configASSERT( !( ( unsigned long ) pxNewTCB->pxStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
-
 		/* Calculate the top of stack address.  This depends on whether the
 		stack grows from high memory to low (as per the 80x86) or visa versa.
 		portSTACK_GROWTH is used to make the result positive or negative as
@@ -472,6 +469,9 @@ tskTCB * pxNewTCB;
 		#else
 		{
 			pxTopOfStack = pxNewTCB->pxStack;
+			
+			/* Check the alignment of the stack buffer is correct. */
+			configASSERT( !( ( unsigned long ) pxNewTCB->pxStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
 
 			/* If we want to use stack checking on architectures that use
 			a positive stack growth direction then we also need to store the

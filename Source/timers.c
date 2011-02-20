@@ -268,7 +268,7 @@ xTIMER *pxTimer;
 		the time this task thinks it is now, even if a command to
 		switch lists due to a tick count overflow is already waiting in
 		the timer queue. */
-		prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow );
+		prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow, xNextExpireTime );
 	}
 
 	/* Call the timer callback. */
@@ -574,5 +574,4 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 	return pxTimer->pvTimerID;
 }
 /*-----------------------------------------------------------*/
-
 

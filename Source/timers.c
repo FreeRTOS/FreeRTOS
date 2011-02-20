@@ -123,7 +123,7 @@ static void	prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
  * Insert the timer into either xActiveTimerList1, or xActiveTimerList2,
  * depending on if the expire time causes a timer counter overflow.
  */
-static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow ) PRIVILEGED_FUNCTION;
+static portBASE_TYPE prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow, portTickType xCommandTime ) PRIVILEGED_FUNCTION;
 
 /*
  * An active timer has reached its expire time.  Reload the timer if it is an
@@ -183,22 +183,32 @@ xTimerHandle xTimerCreate( const signed char *pcTimerName, portTickType xTimerPe
 xTIMER *pxNewTimer;
 
 	/* Allocate the timer structure. */
-	pxNewTimer = ( xTIMER * ) pvPortMalloc( sizeof( xTIMER ) );
-	if( pxNewTimer != NULL )
+	if( xTimerPeriodInTicks == ( portTickType ) 0U )
 	{
-		/* Ensure the infrastructure used by the timer service task has been
-		created/initialised. */
-		prvCheckForValidListAndQueue();
-
-		/* Initialise the timer structure members using the function parameters. */
-		pxNewTimer->pcTimerName = pcTimerName;
-		pxNewTimer->xTimerPeriodInTicks = xTimerPeriodInTicks;
-		pxNewTimer->uxAutoReload = uxAutoReload;
-		pxNewTimer->pvTimerID = pvTimerID;
-		pxNewTimer->pxCallbackFunction = pxCallbackFunction;
-		vListInitialiseItem( &( pxNewTimer->xTimerListItem ) );
+		pxNewTimer = NULL;
+		configASSERT( ( xTimerPeriodInTicks > 0 ) );
 	}
-
+	else
+	{
+		pxNewTimer = ( xTIMER * ) pvPortMalloc( sizeof( xTIMER ) );
+		if( pxNewTimer != NULL )
+		{
+			/* Ensure the infrastructure used by the timer service task has been
+			created/initialised. */
+			prvCheckForValidListAndQueue();
+	
+			configASSERT( ( xTimerPeriodInTicks > 0 ) );
+	
+			/* Initialise the timer structure members using the function parameters. */
+			pxNewTimer->pcTimerName = pcTimerName;
+			pxNewTimer->xTimerPeriodInTicks = xTimerPeriodInTicks;
+			pxNewTimer->uxAutoReload = uxAutoReload;
+			pxNewTimer->pvTimerID = pvTimerID;
+			pxNewTimer->pxCallbackFunction = pxCallbackFunction;
+			vListInitialiseItem( &( pxNewTimer->xTimerListItem ) );
+		}
+	}
+	
 	return ( xTimerHandle ) pxNewTimer;
 }
 /*-----------------------------------------------------------*/
@@ -234,6 +244,7 @@ xTIMER_MESSAGE xMessage;
 		}
 	}
 
+	configASSERT( xReturn );
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -311,11 +322,11 @@ portBASE_TYPE xTimerListsWereSwitched;
 			}
 			else
 			{
-				/* The tick count has not overflowed, and the next expire 
-				time has not been reached yet.  This task should therefore 
-				block to wait for the next expire time or a command to be 
+				/* The tick count has not overflowed, and the next expire
+				time has not been reached yet.  This task should therefore
+				block to wait for the next expire time or a command to be
 				received - whichever comes first.  The following line cannot
-				be reached unless xNextExpireTime > xTimeNow, except in the 
+				be reached unless xNextExpireTime > xTimeNow, except in the
 				case when the current timer list is empty. */
 				vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ) );
 			}
@@ -341,7 +352,7 @@ portTickType xNextExpireTime;
 	the timer with the nearest expiry time will expire.  If there are no
 	active timers then just set the next expire time to 0.  That will cause
 	this task to unblock when the tick count overflows, at which point the
-	timer lists will be switched and the next expiry time can be 
+	timer lists will be switched and the next expiry time can be
 	re-assessed.  */
 	*pxListWasEmpty = listLIST_IS_EMPTY( pxCurrentTimerList );
 	if( *pxListWasEmpty == pdFALSE )
@@ -381,19 +392,44 @@ static portTickType xLastTime = ( portTickType ) 0U;
 }
 /*-----------------------------------------------------------*/
 
-static void prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow )
+static portBASE_TYPE prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow, portTickType xCommandTime )
 {
+portBASE_TYPE xProcessTimerNow = pdFALSE;
+
 	listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xNextExpiryTime );
 	listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
 	
-	if( xNextExpiryTime < xTimeNow )
+	if( xNextExpiryTime <= xTimeNow )
 	{
-		vListInsert( pxOverflowTimerList, &( pxTimer->xTimerListItem ) );
+		/* Has the expiry time elapsed between the command to start/reset a
+		timer was issued, and the time the command was processed? */
+		if( ( xTimeNow - xCommandTime ) >= pxTimer->xTimerPeriodInTicks )
+		{
+			/* The time between a command being issued and the command being
+			processed actually exceeds the timers period.  */
+			xProcessTimerNow = pdTRUE;
+		}
+		else
+		{
+			vListInsert( pxOverflowTimerList, &( pxTimer->xTimerListItem ) );
+		}
 	}
 	else
 	{
-		vListInsert( pxCurrentTimerList, &( pxTimer->xTimerListItem ) );
+		if( ( xTimeNow < xCommandTime ) && ( xNextExpiryTime >= xCommandTime ) )
+		{
+			/* If, since the command was issued, the tick count has overflowed
+			but the expiry time has not, then the timer must have already passed
+			its expiry time and should be processed immediately. */
+			xProcessTimerNow = pdTRUE;
+		}
+		else
+		{
+			vListInsert( pxCurrentTimerList, &( pxTimer->xTimerListItem ) );
+		}
 	}
+
+	return xProcessTimerNow;
 }
 /*-----------------------------------------------------------*/
 
@@ -428,7 +464,18 @@ portTickType xTimeNow;
 		{
 			case tmrCOMMAND_START :	
 				/* Start or restart a timer. */
-				prvInsertTimerInActiveList( pxTimer,  xTimeNow + pxTimer->xTimerPeriodInTicks, xTimeNow );
+				if( prvInsertTimerInActiveList( pxTimer,  xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.xMessageValue ) == pdTRUE )
+				{
+					/* The timer expired before it was added to the active timer
+					list.  Process it now. */
+					/* Call the timer callback. */
+					pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+
+					if( pxTimer->uxAutoReload == pdTRUE )
+					{
+						xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
+					}
+				}
 				break;
 
 			case tmrCOMMAND_STOP :	
@@ -438,7 +485,8 @@ portTickType xTimeNow;
 
 			case tmrCOMMAND_CHANGE_PERIOD :
 				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
-				prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow );
+				configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
+				prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
 				break;
 
 			case tmrCOMMAND_DELETE :
@@ -526,7 +574,5 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 	return pxTimer->pvTimerID;
 }
 /*-----------------------------------------------------------*/
-
-
 
 

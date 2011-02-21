@@ -243,8 +243,7 @@ xTIMER_MESSAGE xMessage;
 			xReturn = xQueueSendToBackFromISR( xTimerQueue, &xMessage, pxHigherPriorityTaskWoken );
 		}
 	}
-
-	configASSERT( xReturn );
+	
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -268,7 +267,16 @@ xTIMER *pxTimer;
 		the time this task thinks it is now, even if a command to
 		switch lists due to a tick count overflow is already waiting in
 		the timer queue. */
-		prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow, xNextExpireTime );
+		if( prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow, xNextExpireTime ) == pdTRUE )
+		{
+			/* The timer expired before it was added to the active timer
+			list.  Reload it now.  The callback will get executed before
+			this function exits. */
+			if( pxTimer->uxAutoReload == pdTRUE )
+			{
+				xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY ); /* Should it be xNextExpireTime or ( xNextExpireTime + pxTimer->xTimerPeriodInTicks )?  I think the former. */
+			}
+		}
 	}
 
 	/* Call the timer callback. */
@@ -403,7 +411,7 @@ portBASE_TYPE xProcessTimerNow = pdFALSE;
 	{
 		/* Has the expiry time elapsed between the command to start/reset a
 		timer was issued, and the time the command was processed? */
-		if( ( xTimeNow - xCommandTime ) >= pxTimer->xTimerPeriodInTicks )
+		if( ( ( portTickType ) ( xTimeNow - xCommandTime ) ) >= pxTimer->xTimerPeriodInTicks )
 		{
 			/* The time between a command being issued and the command being
 			processed actually exceeds the timers period.  */
@@ -468,7 +476,6 @@ portTickType xTimeNow;
 				{
 					/* The timer expired before it was added to the active timer
 					list.  Process it now. */
-					/* Call the timer callback. */
 					pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
 
 					if( pxTimer->uxAutoReload == pdTRUE )

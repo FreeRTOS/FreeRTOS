@@ -135,7 +135,7 @@ static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType x
  * The tick count has overflowed.  Switch the timer lists after ensuring the
  * current timer list does not still reference some timers.
  */
-static void prvSwitchTimerLists( portTickType xTimeNow, portTickType xLastTime ) PRIVILEGED_FUNCTION;
+static void prvSwitchTimerLists( portTickType xLastTime ) PRIVILEGED_FUNCTION;
 
 /*
  * Obtain the current tick count, setting *pxTimerListsWereSwitched to pdTRUE
@@ -270,12 +270,8 @@ xTIMER *pxTimer;
 		if( prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow, xNextExpireTime ) == pdTRUE )
 		{
 			/* The timer expired before it was added to the active timer
-			list.  Reload it now.  The callback will get executed before
-			this function exits. */
-			if( pxTimer->uxAutoReload == pdTRUE )
-			{
-				xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY ); /* Should it be xNextExpireTime or ( xNextExpireTime + pxTimer->xTimerPeriodInTicks )?  I think the former. */
-			}
+			list.  Reload it now.  */
+			xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
 		}
 	}
 
@@ -386,7 +382,7 @@ static portTickType xLastTime = ( portTickType ) 0U;
 	
 	if( xTimeNow < xLastTime )
 	{
-		prvSwitchTimerLists( xTimeNow, xLastTime );
+		prvSwitchTimerLists( xLastTime );
 		*pxTimerListsWereSwitched = pdTRUE;
 	}
 	else
@@ -510,10 +506,11 @@ portTickType xTimeNow;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSwitchTimerLists( portTickType xTimeNow, portTickType xLastTime )
+static void prvSwitchTimerLists( portTickType xLastTime )
 {
 portTickType xNextExpireTime;
 xList *pxTemp;
+xTIMER *pxTimer;
 
 	/* Remove compiler warnings if configASSERT() is not defined. */
 	( void ) xLastTime;
@@ -526,7 +523,19 @@ xList *pxTemp;
 	{
 		xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
 		configASSERT( ( xNextExpireTime >= xLastTime ) );
-		prvProcessExpiredTimer( xNextExpireTime, xTimeNow );
+
+		/* Remove the timer from the list. */
+		pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
+		vListRemove( &( pxTimer->xTimerListItem ) );
+
+		/* Execute its callback, then send a command to restart the timer if
+		it is an auto-reload timer.  It cannot be restarted here as the lists
+		have not yet been switched. */
+		pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+		if( pxTimer->uxAutoReload == pdTRUE )
+		{
+			xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+		}
 	}
 
 	pxTemp = pxCurrentTimerList;

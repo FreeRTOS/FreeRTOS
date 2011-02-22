@@ -149,7 +149,7 @@ static portTickType prvSampleTimeNow( portBASE_TYPE *pxTimerListsWereSwitched ) 
  * timer list does not contain any timers then return 0 and set *pxListWasEmpty
  * to pdTRUE.
  */
-static portTickType prvLookForExpiredTimer( portBASE_TYPE *pxListWasEmpty ) PRIVILEGED_FUNCTION;
+static portTickType prvGetNextExpireTime( portBASE_TYPE *pxListWasEmpty ) PRIVILEGED_FUNCTION;
 
 /*
  * If a timer has expired, process it.  Otherwise, block the timer service task
@@ -251,6 +251,7 @@ xTIMER_MESSAGE xMessage;
 static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xTimeNow )
 {
 xTIMER *pxTimer;
+portBASE_TYPE xResult;
 
 	/* Remove the timer from the list of active timers.  A check has already
 	been performed to ensure the list is not empty. */
@@ -271,7 +272,9 @@ xTIMER *pxTimer;
 		{
 			/* The timer expired before it was added to the active timer
 			list.  Reload it now.  */
-			xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+			xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+			configASSERT( xResult );
+			( void ) xResult;
 		}
 	}
 
@@ -292,7 +295,7 @@ portBASE_TYPE xListWasEmpty;
 	{
 		/* Query the timers list to see if it contains any timers, and if so,
 		obtain the time at which the next timer will expire. */
-		xNextExpireTime = prvLookForExpiredTimer( &xListWasEmpty );
+		xNextExpireTime = prvGetNextExpireTime( &xListWasEmpty );
 
 		/* If a timer has expired, process it.  Otherwise, block this task
 		until either a timer does expire, or a command is received. */
@@ -322,6 +325,7 @@ portBASE_TYPE xTimerListsWereSwitched;
 			/* The tick count has not overflowed, has the timer expired? */
 			if( ( xListWasEmpty == pdFALSE ) && ( xNextExpireTime <= xTimeNow ) )
 			{
+				xTaskResumeAll();
 				prvProcessExpiredTimer( xNextExpireTime, xTimeNow );
 			}
 			else
@@ -333,21 +337,26 @@ portBASE_TYPE xTimerListsWereSwitched;
 				be reached unless xNextExpireTime > xTimeNow, except in the
 				case when the current timer list is empty. */
 				vQueueWaitForMessageRestricted( xTimerQueue, ( xNextExpireTime - xTimeNow ) );
+
+				if( xTaskResumeAll() == pdFALSE )
+				{
+					/* Yield to wait for either a command to arrive, or the block time
+					to expire.  If a command arrived between the critical section being
+					exited and this yield then the yield will not cause the task
+					to block. */
+					portYIELD_WITHIN_API();
+				}
 			}
 		}
-	}
-	if( xTaskResumeAll() == pdFALSE )
-	{
-		/* Yield to wait for either a command to arrive, or the block time
-		to expire.  If a command arrived between the critical section being
-		exited and this yield then the yield will not cause the task
-		to block. */
-		portYIELD_WITHIN_API();
+		else
+		{
+			xTaskResumeAll();
+		}
 	}
 }
 /*-----------------------------------------------------------*/
 
-static portTickType prvLookForExpiredTimer( portBASE_TYPE *pxListWasEmpty )
+static portTickType prvGetNextExpireTime( portBASE_TYPE *pxListWasEmpty )
 {
 portTickType xNextExpireTime;
 
@@ -441,7 +450,7 @@ static void	prvProcessReceivedCommands( void )
 {
 xTIMER_MESSAGE xMessage;
 xTIMER *pxTimer;
-portBASE_TYPE xTimerListsWereSwitched;
+portBASE_TYPE xTimerListsWereSwitched, xResult;
 portTickType xTimeNow;
 
 	/* In this case the xTimerListsWereSwitched parameter is not used, but it
@@ -476,7 +485,9 @@ portTickType xTimeNow;
 
 					if( pxTimer->uxAutoReload == pdTRUE )
 					{
-						xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
+						xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
+						configASSERT( xResult );
+						( void ) xResult;
 					}
 				}
 				break;
@@ -511,6 +522,7 @@ static void prvSwitchTimerLists( portTickType xLastTime )
 portTickType xNextExpireTime;
 xList *pxTemp;
 xTIMER *pxTimer;
+portBASE_TYPE xResult;
 
 	/* Remove compiler warnings if configASSERT() is not defined. */
 	( void ) xLastTime;
@@ -534,7 +546,9 @@ xTIMER *pxTimer;
 		pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
 		if( pxTimer->uxAutoReload == pdTRUE )
 		{
-			xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+			xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+			configASSERT( xResult );
+			( void ) xResult;
 		}
 	}
 

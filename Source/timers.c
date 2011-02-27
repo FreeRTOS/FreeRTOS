@@ -135,7 +135,7 @@ static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType x
  * The tick count has overflowed.  Switch the timer lists after ensuring the
  * current timer list does not still reference some timers.
  */
-static void prvSwitchTimerLists( portTickType xLastTime ) PRIVILEGED_FUNCTION;
+static void prvSwitchTimerLists( portTickType xLastTime, portTickType xTimeNow ) PRIVILEGED_FUNCTION;
 
 /*
  * Obtain the current tick count, setting *pxTimerListsWereSwitched to pdTRUE
@@ -391,7 +391,7 @@ static portTickType xLastTime = ( portTickType ) 0U;
 	
 	if( xTimeNow < xLastTime )
 	{
-		prvSwitchTimerLists( xLastTime );
+		prvSwitchTimerLists( xLastTime, xTimeNow );
 		*pxTimerListsWereSwitched = pdTRUE;
 	}
 	else
@@ -517,9 +517,9 @@ portTickType xTimeNow;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSwitchTimerLists( portTickType xLastTime )
+static void prvSwitchTimerLists( portTickType xLastTime, portTickType xTimeNow )
 {
-portTickType xNextExpireTime;
+portTickType xNextExpireTime, xReloadTime;
 xList *pxTemp;
 xTIMER *pxTimer;
 portBASE_TYPE xResult;
@@ -534,7 +534,6 @@ portBASE_TYPE xResult;
 	while( listLIST_IS_EMPTY( pxCurrentTimerList ) == pdFALSE )
 	{
 		xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
-		configASSERT( ( xNextExpireTime >= xLastTime ) );
 
 		/* Remove the timer from the list. */
 		pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
@@ -544,11 +543,28 @@ portBASE_TYPE xResult;
 		it is an auto-reload timer.  It cannot be restarted here as the lists
 		have not yet been switched. */
 		pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+
 		if( pxTimer->uxAutoReload == pdTRUE )
 		{
-			xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
-			configASSERT( xResult );
-			( void ) xResult;
+			/* Calculate the reload value, and if the reload value results in
+			the timer going into the same timer list then it has already expired
+			and the timer should be re-inserted into the current list so it is
+			processed again within this loop.  Otherwise a command should be sent
+			to restart the timer to ensure it is only inserted into a list after
+			the lists have been swapped. */
+			xReloadTime = ( xNextExpireTime + pxTimer->xTimerPeriodInTicks );
+			if( xReloadTime > xNextExpireTime )
+			{
+				listSET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ), xReloadTime );
+				listSET_LIST_ITEM_OWNER( &( pxTimer->xTimerListItem ), pxTimer );
+				vListInsert( pxCurrentTimerList, &( pxTimer->xTimerListItem ) );
+			}
+			else
+			{
+				xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+				configASSERT( xResult );
+				( void ) xResult;
+			}
 		}
 	}
 

@@ -260,7 +260,7 @@ static portTickType xIterationsWithoutCounterIncrement = ( portTickType ) 0, xLa
 
 static void prvTest1_CreateTimersWithoutSchedulerRunning( void )
 {
-portBASE_TYPE xTimer;
+unsigned portBASE_TYPE xTimer;
 
 	for( xTimer = 0; xTimer < configTIMER_QUEUE_LENGTH; xTimer++ )
 	{
@@ -269,7 +269,7 @@ portBASE_TYPE xTimer;
 		been started, so their block times should get set to zero within the timer
 		API itself. */
 		xAutoReloadTimers[ xTimer ] = xTimerCreate( "FR Timer",						/* Text name to facilitate debugging.  The kernel does not use this itself. */
-													( ( xTimer + 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
+													( ( xTimer + ( portTickType ) 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
 													pdTRUE,								/* Auto-reload is set to true. */
 													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
 													prvAutoReloadTimerCallback );		/* The callback to be called when the timer expires. */
@@ -314,20 +314,20 @@ portBASE_TYPE xTimer;
 			/* This time it would not be expected that the timer could be
 			started at this point. */
 			xTestStatus = pdFAIL;
-		configASSERT( xTestStatus );
+			configASSERT( xTestStatus );
 		}
 	}
 	
 	/* Create the timers that are used from the tick interrupt to test the timer
 	API functions that can be called from an ISR. */
 	xISRAutoReloadTimer = xTimerCreate( "ISR AR",						/* The text name given to the timer. */
-										0,								/* The timer is not given a period yet - this will be done from the tick hook. */
+										0xffff,							/* The timer is not given a period yet - this will be done from the tick hook, but a period of 0 is invalid. */
 										pdTRUE,							/* This is an auto reload timer. */
 										( void * ) NULL,				/* The identifier is not required. */
 										prvISRAutoReloadTimerCallback );/* The callback that is executed when the timer expires. */
 
 	xISROneShotTimer = xTimerCreate( 	"ISR OS",						/* The text name given to the timer. */
-										0,								/* The timer is not given a period yet - this will be done from the tick hook. */
+										0xffff,							/* The timer is not given a period yet - this will be done from the tick hook, but a period of 0 is invalid. */
 										pdFALSE,						/* This is a one shot timer. */
 										( void * ) NULL,				/* The identifier is not required. */
 										prvISROneShotTimerCallback );	/* The callback that is executed when the timer expires. */
@@ -698,13 +698,13 @@ unsigned char ucTimer;
 
 void vTimerPeriodicISRTests( void )
 {
-static unsigned portBASE_TYPE uxTick = ( unsigned portBASE_TYPE ) -1;
+static portTickType uxTick = ( portTickType ) -1;
 
 /* The xHigherPriorityTaskWoken parameter is not used in this case as this
 function is called from the tick hook anyway.  However the API required it
 to be present. */
 portBASE_TYPE xHigherPriorityTaskWoken = pdTRUE;
-portBASE_TYPE xMargin;
+portTickType xMargin;
 
 	if( configTIMER_TASK_PRIORITY != ( configMAX_PRIORITIES - 1 ) )
 	{
@@ -718,10 +718,24 @@ portBASE_TYPE xMargin;
 	}
 	else
 	{
-		xMargin = 0;
+		xMargin = 1;
 	}
-	
-	uxTick++;
+
+	/* This test is called from the tick ISR even when the scheduler is suspended.
+	Therefore, it is possible for the xTickCount to be temporarily less than the
+	uxTicks count maintained in this function.  That can result in calculated
+	unblock times being too short, as this function is not called as missed ticks
+	(ticks that occur while the scheduler is suspended) are unwound to re-instate
+	the real tick value.  Therefore, if this happens, just abandon the test
+	and start again. */
+	if( xTaskGetSchedulerState() != taskSCHEDULER_RUNNING )
+	{
+		uxTick = ( portTickType ) -1;
+	}
+	else
+	{
+		uxTick++;
+	}
 
 	if( uxTick == 0 )
 	{
@@ -969,7 +983,7 @@ portBASE_TYPE xMargin;
 			configASSERT( xTestStatus );
 		}
 		
-		uxTick = ( unsigned portBASE_TYPE ) -1;
+		uxTick = ( portTickType ) -1;
 	}	
 }
 /*-----------------------------------------------------------*/

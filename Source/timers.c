@@ -135,7 +135,7 @@ static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType x
  * The tick count has overflowed.  Switch the timer lists after ensuring the
  * current timer list does not still reference some timers.
  */
-static void prvSwitchTimerLists( portTickType xLastTime, portTickType xTimeNow ) PRIVILEGED_FUNCTION;
+static void prvSwitchTimerLists( portTickType xLastTime ) PRIVILEGED_FUNCTION;
 
 /*
  * Obtain the current tick count, setting *pxTimerListsWereSwitched to pdTRUE
@@ -391,7 +391,7 @@ static portTickType xLastTime = ( portTickType ) 0U;
 	
 	if( xTimeNow < xLastTime )
 	{
-		prvSwitchTimerLists( xLastTime, xTimeNow );
+		prvSwitchTimerLists( xLastTime );
 		*pxTimerListsWereSwitched = pdTRUE;
 	}
 	else
@@ -517,7 +517,7 @@ portTickType xTimeNow;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSwitchTimerLists( portTickType xLastTime, portTickType xTimeNow )
+static void prvSwitchTimerLists( portTickType xLastTime )
 {
 portTickType xNextExpireTime, xReloadTime;
 xList *pxTemp;

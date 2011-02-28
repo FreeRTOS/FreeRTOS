@@ -87,16 +87,16 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, portBASE_TYPE *pxHigherPriorityTaskWoken, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
-#define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, NULL, xBlockTime )
+#define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, xTaskGetTickCount(), NULL, xBlockTime )
 #define xTimerStop( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, NULL, xBlockTime )
 #define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, NULL, xBlockTime )
 #define xTimerDelete( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_DELETE, 0, NULL, xBlockTime )
-#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, NULL, xBlockTime )
+#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, xTaskGetTickCount(), NULL, xBlockTime )
 
-#define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, pxHigherPriorityTaskWoken, 0 )
+#define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, xTaskGetTickCountFromISR(), pxHigherPriorityTaskWoken, 0 )
 #define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, pxHigherPriorityTaskWoken, 0 )
 #define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, pxHigherPriorityTaskWoken, 0 )
-#define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, 0, pxHigherPriorityTaskWoken, 0 )
+#define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, xTaskGetTickCountFromISR(), pxHigherPriorityTaskWoken, 0 )
 
 #ifdef __cplusplus
 }

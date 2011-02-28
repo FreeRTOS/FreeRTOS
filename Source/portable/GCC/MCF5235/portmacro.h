@@ -67,7 +67,7 @@ extern "C" {
 #define portSTACK_TYPE  unsigned int
 #define portBASE_TYPE   int
 
-#if( USE_16_BIT_TICKS == 1 )
+#if( configUSE_16_BIT_TICKS == 1 )
     typedef unsigned portSHORT portTickType;
     #define portMAX_DELAY ( portTickType ) 0xffff
 #else

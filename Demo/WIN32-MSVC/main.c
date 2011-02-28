@@ -97,6 +97,7 @@
 #include "recmutex.h"
 #include "flop.h"
 #include "TimerDemo.h"
+#include "countsem.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
@@ -110,7 +111,7 @@
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
-#define mainTIMER_FREQUENCY			( configTICK_RATE_HZ )
+#define mainTIMER_TEST_PERIOD			( 50 )
 
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
@@ -131,7 +132,8 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartRecursiveMutexTasks();
-	vStartTimerDemoTask( mainTIMER_FREQUENCY );
+	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartCountingSemaphoreTasks();
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -145,7 +147,7 @@ int main( void )
 static void prvCheckTask( void *pvParameters )
 {
 portTickType xNextWakeTime;
-const portTickType xCycleFrequency = 5000 / portTICK_RATE_MS;
+const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
 char *pcStatusMessage = "OK";
 
 	/* Just to remove compiler warning. */
@@ -160,7 +162,7 @@ char *pcStatusMessage = "OK";
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
 		/* Check the standard demo tasks are running without error. */
-		if( xAreTimerDemoTasksStillRunning() != pdTRUE )
+		if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
 		{
 			pcStatusMessage = "Error: TimerDemo";
 		}
@@ -196,6 +198,10 @@ char *pcStatusMessage = "OK";
 	    {
 			pcStatusMessage = "Error: RecMutex";
 		}
+		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: CountSem";
+		}
 
 		/* This is the only task that uses stdout so its ok to call printf() 
 		directly. */
@@ -225,5 +231,20 @@ void vApplicationStackOverflowHook( void )
 {
 	/* Can be implemented if required, but not required in this 
 	environment and running this demo. */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* Call the periodic timer test, which tests the timer API functions that
+	can be called from an ISR. */
+	vTimerPeriodicISRTests();
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( void )
+{
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
 }
 

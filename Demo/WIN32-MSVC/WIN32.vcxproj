@@ -125,14 +125,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c" />
+    <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />
     <ClCompile Include="..\Common\Minimal\blocktim.c" />
+    <ClCompile Include="..\Common\Minimal\countsem.c" />
     <ClCompile Include="..\Common\Minimal\flop.c" />
     <ClCompile Include="..\Common\Minimal\GenQTest.c" />
     <ClCompile Include="..\Common\Minimal\integer.c" />
     <ClCompile Include="..\Common\Minimal\PollQ.c" />
     <ClCompile Include="..\Common\Minimal\QPeek.c" />
     <ClCompile Include="..\Common\Minimal\semtest.c" />
+    <ClCompile Include="..\Common\Minimal\timerdemo.c" />
     <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -161,6 +164,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\include\timers.h" />
+    <ClInclude Include="..\..\Source\include\timer_test.h" />
     <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="..\..\Source\include\croutine.h" />

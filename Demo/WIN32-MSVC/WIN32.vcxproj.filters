@@ -79,6 +79,15 @@
     <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c">
       <Filter>Demo App Source\Common Demo Tasks\ModifiedForLowTickRate</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\timers.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\timerdemo.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\countsem.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">
@@ -109,6 +118,12 @@
       <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\timers.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\timer_test.h">
       <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
   </ItemGroup>

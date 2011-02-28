@@ -68,7 +68,7 @@
 #define portSTACK_TYPE	unsigned portLONG
 #define portBASE_TYPE	portLONG
 
-#if( USE_16_BIT_TICKS == 1 )
+#if( configUSE_16_BIT_TICKS == 1 )
     typedef unsigned portSHORT portTickType;
     #define portMAX_DELAY ( portTickType ) 0xffff
 #else

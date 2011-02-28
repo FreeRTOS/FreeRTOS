@@ -73,7 +73,7 @@
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 0 ) /* This parameter has no effect when heap_3.c is included in the project. */
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
-#define configUSE_16_BIT_TICKS			1
+#define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1

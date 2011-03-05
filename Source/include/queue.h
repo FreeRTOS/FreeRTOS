@@ -68,7 +68,11 @@ extern "C" {
 
 #include "mpu_wrappers.h"
 
-
+/**
+ * Type by which queues are referenced.  For example, a call to xQueueCreate
+ * returns (via a pointer parameter) an xQueueHandle variable that can then
+ * be used as a parameter to xQueueSend(), xQueueReceive(), etc.
+ */
 typedef void * xQueueHandle;
 
 
@@ -140,7 +144,7 @@ xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBA
  * <pre>
  portBASE_TYPE xQueueSendToToFront(
 								   xQueueHandle	xQueue,
-								   const	void	*	pvItemToQueue,
+								   const void	*	pvItemToQueue,
 								   portTickType	xTicksToWait
 							   );
  * </pre>

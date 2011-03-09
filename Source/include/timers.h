@@ -244,7 +244,7 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * Queries a timer to see if it is active or dormant.
  *
- * A timer will be ormant if:
+ * A timer will be dormant if:
  *     1) It has been created but not started, or 
  *     2) It is an expired on-shot timer that has not been restarted.
  *
@@ -286,7 +286,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * xTimerStart() starts a timer that was previously created using the 
  * xTimerCreate() API function.  If the timer had already been started and was
- * already in the active state, then xTimerStart() has equaivalent functionality
+ * already in the active state, then xTimerStart() has equivalent functionality
  * to the xTimerReset() API function.
  *
  * Starting a timer ensures the timer is in the active state.  If the timer
@@ -389,7 +389,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * The configUSE_TIMERS configuration constant must be set to 1 for 
  * xTimerChangePeriod() to be available.
  *
- * @param xTimer The handle of the timer being stopped.
+ * @param xTimer The handle of the timer that is having its period changed.
  *
  * @param xNewPeriod The new period for xTimer. Timer periods are specified in 
  * tick periods, so the constant portTICK_RATE_MS can be used to convert a time 
@@ -500,7 +500,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * already in the active state, then xTimerReset() will cause the timer to
  * re-evaluate its expiry time so that it is relative to when xTimerReset() was
  * called.  If the timer was in the dormant state then xTimerReset() has 
- * equaivalent functionality to the xTimerStart() API function.
+ * equivalent functionality to the xTimerStart() API function.
  *
  * Resetting a timer ensures the timer is in the active state.  If the timer
  * is not stopped, deleted, or reset in the mean time, the callback function
@@ -534,10 +534,9 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * Example usage:
  * 
- * // This scenario assumes xTimer has already been created.  When a key is 
- * // pressed, an LCD backlight is switched on.  If 5 seconds pass without a key 
- * // being pressed, then the LCD backlight is switched off.  In this case, the 
- * // timer is a one-shot timer.
+ * // When a key is pressed, an LCD back-light is switched on.  If 5 seconds pass 
+ * // without a key being pressed, then the LCD back-light is switched off.  In 
+ * // this case, the timer is a one-shot timer.
  *
  * xTimerHandle xBacklightTimer = NULL;
  *
@@ -546,19 +545,19 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * void vBacklightTimerCallback( xTIMER *pxTimer )
  * {
  *     // The timer expired, therefore 5 seconds must have passed since a key
- *     // was pressed.  Switch off the LCD backlight.
+ *     // was pressed.  Switch off the LCD back-light.
  *     vSetBacklightState( BACKLIGHT_OFF );
  * }
  *
  * // The key press event handler.
  * void vKeyPressEventHandler( char cKey )
  * {
- *     // Ensure the LCD backlight is on, then reset the timer that is
- *     // responsible for turning the backlight off after 5 seconds of 
+ *     // Ensure the LCD back-light is on, then reset the timer that is
+ *     // responsible for turning the back-light off after 5 seconds of 
  *     // key inactivity.  Wait 10 ticks for the command to be successfully sent
  *     // if it cannot be sent immediately.
  *     vSetBacklightState( BACKLIGHT_ON );
- *     if( vTimerReset( xBacklightTimer, 100 ) != pdPASS )
+ *     if( xTimerReset( xBacklightTimer, 100 ) != pdPASS )
  *     {
  *         // The reset command was not executed successfully.  Take appropriate
  *         // action here.
@@ -572,12 +571,12 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * long x;
  * 
  *     // Create then start the one-shot timer that is responsible for turning
- *     // the backlight off if no keys are pressed within a 5 second period.
+ *     // the back-light off if no keys are pressed within a 5 second period.
  *     xBacklightTimer = xTimerCreate( "BacklightTimer",           // Just a text name, not used by the kernel.
  *                                     ( 5000 / portTICK_RATE_MS), // The timer period in ticks.
  *                                     pdFALSE,                    // The timer is a one-shot timer.
  *                                     0,                          // The id is not used by the callback so can take any value.
- *                                     vBacklightTimerCallback     // The callback function that switches the LCD backlight off.
+ *                                     vBacklightTimerCallback     // The callback function that switches the LCD back-light off.
  *                                   );
  *                                     
  *     if( xBacklightTimer == NULL )
@@ -613,13 +612,83 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * portBASE_TYPE xTimerStartFromISR( 	xTimerHandle xTimer, 
  *										portBASE_TYPE *pxHigherPriorityTaskWoken );
  *
- * Description goes here ####
+ * A version of xTimerStart() that can be called from an interrupt service
+ * routine.
  *
- * @param xTimer
+ * @param xTimer The handle of the timer being started/restarted.
  *
- * @return 
+ * @param pxHigherPriorityTaskWoken The timer service/daemon task spends most
+ * of its time in the Blocked state, waiting for messages to arrive on the timer
+ * command queue.  Calling xTimerStartFromISR() writes a message to the timer
+ * command queue, so has the potential to transition the timer service/daemon
+ * task out of the Blocked state.  If calling xTimerStartFromISR() causes the
+ * timer service/daemon task to leave the Blocked state, and the timer service/
+ * daemon task has a priority equal to or greater than the currently executing
+ * task (the task that was interrupted), then *pxHigherPriorityTaskWoken will
+ * get set to pdTRUE internally within the xTimerStartFromISR() function.  If
+ * xTimerStartFromISR() sets this value to pdTRUE then a context switch should
+ * be performed before the interrupt exits.
+ *
+ * @return pdFAIL will be returned if the start command could not be sent to 
+ * the timer command queue.  pdPASS will be returned if the command was 
+ * successfully send to the timer command queue.  When the command is actually 
+ * processed will depend on the priority of the timer service/daemon task 
+ * relative to other tasks in the system, although the timers expiry time is 
+ * relative to when xTimerStart() is actually called.  The timer service/daemon 
+ * task priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
  *
  * Example usage:
+ * 
+ * // This scenario assumes xBacklightTimer has already been created.  When a 
+ * // key is pressed, an LCD back-light is switched on.  If 5 seconds pass 
+ * // without a key being pressed, then the LCD back-light is switched off.  In 
+ * // this case, the timer is a one-shot timer, and unlike the example given for 
+ * // the xTimerReset() function, the key press event handler is an interrupt
+ * // service routine.
+ *
+ * // The callback function assigned to the one-shot timer.  In this case the
+ * // parameter is not used.
+ * void vBacklightTimerCallback( xTIMER *pxTimer )
+ * {
+ *     // The timer expired, therefore 5 seconds must have passed since a key
+ *     // was pressed.  Switch off the LCD back-light.
+ *     vSetBacklightState( BACKLIGHT_OFF );
+ * }
+ *
+ * // The key press interrupt service routine.
+ * void vKeyPressEventInterruptHandler( void )
+ * {
+ * portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+ *
+ *     // Ensure the LCD back-light is on, then restart the timer that is
+ *     // responsible for turning the back-light off after 5 seconds of 
+ *     // key inactivity.  This is an interrupt service routine so can only
+ *     // call FreeRTOS API functions that end in "FromISR".
+ *     vSetBacklightState( BACKLIGHT_ON );
+ *
+ *     // xTimerStartFromISR() or xTimerResetFromISR() could be called here
+ *     // as both cause the timer to re-calculate its expiry time.
+ *     // xHigherPriorityTaskWoken was initialised to pdFALSE when it was
+ *     // declared (in this function).
+ *     if( xTimerStartFromISR( xBacklightTimer, &xHigherPriorityTaskWoken ) != pdPASS )
+ *     {
+ *         // The start command was not executed successfully.  Take appropriate
+ *         // action here.
+ *     }
+ *
+ *     // Perform the rest of the key processing here.
+ *
+ *     // If xHigherPriorityTaskWoken equals pdTRUE, then a context switch
+ *     // should be performed.  The syntax required to perform a context switch
+ *     // from inside an ISR varies from port to port, and from compiler to
+ *     // compiler.  Inspect the demos for the port you are using to find the
+ *     // actual syntax required.
+ *     if( xHigherPriorityTaskWoken != pdFALSE )
+ *     {
+ *         // Call the interrupt safe yield function here (actual function
+ *         // depends on the FreeRTOS port being used.
+ *     }
+ * }
  */
 #define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, xTaskGetTickCountFromISR(), pxHigherPriorityTaskWoken, 0 )
 
@@ -627,13 +696,61 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * portBASE_TYPE xTimerStopFromISR( 	xTimerHandle xTimer, 
  *										portBASE_TYPE *pxHigherPriorityTaskWoken );
  *
- * Description goes here ####
+ * A version of xTimerStop() that can be called from an interrupt service
+ * routine.
  *
- * @param xTimer
+ * @param xTimer The handle of the timer being stopped.
  *
- * @return 
+ * @param pxHigherPriorityTaskWoken The timer service/daemon task spends most
+ * of its time in the Blocked state, waiting for messages to arrive on the timer
+ * command queue.  Calling xTimerStopFromISR() writes a message to the timer
+ * command queue, so has the potential to transition the timer service/daemon
+ * task out of the Blocked state.  If calling xTimerStopFromISR() causes the
+ * timer service/daemon task to leave the Blocked state, and the timer service/
+ * daemon task has a priority equal to or greater than the currently executing
+ * task (the task that was interrupted), then *pxHigherPriorityTaskWoken will
+ * get set to pdTRUE internally within the xTimerStopFromISR() function.  If
+ * xTimerStopFromISR() sets this value to pdTRUE then a context switch should
+ * be performed before the interrupt exits.
+ *
+ * @return pdFAIL will be returned if the stop command could not be sent to 
+ * the timer command queue.  pdPASS will be returned if the command was 
+ * successfully send to the timer command queue.  When the command is actually 
+ * processed will depend on the priority of the timer service/daemon task 
+ * relative to other tasks in the system.  The timer service/daemon task 
+ * priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
  *
  * Example usage:
+ *
+ * // This scenario assumes xTimer has already been created and started.  When
+ * // an interrupt occurs, the timer should be simply stopped.
+ *
+ * // The interrupt service routine that stops the timer.
+ * void vAnExampleInterruptServiceRoutine( void )
+ * {
+ * portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+ *
+ *     // The interrupt has occurred - simply stop the timer.
+ *     // xHigherPriorityTaskWoken was set to pdFALSE where it was defined
+ *     // (within this function).  As this is an interrupt service routine, only
+ *     // FreeRTOS API functions that end in "FromISR" can be used.
+ *     if( xTimerStopFromISR( xTimer, &xHigherPriorityTaskWoken ) != pdPASS )
+ *     {
+ *         // The stop command was not executed successfully.  Take appropriate
+ *         // action here.
+ *     }
+ *
+ *     // If xHigherPriorityTaskWoken equals pdTRUE, then a context switch
+ *     // should be performed.  The syntax required to perform a context switch
+ *     // from inside an ISR varies from port to port, and from compiler to
+ *     // compiler.  Inspect the demos for the port you are using to find the
+ *     // actual syntax required.
+ *     if( xHigherPriorityTaskWoken != pdFALSE )
+ *     {
+ *         // Call the interrupt safe yield function here (actual function
+ *         // depends on the FreeRTOS port being used.
+ *     }
+ * }
  */
 #define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_STOP, 0, pxHigherPriorityTaskWoken, 0 )
 
@@ -642,13 +759,62 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *											portTickType xNewPeriod,
  *											portBASE_TYPE *pxHigherPriorityTaskWoken );
  *
- * Description goes here ####
+ * A version of xTimerChangePeriod() that can be called from an interrupt 
+ * service routine.
  *
- * @param xTimer
+ * @param xTimer The handle of the timer that is having its period changed.
  *
- * @return 
+ * @param pxHigherPriorityTaskWoken The timer service/daemon task spends most
+ * of its time in the Blocked state, waiting for messages to arrive on the timer
+ * command queue.  Calling xTimerChangePeriodFromISR() writes a message to the 
+ * timer command queue, so has the potential to transition the timer service/
+ * daemon task out of the Blocked state.  If calling xTimerChangePeriodFromISR() 
+ * causes the timer service/daemon task to leave the Blocked state, and the 
+ * timer service/daemon task has a priority equal to or greater than the 
+ * currently executing task (the task that was interrupted), then 
+ * *pxHigherPriorityTaskWoken will get set to pdTRUE internally within the 
+ * xTimerChangePeriodFromISR() function.  If xTimerChangePeriodFromISR() sets 
+ * this value to pdTRUE then a context switch should be performed before the 
+ * interrupt exits.
+ *
+ * @return pdFAIL will be returned if the command to change the timers period
+ * could not be sent to the timer command queue.  pdPASS will be returned if the 
+ * command was successfully send to the timer command queue.  When the command 
+ * is actually processed will depend on the priority of the timer service/daemon 
+ * task relative to other tasks in the system.  The timer service/daemon task 
+ * priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
  *
  * Example usage:
+ *
+ * // This scenario assumes xTimer has already been created and started.  When
+ * // an interrupt occurs, the period of xTimer should be changed to 500ms.
+ *
+ * // The interrupt service routine that changes the period of xTimer.
+ * void vAnExampleInterruptServiceRoutine( void )
+ * {
+ * portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+ *
+ *     // The interrupt has occurred - change the period of xTimer to 500ms.
+ *     // xHigherPriorityTaskWoken was set to pdFALSE where it was defined
+ *     // (within this function).  As this is an interrupt service routine, only
+ *     // FreeRTOS API functions that end in "FromISR" can be used.
+ *     if( xTimerChangePeriodFromISR( xTimer, &xHigherPriorityTaskWoken ) != pdPASS )
+ *     {
+ *         // The command to change the timers period was not executed 
+ *         // successfully.  Take appropriate action here.
+ *     }
+ *
+ *     // If xHigherPriorityTaskWoken equals pdTRUE, then a context switch
+ *     // should be performed.  The syntax required to perform a context switch
+ *     // from inside an ISR varies from port to port, and from compiler to
+ *     // compiler.  Inspect the demos for the port you are using to find the
+ *     // actual syntax required.
+ *     if( xHigherPriorityTaskWoken != pdFALSE )
+ *     {
+ *         // Call the interrupt safe yield function here (actual function
+ *         // depends on the FreeRTOS port being used.
+ *     }
+ * }
  */
 #define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_CHANGE_PERIOD, xNewPeriod, pxHigherPriorityTaskWoken, 0 )
 
@@ -656,13 +822,84 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * portBASE_TYPE xTimerResetFromISR( 	xTimerHandle xTimer, 
  *										portBASE_TYPE *pxHigherPriorityTaskWoken );
  *
- * Description goes here ####
+ * A version of xTimerReset() that can be called from an interrupt service
+ * routine.
  *
- * @param xTimer
+ * @param xTimer The handle of the timer that is to be started, reset, or
+ * restarted.
  *
- * @return 
+ * @param pxHigherPriorityTaskWoken The timer service/daemon task spends most
+ * of its time in the Blocked state, waiting for messages to arrive on the timer
+ * command queue.  Calling xTimerResetFromISR() writes a message to the timer
+ * command queue, so has the potential to transition the timer service/daemon
+ * task out of the Blocked state.  If calling xTimerResetFromISR() causes the
+ * timer service/daemon task to leave the Blocked state, and the timer service/
+ * daemon task has a priority equal to or greater than the currently executing
+ * task (the task that was interrupted), then *pxHigherPriorityTaskWoken will
+ * get set to pdTRUE internally within the xTimerResetFromISR() function.  If
+ * xTimerResetFromISR() sets this value to pdTRUE then a context switch should
+ * be performed before the interrupt exits.
+ *
+ * @return pdFAIL will be returned if the reset command could not be sent to 
+ * the timer command queue.  pdPASS will be returned if the command was 
+ * successfully send to the timer command queue.  When the command is actually 
+ * processed will depend on the priority of the timer service/daemon task 
+ * relative to other tasks in the system, although the timers expiry time is 
+ * relative to when xTimerStart() is actually called.  The timer service/daemon 
+ * task priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
  *
  * Example usage:
+ * 
+ * // This scenario assumes xBacklightTimer has already been created.  When a 
+ * // key is pressed, an LCD back-light is switched on.  If 5 seconds pass 
+ * // without a key being pressed, then the LCD back-light is switched off.  In 
+ * // this case, the timer is a one-shot timer, and unlike the example given for 
+ * // the xTimerReset() function, the key press event handler is an interrupt
+ * // service routine.
+ *
+ * // The callback function assigned to the one-shot timer.  In this case the
+ * // parameter is not used.
+ * void vBacklightTimerCallback( xTIMER *pxTimer )
+ * {
+ *     // The timer expired, therefore 5 seconds must have passed since a key
+ *     // was pressed.  Switch off the LCD back-light.
+ *     vSetBacklightState( BACKLIGHT_OFF );
+ * }
+ *
+ * // The key press interrupt service routine.
+ * void vKeyPressEventInterruptHandler( void )
+ * {
+ * portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+ *
+ *     // Ensure the LCD back-light is on, then reset the timer that is
+ *     // responsible for turning the back-light off after 5 seconds of 
+ *     // key inactivity.  This is an interrupt service routine so can only
+ *     // call FreeRTOS API functions that end in "FromISR".
+ *     vSetBacklightState( BACKLIGHT_ON );
+ *
+ *     // xTimerStartFromISR() or xTimerResetFromISR() could be called here
+ *     // as both cause the timer to re-calculate its expiry time.
+ *     // xHigherPriorityTaskWoken was initialised to pdFALSE when it was
+ *     // declared (in this function).
+ *     if( xTimerResetFromISR( xBacklightTimer, &xHigherPriorityTaskWoken ) != pdPASS )
+ *     {
+ *         // The reset command was not executed successfully.  Take appropriate
+ *         // action here.
+ *     }
+ *
+ *     // Perform the rest of the key processing here.
+ *
+ *     // If xHigherPriorityTaskWoken equals pdTRUE, then a context switch
+ *     // should be performed.  The syntax required to perform a context switch
+ *     // from inside an ISR varies from port to port, and from compiler to
+ *     // compiler.  Inspect the demos for the port you are using to find the
+ *     // actual syntax required.
+ *     if( xHigherPriorityTaskWoken != pdFALSE )
+ *     {
+ *         // Call the interrupt safe yield function here (actual function
+ *         // depends on the FreeRTOS port being used.
+ *     }
+ * }
  */
 #define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( xTimer, tmrCOMMAND_START, xTaskGetTickCountFromISR(), pxHigherPriorityTaskWoken, 0 )
 

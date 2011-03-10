@@ -102,7 +102,7 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  *
  * Timers are created in the dormant state.  The xTimerStart(), xTimerReset(),
  * xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and
- * xTimerChangePeriodFromISR() can all be used to transition a timer into the
+ * xTimerChangePeriodFromISR() API functions can all be used to transition a timer into the
  * active state.
  *
  * @param pcTimerName A text name that is assigned to the timer.  This is done
@@ -114,19 +114,21 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  * specified in milliseconds.  For example, if the timer must expire after 100
  * ticks, then xTimerPeriod should be set to 100.  Alternatively, if the timer
  * must expire after 500ms, then xPeriod can be set to ( 500 / portTICK_RATE_MS )
- * provided configTICK_RATE_HZ is set to less than or equal to 1000.
+ * provided configTICK_RATE_HZ is less than or equal to 1000.
  *
  * @param uxAutoReload If uxAutoReload is set to pdTRUE then the timer will
  * expire repeatedly with a frequency set by the xTimerPeriod parameter.  If
  * uxAutoReload is set to pdFALSE then the timer will be a one-shot timer and
- * will expire once only xTimerPeriod ticks from the time it is started.
+ * enter the dormant state after it expires.
  *
- * @param pvTimerID An identifier to assign to the timer being created.  
- * Typically this would be used to identify the timer that expired within the
- * timers callback function when multiple timers are assigned the same callback
- * function.
+ * @param pvTimerID An identifier that is assigned to the timer being created.  
+ * Typically this would be used in the timer callback function to identify which 
+ * timer expired when the same callback function is assigned to more than one 
+ * timer.
  *
  * @param pxCallbackFunction The function to call when the timer expires.
+ * Callback functions must have the prototype defined by tmrTIMER_CALLBACK, 
+ * which is	"void vCallbackFunction( xTIMER *xTimer );".
  *
  * @return If the timer is successfully create then a handle to the newly
  * created timer is returned.  If the timer cannot be created (because either
@@ -220,12 +222,12 @@ xTimerHandle xTimerCreate( const signed char *pcTimerName, portTickType xTimerPe
 /**
  * void *pvTimerGetTimerID( xTimerHandle xTimer );
  *
- * Returns the ID assigned to the xTimer parameter.  
+ * Returns the ID assigned to the timer.
  * 
  * IDs are assigned to timers using the pvTimerID parameter of the call to
- * xTimerCreated() used to create the timer.
+ * xTimerCreated() that was used to create the timer.
  *
- * If the same callback function is assigned to multiple tasks then the timer
+ * If the same callback function is assigned to multiple timers then the timer
  * ID can be used within the callback function to identify which timer actually
  * expired.
  *
@@ -248,9 +250,10 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *     1) It has been created but not started, or 
  *     2) It is an expired on-shot timer that has not been restarted.
  *
- * Timers can be started using the xTimerStart(), xTimerReset(),
+ * Timers are created in the dormant state.  The xTimerStart(), xTimerReset(),
  * xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and
- * xTimerChangePeriodFromISR() API functions.
+ * xTimerChangePeriodFromISR() API functions can all be used to transition a timer into the
+ * active state.
  *
  * @param xTimer The timer being queried.
  *
@@ -262,7 +265,7 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * // This function assumes xTimer has already been created.
  * void vAFunction( xTimerHandle xTimer )
  * {
- *     if( xTimerIsTimerActive( xTimer ) != pdFALSE ) // or more simply and equivalently "if( xTimerIsTimerActive( xTimer )" )
+ *     if( xTimerIsTimerActive( xTimer ) != pdFALSE ) // or more simply and equivalently "if( xTimerIsTimerActive( xTimer ) )"
  *     {
  *         // xTimer is active, do something.
  *     }
@@ -291,7 +294,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * Starting a timer ensures the timer is in the active state.  If the timer
  * is not stopped, deleted, or reset in the mean time, the callback function
- * associated with the timer will get called 'n 'ticks after xTimerStart() was 
+ * associated with the timer will get called 'n' ticks after xTimerStart() was 
  * called, where 'n' is the timers defined period.
  *
  * It is valid to call xTimerStart() before the scheduler has been started, but
@@ -312,7 +315,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the start command could not be sent to 
  * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
- * be returned if the command was successfully send to the timer command queue.
+ * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system, although the
  * timers expiry time is relative to when xTimerStart() is actually called.  The 
@@ -355,7 +358,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the stop command could not be sent to 
  * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
- * be returned if the command was successfully send to the timer command queue.
+ * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system.  The timer 
  * service/daemon task priority is set by the configTIMER_TASK_PRIORITY 
@@ -396,7 +399,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * that has been specified in milliseconds.  For example, if the timer must 
  * expire after 100 ticks, then xNewPeriod should be set to 100.  Alternatively, 
  * if the timer must expire after 500ms, then xNewPeriod can be set to 
- * ( 500 / portTICK_RATE_MS ) provided configTICK_RATE_HZ is set to less than
+ * ( 500 / portTICK_RATE_MS ) provided configTICK_RATE_HZ is less than
  * or equal to 1000.
  *
  * @param xBlockTime Specifies the time, in ticks, that the calling task should
@@ -407,7 +410,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the change period command could not be 
  * sent to the timer command queue even after xBlockTime ticks had passed.  
- * pdPASS will be returned if the command was successfully send to the timer 
+ * pdPASS will be returned if the command was successfully sent to the timer 
  * command queue.  When the command is actually processed will depend on the 
  * priority of the timer service/daemon task relative to other tasks in the 
  * system.  The timer service/daemon task priority is set by the 
@@ -422,7 +425,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * // started.
  * void vAFunction( xTimerHandle xTimer )
  * {
- *     if( xTimerIsTimerActive( xTimer ) != pdFALSE ) // or more simply and equivalently "if( xTimerIsTimerActive( xTimer )" )
+ *     if( xTimerIsTimerActive( xTimer ) != pdFALSE ) // or more simply and equivalently "if( xTimerIsTimerActive( xTimer ) )"
  *     {
  *         // xTimer is already active - delete it.
  *         xTimerDelete( xTimer );
@@ -441,7 +444,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *         {
  *             // The command could not be sent, even after waiting for 100 ticks
  *             // to pass.  Take appropriate action here.
- *         {
+ *         }
  *     } 
  * }
  */
@@ -463,7 +466,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * The configUSE_TIMERS configuration constant must be set to 1 for 
  * xTimerDelete() to be available.
  *
- * @param xTimer The handle of the timer being stopped.
+ * @param xTimer The handle of the timer being deleted.
  *
  * @param xBlockTime Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the delete command to be 
@@ -473,7 +476,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the delete command could not be sent to 
  * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
- * be returned if the command was successfully send to the timer command queue.
+ * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system.  The timer 
  * service/daemon task priority is set by the configTIMER_TASK_PRIORITY 
@@ -504,7 +507,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * Resetting a timer ensures the timer is in the active state.  If the timer
  * is not stopped, deleted, or reset in the mean time, the callback function
- * associated with the timer will get called 'n 'ticks after xTimerReset() was 
+ * associated with the timer will get called 'n' ticks after xTimerReset() was 
  * called, where 'n' is the timers defined period.
  *
  * It is valid to call xTimerReset() before the scheduler has been started, but
@@ -515,7 +518,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  * The configUSE_TIMERS configuration constant must be set to 1 for xTimerReset()
  * to be available.
  *
- * @param xTimer The handle of the timer being started/restarted.
+ * @param xTimer The handle of the timer being reset/started/restarted.
  *
  * @param xBlockTime Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the reset command to be successfully
@@ -525,7 +528,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the reset command could not be sent to 
  * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
- * be returned if the command was successfully send to the timer command queue.
+ * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system, although the
  * timers expiry time is relative to when xTimerStart() is actually called.  The 
@@ -631,10 +634,10 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the start command could not be sent to 
  * the timer command queue.  pdPASS will be returned if the command was 
- * successfully send to the timer command queue.  When the command is actually 
+ * successfully sent to the timer command queue.  When the command is actually 
  * processed will depend on the priority of the timer service/daemon task 
  * relative to other tasks in the system, although the timers expiry time is 
- * relative to when xTimerStart() is actually called.  The timer service/daemon 
+ * relative to when xTimerStartFromISR() is actually called.  The timer service/daemon 
  * task priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
  *
  * Example usage:
@@ -715,7 +718,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the stop command could not be sent to 
  * the timer command queue.  pdPASS will be returned if the command was 
- * successfully send to the timer command queue.  When the command is actually 
+ * successfully sent to the timer command queue.  When the command is actually 
  * processed will depend on the priority of the timer service/daemon task 
  * relative to other tasks in the system.  The timer service/daemon task 
  * priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
@@ -764,6 +767,14 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @param xTimer The handle of the timer that is having its period changed.
  *
+ * @param xNewPeriod The new period for xTimer. Timer periods are specified in 
+ * tick periods, so the constant portTICK_RATE_MS can be used to convert a time 
+ * that has been specified in milliseconds.  For example, if the timer must 
+ * expire after 100 ticks, then xNewPeriod should be set to 100.  Alternatively, 
+ * if the timer must expire after 500ms, then xNewPeriod can be set to 
+ * ( 500 / portTICK_RATE_MS ) provided configTICK_RATE_HZ is less than
+ * or equal to 1000.
+ *
  * @param pxHigherPriorityTaskWoken The timer service/daemon task spends most
  * of its time in the Blocked state, waiting for messages to arrive on the timer
  * command queue.  Calling xTimerChangePeriodFromISR() writes a message to the 
@@ -779,7 +790,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the command to change the timers period
  * could not be sent to the timer command queue.  pdPASS will be returned if the 
- * command was successfully send to the timer command queue.  When the command 
+ * command was successfully sent to the timer command queue.  When the command 
  * is actually processed will depend on the priority of the timer service/daemon 
  * task relative to other tasks in the system.  The timer service/daemon task 
  * priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
@@ -842,10 +853,10 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * @return pdFAIL will be returned if the reset command could not be sent to 
  * the timer command queue.  pdPASS will be returned if the command was 
- * successfully send to the timer command queue.  When the command is actually 
+ * successfully sent to the timer command queue.  When the command is actually 
  * processed will depend on the priority of the timer service/daemon task 
  * relative to other tasks in the system, although the timers expiry time is 
- * relative to when xTimerStart() is actually called.  The timer service/daemon 
+ * relative to when xTimerResetFromISR() is actually called.  The timer service/daemon 
  * task priority is set by the configTIMER_TASK_PRIORITY configuration constant. 
  *
  * Example usage:

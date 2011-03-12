@@ -62,8 +62,8 @@
  * provide no particular functionality but do provide good examples of how to
  * use the FreeRTOS API.
  *
- * In addition to the standard demo tasks, the following tasks, interrupts and
- * tests are defined and/or created within this file:
+ * In addition to the standard demo tasks, the following tasks, interrupts tests
+ * and timers are defined and/or created within this file:
  *
  * "LCD" task - The LCD task is a 'gatekeeper' task.  It is the only task that
  * is permitted to access the LCD and therefore ensures access to the LCD is
@@ -85,35 +85,24 @@
  * the poll rate to ensure debouncing is not necessary and that the task does
  * not use all the available CPU processing time.
  *
- * Button Interrupt and run time stats display - The select button on the
- * joystick input device is configured to generate an external interrupt.  The
- * handler for this interrupt sends a message to LCD task, which interprets the
- * message to mean, firstly write a message to the LCD, and secondly, generate
- * a table of run time statistics.  The run time statistics are displayed as a
- * table that contains information on how much processing time each task has
- * been allocated since the application started to execute.  This information
- * is provided both as an absolute time, and as a percentage of the total run
- * time.  The information is displayed in the terminal IO window of the IAR
- * embedded workbench.  The online documentation for this demo shows a screen
- * shot demonstrating where the run time stats can be viewed.
+ * Button Interrupt - The select button on the joystick input device is 
+ * configured to generate an external interrupt.  The handler for this interrupt 
+ * sends a message to LCD task, which then prints out a string to say the 
+ * joystick select button was pressed.
  *
  * Idle Hook - The idle hook is a function that is called on each iteration of
  * the idle task.  In this case it is used to place the processor into a low
  * power mode.  Note however that this application is implemented using standard
  * components, and is therefore not optimised for low power operation.  Lower
  * power consumption would be achieved by converting polling tasks into event
- * driven tasks, and slowing the tick interrupt frequency.
+ * driven tasks, and slowing the tick interrupt frequency, etc.
  *
- * "Check" function called from the tick hook - The tick hook is called during
- * each tick interrupt.  It is called from an interrupt context so must execute
- * quickly, not attempt to block, and not call any FreeRTOS API functions that
- * do not end in "FromISR".  In this case the tick hook executes a 'check'
- * function.  This only executes every five seconds.  Its main function is to
- * check that all the standard demo tasks are still operational.  Each time it
- * executes it sends a status code to the LCD task.  The LCD task interprets the
- * code and displays an appropriate message - which will be PASS if no tasks
- * have reported any errors, or a message stating which task has reported an
- * error.
+ * "Check" callback function - Called each time the 'check' timer expires.  The
+ * check timer executes every five seconds.  Its main function is to check that 
+ * all the standard demo tasks are still operational.  Each time it executes it 
+ * sends a status code to the LCD task.  The LCD task interprets the code and 
+ * displays an appropriate message - which will be PASS if no tasks have 
+ * reported any errors, or a message stating which task has reported an error.
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
@@ -122,9 +111,12 @@
  * test loop.  A register containing an unexpected value is indicative of an
  * error in the context switching mechanism and will result in a branch to a
  * null loop - which in turn will prevent the check variable from incrementing
- * any further and allow the check task (described a above) to determine that an
- * error has occurred.  The nature of the reg test tasks necessitates that they
- * are written in assembly code.
+ * any further and allow the check timer callback (described a above) to 
+ * determine that an error has occurred.  The nature of the reg test tasks 
+ * necessitates that they are written in assembly code.
+ *
+ * Tick hook function - called inside the RTOS tick function, this simple 
+ * example does nothing but toggle an LED.
  *
  * *NOTE 1* vApplicationSetupTimerInterrupt() is called by the kernel to let
  * the application set up a timer to generate the tick interrupt.  In this
@@ -138,6 +130,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "queue.h"
 
 /* Hardware includes. */
@@ -149,6 +142,8 @@
 #include "dynamic.h"
 #include "comtest2.h"
 #include "GenQTest.h"
+#include "TimerDemo.h"
+#include "countsem.h"
 
 /* Codes sent within messages to the LCD task so the LCD task can interpret
 exactly what the message it just received was.  These are sent in the
@@ -164,6 +159,8 @@ of the same message and indicate what the status actually is. */
 #define mainERROR_COM_TEST				( pdPASS + 2 )
 #define mainERROR_GEN_QUEUE_TEST		( pdPASS + 3 )
 #define mainERROR_REG_TEST				( pdPASS + 4 )
+#define mainERROR_TIMER_TEST			( pdPASS + 5 )
+#define mainERROR_COUNT_SEM_TEST		( pdPASS + 6 )
 
 /* The length of the queue (the number of items the queue can hold) that is used
 to send messages from tasks and interrupts the the LCD task. */
@@ -178,14 +175,24 @@ to send messages from tasks and interrupts the the LCD task. */
 information.  */
 #define mainCOM_TEST_LED				( 1 )
 
-/* The baud rate used by the comtest tasks described at the top of this file. */
-#define mainCOM_TEST_BAUD_RATE			( 38400 )
+/* The baud rate used by the comtest tasks. */
+#define mainCOM_TEST_BAUD_RATE			( 115200 )
 
 /* The maximum number of lines of text that can be displayed on the LCD. */
 #define mainMAX_LCD_LINES				( 8 )
 
 /* Just used to ensure parameters are passed into tasks correctly. */
 #define mainTASK_PARAMETER_CHECK_VALUE	( ( void * ) 0xDEAD )
+
+/* The base period used by the timer test tasks. */
+#define mainTIMER_TEST_PERIOD			( 50 )
+
+/* The frequency at which the check timer (described in the comments at the top
+of this file) will call its callback function. */
+#define mainCHECK_TIMER_PERIOD			( 5000UL / ( unsigned long ) portTICK_RATE_MS )
+
+/* Misc. */
+#define mainDONT_BLOCK					( 0 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -215,7 +222,12 @@ static void prvButtonPollTask( void *pvParameters );
  * Converts a status message value into an appropriate string for display on
  * the LCD.  The string is written to pcBuffer.
  */
-static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue );
+static void prvGenerateStatusMessage( char *pcBuffer, unsigned long ulStatusValue );
+
+/*
+ * Defines the 'check' functionality as described at the top of this file.  This
+ * function is the callback function for the 'check' timer. */
+static void vCheckTimerCallback( xTimerHandle xTimer );
 
 /*-----------------------------------------------------------*/
 
@@ -229,6 +241,9 @@ volatile unsigned short usRegTest1Counter = 0, usRegTest2Counter = 0;
 the LCD task. */
 static xQueueHandle xLCDQueue = NULL;
 
+/* The 'check' timer, as described at the top of this file. */
+static xTimerHandle xCheckTimer = NULL;
+
 /* The definition of each message sent from tasks and interrupts to the LCD
 task. */
 typedef struct
@@ -239,10 +254,6 @@ typedef struct
 
 /*-----------------------------------------------------------*/
 
-/* The linker script tests the FreeRTOS ports use of 20bit addresses by
-locating all code in high memory.  The following pragma ensures that main
-remains in low memory. */
-#pragma CODE_SECTION(main,".main")
 void main( void )
 {
 	/* Configure the peripherals used by this demo application.  This includes
@@ -261,6 +272,15 @@ void main( void )
 		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 		vStartDynamicPriorityTasks();
 		vStartGenericQueueTasks( mainGENERIC_QUEUE_TEST_PRIORITY );
+		vStartCountingSemaphoreTasks();
+		
+		/* Note that creating the timer test/demo tasks will fill the timer
+		command queue.  This is intentional, and forms part of the test the tasks
+		perform.  It does mean however that, after this function is called, no
+		more timer commands can be sent until after the scheduler has been
+		started (at which point the timer daemon will drained the timer command
+		queue, freeing up space for more commands to be received). */
+		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 		
 		/* Create the LCD, button poll and register test tasks, as described at
 		the top	of this	file. */
@@ -268,6 +288,13 @@ void main( void )
 		xTaskCreate( prvButtonPollTask, ( signed char * ) "BPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		xTaskCreate( vRegTest1Task, ( signed char * ) "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 		xTaskCreate( vRegTest2Task, ( signed char * ) "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
+
+		/* Create the 'check' timer - the timer that periodically calls the
+		check function as described at the top of this file.  Note that, for
+		the reasons stated in the comments above the call to 
+		vStartTimerDemoTask(), that the check timer is not actually started 
+		until after the scheduler has been started. */
+		xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainCHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback ); 
 
 		/* Start the scheduler. */
 		vTaskStartScheduler();
@@ -289,26 +316,32 @@ xQueueMessage xReceivedMessage;
 LCD.  Note this is a static variable to prevent it being allocated on the task
 stack, which is too small to hold such a variable.  The stack size is configured
 when the task is created. */
-static char cBuffer[ 512 ];
+static char cBuffer[ 50 ];
 unsigned char ucLine = 1;
 
+	/* Now the scheduler has been started (it must have been for this task to
+	be running), start the check timer too.  The call to xTimerStart() will
+	block until the command has been accepted. */
+	if( xCheckTimer != NULL )
+	{
+		xTimerStart( xCheckTimer, portMAX_DELAY );
+	}
 
-	/* This function is the only function that uses printf().  If printf() is
-	used from any other function then some sort of mutual exclusion on stdout
-	will be necessary.
-	
-	This is also the only function that is permitted to access the LCD.
+	/* This is the only function that is permitted to access the LCD.
 	
 	First print out the number of bytes that remain in the FreeRTOS heap.  This
-	can be viewed in the terminal IO window within the IAR Embedded Workbench. */
-	printf( "%d bytes of heap space remain unallocated\n", ( int ) xPortGetFreeHeapSize() );
-	fflush( stdout );
+	is done after a short delay to ensure all the demo tasks have created all
+	the objects they are going to use.  */
+	vTaskDelay( mainTIMER_TEST_PERIOD * 10 );
+	sprintf( cBuffer, "%d heap free", ( int ) xPortGetFreeHeapSize() );
+	halLcdPrintLine( cBuffer, ucLine, OVERWRITE_TEXT );
+	ucLine++;
 	
 	/* Just as a test of the port, and for no functional reason, check the task
 	parameter contains its expected value. */
 	if( pvParameters != mainTASK_PARAMETER_CHECK_VALUE )
 	{
-		halLcdPrintLine( "Invalid parameter", ucLine,  OVERWRITE_TEXT );
+		halLcdPrintLine( "Invalid parameter", ucLine, OVERWRITE_TEXT );
 		ucLine++;		
 	}
 
@@ -340,33 +373,13 @@ unsigned char ucLine = 1;
 
 			case mainMESSAGE_BUTTON_SEL		:	/* The select button interrupt
 												just informed this task that the
-												select button was pressed.
-												Generate a table of task run time
-												statistics and output this to
-												the terminal IO window in the IAR
-												embedded workbench. */
-												printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************" );
-												fflush( stdout );
-												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
-												printf( cBuffer );
-												fflush( stdout );
-												
-												/* Also generate and output a
-												table of task states. */
-												printf( "\nTask\t\tState Priority\tStack\t#\n*****************************************" );
-												fflush( stdout );
-												vTaskList( ( signed char * ) cBuffer );
-												printf( cBuffer );
-												fflush( stdout );
-												
-												/* Finally print out a message 
-												to the LCD - in this case the
-												pointer to the string to print
-												is sent directly in the
-												ulMessageValue member of the
-												message.  This just demonstrates
-												a different communication
-												technique. */
+												select button has been pressed.
+												In this case the pointer to the 
+												string to print is sent directly 
+												in the ulMessageValue member of 
+												the	message.  This just 
+												demonstrates a different 
+												communication technique. */
 												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.ulMessageValue );
 												break;
 												
@@ -391,11 +404,11 @@ unsigned char ucLine = 1;
 }
 /*-----------------------------------------------------------*/
 
-static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue )
+static void prvGenerateStatusMessage( char *pcBuffer, unsigned long ulStatusValue )
 {
 	/* Just a utility function to convert a status value into a meaningful
 	string for output onto the LCD. */
-	switch( lStatusValue )
+	switch( ulStatusValue )
 	{
 		case pdPASS						:	sprintf( pcBuffer, "Status = PASS" );
 											break;
@@ -406,6 +419,10 @@ static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue )
 		case mainERROR_GEN_QUEUE_TEST 	:	sprintf( pcBuffer, "Error: Gen Q test" );
 											break;
 		case mainERROR_REG_TEST			:	sprintf( pcBuffer, "Error: Reg test" );
+											break;
+		case mainERROR_TIMER_TEST		:	sprintf( pcBuffer, "Error: Tmr test" );
+											break;
+		case mainERROR_COUNT_SEM_TEST	:	sprintf( pcBuffer, "Error: Count sem" );
 											break;
 		default							:	sprintf( pcBuffer, "Unknown status" );
 											break;
@@ -447,6 +464,68 @@ xQueueMessage xMessage;
 }
 /*-----------------------------------------------------------*/
 
+static void vCheckTimerCallback( xTimerHandle xTimer )
+{
+static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
+
+/* Define the status message that is sent to the LCD task.  By default the
+status is PASS. */
+static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
+
+	/* This is the callback function used by the 'check' timer, as described
+	at the top of this file. */
+
+	/* The parameter is not used. */
+	( void ) xTimer;
+	
+	/* See if the standard demo tasks are executing as expected, changing
+	the message that is sent to the LCD task from PASS to an error code if
+	any tasks set reports an error. */
+	if( xAreComTestTasksStillRunning() != pdPASS )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_COM_TEST;
+	}
+
+	if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_DYNAMIC_TASKS;
+	}
+	
+	if( xAreGenericQueueTasksStillRunning() != pdPASS )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_GEN_QUEUE_TEST;
+	}			
+	
+	if( xAreCountingSemaphoreTasksStillRunning() != pdPASS )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_COUNT_SEM_TEST;
+	}
+	
+	if( xAreTimerDemoTasksStillRunning( ( portTickType ) mainCHECK_TIMER_PERIOD ) != pdPASS )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_TIMER_TEST;
+	}
+
+	/* Check the reg test tasks are still cycling.  They will stop
+	incrementing their loop counters if they encounter an error. */
+	if( usRegTest1Counter == usLastRegTest1Counter )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
+	}
+
+	if( usRegTest2Counter == usLastRegTest2Counter )
+	{
+		xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
+	}
+
+	usLastRegTest1Counter = usRegTest1Counter;
+	usLastRegTest2Counter = usRegTest2Counter;
+	
+	/* This is called from a timer callback so must not block! */
+	xQueueSendToBack( xLCDQueue, &xStatusMessage, mainDONT_BLOCK );
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupHardware( void )
 {
 /* Convert a Hz value to a KHz value, as required by the Init_FLL_Settle()
@@ -480,63 +559,13 @@ unsigned long ulCPU_Clock_KHz = ( configCPU_CLOCK_HZ / 1000UL );
 }
 /*-----------------------------------------------------------*/
 
+
 void vApplicationTickHook( void )
 {
-static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 static unsigned long ulCounter = 0;
-static const unsigned long ulCheckFrequency = 5000UL / portTICK_RATE_MS;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-/* Define the status message that is sent to the LCD task.  By default the
-status is PASS. */
-static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
-
-	/* This is called from within the tick interrupt and performs the 'check'
-	functionality as described in the comments at the top of this file.
-
-	Is it time to perform the 'check' functionality again? */
+	/* Is it time to toggle the LED again? */
 	ulCounter++;
-	if( ulCounter >= ulCheckFrequency )
-	{
-		/* See if the standard demo tasks are executing as expected, changing
-		the message that is sent to the LCD task from PASS to an error code if
-		any tasks set reports an error. */
-		if( xAreComTestTasksStillRunning() != pdPASS )
-		{
-			xStatusMessage.ulMessageValue = mainERROR_COM_TEST;
-		}
-
-		if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
-		{
-			xStatusMessage.ulMessageValue = mainERROR_DYNAMIC_TASKS;
-		}
-		
-		if( xAreGenericQueueTasksStillRunning() != pdPASS )
-		{
-			xStatusMessage.ulMessageValue = mainERROR_GEN_QUEUE_TEST;
-		}			
-
-		/* Check the reg test tasks are still cycling.  They will stop
-		incrementing their loop counters if they encounter an error. */
-		if( usRegTest1Counter == usLastRegTest1Counter )
-		{
-			xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
-		}
-
-		if( usRegTest2Counter == usLastRegTest2Counter )
-		{
-			xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
-		}
-
-		usLastRegTest1Counter = usRegTest1Counter;
-		usLastRegTest2Counter = usRegTest2Counter;
-		
-		/* As this is the tick hook the lHigherPriorityTaskWoken parameter is not
-		needed (a context switch is going to be performed anyway), but it must
-		still be provided. */
-		xQueueSendFromISR( xLCDQueue, &xStatusMessage, &xHigherPriorityTaskWoken );
-		ulCounter = 0;
-	}
 
 	/* Just periodically toggle an LED to show that the tick interrupt is
 	running.  Note that this access LED_PORT_OUT in a non-atomic way, so tasks
@@ -641,4 +670,5 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
+
 

@@ -23,6 +23,7 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\..\Source\tasks.c FreeRTOS_Source
 	copy ..\..\Source\queue.c FreeRTOS_Source
 	copy ..\..\Source\list.c FreeRTOS_Source
+	copy ..\..\Source\timers.c FreeRTOS_Source
 	
 	REM Copy the common header files
 
@@ -38,6 +39,8 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\Common\minimal\dynamic.c Demo_Source\Common_Demo_Files
 	copy ..\Common\minimal\comtest.c Demo_Source\Common_Demo_Files
 	copy ..\Common\minimal\GenQTest.c Demo_Source\Common_Demo_Files
+	copy ..\Common\minimal\TimerDemo.c Demo_Source\Common_Demo_Files
+	copy ..\Common\minimal\countsem.c Demo_Source\Common_Demo_Files
 	
 	REM Copy the common demo file headers.
 	copy ..\Common\include\dynamic.h Demo_Source\Common_Demo_Files\include
@@ -46,5 +49,7 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\Common\include\GenQTest.h Demo_Source\Common_Demo_Files\include
 	copy ..\Common\include\serial.h Demo_Source\Common_Demo_Files\include
 	copy ..\Common\include\partest.h Demo_Source\Common_Demo_Files\include
+	copy ..\Common\include\TimerDemo.h Demo_Source\Common_Demo_Files\include
+	copy ..\Common\include\countsem.h Demo_Source\Common_Demo_Files\include
 	
 : END

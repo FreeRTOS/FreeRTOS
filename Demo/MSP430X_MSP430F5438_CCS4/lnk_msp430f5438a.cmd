@@ -110,7 +110,7 @@ SECTIONS
 /* Original line. */
     .text      : {}>> FLASH | FLASH2   /* CODE                              */
 /* Modified line. */
-/*    .text      : {}>> FLASH2 */              /* CODE                              */
+/*    .text      : {}>> FLASH2 */             /* CODE                              */
 	.main      : {} > FLASH
     .text:_isr : {} > FLASH              /* ISR CODE SPACE                    */
     .cinit     : {} > FLASH              /* INITIALIZATION TABLES             */

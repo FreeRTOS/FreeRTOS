@@ -95,8 +95,8 @@ unsigned portLONG ulBaudRateCount;
 	portENTER_CRITICAL();
 	{
 		/* Create the queues used by the com test task. */
-		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 		/* Reset UART. */
 		UCA1CTL1 |= UCSWRST;
@@ -105,11 +105,11 @@ unsigned portLONG ulBaudRateCount;
 		UCA1CTL1 = UCSSEL0 | UCSSEL1;
 		
 		/* Setup baud rate low byte. */
-		UCA1BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
+		UCA1BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* Setup baud rate high byte. */
 		ulBaudRateCount >>= 8UL;
-		UCA1BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
+		UCA1BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* UCLISTEN sets loopback mode! */
 		UCA1STAT = UCLISTEN;
@@ -152,16 +152,21 @@ signed portBASE_TYPE xReturn;
 	completed and switched itself off. */
 	xReturn = xQueueSend( xCharsForTx, &cOutChar, xBlockTime );
 	UCA1IE |= UCTXIE;
-
+	
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
+/* The implementation of this interrupt is provided to demonstrate the use
+of queues from inside an interrupt service routine.  It is *not* intended to
+be an efficient interrupt implementation.  A real application should make use
+of the DMA.  Or, as a minimum, transmission and reception could use a simple
+RAM ring buffer, and synchronise with a task using a semaphore when a complete
+message has been received or transmitted. */
 #pragma vector=USCI_A1_VECTOR
 interrupt void prvUSCI_A1_ISR( void )
 {
-signed portCHAR cChar;
-portBASE_TYPE xTaskWoken = pdFALSE;
+signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	while( ( UCA1IFG & UCRXIFG ) != 0 )
@@ -177,7 +182,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	{
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xTaskWoken ) == pdTRUE )
+		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 		{
 			/* There was another character queued - transmit it now. */
 			UCA1TXBUF = cChar;
@@ -189,7 +194,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			UCA1IE &= ~UCTXIE;
 		}
 	}
-
+	
 	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	
 	/* If writing to a queue caused a task to unblock, and the unblocked task

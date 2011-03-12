@@ -126,7 +126,6 @@ unsigned long *pulTopOfStack;
 		pusTopOfStack--;
 		pulTopOfStack = ( unsigned long * ) pusTopOfStack;
 		*pulTopOfStack = ( unsigned long ) pxCode;
-		pusTopOfStack = ( unsigned short * ) pulTopOfStack;
 	}
 
 	pusTopOfStack--;

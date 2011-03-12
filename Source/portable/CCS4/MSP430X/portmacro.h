@@ -114,7 +114,7 @@ extern volatile unsigned short usCriticalNesting;								\
 
 #define portEXIT_CRITICAL()														\
 {																				\
-extern volatile unsigned short usCriticalNesting;							\
+extern volatile unsigned short usCriticalNesting;								\
 																				\
 	if( usCriticalNesting > portNO_CRITICAL_SECTION_NESTING )					\
 	{																			\
@@ -141,10 +141,10 @@ extern void vPortYield( void );
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
-#define portBYTE_ALIGNMENT			4
+#define portBYTE_ALIGNMENT			2
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )	
-#define portNOP()	
+#define portNOP()					__no_operation()	
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

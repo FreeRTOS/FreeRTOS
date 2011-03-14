@@ -176,7 +176,7 @@ information.  */
 #define mainCOM_TEST_LED				( 1 )
 
 /* The baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE			( 115200 )
+#define mainCOM_TEST_BAUD_RATE			( 38400 )
 
 /* The maximum number of lines of text that can be displayed on the LCD. */
 #define mainMAX_LCD_LINES				( 8 )

@@ -169,16 +169,14 @@ interrupt void prvUSCI_A1_ISR( void )
 signed char cChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	while( ( UCA1IFG & UCRXIFG ) != 0 )
+	if( ( UCA1IFG & UCRXIFG ) != 0 )
 	{
 		/* Get the character from the UART and post it on the queue of Rxed
 		characters. */
 		cChar = UCA1RXBUF;
 		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
-	}
-	
-	/* If there is a Tx interrupt pending and the tx interrupts are enabled. */
-	if( ( UCA1IFG & UCTXIFG ) != 0 )
+	}	
+	else if( ( UCA1IFG & UCTXIFG ) != 0 )
 	{
 		/* The previous character has been transmitted.  See if there are any
 		further characters waiting transmission. */

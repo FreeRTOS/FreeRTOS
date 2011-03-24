@@ -239,10 +239,10 @@ typedef struct
 
 /*-----------------------------------------------------------*/
 
-/* The linker script tests the FreeRTOS ports use of 20bit addresses by
-locating all code in high memory.  The following pragma ensures that main
-remains in low memory.  The ISR_CODE segment is used for convenience as ISR
-functions are always placed in low memory. */
+/* The linker script can be used to test the FreeRTOS ports use of 20bit 
+addresses by locating all code in high memory.  The following pragma ensures 
+that main remains in low memory when that is done.  The ISR_CODE segment is used 
+for convenience as ISR functions are always placed in low memory. */
 #pragma location="ISR_CODE"
 void main( void )
 {

@@ -157,6 +157,12 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
+/* The implementation of this interrupt is provided to demonstrate the use
+of queues from inside an interrupt service routine.  It is *not* intended to
+be an efficient interrupt implementation.  A real application should make use
+of the DMA.  Or, as a minimum, transmission and reception could use a simple
+RAM ring buffer, and synchronise with a task using a semaphore when a complete
+message has been received or transmitted. */
 #pragma vector=USCI_A1_VECTOR
 static __interrupt void prvUSCI_A1_ISR( void )
 {

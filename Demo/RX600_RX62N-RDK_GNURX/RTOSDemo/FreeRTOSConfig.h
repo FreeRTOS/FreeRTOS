@@ -122,9 +122,9 @@ extern volatile unsigned long ulHighFrequencyTickCount;
 
 /* Override some of the priorities set in the common demo tasks.  This is
 required to ensure flase positive timing errors are not reported. */
-#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 2 )
-#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 3 )
-
+#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
+#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
+#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 3 )
 
 /*-----------------------------------------------------------
  * Ethernet configuration.

@@ -79,7 +79,9 @@
 #include "IntQueueTimer.h"
 
 /* Priorities used by test tasks. */
-#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 2 )
+#ifndef intqHIGHER_PRIORITY
+	#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 2 )
+#endif
 #define intqLOWER_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The number of values to send/receive before checking that all values were

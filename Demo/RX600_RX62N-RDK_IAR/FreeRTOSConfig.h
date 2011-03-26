@@ -94,12 +94,12 @@
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 
-/* 
+/*
 The interrupt priority used by the kernel itself for the tick interrupt and
-the pended interrupt is set by configKERNEL_INTERRUPT_PRIORITY.  This would 
-normally be the lowest priority (1 in this case).  The maximum interrupt 
+the pended interrupt is set by configKERNEL_INTERRUPT_PRIORITY.  This would
+normally be the lowest priority (1 in this case).  The maximum interrupt
 priority from which FreeRTOS API calls can be made is set by
-configMAX_SYSCALL_INTERRUPT_PRIORITY.  Interrupts that use a priority above this 
+configMAX_SYSCALL_INTERRUPT_PRIORITY.  Interrupts that use a priority above this
 will not be effected by anything the kernel is doing.  Interrupts at or below
 this priority can use FreeRTOS API functions - but *only* those that end in
 "FromISR".  Both these constants are defined in 'PriorityDefinitions.h' so they
@@ -126,15 +126,18 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 
+#define configASSERT( x ) if( ( x ) == pdFALSE ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 extern volatile unsigned long ulHighFrequencyTickCount;
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() portNOP() /* Run time stats use the same timer as the high frequency timer test. */
 #define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTickCount
 
 
 /* Override some of the priorities set in the common demo tasks.  This is
-required to ensure flase positive timing errors are not reported. */
-#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 2 )
-#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 3 )
+required to ensure false positive timing errors are not reported. */
+#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
+#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
+#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 3 )
 
 
 /*-----------------------------------------------------------

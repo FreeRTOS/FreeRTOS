@@ -90,16 +90,16 @@ void __attribute__( (interrupt(ipl1), vector(_UART2_VECTOR))) vU2InterruptWrappe
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-unsigned portSHORT usBRG;
+unsigned short usBRG;
 
 	/* Create the queues used by the com test task. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 	/* Configure the UART and interrupts. */
-	usBRG = (unsigned portSHORT)(( (float)configPERIPHERAL_CLOCK_HZ / ( (float)16 * (float)ulWantedBaud ) ) - (float)0.5);
+	usBRG = (unsigned short)(( (float)configPERIPHERAL_CLOCK_HZ / ( (float)16 * (float)ulWantedBaud ) ) - (float)0.5);
 	OpenUART2( UART_EN, UART_RX_ENABLE | UART_TX_ENABLE | UART_INT_TX | UART_INT_RX_CHAR, usBRG );
 	ConfigIntUART2( ( configKERNEL_INTERRUPT_PRIORITY + 1 ) | UART_INT_SUB_PR0 | UART_TX_INT_EN | UART_RX_INT_EN );
 
@@ -110,7 +110,7 @@ unsigned portSHORT usBRG;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;
@@ -128,7 +128,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;
@@ -159,7 +159,7 @@ void vSerialClose( xComPortHandle xPort )
 void vU2InterruptHandler( void )
 {
 /* Declared static to minimise stack use. */
-static portCHAR cChar;
+static char cChar;
 static portBASE_TYPE xHigherPriorityTaskWoken;
 
 	xHigherPriorityTaskWoken = pdFALSE;

@@ -74,7 +74,7 @@ void vInitialiseTimerForIntQueueTest( void )
 
 	T3CON = 0;
 	TMR3 = 0;
-	PR3 = ( unsigned portSHORT ) ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT3_FREQUENCY );
+	PR3 = ( unsigned short ) ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT3_FREQUENCY );
 
 	/* Setup timer 3 interrupt priority to be above the kernel priority. */
 	ConfigIntTimer3( T3_INT_ON | ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 ) );
@@ -92,7 +92,7 @@ void vInitialiseTimerForIntQueueTest( void )
 	/* Do the same for timer 4. */
 	T4CON = 0;
 	TMR4 = 0;
-	PR4 = ( unsigned portSHORT ) ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT4_FREQUENCY );
+	PR4 = ( unsigned short ) ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT4_FREQUENCY );
 
 	/* Setup timer 4 interrupt priority to be above the kernel priority. */
 	ConfigIntTimer4( T4_INT_ON | ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) );

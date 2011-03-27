@@ -166,7 +166,7 @@ interrupt test" interrupt. */
 #define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ( ( configCPU_CLOCK_HZ >> 1 ) / mainTEST_INTERRUPT_FREQUENCY )
 
 /* The number of nano seconds between each core clock. */
-#define mainNS_PER_CLOCK ( ( unsigned portLONG ) ( ( 1.0 / ( double ) ( configCPU_CLOCK_HZ >> 1 ) ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) ( configCPU_CLOCK_HZ >> 1 ) ) * 1000000000.0 ) )
 
 /*-----------------------------------------------------------*/
 
@@ -197,12 +197,12 @@ static xQueueHandle xLCDQueue;
 
 /* Flag used by prvTestTask1() and prvTestTask2() to indicate their status
 (pass/fail). */
-unsigned portLONG ulStatus1 = pdPASS;
+unsigned long ulStatus1 = pdPASS;
 
 /* Variables incremented by prvTestTask1() and prvTestTask2() respectively on 
 each iteration of their function.  This is used to detect either task stopping
 their execution.. */
-unsigned portLONG ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
+unsigned long ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -293,14 +293,14 @@ static void prvSetupHardware( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-unsigned portLONG ulLastRegTest1Value = 0, ulLastRegTest2Value = 0, ulTicksToWait = mainNO_ERROR_PERIOD;
+unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0, ulTicksToWait = mainNO_ERROR_PERIOD;
 portTickType xLastExecutionTime;
 
 /* Buffer into which the high frequency timer count is written as a string. */
-static portCHAR cStringBuffer[ mainMAX_STRING_LENGTH ];
+static char cStringBuffer[ mainMAX_STRING_LENGTH ];
 
 /* The count of the high frequency timer interrupts. */
-extern unsigned portLONG ulHighFrequencyTimerInterrupts;
+extern unsigned long ulHighFrequencyTimerInterrupts;
 xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 
 	/* Setup the high frequency, high priority, timer test.  It is setup here
@@ -391,7 +391,7 @@ void vApplicationStackOverflowHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void _general_exception_handler( unsigned portLONG ulCause, unsigned portLONG ulStatus )
+void _general_exception_handler( unsigned long ulCause, unsigned long ulStatus )
 {
 	/* This overrides the definition provided by the kernel.  Other exceptions 
 	should be handled here. */

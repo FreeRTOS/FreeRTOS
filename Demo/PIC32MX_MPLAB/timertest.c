@@ -68,17 +68,17 @@ void __attribute__( (interrupt(ipl0), vector(_TIMER_2_VECTOR))) vT2InterruptWrap
 /*-----------------------------------------------------------*/
 
 /* Incremented every 20,000 interrupts, so should count in seconds. */
-unsigned portLONG ulHighFrequencyTimerInterrupts = 0;
+unsigned long ulHighFrequencyTimerInterrupts = 0;
 
 /* The frequency at which the timer is interrupting. */
-static unsigned portLONG ulFrequencyHz;
+static unsigned long ulFrequencyHz;
 
 /*-----------------------------------------------------------*/
 
-void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
+void vSetupTimerTest( unsigned short usFrequencyHz )
 {
 	/* Remember the frequency so it can be used from the ISR. */
-	ulFrequencyHz = ( unsigned portLONG ) usFrequencyHz;
+	ulFrequencyHz = ( unsigned long ) usFrequencyHz;
 
 	/* T2 is used to generate interrupts above the kernel and max syscall interrupt
 	priority. */
@@ -86,7 +86,7 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 	TMR2 = 0;
 
 	/* Timer 2 is going to interrupt at usFrequencyHz Hz. */
-	PR2 = ( unsigned portSHORT ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned portLONG ) usFrequencyHz ) - 1 );
+	PR2 = ( unsigned short ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned long ) usFrequencyHz ) - 1 );
 
 	/* Setup timer 2 interrupt priority to be above the kernel priority so 
 	the timer jitter is not effected by the kernel activity. */
@@ -105,7 +105,7 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 
 void vT2InterruptHandler( void )
 {
-static unsigned portLONG ulCalls = 0;
+static unsigned long ulCalls = 0;
 
 	++ulCalls;
 	if( ulCalls >= ulFrequencyHz )

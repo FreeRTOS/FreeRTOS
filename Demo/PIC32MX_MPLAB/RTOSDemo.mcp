@@ -5,8 +5,8 @@ device=PIC32MX360F512L
 [PATH_INFO]
 BuildDirPolicy=BuildDirIsProjectDir
 dir_src=
-dir_bin=
-dir_tmp=
+dir_bin=./output
+dir_tmp=./output
 dir_sin=..\..\Source\portable\MPLAB\PIC32MX;.
 dir_inc=.;.;..\common\include;..\..\source\portable\mplab\pic32mx;..\..\source\include
 dir_lib=

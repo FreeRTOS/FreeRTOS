@@ -180,6 +180,7 @@ portBASE_TYPE xReturn = pdFAIL;
 		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL);
 	}
 
+	configASSERT( xReturn );
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -203,8 +204,6 @@ xTIMER *pxNewTimer;
 			created/initialised. */
 			prvCheckForValidListAndQueue();
 	
-			configASSERT( ( xTimerPeriodInTicks > 0 ) );
-	
 			/* Initialise the timer structure members using the function parameters. */
 			pxNewTimer->pcTimerName = pcTimerName;
 			pxNewTimer->xTimerPeriodInTicks = xTimerPeriodInTicks;
@@ -212,6 +211,12 @@ xTIMER *pxNewTimer;
 			pxNewTimer->pvTimerID = pvTimerID;
 			pxNewTimer->pxCallbackFunction = pxCallbackFunction;
 			vListInitialiseItem( &( pxNewTimer->xTimerListItem ) );
+			
+			traceTIMER_CREATE( pxNewTimer );
+		}
+		else
+		{
+			traceTIMER_CREATE_FAILED();
 		}
 	}
 	
@@ -248,6 +253,8 @@ xTIMER_MESSAGE xMessage;
 		{
 			xReturn = xQueueSendToBackFromISR( xTimerQueue, &xMessage, pxHigherPriorityTaskWoken );
 		}
+		
+		traceTIMER_COMMAND_SEND( xTimer, xCommandID, xOptionalValue, xReturn );
 	}
 	
 	return xReturn;
@@ -263,6 +270,7 @@ portBASE_TYPE xResult;
 	been performed to ensure the list is not empty. */
 	pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
 	vListRemove( &( pxTimer->xTimerListItem ) );
+	traceTIMER_EXPIRED( pxTimer );
 
 	/* If the timer is an auto reload timer then calculate the next
 	expiry time and re-insert the timer in the list of active timers. */
@@ -479,6 +487,8 @@ portTickType xTimeNow;
 			}
 		}
 
+		traceTIMER_COMMAND_RECEIVED( pxTimer, xMessage.xMessageID, xMessage.xMessageValue );
+		
 		switch( xMessage.xMessageID )
 		{
 			case tmrCOMMAND_START :	

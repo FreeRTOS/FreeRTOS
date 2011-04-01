@@ -408,6 +408,26 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceTASK_INCREMENT_TICK( xTickCount )
 #endif
 
+#ifndef traceTIMER_CREATE
+	#define traceTIMER_CREATE( pxNewTimer )
+#endif
+
+#ifndef traceTIMER_CREATE_FAILED
+	#define traceTIMER_CREATE_FAILED()
+#endif
+
+#ifndef traceTIMER_COMMAND_SEND
+	#define traceTIMER_COMMAND_SEND( xTimer, xMessageID, xMessageValueValue, xReturn )
+#endif
+
+#ifndef traceTIMER_EXPIRED
+	#define traceTIMER_EXPIRED( pxTimer )
+#endif
+
+#ifndef traceTIMER_COMMAND_RECEIVED
+	#define traceTIMER_COMMAND_RECEIVED( pxTimer, xMessageID, xMessageValue )
+#endif
+
 #ifndef configGENERATE_RUN_TIME_STATS
 	#define configGENERATE_RUN_TIME_STATS 0
 #endif

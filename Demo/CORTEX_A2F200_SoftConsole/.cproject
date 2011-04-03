@@ -4,7 +4,7 @@
 <cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 <storageModule moduleId="org.eclipse.cdt.core.settings">
 <cconfiguration id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558">
-<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558" moduleId="org.eclipse.cdt.core.settings" name="Blinky">
 <externalSettings/>
 <extensions>
 <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -15,7 +15,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="cdtBuildSystem" version="4.0.0">
-<configuration artifactName="RTOSDemo" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558" name="Debug" parent="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug">
+<configuration artifactName="RTOSDemo" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Very simplistic FreeRTOS demo" id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558" name="Blinky" parent="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug">
 <folderInfo id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558." name="/" resourcePath="">
 <toolChain id="cdt.managedbuild.toolchain.gnu.cross.cortexm3.exe.debug.1726660630" name="Microsemi Cortex-M3 Tools" superClass="cdt.managedbuild.toolchain.gnu.cross.cortexm3.exe.debug">
 <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.cross.cortexm3.exe.debug.1035922613" name="Debug Platform" osList="all" superClass="cdt.managedbuild.target.gnu.platform.cross.cortexm3.exe.debug"/>
@@ -55,7 +55,7 @@
 </folderInfo>
 <sourceEntries>
 <entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS_Source"/>
-<entry excluding="MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang|FreeRTOS_Source" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="FreeTCPIP|WebServer|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang|FreeRTOS_Source" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>

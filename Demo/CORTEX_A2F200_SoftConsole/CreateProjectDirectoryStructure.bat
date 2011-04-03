@@ -16,7 +16,13 @@ IF EXIST FreeRTOS_Source Goto END
 	MD FreeRTOS_Source\portable\GCC
 	MD FreeRTOS_Source\portable\GCC\ARM_CM3
 	MD FreeRTOS_Source\portable\MemMang	
-	
+	MD FreeTCPIP
+	MD FreeTCPIP\http_Common
+	MD FreeTCPIP\apps
+	MD FreeTCPIP\apps\httpd
+	MD FreeTCPIP\net
+	MD FreeTCPIP\sys
+		
 	REM Copy the core kernel files.
 	copy ..\..\Source\tasks.c FreeRTOS_Source
 	copy ..\..\Source\queue.c FreeRTOS_Source
@@ -24,7 +30,6 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\..\Source\timers.c FreeRTOS_Source
 	
 	REM Copy the common header files
-
 	copy ..\..\Source\include\*.* FreeRTOS_Source\include
 	
 	REM Copy the portable layer files
@@ -32,5 +37,22 @@ IF EXIST FreeRTOS_Source Goto END
 	
 	REM Copy the basic memory allocation files
 	copy ..\..\Source\portable\MemMang\heap_1.c FreeRTOS_Source\portable\MemMang
+	
+	REM Copy the core FreeTCPIP (based on uIP) files
+	copy ..\Common\ethernet\FreeTCPIP\psock.c FreeTCPIP
+	copy ..\Common\ethernet\FreeTCPIP\timer.c FreeTCPIP
+	copy ..\Common\ethernet\FreeTCPIP\uip.c FreeTCPIP
+	copy ..\Common\ethernet\FreeTCPIP\uip_arp.c FreeTCPIP
+	
+	REM Copy the FreeTCPIP (based on uIP) header files
+	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\*.h FreeTCPIP\apps\httpd
+	copy ..\Common\ethernet\FreeTCPIP\net\*.h FreeTCPIP\net
+	copy ..\Common\ethernet\FreeTCPIP\sys\*.h FreeTCPIP\sys
+	
+	
+	REM Copy the core HTTPD files
+	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c FreeTCPIP\http_Common
+	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c FreeTCPIP\http_Common
+	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c FreeTCPIP\http_Common	
 	
 : END

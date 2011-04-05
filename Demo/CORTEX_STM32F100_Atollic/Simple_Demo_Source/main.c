@@ -64,9 +64,9 @@ functions.
 The idle hook function:
 The idle hook function queries the amount of FreeRTOS heap space that is
 remaining (see vApplicationIdleHook() defined in this file).  The demo 
-application is configured use 7K or the available 8K of RAM as the FreeRTOS heap.
-Memory is only allocated from this heap during initialisation, and this demo 
-only actually uses 1.6K bytes of the configured 7K available - leaving 5.4K 
+application is configured to use 7K of the available 8K of RAM as the FreeRTOS 
+heap.  Memory is only allocated from this heap during initialisation, and this 
+demo only actually uses 1.6K bytes of the configured 7K available - leaving 5.4K 
 bytes of heap space unallocated.
 
 The main() Function:
@@ -82,9 +82,9 @@ another 200 milliseconds.
 
 The Queue Receive Task:
 The queue receive task is implemented by the prvQueueReceiveTask() function
-in this file.  prvQueueReceiveTask() sits in a loop that causes repeatedly 
-attempt to read data from the queue that was created within main().  When data 
-is received, the task checks the value of the data, and if the value equals 
+in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly blocks 
+on attempts to read data from the queue that was created within main().  When 
+data is received, the task checks the value of the data, and if the value equals 
 the expected 100, toggles the green LED.  The 'block time' parameter passed to 
 the queue receive function specifies that the task should be held in the Blocked 
 state indefinitely to wait for data to be available on the queue.  The queue 

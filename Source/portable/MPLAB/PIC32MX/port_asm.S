@@ -195,11 +195,14 @@ vPortYieldISR:
 	lw			s7, (s7)
 	sw			s5, (s7)
 
-	/* Set the interrupt mask to the max priority that can use the API. */
+	/* Set the interrupt mask to the max priority that can use the API.  The
+	yield handler will only be called at configKERNEL_INTERRUPT_PRIORITY which
+	is below configMAX_SYSCALL_INTERRUPT_PRIORITY - so this can only ever
+	raise the IPL value and never lower it. */
 	di
 	mfc0		s7, _CP0_STATUS
-	ori			s7, s7, 1
-	ori			s6, s7, configMAX_SYSCALL_INTERRUPT_PRIORITY << 10
+	ins 		s7, $0, 10, 6
+	ori			s6, s7, ( configMAX_SYSCALL_INTERRUPT_PRIORITY << 10 ) | 1
 
 	/* This mtc0 re-enables interrupts, but only above 
 	configMAX_SYSCALL_INTERRUPT_PRIORITY. */

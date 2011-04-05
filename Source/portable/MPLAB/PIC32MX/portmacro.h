@@ -84,7 +84,7 @@ extern "C" {
 	typedef unsigned portSHORT portTickType;
 	#define portMAX_DELAY ( portTickType ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
+	typedef unsigned long portTickType;
 	#define portMAX_DELAY ( portTickType ) 0xffffffff
 #endif
 /*-----------------------------------------------------------*/
@@ -96,28 +96,34 @@ extern "C" {
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
-#define portIPL_SHIFT				( 10 )
-#define portALL_IPL_BITS			( 0x3f << portIPL_SHIFT )
+#define portIPL_SHIFT				( 10UL )
+#define portALL_IPL_BITS			( 0x3fUL << portIPL_SHIFT )
 #define portSW0_BIT					( 0x01 << 8 )
 
-#define portDISABLE_INTERRUPTS()											\
-{																			\
-unsigned portLONG ulStatus;													\
-																			\
-	/* Mask interrupts at and below the kernel interrupt priority. */		\
-	ulStatus = _CP0_GET_STATUS();											\
-	ulStatus |= ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT );	\
-	_CP0_SET_STATUS( ulStatus );											\
+/* This clears the IPL bits, then sets them to 
+configMAX_SYSCALL_INTERRUPT_PRIORITY.  This function should not be called
+from an interrupt, so therefore will not be called with an IPL setting
+above configMAX_SYSCALL_INTERRUPT_PRIORITY.  Therefore, when used correctly, the 
+instructions in this macro can only result in the IPL being raised, and 
+therefore never lowered. */
+#define portDISABLE_INTERRUPTS()										\
+{																		\
+unsigned long ulStatus;													\
+																		\
+	/* Mask interrupts at and below the kernel interrupt priority. */	\
+	ulStatus = _CP0_GET_STATUS();										\
+	ulStatus &= ~portALL_IPL_BITS;										\
+	_CP0_SET_STATUS( ( ulStatus | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) ); \
 }
 
-#define portENABLE_INTERRUPTS()												\
-{																			\
-unsigned portLONG ulStatus;													\
-																			\
-	/* Unmask all interrupts. */											\
-	ulStatus = _CP0_GET_STATUS();											\
-	ulStatus &= ~portALL_IPL_BITS;											\
-	_CP0_SET_STATUS( ulStatus );											\
+#define portENABLE_INTERRUPTS()											\
+{																		\
+unsigned long ulStatus;													\
+																		\
+	/* Unmask all interrupts. */										\
+	ulStatus = _CP0_GET_STATUS();										\
+	ulStatus &= ~portALL_IPL_BITS;										\
+	_CP0_SET_STATUS( ulStatus );										\
 }
 
 
@@ -138,7 +144,7 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 
 #define portYIELD()								\
 {												\
-unsigned portLONG ulStatus;						\
+unsigned long ulStatus;							\
 												\
 	/* Trigger software interrupt. */			\
 	ulStatus = _CP0_GET_CAUSE();				\

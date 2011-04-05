@@ -204,7 +204,13 @@ unsigned portBASE_TYPE uxSavedStatusRegister;
 
 	asm volatile ( "di" );
 	uxSavedStatusRegister = _CP0_GET_STATUS() | 0x01;
-	_CP0_SET_STATUS( ( uxSavedStatusRegister | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) );
+	/* This clears the IPL bits, then sets them to 
+	configMAX_SYSCALL_INTERRUPT_PRIORITY.  This function should not be called
+	from an interrupt that has a priority above 
+	configMAX_SYSCALL_INTERRUPT_PRIORITY so, when used correctly, the action
+	can only result in the IPL being unchanged or raised, and therefore never
+	lowered. */
+	_CP0_SET_STATUS( ( ( uxSavedStatusRegister & ( ~portALL_IPL_BITS ) ) ) | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) );
 
 	return uxSavedStatusRegister;
 }

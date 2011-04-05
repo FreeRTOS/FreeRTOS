@@ -406,7 +406,7 @@ void vCoRoutineSchedule( void );
 #define crQUEUE_SEND( xHandle, pxQueue, pvItemToQueue, xTicksToWait, pxResult )			\
 {																						\
 	*( pxResult ) = xQueueCRSend( ( pxQueue) , ( pvItemToQueue) , ( xTicksToWait ) );	\
-	if( *pxResult == errQUEUE_BLOCKED )													\
+	if( *( pxResult ) == errQUEUE_BLOCKED )												\
 	{																					\
 		crSET_STATE0( ( xHandle ) );													\
 		*pxResult = xQueueCRSend( ( pxQueue ), ( pvItemToQueue ), 0 );					\

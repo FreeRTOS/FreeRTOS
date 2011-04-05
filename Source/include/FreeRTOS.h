@@ -173,8 +173,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 #if configMAX_TASK_NAME_LEN < 1
-	#undef configMAX_TASK_NAME_LEN
-	#define configMAX_TASK_NAME_LEN 1
+	#error configMAX_TASK_NAME_LEN must be set to a minimum of 1 in FreeRTOSConfig.h
 #endif
 
 #ifndef INCLUDE_xTaskResumeFromISR
@@ -187,9 +186,6 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 /* The timers module relies on xTaskGetSchedulerState(). */
 #if configUSE_TIMERS == 1
-
-	#undef INCLUDE_xTaskGetSchedulerState
-	#define INCLUDE_xTaskGetSchedulerState 1
 
 	#ifndef configTIMER_TASK_PRIORITY
 		#error If configUSE_TIMERS is set to 1 then configTIMER_TASK_PRIORITY must also be defined.
@@ -209,15 +205,8 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define INCLUDE_xTaskGetSchedulerState 0
 #endif
 
-#if ( configUSE_MUTEXES == 1 )
-	/* xTaskGetCurrentTaskHandle is used by the priority inheritance mechanism
-	within the mutex implementation so must be available if mutexes are used. */
-	#undef INCLUDE_xTaskGetCurrentTaskHandle
-	#define INCLUDE_xTaskGetCurrentTaskHandle 1
-#else
-	#ifndef INCLUDE_xTaskGetCurrentTaskHandle
-		#define INCLUDE_xTaskGetCurrentTaskHandle 0
-	#endif
+#ifndef INCLUDE_xTaskGetCurrentTaskHandle
+	#define INCLUDE_xTaskGetCurrentTaskHandle 0
 #endif
 
 
@@ -231,11 +220,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 
 #ifndef configQUEUE_REGISTRY_SIZE
-	#define configQUEUE_REGISTRY_SIZE 0
+	#define configQUEUE_REGISTRY_SIZE 0U
 #endif
 
-#if configQUEUE_REGISTRY_SIZE < 1
-	#define configQUEUE_REGISTRY_SIZE 0
+#if ( configQUEUE_REGISTRY_SIZE < 1U )
 	#define vQueueAddToRegistry( xQueue, pcName )
 	#define vQueueUnregisterQueue( xQueue )
 #endif

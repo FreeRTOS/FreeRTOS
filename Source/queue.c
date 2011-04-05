@@ -144,6 +144,7 @@ signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const
 signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * Co-routine queue functions differ from task queue functions.  Co-routines are
@@ -1285,7 +1286,7 @@ signed portBASE_TYPE xReturn;
 			xReturn = pdPASS;
 
 			/* Were any co-routines waiting for data to become available? */
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 			{
 				/* In this instance the co-routine could be placed directly
 				into the ready list as we are within a critical section.
@@ -1360,7 +1361,7 @@ signed portBASE_TYPE xReturn;
 			xReturn = pdPASS;
 
 			/* Were any co-routines waiting for space to become available? */
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 			{
 				/* In this instance the co-routine could be placed directly
 				into the ready list as we are within a critical section.
@@ -1399,7 +1400,7 @@ signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvIt
 		co-routine has not already been woken. */
 		if( !xCoRoutinePreviouslyWoken )
 		{
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) )
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 			{
 				if( xCoRoutineRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 				{
@@ -1434,7 +1435,7 @@ signed portBASE_TYPE xReturn;
 
 		if( !( *pxCoRoutineWoken ) )
 		{
-			if( !listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) )
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 			{
 				if( xCoRoutineRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
 				{
@@ -1463,7 +1464,7 @@ signed portBASE_TYPE xReturn;
 
 		/* See if there is an empty space in the registry.  A NULL name denotes
 		a free slot. */
-		for( ux = 0; ux < configQUEUE_REGISTRY_SIZE; ux++ )
+		for( ux = ( unsigned portBASE_TYPE ) 0U; ux < configQUEUE_REGISTRY_SIZE; ux++ )
 		{
 			if( xQueueRegistry[ ux ].pcQueueName == NULL )
 			{
@@ -1486,7 +1487,7 @@ signed portBASE_TYPE xReturn;
 
 		/* See if the handle of the queue being unregistered in actually in the
 		registry. */
-		for( ux = 0; ux < configQUEUE_REGISTRY_SIZE; ux++ )
+		for( ux = ( unsigned portBASE_TYPE ) 0U; ux < configQUEUE_REGISTRY_SIZE; ux++ )
 		{
 			if( xQueueRegistry[ ux ].xHandle == xQueue )
 			{
@@ -1506,7 +1507,7 @@ signed portBASE_TYPE xReturn;
 	void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait )
 	{
 		/* This function should not be called by application code hence the
-		'Restricted' in its name.  It is not part of the public API.  It is 
+		'Restricted' in its name.  It is not part of the public API.  It is
 		designed for use by kernel code, and has special calling requirements.
 		It can result in vListInsert() being called on a list that can only
 		possibly ever have one item in it, so the list will be fast, but even

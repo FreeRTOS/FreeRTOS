@@ -51,20 +51,20 @@
     licensing and training services.
 */
 
+#ifndef SEMAPHORE_H
+#define SEMAPHORE_H
+
 #ifndef INC_FREERTOS_H
 	#error "#include FreeRTOS.h" must appear in source files before "#include semphr.h"
 #endif
-
-#ifndef SEMAPHORE_H
-#define SEMAPHORE_H
 
 #include "queue.h"
 
 typedef xQueueHandle xSemaphoreHandle;
 
-#define semBINARY_SEMAPHORE_QUEUE_LENGTH	( ( unsigned char ) 1 )
-#define semSEMAPHORE_QUEUE_ITEM_LENGTH		( ( unsigned char ) 0 )
-#define semGIVE_BLOCK_TIME					( ( portTickType ) 0 )
+#define semBINARY_SEMAPHORE_QUEUE_LENGTH	( ( unsigned char ) 1U )
+#define semSEMAPHORE_QUEUE_ITEM_LENGTH		( ( unsigned char ) 0U )
+#define semGIVE_BLOCK_TIME					( ( portTickType ) 0U )
 
 
 /**
@@ -105,12 +105,12 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup vSemaphoreCreateBinary vSemaphoreCreateBinary
  * \ingroup Semaphores
  */
-#define vSemaphoreCreateBinary( xSemaphore )		{																								\
-														xSemaphore = xQueueCreate( ( unsigned portBASE_TYPE ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH );	\
-														if( xSemaphore != NULL )																	\
-														{																							\
-															xSemaphoreGive( xSemaphore );															\
-														}																							\
+#define vSemaphoreCreateBinary( xSemaphore )		{																									\
+														( xSemaphore ) = xQueueCreate( ( unsigned portBASE_TYPE ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH );	\
+														if( ( xSemaphore ) != NULL )																	\
+														{																								\
+															xSemaphoreGive( ( xSemaphore ) );															\
+														}																								\
 													}
 
 /**
@@ -178,7 +178,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreTake xSemaphoreTake
  * \ingroup Semaphores
  */
-#define xSemaphoreTake( xSemaphore, xBlockTime )		xQueueGenericReceive( ( xQueueHandle ) xSemaphore, NULL, xBlockTime, pdFALSE )
+#define xSemaphoreTake( xSemaphore, xBlockTime )		xQueueGenericReceive( ( xQueueHandle ) ( xSemaphore ), NULL, ( xBlockTime ), pdFALSE )
 
 /**
  * semphr. h
@@ -271,7 +271,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreTakeRecursive xSemaphoreTakeRecursive
  * \ingroup Semaphores
  */
-#define xSemaphoreTakeRecursive( xMutex, xBlockTime )	xQueueTakeMutexRecursive( xMutex, xBlockTime )
+#define xSemaphoreTakeRecursive( xMutex, xBlockTime )	xQueueTakeMutexRecursive( ( xMutex ), ( xBlockTime ) )
 
 
 /* 
@@ -286,7 +286,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * responsiveness to gain execution speed, whereas the fully featured API
  * sacrifices execution speed to ensure better interrupt responsiveness.
  */
-#define xSemaphoreAltTake( xSemaphore, xBlockTime )		xQueueAltGenericReceive( ( xQueueHandle ) xSemaphore, NULL, xBlockTime, pdFALSE )
+#define xSemaphoreAltTake( xSemaphore, xBlockTime )		xQueueAltGenericReceive( ( xQueueHandle ) ( xSemaphore ), NULL, ( xBlockTime ), pdFALSE )
 
 /**
  * semphr. h
@@ -349,7 +349,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreGive xSemaphoreGive
  * \ingroup Semaphores
  */
-#define xSemaphoreGive( xSemaphore )		xQueueGenericSend( ( xQueueHandle ) xSemaphore, NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
+#define xSemaphoreGive( xSemaphore )		xQueueGenericSend( ( xQueueHandle ) ( xSemaphore ), NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
 
 /**
  * semphr. h
@@ -433,7 +433,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreGiveRecursive xSemaphoreGiveRecursive
  * \ingroup Semaphores
  */
-#define xSemaphoreGiveRecursive( xMutex )	xQueueGiveMutexRecursive( xMutex )
+#define xSemaphoreGiveRecursive( xMutex )	xQueueGiveMutexRecursive( ( xMutex ) )
 
 /* 
  * xSemaphoreAltGive() is an alternative version of xSemaphoreGive().
@@ -447,7 +447,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * responsiveness to gain execution speed, whereas the fully featured API
  * sacrifices execution speed to ensure better interrupt responsiveness.
  */
-#define xSemaphoreAltGive( xSemaphore )		xQueueAltGenericSend( ( xQueueHandle ) xSemaphore, NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
+#define xSemaphoreAltGive( xSemaphore )		xQueueAltGenericSend( ( xQueueHandle ) ( xSemaphore ), NULL, semGIVE_BLOCK_TIME, queueSEND_TO_BACK )
 
 /**
  * semphr. h
@@ -538,7 +538,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreGiveFromISR xSemaphoreGiveFromISR
  * \ingroup Semaphores
  */
-#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )			xQueueGenericSendFromISR( ( xQueueHandle ) xSemaphore, NULL, pxHigherPriorityTaskWoken, queueSEND_TO_BACK )
+#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )			xQueueGenericSendFromISR( ( xQueueHandle ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
 
 /**
  * semphr. h
@@ -703,7 +703,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup xSemaphoreCreateCounting xSemaphoreCreateCounting
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( uxMaxCount, uxInitialCount )
+#define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ) )
 
 
 #endif /* SEMAPHORE_H */

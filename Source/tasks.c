@@ -329,6 +329,7 @@ portTickType xItemValue;																\
 
 /* Callback function prototypes. --------------------------*/
 extern void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
+extern void vApplicationTickHook( void );
 		
 /* File private functions. --------------------------------*/
 
@@ -1298,25 +1299,25 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 			{
 				uxQueue--;
 
-				if( !listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) )
+				if( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) == pdFALSE )
 				{
 					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), tskREADY_CHAR );
 				}
 			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
-			if( !listLIST_IS_EMPTY( pxDelayedTaskList ) )
+			if( listLIST_IS_EMPTY( pxDelayedTaskList ) == pdFALSE )
 			{
 				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, tskBLOCKED_CHAR );
 			}
 
-			if( !listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) )
+			if( listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) == pdFALSE )
 			{
 				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, tskBLOCKED_CHAR );
 			}
 
 			#if( INCLUDE_vTaskDelete == 1 )
 			{
-				if( !listLIST_IS_EMPTY( &xTasksWaitingTermination ) )
+				if( listLIST_IS_EMPTY( &xTasksWaitingTermination ) == pdFALSE )
 				{
 					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xTasksWaitingTermination, tskDELETED_CHAR );
 				}
@@ -1325,7 +1326,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 			#if ( INCLUDE_vTaskSuspend == 1 )
 			{
-				if( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+				if( listLIST_IS_EMPTY( &xSuspendedTaskList ) == pdFALSE )
 				{
 					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &xSuspendedTaskList, tskSUSPENDED_CHAR );
 				}
@@ -1373,25 +1374,25 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 			{
 				uxQueue--;
 
-				if( !listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) )
+				if( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) == pdFALSE )
 				{
 					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), ulTotalRunTime );
 				}
 			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
-			if( !listLIST_IS_EMPTY( pxDelayedTaskList ) )
+			if( listLIST_IS_EMPTY( pxDelayedTaskList ) == pdFALSE )
 			{
 				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, ulTotalRunTime );
 			}
 
-			if( !listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) )
+			if( listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) == pdFALSE )
 			{
 				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, ulTotalRunTime );
 			}
 
 			#if ( INCLUDE_vTaskDelete == 1 )
 			{
-				if( !listLIST_IS_EMPTY( &xTasksWaitingTermination ) )
+				if( listLIST_IS_EMPTY( &xTasksWaitingTermination ) == pdFALSE )
 				{
 					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &xTasksWaitingTermination, ulTotalRunTime );
 				}
@@ -1400,7 +1401,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 			#if ( INCLUDE_vTaskSuspend == 1 )
 			{
-				if( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+				if( listLIST_IS_EMPTY( &xSuspendedTaskList ) == pdFALSE )
 				{
 					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &xSuspendedTaskList, ulTotalRunTime );
 				}
@@ -1512,8 +1513,6 @@ void vTaskIncrementTick( void )
 		scheduler is locked. */
 		#if ( configUSE_TICK_HOOK == 1 )
 		{
-			extern void vApplicationTickHook( void );
-
 			vApplicationTickHook();
 		}
 		#endif
@@ -1521,11 +1520,9 @@ void vTaskIncrementTick( void )
 
 	#if ( configUSE_TICK_HOOK == 1 )
 	{
-		extern void vApplicationTickHook( void );
-
 		/* Guard against the tick hook being called when the missed tick
 		count is being unwound (when the scheduler is being unlocked. */
-		if( uxMissedTicks == 0 )
+		if( uxMissedTicks == ( unsigned portBASE_TYPE ) 0U )
 		{
 			vApplicationTickHook();
 		}
@@ -1550,7 +1547,7 @@ void vTaskIncrementTick( void )
 		{
 			usQueue--;
 
-			while( !listLIST_IS_EMPTY( &( pxReadyTasksLists[ usQueue ] ) ) )
+			while( listLIST_IS_EMPTY( &( pxReadyTasksLists[ usQueue ] ) ) == pdFALSE )
 			{
 				listGET_OWNER_OF_NEXT_ENTRY( pxTCB, &( pxReadyTasksLists[ usQueue ] ) );
 				vListRemove( ( xListItem * ) &( pxTCB->xGenericListItem ) );
@@ -1560,7 +1557,7 @@ void vTaskIncrementTick( void )
 		}while( usQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
 		/* Remove any TCB's from the delayed queue. */
-		while( !listLIST_IS_EMPTY( &xDelayedTaskList1 ) )
+		while( listLIST_IS_EMPTY( &xDelayedTaskList1 ) == pdFALSE )
 		{
 			listGET_OWNER_OF_NEXT_ENTRY( pxTCB, &xDelayedTaskList1 );
 			vListRemove( ( xListItem * ) &( pxTCB->xGenericListItem ) );
@@ -1569,7 +1566,7 @@ void vTaskIncrementTick( void )
 		}
 
 		/* Remove any TCB's from the overflow delayed queue. */
-		while( !listLIST_IS_EMPTY( &xDelayedTaskList2 ) )
+		while( listLIST_IS_EMPTY( &xDelayedTaskList2 ) == pdFALSE )
 		{
 			listGET_OWNER_OF_NEXT_ENTRY( pxTCB, &xDelayedTaskList2 );
 			vListRemove( ( xListItem * ) &( pxTCB->xGenericListItem ) );
@@ -1577,7 +1574,7 @@ void vTaskIncrementTick( void )
 			prvDeleteTCB( ( tskTCB * ) pxTCB );
 		}
 
-		while( !listLIST_IS_EMPTY( &xSuspendedTaskList ) )
+		while( listLIST_IS_EMPTY( &xSuspendedTaskList ) == pdFALSE )
 		{
 			listGET_OWNER_OF_NEXT_ENTRY( pxTCB, &xSuspendedTaskList );
 			vListRemove( ( xListItem * ) &( pxTCB->xGenericListItem ) );
@@ -1591,7 +1588,7 @@ void vTaskIncrementTick( void )
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue )
+	void vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction )
 	{
 	tskTCB *xTCB;
 
@@ -1608,7 +1605,7 @@ void vTaskIncrementTick( void )
 		/* Save the hook function in the TCB.  A critical section is required as
 		the value can be accessed from an interrupt. */
 		taskENTER_CRITICAL();
-			xTCB->pxTaskTag = pxTagValue;
+			xTCB->pxTaskTag = pxHookFunction;
 		taskEXIT_CRITICAL();
 	}
 
@@ -2374,7 +2371,7 @@ tskTCB *pxNewTCB;
 
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskGetCurrentTaskHandle == 1 )
+#if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) )
 
 	xTaskHandle xTaskGetCurrentTaskHandle( void )
 	{
@@ -2392,7 +2389,7 @@ tskTCB *pxNewTCB;
 
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskGetSchedulerState == 1 )
+#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
 
 	portBASE_TYPE xTaskGetSchedulerState( void )
 	{

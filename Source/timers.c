@@ -65,7 +65,7 @@ task.h is included from an application file. */
 
 /* This entire source file will be skipped if the application is not configured
 to include software timer functionality.  This #if is closed at the very bottom
-of this file.  If you want to include software timer functionality then ensure 
+of this file.  If you want to include software timer functionality then ensure
 configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 #if ( configUSE_TIMERS == 1 )
 
@@ -177,7 +177,7 @@ portBASE_TYPE xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
-		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", configTIMER_TASK_STACK_DEPTH, NULL, configTIMER_TASK_PRIORITY, NULL);
+		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, NULL);
 	}
 
 	configASSERT( xReturn );
@@ -274,7 +274,7 @@ portBASE_TYPE xResult;
 
 	/* If the timer is an auto reload timer then calculate the next
 	expiry time and re-insert the timer in the list of active timers. */
-	if( pxTimer->uxAutoReload == pdTRUE )
+	if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
 	{
 		/* This is the only time a timer is inserted into a list using
 		a time relative to anything other than the current time.  It
@@ -499,7 +499,7 @@ portTickType xTimeNow;
 					list.  Process it now. */
 					pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
 
-					if( pxTimer->uxAutoReload == pdTRUE )
+					if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
 					{
 						xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
 						configASSERT( xResult );
@@ -560,7 +560,7 @@ portBASE_TYPE xResult;
 		have not yet been switched. */
 		pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
 
-		if( pxTimer->uxAutoReload == pdTRUE )
+		if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
 		{
 			/* Calculate the reload value, and if the reload value results in
 			the timer going into the same timer list then it has already expired
@@ -603,7 +603,7 @@ static void prvCheckForValidListAndQueue( void )
 			vListInitialise( &xActiveTimerList2 );
 			pxCurrentTimerList = &xActiveTimerList1;
 			pxOverflowTimerList = &xActiveTimerList2;
-			xTimerQueue = xQueueCreate( configTIMER_QUEUE_LENGTH, sizeof( xTIMER_MESSAGE ) );
+			xTimerQueue = xQueueCreate( ( unsigned portBASE_TYPE ) configTIMER_QUEUE_LENGTH, sizeof( xTIMER_MESSAGE ) );
 		}
 	}
 	taskEXIT_CRITICAL();

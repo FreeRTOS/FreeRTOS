@@ -122,7 +122,7 @@ typedef struct xTASK_PARAMTERS
  *
  * \ingroup TaskUtils
  */
-#define tskIDLE_PRIORITY			( ( unsigned portBASE_TYPE ) 0 )
+#define tskIDLE_PRIORITY			( ( unsigned portBASE_TYPE ) 0U )
 
 /**
  * task. h

@@ -465,14 +465,14 @@ tskTCB * pxNewTCB;
 			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( unsigned long ) pxTopOfStack ) & ( ( unsigned long ) ~portBYTE_ALIGNMENT_MASK  ) );
 
 			/* Check the alignment of the calculated top of stack is correct. */
-			configASSERT( !( ( unsigned long ) pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
+			configASSERT( ( ( ( unsigned long ) pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 		}
 		#else
 		{
 			pxTopOfStack = pxNewTCB->pxStack;
 			
 			/* Check the alignment of the stack buffer is correct. */
-			configASSERT( !( ( unsigned long ) pxNewTCB->pxStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
+			configASSERT( ( ( ( unsigned long ) pxNewTCB->pxStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 
 			/* If we want to use stack checking on architectures that use
 			a positive stack growth direction then we also need to store the
@@ -499,7 +499,7 @@ tskTCB * pxNewTCB;
 		#endif
 
 		/* Check the alignment of the initialised stack. */
-		configASSERT( !( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) );
+		configASSERT( ( ( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 
 		if( ( void * ) pxCreatedTask != NULL )
 		{
@@ -1461,6 +1461,8 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 void vTaskIncrementTick( void )
 {
+tskTCB * pxTCB;
+
 	/* Called by the portable layer each time a tick interrupt occurs.
 	Increments the tick then checks to see if the new tick value will cause any
 	tasks to be unblocked. */
@@ -1483,20 +1485,19 @@ void vTaskIncrementTick( void )
 	
 			if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
 			{
-				/* The delayed list is empty.  Set xNextTaskUnblockTime to the
-				maximum possible value so it is extremely unlikely that the
-				if( xTickCount >= xNextTaskUnblockTime ) test will pass
-				until there is an item in the delayed list. */
+				/* The new current delayed list is empty.  Set 
+				xNextTaskUnblockTime to the maximum possible value so it is 
+				extremely unlikely that the	
+				if( xTickCount >= xNextTaskUnblockTime ) test will pass until 
+				there is an item in the delayed list. */
 				xNextTaskUnblockTime = portMAX_DELAY;
 			}
 			else
 			{
-				tskTCB * pxTCB;
-
-				/* The delayed list is not empty, get the value of the item at
-				the head of the delayed list.  This is the time at which the
-				task at the head of the delayed list should be removed from
-				the Blocked state. */
+				/* The new current delayed list is not empty, get the value of 
+				the item at the head of the delayed list.  This is the time at 
+				which the task at the head of the delayed list should be removed 
+				from the Blocked state. */
 				pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
 				xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
 			}
@@ -2066,8 +2067,6 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const 
 	{
 	tskTCB *pxTCB;
 	
-		configASSERT( xRegions );
-
 		if( xTaskToModify == pxCurrentTCB )
 		{
 			xTaskToModify = NULL;
@@ -2164,7 +2163,7 @@ static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
 		vListInsert( ( xList * ) pxDelayedTaskList, ( xListItem * ) &( pxCurrentTCB->xGenericListItem ) );
 
 		/* If the task entering the blocked state was placed at the head of the
-		list of blocked tasks then xNextTaskUnmblockTime needs to be updated
+		list of blocked tasks then xNextTaskUnblockTime needs to be updated
 		too. */
 		if( xTimeToWake < xNextTaskUnblockTime )
 		{

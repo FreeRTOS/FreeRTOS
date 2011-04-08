@@ -273,7 +273,6 @@ PRIVILEGED_DATA static portTickType xNextTaskUnblockTime						= ( portTickType )
  */
 #define prvCheckDelayedTasks()															\
 {																						\
-register tskTCB *pxTCB;																	\
 portTickType xItemValue;																\
 																						\
 	/* Is the tick count greater than or equal to the wake time of the first			\

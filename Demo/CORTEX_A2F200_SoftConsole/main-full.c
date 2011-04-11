@@ -114,7 +114,15 @@ remain on until a full five seconds pass without the button being pressed.
 
 /* Common demo includes. */
 #include "partest.h"
-
+#include "flash.h"
+#include "BlockQ.h"
+#include "death.h"
+#include "blocktim.h"
+#include "semtest.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "recmutex.h"
+#include "TimerDemo.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -127,10 +135,24 @@ converted to ticks using the portTICK_RATE_MS constant. */
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
 the queue empty. */
-#define mainQUEUE_LENGTH					( 1 )
+#define mainQUEUE_LENGTH			( 1 )
 
-#define mainTASK_CONTROLLED_LED				0x01UL
-#define mainTIMER_CONTROLLED_LED			0x02UL
+#define mainCHECK_LED				0x07UL
+#define mainTIMER_CONTROLLED_LED	0x06UL
+#define mainTASK_CONTROLLED_LED		0x05UL
+
+#define mainTIMER_TEST_PERIOD		( 50 )
+
+#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -150,6 +172,14 @@ static void prvQueueSendTask( void *pvParameters );
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
 
+static void vCheckTimerCallback( xTimerHandle xTimer );
+
+/*
+ * This is not a 'standard' partest function, so the prototype is not in
+ * partest.h.
+ */
+void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
+
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
@@ -159,6 +189,12 @@ static xQueueHandle xQueue = NULL;
 function. */
 static xTimerHandle xLEDTimer = NULL;
 
+static xTimerHandle xCheckTimer = NULL;
+
+/* The status message that is displayed at the bottom of the "task stats" web
+page, which is served by the uIP task.  This will report any errors picked up
+by the reg test task. */
+static const char *pcStatusMessage = NULL;
 
 
 /*-----------------------------------------------------------*/
@@ -188,6 +224,22 @@ int main(void)
 									vLEDTimerCallback					/* The callback function that switches the LED off. */
 								);
 
+		xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer", 	/* A text name, purely to help debugging. */
+									( 3000 / portTICK_RATE_MS ),			/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,							/* The ID is not used, so can be set to anything. */
+									vCheckTimerCallback						/* The callback function that inspects the status of all the other tasks. */
+								  );
+
+		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+		vCreateBlockTimeTasks();
+		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+		vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+		vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
+		vStartQueuePeekTasks();
+		vStartRecursiveMutexTasks();
+		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
 	}
@@ -201,6 +253,73 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
+static void vCheckTimerCallback( xTimerHandle xTimer )
+{
+	/* Check the standard demo tasks are running without error. */
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+	{
+		/* Increase the rate at which this task cycles, which will increase the
+		rate at which mainCHECK_LED flashes to give visual feedback that an error
+		has occurred. */
+		pcStatusMessage = "Error: GenQueue";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: QueuePeek\r\n";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreBlockingQueuesStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: BlockQueue\r\n";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: BlockTime\r\n";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: SemTest\r\n";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xIsCreateTaskStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: Death\r\n";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: RecMutex\r\n";
+//		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreTimerDemoTasksStillRunning( ( 3000 / portTICK_RATE_MS ) ) != pdTRUE )
+	{
+		pcStatusMessage = "Error: TimerDemo";
+	}
+
+	/* Toggle the check LED to give an indication of the system status.  If
+	the LED toggles every 5 seconds then everything is ok.  A faster toggle
+	indicates an error. */
+	vParTestToggleLED( mainCHECK_LED );
+
+	if( pcStatusMessage != NULL )
+	{
+		/* The block time is set to zero as a timer callback must *never*
+		attempt to block. */
+		xTimerChangePeriod( xCheckTimer, ( 500 / portTICK_RATE_MS ), 0 );
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void vLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
@@ -208,8 +327,7 @@ static void vLEDTimerCallback( xTimerHandle xTimer )
 	a critical section because it is accessed from multiple tasks, and the
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
-	ulGPIOState |= mainTIMER_CONTROLLED_LED;
-	MSS_GPIO_set_outputs( ulGPIOState );
+	vParTestSetLED( mainTIMER_CONTROLLED_LED, pdFALSE );
 }
 /*-----------------------------------------------------------*/
 
@@ -221,8 +339,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	ulGPIOState &= ~mainTIMER_CONTROLLED_LED;
-	MSS_GPIO_set_outputs( ulGPIOState );
+	vParTestSetLEDFromISR( mainTIMER_CONTROLLED_LED, pdTRUE );
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
@@ -245,6 +362,13 @@ static void prvQueueSendTask( void *pvParameters )
 {
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
+
+	/* The suicide tasks must be created last as they need to know how many
+	tasks were running prior to their creation in order to ascertain whether
+	or not the correct/expected number of tasks are running at any given time. */
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+
+	xTimerStart( xCheckTimer, portMAX_DELAY );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -285,15 +409,7 @@ unsigned long ulReceivedValue;
 			because it is accessed from multiple tasks, and the button interrupt 
 			- in this trivial case, for simplicity, the critical section is 
 			omitted. */
-			if( ( ulGPIOState & mainTASK_CONTROLLED_LED ) != 0 )
-			{
-				ulGPIOState &= ~mainTASK_CONTROLLED_LED;
-			}
-			else
-			{
-				ulGPIOState |= mainTASK_CONTROLLED_LED;
-			}
-			MSS_GPIO_set_outputs( ulGPIOState );
+			vParTestToggleLED( mainTASK_CONTROLLED_LED );
 		}
 	}
 }

@@ -111,6 +111,24 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 }
 /*-----------------------------------------------------------*/
 
+void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+{
+	if( uxLED < partstMAX_LEDS )
+	{
+		if( xValue == pdTRUE )
+		{
+			ulGPIOState &= ~( 1UL << uxLED );
+		}
+		else
+		{
+			ulGPIOState |= ( 1UL << uxLED );
+		}
+
+		MSS_GPIO_set_outputs( ulGPIOState );
+	}
+}
+/*-----------------------------------------------------------*/
+
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	if( uxLED < partstMAX_LEDS )
@@ -119,7 +137,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		interrupt. */
 		taskENTER_CRITICAL();
 		{
-			if( ( ulGPIOState & ( 1UL << uxLED ) != 0UL )
+			if( ( ulGPIOState & ( 1UL << uxLED ) ) != 0UL )
 			{
 				ulGPIOState &= ~( 1UL << uxLED );
 			}

@@ -38,7 +38,7 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\..\Source\portable\GCC\ARM_CM3\*.* FreeRTOS_Source\portable\GCC\ARM_CM3
 	
 	REM Copy the basic memory allocation files
-	copy ..\..\Source\portable\MemMang\heap_1.c FreeRTOS_Source\portable\MemMang
+	copy ..\..\Source\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang
 	
 	REM Copy the core FreeTCPIP (based on uIP) files
 	copy ..\Common\ethernet\FreeTCPIP\psock.c FreeTCPIP

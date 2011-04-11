@@ -66,7 +66,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Common_Demo_Tasks|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|FreeRTOS_Source|MicroSemi_Code/drivers/mss_ethernet_mac|main-full.c|MicroSemi_Code/drivers/mss_pdma|FreeTCPIP|MicroSemi_Code/drivers/mss_spi|Debug/FreeRTOS_Source/portable/MemMang|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mss_uart|WebServer|MicroSemi_Code/drivers/mac" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="Common_Demo_Tasks|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|MicroSemi_Code/drivers/mss_ethernet_mac|main-full.c|MicroSemi_Code/drivers/mss_pdma|FreeTCPIP|MicroSemi_Code/drivers/mss_spi|Debug/FreeRTOS_Source/portable/MemMang|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mss_uart|WebServer|MicroSemi_Code/drivers/mac" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>
@@ -454,12 +454,12 @@
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level.577221940" name="Optimization Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level" valueType="enumerated"/>
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.455246761" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.c.compiler.option.include.paths.1331265337" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Common_Demo_Tasks/include}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/include}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/portable/GCC/ARM_CM3}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_gpio}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_watchdog}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Common_Demo_Tasks/include}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.12052800" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
@@ -485,7 +485,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="main-blinky.c|FreeTCPIP|WebServer|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang|FreeRTOS_Source" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="main-blinky.c|FreeTCPIP|WebServer|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>

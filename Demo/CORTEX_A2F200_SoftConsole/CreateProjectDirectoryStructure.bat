@@ -22,6 +22,8 @@ IF EXIST FreeRTOS_Source Goto END
 	MD FreeTCPIP\apps\httpd
 	MD FreeTCPIP\net
 	MD FreeTCPIP\sys
+	MD Common_Demo_Tasks
+	MD Common_Demo_Tasks\include
 		
 	REM Copy the core kernel files.
 	copy ..\..\Source\tasks.c FreeRTOS_Source
@@ -49,10 +51,34 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\Common\ethernet\FreeTCPIP\net\*.h FreeTCPIP\net
 	copy ..\Common\ethernet\FreeTCPIP\sys\*.h FreeTCPIP\sys
 	
-	
 	REM Copy the core HTTPD files
 	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c FreeTCPIP\http_Common
 	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c FreeTCPIP\http_Common
 	copy ..\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c FreeTCPIP\http_Common	
+
+	REM Copy the common demo files used by this demo
+	copy ..\Common\Minimal\TimerDemo.c Common_Demo_Tasks
+	copy ..\Common\Minimal\BlockQ.c Common_Demo_Tasks
+	copy ..\Common\Minimal\blocktim.c Common_Demo_Tasks
+	copy ..\Common\Minimal\death.c Common_Demo_Tasks
+	copy ..\Common\Minimal\dynamic.c Common_Demo_Tasks
+	copy ..\Common\Minimal\flash.c Common_Demo_Tasks
+	copy ..\Common\Minimal\GenQTest.c Common_Demo_Tasks
+	copy ..\Common\Minimal\QPeek.c Common_Demo_Tasks
+	copy ..\Common\Minimal\recmutex.c Common_Demo_Tasks
+	copy ..\Common\Minimal\semtest.c Common_Demo_Tasks
+	
+	REM Copy the common demo header files
+	copy ..\Common\include\TimerDemo.h Common_Demo_Tasks\include
+	copy ..\Common\include\BlockQ.h Common_Demo_Tasks\include
+	copy ..\Common\include\blocktim.h Common_Demo_Tasks\include
+	copy ..\Common\include\death.h Common_Demo_Tasks\include
+	copy ..\Common\include\dynamic.h Common_Demo_Tasks\include
+	copy ..\Common\include\flash.h Common_Demo_Tasks\include
+	copy ..\Common\include\GenQTest.h Common_Demo_Tasks\include
+	copy ..\Common\include\QPeek.h Common_Demo_Tasks\include
+	copy ..\Common\include\recmutex.h Common_Demo_Tasks\include
+	copy ..\Common\include\semtest.h Common_Demo_Tasks\include
+	copy ..\Common\include\partest.h Common_Demo_Tasks\include
 	
 : END

@@ -28,13 +28,7 @@
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug.1071303895" name="GNU C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug">
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level.510955399" name="Optimization Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level" valueType="enumerated"/>
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.779446663" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.c.compiler.option.include.paths.1134958080" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="../RTOSDemo/FreeRTOS_Source/include"/>
-<listOptionValue builtIn="false" value="../RTOSDemo/FreeRTOS_Source/portable/GCC/ARM_CM3"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/RTOSDemo}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/RTOSDemo/MicroSemi_Code/drivers/mss_gpio}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/RTOSDemo/MicroSemi_Code/drivers/mss_watchdog}&quot;"/>
-</option>
+<option id="gnu.c.compiler.option.include.paths.1134958080" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1656219383" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug.1468299398" name="GNU C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug">
@@ -196,7 +190,7 @@
 </scannerInfoProvider>
 </profile>
 <scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558.89827374;cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558.89827374.">
-<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
+<autodiscovery enabled="false" problemReportingEnabled="false" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
 <profile id="com.actel.softconsole.arm.ActelARMManagedMakePerProjectProfile">
 <buildOutputProvider>
 <openAction enabled="true" filePath=""/>
@@ -204,16 +198,6 @@
 </buildOutputProvider>
 <scannerInfoProvider id="specsFile">
 <runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="arm-none-eabi-gcc" useDefault="true"/>
-<parser enabled="true"/>
-</scannerInfoProvider>
-</profile>
-<profile id="com.actel.softconsole.core8051s.SDCCManagedMakePerProjectProfile">
-<buildOutputProvider>
-<openAction enabled="false" filePath=""/>
-<parser enabled="false"/>
-</buildOutputProvider>
-<scannerInfoProvider id="specsFile">
-<runAction arguments="-V -E -Wp -P -dD ${plugin_state_location}/${specs_file}" command="sdcc" useDefault="true"/>
 <parser enabled="true"/>
 </scannerInfoProvider>
 </profile>
@@ -319,7 +303,7 @@
 </profile>
 </scannerConfigBuildInfo>
 <scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558;cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558.">
-<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
+<autodiscovery enabled="false" problemReportingEnabled="false" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
 <profile id="com.actel.softconsole.arm.ActelARMManagedMakePerProjectProfile">
 <buildOutputProvider>
 <openAction enabled="true" filePath=""/>
@@ -485,7 +469,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="main-blinky.c|FreeTCPIP|WebServer|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="main-blinky.c|FreeTCPIP|WebServer|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>
@@ -615,7 +599,7 @@
 </scannerInfoProvider>
 </profile>
 <scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558.89827374;cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558.89827374.">
-<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
+<autodiscovery enabled="false" problemReportingEnabled="false" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
 <profile id="com.actel.softconsole.arm.ActelARMManagedMakePerProjectProfile">
 <buildOutputProvider>
 <openAction enabled="true" filePath=""/>
@@ -623,16 +607,6 @@
 </buildOutputProvider>
 <scannerInfoProvider id="specsFile">
 <runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="arm-none-eabi-gcc" useDefault="true"/>
-<parser enabled="true"/>
-</scannerInfoProvider>
-</profile>
-<profile id="com.actel.softconsole.core8051s.SDCCManagedMakePerProjectProfile">
-<buildOutputProvider>
-<openAction enabled="false" filePath=""/>
-<parser enabled="false"/>
-</buildOutputProvider>
-<scannerInfoProvider id="specsFile">
-<runAction arguments="-V -E -Wp -P -dD ${plugin_state_location}/${specs_file}" command="sdcc" useDefault="true"/>
 <parser enabled="true"/>
 </scannerInfoProvider>
 </profile>
@@ -738,7 +712,7 @@
 </profile>
 </scannerConfigBuildInfo>
 <scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558;cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.1240723558.">
-<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
+<autodiscovery enabled="false" problemReportingEnabled="false" selectedProfileId="com.actel.softconsole.cortexm3.ActelCortexM3ManagedMakePerProjectProfile"/>
 <profile id="com.actel.softconsole.arm.ActelARMManagedMakePerProjectProfile">
 <buildOutputProvider>
 <openAction enabled="true" filePath=""/>

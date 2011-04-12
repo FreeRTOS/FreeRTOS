@@ -104,7 +104,7 @@
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		( 3 )
 #define configTIMER_QUEUE_LENGTH		10
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
@@ -116,19 +116,14 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
-/* Override some of the priorities set in the common demo tasks.  This is
-required to ensure false positive timing errors are not reported. */
-#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
-#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
-
 /* Use the system definition, if there is one */
 #ifdef __NVIC_PRIO_BITS
 	#define configPRIO_BITS       __NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS       4        /* 15 priority levels */
+	#define configPRIO_BITS       5        /* 15 priority levels */
 #endif
 
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			15
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0x1f
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
 
 /* The lowest priority. */

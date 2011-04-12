@@ -113,19 +113,25 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 
 void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-	if( uxLED < partstMAX_LEDS )
-	{
-		if( xValue == pdTRUE )
-		{
-			ulGPIOState &= ~( 1UL << uxLED );
-		}
-		else
-		{
-			ulGPIOState |= ( 1UL << uxLED );
-		}
+unsigned portBASE_TYPE uxInterruptFlags;
 
-		MSS_GPIO_set_outputs( ulGPIOState );
+	uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
+	{
+		if( uxLED < partstMAX_LEDS )
+		{
+			if( xValue == pdTRUE )
+			{
+				ulGPIOState &= ~( 1UL << uxLED );
+			}
+			else
+			{
+				ulGPIOState |= ( 1UL << uxLED );
+			}
+
+			MSS_GPIO_set_outputs( ulGPIOState );
+		}
 	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
 }
 /*-----------------------------------------------------------*/
 

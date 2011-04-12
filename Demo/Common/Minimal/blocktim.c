@@ -67,11 +67,11 @@
 
 /* Task priorities.  Allow these to be overridden. */
 #ifndef bktPRIMARY_PRIORITY
-	#define bktPRIMARY_PRIORITY			( 3 )
+	#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
 #endif
 
 #ifndef bktSECONDARY_PRIORITY
-	#define bktSECONDARY_PRIORITY		( 2 )
+	#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
 #endif
 
 /* Task behaviour. */

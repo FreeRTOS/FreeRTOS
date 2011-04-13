@@ -108,6 +108,9 @@ void __attribute__( (interrupt(ipl1), vector(_CORE_SOFTWARE_0_VECTOR))) vPortYie
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
+	/* Ensure byte alignment is maintained when leaving this function. */
+	pxTopOfStack--;
+
 	*pxTopOfStack = (portSTACK_TYPE) 0xDEADBEEF;
 	pxTopOfStack--;
 

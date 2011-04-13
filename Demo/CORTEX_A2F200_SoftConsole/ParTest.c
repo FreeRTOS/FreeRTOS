@@ -159,3 +159,21 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 }
 /*-----------------------------------------------------------*/
 
+long lParTestGetLEDState( unsigned long ulLED )
+{
+long lReturn = pdFALSE;
+
+	if( ulLED < partstMAX_LEDS )
+	{
+		taskENTER_CRITICAL();
+		{
+			if( ( ulGPIOState & ( 1UL << ulLED ) ) == 0UL )
+			{
+				lReturn = pdTRUE;
+			}
+		}
+	}
+
+	return lReturn;
+}
+/*-----------------------------------------------------------*/

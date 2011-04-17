@@ -14,6 +14,7 @@ extern "C" {
 #endif 
 
 #include "FreeRTOS.h"
+#include "task.h"
 
 #include "crc32.h"
 
@@ -111,16 +112,15 @@ MSS_MAC_init
 )
 {
     const uint8_t mac_address[6] = { DEFAULT_MAC_ADDRESS };
-
     int32_t a;
 
     /* Try to reset chip */
     MAC_BITBAND->CSR0_SWR = 1u;
-    
-    while ( 1u == MAC_BITBAND->CSR0_SWR )
+
+    do
     {
-        ;
-    }
+    	vTaskDelay( 10 );
+    } while ( 1u == MAC_BITBAND->CSR0_SWR );
 
     /* Check reset values of some registers to constrol
      * base address validity */
@@ -145,7 +145,7 @@ MSS_MAC_init
 
     for( a = 0; a < TX_RING_SIZE; a++ )
     {
-        g_mss_mac.tx_descriptors[a].buffer_1 = (uint32_t)g_mss_mac.tx_buffers[a];
+        g_mss_mac.tx_descriptors[a].buffer_1 = ( unsigned long ) NULL; /* _RB_ used to be "(uint32_t)g_mss_mac.tx_buffers[a];" but set to NULL now to implement a zero copy scheme. */
     }
     g_mss_mac.tx_descriptors[TX_RING_SIZE - 1].descriptor_1 |= TDES1_TER;
 
@@ -197,11 +197,7 @@ MSS_MAC_init
     /* Set default MAC address and reset mac filters */
    	MAC_memcpy( g_mss_mac.mac_address, mac_address, 6u );
    	MSS_MAC_set_mac_filters( 0u, NULL_buffer );
-
-
-    /* Start receiving and transmission */
-    MAC_start_receiving();
-    MAC_start_transmission();
+   	MAC_BITBAND->CSR6_RA = 1; /* Receive all. */
 }
 
 
@@ -265,9 +261,6 @@ MSS_MAC_configure
     PHY_set_link_type( (uint8_t)
         ((((configuration & MSS_MAC_CFG_TRANSMIT_THRESHOLD_MODE) != 0u) ? MSS_MAC_LINK_STATUS_100MB : 0u ) |
         (((configuration & MSS_MAC_CFG_FULL_DUPLEX_MODE) != 0u) ? MSS_MAC_LINK_STATUS_FDX : 0u )) );
-
-    MAC_start_transmission();
-    MAC_start_receiving();
 
     MSS_MAC_auto_setup_link();
 }
@@ -460,10 +453,8 @@ MSS_MAC_tx_packet
         {
 	        pacLen = (uint16_t)MSS_TX_BUFF_SIZE;
         }
-        MAC_memcpy(
-	        (uint8_t*)
-	        g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].buffer_1,
-	        pacData, (uint32_t)pacLen );
+
+        g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].buffer_1 = ( unsigned long ) pacData;
 
         /* update counters */
         desc = g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0;

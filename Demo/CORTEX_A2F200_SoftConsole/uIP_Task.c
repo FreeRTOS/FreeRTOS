@@ -57,7 +57,8 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
+#include "queue.h"
+#include "timers.h"
 
 /* uip includes. */
 #include "net/uip.h"
@@ -69,7 +70,28 @@
 /* Demo includes. */
 #include "ParTest.h"
 
-#include "EMAC.h"
+/* Hardware driver includes. */
+#include "mss_ethernet_mac_regs.h"
+#include "mss_ethernet_mac.h"
+
+/* The buffer used by the uIP stack to both receive and send.  This points to
+one of the Ethernet buffers when its actually in use. */
+unsigned char *uip_buf = NULL;
+
+static const unsigned char ucMACAddress[] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
+
+#define uipARP_TIMER				0
+#define uipPERIODIC_TIMER			1
+
+#define uipEVENT_QUEUE_LENGTH		10
+
+#define uipETHERNET_RX_EVENT		0x01UL
+#define	uipETHERNET_TX_EVENT		0x02UL
+#define uipARP_TIMER_EVENT			0x04UL
+#define uipPERIODIC_TIMER_EVENT		0x08UL
+#define uipAPPLICATION_SEND_EVENT	0x10UL
+
+#define uipDONT_BLOCK				0UL
 
 /*-----------------------------------------------------------*/
 
@@ -90,6 +112,29 @@
 static void prvSetMACAddress( void );
 
 /*
+ * Perform any uIP initialisation required to ready the stack for http
+ * processing.
+ */
+static void prvInitialise_uIP( void );
+
+/*
+ * Handles Ethernet interrupt events.
+ */
+static void prvEMACEventListener( unsigned long ulISREvents );
+
+static void prvUIPTimerCallback( xTimerHandle xTimer );
+
+/*
+ * Initialise the MAC hardware.
+ */
+static void prvInitEmac( void );
+
+void vEMACWrite( void );
+
+unsigned long ulEMACRead( void );
+long lEMACWaitForLink( void );
+
+/*
  * Port functions required by the uIP stack.
  */
 void clock_init( void );
@@ -97,8 +142,10 @@ clock_time_t clock_time( void );
 
 /*-----------------------------------------------------------*/
 
-/* The semaphore used by the ISR to wake the uIP task. */
-xSemaphoreHandle xEMACSemaphore = NULL;
+/* The queue used to send TCP/IP events to the uIP stack. */
+xQueueHandle xEMACEventQueue = NULL;
+
+static unsigned long ulUIP_Events = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -117,32 +164,15 @@ clock_time_t clock_time( void )
 void vuIP_Task( void *pvParameters )
 {
 portBASE_TYPE i, xDoneSomething;
-uip_ipaddr_t xIPAddr;
-struct timer periodic_timer, arp_timer;
+unsigned long ulNewEvent;
 
 	( void ) pvParameters;
 
-	/* Initialise the uIP stack. */
-	timer_set( &periodic_timer, configTICK_RATE_HZ / 2 );
-	timer_set( &arp_timer, configTICK_RATE_HZ * 10 );
-	uip_init();
-	uip_ipaddr( &xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
-	uip_sethostaddr( &xIPAddr );
-	uip_ipaddr( &xIPAddr, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 );
-	uip_setnetmask( &xIPAddr );
-	prvSetMACAddress();
-	httpd_init();
-
-	/* Create the semaphore used to wake the uIP task. */
-	vSemaphoreCreateBinary( xEMACSemaphore );
+	/* Initialise the uIP stack, configuring for web server usage. */
+	prvInitialise_uIP();
 
 	/* Initialise the MAC. */
-	vInitEmac();
-
-	while( lEMACWaitForLink() != pdPASS )
-    {
-        vTaskDelay( uipINIT_WAIT );
-    }
+	prvInitEmac();
 
 	for( ;; )
 	{
@@ -186,9 +216,10 @@ struct timer periodic_timer, arp_timer;
 			}
 		}
 
-		if( timer_expired( &periodic_timer ) && ( uip_buf != NULL ) )
+		if( ( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL ) && ( uip_buf != NULL ) )
 		{
-			timer_reset( &periodic_timer );
+			ulUIP_Events &= ~uipPERIODIC_TIMER_EVENT;
+
 			for( i = 0; i < UIP_CONNS; i++ )
 			{
 				uip_periodic( i );
@@ -204,9 +235,9 @@ struct timer periodic_timer, arp_timer;
 			}
 
 			/* Call the ARP timer function every 10 seconds. */
-			if( timer_expired( &arp_timer ) )
+			if( ( ulUIP_Events & uipARP_TIMER_EVENT ) != 0 )
 			{
-				timer_reset( &arp_timer );
+				ulUIP_Events &= ~uipARP_TIMER_EVENT;
 				uip_arp_timer();
 			}
 			
@@ -215,11 +246,8 @@ struct timer periodic_timer, arp_timer;
 		
 		if( xDoneSomething == pdFALSE )
 		{
-			/* We did not receive a packet, and there was no periodic
-			processing to perform.  Block for a fixed period.  If a packet
-			is received during this period we will be woken by the ISR
-			giving us the Semaphore. */
-			xSemaphoreTake( xEMACSemaphore, configTICK_RATE_HZ / 20 );
+			xQueueReceive( xEMACEventQueue, &ulNewEvent, portMAX_DELAY );
+			ulUIP_Events |= ulNewEvent;
 		}
 	}
 }
@@ -281,4 +309,130 @@ char *c;
 		}
 	}
 }
+/*-----------------------------------------------------------*/
 
+static void prvInitialise_uIP( void )
+{
+uip_ipaddr_t xIPAddr;
+xTimerHandle xARPTimer, xPeriodicTimer;
+
+	uip_init();
+	uip_ipaddr( &xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
+	uip_sethostaddr( &xIPAddr );
+	uip_ipaddr( &xIPAddr, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 );
+	uip_setnetmask( &xIPAddr );
+	prvSetMACAddress();
+	httpd_init();
+
+	/* Create the queue used to sent TCP/IP events to the uIP stack. */
+	xEMACEventQueue = xQueueCreate( uipEVENT_QUEUE_LENGTH, sizeof( unsigned long ) );
+
+	/* Create and start the uIP timers. */
+	xARPTimer = xTimerCreate( 	( const signed char * const ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
+								( 500 / portTICK_RATE_MS ), /* Timer period. */
+								pdTRUE, /* Autor-reload. */
+								( void * ) uipARP_TIMER,
+								prvUIPTimerCallback
+							);
+
+	xPeriodicTimer = xTimerCreate( 	( const signed char * const ) "PeriodicTimer",
+									( 5000 / portTICK_RATE_MS ),
+									pdTRUE, /* Autor-reload. */
+									( void * ) uipPERIODIC_TIMER,
+									prvUIPTimerCallback
+								);
+
+	configASSERT( xARPTimer );
+	configASSERT( xPeriodicTimer );
+
+	xTimerStart( xARPTimer, portMAX_DELAY );
+	xTimerStart( xPeriodicTimer, portMAX_DELAY );
+}
+/*-----------------------------------------------------------*/
+
+static void prvEMACEventListener( unsigned long ulISREvents )
+{
+long lHigherPriorityTaskWoken = pdFALSE;
+unsigned long ulUIPEvents = 0UL;
+
+	configASSERT( xEMACEventQueue );
+
+	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_SEND ) != 0UL )
+	{
+		/* Handle send event. */
+		ulUIPEvents |= uipETHERNET_TX_EVENT;
+	}
+
+	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_RECEIVED ) != 0UL )
+	{
+		/* Wake the uIP task as new data has arrived. */
+		ulUIPEvents |= uipETHERNET_RX_EVENT;
+		xQueueSendFromISR( xEMACEventQueue, &ulUIPEvents, &lHigherPriorityTaskWoken );
+	}
+
+	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
+}
+/*-----------------------------------------------------------*/
+
+static void prvInitEmac( void )
+{
+unsigned long ulMACCfg;
+const unsigned char ucPHYAddress = 1;
+
+	MSS_MAC_init( ucPHYAddress );
+
+	MSS_MAC_set_callback( prvEMACEventListener );
+
+    /* Setup the EMAC and the NVIC for MAC interrupts. */
+    NVIC_SetPriority( EthernetMAC_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+    NVIC_EnableIRQ( EthernetMAC_IRQn );
+}
+/*-----------------------------------------------------------*/
+
+void vEMACWrite( void )
+{
+	MSS_MAC_tx_packet( uip_buf, uip_len, 0 );
+}
+/*-----------------------------------------------------------*/
+
+unsigned long ulEMACRead( void )
+{
+	return MSS_MAC_rx_packet( &uip_buf, ( MSS_RX_BUFF_SIZE + 4 ), 0UL );
+}
+/*-----------------------------------------------------------*/
+
+long lEMACWaitForLink( void )
+{
+long lReturn = pdFAIL;
+unsigned long ulStatus;
+
+	ulStatus = MSS_MAC_link_status();
+	if( ( ulStatus & ( unsigned long ) MSS_MAC_LINK_STATUS_LINK ) != 0UL )
+	{
+		lReturn = pdPASS;
+	}
+
+	return lReturn;
+}
+/*-----------------------------------------------------------*/
+
+static void prvUIPTimerCallback( xTimerHandle xTimer )
+{
+static const unsigned long ulARPTimerExpired = uipARP_TIMER_EVENT;
+static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;
+
+	/* This is a time callback, so calls to xQueueSend() must not attempt to
+	block. */
+	switch( ( int ) pvTimerGetTimerID( xTimer ) )
+	{
+		case uipARP_TIMER		:	xQueueSend( xEMACEventQueue, &ulARPTimerExpired, uipDONT_BLOCK );
+									break;
+
+		case uipPERIODIC_TIMER	:	xQueueSend( xEMACEventQueue, &ulPeriodicTimerExpired, uipDONT_BLOCK );
+									break;
+
+		default					:  	/* Should not get here. */
+									break;
+	}
+}
+/*-----------------------------------------------------------*/

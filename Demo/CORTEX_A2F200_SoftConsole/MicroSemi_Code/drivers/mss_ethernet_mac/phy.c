@@ -20,6 +20,9 @@ extern "C" {
 
 #include "phy.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 extern MAC_instance_t g_mss_mac;
 
 /***************************** MDIO FUNCTIONS *********************************/
@@ -267,7 +270,6 @@ void PHY_auto_negotiate( void )
 {
 	int32_t a;
 	uint16_t reg;
-    int32_t exit = 1;
 
 	reg = MDIO_read( PHYREG_MIIMCR );
 	MDIO_write( PHYREG_MIIMCR,
@@ -275,10 +277,12 @@ void PHY_auto_negotiate( void )
 		MIIMCR_RESTART_AUTONEGOTIATION |
 		reg) );
 
-	for(a=0; (a<1000) && (exit); a++) {
+	for( ;; ) {
 		reg = MDIO_read( PHYREG_MIIMSR );
 		if( (reg & MIIMSR_ANC) != 0 ) {
-			exit = 0;
+			break;
+		} else {
+			vTaskDelay( 200 );
 		}
 	}
 }

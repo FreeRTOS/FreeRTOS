@@ -439,6 +439,9 @@
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.455246761" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.c.compiler.option.include.paths.1331265337" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_ethernet_mac}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/I2C}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/OLED}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeTCPIP/apps/httpd}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/WebServer}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeTCPIP}&quot;"/>
@@ -472,7 +475,7 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="WebServer/httpd-fsdata.c|main-blinky.c|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ethernet_mac|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+<entry excluding="WebServer/httpd-fsdata.c|main-blinky.c|MicroSemi_Code/drivers/mss_uart|MicroSemi_Code/drivers/mss_spi|MicroSemi_Code/drivers/mss_pdma|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mac|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|Debug/FreeRTOS_Source/portable/MemMang" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 </sourceEntries>
 </configuration>
 </storageModule>

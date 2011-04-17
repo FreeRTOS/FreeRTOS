@@ -427,7 +427,7 @@ MSS_MAC_prepare_rx_descriptor
 int32_t
 MSS_MAC_rx_packet
 (
-    uint8_t *pacData,
+    uint8_t **pacData,
     uint16_t pacLen,
     uint32_t time_out
 );

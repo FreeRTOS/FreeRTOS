@@ -17,7 +17,7 @@ extern "C" {
 /**
  * Default MAC address
  */
-#define DEFAULT_MAC_ADDRESS             0xC0u,0xB1u,0x3Cu,0x88u,0x88u,0x88u
+#define DEFAULT_MAC_ADDRESS             configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5
 #define BROADCAST_MAC_ADDRESS 			0xFFu,0xFFu,0xFFu,0xFFu,0xFFu,0xFFu
 
 /**

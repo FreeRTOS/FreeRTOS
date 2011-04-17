@@ -111,6 +111,7 @@
 /* Microsemi drivers/libraries includes. */
 #include "mss_gpio.h"
 #include "mss_watchdog.h"
+#include "OLED.h"
 
 /* Common demo includes. */
 #include "partest.h"
@@ -153,6 +154,10 @@ the queue empty. */
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
+/* The WEB server uses string handling functions, which in turn use a bit more
+stack than most of the other tasks. */
+#define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -179,6 +184,11 @@ static void vCheckTimerCallback( xTimerHandle xTimer );
  * partest.h.
  */
 void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
+
+/*
+ * Contains the implementation of the WEB server.
+ */
+extern void vuIP_Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -239,6 +249,10 @@ int main(void)
 		vStartQueuePeekTasks();
 		vStartRecursiveMutexTasks();
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+
+		/* The web server task. */
+		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -423,11 +437,18 @@ static void prvSetupHardware( void )
 	/* Configure the GPIO for the LEDs. */
 	vParTestInitialise();
 
+	/* Initialise the display. */
+    OLED_init();
+
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( GPIO8_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
     NVIC_EnableIRQ( GPIO8_IRQn );
     MSS_GPIO_config( MSS_GPIO_8, MSS_GPIO_INPUT_MODE | MSS_GPIO_IRQ_EDGE_NEGATIVE );
     MSS_GPIO_enable_irq( MSS_GPIO_8 );
+
+    /* Setup the EMAC and the NVIC for MAC interrupts. */
+    NVIC_SetPriority( EthernetMAC_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+    NVIC_EnableIRQ( EthernetMAC_IRQn );
 }
 /*-----------------------------------------------------------*/
 

@@ -12,7 +12,7 @@
 #ifndef OLED_H_
 #define OLED_H_
 
-#include "../BSP/i2c_driver/i2c.h"
+#include "i2c.h"
 
 #define OLED_HORIZ_SCROLL_ON    0x01
 #define OLED_HORIZ_SCROLL_OFF   0x00
@@ -83,6 +83,7 @@ struct oled_data
 /***************************************************************************//**
   The OLED_init function initializes the OLED display.
  */
+void vOLEDInit( void );
 void OLED_init( void );
 
 /***************************************************************************//**

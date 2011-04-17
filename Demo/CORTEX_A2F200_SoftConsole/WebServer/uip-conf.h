@@ -114,11 +114,7 @@ typedef unsigned short uip_stats_t;
  *
  * \hideinitializer
  */
-#if __LITTLE_ENDIAN__ == 1
-	#define UIP_CONF_BYTE_ORDER      UIP_LITTLE_ENDIAN
-#else
-	#define UIP_CONF_BYTE_ORDER      UIP_BIG_ENDIAN
-#endif
+#define UIP_CONF_BYTE_ORDER      LITTLE_ENDIAN
 
 /**
  * Logging on or off
@@ -159,8 +155,6 @@ typedef unsigned short uip_stats_t;
 /*#include "webclient.h"*/
 
 #define CCIF
-#define CC_REGISTER_ARG
-
 #endif /* __UIP_CONF_H__ */
 
 /** @} */

@@ -13,6 +13,7 @@
 extern "C" {
 #endif 
 
+#include "FreeRTOS.h"
 
 #include "crc32.h"
 
@@ -568,7 +569,7 @@ MSS_MAC_rx_pckt_size
 int32_t
 MSS_MAC_rx_packet
 (
-    uint8_t *pacData,
+    unsigned char **pacData,
     uint16_t pacLen,
     uint32_t time_out
 )
@@ -577,9 +578,6 @@ MSS_MAC_rx_packet
     int8_t exit=0;
 
     ASSERT( MAC_test_instance() == MAC_OK );
-
-    ASSERT( pacData != NULL_buffer );
-
     ASSERT(  (time_out == MSS_MAC_BLOCKING) ||
     			(time_out == MSS_MAC_NONBLOCKING) ||
     			((time_out >= 1) && (time_out <= 0x01000000UL)) );
@@ -619,10 +617,7 @@ MSS_MAC_rx_packet
         	return MAC_NOT_ENOUGH_SPACE;
         }
        
-        MAC_memcpy( pacData,
-    	        (uint8_t*)
-    	        g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1,
-    	        (uint32_t)frame_length );
+        *pacData = ( unsigned char * ) g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1;
 
         MSS_MAC_prepare_rx_descriptor();
        

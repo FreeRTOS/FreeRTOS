@@ -56,8 +56,15 @@
 #include "task.h"
 #include "semphr.h"
 
+/* Hardware driver includes. */
+#include "mss_ethernet_mac.h"
+
 /* uIP includes. */
 #include "net/uip.h"
+
+static void prvEMACEventListener( unsigned long ulEvents );
+
+#define emacPHY_ADDRESS 1
 
 /*-----------------------------------------------------------*/
 
@@ -65,31 +72,74 @@
 one of the Ethernet buffers when its actually in use. */
 unsigned char *uip_buf = NULL;
 
+const unsigned char ucMACAddress[] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
+
 /*-----------------------------------------------------------*/
 
 void vInitEmac( void )
 {
+unsigned long ulMACCfg;
+
+	MSS_MAC_init( emacPHY_ADDRESS );
+
+	ulMACCfg = MSS_MAC_get_configuration();
+
+	ulMACCfg &= ~( MSS_MAC_CFG_STORE_AND_FORWARD | MSS_MAC_CFG_PASS_BAD_FRAMES );
+	ulMACCfg |=	( MSS_MAC_CFG_RECEIVE_ALL | MSS_MAC_CFG_PROMISCUOUS_MODE | MSS_MAC_CFG_FULL_DUPLEX_MODE | MSS_MAC_CFG_TRANSMIT_THRESHOLD_MODE | MSS_MAC_CFG_THRESHOLD_CONTROL_00 );
+	MSS_MAC_configure( ulMACCfg );
+	MSS_MAC_set_mac_address( ( unsigned char *) ucMACAddress );
+	MSS_MAC_set_callback( prvEMACEventListener );
 }
 /*-----------------------------------------------------------*/
 
 void vEMACWrite( void )
 {
+	MSS_MAC_tx_packet( uip_buf, uip_len, 0 );
 }
 /*-----------------------------------------------------------*/
 
 unsigned long ulEMACRead( void )
 {
-unsigned long ulBytesReceived = 0UL;
-
-	return ulBytesReceived;
+	return MSS_MAC_rx_packet( &uip_buf, ( MSS_RX_BUFF_SIZE + 4 ), 0UL );
 }
 /*-----------------------------------------------------------*/
 
 long lEMACWaitForLink( void )
 {
-long lReturn = 0;
-	
+long lReturn = pdFAIL;
+unsigned long ulStatus;
+
+	ulStatus = MSS_MAC_link_status();
+	if( ( ulStatus & ( unsigned long ) MSS_MAC_LINK_STATUS_LINK ) != 0UL )
+	{
+		lReturn = pdPASS;
+	}
+
 	return lReturn;
 }
 /*-----------------------------------------------------------*/
+
+static void prvEMACEventListener( unsigned long ulEvents )
+{
+extern xSemaphoreHandle xEMACSemaphore;
+long lHigherPriorityTaskWoken = pdFALSE;
+
+	if( xEMACSemaphore != NULL )
+	{
+		if( ( ulEvents & MSS_MAC_EVENT_PACKET_SEND ) != 0UL )
+		{
+			/* Handle send event. */
+		}
+
+		if( ( ulEvents & MSS_MAC_EVENT_PACKET_RECEIVED ) != 0UL )
+		{
+			/* Wake the uIP task as new data has arrived. */
+			xSemaphoreGiveFromISR( xEMACSemaphore, &lHigherPriorityTaskWoken );
+		}
+	}
+
+	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
+}
+
+
 

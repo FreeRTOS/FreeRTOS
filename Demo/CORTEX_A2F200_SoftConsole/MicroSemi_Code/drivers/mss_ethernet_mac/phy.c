@@ -268,7 +268,6 @@ void PHY_reset( void )
  */
 void PHY_auto_negotiate( void )
 {
-	int32_t a;
 	uint16_t reg;
 
 	reg = MDIO_read( PHYREG_MIIMCR );

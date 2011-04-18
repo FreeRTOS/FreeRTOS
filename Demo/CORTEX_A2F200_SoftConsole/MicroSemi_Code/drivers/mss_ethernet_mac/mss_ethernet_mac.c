@@ -51,6 +51,12 @@ extern "C" {
 #define MAC_TIME_OUT			  (-6)
 #define MAC_TOO_SMALL_PACKET      (-7)
 
+/* Allocating this many buffers will always ensure there is one free as, even
+though TX_RING_SIZE is set to two, the two Tx descriptors will only ever point
+to the same buffer. */
+#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE
+#define macBUFFER_SIZE 1500
+
 /***************************************************************/
 MAC_instance_t g_mss_mac;
 
@@ -75,6 +81,7 @@ static const int8_t ErrorMessages[][MAX_ERROR_MESSAGE_WIDTH] = {
 static MAC_instance_t* 	NULL_instance;
 static uint8_t* 		NULL_buffer;
 static MSS_MAC_callback_t 	NULL_callback;
+unsigned char *uip_buf = NULL;
 
 /**************************** INTERNAL FUNCTIONS ******************************/
 
@@ -95,6 +102,20 @@ static void     MAC_memset(uint8_t *s, uint8_t c, uint32_t n);
 static void     MAC_memcpy(uint8_t *dest, const uint8_t *src, uint32_t n);
 static void     MAC_memset_All(MAC_instance_t *s, uint32_t c);
 
+static unsigned char *MAC_obtain_buffer( void );
+static void MAC_release_buffer( unsigned char *pcBufferToRelease );
+
+#if( TX_RING_SIZE != 2 )
+	#error This uIP Ethernet driver required TX_RING_SIZE to be set to 2
+#endif
+
+/* Buffers that will dynamically be allocated to/from the Tx and Rx descriptors. */
+static unsigned char ucMACBuffers[ macNUM_BUFFERS ][ macBUFFER_SIZE ];
+
+/* Each array position indicated whether or not the buffer of the same index
+is currently allocated to a descriptor (pdFALSE) or is free for use (pdTRUE). */
+static unsigned char ucMACBufferFree[ macNUM_BUFFERS ];
+
 /***************************************************************************//**
  * Initializes the Ethernet Controller.
  * This function will prepare the Ethernet Controller for first time use in a
@@ -114,6 +135,12 @@ MSS_MAC_init
     const uint8_t mac_address[6] = { DEFAULT_MAC_ADDRESS };
     int32_t a;
 
+	/* To start with all buffers are free. */
+	for( a = 0; a < macNUM_BUFFERS; a++ )
+	{
+		ucMACBufferFree[ a ] = pdTRUE;
+	}
+	
     /* Try to reset chip */
     MAC_BITBAND->CSR0_SWR = 1u;
 
@@ -139,13 +166,19 @@ MSS_MAC_init
         /* Give the ownership to the MAC */
         g_mss_mac.rx_descriptors[a].descriptor_0 = RDES0_OWN;
         g_mss_mac.rx_descriptors[a].descriptor_1 = (MSS_RX_BUFF_SIZE << RDES1_RBS1_OFFSET);
-        g_mss_mac.rx_descriptors[a].buffer_1 = (uint32_t)g_mss_mac.rx_buffers[a];
+		
+		/* Allocate a buffer to the descriptor, then mark the buffer as in use
+		(not free). */
+        g_mss_mac.rx_descriptors[a].buffer_1 = ( unsigned long ) &( ucMACBuffers[ a ][ 0 ] );
+		ucMACBufferFree[ a ] = pdFALSE;
     }
     g_mss_mac.rx_descriptors[RX_RING_SIZE-1].descriptor_1 |= RDES1_RER;
 
     for( a = 0; a < TX_RING_SIZE; a++ )
     {
-        g_mss_mac.tx_descriptors[a].buffer_1 = ( unsigned long ) NULL; /* _RB_ used to be "(uint32_t)g_mss_mac.tx_buffers[a];" but set to NULL now to implement a zero copy scheme. */
+		/* Buffers only get allocated to the Tx buffers when something is
+		actually tranmitted. */
+        g_mss_mac.tx_descriptors[a].buffer_1 = ( unsigned long ) NULL;
     }
     g_mss_mac.tx_descriptors[TX_RING_SIZE - 1].descriptor_1 |= TDES1_TER;
 
@@ -343,31 +376,13 @@ MSS_MAC_get_configuration( void )
 
 
 /***************************************************************************//**
-  Sends a packet to the Ethernet Controller.
+  Sends a packet from the uIP stack to the Ethernet Controller.
   The MSS_MAC_tx_packet() function is used to send a packet to the MSS Ethernet
-  MAC. This function writes pacLen bytes of the packet contained in pacData into
+  MAC. This function writes uip_len bytes of the packet contained in uip_buf into
   the transmit FIFO and then activates the transmitter for this packet. If space
-  is available in the FIFO, the function will return once pacLen bytes of the
+  is available in the FIFO, the function will return once pac_len bytes of the
   packet have been placed into the FIFO and the transmitter has been started.
-  This function will not wait for the transmission to complete. If space is not
-  available in FIFO, the function will keep trying until time_out expires. The
-  function will wait for the transmission to complete when the time_out parameter
-  is set to MSS_MAC_BLOCKING.
- 
-  @param pacData
-    The pacData parameter is a pointer to the packet data to be transmitted.
-    
-  @param pacLen
-    The pacLen parameter is the number of bytes in the packet to be transmitted.
-    
-  @param time_out
-    The time_out parameter is the timeout value for the transmission in milliseconds.
-    The time_out parameter value can be one of the following values:
-    • Unsigned integer greater than 0 and less than 0x01000000
-    • MSS_MAC_BLOCKING – there will be no timeout. 
-    • MSS_MAC_NONBLOCKING – the function will return immediately if the MSS Ethernet
-      MAC does not have any available transmit descriptor. This would happen when
-      several packets are already queued into the MSS Ethernet MAC transmit descriptor FIFO.
+  This function will not wait for the transmission to complete. 
 
   @return
     The function returns zero if a timeout occurs otherwise it returns size of the packet.
@@ -378,119 +393,101 @@ MSS_MAC_get_configuration( void )
 int32_t
 MSS_MAC_tx_packet
 (
-    const uint8_t *pacData,
-    uint16_t pacLen,
-    uint32_t time_out
+    unsigned short usLength
 )
 {
 	uint32_t desc;
+	unsigned long ulDescriptor;
     int32_t error = MAC_OK;
+	extern unsigned char *uip_buf;
 
     ASSERT( MAC_test_instance() == MAC_OK );
 
-    ASSERT( pacData != NULL_buffer );
+    ASSERT( uip_buf != NULL_buffer );
 
-	ASSERT( pacLen >= 12 );
+	ASSERT( usLength >= 12 );
 
     if( (g_mss_mac.flags & FLAG_EXCEED_LIMIT) == 0u )
     {
-		ASSERT( pacLen <= MSS_MAX_PACKET_SIZE );
+		ASSERT( usLength <= MSS_MAX_PACKET_SIZE );
 	}
 
-    ASSERT(  (time_out == MSS_MAC_BLOCKING) ||
-    			(time_out == MSS_MAC_NONBLOCKING) ||
-    			((time_out >= 1) && (time_out <= 0x01000000uL)) );
-
-    if( time_out == MSS_MAC_NONBLOCKING )
-    {
-    	/* Check if current descriptor is free */
-    	if(((g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0) & TDES0_OWN) == TDES0_OWN )
-        {
-			error = MAC_BUFFER_IS_FULL;
-    	}
-    }
-    else
+	/* Check if second descriptor is free, if it is then the first must
+	also be free. */
+	if(((g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == TDES0_OWN )
 	{
-	    /* Wait until descriptor is free */
-	    if( time_out != MSS_MAC_BLOCKING ) {
-    	    MAC_set_time_out( time_out );
-	    }
-        
-        while( (((g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0) & TDES0_OWN) == TDES0_OWN )
-                && (error == MAC_OK) )
-	    {
-		     /* transmit poll demand */
-            MAC->CSR1 = 1u;
-            
-	    	if(time_out != MSS_MAC_BLOCKING){
-	    		if(MAC_get_time_out() == 0u) {
-	    			error = MAC_TIME_OUT;
-	    		}
-	    	}
-	    }
+		error = MAC_BUFFER_IS_FULL;
 	}
 
 	if( error == MAC_OK ) {
+		/* Assumed TX_RING_SIZE == 2. */
+		for( ulDescriptor = 0; ulDescriptor < TX_RING_SIZE; ulDescriptor++ )
+		{
+			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 = 0u;
 
-		g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 = 0u;
+			if( (g_mss_mac.flags & FLAG_CRC_DISABLE) != 0u ) {
+				g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 |= TDES1_AC;
+			}
 
-		if( (g_mss_mac.flags & FLAG_CRC_DISABLE) != 0u ) {
-			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |=	TDES1_AC;
+			/* Every buffer can hold a full frame so they are always first and last
+			   descriptor */
+			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 |= TDES1_LS | TDES1_FS;
+
+			/* set data size */
+			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 |= usLength;
+
+			/* reset end of ring */
+			g_mss_mac.tx_descriptors[TX_RING_SIZE-1].descriptor_1 |= TDES1_TER;
+
+			if( usLength > MSS_TX_BUFF_SIZE ) /* FLAG_EXCEED_LIMIT */
+			{
+				usLength = (uint16_t)MSS_TX_BUFF_SIZE;
+			}
+
+			/* The data buffer is assigned to the Tx descriptor. */
+			g_mss_mac.tx_descriptors[ ulDescriptor ].buffer_1 = ( unsigned long ) uip_buf;
+
+			/* update counters */
+			desc = g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_0;
+			if( (desc & TDES0_LO) != 0u ) {
+				g_mss_mac.statistics.tx_loss_of_carrier++;
+			}
+			if( (desc & TDES0_NC) != 0u ) {
+				g_mss_mac.statistics.tx_no_carrier++;
+			}
+			if( (desc & TDES0_LC) != 0u ) {
+				g_mss_mac.statistics.tx_late_collision++;
+			}
+			if( (desc & TDES0_EC) != 0u ) {
+				g_mss_mac.statistics.tx_excessive_collision++;
+			}
+			if( (desc & TDES0_UF) != 0u ) {
+				g_mss_mac.statistics.tx_underflow_error++;
+			}
+			g_mss_mac.statistics.tx_collision_count +=
+				(desc >> TDES0_CC_OFFSET) & TDES0_CC_MASK;
+
+			/* Give ownership of descriptor to the MAC */
+			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_0 = TDES0_OWN;
+
+			g_mss_mac.tx_desc_index = 0; 
 		}
-
-        /* Every buffer can hold a full frame so they are always first and last
-           descriptor */
-        g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_LS | TDES1_FS;
-
-        /* set data size */
-        g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= pacLen;
-
-        /* reset end of ring */
-        g_mss_mac.tx_descriptors[TX_RING_SIZE-1].descriptor_1 |= TDES1_TER;
-
-        /* copy data into buffer */
-        if( pacLen > MSS_TX_BUFF_SIZE ) /* FLAG_EXCEED_LIMIT */
-        {
-	        pacLen = (uint16_t)MSS_TX_BUFF_SIZE;
-        }
-
-        g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].buffer_1 = ( unsigned long ) pacData;
-
-        /* update counters */
-        desc = g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0;
-        if( (desc & TDES0_LO) != 0u ) {
-	        g_mss_mac.statistics.tx_loss_of_carrier++;
-        }
-        if( (desc & TDES0_NC) != 0u ) {
-	        g_mss_mac.statistics.tx_no_carrier++;
-        }
-        if( (desc & TDES0_LC) != 0u ) {
-	        g_mss_mac.statistics.tx_late_collision++;
-        }
-        if( (desc & TDES0_EC) != 0u ) {
-	        g_mss_mac.statistics.tx_excessive_collision++;
-        }
-        if( (desc & TDES0_UF) != 0u ) {
-	        g_mss_mac.statistics.tx_underflow_error++;
-        }
-        g_mss_mac.statistics.tx_collision_count +=
-	        (desc >> TDES0_CC_OFFSET) & TDES0_CC_MASK;
-
-        /* Give ownership of descriptor to the MAC */
-        g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0 = RDES0_OWN;
-
-        g_mss_mac.tx_desc_index = (g_mss_mac.tx_desc_index + 1u) % (uint32_t)TX_RING_SIZE;
-
-        /* Start transmission */
-        MAC_start_transmission();
-
-        /* transmit poll demand */
-        MAC->CSR1 = 1u;
     }
-    
+
+	/* Start transmission */
+	MAC_start_transmission();
+
+	/* transmit poll demand */
+	MAC->CSR1 = 1u;
+
+	
+	
     if (error == MAC_OK)
     {
-        error = (int32_t)pacLen;
+		/* The buffer uip_buf was pointing to is now under the control of the 
+		MAC (it is being transmitted).  Set uip_buf to point to a free buffer. */
+		uip_buf = MAC_obtain_buffer();
+        error = (int32_t)usLength;
     }
     else
     {
@@ -535,24 +532,11 @@ MSS_MAC_rx_pckt_size
 
 
 /***************************************************************************//**
- * Receives a packet from the Ethernet Controller.
+ * Receives a packet from the Ethernet Controller into the uIP stack.
  * This function reads a packet from the receive FIFO of the controller and
- * places it into pacData. If time_out parameter is zero the function will return
- * immediately (after the copy operation if data is available. Otherwise the function
- * will keep trying to read till time_out expires or data is read, if MSS_MAC_BLOCKING
- * value is given as time_out, function will wait for the reception to complete.
- *
- * @param instance      Pointer to a MAC_instance_t structure
- * @param pacData       The pointer to the packet data.
- * @param pacLen        The pacLen parameter is the size in bytes of the pacData
- *                      buffer where the received data will be copied.
- * @param time_out      Time out value in milli seconds for receiving.
- * 					    if value is #MSS_MAC_BLOCKING, there will be no time out.
- * 					    if value is #MSS_MAC_NONBLOCKING, function will return immediately
- * 					    if there is no packet waiting.
- * 					    Otherwise value must be greater than 0 and smaller than
- * 					    0x01000000.
- * @return              Size of packet if packet fits in pacData.
+ * places it into uip_buf.
+ 
+ * @return              Size of packet if packet fits in uip_buf.
  * 					    0 if there is no received packet.
  * @see   MAC_rx_pckt_size()
  * @see   MAC_tx_packet()
@@ -560,42 +544,16 @@ MSS_MAC_rx_pckt_size
 int32_t
 MSS_MAC_rx_packet
 (
-    unsigned char **pacData,
-    uint16_t pacLen,
-    uint32_t time_out
+	void
 )
 {
 	uint16_t frame_length=0u;
-    int8_t exit=0;
 
     ASSERT( MAC_test_instance() == MAC_OK );
-    ASSERT(  (time_out == MSS_MAC_BLOCKING) ||
-    			(time_out == MSS_MAC_NONBLOCKING) ||
-    			((time_out >= 1) && (time_out <= 0x01000000UL)) );
-
+    
     MAC_dismiss_bad_frames();
 
-    /* wait for a packet */
-	if( time_out != MSS_MAC_BLOCKING ) {
-		if( time_out == MSS_MAC_NONBLOCKING ) {
-    		MAC_set_time_out( 0u );
-		} else {
-    		MAC_set_time_out( time_out );
-		}
-	}
-
-    while( ((g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 &
-    	RDES0_OWN) != 0u) && (exit == 0) )
-    {
-    	if( time_out != MSS_MAC_BLOCKING )
-    	{
-    		if( MAC_get_time_out() == 0u ) {
-    			exit = 1;
-    		}
-    	}
-    }
-
-    if(exit == 0)
+    if( (g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 & RDES0_OWN) == 0u )
     {
         frame_length = ( (
     	    g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 >>
@@ -604,14 +562,21 @@ MSS_MAC_rx_packet
         /* strip crc */
         frame_length -= 4u;
 
-        if( frame_length > pacLen ) {
+        if( frame_length > macBUFFER_SIZE ) {
         	return MAC_NOT_ENOUGH_SPACE;
         }
        
-        *pacData = ( unsigned char * ) g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1;
+		/* uip_buf is about to point to the buffer that contains the received
+		data, mark the buffer that uip_buf is currently pointing to as free
+		again. */
+		MAC_release_buffer( uip_buf );
+        uip_buf = ( unsigned char * ) g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1;
+		
+		/* The buffer the Rx descriptor was pointing to is now in use by the
+		uIP stack - allocate a new buffer to the Rx descriptor. */
+		g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1 = ( unsigned long ) MAC_obtain_buffer();
 
         MSS_MAC_prepare_rx_descriptor();
-       
     }
     return ((int32_t)frame_length);
 }
@@ -1444,10 +1409,10 @@ static void MAC_memset_All(MAC_instance_t *s, uint32_t c)
    	MAC_memset( s->mac_address, (uint8_t)c, 6u );
    	MAC_memset( s->mac_filter_data, (uint8_t)c, 90u );
     s->phy_address = (uint8_t)c;
-    for(count = 0; count<RX_RING_SIZE ;count++)
-    {
-        MAC_memset(s->rx_buffers[count], (uint8_t)c, (MSS_RX_BUFF_SIZE + 4u) );
-    }
+//    for(count = 0; count<RX_RING_SIZE ;count++)
+//    {
+//        MAC_memset(s->rx_buffers[count], (uint8_t)c, (MSS_RX_BUFF_SIZE + 4u) );
+//    }
     s->rx_desc_index =c;
     for(count = 0; count<RX_RING_SIZE ;count++)
     {
@@ -1475,10 +1440,10 @@ static void MAC_memset_All(MAC_instance_t *s, uint32_t c)
     s->statistics.tx_no_carrier = c;
     s->statistics.tx_underflow_error = c;
     s->time_out_value = c;
-    for(count = 0; count < TX_RING_SIZE ;count++)
-    {
-        MAC_memset( s->tx_buffers[count], (uint8_t)c, MSS_TX_BUFF_SIZE );
-    }
+//    for(count = 0; count < TX_RING_SIZE ;count++)
+//    {
+//        MAC_memset( s->tx_buffers[count], (uint8_t)c, MSS_TX_BUFF_SIZE );
+//    }
     s->tx_desc_index = c;
     for(count = 0; count < TX_RING_SIZE ;count++)
     {
@@ -1504,6 +1469,59 @@ static void MAC_memcpy(uint8_t *dest, const uint8_t *src, uint32_t n)
         d[n] = src[n];
     }
 }
+
+void MSS_MAC_TxBufferCompleted( void )
+{
+unsigned char *pxTransmittedBuffer;
+
+	/* Was it the second transmission that has completed? */
+	if( ( g_mss_mac.tx_descriptors[ 1 ].descriptor_0 & TDES0_OWN ) == 0UL )
+	{
+		pxTransmittedBuffer = ( unsigned char * ) g_mss_mac.tx_descriptors[ 1 ].buffer_1;
+
+		/* The buffer has been transmitted and is no longer in use. */
+		MAC_release_buffer( pxTransmittedBuffer );
+	}
+}
+
+static unsigned char *MAC_obtain_buffer( void )
+{
+long lIndex;
+unsigned char *pcReturn = NULL;
+
+	/* Find and return the address of a buffer that is not being used.  Mark
+	the buffer as now in use. */
+	for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
+	{
+		if( ucMACBufferFree[ lIndex ] == pdTRUE )
+		{
+			pcReturn = &( ucMACBuffers[ lIndex ][ 0 ] );
+			break;
+		}
+	}
+	
+	configASSERT( pcReturn );
+	return pcReturn;
+}
+
+void MAC_release_buffer( unsigned char *pucBufferToRelease )
+{
+long lIndex;
+
+	/* uip_buf is going to point to a different buffer - first ensure the buffer
+	it is currently pointing to is marked as being free again. */
+	for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
+	{
+		if( pucBufferToRelease == &( ucMACBuffers[ lIndex ][ 0 ] ) )
+		{
+			/* This is the buffer in use, mark it as being free. */
+			ucMACBufferFree[ lIndex ] = pdTRUE;
+			break;
+		}
+	}
+}
+
+
 
 #ifdef __cplusplus
 }

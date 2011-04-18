@@ -342,36 +342,25 @@ MSS_MAC_get_configuration
 
 
 /***************************************************************************//**
- * Sends a packet to the Ethernet Controller.
- * This function writes pacLen bytes of the packet contained in pacData into the
- * transmit FIFO of the controller and then activates the transmitter for this
- * packet. If space is available in FIFO, the function will return once lBufLen
- * bytes of the packet have been placed into the FIFO and the transmitter has been
- * started. The function will not wait for the transmission to complete. If space
- * is not available in FIFO, the function will keep trying till time_out expires,
- * if MSS_MAC_BLOCKING value is given as time_out, function will wait for the
- * transmission to complete.
- *
- * @param pacData       the pointer to the packet data to be transmitted.
- * @param pacLen        number of bytes in the packet to be transmitted.
- * @param time_out      Time out value for transmision.
- * 					    If value is #MSS_MAC_BLOCKING, there will be no time out.
- * 		    			If value is #MSS_MAC_NONBLOCKING, function will return immediately 
- * 		    			on buffer full case.
- * 		    			Otherwise value must be greater than 0 and smaller than 
- * 		    			0x01000000.
- * @return				Returns 0 if time out occurs otherwise returns size 
- * 						of the packet.
- * @see   MAC_rx_packet()
+  Sends a packet from the uIP stack to the Ethernet Controller.
+  The MSS_MAC_tx_packet() function is used to send a packet to the MSS Ethernet
+  MAC. This function writes uip_len bytes of the packet contained in uip_buf into
+  the transmit FIFO and then activates the transmitter for this packet. If space
+  is available in the FIFO, the function will return once pac_len bytes of the
+  packet have been placed into the FIFO and the transmitter has been started.
+  This function will not wait for the transmission to complete.
+
+  @return
+    The function returns zero if a timeout occurs otherwise it returns size of the packet.
+
+  @see   MAC_rx_packet()
  */
+
 int32_t
 MSS_MAC_tx_packet
 (
-    const uint8_t *pacData,
-    uint16_t pacLen,
-    uint32_t time_out
+    unsigned short usLength
 );
-
 
 /***************************************************************************//**
  * Returns available packet's size.
@@ -401,25 +390,11 @@ MSS_MAC_prepare_rx_descriptor
 );
 
 /***************************************************************************//**
- * Receives a packet from the Ethernet Controller.
+ * Receives a packet from the Ethernet Controller into the uIP stack.
  * This function reads a packet from the receive FIFO of the controller and
- * places it into pacData. If time_out parameter is zero the function will return 
- * immediately (after the copy operation if data is available. Otherwise the function
- * will keep trying to read till time_out expires or data is read, if MSS_MAC_BLOCKING 
- * value is given as time_out, function will wait for the reception to complete.
- *
- * @param pacData       The pointer to the buffer where received packet data will
- *                      be copied. Memory for the buffer should be allocated prior 
- *                      to calling this function.
- * @param pacLen        Size of the buffer, which the received data will be copied in,
- *                      given in number of bytes.
- * @param time_out      Time out value in milli seconds for receiving.
- * 					    if value is #MSS_MAC_BLOCKING, there will be no time out.
- * 					    if value is #MSS_MAC_NONBLOCKING, function will return immediately
- * 					    if there is no packet waiting.
- * 					    Otherwise value must be greater than 0 and smaller than 
- * 					    0x01000000.
- * @return              Size of packet if packet fits in pacData.
+ * places it into uip_buf.
+
+ * @return              Size of packet if packet fits in uip_buf.
  * 					    0 if there is no received packet.
  * @see   MAC_rx_pckt_size()
  * @see   MAC_tx_packet()
@@ -427,9 +402,7 @@ MSS_MAC_prepare_rx_descriptor
 int32_t
 MSS_MAC_rx_packet
 (
-    uint8_t **pacData,
-    uint16_t pacLen,
-    uint32_t time_out
+	void
 );
 
 
@@ -587,6 +560,23 @@ MSS_MAC_get_statistics
 	mss_mac_statistics_id_t stat_id
 );
 
+/*
+ * Ensure uip_buf is pointing to a valid and free buffer before any transmissions
+ * initiated by the uIP stack occur.
+ */
+unsigned char *MSS_MAC_GetTxDescriptor( void );
+
+/*
+ * A buffer is no longer required by the application.  Hand it back to the
+ * control of the MAC hardware.
+ */
+void MSS_MAC_ReleaseBuffer( unsigned char *pucBuffer );
+
+/*
+ * The double Tx has completed.  Hand back the Tx buffer to the control of
+ * the MAC hardware.
+ */
+void MSS_MAC_TxBufferCompleted( void );
 #ifdef __cplusplus
 }
 #endif

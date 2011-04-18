@@ -76,7 +76,7 @@
 
 /* The buffer used by the uIP stack to both receive and send.  This points to
 one of the Ethernet buffers when its actually in use. */
-unsigned char *uip_buf = NULL;
+extern unsigned char *uip_buf;
 
 static const unsigned char ucMACAddress[] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
@@ -131,7 +131,6 @@ static void prvInitEmac( void );
 
 void vEMACWrite( void );
 
-unsigned long ulEMACRead( void );
 long lEMACWaitForLink( void );
 
 /*
@@ -163,7 +162,7 @@ clock_time_t clock_time( void )
 
 void vuIP_Task( void *pvParameters )
 {
-portBASE_TYPE i, xDoneSomething;
+portBASE_TYPE i;
 unsigned long ulNewEvent;
 
 	( void ) pvParameters;
@@ -176,47 +175,52 @@ unsigned long ulNewEvent;
 
 	for( ;; )
 	{
-		xDoneSomething = pdFALSE;
-		
-		/* Is there received data ready to be processed? */
-		uip_len = ( unsigned short ) ulEMACRead();
-		
-		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
+		if( ( ulUIP_Events & uipETHERNET_TX_EVENT ) != 0UL )
 		{
-			/* Standard uIP loop taken from the uIP manual. */
-			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
-			{
-				uip_arp_ipin();
-				uip_input();
+			ulUIP_Events &= ~uipETHERNET_TX_EVENT;
+			MSS_MAC_TxBufferCompleted();
+		}
 
-				/* If the above function invocation resulted in data that
-				should be sent out on the network, the global variable
-				uip_len is set to a value > 0. */
-				if( uip_len > 0 )
-				{
-					uip_arp_out();
-					vEMACWrite();
-				}
-				
-				xDoneSomething = pdTRUE;
-			}
-			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
-			{
-				uip_arp_arpin();
+		if( ( ulUIP_Events & uipETHERNET_RX_EVENT ) != 0UL )
+		{
+			ulUIP_Events &= ~uipETHERNET_RX_EVENT;
 
-				/* If the above function invocation resulted in data that
-				should be sent out on the network, the global variable
-				uip_len is set to a value > 0. */
-				if( uip_len > 0 )
+			/* Is there received data ready to be processed? */
+			uip_len = MSS_MAC_rx_packet();
+
+			if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
+			{
+				/* Standard uIP loop taken from the uIP manual. */
+				if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 				{
-					vEMACWrite();
+					uip_arp_ipin();
+					uip_input();
+
+					/* If the above function invocation resulted in data that
+					should be sent out on the network, the global variable
+					uip_len is set to a value > 0. */
+					if( uip_len > 0 )
+					{
+						uip_arp_out();
+						vEMACWrite();
+					}
 				}
-				
-				xDoneSomething = pdTRUE;
+				else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
+				{
+					uip_arp_arpin();
+
+					/* If the above function invocation resulted in data that
+					should be sent out on the network, the global variable
+					uip_len is set to a value > 0. */
+					if( uip_len > 0 )
+					{
+						vEMACWrite();
+					}
+				}
 			}
 		}
 
-		if( ( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL ) && ( uip_buf != NULL ) )
+		if( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL )
 		{
 			ulUIP_Events &= ~uipPERIODIC_TIMER_EVENT;
 
@@ -233,18 +237,16 @@ unsigned long ulNewEvent;
 					vEMACWrite();
 				}
 			}
-
-			/* Call the ARP timer function every 10 seconds. */
-			if( ( ulUIP_Events & uipARP_TIMER_EVENT ) != 0 )
-			{
-				ulUIP_Events &= ~uipARP_TIMER_EVENT;
-				uip_arp_timer();
-			}
-			
-			xDoneSomething = pdTRUE;
 		}
-		
-		if( xDoneSomething == pdFALSE )
+
+		/* Call the ARP timer function every 10 seconds. */
+		if( ( ulUIP_Events & uipARP_TIMER_EVENT ) != 0 )
+		{
+			ulUIP_Events &= ~uipARP_TIMER_EVENT;
+			uip_arp_timer();
+		}
+
+		if( ulUIP_Events == pdFALSE )
 		{
 			xQueueReceive( xEMACEventQueue, &ulNewEvent, portMAX_DELAY );
 			ulUIP_Events |= ulNewEvent;
@@ -359,14 +361,17 @@ unsigned long ulUIPEvents = 0UL;
 
 	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_SEND ) != 0UL )
 	{
-		/* Handle send event. */
-		ulUIPEvents |= uipETHERNET_TX_EVENT;
+		ulUIP_Events |= uipETHERNET_TX_EVENT;
 	}
 
 	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_RECEIVED ) != 0UL )
 	{
 		/* Wake the uIP task as new data has arrived. */
 		ulUIPEvents |= uipETHERNET_RX_EVENT;
+	}
+
+	if( ulUIPEvents != 0UL )
+	{
 		xQueueSendFromISR( xEMACEventQueue, &ulUIPEvents, &lHigherPriorityTaskWoken );
 	}
 
@@ -376,7 +381,6 @@ unsigned long ulUIPEvents = 0UL;
 
 static void prvInitEmac( void )
 {
-unsigned long ulMACCfg;
 const unsigned char ucPHYAddress = 1;
 
 	MSS_MAC_init( ucPHYAddress );
@@ -391,13 +395,21 @@ const unsigned char ucPHYAddress = 1;
 
 void vEMACWrite( void )
 {
-	MSS_MAC_tx_packet( uip_buf, uip_len, 0 );
-}
-/*-----------------------------------------------------------*/
+const long lMaxAttempts = 10;
+long lAttempt;
+const portTickType xShortDelay = ( 10 / portTICK_RATE_MS );
 
-unsigned long ulEMACRead( void )
-{
-	return MSS_MAC_rx_packet( &uip_buf, ( MSS_RX_BUFF_SIZE + 4 ), 0UL );
+	for( lAttempt = 0; lAttempt < lMaxAttempts; lAttempt++ )
+	{
+		if( MSS_MAC_tx_packet( uip_len ) != 0 )
+		{
+			break;
+		}
+		else
+		{
+			vTaskDelay( xShortDelay );
+		}
+	}
 }
 /*-----------------------------------------------------------*/
 

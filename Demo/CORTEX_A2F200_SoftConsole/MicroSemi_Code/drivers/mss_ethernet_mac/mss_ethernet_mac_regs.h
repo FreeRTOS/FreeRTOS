@@ -65,12 +65,12 @@ typedef struct {
 
 	/* transmit related info: */
     uint32_t    tx_desc_index;          /**< index of the transmit descriptor getting used*/
-    uint8_t     tx_buffers[TX_RING_SIZE][MSS_TX_BUFF_SIZE];/**< array of transmit buffers*/
+//    uint8_t     tx_buffers[TX_RING_SIZE][MSS_TX_BUFF_SIZE];/**< array of transmit buffers*/
     MAC_descriptor_t tx_descriptors[TX_RING_SIZE];/**< array of transmit descriptors*/
 
 	/* receive related info: */
     uint32_t    rx_desc_index;          /**< index of the receive descriptor getting used*/
-    uint8_t     rx_buffers[RX_RING_SIZE][MSS_RX_BUFF_SIZE+4];/**< array of receive buffers*/
+//    uint8_t     rx_buffers[RX_RING_SIZE][MSS_RX_BUFF_SIZE+4];/**< array of receive buffers*/
     MAC_descriptor_t rx_descriptors[RX_RING_SIZE];/**< array of receive descriptors*/
     
     uint8_t		phy_address;            /**< MII address of the connected PHY*/

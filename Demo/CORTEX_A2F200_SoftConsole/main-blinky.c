@@ -52,55 +52,54 @@
 */
 
 /*
-* This simple demo project runs on the STM32 Discovery board, which is
-* populated with an STM32F100RB Cortex-M3 microcontroller.  The discovery board 
-* makes an ideal low cost evaluation platform, but the 8K of RAM provided on the
-* STM32F100RB does not allow the simple application to demonstrate all of all the 
-* FreeRTOS kernel features.  Therefore, this simple demo only actively 
-* demonstrates task, queue, timer and interrupt functionality.  In addition, the 
-* demo is configured to include malloc failure, idle and stack overflow hook 
-* functions.
-* 
-* The idle hook function:
-* The idle hook function queries the amount of FreeRTOS heap space that is
-* remaining (see vApplicationIdleHook() defined in this file).  The demo 
-* application is configured use 7K or the available 8K of RAM as the FreeRTOS heap.
-* Memory is only allocated from this heap during initialisation, and this demo 
-* only actually uses 1.6K bytes of the configured 7K available - leaving 5.4K 
-* bytes of heap space unallocated.
-* 
-* The main() Function:
-* main() creates one software timer, one queue, and two tasks.  It then starts the
-* scheduler.
-* 
-* The Queue Send Task:
-* The queue send task is implemented by the prvQueueSendTask() function in this 
-* file.  prvQueueSendTask() sits in a loop that causes it to repeatedly block for 
-* 200 milliseconds, before sending the value 100 to the queue that was created 
-* within main().  Once the value is sent, the task loops back around to block for
-* another 200 milliseconds.
-* 
-* The Queue Receive Task:
-* The queue receive task is implemented by the prvQueueReceiveTask() function
-* in this file.  prvQueueReceiveTask() sits in a loop that causes repeatedly 
-* attempt to read data from the queue that was created within main().  When data 
-* is received, the task checks the value of the data, and if the value equals 
-* the expected 100, toggles the green LED.  The 'block time' parameter passed to 
-* the queue receive function specifies that the task should be held in the Blocked 
-* state indefinitely to wait for data to be available on the queue.  The queue 
-* receive task will only leave the Blocked state when the queue send task writes 
-* to the queue.  As the queue send task writes to the queue every 200 
-* milliseconds, the queue receive task leaves the Blocked state every 200 
-* milliseconds, and therefore toggles the green LED every 200 milliseconds.
-* 
-* The LED Software Timer and the Button Interrupt:
-* The user button B1 is configured to generate an interrupt each time it is
-* pressed.  The interrupt service routine switches the red LED on, and resets the 
-* LED software timer.  The LED timer has a 5000 millisecond (5 second) period, and
-* uses a callback function that is defined to just turn the red LED off.  
-* Therefore, pressing the user button will turn the red LED on, and the LED will 
-* remain on until a full five seconds pass without the button being pressed.
-*/
+ * main-blinky.c is included when the "Blinky" build configuration is used.
+ * main-full.c is included when the "Full" build configuration is used.
+ *
+ * main-blinky.c (this file) defines a very simple demo that creates two tasks,
+ * one queue, and one timer.  It also demonstrates how Cortex-M3 interrupts can
+ * interact with FreeRTOS tasks/timers.
+ *
+ * This simple demo project runs on the SmartFusion A2F-EVAL-KIT evaluation
+ * board, which is populated with an A2F200M3F SmartFusion mixed signal FPGA.
+ * The A2F200M3F incorporates a Cortex-M3 microcontroller.
+ *
+ * The idle hook function:
+ * The idle hook function demonstrates how to query the amount of FreeRTOS heap
+ * space that is remaining (see vApplicationIdleHook() defined in this file).
+ *
+ * The main() Function:
+ * main() creates one software timer, one queue, and two tasks.  It then starts
+ * the scheduler.
+ *
+ * The Queue Send Task:
+ * The queue send task is implemented by the prvQueueSendTask() function in
+ * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
+ * block for 200 milliseconds, before sending the value 100 to the queue that
+ * was created within main().  Once the value is sent, the task loops back
+ * around to block for another 200 milliseconds.
+ *
+ * The Queue Receive Task:
+ * The queue receive task is implemented by the prvQueueReceiveTask() function
+ * in this file.  prvQueueReceiveTask() sits in a loop that causes it to
+ * repeatedly attempt to read data from the queue that was created within
+ * main().  When data is received, the task checks the value of the data, and
+ * if the value equals the expected 100, toggles the green LED.  The 'block
+ * time' parameter passed to the queue receive function specifies that the task
+ * should be held in the Blocked state indefinitely to wait for data to be
+ * available on the queue.  The queue receive task will only leave the Blocked
+ * state when the queue send task writes to the queue.  As the queue send task
+ * writes to the queue every 200 milliseconds, the queue receive task leaves
+ * the Blocked state every 200 milliseconds, and therefore toggles the LED
+ * every 200 milliseconds.
+ *
+ * The LED Software Timer and the Button Interrupt:
+ * The user button SW1 is configured to generate an interrupt each time it is
+ * pressed.  The interrupt service routine switches an LED on, and resets the
+ * LED software timer.  The LED timer has a 5000 millisecond (5 second) period,
+ * and uses a callback function that is defined to just turn the LED off again.
+ * Therefore, pressing the user button will turn the LED on, and the LED will
+ * remain on until a full five seconds pass without the button being pressed.
+ */
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -126,8 +125,12 @@ will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
+/* The LED toggle by the queue receive task. */
 #define mainTASK_CONTROLLED_LED				0x01UL
+
+/* The LED turned on by the button interrupt, and turned off by the LED timer. */
 #define mainTIMER_CONTROLLED_LED			0x02UL
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -142,8 +145,8 @@ static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
 /*
- * The LED timer callback function.  This does nothing but switch the red LED 
- * off.
+ * The LED timer callback function.  This does nothing but switch off the
+ * LED defined by the mainTIMER_CONTROLLED_LED constant.
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
 
@@ -156,7 +159,8 @@ static xQueueHandle xQueue = NULL;
 function. */
 static xTimerHandle xLEDTimer = NULL;
 
-volatile unsigned long ulGPIOState = 0UL;
+/* Maintains the current LED output state. */
+static volatile unsigned long ulGPIOState = 0UL;
 
 /*-----------------------------------------------------------*/
 

@@ -71,7 +71,7 @@
  * incorporates a Cortex-M3 microcontroller.
  *
  * The main() Function:
- * main() creates two demo specific software timers, one demo specific queue,
+ * main() creates three demo specific software timers, one demo specific queue,
  * and two demo specific tasks.  It then creates a whole host of 'standard demo'
  * tasks/queues/semaphores, before starting the scheduler.  The demo specific
  * tasks and timers are described in the comments here.  The standard demo
@@ -110,9 +110,9 @@
  * Therefore, pressing the user button will turn the LED on, and the LED will
  * remain on until a full five seconds pass without the button being pressed.
  *
- * The Demo Specific Idle Hook Function:
- * The idle hook function demonstrates how to query the amount of FreeRTOS heap
- * space that is remaining (see vApplicationIdleHook() defined in this file).
+ * The Demo Specific OLED Software Timer:
+ * The OLED software timer is responsible for drawing a scrolling text message
+ * on the OLED.
  *
  * The Demo Specific "Check" Callback Function:
  * This is called each time the 'check' timer expires.  The check timer
@@ -125,6 +125,10 @@
  * If LED mainCHECK_LED is toggling every 500ms, then at least one error has
  * been found.  The task in which the error was discovered is displayed at the
  * bottom of the "task stats" page that is served by the embedded web server.
+ *
+ * The Demo Specific Idle Hook Function:
+ * The idle hook function demonstrates how to query the amount of FreeRTOS heap
+ * space that is remaining (see vApplicationIdleHook() defined in this file).
  *
  * The Web Server Task:
  * The IP address used by the SmartFusion target is configured by the
@@ -142,7 +146,7 @@
 /* Microsemi drivers/libraries includes. */
 #include "mss_gpio.h"
 #include "mss_watchdog.h"
-#include "OLED.h"
+#include "oled.h"
 
 /* Common demo includes. */
 #include "partest.h"
@@ -200,6 +204,10 @@ stack than most of the other tasks. */
 have been reported by any of the standard demo tasks. */
 #define mainCHECK_TIMER_PERIOD_ms	( 3000UL )
 
+/* The period at which the OLED timer will expire.  Each time it expires, it's
+callback function updates the OLED text. */
+#define mainOLED_PERIOD_ms			( 75UL )
+
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks. */
 #define mainERROR_CHECK_TIMER_PERIOD_ms ( 500UL )
@@ -231,6 +239,11 @@ static void vLEDTimerCallback( xTimerHandle xTimer );
 static void vCheckTimerCallback( xTimerHandle xTimer );
 
 /*
+ * The OLED timer callback function, as described at the top of this file.
+ */
+static void vOLEDTimerCallback( xTimerHandle xHandle );
+
+/*
  * This is not a 'standard' partest function, so the prototype is not in
  * partest.h, and is instead included here.
  */
@@ -254,11 +267,13 @@ static xTimerHandle xLEDTimer = NULL;
 function. */
 static xTimerHandle xCheckTimer = NULL;
 
+/* The OLED software timer.  Writes a moving text string to the OLED. */
+static xTimerHandle xOLEDTimer = NULL;
+
 /* The status message that is displayed at the bottom of the "task stats" web
 page, which is served by the uIP task.  This will report any errors picked up
 by the check timer callback. */
 static const char *pcStatusMessage = NULL;
-
 
 /*-----------------------------------------------------------*/
 
@@ -296,6 +311,9 @@ int main(void)
 									vCheckTimerCallback						/* The callback function that inspects the status of all the other tasks. */
 								  );
 
+		/* Create the OLED timer as described at the top of this file. */
+		xOLEDTimer = xTimerCreate( ( const signed char * ) "OLEDTimer",	( mainOLED_PERIOD_ms / portTICK_RATE_MS ), pdTRUE, ( void * ) 0, vOLEDTimerCallback );
+
 		/* Create a lot of 'standard demo' tasks. */
 		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 		vCreateBlockTimeTasks();
@@ -307,7 +325,7 @@ int main(void)
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
 		/* Create the web server task. */
-		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+//		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -432,13 +450,14 @@ const unsigned long ulValueToSend = 100UL;
 	instead created here. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	/* The check timer command queue will have been filled when the timer test
-	tasks were created in main() (this is part of the test they perform).
-	Therefore, while the check timer can be created in main(), it could not be
+	/* The timer command queue will have been filled when the timer test tasks
+	were created in main() (this is part of the test they perform).  Therefore,
+	while the check and OLED timers can be created in main(), they cannot be
 	started from main().  Once the scheduler has started, the timer service
-	task will have drained the command queue, and now the check task can be
+	task will drain the command queue, and now the check and OLED timers can be
 	started successfully. */
 	xTimerStart( xCheckTimer, portMAX_DELAY );
+	xTimerStart( xOLEDTimer, portMAX_DELAY );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -481,6 +500,44 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
+static void vOLEDTimerCallback( xTimerHandle xHandle )
+{
+volatile size_t xFreeStackSpace;
+static struct oled_data xOLEDData;
+static unsigned char ucOffset1 = 0, ucOffset2 = 5;
+
+	/* This function is called on each cycle of the idle task.  In this case it
+	does nothing useful, other than report the amount of FreeRTOS heap that
+	remains unallocated. */
+	xFreeStackSpace = xPortGetFreeHeapSize();
+
+	if( xFreeStackSpace > 100 )
+	{
+		/* By now, the kernel has allocated everything it is going to, so
+		if there is a lot of heap remaining unallocated then
+		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
+		reduced accordingly. */
+	}
+
+	xOLEDData.line1          = FIRST_LINE;
+	xOLEDData.char_offset1   = ucOffset1++;
+	xOLEDData.string1        = "www.FreeRTOS.org";
+
+	xOLEDData.line2          = SECOND_LINE;
+	xOLEDData.char_offset2   = ucOffset2++;
+	xOLEDData.string2        = "www.FreeRTOS.org";
+
+	xOLEDData.contrast_val                 = OLED_CONTRAST_VAL;
+	xOLEDData.on_off                       = OLED_HORIZ_SCROLL_OFF;
+	xOLEDData.column_scrool_per_step       = OLED_HORIZ_SCROLL_STEP;
+	xOLEDData.start_page                   = OLED_START_PAGE;
+	xOLEDData.time_intrval_btw_scroll_step = OLED_HORIZ_SCROLL_TINVL;
+	xOLEDData.end_page                     = OLED_END_PAGE;
+
+	OLED_write_data( &xOLEDData, BOTH_LINES );
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupHardware( void )
 {
 	/* Disable the Watch Dog Timer */
@@ -490,7 +547,7 @@ static void prvSetupHardware( void )
 	vParTestInitialise();
 
 	/* Initialise the display. */
-    OLED_init();
+	OLED_init();
 
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( GPIO8_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
@@ -557,5 +614,5 @@ char *pcGetTaskStatusMessage( void )
 		return ( char * ) pcStatusMessage;
 	}
 }
-
+/*-----------------------------------------------------------*/
 

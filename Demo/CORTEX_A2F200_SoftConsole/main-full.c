@@ -1,38 +1,44 @@
 /*
-    FreeRTOS V6.1.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+
+
+	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
+	Atollic AB - Atollic provides professional embedded systems development
+	tools for C/C++ development, code analysis and test automation.
+	See http://www.atollic.com
+
 
     ***************************************************************************
-    *                                                                         *
-    * If you are:                                                             *
-    *                                                                         *
-    *    + New to FreeRTOS,                                                   *
-    *    + Wanting to learn FreeRTOS or multitasking in general quickly       *
-    *    + Looking for basic training,                                        *
-    *    + Wanting to improve your FreeRTOS skills and productivity           *
-    *                                                                         *
-    * then take a look at the FreeRTOS books - available as PDF or paperback  *
-    *                                                                         *
-    *        "Using the FreeRTOS Real Time Kernel - a Practical Guide"        *
-    *                  http://www.FreeRTOS.org/Documentation                  *
-    *                                                                         *
-    * A pdf reference manual is also available.  Both are usually delivered   *
-    * to your inbox within 20 minutes to two hours when purchased between 8am *
-    * and 8pm GMT (although please allow up to 24 hours in case of            *
-    * exceptional circumstances).  Thank you for your support!                *
-    *                                                                         *
+     *                                                                       *
+     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+     *    Complete, revised, and edited pdf reference manuals are also       *
+     *    available.                                                         *
+     *                                                                       *
+     *    Purchasing FreeRTOS documentation will not only help you, by       *
+     *    ensuring you get running as quickly as possible and with an        *
+     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+     *    the FreeRTOS project to continue with its mission of providing     *
+     *    professional grade, cross platform, de facto standard solutions    *
+     *    for microcontrollers - completely free of charge!                  *
+     *                                                                       *
+     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+     *                                                                       *
+     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *                                                                       *
     ***************************************************************************
+
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    ***NOTE*** The exception to the GPL is included to allow you to distribute
-    a combined work that includes FreeRTOS without being obliged to provide the
-    source code for proprietary components outside of the FreeRTOS kernel.
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    >>>NOTE<<< The modification to the GPL is included to allow you to
+    distribute a combined work that includes FreeRTOS without being obliged to
+    provide the source code for proprietary components outside of the FreeRTOS
+    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
     more details. You should have received a copy of the GNU General Public
     License and the FreeRTOS license exception along with FreeRTOS; if not it
     can be viewed here: http://www.freertos.org/a00114.html and also obtained
@@ -52,55 +58,80 @@
 */
 
 /*
-* This simple demo project runs on the STM32 Discovery board, which is
-* populated with an STM32F100RB Cortex-M3 microcontroller.  The discovery board 
-* makes an ideal low cost evaluation platform, but the 8K of RAM provided on the
-* STM32F100RB does not allow the simple application to demonstrate all of all the 
-* FreeRTOS kernel features.  Therefore, this simple demo only actively 
-* demonstrates task, queue, timer and interrupt functionality.  In addition, the 
-* demo is configured to include malloc failure, idle and stack overflow hook 
-* functions.
-* 
-* The idle hook function:
-* The idle hook function queries the amount of FreeRTOS heap space that is
-* remaining (see vApplicationIdleHook() defined in this file).  The demo 
-* application is configured use 7K or the available 8K of RAM as the FreeRTOS heap.
-* Memory is only allocated from this heap during initialisation, and this demo 
-* only actually uses 1.6K bytes of the configured 7K available - leaving 5.4K 
-* bytes of heap space unallocated.
-* 
-* The main() Function:
-* main() creates one software timer, one queue, and two tasks.  It then starts the
-* scheduler.
-* 
-* The Queue Send Task:
-* The queue send task is implemented by the prvQueueSendTask() function in this 
-* file.  prvQueueSendTask() sits in a loop that causes it to repeatedly block for 
-* 200 milliseconds, before sending the value 100 to the queue that was created 
-* within main().  Once the value is sent, the task loops back around to block for
-* another 200 milliseconds.
-* 
-* The Queue Receive Task:
-* The queue receive task is implemented by the prvQueueReceiveTask() function
-* in this file.  prvQueueReceiveTask() sits in a loop that causes repeatedly 
-* attempt to read data from the queue that was created within main().  When data 
-* is received, the task checks the value of the data, and if the value equals 
-* the expected 100, toggles the green LED.  The 'block time' parameter passed to 
-* the queue receive function specifies that the task should be held in the Blocked 
-* state indefinitely to wait for data to be available on the queue.  The queue 
-* receive task will only leave the Blocked state when the queue send task writes 
-* to the queue.  As the queue send task writes to the queue every 200 
-* milliseconds, the queue receive task leaves the Blocked state every 200 
-* milliseconds, and therefore toggles the green LED every 200 milliseconds.
-* 
-* The LED Software Timer and the Button Interrupt:
-* The user button B1 is configured to generate an interrupt each time it is
-* pressed.  The interrupt service routine switches the red LED on, and resets the 
-* LED software timer.  The LED timer has a 5000 millisecond (5 second) period, and
-* uses a callback function that is defined to just turn the red LED off.  
-* Therefore, pressing the user button will turn the red LED on, and the LED will 
-* remain on until a full five seconds pass without the button being pressed.
-*/
+ * main-blinky.c is included when the "Blinky" build configuration is used.
+ * main-full.c is included when the "Full" build configuration is used.
+ *
+ * main-full.c (this file) defines a comprehensive demo that creates many
+ * tasks, queues, semaphores and timers.  It also demonstrates how Cortex-M3
+ * interrupts can interact with FreeRTOS tasks/timers, and implements a simple
+ * and small interactive web server.
+ *
+ * This project runs on the SmartFusion A2F-EVAL-KIT evaluation board, which
+ * is populated with an A2F200M3F SmartFusion mixed signal FPGA.  The A2F200M3F
+ * incorporates a Cortex-M3 microcontroller.
+ *
+ * The main() Function:
+ * main() creates two demo specific software timers, one demo specific queue,
+ * and two demo specific tasks.  It then creates a whole host of 'standard demo'
+ * tasks/queues/semaphores, before starting the scheduler.  The demo specific
+ * tasks and timers are described in the comments here.  The standard demo
+ * tasks are described on the FreeRTOS.org web site.
+ *
+ * The standard demo tasks provide no specific functionality.  They are
+ * included to both test the FreeRTOS port, and provide examples of how the
+ * various FreeRTOS API functions can be used.
+ *
+ * The Demo Specific Queue Send Task:
+ * The queue send task is implemented by the prvQueueSendTask() function in
+ * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
+ * block for 200 milliseconds, before sending the value 100 to the queue that
+ * was created within main().  Once the value is sent, the task loops back
+ * around to block for another 200 milliseconds.
+ *
+ * The Demo Specific Queue Receive Task:
+ * The queue receive task is implemented by the prvQueueReceiveTask() function
+ * in this file.  prvQueueReceiveTask() sits in a loop that causes it to
+ * repeatedly attempt to read data from the queue that was created within
+ * main().  When data is received, the task checks the value of the data, and
+ * if the value equals the expected 100, toggles the green LED.  The 'block
+ * time' parameter passed to the queue receive function specifies that the task
+ * should be held in the Blocked state indefinitely to wait for data to be
+ * available on the queue.  The queue receive task will only leave the Blocked
+ * state when the queue send task writes to the queue.  As the queue send task
+ * writes to the queue every 200 milliseconds, the queue receive task leaves
+ * the Blocked state every 200 milliseconds, and therefore toggles the LED
+ * every 200 milliseconds.
+ *
+ * The Demo Specific LED Software Timer and the Button Interrupt:
+ * The user button SW1 is configured to generate an interrupt each time it is
+ * pressed.  The interrupt service routine switches an LED on, and resets the
+ * LED software timer.  The LED timer has a 5000 millisecond (5 second) period,
+ * and uses a callback function that is defined to just turn the LED off again.
+ * Therefore, pressing the user button will turn the LED on, and the LED will
+ * remain on until a full five seconds pass without the button being pressed.
+ *
+ * The Demo Specific Idle Hook Function:
+ * The idle hook function demonstrates how to query the amount of FreeRTOS heap
+ * space that is remaining (see vApplicationIdleHook() defined in this file).
+ *
+ * The Demo Specific "Check" Callback Function:
+ * This is called each time the 'check' timer expires.  The check timer
+ * callback function inspects all the standard demo tasks to see if they are
+ * all executing as expected.  The check timer is initially configured to
+ * expire every three seconds, but will shorted this to every 500ms if an error
+ * is ever discovered.  The check timer callback toggles the LED defined by
+ * the mainCHECK_LED definition each time it executes.  Therefore, if LED
+ * mainCHECK_LED is toggling every three seconds, then no error have been found.
+ * If LED mainCHECK_LED is toggling every 500ms, then at least one error has
+ * been found.  The task in which the error was discovered is displayed at the
+ * bottom of the "task stats" page that is served by the embedded web server.
+ *
+ * The Web Server Task:
+ * The IP address used by the SmartFusion target is configured by the
+ * definitions configIP_ADDR0 to configIP_ADDR3, which are located in the
+ * FreeRTOSConfig.h header file.  See the documentation page for this example
+ * on the http://www.FreeRTOS.org web site for further connection information.
+ */
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -138,12 +169,19 @@ will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH			( 1 )
 
+/* The LED toggled by the check timer callback function. */
 #define mainCHECK_LED				0x07UL
+
+/* The LED turned on by the button interrupt, and turned off by the LED timer. */
 #define mainTIMER_CONTROLLED_LED	0x06UL
+
+/* The LED toggle by the queue receive task. */
 #define mainTASK_CONTROLLED_LED		0x05UL
 
+/* Constant used by the standard timer test functions. */
 #define mainTIMER_TEST_PERIOD		( 50 )
 
+/* Priorities used by the various different tasks. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -158,6 +196,16 @@ the queue empty. */
 stack than most of the other tasks. */
 #define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
 
+/* The period at which the check timer will expire, in ms, provided no errors
+have been reported by any of the standard demo tasks. */
+#define mainCHECK_TIMER_PERIOD_ms	( 3000UL )
+
+/* The period at which the check timer will expire, in ms, if an error has been
+reported in one of the standard demo tasks. */
+#define mainERROR_CHECK_TIMER_PERIOD_ms ( 500UL )
+
+/* A zero block time. */
+#define mainDONT_BLOCK				( 0UL )
 /*-----------------------------------------------------------*/
 
 /*
@@ -177,11 +225,14 @@ static void prvQueueSendTask( void *pvParameters );
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
 
+/*
+ * The check timer callback function, as described at the top of this file.
+ */
 static void vCheckTimerCallback( xTimerHandle xTimer );
 
 /*
  * This is not a 'standard' partest function, so the prototype is not in
- * partest.h.
+ * partest.h, and is instead included here.
  */
 void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
 
@@ -192,18 +243,20 @@ extern void vuIP_Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/* The queue used by both tasks. */
+/* The queue used by both application specific demo tasks defined in this file. */
 static xQueueHandle xQueue = NULL;
 
-/* The LED software timer.  This uses vLEDTimerCallback() as its callback
+/* The LED software timer.  This uses vLEDTimerCallback() as it's callback
 function. */
 static xTimerHandle xLEDTimer = NULL;
 
+/* The check timer.  This uses vCheckTimerCallback() as it's callback
+function. */
 static xTimerHandle xCheckTimer = NULL;
 
 /* The status message that is displayed at the bottom of the "task stats" web
 page, which is served by the uIP task.  This will report any errors picked up
-by the reg test task. */
+by the check timer callback. */
 static const char *pcStatusMessage = NULL;
 
 
@@ -219,8 +272,8 @@ int main(void)
 
 	if( xQueue != NULL )
 	{
-		/* Start the two tasks as described in the comments at the top of this
-		file. */
+		/* Start the two application specific demo tasks, as described in the
+		comments at the top of this	file. */
 		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
@@ -234,13 +287,16 @@ int main(void)
 									vLEDTimerCallback					/* The callback function that switches the LED off. */
 								);
 
+		/* Create the software timer that performs the 'check' functionality,
+		as described at the top of this file. */
 		xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer", 	/* A text name, purely to help debugging. */
-									( 3000 / portTICK_RATE_MS ),			/* The timer period, in this case 3000ms (3s). */
+									( mainCHECK_TIMER_PERIOD_ms / portTICK_RATE_MS ),/* The timer period, in this case 3000ms (3s). */
 									pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 									( void * ) 0,							/* The ID is not used, so can be set to anything. */
 									vCheckTimerCallback						/* The callback function that inspects the status of all the other tasks. */
 								  );
 
+		/* Create a lot of 'standard demo' tasks. */
 		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 		vCreateBlockTimeTasks();
 		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
@@ -250,9 +306,8 @@ int main(void)
 		vStartRecursiveMutexTasks();
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
-		/* The web server task. */
+		/* Create the web server task. */
 		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
-
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -269,67 +324,63 @@ int main(void)
 
 static void vCheckTimerCallback( xTimerHandle xTimer )
 {
-	/* Check the standard demo tasks are running without error. */
+	/* Check the standard demo tasks are running without error.   Latch the
+	latest reported error in the pcStatusMessage character pointer. */
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
-		/* Increase the rate at which this task cycles, which will increase the
-		rate at which mainCHECK_LED flashes to give visual feedback that an error
-		has occurred. */
 		pcStatusMessage = "Error: GenQueue";
-//		xPrintf( pcStatusMessage );
 	}
 
 	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: QueuePeek\r\n";
-//		xPrintf( pcStatusMessage );
 	}
 
 	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: BlockQueue\r\n";
-//		xPrintf( pcStatusMessage );
 	}
 
 	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: BlockTime\r\n";
-//		xPrintf( pcStatusMessage );
 	}
 
 	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: SemTest\r\n";
-//		xPrintf( pcStatusMessage );
 	}
 
 	if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: Death\r\n";
-//		xPrintf( pcStatusMessage );
 	}
 
 	if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: RecMutex\r\n";
-//		xPrintf( pcStatusMessage );
 	}
 
-	if( xAreTimerDemoTasksStillRunning( ( 3000 / portTICK_RATE_MS ) ) != pdTRUE )
+	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_ms / portTICK_RATE_MS ) ) != pdTRUE )
 	{
 		pcStatusMessage = "Error: TimerDemo";
 	}
 
 	/* Toggle the check LED to give an indication of the system status.  If
-	the LED toggles every 5 seconds then everything is ok.  A faster toggle
-	indicates an error. */
+	the LED toggles every mainCHECK_TIMER_PERIOD_ms milliseconds then
+	everything is ok.  A faster toggle indicates an error. */
 	vParTestToggleLED( mainCHECK_LED );
 
+	/* Have any errors been latch in pcStatusMessage?  If so, shorten the
+	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_ms milliseconds.
+	This will result in an increase in the rate at which mainCHECK_LED
+	toggles. */
 	if( pcStatusMessage != NULL )
 	{
-		/* The block time is set to zero as a timer callback must *never*
-		attempt to block. */
-		xTimerChangePeriod( xCheckTimer, ( 500 / portTICK_RATE_MS ), 0 );
+		/* This call to xTimerChangePeriod() uses a zero block time.  Functions
+		called from inside of a timer callback function must *never* attempt
+		to block. */
+		xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_ms / portTICK_RATE_MS ), mainDONT_BLOCK );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -337,10 +388,7 @@ static void vCheckTimerCallback( xTimerHandle xTimer )
 static void vLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
-	five seconds - turn the LED off.  NOTE - accessing the LED port should use
-	a critical section because it is accessed from multiple tasks, and the
-	button interrupt - in this trivial case, for simplicity, the critical
-	section is omitted. */
+	five seconds - turn the LED off. */
 	vParTestSetLED( mainTIMER_CONTROLLED_LED, pdFALSE );
 }
 /*-----------------------------------------------------------*/
@@ -377,11 +425,19 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* The suicide tasks must be created last as they need to know how many
+	/* The suicide tasks must be created last, as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time. */
+	or not the correct/expected number of tasks are running at any given time.
+	Therefore the standard demo 'death' tasks are not created in main(), but
+	instead created here. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
+	/* The check timer command queue will have been filled when the timer test
+	tasks were created in main() (this is part of the test they perform).
+	Therefore, while the check timer can be created in main(), it could not be
+	started from main().  Once the scheduler has started, the timer service
+	task will have drained the command queue, and now the check task can be
+	started successfully. */
 	xTimerStart( xCheckTimer, portMAX_DELAY );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
@@ -416,13 +472,9 @@ unsigned long ulReceivedValue;
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
 		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, toggle the green LED. */
+		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
-			/* NOTE - accessing the LED port should use a critical section
-			because it is accessed from multiple tasks, and the button interrupt 
-			- in this trivial case, for simplicity, the critical section is 
-			omitted. */
 			vParTestToggleLED( mainTASK_CONTROLLED_LED );
 		}
 	}
@@ -477,7 +529,7 @@ void vApplicationIdleHook( void )
 volatile size_t xFreeStackSpace;
 
 	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amout of FreeRTOS heap that 
+	does nothing useful, other than report the amount of FreeRTOS heap that
 	remains unallocated. */
 	xFreeStackSpace = xPortGetFreeHeapSize();
 
@@ -493,9 +545,9 @@ volatile size_t xFreeStackSpace;
 
 char *pcGetTaskStatusMessage( void )
 {
-	/* Not bothered about a critical section here although technically because of
-	the task priorities the pointer could change it will be atomic if not near
-	atomic and its not critical. */
+	/* Not bothered about a critical section here although technically because
+	of the task priorities the pointer could change it will be atomic if not
+	near atomic and its not critical. */
 	if( pcStatusMessage == NULL )
 	{
 		return "All tasks running without error";

@@ -38,7 +38,7 @@ static void printchar(char **str, int c)
 		++(*str);
 	}
 	else
-	{ 
+	{
 		(void)putchar(c);
 	}
 }
@@ -189,7 +189,7 @@ static int print( char **out, const char *format, va_list args )
 int printf(const char *format, ...)
 {
         va_list args;
-        
+
         va_start( args, format );
         return print( 0, format, args );
 }
@@ -197,7 +197,7 @@ int printf(const char *format, ...)
 int sprintf(char *out, const char *format, ...)
 {
         va_list args;
-        
+
         va_start( args, format );
         return print( &out, format, args );
 }
@@ -206,9 +206,9 @@ int sprintf(char *out, const char *format, ...)
 int snprintf( char *buf, unsigned int count, const char *format, ... )
 {
         va_list args;
-        
+
         ( void ) count;
-        
+
         va_start( args, format );
         return print( &buf, format, args );
 }
@@ -283,7 +283,7 @@ int main(void)
 
 
 /* To keep linker happy. */
-int	write( int i, char* c, int n)
+int	__write( int i, char* c, int n)
 {
 	(void)i;
 	(void)n;

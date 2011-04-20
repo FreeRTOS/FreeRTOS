@@ -19,12 +19,12 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 #include "../../CMSIS/a2fxxxm3.h"
 #include "mss_ethernet_mac.h"
 #include "mss_ethernet_mac_user_cfg.h"
-  
+
 typedef uint32_t addr_t;
 
 
@@ -42,25 +42,26 @@ typedef struct {
 /***************************************************************************//**
  * There should be one instance of this structure for each instance of
  * the MAC in your system. MSS_MAC_init routine initializes this structure.
- * It is used to identify the various MACs in your system and an initilized 
- * MAC instance's structure should be passed as first parameter to MAC functions 
+ * It is used to identify the various MACs in your system and an initilized
+ * MAC instance's structure should be passed as first parameter to MAC functions
  * to identify which MAC should perform the requested operation.
- * Software using the MAC driver should only need to create one single 
- * instance of this data structure for each MAC hardware instance in 
+ * Software using the MAC driver should only need to create one single
+ * instance of this data structure for each MAC hardware instance in
  * the system. Using MAC_get_configuration routine, latest status of the driver
  * may be read by receiving its flags field, similarly MAC_configure routine lets
  * you modify some of these flags.
  */
+#include "net/pack_struct_start.h"
 typedef struct {
 	addr_t		base_address;           /**< Register base address of the driver*/
     uint8_t		flags;                  /**< Configuration of the driver*/
     int8_t		last_error;             /**< Index of last error happened inside the driver*/
     uint8_t     mac_address[6];			/**< MAC address of the drived instance*/
-    uint8_t     mac_filter_data[90];	/**< MAC filter data, 15 addresses to be used for 
+    uint8_t     mac_filter_data[90];	/**< MAC filter data, 15 addresses to be used for
                                             received data filtering*/
     uint16_t	last_timer_value;		/**< Last read value of timer */
     uint32_t	time_out_value;			/**< Time out value */
-    MSS_MAC_callback_t listener;            /**< Pointer to the call-back function to be triggered 
+    MSS_MAC_callback_t listener;            /**< Pointer to the call-back function to be triggered
                                             when a package is received*/
 
 	/* transmit related info: */
@@ -72,48 +73,49 @@ typedef struct {
     uint32_t    rx_desc_index;          /**< index of the receive descriptor getting used*/
 //    uint8_t     rx_buffers[RX_RING_SIZE][MSS_RX_BUFF_SIZE+4];/**< array of receive buffers*/
     MAC_descriptor_t rx_descriptors[RX_RING_SIZE];/**< array of receive descriptors*/
-    
+
     uint8_t		phy_address;            /**< MII address of the connected PHY*/
-    
+
 	struct {
 		uint32_t rx_interrupts;			/**< Number of receive interrupts occurred.*/
-		uint32_t rx_filtering_fail;		/**< Number of received frames which did not pass 
+		uint32_t rx_filtering_fail;		/**< Number of received frames which did not pass
 											the address recognition process.*/
 		uint32_t rx_descriptor_error;	/**< Number of occurrences of; no receive buffer was
 											available when trying to store the received data.*/
-		uint32_t rx_runt_frame;			/**< Number of occurrences of; the frame is damaged by 
-											a collision or by a premature termination before 
+		uint32_t rx_runt_frame;			/**< Number of occurrences of; the frame is damaged by
+											a collision or by a premature termination before
 											the end of a collision window.*/
-		uint32_t rx_not_first;			/**< Number of occurrences of; start of the frame is 
+		uint32_t rx_not_first;			/**< Number of occurrences of; start of the frame is
 											not the first descriptor of a frame.*/
-		uint32_t rx_not_last;			/**< Number of occurrences of; end of the frame is not 
+		uint32_t rx_not_last;			/**< Number of occurrences of; end of the frame is not
 											the first descriptor of a frame.*/
-		uint32_t rx_frame_too_long;		/**< Number of occurrences of; a current frame is 
-											longer than maximum size of 1,518 bytes, as specified 
+		uint32_t rx_frame_too_long;		/**< Number of occurrences of; a current frame is
+											longer than maximum size of 1,518 bytes, as specified
 											by 802.3.*/
-		uint32_t rx_collision_seen;		/**< Number of occurrences of; a late collision was seen 
+		uint32_t rx_collision_seen;		/**< Number of occurrences of; a late collision was seen
 											(collision after 64 bytes following SFD).*/
-		uint32_t rx_crc_error;			/**< Number of occurrences of; a CRC error has occurred 
+		uint32_t rx_crc_error;			/**< Number of occurrences of; a CRC error has occurred
 											in the received frame.*/
-		uint32_t rx_fifo_overflow;		/**< Number of frames not accepted due to the receive 
+		uint32_t rx_fifo_overflow;		/**< Number of frames not accepted due to the receive
 											FIFO overflow.*/
-		uint32_t rx_missed_frame;		/**< Number of frames not accepted due to the 
+		uint32_t rx_missed_frame;		/**< Number of frames not accepted due to the
 											unavailability of the receive descriptor.*/
 		
 		uint32_t tx_interrupts;			/**< Number of transmit interrupts occurred.*/
-		uint32_t tx_loss_of_carrier;	/**< Number of occurrences of; a loss of the carrier 
+		uint32_t tx_loss_of_carrier;	/**< Number of occurrences of; a loss of the carrier
 											during a transmission.*/
 		uint32_t tx_no_carrier;			/**< Number of occurrences of; the carrier was not asserted
 											by an external transceiver during the transmission.*/
-		uint32_t tx_late_collision;		/**< Number of occurrences of; a collision was detected 
+		uint32_t tx_late_collision;		/**< Number of occurrences of; a collision was detected
 											after transmitting 64 bytes.*/
-		uint32_t tx_excessive_collision;/**< Number of occurrences of; the transmission was 
+		uint32_t tx_excessive_collision;/**< Number of occurrences of; the transmission was
 											aborted after 16 retries.*/
 		uint32_t tx_collision_count;	/**< Number of collisions occurred.*/
-		uint32_t tx_underflow_error;	/**< Number of occurrences of; the FIFO was empty during 
+		uint32_t tx_underflow_error;	/**< Number of occurrences of; the FIFO was empty during
 											the frame transmission.*/
     } statistics;
-} MAC_instance_t __attribute__((packed));
+} MAC_instance_t
+#include "net/pack_struct_end.h"
 
 
 /*------------------------------------------------------------------------------
@@ -130,29 +132,29 @@ typedef struct
     uint32_t CSR0_TAP[3];
     uint32_t CSR0_DBO;
     uint32_t CSR0_RESERVED1[11];
-    
+
     uint32_t MAC_CSR_RESERVED0[32];
-    
+
     uint32_t CSR1[32];
-    
+
     uint32_t MAC_CSR_RESERVED1[32];
-    
+
     uint32_t CSR2[32];
-    
+
     uint32_t MAC_CSR_RESERVED2[32];
-    
+
     uint32_t CSR3[32];
-    
+
     uint32_t MAC_CSR_RESERVED3[32];
-    
+
     uint32_t CSR4[32];
-    
+
     uint32_t MAC_CSR_RESERVED4[32];
-    
+
     uint32_t CSR5_TI;
     uint32_t CSR5_TPS;
     uint32_t CSR5_TU;
-    uint32_t CSR5_RESERVED0[2];    
+    uint32_t CSR5_RESERVED0[2];
     uint32_t CSR5_UNF;
     uint32_t CSR5_RI;
     uint32_t CSR5_RU;
@@ -169,7 +171,7 @@ typedef struct
     uint32_t CSR5_RESERVED3[9];
 
     uint32_t MAC_CSR_RESERVED5[32];
-    
+
     uint32_t CSR6_HP;
     uint32_t CSR6_SR;
     uint32_t CSR6_HO;
@@ -191,7 +193,7 @@ typedef struct
     uint32_t CSR6_RESERVED5;
 
     uint32_t MAC_CSR_RESERVED6[32];
-    
+
     uint32_t CSR7_TIE;
     uint32_t CSR7_TSE;
     uint32_t CSR7_TUE;
@@ -210,11 +212,11 @@ typedef struct
     uint32_t CSR7[15];
 
     uint32_t MAC_CSR_RESERVED7[32];
-    
+
     uint32_t CSR8[32];
 
     uint32_t MAC_CSR_RESERVED8[32];
-    
+
     uint32_t CSR9_SCS;
     uint32_t CSR9_SCLK;
     uint32_t CSR9_SDI;
@@ -227,11 +229,11 @@ typedef struct
     uint32_t CSR9_RESERVED1[12];
 
     uint32_t MAC_CSR_RESERVED9[32];
-    
+
     uint32_t CSR10[32];
 
     uint32_t MAC_CSR_RESERVED10[32];
-    
+
     uint32_t CSR11_TIM[16];
     uint32_t CSR11_CON;
     uint32_t CSR11_NRP[3];
@@ -559,19 +561,19 @@ typedef struct
 #define CSR5_TS_SHIFT    20
 
 /** 000 - Stopped; RESET or STOP TRANSMIT command issued.             */
-#define CSR5_TS_STOPPED    0u 
+#define CSR5_TS_STOPPED    0u
 /** 001 - Running, fetching the transmit descriptor.                  */
-#define CSR5_TS_RUNNING_FD 1u 
+#define CSR5_TS_RUNNING_FD 1u
 /** 010 - Running, waiting for end of transmission.                   */
-#define CSR5_TS_RUNNING_WT 2u 
+#define CSR5_TS_RUNNING_WT 2u
 /** 011 - Running, transferring data buffer from host memory to FIFO. */
-#define CSR5_TS_RUNNING_TD 3u 
+#define CSR5_TS_RUNNING_TD 3u
 /** 101 - Running, setup packet.                                      */
-#define CSR5_TS_RUNNING_SP 5u 
+#define CSR5_TS_RUNNING_SP 5u
 /** 110 - Suspended; FIFO underflow or unavailable descriptor.        */
-#define CSR5_TS_SUSPENDED  6u 
+#define CSR5_TS_SUSPENDED  6u
 /** 111 - Running, closing transmit descriptor.                       */
-#define CSR5_TS_RUNNING_CD 7u 
+#define CSR5_TS_RUNNING_CD 7u
 
 /*------------------------------------------------------------------------------
  * CSR5_RS:
@@ -584,19 +586,19 @@ typedef struct
 #define CSR5_RS_SHIFT    17
 
 /** 000 - Stopped; RESET or STOP RECEIVE command issued.                      */
-#define CSR5_RS_STOPPED    0u                                                  
+#define CSR5_RS_STOPPED    0u
 /** 001 - Running, fetching the receive descriptor.                           */
-#define CSR5_RS_RUNNING_FD 1u                                                  
+#define CSR5_RS_RUNNING_FD 1u
 /** 010 - Running, waiting for the end-of-receive packet before prefetch of the
- *next descriptor. */                                                         
-#define CSR5_RS_RUNNING_WR 2u                                                  
+ *next descriptor. */
+#define CSR5_RS_RUNNING_WR 2u
 /** 011 - Running, waiting for the receive packet.                            */
-#define CSR5_RS_RUNNING_RB 3u                                                  
+#define CSR5_RS_RUNNING_RB 3u
 /** 100 - Suspended, unavailable receive buffer.                              */
-#define CSR5_RS_SUSPENDED  4u                                                  
+#define CSR5_RS_SUSPENDED  4u
 /** 101 - Running, closing the receive descriptor.                            */
-#define CSR5_RS_RUNNING_CD 5u                                                  
-/** 111 - Running, transferring data from FIFO to host memory.                */                                                                                                                     
+#define CSR5_RS_RUNNING_CD 5u
+/** 111 - Running, transferring data from FIFO to host memory.                */
 #define CSR5_RS_RUNNING_TD 7u
 
 /*------------------------------------------------------------------------------

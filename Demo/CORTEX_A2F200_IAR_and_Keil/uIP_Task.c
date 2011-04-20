@@ -383,7 +383,7 @@ const unsigned char ucPHYAddress = 1;
 
 	MSS_MAC_init( ucPHYAddress );
 
-	MSS_MAC_set_callback( prvEMACEventListener );
+	MSS_MAC_set_callback( ( MSS_MAC_callback_t ) prvEMACEventListener );
 
     /* Setup the EMAC and the NVIC for MAC interrupts. */
     NVIC_SetPriority( EthernetMAC_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );

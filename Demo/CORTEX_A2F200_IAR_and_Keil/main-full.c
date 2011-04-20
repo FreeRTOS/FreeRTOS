@@ -228,7 +228,7 @@ static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
 /*
- * The LED timer callback function.  This does nothing but switch the red LED 
+ * The LED timer callback function.  This does nothing but switch the red LED
  * off.
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
@@ -292,8 +292,8 @@ int main(void)
 		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Create the software timer that is responsible for turning off the LED 
-		if the button is not pushed within 5000ms, as described at the top of 
+		/* Create the software timer that is responsible for turning off the LED
+		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
 		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
 									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
@@ -325,7 +325,7 @@ int main(void)
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
 		/* Create the web server task. */
-//		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -561,7 +561,7 @@ void vApplicationMallocFailedHook( void )
 {
 	/* Called if a call to pvPortMalloc() fails because there is insufficient
 	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software 
+	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	for( ;; );

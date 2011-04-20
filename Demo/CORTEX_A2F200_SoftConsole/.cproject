@@ -25,17 +25,23 @@
 <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Full"/>
 </outputEntries>
 </builder>
-<tool id="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug.1071303895" name="GNU C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug">
+<tool command="arm-none-eabi-gcc -mthumb -mcpu=cortex-m3 -ffunction-sections -fdata-sections" id="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug.1071303895" name="GNU C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug">
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level.510955399" name="Optimization Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level" valueType="enumerated"/>
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.779446663" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.c.compiler.option.include.paths.1134958080" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths"/>
+<option id="gnu.c.compiler.option.include.paths.1134958080" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/include}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_watchdog}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_gpio}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/portable/GCC/ARM_CM3}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
+</option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1656219383" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug.1468299398" name="GNU C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug">
 <option id="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.optimization.level.2285143" name="Optimization Level" superClass="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.debugging.level.679011726" name="Debug Level" superClass="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 </tool>
-<tool id="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug.442931082" name="GNU C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug">
+<tool command="arm-none-eabi-gcc -mthumb -mcpu=cortex-m3 -specs=bare.specs --gc-sections" id="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug.442931082" name="GNU C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug">
 <option id="gnu.c.link.option.ldflags.1590630226" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-T ../MicroSemi_Code/CMSIS/startup_gcc/debug-in-actel-smartfusion-envm.ld" valueType="string"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.linker.input.289727023" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -44,13 +50,7 @@
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.cross.cortexm3.exe.debug.1350537504" name="GNU C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.cross.cortexm3.exe.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.assembler.cross.cortexm3.exe.debug.1697516927" name="GNU Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cross.cortexm3.exe.debug">
-<option id="gnu.both.asm.option.include.paths.1003180654" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="../RTOSDemo/FreeRTOS_Source/include"/>
-<listOptionValue builtIn="false" value="../RTOSDemo/FreeRTOS_Source/portable/GCC/ARM_CM3"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/RTOSDemo}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/RTOSDemo/MicroSemi_Code/drivers/mss_gpio}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/RTOSDemo/MicroSemi_Code/drivers/mss_watchdog}&quot;"/>
-</option>
+<option id="gnu.both.asm.option.include.paths.1003180654" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.2018963534" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 <tool id="com.actel.softconsole.memory-map.gen.cross.cortexm3.xml.debug.660351128" name="Memory map generator" superClass="com.actel.softconsole.memory-map.gen.cross.cortexm3.xml.debug"/>
@@ -60,7 +60,8 @@
 </toolChain>
 </folderInfo>
 <sourceEntries>
-<entry excluding="Common_Demo_Tasks|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|MicroSemi_Code/drivers/mss_ethernet_mac|main-full.c|MicroSemi_Code/drivers/mss_pdma|FreeTCPIP|MicroSemi_Code/drivers/mss_spi|Debug/FreeRTOS_Source/portable/MemMang|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mss_uart|WebServer|MicroSemi_Code/drivers/mac" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry excluding="MicroSemi_Code/drivers|uIP_Task.c|ParTest.c|OLED.c|Common_Demo_Tasks|Debug/FreeRTOS_Source/portable/GCC/ARM_CM3|MicroSemi_Code/drivers/mss_ethernet_mac|main-full.c|MicroSemi_Code/drivers/mss_pdma|FreeTCPIP|MicroSemi_Code/drivers/mss_spi|Debug/FreeRTOS_Source/portable/MemMang|MicroSemi_Code/drivers/mss_ace|MicroSemi_Code/drivers/mss_uart|WebServer|MicroSemi_Code/drivers/mac" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MicroSemi_Code/drivers/mss_gpio"/>
 </sourceEntries>
 </configuration>
 </storageModule>
@@ -451,6 +452,7 @@
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_gpio}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/MicroSemi_Code/drivers/mss_watchdog}&quot;"/>
 </option>
+<option id="gnu.c.compiler.option.misc.other.1336073690" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -ffunction-sections -fdata-sections" valueType="string"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.12052800" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug.1923895634" name="GNU C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug">
@@ -458,7 +460,8 @@
 <option id="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.debugging.level.1558265876" name="Debug Level" superClass="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug.1745705707" name="GNU C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug">
-<option id="gnu.c.link.option.ldflags.1879179053" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-T ../MicroSemi_Code/CMSIS/startup_gcc/debug-in-actel-smartfusion-envm.ld" valueType="string"/>
+<option id="gnu.c.link.option.ldflags.1879179053" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-T ../MicroSemi_Code/CMSIS/startup_gcc/debug-in-actel-smartfusion-envm.ld --gc-sections" valueType="string"/>
+<option id="gnu.c.link.option.other.1410044636" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1952701542" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 <additionalInput kind="additionalinput" paths="$(LIBS)"/>

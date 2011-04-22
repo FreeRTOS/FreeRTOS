@@ -22,3 +22,8 @@
 #ifdef __ICCRX__
 	#pragma pack(1)
 #endif
+
+
+#ifdef __ICCARM__
+	#pragma pack(1)
+#endif

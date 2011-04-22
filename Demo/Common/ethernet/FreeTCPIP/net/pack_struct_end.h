@@ -21,3 +21,8 @@
 	;
 	#pragma pack()
 #endif
+
+#ifdef __ICCARM__
+	;
+	#pragma pack()
+#endif

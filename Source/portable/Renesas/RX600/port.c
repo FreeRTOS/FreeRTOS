@@ -259,9 +259,6 @@ void vSoftwareInterruptISR( void )
 #pragma inline_asm prvYieldHandler
 static void prvYieldHandler( void )
 {
-	/* Install as the software interrupt handler. */
-	.RVECTOR    _VECT( _ICU_SWINT ), _vSoftwareInterruptISR
-
 	/* Re-enable interrupts. */
 	SETPSW	I
 

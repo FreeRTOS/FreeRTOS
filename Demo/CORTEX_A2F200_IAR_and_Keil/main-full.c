@@ -326,6 +326,12 @@ int main(void)
 
 		/* Create the web server task. */
 		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+		
+		/* The suicide tasks must be created last, as they need to know how many
+		tasks were running prior to their creation in order to ascertain whether
+		or not the correct/expected number of tasks are running at any given
+		time. */
+		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -443,13 +449,6 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* The suicide tasks must be created last, as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time.
-	Therefore the standard demo 'death' tasks are not created in main(), but
-	instead created here. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-
 	/* The timer command queue will have been filled when the timer test tasks
 	were created in main() (this is part of the test they perform).  Therefore,
 	while the check and OLED timers can be created in main(), they cannot be
@@ -502,30 +501,16 @@ unsigned long ulReceivedValue;
 
 static void vOLEDTimerCallback( xTimerHandle xHandle )
 {
-volatile size_t xFreeStackSpace;
 static struct oled_data xOLEDData;
 static unsigned char ucOffset1 = 0, ucOffset2 = 5;
 
-	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amount of FreeRTOS heap that
-	remains unallocated. */
-	xFreeStackSpace = xPortGetFreeHeapSize();
-
-	if( xFreeStackSpace > 100 )
-	{
-		/* By now, the kernel has allocated everything it is going to, so
-		if there is a lot of heap remaining unallocated then
-		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
-		reduced accordingly. */
-	}
-
 	xOLEDData.line1          = FIRST_LINE;
 	xOLEDData.char_offset1   = ucOffset1++;
-	xOLEDData.string1        = "www.FreeRTOS.org";
+	xOLEDData.string1        = " www.FreeRTOS.org";
 
 	xOLEDData.line2          = SECOND_LINE;
 	xOLEDData.char_offset2   = ucOffset2++;
-	xOLEDData.string2        = "www.FreeRTOS.org";
+	xOLEDData.string2        = " www.FreeRTOS.org";
 
 	xOLEDData.contrast_val                 = OLED_CONTRAST_VAL;
 	xOLEDData.on_off                       = OLED_HORIZ_SCROLL_OFF;
@@ -540,6 +525,8 @@ static unsigned char ucOffset1 = 0, ucOffset2 = 5;
 
 static void prvSetupHardware( void )
 {
+	SystemCoreClockUpdate();
+	
 	/* Disable the Watch Dog Timer */
 	MSS_WD_disable( );
 

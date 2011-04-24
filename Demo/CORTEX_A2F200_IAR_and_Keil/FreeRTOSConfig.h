@@ -69,6 +69,12 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#ifdef __ICCARM__
+	#include <stdint.h>
+	#include <stddef.h>
+	extern uint32_t SystemFrequency;
+#endif
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -81,10 +87,11 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
+
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( 75000000UL )
+#define configCPU_CLOCK_HZ				( SystemFrequency )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
@@ -108,7 +115,7 @@
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 3 )
+#define configTIMER_TASK_PRIORITY		( 2 )
 #define configTIMER_QUEUE_LENGTH		10
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
 

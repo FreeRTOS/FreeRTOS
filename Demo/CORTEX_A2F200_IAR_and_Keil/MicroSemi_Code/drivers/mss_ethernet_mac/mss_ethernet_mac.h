@@ -16,7 +16,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 /******************************** DEFINES *************************************/
 
@@ -160,7 +160,7 @@ extern "C" {
 #define MSS_PHY_ADDRESS_AUTO_DETECT		255u
 
 /***************************************************************************//**
- * Listener function type defines the function prototype that might be followed 
+ * Listener function type defines the function prototype that might be followed
  * by MAC_isr which is triggered with each receive and transmit related interrupts.
  * Listener functions should follow the following prototype:
  *		void MAC_Listener( uint32_t events );
@@ -168,7 +168,7 @@ extern "C" {
  * or events. Events input to the system are:
  *      #define MSS_MAC_EVENT_PACKET_SEND		1
  *      #define MSS_MAC_EVENT_PACKET_RECEIVED	2
- * Listener function should be defined by the application using this driver if 
+ * Listener function should be defined by the application using this driver if
  * needed. This function may be assigned to the driver using MAC_set_callback
  * routine and may be un assigned again by using the same routine with a NULL pointer
  * as the event listener function. It is recommended to use this property for interrupt
@@ -177,7 +177,7 @@ extern "C" {
 typedef void (*MSS_MAC_callback_t)(uint32_t events);
 
 /***************************************************************************//**
- * Statistics counter identifiers are used with MAC_get_statistics routine to 
+ * Statistics counter identifiers are used with MAC_get_statistics routine to
  * receive the count of the requested errors/interrupts occurrences.
  *
  * MSS_MAC_RX_INTERRUPTS
@@ -270,7 +270,7 @@ typedef enum {
 	MSS_MAC_TX_EXCESSIVE_COLLISION,
 	MSS_MAC_TX_COLLISION_COUNT,
 	MSS_MAC_TX_UNDERFLOW_ERROR
-} mss_mac_statistics_id_t; 
+} mss_mac_statistics_id_t;
 
 /******************************* FUNCTIONS ************************************/
 
@@ -317,7 +317,7 @@ MSS_MAC_configure
 
 /***************************************************************************//**
  * Returns the configuration of the Ethernet Controller.
- * After the MAC_init function has been called, this API function can be used to 
+ * After the MAC_init function has been called, this API function can be used to
  * get the configuration of the Ethernet Controller.
  *
  * @return              The logical OR of the following values:
@@ -366,7 +366,7 @@ MSS_MAC_tx_packet
  * Returns available packet's size.
  *
  * @return              Size of packet, bigger than 0, if a packet is available,
- *                      if not, returns 0. 
+ *                      if not, returns 0.
  * @see   MAC_rx_packet()
  */
 int32_t
@@ -416,26 +416,26 @@ MSS_MAC_rx_packet
   used by the user application or copied to another buffer, the
   MSS_MAC_prepare_rx_descriptor() function must be called to free up the receive
   memory buffer used by the MSS Ethernet MAC
- 
+
   @param pacData
    The pacData parameter is a pointer to a memory buffer pointer. The uint8_t
    pointer pointed to by the pacData parameter will contain the address of the
    memory buffer containing the received packet after this function returns. The
    value of pacData is only valid if the return value is larger than zero,
    indicating that a packet was received.
-   
+
   @param time_out
     The time_out parameter is the timeout value for the transmission in milliseconds.
     The time_out parameter value can be one of the following values:
         • Unsigned integer greater than 0 and less than 0x01000000
-        • MSS_MAC_BLOCKING – there will be no timeout. 
+        • MSS_MAC_BLOCKING – there will be no timeout.
         • MSS_MAC_NONBLOCKING – the function will return immediately if no packets
-          have been received. 
+          have been received.
 
   @return
   	The function returns the size of the packet if the packet fits in pacData.
     Returns zero if there is no received packet.
-                        
+
   @see   MAC_rx_pckt_size()
   @see   MAC_tx_packet()
  */
@@ -537,10 +537,10 @@ MSS_MAC_set_callback
 /***************************************************************************//**
  * Returns description of latest error happened.
  *
- * @return              A string describing the error. This string must not be 
+ * @return              A string describing the error. This string must not be
  * 						modified by the application.
  */
-const int8_t* 
+const int8_t*
 MSS_MAC_last_error
 (
     void
@@ -549,7 +549,7 @@ MSS_MAC_last_error
 
 /***************************************************************************//**
  * Returns statistics counter of stat_id identifier.
- * 
+ *
  * @param stat_id		Identifier of statistics counter.
  * @return				Statistics counter of stat_id identifier.
  * 						On error returns 0.
@@ -561,22 +561,10 @@ MSS_MAC_get_statistics
 );
 
 /*
- * Ensure uip_buf is pointing to a valid and free buffer before any transmissions
- * initiated by the uIP stack occur.
- */
-unsigned char *MSS_MAC_GetTxDescriptor( void );
-
-/*
- * A buffer is no longer required by the application.  Hand it back to the
- * control of the MAC hardware.
- */
-void MSS_MAC_ReleaseBuffer( unsigned char *pucBuffer );
-
-/*
  * The double Tx has completed.  Hand back the Tx buffer to the control of
  * the MAC hardware.
  */
-void MSS_MAC_TxBufferCompleted( void );
+void MSS_MAC_CheckTxBufferStatus( void );
 #ifdef __cplusplus
 }
 #endif

@@ -143,6 +143,13 @@ unsigned portBASE_TYPE *puxPriority;
 	started. Therefore the idle task is not yet accounted for. We correct
 	this by increasing uxTasksRunningAtStart by 1. */
 	uxTasksRunningAtStart++;
+	
+	/* FreeRTOS version 7.0.0 can optionally create a timer service task.  If
+	this is done, then uxTasksRunningAtStart needs incrementing again as that
+	too is created when the scheduler is started. */
+	#if configUSE_TIMERS == 1
+		uxTasksRunningAtStart++;
+	#endif
 }
 /*-----------------------------------------------------------*/
 					

@@ -69,10 +69,14 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+/* Use a guard to ensure the following few definitions are'nt included in
+assembly files that include this header file. */
 #ifdef __ICCARM__
 	#include <stdint.h>
 	#include <stddef.h>
 	extern uint32_t SystemFrequency;
+	void vMainConfigureTimerForRunTimeStats( void );
+	unsigned long ulGetRunTimeCounterValue( void );
 #endif
 
 /*-----------------------------------------------------------
@@ -102,7 +106,7 @@
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	0
+#define configGENERATE_RUN_TIME_STATS	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configUSE_MALLOC_FAILED_HOOK	1
@@ -128,6 +132,9 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vMainConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
 
 /* Use the system definition, if there is one */
 #ifdef __NVIC_PRIO_BITS

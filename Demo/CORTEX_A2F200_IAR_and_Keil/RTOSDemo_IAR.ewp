@@ -1047,7 +1047,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa082, Pe1644, Pa039, Pa050</state>
+          <state>Pa082, Pe1644, Pa039, Pa050, pe191</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -1148,6 +1148,7 @@
           <state>$PROJ_DIR$/../Common/include</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/I2C</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_ethernet_mac</state>
+          <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_timer</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/OLED</state>
         </option>
         <option>

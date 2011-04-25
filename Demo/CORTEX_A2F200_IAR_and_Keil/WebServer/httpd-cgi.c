@@ -229,26 +229,13 @@ static unsigned short generate_io_state( void *arg )
 /*---------------------------------------------------------------------------*/
 extern void vTaskGetRunTimeStats( signed char *pcWriteBuffer );
 extern unsigned short usMaxJitter;
-static char cJitterBuffer[ 200 ];
 static unsigned short generate_runtime_stats( void *arg )
 {
 	( void ) arg;
 	lRefreshCount++;
 	sprintf( cCountBuf, "<p><br>Refresh count = %d", ( int ) lRefreshCount );
 	
-	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
-	{
-		sprintf( cJitterBuffer, "<p><br>Max high frequency timer jitter = %d peripheral clock periods.<p><br>", ( int ) usMaxJitter );
-		vTaskGetRunTimeStats( uip_appdata );
-		strcat( uip_appdata, cJitterBuffer );
-	}
-	#else
-	{
-		( void ) cJitterBuffer;
-		strcpy( uip_appdata, "<p>Run time stats are only available in the debug_with_optimisation build configuration.<p>" );
-	}
-	#endif	
-
+	vTaskGetRunTimeStats( uip_appdata );
 	strcat( uip_appdata, cCountBuf );
 
 	return strlen( uip_appdata );

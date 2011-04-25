@@ -7,6 +7,8 @@
  * SVN $Revision: 2152 $
  * SVN $Date: 2010-02-11 14:44:11 +0000 (Thu, 11 Feb 2010) $
  */
+
+
 #include "i2c.h"
 #include "../../CMSIS/mss_assert.h"
 
@@ -145,6 +147,14 @@ void MSS_I2C_init
     this_i2c->hw_reg_bit->CTRL_CR1 = (clock_speed >> 1) & 0x01;
     this_i2c->hw_reg_bit->CTRL_CR0 = clock_speed & 0x01;
     this_i2c->hw_reg->ADDR = this_i2c->ser_address;
+	
+	/* The interrupt can cause a context switch, so ensure its priority is
+	between configKERNEL_INTERRUPT_PRIORITY and configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	NVIC_SetPriority( this_i2c->irqn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+	
+	vSemaphoreCreateBinary( ( this_i2c->xI2CCompleteSemaphore ) );
+	xSemaphoreTake( ( this_i2c->xI2CCompleteSemaphore ), 0 );
+	configASSERT( ( this_i2c->xI2CCompleteSemaphore ) );
 }
 
 /*------------------------------------------------------------------------------
@@ -196,6 +206,7 @@ void MSS_I2C_write
 	uint32_t primask;
 
     ASSERT( (this_i2c == &g_mss_i2c0) || (this_i2c == &g_mss_i2c1) );
+	configASSERT( ( this_i2c->xI2CCompleteSemaphore ) );
 
 	primask = disable_interrupts();
 
@@ -431,11 +442,28 @@ mss_i2c_status_t MSS_I2C_wait_complete
 {
     ASSERT( (this_i2c == &g_mss_i2c0) || (this_i2c == &g_mss_i2c1) );
 
+#ifdef USE_OLD_I2C_POLLING_CODE
     while ( this_i2c->status == MSS_I2C_IN_PROGRESS )
     {
         /* Wait for transaction to compltete.*/
         ;
     }
+#else
+	configASSERT( ( this_i2c->xI2CCompleteSemaphore ) );
+	if( xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED )
+	{
+		while ( this_i2c->status == MSS_I2C_IN_PROGRESS )
+		{
+			/* Wait for transaction to compltete.*/
+			;
+		}
+	}
+	else
+	{
+		xSemaphoreTake( this_i2c->xI2CCompleteSemaphore, portMAX_DELAY );
+	}
+#endif
+
     return this_i2c->status;
 }
 
@@ -451,12 +479,14 @@ mss_i2c_status_t MSS_I2C_wait_complete
 static void mss_i2c_isr
 (
 	mss_i2c_instance_t * this_i2c
-)
+		)
 {
 	volatile uint8_t status;
 	uint8_t data;
     uint8_t hold_bus;
     uint8_t clear_irq = 1;
+	long lHigherPriorityTaskWoken = pdFALSE;
+	configASSERT( ( this_i2c->xI2CCompleteSemaphore ) );
 
     ASSERT( (this_i2c == &g_mss_i2c0) || (this_i2c == &g_mss_i2c1) );
 
@@ -539,6 +569,7 @@ static void mss_i2c_isr
                     clear_irq = 0;
                 }
                 this_i2c->status = MSS_I2C_SUCCESS;
+				xSemaphoreGiveFromISR( this_i2c->xI2CCompleteSemaphore, &lHigherPriorityTaskWoken );
 			}
 			break;
 
@@ -577,6 +608,7 @@ static void mss_i2c_isr
                     clear_irq = 0;
                 }
                 this_i2c->status = MSS_I2C_SUCCESS;
+				xSemaphoreGiveFromISR( this_i2c->xI2CCompleteSemaphore, &lHigherPriorityTaskWoken );
 			}
             break;
 
@@ -600,6 +632,7 @@ static void mss_i2c_isr
 		case ST_SLAR_NACK: /* SLA+R tx'ed; let's release the bus (send a stop condition) */
             this_i2c->hw_reg_bit->CTRL_STO = 0x01;
             this_i2c->status = MSS_I2C_FAILED;
+			xSemaphoreGiveFromISR( this_i2c->xI2CCompleteSemaphore, &lHigherPriorityTaskWoken );
 			break;
 
 		case ST_RX_DATA_ACK: /* Data byte received, ACK returned */
@@ -630,6 +663,7 @@ static void mss_i2c_isr
             }
 
             this_i2c->status = MSS_I2C_SUCCESS;
+//			xSemaphoreGiveFromISR( this_i2c->xI2CCompleteSemaphore, &lHigherPriorityTaskWoken );
             break;
 
 		/******************** SLAVE RECEIVER **************************/
@@ -696,6 +730,7 @@ static void mss_i2c_isr
 			}
 			/* Mark any previous master write transaction as complete. */
             this_i2c->status = MSS_I2C_SUCCESS;
+//			xSemaphoreGiveFromISR( this_i2c->xI2CCompleteSemaphore, &lHigherPriorityTaskWoken );
 			break;
 
 		case ST_SLV_RST: /* SMBUS ONLY: timeout state. must clear interrupt */
@@ -747,6 +782,8 @@ static void mss_i2c_isr
     /* Read the status register to ensure the last I2C registers write took place
      * in a system built around a bus making use of posted writes. */
     status = this_i2c->hw_reg->STATUS;
+	
+	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }
 
 /*------------------------------------------------------------------------------

@@ -74,26 +74,24 @@
 #include "mss_ethernet_mac_regs.h"
 #include "mss_ethernet_mac.h"
 
-/* The buffer used by the uIP stack to both receive and send.  This points to
-one of the Ethernet buffers when its actually in use. */
+/* The buffer used by the uIP stack to both receive and send.  In this case,
+because the Ethernet driver has been modified to be zero copy - the uip_buf
+variable is just a pointer to an Ethernet buffer, and not a buffer in its own
+right. */
 extern unsigned char *uip_buf;
 
-static const unsigned char ucMACAddress[] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
-
+/* The ARP timer and the periodic timer share a callback function, so the
+respective timer IDs are used to determine which timer actually expired.  These
+constants are assigned to the timer IDs. */
 #define uipARP_TIMER				0
 #define uipPERIODIC_TIMER			1
 
+/* The length of the queue used to send events from timers or the Ethernet
+driver to the uIP stack. */
 #define uipEVENT_QUEUE_LENGTH		10
 
-#define uipETHERNET_RX_EVENT		0x01UL
-#define	uipETHERNET_TX_EVENT		0x02UL
-#define uipARP_TIMER_EVENT			0x04UL
-#define uipPERIODIC_TIMER_EVENT		0x08UL
-#define uipAPPLICATION_SEND_EVENT	0x10UL
-
+/* A block time of zero simply means "don't block". */
 #define uipDONT_BLOCK				0UL
-
-/*-----------------------------------------------------------*/
 
 /* How long to wait before attempting to connect the MAC again. */
 #define uipINIT_WAIT    ( 100 / portTICK_RATE_MS )
@@ -122,6 +120,10 @@ static void prvInitialise_uIP( void );
  */
 static void prvEMACEventListener( unsigned long ulISREvents );
 
+/*
+ * The callback function that is assigned to both the periodic timer and the
+ * ARP timer.
+ */
 static void prvUIPTimerCallback( xTimerHandle xTimer );
 
 /*
@@ -129,14 +131,16 @@ static void prvUIPTimerCallback( xTimerHandle xTimer );
  */
 static void prvInitEmac( void );
 
+/*
+ * Write data to the Ethener.  Note that this actually writes data twice for the
+ * to get around delayed ack issues when communicating with a non real-time
+ * peer (for example, a Windows machine).
+ */
 void vEMACWrite( void );
-
-long lEMACWaitForLink( void );
 
 /*
  * Port functions required by the uIP stack.
  */
-void clock_init( void );
 clock_time_t clock_time( void );
 
 /*-----------------------------------------------------------*/
@@ -144,14 +148,6 @@ clock_time_t clock_time( void );
 /* The queue used to send TCP/IP events to the uIP stack. */
 xQueueHandle xEMACEventQueue = NULL;
 
-static unsigned long ulUIP_Events = 0UL;
-
-/*-----------------------------------------------------------*/
-
-void clock_init(void)
-{
-	/* This is done when the scheduler starts. */
-}
 /*-----------------------------------------------------------*/
 
 clock_time_t clock_time( void )
@@ -163,70 +159,31 @@ clock_time_t clock_time( void )
 void vuIP_Task( void *pvParameters )
 {
 portBASE_TYPE i;
-unsigned long ulNewEvent;
+unsigned long ulNewEvent = 0UL;
+unsigned long ulUIP_Events = 0UL;
 
+	/* Just to prevent compiler warnings about the unused parameter. */
 	( void ) pvParameters;
 
 	/* Initialise the uIP stack, configuring for web server usage. */
 	prvInitialise_uIP();
 
-	/* Initialise the MAC. */
+	/* Initialise the MAC and PHY. */
 	prvInitEmac();
 
 	for( ;; )
 	{
-		if( ( ulUIP_Events & uipETHERNET_TX_EVENT ) != 0UL )
+		/* Is there received data ready to be processed? */
+		uip_len = MSS_MAC_rx_packet();
+
+		/* Statements to be executed if data has been received on the Ethernet. */
+		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 		{
-			ulUIP_Events &= ~uipETHERNET_TX_EVENT;
-			MSS_MAC_TxBufferCompleted();
-		}
-
-		if( ( ulUIP_Events & uipETHERNET_RX_EVENT ) != 0UL )
-		{
-			ulUIP_Events &= ~uipETHERNET_RX_EVENT;
-
-			/* Is there received data ready to be processed? */
-			uip_len = MSS_MAC_rx_packet();
-
-			if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
+			/* Standard uIP loop taken from the uIP manual. */
+			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 			{
-				/* Standard uIP loop taken from the uIP manual. */
-				if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
-				{
-					uip_arp_ipin();
-					uip_input();
-
-					/* If the above function invocation resulted in data that
-					should be sent out on the network, the global variable
-					uip_len is set to a value > 0. */
-					if( uip_len > 0 )
-					{
-						uip_arp_out();
-						vEMACWrite();
-					}
-				}
-				else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
-				{
-					uip_arp_arpin();
-
-					/* If the above function invocation resulted in data that
-					should be sent out on the network, the global variable
-					uip_len is set to a value > 0. */
-					if( uip_len > 0 )
-					{
-						vEMACWrite();
-					}
-				}
-			}
-		}
-
-		if( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL )
-		{
-			ulUIP_Events &= ~uipPERIODIC_TIMER_EVENT;
-
-			for( i = 0; i < UIP_CONNS; i++ )
-			{
-				uip_periodic( i );
+				uip_arp_ipin();
+				uip_input();
 
 				/* If the above function invocation resulted in data that
 				should be sent out on the network, the global variable
@@ -237,15 +194,57 @@ unsigned long ulNewEvent;
 					vEMACWrite();
 				}
 			}
+			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
+			{
+				uip_arp_arpin();
+
+				/* If the above function invocation resulted in data that
+				should be sent out on the network, the global variable
+				uip_len is set to a value > 0. */
+				if( uip_len > 0 )
+				{
+					vEMACWrite();
+				}
+			}
+		}
+		else
+		{
+			/* Clear the RX event latched in ulUIP_Events - if one was latched. */
+			ulUIP_Events &= ~uipETHERNET_RX_EVENT;
 		}
 
-		/* Call the ARP timer function every 10 seconds. */
+		/* Statements to be executed if the TCP/IP period timer has expired. */
+		if( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL )
+		{
+			ulUIP_Events &= ~uipPERIODIC_TIMER_EVENT;
+
+			if( uip_buf != NULL )
+			{
+				for( i = 0; i < UIP_CONNS; i++ )
+				{
+					uip_periodic( i );
+	
+					/* If the above function invocation resulted in data that
+					should be sent out on the network, the global variable
+					uip_len is set to a value > 0. */
+					if( uip_len > 0 )
+					{
+						uip_arp_out();
+						vEMACWrite();
+					}
+				}
+			}
+		}
+
+		/* Statements to be executed if the ARP timer has expired. */
 		if( ( ulUIP_Events & uipARP_TIMER_EVENT ) != 0 )
 		{
 			ulUIP_Events &= ~uipARP_TIMER_EVENT;
 			uip_arp_timer();
 		}
 
+		/* If all latched events have been cleared - block until another event
+		occurs. */
 		if( ulUIP_Events == pdFALSE )
 		{
 			xQueueReceive( xEMACEventQueue, &ulNewEvent, portMAX_DELAY );
@@ -270,49 +269,6 @@ struct uip_eth_addr xAddr;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationProcessFormInput( char *pcInputString )
-{
-char *c;
-
-	/* Only interested in processing form input if this is the IO page. */
-	c = strstr( pcInputString, "io.shtml" );
-	
-	if( c )
-	{
-		/* Is there a command in the string? */
-		c = strstr( pcInputString, "?" );
-	    if( c )
-	    {
-			/* Turn the LED's on or off in accordance with the check box status. */
-			if( strstr( c, "LED0=1" ) != NULL )
-			{
-				/* Turn the LEDs on. */
-				vParTestSetLED( 7, 1 );
-				vParTestSetLED( 8, 1 );
-				vParTestSetLED( 9, 1 );
-				vParTestSetLED( 10, 1 );
-			}
-			else
-			{
-				/* Turn the LEDs off. */
-				vParTestSetLED( 7, 0 );
-				vParTestSetLED( 8, 0 );
-				vParTestSetLED( 9, 0 );
-				vParTestSetLED( 10, 0 );
-			}
-	    }
-		else
-		{
-			/* Commands to turn LEDs off are not always explicit. */
-			vParTestSetLED( 7, 0 );
-			vParTestSetLED( 8, 0 );
-			vParTestSetLED( 9, 0 );
-			vParTestSetLED( 10, 0 );
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
 static void prvInitialise_uIP( void )
 {
 uip_ipaddr_t xIPAddr;
@@ -331,22 +287,25 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 
 	/* Create and start the uIP timers. */
 	xARPTimer = xTimerCreate( 	( const signed char * const ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
-								( 500 / portTICK_RATE_MS ), /* Timer period. */
+								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
 								pdTRUE, /* Autor-reload. */
 								( void * ) uipARP_TIMER,
 								prvUIPTimerCallback
 							);
 
 	xPeriodicTimer = xTimerCreate( 	( const signed char * const ) "PeriodicTimer",
-									( 5000 / portTICK_RATE_MS ),
+									( 500UL / portTICK_RATE_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,
 									prvUIPTimerCallback
 								);
 
+	/* Sanity check that the timers were indeed created. */
 	configASSERT( xARPTimer );
 	configASSERT( xPeriodicTimer );
 
+	/* These commands will block indefinitely until they succeed, so there is
+	no point in checking their return values. */
 	xTimerStart( xARPTimer, portMAX_DELAY );
 	xTimerStart( xPeriodicTimer, portMAX_DELAY );
 }
@@ -355,24 +314,21 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 static void prvEMACEventListener( unsigned long ulISREvents )
 {
 long lHigherPriorityTaskWoken = pdFALSE;
-unsigned long ulUIPEvents = 0UL;
+const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 
+	/* Sanity check that the event queue was indeed created. */
 	configASSERT( xEMACEventQueue );
 
 	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_SEND ) != 0UL )
 	{
-		ulUIP_Events |= uipETHERNET_TX_EVENT;
+		/* An Ethernet Tx event has occurred. */
+		MSS_MAC_FreeTxBuffers();
 	}
 
 	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_RECEIVED ) != 0UL )
 	{
-		/* Wake the uIP task as new data has arrived. */
-		ulUIPEvents |= uipETHERNET_RX_EVENT;
-	}
-
-	if( ulUIPEvents != 0UL )
-	{
-		xQueueSendFromISR( xEMACEventQueue, &ulUIPEvents, &lHigherPriorityTaskWoken );
+		/* An Ethernet Rx event has occurred. */
+		xQueueSendFromISR( xEMACEventQueue, &ulRxEvent, &lHigherPriorityTaskWoken );
 	}
 
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
@@ -383,9 +339,12 @@ static void prvInitEmac( void )
 {
 const unsigned char ucPHYAddress = 1;
 
+	/* Initialise the MAC and PHY hardware. */
 	MSS_MAC_init( ucPHYAddress );
 
-	MSS_MAC_set_callback( prvEMACEventListener );
+	/* Register the event listener.  The Ethernet interrupt handler will call
+	this listener whenever an Rx or a Tx interrupt occurs. */
+	MSS_MAC_set_callback( ( MSS_MAC_callback_t ) prvEMACEventListener );
 
     /* Setup the EMAC and the NVIC for MAC interrupts. */
     NVIC_SetPriority( EthernetMAC_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
@@ -399,6 +358,10 @@ const long lMaxAttempts = 10;
 long lAttempt;
 const portTickType xShortDelay = ( 10 / portTICK_RATE_MS );
 
+	/* Try to send data to the Ethernet.  Keep trying for a while if data cannot
+	be sent immediately.  Note that this will actually cause the data to be sent
+	twice to get around delayed ACK problems when communicating with non real-
+	time TCP/IP stacks (such as a Windows machine). */
 	for( lAttempt = 0; lAttempt < lMaxAttempts; lAttempt++ )
 	{
 		if( MSS_MAC_tx_packet( uip_len ) != 0 )
@@ -413,28 +376,14 @@ const portTickType xShortDelay = ( 10 / portTICK_RATE_MS );
 }
 /*-----------------------------------------------------------*/
 
-long lEMACWaitForLink( void )
-{
-long lReturn = pdFAIL;
-unsigned long ulStatus;
-
-	ulStatus = MSS_MAC_link_status();
-	if( ( ulStatus & ( unsigned long ) MSS_MAC_LINK_STATUS_LINK ) != 0UL )
-	{
-		lReturn = pdPASS;
-	}
-
-	return lReturn;
-}
-/*-----------------------------------------------------------*/
-
 static void prvUIPTimerCallback( xTimerHandle xTimer )
 {
 static const unsigned long ulARPTimerExpired = uipARP_TIMER_EVENT;
 static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;
 
 	/* This is a time callback, so calls to xQueueSend() must not attempt to
-	block. */
+	block.  As this callback is assigned to both the ARP and Periodic timers, the
+	first thing to do is ascertain which timer it was that actually expired. */
 	switch( ( int ) pvTimerGetTimerID( xTimer ) )
 	{
 		case uipARP_TIMER		:	xQueueSend( xEMACEventQueue, &ulARPTimerExpired, uipDONT_BLOCK );
@@ -445,6 +394,43 @@ static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;
 
 		default					:  	/* Should not get here. */
 									break;
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationProcessFormInput( char *pcInputString )
+{
+char *c;
+
+	/* Only interested in processing form input if this is the IO page. */
+	c = strstr( pcInputString, "io.shtml" );
+	
+	if( c )
+	{
+		/* Is there a command in the string? */
+		c = strstr( pcInputString, "?" );
+	    if( c )
+	    {
+			/* Turn the LED's on or off in accordance with the check box status. */
+			if( strstr( c, "LED0=1" ) != NULL )
+			{
+				/* Turn the LEDs on. */
+				vParTestSetLED( 3, 1 );
+				vParTestSetLED( 4, 1 );
+			}
+			else
+			{
+				/* Turn the LEDs off. */
+				vParTestSetLED( 3, 0 );
+				vParTestSetLED( 4, 0 );
+			}
+	    }
+		else
+		{
+			/* Commands to turn LEDs off are not always explicit. */
+			vParTestSetLED( 3, 0 );
+			vParTestSetLED( 4, 0 );
+		}
 	}
 }
 /*-----------------------------------------------------------*/

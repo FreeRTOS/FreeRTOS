@@ -194,6 +194,11 @@
 
 #include "../../CMSIS/a2fxxxm3.h"
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -324,7 +329,10 @@ typedef struct mss_i2c_instance
 	/* Slave data: */
 	uint_fast8_t slave_mem_offset_length;
 	mss_i2c_slave_wr_handler_t slave_write_handler;
-
+	
+	/* Used to get access to and wait for completion of an I2C transaction. */
+	xSemaphoreHandle xI2CCompleteSemaphore;
+	
 } mss_i2c_instance_t;
 
 /*-------------------------------------------------------------------------*//**

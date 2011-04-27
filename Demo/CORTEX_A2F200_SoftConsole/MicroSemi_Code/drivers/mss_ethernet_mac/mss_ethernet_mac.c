@@ -9,9 +9,18 @@
  *
  ******************************************************************************/
 
+/*
+ *
+ *
+ * NOTE:  This driver has been modified specifically for use with the* uIP stack.
+ * It is no longer a generic driver.
+ *
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -29,7 +38,7 @@ extern "C" {
 /**************************** INTERNAL DEFINES ********************************/
 
 #define MAC_CHECK(CHECK,ERRNO)	\
-	{if(!(CHECK)){g_mss_mac.last_error=(ERRNO); ASSERT((CHECK));}}
+	{if(!(CHECK)){g_mss_mac.last_error=(ERRNO); configASSERT((CHECK));}}
 
 /*
  * Flags
@@ -54,8 +63,8 @@ extern "C" {
 /* Allocating this many buffers will always ensure there is one free as, even
 though TX_RING_SIZE is set to two, the two Tx descriptors will only ever point
 to the same buffer. */
-#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE
-#define macBUFFER_SIZE 1500
+#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE + 1
+#define macBUFFER_SIZE 1488
 
 /***************************************************************/
 MAC_instance_t g_mss_mac;
@@ -78,14 +87,15 @@ static const int8_t ErrorMessages[][MAX_ERROR_MESSAGE_WIDTH] = {
 /*
  * Null variables
  */
-static MAC_instance_t* 	NULL_instance;
 static uint8_t* 		NULL_buffer;
 static MSS_MAC_callback_t 	NULL_callback;
+
+/* Declare the uip_buf as a pointer, rather than the traditional array, as this
+is a zero copy driver.  uip_buf just gets set to whichever buffer is being
+processed. */
 unsigned char *uip_buf = NULL;
 
 /**************************** INTERNAL FUNCTIONS ******************************/
-
-static int32_t	MAC_test_instance( void );
 
 static int32_t	MAC_dismiss_bad_frames( void );
 static int32_t	MAC_send_setup_frame( void );
@@ -109,12 +119,17 @@ static void MAC_release_buffer( unsigned char *pcBufferToRelease );
 	#error This uIP Ethernet driver required TX_RING_SIZE to be set to 2
 #endif
 
-/* Buffers that will dynamically be allocated to/from the Tx and Rx descriptors. */
-static unsigned char ucMACBuffers[ macNUM_BUFFERS ][ macBUFFER_SIZE ];
+/* Buffers that will dynamically be allocated to/from the Tx and Rx descriptors.
+The union is used for alignment only. */
+static union xMAC_BUFFERS
+{
+	unsigned long ulAlignmentVariable; /* For alignment only, not used anywhere. */
+	unsigned char ucBuffer[ macNUM_BUFFERS ][ macBUFFER_SIZE ];
+} xMACBuffers;
 
-/* Each array position indicated whether or not the buffer of the same index
-is currently allocated to a descriptor (pdFALSE) or is free for use (pdTRUE). */
-static unsigned char ucMACBufferFree[ macNUM_BUFFERS ];
+/* Each array position indicates whether or not the buffer of the same index
+is currently allocated to a descriptor (pdTRUE) or is free for use (pdFALSE). */
+static unsigned char ucMACBufferInUse[ macNUM_BUFFERS ] = { 0 };
 
 /***************************************************************************//**
  * Initializes the Ethernet Controller.
@@ -138,7 +153,7 @@ MSS_MAC_init
 	/* To start with all buffers are free. */
 	for( a = 0; a < macNUM_BUFFERS; a++ )
 	{
-		ucMACBufferFree[ a ] = pdTRUE;
+		ucMACBufferInUse[ a ] = pdFALSE;
 	}
 	
     /* Try to reset chip */
@@ -151,9 +166,9 @@ MSS_MAC_init
 
     /* Check reset values of some registers to constrol
      * base address validity */
-    ASSERT( MAC->CSR0 == 0xFE000000uL );
-    ASSERT( MAC->CSR5 == 0xF0000000uL );
-    ASSERT( MAC->CSR6 == 0x32000040uL );
+    configASSERT( MAC->CSR0 == 0xFE000000uL );
+    configASSERT( MAC->CSR5 == 0xF0000000uL );
+    configASSERT( MAC->CSR6 == 0x32000040uL );
 
     /* Instance setup */
     MAC_memset_All( &g_mss_mac, 0u );
@@ -169,8 +184,8 @@ MSS_MAC_init
 		
 		/* Allocate a buffer to the descriptor, then mark the buffer as in use
 		(not free). */
-        g_mss_mac.rx_descriptors[a].buffer_1 = ( unsigned long ) &( ucMACBuffers[ a ][ 0 ] );
-		ucMACBufferFree[ a ] = pdFALSE;
+        g_mss_mac.rx_descriptors[a].buffer_1 = ( unsigned long ) &( xMACBuffers.ucBuffer[ a ][ 0 ] );
+		ucMACBufferInUse[ a ] = pdTRUE;
     }
     g_mss_mac.rx_descriptors[RX_RING_SIZE-1].descriptor_1 |= RDES1_RER;
 
@@ -189,8 +204,6 @@ MSS_MAC_init
     MAC_BITBAND->CSR0_BAR = (uint32_t)BUS_ARBITRATION_SCHEME;
 
     /* Fixed settings */
-    /* No automatic polling */
-    MAC->CSR0 = MAC->CSR0 &~ CSR0_TAP_MASK;
     /* No space between descriptors */
     MAC->CSR0 = MAC->CSR0 &~ CSR0_DSL_MASK;
     /* General-purpose timer works in continuous mode */
@@ -198,39 +211,41 @@ MSS_MAC_init
     /* Start general-purpose */
     MAC->CSR11 =  (MAC->CSR11 & ~CSR11_TIM_MASK) | (0x0000FFFFuL << CSR11_TIM_SHIFT);
 
-    /* Disable promiscuous mode */
-    MAC_BITBAND->CSR6_PR = 0u;
-
-    /* Enable store and forward */
-    MAC_BITBAND->CSR6_SF = 1u;
-
+	/* Ensure promiscous mode is off (it should be by default anyway). */
+	MAC_BITBAND->CSR6_PR = 0;
+	
+	/* Perfect filter. */
+	MAC_BITBAND->CSR6_HP = 1;
+	
+	/* Pass multcast. */
+	MAC_BITBAND->CSR6_PM = 1;
+	
     /* Set descriptors */
     MAC->CSR3 = (uint32_t)&(g_mss_mac.rx_descriptors[0].descriptor_0);
     MAC->CSR4 = (uint32_t)&(g_mss_mac.tx_descriptors[0].descriptor_0);
-    
+
 	/* enable normal interrupts */
     MAC_BITBAND->CSR7_NIE = 1u;
 
+    /* Set default MAC address and reset mac filters */
+   	MAC_memcpy( g_mss_mac.mac_address, mac_address, 6u );
+ 	MSS_MAC_set_mac_address((uint8_t *)mac_address);
+	
     /* Detect PHY */
     if( g_mss_mac.phy_address > MSS_PHY_ADDRESS_MAX )
     {
     	PHY_probe();
-    	ASSERT( g_mss_mac.phy_address <= MSS_PHY_ADDRESS_MAX );
+    	configASSERT( g_mss_mac.phy_address <= MSS_PHY_ADDRESS_MAX );
     }
 
     /* Reset PHY */
     PHY_reset();
 
-	/* Set flags */
-    g_mss_mac.flags = FLAG_MAC_INIT_DONE | FLAG_PERFECT_FILTERING;
-
 	/* Configure chip according to PHY status */
     MSS_MAC_auto_setup_link();
-
-    /* Set default MAC address and reset mac filters */
-   	MAC_memcpy( g_mss_mac.mac_address, mac_address, 6u );
-   	MSS_MAC_set_mac_filters( 0u, NULL_buffer );
-   	MAC_BITBAND->CSR6_RA = 1; /* Receive all. */
+	
+	/* Ensure uip_buf starts by pointing somewhere. */
+	uip_buf = MAC_obtain_buffer();	
 }
 
 
@@ -259,18 +274,16 @@ MSS_MAC_configure
 {
     int32_t ret;
 
-    ASSERT( MAC_test_instance() == MAC_OK );
-
     ret = MAC_stop_transmission();
-    ASSERT( ret == MAC_OK );
+    configASSERT( ret == MAC_OK );
 
     ret = MAC_stop_receiving();
-    ASSERT( ret == MAC_OK );
+    configASSERT( ret == MAC_OK );
 
     MAC_BITBAND->CSR6_RA = (uint32_t)(((configuration & MSS_MAC_CFG_RECEIVE_ALL) != 0u) ? 1u : 0u );
     MAC_BITBAND->CSR6_TTM = (((configuration & MSS_MAC_CFG_TRANSMIT_THRESHOLD_MODE) != 0u) ? 1u : 0u );
     MAC_BITBAND->CSR6_SF = (uint32_t)(((configuration & MSS_MAC_CFG_STORE_AND_FORWARD) != 0u) ? 1u : 0u );
-    
+
     switch( configuration & MSS_MAC_CFG_THRESHOLD_CONTROL_11 ) {
     case MSS_MAC_CFG_THRESHOLD_CONTROL_00:
         MAC->CSR6 = MAC->CSR6 & ~CSR6_TR_MASK;
@@ -322,8 +335,6 @@ MSS_MAC_get_configuration( void )
 {
     uint32_t configuration;
 
-    ASSERT( MAC_test_instance() == MAC_OK );
-
     configuration = 0u;
     if( MAC_BITBAND->CSR6_RA != 0u ) {
         configuration |= MSS_MAC_CFG_RECEIVE_ALL;
@@ -370,7 +381,7 @@ MSS_MAC_get_configuration( void )
     if( MAC_BITBAND->CSR6_HP != 0u ) {
         configuration |= MSS_MAC_CFG_HASH_PERFECT_RECEIVE_FILTERING_MODE;
     }
-    
+
     return (int32_t)configuration;
 }
 
@@ -382,11 +393,11 @@ MSS_MAC_get_configuration( void )
   the transmit FIFO and then activates the transmitter for this packet. If space
   is available in the FIFO, the function will return once pac_len bytes of the
   packet have been placed into the FIFO and the transmitter has been started.
-  This function will not wait for the transmission to complete. 
+  This function will not wait for the transmission to complete.
 
   @return
     The function returns zero if a timeout occurs otherwise it returns size of the packet.
-    
+
   @see   MAC_rx_packet()
  */
 
@@ -399,42 +410,42 @@ MSS_MAC_tx_packet
 	uint32_t desc;
 	unsigned long ulDescriptor;
     int32_t error = MAC_OK;
-	extern unsigned char *uip_buf;
 
-    ASSERT( MAC_test_instance() == MAC_OK );
+    configASSERT( uip_buf != NULL_buffer );
 
-    ASSERT( uip_buf != NULL_buffer );
-
-	ASSERT( usLength >= 12 );
+	configASSERT( usLength >= 12 );
 
     if( (g_mss_mac.flags & FLAG_EXCEED_LIMIT) == 0u )
     {
-		ASSERT( usLength <= MSS_MAX_PACKET_SIZE );
+		configASSERT( usLength <= MSS_MAX_PACKET_SIZE );
 	}
 
 	/* Check if second descriptor is free, if it is then the first must
 	also be free. */
-	if(((g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == TDES0_OWN )
+	if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) || ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) )
 	{
 		error = MAC_BUFFER_IS_FULL;
 	}
 
-	if( error == MAC_OK ) {
-		/* Assumed TX_RING_SIZE == 2. */
+	
+	if( error == MAC_OK )
+	{
+		/* Assumed TX_RING_SIZE == 2.  A #error directive checks this is the
+		case. */
 		for( ulDescriptor = 0; ulDescriptor < TX_RING_SIZE; ulDescriptor++ )
 		{
-			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 = 0u;
+			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 = 0u;
 
 			if( (g_mss_mac.flags & FLAG_CRC_DISABLE) != 0u ) {
-				g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 |= TDES1_AC;
+				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_AC;
 			}
 
 			/* Every buffer can hold a full frame so they are always first and last
 			   descriptor */
-			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 |= TDES1_LS | TDES1_FS;
+        	g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_LS | TDES1_FS | TDES1_IC;
 
 			/* set data size */
-			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_1 |= usLength;
+			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= usLength;
 
 			/* reset end of ring */
 			g_mss_mac.tx_descriptors[TX_RING_SIZE-1].descriptor_1 |= TDES1_TER;
@@ -445,10 +456,10 @@ MSS_MAC_tx_packet
 			}
 
 			/* The data buffer is assigned to the Tx descriptor. */
-			g_mss_mac.tx_descriptors[ ulDescriptor ].buffer_1 = ( unsigned long ) uip_buf;
+			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].buffer_1 = ( unsigned long ) uip_buf;
 
 			/* update counters */
-			desc = g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_0;
+			desc = g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0;
 			if( (desc & TDES0_LO) != 0u ) {
 				g_mss_mac.statistics.tx_loss_of_carrier++;
 			}
@@ -468,26 +479,22 @@ MSS_MAC_tx_packet
 				(desc >> TDES0_CC_OFFSET) & TDES0_CC_MASK;
 
 			/* Give ownership of descriptor to the MAC */
-			g_mss_mac.tx_descriptors[ ulDescriptor ].descriptor_0 = TDES0_OWN;
-
-			g_mss_mac.tx_desc_index = 0; 
-		}
+			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0 = RDES0_OWN;
+			
+			g_mss_mac.tx_desc_index = (g_mss_mac.tx_desc_index + 1u) % (uint32_t)TX_RING_SIZE;
+			
+			MAC_start_transmission();
+			MAC->CSR1 = 1u;
+		}		
     }
-
-	/* Start transmission */
-	MAC_start_transmission();
-
-	/* transmit poll demand */
-	MAC->CSR1 = 1u;
-
-	
 	
     if (error == MAC_OK)
     {
-		/* The buffer uip_buf was pointing to is now under the control of the 
-		MAC (it is being transmitted).  Set uip_buf to point to a free buffer. */
-		uip_buf = MAC_obtain_buffer();
         error = (int32_t)usLength;
+		
+		/* The buffer pointed to by uip_buf is now assigned to a Tx descriptor.
+		Find anothere free buffer for uip_buf. */
+		uip_buf = MAC_obtain_buffer();
     }
     else
     {
@@ -512,8 +519,6 @@ MSS_MAC_rx_pckt_size
 )
 {
     int32_t retval;
-    ASSERT( MAC_test_instance() == MAC_OK );
-
     MAC_dismiss_bad_frames();
 
     if( (g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 &	RDES0_OWN) != 0u )
@@ -535,7 +540,7 @@ MSS_MAC_rx_pckt_size
  * Receives a packet from the Ethernet Controller into the uIP stack.
  * This function reads a packet from the receive FIFO of the controller and
  * places it into uip_buf.
- 
+
  * @return              Size of packet if packet fits in uip_buf.
  * 					    0 if there is no received packet.
  * @see   MAC_rx_pckt_size()
@@ -549,8 +554,6 @@ MSS_MAC_rx_packet
 {
 	uint16_t frame_length=0u;
 
-    ASSERT( MAC_test_instance() == MAC_OK );
-    
     MAC_dismiss_bad_frames();
 
     if( (g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 & RDES0_OWN) == 0u )
@@ -565,7 +568,7 @@ MSS_MAC_rx_packet
         if( frame_length > macBUFFER_SIZE ) {
         	return MAC_NOT_ENOUGH_SPACE;
         }
-       
+
 		/* uip_buf is about to point to the buffer that contains the received
 		data, mark the buffer that uip_buf is currently pointing to as free
 		again. */
@@ -585,7 +588,7 @@ MSS_MAC_rx_packet
 /***************************************************************************//**
  * Receives a packet from the Ethernet Controller.
  * This function reads a packet from the receive FIFO of the controller and
- * sets the address of pacData to the received data. 
+ * sets the address of pacData to the received data.
  * If time_out parameter is zero the function will return
  * immediately (after the copy operation if data is available. Otherwise the function
  * will keep trying to read till time_out expires or data is read, if MSS_MAC_BLOCKING
@@ -614,9 +617,7 @@ MSS_MAC_rx_packet_ptrset
 	uint16_t frame_length = 0u;
     int8_t exit = 0;
 
-    ASSERT( MAC_test_instance() == MAC_OK );
-
-    ASSERT(  (time_out == MSS_MAC_BLOCKING) ||
+    configASSERT(  (time_out == MSS_MAC_BLOCKING) ||
     			(time_out == MSS_MAC_NONBLOCKING) ||
     			((time_out >= 1) && (time_out <= 0x01000000UL)) );
 
@@ -653,11 +654,11 @@ MSS_MAC_rx_packet_ptrset
 
        /* Here we are setting the buffer 'pacData' address to the address
           RX descriptor address. After this is called, the following function
-          must be called 'MAC_prepare_rx_descriptor' 
+          must be called 'MAC_prepare_rx_descriptor'
           to prepare the current rx descriptor for receiving the next packet.
-       */       
-    	*pacData = (uint8_t *)g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1 ;         
-        
+       */
+    	*pacData = (uint8_t *)g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].buffer_1 ;
+
     }
     return ((int32_t)frame_length);
 }
@@ -678,8 +679,6 @@ MSS_MAC_link_status
 )
 {
 	uint32_t link;
-
-    ASSERT( MAC_test_instance() == MAC_OK );
 
     link = PHY_link_status();
     if( link == MSS_MAC_LINK_STATUS_LINK ) {
@@ -706,7 +705,6 @@ MSS_MAC_auto_setup_link
 )
 {
 	int32_t link;
-    ASSERT( MAC_test_instance() == MAC_OK );
 
     PHY_auto_negotiate();
 
@@ -741,9 +739,8 @@ MSS_MAC_set_mac_address
     const uint8_t *new_address
 )
 {
-    ASSERT( MAC_test_instance() == MAC_OK );
     /* Check if the new address is unicast */
-    ASSERT( (new_address[0]&1) == 0 );
+    configASSERT( (new_address[0]&1) == 0 );
 
    	MAC_memcpy( g_mss_mac.mac_address, new_address, 6u );
 
@@ -777,8 +774,6 @@ MSS_MAC_get_mac_address
     uint8_t *address
 )
 {
-    ASSERT( MAC_test_instance() == MAC_OK );
-
    	MAC_memcpy( address, g_mss_mac.mac_address, 6u );
 }
 
@@ -796,13 +791,12 @@ MSS_MAC_set_mac_filters
 	const uint8_t *filters
 )
 {
-    ASSERT( MAC_test_instance() == MAC_OK );
-    ASSERT( (filter_count==0) || (filters != NULL_buffer) );
+    configASSERT( (filter_count==0) || (filters != NULL_buffer) );
     /* Check if the mac addresses is multicast */
     {
     	int32_t a;
     	for( a = 0u; a < filter_count; a++ ) {
-    		ASSERT( (filters[a*6]&1) == 1 );
+    		configASSERT( (filters[a*6]&1) == 1 );
     	}
     }
 
@@ -852,8 +846,6 @@ void EthernetMAC_IRQHandler( void )
     uint32_t events;
     uint32_t intr_status;
 
-    ASSERT( MAC_test_instance() == MAC_OK );
-
     events = 0u;
     intr_status = MAC->CSR5;
 
@@ -871,7 +863,7 @@ void EthernetMAC_IRQHandler( void )
 
     /* Clear interrupts */
     MAC->CSR5 = CSR5_INT_BITS;
-    
+
     if( (events != 0u) && (g_mss_mac.listener != NULL_callback) ) {
         g_mss_mac.listener( events );
     }
@@ -896,12 +888,10 @@ MSS_MAC_set_callback
     MSS_MAC_callback_t listener
 )
 {
-    ASSERT( MAC_test_instance() == MAC_OK );
-
 	/* disable tx and rx interrupts */
     MAC_BITBAND->CSR7_RIE = 0u;
     MAC_BITBAND->CSR7_TIE = 0u;
-    
+
     g_mss_mac.listener = listener;
 
 	if( listener != NULL_callback ) {
@@ -929,8 +919,6 @@ MSS_MAC_last_error
 {
 	int8_t error_msg_nb;
     const int8_t* returnvalue;
-    
-    ASSERT( MAC_test_instance() == MAC_OK );
 
 	error_msg_nb = -(g_mss_mac.last_error);
 	if( error_msg_nb >= ERROR_MESSAGE_COUNT ) {
@@ -957,7 +945,6 @@ MSS_MAC_get_statistics
 )
 {
     uint32_t returnval = 0u;
-    ASSERT( MAC_test_instance() == MAC_OK );
 
 	switch( stat_id ) {
 	case MSS_MAC_RX_INTERRUPTS:
@@ -1024,31 +1011,6 @@ MSS_MAC_get_statistics
 
 /**************************** INTERNAL FUNCTIONS ******************************/
 
-/***************************************************************************//**
- * Checks if instace is valid.
- */
-static int32_t
-MAC_test_instance
-(
-    void
-)
-{
-    uint32_t val1;
-    uint32_t val2;
-    int32_t retval = MAC_WRONG_PARAMETER;
-
-    val1 = MAC->CSR3;
-    val2 = MAC->CSR4;
-
-    if( (&g_mss_mac != NULL_instance) &&
-    	((g_mss_mac.flags & FLAG_MAC_INIT_DONE) != 0u) &&
-    	( val1 == (uint32_t)g_mss_mac.rx_descriptors) &&
-    	(val2 == (uint32_t)g_mss_mac.tx_descriptors ) )
-    {
-    	retval = MAC_OK;
-    }
-    return retval;
-}
 
 /***************************************************************************//**
  * Prepares current rx descriptor for receiving.
@@ -1087,7 +1049,7 @@ MSS_MAC_prepare_rx_descriptor
 	if( (desc & RDES0_CE) != 0u ) {
 		g_mss_mac.statistics.rx_crc_error++;
 	}
-    
+
 	desc = MAC->CSR8;
 	g_mss_mac.statistics.rx_fifo_overflow +=
 		(desc & (CSR8_OCO_MASK|CSR8_FOC_MASK)) >> CSR8_FOC_SHIFT;
@@ -1166,22 +1128,22 @@ MAC_send_setup_frame
 
 	/* Stop transmission */
     ret = MAC_stop_transmission();
-    ASSERT( ret == MAC_OK );
+    configASSERT( ret == MAC_OK );
 
     ret = MAC_stop_receiving();
-    ASSERT( ret == MAC_OK );
+    configASSERT( ret == MAC_OK );
 
     /* Set descriptor */
     MAC->CSR4 = (uint32_t)&descriptor;
-    
+
 	/* Start transmission */
     MAC_start_transmission();
 
     /* Wait until transmission over */
     ret = MAC_OK;
     MAC_set_time_out( (uint32_t)SETUP_FRAME_TIME_OUT );
-    
-    while( (((MAC->CSR5 & CSR5_TS_MASK) >> CSR5_TS_SHIFT) != 
+
+    while( (((MAC->CSR5 & CSR5_TS_MASK) >> CSR5_TS_SHIFT) !=
     	CSR5_TS_SUSPENDED) && (MAC_OK == ret) )
     {
     	/* transmit poll demand */
@@ -1195,7 +1157,7 @@ MAC_send_setup_frame
 
     /* Set tx descriptor */
     MAC->CSR4 = (uint32_t)g_mss_mac.tx_descriptors;
-    
+
     /* Start receiving and transmission */
     MAC_start_receiving();
     MAC_start_transmission();
@@ -1219,7 +1181,7 @@ MAC_stop_transmission
 {
     int32_t retval = MAC_OK;
     MAC_set_time_out( (uint16_t)STATE_CHANGE_TIME_OUT );
-    
+
 	while( (((MAC->CSR5 & CSR5_TS_MASK) >> CSR5_TS_SHIFT) !=
 		CSR5_TS_STOPPED) && (retval == MAC_OK) )
 	{
@@ -1300,7 +1262,7 @@ MAC_dismiss_bad_frames
 {
 	int32_t dc = 0;
 	int8_t cont = 1;
-    
+
 	if( MAC_BITBAND->CSR6_PB != 0u ) {
 		/* User wants bad frames too, don't dismiss anything */
 		cont = 0;
@@ -1357,14 +1319,14 @@ MAC_get_time_out
 {
 	uint32_t timer;
 	uint32_t time = 0u;
-    
+
 	timer = ( MAC->CSR11 & CSR11_TIM_MASK );
-    
+
 	if( timer > g_mss_mac.last_timer_value ) {
 		time = 0x0000ffffUL;
 	}
 	time += g_mss_mac.last_timer_value - timer;
-    
+
 	if( MAC_BITBAND->CSR6_TTM == 0u ) {
 		time *= 10u;
 	}
@@ -1409,10 +1371,6 @@ static void MAC_memset_All(MAC_instance_t *s, uint32_t c)
    	MAC_memset( s->mac_address, (uint8_t)c, 6u );
    	MAC_memset( s->mac_filter_data, (uint8_t)c, 90u );
     s->phy_address = (uint8_t)c;
-//    for(count = 0; count<RX_RING_SIZE ;count++)
-//    {
-//        MAC_memset(s->rx_buffers[count], (uint8_t)c, (MSS_RX_BUFF_SIZE + 4u) );
-//    }
     s->rx_desc_index =c;
     for(count = 0; count<RX_RING_SIZE ;count++)
     {
@@ -1440,10 +1398,6 @@ static void MAC_memset_All(MAC_instance_t *s, uint32_t c)
     s->statistics.tx_no_carrier = c;
     s->statistics.tx_underflow_error = c;
     s->time_out_value = c;
-//    for(count = 0; count < TX_RING_SIZE ;count++)
-//    {
-//        MAC_memset( s->tx_buffers[count], (uint8_t)c, MSS_TX_BUFF_SIZE );
-//    }
     s->tx_desc_index = c;
     for(count = 0; count < TX_RING_SIZE ;count++)
     {
@@ -1470,21 +1424,28 @@ static void MAC_memcpy(uint8_t *dest, const uint8_t *src, uint32_t n)
     }
 }
 
-void MSS_MAC_TxBufferCompleted( void )
+/***************************************************************************//**
+ * Tx has completed, mark the buffers that were assigned to the Tx descriptors
+ * as free again.
+ *
+ */
+void MSS_MAC_FreeTxBuffers( void )
 {
-unsigned char *pxTransmittedBuffer;
-
-	/* Was it the second transmission that has completed? */
-	if( ( g_mss_mac.tx_descriptors[ 1 ].descriptor_0 & TDES0_OWN ) == 0UL )
+	if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == 0 ) && ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == 0 ) )
 	{
-		pxTransmittedBuffer = ( unsigned char * ) g_mss_mac.tx_descriptors[ 1 ].buffer_1;
-
-		/* The buffer has been transmitted and is no longer in use. */
-		MAC_release_buffer( pxTransmittedBuffer );
+		MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 0 ].buffer_1 );
+		MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 1 ].buffer_1 );
 	}
 }
 
-static unsigned char *MAC_obtain_buffer( void )
+/***************************************************************************//**
+ * Look through the array of buffers until one is found that is free for use -
+ * that is, not currently assigned to an Rx or a Tx descriptor.  Mark the buffer
+ * as in use, then return its address.
+ *
+ * @return          a pointer to a free buffer.
+ */
+unsigned char *MAC_obtain_buffer( void )
 {
 long lIndex;
 unsigned char *pcReturn = NULL;
@@ -1493,9 +1454,10 @@ unsigned char *pcReturn = NULL;
 	the buffer as now in use. */
 	for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
 	{
-		if( ucMACBufferFree[ lIndex ] == pdTRUE )
+		if( ucMACBufferInUse[ lIndex ] == pdFALSE )
 		{
-			pcReturn = &( ucMACBuffers[ lIndex ][ 0 ] );
+			pcReturn = &( xMACBuffers.ucBuffer[ lIndex ][ 0 ] );
+			ucMACBufferInUse[ lIndex ] = pdTRUE;
 			break;
 		}
 	}
@@ -1504,6 +1466,10 @@ unsigned char *pcReturn = NULL;
 	return pcReturn;
 }
 
+/***************************************************************************//**
+ * Return a buffer to the list of free buffers, it was in use, but is not now.
+ *
+ */
 void MAC_release_buffer( unsigned char *pucBufferToRelease )
 {
 long lIndex;
@@ -1512,13 +1478,15 @@ long lIndex;
 	it is currently pointing to is marked as being free again. */
 	for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
 	{
-		if( pucBufferToRelease == &( ucMACBuffers[ lIndex ][ 0 ] ) )
+		if( pucBufferToRelease == &( xMACBuffers.ucBuffer[ lIndex ][ 0 ] ) )
 		{
 			/* This is the buffer in use, mark it as being free. */
-			ucMACBufferFree[ lIndex ] = pdTRUE;
+			ucMACBufferInUse[ lIndex ] = pdFALSE;
 			break;
 		}
 	}
+	
+	configASSERT( lIndex < macNUM_BUFFERS );
 }
 
 

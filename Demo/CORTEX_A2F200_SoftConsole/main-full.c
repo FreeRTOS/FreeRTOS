@@ -71,11 +71,11 @@
  * incorporates a Cortex-M3 microcontroller.
  *
  * The main() Function:
- * main() creates three demo specific software timers, one demo specific queue,
- * and two demo specific tasks.  It then creates a whole host of 'standard demo'
- * tasks/queues/semaphores, before starting the scheduler.  The demo specific
- * tasks and timers are described in the comments here.  The standard demo
- * tasks are described on the FreeRTOS.org web site.
+ * main() creates two demo specific software timers, one demo specific queue,
+ * and three demo specific tasks.  It then creates a whole host of 'standard
+ * demo' tasks/queues/semaphores, before starting the scheduler.  The demo
+ * specific tasks and timers are described in the comments here.  The standard
+ * demo tasks are described on the FreeRTOS.org web site.
  *
  * The standard demo tasks provide no specific functionality.  They are
  * included to both test the FreeRTOS port, and provide examples of how the
@@ -102,6 +102,11 @@
  * the Blocked state every 200 milliseconds, and therefore toggles the LED
  * every 200 milliseconds.
  *
+ * The Demo Specific OLED Task:
+ * The OLED task is a very simple task that just scrolls a message across the
+ * OLED.  Ideally this would be done in a timer, but the OLED driver accesses
+ * the I2C which is time consuming.
+ *
  * The Demo Specific LED Software Timer and the Button Interrupt:
  * The user button SW1 is configured to generate an interrupt each time it is
  * pressed.  The interrupt service routine switches an LED on, and resets the
@@ -109,10 +114,6 @@
  * and uses a callback function that is defined to just turn the LED off again.
  * Therefore, pressing the user button will turn the LED on, and the LED will
  * remain on until a full five seconds pass without the button being pressed.
- *
- * The Demo Specific OLED Software Timer:
- * The OLED software timer is responsible for drawing a scrolling text message
- * on the OLED.
  *
  * The Demo Specific "Check" Callback Function:
  * This is called each time the 'check' timer expires.  The check timer
@@ -122,7 +123,7 @@
  * is ever discovered.  The check timer callback toggles the LED defined by
  * the mainCHECK_LED definition each time it executes.  Therefore, if LED
  * mainCHECK_LED is toggling every three seconds, then no error have been found.
- * If LED mainCHECK_LED is toggling every 500ms, then at least one error has
+ * If LED mainCHECK_LED is toggling every 500ms, then at least one errors has
  * been found.  The task in which the error was discovered is displayed at the
  * bottom of the "task stats" page that is served by the embedded web server.
  *
@@ -146,6 +147,7 @@
 /* Microsemi drivers/libraries includes. */
 #include "mss_gpio.h"
 #include "mss_watchdog.h"
+#include "mss_timer.h"
 #include "oled.h"
 
 /* Common demo includes. */
@@ -193,6 +195,7 @@ the queue empty. */
 #define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainOLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
@@ -202,15 +205,19 @@ stack than most of the other tasks. */
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks. */
-#define mainCHECK_TIMER_PERIOD_ms	( 3000UL )
+#define mainCHECK_TIMER_PERIOD_MS	( 3000UL / portTICK_RATE_MS )
 
 /* The period at which the OLED timer will expire.  Each time it expires, it's
 callback function updates the OLED text. */
-#define mainOLED_PERIOD_ms			( 75UL )
+#define mainOLED_PERIOD_MS			( 75UL / portTICK_RATE_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks. */
-#define mainERROR_CHECK_TIMER_PERIOD_ms ( 500UL )
+#define mainERROR_CHECK_TIMER_PERIOD_MS ( 500UL / portTICK_RATE_MS )
+
+/* The LED will remain on until the button has not been pushed for a full
+5000ms. */
+#define mainLED_TIMER_PERIOD_MS		( 5000UL / portTICK_RATE_MS )
 
 /* A zero block time. */
 #define mainDONT_BLOCK				( 0UL )
@@ -228,20 +235,15 @@ static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
 /*
- * The LED timer callback function.  This does nothing but switch the red LED 
+ * The LED timer callback function.  This does nothing but switch the red LED
  * off.
  */
-static void vLEDTimerCallback( xTimerHandle xTimer );
+static void prvLEDTimerCallback( xTimerHandle xTimer );
 
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void vCheckTimerCallback( xTimerHandle xTimer );
-
-/*
- * The OLED timer callback function, as described at the top of this file.
- */
-static void vOLEDTimerCallback( xTimerHandle xHandle );
+static void prvCheckTimerCallback( xTimerHandle xTimer );
 
 /*
  * This is not a 'standard' partest function, so the prototype is not in
@@ -254,21 +256,25 @@ void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE x
  */
 extern void vuIP_Task( void *pvParameters );
 
+/*
+ * A very simply task that does nothing but scroll the OLED display.  Ideally
+ * this would be done within a timer, but it accesses the I2C port which is
+ * time consuming.
+ */
+static void prvOLEDTask( void * pvParameters);
+
 /*-----------------------------------------------------------*/
 
 /* The queue used by both application specific demo tasks defined in this file. */
 static xQueueHandle xQueue = NULL;
 
-/* The LED software timer.  This uses vLEDTimerCallback() as it's callback
+/* The LED software timer.  This uses prvLEDTimerCallback() as it's callback
 function. */
 static xTimerHandle xLEDTimer = NULL;
 
-/* The check timer.  This uses vCheckTimerCallback() as it's callback
+/* The check timer.  This uses prvCheckTimerCallback() as it's callback
 function. */
 static xTimerHandle xCheckTimer = NULL;
-
-/* The OLED software timer.  Writes a moving text string to the OLED. */
-static xTimerHandle xOLEDTimer = NULL;
 
 /* The status message that is displayed at the bottom of the "task stats" web
 page, which is served by the uIP task.  This will report any errors picked up
@@ -287,32 +293,30 @@ int main(void)
 
 	if( xQueue != NULL )
 	{
-		/* Start the two application specific demo tasks, as described in the
+		/* Start the three application specific demo tasks, as described in the
 		comments at the top of this	file. */
 		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvOLEDTask, ( signed char * ) "OLED", configMINIMAL_STACK_SIZE, NULL, mainOLED_TASK_PRIORITY, NULL );
 
-		/* Create the software timer that is responsible for turning off the LED 
-		if the button is not pushed within 5000ms, as described at the top of 
+		/* Create the software timer that is responsible for turning off the LED
+		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
 		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
+									( mainLED_TIMER_PERIOD_MS ),		/* The timer period, in this case 5000ms (5s). */
 									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
 									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									vLEDTimerCallback					/* The callback function that switches the LED off. */
+									prvLEDTimerCallback					/* The callback function that switches the LED off. */
 								);
 
 		/* Create the software timer that performs the 'check' functionality,
 		as described at the top of this file. */
-		xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer", 	/* A text name, purely to help debugging. */
-									( mainCHECK_TIMER_PERIOD_ms / portTICK_RATE_MS ),/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,							/* The ID is not used, so can be set to anything. */
-									vCheckTimerCallback						/* The callback function that inspects the status of all the other tasks. */
+		xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+									( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,						/* The ID is not used, so can be set to anything. */
+									prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 								  );
-
-		/* Create the OLED timer as described at the top of this file. */
-		xOLEDTimer = xTimerCreate( ( const signed char * ) "OLEDTimer",	( mainOLED_PERIOD_ms / portTICK_RATE_MS ), pdTRUE, ( void * ) 0, vOLEDTimerCallback );
 
 		/* Create a lot of 'standard demo' tasks. */
 		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -325,7 +329,13 @@ int main(void)
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
 		/* Create the web server task. */
-//		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+		
+		/* The suicide tasks must be created last, as they need to know how many
+		tasks were running prior to their creation in order to ascertain whether
+		or not the correct/expected number of tasks are running at any given
+		time. */
+		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -340,7 +350,7 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
-static void vCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
 	/* Check the standard demo tasks are running without error.   Latch the
 	latest reported error in the pcStatusMessage character pointer. */
@@ -379,18 +389,18 @@ static void vCheckTimerCallback( xTimerHandle xTimer )
 		pcStatusMessage = "Error: RecMutex\r\n";
 	}
 
-	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_ms / portTICK_RATE_MS ) ) != pdTRUE )
+	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_MS ) ) != pdTRUE )
 	{
 		pcStatusMessage = "Error: TimerDemo";
 	}
 
 	/* Toggle the check LED to give an indication of the system status.  If
-	the LED toggles every mainCHECK_TIMER_PERIOD_ms milliseconds then
+	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
 	vParTestToggleLED( mainCHECK_LED );
 
 	/* Have any errors been latch in pcStatusMessage?  If so, shorten the
-	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_ms milliseconds.
+	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
 	This will result in an increase in the rate at which mainCHECK_LED
 	toggles. */
 	if( pcStatusMessage != NULL )
@@ -398,12 +408,12 @@ static void vCheckTimerCallback( xTimerHandle xTimer )
 		/* This call to xTimerChangePeriod() uses a zero block time.  Functions
 		called from inside of a timer callback function must *never* attempt
 		to block. */
-		xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_ms / portTICK_RATE_MS ), mainDONT_BLOCK );
+		xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void vLEDTimerCallback( xTimerHandle xTimer )
+static void prvLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
 	five seconds - turn the LED off. */
@@ -443,13 +453,6 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* The suicide tasks must be created last, as they need to know how many
-	tasks were running prior to their creation in order to ascertain whether
-	or not the correct/expected number of tasks are running at any given time.
-	Therefore the standard demo 'death' tasks are not created in main(), but
-	instead created here. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-
 	/* The timer command queue will have been filled when the timer test tasks
 	were created in main() (this is part of the test they perform).  Therefore,
 	while the check and OLED timers can be created in main(), they cannot be
@@ -457,7 +460,6 @@ const unsigned long ulValueToSend = 100UL;
 	task will drain the command queue, and now the check and OLED timers can be
 	started successfully. */
 	xTimerStart( xCheckTimer, portMAX_DELAY );
-	xTimerStart( xOLEDTimer, portMAX_DELAY );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -474,7 +476,7 @@ const unsigned long ulValueToSend = 100UL;
 		toggle an LED.  0 is used as the block time so the sending operation
 		will not block - it shouldn't need to block as the queue should always
 		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0 );
+		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -500,33 +502,20 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
-static void vOLEDTimerCallback( xTimerHandle xHandle )
+static void prvOLEDTask( void * pvParameters)
 {
-volatile size_t xFreeStackSpace;
 static struct oled_data xOLEDData;
 static unsigned char ucOffset1 = 0, ucOffset2 = 5;
+static portTickType xLastScrollTime = 0UL;
 
-	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amount of FreeRTOS heap that
-	remains unallocated. */
-	xFreeStackSpace = xPortGetFreeHeapSize();
+	/* Initialise the display. */
+	OLED_init();
 
-	if( xFreeStackSpace > 100 )
-	{
-		/* By now, the kernel has allocated everything it is going to, so
-		if there is a lot of heap remaining unallocated then
-		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
-		reduced accordingly. */
-	}
-
+	/* Initialise the parts of the oled_data structure that do not change. */
 	xOLEDData.line1          = FIRST_LINE;
-	xOLEDData.char_offset1   = ucOffset1++;
-	xOLEDData.string1        = "www.FreeRTOS.org";
-
+	xOLEDData.string1        = " www.FreeRTOS.org";
 	xOLEDData.line2          = SECOND_LINE;
-	xOLEDData.char_offset2   = ucOffset2++;
-	xOLEDData.string2        = "www.FreeRTOS.org";
-
+	xOLEDData.string2        = " www.FreeRTOS.org";
 	xOLEDData.contrast_val                 = OLED_CONTRAST_VAL;
 	xOLEDData.on_off                       = OLED_HORIZ_SCROLL_OFF;
 	xOLEDData.column_scrool_per_step       = OLED_HORIZ_SCROLL_STEP;
@@ -534,20 +523,34 @@ static unsigned char ucOffset1 = 0, ucOffset2 = 5;
 	xOLEDData.time_intrval_btw_scroll_step = OLED_HORIZ_SCROLL_TINVL;
 	xOLEDData.end_page                     = OLED_END_PAGE;
 
-	OLED_write_data( &xOLEDData, BOTH_LINES );
+
+	/* Initialise the last scroll time.  This only needs to be done once,
+	because from this point on it will get automatically updated in the
+	xTaskDelayUntil() API function. */
+	xLastScrollTime = xTaskGetTickCount();
+
+	for( ;; )
+	{
+		/* Wait until it is time to update the OLED again. */
+		vTaskDelayUntil( &xLastScrollTime, mainOLED_PERIOD_MS );
+		
+		xOLEDData.char_offset1   = ucOffset1++;
+		xOLEDData.char_offset2   = ucOffset2++;
+	
+		OLED_write_data( &xOLEDData, BOTH_LINES );
+	}
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
+	SystemCoreClockUpdate();
+	
 	/* Disable the Watch Dog Timer */
 	MSS_WD_disable( );
 
 	/* Configure the GPIO for the LEDs. */
 	vParTestInitialise();
-
-	/* Initialise the display. */
-	OLED_init();
 
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( GPIO8_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
@@ -561,7 +564,7 @@ void vApplicationMallocFailedHook( void )
 {
 	/* Called if a call to pvPortMalloc() fails because there is insufficient
 	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software 
+	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	for( ;; );
@@ -615,4 +618,34 @@ char *pcGetTaskStatusMessage( void )
 	}
 }
 /*-----------------------------------------------------------*/
+
+void vMainConfigureTimerForRunTimeStats( void )
+{
+const unsigned long ulMax32BitValue = 0xffffffffUL;
+
+	MSS_TIM64_init( MSS_TIMER_PERIODIC_MODE );
+	MSS_TIM64_load_immediate( ulMax32BitValue, ulMax32BitValue );
+	MSS_TIM64_start();
+}
+/*-----------------------------------------------------------*/
+unsigned long ulGetRunTimeCounterValue( void )
+{
+unsigned long long ullCurrentValue;
+const unsigned long long ulMax64BitValue = 0xffffffffffffffffULL;
+unsigned long *pulHighWord, *pulLowWord;
+
+	pulHighWord = ( unsigned long * ) &ullCurrentValue;
+	pulLowWord = pulHighWord++;
+	
+	MSS_TIM64_get_current_value( ( uint32_t * ) pulHighWord, ( uint32_t * ) pulLowWord );
+	
+	/* Convert the down count into an upcount. */
+	ullCurrentValue = ulMax64BitValue - ullCurrentValue;
+	
+	/* Scale to a 32bit number of suitable frequency. */
+	ullCurrentValue >>= 13;
+
+	/* Just return 32 bits. */
+	return ( unsigned long ) ullCurrentValue;
+}
 

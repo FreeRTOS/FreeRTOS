@@ -269,49 +269,6 @@ struct uip_eth_addr xAddr;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationProcessFormInput( char *pcInputString )
-{
-char *c;
-
-	/* Only interested in processing form input if this is the IO page. */
-	c = strstr( pcInputString, "io.shtml" );
-	
-	if( c )
-	{
-		/* Is there a command in the string? */
-		c = strstr( pcInputString, "?" );
-	    if( c )
-	    {
-			/* Turn the LED's on or off in accordance with the check box status. */
-			if( strstr( c, "LED0=1" ) != NULL )
-			{
-				/* Turn the LEDs on. */
-				vParTestSetLED( 7, 1 );
-				vParTestSetLED( 8, 1 );
-				vParTestSetLED( 9, 1 );
-				vParTestSetLED( 10, 1 );
-			}
-			else
-			{
-				/* Turn the LEDs off. */
-				vParTestSetLED( 7, 0 );
-				vParTestSetLED( 8, 0 );
-				vParTestSetLED( 9, 0 );
-				vParTestSetLED( 10, 0 );
-			}
-	    }
-		else
-		{
-			/* Commands to turn LEDs off are not always explicit. */
-			vParTestSetLED( 7, 0 );
-			vParTestSetLED( 8, 0 );
-			vParTestSetLED( 9, 0 );
-			vParTestSetLED( 10, 0 );
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
 static void prvInitialise_uIP( void )
 {
 uip_ipaddr_t xIPAddr;
@@ -357,7 +314,7 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 static void prvEMACEventListener( unsigned long ulISREvents )
 {
 long lHigherPriorityTaskWoken = pdFALSE;
-unsigned long ulUIPEvents = 0UL;
+const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 
 	/* Sanity check that the event queue was indeed created. */
 	configASSERT( xEMACEventQueue );
@@ -365,20 +322,13 @@ unsigned long ulUIPEvents = 0UL;
 	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_SEND ) != 0UL )
 	{
 		/* An Ethernet Tx event has occurred. */
-		MSS_MAC_CheckTxBufferStatus();
+		MSS_MAC_FreeTxBuffers();
 	}
 
 	if( ( ulISREvents & MSS_MAC_EVENT_PACKET_RECEIVED ) != 0UL )
 	{
 		/* An Ethernet Rx event has occurred. */
-		ulUIPEvents |= uipETHERNET_RX_EVENT;
-	}
-
-	if( ulUIPEvents != 0UL )
-	{
-		/* Send any events that have occurred to the uIP stack (the uIP task in
-		this case). */
-		xQueueSendFromISR( xEMACEventQueue, &ulUIPEvents, &lHigherPriorityTaskWoken );
+		xQueueSendFromISR( xEMACEventQueue, &ulRxEvent, &lHigherPriorityTaskWoken );
 	}
 
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
@@ -444,6 +394,43 @@ static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;
 
 		default					:  	/* Should not get here. */
 									break;
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationProcessFormInput( char *pcInputString )
+{
+char *c;
+
+	/* Only interested in processing form input if this is the IO page. */
+	c = strstr( pcInputString, "io.shtml" );
+	
+	if( c )
+	{
+		/* Is there a command in the string? */
+		c = strstr( pcInputString, "?" );
+	    if( c )
+	    {
+			/* Turn the LED's on or off in accordance with the check box status. */
+			if( strstr( c, "LED0=1" ) != NULL )
+			{
+				/* Turn the LEDs on. */
+				vParTestSetLED( 3, 1 );
+				vParTestSetLED( 4, 1 );
+			}
+			else
+			{
+				/* Turn the LEDs off. */
+				vParTestSetLED( 3, 0 );
+				vParTestSetLED( 4, 0 );
+			}
+	    }
+		else
+		{
+			/* Commands to turn LEDs off are not always explicit. */
+			vParTestSetLED( 3, 0 );
+			vParTestSetLED( 4, 0 );
+		}
 	}
 }
 /*-----------------------------------------------------------*/

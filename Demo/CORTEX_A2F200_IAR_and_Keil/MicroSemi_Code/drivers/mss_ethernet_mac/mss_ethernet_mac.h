@@ -564,7 +564,7 @@ MSS_MAC_get_statistics
  * The double Tx has completed.  Hand back the Tx buffer to the control of
  * the MAC hardware.
  */
-void MSS_MAC_CheckTxBufferStatus( void );
+void MSS_MAC_FreeTxBuffers( void );
 #ifdef __cplusplus
 }
 #endif

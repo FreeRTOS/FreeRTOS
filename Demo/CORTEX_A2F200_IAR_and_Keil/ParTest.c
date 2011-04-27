@@ -172,6 +172,7 @@ long lReturn = pdFALSE;
 				lReturn = pdTRUE;
 			}
 		}
+		taskEXIT_CRITICAL();
 	}
 
 	return lReturn;

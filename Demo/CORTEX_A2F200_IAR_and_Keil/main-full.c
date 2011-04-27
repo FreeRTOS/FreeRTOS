@@ -123,7 +123,7 @@
  * is ever discovered.  The check timer callback toggles the LED defined by
  * the mainCHECK_LED definition each time it executes.  Therefore, if LED
  * mainCHECK_LED is toggling every three seconds, then no error have been found.
- * If LED mainCHECK_LED is toggling every 500ms, then at least one error has
+ * If LED mainCHECK_LED is toggling every 500ms, then at least one errors has
  * been found.  The task in which the error was discovered is displayed at the
  * bottom of the "task stats" page that is served by the embedded web server.
  *

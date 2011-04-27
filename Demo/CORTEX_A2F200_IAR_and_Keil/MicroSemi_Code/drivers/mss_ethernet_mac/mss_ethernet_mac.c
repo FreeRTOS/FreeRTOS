@@ -10,8 +10,12 @@
  ******************************************************************************/
 
 /*
- * NOTE:  This driver has been roughly modified specifically for use with the
- * uIP stack.  It is no longer a generic driver.
+ *
+ *
+ * NOTE:  This driver has been modified specifically for use with the* uIP stack.
+ * It is no longer a generic driver.
+ *
+ *
  */
 
 #ifdef __cplusplus
@@ -59,7 +63,7 @@ extern "C" {
 /* Allocating this many buffers will always ensure there is one free as, even
 though TX_RING_SIZE is set to two, the two Tx descriptors will only ever point
 to the same buffer. */
-#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE + 2
+#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE + 1
 #define macBUFFER_SIZE 1488
 
 /***************************************************************/
@@ -207,13 +211,14 @@ MSS_MAC_init
     /* Start general-purpose */
     MAC->CSR11 =  (MAC->CSR11 & ~CSR11_TIM_MASK) | (0x0000FFFFuL << CSR11_TIM_SHIFT);
 
-	/* Disable transmit interrupt mitigation. */
-	MAC->CSR11 = ( MAC->CSR11 & ~CSR11_TT_MASK );
-	MAC->CSR11 = ( MAC->CSR11 & ~CSR11_NTP_MASK );
-
-	/* Automatic Tx descriptor polling. */
-	MAC->CSR0 = ( MAC->CSR0 & ~CSR0_TAP_MASK );
-	MAC->CSR0 = ( MAC->CSR0 | ( 0x01 << CSR0_TAP_SHIFT ) );
+	/* Ensure promiscous mode is off (it should be by default anyway). */
+	MAC_BITBAND->CSR6_PR = 0;
+	
+	/* Perfect filter. */
+	MAC_BITBAND->CSR6_HP = 1;
+	
+	/* Pass multcast. */
+	MAC_BITBAND->CSR6_PM = 1;
 	
     /* Set descriptors */
     MAC->CSR3 = (uint32_t)&(g_mss_mac.rx_descriptors[0].descriptor_0);
@@ -420,10 +425,6 @@ MSS_MAC_tx_packet
 	if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) || ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) )
 	{
 		error = MAC_BUFFER_IS_FULL;
-		
-		/* Check the buffers pointed to by the Tx descriptors, just in case a Tx
-		interrupt has been missed and a free buffer remains marked as in use. */
-		MSS_MAC_CheckTxBufferStatus();
 	}
 
 	
@@ -1424,30 +1425,16 @@ static void MAC_memcpy(uint8_t *dest, const uint8_t *src, uint32_t n)
 }
 
 /***************************************************************************//**
- * Check the buffers assigned to the Tx descriptors to ensure that none remain
- * marked as in use even though the Tx has completed.  This could happen if a
- * Tx interrupt was missed.
+ * Tx has completed, mark the buffers that were assigned to the Tx descriptors
+ * as free again.
  *
  */
-void MSS_MAC_CheckTxBufferStatus( void )
+void MSS_MAC_FreeTxBuffers( void )
 {
-unsigned char *pxTransmittedBuffer;
-long lDescriptor, lIndex;
-
-	for( lDescriptor = 1; lDescriptor < TX_RING_SIZE; lDescriptor++ )
+	if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == 0 ) && ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == 0 ) )
 	{
-		if( ( g_mss_mac.tx_descriptors[ lDescriptor ].descriptor_0 & TDES0_OWN ) == 0UL )
-		{
-			pxTransmittedBuffer = ( unsigned char * ) g_mss_mac.tx_descriptors[ lDescriptor ].buffer_1;
-
-			for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
-			{
-				if( pxTransmittedBuffer == &( xMACBuffers.ucBuffer[ lIndex ][ 0 ] ) )
-				{
-					ucMACBufferInUse[ lIndex ] = pdFALSE;
-				}
-			}			
-		}
+		MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 0 ].buffer_1 );
+		MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 1 ].buffer_1 );
 	}
 }
 
@@ -1498,10 +1485,6 @@ long lIndex;
 			break;
 		}
 	}
-	
-	/* Check the buffers pointed to by the Tx descriptors, just in case a Tx
-	interrupt has been missed and a free buffer remains marked as in use. */
-	MSS_MAC_CheckTxBufferStatus();
 	
 	configASSERT( lIndex < macNUM_BUFFERS );
 }

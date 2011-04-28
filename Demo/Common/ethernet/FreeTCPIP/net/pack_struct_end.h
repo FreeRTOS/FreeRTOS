@@ -26,3 +26,8 @@
 	;
 	#pragma pack()
 #endif
+
+
+#ifdef __CC_ARM
+	;
+#endif

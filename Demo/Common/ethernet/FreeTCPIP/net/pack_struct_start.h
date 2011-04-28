@@ -27,3 +27,8 @@
 #ifdef __ICCARM__
 	#pragma pack(1)
 #endif
+
+#ifdef __CC_ARM
+	__packed
+#endif
+

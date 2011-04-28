@@ -69,12 +69,14 @@
 
 	typedef uip_ip6addr_t	uip_ipaddr_t;
 #else /* UIP_CONF_IPV6 */
-	typedef union			uip_ip4addr_t
-	{
-		u8_t	u8[4];	/* Initializer, must come first!!! */
-		u16_t	u16[2];
-	} uip_ip4addr_t;
-	typedef uip_ip4addr_t	uip_ipaddr_t;
+	#include "pack_struct_start.h"
+		typedef union			uip_ip4addr_t
+		{
+			u8_t	u8[4];	/* Initializer, must come first!!! */
+			u16_t	u16[2];
+		} uip_ip4addr_t;
+		typedef uip_ip4addr_t	uip_ipaddr_t
+	#include "pack_struct_end.h"
 #endif /* UIP_CONF_IPV6 */
 
 /*---------------------------------------------------------------------------*/

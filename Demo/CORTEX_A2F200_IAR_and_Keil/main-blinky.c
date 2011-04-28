@@ -308,6 +308,8 @@ unsigned long ulReceivedValue;
 
 static void prvSetupHardware( void )
 {
+	SystemCoreClockUpdate();
+
 	/* Disable the Watch Dog Timer */
 	MSS_WD_disable( );
 
@@ -375,5 +377,22 @@ volatile size_t xFreeStackSpace;
 		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
 		reduced accordingly. */
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vMainConfigureTimerForRunTimeStats( void )
+{
+	/* This function is not used by the Blinky build configuration, but needs
+	to be defined as the Blinky and Full build configurations share a
+	FreeRTOSConfig.h header file. */
+}
+/*-----------------------------------------------------------*/
+
+unsigned long ulGetRunTimeCounterValue( void )
+{
+	/* This function is not used by the Blinky build configuration, but needs
+	to be defined as the Blinky and Full build configurations share a
+	FreeRTOSConfig.h header file. */
+	return 0UL;
 }
 

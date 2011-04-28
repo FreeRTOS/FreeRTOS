@@ -1142,6 +1142,8 @@
           <state>$PROJ_DIR$/MicroSemi_Code/CMSIS</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_gpio</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_watchdog</state>
+          <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_ace</state>
+          <state>$PROJ_DIR$/MicroSemi_Code/drivers_config/mss_ace</state>
           <state>$PROJ_DIR$/WebServer</state>
           <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP/apps/httpd</state>
           <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP</state>
@@ -1733,7 +1735,7 @@
     </settings>
   </configuration>
   <configuration>
-    <name>Full-with-optimisation</name>
+    <name>Full_with_optimisation</name>
     <toolchain>
       <name>ARM</name>
     </toolchain>
@@ -1747,15 +1749,15 @@
         <debug>1</debug>
         <option>
           <name>ExePath</name>
-          <state>Full-with-optimisation\Exe</state>
+          <state>Full_with_optimisation\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>Full-with-optimisation\Obj</state>
+          <state>Full_with_optimisation\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>Full-with-optimisation\List</state>
+          <state>Full_with_optimisation\List</state>
         </option>
         <option>
           <name>Variant</name>
@@ -2011,6 +2013,8 @@
           <state>$PROJ_DIR$/MicroSemi_Code/CMSIS</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_gpio</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_watchdog</state>
+          <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_ace</state>
+          <state>$PROJ_DIR$/MicroSemi_Code/drivers_config/mss_ace</state>
           <state>$PROJ_DIR$/WebServer</state>
           <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP/apps/httpd</state>
           <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP</state>
@@ -2696,6 +2700,18 @@
     <group>
       <name>Drivers</name>
       <file>
+        <name>$PROJ_DIR$\MicroSemi_Code\drivers_config\mss_ace\ace_config.c</name>
+        <excluded>
+          <configuration>Blinky</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\MicroSemi_Code\drivers\mss_ace\ace_convert.c</name>
+        <excluded>
+          <configuration>Blinky</configuration>
+        </excluded>
+      </file>
+      <file>
         <name>$PROJ_DIR$\MicroSemi_Code\drivers\mss_ethernet_mac\crc32.c</name>
         <excluded>
           <configuration>Blinky</configuration>
@@ -2706,6 +2722,248 @@
         <excluded>
           <configuration>Blinky</configuration>
         </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\MicroSemi_Code\drivers\mss_ace\mss_ace.c</name>
+        <excluded>
+          <configuration>Blinky</configuration>
+        </excluded>
+        <configuration>
+          <name>Blinky</name>
+          <settings>
+            <name>ICCARM</name>
+            <data>
+              <version>26</version>
+              <wantNonLocal>0</wantNonLocal>
+              <debug>1</debug>
+              <option>
+                <name>CCDefines</name>
+                <state></state>
+              </option>
+              <option>
+                <name>CCPreprocFile</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCPreprocComments</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCPreprocLine</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCListCFile</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCListCMnemonics</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCListCMessages</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCListAssFile</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCListAssSource</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCEnableRemarks</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCDiagSuppress</name>
+                <state>Pa082</state>
+              </option>
+              <option>
+                <name>CCDiagRemark</name>
+                <state></state>
+              </option>
+              <option>
+                <name>CCDiagWarning</name>
+                <state></state>
+              </option>
+              <option>
+                <name>CCDiagError</name>
+                <state></state>
+              </option>
+              <option>
+                <name>CCObjPrefix</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>CCAllowList</name>
+                <version>1</version>
+                <state>0000000</state>
+              </option>
+              <option>
+                <name>CCDebugInfo</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IEndianMode</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IProcessor</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IExtraOptionsCheck</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IExtraOptions</name>
+                <state></state>
+              </option>
+              <option>
+                <name>CCLangConformance</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCSignedPlainChar</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>CCRequirePrototypes</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCMultibyteSupport</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCDiagWarnAreErr</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCCompilerRuntimeInfo</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IFpuProcessor</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>OutputFile</name>
+                <state>$FILE_BNAME$.o</state>
+              </option>
+              <option>
+                <name>CCLibConfigHeader</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>PreInclude</name>
+                <state></state>
+              </option>
+              <option>
+                <name>CompilerMisraOverride</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCIncludePath2</name>
+                <state>$PROJ_DIR$/../../Source/include</state>
+                <state>$PROJ_DIR$/../../Source/portable/IAR/ARM_CM3</state>
+                <state>$PROJ_DIR$</state>
+                <state>$PROJ_DIR$/MicroSemi_Code/CMSIS</state>
+                <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_gpio</state>
+                <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_watchdog</state>
+              </option>
+              <option>
+                <name>CCStdIncCheck</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCCodeSection</name>
+                <state>.text</state>
+              </option>
+              <option>
+                <name>IInterwork2</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IProcessorMode2</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>CCOptLevel</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCOptStrategy</name>
+                <version>0</version>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCOptLevelSlave</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CompilerMisraRules98</name>
+                <version>0</version>
+                <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+              </option>
+              <option>
+                <name>CompilerMisraRules04</name>
+                <version>0</version>
+                <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+              </option>
+              <option>
+                <name>CCPosIndRopi</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCPosIndRwpi</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>CCPosIndNoDynInit</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IccLang</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IccCDialect</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IccAllowVLA</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IccCppDialect</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IccExceptions</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IccRTTI</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IccStaticDestr</name>
+                <state>1</state>
+              </option>
+              <option>
+                <name>IccRelaxedFpPrecision</name>
+                <state>0</state>
+              </option>
+              <option>
+                <name>IccCppInlineSemantics</name>
+                <state>0</state>
+              </option>
+            </data>
+          </settings>
+        </configuration>
       </file>
       <file>
         <name>$PROJ_DIR$\MicroSemi_Code\drivers\mss_ethernet_mac\mss_ethernet_mac.c</name>
@@ -2758,7 +3016,7 @@
     <name>$PROJ_DIR$\main-blinky.c</name>
     <excluded>
       <configuration>Full</configuration>
-      <configuration>Full-with-optimisation</configuration>
+      <configuration>Full_with_optimisation</configuration>
     </excluded>
   </file>
   <file>

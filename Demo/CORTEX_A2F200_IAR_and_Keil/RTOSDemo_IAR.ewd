@@ -1671,7 +1671,7 @@
     </debuggerPlugins>
   </configuration>
   <configuration>
-    <name>Full-with-optimisation</name>
+    <name>Full_with_optimisation</name>
     <toolchain>
       <name>ARM</name>
     </toolchain>

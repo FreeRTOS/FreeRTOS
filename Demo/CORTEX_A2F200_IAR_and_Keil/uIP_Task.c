@@ -159,8 +159,8 @@ clock_time_t clock_time( void )
 void vuIP_Task( void *pvParameters )
 {
 portBASE_TYPE i;
-unsigned long ulNewEvent = 0UL;
-unsigned long ulUIP_Events = 0UL;
+unsigned long ulNewEvent = 0UL, ulUIP_Events = 0UL;
+long lPacketLength;
 
 	/* Just to prevent compiler warnings about the unused parameter. */
 	( void ) pvParameters;
@@ -174,11 +174,13 @@ unsigned long ulUIP_Events = 0UL;
 	for( ;; )
 	{
 		/* Is there received data ready to be processed? */
-		uip_len = MSS_MAC_rx_packet();
+		lPacketLength = MSS_MAC_rx_packet();
 
 		/* Statements to be executed if data has been received on the Ethernet. */
-		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
+		if( ( lPacketLength > 0 ) && ( uip_buf != NULL ) )
 		{
+			uip_len = ( u16_t ) lPacketLength;
+			
 			/* Standard uIP loop taken from the uIP manual. */
 			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 			{
@@ -356,7 +358,7 @@ void vEMACWrite( void )
 {
 const long lMaxAttempts = 10;
 long lAttempt;
-const portTickType xShortDelay = ( 10 / portTICK_RATE_MS );
+const portTickType xShortDelay = ( 5 / portTICK_RATE_MS );
 
 	/* Try to send data to the Ethernet.  Keep trying for a while if data cannot
 	be sent immediately.  Note that this will actually cause the data to be sent

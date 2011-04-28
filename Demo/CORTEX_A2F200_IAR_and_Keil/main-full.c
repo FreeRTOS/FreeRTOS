@@ -148,6 +148,7 @@
 #include "mss_gpio.h"
 #include "mss_watchdog.h"
 #include "mss_timer.h"
+#include "mss_ace.h"
 #include "oled.h"
 
 /* Common demo includes. */
@@ -551,6 +552,9 @@ static void prvSetupHardware( void )
 
 	/* Configure the GPIO for the LEDs. */
 	vParTestInitialise();
+	
+	/* ACE Initialization */
+	ACE_init();
 
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( GPIO8_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
@@ -628,6 +632,7 @@ const unsigned long ulMax32BitValue = 0xffffffffUL;
 	MSS_TIM64_start();
 }
 /*-----------------------------------------------------------*/
+
 unsigned long ulGetRunTimeCounterValue( void )
 {
 unsigned long long ullCurrentValue;

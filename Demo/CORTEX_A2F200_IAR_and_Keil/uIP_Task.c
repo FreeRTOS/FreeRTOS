@@ -288,14 +288,14 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 	xEMACEventQueue = xQueueCreate( uipEVENT_QUEUE_LENGTH, sizeof( unsigned long ) );
 
 	/* Create and start the uIP timers. */
-	xARPTimer = xTimerCreate( 	( const signed char * const ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
+	xARPTimer = xTimerCreate( 	( signed char * ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
 								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
 								pdTRUE, /* Autor-reload. */
 								( void * ) uipARP_TIMER,
 								prvUIPTimerCallback
 							);
 
-	xPeriodicTimer = xTimerCreate( 	( const signed char * const ) "PeriodicTimer",
+	xPeriodicTimer = xTimerCreate( 	( signed char * ) "PeriodicTimer",
 									( 500UL / portTICK_RATE_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,

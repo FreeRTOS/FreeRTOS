@@ -63,7 +63,7 @@
 
 /* Use a guard to ensure the following few definitions are'nt included in
 assembly files that include this header file. */
-#ifdef __ICCARM__
+#ifndef __IASMARM__
 	#include <stdint.h>
 	#include <stddef.h>
 	extern uint32_t SystemFrequency;

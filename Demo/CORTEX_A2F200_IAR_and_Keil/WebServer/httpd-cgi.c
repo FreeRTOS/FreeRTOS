@@ -210,9 +210,10 @@ unsigned long	ulString;
 static unsigned short generate_io_state( void *arg )
 {
 	extern long lParTestGetLEDState( unsigned long ulLED );
-	( void ) arg;
 	unsigned short usRawVoltage;
 	const ace_channel_handle_t xVoltageChannel = ( ace_channel_handle_t ) 0;
+
+	( void ) arg;
 
 	/* Are the dynamically setable LEDs currently on or off? */
 	if( lParTestGetLEDState( 3 ) )

@@ -31,12 +31,14 @@ typedef uint32_t addr_t;
 /***************************************************************************//**
  * Descriptor structure
  */
+#include "pack_struct_start.h"
 typedef struct {
     volatile uint32_t   descriptor_0;
     volatile uint32_t   descriptor_1;
     volatile uint32_t   buffer_1;
     volatile uint32_t   buffer_2;
-} MAC_descriptor_t;
+} MAC_descriptor_t
+#include "pack_struct_end.h"
 
 
 /***************************************************************************//**
@@ -74,6 +76,7 @@ typedef struct {
 
     uint8_t		phy_address;            /**< MII address of the connected PHY*/
 
+	#include "pack_struct_start.h"
 	struct {
 		uint32_t rx_interrupts;			/**< Number of receive interrupts occurred.*/
 		uint32_t rx_filtering_fail;		/**< Number of received frames which did not pass
@@ -111,7 +114,8 @@ typedef struct {
 		uint32_t tx_collision_count;	/**< Number of collisions occurred.*/
 		uint32_t tx_underflow_error;	/**< Number of occurrences of; the FIFO was empty during
 											the frame transmission.*/
-    } statistics;
+    } statistics
+	#include "pack_struct_end.h"
 } MAC_instance_t
 #include "net/pack_struct_end.h"
 

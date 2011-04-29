@@ -63,7 +63,7 @@ extern "C" {
 /* Allocating this many buffers will always ensure there is one free as, even
 though TX_RING_SIZE is set to two, the two Tx descriptors will only ever point
 to the same buffer. */
-#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE + 1
+#define macNUM_BUFFERS RX_RING_SIZE + TX_RING_SIZE
 #define macBUFFER_SIZE 1488
 
 /***************************************************************/
@@ -420,77 +420,93 @@ MSS_MAC_tx_packet
 		configASSERT( usLength <= MSS_MAX_PACKET_SIZE );
 	}
 
-	/* Check if second descriptor is free, if it is then the first must
-	also be free. */
-	if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) || ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) )
+	taskENTER_CRITICAL();
 	{
-		error = MAC_BUFFER_IS_FULL;
+		/* Check both Tx descriptors are free, meaning the double send has completed. */
+		if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) || ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == TDES0_OWN ) )
+		{
+			error = MAC_BUFFER_IS_FULL;
+		}
 	}
+	taskEXIT_CRITICAL();
 
+	configASSERT( ( g_mss_mac.tx_desc_index == 0 ) );
 	
 	if( error == MAC_OK )
 	{
+		/* Ensure nothing is going to get sent until both descriptors are ready.
+		This is done to	prevent a Tx end occurring prior to the second descriptor
+		being ready. */
+		MAC_BITBAND->CSR6_ST = 0u;
+
 		/* Assumed TX_RING_SIZE == 2.  A #error directive checks this is the
 		case. */
-		for( ulDescriptor = 0; ulDescriptor < TX_RING_SIZE; ulDescriptor++ )
+		taskENTER_CRITICAL();
 		{
-			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 = 0u;
-
-			if( (g_mss_mac.flags & FLAG_CRC_DISABLE) != 0u ) {
-				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_AC;
-			}
-
-			/* Every buffer can hold a full frame so they are always first and last
-			   descriptor */
-        	g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_LS | TDES1_FS | TDES1_IC;
-
-			/* set data size */
-			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= usLength;
-
-			/* reset end of ring */
-			g_mss_mac.tx_descriptors[TX_RING_SIZE-1].descriptor_1 |= TDES1_TER;
-
-			if( usLength > MSS_TX_BUFF_SIZE ) /* FLAG_EXCEED_LIMIT */
+			for( ulDescriptor = 0; ulDescriptor < TX_RING_SIZE; ulDescriptor++ )
 			{
-				usLength = (uint16_t)MSS_TX_BUFF_SIZE;
-			}
-
-			/* The data buffer is assigned to the Tx descriptor. */
-			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].buffer_1 = ( unsigned long ) uip_buf;
-
-			/* update counters */
-			desc = g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0;
-			if( (desc & TDES0_LO) != 0u ) {
-				g_mss_mac.statistics.tx_loss_of_carrier++;
-			}
-			if( (desc & TDES0_NC) != 0u ) {
-				g_mss_mac.statistics.tx_no_carrier++;
-			}
-			if( (desc & TDES0_LC) != 0u ) {
-				g_mss_mac.statistics.tx_late_collision++;
-			}
-			if( (desc & TDES0_EC) != 0u ) {
-				g_mss_mac.statistics.tx_excessive_collision++;
-			}
-			if( (desc & TDES0_UF) != 0u ) {
-				g_mss_mac.statistics.tx_underflow_error++;
-			}
-			g_mss_mac.statistics.tx_collision_count +=
-				(desc >> TDES0_CC_OFFSET) & TDES0_CC_MASK;
-
-			/* Give ownership of descriptor to the MAC */
-			g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0 = RDES0_OWN;
-			
-			g_mss_mac.tx_desc_index = (g_mss_mac.tx_desc_index + 1u) % (uint32_t)TX_RING_SIZE;
-			
-			MAC_start_transmission();
-			MAC->CSR1 = 1u;
-		}		
+				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 = 0u;
+	
+				if( (g_mss_mac.flags & FLAG_CRC_DISABLE) != 0u ) {
+					g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_AC;
+				}
+	
+				/* Every buffer can hold a full frame so they are always first and last
+				   descriptor */
+				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= TDES1_LS | TDES1_FS;
+	
+				/* set data size */
+				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_1 |= usLength;
+	
+				/* reset end of ring */
+				g_mss_mac.tx_descriptors[TX_RING_SIZE-1].descriptor_1 |= TDES1_TER;
+	
+				if( usLength > MSS_TX_BUFF_SIZE ) /* FLAG_EXCEED_LIMIT */
+				{
+					usLength = (uint16_t)MSS_TX_BUFF_SIZE;
+				}
+	
+				/* The data buffer is assigned to the Tx descriptor. */
+				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].buffer_1 = ( unsigned long ) uip_buf;
+	
+				/* update counters */
+				desc = g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0;
+				if( (desc & TDES0_LO) != 0u ) {
+					g_mss_mac.statistics.tx_loss_of_carrier++;
+				}
+				if( (desc & TDES0_NC) != 0u ) {
+					g_mss_mac.statistics.tx_no_carrier++;
+				}
+				if( (desc & TDES0_LC) != 0u ) {
+					g_mss_mac.statistics.tx_late_collision++;
+				}
+				if( (desc & TDES0_EC) != 0u ) {
+					g_mss_mac.statistics.tx_excessive_collision++;
+				}
+				if( (desc & TDES0_UF) != 0u ) {
+					g_mss_mac.statistics.tx_underflow_error++;
+				}
+				g_mss_mac.statistics.tx_collision_count +=
+					(desc >> TDES0_CC_OFFSET) & TDES0_CC_MASK;
+	
+				/* Give ownership of descriptor to the MAC */
+				g_mss_mac.tx_descriptors[ g_mss_mac.tx_desc_index ].descriptor_0 = TDES0_OWN;
+				
+				g_mss_mac.tx_desc_index = (g_mss_mac.tx_desc_index + 1u) % (uint32_t)TX_RING_SIZE;
+			}		
+		}
+		taskEXIT_CRITICAL();
     }
 	
     if (error == MAC_OK)
     {
         error = (int32_t)usLength;
+		
+		/* Start sending now both descriptors are set up.  This is done to
+		prevent a Tx end occurring prior to the second descriptor being
+		ready. */
+		MAC_BITBAND->CSR6_ST = 1u;
+		MAC->CSR1 = 1u;
 		
 		/* The buffer pointed to by uip_buf is now assigned to a Tx descriptor.
 		Find anothere free buffer for uip_buf. */
@@ -594,8 +610,7 @@ MSS_MAC_rx_packet
  * will keep trying to read till time_out expires or data is read, if MSS_MAC_BLOCKING
  * value is given as time_out, function will wait for the reception to complete.
  *
- * @param instance      Pointer to a MAC_instance_t structure
- * @param pacData       The pointer to the packet data.
+  * @param pacData       The pointer to the packet data.
  * @param time_out      Time out value in milli seconds for receiving.
  * 					    if value is #MSS_MAC_BLOCKING, there will be no time out.
  * 					    if value is #MSS_MAC_NONBLOCKING, function will return immediately
@@ -1057,8 +1072,7 @@ MSS_MAC_prepare_rx_descriptor
 		(desc & (CSR8_MFO_MASK|CSR8_MFC_MASK));
 
 	/* Give ownership of descriptor to the MAC */
-	g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 =
-		RDES0_OWN;
+	g_mss_mac.rx_descriptors[ g_mss_mac.rx_desc_index ].descriptor_0 = RDES0_OWN;
 	g_mss_mac.rx_desc_index = (g_mss_mac.rx_desc_index + 1u) % RX_RING_SIZE;
 
 	/* Start receive */
@@ -1431,10 +1445,19 @@ static void MAC_memcpy(uint8_t *dest, const uint8_t *src, uint32_t n)
  */
 void MSS_MAC_FreeTxBuffers( void )
 {
-	if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == 0 ) && ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == 0 ) )
+	/* Check the buffers have not already been freed in the first of the
+	two Tx interrupts - which could potentially happen if the second Tx completed
+	during the interrupt for the first Tx. */
+	if( g_mss_mac.tx_descriptors[ 0 ].buffer_1 != NULL )
 	{
-		MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 0 ].buffer_1 );
-		MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 1 ].buffer_1 );
+		if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == 0 ) && ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == 0 ) )
+		{
+			configASSERT( g_mss_mac.tx_descriptors[ 0 ].buffer_1 == g_mss_mac.tx_descriptors[ 1 ].buffer_1 );
+			MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 0 ].buffer_1 );
+			
+			/* Just to mark the fact that the buffer has already been released. */
+			g_mss_mac.tx_descriptors[ 0 ].buffer_1 == NULL;
+		}
 	}
 }
 
@@ -1447,19 +1470,72 @@ void MSS_MAC_FreeTxBuffers( void )
  */
 unsigned char *MAC_obtain_buffer( void )
 {
-long lIndex;
+long lIndex, lAttempt = 0, lDescriptor, lBufferIsInUse;
 unsigned char *pcReturn = NULL;
+unsigned char *pcBufferAddress;
 
 	/* Find and return the address of a buffer that is not being used.  Mark
 	the buffer as now in use. */
-	for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
+	while( ( lAttempt <= 1 ) && ( pcReturn == NULL ) )
 	{
-		if( ucMACBufferInUse[ lIndex ] == pdFALSE )
+		for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
 		{
-			pcReturn = &( xMACBuffers.ucBuffer[ lIndex ][ 0 ] );
-			ucMACBufferInUse[ lIndex ] = pdTRUE;
-			break;
+			if( ucMACBufferInUse[ lIndex ] == pdFALSE )
+			{
+				pcReturn = &( xMACBuffers.ucBuffer[ lIndex ][ 0 ] );
+				ucMACBufferInUse[ lIndex ] = pdTRUE;
+				break;
+			}
 		}
+		
+		if( pcReturn == NULL )
+		{
+			/* Did not find a buffer.  That should not really happen, but could if
+			an interrupt was missed.  See if any buffers are marked as in use, but
+			are not actually in use. */
+			for( lIndex = 0; lIndex < macNUM_BUFFERS; lIndex++ )
+			{
+				pcBufferAddress = &( xMACBuffers.ucBuffer[ lIndex ][ 0 ] );
+				lBufferIsInUse = pdFALSE;
+				
+				/* Is the buffer used by an Rx descriptor? */
+				for( lDescriptor = 0; lDescriptor < RX_RING_SIZE; lDescriptor++ )
+				{
+					if( g_mss_mac.rx_descriptors[ lDescriptor ].buffer_1 == ( uint32_t ) pcBufferAddress )
+					{
+						/* The buffer is in use by an Rx descriptor. */
+						lBufferIsInUse = pdTRUE;
+						break;
+					}
+				}
+				
+				if( lBufferIsInUse != pdTRUE )
+				{
+					/* Is the buffer used by an Tx descriptor? */
+					for( lDescriptor = 0; lDescriptor < TX_RING_SIZE; lDescriptor++ )
+					{
+						if( g_mss_mac.tx_descriptors[ lDescriptor ].buffer_1 == ( uint32_t ) pcBufferAddress )
+						{
+							/* The buffer is in use by an Tx descriptor. */
+							lBufferIsInUse = pdTRUE;
+							break;
+						}
+					}			
+				}
+				
+				/* If the buffer was not found to be in use by either a Tx or an
+				Rx descriptor, but the buffer is marked as in use, then mark the
+				buffer to be in it's correct state of "not in use". */
+				if( ( lBufferIsInUse == pdFALSE ) && ( ucMACBufferInUse[ lIndex ] == pdTRUE ) )
+				{
+					ucMACBufferInUse[ lIndex ] = pdFALSE;
+				}
+			}
+		}
+																	
+		/* If any buffer states were changed it might be that a buffer can now
+		be obtained.  Try again, but only one more time. */
+		lAttempt++;
 	}
 	
 	configASSERT( pcReturn );

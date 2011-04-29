@@ -318,7 +318,7 @@ void OLED_init(void )
  */
 void OLED_clear_display( oled_no_of_line LINES )
 {
-    uint8_t i, j,start_line,end_line;
+    uint8_t i, j,start_line = 0,end_line = 0;
     uint8_t clear_8_columns[] =
     {
         OLED_DATA_CODE, 0x00,

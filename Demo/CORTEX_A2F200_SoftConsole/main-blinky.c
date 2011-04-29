@@ -185,8 +185,8 @@ int main(void)
 		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Create the software timer that is responsible for turning off the LED 
-		if the button is not pushed within 5000ms, as described at the top of 
+		/* Create the software timer that is responsible for turning off the LED
+		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
 		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
 									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
@@ -289,8 +289,8 @@ unsigned long ulReceivedValue;
 		if( ulReceivedValue == 100UL )
 		{
 			/* NOTE - accessing the LED port should use a critical section
-			because it is accessed from multiple tasks, and the button interrupt 
-			- in this trivial case, for simplicity, the critical section is 
+			because it is accessed from multiple tasks, and the button interrupt
+			- in this trivial case, for simplicity, the critical section is
 			omitted. */
 			if( ( ulGPIOState & mainTASK_CONTROLLED_LED ) != 0 )
 			{
@@ -308,6 +308,8 @@ unsigned long ulReceivedValue;
 
 static void prvSetupHardware( void )
 {
+	SystemCoreClockUpdate();
+
 	/* Disable the Watch Dog Timer */
 	MSS_WD_disable( );
 
@@ -340,7 +342,7 @@ void vApplicationMallocFailedHook( void )
 {
 	/* Called if a call to pvPortMalloc() fails because there is insufficient
 	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software 
+	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	for( ;; );
@@ -364,7 +366,7 @@ void vApplicationIdleHook( void )
 volatile size_t xFreeStackSpace;
 
 	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amout of FreeRTOS heap that 
+	does nothing useful, other than report the amout of FreeRTOS heap that
 	remains unallocated. */
 	xFreeStackSpace = xPortGetFreeHeapSize();
 
@@ -376,3 +378,21 @@ volatile size_t xFreeStackSpace;
 		reduced accordingly. */
 	}
 }
+/*-----------------------------------------------------------*/
+
+void vMainConfigureTimerForRunTimeStats( void )
+{
+	/* This function is not used by the Blinky build configuration, but needs
+	to be defined as the Blinky and Full build configurations share a
+	FreeRTOSConfig.h header file. */
+}
+/*-----------------------------------------------------------*/
+
+unsigned long ulGetRunTimeCounterValue( void )
+{
+	/* This function is not used by the Blinky build configuration, but needs
+	to be defined as the Blinky and Full build configurations share a
+	FreeRTOSConfig.h header file. */
+	return 0UL;
+}
+

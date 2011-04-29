@@ -49,6 +49,7 @@
 #include "apps/httpd/httpd.h"
 #include "apps/httpd/httpd-cgi.h"
 #include "apps/httpd/httpd-fs.h"
+#include "mss_ace.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -209,6 +210,9 @@ unsigned long	ulString;
 static unsigned short generate_io_state( void *arg )
 {
 	extern long lParTestGetLEDState( unsigned long ulLED );
+	unsigned short usRawVoltage;
+	const ace_channel_handle_t xVoltageChannel = ( ace_channel_handle_t ) 0;
+
 	( void ) arg;
 
 	/* Are the dynamically setable LEDs currently on or off? */
@@ -221,7 +225,8 @@ static unsigned short generate_io_state( void *arg )
 		pcStatus = "";
 	}
 
-	sprintf( uip_appdata, "<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED<p><p>", pcStatus );
+	usRawVoltage = ( unsigned short ) ACE_get_ppe_sample( xVoltageChannel );	
+	sprintf( uip_appdata, "<input type=\"checkbox\" name=\"LED0\" value=\"1\" %s>LED<p><p><p>Raw voltage input is %d", pcStatus, usRawVoltage );
 
 	return strlen( uip_appdata );
 }

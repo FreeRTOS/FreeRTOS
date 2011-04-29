@@ -63,7 +63,7 @@
  * executed from within CCS4!  Once it has been executed, re-open or refresh 
  * the CCS4 project and remove the #error line below.
  */
-//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
 
 #ifndef FREERTOS_CONFIG_H

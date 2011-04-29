@@ -2019,6 +2019,7 @@
           <state>$PROJ_DIR$/WebServer</state>
           <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP/apps/httpd</state>
           <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP</state>
+          <state>$PROJ_DIR$/../Common/ethernet/FreeTCPIP/net</state>
           <state>$PROJ_DIR$/../Common/include</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/I2C</state>
           <state>$PROJ_DIR$/MicroSemi_Code/drivers/mss_ethernet_mac</state>

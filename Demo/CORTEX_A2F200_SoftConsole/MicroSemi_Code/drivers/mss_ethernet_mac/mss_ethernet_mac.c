@@ -1448,7 +1448,7 @@ void MSS_MAC_FreeTxBuffers( void )
 	/* Check the buffers have not already been freed in the first of the
 	two Tx interrupts - which could potentially happen if the second Tx completed
 	during the interrupt for the first Tx. */
-	if( g_mss_mac.tx_descriptors[ 0 ].buffer_1 != NULL )
+	if( g_mss_mac.tx_descriptors[ 0 ].buffer_1 != ( uint32_t ) NULL )
 	{
 		if( ( ( (g_mss_mac.tx_descriptors[ 0 ].descriptor_0) & TDES0_OWN) == 0 ) && ( ( (g_mss_mac.tx_descriptors[ 1 ].descriptor_0) & TDES0_OWN) == 0 ) )
 		{
@@ -1456,7 +1456,7 @@ void MSS_MAC_FreeTxBuffers( void )
 			MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 0 ].buffer_1 );
 			
 			/* Just to mark the fact that the buffer has already been released. */
-			g_mss_mac.tx_descriptors[ 0 ].buffer_1 == NULL;
+			g_mss_mac.tx_descriptors[ 0 ].buffer_1 = ( uint32_t ) NULL;
 		}
 	}
 }

@@ -1456,7 +1456,7 @@ void MSS_MAC_FreeTxBuffers( void )
 			MAC_release_buffer( ( unsigned char * ) g_mss_mac.tx_descriptors[ 0 ].buffer_1 );
 			
 			/* Just to mark the fact that the buffer has already been released. */
-			g_mss_mac.tx_descriptors[ 0 ].buffer_1 == NULL;
+			g_mss_mac.tx_descriptors[ 0 ].buffer_1 = NULL;
 		}
 	}
 }

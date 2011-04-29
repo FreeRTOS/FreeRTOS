@@ -944,9 +944,9 @@ tskTCB * pxNewTCB;
 				/* The scheduler is not running, but the task that was pointed
 				to by pxCurrentTCB has just been suspended and pxCurrentTCB
 				must be adjusted to point to a different task. */
-				if( uxCurrentNumberOfTasks == ( unsigned portBASE_TYPE ) 1U )
+				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == uxCurrentNumberOfTasks ) 
 				{
-					/* No other tasks are defined, so set pxCurrentTCB back to
+					/* No other tasks are ready, so set pxCurrentTCB back to
 					NULL so when the next task is created pxCurrentTCB will
 					be set to point to it no matter what its relative priority
 					is. */

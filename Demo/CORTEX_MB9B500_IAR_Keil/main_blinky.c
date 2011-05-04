@@ -65,9 +65,8 @@
  * one queue, and one timer.  It also demonstrates how Cortex-M3 interrupts can
  * interact with FreeRTOS tasks/timers.
  *
- * This simple demo project runs on the SmartFusion A2F-EVAL-KIT evaluation
- * board, which is populated with an A2F200M3F SmartFusion mixed signal FPGA.
- * The A2F200M3F incorporates a Cortex-M3 microcontroller.
+ * This simple demo project runs on the SK-FM3-100PMC evaluation board, which
+ * is populated with an MB9B500 microcontroller.
  *
  * The idle hook function:
  * The idle hook function demonstrates how to query the amount of FreeRTOS heap
@@ -89,22 +88,23 @@
  * in this file.  prvQueueReceiveTask() sits in a loop that causes it to
  * repeatedly attempt to read data from the queue that was created within
  * main().  When data is received, the task checks the value of the data, and
- * if the value equals the expected 100, toggles the green LED.  The 'block
- * time' parameter passed to the queue receive function specifies that the task
- * should be held in the Blocked state indefinitely to wait for data to be
- * available on the queue.  The queue receive task will only leave the Blocked
- * state when the queue send task writes to the queue.  As the queue send task
- * writes to the queue every 200 milliseconds, the queue receive task leaves
- * the Blocked state every 200 milliseconds, and therefore toggles the LED
- * every 200 milliseconds.
+ * if the value equals the expected 100, toggles an LED on the 7 segment
+ * display.  The 'block time' parameter passed to the queue receive function
+ * specifies that the task should be held in the Blocked state indefinitely to
+ * wait for data to be available on the queue.  The queue receive task will only
+ * leave the Blocked state when the queue send task writes to the queue.  As the
+ * queue send task writes to the queue every 200 milliseconds, the queue receive
+ * task leaves the Blocked state every 200 milliseconds, and therefore toggles
+ * the LED every 200 milliseconds.
  *
  * The LED Software Timer and the Button Interrupt:
- * The user button SW1 is configured to generate an interrupt each time it is
- * pressed.  The interrupt service routine switches an LED on, and resets the
- * LED software timer.  The LED timer has a 5000 millisecond (5 second) period,
- * and uses a callback function that is defined to just turn the LED off again.
- * Therefore, pressing the user button will turn the LED on, and the LED will
- * remain on until a full five seconds pass without the button being pressed.
+ * The user button SW2 is configured to generate an interrupt each time it is
+ * pressed.  The interrupt service routine switches an LED in the 7 segment
+ * diplay on, and resets the LED software timer.  The LED timer has a 5000
+ * millisecond (5 second) period, and uses a callback function that is defined
+ * to just turn the LED off again.  Therefore, pressing the user button will
+ * turn the LED on, and the LED will remain on until a full five seconds pass
+ * without the button being pressed.
  */
 
 /* Kernel includes. */
@@ -116,7 +116,6 @@
 /* Fujitsu drivers/libraries. */
 #include "mb9bf506n.h"
 #include "system_mb9bf50x.h"
-
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -236,8 +235,9 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
 	xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
 
-	/* Clear the interrupt before leaving. */
-	FM3_EXTI->EICL  = 0x0000;
+	/* Clear the interrupt before leaving.  This just clears all the interrupts
+	for simplicity, as only one is actually used in this simple demo anyway. */
+	FM3_EXTI->EICL = 0x0000;
 
 	/* If calling xTimerResetFromISR() caused a task (in this case the timer
 	service/daemon task) to unblock, and the unblocked task has a priority
@@ -285,7 +285,7 @@ unsigned long ulReceivedValue;
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
 		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, toggle the green LED. */
+		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
 			/* NOTE - accessing the LED port should use a critical section
@@ -372,14 +372,14 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeStackSpace;
+volatile size_t xFreeHeapSpace;
 
 	/* This function is called on each cycle of the idle task.  In this case it
 	does nothing useful, other than report the amout of FreeRTOS heap that
 	remains unallocated. */
-	xFreeStackSpace = xPortGetFreeHeapSize();
+	xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	if( xFreeStackSpace > 100 )
+	if( xFreeHeapSpace > 100 )
 	{
 		/* By now, the kernel has allocated everything it is going to, so
 		if there is a lot of heap remaining unallocated then

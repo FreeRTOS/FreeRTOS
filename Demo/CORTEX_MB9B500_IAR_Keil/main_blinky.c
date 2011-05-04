@@ -308,11 +308,10 @@ unsigned long ulReceivedValue;
 
 static void prvSetupHardware( void )
 {
+const unsigned short usButtonInputBit = 0x01U;
+
 	SystemInit();
 	SystemCoreClockUpdate();
-	
-	/* No analog inputs. */
-	FM3_GPIO->ADE  = 0x00FF;
 	
 	/* LED seg1 to GPIO output (P18->P1F). */
 	FM3_GPIO->DDR1 = 0xFF00;
@@ -330,30 +329,21 @@ static void prvSetupHardware( void )
 	FM3_GPIO->DDR5 = 0x0000;
 	FM3_GPIO->PFR5 = 0x0000;
 
+	/* Assign the button input as GPIO. */
+	FM3_GPIO->PFR1 |= usButtonInputBit;
 	
-	/* setting INT02_1 */
-	/* MB9BF500(120pin) pin63->P11,AN01,SIN1_1,INT02_1,RX1_2 */
-//	GPIO->EPFR06 = 0x00000020;			/* bit5,4:EINT02S=0b10 EINT-ch2 use INT02_1 */
-	
-//	GPIO->ADE   &= 0xFFFD;				/* bit2:ADE2=0b0 AN01pin use digital input/output pin */
-	
-//	GPIO->PFR1  |= 0x0002;				/* bit2:PFR1_2=0b1 P11pin use peripheral port */
-										/* I/O port setting end */
-	
-	FM3_EXTI->ENIR  = 0x0000;				/* INT interrupt disable */
-	FM3_EXTI->ELVR  = 0x0030;				/* bit5,4:LB2,LA2=0b11 INT2 low level edge */
+	/* Button interrupt on falling edge. */
+	FM3_EXTI->ELVR  = 0x0003;
 
-	FM3_EXTI->EICL  = 0x0000;				/* bit2:ECL=0b0 INT2 interrupt request clear */
+	/* Clear all external interrupts. */
+	FM3_EXTI->EICL  = 0x0000;
 
-//	FM3_EXTI->ENIR  = 0x0004;				/* bit2:EN2=0b1 enable INT2 */
-	FM3_EXTI->ENIR  = 0x0001;				/* Enable INT0. */
-	
+	/* Enable the button interrupt. */
+	FM3_EXTI->ENIR |= usButtonInputBit;
 	
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( EXINT0_7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
     NVIC_EnableIRQ( EXINT0_7_IRQn );
-//    MSS_GPIO_config( MSS_GPIO_8, MSS_GPIO_INPUT_MODE | MSS_GPIO_IRQ_EDGE_NEGATIVE );
-//    MSS_GPIO_enable_irq( MSS_GPIO_8 );
 }
 /*-----------------------------------------------------------*/
 

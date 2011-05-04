@@ -363,14 +363,14 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeStackSpace;
+volatile size_t xFreeHeapSpace;
 
 	/* This function is called on each cycle of the idle task.  In this case it
 	does nothing useful, other than report the amout of FreeRTOS heap that
 	remains unallocated. */
-	xFreeStackSpace = xPortGetFreeHeapSize();
+	xFreeHeapSpace = xPortGetFreeHeapSize();
 
-	if( xFreeStackSpace > 100 )
+	if( xFreeHeapSpace > 100 )
 	{
 		/* By now, the kernel has allocated everything it is going to, so
 		if there is a lot of heap remaining unallocated then

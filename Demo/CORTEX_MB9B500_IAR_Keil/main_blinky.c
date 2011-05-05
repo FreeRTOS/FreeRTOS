@@ -131,10 +131,10 @@ the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
 /* The LED toggle by the queue receive task. */
-#define mainTASK_CONTROLLED_LED				0x0100UL
+#define mainTASK_CONTROLLED_LED				0x8000UL
 
 /* The LED turned on by the button interrupt, and turned off by the LED timer. */
-#define mainTIMER_CONTROLLED_LED			0x0200UL
+#define mainTIMER_CONTROLLED_LED			0x8000UL
 
 /*-----------------------------------------------------------*/
 
@@ -163,9 +163,6 @@ static xQueueHandle xQueue = NULL;
 /* The LED software timer.  This uses vLEDTimerCallback() as its callback
 function. */
 static xTimerHandle xLEDTimer = NULL;
-
-/* Maintains the current LED output state. */
-static volatile unsigned long ulGPIOState = 0xffffUL;
 
 /*-----------------------------------------------------------*/
 
@@ -214,8 +211,7 @@ static void vLEDTimerCallback( xTimerHandle xTimer )
 	a critical section because it is accessed from multiple tasks, and the
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
-	ulGPIOState |= mainTIMER_CONTROLLED_LED;
-	FM3_GPIO->PDOR3 = ulGPIOState;
+	FM3_GPIO->PDOR1 |= mainTIMER_CONTROLLED_LED;
 }
 /*-----------------------------------------------------------*/
 
@@ -227,8 +223,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	ulGPIOState &= ~mainTIMER_CONTROLLED_LED;
-	FM3_GPIO->PDOR3 = ulGPIOState;
+	FM3_GPIO->PDOR1 &= ~mainTIMER_CONTROLLED_LED;
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
@@ -292,15 +287,14 @@ unsigned long ulReceivedValue;
 			because it is accessed from multiple tasks, and the button interrupt
 			- in this trivial case, for simplicity, the critical section is
 			omitted. */
-			if( ( ulGPIOState & mainTASK_CONTROLLED_LED ) != 0 )
+			if( ( FM3_GPIO->PDOR3 & mainTASK_CONTROLLED_LED ) != 0 )
 			{
-				ulGPIOState &= ~mainTASK_CONTROLLED_LED;
+				FM3_GPIO->PDOR3 &= ~mainTASK_CONTROLLED_LED;
 			}
 			else
 			{
-				ulGPIOState |= mainTASK_CONTROLLED_LED;
+				FM3_GPIO->PDOR3 |= mainTASK_CONTROLLED_LED;
 			}
-			FM3_GPIO->PDOR3 = ulGPIOState;
 		}
 	}
 }
@@ -309,9 +303,13 @@ unsigned long ulReceivedValue;
 static void prvSetupHardware( void )
 {
 const unsigned short usButtonInputBit = 0x01U;
+const unsigned short usGPIOState = 0xFF00U;
 
 	SystemInit();
 	SystemCoreClockUpdate();
+	
+	/* Analog inputs are not used on the LED outputs. */
+	FM3_GPIO->ADE  = 0x00FF;
 	
 	/* LED seg1 to GPIO output (P18->P1F). */
 	FM3_GPIO->DDR1 = 0xFF00;
@@ -322,8 +320,8 @@ const unsigned short usButtonInputBit = 0x01U;
 	FM3_GPIO->PFR3 = 0x0000;
 	
 	/* Start with all LEDs off. */
-	FM3_GPIO->PDOR3 = ulGPIOState;
-	FM3_GPIO->PDOR1 = ulGPIOState;
+	FM3_GPIO->PDOR3 = usGPIOState;
+	FM3_GPIO->PDOR1 = usGPIOState;
 	
 	/* Set the switches to input (P18->P1F). */
 	FM3_GPIO->DDR5 = 0x0000;

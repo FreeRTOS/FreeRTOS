@@ -900,6 +900,42 @@
     </settings>
   </configuration>
   <group>
+    <name>Common_Demo_Source</name>
+    <excluded>
+      <configuration>Blinky</configuration>
+    </excluded>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\flash.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+    </file>
+  </group>
+  <group>
     <name>FreeRTOS_Source</name>
     <group>
       <name>Portable</name>
@@ -939,7 +975,19 @@
     </file>
   </group>
   <file>
+    <name>$PROJ_DIR$\main-full.c</name>
+    <excluded>
+      <configuration>Blinky</configuration>
+    </excluded>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main_blinky.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\ParTest.c</name>
+    <excluded>
+      <configuration>Blinky</configuration>
+    </excluded>
   </file>
 </project>
 

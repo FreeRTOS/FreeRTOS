@@ -82,7 +82,7 @@ assembly files that include this header file. */
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				0
+#define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
@@ -99,7 +99,7 @@ assembly files that include this header file. */
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
-#define configUSE_COUNTING_SEMAPHORES	0
+#define configUSE_COUNTING_SEMAPHORES	1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0

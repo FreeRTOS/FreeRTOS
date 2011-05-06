@@ -63,16 +63,14 @@
  *
  * main-full.c (this file) defines a comprehensive demo that creates many
  * tasks, queues, semaphores and timers.  It also demonstrates how Cortex-M3
- * interrupts can interact with FreeRTOS tasks/timers, and implements a simple
- * and small interactive web server.
+ * interrupts can interact with FreeRTOS tasks/timers.
  *
- * This project runs on the SmartFusion A2F-EVAL-KIT evaluation board, which
- * is populated with an A2F200M3F SmartFusion mixed signal FPGA.  The A2F200M3F
- * incorporates a Cortex-M3 microcontroller.
+ * This project runs on the SK-FM3-100PMC evaluation board, which is populated
+ * with an MB9BF5006N Cortex-M3 based microcontroller.
  *
  * The main() Function:
- * main() creates two demo specific software timers, one demo specific queue,
- * and three demo specific tasks.  It then creates a whole host of 'standard
+ * main() creates three demo specific software timers, one demo specific queue,
+ * and two demo specific tasks.  It then creates a whole host of 'standard
  * demo' tasks/queues/semaphores, before starting the scheduler.  The demo
  * specific tasks and timers are described in the comments here.  The standard
  * demo tasks are described on the FreeRTOS.org web site.
@@ -80,6 +78,9 @@
  * The standard demo tasks provide no specific functionality.  They are
  * included to both test the FreeRTOS port, and provide examples of how the
  * various FreeRTOS API functions can be used.
+ *
+ * This demo creates 43 tasks in total.  If you want a simpler demo, use the
+ * Blinky build configuration.
  *
  * The Demo Specific Queue Send Task:
  * The queue send task is implemented by the prvQueueSendTask() function in
@@ -93,22 +94,25 @@
  * in this file.  prvQueueReceiveTask() sits in a loop that causes it to
  * repeatedly attempt to read data from the queue that was created within
  * main().  When data is received, the task checks the value of the data, and
- * if the value equals the expected 100, toggles the green LED.  The 'block
- * time' parameter passed to the queue receive function specifies that the task
- * should be held in the Blocked state indefinitely to wait for data to be
- * available on the queue.  The queue receive task will only leave the Blocked
- * state when the queue send task writes to the queue.  As the queue send task
- * writes to the queue every 200 milliseconds, the queue receive task leaves
- * the Blocked state every 200 milliseconds, and therefore toggles the LED
- * every 200 milliseconds.
+ * if the value equals the expected 100, toggles an LED in the 7 segment display
+ * (see the documentation page for this demo on the FreeRTOS.org site to see
+ * which LED is used).  The 'block time' parameter passed to the queue receive
+ * function specifies that the task should be held in the Blocked state
+ * indefinitely to wait for data to be available on the queue.  The queue
+ * receive task will only leave the Blocked state when the queue send task
+ * writes to the queue.  As the queue send task writes to the queue every 200
+ * milliseconds, the queue receive task leaves the Blocked state every 200
+ * milliseconds, and therefore toggles the LED every 200 milliseconds.
  *
  * The Demo Specific LED Software Timer and the Button Interrupt:
- * The user button SW1 is configured to generate an interrupt each time it is
+ * The user button SW2 is configured to generate an interrupt each time it is
  * pressed.  The interrupt service routine switches an LED on, and resets the
  * LED software timer.  The LED timer has a 5000 millisecond (5 second) period,
  * and uses a callback function that is defined to just turn the LED off again.
  * Therefore, pressing the user button will turn the LED on, and the LED will
  * remain on until a full five seconds pass without the button being pressed.
+ * See the documentation page for this demo on the FreeRTOS.org web site to see
+ * which LED is used.
  *
  * The Demo Specific "Check" Callback Function:
  * This is called each time the 'check' timer expires.  The check timer
@@ -119,18 +123,23 @@
  * the mainCHECK_LED definition each time it executes.  Therefore, if LED
  * mainCHECK_LED is toggling every three seconds, then no error have been found.
  * If LED mainCHECK_LED is toggling every 500ms, then at least one errors has
- * been found.  The task in which the error was discovered is displayed at the
- * bottom of the "task stats" page that is served by the embedded web server.
+ * been found.  The variable pcStatusMessage is set to a string that indicates
+ * which task reported an error.  See the documentation page for this demo on
+ * the FreeRTOS.org web site to see which LED in the 7 segment display is used.
+ *
+ * The Demo Specific "Digit Counter" Callback Function:
+ * This is called each time the 'digit counter' timer expires.  It causes the
+ * digits 0 to 9 to be displayed in turn as the first character of the two
+ * character display.  The LEDs in the other digit of the two character
+ * display are used as general purpose LEDs, as described in this comment block.
  *
  * The Demo Specific Idle Hook Function:
  * The idle hook function demonstrates how to query the amount of FreeRTOS heap
  * space that is remaining (see vApplicationIdleHook() defined in this file).
  *
- * The Web Server Task:
- * The IP address used by the SmartFusion target is configured by the
- * definitions configIP_ADDR0 to configIP_ADDR3, which are located in the
- * FreeRTOSConfig.h header file.  See the documentation page for this example
- * on the http://www.FreeRTOS.org web site for further connection information.
+ * The Demo Specific Tick Hook Function:
+ * The tick hook function is used to test the interrupt safe software timer
+ * functionality.
  */
 
 /* Kernel includes. */
@@ -154,33 +163,46 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "TimerDemo.h"
-
-/* Priorities at which the tasks are created. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#include "comtest2.h"
+#include "PollQ.h"
+#include "countsem.h"
+#include "dynamic.h"
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
 converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS	( 200 / portTICK_RATE_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH			( 1 )
 
-/* The LED toggled by the check timer callback function. */
+/* The LED toggled by the check timer callback function.  This is an LED in the
+second digit of the two digit 7 segment display.  See the documentation page
+for this demo on the FreeRTOS.org web site to see which LED this relates to. */
 #define mainCHECK_LED				0x07UL
 
-/* The LED toggle by the queue receive task. */
-#define mainTASK_CONTROLLED_LED		0x04UL
+/* The LED toggle by the queue receive task.  This is an LED in the second digit
+of the two digit 7 segment display.  See the documentation page for this demo on
+the FreeRTOS.org web site to see which LED this relates to. */
+#define mainTASK_CONTROLLED_LED		0x06UL
 
-/* The LED turned on by the button interrupt, and turned off by the LED timer. */
+/* The LED turned on by the button interrupt, and turned off by the LED timer.
+This is an LED in the second digit of the two digit 7 segment display.  See the
+documentation page for this demo on the FreeRTOS.org web site to see which LED
+this relates to. */
 #define mainTIMER_CONTROLLED_LED	0x05UL
+
+/* The LED used by the comtest tasks. See the comtest.c file for more
+information.  The LEDs used by the comtest task are in the second digit of the
+two digit 7 segment display.  See the documentation page for this demo on the
+FreeRTOS.org web site to see which LEDs this relates to. */
+#define mainCOM_TEST_LED			( 3 )
 
 /* Constant used by the standard timer test functions. */
 #define mainTIMER_TEST_PERIOD		( 50 )
 
-/* Priorities used by the various different tasks. */
+/* Priorities used by the various different standard demo tasks. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -189,25 +211,36 @@ the queue empty. */
 #define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
+
+/* Priorities defined in this main-full.c file. */
+#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The period at which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks. */
-#define mainCHECK_TIMER_PERIOD_MS	( 3000UL / portTICK_RATE_MS )
+have been reported by any of the standard demo tasks.  ms are converted to the
+equivalent in ticks using the portTICK_RATE_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS ( 500UL / portTICK_RATE_MS )
+reported in one of the standard demo tasks.  ms are converted to the equivalent
+in ticks using the portTICK_RATE_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 500UL / portTICK_RATE_MS )
 
 /* The period at which the digit counter timer will expire, in ms, and converted
 to ticks using the portTICK_RATE_MS constant. */
-#define mainDIGIT_COUNTER_TIMER_PERIOD_MS ( 250UL / portTICK_RATE_MS )
+#define mainDIGIT_COUNTER_TIMER_PERIOD_MS 	( 250UL / portTICK_RATE_MS )
 
 /* The LED will remain on until the button has not been pushed for a full
 5000ms. */
-#define mainLED_TIMER_PERIOD_MS		( 5000UL / portTICK_RATE_MS )
+#define mainLED_TIMER_PERIOD_MS				( 5000UL / portTICK_RATE_MS )
 
 /* A zero block time. */
-#define mainDONT_BLOCK				( 0UL )
+#define mainDONT_BLOCK						( 0UL )
+
+/* Baud rate used by the comtest tasks. */
+#define mainCOM_TEST_BAUD_RATE				( 115200UL )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -216,14 +249,14 @@ to ticks using the portTICK_RATE_MS constant. */
 static void prvSetupHardware( void );
 
 /*
- * The tasks as described in the comments at the top of this file.
+ * The application specific (not common demo) tasks as described in the comments
+ * at the top of this file.
  */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
 /*
- * The LED timer callback function.  This does nothing but switch the red LED
- * off.
+ * The LED timer callback function.  This does nothing but switch an LED off.
  */
 static void prvLEDTimerCallback( xTimerHandle xTimer );
 
@@ -252,11 +285,11 @@ static xQueueHandle xQueue = NULL;
 function. */
 static xTimerHandle xLEDTimer = NULL;
 
-/* The counter software timer.  This displays a counting digit on one of the
-seven segment displays. */
+/* The digit counter software timer.  This displays a counting digit on one half
+of the seven segment displays. */
 static xTimerHandle xDigitCounterTimer = NULL;
 
-/* The check timer.  This uses prvCheckTimerCallback() as it's callback
+/* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
 static xTimerHandle xCheckTimer = NULL;
 
@@ -277,7 +310,7 @@ int main(void)
 
 	if( xQueue != NULL )
 	{
-		/* Start the three application specific demo tasks, as described in the
+		/* Start the two application specific demo tasks, as described in the
 		comments at the top of this	file. */
 		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
@@ -310,7 +343,9 @@ int main(void)
 									prvDigitCounterTimerCallback					/* The callback function that inspects the status of all the other tasks. */
 								  );		
 		
-		/* Create a lot of 'standard demo' tasks. */
+		/* Create a lot of 'standard demo' tasks.  Over 40 tasks are created in
+		this demo.  For a much simpler demo, select the 'blinky' build
+		configuration. */
 		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 		vCreateBlockTimeTasks();
 		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
@@ -319,7 +354,11 @@ int main(void)
 		vStartQueuePeekTasks();
 		vStartRecursiveMutexTasks();
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+		vStartCountingSemaphoreTasks();
+		vStartDynamicPriorityTasks();
+		
 		/* The suicide tasks must be created last, as they need to know how many
 		tasks were running prior to their creation in order to ascertain whether
 		or not the correct/expected number of tasks are running at any given
@@ -378,11 +417,31 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 		pcStatusMessage = "Error: RecMutex\r\n";
 	}
 
+	if( xAreComTestTasksStillRunning() != pdPASS )
+	{
+		pcStatusMessage = "Error: ComTest\r\n";
+	}
+	
 	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_MS ) ) != pdTRUE )
 	{
 		pcStatusMessage = "Error: TimerDemo";
 	}
 
+	if( xArePollingQueuesStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: PollQueue";
+	}
+
+	if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: CountSem";
+	}
+	
+	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: DynamicPriority";
+	}
+	
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
@@ -589,19 +648,11 @@ volatile size_t xFreeStackSpace;
 }
 /*-----------------------------------------------------------*/
 
-char *pcGetTaskStatusMessage( void )
+void vApplicationTickHook( void )
 {
-	/* Not bothered about a critical section here although technically because
-	of the task priorities the pointer could change it will be atomic if not
-	near atomic and its not critical. */
-	if( pcStatusMessage == NULL )
-	{
-		return "All tasks running without error";
-	}
-	else
-	{
-		return ( char * ) pcStatusMessage;
-	}
-}
+	/* Call the periodic timer test, which tests the timer API functions that
+	can be called from an ISR. */
+	vTimerPeriodicISRTests();
+}	
 /*-----------------------------------------------------------*/
 

@@ -100,7 +100,7 @@
  * The LED Software Timer and the Button Interrupt:
  * The user button SW2 is configured to generate an interrupt each time it is
  * pressed.  The interrupt service routine switches an LED in the 7 segment
- * diplay on, and resets the LED software timer.  The LED timer has a 5000
+ * display on, and resets the LED software timer.  The LED timer has a 5000
  * millisecond (5 second) period, and uses a callback function that is defined
  * to just turn the LED off again.  Therefore, pressing the user button will
  * turn the LED on, and the LED will remain on until a full five seconds pass
@@ -368,12 +368,21 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 }
 /*-----------------------------------------------------------*/
 
+void vApplicationTickHook( void )
+{
+	/* A tick hook is used by the "Full" build configuration.  The Full and
+	blinky build configurations share a FreeRTOSConfig.h header file, so this
+	simple build configuration also has to define a tick hook - even though it
+	does not actually use it for anything. */
+}
+/*-----------------------------------------------------------*/
+
 void vApplicationIdleHook( void )
 {
 volatile size_t xFreeHeapSpace;
 
 	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amout of FreeRTOS heap that
+	does nothing useful, other than report the amount of FreeRTOS heap that
 	remains unallocated. */
 	xFreeHeapSpace = xPortGetFreeHeapSize();
 

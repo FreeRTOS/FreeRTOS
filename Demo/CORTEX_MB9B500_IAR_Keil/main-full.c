@@ -102,11 +102,6 @@
  * the Blocked state every 200 milliseconds, and therefore toggles the LED
  * every 200 milliseconds.
  *
- * The Demo Specific OLED Task:
- * The OLED task is a very simple task that just scrolls a message across the
- * OLED.  Ideally this would be done in a timer, but the OLED driver accesses
- * the I2C which is time consuming.
- *
  * The Demo Specific LED Software Timer and the Button Interrupt:
  * The user button SW1 is configured to generate an interrupt each time it is
  * pressed.  The interrupt service routine switches an LED on, and resets the
@@ -144,12 +139,9 @@
 #include "queue.h"
 #include "timers.h"
 
-/* Microsemi drivers/libraries includes. */
-#include "mss_gpio.h"
-#include "mss_watchdog.h"
-#include "mss_timer.h"
-#include "mss_ace.h"
-#include "oled.h"
+/* Fujitsu drivers/libraries. */
+#include "mb9bf506n.h"
+#include "system_mb9bf50x.h"
 
 /* Common demo includes. */
 #include "partest.h"
@@ -179,11 +171,13 @@ the queue empty. */
 /* The LED toggled by the check timer callback function. */
 #define mainCHECK_LED				0x07UL
 
-/* The LED turned on by the button interrupt, and turned off by the LED timer. */
-#define mainTIMER_CONTROLLED_LED	0x06UL
-
 /* The LED toggle by the queue receive task. */
-#define mainTASK_CONTROLLED_LED		0x05UL
+#define mainTASK_CONTROLLED_LED		0x8000UL
+
+/* The LED turned on by the button interrupt, and turned off by the LED timer.
+Although it looks like this value is the same as that defined for
+mainTASK_CONTROLLED_LED, the two LEDs are on different ports. */
+#define mainTIMER_CONTROLLED_LED	0x8000UL
 
 /* Constant used by the standard timer test functions. */
 #define mainTIMER_TEST_PERIOD		( 50 )
@@ -195,22 +189,12 @@ the queue empty. */
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainOLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
-
-/* The WEB server uses string handling functions, which in turn use a bit more
-stack than most of the other tasks. */
-#define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks. */
 #define mainCHECK_TIMER_PERIOD_MS	( 3000UL / portTICK_RATE_MS )
-
-/* The period at which the OLED timer will expire.  Each time it expires, it's
-callback function updates the OLED text. */
-#define mainOLED_PERIOD_MS			( 75UL / portTICK_RATE_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks. */
@@ -252,18 +236,6 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
  */
 void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
 
-/*
- * Contains the implementation of the WEB server.
- */
-extern void vuIP_Task( void *pvParameters );
-
-/*
- * A very simply task that does nothing but scroll the OLED display.  Ideally
- * this would be done within a timer, but it accesses the I2C port which is
- * time consuming.
- */
-static void prvOLEDTask( void * pvParameters);
-
 /*-----------------------------------------------------------*/
 
 /* The queue used by both application specific demo tasks defined in this file. */
@@ -277,9 +249,9 @@ static xTimerHandle xLEDTimer = NULL;
 function. */
 static xTimerHandle xCheckTimer = NULL;
 
-/* The status message that is displayed at the bottom of the "task stats" web
-page, which is served by the uIP task.  This will report any errors picked up
-by the check timer callback. */
+/* If an error is detected in a standard demo task, then pcStatusMessage will
+be set to point to a string that identifies the offending task.  This is just
+to make debugging easier. */
 static const char *pcStatusMessage = NULL;
 
 /*-----------------------------------------------------------*/
@@ -298,7 +270,6 @@ int main(void)
 		comments at the top of this	file. */
 		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
-		xTaskCreate( prvOLEDTask, ( signed char * ) "OLED", configMINIMAL_STACK_SIZE, NULL, mainOLED_TASK_PRIORITY, NULL );
 
 		/* Create the software timer that is responsible for turning off the LED
 		if the button is not pushed within 5000ms, as described at the top of
@@ -329,9 +300,6 @@ int main(void)
 		vStartRecursiveMutexTasks();
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
-		/* Create the web server task. */
-		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
-		
 		/* The suicide tasks must be created last, as they need to know how many
 		tasks were running prior to their creation in order to ascertain whether
 		or not the correct/expected number of tasks are running at any given
@@ -417,28 +385,35 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 static void prvLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
-	five seconds - turn the LED off. */
-	vParTestSetLED( mainTIMER_CONTROLLED_LED, pdFALSE );
+	five seconds - turn the LED off.  NOTE - accessing the LED port should use
+	a critical section because it is accessed from multiple tasks, and the
+	button interrupt - in this trivial case, for simplicity, the critical
+	section is omitted.
+	
+	A ParTest function is not used to set the LED as the LED is not on the seven
+	segment display that the ParTest functions control. */
+	FM3_GPIO->PDOR1 |= mainTIMER_CONTROLLED_LED;
 }
 /*-----------------------------------------------------------*/
 
 /* The ISR executed when the user button is pushed. */
-void GPIO8_IRQHandler( void )
+void INT0_7_Handler( void )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	vParTestSetLEDFromISR( mainTIMER_CONTROLLED_LED, pdTRUE );
+	FM3_GPIO->PDOR1 &= ~mainTIMER_CONTROLLED_LED;
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
 	configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
 	xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
 
-	/* Clear the interrupt before leaving. */
-    MSS_GPIO_clear_irq( MSS_GPIO_8 );
+	/* Clear the interrupt before leaving.  This just clears all the interrupts
+	for simplicity, as only one is actually used in this simple demo anyway. */
+	FM3_EXTI->EICL = 0x0000;
 
 	/* If calling xTimerResetFromISR() caused a task (in this case the timer
 	service/daemon task) to unblock, and the unblocked task has a priority
@@ -456,7 +431,7 @@ const unsigned long ulValueToSend = 100UL;
 
 	/* The timer command queue will have been filled when the timer test tasks
 	were created in main() (this is part of the test they perform).  Therefore,
-	while the check and OLED timers can be created in main(), they cannot be
+	while the check and count timers can be created in main(), they cannot be
 	started from main().  Once the scheduler has started, the timer service
 	task will drain the command queue, and now the check and OLED timers can be
 	started successfully. */
@@ -503,64 +478,35 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
-static void prvOLEDTask( void * pvParameters)
-{
-static struct oled_data xOLEDData;
-static unsigned char ucOffset1 = 0, ucOffset2 = 5;
-static portTickType xLastScrollTime = 0UL;
-
-	/* Initialise the display. */
-	OLED_init();
-
-	/* Initialise the parts of the oled_data structure that do not change. */
-	xOLEDData.line1          = FIRST_LINE;
-	xOLEDData.string1        = " www.FreeRTOS.org";
-	xOLEDData.line2          = SECOND_LINE;
-	xOLEDData.string2        = " www.FreeRTOS.org";
-	xOLEDData.contrast_val                 = OLED_CONTRAST_VAL;
-	xOLEDData.on_off                       = OLED_HORIZ_SCROLL_OFF;
-	xOLEDData.column_scrool_per_step       = OLED_HORIZ_SCROLL_STEP;
-	xOLEDData.start_page                   = OLED_START_PAGE;
-	xOLEDData.time_intrval_btw_scroll_step = OLED_HORIZ_SCROLL_TINVL;
-	xOLEDData.end_page                     = OLED_END_PAGE;
-
-
-	/* Initialise the last scroll time.  This only needs to be done once,
-	because from this point on it will get automatically updated in the
-	xTaskDelayUntil() API function. */
-	xLastScrollTime = xTaskGetTickCount();
-
-	for( ;; )
-	{
-		/* Wait until it is time to update the OLED again. */
-		vTaskDelayUntil( &xLastScrollTime, mainOLED_PERIOD_MS );
-		
-		xOLEDData.char_offset1   = ucOffset1++;
-		xOLEDData.char_offset2   = ucOffset2++;
-	
-		OLED_write_data( &xOLEDData, BOTH_LINES );
-	}
-}
-/*-----------------------------------------------------------*/
-
 static void prvSetupHardware( void )
 {
+const unsigned short usButtonInputBit = 0x01U;
+
+	SystemInit();
 	SystemCoreClockUpdate();
-	
-	/* Disable the Watch Dog Timer */
-	MSS_WD_disable( );
 
-	/* Configure the GPIO for the LEDs. */
-	vParTestInitialise();
+	/* Initialise the IO used for the LEDs on the 7 segment displays. */
+	vParTestInitialise();	
 	
-	/* ACE Initialization */
-	ACE_init();
+	/* Set the switches to input (P18->P1F). */
+	FM3_GPIO->DDR5 = 0x0000;
+	FM3_GPIO->PFR5 = 0x0000;
 
+	/* Assign the button input as GPIO. */
+	FM3_GPIO->PFR1 |= usButtonInputBit;
+	
+	/* Button interrupt on falling edge. */
+	FM3_EXTI->ELVR  = 0x0003;
+
+	/* Clear all external interrupts. */
+	FM3_EXTI->EICL  = 0x0000;
+
+	/* Enable the button interrupt. */
+	FM3_EXTI->ENIR |= usButtonInputBit;
+	
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
-	NVIC_SetPriority( GPIO8_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
-    NVIC_EnableIRQ( GPIO8_IRQn );
-    MSS_GPIO_config( MSS_GPIO_8, MSS_GPIO_INPUT_MODE | MSS_GPIO_IRQ_EDGE_NEGATIVE );
-    MSS_GPIO_enable_irq( MSS_GPIO_8 );
+	NVIC_SetPriority( EXINT0_7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+    NVIC_EnableIRQ( EXINT0_7_IRQn );
 }
 /*-----------------------------------------------------------*/
 
@@ -622,35 +568,4 @@ char *pcGetTaskStatusMessage( void )
 	}
 }
 /*-----------------------------------------------------------*/
-
-void vMainConfigureTimerForRunTimeStats( void )
-{
-const unsigned long ulMax32BitValue = 0xffffffffUL;
-
-	MSS_TIM64_init( MSS_TIMER_PERIODIC_MODE );
-	MSS_TIM64_load_immediate( ulMax32BitValue, ulMax32BitValue );
-	MSS_TIM64_start();
-}
-/*-----------------------------------------------------------*/
-
-unsigned long ulGetRunTimeCounterValue( void )
-{
-unsigned long long ullCurrentValue;
-const unsigned long long ulMax64BitValue = 0xffffffffffffffffULL;
-unsigned long *pulHighWord, *pulLowWord;
-
-	pulHighWord = ( unsigned long * ) &ullCurrentValue;
-	pulLowWord = pulHighWord++;
-	
-	MSS_TIM64_get_current_value( ( uint32_t * ) pulHighWord, ( uint32_t * ) pulLowWord );
-	
-	/* Convert the down count into an upcount. */
-	ullCurrentValue = ulMax64BitValue - ullCurrentValue;
-	
-	/* Scale to a 32bit number of suitable frequency. */
-	ullCurrentValue >>= 13;
-
-	/* Just return 32 bits. */
-	return ( unsigned long ) ullCurrentValue;
-}
 

@@ -59,31 +59,36 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Library includes. */
-#include "mss_gpio.h"
+/* Fujitsu drivers/libraries. */
+#include "mb9bf506n.h"
+#include "system_mb9bf50x.h"
 
+/* Only the LEDs on one of the two seven segment displays are used. */
 #define partstMAX_LEDS		8
 
-static volatile unsigned long ulGPIOState = 0UL;
+/* The LEDs are controlled by bits 8 to 15 of the IO port. */
+#define partstLED_0_OFFSET	8
 
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
-long x;
+const unsigned short usGPIOState = 0xFF00U;
 
-	/* Initialise the GPIO */
-	MSS_GPIO_init();
-
-	/* Set up GPIO for the LEDs. */
-	for( x = 0; x < partstMAX_LEDS; x++ )
-	{
-		MSS_GPIO_config( ( mss_gpio_id_t ) x , MSS_GPIO_OUTPUT_MODE );
-	}
-
-	/* All LEDs start off. */
-	ulGPIOState = 0xffffffffUL;
-	MSS_GPIO_set_outputs( ulGPIOState );
+	/* Analog inputs are not used on the LED outputs. */
+	FM3_GPIO->ADE  = 0x00FF;
+	
+	/* LED seg1 to GPIO output (P18->P1F). */
+	FM3_GPIO->DDR1 = 0xFF00;
+	FM3_GPIO->PFR1 = 0x0000;
+	
+	/* LED seg2 to GPIO output (P30->P3F). */
+	FM3_GPIO->DDR3 = 0xFF00;
+	FM3_GPIO->PFR3 = 0x0000;
+	
+	/* Start with all LEDs off. */
+	FM3_GPIO->PDOR3 = usGPIOState;
+	FM3_GPIO->PDOR1 = usGPIOState;
 }
 /*-----------------------------------------------------------*/
 
@@ -97,14 +102,12 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		{
 			if( xValue == pdTRUE )
 			{
-				ulGPIOState &= ~( 1UL << uxLED );
+				FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
 			}
 			else
 			{
-				ulGPIOState |= ( 1UL << uxLED );
+				FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
 			}
-			
-			MSS_GPIO_set_outputs( ulGPIOState );
 		}
 		taskEXIT_CRITICAL();
 	}
@@ -121,14 +124,12 @@ unsigned portBASE_TYPE uxInterruptFlags;
 		{
 			if( xValue == pdTRUE )
 			{
-				ulGPIOState &= ~( 1UL << uxLED );
+				FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
 			}
 			else
 			{
-				ulGPIOState |= ( 1UL << uxLED );
+				FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
 			}
-
-			MSS_GPIO_set_outputs( ulGPIOState );
 		}
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
@@ -143,16 +144,14 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 		interrupt. */
 		taskENTER_CRITICAL();
 		{
-			if( ( ulGPIOState & ( 1UL << uxLED ) ) != 0UL )
+			if( ( FM3_GPIO->PDOR3 & ( 1UL << ( uxLED + partstLED_0_OFFSET ) ) ) != 0UL )
 			{
-				ulGPIOState &= ~( 1UL << uxLED );
+				FM3_GPIO->PDOR3 &= ~( 1UL << ( uxLED + partstLED_0_OFFSET ) );
 			}
 			else
 			{
-				ulGPIOState |= ( 1UL << uxLED );
+				FM3_GPIO->PDOR3 |= ( 1UL << ( uxLED + partstLED_0_OFFSET ) );
 			}
-			
-			MSS_GPIO_set_outputs( ulGPIOState );
 		}
 		taskEXIT_CRITICAL();
 	}
@@ -167,7 +166,7 @@ long lReturn = pdFALSE;
 	{
 		taskENTER_CRITICAL();
 		{
-			if( ( ulGPIOState & ( 1UL << ulLED ) ) == 0UL )
+			if( ( FM3_GPIO->PDOR3 & ( 1UL << ( ulLED + partstLED_0_OFFSET ) ) ) == 0UL )
 			{
 				lReturn = pdTRUE;
 			}

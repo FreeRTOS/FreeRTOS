@@ -172,12 +172,10 @@ the queue empty. */
 #define mainCHECK_LED				0x07UL
 
 /* The LED toggle by the queue receive task. */
-#define mainTASK_CONTROLLED_LED		0x8000UL
+#define mainTASK_CONTROLLED_LED		0x04UL
 
-/* The LED turned on by the button interrupt, and turned off by the LED timer.
-Although it looks like this value is the same as that defined for
-mainTASK_CONTROLLED_LED, the two LEDs are on different ports. */
-#define mainTIMER_CONTROLLED_LED	0x8000UL
+/* The LED turned on by the button interrupt, and turned off by the LED timer. */
+#define mainTIMER_CONTROLLED_LED	0x05UL
 
 /* Constant used by the standard timer test functions. */
 #define mainTIMER_TEST_PERIOD		( 50 )
@@ -199,6 +197,10 @@ have been reported by any of the standard demo tasks. */
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks. */
 #define mainERROR_CHECK_TIMER_PERIOD_MS ( 500UL / portTICK_RATE_MS )
+
+/* The period at which the digit counter timer will expire, in ms, and converted
+to ticks using the portTICK_RATE_MS constant. */
+#define mainDIGIT_COUNTER_TIMER_PERIOD_MS ( 250UL / portTICK_RATE_MS )
 
 /* The LED will remain on until the button has not been pushed for a full
 5000ms. */
@@ -231,6 +233,11 @@ static void prvLEDTimerCallback( xTimerHandle xTimer );
 static void prvCheckTimerCallback( xTimerHandle xTimer );
 
 /*
+ * The digit counter callback function, as described at the top of this file.
+ */
+static void prvDigitCounterTimerCallback( xTimerHandle xTimer );
+
+/*
  * This is not a 'standard' partest function, so the prototype is not in
  * partest.h, and is instead included here.
  */
@@ -244,6 +251,10 @@ static xQueueHandle xQueue = NULL;
 /* The LED software timer.  This uses prvLEDTimerCallback() as it's callback
 function. */
 static xTimerHandle xLEDTimer = NULL;
+
+/* The counter software timer.  This displays a counting digit on one of the
+seven segment displays. */
+static xTimerHandle xDigitCounterTimer = NULL;
 
 /* The check timer.  This uses prvCheckTimerCallback() as it's callback
 function. */
@@ -290,6 +301,15 @@ int main(void)
 									prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 								  );
 
+		/* Create the software timer that performs the 'digit counting'
+		functionality, as described at the top of this file. */
+		xDigitCounterTimer = xTimerCreate( ( const signed char * ) "DigitCounter",	/* A text name, purely to help debugging. */
+									( mainDIGIT_COUNTER_TIMER_PERIOD_MS ),			/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,											/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,									/* The ID is not used, so can be set to anything. */
+									prvDigitCounterTimerCallback					/* The callback function that inspects the status of all the other tasks. */
+								  );		
+		
 		/* Create a lot of 'standard demo' tasks. */
 		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 		vCreateBlockTimeTasks();
@@ -385,14 +405,29 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 static void prvLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
-	five seconds - turn the LED off.  NOTE - accessing the LED port should use
-	a critical section because it is accessed from multiple tasks, and the
-	button interrupt - in this trivial case, for simplicity, the critical
-	section is omitted.
+	five seconds - turn the LED off. */
+	vParTestSetLED( mainTIMER_CONTROLLED_LED, pdFALSE );
+}
+/*-----------------------------------------------------------*/
+
+static void prvDigitCounterTimerCallback( xTimerHandle xTimer )
+{
+/* Define the bit patterns that display numbers on the seven segment display. */
+static const unsigned short usNumbersPatterns[] = { 0xC000U, 0xF900U, 0xA400U, 0xB000U, 0x9900U, 0x9200U, 0x8200U, 0xF800U, 0x8000U, 0x9000U };
+static long lCounter = 0L;
+const long lNumberOfDigits = 10L;
+
+	/* Display the next number, counting up. */
+	FM3_GPIO->PDOR1 = usNumbersPatterns[ lCounter ];
+
+	/* Move onto the next digit. */	
+	lCounter++;
 	
-	A ParTest function is not used to set the LED as the LED is not on the seven
-	segment display that the ParTest functions control. */
-	FM3_GPIO->PDOR1 |= mainTIMER_CONTROLLED_LED;
+	/* Ensure the counter does not go off the end of the array. */
+	if( lCounter >= lNumberOfDigits )
+	{
+		lCounter = 0L;
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -404,7 +439,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	FM3_GPIO->PDOR1 &= ~mainTIMER_CONTROLLED_LED;
+	vParTestSetLEDFromISR( mainTIMER_CONTROLLED_LED, pdTRUE );
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
@@ -431,11 +466,12 @@ const unsigned long ulValueToSend = 100UL;
 
 	/* The timer command queue will have been filled when the timer test tasks
 	were created in main() (this is part of the test they perform).  Therefore,
-	while the check and count timers can be created in main(), they cannot be
-	started from main().  Once the scheduler has started, the timer service
-	task will drain the command queue, and now the check and OLED timers can be
-	started successfully. */
+	while the check and digit counter timers can be created in main(), they
+	cannot be started from main().  Once the scheduler has started, the timer
+	service	task will drain the command queue, and now the check and digit
+	counter timers can be started successfully. */
 	xTimerStart( xCheckTimer, portMAX_DELAY );
+	xTimerStart( xDigitCounterTimer, portMAX_DELAY );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();

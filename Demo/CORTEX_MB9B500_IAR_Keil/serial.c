@@ -59,7 +59,7 @@
 	is done to demonstrate queues being used in an interrupt, and to deliberately
 	load the system to test the FreeRTOS port.  It is *NOT* meant to be an
 	example of an efficient implementation.  An efficient implementation should
-	use FIFO's or DMA if available, and only use FreeRTOS API functions when
+	use FIFOs or DMA if available, and only use FreeRTOS API functions when
 	enough has been received to warrant a task being unblocked to process the
 	data.
 */
@@ -106,8 +106,6 @@ static xQueueHandle xCharsForTx;
  */
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-xComPortHandle xReturn;
-
 	/* Create the queues used to hold Rx/Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
@@ -159,14 +157,10 @@ xComPortHandle xReturn;
 		are called in the interrupt handler. */
 		NVIC_SetPriority( MFS0TX_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
 	}
-	else
-	{
-		xReturn = ( xComPortHandle ) 0;
-	}
 
 	/* This demo file only supports a single port but we have to return
 	something to comply with the standard demo header file. */
-	return xReturn;
+	return ( xComPortHandle ) 0;
 }
 /*-----------------------------------------------------------*/
 

@@ -1,6 +1,6 @@
 ;
 ;/*
-;    FreeRTOS V7.0.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+;    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
 ;	
 ;
 ;    ***************************************************************************

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
 	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
@@ -76,7 +76,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V7.0.0"
+#define tskKERNEL_VERSION_NUMBER "V7.0.1"
 
 /**
  * task. h

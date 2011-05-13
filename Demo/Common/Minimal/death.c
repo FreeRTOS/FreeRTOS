@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -144,8 +144,8 @@ unsigned portBASE_TYPE *puxPriority;
 	this by increasing uxTasksRunningAtStart by 1. */
 	uxTasksRunningAtStart++;
 	
-	/* FreeRTOS version 7.0.0 can optionally create a timer service task.  If
-	this is done, then uxTasksRunningAtStart needs incrementing again as that
+	/* From FreeRTOS version 7.0.0 can optionally create a timer service task.  
+	If this is done, then uxTasksRunningAtStart needs incrementing again as that
 	too is created when the scheduler is started. */
 	#if configUSE_TIMERS == 1
 		uxTasksRunningAtStart++;

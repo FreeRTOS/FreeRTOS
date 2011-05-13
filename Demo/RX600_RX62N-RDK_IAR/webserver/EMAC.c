@@ -152,7 +152,7 @@ static void prvResetEverything( void );
 /*-----------------------------------------------------------*/
 
 /* Points to the Rx descriptor currently in use. */
-static volatile ethfifo *pxCurrentDesc = NULL;
+static volatile ethfifo *pxCurrentRxDesc = NULL;
 
 /* The buffer used by the uIP stack to both receive and send.  This points to
 one of the Ethernet buffers when its actually in use. */
@@ -241,23 +241,29 @@ unsigned long ulBytesReceived;
 
 	if( ulBytesReceived > 0 )
 	{
-		pxCurrentDesc->status &= ~( FP1 | FP0 );
-		pxCurrentDesc->status |= ACT;			
+		/* Mark the pxDescriptor buffer as free as uip_buf is going to be set to
+		the buffer that contains the received data. */
+		prvReturnBuffer( uip_buf );
 
+		/* Point uip_buf to the data about ot be processed. */
+		uip_buf = ( void * ) pxCurrentRxDesc->buf_p;
+		
+		/* Allocate a new buffer to the descriptor, as uip_buf is now using it's
+		old descriptor. */
+		pxCurrentRxDesc->buf_p = ( char * ) prvGetNextBuffer();
+
+		/* Prepare the descriptor to go again. */
+		pxCurrentRxDesc->status &= ~( FP1 | FP0 );
+		pxCurrentRxDesc->status |= ACT;
+
+		/* Move onto the next buffer in the ring. */
+		pxCurrentRxDesc = pxCurrentRxDesc->next;
+		
 		if( EDMAC.EDRRR.LONG == 0x00000000L )
 		{
 			/* Restart Ethernet if it has stopped */
 			EDMAC.EDRRR.LONG = 0x00000001L;
 		}
-
-		/* Mark the pxDescriptor buffer as free as uip_buf is going to be set to
-		the buffer that contains the received data. */
-		prvReturnBuffer( uip_buf );
-		
-		uip_buf = ( void * ) pxCurrentDesc->buf_p;
-
-		/* Move onto the next buffer in the ring. */
-		pxCurrentDesc = pxCurrentDesc->next;
 	}
 
 	return ulBytesReceived;
@@ -367,7 +373,7 @@ long x;
 	pxDescriptor->next = ( ethfifo * ) &( xTxDescriptors[ 0 ] );
 	
 	/* Use the first Rx descriptor to start with. */
-	pxCurrentDesc = &( xRxDescriptors[ 0 ] );
+	pxCurrentRxDesc = &( xRxDescriptors[ 0 ] );
 }
 /*-----------------------------------------------------------*/
 
@@ -439,17 +445,17 @@ static unsigned long prvCheckRxFifoStatus( void )
 {
 unsigned long ulReturn = 0;
 
-	if( ( pxCurrentDesc->status & ACT ) != 0 )
+	if( ( pxCurrentRxDesc->status & ACT ) != 0 )
 	{
 		/* Current descriptor is still active. */
 	}
-	else if( ( pxCurrentDesc->status & FE ) != 0 )
+	else if( ( pxCurrentRxDesc->status & FE ) != 0 )
 	{
 		/* Frame error.  Clear the error. */
-		pxCurrentDesc->status &= ~( FP1 | FP0 | FE );
-		pxCurrentDesc->status &= ~( RMAF | RRF | RTLF | RTSF | PRE | CERF );
-		pxCurrentDesc->status |= ACT;
-		pxCurrentDesc = pxCurrentDesc->next;
+		pxCurrentRxDesc->status &= ~( FP1 | FP0 | FE );
+		pxCurrentRxDesc->status &= ~( RMAF | RRF | RTLF | RTSF | PRE | CERF );
+		pxCurrentRxDesc->status |= ACT;
+		pxCurrentRxDesc = pxCurrentRxDesc->next;
 
 		if( EDMAC.EDRRR.LONG == 0x00000000UL )
 		{
@@ -461,9 +467,9 @@ unsigned long ulReturn = 0;
 	{
 		/* The descriptor contains a frame.  Because of the size of the buffers
 		the frame should always be complete. */
-		if( ( pxCurrentDesc->status & FP0 ) == FP0 )
+		if( ( pxCurrentRxDesc->status & FP0 ) == FP0 )
 		{
-			ulReturn = pxCurrentDesc->size;
+			ulReturn = pxCurrentRxDesc->size;
 		}
 		else
 		{
@@ -510,12 +516,13 @@ static void prvConfigureEtherCAndEDMAC( void )
 	#if __LITTLE_ENDIAN__ == 1
 		EDMAC.EDMR.BIT.DE = 1;
 	#endif
-	EDMAC.RDLAR = ( void * ) pxCurrentDesc;	/* Initialaize Rx Descriptor List Address */
+	EDMAC.RDLAR = ( void * ) pxCurrentRxDesc;	/* Initialaize Rx Descriptor List Address */
 	EDMAC.TDLAR = ( void * ) &( xTxDescriptors[ 0 ] );/* Initialaize Tx Descriptor List Address */
 	EDMAC.TRSCER.LONG = 0x00000000;				/* Copy-back status is RFE & TFE only   */
 	EDMAC.TFTR.LONG = 0x00000000;				/* Threshold of Tx_FIFO */
 	EDMAC.FDR.LONG = 0x00000000;				/* Transmit fifo & receive fifo is 256 bytes */
 	EDMAC.RMCR.LONG = 0x00000003;				/* Receive function is normal mode(continued) */
+	ETHERC.ECMR.BIT.PRM = 0;					/* Ensure promiscuous mode is off. */
 	
 	/* Enable the interrupt... */
 	_IEN( _ETHER_EINT ) = 1;	
@@ -527,21 +534,16 @@ __interrupt void vEMAC_ISR_Handler( void )
 {
 unsigned long ul = EDMAC.EESR.LONG;
 long lHigherPriorityTaskWoken = pdFALSE;
-extern xSemaphoreHandle xEMACSemaphore;
-static long ulTxEndInts = 0;
+extern xQueueHandle xEMACEventQueue;
+const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 
 	__enable_interrupt();
 
 	/* Has a Tx end occurred? */
 	if( ul & emacTX_END_INTERRUPT )
 	{
-		++ulTxEndInts;
-		if( ulTxEndInts >= 2 )
-		{
-			/* Only return the buffer to the pool once both Txes have completed. */
-			prvReturnBuffer( ( void * ) xTxDescriptors[ 0 ].buf_p );
-			ulTxEndInts = 0;
-		}
+		/* Only return the buffer to the pool once both Txes have completed. */
+		prvReturnBuffer( ( void * ) xTxDescriptors[ 0 ].buf_p );
 		EDMAC.EESR.LONG = emacTX_END_INTERRUPT;
 	}
 
@@ -549,7 +551,7 @@ static long ulTxEndInts = 0;
 	if( ul & emacRX_END_INTERRUPT )
 	{
 		/* Make sure the Ethernet task is not blocked waiting for a packet. */
-		xSemaphoreGiveFromISR( xEMACSemaphore, &lHigherPriorityTaskWoken );
+		xQueueSendFromISR( xEMACEventQueue, &ulRxEvent, &lHigherPriorityTaskWoken );
 		portYIELD_FROM_ISR( lHigherPriorityTaskWoken );
 		EDMAC.EESR.LONG = emacRX_END_INTERRUPT;
 	}

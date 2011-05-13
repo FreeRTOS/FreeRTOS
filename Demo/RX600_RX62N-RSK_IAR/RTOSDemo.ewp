@@ -12,7 +12,7 @@
       <name>General</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -129,13 +129,17 @@
           <name>GenIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>GenRopi</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCRX</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>10</version>
+        <version>11</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -369,13 +373,25 @@
           <name>IccIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>IccPosIndRopi</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AggressiveInlining</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AggressiveUnrolling</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ARX</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -524,6 +540,14 @@
           <name>AsmIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>AsmPosIndRopi</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AsmCpuCore</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -581,7 +605,7 @@
       <name>ILINK</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -807,6 +831,10 @@
           <name>IlinkLogUnusedFragments</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkSubnormal</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -846,7 +874,7 @@
       <name>General</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -963,13 +991,17 @@
           <name>GenIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>GenRopi</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCRX</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>10</version>
+        <version>11</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1202,13 +1234,25 @@
           <name>IccIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>IccPosIndRopi</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AggressiveInlining</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AggressiveUnrolling</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ARX</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1357,6 +1401,14 @@
           <name>AsmIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>AsmPosIndRopi</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AsmCpuCore</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1414,7 +1466,7 @@
       <name>ILINK</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1640,6 +1692,10 @@
           <name>IlinkLogUnusedFragments</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkSubnormal</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1679,7 +1735,7 @@
       <name>General</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1796,13 +1852,17 @@
           <name>GenIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>GenRopi</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCRX</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>10</version>
+        <version>11</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2036,13 +2096,25 @@
           <name>IccIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>IccPosIndRopi</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AggressiveInlining</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AggressiveUnrolling</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ARX</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>3</version>
+        <version>5</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2191,6 +2263,14 @@
           <name>AsmIntSize</name>
           <state>1</state>
         </option>
+        <option>
+          <name>AsmPosIndRopi</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AsmCpuCore</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -2248,7 +2328,7 @@
       <name>ILINK</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2474,6 +2554,10 @@
           <name>IlinkLogUnusedFragments</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkSubnormal</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -2567,6 +2651,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\timers.c</name>
     </file>
   </group>
   <group>

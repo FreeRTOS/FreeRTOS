@@ -93,6 +93,12 @@
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
+/* Software timer definitions. */
+#define configUSE_TIMERS				1
+#define configTIMER_TASK_PRIORITY		( 3 )
+#define configTIMER_QUEUE_LENGTH		5
+#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+
 /* The interrupt priority used by the kernel itself for the tick interrupt and
 the pended interrupt.  This would normally be the lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY         1
@@ -114,6 +120,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
+
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
 
 extern volatile unsigned long ulHighFrequencyTickCount;
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() portNOP() /* Run time stats use the same timer as the high frequency timer test. */

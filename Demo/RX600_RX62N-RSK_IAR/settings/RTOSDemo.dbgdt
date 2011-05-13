@@ -31,7 +31,7 @@
       
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-20000-3827</Identity>
@@ -43,20 +43,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-2655-13188</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-2655-13188</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main-full.c</Filename><XPos>0</XPos><YPos>245</YPos><SelStart>12507</SelStart><SelEnd>12507</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main-full.c</Filename><XPos>0</XPos><YPos>245</YPos><SelStart>12338</SelStart><SelEnd>12338</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>74</YPos><SelStart>4686</SelStart><SelEnd>4686</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\webserver\EMAC.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>13776</SelStart><SelEnd>13776</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main-blinky.c</Filename><XPos>0</XPos><YPos>86</YPos><SelStart>4787</SelStart><SelEnd>4787</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\uIP_Task.c</Filename><XPos>0</XPos><YPos>226</YPos><SelStart>7106</SelStart><SelEnd>7106</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00a2ab10><key>iaridepm.enu1</key></Toolbar-00a2ab10><Toolbar-00b05540><key>debuggergui.enu1</key></Toolbar-00b05540></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>238</Right><x>-2</x><y>-2</y><xscreen>121</xscreen><yscreen>141</yscreen><sizeHorzCX>72024</sizeHorzCX><sizeHorzCY>143585</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>200</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-013360d0><key>iaridepm.enu1</key></Toolbar-013360d0><Toolbar-0b79f4f0><key>debuggergui.enu1</key></Toolbar-0b79f4f0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>740</Bottom><Right>238</Right><x>-2</x><y>-2</y><xscreen>121</xscreen><yscreen>141</yscreen><sizeHorzCX>72024</sizeHorzCX><sizeHorzCY>143585</sizeHorzCY><sizeVertCX>142857</sizeVertCX><sizeVertCY>755601</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>200</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>203666</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>203666</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

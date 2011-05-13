@@ -242,23 +242,29 @@ unsigned long ulBytesReceived;
 
 	if( ulBytesReceived > 0 )
 	{
-		pxCurrentRxDesc->status &= ~( FP1 | FP0 );
-		pxCurrentRxDesc->status |= ACT;			
+		/* Mark the pxDescriptor buffer as free as uip_buf is going to be set to
+		the buffer that contains the received data. */
+		prvReturnBuffer( uip_buf );
 
+		/* Point uip_buf to the data about ot be processed. */
+		uip_buf = ( void * ) pxCurrentRxDesc->buf_p;
+		
+		/* Allocate a new buffer to the descriptor, as uip_buf is now using it's
+		old descriptor. */
+		pxCurrentRxDesc->buf_p = ( char * ) prvGetNextBuffer();
+
+		/* Prepare the descriptor to go again. */
+		pxCurrentRxDesc->status &= ~( FP1 | FP0 );
+		pxCurrentRxDesc->status |= ACT;
+
+		/* Move onto the next buffer in the ring. */
+		pxCurrentRxDesc = pxCurrentRxDesc->next;
+		
 		if( EDMAC.EDRRR.LONG == 0x00000000L )
 		{
 			/* Restart Ethernet if it has stopped */
 			EDMAC.EDRRR.LONG = 0x00000001L;
 		}
-
-		/* Mark the pxDescriptor buffer as free as uip_buf is going to be set to
-		the buffer that contains the received data. */
-		prvReturnBuffer( uip_buf );
-		
-		uip_buf = ( void * ) pxCurrentRxDesc->buf_p;
-
-		/* Move onto the next buffer in the ring. */
-		pxCurrentRxDesc = pxCurrentRxDesc->next;
 	}
 
 	return ulBytesReceived;
@@ -517,6 +523,7 @@ static void prvConfigureEtherCAndEDMAC( void )
 	EDMAC.TFTR.LONG = 0x00000000;				/* Threshold of Tx_FIFO */
 	EDMAC.FDR.LONG = 0x00000000;				/* Transmit fifo & receive fifo is 256 bytes */
 	EDMAC.RMCR.LONG = 0x00000003;				/* Receive function is normal mode(continued) */
+	ETHERC.ECMR.BIT.PRM = 0;					/* Ensure promiscuous mode is off. */
 	
 	/* Enable the interrupt... */
 	_IEN( _ETHER_EINT ) = 1;	
@@ -527,8 +534,8 @@ void vEMAC_ISR_Handler( void )
 {
 unsigned long ul = EDMAC.EESR.LONG;
 long lHigherPriorityTaskWoken = pdFALSE;
-extern xSemaphoreHandle xEMACSemaphore;
-static long ulTxEndInts = 0;
+extern xQueueHandle xEMACEventQueue;
+const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 
 	/* Re-enabled interrupts. */
 	__asm volatile( "SETPSW	I" );
@@ -536,13 +543,8 @@ static long ulTxEndInts = 0;
 	/* Has a Tx end occurred? */
 	if( ul & emacTX_END_INTERRUPT )
 	{
-		++ulTxEndInts;
-		if( ulTxEndInts >= 2 )
-		{
-			/* Only return the buffer to the pool once both Txes have completed. */
-			prvReturnBuffer( ( void * ) xTxDescriptors[ 0 ].buf_p );
-			ulTxEndInts = 0;
-		}
+		/* Only return the buffer to the pool once both Txes have completed. */
+		prvReturnBuffer( ( void * ) xTxDescriptors[ 0 ].buf_p );
 		EDMAC.EESR.LONG = emacTX_END_INTERRUPT;
 	}
 
@@ -550,7 +552,7 @@ static long ulTxEndInts = 0;
 	if( ul & emacRX_END_INTERRUPT )
 	{
 		/* Make sure the Ethernet task is not blocked waiting for a packet. */
-		xSemaphoreGiveFromISR( xEMACSemaphore, &lHigherPriorityTaskWoken );
+		xQueueSendFromISR( xEMACEventQueue, &ulRxEvent, &lHigherPriorityTaskWoken );
 		portYIELD_FROM_ISR( lHigherPriorityTaskWoken );
 		EDMAC.EESR.LONG = emacRX_END_INTERRUPT;
 	}

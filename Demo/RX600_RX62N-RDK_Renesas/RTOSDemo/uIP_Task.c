@@ -228,7 +228,6 @@ static void prvInitialise_uIP( void )
 {
 xTimerHandle xARPTimer, xPeriodicTimer;
 uip_ipaddr_t xIPAddr;
-struct timer periodic_timer, arp_timer;
 const unsigned long ul_uIPEventQueueLength = 10UL;
 
 	/* Initialise the uIP stack. */

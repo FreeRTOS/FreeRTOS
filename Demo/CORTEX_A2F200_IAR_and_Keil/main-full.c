@@ -456,10 +456,9 @@ const unsigned long ulValueToSend = 100UL;
 
 	/* The timer command queue will have been filled when the timer test tasks
 	were created in main() (this is part of the test they perform).  Therefore,
-	while the check and OLED timers can be created in main(), they cannot be
-	started from main().  Once the scheduler has started, the timer service
-	task will drain the command queue, and now the check and OLED timers can be
-	started successfully. */
+	while the check timer can be created in main(), it cannot be started from 
+	main().  Once the scheduler has started, the timer service task will drain 
+	the command queue, and now the check timer can be started successfully. */
 	xTimerStart( xCheckTimer, portMAX_DELAY );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */

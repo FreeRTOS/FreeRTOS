@@ -13,7 +13,7 @@
 "Debug_with_optimisation" 
 "SimDebug_RX600" 
 [CURRENT_CONFIGURATION]
-"Debug_with_optimisation" 
+"Debug" 
 [CURRENT_SESSION]
 "SessionRX600_E1_E20_SYSTEM" 
 [GENERAL_DATA_PROJECT]

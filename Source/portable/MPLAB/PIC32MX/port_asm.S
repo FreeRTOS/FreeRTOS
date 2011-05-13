@@ -284,9 +284,9 @@ vPortYieldISR:
 	/* Remove stack frame. */
 	addiu		sp,	sp,	portCONTEXT_SIZE
 
-	mtc0		k1, _CP0_STATUS
-	ehb	
+	mtc0		k1, _CP0_STATUS	
 	mtc0 		k0, _CP0_EPC
+	ehb
 	eret 
 	nop
 

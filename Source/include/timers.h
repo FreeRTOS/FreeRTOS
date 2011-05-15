@@ -134,7 +134,7 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  *
  * @param pxCallbackFunction The function to call when the timer expires.
  * Callback functions must have the prototype defined by tmrTIMER_CALLBACK,
- * which is	"void vCallbackFunction( xTIMER *xTimer );".
+ * which is	"void vCallbackFunction( xTimerHandle xTimer );".
  *
  * @return If the timer is successfully create then a handle to the newly
  * created timer is returned.  If the timer cannot be created (because either
@@ -156,7 +156,7 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  * // The callback function does nothing but count the number of times the
  * // associated timer expires, and stop the timer once the timer has expired
  * // 10 times.
- * void vTimerCallback( xTIMER *pxTimer )
+ * void vTimerCallback( xTimerHandle pxTimer )
  * {
  * long lArrayIndex;
  * const long xMaxExpiryCountBeforeStopping = 10;
@@ -551,7 +551,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * // The callback function assigned to the one-shot timer.  In this case the
  * // parameter is not used.
- * void vBacklightTimerCallback( xTIMER *pxTimer )
+ * void vBacklightTimerCallback( xTimerHandle pxTimer )
  * {
  *     // The timer expired, therefore 5 seconds must have passed since a key
  *     // was pressed.  Switch off the LCD back-light.
@@ -657,7 +657,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * // The callback function assigned to the one-shot timer.  In this case the
  * // parameter is not used.
- * void vBacklightTimerCallback( xTIMER *pxTimer )
+ * void vBacklightTimerCallback( xTimerHandle pxTimer )
  * {
  *     // The timer expired, therefore 5 seconds must have passed since a key
  *     // was pressed.  Switch off the LCD back-light.
@@ -876,7 +876,7 @@ portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * // The callback function assigned to the one-shot timer.  In this case the
  * // parameter is not used.
- * void vBacklightTimerCallback( xTIMER *pxTimer )
+ * void vBacklightTimerCallback( xTimerHandle pxTimer )
  * {
  *     // The timer expired, therefore 5 seconds must have passed since a key
  *     // was pressed.  Switch off the LCD back-light.

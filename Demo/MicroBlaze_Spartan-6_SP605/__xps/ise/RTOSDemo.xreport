@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2011-05-30T16:47:01</DateModified>
+  <DateModified>2011-05-30T20:52:00</DateModified>
   <ModuleName>RTOSDemo</ModuleName>
-  <SummaryTimeStamp>2011-05-30T16:47:01</SummaryTimeStamp>
+  <SummaryTimeStamp>2011-05-30T20:52:00</SummaryTimeStamp>
   <SavedFilePath>C:/E/Dev/FreeRTOS/WorkingCopy/Demo/MicroBlaze_Spartan-6_SP605/__xps/ise/RTOSDemo.xreport</SavedFilePath>
   <FilterFile>filter.filter</FilterFile>
   <SavedFilterFilePath>C:/E/Dev/FreeRTOS/WorkingCopy/Demo/MicroBlaze_Spartan-6_SP605/__xps/ise</SavedFilterFilePath>

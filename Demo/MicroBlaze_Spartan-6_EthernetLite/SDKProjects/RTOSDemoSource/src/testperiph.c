@@ -52,7 +52,7 @@
 
 #define GPIO_CHANNEL1 1
 
-int main() 
+int xmain()
 {
 
    static XIntc intc;

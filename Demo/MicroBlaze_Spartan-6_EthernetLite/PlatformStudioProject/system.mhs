@@ -382,6 +382,6 @@ BEGIN axi_intc
  BUS_INTERFACE S_AXI = axi4lite_0
  PORT IRQ = microblaze_0_interrupt
  PORT S_AXI_ACLK = clk_50_0000MHzPLL0
- PORT INTR = RS232_Uart_1_Interrupt & Push_Buttons_4Bits_IP2INTC_Irpt & Ethernet_Lite_IP2INTC_Irpt & axi_timer_0_Interrupt
+ PORT INTR = Push_Buttons_4Bits_IP2INTC_Irpt & Ethernet_Lite_IP2INTC_Irpt & axi_timer_0_Interrupt & RS232_Uart_1_Interrupt
 END
 

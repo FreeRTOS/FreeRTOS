@@ -1,0 +1,3 @@
+PROCESSOR=microblaze_0
+REPOSITORIES=
+HWSPEC=../HardwareWithEthernetLite/system.xml

@@ -1,7 +1,47 @@
-
-<EDKSYSTEM EDKVERSION="13.1" EDWVERSION="1.2" TIMESTAMP="Mon May 30 21:45:54 2011">
+<EDKSYSTEM EDKVERSION="13.1" EDWVERSION="1.2" TIMESTAMP="Mon May 30 21:58:14 2011">
 
   <SYSTEMINFO ARCH="spartan6" DEVICE="xc6slx45t" PACKAGE="fgg484" PART="xc6slx45tfgg484-3" SOURCE="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/MicroBlaze_Spartan-6_SP605/system.xmp" SPEEDGRADE="-3"/>
+
+  <EXTERNALPORTS>
+    <PORT DIR="I" MHS_INDEX="0" NAME="RESET" RSTPOLARITY="1" SIGIS="RST" SIGNAME="RESET"/>
+    <PORT CLKFREQUENCY="200000000" DIFFPOLARITY="P" DIR="I" MHS_INDEX="1" NAME="CLK_P" SIGIS="CLK" SIGNAME="CLK"/>
+    <PORT CLKFREQUENCY="200000000" DIFFPOLARITY="N" DIR="I" MHS_INDEX="2" NAME="CLK_N" SIGIS="CLK" SIGNAME="CLK"/>
+    <PORT DIR="O" MHS_INDEX="3" NAME="RS232_Uart_1_sout" SIGNAME="RS232_Uart_1_sout"/>
+    <PORT DIR="I" MHS_INDEX="4" NAME="RS232_Uart_1_sin" SIGNAME="RS232_Uart_1_sin"/>
+    <PORT DIR="O" ENDIAN="BIG" LEFT="0" LSB="3" MHS_INDEX="5" MSB="0" NAME="LEDs_4Bits_TRI_O" RIGHT="3" SIGNAME="LEDs_4Bits_TRI_O"/>
+    <PORT DIR="I" ENDIAN="LITTLE" LEFT="3" LSB="0" MHS_INDEX="6" MSB="3" NAME="Push_Buttons_4Bits_TRI_I" RIGHT="0" SIGNAME="Push_Buttons_4Bits_TRI_I"/>
+    <PORT DIR="O" MHS_INDEX="7" NAME="mcbx_dram_clk" SIGNAME="mcbx_dram_clk"/>
+    <PORT DIR="O" MHS_INDEX="8" NAME="mcbx_dram_clk_n" SIGNAME="mcbx_dram_clk_n"/>
+    <PORT DIR="O" MHS_INDEX="9" NAME="mcbx_dram_cke" SIGNAME="mcbx_dram_cke"/>
+    <PORT DIR="O" MHS_INDEX="10" NAME="mcbx_dram_odt" SIGNAME="mcbx_dram_odt"/>
+    <PORT DIR="O" MHS_INDEX="11" NAME="mcbx_dram_ras_n" SIGNAME="mcbx_dram_ras_n"/>
+    <PORT DIR="O" MHS_INDEX="12" NAME="mcbx_dram_cas_n" SIGNAME="mcbx_dram_cas_n"/>
+    <PORT DIR="O" MHS_INDEX="13" NAME="mcbx_dram_we_n" SIGNAME="mcbx_dram_we_n"/>
+    <PORT DIR="O" MHS_INDEX="14" NAME="mcbx_dram_udm" SIGNAME="mcbx_dram_udm"/>
+    <PORT DIR="O" MHS_INDEX="15" NAME="mcbx_dram_ldm" SIGNAME="mcbx_dram_ldm"/>
+    <PORT DIR="O" ENDIAN="LITTLE" LEFT="2" LSB="0" MHS_INDEX="16" MSB="2" NAME="mcbx_dram_ba" RIGHT="0" SIGNAME="mcbx_dram_ba"/>
+    <PORT DIR="O" ENDIAN="LITTLE" LEFT="12" LSB="0" MHS_INDEX="17" MSB="12" NAME="mcbx_dram_addr" RIGHT="0" SIGNAME="mcbx_dram_addr"/>
+    <PORT DIR="O" MHS_INDEX="18" NAME="mcbx_dram_ddr3_rst" SIGNAME="mcbx_dram_ddr3_rst"/>
+    <PORT DIR="IO" ENDIAN="LITTLE" LEFT="15" LSB="0" MHS_INDEX="19" MSB="15" NAME="mcbx_dram_dq" RIGHT="0" SIGNAME="mcbx_dram_dq"/>
+    <PORT DIR="IO" MHS_INDEX="20" NAME="mcbx_dram_dqs" SIGNAME="mcbx_dram_dqs"/>
+    <PORT DIR="IO" MHS_INDEX="21" NAME="mcbx_dram_dqs_n" SIGNAME="mcbx_dram_dqs_n"/>
+    <PORT DIR="IO" MHS_INDEX="22" NAME="mcbx_dram_udqs" SIGNAME="mcbx_dram_udqs"/>
+    <PORT DIR="IO" MHS_INDEX="23" NAME="mcbx_dram_udqs_n" SIGNAME="mcbx_dram_udqs_n"/>
+    <PORT DIR="IO" MHS_INDEX="24" NAME="rzq" SIGNAME="rzq"/>
+    <PORT DIR="IO" MHS_INDEX="25" NAME="zio" SIGNAME="zio"/>
+    <PORT DIR="IO" MHS_INDEX="26" NAME="Ethernet_Lite_MDIO" SIGNAME="Ethernet_Lite_MDIO"/>
+    <PORT DIR="O" MHS_INDEX="27" NAME="Ethernet_Lite_MDC" SIGNAME="Ethernet_Lite_MDC"/>
+    <PORT DIR="O" ENDIAN="LITTLE" LEFT="3" LSB="0" MHS_INDEX="28" MSB="3" NAME="Ethernet_Lite_TXD" RIGHT="0" SIGNAME="Ethernet_Lite_TXD"/>
+    <PORT DIR="O" MHS_INDEX="29" NAME="Ethernet_Lite_TX_EN" SIGNAME="Ethernet_Lite_TX_EN"/>
+    <PORT DIR="I" MHS_INDEX="30" NAME="Ethernet_Lite_TX_CLK" SIGNAME="Ethernet_Lite_TX_CLK"/>
+    <PORT DIR="I" MHS_INDEX="31" NAME="Ethernet_Lite_COL" SIGNAME="Ethernet_Lite_COL"/>
+    <PORT DIR="I" ENDIAN="LITTLE" LEFT="3" LSB="0" MHS_INDEX="32" MSB="3" NAME="Ethernet_Lite_RXD" RIGHT="0" SIGNAME="Ethernet_Lite_RXD"/>
+    <PORT DIR="I" MHS_INDEX="33" NAME="Ethernet_Lite_RX_ER" SIGNAME="Ethernet_Lite_RX_ER"/>
+    <PORT DIR="I" MHS_INDEX="34" NAME="Ethernet_Lite_RX_CLK" SIGNAME="Ethernet_Lite_RX_CLK"/>
+    <PORT DIR="I" MHS_INDEX="35" NAME="Ethernet_Lite_CRS" SIGNAME="Ethernet_Lite_CRS"/>
+    <PORT DIR="I" MHS_INDEX="36" NAME="Ethernet_Lite_RX_DV" SIGNAME="Ethernet_Lite_RX_DV"/>
+    <PORT DIR="O" MHS_INDEX="37" NAME="Ethernet_Lite_PHY_RST_N" SIGNAME="Ethernet_Lite_PHY_RST_N"/>
+  </EXTERNALPORTS>
 
   <MODULES>
     <MODULE BUSSTD="AXI" BUSSTD_PSF="AXI" HWVERSION="1.02.a" INSTANCE="axi4_0" IPTYPE="BUS" IS_CROSSBAR="TRUE" MHS_INDEX="0" MODCLASS="BUS" MODTYPE="axi_interconnect">
@@ -10,6 +50,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_interconnect_v1_02_a/doc/ds768_axi_interconnect.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_BASEFAMILY" TYPE="STRING" VALUE="spartan6"/>
@@ -230,7 +271,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE BUSSTD="AXI" BUSSTD_PSF="AXI" HWVERSION="1.02.a" INSTANCE="axi4lite_0" IPTYPE="BUS" MHS_INDEX="1" MODCLASS="BUS" MODTYPE="axi_interconnect">
       <DESCRIPTION TYPE="SHORT">AXI Interconnect</DESCRIPTION>
@@ -238,6 +278,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_interconnect_v1_02_a/doc/ds768_axi_interconnect.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_BASEFAMILY" TYPE="STRING" VALUE="spartan6"/>
@@ -458,7 +499,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="8.10.a" INSTANCE="microblaze_0" IPTYPE="PROCESSOR" MHS_INDEX="2" MODCLASS="PROCESSOR" MODTYPE="microblaze" PROCTYPE="MICROBLAZE">
       <DESCRIPTION TYPE="SHORT">MicroBlaze</DESCRIPTION>
@@ -466,6 +506,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/microblaze_v8_10_a/doc/microblaze.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER MPD_INDEX="0" NAME="C_SCO" TYPE="integer" VALUE="0"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_FREQ" TYPE="integer" VALUE="100000000"/>
@@ -1435,7 +1476,7 @@
             <PORTMAP DIR="O" PHYSICAL="M_AXI_DP_RREADY"/>
           </PORTMAPS>
         </BUSINTERFACE>
-        <BUSINTERFACE BUSNAME="__NOC__" BUSSTD="AXI" BUSSTD_PSF="AXI" IS_INSTANTIATED="TRUE" IS_INSTRUCTION="TRUE" MHS_INDEX="6" MPD_INDEX="5" NAME="M_AXI_IP" PROTOCOL="AXI4LITE" TYPE="MASTER">
+        <BUSINTERFACE BUSNAME="__NOC__" BUSSTD="AXI" BUSSTD_PSF="AXI" IS_INSTRUCTION="TRUE" MPD_INDEX="5" NAME="M_AXI_IP" PROTOCOL="AXI4LITE" TYPE="MASTER">
           <PORTMAPS>
             <PORTMAP DIR="I" PHYSICAL="CLK"/>
             <PORTMAP DIR="O" PHYSICAL="M_AXI_IP_AWID"/>
@@ -2478,9 +2519,6 @@
           </PORTMAPS>
         </BUSINTERFACE>
       </BUSINTERFACES>
-      <INTERRUPTINFO TYPE="TARGET">
-        <SOURCE INSTANCE="microblaze_0_intc" INTC_INDEX="0"/>
-      </INTERRUPTINFO>
       <MEMORYMAP>
         <MEMRANGE BASEDECIMAL="0" BASENAME="C_BASEADDR" BASEVALUE="0x00000000" HIGHDECIMAL="8191" HIGHNAME="C_HIGHADDR" HIGHVALUE="0x00001fff" INSTANCE="microblaze_0_d_bram_ctrl" IS_DATA="TRUE" IS_INSTRUCTION="FALSE" IS_VALID="TRUE" MEMTYPE="MEMORY" SIZE="8192" SIZEABRV="8K">
           <ACCESSROUTE>
@@ -2545,7 +2583,9 @@
         <PERIPHERAL INSTANCE="microblaze_0_intc"/>
         <PERIPHERAL INSTANCE="MCB_DDR3"/>
       </PERIPHERALS>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
+      <INTERRUPTINFO TYPE="TARGET">
+        <SOURCE INSTANCE="microblaze_0_intc" INTC_INDEX="0"/>
+      </INTERRUPTINFO>
     </MODULE>
     <MODULE BUSSTD="LMB" BUSSTD_PSF="LMB" HWVERSION="2.00.a" INSTANCE="microblaze_0_ilmb" IPTYPE="BUS" MHS_INDEX="3" MODCLASS="BUS" MODTYPE="lmb_v10">
       <DESCRIPTION TYPE="SHORT">Local Memory Bus (LMB) 1.0</DESCRIPTION>
@@ -2553,6 +2593,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/lmb_v10_v2_00_a/doc/lmb_v10.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_LMB_NUM_SLAVES" TYPE="integer" VALUE="1"/>
         <PARAMETER MPD_INDEX="1" NAME="C_LMB_AWIDTH" TYPE="integer" VALUE="32"/>
@@ -2590,7 +2631,6 @@
       <IOINTERFACES>
         <IOINTERFACE MPD_INDEX="0" NAME="reset_0"/>
       </IOINTERFACES>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE BUSSTD="LMB" BUSSTD_PSF="LMB" HWVERSION="2.00.a" INSTANCE="microblaze_0_dlmb" IPTYPE="BUS" MHS_INDEX="4" MODCLASS="BUS" MODTYPE="lmb_v10">
       <DESCRIPTION TYPE="SHORT">Local Memory Bus (LMB) 1.0</DESCRIPTION>
@@ -2598,6 +2638,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/lmb_v10_v2_00_a/doc/lmb_v10.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_LMB_NUM_SLAVES" TYPE="integer" VALUE="1"/>
         <PARAMETER MPD_INDEX="1" NAME="C_LMB_AWIDTH" TYPE="integer" VALUE="32"/>
@@ -2635,7 +2676,6 @@
       <IOINTERFACES>
         <IOINTERFACE MPD_INDEX="0" NAME="reset_0"/>
       </IOINTERFACES>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="3.00.a" INSTANCE="microblaze_0_i_bram_ctrl" IPTYPE="PERIPHERAL" MHS_INDEX="5" MODCLASS="MEMORY_CNTLR" MODTYPE="lmb_bram_if_cntlr">
       <DESCRIPTION TYPE="SHORT">LMB BRAM Controller</DESCRIPTION>
@@ -2643,6 +2683,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/lmb_bram_if_cntlr_v3_00_a/doc/lmb_bram_if_cntlr.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER ADDRESS="BASE" ADDR_TYPE="MEMORY" CHANGEDBY="USER" ENDIAN="BIG" IS_INSTANTIATED="TRUE" LSB="31" MHS_INDEX="2" MPD_INDEX="0" MSB="0" NAME="C_BASEADDR" TYPE="std_logic_vector" VALUE="0x00000000"/>
         <PARAMETER ADDRESS="HIGH" ADDR_TYPE="MEMORY" CHANGEDBY="USER" ENDIAN="BIG" IS_INSTANTIATED="TRUE" LSB="31" MHS_INDEX="3" MPD_INDEX="1" MSB="0" NAME="C_HIGHADDR" TYPE="std_logic_vector" VALUE="0x00001fff"/>
@@ -2873,7 +2914,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="3.00.a" INSTANCE="microblaze_0_d_bram_ctrl" IPTYPE="PERIPHERAL" MHS_INDEX="6" MODCLASS="MEMORY_CNTLR" MODTYPE="lmb_bram_if_cntlr">
       <DESCRIPTION TYPE="SHORT">LMB BRAM Controller</DESCRIPTION>
@@ -2881,6 +2921,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/lmb_bram_if_cntlr_v3_00_a/doc/lmb_bram_if_cntlr.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER ADDRESS="BASE" ADDR_TYPE="MEMORY" CHANGEDBY="USER" ENDIAN="BIG" IS_INSTANTIATED="TRUE" LSB="31" MHS_INDEX="2" MPD_INDEX="0" MSB="0" NAME="C_BASEADDR" TYPE="std_logic_vector" VALUE="0x00000000"/>
         <PARAMETER ADDRESS="HIGH" ADDR_TYPE="MEMORY" CHANGEDBY="USER" ENDIAN="BIG" IS_INSTANTIATED="TRUE" LSB="31" MHS_INDEX="3" MPD_INDEX="1" MSB="0" NAME="C_HIGHADDR" TYPE="std_logic_vector" VALUE="0x00001fff"/>
@@ -3111,7 +3152,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="1.00.a" INSTANCE="microblaze_0_bram_block" IPTYPE="PERIPHERAL" MHS_INDEX="7" MODCLASS="MEMORY" MODTYPE="bram_block">
       <DESCRIPTION TYPE="SHORT">Block RAM (BRAM) Block</DESCRIPTION>
@@ -3119,6 +3159,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/bram_block_v1_00_a/doc/bram_block.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_MEMSIZE" TYPE="integer" VALUE="0x2000"/>
         <PARAMETER MPD_INDEX="1" NAME="C_PORT_DWIDTH" TYPE="integer" VALUE="32"/>
@@ -3166,7 +3207,6 @@
           </PORTMAPS>
         </BUSINTERFACE>
       </BUSINTERFACES>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="3.00.a" INSTANCE="proc_sys_reset_0" IPTYPE="PERIPHERAL" MHS_INDEX="8" MODCLASS="PERIPHERAL" MODTYPE="proc_sys_reset">
       <DESCRIPTION TYPE="SHORT">Processor System Reset Module</DESCRIPTION>
@@ -3174,6 +3214,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/proc_sys_reset_v3_00_a/doc/proc_sys_reset.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_SUBFAMILY" TYPE="string" VALUE="t"/>
         <PARAMETER MPD_INDEX="1" NAME="C_EXT_RST_WIDTH" TYPE="integer" VALUE="4"/>
@@ -3235,7 +3276,6 @@
       <IOINTERFACES>
         <IOINTERFACE MPD_INDEX="0" NAME="reset_0"/>
       </IOINTERFACES>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="4.01.a" INSTANCE="clock_generator_0" IPTYPE="PERIPHERAL" MHS_INDEX="9" MODCLASS="IP" MODTYPE="clock_generator">
       <DESCRIPTION TYPE="SHORT">Clock Generator</DESCRIPTION>
@@ -3243,6 +3283,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/clock_generator_v4_01_a/doc/clock_generator.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_DEVICE" TYPE="STRING" VALUE="6slx45t"/>
@@ -3368,7 +3409,6 @@
         <PORT DIR="O" MPD_INDEX="22" NAME="PSDONE" SIGNAME="__NOC__"/>
       </PORTS>
       <BUSINTERFACES/>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="2.00.b" INSTANCE="debug_module" IPTYPE="PERIPHERAL" MHS_INDEX="10" MODCLASS="DEBUG" MODTYPE="mdm">
       <DESCRIPTION TYPE="SHORT">MicroBlaze Debug Module (MDM)</DESCRIPTION>
@@ -3376,6 +3416,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/mdm_v2_00_b/doc/mdm.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER MPD_INDEX="1" NAME="C_JTAG_CHAIN" TYPE="INTEGER" VALUE="2"/>
@@ -3734,7 +3775,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="1.01.a" INSTANCE="RS232_Uart_1" IPTYPE="PERIPHERAL" MHS_INDEX="11" MODCLASS="PERIPHERAL" MODTYPE="axi_uartlite">
       <DESCRIPTION TYPE="SHORT">AXI UART (Lite)</DESCRIPTION>
@@ -3742,6 +3782,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_uartlite_v1_01_a/doc/axi_uartlite_ds741.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_S_AXI_ACLK_FREQ_HZ" TYPE="INTEGER" VALUE="50000000"/>
@@ -3821,9 +3862,6 @@
           </PORTMAPS>
         </IOINTERFACE>
       </IOINTERFACES>
-      <INTERRUPTINFO TYPE="SOURCE">
-        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="0"/>
-      </INTERRUPTINFO>
       <MEMORYMAP>
         <MEMRANGE BASEDECIMAL="1080033280" BASENAME="C_BASEADDR" BASEVALUE="0x40600000" HIGHDECIMAL="1080098815" HIGHNAME="C_HIGHADDR" HIGHVALUE="0x4060ffff" MEMTYPE="REGISTER" MINSIZE="0x1000" SIZE="65536" SIZEABRV="64K">
           <SLAVES>
@@ -3831,7 +3869,9 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
+      <INTERRUPTINFO TYPE="SOURCE">
+        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="0"/>
+      </INTERRUPTINFO>
     </MODULE>
     <MODULE HWVERSION="1.01.a" INSTANCE="LEDs_4Bits" IPTYPE="PERIPHERAL" MHS_INDEX="12" MODCLASS="PERIPHERAL" MODTYPE="axi_gpio">
       <DESCRIPTION TYPE="SHORT">AXI General Purpose IO</DESCRIPTION>
@@ -3839,6 +3879,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_gpio_v1_01_a/doc/ds744_axi_gpio.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER ADDRESS="BASE" ADDR_TYPE="REGISTER" CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="11" MPD_INDEX="1" NAME="C_BASEADDR" TYPE="std_logic_vector" VALUE="0x40020000"/>
@@ -3942,7 +3983,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="1.01.a" INSTANCE="Push_Buttons_4Bits" IPTYPE="PERIPHERAL" MHS_INDEX="13" MODCLASS="PERIPHERAL" MODTYPE="axi_gpio">
       <DESCRIPTION TYPE="SHORT">AXI General Purpose IO</DESCRIPTION>
@@ -3950,6 +3990,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_gpio_v1_01_a/doc/ds744_axi_gpio.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER ADDRESS="BASE" ADDR_TYPE="REGISTER" CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="11" MPD_INDEX="1" NAME="C_BASEADDR" TYPE="std_logic_vector" VALUE="0x40000000"/>
@@ -4046,9 +4087,6 @@
           </PORTMAPS>
         </IOINTERFACE>
       </IOINTERFACES>
-      <INTERRUPTINFO TYPE="SOURCE">
-        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="1"/>
-      </INTERRUPTINFO>
       <MEMORYMAP>
         <MEMRANGE BASEDECIMAL="1073741824" BASENAME="C_BASEADDR" BASEVALUE="0x40000000" HIGHDECIMAL="1073807359" HIGHNAME="C_HIGHADDR" HIGHVALUE="0x4000ffff" MEMTYPE="REGISTER" MINSIZE="0x1000" SIZE="65536" SIZEABRV="64K">
           <SLAVES>
@@ -4056,7 +4094,9 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
+      <INTERRUPTINFO TYPE="SOURCE">
+        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="1"/>
+      </INTERRUPTINFO>
     </MODULE>
     <MODULE HWVERSION="1.02.a" INSTANCE="MCB_DDR3" IPTYPE="PERIPHERAL" MHS_INDEX="14" MODCLASS="MEMORY_CNTLR" MODTYPE="axi_s6_ddrx">
       <DESCRIPTION TYPE="SHORT">AXI S6 Memory Controller(DDR/DDR2/DDR3)</DESCRIPTION>
@@ -4064,6 +4104,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_s6_ddrx_v1_02_a/doc/axi_s6_ddrx.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER MPD_INDEX="0" NAME="C_MCB_LOC" VALUE="MEMC3"/>
         <PARAMETER CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="2" MPD_INDEX="1" NAME="C_MCB_RZQ_LOC" TYPE="STRING" VALUE="K7"/>
@@ -4815,7 +4856,6 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
     </MODULE>
     <MODULE HWVERSION="1.00.a" INSTANCE="Ethernet_Lite" IPTYPE="PERIPHERAL" MHS_INDEX="15" MODCLASS="PERIPHERAL" MODTYPE="axi_ethernetlite">
       <DESCRIPTION TYPE="SHORT">AXI 10/100 Ethernet MAC Lite</DESCRIPTION>
@@ -4823,15 +4863,16 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_ethernetlite_v1_00_a/doc/ds787_axi_ethernetlite.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
-        <PARAMETER CHANGEDBY="SYSTEM" IS_INSTANTIATED="TRUE" MHS_INDEX="9" MPD_INDEX="0" NAME="C_S_AXI_PROTOCOL" VALUE="AXI4LITE"/>
+        <PARAMETER CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="9" MPD_INDEX="0" NAME="C_S_AXI_PROTOCOL" VALUE="AXI4LITE"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER ADDRESS="BASE" ADDR_TYPE="REGISTER" CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="7" MPD_INDEX="2" NAME="C_BASEADDR" TYPE="std_logic_vector" VALUE="0x40e00000"/>
         <PARAMETER ADDRESS="HIGH" ADDR_TYPE="REGISTER" CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="8" MPD_INDEX="3" NAME="C_HIGHADDR" TYPE="std_logic_vector" VALUE="0x40e0ffff"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="4" NAME="C_S_AXI_ACLK_PERIOD_PS" TYPE="INTEGER" VALUE="20000"/>
         <PARAMETER MPD_INDEX="5" NAME="C_S_AXI_ADDR_WIDTH" TYPE="INTEGER" VALUE="32"/>
         <PARAMETER MPD_INDEX="6" NAME="C_S_AXI_DATA_WIDTH" TYPE="INTEGER" VALUE="32"/>
-        <PARAMETER CHANGEDBY="SYSTEM" IS_INSTANTIATED="TRUE" MHS_INDEX="12" MPD_INDEX="7" NAME="C_S_AXI_ID_WIDTH" TYPE="INTEGER" VALUE="1"/>
+        <PARAMETER CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="12" MPD_INDEX="7" NAME="C_S_AXI_ID_WIDTH" TYPE="INTEGER" VALUE="1"/>
         <PARAMETER MPD_INDEX="8" NAME="C_INCLUDE_MDIO" TYPE="INTEGER" VALUE="1"/>
         <PARAMETER MPD_INDEX="9" NAME="C_INCLUDE_GLOBAL_BUFFERS" TYPE="INTEGER" VALUE="0"/>
         <PARAMETER MPD_INDEX="10" NAME="C_INCLUDE_INTERNAL_LOOPBACK" TYPE="INTEGER" VALUE="0"/>
@@ -4983,9 +5024,6 @@
           </PORTMAPS>
         </IOINTERFACE>
       </IOINTERFACES>
-      <INTERRUPTINFO TYPE="SOURCE">
-        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="2"/>
-      </INTERRUPTINFO>
       <MEMORYMAP>
         <MEMRANGE BASEDECIMAL="1088421888" BASENAME="C_BASEADDR" BASEVALUE="0x40e00000" HIGHDECIMAL="1088487423" HIGHNAME="C_HIGHADDR" HIGHVALUE="0x40e0ffff" MEMTYPE="REGISTER" MINSIZE="0x02000" SIZE="65536" SIZEABRV="64K">
           <SLAVES>
@@ -4993,7 +5031,9 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
+      <INTERRUPTINFO TYPE="SOURCE">
+        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="2"/>
+      </INTERRUPTINFO>
     </MODULE>
     <MODULE HWVERSION="1.01.a" INSTANCE="axi_timer_0" IPTYPE="PERIPHERAL" MHS_INDEX="16" MODCLASS="PERIPHERAL" MODTYPE="axi_timer">
       <DESCRIPTION TYPE="SHORT">AXI Timer/Counter</DESCRIPTION>
@@ -5001,6 +5041,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_timer_v1_01_a/doc/axi_timer_ds764.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER MPD_INDEX="0" NAME="C_S_AXI_PROTOCOL" TYPE="STRING" VALUE="AXI4LITE"/>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="1" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
@@ -5083,9 +5124,6 @@
           </PORTMAPS>
         </BUSINTERFACE>
       </BUSINTERFACES>
-      <INTERRUPTINFO TYPE="SOURCE">
-        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="3"/>
-      </INTERRUPTINFO>
       <MEMORYMAP>
         <MEMRANGE BASEDECIMAL="1103101952" BASENAME="C_BASEADDR" BASEVALUE="0x41c00000" HIGHDECIMAL="1103167487" HIGHNAME="C_HIGHADDR" HIGHVALUE="0x41c0ffff" MEMTYPE="REGISTER" MINSIZE="0x1000" SIZE="65536" SIZEABRV="64K">
           <SLAVES>
@@ -5093,7 +5131,9 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
+      <INTERRUPTINFO TYPE="SOURCE">
+        <TARGET INSTANCE="microblaze_0_intc" INTC_INDEX="0" PRIORITY="3"/>
+      </INTERRUPTINFO>
     </MODULE>
     <MODULE HWVERSION="1.01.a" INSTANCE="microblaze_0_intc" IPTYPE="PERIPHERAL" MHS_INDEX="17" MODCLASS="INTERRUPT_CNTLR" MODTYPE="axi_intc">
       <DESCRIPTION TYPE="SHORT">AXI Interrupt Controller</DESCRIPTION>
@@ -5101,6 +5141,7 @@
       <DOCUMENTATION>
         <DOCUMENT SOURCE="C:/devtools/Xilinx/13.1/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/axi_intc_v1_01_a/doc/ds747_axi_intc.pdf" TYPE="IP"/>
       </DOCUMENTATION>
+      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
       <PARAMETERS>
         <PARAMETER CHANGEDBY="SYSTEM" MPD_INDEX="0" NAME="C_FAMILY" TYPE="STRING" VALUE="spartan6"/>
         <PARAMETER ADDRESS="BASE" ADDR_TYPE="REGISTER" CHANGEDBY="USER" IS_INSTANTIATED="TRUE" MHS_INDEX="7" MPD_INDEX="1" NAME="C_BASEADDR" TYPE="std_logic_vector" VALUE="0x41200000"/>
@@ -5182,13 +5223,6 @@
           </PORTMAPS>
         </BUSINTERFACE>
       </BUSINTERFACES>
-      <INTERRUPTINFO INTC_INDEX="0" TYPE="CONTROLLER">
-        <SOURCE INSTANCE="RS232_Uart_1" PRIORITY="0" SIGNAME="RS232_Uart_1_Interrupt"/>
-        <SOURCE INSTANCE="Push_Buttons_4Bits" PRIORITY="1" SIGNAME="Push_Buttons_4Bits_IP2INTC_Irpt"/>
-        <SOURCE INSTANCE="Ethernet_Lite" PRIORITY="2" SIGNAME="Ethernet_Lite_IP2INTC_Irpt"/>
-        <SOURCE INSTANCE="axi_timer_0" PRIORITY="3" SIGNAME="axi_timer_0_Interrupt"/>
-        <TARGET INSTANCE="microblaze_0"/>
-      </INTERRUPTINFO>
       <MEMORYMAP>
         <MEMRANGE BASEDECIMAL="1092616192" BASENAME="C_BASEADDR" BASEVALUE="0x41200000" HIGHDECIMAL="1092681727" HIGHNAME="C_HIGHADDR" HIGHVALUE="0x4120ffff" MEMTYPE="REGISTER" MINSIZE="0x1000" SIZE="65536" SIZEABRV="64K">
           <SLAVES>
@@ -5196,49 +5230,14 @@
           </SLAVES>
         </MEMRANGE>
       </MEMORYMAP>
-      <LICENSEINFO ICON_NAME="ps_core_preferred"/>
+      <INTERRUPTINFO INTC_INDEX="0" TYPE="CONTROLLER">
+        <SOURCE INSTANCE="RS232_Uart_1" PRIORITY="0" SIGNAME="RS232_Uart_1_Interrupt"/>
+        <SOURCE INSTANCE="Push_Buttons_4Bits" PRIORITY="1" SIGNAME="Push_Buttons_4Bits_IP2INTC_Irpt"/>
+        <SOURCE INSTANCE="Ethernet_Lite" PRIORITY="2" SIGNAME="Ethernet_Lite_IP2INTC_Irpt"/>
+        <SOURCE INSTANCE="axi_timer_0" PRIORITY="3" SIGNAME="axi_timer_0_Interrupt"/>
+        <TARGET INSTANCE="microblaze_0"/>
+      </INTERRUPTINFO>
     </MODULE>
   </MODULES>
-
-  <EXTERNALPORTS>
-    <PORT DIR="I" MHS_INDEX="0" NAME="RESET" RSTPOLARITY="1" SIGIS="RST" SIGNAME="RESET"/>
-    <PORT CLKFREQUENCY="200000000" DIFFPOLARITY="P" DIR="I" MHS_INDEX="1" NAME="CLK_P" SIGIS="CLK" SIGNAME="CLK"/>
-    <PORT CLKFREQUENCY="200000000" DIFFPOLARITY="N" DIR="I" MHS_INDEX="2" NAME="CLK_N" SIGIS="CLK" SIGNAME="CLK"/>
-    <PORT DIR="O" MHS_INDEX="3" NAME="RS232_Uart_1_sout" SIGNAME="RS232_Uart_1_sout"/>
-    <PORT DIR="I" MHS_INDEX="4" NAME="RS232_Uart_1_sin" SIGNAME="RS232_Uart_1_sin"/>
-    <PORT DIR="O" ENDIAN="BIG" LEFT="0" LSB="3" MHS_INDEX="5" MSB="0" NAME="LEDs_4Bits_TRI_O" RIGHT="3" SIGNAME="LEDs_4Bits_TRI_O"/>
-    <PORT DIR="I" ENDIAN="LITTLE" LEFT="3" LSB="0" MHS_INDEX="6" MSB="3" NAME="Push_Buttons_4Bits_TRI_I" RIGHT="0" SIGNAME="Push_Buttons_4Bits_TRI_I"/>
-    <PORT DIR="O" MHS_INDEX="7" NAME="mcbx_dram_clk" SIGNAME="mcbx_dram_clk"/>
-    <PORT DIR="O" MHS_INDEX="8" NAME="mcbx_dram_clk_n" SIGNAME="mcbx_dram_clk_n"/>
-    <PORT DIR="O" MHS_INDEX="9" NAME="mcbx_dram_cke" SIGNAME="mcbx_dram_cke"/>
-    <PORT DIR="O" MHS_INDEX="10" NAME="mcbx_dram_odt" SIGNAME="mcbx_dram_odt"/>
-    <PORT DIR="O" MHS_INDEX="11" NAME="mcbx_dram_ras_n" SIGNAME="mcbx_dram_ras_n"/>
-    <PORT DIR="O" MHS_INDEX="12" NAME="mcbx_dram_cas_n" SIGNAME="mcbx_dram_cas_n"/>
-    <PORT DIR="O" MHS_INDEX="13" NAME="mcbx_dram_we_n" SIGNAME="mcbx_dram_we_n"/>
-    <PORT DIR="O" MHS_INDEX="14" NAME="mcbx_dram_udm" SIGNAME="mcbx_dram_udm"/>
-    <PORT DIR="O" MHS_INDEX="15" NAME="mcbx_dram_ldm" SIGNAME="mcbx_dram_ldm"/>
-    <PORT DIR="O" ENDIAN="LITTLE" LEFT="2" LSB="0" MHS_INDEX="16" MSB="2" NAME="mcbx_dram_ba" RIGHT="0" SIGNAME="mcbx_dram_ba"/>
-    <PORT DIR="O" ENDIAN="LITTLE" LEFT="12" LSB="0" MHS_INDEX="17" MSB="12" NAME="mcbx_dram_addr" RIGHT="0" SIGNAME="mcbx_dram_addr"/>
-    <PORT DIR="O" MHS_INDEX="18" NAME="mcbx_dram_ddr3_rst" SIGNAME="mcbx_dram_ddr3_rst"/>
-    <PORT DIR="IO" ENDIAN="LITTLE" LEFT="15" LSB="0" MHS_INDEX="19" MSB="15" NAME="mcbx_dram_dq" RIGHT="0" SIGNAME="mcbx_dram_dq"/>
-    <PORT DIR="IO" MHS_INDEX="20" NAME="mcbx_dram_dqs" SIGNAME="mcbx_dram_dqs"/>
-    <PORT DIR="IO" MHS_INDEX="21" NAME="mcbx_dram_dqs_n" SIGNAME="mcbx_dram_dqs_n"/>
-    <PORT DIR="IO" MHS_INDEX="22" NAME="mcbx_dram_udqs" SIGNAME="mcbx_dram_udqs"/>
-    <PORT DIR="IO" MHS_INDEX="23" NAME="mcbx_dram_udqs_n" SIGNAME="mcbx_dram_udqs_n"/>
-    <PORT DIR="IO" MHS_INDEX="24" NAME="rzq" SIGNAME="rzq"/>
-    <PORT DIR="IO" MHS_INDEX="25" NAME="zio" SIGNAME="zio"/>
-    <PORT DIR="IO" MHS_INDEX="26" NAME="Ethernet_Lite_MDIO" SIGNAME="Ethernet_Lite_MDIO"/>
-    <PORT DIR="O" MHS_INDEX="27" NAME="Ethernet_Lite_MDC" SIGNAME="Ethernet_Lite_MDC"/>
-    <PORT DIR="O" ENDIAN="LITTLE" LEFT="3" LSB="0" MHS_INDEX="28" MSB="3" NAME="Ethernet_Lite_TXD" RIGHT="0" SIGNAME="Ethernet_Lite_TXD"/>
-    <PORT DIR="O" MHS_INDEX="29" NAME="Ethernet_Lite_TX_EN" SIGNAME="Ethernet_Lite_TX_EN"/>
-    <PORT DIR="I" MHS_INDEX="30" NAME="Ethernet_Lite_TX_CLK" SIGNAME="Ethernet_Lite_TX_CLK"/>
-    <PORT DIR="I" MHS_INDEX="31" NAME="Ethernet_Lite_COL" SIGNAME="Ethernet_Lite_COL"/>
-    <PORT DIR="I" ENDIAN="LITTLE" LEFT="3" LSB="0" MHS_INDEX="32" MSB="3" NAME="Ethernet_Lite_RXD" RIGHT="0" SIGNAME="Ethernet_Lite_RXD"/>
-    <PORT DIR="I" MHS_INDEX="33" NAME="Ethernet_Lite_RX_ER" SIGNAME="Ethernet_Lite_RX_ER"/>
-    <PORT DIR="I" MHS_INDEX="34" NAME="Ethernet_Lite_RX_CLK" SIGNAME="Ethernet_Lite_RX_CLK"/>
-    <PORT DIR="I" MHS_INDEX="35" NAME="Ethernet_Lite_CRS" SIGNAME="Ethernet_Lite_CRS"/>
-    <PORT DIR="I" MHS_INDEX="36" NAME="Ethernet_Lite_RX_DV" SIGNAME="Ethernet_Lite_RX_DV"/>
-    <PORT DIR="O" MHS_INDEX="37" NAME="Ethernet_Lite_PHY_RST_N" SIGNAME="Ethernet_Lite_PHY_RST_N"/>
-  </EXTERNALPORTS>
 
 </EDKSYSTEM>

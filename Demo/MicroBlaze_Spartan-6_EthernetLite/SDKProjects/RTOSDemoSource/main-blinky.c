@@ -114,8 +114,8 @@
 /* BSP includes. */
 #include "xenv_standalone.h"
 #include "xtmrctr.h"
-#include "xintc.h"
 #include "xil_exception.h"
+#include "microblaze_exceptions_g.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -169,14 +169,13 @@ static volatile unsigned long ulGPIOState = 0UL;
 
 /*-----------------------------------------------------------*/
 
-static XTmrCtr axi_timer_0_Timer;
-static XIntc intc;
+static XTmrCtr xTimer0Instance;
 
 /*-----------------------------------------------------------*/
 
 int main(void)
 {
-	/* Configure the NVIC, LED outputs and button inputs. */
+	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
 
 	/* Create the queue. */
@@ -312,39 +311,9 @@ unsigned long ulReceivedValue;
 
 static void prvSetupHardware( void )
 {
-int iStatus;
-
 	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
 		microblaze_enable_exceptions();
 	#endif
-
-	iStatus = XIntc_Initialize( &intc, XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR );
-
-	if( iStatus == XST_SUCCESS )
-	{
-		/* Sanity check on the hardware build. */
-		iStatus = XIntc_SelfTest( &intc );
-	}
-
-	if( iStatus == XST_SUCCESS )
-	{
-		/* Initialise the exception table. */
-		Xil_ExceptionInit();
-
-		/* Register the interrupt controller handle that uses the exception
-		table. */
-		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	(Xil_ExceptionHandler)XIntc_DeviceInterruptHandler,	NULL );
-
-		/* Start the interrupt controller.  Interrupts are enabled when the
-		scheduler starts. */
-		iStatus = XIntc_Start( &intc, XIN_REAL_MODE );
-
-		/* Ensure the compiler does not generate warnings for the unused
-		iStatus valud if configASSERT() is not defined. */
-		( void ) iStatus;
-	}
-
-	configASSERT( ( iStatus == XST_SUCCESS ) )
 }
 /*-----------------------------------------------------------*/
 
@@ -409,38 +378,41 @@ unsigned long ulGetRunTimeCounterValue( void )
 
 void vApplicationSetupTimerInterrupt( void )
 {
-int iStatus;
+portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
 const unsigned long ulCounterValue = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) + 1UL );
-extern void vTickISR( void *pvUnused, unsigned char ucUnused );
+extern void vTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
-	iStatus = XTmrCtr_Initialize( &axi_timer_0_Timer, XPAR_AXI_TIMER_0_DEVICE_ID );
+	xStatus = XTmrCtr_Initialize( &xTimer0Instance, XPAR_AXI_TIMER_0_DEVICE_ID );
 
-	if( iStatus == XST_SUCCESS )
+	if( xStatus == XST_SUCCESS )
 	{
-		/* Enable the interrupt for the timer counter.  Note that interrupts
-		are globally disabled when this function is called.  Interrupt
-		processing will not actually start until the first task is executing. */
-		XIntc_Enable( &intc, XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR );
+		/* Install the tick interrupt handler as the timer ISR. */
+		xStatus = xPortInstallInterruptHandler( XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR, vTickISR, NULL );
+	}
+
+	if( xStatus == pdPASS )
+	{
+		vPortEnableInterrupt( XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR );
 
 		/* Configure the timer interrupt handler. */
-		XTmrCtr_SetHandler( &axi_timer_0_Timer, ( void * ) vTickISR, NULL );
+		XTmrCtr_SetHandler( &xTimer0Instance, ( void * ) vTickISR, NULL );
 
 		/* Set the correct period for the timer. */
-		XTmrCtr_SetResetValue( &axi_timer_0_Timer, ucTimerCounterNumber, ulCounterValue );
+		XTmrCtr_SetResetValue( &xTimer0Instance, ucTimerCounterNumber, ulCounterValue );
 
 		/* Enable the interrupts.  Auto-reload mode is used to generate a
 		periodic tick.  Note that interrupts are disabled when this function is
 		called, so interrupts will not start to be processed until the first
 		task has started to run. */
-		XTmrCtr_SetOptions( &axi_timer_0_Timer, ucTimerCounterNumber, ( XTC_INT_MODE_OPTION | XTC_AUTO_RELOAD_OPTION | XTC_DOWN_COUNT_OPTION ) );
+		XTmrCtr_SetOptions( &xTimer0Instance, ucTimerCounterNumber, ( XTC_INT_MODE_OPTION | XTC_AUTO_RELOAD_OPTION | XTC_DOWN_COUNT_OPTION ) );
 
 		/* Start the timer. */
-		XTmrCtr_Start( &axi_timer_0_Timer, ucTimerCounterNumber );
+		XTmrCtr_Start( &xTimer0Instance, ucTimerCounterNumber );
 	}
 
-	configASSERT( ( iStatus == XST_SUCCESS ) );
+	configASSERT( ( xStatus == pdPASS ) );
 }
 
 

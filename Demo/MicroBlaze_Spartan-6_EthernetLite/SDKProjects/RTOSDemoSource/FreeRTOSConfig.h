@@ -63,6 +63,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include <xparameters.h>
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -119,5 +121,7 @@ to exclude the API function. */
 
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
 	
+#define configINTERRUPT_CONTROLLER_TO_USE XPAR_INTC_SINGLE_DEVICE_ID
+
 #endif /* FREERTOS_CONFIG_H */
 

@@ -58,6 +58,9 @@
 extern "C" {
 #endif
 
+/* BSP includes. */
+#include "xbasic_types.h"
+
 /*-----------------------------------------------------------
  * Port specific definitions.  
  *
@@ -86,11 +89,16 @@ extern "C" {
 #endif
 /*-----------------------------------------------------------*/	
 
-/* Interrupt control macros. */
+/* Interrupt control macros and functions. */
 void microblaze_disable_interrupts( void );
 void microblaze_enable_interrupts( void );
 #define portDISABLE_INTERRUPTS()	microblaze_disable_interrupts()
 #define portENABLE_INTERRUPTS()		microblaze_enable_interrupts()
+
+portBASE_TYPE xPortInstallInterruptHandler( unsigned char ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef );
+void vPortEnableInterrupt( unsigned char ucInterruptID );
+void vPortDisableInterrupt( unsigned char ucInterruptID );
+
 /*-----------------------------------------------------------*/
 
 /* Critical section macros. */

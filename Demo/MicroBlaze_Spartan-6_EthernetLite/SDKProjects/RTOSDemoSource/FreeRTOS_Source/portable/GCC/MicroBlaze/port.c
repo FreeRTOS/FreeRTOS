@@ -67,6 +67,7 @@
 #include <xintc.h>
 #include <xintc_i.h>
 #include <xtmrctr.h>
+#include <xil_exception.h>
 
 /* Tasks are started with interrupts enabled. */
 #define portINITIAL_MSR_STATE		( ( portSTACK_TYPE ) 0x02 )
@@ -83,6 +84,21 @@ to reach zero, so it is initialised to a high value. */
 debugging. */
 #define portISR_STACK_FILL_VALUE	0x55555555
 
+/*-----------------------------------------------------------*/
+
+/*
+ * Initialise the interrupt controller instance.
+ */
+static portBASE_TYPE prvInitialiseInterruptController( void );
+
+/*
+ * Call an application provided callback to set up the periodic interrupt used
+ * for the RTOS tick.  Using an application callback allows the application
+ * writer to decide
+ */
+extern void vApplicationSetupTimerInterrupt( void );
+/*-----------------------------------------------------------*/
+
 /* Counts the nesting depth of calls to portENTER_CRITICAL().  Each task 
 maintains it's own count, so this variable is saved as part of the task
 context. */
@@ -92,14 +108,9 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = portINITIAL_NESTING_VALUE;
 separate stack for interrupts. */
 unsigned long *pulISRStack;
 
-/*-----------------------------------------------------------*/
+/* The instance of the interrupt controller used by this port. */
+static XIntc xInterruptControllerInstance;
 
-/*
- * Call an application provided callback to set up the periodic interrupt used
- * for the RTOS tick.  Using an application callback allows the application
- * writer to decide
- */
-extern void vApplicationSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
 /* 
@@ -313,10 +324,47 @@ static unsigned long ulInterruptMask;
 }
 /*-----------------------------------------------------------*/
 
+void vPortEnableInterrupt( unsigned char ucInterruptID )
+{
+	XIntc_Enable( &xInterruptControllerInstance, ucInterruptID );
+}
+/*-----------------------------------------------------------*/
+
+void vPortDisableInterrupt( unsigned char ucInterruptID )
+{
+	XIntc_Disable( &xInterruptControllerInstance, ucInterruptID );
+}
+/*-----------------------------------------------------------*/
+
+portBASE_TYPE xPortInstallInterruptHandler( unsigned char ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef )
+{
+static portBASE_TYPE xInterruptControllerInitialised = pdFALSE;
+portBASE_TYPE xReturn = XST_SUCCESS;
+
+	if( xInterruptControllerInitialised != pdTRUE )
+	{
+		xReturn = prvInitialiseInterruptController();
+		xInterruptControllerInitialised = pdTRUE;
+	}
+
+	if( xReturn == XST_SUCCESS )
+	{
+		xReturn = XIntc_Connect( &xInterruptControllerInstance, ucInterruptID, pxHandler, pvCallBackRef );
+	}
+
+	if( xReturn == XST_SUCCESS )
+	{
+		xReturn = pdPASS;
+	}
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
 /* 
  * Handler for the timer interrupt.
  */
-void vTickISR( void *pvUnused, unsigned char ucUnused )
+void vTickISR( void *pvUnused )
 {
 	/* Ensure the unused parameter does not generate a compiler warning. */
 	( void ) pvUnused;
@@ -332,6 +380,37 @@ void vTickISR( void *pvUnused, unsigned char ucUnused )
 }
 /*-----------------------------------------------------------*/
 
+static portBASE_TYPE prvInitialiseInterruptController( void )
+{
+portBASE_TYPE xStatus;
+
+	xStatus = XIntc_Initialize( &xInterruptControllerInstance, configINTERRUPT_CONTROLLER_TO_USE );
+
+	if( xStatus == XST_SUCCESS )
+	{
+		/* Initialise the exception table. */
+		Xil_ExceptionInit();
+
+		/* Register the interrupt controller handle that uses the exception
+		table. */
+		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	( Xil_ExceptionHandler ) XIntc_DeviceInterruptHandler, NULL );
+
+	    /* Service all pending interrupts each time the handler is entered. */
+	    XIntc_SetIntrSvcOption( xInterruptControllerInstance.BaseAddress, XIN_SVC_ALL_ISRS_OPTION );
+
+		/* Start the interrupt controller.  Interrupts are enabled when the
+		scheduler starts. */
+		xStatus = XIntc_Start( &xInterruptControllerInstance, XIN_REAL_MODE );
+
+		/* Ensure the compiler does not generate warnings for the unused
+		iStatus valud if configASSERT() is not defined. */
+		( void ) xStatus;
+	}
+
+	configASSERT( ( xStatus == ( portBASE_TYPE ) XST_SUCCESS ) )
+
+	return xStatus;
+}
 
 
 

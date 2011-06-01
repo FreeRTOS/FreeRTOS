@@ -51,73 +51,94 @@
     licensing and training services.
 */
 
+#ifndef PORTMACRO_H
+#define PORTMACRO_H
 
-/* The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within CCS4!  Once it has been executed, re-open or refresh 
- * the CCS4 project and remove the #error line below.
- */
-//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
-
-
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*-----------------------------------------------------------
- * Application specific definitions.
+ * Port specific definitions.  
  *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
+ * The settings in this file configure FreeRTOS correctly for the
+ * given hardware and compiler.
  *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
- *
- * See http://www.freertos.org/a00110.html.
- *----------------------------------------------------------*/
+ * These settings should not be altered.
+ *-----------------------------------------------------------
+ */
 
-#define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( 100000000UL )
-#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
-#define configMAX_TASK_NAME_LEN			( 10 )
-#define configUSE_TRACE_FACILITY		0
-#define configUSE_16_BIT_TICKS			1
-#define configIDLE_SHOULD_YIELD			1
-#define configUSE_MUTEXES				1
-#define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	0
-#define configCHECK_FOR_STACK_OVERFLOW	2
-#define configUSE_RECURSIVE_MUTEXES		1
-#define configUSE_MALLOC_FAILED_HOOK	1
-#define configUSE_APPLICATION_TASK_TAG	0
-#define configUSE_COUNTING_SEMAPHORES	1
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#define configINTERRUPT_STACK_SIZE		configMINIMAL_STACK_SIZE
+/* Type definitions. */
+#define portCHAR		char
+#define portFLOAT		float
+#define portDOUBLE		double
+#define portLONG		long
+#define portSHORT		short
+#define portSTACK_TYPE	unsigned portLONG
+#define portBASE_TYPE	portLONG
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 			0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#if( configUSE_16_BIT_TICKS == 1 )
+	typedef unsigned portSHORT portTickType;
+	#define portMAX_DELAY ( portTickType ) 0xffff
+#else
+	typedef unsigned portLONG portTickType;
+	#define portMAX_DELAY ( portTickType ) 0xffffffff
+#endif
+/*-----------------------------------------------------------*/	
 
-/* Software timer definitions. */
-#define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 3 )
-#define configTIMER_QUEUE_LENGTH		10
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+/* Interrupt control macros. */
+void microblaze_disable_interrupts( void );
+void microblaze_enable_interrupts( void );
+#define portDISABLE_INTERRUPTS()	microblaze_disable_interrupts()
+#define portENABLE_INTERRUPTS()		microblaze_enable_interrupts()
+/*-----------------------------------------------------------*/
 
-/* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet		1
-#define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete				0
-#define INCLUDE_vTaskCleanUpResources	0
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
+/* Critical section macros. */
+void vPortEnterCritical( void );
+void vPortExitCritical( void );
+#define portENTER_CRITICAL()		{																\
+										extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
+										microblaze_disable_interrupts();							\
+										uxCriticalNesting++;										\
+									}
+									
+#define portEXIT_CRITICAL()			{																\
+										extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
+										/* Interrupts are disabled, so we can */					\
+										/* access the variable directly. */							\
+										uxCriticalNesting--;										\
+										if( uxCriticalNesting == 0 )								\
+										{															\
+											/* The nesting has unwound and we 						\
+											can enable interrupts again. */							\
+											portENABLE_INTERRUPTS();								\
+										}															\
+									}
 
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
-	
-#endif /* FREERTOS_CONFIG_H */
+/*-----------------------------------------------------------*/
+
+/* Task utilities. */
+void vPortYield( void );
+#define portYIELD() vPortYield()
+
+void vTaskSwitchContext();
+#define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) vTaskSwitchContext()
+/*-----------------------------------------------------------*/
+
+/* Hardware specifics. */
+#define portBYTE_ALIGNMENT			4
+#define portSTACK_GROWTH			( -1 )
+#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portNOP()					asm volatile ( "NOP" )
+/*-----------------------------------------------------------*/
+
+/* Task function macros as described on the FreeRTOS.org WEB site. */
+#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
+#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* PORTMACRO_H */
 

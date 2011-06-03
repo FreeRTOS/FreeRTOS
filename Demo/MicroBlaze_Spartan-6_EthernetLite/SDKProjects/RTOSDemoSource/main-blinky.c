@@ -172,6 +172,41 @@ static volatile unsigned long ulGPIOState = 0UL;
 static XTmrCtr xTimer0Instance;
 
 /*-----------------------------------------------------------*/
+#define JUST_TESTING
+#ifdef JUST_TESTING
+volatile unsigned long ul1 = 0, ul2 = 0;
+
+void vTemp1( void *pvParameters )
+{
+	for( ;; )
+	{
+		ul1++;
+		//taskYIELD();
+	}
+}
+
+void vTemp2( void *pvParameters )
+{
+	for( ;; )
+	{
+		ul2++;
+		//taskYIELD();
+	}
+}
+
+void main( void )
+{
+	prvSetupHardware();
+
+	xTaskCreate( vTemp1, ( signed char * ) "Test1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
+	xTaskCreate( vTemp2, ( signed char * ) "Test2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
+
+	vTaskStartScheduler();
+	for( ;; );
+}
+
+
+#else /* JUST_TESTING */
 
 int main(void)
 {
@@ -210,7 +245,7 @@ int main(void)
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-
+#endif /* JUST_TESTING */
 static void vLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
@@ -415,4 +450,16 @@ extern void vTickISR( void *pvUnused );
 	configASSERT( ( xStatus == pdPASS ) );
 }
 
+
+void vApplicationClearTimerInterrupt( void )
+{
+unsigned long ulCSR;
+
+	/* Increment the RTOS tick - this might cause a task to unblock. */
+	vTaskIncrementTick();
+
+	/* Clear the timer interrupt */
+	ulCSR = XTmrCtr_GetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0 );
+	XTmrCtr_SetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0, ulCSR );
+}
 

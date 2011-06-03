@@ -126,6 +126,7 @@ const unsigned long ulR2 = ( unsigned long ) &_SDA2_BASE_;
 const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 
 #if 0
+//_RB_
 	#ifdef XPAR_MICROBLAZE_USE_ICACHE
 		microblaze_invalidate_icache();
 		microblaze_enable_icache();
@@ -150,74 +151,76 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 
 	/* First stack an initial value for the critical section nesting.  This
 	is initialised to zero as tasks are started with interrupts enabled. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R0. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R0 is always zero. */
+	
+	/* R1 is the SP. */
 
 	/* Place an initial value for all the general purpose registers. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) ulR2;	/* R2 - small data area. */
+	*pxTopOfStack = ( portSTACK_TYPE ) ulR2;	/* R2 - read only small data area. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x03;	/* R3. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x03;	/* R3 - return values and temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x04;	/* R4. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x04;	/* R4 - return values and temporaries. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;/* R5 contains the function call parameters. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 - other parameters and temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7 - other parameters and temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x08;	/* R8. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x08;	/* R8 - other parameters and temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x09;	/* R9. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x09;	/* R9 - other parameters and temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0a;	/* R10. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x0a;	/* R10 - other parameters and temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0b;	/* R11. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x0b;	/* R11 - temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0c;	/* R12. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x0c;	/* R12 - temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) ulR13;	/* R13 - small data read write area. */
+	*pxTopOfStack = ( portSTACK_TYPE ) ulR13;	/* R13 - read/write small data area. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* R14. */
+	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* R14 - return address for interrupt. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0f;	/* R15. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x0f;	/* R15 - return address for subroutine. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R16. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R16 - return address for trap (debugger). */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11;	/* R17. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x11;	/* R17 - return address for exceptions, if configured. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R18. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R18 - reserved for assembler and compiler temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x13;	/* R19. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x13;	/* R19 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R20. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R20 - reserved for storing a pointer to the Global Offset Table (GOT) in Position Independent Code (PIC). Non-volatile in non-PIC code. Must be saved across function calls. Callee-save.  Not used by FreeRTOS. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x15;	/* R21. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x15;	/* R21 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x16;	/* R22. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x16;	/* R22 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x17;	/* R23. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x17;	/* R23 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x18;	/* R24. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x18;	/* R24 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x19;	/* R25. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x19;	/* R25 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1a;	/* R26. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1a;	/* R26 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1b;	/* R27. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1b;	/* R27 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1c;	/* R28. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1c;	/* R28 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1d;	/* R29. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1d;	/* R29 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1e;	/* R30. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1e;	/* R30 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
 
 	/* The MSR is stacked between R30 and R31. */
 	*pxTopOfStack = portINITIAL_MSR_STATE;
 	pxTopOfStack--;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1f;	/* R31. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1f;	/* R31 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
 
 	/* Return a pointer to the top of the stack we have generated so this can
@@ -359,8 +362,12 @@ portBASE_TYPE xReturn = XST_SUCCESS;
  */
 void vTickISR( void *pvUnused )
 {
+extern void vApplicationClearTimerInterrupt();
+
 	/* Ensure the unused parameter does not generate a compiler warning. */
 	( void ) pvUnused;
+
+	vApplicationClearTimerInterrupt();
 
 	/* Increment the RTOS tick - this might cause a task to unblock. */
 	vTaskIncrementTick();
@@ -387,7 +394,7 @@ extern Xil_ExceptionHandler vPortFreeRTOSInterruptHandler;
 
 		/* Register the interrupt controller handle that uses the exception
 		table. */
-		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	vPortFreeRTOSInterruptHandler, NULL );
+//_RB_		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	vPortFreeRTOSInterruptHandler, NULL );
 
 	    /* Service all pending interrupts each time the handler is entered. */
 	    XIntc_SetIntrSvcOption( xInterruptControllerInstance.BaseAddress, XIN_SVC_ALL_ISRS_OPTION );

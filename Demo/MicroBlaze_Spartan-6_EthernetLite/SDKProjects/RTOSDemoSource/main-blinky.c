@@ -380,7 +380,7 @@ void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
-const unsigned long ulCounterValue = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) + 1UL );
+const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
 extern void vTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */

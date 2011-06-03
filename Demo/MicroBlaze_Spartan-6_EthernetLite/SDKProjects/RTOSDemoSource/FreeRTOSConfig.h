@@ -80,7 +80,7 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( 100000000UL )
+#define configCPU_CLOCK_HZ				( XPAR_MICROBLAZE_CORE_CLOCK_FREQ_HZ )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )

@@ -229,7 +229,6 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 portBASE_TYPE xPortStartScheduler( void )
 {
 extern void ( vStartFirstTask )( void );
-int iStatus;
 
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
@@ -245,14 +244,8 @@ int iStatus;
 		memset( pulISRStack, portISR_STACK_FILL_VALUE, configMINIMAL_STACK_SIZE * sizeof( portSTACK_TYPE ) );
 		pulISRStack += ( configMINIMAL_STACK_SIZE - 1 );
 
-		/* Enable exceptions. */
-		microblaze_enable_interrupts();
-
-		if( iStatus == XST_SUCCESS )
-		{
-			/* Kick off the first task. */
-			vStartFirstTask();
-		}
+		/* From here on, the created tasks will be executing. */
+		vStartFirstTask();
 	}
 
 	/* Should not get here as the tasks are now running! */
@@ -383,6 +376,7 @@ void vTickISR( void *pvUnused )
 static portBASE_TYPE prvInitialiseInterruptController( void )
 {
 portBASE_TYPE xStatus;
+extern Xil_ExceptionHandler vPortFreeRTOSInterruptHandler;
 
 	xStatus = XIntc_Initialize( &xInterruptControllerInstance, configINTERRUPT_CONTROLLER_TO_USE );
 
@@ -393,7 +387,7 @@ portBASE_TYPE xStatus;
 
 		/* Register the interrupt controller handle that uses the exception
 		table. */
-		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	( Xil_ExceptionHandler ) XIntc_DeviceInterruptHandler, NULL );
+		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	vPortFreeRTOSInterruptHandler, NULL );
 
 	    /* Service all pending interrupts each time the handler is entered. */
 	    XIntc_SetIntrSvcOption( xInterruptControllerInstance.BaseAddress, XIN_SVC_ALL_ISRS_OPTION );

@@ -116,6 +116,7 @@
 #include "xtmrctr.h"
 #include "xil_exception.h"
 #include "microblaze_exceptions_g.h"
+#include "xgpio.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -165,14 +166,16 @@ function. */
 static xTimerHandle xLEDTimer = NULL;
 
 /* Maintains the current LED output state. */
-static volatile unsigned long ulGPIOState = 0UL;
+static volatile unsigned char ucGPIOState = 0U;
 
 /*-----------------------------------------------------------*/
 
 static XTmrCtr xTimer0Instance;
+static XGpio xOutputGPIOInstance;
+static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL;
 
 /*-----------------------------------------------------------*/
-#define JUST_TESTING
+#define NOT_JUST_TESTING
 #ifdef JUST_TESTING
 volatile unsigned long ul1 = 0, ul2 = 0;
 
@@ -197,6 +200,12 @@ void vTemp2( void *pvParameters )
 void main( void )
 {
 	prvSetupHardware();
+
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 0 );
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 1 );
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 2 );
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 3 );
+
 
 	xTaskCreate( vTemp1, ( signed char * ) "Test1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
 	xTaskCreate( vTemp2, ( signed char * ) "Test2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
@@ -253,8 +262,8 @@ static void vLEDTimerCallback( xTimerHandle xTimer )
 	a critical section because it is accessed from multiple tasks, and the
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
-	ulGPIOState |= mainTIMER_CONTROLLED_LED;
-//_RB_	MSS_GPIO_set_outputs( ulGPIOState );
+	ucGPIOState |= mainTIMER_CONTROLLED_LED;
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 }
 /*-----------------------------------------------------------*/
 
@@ -266,8 +275,8 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	ulGPIOState &= ~mainTIMER_CONTROLLED_LED;
-//_RB_	MSS_GPIO_set_outputs( ulGPIOState );
+	ucGPIOState &= ~mainTIMER_CONTROLLED_LED;
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
@@ -330,15 +339,16 @@ unsigned long ulReceivedValue;
 			because it is accessed from multiple tasks, and the button interrupt
 			- in this trivial case, for simplicity, the critical section is
 			omitted. */
-			if( ( ulGPIOState & mainTASK_CONTROLLED_LED ) != 0 )
+			if( ( ucGPIOState & mainTASK_CONTROLLED_LED ) != 0 )
 			{
-				ulGPIOState &= ~mainTASK_CONTROLLED_LED;
+				ucGPIOState &= ~mainTASK_CONTROLLED_LED;
 			}
 			else
 			{
-				ulGPIOState |= mainTASK_CONTROLLED_LED;
+				ucGPIOState |= mainTASK_CONTROLLED_LED;
 			}
-//_RB_			MSS_GPIO_set_outputs( ulGPIOState );
+
+			XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 		}
 	}
 }
@@ -346,6 +356,23 @@ unsigned long ulReceivedValue;
 
 static void prvSetupHardware( void )
 {
+portBASE_TYPE xStatus;
+const unsigned char ucSetToOutput = 0U;
+
+	/* Initialize the GPIO. */
+	xStatus = XGpio_Initialize( &xOutputGPIOInstance, XPAR_LEDS_4BITS_DEVICE_ID );
+	if( xStatus == XST_SUCCESS )
+	{
+		/* All LEDs on this channel are going to be outputs. */
+		XGpio_SetDataDirection( &xOutputGPIOInstance, uxGPIOOutputChannel, ucSetToOutput );
+
+		/* Start with all LEDs off. */
+		ucGPIOState = 0U;
+		XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
+	}
+
+	configASSERT( ( xStatus == XST_SUCCESS ) );
+
 	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
 		microblaze_enable_exceptions();
 	#endif
@@ -449,7 +476,7 @@ extern void vTickISR( void *pvUnused );
 
 	configASSERT( ( xStatus == pdPASS ) );
 }
-
+/*-----------------------------------------------------------*/
 
 void vApplicationClearTimerInterrupt( void )
 {

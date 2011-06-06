@@ -3,8 +3,8 @@
 
 <cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="xilinx.gnu.mb.exe.debug.1890710697">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="xilinx.gnu.mb.exe.debug.1890710697" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+		<cconfiguration id="xilinx.gnu.mb.exe.debug.1890710697.1551842913">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="xilinx.gnu.mb.exe.debug.1890710697.1551842913" moduleId="org.eclipse.cdt.core.settings" name="Blilnky">
 				<externalSettings/>
 				<extensions>
 					<extension id="com.xilinx.sdk.managedbuilder.XELF.mb" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -16,89 +16,92 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="elf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="xilinx.gnu.mb.exe.debug.1890710697" name="Debug" parent="xilinx.gnu.mb.exe.debug">
-					<folderInfo id="xilinx.gnu.mb.exe.debug.1890710697." name="/" resourcePath="">
-						<toolChain id="xilinx.gnu.mb.exe.debug.toolchain.599082172" name="Xilinx MicroBlaze GNU Toolchain" superClass="xilinx.gnu.mb.exe.debug.toolchain">
-							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.mb" id="xilinx.mb.target.gnu.base.debug.274213147" isAbstract="false" name="Debug Platform" superClass="xilinx.mb.target.gnu.base.debug"/>
-							<builder buildPath="${workspace_loc:/RTOSDemoSource/Debug}" enableAutoBuild="true" id="xilinx.gnu.mb.toolchain.builder.debug.1579135972" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU make" superClass="xilinx.gnu.mb.toolchain.builder.debug"/>
-							<tool id="xilinx.gnu.mb.c.toolchain.assembler.debug.1239514963" name="MicroBlaze gcc assembler" superClass="xilinx.gnu.mb.c.toolchain.assembler.debug">
-								<option id="xilinx.gnu.mb.assembler.usele.1396275909" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.assembler.usele" value="true" valueType="boolean"/>
-								<inputType id="xilinx.gnu.assembler.input.637949814" superClass="xilinx.gnu.assembler.input"/>
+				<configuration artifactExtension="elf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Very simple starter example" id="xilinx.gnu.mb.exe.debug.1890710697.1551842913" name="Blilnky" parent="xilinx.gnu.mb.exe.debug">
+					<folderInfo id="xilinx.gnu.mb.exe.debug.1890710697.1551842913." name="/" resourcePath="">
+						<toolChain id="xilinx.gnu.mb.exe.debug.toolchain.257341927" name="Xilinx MicroBlaze GNU Toolchain" superClass="xilinx.gnu.mb.exe.debug.toolchain">
+							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.mb" id="xilinx.mb.target.gnu.base.debug.424447469" isAbstract="false" name="Debug Platform" superClass="xilinx.mb.target.gnu.base.debug"/>
+							<builder buildPath="${workspace_loc:/RTOSDemoSource/Debug}" enableAutoBuild="true" id="xilinx.gnu.mb.toolchain.builder.debug.930852495" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU make" superClass="xilinx.gnu.mb.toolchain.builder.debug"/>
+							<tool id="xilinx.gnu.mb.c.toolchain.assembler.debug.978073207" name="MicroBlaze gcc assembler" superClass="xilinx.gnu.mb.c.toolchain.assembler.debug">
+								<option id="xilinx.gnu.mb.assembler.usele.2022235394" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.assembler.usele" value="true" valueType="boolean"/>
+								<inputType id="xilinx.gnu.assembler.input.278099745" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.c.toolchain.compiler.debug.1867440614" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.337889984" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.option.debugging.level.617270473" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.1451001122" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usele.160030529" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1216651937" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.1517601997" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usediv.672884238" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.fpu.2006005452" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mul.678398498" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.560760309" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
+							<tool id="xilinx.gnu.mb.c.toolchain.compiler.debug.835271198" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.716987775" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.option.debugging.level.1945788166" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.96719191" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usele.706567309" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1579209203" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.1892830682" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usediv.441061894" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.fpu.889919540" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mul.769937239" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.702422111" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
 								</option>
-								<option id="xilinx.gnu.compiler.dircategory.includes.1932434235" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+								<option id="xilinx.gnu.compiler.dircategory.includes.788537379" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/Common_Demo_Files/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
 								</option>
-								<inputType id="xilinx.gnu.compiler.input.2107818916" name="C source files" superClass="xilinx.gnu.compiler.input"/>
+								<inputType id="xilinx.gnu.compiler.input.264309084" name="C source files" superClass="xilinx.gnu.compiler.input"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.cxx.toolchain.compiler.debug.892124153" name="MicroBlaze g++ compiler" superClass="xilinx.gnu.mb.cxx.toolchain.compiler.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.1589998383" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.option.debugging.level.128602658" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.1802673391" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usele.1454232863" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1778832640" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.435976827" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usediv.1414449733" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.fpu.1308489561" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mul.1215307028" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.1137996366" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
+							<tool id="xilinx.gnu.mb.cxx.toolchain.compiler.debug.1757864406" name="MicroBlaze g++ compiler" superClass="xilinx.gnu.mb.cxx.toolchain.compiler.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.1341113404" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.option.debugging.level.437017279" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.73247828" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usele.1996765397" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1004904872" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.2102491479" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usediv.1878612258" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.fpu.548710489" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mul.901018577" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.579575146" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
 								</option>
 							</tool>
-							<tool id="xilinx.gnu.mb.toolchain.archiver.1592538942" name="MicroBlaze archiver" superClass="xilinx.gnu.mb.toolchain.archiver"/>
-							<tool id="xilinx.gnu.mb.c.toolchain.linker.debug.944775154" name="MicroBlaze gcc linker" superClass="xilinx.gnu.mb.c.toolchain.linker.debug">
-								<option id="xilinx.gnu.mb.linker.inferred.mbversion.1111013174" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usele.882904483" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.595799628" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.1837572058" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usediv.1995633804" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.fpu.1492907557" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.linker.inferred.mul.679446604" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1872729354" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
+							<tool id="xilinx.gnu.mb.toolchain.archiver.1048677661" name="MicroBlaze archiver" superClass="xilinx.gnu.mb.toolchain.archiver"/>
+							<tool id="xilinx.gnu.mb.c.toolchain.linker.debug.1152738454" name="MicroBlaze gcc linker" superClass="xilinx.gnu.mb.c.toolchain.linker.debug">
+								<option id="xilinx.gnu.mb.linker.inferred.mbversion.1959093628" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usele.1271633588" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.1223851799" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.1132489905" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usediv.7712425" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.fpu.563163194" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.linker.inferred.mul.1195982521" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.989668099" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
-								<option id="xilinx.gnu.c.linker.option.lscript.2086162423" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<inputType id="xilinx.gnu.linker.input.68952515" superClass="xilinx.gnu.linker.input">
+								<option id="xilinx.gnu.c.linker.option.lscript.176750025" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
+								<inputType id="xilinx.gnu.linker.input.384537517" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
-								<inputType id="xilinx.gnu.linker.input.lscript.258084575" name="Linker Script" superClass="xilinx.gnu.linker.input.lscript"/>
+								<inputType id="xilinx.gnu.linker.input.lscript.728905130" name="Linker Script" superClass="xilinx.gnu.linker.input.lscript"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.cxx.toolchain.linker.debug.157885767" name="MicroBlaze g++ linker" superClass="xilinx.gnu.mb.cxx.toolchain.linker.debug">
-								<option id="xilinx.gnu.mb.linker.inferred.mbversion.1177333884" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usele.1758849265" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.876997851" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.1810668130" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usediv.507574974" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.fpu.1213315596" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.linker.inferred.mul.36102197" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1705482080" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
+							<tool id="xilinx.gnu.mb.cxx.toolchain.linker.debug.1026703573" name="MicroBlaze g++ linker" superClass="xilinx.gnu.mb.cxx.toolchain.linker.debug">
+								<option id="xilinx.gnu.mb.linker.inferred.mbversion.1521662887" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usele.304488947" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.1307373804" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.972908817" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usediv.1587557455" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.fpu.186398214" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.linker.inferred.mul.1765763083" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.771165792" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
-								<option id="xilinx.gnu.c.linker.option.lscript.1465464686" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
+								<option id="xilinx.gnu.c.linker.option.lscript.664782973" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.size.debug.1936094326" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.debug"/>
-							<tool id="xilinx.elfcheck.mb.debug.2147351327" name="Xilinx ELF Check" superClass="xilinx.elfcheck.mb.debug">
-								<option id="xilinx.elfcheck.option.hwspec.1155867438" name="Hardware Specification" superClass="xilinx.elfcheck.option.hwspec" value="-hw ../../HardwareWithEthernetLite/system.xml" valueType="string"/>
-								<option id="xilinx.elfcheck.option.procname.2108096300" name="Processor Name" superClass="xilinx.elfcheck.option.procname" value="-pe microblaze_0" valueType="string"/>
+							<tool id="xilinx.gnu.mb.size.debug.778946449" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.debug"/>
+							<tool id="xilinx.elfcheck.mb.debug.225695907" name="Xilinx ELF Check" superClass="xilinx.elfcheck.mb.debug">
+								<option id="xilinx.elfcheck.option.hwspec.581017009" name="Hardware Specification" superClass="xilinx.elfcheck.option.hwspec" value="-hw ../../HardwareWithEthernetLite/system.xml" valueType="string"/>
+								<option id="xilinx.elfcheck.option.procname.479774108" name="Processor Name" superClass="xilinx.elfcheck.option.procname" value="-pe microblaze_0" valueType="string"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="main-full.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="scannerConfiguration">
@@ -718,8 +721,8 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
-		<cconfiguration id="xilinx.gnu.mb.exe.release.1186286811">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="xilinx.gnu.mb.exe.release.1186286811" moduleId="org.eclipse.cdt.core.settings" name="Release">
+		<cconfiguration id="xilinx.gnu.mb.exe.debug.1890710697.1391169017">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="xilinx.gnu.mb.exe.debug.1890710697.1391169017" moduleId="org.eclipse.cdt.core.settings" name="Full">
 				<externalSettings/>
 				<extensions>
 					<extension id="com.xilinx.sdk.managedbuilder.XELF.mb" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -731,83 +734,92 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="elf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="xilinx.gnu.mb.exe.release.1186286811" name="Release" parent="xilinx.gnu.mb.exe.release">
-					<folderInfo id="xilinx.gnu.mb.exe.release.1186286811." name="/" resourcePath="">
-						<toolChain id="xilinx.gnu.mb.exe.release.toolchain.718912482" name="Xilinx MicroBlaze GNU Toolchain" superClass="xilinx.gnu.mb.exe.release.toolchain">
-							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.mb" id="xilinx.mb.target.gnu.base.release.1280250899" isAbstract="false" name="Debug Platform" superClass="xilinx.mb.target.gnu.base.release"/>
-							<builder buildPath="${workspace_loc:/RTOSDemoSource/Release}" enableAutoBuild="true" id="xilinx.gnu.mb.toolchain.builder.release.432669831" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU make" superClass="xilinx.gnu.mb.toolchain.builder.release"/>
-							<tool id="xilinx.gnu.mb.c.toolchain.assembler.release.2062618334" name="MicroBlaze gcc assembler" superClass="xilinx.gnu.mb.c.toolchain.assembler.release">
-								<option id="xilinx.gnu.mb.assembler.usele.1004143246" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.assembler.usele" value="true" valueType="boolean"/>
-								<inputType id="xilinx.gnu.assembler.input.1424192310" superClass="xilinx.gnu.assembler.input"/>
+				<configuration artifactExtension="elf" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="Comprehensive example" id="xilinx.gnu.mb.exe.debug.1890710697.1391169017" name="Full" parent="xilinx.gnu.mb.exe.debug">
+					<folderInfo id="xilinx.gnu.mb.exe.debug.1890710697.1391169017." name="/" resourcePath="">
+						<toolChain id="xilinx.gnu.mb.exe.debug.toolchain.1065681176" name="Xilinx MicroBlaze GNU Toolchain" superClass="xilinx.gnu.mb.exe.debug.toolchain">
+							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.mb" id="xilinx.mb.target.gnu.base.debug.472412552" isAbstract="false" name="Debug Platform" superClass="xilinx.mb.target.gnu.base.debug"/>
+							<builder buildPath="${workspace_loc:/RTOSDemoSource/Debug}" enableAutoBuild="true" id="xilinx.gnu.mb.toolchain.builder.debug.2034661333" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU make" superClass="xilinx.gnu.mb.toolchain.builder.debug"/>
+							<tool id="xilinx.gnu.mb.c.toolchain.assembler.debug.1663720311" name="MicroBlaze gcc assembler" superClass="xilinx.gnu.mb.c.toolchain.assembler.debug">
+								<option id="xilinx.gnu.mb.assembler.usele.787661810" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.assembler.usele" value="true" valueType="boolean"/>
+								<inputType id="xilinx.gnu.assembler.input.828396103" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.c.toolchain.compiler.release.1828722124" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.release">
-								<option defaultValue="gnu.c.optimization.level.most" id="xilinx.gnu.compiler.option.optimization.level.1238786955" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.option.debugging.level.949291389" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.772757699" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usele.1473700868" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1861351915" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.933103475" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usediv.1452006705" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.fpu.736763488" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mul.1393822003" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.306993152" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
+							<tool id="xilinx.gnu.mb.c.toolchain.compiler.debug.1610218702" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.116271748" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.option.debugging.level.171855055" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.900759104" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usele.366091388" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1212298558" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.1277381811" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usediv.192502540" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.fpu.2033157740" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mul.2087417140" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.729428302" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
 								</option>
-								<inputType id="xilinx.gnu.compiler.input.690911521" name="C source files" superClass="xilinx.gnu.compiler.input"/>
+								<option id="xilinx.gnu.compiler.dircategory.includes.1539819216" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/Common_Demo_Files/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
+								</option>
+								<inputType id="xilinx.gnu.compiler.input.505106416" name="C source files" superClass="xilinx.gnu.compiler.input"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.cxx.toolchain.compiler.release.449737219" name="MicroBlaze g++ compiler" superClass="xilinx.gnu.mb.cxx.toolchain.compiler.release">
-								<option defaultValue="gnu.c.optimization.level.most" id="xilinx.gnu.compiler.option.optimization.level.719334230" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.option.debugging.level.888257007" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.1974867876" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usele.1741794988" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1085726307" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.183628355" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.usediv.1022113972" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.fpu.1627263935" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.compiler.inferred.mul.364150553" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.632505535" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
+							<tool id="xilinx.gnu.mb.cxx.toolchain.compiler.debug.2087155544" name="MicroBlaze g++ compiler" superClass="xilinx.gnu.mb.cxx.toolchain.compiler.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.76035929" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.option.debugging.level.830648985" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mbversion.1609359386" name="MicroBlaze Version" superClass="xilinx.gnu.mb.compiler.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usele.777715972" name="Produce little endian code (-mlittle-endian)" superClass="xilinx.gnu.mb.compiler.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usebarrel.1922242390" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.compiler.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usepcmp.75463556" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.compiler.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.usediv.1698265058" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.compiler.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.fpu.1268286956" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.compiler.inferred.mul.147816156" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.1260701076" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
 								</option>
 							</tool>
-							<tool id="xilinx.gnu.mb.toolchain.archiver.156208251" name="MicroBlaze archiver" superClass="xilinx.gnu.mb.toolchain.archiver"/>
-							<tool id="xilinx.gnu.mb.c.toolchain.linker.release.1781075016" name="MicroBlaze gcc linker" superClass="xilinx.gnu.mb.c.toolchain.linker.release">
-								<option id="xilinx.gnu.mb.linker.inferred.mbversion.881243134" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usele.1248988996" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.354962392" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.1920529150" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usediv.943020691" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.fpu.2040866770" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.linker.inferred.mul.378837391" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1279322127" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
+							<tool id="xilinx.gnu.mb.toolchain.archiver.1361288263" name="MicroBlaze archiver" superClass="xilinx.gnu.mb.toolchain.archiver"/>
+							<tool id="xilinx.gnu.mb.c.toolchain.linker.debug.512205974" name="MicroBlaze gcc linker" superClass="xilinx.gnu.mb.c.toolchain.linker.debug">
+								<option id="xilinx.gnu.mb.linker.inferred.mbversion.88071915" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usele.2098428761" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.337502401" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.1186226796" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usediv.694766114" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.fpu.1355435021" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.linker.inferred.mul.1335029834" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1334512887" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
-								<option id="xilinx.gnu.c.linker.option.lscript.1907224502" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<inputType id="xilinx.gnu.linker.input.134341694" superClass="xilinx.gnu.linker.input">
+								<option id="xilinx.gnu.c.linker.option.lscript.1073578867" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
+								<inputType id="xilinx.gnu.linker.input.1399699093" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
-								<inputType id="xilinx.gnu.linker.input.lscript.1733021603" name="Linker Script" superClass="xilinx.gnu.linker.input.lscript"/>
+								<inputType id="xilinx.gnu.linker.input.lscript.751524851" name="Linker Script" superClass="xilinx.gnu.linker.input.lscript"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.cxx.toolchain.linker.release.98720932" name="MicroBlaze g++ linker" superClass="xilinx.gnu.mb.cxx.toolchain.linker.release">
-								<option id="xilinx.gnu.mb.linker.inferred.mbversion.1241661489" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usele.1237060844" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.1982200182" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.129183171" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.usediv.1333108220" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
-								<option id="xilinx.gnu.mb.linker.inferred.fpu.858346517" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
-								<option id="xilinx.gnu.mb.linker.inferred.mul.733062971" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
-								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1337156964" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
+							<tool id="xilinx.gnu.mb.cxx.toolchain.linker.debug.2073868051" name="MicroBlaze g++ linker" superClass="xilinx.gnu.mb.cxx.toolchain.linker.debug">
+								<option id="xilinx.gnu.mb.linker.inferred.mbversion.563798700" name="MicroBlaze Version" superClass="xilinx.gnu.mb.linker.inferred.mbversion" value="8.10.a" valueType="string"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usele.143230105" name="Produce little endian artifacts (-mlittle-endian)" superClass="xilinx.gnu.mb.linker.inferred.usele" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usebarrel.1356384257" name="Use Barrel Shifter (-mxl-barrel-shift)" superClass="xilinx.gnu.mb.linker.inferred.usebarrel" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usepcmp.1766995151" name="Use Pattern Compare (-mxl-pattern-compare)" superClass="xilinx.gnu.mb.linker.inferred.usepcmp" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.usediv.1611022077" name="Use hardware divider (-mno-xl-soft-div)" superClass="xilinx.gnu.mb.linker.inferred.usediv" value="true" valueType="boolean"/>
+								<option id="xilinx.gnu.mb.linker.inferred.fpu.484719747" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
+								<option id="xilinx.gnu.mb.linker.inferred.mul.494988599" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
+								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1681875689" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
-								<option id="xilinx.gnu.c.linker.option.lscript.793254984" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
+								<option id="xilinx.gnu.c.linker.option.lscript.480905448" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 							</tool>
-							<tool id="xilinx.gnu.mb.size.release.751554075" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.release"/>
-							<tool id="xilinx.elfcheck.mb.release.941988759" name="Xilinx ELF Check" superClass="xilinx.elfcheck.mb.release">
-								<option id="xilinx.elfcheck.option.hwspec.1947090803" name="Hardware Specification" superClass="xilinx.elfcheck.option.hwspec" value="-hw ../../HardwareWithEthernetLite/system.xml" valueType="string"/>
-								<option id="xilinx.elfcheck.option.procname.1744481658" name="Processor Name" superClass="xilinx.elfcheck.option.procname" value="-pe microblaze_0" valueType="string"/>
+							<tool id="xilinx.gnu.mb.size.debug.536351174" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.debug"/>
+							<tool id="xilinx.elfcheck.mb.debug.1281142255" name="Xilinx ELF Check" superClass="xilinx.elfcheck.mb.debug">
+								<option id="xilinx.elfcheck.option.hwspec.1602098677" name="Hardware Specification" superClass="xilinx.elfcheck.option.hwspec" value="-hw ../../HardwareWithEthernetLite/system.xml" valueType="string"/>
+								<option id="xilinx.elfcheck.option.procname.1990677201" name="Processor Name" superClass="xilinx.elfcheck.option.procname" value="-pe microblaze_0" valueType="string"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="main-blinky.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="scannerConfiguration">

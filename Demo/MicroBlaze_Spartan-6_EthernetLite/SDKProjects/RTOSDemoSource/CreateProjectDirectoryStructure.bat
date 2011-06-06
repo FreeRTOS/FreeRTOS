@@ -36,21 +36,30 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\..\..\..\Source\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang
 
 	REM Copy the files that define the common demo tasks.
-	copy ..\..\..\Common\minimal\dynamic.c Demo_Source\Common_Demo_Files
-	copy ..\..\..\Common\minimal\comtest.c Demo_Source\Common_Demo_Files
-	copy ..\..\..\Common\minimal\GenQTest.c Demo_Source\Common_Demo_Files
-	copy ..\..\..\Common\minimal\TimerDemo.c Demo_Source\Common_Demo_Files
-	copy ..\..\..\Common\minimal\countsem.c Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\dynamic.c      Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\BlockQ.c       Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\death.c        Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\blocktim.c     Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\semtest.c      Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\PollQ.c        Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\GenQTest.c     Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\QPeek.c        Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\recmutex.c     Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\flop.c         Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\flash.c        Demo_Source\Common_Demo_Files
 	
 	REM Copy the common demo file headers.
-	copy ..\..\..\Common\include\dynamic.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\comtest.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\comtest2.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\GenQTest.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\serial.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\partest.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\TimerDemo.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\countsem.h Demo_Source\Common_Demo_Files\include
-	copy ..\..\..\Common\include\partest.h Demo_Source\Common_Demo_Files\include
-	
+    copy ..\..\..\Common\include\dynamic.h      Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\partest.h      Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\BlockQ.h       Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\death.h        Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\blocktim.h     Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\semtest.h      Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\PollQ.h        Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\GenQTest.h     Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\QPeek.h        Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\recmutex.h     Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\flop.h         Demo_Source\Common_Demo_Files\include
+    copy ..\..\..\Common\include\flash.h        Demo_Source\Common_Demo_Files\include
+    
 : END

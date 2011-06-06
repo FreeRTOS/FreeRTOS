@@ -64,11 +64,14 @@
 /* Library includes. */
 #include "xgpio.h"
 
+#define partstMAX_LED	4
+
 /*-----------------------------------------------------------*/
 
-static XGpio xOutputGPIOInstance;
 static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL;
-static ucCurrentLEDState = 0U;
+static unsigned char ucGPIOState = 0U;
+
+static XGpio xOutputGPIOInstance;
 
 /*
  * Setup the IO for the LED outputs.
@@ -78,103 +81,70 @@ void vParTestInitialise( void )
 portBASE_TYPE xStatus;
 const unsigned char ucSetToOutput = 0U;
 
-	/* Initialize the GPIO. */
-	xStatus = XGpio_Initialize( &xOutputGPIOInstance, XPAR_LEDS_4BITS_DEVICE_ID );	
+	/* Initialise the GPIO for the LEDs. */
+	xStatus = XGpio_Initialize( &xOutputGPIOInstance, XPAR_LEDS_4BITS_DEVICE_ID );
 	if( xStatus == XST_SUCCESS )
 	{
-		/* All LEDs on this channel are going to be outputs. */
+		/* All bits on this channel are going to be outputs (LEDs). */
 		XGpio_SetDataDirection( &xOutputGPIOInstance, uxGPIOOutputChannel, ucSetToOutput );
-		
+
 		/* Start with all LEDs off. */
-		ucCurrentLEDState = 0U;
-		XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucCurrentLEDState );
+		ucGPIOState = 0U;
+		XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 	}
 	
-	configASSERT( ( xStatus == XST_SUCCESS ) );
+	configASSERT( xStatus == XST_SUCCESS );
 }
 /*-----------------------------------------------------------*/
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-#if 0
-unsigned portBASE_TYPE uxBaseAddress, *puxCurrentValue;
+unsigned char ucLED = 1U;
 
-	portENTER_CRITICAL();
+	if( uxLED < partstMAX_LED )
 	{
-		/* Which IO section does the LED being set/cleared belong to?  The
-		4 bit or 5 bit outputs? */
-		if( uxLED <= partstMAX_4BIT_LED )
-		{
-			uxBaseAddress = XPAR_LEDS_4BIT_BASEADDR;
-			puxCurrentValue = &uxCurrentOutput4Bit;
-		}	
-		else
-		{
-			uxBaseAddress = XPAR_LEDS_POSITIONS_BASEADDR;
-			puxCurrentValue = &uxCurrentOutput5Bit;
-			uxLED -= partstMAX_4BIT_LED;
-		}
+		ucLED <<= ( unsigned char ) uxLED;
 
-		/* Setup the bit mask accordingly. */
-		uxLED = 0x01 << uxLED;
-
-		/* Maintain the current output value. */
-		if( xValue )
+		portENTER_CRITICAL();
 		{
-			*puxCurrentValue |= uxLED;
+			if( xValue == pdFALSE )
+			{
+				ucGPIOState &= ~ucLED;
+			}
+			else
+			{
+				ucGPIOState |= ucLED;
+			}
+			XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 		}
-		else
-		{
-			*puxCurrentValue &= ~uxLED;
-		}
-
-		/* Write the value to the port. */
-		XGpio_mSetDataReg( uxBaseAddress, partstCHANNEL_1, *puxCurrentValue );
+		portEXIT_CRITICAL();
 	}
-	portEXIT_CRITICAL();
-#endif
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-#if 0
-unsigned portBASE_TYPE uxBaseAddress, *puxCurrentValue;
+unsigned char ucLED = 1U;
 
-	portENTER_CRITICAL();
+	if( uxLED < partstMAX_LED )
 	{
-		/* Which IO section does the LED being toggled belong to?  The
-		4 bit or 5 bit outputs? */
-		if( uxLED <= partstMAX_4BIT_LED )
-		{
-			uxBaseAddress = XPAR_LEDS_4BIT_BASEADDR;
-			puxCurrentValue = &uxCurrentOutput4Bit;
-		}	
-		else
-		{
-			uxBaseAddress = XPAR_LEDS_POSITIONS_BASEADDR;
-			puxCurrentValue = &uxCurrentOutput5Bit;
-			uxLED -= partstMAX_4BIT_LED;
-		}
+		ucLED <<= ( unsigned char ) uxLED;
 
-		/* Setup the bit mask accordingly. */
-		uxLED = 0x01 << uxLED;
-
-		/* Maintain the current output value. */
-		if( *puxCurrentValue & uxLED )
+		portENTER_CRITICAL();
 		{
-			*puxCurrentValue &= ~uxLED;
-		}
-		else
-		{
-			*puxCurrentValue |= uxLED;
-		}
+			if( ( ucGPIOState & ucLED ) != 0 )
+			{
+				ucGPIOState &= ~ucLED;
+			}
+			else
+			{
+				ucGPIOState |= ucLED;
+			}
 
-		/* Write the value to the port. */
-		XGpio_mSetDataReg(uxBaseAddress, partstCHANNEL_1, *puxCurrentValue );
+			XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
+		}
+		portEXIT_CRITICAL();
 	}
-	portEXIT_CRITICAL();
-#endif
 }
 
 

@@ -383,7 +383,6 @@ extern void vApplicationClearTimerInterrupt();
 static portBASE_TYPE prvInitialiseInterruptController( void )
 {
 portBASE_TYPE xStatus;
-extern Xil_ExceptionHandler vPortFreeRTOSInterruptHandler;
 
 	xStatus = XIntc_Initialize( &xInterruptControllerInstance, configINTERRUPT_CONTROLLER_TO_USE );
 
@@ -391,10 +390,6 @@ extern Xil_ExceptionHandler vPortFreeRTOSInterruptHandler;
 	{
 		/* Initialise the exception table. */
 		Xil_ExceptionInit();
-
-		/* Register the interrupt controller handle that uses the exception
-		table. */
-//_RB_		Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_INT,	vPortFreeRTOSInterruptHandler, NULL );
 
 	    /* Service all pending interrupts each time the handler is entered. */
 	    XIntc_SetIntrSvcOption( xInterruptControllerInstance.BaseAddress, XIN_SVC_ALL_ISRS_OPTION );

@@ -124,7 +124,7 @@
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
 converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			( 1000 / portTICK_RATE_MS ) //_RB_ should be 200
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -156,6 +156,8 @@ static void prvQueueSendTask( void *pvParameters );
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
 
+static void prvButtonInputInterruptHandler( void *pvUnused );
+
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
@@ -171,51 +173,10 @@ static volatile unsigned char ucGPIOState = 0U;
 /*-----------------------------------------------------------*/
 
 static XTmrCtr xTimer0Instance;
-static XGpio xOutputGPIOInstance;
-static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL;
+static XGpio xOutputGPIOInstance, xInputGPIOInstance;
+static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL, uxGPIOInputChannel = 1UL;
 
 /*-----------------------------------------------------------*/
-#define NOT_JUST_TESTING
-#ifdef JUST_TESTING
-volatile unsigned long ul1 = 0, ul2 = 0;
-
-void vTemp1( void *pvParameters )
-{
-	for( ;; )
-	{
-		ul1++;
-		//taskYIELD();
-	}
-}
-
-void vTemp2( void *pvParameters )
-{
-	for( ;; )
-	{
-		ul2++;
-		//taskYIELD();
-	}
-}
-
-void main( void )
-{
-	prvSetupHardware();
-
-	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 0 );
-	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 1 );
-	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 2 );
-	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, 1 << 3 );
-
-
-	xTaskCreate( vTemp1, ( signed char * ) "Test1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
-	xTaskCreate( vTemp2, ( signed char * ) "Test2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
-
-	vTaskStartScheduler();
-	for( ;; );
-}
-
-
-#else /* JUST_TESTING */
 
 int main(void)
 {
@@ -254,7 +215,7 @@ int main(void)
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-#endif /* JUST_TESTING */
+
 static void vLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
@@ -262,20 +223,20 @@ static void vLEDTimerCallback( xTimerHandle xTimer )
 	a critical section because it is accessed from multiple tasks, and the
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
-	ucGPIOState |= mainTIMER_CONTROLLED_LED;
+	ucGPIOState &= ~mainTIMER_CONTROLLED_LED;
 	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 }
 /*-----------------------------------------------------------*/
 
 /* The ISR executed when the user button is pushed. */
-void GPIO8_IRQHandler( void )
+static void prvButtonInputInterruptHandler( void *pvUnused )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	ucGPIOState &= ~mainTIMER_CONTROLLED_LED;
+	ucGPIOState |= mainTIMER_CONTROLLED_LED;
 	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
@@ -284,7 +245,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
 
 	/* Clear the interrupt before leaving. */
-//_RB_    MSS_GPIO_clear_irq( MSS_GPIO_8 );
+	XGpio_InterruptClear( &xInputGPIOInstance, uxGPIOInputChannel );
 
 	/* If calling xTimerResetFromISR() caused a task (in this case the timer
 	service/daemon task) to unblock, and the unblocked task has a priority
@@ -359,11 +320,11 @@ static void prvSetupHardware( void )
 portBASE_TYPE xStatus;
 const unsigned char ucSetToOutput = 0U;
 
-	/* Initialize the GPIO. */
+	/* Initialize the GPIO for the LEDs. */
 	xStatus = XGpio_Initialize( &xOutputGPIOInstance, XPAR_LEDS_4BITS_DEVICE_ID );
 	if( xStatus == XST_SUCCESS )
 	{
-		/* All LEDs on this channel are going to be outputs. */
+		/* All bits on this channel are going to be outputs (LEDs). */
 		XGpio_SetDataDirection( &xOutputGPIOInstance, uxGPIOOutputChannel, ucSetToOutput );
 
 		/* Start with all LEDs off. */
@@ -371,7 +332,32 @@ const unsigned char ucSetToOutput = 0U;
 		XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
 	}
 
-	configASSERT( ( xStatus == XST_SUCCESS ) );
+	/* Initialise the GPIO for the button inputs. */
+	if( xStatus == XST_SUCCESS )
+	{
+		xStatus = XGpio_Initialize( &xInputGPIOInstance, XPAR_PUSH_BUTTONS_4BITS_DEVICE_ID );
+	}
+
+	if( xStatus == XST_SUCCESS )
+	{
+		/* Install the handler defined in this task for the button input. */
+		xStatus = xPortInstallInterruptHandler( XPAR_MICROBLAZE_0_INTC_PUSH_BUTTONS_4BITS_IP2INTC_IRPT_INTR, prvButtonInputInterruptHandler, NULL );
+
+		if( xStatus == pdPASS )
+		{
+			/* Set buttons to input. */
+			XGpio_SetDataDirection( &xInputGPIOInstance, uxGPIOInputChannel, ~( ucSetToOutput ) );
+
+
+			vPortEnableInterrupt( XPAR_MICROBLAZE_0_INTC_PUSH_BUTTONS_4BITS_IP2INTC_IRPT_INTR );
+
+			/* Enable GPIO channel interrupts. */
+			XGpio_InterruptEnable( &xInputGPIOInstance, uxGPIOInputChannel ); //_RB_
+			XGpio_InterruptGlobalEnable( &xInputGPIOInstance );
+		}
+	}
+
+	configASSERT( ( xStatus == pdPASS ) );
 
 	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
 		microblaze_enable_exceptions();

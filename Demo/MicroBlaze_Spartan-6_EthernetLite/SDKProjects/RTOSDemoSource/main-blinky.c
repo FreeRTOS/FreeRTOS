@@ -178,7 +178,7 @@ static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL, uxGPIOInputChanne
 
 /*-----------------------------------------------------------*/
 
-int main(void)
+int main( void )
 {
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();

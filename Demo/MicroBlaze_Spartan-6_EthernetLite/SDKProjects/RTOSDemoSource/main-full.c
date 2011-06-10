@@ -134,6 +134,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 
 /* Standard demo includes. */
 #include "partest.h"
@@ -150,11 +151,6 @@
 #include "dynamic.h"
 
 #define xPrintf( x )
-
-/* Values that are passed into the reg test tasks using the task parameter.  The
-tasks check that the values are passed in correctly. */
-#define mainREG_TEST_1_PARAMETER	( 0x12121212UL )
-#define mainREG_TEST_2_PARAMETER	( 0x12345678UL )
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
@@ -173,17 +169,20 @@ stack than most of the other tasks. */
 #define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
 
 /* The LED toggled by the check task. */
-#define mainCHECK_LED				( 5 )
+#define mainCHECK_LED				( 3 )
 
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error.  Controlled by the check task as described at the top of this
 file. */
-#define mainNO_ERROR_CYCLE_TIME		( 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_TIMER_PERIOD		( 5000 / portTICK_RATE_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task.  Controlled by the check task as described at the top of
 this file. */
-#define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
+#define mainERROR_CHECK_TIMER_PERIOD		( 200 / portTICK_RATE_MS )
+
+/* A block time of zero means "don't block". */
+#define mainDONT_BLOCK				( ( portTickType ) 0 )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -220,13 +219,15 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 /*
  * The reg test tasks as described at the top of this file.
  */
-static void prvRegTest1Task( void *pvParameters );
-static void prvRegTest2Task( void *pvParameters );
+extern void vRegisterTest1( void *pvParameters );
+extern void vRegisterTest2( void *pvParameters );
 
 /*
- * The check task as described at the top of this file.
+ * Defines the 'check' functionality as described at the top of this file.  This
+ * function is the callback function for the 'check' timer.
  */
-static void prvCheckTask( void *pvParameters );
+static void vCheckTimerCallback( xTimerHandle xTimer );
+
 
 static void prvSetupHardware( void );
 
@@ -237,12 +238,6 @@ static void prvSetupHardware( void );
 
 /*-----------------------------------------------------------*/
 
-/* Variables that are incremented on each iteration of the reg test tasks -
-provided the tasks have not reported any errors.  The check task inspects these
-variables to ensure they are still incrementing as expected.  If a variable
-stops incrementing then it is likely that its associate task has stalled. */
-unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
-
 /* The status message that is displayed at the bottom of the "task stats" web
 page, which is served by the uIP task.  This will report any errors picked up
 by the reg test task. */
@@ -250,38 +245,52 @@ static const char *pcStatusMessage = NULL;
 
 static XTmrCtr xTimer0Instance;
 
-/*-----------------------------------------------------------*/
+/* The 'check' timer, as described at the top of this file. */
+static xTimerHandle xCheckTimer = NULL;
 
-int main(void)
+/*-----------------------------------------------------------*/
+volatile int xyz = 1;
+
+int main( void )
 {
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
 	
 	/* Start the reg test tasks which test the context switching mechanism. */
-	xTaskCreate( prvRegTest1Task, ( const signed char * const ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTest2Task, ( const signed char * const ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+//	xTaskCreate( vRegisterTest1, ( const signed char * const ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
+//	xTaskCreate( vRegisterTest2, ( const signed char * const ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
 
 	/* The web server task. */
 //_RB_	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
-	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, ( const signed char * const ) "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
 	/* Create the standard demo tasks. */
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vCreateBlockTimeTasks();
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+//	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+//	vCreateBlockTimeTasks();
+//	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+//	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartRecursiveMutexTasks();
-	vStartMathTasks( mainFLOP_TASK_PRIORITY );
+//	vStartQueuePeekTasks();
+//	vStartRecursiveMutexTasks();
+//	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+//	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+
+	/* Create the 'check' timer - the timer that periodically calls the
+	check function as described at the top of this file.  Note that, for
+	the reasons stated in the comments above the call to
+	vStartTimerDemoTask(), that the check timer is not actually started
+	until after the scheduler has been started. */
+	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
+
+	/* Ensure the check timer will start running as soon as the scheduler
+	starts.  The block time is set to 0 (mainDONT_BLOCK), but would be
+	ingnored at this point anyway as block times can only be specified when
+	the scheduler is running. */
+	xTimerStart( xCheckTimer, mainDONT_BLOCK );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
@@ -293,104 +302,107 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void vCheckTimerCallback( xTimerHandle xTimer )
 {
+extern unsigned long ulRegTest1CycleCount, ulRegTest2CycleCount;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
-portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
-extern void vSetupHighFrequencyTimer( void );
+static long lErrorAlreadyLatched = pdFALSE;
 
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
+	/* This is the callback function used by the 'check' timer, as described
+	at the top of this file. */
 
-	for( ;; )
+#if 0
+	/* Check the standard demo tasks are running without error. */
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+		/* Increase the rate at which this task cycles, which will increase the
+		rate at which mainCHECK_LED flashes to give visual feedback that an error
+		has occurred. */
+		pcStatusMessage = "Error: GenQueue";
+		xPrintf( pcStatusMessage );
+	}
 
-		/* Check the standard demo tasks are running without error. */
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			/* Increase the rate at which this task cycles, which will increase the
-			rate at which mainCHECK_LED flashes to give visual feedback that an error
-			has occurred. */			
-			pcStatusMessage = "Error: GenQueue";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: QueuePeek\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: BlockQueue\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: BlockTime\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: SemTest\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: PollQueue\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xIsCreateTaskStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: Death\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: RecMutex\r\n";
-			xPrintf( pcStatusMessage );
-		}
-		
-		if( xAreMathsTaskStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Flop\r\n";
-			xPrintf( pcStatusMessage );
-		}
+	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: QueuePeek\r\n";
+		xPrintf( pcStatusMessage );
+	}
 
-		/* Check the reg test tasks are still cycling.  They will stop incrementing
-		their loop counters if they encounter an error. */
-		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
-		{
-			pcStatusMessage = "Error: RegTest1\r\n";
-			xPrintf( pcStatusMessage );
-		}
+	if( xAreBlockingQueuesStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: BlockQueue\r\n";
+		xPrintf( pcStatusMessage );
+	}
 
-		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
-		{
-			pcStatusMessage = "Error: RegTest2\r\n";
-			xPrintf( pcStatusMessage );
-		}
+	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: BlockTime\r\n";
+		xPrintf( pcStatusMessage );
+	}
 
-		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
-		ulLastRegTest2CycleCount = ulRegTest2CycleCount;
+	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: SemTest\r\n";
+		xPrintf( pcStatusMessage );
+	}
 
-		/* Toggle the check LED to give an indication of the system status.  If
-		the LED toggles every 5 seconds then everything is ok.  A faster toggle
-		indicates an error. */
-		vParTestToggleLED( mainCHECK_LED );
-		
-		/* Ensure the LED toggles at a faster rate if an error has occurred. */
-		if( pcStatusMessage != NULL )
+	if( xArePollingQueuesStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: PollQueue\r\n";
+		xPrintf( pcStatusMessage );
+	}
+
+	if( xIsCreateTaskStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: Death\r\n";
+		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	{
+		pcStatusMessage = "Error: RecMutex\r\n";
+		xPrintf( pcStatusMessage );
+	}
+
+	if( xAreMathsTaskStillRunning() != pdPASS )
+	{
+		pcStatusMessage = "Error: Flop\r\n";
+		xPrintf( pcStatusMessage );
+	}
+#endif //_RB_
+	/* Check the reg test tasks are still cycling.  They will stop incrementing
+	their loop counters if they encounter an error. */
+	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+	{
+		pcStatusMessage = "Error: RegTest1\r\n";
+		xPrintf( pcStatusMessage );
+	}
+
+	if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
+	{
+		pcStatusMessage = "Error: RegTest2\r\n";
+		xPrintf( pcStatusMessage );
+	}
+
+	ulLastRegTest1CycleCount = ulRegTest1CycleCount;
+	ulLastRegTest2CycleCount = ulRegTest2CycleCount;
+
+	/* Toggle the check LED to give an indication of the system status.  If
+	the LED toggles every 5 seconds then everything is ok.  A faster toggle
+	indicates an error. */
+	vParTestToggleLED( mainCHECK_LED );
+
+	if( pcStatusMessage != NULL )
+	{
+		if( lErrorAlreadyLatched == pdFALSE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
+			/* Ensure the LED toggles at a faster rate if an error has occurred.
+			This is called from a timer callback so must not attempt to block. */
+			xTimerChangePeriod( xTimer, mainERROR_CHECK_TIMER_PERIOD, mainDONT_BLOCK );
+
+			/* Just to ensure the timer period is not changed on each execution
+			of the callback. */
+			lErrorAlreadyLatched = pdTRUE;
 		}
 	}
 }
@@ -400,7 +412,8 @@ void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
-const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
+//const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
+const unsigned long ulCounterValue = ( ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL ) ) * 2UL; //_RB_ there is a clock set up incorrectly somwehre, the *2 should not be required.
 extern void vTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
@@ -472,30 +485,6 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-/* This function is explained in the comments at the top of this file. */
-static void prvRegTest1Task( void *pvParameters )
-{
-	configASSERT( pvParameters == ( void * ) mainREG_TEST_1_PARAMETER );
-
-	for( ;; )
-	{
-		vTaskDelay( 10000 );
-	}
-}
-/*-----------------------------------------------------------*/
-
-/* This function is explained in the comments at the top of this file. */
-static void prvRegTest2Task( void *pvParameters )
-{
-	configASSERT( pvParameters == ( void * ) mainREG_TEST_2_PARAMETER );
-
-	for( ;; )
-	{
-		vTaskDelay( 10000 );
-	}
-}
-/*-----------------------------------------------------------*/
-
 char *pcGetTaskStatusMessage( void )
 {
 	/* Not bothered about a critical section here although technically because of
@@ -552,8 +541,21 @@ const unsigned char ucSetToOutput = 0U;
 #endif //_RB_
 
 	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-		microblaze_enable_exceptions();
+//_RB_		microblaze_enable_exceptions();
 	#endif
 }
 /*-----------------------------------------------------------*/
+
+extern void vAssertCalled( char *pcFile, long lLine )
+{
+volatile unsigned long ul = 1;
+
+	taskDISABLE_INTERRUPTS();
+	while( ul == 1 )
+	{
+		/* Just for somewhere to put a breakpoint. */
+		portNOP();
+	}
+	taskENABLE_INTERRUPTS();
+}
 

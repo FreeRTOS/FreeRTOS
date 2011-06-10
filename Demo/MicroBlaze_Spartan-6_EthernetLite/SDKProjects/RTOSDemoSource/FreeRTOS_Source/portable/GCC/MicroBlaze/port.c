@@ -239,6 +239,7 @@ extern void ( vStartFirstTask )( void );
 
 	/* Allocate the stack to be used by the interrupt handler. */
 	pulISRStack = ( unsigned long * ) pvPortMalloc( configINTERRUPT_STACK_SIZE * sizeof( portSTACK_TYPE ) );
+	configASSERT( pulISRStack != NULL );
 
 	/* Restore the context of the first task that is going to run. */
 	if( pulISRStack != NULL )
@@ -273,10 +274,12 @@ extern void VPortYieldASM( void );
 	not interrupted by the tick ISR.  It is not a problem to do this as
 	each task maintains it's own interrupt status. */
 	portENTER_CRITICAL();
+	{
 		/* Jump directly to the yield function to ensure there is no
 		compiler generated prologue code. */
 		asm volatile (	"bralid r14, VPortYieldASM		\n\t" \
 						"or r0, r0, r0					\n\t" );
+	}
 	portEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/

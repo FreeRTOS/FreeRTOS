@@ -82,7 +82,7 @@
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( XPAR_MICROBLAZE_CORE_CLOCK_FREQ_HZ ) /* Not actually used in this demo as the timer is set up in main and uses the peripheral clock, not the CPU clock. */
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 6 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 40 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
@@ -96,7 +96,7 @@
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 180 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 230 )
 #define configINTERRUPT_STACK_SIZE		configMINIMAL_STACK_SIZE
 
 /* Co-routine definitions. */
@@ -119,7 +119,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
-#define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
+extern void vAssertCalled( char *pcFile, long lLine );
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 	
 #define configINTERRUPT_CONTROLLER_TO_USE XPAR_INTC_SINGLE_DEVICE_ID
 

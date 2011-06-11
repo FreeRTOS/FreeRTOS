@@ -249,25 +249,24 @@ static XTmrCtr xTimer0Instance;
 static xTimerHandle xCheckTimer = NULL;
 
 /*-----------------------------------------------------------*/
-volatile int xyz = 1;
 
 int main( void )
 {
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
-	
+
 	/* Start the reg test tasks which test the context switching mechanism. */
-//	xTaskCreate( vRegisterTest1, ( const signed char * const ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
-//	xTaskCreate( vRegisterTest2, ( const signed char * const ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegisterTest1, ( const signed char * const ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegisterTest2, ( const signed char * const ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
 
 	/* The web server task. */
 //_RB_	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
-//	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-//	vCreateBlockTimeTasks();
-//	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-//	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+	vCreateBlockTimeTasks();
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 //	vStartQueuePeekTasks();
@@ -284,13 +283,13 @@ int main( void )
 	the reasons stated in the comments above the call to
 	vStartTimerDemoTask(), that the check timer is not actually started
 	until after the scheduler has been started. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
+//	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
 
 	/* Ensure the check timer will start running as soon as the scheduler
 	starts.  The block time is set to 0 (mainDONT_BLOCK), but would be
 	ingnored at this point anyway as block times can only be specified when
 	the scheduler is running. */
-	xTimerStart( xCheckTimer, mainDONT_BLOCK );
+//	xTimerStart( xCheckTimer, mainDONT_BLOCK );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();
@@ -537,6 +536,7 @@ const unsigned char ucSetToOutput = 0U;
 
 	configASSERT( ( xStatus == pdPASS ) );
 #else
+	taskDISABLE_INTERRUPTS();
 	vParTestInitialise();
 #endif //_RB_
 
@@ -545,17 +545,4 @@ const unsigned char ucSetToOutput = 0U;
 	#endif
 }
 /*-----------------------------------------------------------*/
-
-void vAssertCalled( char *pcFile, long lLine )
-{
-volatile unsigned long ul = 1;
-
-	taskDISABLE_INTERRUPTS();
-	while( ul == 1 )
-	{
-		/* Just for somewhere to put a breakpoint. */
-		portNOP();
-	}
-	taskENABLE_INTERRUPTS();
-}
 

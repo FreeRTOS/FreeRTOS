@@ -478,15 +478,3 @@ unsigned long ulCSR;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( char *pcFile, long lLine )
-{
-volatile unsigned long ul = 1;
-
-	taskDISABLE_INTERRUPTS();
-	while( ul == 1 )
-	{
-		/* Just for somewhere to put a breakpoint. */
-		portNOP();
-	}
-	taskENABLE_INTERRUPTS();
-}

@@ -63,19 +63,22 @@
 	.extern uxCriticalNesting
 	.extern pulISRStack
 
-/*	.global vPortFreeRTOSInterruptHandler */
 	.global _interrupt_handler
 	.global VPortYieldASM
-	.global vStartFirstTask
+	.global vPortStartFirstTask
 
 
 .macro portSAVE_CONTEXT
+
 	/* Make room for the context on the stack. */
 	addik r1, r1, -132
-	/* Save r31 so it can then be used. */
+
+	/* Save r31 so it can then be used as a temporary. */
 	swi r31, r1, 4
+
 	/* Copy the msr into r31 - this is stacked later. */
 	mfs r31, rmsr
+
 	/* Stack general registers. */
 	swi r30, r1, 12
 	swi r29, r1, 16
@@ -105,9 +108,11 @@
 	swi r4, r1, 116
 	swi r3, r1, 120
 	swi r2, r1, 124
+
 	/* Stack the critical section nesting value. */
 	lwi r3, r0, uxCriticalNesting
 	swi r3, r1, 128
+
 	/* Save the top of stack value to the TCB. */
 	lwi r3, r0, pxCurrentTCB
 	sw	r1, r0, r3
@@ -115,9 +120,11 @@
 	.endm
 
 .macro portRESTORE_CONTEXT
+
 	/* Load the top of stack value from the TCB. */
 	lwi r3, r0, pxCurrentTCB
 	lw	r1, r0, r3	
+
 	/* Restore the general registers. */
 	lwi r31, r1, 4		
 	lwi r30, r1, 12		
@@ -149,38 +156,30 @@
 	lwi r4, r1, 116
 	lwi r2, r1, 124
 
+	/* Reload the rmsr from the stack. */
+	lwi r3, r1, 8
+	mts rmsr, r3
+
 	/* Load the critical nesting value. */
 	lwi r3, r1, 128
 	swi r3, r0, uxCriticalNesting
 
-	/* Obtain the MSR value from the stack. */
-	lwi r3, r1, 8
+	/* Test the critical nesting value.  If it is non zero then the task last
+	exited the running state using a yield.  If it is zero, then the task
+	last exited the running state through an interrupt. */
+	xori r3, r3, 0
+	bnei r3, exit_from_yield
 
-	/* Are interrupts enabled in the MSR?  If so return using an return from 
-	interrupt instruction to ensure interrupts are enabled only once the task
-	is running again. */
-	andi r3, r3, 2
-	beqid r3, 36
-	or r0, r0, r0
-
-	/* Reload the rmsr from the stack, clear the enable interrupt bit in the
-	value before saving back to rmsr register, then return enabling interrupts
-	as we return. */
-	lwi r3, r1, 8
-	andi r3, r3, ~2
-	mts rmsr, r3
+	/* r3 was being used as a temporary.  Now restore its true value from the
+	stack. */
 	lwi r3, r1, 120
+
+	/* Remove the stack frame. */
 	addik r1, r1, 132
+
+	/* Return using rtid so interrupts are re-enabled as this function is
+	exited. */
 	rtid r14, 0
-	or r0, r0, r0
-
-	/* Reload the rmsr from the stack, place it in the rmsr register, and
-	return without enabling interrupts. */
-	lwi r3, r1, 8
-	mts rmsr, r3
-	lwi r3, r1, 120
-	addik r1, r1, 132
-	rtsd r14, 0
 	or r0, r0, r0
 
 	.endm
@@ -188,41 +187,68 @@
 	.text
 	.align  2
 
+/* This function is used to exit portRESTORE_CONTEXT() if the task being
+returned to last left the Running state by calling taskYIELD() (rather than
+being preempted by an interrupt. */
+exit_from_yield:
 
-/*vPortFreeRTOSInterruptHandler:*/
+	/* r3 was being used as a temporary.  Now restore its true value from the
+	stack. */
+	lwi r3, r1, 120
+
+	/* Remove the stack frame. */
+	addik r1, r1, 132
+
+	/* Return to the task. */
+	rtsd r14, 0
+	or r0, r0, r0
+
+
 _interrupt_handler:
+
 	portSAVE_CONTEXT
-	/* Entered via an interrupt so interrupts must be enabled in msr. */
-	ori r31, r31, 2
+
 	/* Stack msr. */
 	swi r31, r1, 8
-	/* Stack the return address.  As we entered via an interrupt we do
-	not need to modify the return address prior to stacking. */
+
+	/* Stack the return address. */
 	swi r14, r1, 76
-	/* Now switch to use the ISR stack. */
-	lwi r3, r0, pulISRStack
-	add r1, r3, r0
+
+	/* Switch to the ISR stack. */
+	lwi r1, r0, pulISRStack
+
+	/* Execute any pending interrupts. */
 	bralid r15, XIntc_DeviceInterruptHandler
 	or r0, r0, r0
+
+	/* Restore the context of the next task scheduled to execute. */
 	portRESTORE_CONTEXT
 
 
 VPortYieldASM:
+
 	portSAVE_CONTEXT
+
 	/* Stack msr. */
 	swi r31, r1, 8
-	/* Modify the return address so we return to the instruction after the
-	exception. */
+
+	/* Modify the return address so a return is done to the instruction after
+	the call to VPortYieldASM. */
 	addi r14, r14, 8
 	swi r14, r1, 76
-	/* Now switch to use the ISR stack. */
-	lwi r3, r0, pulISRStack
-	add r1, r3, r0
+
+	/* Switch to use the ISR stack. */
+	lwi r1, r0, pulISRStack
+
+	/* Select the next task to execute. */
 	bralid r15, vTaskSwitchContext
 	or r0, r0, r0
+
+	/* Restore the context of the next task scheduled to execute. */
 	portRESTORE_CONTEXT
 
-vStartFirstTask:
+vPortStartFirstTask:
+
 	portRESTORE_CONTEXT
 	
 	

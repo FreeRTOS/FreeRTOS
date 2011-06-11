@@ -546,7 +546,7 @@ const unsigned char ucSetToOutput = 0U;
 }
 /*-----------------------------------------------------------*/
 
-extern void vAssertCalled( char *pcFile, long lLine )
+void vAssertCalled( char *pcFile, long lLine )
 {
 volatile unsigned long ul = 1;
 

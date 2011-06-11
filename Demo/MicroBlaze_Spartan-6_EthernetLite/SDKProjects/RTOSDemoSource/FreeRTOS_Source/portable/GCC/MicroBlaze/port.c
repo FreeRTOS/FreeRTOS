@@ -77,13 +77,6 @@ to the scheduler being commenced we don't want the critical nesting level
 to reach zero, so it is initialised to a high value. */
 #define portINITIAL_NESTING_VALUE	( 0xff )
 
-/* Our hardware setup only uses one counter. */
-#define portCOUNTER_0 				0
-
-/* The stack used by the ISR is filled with a known value to assist in
-debugging. */
-#define portISR_STACK_FILL_VALUE	0x55555555
-
 /*-----------------------------------------------------------*/
 
 /*
@@ -231,26 +224,19 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 
 portBASE_TYPE xPortStartScheduler( void )
 {
-extern void ( vStartFirstTask )( void );
+extern void ( vPortStartFirstTask )( void );
+extern unsigned long *_stack;
 
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
 	vApplicationSetupTimerInterrupt();
 
 	/* Allocate the stack to be used by the interrupt handler. */
-	pulISRStack = ( unsigned long * ) pvPortMalloc( configINTERRUPT_STACK_SIZE * sizeof( portSTACK_TYPE ) );
-	configASSERT( pulISRStack != NULL );
+	pulISRStack = _stack;
 
-	/* Restore the context of the first task that is going to run. */
-	if( pulISRStack != NULL )
-	{
-		/* Fill the ISR stack with a known value to facilitate debugging. */
-		memset( pulISRStack, portISR_STACK_FILL_VALUE, configMINIMAL_STACK_SIZE * sizeof( portSTACK_TYPE ) );
-		pulISRStack += ( configMINIMAL_STACK_SIZE - 1 );
-
-		/* From here on, the created tasks will be executing. */
-		vStartFirstTask();
-	}
+	/* Restore the context of the first task that is going to run.  From here
+	on, the created tasks will be executing. */
+	vPortStartFirstTask();
 
 	/* Should not get here as the tasks are now running! */
 	return pdFALSE;

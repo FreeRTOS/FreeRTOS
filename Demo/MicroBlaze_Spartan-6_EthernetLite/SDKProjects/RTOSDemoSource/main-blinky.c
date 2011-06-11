@@ -428,7 +428,8 @@ void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
-const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
+//const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
+const unsigned long ulCounterValue = ( ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL ) ) * 2UL; //_RB_ there is a clock set up incorrectly somwehre, the *2 should not be required. */
 extern void vTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
@@ -475,4 +476,17 @@ unsigned long ulCSR;
 	ulCSR = XTmrCtr_GetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0 );
 	XTmrCtr_SetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0, ulCSR );
 }
+/*-----------------------------------------------------------*/
 
+void vAssertCalled( char *pcFile, long lLine )
+{
+volatile unsigned long ul = 1;
+
+	taskDISABLE_INTERRUPTS();
+	while( ul == 1 )
+	{
+		/* Just for somewhere to put a breakpoint. */
+		portNOP();
+	}
+	taskENABLE_INTERRUPTS();
+}

@@ -99,7 +99,8 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = portINITIAL_NESTING_VALUE;
 
 /* To limit the amount of stack required by each task, this port uses a
 separate stack for interrupts. */
-unsigned long *pulISRStack;
+unsigned long ulISRStack;
+unsigned long *pulISRStack = &ulISRStack;
 
 /* The instance of the interrupt controller used by this port. */
 static XIntc xInterruptControllerInstance;
@@ -176,7 +177,7 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* R14 - return address for interrupt. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0f;	/* R15 - return address for subroutine. */
+	*pxTopOfStack = ( portSTACK_TYPE ) NULL;	/* R15 - return address for subroutine. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R16 - return address for trap (debugger). */
 	pxTopOfStack--;
@@ -225,14 +226,15 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 portBASE_TYPE xPortStartScheduler( void )
 {
 extern void ( vPortStartFirstTask )( void );
-extern unsigned long *_stack;
+extern unsigned long _stack[];
 
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
 	vApplicationSetupTimerInterrupt();
 
 	/* Allocate the stack to be used by the interrupt handler. */
-	pulISRStack = _stack;
+	pulISRStack = ( unsigned long * ) _stack;
+	pulISRStack--;
 
 	/* Restore the context of the first task that is going to run.  From here
 	on, the created tasks will be executing. */

@@ -208,13 +208,16 @@ void vRegisterTest2( void *pvParameters )
 					"	addi r31, r0, 1031	\n\t"
 				);
 
+	/* Yield. */
+	asm volatile (	"Loop_Start_2:				\n\t" \
+					"bralid r14, VPortYieldASM	\n\t" \
+					"or r0, r0, r0				\n\t" );
+
 	/* Now test the register values to ensure they contain the same value that
 	was written to them above.	 This task will get preempted frequently so 
 	other tasks are likely to have executed since the register values were 
 	written. */
-
-	asm volatile (	"Loop_Start_2:				\n\t" \
-					"	xori r18, r3, 103		\n\t" \
+	asm volatile (	"	xori r18, r3, 103		\n\t" \
 					"	bnei r18, Error_Loop_2	\n\t" \
 					"	xori r18, r4, 104		\n\t" \
 					"	bnei r18, Error_Loop_2	\n\t" \

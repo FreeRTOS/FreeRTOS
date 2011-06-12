@@ -269,9 +269,9 @@ int main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
-//	vStartQueuePeekTasks();
-//	vStartRecursiveMutexTasks();
-//	vStartMathTasks( mainFLOP_TASK_PRIORITY );
+	vStartQueuePeekTasks();
+	vStartRecursiveMutexTasks();
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
@@ -283,13 +283,13 @@ int main( void )
 	the reasons stated in the comments above the call to
 	vStartTimerDemoTask(), that the check timer is not actually started
 	until after the scheduler has been started. */
-//	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
+	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
 
 	/* Ensure the check timer will start running as soon as the scheduler
 	starts.  The block time is set to 0 (mainDONT_BLOCK), but would be
 	ingnored at this point anyway as block times can only be specified when
 	the scheduler is running. */
-//	xTimerStart( xCheckTimer, mainDONT_BLOCK );
+	xTimerStart( xCheckTimer, mainDONT_BLOCK );
 
 	/* Start the tasks running. */
 	vTaskStartScheduler();

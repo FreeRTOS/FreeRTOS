@@ -1792,7 +1792,7 @@ portTickType xTimeToWake;
 		designed for use by kernel code, and has special calling requirements -
 		it should be called from a critical section. */
 
-	
+
 		/* Place the event list item of the TCB in the appropriate event list.
 		In this case it is assume that this is the only task that is going to
 		be waiting on this event list, so the faster vListInsertEnd() function

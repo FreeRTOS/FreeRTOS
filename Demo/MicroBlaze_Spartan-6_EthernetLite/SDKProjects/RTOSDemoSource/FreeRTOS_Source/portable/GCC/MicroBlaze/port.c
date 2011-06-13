@@ -69,8 +69,9 @@
 #include <xtmrctr.h>
 #include <xil_exception.h>
 
-/* Tasks are started with interrupts enabled. */
-#define portINITIAL_MSR_STATE		( ( portSTACK_TYPE ) 0x02 )
+/* Tasks are started with interrupts disabled as they will have their interrupts
+enabled as the task starts (when its context is restored for the first time). */
+#define portINITIAL_MSR_STATE		( ( portSTACK_TYPE ) 0x00 )
 
 /* Tasks are started with a critical section nesting of 0 - however prior
 to the scheduler being commenced we don't want the critical nesting level
@@ -99,8 +100,7 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = portINITIAL_NESTING_VALUE;
 
 /* To limit the amount of stack required by each task, this port uses a
 separate stack for interrupts. */
-unsigned long ulISRStack;
-unsigned long *pulISRStack = &ulISRStack;
+unsigned long *pulISRStack;
 
 /* The instance of the interrupt controller used by this port. */
 static XIntc xInterruptControllerInstance;
@@ -143,10 +143,19 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x33333333;
 	pxTopOfStack--; 
 
+	/* The debugger will look at the previous stack frame. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
+	pxTopOfStack--;
+
 	/* First stack an initial value for the critical section nesting.  This
-	is initialised to zero as tasks are started with interrupts enabled. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R0 is always zero. */
+	is initialised to zero. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;
 	
+	/* R0 is always zero. */
 	/* R1 is the SP. */
 
 	/* Place an initial value for all the general purpose registers. */
@@ -159,7 +168,7 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;/* R5 contains the function call parameters. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 - other parameters and temporaries. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 - other parameters and temporaries.  Used as the return address from vPortTaskEntryPoint. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7 - other parameters and temporaries. */
 	pxTopOfStack--;
@@ -185,7 +194,7 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R18 - reserved for assembler and compiler temporaries. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x13;	/* R19 - must be saved across function calls. Callee-save. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R19 - must be saved across function calls. Callee-save.  Seems to be interpreted as the frame pointer. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R20 - reserved for storing a pointer to the Global Offset Table (GOT) in Position Independent Code (PIC). Non-volatile in non-PIC code. Must be saved across function calls. Callee-save.  Not used by FreeRTOS. */
 	pxTopOfStack--;
@@ -232,9 +241,12 @@ extern unsigned long _stack[];
 	this function is called. */
 	vApplicationSetupTimerInterrupt();
 
-	/* Allocate the stack to be used by the interrupt handler. */
+	/* Reuse the stack from main as the stack for the interrupts/exceptions.
+	The value is adjusted slightly to allow functions called from the
+	interrupts/exceptions to write back into the stack of the interrupt/
+	exception function itself. */
 	pulISRStack = ( unsigned long * ) _stack;
-	pulISRStack--;
+	pulISRStack -= 2;
 
 	/* Restore the context of the first task that is going to run.  From here
 	on, the created tasks will be executing. */

@@ -216,7 +216,9 @@ _interrupt_handler:
 	/* Stack the return address. */
 	swi r14, r1, 76
 
-	/* Switch to the ISR stack. */
+	/* Switch to the ISR stack.  The pulISRStack value has already been set to
+	leave space for the caller function to write back into the stack of this
+	function. */
 	lwi r1, r0, pulISRStack
 
 	/* The parameter to the interrupt handler. */

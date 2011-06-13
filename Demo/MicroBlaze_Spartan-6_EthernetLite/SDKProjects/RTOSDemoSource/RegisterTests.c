@@ -53,6 +53,7 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+#include "task.h"
 
 /*
  * The register test task as described at the top of this file.
@@ -183,16 +184,7 @@ void vRegisterTest2( void *pvParameters )
 	code.
 	
 	First fill the registers with known values. */
-	asm volatile (	"	addi r3, r0, 103	\n\t" \
-					"	addi r4, r0, 104	\n\t" \
-					"	addi r6, r0, 106	\n\t" \
-					"	addi r7, r0, 107	\n\t" \
-					"	addi r8, r0, 108	\n\t" \
-					"	addi r9, r0, 109	\n\t" \
-					"	addi r10, r0, 1010	\n\t" \
-					"	addi r11, r0, 1011	\n\t" \
-					"	addi r12, r0, 1012	\n\t" \
-					"	addi r16, r0, 1016	\n\t" \
+	asm volatile (	"	addi r16, r0, 1016	\n\t" \
 					"	addi r19, r0, 1019	\n\t" \
 					"	addi r20, r0, 1020	\n\t" \
 					"	addi r21, r0, 1021	\n\t" \
@@ -205,13 +197,26 @@ void vRegisterTest2( void *pvParameters )
 					"	addi r28, r0, 1028	\n\t" \
 					"	addi r29, r0, 1029	\n\t" \
 					"	addi r30, r0, 1030	\n\t" \
-					"	addi r31, r0, 1031	\n\t"
+					"	addi r31, r0, 1031	\n\t" \
+					"							" \
+					"Loop_Start_2:				"
 				);
 
-	/* Yield. */
-	asm volatile (	"Loop_Start_2:				\n\t" \
-					"bralid r14, VPortYieldASM	\n\t" \
-					"or r0, r0, r0				\n\t" );
+	taskYIELD();
+
+	asm volatile (  "	addi r3, r0, 103	\n\t" \
+					"	addi r4, r0, 104	\n\t" \
+					"	addi r6, r0, 106	\n\t" \
+					"	addi r7, r0, 107	\n\t" \
+					"	addi r8, r0, 108	\n\t" \
+					"	addi r9, r0, 109	\n\t" \
+					"	addi r10, r0, 1010	\n\t" \
+					"	addi r11, r0, 1011	\n\t" \
+					"	addi r12, r0, 1012	\n\t" \
+				);
+
+	/* taskYIELD() could have changed temporaries - set them back to those
+	expected by the reg test task. */
 
 	/* Now test the register values to ensure they contain the same value that
 	was written to them above.	 This task will get preempted frequently so 

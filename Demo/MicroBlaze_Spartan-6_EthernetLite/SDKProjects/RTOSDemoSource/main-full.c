@@ -276,7 +276,7 @@ int main( void )
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
-//	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Create the 'check' timer - the timer that periodically calls the
 	check function as described at the top of this file.  Note that, for
@@ -297,6 +297,7 @@ int main( void )
 	/* If all is well we will never reach here as the scheduler will now be
 	running.  If we do reach here then it is likely that there was insufficient
 	heap available for the idle task to be created. */
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -465,6 +466,7 @@ unsigned long ulCSR;
 of this file. */
 void vApplicationMallocFailedHook( void )
 {
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -473,6 +475,7 @@ void vApplicationMallocFailedHook( void )
 of this file. */
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/

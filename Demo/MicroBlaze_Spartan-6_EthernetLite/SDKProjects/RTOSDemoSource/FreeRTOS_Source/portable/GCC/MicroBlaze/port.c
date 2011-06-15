@@ -68,15 +68,15 @@
 #include <xintc_i.h>
 #include <xtmrctr.h>
 #include <xil_exception.h>
-
-/* Tasks are started with interrupts disabled as they will have their interrupts
-enabled as the task starts (when its context is restored for the first time). */
-#define portINITIAL_MSR_STATE		( ( portSTACK_TYPE ) 0x00 )
+#include <mb_interface.h>
 
 /* Tasks are started with a critical section nesting of 0 - however prior
 to the scheduler being commenced we don't want the critical nesting level
 to reach zero, so it is initialised to a high value. */
 #define portINITIAL_NESTING_VALUE	( 0xff )
+
+/* The bit within the MSR register that enabled/disables interrupts. */
+#define portMSR_IE					( 0x02U )
 
 /*-----------------------------------------------------------*/
 
@@ -118,19 +118,6 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 extern void *_SDA2_BASE_, *_SDA_BASE_;
 const unsigned long ulR2 = ( unsigned long ) &_SDA2_BASE_;
 const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
-
-#if 0
-//_RB_
-	#ifdef XPAR_MICROBLAZE_USE_ICACHE
-		microblaze_invalidate_icache();
-		microblaze_enable_icache();
-	#endif
-
-	#ifdef XPAR_MICROBLAZE_USE_DCACHE
-		microblaze_invalidate_dcache();
-		microblaze_enable_dcache();
-	#endif
-#endif
 
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is essential for the Microblaze port and these lines must
@@ -219,8 +206,10 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x1e;	/* R30 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
 
-	/* The MSR is stacked between R30 and R31. */
-	*pxTopOfStack = portINITIAL_MSR_STATE;
+	/* The MSR is stacked between R30 and R31.  This should have interrupts
+	disabled.  Each task will enable interrupts automatically when it enters
+	the running state for the first time. */
+	*pxTopOfStack = mfmsr() & ~portMSR_IE;
 	pxTopOfStack--;
 
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x1f;	/* R31 - must be saved across function calls. Callee-save. */

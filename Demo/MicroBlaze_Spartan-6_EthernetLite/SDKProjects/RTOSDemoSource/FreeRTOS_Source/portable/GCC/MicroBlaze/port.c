@@ -64,6 +64,7 @@
 #include <string.h>
 
 /* Hardware includes. */
+#include <xparameters.h>
 #include <xintc.h>
 #include <xintc_i.h>
 #include <xtmrctr.h>
@@ -78,6 +79,7 @@ to reach zero, so it is initialised to a high value. */
 /* The bit within the MSR register that enabled/disables interrupts. */
 #define portMSR_IE					( 0x02U )
 
+#define portINITIAL_FSR				( 0U )
 /*-----------------------------------------------------------*/
 
 /*
@@ -136,6 +138,18 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
+	pxTopOfStack--;
+
+	#if XPAR_MICROBLAZE_0_USE_FPU == 1
+		/* The FSR value placed in the initial task context is just 0. */
+		*pxTopOfStack = portINITIAL_FSR;
+		pxTopOfStack--;
+	#endif
+
+	/* The MSR value placed in the initial task context should have interrupts
+	disabled.  Each task will enable interrupts automatically when it enters
+	the running state for the first time. */
+	*pxTopOfStack = mfmsr() & ~portMSR_IE;
 	pxTopOfStack--;
 
 	/* First stack an initial value for the critical section nesting.  This
@@ -205,13 +219,6 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x1e;	/* R30 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
-
-	/* The MSR is stacked between R30 and R31.  This should have interrupts
-	disabled.  Each task will enable interrupts automatically when it enters
-	the running state for the first time. */
-	*pxTopOfStack = mfmsr() & ~portMSR_IE;
-	pxTopOfStack--;
-
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x1f;	/* R31 - must be saved across function calls. Callee-save. */
 	pxTopOfStack--;
 
@@ -230,12 +237,8 @@ extern unsigned long _stack[];
 	this function is called. */
 	vApplicationSetupTimerInterrupt();
 
-	/* Reuse the stack from main as the stack for the interrupts/exceptions.
-	The value is adjusted slightly to allow functions called from the
-	interrupts/exceptions to write back into the stack of the interrupt/
-	exception function itself. */
+	/* Reuse the stack from main as the stack for the interrupts/exceptions. */
 	pulISRStack = ( unsigned long * ) _stack;
-	pulISRStack -= 2;
 
 	/* Restore the context of the first task that is going to run.  From here
 	on, the created tasks will be executing. */

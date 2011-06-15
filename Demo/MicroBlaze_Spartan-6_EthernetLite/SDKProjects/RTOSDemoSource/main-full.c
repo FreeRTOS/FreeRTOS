@@ -311,7 +311,6 @@ static long lErrorAlreadyLatched = pdFALSE;
 	/* This is the callback function used by the 'check' timer, as described
 	at the top of this file. */
 
-#if 0
 	/* Check the standard demo tasks are running without error. */
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
@@ -369,7 +368,6 @@ static long lErrorAlreadyLatched = pdFALSE;
 		pcStatusMessage = "Error: Flop\r\n";
 		xPrintf( pcStatusMessage );
 	}
-#endif //_RB_
 	/* Check the reg test tasks are still cycling.  They will stop incrementing
 	their loop counters if they encounter an error. */
 	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
@@ -505,47 +503,23 @@ char *pcGetTaskStatusMessage( void )
 
 static void prvSetupHardware( void )
 {
-#if 0
-portBASE_TYPE xStatus;
-const unsigned char ucSetToOutput = 0U;
-
-	/* Set up the GPIO port for the LED outputs. */
-	vParTestInitialise();
-
-	/* Initialise the GPIO for the button inputs. */
-	if( xStatus == XST_SUCCESS )
-	{
-		xStatus = XGpio_Initialize( &xInputGPIOInstance, XPAR_PUSH_BUTTONS_4BITS_DEVICE_ID );
-	}
-
-	if( xStatus == XST_SUCCESS )
-	{
-		/* Install the handler defined in this task for the button input. */
-		xStatus = xPortInstallInterruptHandler( XPAR_MICROBLAZE_0_INTC_PUSH_BUTTONS_4BITS_IP2INTC_IRPT_INTR, prvButtonInputInterruptHandler, NULL );
-
-		if( xStatus == pdPASS )
-		{
-			/* Set buttons to input. */
-			XGpio_SetDataDirection( &xInputGPIOInstance, uxGPIOInputChannel, ~( ucSetToOutput ) );
-
-
-			vPortEnableInterrupt( XPAR_MICROBLAZE_0_INTC_PUSH_BUTTONS_4BITS_IP2INTC_IRPT_INTR );
-
-			/* Enable GPIO channel interrupts. */
-			XGpio_InterruptEnable( &xInputGPIOInstance, uxGPIOInputChannel ); //_RB_
-			XGpio_InterruptGlobalEnable( &xInputGPIOInstance );
-		}
-	}
-
-	configASSERT( ( xStatus == pdPASS ) );
-#else
 	taskDISABLE_INTERRUPTS();
 	vParTestInitialise();
-#endif //_RB_
 
 	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-//_RB_		microblaze_enable_exceptions();
+		microblaze_enable_exceptions();
 	#endif
+
+	#ifdef XPAR_MICROBLAZE_USE_ICACHE
+		microblaze_invalidate_icache();
+		microblaze_enable_icache();
+	#endif
+
+	#ifdef XPAR_MICROBLAZE_USE_DCACHE
+		microblaze_invalidate_dcache();
+		microblaze_enable_dcache();
+	#endif
+
 }
 /*-----------------------------------------------------------*/
 

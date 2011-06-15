@@ -182,7 +182,7 @@ this file. */
 #define mainERROR_CHECK_TIMER_PERIOD		( 200 / portTICK_RATE_MS )
 
 /* A block time of zero means "don't block". */
-#define mainDONT_BLOCK				( ( portTickType ) 0 )
+#define mainDONT_BLOCK						( ( portTickType ) 0 )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -271,6 +271,14 @@ int main( void )
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
+
+	/* Note - the set of standard demo tasks contains two versions of
+	vStartMathTasks.c.  One is defined in flop.c, and uses double precision
+	floating point numbers and variables.  The other is defined in sp_flop.c
+	and uses single precision floating point numbers and variables.  The
+	MicroBlaze floating point unit only handles single precision floating.
+	Therefore, to test the floating point unit, sp_flop.c should be included
+	in this project. */
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many

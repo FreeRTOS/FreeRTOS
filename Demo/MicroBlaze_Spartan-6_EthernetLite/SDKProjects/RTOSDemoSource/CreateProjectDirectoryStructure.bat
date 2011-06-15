@@ -45,7 +45,7 @@ IF EXIST FreeRTOS_Source Goto END
     copy ..\..\..\Common\minimal\GenQTest.c     Demo_Source\Common_Demo_Files
     copy ..\..\..\Common\minimal\QPeek.c        Demo_Source\Common_Demo_Files
     copy ..\..\..\Common\minimal\recmutex.c     Demo_Source\Common_Demo_Files
-    copy ..\..\..\Common\minimal\flop.c         Demo_Source\Common_Demo_Files
+    copy ..\..\..\Common\minimal\sp_flop.c      Demo_Source\Common_Demo_Files
     copy ..\..\..\Common\minimal\flash.c        Demo_Source\Common_Demo_Files
 	
 	REM Copy the common demo file headers.

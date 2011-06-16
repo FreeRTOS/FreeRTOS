@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <project>
-  <fileVersion>1</fileVersion>
+  <fileVersion>2</fileVersion>
   <configuration>
     <name>Debug</name>
     <toolchain>
@@ -12,7 +12,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>15</version>
+        <version>22</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\Luminary\iolm3s316.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\TexasInstruments\iolm3s316.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -89,15 +89,11 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>5.11.0.50615</state>
+          <state>6.20.1.52589</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
           <state>0</state>
-        </option>
-        <option>
-          <name>FlashLoaders</name>
-          <state>,,,,(default),</state>
         </option>
         <option>
           <name>UseFlashLoader</name>
@@ -110,6 +106,70 @@
         <option>
           <name>OCBE8Slave</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>MacFile2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CDevice</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FlashLoadersV3</name>
+          <state>$TOOLKIT_DIR$\config\flashloader\TexasInstruments\FlashLM3S3xx.board</state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck3</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OverrideDefFlashBoard</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesOffset1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesOffset2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesOffset3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesUse1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesUse2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesUse3</name>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -222,7 +282,7 @@
       <name>IARROM_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -232,10 +292,6 @@
         <option>
           <name>CRomLogFileEditB</name>
           <state>$TOOLKIT_DIR$\cspycomm.log</state>
-        </option>
-        <option>
-          <name>CRomCommunication</name>
-          <state>0</state>
         </option>
         <option>
           <name>CRomCommPort</name>
@@ -257,7 +313,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>9</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -314,8 +370,8 @@
         </option>
         <option>
           <name>CCUSBDevice</name>
-          <version>0</version>
-          <state>0</state>
+          <version>1</version>
+          <state>1</state>
         </option>
         <option>
           <name>CCRDICatchReset</name>
@@ -367,8 +423,77 @@
         </option>
         <option>
           <name>CCJLinkResetList</name>
+          <version>5</version>
+          <state>7</state>
+        </option>
+        <option>
+          <name>CCJLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchCHRERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCJLinkScriptFile</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCJLinkUsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCTcpIpAlt</name>
           <version>0</version>
-          <state>5</state>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJLinkTcpIpSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCCpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCSwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSwoClockEdit</name>
+          <state>2000</state>
         </option>
       </data>
     </settings>
@@ -376,7 +501,7 @@
       <name>LMIFTDI_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -395,13 +520,21 @@
           <name>CCLmiftdiLogFile</name>
           <state>$TOOLKIT_DIR$\cspycomm.log</state>
         </option>
+        <option>
+          <name>CCLmiFtdiInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCLmiFtdiInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>MACRAIGOR_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -476,13 +609,85 @@
           <name>CCJTagUpdateBreakpoints</name>
           <state>main</state>
         </option>
+        <option>
+          <name>CCMacraigorInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCMacraigorInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>PEMICRO_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>OCDriverInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCPEMicroAttachSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCPEMicroInterfaceList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPEMicroResetDelay</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCPEMicroJtagSpeed</name>
+          <state>#UNINITIALIZED#</state>
+        </option>
+        <option>
+          <name>CCJPEMicroShowSettings</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>LogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>CCPEMicroUSBDevice</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPEMicroSerialPort</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJPEMicroTCPIPAutoScanNetwork</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCPEMicroTCPIP</name>
+          <state>10.0.0.1</state>
+        </option>
+        <option>
+          <name>CCPEMicroCommCmdLineProducer</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>RDI_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -530,12 +735,46 @@
           <state>0</state>
         </option>
         <option>
-          <name>CCRDIUseETM</name>
-          <state>0</state>
+          <name>OCDriverInfo</name>
+          <state>1</state>
         </option>
+      </data>
+    </settings>
+    <settings>
+      <name>STLINK_ID</name>
+      <archiveVersion>2</archiveVersion>
+      <data>
+        <version>2</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
         <option>
           <name>OCDriverInfo</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>CCSTLinkInterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkInterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkResetList</name>
+          <version>1</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCSwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSwoClockEdit</name>
+          <state>2000</state>
         </option>
       </data>
     </settings>
@@ -566,11 +805,11 @@
     </settings>
     <debuggerPlugins>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyArmPlugin.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -578,7 +817,11 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\OSE\OseEpsilonPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\MQX\MQXRtosPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -586,7 +829,19 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\Quadros\Quadros_EWB6_Plugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\ThreadX\ThreadXArmPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-286-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -598,16 +853,24 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\FreeRTOS\FreeRTOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
       </plugin>
     </debuggerPlugins>
   </configuration>

@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>6.10.1.52170</state>
+          <state>6.20.1.52589</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -313,7 +313,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>12</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -370,8 +370,8 @@
         </option>
         <option>
           <name>CCUSBDevice</name>
-          <version>0</version>
-          <state>0</state>
+          <version>1</version>
+          <state>1</state>
         </option>
         <option>
           <name>CCRDICatchReset</name>
@@ -423,7 +423,7 @@
         </option>
         <option>
           <name>CCJLinkResetList</name>
-          <version>4</version>
+          <version>5</version>
           <state>7</state>
         </option>
         <option>
@@ -469,6 +469,31 @@
         <option>
           <name>OCJLinkScriptFile</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>CCJLinkUsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCTcpIpAlt</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJLinkTcpIpSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCCpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCSwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSwoClockEdit</name>
+          <state>2000</state>
         </option>
       </data>
     </settings>
@@ -662,7 +687,7 @@
       <name>RDI_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -710,10 +735,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>CCRDIUseETM</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>OCDriverInfo</name>
           <state>1</state>
         </option>
@@ -723,7 +744,7 @@
       <name>STLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -737,6 +758,23 @@
         <option>
           <name>CCSTLinkInterfaceCmdLine</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkResetList</name>
+          <version>1</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCSwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSwoClockEdit</name>
+          <state>2000</state>
         </option>
       </data>
     </settings>
@@ -825,10 +863,6 @@
       <plugin>
         <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
@@ -1151,7 +1185,7 @@
       <name>JLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>12</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1208,8 +1242,8 @@
         </option>
         <option>
           <name>CCUSBDevice</name>
-          <version>0</version>
-          <state>0</state>
+          <version>1</version>
+          <state>1</state>
         </option>
         <option>
           <name>CCRDICatchReset</name>
@@ -1261,7 +1295,7 @@
         </option>
         <option>
           <name>CCJLinkResetList</name>
-          <version>4</version>
+          <version>5</version>
           <state>7</state>
         </option>
         <option>
@@ -1307,6 +1341,31 @@
         <option>
           <name>OCJLinkScriptFile</name>
           <state>1</state>
+        </option>
+        <option>
+          <name>CCJLinkUsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCTcpIpAlt</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCJLinkTcpIpSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCCpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCSwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSwoClockEdit</name>
+          <state>2000</state>
         </option>
       </data>
     </settings>
@@ -1500,7 +1559,7 @@
       <name>RDI_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1548,10 +1607,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>CCRDIUseETM</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>OCDriverInfo</name>
           <state>1</state>
         </option>
@@ -1561,7 +1616,7 @@
       <name>STLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1575,6 +1630,23 @@
         <option>
           <name>CCSTLinkInterfaceCmdLine</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkResetList</name>
+          <version>1</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCSwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSwoClockEdit</name>
+          <state>2000</state>
         </option>
       </data>
     </settings>
@@ -1663,10 +1735,6 @@
       <plugin>
         <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
         <loadFlag>0</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
         <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>

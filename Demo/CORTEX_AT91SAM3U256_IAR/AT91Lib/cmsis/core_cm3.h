@@ -619,159 +619,183 @@ static __INLINE void __set_CONTROL(uint32_t control)
 
 #endif /* __ARMCC_VERSION  */ 
 
-
-
 #elif (defined (__ICCARM__)) /*------------------ ICC Compiler -------------------*/
 /* IAR iccarm specific functions */
 
-#define __enable_irq                              __enable_interrupt        /*!< global Interrupt enable */
-#define __disable_irq                             __disable_interrupt       /*!< global Interrupt disable */
+#if (__VER__ >= 6020000)  // If iccarm version is 6.20.0 or later ----------
 
-static __INLINE void __enable_fault_irq()         { __ASM ("cpsie f"); }
-static __INLINE void __disable_fault_irq()        { __ASM ("cpsid f"); }
+#include <cmsis_iar.h>
 
-static __INLINE  void __WFI()                     { __ASM ("wfi"); }
-static __INLINE  void __WFE()                     { __ASM ("wfe"); }
-static __INLINE  void __SEV()                     { __ASM ("sev"); }
-static __INLINE  void __CLREX()                   { __ASM ("clrex"); }
+#else
 
-/**
- * @brief  Return the Process Stack Pointer
- *
- * @param  none
- * @return uint32_t ProcessStackPointer
- *
- * Return the actual process stack pointer
- */
-extern uint32_t __get_PSP(void);
+#pragma diag_suppress=Pe940
+#pragma diag_suppress=Pe177
 
-/**
- * @brief  Set the Process Stack Pointer
- *
- * @param  uint32_t Process Stack Pointer
- * @return none
- *
- * Assign the value ProcessStackPointer to the MSP 
- * (process stack pointer) Cortex processor register
- */
-extern void __set_PSP(uint32_t topOfProcStack);
+#define __enable_irq    __enable_interrupt
+#define __disable_irq   __disable_interrupt
+#define __NOP           __no_operation
 
-/**
- * @brief  Return the Main Stack Pointer
- *
- * @param  none
- * @return uint32_t Main Stack Pointer
- *
- * Return the current value of the MSP (main stack pointer)
- * Cortex processor register
- */
-extern uint32_t __get_MSP(void);
+#if (__VER__ < 6020000)  // If iccarm version is older than 6.20.0 ----------
 
-/**
- * @brief  Set the Main Stack Pointer
- *
- * @param  uint32_t Main Stack Pointer
- * @return none
- *
- * Assign the value mainStackPointer to the MSP 
- * (main stack pointer) Cortex processor register
- */
-extern void __set_MSP(uint32_t topOfMainStack);
+#if (__VER__ < 6010002)  // If iccarm version is older than 6.10.2 ----------
 
-/**
- * @brief  Reverse byte order in unsigned short value
- *
- * @param  uint16_t value to reverse
- * @return uint32_t reversed value
- *
- * Reverse byte order in unsigned short value
- */
-extern uint32_t __REV16(uint16_t value);
+static uint32_t __get_APSR(void)
+{
+  __ASM("mrs r0, apsr");
+}
 
-/**
- * @brief  Reverse bit order of value
- *
- * @param  uint32_t value to reverse
- * @return uint32_t reversed value
- *
- * Reverse bit order of value
- */
-extern uint32_t __RBIT(uint32_t value);
+static uint32_t __get_xPSR(void)
+{
+  __ASM("mrs r0, psr");           // assembler does not know "xpsr"
+}
 
-/**
- * @brief  LDR Exclusive
- *
- * @param  uint8_t* address
- * @return uint8_t value of (*address)
- *
- * Exclusive LDR command
- */
-extern uint8_t __LDREXB(uint8_t *addr);
+#endif                   // __VER__ < 6010002
 
-/**
- * @brief  LDR Exclusive
- *
- * @param  uint16_t* address
- * @return uint16_t value of (*address)
- *
- * Exclusive LDR command
- */
-extern uint16_t __LDREXH(uint16_t *addr);
+static uint32_t __get_IPSR(void)
+{
+  __ASM("mrs r0, ipsr");
+}
 
-/**
- * @brief  LDR Exclusive
- *
- * @param  uint32_t* address
- * @return uint32_t value of (*address)
- *
- * Exclusive LDR command
- */
-extern uint32_t __LDREXW(uint32_t *addr);
+static uint32_t __get_PSR(void)
+{
+  __ASM("mrs r0, psr");
+}
 
-/**
- * @brief  STR Exclusive
- *
- * @param  uint8_t *address
- * @param  uint8_t value to store
- * @return uint32_t successful / failed
- *
- * Exclusive STR command
- */
-extern uint32_t __STREXB(uint8_t value, uint8_t *addr);
+static uint32_t __get_PSP(void)
+{
+  __ASM("mrs r0, psp");
+}
+ 
+static void __set_PSP(uint32_t topOfProcStack)
+{
+  __ASM("msr psp, r0");
+}
 
-/**
- * @brief  STR Exclusive
- *
- * @param  uint16_t *address
- * @param  uint16_t value to store
- * @return uint32_t successful / failed
- *
- * Exclusive STR command
- */
-extern uint32_t __STREXH(uint16_t value, uint16_t *addr);
+static uint32_t __get_MSP(void)
+{
+  __ASM("mrs r0, msp");
+}
+ 
+static void __set_MSP(uint32_t topOfMainStack)
+{
+  __ASM("msr msp, r0");
+}
 
-/**
- * @brief  STR Exclusive
- *
- * @param  uint32_t *address
- * @param  uint32_t value to store
- * @return uint32_t successful / failed
- *
- * Exclusive STR command
- */
-extern uint32_t __STREXW(uint32_t value, uint32_t *addr);
+static __INLINE  void __WFI(void)
+{
+  __ASM ("wfi");
+}
 
+static __INLINE  void __WFE(void)
+{
+  __ASM ("wfe");
+}
 
-/* intrinsic void __set_PRIMASK();                                    */
-/* intrinsic void __get_PRIMASK();                                    */
-/* intrinsic void __set_FAULTMASK();                                  */
-/* intrinsic void __get_FAULTMASK();                                  */
-/* intrinsic uint32_t __REV(uint32_t value);                          */
-/* intrinsic uint32_t __REVSH(uint32_t value);                        */
-/* intrinsic unsigned long __STREX(unsigned long, unsigned long);     */
-/* intrinsic unsigned long __LDREX(unsigned long *);                  */
+static __INLINE  void __SEV(void)
+{
+  __ASM ("sev");
+}
 
+static uint32_t __REV16(uint32_t value)
+{
+  __ASM("rev16 r0, r0");
+}
 
+#endif                   // __VER__ < 6020000
+
+#if (__CORTEX_M >= 0x03)   // __CORTEX_M is defined in core_cm0.h, core_cm3.h and core_cm4.h.
+
+#if (__VER__ < 6020000)  // If iccarm version is older than 6.20.0 ----------
+
+static __INLINE void __enable_fault_irq(void)
+{
+  __ASM ("cpsie f");
+}
+
+static __INLINE void __disable_fault_irq(void)
+{
+  __ASM ("cpsid f");
+}
+
+static uint32_t __RBIT(uint32_t value)
+{
+  __ASM("rbit r0, r0");
+}
+
+static uint8_t __LDREXB(volatile uint8_t *addr)
+{
+  __ASM("ldrexb r0, [r0]");
+}
+
+static uint16_t __LDREXH(volatile uint16_t *addr)
+{
+  __ASM("ldrexh r0, [r0]");
+}
+
+static uint32_t __LDREXW(volatile uint32_t *addr)
+{
+  __ASM("ldrex r0, [r0]");
+}
+
+static uint32_t __STREXB(uint8_t value, volatile uint8_t *addr)
+{
+  __ASM("strexb r0, r0, [r1]");
+}
+
+static uint32_t __STREXH(uint16_t value, volatile uint16_t *addr)
+{
+  __ASM("strexh r0, r0, [r1]");
+}
+
+static uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
+{
+  __ASM("strex r0, r0, [r1]");
+}
+
+static __INLINE void __CLREX(void)
+{
+  __ASM ("clrex");
+}
+
+#else                  // __VER__ >= 6020000 ---------------------
+
+#define __LDREXW        __LDREX
+#define __STREXW        __STREX
+#define __enable_fault_irq __enable_fiq
+#define __disable_fault_irq __disable_fiq
+
+#endif                 // __VER__ < 6020000
+
+#endif /* (__CORTEX_M >= 0x03) */
+
+#if (__CORTEX_M == 0x04)   // __CORTEX_M is defined in core_cm0.h, core_cm3.h and core_cm4.h.
+
+#if (__VER__ < 6020000)  // If iccarm version is older than 6.20.0 ----------
+
+static uint32_t __get_FPSCR(void)
+{
+#if (__FPU_PRESENT == 1)   // __FPU_PRESENT is defined in the device header file, if present in current device.
+  __ASM("vmrs r0, fpscr"); 
+#else
+  return(0);
+#endif
+}
+
+static void __set_FPSCR(uint32_t fpscr)
+{
+#if (__FPU_PRESENT == 1)   // __FPU_PRESENT is defined in the device header file, if present in current device.
+  __ASM("vmsr fpscr, r0");
+#endif
+}
+
+#endif                 // __VER__ < 6020000
+
+#endif /* (__CORTEX_M == 0x04) */
+
+#pragma diag_default=Pe940
+#pragma diag_default=Pe177
+
+#endif                 // __VER__ >= 6020000
 
 #elif (defined (__GNUC__)) /*------------------ GNU Compiler ---------------------*/
 /* GNU gcc specific functions */

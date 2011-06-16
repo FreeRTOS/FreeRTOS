@@ -12,7 +12,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>18</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -29,7 +29,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>17</version>
+          <version>19</version>
           <state>37</state>
         </option>
         <option>
@@ -38,8 +38,8 @@
         </option>
         <option>
           <name>Input variant</name>
-          <version>1</version>
-          <state>3</state>
+          <version>3</version>
+          <state>6</state>
         </option>
         <option>
           <name>Input description</name>
@@ -47,8 +47,8 @@
         </option>
         <option>
           <name>Output variant</name>
-          <version>0</version>
-          <state>3</state>
+          <version>2</version>
+          <state>7</state>
         </option>
         <option>
           <name>Output description</name>
@@ -60,7 +60,7 @@
         </option>
         <option>
           <name>FPU</name>
-          <version>1</version>
+          <version>2</version>
           <state>0</state>
         </option>
         <option>
@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.10.1.52170</state>
+          <state>6.20.1.52589</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -135,13 +135,31 @@
           <name>RTConfigPath2</name>
           <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
         </option>
+        <option>
+          <name>GFPUCoreSlave</name>
+          <version>19</version>
+          <state>37</state>
+        </option>
+        <option>
+          <name>GBECoreSlave</name>
+          <version>19</version>
+          <state>37</state>
+        </option>
+        <option>
+          <name>OGUseCmsis</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OGUseCmsisDspLib</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>26</version>
+        <version>28</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -366,11 +384,15 @@
           <state>1</state>
         </option>
         <option>
-          <name>IccRelaxedFpPrecision</name>
+          <name>IccCppInlineSemantics</name>
           <state>0</state>
         </option>
         <option>
-          <name>IccCppInlineSemantics</name>
+          <name>IccCmsis</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccFloatSemantics</name>
           <state>0</state>
         </option>
       </data>
@@ -593,7 +615,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>11</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -839,6 +861,22 @@
           <name>IlinkOptExceptionsForce</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IlinkCmsis</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkOptMergeDuplSections</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkOptUseVfe</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkOptForceVfe</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -878,7 +916,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>18</version>
+        <version>21</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -895,7 +933,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>17</version>
+          <version>19</version>
           <state>37</state>
         </option>
         <option>
@@ -904,8 +942,8 @@
         </option>
         <option>
           <name>Input variant</name>
-          <version>1</version>
-          <state>3</state>
+          <version>3</version>
+          <state>6</state>
         </option>
         <option>
           <name>Input description</name>
@@ -913,8 +951,8 @@
         </option>
         <option>
           <name>Output variant</name>
-          <version>0</version>
-          <state>3</state>
+          <version>2</version>
+          <state>7</state>
         </option>
         <option>
           <name>Output description</name>
@@ -926,7 +964,7 @@
         </option>
         <option>
           <name>FPU</name>
-          <version>1</version>
+          <version>2</version>
           <state>0</state>
         </option>
         <option>
@@ -953,7 +991,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.10.1.52170</state>
+          <state>6.20.1.52589</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -1001,13 +1039,31 @@
           <name>RTConfigPath2</name>
           <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
         </option>
+        <option>
+          <name>GFPUCoreSlave</name>
+          <version>19</version>
+          <state>37</state>
+        </option>
+        <option>
+          <name>GBECoreSlave</name>
+          <version>19</version>
+          <state>37</state>
+        </option>
+        <option>
+          <name>OGUseCmsis</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OGUseCmsisDspLib</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>26</version>
+        <version>28</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1232,11 +1288,15 @@
           <state>1</state>
         </option>
         <option>
-          <name>IccRelaxedFpPrecision</name>
+          <name>IccCppInlineSemantics</name>
           <state>0</state>
         </option>
         <option>
-          <name>IccCppInlineSemantics</name>
+          <name>IccCmsis</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccFloatSemantics</name>
           <state>0</state>
         </option>
       </data>
@@ -1459,7 +1519,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>11</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1703,6 +1763,22 @@
         </option>
         <option>
           <name>IlinkOptExceptionsForce</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkCmsis</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkOptMergeDuplSections</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkOptUseVfe</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkOptForceVfe</name>
           <state>0</state>
         </option>
       </data>

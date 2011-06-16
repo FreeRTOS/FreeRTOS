@@ -40,7 +40,7 @@
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.788537379" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/Common_Demo_Files/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
 								</option>
@@ -1010,7 +1010,7 @@
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.1539819216" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/Common_Demo_Files/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
 								</option>
@@ -1045,7 +1045,7 @@
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.1073578867" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 								<option id="xilinx.gnu.c.link.option.ldflags.471396681" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="-Map=output.map" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.other.791541632" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other" valueType="stringList"/>
+								<option id="xilinx.gnu.c.link.option.other.791541632" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other"/>
 								<inputType id="xilinx.gnu.linker.input.1399699093" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

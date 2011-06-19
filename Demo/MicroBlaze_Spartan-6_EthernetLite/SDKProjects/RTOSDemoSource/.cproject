@@ -101,7 +101,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/testperiph.c|ParTest.c|src/xuartlite_selftest_example.c|src/xtmrctr_selftest_example.c|src/xtmrctr_intr_example.c|src/xintc_tapp_example.c|src/xgpio_tapp_example.c|src/xgpio_intr_tapp_example.c|src/xemaclite_polled_example.c|src/xemaclite_intr_example.c|Demo_Source|RegisterTests.c|main-full.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="serial.c|src/testperiph.c|ParTest.c|src/xuartlite_selftest_example.c|src/xtmrctr_selftest_example.c|src/xtmrctr_intr_example.c|src/xintc_tapp_example.c|src/xgpio_tapp_example.c|src/xgpio_intr_tapp_example.c|src/xemaclite_polled_example.c|src/xemaclite_intr_example.c|Demo_Source|RegisterTests.c|main-full.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

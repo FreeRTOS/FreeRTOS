@@ -149,17 +149,18 @@
 #include "recmutex.h"
 #include "flop.h"
 #include "dynamic.h"
+#include "comtest_strings.h"
 
 #define xPrintf( x )
 
 /* Priorities at which the tasks are created. */
-#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
@@ -183,6 +184,16 @@ this file. */
 
 /* A block time of zero means "don't block". */
 #define mainDONT_BLOCK						( ( portTickType ) 0 )
+
+/* The LED used by the comtest tasks. See the comtest.c file for more
+information.  In this case an invalid LED number is provided as all four
+available LEDs are already in use. */
+#define mainCOM_TEST_LED			( 4 )
+
+/* Baud rate used by the comtest tasks.  This is actually fixed in the hardware
+when the hardware was built, but the standard serial init function required a
+baud rate parameter. */
+#define mainCOM_TEST_BAUD_RATE				( XPAR_RS232_UART_1_BAUDRATE )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -271,6 +282,7 @@ int main( void )
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
+	vStartComTestStringsTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 
 	/* Note - the set of standard demo tasks contains two versions of
 	vStartMathTasks.c.  One is defined in flop.c, and uses double precision
@@ -428,12 +440,12 @@ extern void vTickISR( void *pvUnused );
 	if( xStatus == XST_SUCCESS )
 	{
 		/* Install the tick interrupt handler as the timer ISR. */
-		xStatus = xPortInstallInterruptHandler( XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR, vTickISR, NULL );
+		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_TMRCTR_0_VEC_ID, vTickISR, NULL );
 	}
 
 	if( xStatus == pdPASS )
 	{
-		vPortEnableInterrupt( XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR );
+		vPortEnableInterrupt( XPAR_INTC_0_TMRCTR_0_VEC_ID );
 
 		/* Configure the timer interrupt handler. */
 		XTmrCtr_SetHandler( &xTimer0Instance, ( void * ) vTickISR, NULL );

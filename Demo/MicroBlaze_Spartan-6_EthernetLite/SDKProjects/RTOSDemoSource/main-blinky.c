@@ -438,12 +438,12 @@ extern void vTickISR( void *pvUnused );
 	if( xStatus == XST_SUCCESS )
 	{
 		/* Install the tick interrupt handler as the timer ISR. */
-		xStatus = xPortInstallInterruptHandler( XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR, vTickISR, NULL );
+		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_TMRCTR_0_VEC_ID, vTickISR, NULL );
 	}
 
 	if( xStatus == pdPASS )
 	{
-		vPortEnableInterrupt( XPAR_MICROBLAZE_0_INTC_AXI_TIMER_0_INTERRUPT_INTR );
+		vPortEnableInterrupt( XPAR_INTC_0_TMRCTR_0_VEC_ID );
 
 		/* Configure the timer interrupt handler. */
 		XTmrCtr_SetHandler( &xTimer0Instance, ( void * ) vTickISR, NULL );

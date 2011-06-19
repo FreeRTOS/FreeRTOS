@@ -388,6 +388,13 @@ static long lErrorAlreadyLatched = pdFALSE;
 		pcStatusMessage = "Error: Flop\r\n";
 		xPrintf( pcStatusMessage );
 	}
+
+	if( xAreComTestTasksStillRunning() != pdPASS )
+	{
+		pcStatusMessage = "Error: Comtest\r\n";
+		xPrintf( pcStatusMessage );
+	}
+
 	/* Check the reg test tasks are still cycling.  They will stop incrementing
 	their loop counters if they encounter an error. */
 	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )

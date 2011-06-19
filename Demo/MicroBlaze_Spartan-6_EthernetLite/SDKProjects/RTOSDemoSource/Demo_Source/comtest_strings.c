@@ -161,6 +161,9 @@ size_t xStringLength;
 
 	xStringLength = strlen( comTRANSACTED_STRING );
 
+	/* Include the null terminator in the string length. */
+	xStringLength++;
+
 	for( ;; )
 	{
 		/* Send the string.  Setting the last parameter to pdTRUE ensures
@@ -192,83 +195,90 @@ size_t xStringLength;
 }
 /*-----------------------------------------------------------*/
 
+#define comtstWAITING_START_OF_STRING 	0
+#define comtstWAITING_END_OF_STRING		1
+
+
 static void vComRxTask( void *pvParameters )
 {
-#if 0
-signed char cExpectedByte, cByteRxed;
-portBASE_TYPE xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
+portBASE_TYPE xState = comtstWAITING_START_OF_STRING, xErrorOccurred = pdFALSE;
+char *pcExpectedByte, cRxedChar;
+const xComPortHandle xPort = NULL;
+
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
 
+	pcExpectedByte = comTRANSACTED_STRING;
+
 	for( ;; )
 	{
-		/* We expect to receive the characters from comFIRST_BYTE to
-		comLAST_BYTE in an incrementing order.  Loop to receive each byte. */
-		for( cExpectedByte = comFIRST_BYTE; cExpectedByte <= comLAST_BYTE; cExpectedByte++ )
+		/* Wait for the next character. */
+		if( xSerialGetChar( xPort, &cRxedChar, ( comTX_MAX_BLOCK_TIME * 2 ) ) == pdFALSE )
 		{
-			/* Block on the queue that contains received bytes until a byte is
-			available. */
-			if( xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME ) )
-			{
-				/* Was this the byte we were expecting?  If so, toggle the LED,
-				otherwise we are out on sync and should break out of the loop
-				until the expected character sequence is about to restart. */
-				if( cByteRxed == cExpectedByte )
+			/* A character definitely should have been received by now.  As a
+			character was not received an error must have occurred (which might
+			just be that the loopback connector is not fitted. */
+			xErrorOccurred = pdTRUE;
+		}
+
+		switch( xState )
+		{
+			case comtstWAITING_START_OF_STRING:
+				if( cRxedChar == *pcExpectedByte )
 				{
-					vParTestToggleLED( uxBaseLED + comRX_LED_OFFSET );
+					/* The received character was the first character of the
+					string.  Move to the next state to check each character
+					as it comes in until the entire string has been received. */
+					xState = comtstWAITING_END_OF_STRING;
+					pcExpectedByte++;
+				}
+				break;
+
+			case comtstWAITING_END_OF_STRING:
+				if( cRxedChar == *pcExpectedByte )
+				{
+					/* The received character was the expected character.  Was
+					it the last character in the string - i.e. the null
+					terminator? */
+					if( cRxedChar == 0x00 )
+					{
+						/* The entire string has been received.  If no errors
+						have been latched, then increment the loop counter to
+						show that this task is still healthy. */
+						if( xErrorOccurred == pdFALSE )
+						{
+							uxRxLoops++;
+
+							/* Toggle an LED to give a visible sign that a
+							complete string has been received. */
+							vParTestToggleLED( uxBaseLED + comRX_LED_OFFSET );
+						}
+
+						/* Go back to wait for the start of the next string. */
+						pcExpectedByte = comTRANSACTED_STRING;
+						xState = comtstWAITING_START_OF_STRING;
+					}
+					else
+					{
+						/* Wait for the next character in the string. */
+						pcExpectedByte++;
+					}
 				}
 				else
 				{
-					xResyncRequired = pdTRUE;
-					break; /*lint !e960 Non-switch break allowed. */
+					/* The character received was not that expected. */
+					xErrorOccurred = pdTRUE;
 				}
-			}
-		}
+				break;
 
-		/* Turn the LED off while we are not doing anything. */
-		vParTestSetLED( uxBaseLED + comRX_LED_OFFSET, pdFALSE );
-
-		/* Did we break out of the loop because the characters were received in
-		an unexpected order?  If so wait here until the character sequence is
-		about to restart. */
-		if( xResyncRequired == pdTRUE )
-		{
-			while( cByteRxed != comLAST_BYTE )
-			{
-				/* Block until the next char is available. */
-				xSerialGetChar( xPort, &cByteRxed, comRX_BLOCK_TIME );
-			}
-
-			/* Note that an error occurred which caused us to have to resync.
-			We use this to stop incrementing the loop counter so
-			sAreComTestTasksStillRunning() will return false - indicating an
-			error. */
-			xErrorOccurred++;
-
-			/* We have now resynced with the Tx task and can continue. */
-			xResyncRequired = pdFALSE;
-		}
-		else
-		{
-			if( xErrorOccurred < comTOTAL_PERMISSIBLE_ERRORS )
-			{
-				/* Increment the count of successful loops.  As error
-				occurring (i.e. an unexpected character being received) will
-				prevent this counter being incremented for the rest of the
-				execution.   Don't worry about mutual exclusion on this
-				variable - it doesn't really matter as we just want it
-				to change. */
-				uxRxLoops++;
-			}
+			default:
+				/* Should not get here.  Stop the Rx loop counter from
+				incrementing to latch the error. */
+				xErrorOccurred = pdTRUE;
+				break;
 		}
 	}
-#else
-	for( ;; )
-	{
-		vTaskDelay( 10000 );
-	}
-#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -289,7 +299,7 @@ portBASE_TYPE xReturn;
 	}
 
 	/* Reset the count of successful Rx loops.  When this function is called
-	again we expect this to have been incremented. */
+	again it should have been incremented. */
 	uxRxLoops = comINITIAL_RX_COUNT_VALUE;
 
 	return xReturn;

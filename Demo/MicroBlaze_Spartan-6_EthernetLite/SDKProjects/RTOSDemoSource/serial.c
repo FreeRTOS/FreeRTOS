@@ -67,7 +67,6 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "queue.h"
-#include "semphr.h"
 #include "task.h" /*_RB_ remove this when the file is working. */
 #include "comtest_strings.h"
 
@@ -79,42 +78,34 @@
 #include "serial.h"
 /*-----------------------------------------------------------*/
 
-/* Misc defines. */
-#define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
-#define serNO_BLOCK						( ( portTickType ) 0 )
-
-/*-----------------------------------------------------------*/
-
-/* The queue used to hold received characters. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
-
-static XUartLite xUartLiteInstance;
-
 static void prvRxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount );
 static void prvTxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount );
 
+static XUartLite xUartLiteInstance;
+
+/* The queue used to hold received characters. */
+static xQueueHandle xRxedChars;
+
+
 /*-----------------------------------------------------------*/
 
-/*
- * See the serial2.h header file.
- */
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 portBASE_TYPE xStatus;
 
-	/* Create the queues used to hold Rx/Tx characters. */
+	/* Create the queue used to hold Rx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	
-	/* If the queues were created correctly then setup the serial port
+
+	/* If the queue was created correctly then setup the serial port
 	hardware. */
-	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
+	if( xRxedChars != NULL )
 	{
 		xStatus = XUartLite_Initialize( &xUartLiteInstance, XPAR_UARTLITE_1_DEVICE_ID );
 
 		if( xStatus == XST_SUCCESS )
 		{
+			/* Complete initialisation of the UART and its associated
+			interrupts. */
 			XUartLite_ResetFifos( &xUartLiteInstance );
 			XUartLite_SetRecvHandler( &xUartLiteInstance, ( XUartLite_Handler ) prvRxHandler, NULL );
 			XUartLite_SetSendHandler( &xUartLiteInstance, ( XUartLite_Handler ) prvTxHandler, NULL );
@@ -134,13 +125,6 @@ portBASE_TYPE xStatus;
 
 portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
-extern u8 XUartLite_RecvByte(u32 BaseAddress);
-
-//	*pcRxedChar = XUartLite_RecvByte( xUartLiteInstance.RegBaseAddress );
-
-	vTaskDelay( 1000 );
-	return pdTRUE;
-#if 0
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
 
@@ -154,66 +138,23 @@ extern u8 XUartLite_RecvByte(u32 BaseAddress);
 	{
 		return pdFALSE;
 	}
-#endif
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned portBASE_TYPE uxStringLength )
 {
-	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, ( unsigned portBASE_TYPE ) usStringLength );
-
-#if 0
-unsigned portBASE_TYPE uxReturn = 0U;
-
-char *pc = pc;
-extern void XUartLite_SendByte(u32 BaseAddress, u8 Data);
-
-	/* Just to avoid compiler warnings. */
-	( void ) pxPort;
-
-	while( uxReturn != usStringLength )
-	{
-		XUartLite_SendByte( xUartLiteInstance.RegBaseAddress, *pc );
-		pc++;
-		uxReturn++;
-//		uxReturn += XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, ( ( unsigned portBASE_TYPE ) usStringLength ) - uxReturn );
-		while( XUartLite_IsSending( &xUartLiteInstance ) != pdFALSE )
-		{
-			/*_RB_ This function is not yet written to make use of the RTOS. */
-		}
-	}
-#endif
+	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, uxStringLength );
 }
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
-#if 1
-	extern void XUartLite_SendByte(u32 BaseAddress, u8 Data);
+	/* Only vSerialPutString() is used in this demo. */
+	( void ) pxPort;
+	( void ) cOutChar;
+	( void ) xBlockTime;
 
-//	for( ;; )
-//	{
-		XUartLite_SendByte( xUartLiteInstance.RegBaseAddress, cOutChar );
-//	}
-//	vTaskDelay( 2 );
-	return 1;
-#else
-signed portBASE_TYPE xReturn;
-
-	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) == pdPASS )
-	{
-		xReturn = pdPASS;
-		
-		/* Enable the UART Tx interrupt. */
-		XUartLite_EnableIntr( xUartLiteInstance.RegBaseAddress );
-	}
-	else
-	{
-		xReturn = pdFAIL;
-	}
-
-	return xReturn;
-#endif
+	return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
@@ -225,7 +166,16 @@ void vSerialClose( xComPortHandle xPort )
 
 static void prvRxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount )
 {
-	portNOP();
+signed char cRxedChar;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+	while( XUartLite_IsReceiveEmpty( xUartLiteInstance.RegBaseAddress ) == pdFALSE )
+	{
+		cRxedChar = XUartLite_ReadReg( xUartLiteInstance.RegBaseAddress, XUL_RX_FIFO_OFFSET);
+		xQueueSendFromISR( xRxedChars, &cRxedChar, &xHigherPriorityTaskWoken );
+	}
+
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken ); //_RB_ This needs re-implementing so it does not get called multiple times as multiple peripherals are servied in a single ISR. */
 }
 /*-----------------------------------------------------------*/
 
@@ -233,6 +183,9 @@ static void prvTxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount )
 {
 	portNOP();
 }
+
+
+
 
 
 

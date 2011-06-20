@@ -175,7 +175,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		xQueueSendFromISR( xRxedChars, &cRxedChar, &xHigherPriorityTaskWoken );
 	}
 
-	portYIELD_FROM_ISR( xHigherPriorityTaskWoken ); //_RB_ This needs re-implementing so it does not get called multiple times as multiple peripherals are servied in a single ISR. */
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

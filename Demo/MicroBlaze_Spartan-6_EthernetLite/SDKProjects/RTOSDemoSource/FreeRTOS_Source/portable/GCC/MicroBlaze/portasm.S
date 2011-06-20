@@ -108,6 +108,7 @@ back into the caller stack. */
 	.extern vTaskSwitchContext
 	.extern uxCriticalNesting
 	.extern pulISRStack
+	.extern ulTaskSwitchRequested
 
 	.global _interrupt_handler
 	.global VPortYieldASM
@@ -281,6 +282,25 @@ _interrupt_handler:
 	/* Execute any pending interrupts. */
 	bralid r15, XIntc_DeviceInterruptHandler
 	or r0, r0, r0
+
+	/* See if a new task should be selected to execute. */
+	lwi r18, r0, ulTaskSwitchRequested
+	or r18, r18, r0
+
+	/* If ulTaskSwitchRequested is already zero, then jump straight to
+	restoring the task that is already in the Running state. */
+	beqi r18, task_switch_not_requested
+
+	/* Set ulTaskSwitchRequested back to zero as a task switch is about to be
+	performed. */
+	swi r0, r0, ulTaskSwitchRequested
+
+	/* ulTaskSwitchRequested was not 0 when tested.  Select the next task to
+	execute. */
+	bralid r15, vTaskSwitchContext
+	or r0, r0, r0
+
+task_switch_not_requested:
 
 	/* Restore the context of the next task scheduled to execute. */
 	portRESTORE_CONTEXT

@@ -104,6 +104,13 @@ volatile unsigned portBASE_TYPE uxCriticalNesting = portINITIAL_NESTING_VALUE;
 separate stack for interrupts. */
 unsigned long *pulISRStack;
 
+/* If an interrupt requests a context switch then ulTaskSwitchRequested will
+get set to 1, which in turn will cause vTaskSwitchContext() to be called
+prior to a task context getting restored on exit from the interrupt.  This
+mechanism is used as a single interrupt can cause multiple peripherals handlers
+to get called, and vTaskSwitchContext() should not get called in each handler. */
+volatile unsigned long ulTaskSwitchRequested = 0UL;
+
 /* The instance of the interrupt controller used by this port. */
 static XIntc xInterruptControllerInstance;
 
@@ -276,45 +283,6 @@ extern void VPortYieldASM( void );
 }
 /*-----------------------------------------------------------*/
 
-/*
- * The task context has already been saved when this is called.
- *
- * This handler determines the interrupt source and calls the relevant 
- * peripheral handler.
- */
-void vTaskISRHandler( void )
-{
-static unsigned long ulPending;    
-static XIntc_VectorTableEntry *pxTablePtr;
-static XIntc_Config *pxConfig;
-static unsigned long ulInterruptMask;
-
-	/* Which interrupts are pending? */
-	ulPending = XIntc_In32( ( XPAR_INTC_SINGLE_BASEADDR + XIN_IVR_OFFSET ) );
-
-	if( ulPending < XPAR_INTC_MAX_NUM_INTR_INPUTS )
-	{
-
-		ulInterruptMask = ( unsigned long ) 1 << ulPending;
-
-		/* Get the configuration data using the device ID */
-		pxConfig = &XIntc_ConfigTable[ ( unsigned long ) XPAR_INTC_SINGLE_DEVICE_ID ];
-
-		pxTablePtr = &( pxConfig->HandlerTable[ ulPending ] );
-		if( pxConfig->AckBeforeService & ( ulInterruptMask  ) )
-		{
-			XIntc_AckIntr( pxConfig->BaseAddress, ulInterruptMask );
-			pxTablePtr->Handler( pxTablePtr->CallBackRef );
-		}
-		else
-		{
-			pxTablePtr->Handler( pxTablePtr->CallBackRef );
-			XIntc_AckIntr( pxConfig->BaseAddress, ulInterruptMask );
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
 void vPortEnableInterrupt( unsigned char ucInterruptID )
 {
 	XIntc_Enable( &xInterruptControllerInstance, ucInterruptID );
@@ -357,7 +325,7 @@ portBASE_TYPE xReturn = XST_SUCCESS;
  */
 void vTickISR( void *pvUnused )
 {
-extern void vApplicationClearTimerInterrupt();
+extern void vApplicationClearTimerInterrupt( void );
 
 	/* Ensure the unused parameter does not generate a compiler warning. */
 	( void ) pvUnused;
@@ -370,7 +338,8 @@ extern void vApplicationClearTimerInterrupt();
 	/* If we are using the preemptive scheduler then we also need to determine
 	if this tick should cause a context switch. */
 	#if configUSE_PREEMPTION == 1
-		vTaskSwitchContext();
+		/* Force vTaskSwitchContext() to be called as the interrupt exits. */
+		ulTaskSwitchRequested = 1;
 	#endif
 }
 /*-----------------------------------------------------------*/

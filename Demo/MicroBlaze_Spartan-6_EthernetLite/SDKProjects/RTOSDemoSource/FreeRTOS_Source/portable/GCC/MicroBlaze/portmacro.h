@@ -130,7 +130,8 @@ void vPortYield( void );
 #define portYIELD() vPortYield()
 
 void vTaskSwitchContext();
-#define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) vTaskSwitchContext() //_RB_ This needs re-implementing so it does not get called multiple times as multiple peripherals are servied in a single ISR. */
+extern volatile unsigned long ulTaskSwitchRequested;
+#define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) ulTaskSwitchRequested = 1
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */

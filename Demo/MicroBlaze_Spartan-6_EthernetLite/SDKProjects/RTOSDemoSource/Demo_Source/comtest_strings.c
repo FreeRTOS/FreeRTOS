@@ -53,33 +53,26 @@
 
 
 /*
- * This version of comtest. c is for use on systems that have limited stack
- * space and no display facilities.  The complete version can be found in
- * the Demo/Common/Full directory.
+ * Creates a task and a timer that operate on an interrupt driven serial port.
+ * This demo assumes that the characters transmitted on a port will also be
+ * received on the same port.  Therefore, the UART must either be connected to
+ * an echo server, or the uart connector must have a loopback connector fitted.
+ * See http://www.serialporttool.com/CommEcho.htm for a suitable echo server
+ * for Windows hosts.
  *
- * Creates two tasks that operate on an interrupt driven serial port.  A
- * loopback connector should be used so that everything that is transmitted is
- * also received.  The serial port does not use any flow control.  On a
- * standard 9way 'D' connector pins two and three should be connected together.
+ * The timer sends a string to the UART, toggles an LED, then waits resets
+ * itself by changing its own period.  The period is calculated as a pseudo
+ * random number between comTX_MAX_BLOCK_TIME and comTX_MIN_BLOCK_TIME.
  *
- * The first task posts a sequence of characters to the Tx queue, toggling an
- * LED on each successful post.  At the end of the sequence it sleeps for a
- * pseudo-random period before resending the same sequence.
+ * The task blocks on an Rx queue waiting for a character to become
+ * available.  Received characters are checked to ensure they match those
+ * transmitted by the Tx timer.  An error is latched if characters are missing,
+ * incorrect, or arrive too slowly.
  *
- * The UART Tx end interrupt is enabled whenever data is available in the Tx
- * queue.  The Tx end ISR removes a single character from the Tx queue and
- * passes it to the UART for transmission.
- *
- * The second task blocks on the Rx queue waiting for a character to become
- * available.  When the UART Rx end interrupt receives a character it places
- * it in the Rx queue, waking the second task.  The second task checks that the
- * characters removed from the Rx queue form the same sequence as those posted
- * to the Tx queue, and toggles an LED for each correct character.
- *
- * The receiving task is spawned with a higher priority than the transmitting
- * task.  The receiver will therefore wake every time a character is
- * transmitted so neither the Tx or Rx queue should ever hold more than a few
- * characters.
+ * How characters are actually transmitted and received is port specific.  Demos
+ * that include this test/demo file will provide example drivers.  The Tx timer
+ * executes in the context of the timer service (daemon) task, and must therefore
+ * never attempt to block.
  *
  */
 
@@ -88,128 +81,154 @@
 #include <string.h>
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
+
+#ifndef configUSE_TIMERS
+	#error This demo uses timers.  configUSE_TIMERS must be set to 1 in FreeRTOSConfig.h.
+#endif
+
+#if configUSE_TIMERS != 1
+	#error This demo uses timers.  configUSE_TIMERS must be set to 1 in FreeRTOSConfig.h.
+#endif
+
 
 /* Demo program include files. */
 #include "serial.h"
 #include "comtest_strings.h"
 #include "partest.h"
 
+/* The size of the stack given to the Rx task. */
 #define comSTACK_SIZE				configMINIMAL_STACK_SIZE
+
+/* See the comment above the declaraction of uxBaseLED. */
 #define comTX_LED_OFFSET			( 0 )
 #define comRX_LED_OFFSET			( 1 )
-#define comTOTAL_PERMISSIBLE_ERRORS ( 2 )
 
-/* The Tx task will transmit the sequence of characters at a pseudo random
-interval.  This is the maximum and minimum block time between sends. */
+/* The Tx timer transmits the sequence of characters at a pseudo random
+interval that is capped between comTX_MAX_BLOCK_TIME and
+comTX_MIN_BLOCK_TIME. */
 #define comTX_MAX_BLOCK_TIME		( ( portTickType ) 0x96 )
 #define comTX_MIN_BLOCK_TIME		( ( portTickType ) 0x32 )
 #define comOFFSET_TIME				( ( portTickType ) 3 )
 
-/* We should find that each character can be queued for Tx immediately and we
-don't have to block to send. */
-#define comNO_BLOCK					( ( portTickType ) 0 )
+/* States for the simple state machine implemented in the Rx task. */
+#define comtstWAITING_START_OF_STRING 	0
+#define comtstWAITING_END_OF_STRING		1
 
-/* The Rx task will block on the Rx queue for a long period. */
-#define comRX_BLOCK_TIME			( ( portTickType ) 0xffff )
+/* A short delay in ticks - this delay is used to allow the Rx queue to fill up
+a bit so more than one character can be processed at a time.  This is relative
+to comTX_MIN_BLOCK_TIME to ensure it is never longer than the shortest gap
+between transmissions.  It could be worked out more scientifically from the
+baud rate being used. */
+#define comSHORT_DELAY				( comTX_MIN_BLOCK_TIME >> ( portTickType ) 2 )
 
 /* The string that is transmitted and received. */
-#define comTRANSACTED_STRING		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-#define comBUFFER_LEN				( ( unsigned portBASE_TYPE ) ( comLAST_BYTE - comFIRST_BYTE ) + ( unsigned portBASE_TYPE ) 1 )
-#define comINITIAL_RX_COUNT_VALUE	( 0 )
+#define comTRANSACTED_STRING		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
 /* Handle to the com port used by both tasks. */
 static xComPortHandle xPort = NULL;
 
-/* The transmit task as described at the top of the file. */
-static void vComTxTask( void *pvParameters );
+/* The transmit timer as described at the top of the file. */
+static void vComTxTimerCallback( xTimerHandle xTimer );
 
 /* The receive task as described at the top of the file. */
-static portTASK_FUNCTION_PROTO( vComRxTask, pvParameters );
+static void vComRxTask( void *pvParameters );
 
-/* The LED that should be toggled by the Rx and Tx tasks.  The Rx task will
-toggle LED ( uxBaseLED + comRX_LED_OFFSET).  The Tx task will toggle LED
-( uxBaseLED + comTX_LED_OFFSET ). */
+/* The Rx task will toggle LED ( uxBaseLED + comRX_LED_OFFSET).  The Tx task
+will toggle LED ( uxBaseLED + comTX_LED_OFFSET ). */
 static unsigned portBASE_TYPE uxBaseLED = 0;
 
-/* Check variable used to ensure no error have occurred.  The Rx task will
-increment this variable after every successfully received sequence.  If at any
-time the sequence is incorrect the the variable will stop being incremented. */
-static volatile unsigned portBASE_TYPE uxRxLoops = comINITIAL_RX_COUNT_VALUE;
+/* The Rx task toggles uxRxLoops on each successful iteration of its defined
+function - provided no errors have ever been latched.  If this variable stops
+incrementing, then an error has occurred. */
+static volatile unsigned portBASE_TYPE uxRxLoops = 0UL;
+
+/* The timer used to periodically transmit the string. */
+static xTimerHandle xTxTimer = NULL;
+
+/* The string length is held at file scope so the Tx timer does not need to
+calculate it each time it executes. */
+static size_t xStringLength = 0U;
 
 /*-----------------------------------------------------------*/
 
 void vStartComTestStringsTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulBaudRate, unsigned portBASE_TYPE uxLED )
 {
-	/* Initialise the com port then spawn the Rx and Tx tasks. */
+	/* Store values that are used at run time. */
 	uxBaseLED = uxLED;
-	xSerialPortInitMinimal( ulBaudRate, strlen( comTRANSACTED_STRING ) );
 
-	/* The Tx task is spawned with a lower priority than the Rx task. */
-	xTaskCreate( vComTxTask, ( signed char * ) "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( xTaskHandle * ) NULL );
-	xTaskCreate( vComRxTask, ( signed char * ) "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
-}
-/*-----------------------------------------------------------*/
-
-static void vComTxTask( void * pvParameters )
-{
-portTickType xTimeToWait;
-size_t xStringLength;
-
-	/* Just to stop compiler warnings. */
-	( void ) pvParameters;
-
+	/* Calculate the string length here, rather than each time the timer
+	executes. */
 	xStringLength = strlen( comTRANSACTED_STRING );
 
-	/* Include the null terminator in the string length. */
+	/* Include the null terminator in the string length as this is used to
+	detect the end of the string in the Rx task. */
 	xStringLength++;
 
-	for( ;; )
-	{
-		/* Send the string.  Setting the last parameter to pdTRUE ensures
-		that vSerialPutString() will not return until the entire string has
-		been sent to the UART.  The UART interrupt is used to send more data
-		to the UART as the UART FIFO empties, until the entire string has been
-		sent.  No CPU time is consumed by this task while it waits for the
-		string to be sent to the UART. */
-		vSerialPutString( xPort, ( const signed char * const ) comTRANSACTED_STRING, xStringLength );
+	/* Initialise the com port then spawn the Rx task and create the Tx
+	timer. */
+	xSerialPortInitMinimal( ulBaudRate, ( xStringLength * 2U ) );
 
-		/* Toggle an LED to give a visible indication that another transmission
-		has been performed. */
-		vParTestToggleLED( uxBaseLED + comTX_LED_OFFSET );
-
-		/* Wait a pseudo random time before sending the string again. */
-		xTimeToWait = xTaskGetTickCount() + comOFFSET_TIME;
-
-		/* Ensure the time to wait does not greater than comTX_MAX_BLOCK_TIME. */
-		xTimeToWait %= comTX_MAX_BLOCK_TIME;
-
-		/* Ensure the time to wait is not less than comTX_MIN_BLOCK_TIME. */
-		if( xTimeToWait < comTX_MIN_BLOCK_TIME )
-		{
-			xTimeToWait = comTX_MIN_BLOCK_TIME;
-		}
-
-		vTaskDelay( xTimeToWait );
-	}
+	/* Create the Rx task and the Tx timer.  The timer is started from the
+	Rx task. */
+	xTaskCreate( vComRxTask, ( signed char * ) "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTxTimer = xTimerCreate( ( const signed char * ) "TxTimer", comTX_MIN_BLOCK_TIME, pdFALSE, NULL, vComTxTimerCallback );
+	configASSERT( xTxTimer );
 }
 /*-----------------------------------------------------------*/
 
-#define comtstWAITING_START_OF_STRING 	0
-#define comtstWAITING_END_OF_STRING		1
+static void vComTxTimerCallback( xTimerHandle xTimer )
+{
+portTickType xTimeToWait;
 
+	/* Just to stop compiler warnings. */
+	( void ) xTimer;
+
+	/* Send the string.  How this is actually performed depends on the
+	sample driver provided with this demo.  However - as this is a timer,
+	it executes in the context of the timer task and therefore must not
+	block. */
+	vSerialPutString( xPort, ( const signed char * const ) comTRANSACTED_STRING, xStringLength );
+
+	/* Toggle an LED to give a visible indication that another transmission
+	has been performed. */
+	vParTestToggleLED( uxBaseLED + comTX_LED_OFFSET );
+
+	/* Wait a pseudo random time before sending the string again. */
+	xTimeToWait = xTaskGetTickCount() + comOFFSET_TIME;
+
+	/* Ensure the time to wait does not greater than comTX_MAX_BLOCK_TIME. */
+	xTimeToWait %= comTX_MAX_BLOCK_TIME;
+
+	/* Ensure the time to wait is not less than comTX_MIN_BLOCK_TIME. */
+	if( xTimeToWait < comTX_MIN_BLOCK_TIME )
+	{
+		xTimeToWait = comTX_MIN_BLOCK_TIME;
+	}
+
+	/* Reset the timer to run again xTimeToWait ticks from now.  This function
+	is called from the context of the timer task, so the block time must not
+	be anything other than zero. */
+	xTimerChangePeriod( xTxTimer, xTimeToWait, 0 );
+}
+/*-----------------------------------------------------------*/
 
 static void vComRxTask( void *pvParameters )
 {
 portBASE_TYPE xState = comtstWAITING_START_OF_STRING, xErrorOccurred = pdFALSE;
-char *pcExpectedByte, cRxedChar;
+signed char *pcExpectedByte, cRxedChar;
 const xComPortHandle xPort = NULL;
-
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
 
-	pcExpectedByte = comTRANSACTED_STRING;
+	/* Start the Tx timer.  This only needs to be started once, as it will
+	reset itself thereafter. */
+	xTimerStart( xTxTimer, portMAX_DELAY );
+
+	/* The first expected Rx character is the first in the string that is
+	transmitted. */
+	pcExpectedByte = ( signed char * ) comTRANSACTED_STRING;
 
 	for( ;; )
 	{
@@ -232,10 +251,17 @@ const xComPortHandle xPort = NULL;
 					as it comes in until the entire string has been received. */
 					xState = comtstWAITING_END_OF_STRING;
 					pcExpectedByte++;
+
+					/* Block for a short period.  This just allows the Rx queue to
+					contain more than one character, and therefore prevent
+					thrashing reads to the queue and repetitive context switches as
+					each character is received. */
+					vTaskDelay( comSHORT_DELAY );
 				}
 				break;
 
 			case comtstWAITING_END_OF_STRING:
+
 				if( cRxedChar == *pcExpectedByte )
 				{
 					/* The received character was the expected character.  Was
@@ -256,7 +282,7 @@ const xComPortHandle xPort = NULL;
 						}
 
 						/* Go back to wait for the start of the next string. */
-						pcExpectedByte = comTRANSACTED_STRING;
+						pcExpectedByte = ( signed char * ) comTRANSACTED_STRING;
 						xState = comtstWAITING_START_OF_STRING;
 					}
 					else
@@ -289,7 +315,7 @@ portBASE_TYPE xReturn;
 	/* If the count of successful reception loops has not changed than at
 	some time an error occurred (i.e. a character was received out of sequence)
 	and we will return false. */
-	if( uxRxLoops == comINITIAL_RX_COUNT_VALUE )
+	if( uxRxLoops == 0UL )
 	{
 		xReturn = pdFALSE;
 	}
@@ -300,7 +326,7 @@ portBASE_TYPE xReturn;
 
 	/* Reset the count of successful Rx loops.  When this function is called
 	again it should have been incremented. */
-	uxRxLoops = comINITIAL_RX_COUNT_VALUE;
+	uxRxLoops = 0UL;
 
 	return xReturn;
 }

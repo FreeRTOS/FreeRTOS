@@ -59,7 +59,8 @@ extern "C" {
 #endif
 
 /* BSP includes. */
-#include "xbasic_types.h"
+#include <mb_interface.h>
+#include <xparameters.h>
 
 /*-----------------------------------------------------------
  * Port specific definitions.  

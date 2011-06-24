@@ -74,7 +74,7 @@
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.176750025" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.ldflags.1590675094" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
+								<option id="xilinx.gnu.c.link.option.ldflags.1590675094" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
 								<inputType id="xilinx.gnu.linker.input.384537517" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -93,7 +93,7 @@
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.664782973" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.ldflags.1516959028" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
+								<option id="xilinx.gnu.c.link.option.ldflags.1516959028" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
 							</tool>
 							<tool id="xilinx.gnu.mb.size.debug.778946449" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.debug"/>
 							<tool id="xilinx.elfcheck.mb.debug.225695907" name="Xilinx ELF Check" superClass="xilinx.elfcheck.mb.debug">
@@ -1066,7 +1066,7 @@
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.480905448" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.ldflags.548655668" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
+								<option id="xilinx.gnu.c.link.option.ldflags.548655668" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
 							</tool>
 							<tool id="xilinx.gnu.mb.size.debug.536351174" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.debug"/>
 							<tool id="xilinx.elfcheck.mb.debug.1281142255" name="Xilinx ELF Check" superClass="xilinx.elfcheck.mb.debug">

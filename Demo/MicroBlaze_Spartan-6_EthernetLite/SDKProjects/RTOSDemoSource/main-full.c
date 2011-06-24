@@ -533,16 +533,16 @@ static void prvSetupHardware( void )
 	taskDISABLE_INTERRUPTS();
 	vParTestInitialise();
 
-	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
+	#if MICROBLAZE_EXCEPTIONS_ENABLED == 1
 		microblaze_enable_exceptions();
 	#endif
 
-	#ifdef XPAR_MICROBLAZE_USE_ICACHE
+	#if XPAR_MICROBLAZE_USE_ICACHE == 1
 		microblaze_invalidate_icache();
 		microblaze_enable_icache();
 	#endif
 
-	#ifdef XPAR_MICROBLAZE_USE_DCACHE
+	#if XPAR_MICROBLAZE_USE_DCACHE == 1
 		microblaze_invalidate_dcache();
 		microblaze_enable_dcache();
 	#endif

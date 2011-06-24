@@ -64,12 +64,10 @@
 #include <string.h>
 
 /* Hardware includes. */
-#include <xparameters.h>
-#include <xintc.h>
 #include <xintc_i.h>
-#include <xtmrctr.h>
 #include <xil_exception.h>
-#include <mb_interface.h>
+#include <microblaze_exceptions_i.h>
+#include <microblaze_exceptions_g.h>
 
 /* Tasks are started with a critical section nesting of 0 - however prior
 to the scheduler being commenced we don't want the critical nesting level
@@ -86,6 +84,8 @@ to reach zero, so it is initialised to a high value. */
  * Initialise the interrupt controller instance.
  */
 static portBASE_TYPE prvInitialiseInterruptController( void );
+
+static void prvExceptionHandler( void *pvExceptionID );
 
 /*
  * Call an application provided callback to set up the periodic interrupt used
@@ -344,6 +344,20 @@ extern void vApplicationClearTimerInterrupt( void );
 }
 /*-----------------------------------------------------------*/
 
+static void prvExceptionHandler( void *pvExceptionID )
+{
+volatile unsigned long ulExceptionID;
+
+	ulExceptionID = ( unsigned long ) pvExceptionID;
+	for( ;; )
+	{
+		portNOP();
+	}
+
+	( void ) ulExceptionID;
+}
+/*-----------------------------------------------------------*/
+
 static portBASE_TYPE prvInitialiseInterruptController( void )
 {
 portBASE_TYPE xStatus;
@@ -358,6 +372,47 @@ portBASE_TYPE xStatus;
 	    /* Service all pending interrupts each time the handler is entered. */
 	    XIntc_SetIntrSvcOption( xInterruptControllerInstance.BaseAddress, XIN_SVC_ALL_ISRS_OPTION );
 
+	    /* Install exception handlers. */
+		#if MICROBLAZE_EXCEPTIONS_ENABLED == 1
+
+			#if XPAR_MICROBLAZE_0_UNALIGNED_EXCEPTIONS == 1
+	    		microblaze_register_exception_handler( XEXC_ID_UNALIGNED_ACCESS, prvExceptionHandler, ( void * ) XEXC_ID_UNALIGNED_ACCESS );
+			#endif /* XPAR_MICROBLAZE_0_UNALIGNED_EXCEPTIONS*/
+
+			#if XPAR_MICROBLAZE_0_ILL_OPCODE_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_ILLEGAL_OPCODE, prvExceptionHandler, ( void * ) XEXC_ID_ILLEGAL_OPCODE );
+			#endif /* XPAR_MICROBLAZE_0_ILL_OPCODE_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_M_AXI_I_BUS_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_M_AXI_I_EXCEPTION, prvExceptionHandler, ( void * ) XEXC_ID_M_AXI_I_EXCEPTION );
+			#endif /* XPAR_MICROBLAZE_0_M_AXI_I_BUS_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_M_AXI_D_BUS_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_M_AXI_D_EXCEPTION, prvExceptionHandler, ( void * ) XEXC_ID_M_AXI_D_EXCEPTION );
+			#endif /* XPAR_MICROBLAZE_0_M_AXI_D_BUS_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_IPLB_BUS_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_IPLB_EXCEPTION, prvExceptionHandler, ( void * ) XEXC_ID_IPLB_EXCEPTION );
+			#endif /* XPAR_MICROBLAZE_0_IPLB_BUS_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_DPLB_BUS_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_DPLB_EXCEPTION, prvExceptionHandler, ( void * ) XEXC_ID_DPLB_EXCEPTION );
+			#endif /* XPAR_MICROBLAZE_0_DPLB_BUS_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_DIV_ZERO_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_DIV_BY_ZERO, prvExceptionHandler, ( void * ) XEXC_ID_DIV_BY_ZERO );
+			#endif /* XPAR_MICROBLAZE_0_DIV_ZERO_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_FPU_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_FPU, prvExceptionHandler, ( void * ) XEXC_ID_FPU );
+			#endif /* XPAR_MICROBLAZE_0_FPU_EXCEPTION*/
+
+			#if XPAR_MICROBLAZE_0_FSL_EXCEPTION == 1
+	    		microblaze_register_exception_handler( XEXC_ID_FSL, prvExceptionHandler, ( void * ) XEXC_ID_FSL );
+			#endif /* XPAR_MICROBLAZE_0_FSL_EXCEPTION*/
+
+		#endif /* MICROBLAZE_EXCEPTIONS_ENABLED */
+
 		/* Start the interrupt controller.  Interrupts are enabled when the
 		scheduler starts. */
 		xStatus = XIntc_Start( &xInterruptControllerInstance, XIN_REAL_MODE );
@@ -369,9 +424,15 @@ portBASE_TYPE xStatus;
 
 	configASSERT( ( xStatus == ( portBASE_TYPE ) XST_SUCCESS ) )
 
+/*_RB_ Exception test code.
+__asm volatile (
+					"bralid r15, 1234 \n"
+					"or r0, r0, r0 \n"
+				);
+*/
+
 	return xStatus;
 }
-
-
+/*-----------------------------------------------------------*/
 
 

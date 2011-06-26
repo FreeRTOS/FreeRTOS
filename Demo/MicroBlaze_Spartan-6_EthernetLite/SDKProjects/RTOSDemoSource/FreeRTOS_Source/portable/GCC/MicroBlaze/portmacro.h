@@ -146,6 +146,48 @@ extern volatile unsigned long ulTaskSwitchRequested;
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
+typedef struct PORT_REGISTER_DUMP
+{
+	unsigned long ulSP;
+	unsigned long ulR2_small_data_area;
+	unsigned long ulR3;
+	unsigned long ulR4;
+	unsigned long ulR5;
+	unsigned long ulR6;
+	unsigned long ulR7;
+	unsigned long ulR8;
+	unsigned long ulR9;
+	unsigned long ulR10;
+	unsigned long ulR11;
+	unsigned long ulR12;
+	unsigned long ulR13_read_write_small_data_area;
+	unsigned long ulR14_return_address_from_interrupt;
+	unsigned long ulR15_return_address_from_subroutine;
+	unsigned long ulR16_return_address_from_trap;
+	unsigned long ulR17_return_address_from_some_exceptions;
+	unsigned long ulR18;
+	unsigned long ulR19;
+	unsigned long ulR20;
+	unsigned long ulR21;
+	unsigned long ulR22;
+	unsigned long ulR23;
+	unsigned long ulR24;
+	unsigned long ulR25;
+	unsigned long ulR26;
+	unsigned long ulR27;
+	unsigned long ulR28;
+	unsigned long ulR29;
+	unsigned long ulR30;
+	unsigned long ulR31;
+	unsigned long ulPC;
+	unsigned long ulESR;
+	signed char *pcExceptionCause;
+	signed char *pcCurrentTaskName;
+	void * xCurrentTaskHandle;
+} xPortRegisterDump;
+
+void vPortExceptionsInstallHandlers( void );
+
 #ifdef __cplusplus
 }
 #endif

@@ -1281,6 +1281,17 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
+signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery )
+{
+tskTCB *pxTCB;
+
+	/* If null is passed in here then we are suspending ourselves. */
+	pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+	configASSERT( pxTCB );
+	return &( pxTCB->pcTaskName[ 0 ] );
+}
+/*-----------------------------------------------------------*/
+
 #if ( configUSE_TRACE_FACILITY == 1 )
 
 	void vTaskList( signed char *pcWriteBuffer )

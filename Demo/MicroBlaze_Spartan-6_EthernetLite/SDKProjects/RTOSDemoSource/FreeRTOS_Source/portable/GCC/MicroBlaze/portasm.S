@@ -58,6 +58,7 @@
 */
 
 #include "FreeRTOSConfig.h"
+#include "microblaze_exceptions_g.h"
 #include "xparameters.h"
 
 /* The context is oversized to allow functions called from the ISR to write
@@ -109,10 +110,13 @@ back into the caller stack. */
 	.extern uxCriticalNesting
 	.extern pulISRStack
 	.extern ulTaskSwitchRequested
+	.extern vPortExceptionHandler
+	.extern pulStackPointerOnFunctionEntry
 
 	.global _interrupt_handler
 	.global VPortYieldASM
 	.global vPortStartFirstTask
+	.global vPortExceptionHandlerEntry
 
 
 .macro portSAVE_CONTEXT
@@ -333,8 +337,22 @@ vPortStartFirstTask:
 
 	portRESTORE_CONTEXT
 	
-	
 
+
+#if MICROBLAZE_EXCEPTIONS_ENABLED == 1
+	
+	.text
+	.align 2
+vPortExceptionHandlerEntry:
+
+	/* Take a copy of the stack pointer before vPortExecptionHandler is called,
+	storing its value prior to the function stack frame being created. */
+	lwi r18, r0, pulStackPointerOnFunctionEntry
+	swi r1, r0, pulStackPointerOnFunctionEntry
+	bralid r15, vPortExceptionHandler
+	or r0, r0, r0
+
+#endif /* MICROBLAZE_EXCEPTIONS_ENABLED */
 
 
 

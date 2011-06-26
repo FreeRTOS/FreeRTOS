@@ -96,6 +96,7 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 200 )
 #define configINTERRUPT_STACK_SIZE		configMINIMAL_STACK_SIZE
+#define configINSTALL_EXCEPTION_HANDLERS 1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0

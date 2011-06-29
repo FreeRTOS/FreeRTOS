@@ -52,28 +52,20 @@
 */
 
 /* ****************************************************************************
- * This project includes a lot of tasks and tests and is therefore complex.
- * If you would prefer a much simpler project to get started with then select
- * the 'Blinky' build configuration within the Embedded Workbench IDE.
+ * This project includes a lot of demo and test tasks,  and is therefore complex.
+ * If you would prefer a much simpler project to get started with, then select
+ * the 'Blinky' build configuration within the SDK Eclipse IDE.
  * ****************************************************************************
  *
- * Creates all the demo application tasks, then starts the scheduler.  The web
- * documentation provides more details of the standard demo application tasks,
- * which provide no particular functionality but do provide a good example of
- * how to use the FreeRTOS API.  The tasks defined in flop.c are included in the
- * set of standard demo tasks to ensure the floating point unit gets some
- * exercise.
+ * main() creates all the demo application tasks, then starts the scheduler.  
+ * The web documentation provides more details of the standard demo application 
+ * tasks, which provide no particular functionality, but do provide a good 
+ * example of how to use the FreeRTOS API.  
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * Webserver ("uIP") task - This serves a number of dynamically generated WEB
- * pages to a standard WEB browser.  The IP and MAC addresses are configured by
- * constants defined at the bottom of FreeRTOSConfig.h.  Use either a standard
- * Ethernet cable to connect through a hug, or a cross over (point to point)
- * cable to connect directly.  Ensure the IP address used is compatible with the
- * IP address of the machine running the browser - the easiest way to achieve
- * this is to ensure the first three octets of the IP addresses are the same.
+ * Webserver ("lwIP") task - TBD _RB_
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
@@ -82,54 +74,32 @@
  * test loop.  A register containing an unexpected value is indicative of an
  * error in the context switching mechanism and will result in a branch to a
  * null loop - which in turn will prevent the check variable from incrementing
- * any further and allow the check task (described below) to determine that an
+ * any further and allow the check timer (described below) to determine that an
  * error has occurred.  The nature of the reg test tasks necessitates that they
  * are written in assembly code.
  *
- * "Check" task - This only executes every five seconds but has a high priority
- * to ensure it gets processor time.  Its main function is to check that all the
- * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will toggle LED 5 every 5 seconds - the toggle
- * rate increasing to 200ms being a visual indication that at least one task has
- * reported unexpected behaviour.
+ * "Check" timer - The check timer period is initially set to five seconds.  
+ * The check timer callback function checks that all the standard demo tasks are 
+ * functioning as expected, without error.  If an error is discovered in any 
+ * standard demo task, then the check timer period is shortened to 200ms.  The
+ * check timer callback function also toggles an LED each time it is called. 
+ * Therefore, if the LED toggles every five seconds, all the tasks are
+ * functioning as expected, without any error conditions being detected.  If the
+ * LED toggles every 200ms then an error has been discovered in at least one
+ * task. 
  *
- * "High frequency timer test" - A high frequency periodic interrupt is
- * generated using a timer - the interrupt is assigned a priority above
- * configMAX_SYSCALL_INTERRUPT_PRIORITY so should not be effected by anything
- * the kernel is doing.  The frequency and priority of the interrupt, in
- * combination with other standard tests executed in this demo, should result
- * in interrupts nesting at least 3 and probably 4 deep.  This test is only
- * included in build configurations that have the optimiser switched on.  In
- * optimised builds the count of high frequency ticks is used as the time base
- * for the run time stats.
- *
- * *NOTE 1* If LED5 is toggling every 5 seconds then all the demo application
- * tasks are executing as expected and no errors have been reported in any
- * tasks.  The toggle rate increasing to 200ms indicates that at least one task
- * has reported unexpected behaviour.
- *
- * *NOTE 2* vApplicationSetupTimerInterrupt() is called by the kernel to let
- * the application set up a timer to generate the tick interrupt.  In this
- * example a compare match timer is used for this purpose.
- *
- * *NOTE 3* The CPU must be in Supervisor mode when the scheduler is started.
- * The PowerON_Reset_PC() supplied in resetprg.c with this demo has
- * Change_PSW_PM_to_UserMode() commented out to ensure this is the case.
- *
- * *NOTE 4* The IntQueue common demo tasks test interrupt nesting and make use
- * of all the 8bit timers (as two cascaded 16bit units).
-*/
+ * This file also includes example implementations of the vApplicationTickHook(),
+ * vApplicationIdleHook(), vApplicationStackOverflowHook(),
+ * vApplicationMallocFailedHook(), vApplicationClearTimerInterrupt(), and
+ * vApplicationSetupTimerInterrupt() callback (hook) functions.
+ */
 
 /* Standard includes. */
 #include <string.h>
 #include <stdio.h>
 
 /* BSP includes. */
-#include "xenv_standalone.h"
 #include "xtmrctr.h"
-#include "xil_exception.h"
-#include "microblaze_exceptions_g.h"
-#include "xgpio.h"
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -150,8 +120,7 @@
 #include "flop.h"
 #include "dynamic.h"
 #include "comtest_strings.h"
-
-#define xPrintf( x )
+#include "TimerDemo.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -194,6 +163,8 @@ available LEDs are already in use. */
 when the hardware was built, but the standard serial init function required a
 baud rate parameter. */
 #define mainCOM_TEST_BAUD_RATE				( XPAR_RS232_UART_1_BAUDRATE )
+
+#define mainTIMER_TEST_PERIOD			( 20 )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -242,10 +213,6 @@ static void vCheckTimerCallback( xTimerHandle xTimer );
 
 static void prvSetupHardware( void );
 
-/*
- * Contains the implementation of the WEB server.
- */
-//_RB_extern void vuIP_Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -263,15 +230,18 @@ static xTimerHandle xCheckTimer = NULL;
 
 int main( void )
 {
+	/* *************************************************************************
+	This project includes a lot of demo and test tasks,  and is therefore complex.
+	If you would prefer a much simpler project to get started with, then select
+	the 'Blinky' build configuration within the SDK Eclipse IDE.
+	***************************************************************************/
+
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
 
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( vRegisterTest1, ( const signed char * const ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegisterTest2, ( const signed char * const ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
-
-	/* The web server task. */
-//_RB_	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -283,6 +253,8 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vStartComTestStringsTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+	vStartDynamicPriorityTasks();
+	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
 	/* Note - the set of standard demo tasks contains two versions of
 	vStartMathTasks.c.  One is defined in flop.c, and uses double precision
@@ -305,12 +277,6 @@ int main( void )
 	until after the scheduler has been started. */
 	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
 
-	/* Ensure the check timer will start running as soon as the scheduler
-	starts.  The block time is set to 0 (mainDONT_BLOCK), but would be
-	ingnored at this point anyway as block times can only be specified when
-	the scheduler is running. */
-	xTimerStart( xCheckTimer, mainDONT_BLOCK );
-
 	/* Start the tasks running. */
 	vTaskStartScheduler();
 
@@ -327,6 +293,7 @@ static void vCheckTimerCallback( xTimerHandle xTimer )
 extern unsigned long ulRegTest1CycleCount, ulRegTest2CycleCount;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 static long lErrorAlreadyLatched = pdFALSE;
+portTickType xExecutionRate = mainNO_ERROR_CHECK_TIMER_PERIOD;
 
 	/* This is the callback function used by the 'check' timer, as described
 	at the top of this file. */
@@ -338,75 +305,60 @@ static long lErrorAlreadyLatched = pdFALSE;
 		rate at which mainCHECK_LED flashes to give visual feedback that an error
 		has occurred. */
 		pcStatusMessage = "Error: GenQueue";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: QueuePeek\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
+	else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: BlockQueue\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: BlockTime\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: SemTest\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xArePollingQueuesStillRunning() != pdTRUE )
+	else if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: PollQueue\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xIsCreateTaskStillRunning() != pdTRUE )
+	else if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: Death\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: RecMutex\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreMathsTaskStillRunning() != pdPASS )
+	else if( xAreMathsTaskStillRunning() != pdPASS )
 	{
 		pcStatusMessage = "Error: Flop\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	if( xAreComTestTasksStillRunning() != pdPASS )
+	else if( xAreComTestTasksStillRunning() != pdPASS )
 	{
 		pcStatusMessage = "Error: Comtest\r\n";
-		xPrintf( pcStatusMessage );
 	}
-
-	/* Check the reg test tasks are still cycling.  They will stop incrementing
-	their loop counters if they encounter an error. */
-	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+	else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 	{
-		pcStatusMessage = "Error: RegTest1\r\n";
-		xPrintf( pcStatusMessage );
+		pcStatusMessage = "Error: Dynamic\r\n";
 	}
-
-	if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
+	else if( xAreTimerDemoTasksStillRunning( xExecutionRate ) != pdTRUE )
+	{
+		pcStatusMessage = "Error: TimerDemo";
+	}
+	else if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+	{
+		/* Check the reg test tasks are still cycling.  They will stop
+		incrementing their loop counters if they encounter an error. */
+		pcStatusMessage = "Error: RegTest1\r\n";
+	}
+	else if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 	{
 		pcStatusMessage = "Error: RegTest2\r\n";
-		xPrintf( pcStatusMessage );
 	}
 
 	ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -425,6 +377,11 @@ static long lErrorAlreadyLatched = pdFALSE;
 			This is called from a timer callback so must not attempt to block. */
 			xTimerChangePeriod( xTimer, mainERROR_CHECK_TIMER_PERIOD, mainDONT_BLOCK );
 
+			/* Update the xExecutionRate variable as the rate at which this
+			callback is executed has to be passed into the
+			xAreTimerDemoTasksStillRunning() function. */
+			xExecutionRate = mainERROR_CHECK_TIMER_PERIOD;
+
 			/* Just to ensure the timer period is not changed on each execution
 			of the callback. */
 			lErrorAlreadyLatched = pdTRUE;
@@ -437,8 +394,7 @@ void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
-//const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
-const unsigned long ulCounterValue = ( ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL ) ) * 2UL; //_RB_ there is a clock set up incorrectly somwehre, the *2 should not be required.
+const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
 extern void vTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
@@ -478,9 +434,6 @@ void vApplicationClearTimerInterrupt( void )
 {
 unsigned long ulCSR;
 
-	/* Increment the RTOS tick - this might cause a task to unblock. */
-	vTaskIncrementTick();
-
 	/* Clear the timer interrupt */
 	ulCSR = XTmrCtr_GetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0 );
 	XTmrCtr_SetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0, ulCSR );
@@ -509,6 +462,21 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
+static long lCheckTimerStarted = pdFALSE;
+
+	if( lCheckTimerStarted == pdFALSE )
+	{
+		xTimerStart( xCheckTimer, mainDONT_BLOCK ); //_RB_ comment why this is done here.
+		lCheckTimerStarted = pdTRUE;
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* Call the periodic timer test, which tests the timer API functions that
+	can be called from an ISR. */
+	vTimerPeriodicISRTests();
 }
 /*-----------------------------------------------------------*/
 

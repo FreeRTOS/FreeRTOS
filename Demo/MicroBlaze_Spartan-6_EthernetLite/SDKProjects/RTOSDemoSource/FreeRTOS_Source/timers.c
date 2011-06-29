@@ -311,8 +311,6 @@ portBASE_TYPE xListWasEmpty;
 	/* Just to avoid compiler warnings. */
 	( void ) pvParameters;
 
-	vTaskDelay( 2 );
-
 	for( ;; )
 	{
 		/* Query the timers list to see if it contains any timers, and if so,

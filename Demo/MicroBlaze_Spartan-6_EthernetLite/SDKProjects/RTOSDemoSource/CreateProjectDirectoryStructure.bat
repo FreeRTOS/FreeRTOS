@@ -48,6 +48,7 @@ IF EXIST FreeRTOS_Source Goto END
     copy ..\..\..\Common\minimal\sp_flop.c         Demo_Source
     copy ..\..\..\Common\minimal\flash.c           Demo_Source
     copy ..\..\..\Common\minimal\comtest_strings.c Demo_Source
+	copy ..\..\..\Common\minimal\TimerDemo.c       Demo_Source
 	
 	REM Copy the common demo file headers.
     copy ..\..\..\Common\include\dynamic.h         Demo_Source\include
@@ -65,5 +66,6 @@ IF EXIST FreeRTOS_Source Goto END
     copy ..\..\..\Common\include\comtest_strings.h Demo_Source\include
     copy ..\..\..\Common\include\serial.h          Demo_Source\include
     copy ..\..\..\Common\include\comtest.h         Demo_Source\include
+	copy ..\..\..\Common\include\TimerDemo.h       Demo_Source\include
     
 : END

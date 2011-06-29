@@ -113,11 +113,8 @@
 #include "queue.h"
 #include "timers.h"
 
-/* BSP includes. *///_RB_ which of these can be removed?
-#include "xenv_standalone.h"
+/* BSP includes. */
 #include "xtmrctr.h"
-#include "xil_exception.h"
-#include "microblaze_exceptions_g.h"
 #include "xgpio.h"
 
 /* Priorities at which the tasks are created. */
@@ -196,6 +193,13 @@ static const unsigned long ulGPIOOutputChannel = 1UL, ulGPIOInputChannel = 1UL;
 
 int main( void )
 {
+	/* *************************************************************************
+	This is a very simple project suitable for getting started with FreeRTOS.  
+	If you would prefer a more complex project that demonstrates a lot more 
+	features and tests, then select the 'Full' build configuration within the 
+	SDK Eclipse IDE. 
+	***************************************************************************/
+
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
 
@@ -380,10 +384,6 @@ const unsigned char ucSetToOutput = 0U;
 	}
 
 	configASSERT( ( xStatus == pdPASS ) );
-
-	#ifdef MICROBLAZE_EXCEPTIONS_ENABLED
-		microblaze_enable_exceptions();
-	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -427,6 +427,14 @@ volatile size_t xFreeHeapSpace;
 		the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
 		reduced accordingly. */
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* This simple blinky demo does not use the tick hook, but a tick hook is
+	required to be defined as the blinky and full demos share a
+	FreeRTOSConfig.h header file. */
 }
 /*-----------------------------------------------------------*/
 

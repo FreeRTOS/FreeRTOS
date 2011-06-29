@@ -71,10 +71,12 @@
 #define portexR12_STACK_OFFSET	13
 #define portexR15_STACK_OFFSET	16
 #define portexR18_STACK_OFFSET  18
+#define portexMSR_STACK_OFFSET	19
 #define portexR19_STACK_OFFSET  -1
 
 #define portexESR_DS_MASK		0x00001000UL
 
+#define portexASM_HANDLER_STACK_FRAME_SIZE 84UL
 
 /* Exclude the entire file if the MicroBlaze is not configured to handle
 exceptions, or the application defined configuration item 
@@ -82,13 +84,22 @@ configINSTALL_EXCEPTION_HANDLERS is not set to 1. */
 #if ( MICROBLAZE_EXCEPTIONS_ENABLED == 1 ) && ( configINSTALL_EXCEPTION_HANDLERS == 1 )
 
 /* These are global volatiles to allow their inspection by a debugger. */
-unsigned long *pulStackPointerOnFunctionEntry = NULL;
+unsigned long *pulStackPointerOnFunctionEntry = NULL, ulBTROnFunctionEntry = 0UL;
 
 static xPortRegisterDump xRegisterDump;
 
 void vPortExceptionHandler( void *pvExceptionID );
 extern void vPortExceptionHandlerEntry( void *pvExceptionID );
 
+/*-----------------------------------------------------------*/
+extern void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump ) __attribute__((weak));
+void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
+{
+	for( ;; )
+	{
+		portNOP();
+	}
+}
 /*-----------------------------------------------------------*/
 
 void vPortExceptionHandler( void *pvExceptionID )
@@ -112,14 +123,14 @@ extern void *pxCurrentTCB;
 	xRegisterDump.ulR10 = pulStackPointerOnFunctionEntry[ portexR10_STACK_OFFSET ];
 	xRegisterDump.ulR11 = pulStackPointerOnFunctionEntry[ portexR11_STACK_OFFSET ];
 	xRegisterDump.ulR12 = pulStackPointerOnFunctionEntry[ portexR12_STACK_OFFSET ];
+	xRegisterDump.ulR15_return_address_from_subroutine = pulStackPointerOnFunctionEntry[ portexR15_STACK_OFFSET ];
+	xRegisterDump.ulR18 = pulStackPointerOnFunctionEntry[ portexR18_STACK_OFFSET ];
 	xRegisterDump.ulR19 = pulStackPointerOnFunctionEntry[ portexR19_STACK_OFFSET ];
 
 	/* Obtain the value of all other registers. */
-	//xRegisterDump.ulR1 =
 	xRegisterDump.ulR2_small_data_area = mfgpr( R2 );
 	xRegisterDump.ulR13_read_write_small_data_area = mfgpr( R13 );
 	xRegisterDump.ulR14_return_address_from_interrupt = mfgpr( R14 );
-	xRegisterDump.ulR15_return_address_from_subroutine = mfgpr( R15 );
 	xRegisterDump.ulR16_return_address_from_trap = mfgpr( R16 );
 	xRegisterDump.ulR17_return_address_from_some_exceptions = mfgpr( R17 );
 	xRegisterDump.ulR18 = mfgpr( R18 );
@@ -135,8 +146,15 @@ extern void *pxCurrentTCB;
 	xRegisterDump.ulR29 = mfgpr( R29 );
 	xRegisterDump.ulR30 = mfgpr( R30 );
 	xRegisterDump.ulR31 = mfgpr( R31 );
-
+	xRegisterDump.ulR1_SP = ( ( unsigned long ) pulStackPointerOnFunctionEntry ) + portexASM_HANDLER_STACK_FRAME_SIZE;
+	xRegisterDump.ulBTR = ulBTROnFunctionEntry;
+	xRegisterDump.ulMSR = pulStackPointerOnFunctionEntry[ portexMSR_STACK_OFFSET ];
+	xRegisterDump.ulEAR = mfear();
 	xRegisterDump.ulESR = mfesr();
+	xRegisterDump.ulEDR = mfedr();
+
+
+#ifdef THIS_IS_PROBABLY_INCORRECT
 	if( ( xRegisterDump.ulESR * portexESR_DS_MASK ) != 0UL )
 	{
 		xRegisterDump.ulPC = mfbtr();
@@ -145,12 +163,20 @@ extern void *pxCurrentTCB;
 	{
 		xRegisterDump.ulPC = xRegisterDump.ulR17_return_address_from_some_exceptions - 4;
 	}
+#else
+	xRegisterDump.ulPC = xRegisterDump.ulR17_return_address_from_some_exceptions - 4;
+#endif
 
-	// xRegisterDump.ulSP =;
 
-	// PC changes
-	// MSR changes
-	// BTR changes
+	#if XPAR_MICROBLAZE_0_USE_FPU == 1
+	{
+		xRegisterDump.ulFSR = mffsr();
+	}
+	#else
+	{
+		xRegisterDump.ulFSR = 0UL;
+	}
+	#endif
 
 	switch( ( unsigned long ) pvExceptionID )
 	{
@@ -178,15 +204,21 @@ extern void *pxCurrentTCB;
 				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_DIV_BY_ZERO";
 				break;
 
-		case XEXC_ID_FPU :
-				/*_RB_ More decoding required here and in other exceptions. */
-				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_FPU";
-				break;
-
 		case XEXC_ID_STACK_VIOLATION :
 				xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_STACK_VIOLATION or XEXC_ID_MMU";
 				break;
+
+		#if XPAR_MICROBLAZE_0_USE_FPU == 1
+
+			case XEXC_ID_FPU :
+						/*_RB_ More decoding required here and in other exceptions. */
+						xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_FPU see ulFSR value";
+						break;
+
+		#endif /* XPAR_MICROBLAZE_0_USE_FPU */
 	}
+
+	vApplicationExceptionRegisterDump( &xRegisterDump );
 
 	/* Must not attempt to leave this function! */
 	for( ;; )
@@ -198,43 +230,49 @@ extern void *pxCurrentTCB;
 
 void vPortExceptionsInstallHandlers( void )
 {
-	#if XPAR_MICROBLAZE_0_UNALIGNED_EXCEPTIONS == 1
-		microblaze_register_exception_handler( XEXC_ID_UNALIGNED_ACCESS, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_UNALIGNED_ACCESS );
-	#endif /* XPAR_MICROBLAZE_0_UNALIGNED_EXCEPTIONS*/
+static unsigned long ulHandlersAlreadyInstalled = pdFALSE;
 
-	#if XPAR_MICROBLAZE_0_ILL_OPCODE_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_ILLEGAL_OPCODE, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_ILLEGAL_OPCODE );
-	#endif /* XPAR_MICROBLAZE_0_ILL_OPCODE_EXCEPTION*/
+	if( ulHandlersAlreadyInstalled == pdFALSE )
+	{
+		ulHandlersAlreadyInstalled = pdTRUE;
 
-	#if XPAR_MICROBLAZE_0_M_AXI_I_BUS_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_M_AXI_I_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_M_AXI_I_EXCEPTION );
-	#endif /* XPAR_MICROBLAZE_0_M_AXI_I_BUS_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_UNALIGNED_EXCEPTIONS == 1
+			microblaze_register_exception_handler( XEXC_ID_UNALIGNED_ACCESS, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_UNALIGNED_ACCESS );
+		#endif /* XPAR_MICROBLAZE_0_UNALIGNED_EXCEPTIONS*/
 
-	#if XPAR_MICROBLAZE_0_M_AXI_D_BUS_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_M_AXI_D_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_M_AXI_D_EXCEPTION );
-	#endif /* XPAR_MICROBLAZE_0_M_AXI_D_BUS_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_ILL_OPCODE_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_ILLEGAL_OPCODE, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_ILLEGAL_OPCODE );
+		#endif /* XPAR_MICROBLAZE_0_ILL_OPCODE_EXCEPTION*/
 
-	#if XPAR_MICROBLAZE_0_IPLB_BUS_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_IPLB_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_IPLB_EXCEPTION );
-	#endif /* XPAR_MICROBLAZE_0_IPLB_BUS_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_M_AXI_I_BUS_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_M_AXI_I_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_M_AXI_I_EXCEPTION );
+		#endif /* XPAR_MICROBLAZE_0_M_AXI_I_BUS_EXCEPTION*/
 
-	#if XPAR_MICROBLAZE_0_DPLB_BUS_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_DPLB_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_DPLB_EXCEPTION );
-	#endif /* XPAR_MICROBLAZE_0_DPLB_BUS_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_M_AXI_D_BUS_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_M_AXI_D_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_M_AXI_D_EXCEPTION );
+		#endif /* XPAR_MICROBLAZE_0_M_AXI_D_BUS_EXCEPTION*/
 
-	#if XPAR_MICROBLAZE_0_DIV_ZERO_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_DIV_BY_ZERO, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_DIV_BY_ZERO );
-	#endif /* XPAR_MICROBLAZE_0_DIV_ZERO_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_IPLB_BUS_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_IPLB_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_IPLB_EXCEPTION );
+		#endif /* XPAR_MICROBLAZE_0_IPLB_BUS_EXCEPTION*/
 
-	#if XPAR_MICROBLAZE_0_FPU_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_FPU, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_FPU );
-	#endif /* XPAR_MICROBLAZE_0_FPU_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_DPLB_BUS_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_DPLB_EXCEPTION, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_DPLB_EXCEPTION );
+		#endif /* XPAR_MICROBLAZE_0_DPLB_BUS_EXCEPTION*/
 
-	#if XPAR_MICROBLAZE_0_FSL_EXCEPTION == 1
-		microblaze_register_exception_handler( XEXC_ID_FSL, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_FSL );
-	#endif /* XPAR_MICROBLAZE_0_FSL_EXCEPTION*/
+		#if XPAR_MICROBLAZE_0_DIV_ZERO_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_DIV_BY_ZERO, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_DIV_BY_ZERO );
+		#endif /* XPAR_MICROBLAZE_0_DIV_ZERO_EXCEPTION*/
+
+		#if XPAR_MICROBLAZE_0_FPU_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_FPU, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_FPU );
+		#endif /* XPAR_MICROBLAZE_0_FPU_EXCEPTION*/
+
+		#if XPAR_MICROBLAZE_0_FSL_EXCEPTION == 1
+			microblaze_register_exception_handler( XEXC_ID_FSL, vPortExceptionHandlerEntry, ( void * ) XEXC_ID_FSL );
+		#endif /* XPAR_MICROBLAZE_0_FSL_EXCEPTION*/
+	}
 }
-/*-----------------------------------------------------------*/
 
 /* Exclude the entire file if the MicroBlaze is not configured to handle
 exceptions, or the application defined configuration item 

@@ -148,7 +148,9 @@ extern volatile unsigned long ulTaskSwitchRequested;
 
 typedef struct PORT_REGISTER_DUMP
 {
-	unsigned long ulSP;
+	/* The following structure members hold the values of the MicroBlaze
+	registers at the time the exception was raised. */
+	unsigned long ulR1_SP;
 	unsigned long ulR2_small_data_area;
 	unsigned long ulR3;
 	unsigned long ulR4;
@@ -181,12 +183,30 @@ typedef struct PORT_REGISTER_DUMP
 	unsigned long ulR31;
 	unsigned long ulPC;
 	unsigned long ulESR;
+	unsigned long ulBTR;
+	unsigned long ulMSR;
+	unsigned long ulEAR;
+	unsigned long ulFSR;
+	unsigned long ulEDR;
+
+	/* A human readable description of the exception cause.  The strings used
+	are the same as the #define constant names found in the
+	microblaze_exceptions_i.h header file */
 	signed char *pcExceptionCause;
+
+	/* The human readable name of the task that was running at the time the
+	exception occurred.  This is the name that was given to the task when the
+	task was created using the FreeRTOS xTaskCreate() API function. */
 	signed char *pcCurrentTaskName;
+
+	/* The handle of the task that was running a the time the exception
+	occurred. */
 	void * xCurrentTaskHandle;
+
 } xPortRegisterDump;
 
 void vPortExceptionsInstallHandlers( void );
+void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump );
 
 #ifdef __cplusplus
 }

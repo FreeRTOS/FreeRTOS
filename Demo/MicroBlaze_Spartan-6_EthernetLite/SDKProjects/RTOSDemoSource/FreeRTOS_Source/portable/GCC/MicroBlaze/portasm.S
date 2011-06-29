@@ -112,6 +112,7 @@ back into the caller stack. */
 	.extern ulTaskSwitchRequested
 	.extern vPortExceptionHandler
 	.extern pulStackPointerOnFunctionEntry
+	.extern ulBTROnFunctionEntry
 
 	.global _interrupt_handler
 	.global VPortYieldASM
@@ -347,8 +348,9 @@ vPortExceptionHandlerEntry:
 
 	/* Take a copy of the stack pointer before vPortExecptionHandler is called,
 	storing its value prior to the function stack frame being created. */
-	lwi r18, r0, pulStackPointerOnFunctionEntry
 	swi r1, r0, pulStackPointerOnFunctionEntry
+	mfs r18, RBTR
+	swi r18, r0, ulBTROnFunctionEntry
 	bralid r15, vPortExceptionHandler
 	or r0, r0, r0
 

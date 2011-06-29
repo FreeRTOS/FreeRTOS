@@ -550,3 +550,11 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
+void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
+{
+	for( ;; )
+	{
+		portNOP();
+	}
+}
+

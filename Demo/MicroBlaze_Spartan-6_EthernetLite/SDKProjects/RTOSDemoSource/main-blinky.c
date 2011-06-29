@@ -65,7 +65,9 @@
  * one queue, and one timer.  It also demonstrates how MicroBlaze interrupts
  * can interact with FreeRTOS tasks/timers.
  *
- * This simple demo project runs on the Spartan-6 SP605 development board.
+ * This simple demo project was developed and tested on the Spartan-6 SP605 
+ * development board, using the hardware configuration found in the hardware
+ * project that is already included in the Eclipse project.
  *
  * The idle hook function:
  * The idle hook function demonstrates how to query the amount of FreeRTOS heap
@@ -87,8 +89,8 @@
  * in this file.  prvQueueReceiveTask() sits in a loop that causes it to
  * repeatedly attempt to read data from the queue that was created within
  * main().  When data is received, the task checks the value of the data, and
- * if the value equals the expected 100, toggles the green LED.  The 'block
- * time' parameter passed to the queue receive function specifies that the task
+ * if the value equals the expected 100, toggles an LED.  The 'block time' 
+ * parameter passed to the queue receive function specifies that the task
  * should be held in the Blocked state indefinitely to wait for data to be
  * available on the queue.  The queue receive task will only leave the Blocked
  * state when the queue send task writes to the queue.  As the queue send task
@@ -97,7 +99,7 @@
  * every 200 milliseconds.
  *
  * The LED Software Timer and the Button Interrupt:
- * The user button SW1 is configured to generate an interrupt each time it is
+ * The user buttons are configured to generate an interrupt each time one is
  * pressed.  The interrupt service routine switches an LED on, and resets the
  * LED software timer.  The LED timer has a 5000 millisecond (5 second) period,
  * and uses a callback function that is defined to just turn the LED off again.
@@ -111,7 +113,7 @@
 #include "queue.h"
 #include "timers.h"
 
-/* BSP includes. */
+/* BSP includes. *///_RB_ which of these can be removed?
 #include "xenv_standalone.h"
 #include "xtmrctr.h"
 #include "xil_exception.h"
@@ -124,18 +126,21 @@
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
 converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 1000 / portTICK_RATE_MS ) //_RB_ should be 200
+#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
-will remove items as they are added, meaning the send task should always find
-the queue empty. */
+will remove items as they are added because it has the higher priority, meaning 
+the send task should always find the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
-/* The LED toggle by the queue receive task. */
+/* The LED toggled by the queue receive task. */
 #define mainTASK_CONTROLLED_LED				0x01UL
 
 /* The LED turned on by the button interrupt, and turned off by the LED timer. */
 #define mainTIMER_CONTROLLED_LED			0x02UL
+
+/* A block time of 0 simply means, "don't block". */
+#define mainDONT_BLOCK						( portTickType ) 0
 
 /*-----------------------------------------------------------*/
 
@@ -156,11 +161,17 @@ static void prvQueueSendTask( void *pvParameters );
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
 
+/* 
+ * The handler executed each time a button interrupt is generated.  This ensures
+ * the LED defined by mainTIMER_CONTROLLED_LED is on, and resets the timer so
+ * the timer will not turn the LED off for a full 5 seconds after the button
+ * interrupt occurred.
+ */
 static void prvButtonInputInterruptHandler( void *pvUnused );
 
 /*-----------------------------------------------------------*/
 
-/* The queue used by both tasks. */
+/* The queue used by the queue send and queue receive tasks. */
 static xQueueHandle xQueue = NULL;
 
 /* The LED software timer.  This uses vLEDTimerCallback() as its callback
@@ -172,9 +183,14 @@ static volatile unsigned char ucGPIOState = 0U;
 
 /*-----------------------------------------------------------*/
 
+/* Structures that hold the state of the various peripherals used by this demo.
+These are used by the Xilinx peripheral driver API functions. */
 static XTmrCtr xTimer0Instance;
 static XGpio xOutputGPIOInstance, xInputGPIOInstance;
-static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL, uxGPIOInputChannel = 1UL;
+
+/* Constants required by the Xilinx peripheral driver API functions that are
+relevant to the particular hardware set up. */
+static const unsigned long ulGPIOOutputChannel = 1UL, ulGPIOInputChannel = 1UL;
 
 /*-----------------------------------------------------------*/
 
@@ -183,29 +199,31 @@ int main( void )
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
 
-	/* Create the queue. */
+	/* Create the queue used by the queue send and queue receive tasks as
+	described in the comments at the top of this file. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
-	if( xQueue != NULL )
-	{
-		/* Start the two tasks as described in the comments at the top of this
-		file. */
-		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+	/* Sanity check that the queue was created. */
+	configASSERT( xQueue );
 
-		/* Create the software timer that is responsible for turning off the LED
-		if the button is not pushed within 5000ms, as described at the top of
-		this file. */
-		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									vLEDTimerCallback					/* The callback function that switches the LED off. */
-								);
+	/* Start the two tasks as described in the comments at the top of this 
+	file. */
+	xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+	xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Start the tasks and timer running. */
-		vTaskStartScheduler();
-	}
+	/* Create the software timer that is responsible for turning off the LED
+	if the button is not pushed within 5000ms, as described at the top of
+	this file.  The timer is not actually started until a button interrupt is
+	pushed, as it is not until that point that the LED is turned on. */
+	xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
+								( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
+								pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+								( void * ) 0,						/* The ID is not used, so can be set to anything. */
+								vLEDTimerCallback					/* The callback function that switches the LED off. */
+							);
+
+	/* Start the tasks and timer running. */
+	vTaskStartScheduler();
 
 	/* If all is well, the scheduler will now be running, and the following line
 	will never be reached.  If the following line does execute, then there was
@@ -216,6 +234,7 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
+/* The callback is executed when the LED timer expires. */
 static void vLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
@@ -224,35 +243,34 @@ static void vLEDTimerCallback( xTimerHandle xTimer )
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
 	ucGPIOState &= ~mainTIMER_CONTROLLED_LED;
-	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ucGPIOState );
 }
 /*-----------------------------------------------------------*/
 
-/* The ISR executed when the user button is pushed. */
+/* The ISR is executed when the user button is pushed. */
 static void prvButtonInputInterruptHandler( void *pvUnused )
 {
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+long lHigherPriorityTaskWoken = pdFALSE;
 
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
 	ucGPIOState |= mainTIMER_CONTROLLED_LED;
-	XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
+	XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ucGPIOState );
 
-	/* This interrupt safe FreeRTOS function can be called from this interrupt
-	because the interrupt priority is below the
-	configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
-	xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
+	/* Ensure only the ISR safe reset API function is used, as this is executed
+	in an interrupt context. */
+	xTimerResetFromISR( xLEDTimer, &lHigherPriorityTaskWoken );
 
 	/* Clear the interrupt before leaving. */
-	XGpio_InterruptClear( &xInputGPIOInstance, uxGPIOInputChannel );
+	XGpio_InterruptClear( &xInputGPIOInstance, ulGPIOInputChannel );
 
 	/* If calling xTimerResetFromISR() caused a task (in this case the timer
 	service/daemon task) to unblock, and the unblocked task has a priority
 	higher than or equal to the task that was interrupted, then
-	xHigherPriorityTaskWoken will now be set to pdTRUE, and calling
+	lHigherPriorityTaskWoken will now be set to pdTRUE, and calling
 	portEND_SWITCHING_ISR() will ensure the unblocked task runs next. */
-	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	portYIELD_FROM_ISR( lHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
@@ -276,7 +294,7 @@ const unsigned long ulValueToSend = 100UL;
 		toggle an LED.  0 is used as the block time so the sending operation
 		will not block - it shouldn't need to block as the queue should always
 		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0 );
+		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -309,7 +327,7 @@ unsigned long ulReceivedValue;
 				ucGPIOState |= mainTASK_CONTROLLED_LED;
 			}
 
-			XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
+			XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ucGPIOState );
 		}
 	}
 }
@@ -325,11 +343,11 @@ const unsigned char ucSetToOutput = 0U;
 	if( xStatus == XST_SUCCESS )
 	{
 		/* All bits on this channel are going to be outputs (LEDs). */
-		XGpio_SetDataDirection( &xOutputGPIOInstance, uxGPIOOutputChannel, ucSetToOutput );
+		XGpio_SetDataDirection( &xOutputGPIOInstance, ulGPIOOutputChannel, ucSetToOutput );
 
 		/* Start with all LEDs off. */
 		ucGPIOState = 0U;
-		XGpio_DiscreteWrite( &xOutputGPIOInstance, uxGPIOOutputChannel, ucGPIOState );
+		XGpio_DiscreteWrite( &xOutputGPIOInstance, ulGPIOOutputChannel, ucGPIOState );
 	}
 
 	/* Initialise the GPIO for the button inputs. */
@@ -340,19 +358,23 @@ const unsigned char ucSetToOutput = 0U;
 
 	if( xStatus == XST_SUCCESS )
 	{
-		/* Install the handler defined in this task for the button input. */
+		/* Install the handler defined in this task for the button input. 
+		*NOTE* The FreeRTOS defined xPortInstallInterruptHandler() API function
+		must be used for this purpose. */
 		xStatus = xPortInstallInterruptHandler( XPAR_MICROBLAZE_0_INTC_PUSH_BUTTONS_4BITS_IP2INTC_IRPT_INTR, prvButtonInputInterruptHandler, NULL );
 
 		if( xStatus == pdPASS )
 		{
 			/* Set buttons to input. */
-			XGpio_SetDataDirection( &xInputGPIOInstance, uxGPIOInputChannel, ~( ucSetToOutput ) );
-
-
+			XGpio_SetDataDirection( &xInputGPIOInstance, ulGPIOInputChannel, ~( ucSetToOutput ) );
+			
+			/* Enable the button input interrupts in the interrupt controller.
+			*NOTE* The vPortEnableInterrupt() API function must be used for this
+			purpose. */
 			vPortEnableInterrupt( XPAR_MICROBLAZE_0_INTC_PUSH_BUTTONS_4BITS_IP2INTC_IRPT_INTR );
 
 			/* Enable GPIO channel interrupts. */
-			XGpio_InterruptEnable( &xInputGPIOInstance, uxGPIOInputChannel ); //_RB_
+			XGpio_InterruptEnable( &xInputGPIOInstance, ulGPIOInputChannel );
 			XGpio_InterruptGlobalEnable( &xInputGPIOInstance );
 		}
 	}
@@ -372,6 +394,7 @@ void vApplicationMallocFailedHook( void )
 	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -407,29 +430,19 @@ volatile size_t xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
-void vMainConfigureTimerForRunTimeStats( void )
-{
-	/* This function is not used by the Blinky build configuration, but needs
-	to be defined as the Blinky and Full build configurations share a
-	FreeRTOSConfig.h header file. */
-}
-/*-----------------------------------------------------------*/
-
-unsigned long ulGetRunTimeCounterValue( void )
-{
-	/* This function is not used by the Blinky build configuration, but needs
-	to be defined as the Blinky and Full build configurations share a
-	FreeRTOSConfig.h header file. */
-	return 0UL;
-}
-/*-----------------------------------------------------------*/
-
+/* This is an application defined callback function used to install the tick
+interrupt handler.  It is provided as an application callback because the kernel
+will run on lots of different MicroBlaze and FPGA configurations - not all of
+which will have the same timer peripherals defined or available.  This example
+uses the AXI Timer 0.  If that is available on your hardware platform then this
+example callback implementation should not require modification.   The name of
+the interrupt handler that should be installed in vTickISR(), which the function
+below declares as an extern. */
 void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
-//const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
-const unsigned long ulCounterValue = ( ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL ) ) * 2UL; //_RB_ there is a clock set up incorrectly somwehre, the *2 should not be required. */
+const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
 extern void vTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
@@ -437,12 +450,17 @@ extern void vTickISR( void *pvUnused );
 
 	if( xStatus == XST_SUCCESS )
 	{
-		/* Install the tick interrupt handler as the timer ISR. */
+		/* Install the tick interrupt handler as the timer ISR. 
+		*NOTE* The xPortInstallInterruptHandler() API function must be used for
+		this purpose. */
 		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_TMRCTR_0_VEC_ID, vTickISR, NULL );
 	}
 
 	if( xStatus == pdPASS )
 	{
+		/* Enable the timer interrupt in the interrupt controller.
+		*NOTE* The vPortEnableInterrupt() API function must be used for this
+		purpose. */
 		vPortEnableInterrupt( XPAR_INTC_0_TMRCTR_0_VEC_ID );
 
 		/* Configure the timer interrupt handler. */
@@ -461,16 +479,23 @@ extern void vTickISR( void *pvUnused );
 		XTmrCtr_Start( &xTimer0Instance, ucTimerCounterNumber );
 	}
 
+	/* Sanity check that the function executed as expected. */
 	configASSERT( ( xStatus == pdPASS ) );
 }
 /*-----------------------------------------------------------*/
 
+/* This is an application defined callback function used to clear whichever
+interrupt was installed by the the vApplicationSetupTimerInterrupt() callback
+function - in this case the interrupt generated by the AXI timer.  It is 
+provided as an application callback because the kernel will run on lots of 
+different MicroBlaze and FPGA configurations - not all of which will have the 
+same timer peripherals defined or available.  This example uses the AXI Timer 0.  
+If that is available on your hardware platform then this example callback 
+implementation should not require modification provided the example definition
+of vApplicationSetupTimerInterrupt() is also not modified. */
 void vApplicationClearTimerInterrupt( void )
 {
 unsigned long ulCSR;
-
-	/* Increment the RTOS tick - this might cause a task to unblock. */
-	vTaskIncrementTick();
 
 	/* Clear the timer interrupt */
 	ulCSR = XTmrCtr_GetControlStatusReg( XPAR_AXI_TIMER_0_BASEADDR, 0 );

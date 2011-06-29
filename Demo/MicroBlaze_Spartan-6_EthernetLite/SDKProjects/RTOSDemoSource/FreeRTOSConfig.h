@@ -54,8 +54,9 @@
 
 /* The following #error directive is to remind users that a batch file must be
  * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within CCS4!  Once it has been executed, re-open or refresh 
- * the CCS4 project and remove the #error line below.
+ * executed from within older versions of Eclipse, but probably can be executed
+ * from within the Xilinx SDK.  Once it has been executed, re-open or refresh 
+ * the Eclipse project and remove the #error line below.
  */
 //#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
@@ -74,11 +75,10 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( XPAR_MICROBLAZE_CORE_CLOCK_FREQ_HZ ) /* Not actually used in this demo as the timer is set up in main and uses the peripheral clock, not the CPU clock. */
+#define configCPU_CLOCK_HZ				( XPAR_MICROBLAZE_CORE_CLOCK_FREQ_HZ ) /* Not actually used in this demo as the timer is set up in main() and uses the peripheral clock, not the CPU clock. */
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 6 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 64 * 1024 ) )
@@ -96,7 +96,18 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 200 )
 #define configINTERRUPT_STACK_SIZE		configMINIMAL_STACK_SIZE
+
+/* If configINSTALL_EXCEPTION_HANDLERS is set to 1, then the kernel will
+automatically install its own exception handlers before the kernel is started,
+if the application writer has not already caused them to be installed using the 
+vPortExceptionsInstallHandlers() API function.  See the documentation page for
+this demo on the FreeRTOS.org web site for more information. */
 #define configINSTALL_EXCEPTION_HANDLERS 1
+
+/* configINTERRUPT_CONTROLLER_TO_USE must be set to the ID of the interrupt
+controller that is going to be used directly by FreeRTOS itself.  Most hardware
+designs will only include on interrupt controller. */
+#define configINTERRUPT_CONTROLLER_TO_USE XPAR_INTC_SINGLE_DEVICE_ID
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -120,7 +131,7 @@ to exclude the API function. */
 
 #define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 	
-#define configINTERRUPT_CONTROLLER_TO_USE XPAR_INTC_SINGLE_DEVICE_ID
+
 
 #endif /* FREERTOS_CONFIG_H */
 

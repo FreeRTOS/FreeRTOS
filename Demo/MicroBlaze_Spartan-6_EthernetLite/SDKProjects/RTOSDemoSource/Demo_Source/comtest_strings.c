@@ -60,19 +60,19 @@
  * See http://www.serialporttool.com/CommEcho.htm for a suitable echo server
  * for Windows hosts.
  *
- * The timer sends a string to the UART, toggles an LED, then waits resets
- * itself by changing its own period.  The period is calculated as a pseudo
- * random number between comTX_MAX_BLOCK_TIME and comTX_MIN_BLOCK_TIME.
+ * The timer sends a string to the UART, toggles an LED, then resets itself by 
+ * changing its own period.  The period is calculated as a pseudo random number 
+ * between comTX_MAX_BLOCK_TIME and comTX_MIN_BLOCK_TIME.
  *
- * The task blocks on an Rx queue waiting for a character to become
- * available.  Received characters are checked to ensure they match those
- * transmitted by the Tx timer.  An error is latched if characters are missing,
- * incorrect, or arrive too slowly.
+ * The task blocks on an Rx queue waiting for a character to become available.  
+ * Received characters are checked to ensure they match those transmitted by the 
+ * Tx timer.  An error is latched if characters are missing, incorrect, or 
+ * arrive too slowly.
  *
  * How characters are actually transmitted and received is port specific.  Demos
  * that include this test/demo file will provide example drivers.  The Tx timer
- * executes in the context of the timer service (daemon) task, and must therefore
- * never attempt to block.
+ * executes in the context of the timer service (daemon) task, and must 
+ * therefore never attempt to block.
  *
  */
 
@@ -100,7 +100,7 @@
 /* The size of the stack given to the Rx task. */
 #define comSTACK_SIZE				configMINIMAL_STACK_SIZE
 
-/* See the comment above the declaraction of uxBaseLED. */
+/* See the comment above the declaraction of the uxBaseLED variable. */
 #define comTX_LED_OFFSET			( 0 )
 #define comRX_LED_OFFSET			( 1 )
 
@@ -125,13 +125,17 @@ baud rate being used. */
 /* The string that is transmitted and received. */
 #define comTRANSACTED_STRING		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
+/* A block time of 0 simply means "don't block". */
+#define comtstDONT_BLOCK			( portTickType ) 0
+
 /* Handle to the com port used by both tasks. */
 static xComPortHandle xPort = NULL;
 
-/* The transmit timer as described at the top of the file. */
-static void vComTxTimerCallback( xTimerHandle xTimer );
+/* The callback function allocated to the transmit timer, as described in the
+comments at the top of this file. */
+static void prvComTxTimerCallback( xTimerHandle xTimer );
 
-/* The receive task as described at the top of the file. */
+/* The receive task as described in the comments at the top of this file. */
 static void vComRxTask( void *pvParameters );
 
 /* The Rx task will toggle LED ( uxBaseLED + comRX_LED_OFFSET).  The Tx task
@@ -143,7 +147,8 @@ function - provided no errors have ever been latched.  If this variable stops
 incrementing, then an error has occurred. */
 static volatile unsigned portBASE_TYPE uxRxLoops = 0UL;
 
-/* The timer used to periodically transmit the string. */
+/* The timer used to periodically transmit the string.  This is the timer that
+has prvComTxTimerCallback allocated to it as its callback function. */
 static xTimerHandle xTxTimer = NULL;
 
 /* The string length is held at file scope so the Tx timer does not need to
@@ -157,7 +162,7 @@ void vStartComTestStringsTasks( unsigned portBASE_TYPE uxPriority, unsigned long
 	/* Store values that are used at run time. */
 	uxBaseLED = uxLED;
 
-	/* Calculate the string length here, rather than each time the timer
+	/* Calculate the string length here, rather than each time the Tx timer
 	executes. */
 	xStringLength = strlen( comTRANSACTED_STRING );
 
@@ -165,23 +170,23 @@ void vStartComTestStringsTasks( unsigned portBASE_TYPE uxPriority, unsigned long
 	detect the end of the string in the Rx task. */
 	xStringLength++;
 
-	/* Initialise the com port then spawn the Rx task and create the Tx
+	/* Initialise the com port, then spawn the Rx task and create the Tx
 	timer. */
 	xSerialPortInitMinimal( ulBaudRate, ( xStringLength * 2U ) );
 
 	/* Create the Rx task and the Tx timer.  The timer is started from the
 	Rx task. */
 	xTaskCreate( vComRxTask, ( signed char * ) "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
-	xTxTimer = xTimerCreate( ( const signed char * ) "TxTimer", comTX_MIN_BLOCK_TIME, pdFALSE, NULL, vComTxTimerCallback );
+	xTxTimer = xTimerCreate( ( const signed char * ) "TxTimer", comTX_MIN_BLOCK_TIME, pdFALSE, NULL, prvComTxTimerCallback );
 	configASSERT( xTxTimer );
 }
 /*-----------------------------------------------------------*/
 
-static void vComTxTimerCallback( xTimerHandle xTimer )
+static void prvComTxTimerCallback( xTimerHandle xTimer )
 {
 portTickType xTimeToWait;
 
-	/* Just to stop compiler warnings. */
+	/* The parameter is not used in this case. */
 	( void ) xTimer;
 
 	/* Send the string.  How this is actually performed depends on the
@@ -197,7 +202,7 @@ portTickType xTimeToWait;
 	/* Wait a pseudo random time before sending the string again. */
 	xTimeToWait = xTaskGetTickCount() + comOFFSET_TIME;
 
-	/* Ensure the time to wait does not greater than comTX_MAX_BLOCK_TIME. */
+	/* Ensure the time to wait is not greater than comTX_MAX_BLOCK_TIME. */
 	xTimeToWait %= comTX_MAX_BLOCK_TIME;
 
 	/* Ensure the time to wait is not less than comTX_MIN_BLOCK_TIME. */
@@ -209,7 +214,7 @@ portTickType xTimeToWait;
 	/* Reset the timer to run again xTimeToWait ticks from now.  This function
 	is called from the context of the timer task, so the block time must not
 	be anything other than zero. */
-	xTimerChangePeriod( xTxTimer, xTimeToWait, 0 );
+	xTimerChangePeriod( xTxTimer, xTimeToWait, comtstDONT_BLOCK );
 }
 /*-----------------------------------------------------------*/
 
@@ -219,7 +224,7 @@ portBASE_TYPE xState = comtstWAITING_START_OF_STRING, xErrorOccurred = pdFALSE;
 signed char *pcExpectedByte, cRxedChar;
 const xComPortHandle xPort = NULL;
 
-	/* Just to stop compiler warnings. */
+	/* The parameter is not used in this example. */
 	( void ) pvParameters;
 
 	/* Start the Tx timer.  This only needs to be started once, as it will
@@ -237,7 +242,7 @@ const xComPortHandle xPort = NULL;
 		{
 			/* A character definitely should have been received by now.  As a
 			character was not received an error must have occurred (which might
-			just be that the loopback connector is not fitted. */
+			just be that the loopback connector is not fitted). */
 			xErrorOccurred = pdTRUE;
 		}
 
@@ -252,16 +257,15 @@ const xComPortHandle xPort = NULL;
 					xState = comtstWAITING_END_OF_STRING;
 					pcExpectedByte++;
 
-					/* Block for a short period.  This just allows the Rx queue to
-					contain more than one character, and therefore prevent
-					thrashing reads to the queue and repetitive context switches as
-					each character is received. */
+					/* Block for a short period.  This just allows the Rx queue 
+					to contain more than one character, and therefore prevent
+					thrashing reads to the queue, and repetitive context 
+					switches as	each character is received. */
 					vTaskDelay( comSHORT_DELAY );
 				}
 				break;
 
 			case comtstWAITING_END_OF_STRING:
-
 				if( cRxedChar == *pcExpectedByte )
 				{
 					/* The received character was the expected character.  Was
@@ -271,7 +275,7 @@ const xComPortHandle xPort = NULL;
 					{
 						/* The entire string has been received.  If no errors
 						have been latched, then increment the loop counter to
-						show that this task is still healthy. */
+						show this task is still healthy. */
 						if( xErrorOccurred == pdFALSE )
 						{
 							uxRxLoops++;
@@ -314,7 +318,7 @@ portBASE_TYPE xReturn;
 
 	/* If the count of successful reception loops has not changed than at
 	some time an error occurred (i.e. a character was received out of sequence)
-	and we will return false. */
+	and false is returned. */
 	if( uxRxLoops == 0UL )
 	{
 		xReturn = pdFALSE;
@@ -325,7 +329,7 @@ portBASE_TYPE xReturn;
 	}
 
 	/* Reset the count of successful Rx loops.  When this function is called
-	again it should have been incremented. */
+	again it should have been incremented again. */
 	uxRxLoops = 0UL;
 
 	return xReturn;

@@ -56,14 +56,16 @@
  * point calculation - using single precision variables.
  *
  * All the tasks run at the idle priority and never block or yield.  This causes 
- * all eight tasks to time slice with the idle task.  Running at the idle priority 
- * means that these tasks will get pre-empted any time another task is ready to run
- * or a time slice occurs.  More often than not the pre-emption will occur mid 
- * calculation, creating a good test of the schedulers context switch mechanism - a 
- * calculation producing an unexpected result could be a symptom of a corruption in 
- * the context of a task.
+ * all eight tasks to time slice with the idle task, and other idle priority
+ * tasks.  Running at the idle priority means that these tasks will get 
+ * pre-empted any time another task is ready to run or a time slice occurs.  
+ * More often than not the pre-emption will occur mid calculation, creating a 
+ * good test of the schedulers context switch mechanism - a calculation 
+ * producing an unexpected result could be a symptom of a corruption in the 
+ * context of a task.
  */
 
+/* Standard includes. */
 #include <stdlib.h>
 #include <math.h>
 
@@ -74,37 +76,39 @@
 /* Demo program include files. */
 #include "flop.h"
 
+/* The size of the stack allocated to each floating point test task. */
 #define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
+
+/* The number of tasks that are created. */
 #define mathNUMBER_OF_TASKS  ( 8 )
 
 /* Four tasks, each of which performs a different floating point calculation.  
 Each of the four is created twice. */
-static portTASK_FUNCTION_PROTO( vCompetingMathTask1, pvParameters );
-static portTASK_FUNCTION_PROTO( vCompetingMathTask2, pvParameters );
-static portTASK_FUNCTION_PROTO( vCompetingMathTask3, pvParameters );
-static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
+static void prvCompetingMathTask1( void *pvParameters );
+static void prvCompetingMathTask2( void *pvParameters );
+static void prvCompetingMathTask3( void *pvParameters );
+static void prvCompetingMathTask4( void *pvParameters );
 
 /* These variables are used to check that all the tasks are still running.  If a 
-task gets a calculation wrong it will
-stop incrementing its check variable. */
+task gets a calculation wrong it will stop incrementing its check variable. */
 static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 
 /*-----------------------------------------------------------*/
 
 void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 {
-	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask1, ( signed char * ) "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask2, ( signed char * ) "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask3, ( signed char * ) "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask4, ( signed char * ) "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask1, ( signed char * ) "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask2, ( signed char * ) "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask3, ( signed char * ) "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, NULL );
+	xTaskCreate( prvCompetingMathTask4, ( signed char * ) "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, NULL );
 }
 /*-----------------------------------------------------------*/
 
-static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
+static void prvCompetingMathTask1( void *pvParameters )
 {
 volatile float f1, f2, f3, f4;
 volatile unsigned short *pusTaskCheckVariable;
@@ -156,7 +160,7 @@ short sError = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
+static void prvCompetingMathTask2( void *pvParameters )
 {
 volatile float f1, f2, f3, f4;
 volatile unsigned short *pusTaskCheckVariable;
@@ -209,7 +213,7 @@ short sError = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
+static void prvCompetingMathTask3( void *pvParameters )
 {
 volatile float *pfArray, fTotal1, fTotal2, fDifference, fPosition;
 volatile unsigned short *pusTaskCheckVariable;
@@ -267,7 +271,7 @@ short sError = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
+static void prvCompetingMathTask4( void *pvParameters )
 {
 volatile float *pfArray, fTotal1, fTotal2, fDifference, fPosition;
 volatile unsigned short *pusTaskCheckVariable;
@@ -328,8 +332,8 @@ short sError = pdFALSE;
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreMathsTaskStillRunning( void )
 {
-/* Keep a history of the check variables so we know if they have been incremented 
-since the last call. */
+/* Keep a history of the check variables so it can be determined if they have 
+been incremented since the last call of this function. */
 static unsigned short usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdTRUE, xTask;
 

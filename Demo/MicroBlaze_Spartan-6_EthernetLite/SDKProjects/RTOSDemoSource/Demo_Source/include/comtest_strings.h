@@ -51,8 +51,8 @@
     licensing and training services.
 */
 
-#ifndef COMTEST_H
-#define COMTEST_H
+#ifndef COMTEST_STRINGS_H
+#define COMTEST_STRINGS_H
 
 void vStartComTestStringsTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulBaudRate, unsigned portBASE_TYPE uxLED );
 portBASE_TYPE xAreComTestTasksStillRunning( void );

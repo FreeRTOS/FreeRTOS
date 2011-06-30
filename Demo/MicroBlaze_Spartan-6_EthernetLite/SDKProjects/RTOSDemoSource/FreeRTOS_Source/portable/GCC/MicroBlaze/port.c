@@ -68,47 +68,55 @@
 #include <xil_exception.h>
 #include <microblaze_exceptions_g.h>
 
-/* Tasks are started with a critical section nesting of 0 - however prior
-to the scheduler being commenced we don't want the critical nesting level
-to reach zero, so it is initialised to a high value. */
+/* Tasks are started with a critical section nesting of 0 - however, prior to 
+the scheduler being commenced interrupts should not be enabled, so the critical 
+nesting variable is initialised to a non-zero value. */
 #define portINITIAL_NESTING_VALUE	( 0xff )
 
 /* The bit within the MSR register that enabled/disables interrupts. */
 #define portMSR_IE					( 0x02U )
 
+/* If the floating point unit is included in the MicroBlaze build, then the
+FSR register is saved as part of the task context.  portINITIAL_FSR is the value
+given to the FSR register when the initial context is set up for a task being
+created. */
 #define portINITIAL_FSR				( 0U )
 /*-----------------------------------------------------------*/
 
 /*
  * Initialise the interrupt controller instance.
  */
-static portBASE_TYPE prvInitialiseInterruptController( void );
+static long prvInitialiseInterruptController( void );
 
-/*
- * Call an application provided callback to set up the periodic interrupt used
- * for the RTOS tick.  Using an application callback allows the application
- * writer to decide
+/* Ensure the interrupt controller instance variable is initialised before it is 
+ * used, and that the initialisation only happens once. 
  */
-extern void vApplicationSetupTimerInterrupt( void );
+static long prvEnsureInterruptControllerIsInitialised( void );
+
 /*-----------------------------------------------------------*/
 
 /* Counts the nesting depth of calls to portENTER_CRITICAL().  Each task 
-maintains it's own count, so this variable is saved as part of the task
+maintains its own count, so this variable is saved as part of the task
 context. */
 volatile unsigned portBASE_TYPE uxCriticalNesting = portINITIAL_NESTING_VALUE;
 
-/* To limit the amount of stack required by each task, this port uses a
-separate stack for interrupts. */
+/* This port uses a separate stack for interrupts.  This prevents the stack of
+every task needing to be large enough to hold an entire interrupt stack on top
+of the task stack. */
 unsigned long *pulISRStack;
 
-/* If an interrupt requests a context switch then ulTaskSwitchRequested will
-get set to 1, which in turn will cause vTaskSwitchContext() to be called
-prior to a task context getting restored on exit from the interrupt.  This
-mechanism is used as a single interrupt can cause multiple peripherals handlers
-to get called, and vTaskSwitchContext() should not get called in each handler. */
+/* If an interrupt requests a context switch, then ulTaskSwitchRequested will
+get set to 1.  ulTaskSwitchRequested is inspected just before the main interrupt
+handler exits.  If, at that time, ulTaskSwitchRequested is set to 1, the kernel
+will call vTaskSwitchContext() to ensure the task that runs immediately after
+the interrupt exists is the highest priority task that is able to run.  This is 
+an unusual mechanism, but is used for this port because a single interrupt can 
+cause the servicing of multiple peripherals - and it is inefficient to call
+vTaskSwitchContext() multiple times as each peripheral is serviced. */
 volatile unsigned long ulTaskSwitchRequested = 0UL;
 
-/* The instance of the interrupt controller used by this port. */
+/* The instance of the interrupt controller used by this port.  This is required
+by the Xilinx library API functions. */
 static XIntc xInterruptControllerInstance;
 
 /*-----------------------------------------------------------*/
@@ -117,7 +125,7 @@ static XIntc xInterruptControllerInstance;
  * Initialise the stack of a task to look exactly as if a call to 
  * portSAVE_CONTEXT had been made.
  * 
- * See the header file portable.h.
+ * See the portable.h header file.
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
@@ -127,16 +135,7 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is essential for the Microblaze port and these lines must
-	not be omitted.  The parameter value will overwrite the 
-	0x22222222 value during the function prologue. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11111111;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x22222222;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x33333333;
-	pxTopOfStack--; 
-
-	/* The debugger will look at the previous stack frame. */
+	not be omitted. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;
@@ -172,62 +171,79 @@ const unsigned long ulR13 = ( unsigned long ) &_SDA_BASE_;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x04;	/* R4 - return values and temporaries. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;/* R5 contains the function call parameters. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 - other parameters and temporaries.  Used as the return address from vPortTaskEntryPoint. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7 - other parameters and temporaries. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x08;	/* R8 - other parameters and temporaries. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x09;	/* R9 - other parameters and temporaries. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0a;	/* R10 - other parameters and temporaries. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0b;	/* R11 - temporaries. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0c;	/* R12 - temporaries. */
-	pxTopOfStack--;
+
+	#ifdef portPRE_LOAD_STACK_FOR_DEBUGGING
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 - other parameters and temporaries.  Used as the return address from vPortTaskEntryPoint. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7 - other parameters and temporaries. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x08;	/* R8 - other parameters and temporaries. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x09;	/* R9 - other parameters and temporaries. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x0a;	/* R10 - other parameters and temporaries. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x0b;	/* R11 - temporaries. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x0c;	/* R12 - temporaries. */
+		pxTopOfStack--;
+	#else
+		pxTopOfStack-= 8;
+	#endif
+	
 	*pxTopOfStack = ( portSTACK_TYPE ) ulR13;	/* R13 - read/write small data area. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* R14 - return address for interrupt. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) NULL;	/* R15 - return address for subroutine. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R16 - return address for trap (debugger). */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11;	/* R17 - return address for exceptions, if configured. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R18 - reserved for assembler and compiler temporaries. */
-	pxTopOfStack--;
+	
+	#ifdef portPRE_LOAD_STACK_FOR_DEBUGGING
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R16 - return address for trap (debugger). */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x11;	/* R17 - return address for exceptions, if configured. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R18 - reserved for assembler and compiler temporaries. */
+		pxTopOfStack--;
+	#else
+		pxTopOfStack -= 4;
+	#endif
+	
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R19 - must be saved across function calls. Callee-save.  Seems to be interpreted as the frame pointer. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R20 - reserved for storing a pointer to the Global Offset Table (GOT) in Position Independent Code (PIC). Non-volatile in non-PIC code. Must be saved across function calls. Callee-save.  Not used by FreeRTOS. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x15;	/* R21 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x16;	/* R22 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x17;	/* R23 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x18;	/* R24 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x19;	/* R25 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1a;	/* R26 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1b;	/* R27 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1c;	/* R28 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1d;	/* R29 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1e;	/* R30 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1f;	/* R31 - must be saved across function calls. Callee-save. */
-	pxTopOfStack--;
+	
+	#ifdef portPRE_LOAD_STACK_FOR_DEBUGGING	
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R20 - reserved for storing a pointer to the Global Offset Table (GOT) in Position Independent Code (PIC). Non-volatile in non-PIC code. Must be saved across function calls. Callee-save.  Not used by FreeRTOS. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x15;	/* R21 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x16;	/* R22 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x17;	/* R23 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x18;	/* R24 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x19;	/* R25 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1a;	/* R26 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1b;	/* R27 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1c;	/* R28 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1d;	/* R29 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1e;	/* R30 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x1f;	/* R31 - must be saved across function calls. Callee-save. */
+		pxTopOfStack--;
+	#else
+		pxTopOfStack -= 13;
+	#endif
 
-	/* Return a pointer to the top of the stack we have generated so this can
-	be stored in the task control block for the task. */
+	/* Return a pointer to the top of the stack that has been generated so this 
+	can	be stored in the task control block for the task. */
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -238,11 +254,22 @@ extern void ( vPortStartFirstTask )( void );
 extern unsigned long _stack[];
 
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
-	this function is called. */
+	this function is called.  
+	
+	This port uses an application defined callback function to install the tick
+	interrupt handler because the kernel will run on lots of different 
+	MicroBlaze and FPGA configurations - not all of	which will have the same 
+	timer peripherals defined or available.  An example definition of
+	vApplicationSetupTimerInterrupt() is provided in the official demo
+	application that accompanies this port. */
 	vApplicationSetupTimerInterrupt();
 
-	/* Reuse the stack from main as the stack for the interrupts/exceptions. */
+	/* Reuse the stack from main() as the stack for the interrupts/exceptions. */
 	pulISRStack = ( unsigned long * ) _stack;
+
+	/* Ensure there is enough space for the functions called from the interrupt
+	service routines to write back into the stack frame of the caller. */
+	pulISRStack -= 2;
 
 	/* Restore the context of the first task that is going to run.  From here
 	on, the created tasks will be executing. */
@@ -268,7 +295,7 @@ extern void VPortYieldASM( void );
 
 	/* Perform the context switch in a critical section to assure it is
 	not interrupted by the tick ISR.  It is not a problem to do this as
-	each task maintains it's own interrupt status. */
+	each task maintains its own interrupt status. */
 	portENTER_CRITICAL();
 	{
 		/* Jump directly to the yield function to ensure there is no
@@ -282,43 +309,92 @@ extern void VPortYieldASM( void );
 
 void vPortEnableInterrupt( unsigned char ucInterruptID )
 {
-	XIntc_Enable( &xInterruptControllerInstance, ucInterruptID );
+long lReturn;
+
+	/* An API function is provided to enable an interrupt in the interrupt
+	controller because the interrupt controller instance variable is private
+	to this file. */
+	lReturn = prvEnsureInterruptControllerIsInitialised();
+	if( lReturn == pdPASS )
+	{
+		XIntc_Enable( &xInterruptControllerInstance, ucInterruptID );
+	}
+	
+	configASSERT( lReturn );
 }
 /*-----------------------------------------------------------*/
 
 void vPortDisableInterrupt( unsigned char ucInterruptID )
 {
-	XIntc_Disable( &xInterruptControllerInstance, ucInterruptID );
+long lReturn;
+
+	/* An API function is provided to disable an interrupt in the interrupt
+	controller because the interrupt controller instance variable is private
+	to this file. */
+	lReturn = prvEnsureInterruptControllerIsInitialised();
+	
+	if( lReturn == pdPASS )
+	{
+		XIntc_Disable( &xInterruptControllerInstance, ucInterruptID );
+	}
+	
+	configASSERT( lReturn );
 }
 /*-----------------------------------------------------------*/
 
 portBASE_TYPE xPortInstallInterruptHandler( unsigned char ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef )
 {
-static portBASE_TYPE xInterruptControllerInitialised = pdFALSE;
-portBASE_TYPE xReturn = XST_SUCCESS;
+long lReturn;
 
-	if( xInterruptControllerInitialised != pdTRUE )
+	/* An API function is provided to install an interrupt handler because the 
+	interrupt controller instance variable is private to this file. */
+
+	lReturn = prvEnsureInterruptControllerIsInitialised();
+	
+	if( lReturn == pdPASS )
 	{
-		xReturn = prvInitialiseInterruptController();
-		xInterruptControllerInitialised = pdTRUE;
+		lReturn = XIntc_Connect( &xInterruptControllerInstance, ucInterruptID, pxHandler, pvCallBackRef );
 	}
 
-	if( xReturn == XST_SUCCESS )
+	if( lReturn == XST_SUCCESS )
 	{
-		xReturn = XIntc_Connect( &xInterruptControllerInstance, ucInterruptID, pxHandler, pvCallBackRef );
+		lReturn = pdPASS;
+	}
+	
+	configASSERT( lReturn == pdPASS );
+
+	return lReturn;
+}
+/*-----------------------------------------------------------*/
+
+static long prvEnsureInterruptControllerIsInitialised( void )
+{
+static long lInterruptControllerInitialised = pdFALSE;
+long lReturn;
+
+	/* Ensure the interrupt controller instance variable is initialised before
+	it is used, and that the initialisation only happens once. */
+	if( lInterruptControllerInitialised != pdTRUE )
+	{
+		lReturn = prvInitialiseInterruptController();
+		
+		if( lReturn == pdPASS )
+		{
+			lInterruptControllerInitialised = pdTRUE;
+		}
+	}
+	else
+	{
+		lReturn = pdPASS;
 	}
 
-	if( xReturn == XST_SUCCESS )
-	{
-		xReturn = pdPASS;
-	}
-
-	return xReturn;
+	return lReturn;
 }
 /*-----------------------------------------------------------*/
 
 /* 
- * Handler for the timer interrupt.
+ * Handler for the timer interrupt.  This is the handler that the application
+ * defined callback function vApplicationSetupTimerInterrupt() should install.
  */
 void vTickISR( void *pvUnused )
 {
@@ -327,13 +403,20 @@ extern void vApplicationClearTimerInterrupt( void );
 	/* Ensure the unused parameter does not generate a compiler warning. */
 	( void ) pvUnused;
 
+	/* This port uses an application defined callback function to clear the tick
+	interrupt because the kernel will run on lots of different MicroBlaze and 
+	FPGA configurations - not all of which will have the same timer peripherals 
+	defined or available.  An example definition of
+	vApplicationClearTimerInterrupt() is provided in the official demo
+	application that accompanies this port. */	
 	vApplicationClearTimerInterrupt();
 
 	/* Increment the RTOS tick - this might cause a task to unblock. */
 	vTaskIncrementTick();
 
-	/* If we are using the preemptive scheduler then we also need to determine
-	if this tick should cause a context switch. */
+	/* If the preemptive scheduler is being used then a context switch should be
+	requested in case incrementing the tick unblocked a task, or a time slice
+	should cause another task to enter the Running state. */
 	#if configUSE_PREEMPTION == 1
 		/* Force vTaskSwitchContext() to be called as the interrupt exits. */
 		ulTaskSwitchRequested = 1;
@@ -341,13 +424,13 @@ extern void vApplicationClearTimerInterrupt( void );
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvInitialiseInterruptController( void )
+static long prvInitialiseInterruptController( void )
 {
-portBASE_TYPE xStatus;
+long lStatus;
 
-	xStatus = XIntc_Initialize( &xInterruptControllerInstance, configINTERRUPT_CONTROLLER_TO_USE );
+	lStatus = XIntc_Initialize( &xInterruptControllerInstance, configINTERRUPT_CONTROLLER_TO_USE );
 
-	if( xStatus == XST_SUCCESS )
+	if( lStatus == XST_SUCCESS )
 	{
 		/* Initialise the exception table. */
 		Xil_ExceptionInit();
@@ -366,28 +449,21 @@ portBASE_TYPE xStatus;
 
 		/* Start the interrupt controller.  Interrupts are enabled when the
 		scheduler starts. */
-		xStatus = XIntc_Start( &xInterruptControllerInstance, XIN_REAL_MODE );
+		lStatus = XIntc_Start( &xInterruptControllerInstance, XIN_REAL_MODE );
 
-		/* Ensure the compiler does not generate warnings for the unused
-		iStatus valud if configASSERT() is not defined. */
-		( void ) xStatus;
+		if( lStatus == XST_SUCCESS )
+		{
+			lStatus = pdPASS;
+		}
+		else
+		{
+			lStatus = pdFAIL;
+		}
 	}
 
-	configASSERT( ( xStatus == ( portBASE_TYPE ) XST_SUCCESS ) )
+	configASSERT( lStatus == pdPASS );
 
-/*_RB_ Exception test code. */
-#if 0
-This does not cause the bralid address to be in the r17 register.
-__asm volatile (
-					"bralid r15, 1234 \n"
-					"or r0, r0, r0 \n"
-				);
-#endif
-#if 0
-	xStatus /= 0;
-#endif
-
-	return xStatus;
+	return lStatus;
 }
 /*-----------------------------------------------------------*/
 

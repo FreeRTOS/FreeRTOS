@@ -57,7 +57,10 @@
     licensing and training services.
 */
 
+/* FreeRTOS includes. */
 #include "FreeRTOSConfig.h"
+
+/* Xilinx library includes. */
 #include "microblaze_exceptions_g.h"
 #include "xparameters.h"
 
@@ -250,7 +253,7 @@ back into the caller stack. */
 
 /* This function is used to exit portRESTORE_CONTEXT() if the task being
 returned to last left the Running state by calling taskYIELD() (rather than
-being preempted by an interrupt. */
+being preempted by an interrupt). */
 	.text
 	.align  2
 exit_from_yield:
@@ -276,13 +279,11 @@ _interrupt_handler:
 	/* Stack the return address. */
 	swi r14, r1, portR14_OFFSET
 
-	/* Switch to the ISR stack.  The pulISRStack value has already been set to
-	leave space for the caller function to write back into the stack of this
-	function. */
+	/* Switch to the ISR stack. */
 	lwi r1, r0, pulISRStack
 
 	/* The parameter to the interrupt handler. */
-	ori     r5, r0, configINTERRUPT_CONTROLLER_TO_USE
+	ori r5, r0, configINTERRUPT_CONTROLLER_TO_USE
 
 	/* Execute any pending interrupts. */
 	bralid r15, XIntc_DeviceInterruptHandler

@@ -100,6 +100,8 @@ portBASE_TYPE xPortInstallInterruptHandler( unsigned char ucInterruptID, XInterr
 void vPortEnableInterrupt( unsigned char ucInterruptID );
 void vPortDisableInterrupt( unsigned char ucInterruptID );
 
+void vApplicationSetupTimerInterrupt( void );
+
 /*-----------------------------------------------------------*/
 
 /* Critical section macros. */

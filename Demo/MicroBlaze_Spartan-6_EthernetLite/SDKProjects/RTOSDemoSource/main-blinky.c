@@ -389,11 +389,16 @@ const unsigned char ucSetToOutput = 0U;
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Called if a call to pvPortMalloc() fails because there is insufficient
-	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software
-	timers, and semaphores.  The size of the FreeRTOS heap is set by the
-	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+	/* vApplicationMallocFailedHook() will only be called if
+	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+	function that will get called if a call to pvPortMalloc() fails. 
+	pvPortMalloc() is called internally by the kernel whenever a task, queue or
+	semaphore is created.  It is also called by various parts of the demo
+	application.  If heap_1.c or heap_2.c are used, then the size of the heap
+	available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+	to query the size of free heap space that remains (although it does not
+	provide information on how the remaining heap might be fragmented). */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
@@ -404,9 +409,13 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	( void ) pcTaskName;
 	( void ) pxTask;
 
-	/* Run time stack overflow checking is performed if
-	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+	/* vApplicationStackOverflowHook() will only be called if
+	configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2.  The handle and name
+	of the offending task will be passed into the hook function via its 
+	parameters.  However, when a stack has overflowed, it is possible that the
+	parameters will have been corrupted, in which case the pxCurrentTCB variable
+	can be inspected directly. */
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -415,9 +424,18 @@ void vApplicationIdleHook( void )
 {
 volatile size_t xFreeHeapSpace;
 
-	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amout of FreeRTOS heap that
-	remains unallocated. */
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set 
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle 
+	task.  It is essential that code added to this hook function never attempts 
+	to block in any way (for example, call xQueueReceive() with a block time 
+	specified, or call vTaskDelay()).  If the application makes use of the 
+	vTaskDelete() API function (as this demo application does) then it is also 
+	important that vApplicationIdleHook() is permitted to return to its calling 
+	function, because it is the responsibility of the idle task to clean up 
+	memory allocated by the kernel to any task that has since been deleted. */
+
+	/* This implementation of vApplicationIdleHook() simply demonstrates how
+	the xPortGetFreeHeapSize() function can be used. */
 	xFreeHeapSpace = xPortGetFreeHeapSize();
 
 	if( xFreeHeapSpace > 100 )
@@ -432,7 +450,11 @@ volatile size_t xFreeHeapSpace;
 
 void vApplicationTickHook( void )
 {
-	/* This simple blinky demo does not use the tick hook, but a tick hook is
+	/* vApplicationTickHook() will only be called if configUSE_TICK_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It executes from an interrupt context so must
+	not use any FreeRTOS API functions that do not end in ...FromISR().
+
+	This simple blinky demo does not use the tick hook, but a tick hook is
 	required to be defined as the blinky and full demos share a
 	FreeRTOSConfig.h header file. */
 }
@@ -444,7 +466,7 @@ will run on lots of different MicroBlaze and FPGA configurations - not all of
 which will have the same timer peripherals defined or available.  This example
 uses the AXI Timer 0.  If that is available on your hardware platform then this
 example callback implementation should not require modification.   The name of
-the interrupt handler that should be installed in vTickISR(), which the function
+the interrupt handler that should be installed is vTickISR(), which the function
 below declares as an extern. */
 void vApplicationSetupTimerInterrupt( void )
 {

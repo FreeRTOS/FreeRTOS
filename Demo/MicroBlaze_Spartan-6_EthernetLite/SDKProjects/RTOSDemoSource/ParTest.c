@@ -52,7 +52,7 @@
 */
 
 /*-----------------------------------------------------------
- * Simple parallel port IO routines.
+ * Simple digital IO routines.
  *-----------------------------------------------------------*/
 
 /* Kernel includes. */
@@ -64,13 +64,20 @@
 /* Library includes. */
 #include "xgpio.h"
 
+/* The hardware design that accompanies this demo project has four LED 
+outputs. */
 #define partstMAX_LED	4
 
 /*-----------------------------------------------------------*/
 
+/* A hardware specific constant required to use the Xilinx driver library. */
 static const unsigned portBASE_TYPE uxGPIOOutputChannel = 1UL;
+
+/* The current state of the output port. */
 static unsigned char ucGPIOState = 0U;
 
+/* Structure that hold the state of the ouptut peripheral used by this demo.
+This is used by the Xilinx peripheral driver API functions. */
 static XGpio xOutputGPIOInstance;
 
 /*
@@ -101,6 +108,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
 unsigned char ucLED = 1U;
 
+	/* Only attempt to set the LED if it is in range. */
 	if( uxLED < partstMAX_LED )
 	{
 		ucLED <<= ( unsigned char ) uxLED;
@@ -126,6 +134,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 unsigned char ucLED = 1U;
 
+	/* Only attempt to toggle the LED if it is in range. */
 	if( uxLED < partstMAX_LED )
 	{
 		ucLED <<= ( unsigned char ) uxLED;

@@ -56,27 +56,26 @@
 #include "task.h"
 
 /*
- * The register test task as described at the top of this file.
+ * The register test task as described in the comments at the top of main-full.c.
  */
 void vRegisterTest1( void *pvParameters );
 void vRegisterTest2( void *pvParameters );
 
 /* Variables that are incremented on each iteration of the reg test tasks -
-provided the tasks have not reported any errors.  The check task inspects these
+provided the tasks have not reported any errors.  The check timer inspects these
 variables to ensure they are still incrementing as expected.  If a variable
-stops incrementing then it is likely that its associate task has stalled. */
+stops incrementing then it is likely that its associate task has stalled or
+detected an error. */
 volatile unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 /*-----------------------------------------------------------*/
 
 void vRegisterTest1( void *pvParameters )
 {
-//_RB_ Why can R5 not be used in this test?
-
 	/* This task uses an infinite loop that is implemented in the assembly 
 	code.
 	
-	First fill the registers with known values. */
+	First fill the relevant registers with known values. */
 	asm volatile (	"	addi r3, r0, 3		\n\t" \
 					"	addi r4, r0, 4		\n\t" \
 					"	addi r6, r0, 6		\n\t" \
@@ -105,7 +104,10 @@ void vRegisterTest1( void *pvParameters )
 	/* Now test the register values to ensure they contain the same value that
 	was written to them above.	 This task will get preempted frequently so 
 	other tasks are likely to have executed since the register values were 
-	written. */
+	written.  If any register contains an unexpected value then the task will
+	branch to Error_Loop_1, which in turn prevents it from incrementing its
+	loop counter, enabling the check timer to determine that all is not as it
+	should be. */
 
 	asm volatile (	"Loop_Start_1:				\n\t" \
 					"	xori r18, r3, 3			\n\t" \
@@ -157,9 +159,9 @@ void vRegisterTest1( void *pvParameters )
 				 );
 
 	/* If this task has not branched to the error loop, then everything is ok,
-	and the check variable should be incremented to indicate that this task
-	is still running.  Then, brach back to the top to check the registers
-	again. */
+	and the check variable can be incremented to indicate that this task
+	is still running.  Then, brach back to the top to check the register
+	contents again. */
 	asm volatile (  "	lwi r18, r0, ulRegTest1CycleCount	\n\t" \
 					"	addik r18, r18, 1			 		\n\t" \
 					"	swi r18, r0, ulRegTest1CycleCount 	\n\t" \
@@ -202,8 +204,13 @@ void vRegisterTest2( void *pvParameters )
 					"Loop_Start_2:				"
 				);
 
+	/* Unlike vRegisterTest1, vRegisterTest2 performs a yield.  This increases
+	the test coverage, but does mean volatile registers need re-loading with 
+	their exepcted values. */
 	taskYIELD();
 
+	/* taskYIELD() could have changed temporaries - set them back to those
+	expected by the reg test task. */
 	asm volatile (  "	addi r3, r0, 103	\n\t" \
 					"	addi r4, r0, 104	\n\t" \
 					"	addi r6, r0, 106	\n\t" \
@@ -215,8 +222,6 @@ void vRegisterTest2( void *pvParameters )
 					"	addi r12, r0, 1012	\n\t" \
 				);
 
-	/* taskYIELD() could have changed temporaries - set them back to those
-	expected by the reg test task. */
 
 	/* Now test the register values to ensure they contain the same value that
 	was written to them above.	 This task will get preempted frequently so 

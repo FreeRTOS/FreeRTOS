@@ -102,6 +102,7 @@
 
 /* BSP includes. */
 #include "xtmrctr.h"
+#include "microblaze_exceptions_g.h"
 
 /* Kernel includes. */
 #include "FreeRTOS.h"

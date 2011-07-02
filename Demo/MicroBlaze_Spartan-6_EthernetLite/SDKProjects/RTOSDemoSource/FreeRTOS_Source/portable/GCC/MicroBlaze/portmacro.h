@@ -168,7 +168,7 @@ typedef struct PORT_REGISTER_DUMP
 	unsigned long ulR14_return_address_from_interrupt;
 	unsigned long ulR15_return_address_from_subroutine;
 	unsigned long ulR16_return_address_from_trap;
-	unsigned long ulR17_return_address_from_some_exceptions;
+	unsigned long ulR17_return_address_from_exceptions; /* The exception entry code can copy the BTR in here for exceptions that occur in the delay slot of branch instructions. */
 	unsigned long ulR18;
 	unsigned long ulR19;
 	unsigned long ulR20;
@@ -185,7 +185,6 @@ typedef struct PORT_REGISTER_DUMP
 	unsigned long ulR31;
 	unsigned long ulPC;
 	unsigned long ulESR;
-	unsigned long ulBTR;
 	unsigned long ulMSR;
 	unsigned long ulEAR;
 	unsigned long ulFSR;

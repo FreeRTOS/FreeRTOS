@@ -466,14 +466,14 @@ will run on lots of different MicroBlaze and FPGA configurations - not all of
 which will have the same timer peripherals defined or available.  This example
 uses the AXI Timer 0.  If that is available on your hardware platform then this
 example callback implementation should not require modification.   The name of
-the interrupt handler that should be installed is vTickISR(), which the function
-below declares as an extern. */
+the interrupt handler that should be installed is vPortTickISR(), which the 
+function below declares as an extern. */
 void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
 const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
 const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
-extern void vTickISR( void *pvUnused );
+extern void vPortTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
 	xStatus = XTmrCtr_Initialize( &xTimer0Instance, XPAR_AXI_TIMER_0_DEVICE_ID );
@@ -483,7 +483,7 @@ extern void vTickISR( void *pvUnused );
 		/* Install the tick interrupt handler as the timer ISR. 
 		*NOTE* The xPortInstallInterruptHandler() API function must be used for
 		this purpose. */
-		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_TMRCTR_0_VEC_ID, vTickISR, NULL );
+		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_TMRCTR_0_VEC_ID, vPortTickISR, NULL );
 	}
 
 	if( xStatus == pdPASS )
@@ -494,7 +494,7 @@ extern void vTickISR( void *pvUnused );
 		vPortEnableInterrupt( XPAR_INTC_0_TMRCTR_0_VEC_ID );
 
 		/* Configure the timer interrupt handler. */
-		XTmrCtr_SetHandler( &xTimer0Instance, ( void * ) vTickISR, NULL );
+		XTmrCtr_SetHandler( &xTimer0Instance, ( void * ) vPortTickISR, NULL );
 
 		/* Set the correct period for the timer. */
 		XTmrCtr_SetResetValue( &xTimer0Instance, ucTimerCounterNumber, ulCounterValue );

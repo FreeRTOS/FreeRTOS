@@ -284,6 +284,15 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
 /**
+ * xTimerGetTimerTaskHandle() is only available if 
+ * INCLUDE_xTimerGetTimerTaskHandle is set to 1 in FreeRTOSConfig.h.
+ *
+ * Simply returns the handle of the timer service/daemon task.  It it not valid
+ * to call xTimerGetTimerTaskHandle() before the scheduler has been started.
+ */
+xTaskHandle xTimerGetTimerTaskHandle( void );
+
+/**
  * portBASE_TYPE xTimerStart( xTimerHandle xTimer, portTickType xBlockTime );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the

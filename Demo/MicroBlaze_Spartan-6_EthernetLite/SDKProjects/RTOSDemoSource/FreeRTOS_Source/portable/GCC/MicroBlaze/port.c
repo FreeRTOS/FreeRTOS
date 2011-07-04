@@ -396,7 +396,7 @@ long lReturn;
  * Handler for the timer interrupt.  This is the handler that the application
  * defined callback function vApplicationSetupTimerInterrupt() should install.
  */
-void vTickISR( void *pvUnused )
+void vPortTickISR( void *pvUnused )
 {
 extern void vApplicationClearTimerInterrupt( void );
 

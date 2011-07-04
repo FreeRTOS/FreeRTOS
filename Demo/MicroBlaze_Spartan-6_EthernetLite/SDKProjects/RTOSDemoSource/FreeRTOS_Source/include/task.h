@@ -202,7 +202,7 @@ typedef struct xTASK_PARAMTERS
  *<pre>
  portBASE_TYPE xTaskCreate(
 							  pdTASK_CODE pvTaskCode,
-							  const char * const pcName,
+							  const signed char * const pcName,
 							  unsigned short usStackDepth,
 							  void *pvParameters,
 							  unsigned portBASE_TYPE uxPriority,
@@ -1170,6 +1170,14 @@ constant. */
  */
 portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter ) PRIVILEGED_FUNCTION;
 
+/**
+ * xTaskGetIdleTaskHandle() is only available if 
+ * INCLUDE_xTaskGetIdleTaskHandle is set to 1 in FreeRTOSConfig.h.
+ *
+ * Simply returns the handle of the idle task.  It is not valid to call
+ * xTaskGetIdleTaskHandle() before the scheduler has been started.
+ */
+xTaskHandle xTaskGetIdleTaskHandle( void );
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

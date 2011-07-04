@@ -96,8 +96,82 @@ void microblaze_enable_interrupts( void );
 #define portDISABLE_INTERRUPTS()	microblaze_disable_interrupts()
 #define portENABLE_INTERRUPTS()		microblaze_enable_interrupts()
 
+/*
+ * Installs pxHandler as the interrupt handler for the peripheral specified by 
+ * the ucInterruptID parameter.
+ *
+ * ucInterruptID:
+ * 
+ * The ID of the peripheral that will have pxHandler assigned as its interrupt
+ * handler.  Peripheral IDs are defined in the xparameters.h header file, which 
+ * is itself part of the BSP project.  For example, in the official demo 
+ * application for this port, xparameters.h defines the following IDs for the 
+ * four possible interrupt sources:
+ *
+ * XPAR_INTC_0_UARTLITE_1_VEC_ID  -  for the UARTlite peripheral.
+ * XPAR_INTC_0_TMRCTR_0_VEC_ID    -  for the AXI Timer 0 peripheral.
+ * XPAR_INTC_0_EMACLITE_0_VEC_ID  -  for the Ethernet lite peripheral.
+ * XPAR_INTC_0_GPIO_1_VEC_ID      -  for the button inputs.
+ *
+ *
+ * pxHandler:
+ * 
+ * A pointer to the interrupt handler function itself.  This must be a void
+ * function that takes a (void *) parameter.
+ *
+ *
+ * pvCallBackRef:
+ *
+ * The parameter passed into the handler function.  In many cases this will not
+ * be used and can be NULL.  Some times it is used to pass in a reference to
+ * the peripheral instance variable, so it can be accessed from inside the
+ * handler function.
+ *
+ * 
+ * pdPASS is returned if the function executes successfully.  Any other value
+ * being returned indicates that the function did not execute correctly.
+ */
 portBASE_TYPE xPortInstallInterruptHandler( unsigned char ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef );
+
+
+/*
+ * Enables the interrupt, within the interrupt controller, for the peripheral 
+ * specified by the ucInterruptID parameter.
+ *
+ * ucInterruptID:
+ * 
+ * The ID of the peripheral that will have its interrupt enabled in the
+ * interrupt controller.  Peripheral IDs are defined in the xparameters.h header 
+ * file, which is itself part of the BSP project.  For example, in the official 
+ * demo application for this port, xparameters.h defines the following IDs for 
+ * the four possible interrupt sources:
+ *
+ * XPAR_INTC_0_UARTLITE_1_VEC_ID  -  for the UARTlite peripheral.
+ * XPAR_INTC_0_TMRCTR_0_VEC_ID    -  for the AXI Timer 0 peripheral.
+ * XPAR_INTC_0_EMACLITE_0_VEC_ID  -  for the Ethernet lite peripheral.
+ * XPAR_INTC_0_GPIO_1_VEC_ID      -  for the button inputs.
+ *
+ */
 void vPortEnableInterrupt( unsigned char ucInterruptID );
+
+/*
+ * Disables the interrupt, within the interrupt controller, for the peripheral 
+ * specified by the ucInterruptID parameter.
+ *
+ * ucInterruptID:
+ * 
+ * The ID of the peripheral that will have its interrupt disabled in the
+ * interrupt controller.  Peripheral IDs are defined in the xparameters.h header 
+ * file, which is itself part of the BSP project.  For example, in the official 
+ * demo application for this port, xparameters.h defines the following IDs for 
+ * the four possible interrupt sources:
+ *
+ * XPAR_INTC_0_UARTLITE_1_VEC_ID  -  for the UARTlite peripheral.
+ * XPAR_INTC_0_TMRCTR_0_VEC_ID    -  for the AXI Timer 0 peripheral.
+ * XPAR_INTC_0_EMACLITE_0_VEC_ID  -  for the Ethernet lite peripheral.
+ * XPAR_INTC_0_GPIO_1_VEC_ID      -  for the button inputs.
+ *
+ */
 void vPortDisableInterrupt( unsigned char ucInterruptID );
 
 void vApplicationSetupTimerInterrupt( void );
@@ -128,11 +202,16 @@ void vPortExitCritical( void );
 
 /*-----------------------------------------------------------*/
 
-/* Task utilities. */
+/* The yield macro maps directly to the vPortYield() function. */
 void vPortYield( void );
 #define portYIELD() vPortYield()
 
-void vTaskSwitchContext();
+/* portYIELD_FROM_ISR() does not directly call vTaskSwitchContext(), but instead
+sets a flag to say that a yield has been requested.  The interrupt exit code
+then checks this flag, and calls vTaskSwitchContext() before restoring a task
+context, if the flag is not false.  This is done to prevent multiple calls to
+vTaskSwitchContext() being made from a single interrupt, as a single interrupt
+can result in multiple peripherals being serviced. */
 extern volatile unsigned long ulTaskSwitchRequested;
 #define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) ulTaskSwitchRequested = 1
 /*-----------------------------------------------------------*/
@@ -147,7 +226,11 @@ extern volatile unsigned long ulTaskSwitchRequested;
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+/*-----------------------------------------------------------*/
 
+/* The following structure is used by the FreeRTOS exception handler.  It is
+filled with the MicroBlaze context as it was at the time the exception occurred.
+This is done as an aid to debugging exception occurrences. */
 typedef struct PORT_REGISTER_DUMP
 {
 	/* The following structure members hold the values of the MicroBlaze
@@ -168,7 +251,7 @@ typedef struct PORT_REGISTER_DUMP
 	unsigned long ulR14_return_address_from_interrupt;
 	unsigned long ulR15_return_address_from_subroutine;
 	unsigned long ulR16_return_address_from_trap;
-	unsigned long ulR17_return_address_from_exceptions; /* The exception entry code can copy the BTR in here for exceptions that occur in the delay slot of branch instructions. */
+	unsigned long ulR17_return_address_from_exceptions; /* The exception entry code will copy the BTR into R17 if the exception occurred in the delay slot of a branch instruction. */
 	unsigned long ulR18;
 	unsigned long ulR19;
 	unsigned long ulR20;

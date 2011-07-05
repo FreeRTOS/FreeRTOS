@@ -1016,7 +1016,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
 								</option>
-								<option id="xilinx.gnu.compiler.misc.other.1660455181" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0" valueType="string"/>
+								<option id="xilinx.gnu.compiler.misc.other.1660455181" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -fno-strict-aliasing" valueType="string"/>
 								<inputType id="xilinx.gnu.compiler.input.505106416" name="C source files" superClass="xilinx.gnu.compiler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.mb.cxx.toolchain.compiler.debug.2087155544" name="MicroBlaze g++ compiler" superClass="xilinx.gnu.mb.cxx.toolchain.compiler.debug">

@@ -78,8 +78,8 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned portLONG
-#define portBASE_TYPE	portLONG
+#define portSTACK_TYPE	unsigned long
+#define portBASE_TYPE	long
 
 #if( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned portSHORT portTickType;
@@ -95,6 +95,120 @@ void microblaze_disable_interrupts( void );
 void microblaze_enable_interrupts( void );
 #define portDISABLE_INTERRUPTS()	microblaze_disable_interrupts()
 #define portENABLE_INTERRUPTS()		microblaze_enable_interrupts()
+
+/*-----------------------------------------------------------*/
+
+/* Critical section macros. */
+void vPortEnterCritical( void );
+void vPortExitCritical( void );
+#define portENTER_CRITICAL()		{																\
+										extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
+										microblaze_disable_interrupts();							\
+										uxCriticalNesting++;										\
+									}
+
+#define portEXIT_CRITICAL()			{																\
+										extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
+										/* Interrupts are disabled, so we can */					\
+										/* access the variable directly. */							\
+										uxCriticalNesting--;										\
+										if( uxCriticalNesting == 0 )								\
+										{															\
+											/* The nesting has unwound and we 						\
+											can enable interrupts again. */							\
+											portENABLE_INTERRUPTS();								\
+										}															\
+									}
+
+/*-----------------------------------------------------------*/
+
+/* The yield macro maps directly to the vPortYield() function. */
+void vPortYield( void );
+#define portYIELD() vPortYield()
+
+/* portYIELD_FROM_ISR() does not directly call vTaskSwitchContext(), but instead
+sets a flag to say that a yield has been requested.  The interrupt exit code
+then checks this flag, and calls vTaskSwitchContext() before restoring a task
+context, if the flag is not false.  This is done to prevent multiple calls to
+vTaskSwitchContext() being made from a single interrupt, as a single interrupt
+can result in multiple peripherals being serviced. */
+extern volatile unsigned long ulTaskSwitchRequested;
+#define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) ulTaskSwitchRequested = 1
+/*-----------------------------------------------------------*/
+
+/* Hardware specifics. */
+#define portBYTE_ALIGNMENT			4
+#define portSTACK_GROWTH			( -1 )
+#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portNOP()					asm volatile ( "NOP" )
+/*-----------------------------------------------------------*/
+
+/* Task function macros as described on the FreeRTOS.org WEB site. */
+#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
+#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+/*-----------------------------------------------------------*/
+
+/* The following structure is used by the FreeRTOS exception handler.  It is
+filled with the MicroBlaze context as it was at the time the exception occurred.
+This is done as an aid to debugging exception occurrences. */
+typedef struct PORT_REGISTER_DUMP
+{
+	/* The following structure members hold the values of the MicroBlaze
+	registers at the time the exception was raised. */
+	unsigned long ulR1_SP;
+	unsigned long ulR2_small_data_area;
+	unsigned long ulR3;
+	unsigned long ulR4;
+	unsigned long ulR5;
+	unsigned long ulR6;
+	unsigned long ulR7;
+	unsigned long ulR8;
+	unsigned long ulR9;
+	unsigned long ulR10;
+	unsigned long ulR11;
+	unsigned long ulR12;
+	unsigned long ulR13_read_write_small_data_area;
+	unsigned long ulR14_return_address_from_interrupt;
+	unsigned long ulR15_return_address_from_subroutine;
+	unsigned long ulR16_return_address_from_trap;
+	unsigned long ulR17_return_address_from_exceptions; /* The exception entry code will copy the BTR into R17 if the exception occurred in the delay slot of a branch instruction. */
+	unsigned long ulR18;
+	unsigned long ulR19;
+	unsigned long ulR20;
+	unsigned long ulR21;
+	unsigned long ulR22;
+	unsigned long ulR23;
+	unsigned long ulR24;
+	unsigned long ulR25;
+	unsigned long ulR26;
+	unsigned long ulR27;
+	unsigned long ulR28;
+	unsigned long ulR29;
+	unsigned long ulR30;
+	unsigned long ulR31;
+	unsigned long ulPC;
+	unsigned long ulESR;
+	unsigned long ulMSR;
+	unsigned long ulEAR;
+	unsigned long ulFSR;
+	unsigned long ulEDR;
+
+	/* A human readable description of the exception cause.  The strings used
+	are the same as the #define constant names found in the
+	microblaze_exceptions_i.h header file */
+	signed char *pcExceptionCause;
+
+	/* The human readable name of the task that was running at the time the
+	exception occurred.  This is the name that was given to the task when the
+	task was created using the FreeRTOS xTaskCreate() API function. */
+	signed char *pcCurrentTaskName;
+
+	/* The handle of the task that was running a the time the exception
+	occurred. */
+	void * xCurrentTaskHandle;
+
+} xPortRegisterDump;
+
 
 /*
  * Installs pxHandler as the interrupt handler for the peripheral specified by 
@@ -197,7 +311,7 @@ void vApplicationSetupTimerInterrupt( void );
  * implementation should not require modification provided the example definition
  * of vApplicationSetupTimerInterrupt() is also not modified. 
  */
-void vApplicationClearTimerInterrupt( void )
+void vApplicationClearTimerInterrupt( void );
 
 /*
  * vPortExceptionsInstallHandlers() is only available when the MicroBlaze
@@ -238,119 +352,6 @@ void vPortExceptionsInstallHandlers( void );
  */
 void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump );
 
-
-/*-----------------------------------------------------------*/
-
-/* Critical section macros. */
-void vPortEnterCritical( void );
-void vPortExitCritical( void );
-#define portENTER_CRITICAL()		{																\
-										extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
-										microblaze_disable_interrupts();							\
-										uxCriticalNesting++;										\
-									}
-									
-#define portEXIT_CRITICAL()			{																\
-										extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
-										/* Interrupts are disabled, so we can */					\
-										/* access the variable directly. */							\
-										uxCriticalNesting--;										\
-										if( uxCriticalNesting == 0 )								\
-										{															\
-											/* The nesting has unwound and we 						\
-											can enable interrupts again. */							\
-											portENABLE_INTERRUPTS();								\
-										}															\
-									}
-
-/*-----------------------------------------------------------*/
-
-/* The yield macro maps directly to the vPortYield() function. */
-void vPortYield( void );
-#define portYIELD() vPortYield()
-
-/* portYIELD_FROM_ISR() does not directly call vTaskSwitchContext(), but instead
-sets a flag to say that a yield has been requested.  The interrupt exit code
-then checks this flag, and calls vTaskSwitchContext() before restoring a task
-context, if the flag is not false.  This is done to prevent multiple calls to
-vTaskSwitchContext() being made from a single interrupt, as a single interrupt
-can result in multiple peripherals being serviced. */
-extern volatile unsigned long ulTaskSwitchRequested;
-#define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) ulTaskSwitchRequested = 1
-/*-----------------------------------------------------------*/
-
-/* Hardware specifics. */
-#define portBYTE_ALIGNMENT			4
-#define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
-#define portNOP()					asm volatile ( "NOP" )
-/*-----------------------------------------------------------*/
-
-/* Task function macros as described on the FreeRTOS.org WEB site. */
-#define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
-#define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
-/*-----------------------------------------------------------*/
-
-/* The following structure is used by the FreeRTOS exception handler.  It is
-filled with the MicroBlaze context as it was at the time the exception occurred.
-This is done as an aid to debugging exception occurrences. */
-typedef struct PORT_REGISTER_DUMP
-{
-	/* The following structure members hold the values of the MicroBlaze
-	registers at the time the exception was raised. */
-	unsigned long ulR1_SP;
-	unsigned long ulR2_small_data_area;
-	unsigned long ulR3;
-	unsigned long ulR4;
-	unsigned long ulR5;
-	unsigned long ulR6;
-	unsigned long ulR7;
-	unsigned long ulR8;
-	unsigned long ulR9;
-	unsigned long ulR10;
-	unsigned long ulR11;
-	unsigned long ulR12;
-	unsigned long ulR13_read_write_small_data_area;
-	unsigned long ulR14_return_address_from_interrupt;
-	unsigned long ulR15_return_address_from_subroutine;
-	unsigned long ulR16_return_address_from_trap;
-	unsigned long ulR17_return_address_from_exceptions; /* The exception entry code will copy the BTR into R17 if the exception occurred in the delay slot of a branch instruction. */
-	unsigned long ulR18;
-	unsigned long ulR19;
-	unsigned long ulR20;
-	unsigned long ulR21;
-	unsigned long ulR22;
-	unsigned long ulR23;
-	unsigned long ulR24;
-	unsigned long ulR25;
-	unsigned long ulR26;
-	unsigned long ulR27;
-	unsigned long ulR28;
-	unsigned long ulR29;
-	unsigned long ulR30;
-	unsigned long ulR31;
-	unsigned long ulPC;
-	unsigned long ulESR;
-	unsigned long ulMSR;
-	unsigned long ulEAR;
-	unsigned long ulFSR;
-	unsigned long ulEDR;
-
-	/* A human readable description of the exception cause.  The strings used
-	are the same as the #define constant names found in the
-	microblaze_exceptions_i.h header file */
-	signed char *pcExceptionCause;
-
-	/* The human readable name of the task that was running at the time the
-	exception occurred.  This is the name that was given to the task when the
-	task was created using the FreeRTOS xTaskCreate() API function. */
-	signed char *pcCurrentTaskName;
-
-	/* The handle of the task that was running a the time the exception
-	occurred. */
-	void * xCurrentTaskHandle;
-
-} xPortRegisterDump;
 
 #ifdef __cplusplus
 }

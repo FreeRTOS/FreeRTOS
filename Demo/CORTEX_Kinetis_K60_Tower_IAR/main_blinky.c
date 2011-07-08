@@ -124,21 +124,27 @@
 converted to ticks using the portTICK_RATE_MS constant. */
 #define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
 
+/* The LED will remain on until the button has not been pushed for a full
+5000ms. */
+#define mainBUTTON_LED_TIMER_PERIOD_MS		( 5000UL / portTICK_RATE_MS )
+
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
 /* The LED toggle by the queue receive task (blue). */
-#define mainTASK_CONTROLLED_LED				10
+#define mainTASK_CONTROLLED_LED				( 1UL << 10UL )
 
 /* The LED turned on by the button interrupt, and turned off by the LED timer. */
-#define mainTIMER_CONTROLLED_LED			29
+#define mainTIMER_CONTROLLED_LED			( 1UL << 29UL )
 
+/* The vector used by the GPIO port E.  Button SW2 is configured to generate
+an interrput on this port. */
 #define mainGPIO_E_VECTOR					( 107 - 16 )
 
-#define GPIO_PIN_MASK            0x1Fu
-#define GPIO_PIN( x )              ( ( ( 1 ) << ( x & GPIO_PIN_MASK ) ) )
+/* A block time of zero simply means "don't block". */
+#define mainDONT_BLOCK						( 0UL )
 
 /*-----------------------------------------------------------*/
 
@@ -157,16 +163,16 @@ static void prvQueueSendTask( void *pvParameters );
  * The LED timer callback function.  This does nothing but switch off the
  * LED defined by the mainTIMER_CONTROLLED_LED constant.
  */
-static void vLEDTimerCallback( xTimerHandle xTimer );
+static void prvButtonLEDTimerCallback( xTimerHandle xTimer );
 
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
 static xQueueHandle xQueue = NULL;
 
-/* The LED software timer.  This uses vLEDTimerCallback() as its callback
+/* The LED software timer.  This uses prvButtonLEDTimerCallback() as its callback
 function. */
-static xTimerHandle xLEDTimer = NULL;
+static xTimerHandle xButtonLEDTimer = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -188,11 +194,11 @@ void main( void )
 		/* Create the software timer that is responsible for turning off the LED
 		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
-		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									vLEDTimerCallback					/* The callback function that switches the LED off. */
+		xButtonLEDTimer = xTimerCreate( ( const signed char * ) "ButtonLEDTimer", /* A text name, purely to help debugging. */
+									mainBUTTON_LED_TIMER_PERIOD_MS,			/* The timer period, in this case 5000ms (5s). */
+									pdFALSE,								/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									( void * ) 0,							/* The ID is not used, so can be set to anything. */
+									prvButtonLEDTimerCallback				/* The callback function that switches the LED off. */
 								);
 
 		/* Start the tasks and timer running. */
@@ -208,14 +214,14 @@ void main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void vLEDTimerCallback( xTimerHandle xTimer )
+static void prvButtonLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
 	five seconds - turn the LED off.  NOTE - accessing the LED port should use
 	a critical section because it is accessed from multiple tasks, and the
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
-	GPIOA_PDOR |= GPIO_PDOR_PDO( GPIO_PIN( mainTIMER_CONTROLLED_LED ) );
+	GPIOA_PDOR |= GPIO_PDOR_PDO( mainTIMER_CONTROLLED_LED );
 }
 /*-----------------------------------------------------------*/
 
@@ -227,12 +233,12 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	GPIOA_PDOR &= ~GPIO_PDOR_PDO( GPIO_PIN( mainTIMER_CONTROLLED_LED ) );
+	GPIOA_PDOR &= ~GPIO_PDOR_PDO( mainTIMER_CONTROLLED_LED );
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
 	configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
-	xTimerResetFromISR( xLEDTimer, &xHigherPriorityTaskWoken );
+	xTimerResetFromISR( xButtonLEDTimer, &xHigherPriorityTaskWoken );
 
 	/* Clear the interrupt before leaving.  This just clears all the interrupts
 	for simplicity, as only one is actually used in this simple demo anyway. */
@@ -267,7 +273,7 @@ const unsigned long ulValueToSend = 100UL;
 		toggle an LED.  0 is used as the block time so the sending operation
 		will not block - it shouldn't need to block as the queue should always
 		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0 );
+		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -291,7 +297,7 @@ unsigned long ulReceivedValue;
 			because it is accessed from multiple tasks, and the button interrupt
 			- in this trivial case, for simplicity, the critical section is
 			omitted. */
-		    GPIOA_PTOR |= GPIO_PDOR_PDO( GPIO_PIN( mainTASK_CONTROLLED_LED ) );
+		    GPIOA_PTOR |= GPIO_PDOR_PDO( mainTASK_CONTROLLED_LED );
 		}
 	}
 }
@@ -299,13 +305,11 @@ unsigned long ulReceivedValue;
 
 static void prvSetupHardware( void )
 {
-	/* Turn on all port clocks */
-	SIM_SCGC5 = SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTC_MASK | SIM_SCGC5_PORTD_MASK | SIM_SCGC5_PORTE_MASK;
-
 	/* Enable the interrupt on SW1. */
 	PORTE_PCR26 = PORT_PCR_MUX( 1 ) | PORT_PCR_IRQC( 0xA ) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
 
 	enable_irq( mainGPIO_E_VECTOR );
+	set_irq_priority( mainGPIO_E_VECTOR, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
 	
 	/* Set PTA10, PTA11, PTA28, and PTA29 (connected to LED's) for GPIO
 	functionality. */
@@ -314,8 +318,8 @@ static void prvSetupHardware( void )
 	PORTA_PCR28 = ( 0 | PORT_PCR_MUX( 1 ) );
 	PORTA_PCR29 = ( 0 | PORT_PCR_MUX( 1 ) );
 	
-	/* Change PTA10, PTA11, PTA28, PTA29 to outputs. */
-	GPIOA_PDDR=GPIO_PDDR_PDD( GPIO_PIN( mainTASK_CONTROLLED_LED ) | GPIO_PIN( mainTIMER_CONTROLLED_LED ) );	
+	/* Change PTA10, PTA29 to outputs. */
+	GPIOA_PDDR=GPIO_PDDR_PDD( mainTASK_CONTROLLED_LED | mainTIMER_CONTROLLED_LED );	
 
 	/* Start with LEDs off. */
 	GPIOA_PTOR = ~0U;
@@ -329,6 +333,7 @@ void vApplicationMallocFailedHook( void )
 	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -341,6 +346,7 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	/* Run time stack overflow checking is performed if
 	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/

@@ -38,19 +38,6 @@ common_startup(void)
     uint8 * bss_start, * bss_end;
 
 
-    /* Addresses for VECTOR_TABLE and VECTOR_RAM come from the linker file */
-    extern uint32 __VECTOR_TABLE[];
-    extern uint32 __VECTOR_RAM[];
-
-    /* Copy the vector table to RAM */
-    if (__VECTOR_RAM != __VECTOR_TABLE)
-    {
-        for (n = 0; n < 0x410; n++)
-            __VECTOR_RAM[n] = __VECTOR_TABLE[n];
-    }
-    /* Point the VTOR to the new copy of the vector table */
-    write_vtor((uint32)__VECTOR_RAM);
-
     /* Get the addresses for the .data section (initialized data section) */
 	#if (defined(CW))
         data_ram = (uint8 *)__DATA_RAM;

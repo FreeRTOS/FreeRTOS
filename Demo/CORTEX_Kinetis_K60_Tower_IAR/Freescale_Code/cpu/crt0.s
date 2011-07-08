@@ -27,7 +27,6 @@ __startup
 	MOV     r10,#0
 	MOV     r11,#0
 	MOV     r12,#0
-	CPSIE   i                       ; Unmask interrupts
         import start
         BL      start                  ; call the C code
 __done

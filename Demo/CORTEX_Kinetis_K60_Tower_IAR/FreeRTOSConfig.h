@@ -73,11 +73,10 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 75000000UL )
+#define configCPU_CLOCK_HZ				( 96000000UL )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )

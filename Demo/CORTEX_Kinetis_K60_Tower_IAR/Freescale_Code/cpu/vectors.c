@@ -7,10 +7,13 @@
 #include "vectors.h"
 #include "common.h"
 
+/* The kernel interrupts - in their CMSIS form. */
 extern void SVC_Handler( void );
 extern void PendSV_Handler( void );
 extern void SysTick_Handler( void );
 
+/* The button interrupt. */
+extern void vPort_E_ISRHandler( void );
 
 /******************************************************************************
 * Vector Table
@@ -135,7 +138,7 @@ typedef void (*vector_entry)(void);
    VECTOR_104,
    VECTOR_105, /* Port C */
    VECTOR_106,
-   VECTOR_107, /* Port E */
+   vPort_E_ISRHandler, /* Port E */
    VECTOR_108,
    VECTOR_109,
    VECTOR_110,

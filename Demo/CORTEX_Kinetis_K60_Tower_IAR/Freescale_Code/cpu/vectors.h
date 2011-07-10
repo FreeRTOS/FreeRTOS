@@ -19,6 +19,11 @@ extern void SysTick_Handler( void );
 /* The button interrupt. */
 extern void vPort_E_ISRHandler( void );
 
+/* Ethernet interrupt handlers. */
+void vEMAC_TxISRHandler( void );
+void vEMAC_RxISRHandler( void );
+void vEMAC_ErrorISRHandler( void );
+void vEMAC_ISRHandler( void );
 
 // function prototype for default_isr in vectors.c
 void default_isr(void);
@@ -126,9 +131,9 @@ extern void __iar_program_start(void);
 #define VECTOR_089      default_isr     // 0x0000_0164 89    73     USB OTG
 #define VECTOR_090      default_isr     // 0x0000_0168 90    74     USB Charger Detect
 #define VECTOR_091      default_isr     // 0x0000_016C 91    75		ENET			 IEEE 1588 Timer interrupt			
-#define VECTOR_092      default_isr     // 0x0000_0170 92    76		ENET			 Transmit interrupt
-#define VECTOR_093      default_isr     // 0x0000_0174 93    77		ENET			 Receive interrupt
-#define VECTOR_094      default_isr     // 0x0000_0178 94    78		ENET			 Error and miscellaneous interrupt
+#define VECTOR_092      vEMAC_ISRHandler     // 0x0000_0170 92    76		ENET			 Transmit interrupt
+#define VECTOR_093      vEMAC_ISRHandler     // 0x0000_0174 93    77		ENET			 Receive interrupt
+#define VECTOR_094      vEMAC_ISRHandler  // 0x0000_0178 94    78		ENET			 Error and miscellaneous interrupt
 #define VECTOR_095      default_isr     // 0x0000_017C 95    79     I2S
 #define VECTOR_096      default_isr     // 0x0000_0180 96    80     SDHC
 #define VECTOR_097      default_isr     // 0x0000_0184 97    81     DAC0

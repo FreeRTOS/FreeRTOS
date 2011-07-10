@@ -175,6 +175,11 @@ all the available LEDs are already used by other tasks and timers. */
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
+
+/* The WEB server uses string handling functions, which in turn use a bit more
+stack than most of the other tasks. */
+#define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
 
 /* Priorities defined in this main-full.c file. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -245,6 +250,11 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
  */
 void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
 
+/*
+ * Contains the implementation of the WEB server.
+ */
+extern void vuIP_Task( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* The queue used by both application specific demo tasks defined in this file. */
@@ -297,6 +307,9 @@ void main( void )
 		vStartCountingSemaphoreTasks();
 		vStartDynamicPriorityTasks();
 		
+		/* The web server task. */
+		xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+
 		/* The suicide tasks must be created last, as they need to know how many
 		tasks were running prior to their creation in order to ascertain whether
 		or not the correct/expected number of tasks are running at any given
@@ -435,7 +448,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	vParTestToggleLED( mainTIMER_CONTROLLED_LED );
+	vParTestSetLED( mainTIMER_CONTROLLED_LED, pdTRUE );
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
@@ -461,6 +474,7 @@ static void prvSetupHardware( void )
 	taskDISABLE_INTERRUPTS();
 	PORTE_PCR26 = PORT_PCR_MUX( 1 ) | PORT_PCR_IRQC( 0xA ) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
 	enable_irq( mainGPIO_E_VECTOR );
+	set_irq_priority( mainGPIO_E_VECTOR, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
 	
 	/* Configure the LED outputs. */
 	vParTestInitialise();
@@ -561,7 +575,7 @@ volatile size_t xFreeHeapSpace;
 		xTimerStart( xLED2Timer, portMAX_DELAY );
 		
 		xFreeHeapSpace = xPortGetFreeHeapSize();
-		printf( "%d bytes of FreeRTOS heap remain unused - configTOTAL_HEAP_SIZE can be reduced\n", xFreeHeapSpace );
+		printf( "%d bytes of FreeRTOS heap remain unused\nconfigTOTAL_HEAP_SIZE can be reduced\n", xFreeHeapSpace );
 		
 		if( xFreeHeapSpace > 100 )
 		{
@@ -582,3 +596,18 @@ void vApplicationTickHook( void )
 }	
 /*-----------------------------------------------------------*/
 
+char *pcGetTaskStatusMessage( void )
+{
+	/* Not bothered about a critical section here although technically because
+	of the task priorities the pointer could change it will be atomic if not
+	near atomic and its not critical. */
+	if( pcStatusMessage == NULL )
+	{
+		return "All tasks running without error";
+	}
+	else
+	{
+		return ( char * ) pcStatusMessage;
+	}
+}
+/*-----------------------------------------------------------*/

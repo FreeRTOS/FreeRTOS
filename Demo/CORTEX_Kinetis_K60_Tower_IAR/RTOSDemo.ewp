@@ -205,7 +205,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa082</state>
+          <state>Pa082, Pe1644, Pa039, Pa050, pe191</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -304,6 +304,9 @@
           <state>$PROJ_DIR$\Freescale_Code\drivers\mcg</state>
           <state>$PROJ_DIR$\Freescale_Code\drivers\wdog</state>
           <state>$PROJ_DIR$\Freescale_Code\drivers\adc16</state>
+          <state>$PROJ_DIR$\Freescale_Code\drivers\enet</state>
+          <state>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP</state>
+          <state>$PROJ_DIR$\webserver</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1911,6 +1914,21 @@
     <group>
       <name>drivers</name>
       <group>
+        <name>enet</name>
+        <excluded>
+          <configuration>Blinky</configuration>
+        </excluded>
+        <file>
+          <name>$PROJ_DIR$\Freescale_Code\drivers\enet\enet.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\Freescale_Code\drivers\enet\eth_phy.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\Freescale_Code\drivers\enet\mii.c</name>
+        </file>
+      </group>
+      <group>
         <name>mcg</name>
         <file>
           <name>$PROJ_DIR$\Freescale_Code\drivers\mcg\mcg.c</name>
@@ -1930,6 +1948,48 @@
       </group>
     </group>
   </group>
+  <group>
+    <name>FreeTCPIP (based on uIP)</name>
+    <excluded>
+      <configuration>Blinky</configuration>
+    </excluded>
+    <group>
+      <name>webserver</name>
+      <group>
+        <name>Common</name>
+        <file>
+          <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c</name>
+        </file>
+      </group>
+      <group>
+        <name>Port specific</name>
+        <file>
+          <name>$PROJ_DIR$\webserver\EMAC.c</name>
+        </file>
+        <file>
+          <name>$PROJ_DIR$\webserver\httpd-cgi.c</name>
+        </file>
+      </group>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\psock.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\timer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\uip.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\ethernet\FreeTCPIP\uip_arp.c</name>
+    </file>
+  </group>
   <file>
     <name>$PROJ_DIR$\FreeRTOSConfig.h</name>
   </file>
@@ -1947,6 +2007,12 @@
   </file>
   <file>
     <name>$PROJ_DIR$\ParTest.c</name>
+    <excluded>
+      <configuration>Blinky</configuration>
+    </excluded>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\uIP_Task.c</name>
     <excluded>
       <configuration>Blinky</configuration>
     </excluded>

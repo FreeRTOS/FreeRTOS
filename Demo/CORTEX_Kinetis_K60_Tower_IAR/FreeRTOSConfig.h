@@ -155,5 +155,7 @@ to exclude the API function. */
 #define configNET_MASK2		255
 #define configNET_MASK3		0
 
+#define configPHY_ADDRESS 	1
+
 #endif /* FREERTOS_CONFIG_H */
 

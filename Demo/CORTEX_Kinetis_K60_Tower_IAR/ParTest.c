@@ -89,9 +89,9 @@ void vParTestInitialise( void )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 {
-	if( uxLED < partstMAX_LEDS )
+	if( ulLED < partstMAX_LEDS )
 	{
 		/* A critical section is used as the LEDs are also accessed from an
 		interrupt. */
@@ -99,11 +99,11 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		{
 			if( xValue == pdTRUE )
 			{
-				GPIOA_PDOR &= ~GPIO_PDOR_PDO( ulLEDs[ uxLED ] );
+				GPIOA_PDOR &= ~GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
 			}
 			else
 			{
-				GPIOA_PDOR |= GPIO_PDOR_PDO( ulLEDs[ uxLED ] );
+				GPIOA_PDOR |= GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
 			}
 		}
 		taskEXIT_CRITICAL();
@@ -111,36 +111,36 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
+void vParTestToggleLED( unsigned long ulLED )
 {
-	if( uxLED < partstMAX_LEDS )
+	if( ulLED < partstMAX_LEDS )
 	{
 		/* A critical section is used as the LEDs are also accessed from an
 		interrupt. */
 		taskENTER_CRITICAL();
 		{
-			GPIOA_PTOR |= GPIO_PDOR_PDO( ulLEDs[ uxLED ] );		
+			GPIOA_PTOR |= GPIO_PDOR_PDO( ulLEDs[ ulLED ] );		
 		}
 		taskEXIT_CRITICAL();
 	}
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
+void vParTestSetLEDFromISR( unsigned long ulLED, signed portBASE_TYPE xValue )
 {
 unsigned portBASE_TYPE uxInterruptFlags;
 
-	if( uxLED < partstMAX_LEDS )
+	if( ulLED < partstMAX_LEDS )
 	{
 		uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
 			if( xValue == pdTRUE )
 			{
-				GPIOA_PDOR &= ~GPIO_PDOR_PDO( ulLEDs[ uxLED ] );
+				GPIOA_PDOR &= ~GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
 			}
 			else
 			{
-				GPIOA_PDOR |= GPIO_PDOR_PDO( ulLEDs[ uxLED ] );
+				GPIOA_PDOR |= GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
 			}
 		}
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
@@ -148,3 +148,29 @@ unsigned portBASE_TYPE uxInterruptFlags;
 }
 /*-----------------------------------------------------------*/
 
+long lParTestGetLEDState( unsigned long ulLED )
+{
+long lReturn = pdFALSE;
+
+	if( ulLED < partstMAX_LEDS )
+	{
+		/* A critical section is used as the LEDs are also accessed from an
+		interrupt. */
+		taskENTER_CRITICAL();
+		{
+			lReturn = GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
+			
+			if( lReturn == 0 )
+			{
+				lReturn = pdTRUE;
+			}
+			else
+			{
+				lReturn = pdFALSE;
+			}
+		}
+		taskEXIT_CRITICAL();
+	}
+
+	return lReturn;
+}

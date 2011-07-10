@@ -134,7 +134,6 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "TimerDemo.h"
-#include "comtest2.h"
 #include "PollQ.h"
 #include "countsem.h"
 #include "dynamic.h"
@@ -157,11 +156,6 @@ the queue empty. */
 /* The LEDs toggled by the two simple flash LED timers. */
 #define mainLED0					0UL
 #define mainLED1					1UL
-
-/* The LED used by the comtest tasks. See the comtest.c file for more
-information.  In this case, the LED is deliberatly out of the valid range as
-all the available LEDs are already used by other tasks and timers. */
-#define mainCOM_TEST_LED			( 4 )
 
 /* Constant used by the standard timer test functions. */
 #define mainTIMER_TEST_PERIOD		( 50 )
@@ -206,9 +200,6 @@ callback functions. */
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
-
-/* Baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( 115200UL )
 
 /* The vector used by the GPIO port E.  Button SW2 is configured to generate
 an interrput on this port. */
@@ -276,6 +267,8 @@ be set to point to a string that identifies the offending task.  This is just
 to make debugging easier. */
 static const char *pcStatusMessage = NULL;
 
+/* Used in the run time stats calculation. */
+static unsigned long ulClocksPer10thOfAMilliSecond = 0UL;
 /*-----------------------------------------------------------*/
 
 void main( void )
@@ -302,7 +295,6 @@ void main( void )
 		vStartQueuePeekTasks();
 		vStartRecursiveMutexTasks();
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-//_RB_		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 		vStartCountingSemaphoreTasks();
 		vStartDynamicPriorityTasks();
@@ -370,11 +362,6 @@ static long lChangedTimerPeriodAlready = pdFALSE;
 		pcStatusMessage = "Error: RecMutex\n";
 	}
 
-if( 0 )//_RB_	if( xAreComTestTasksStillRunning() != pdPASS )
-	{
-		pcStatusMessage = "Error: ComTest\n";
-	}
-	
 	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_MS ) ) != pdTRUE )
 	{
 		pcStatusMessage = "Error: TimerDemo\n";
@@ -611,3 +598,53 @@ char *pcGetTaskStatusMessage( void )
 	}
 }
 /*-----------------------------------------------------------*/
+
+void vMainConfigureTimerForRunTimeStats( void )
+{
+	/* How many clocks are there per tenth of a millisecond? */
+	ulClocksPer10thOfAMilliSecond = configCPU_CLOCK_HZ / 10000UL;
+}
+/*-----------------------------------------------------------*/
+
+unsigned long ulMainGetRunTimeCounterValue( void )
+{
+unsigned long ulSysTickCounts, ulTickCount, ulReturn;
+const unsigned long ulSysTickReloadValue = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
+volatile unsigned long * const pulCurrentSysTickCount = ( ( volatile unsigned long *) 0xe000e018 );
+volatile unsigned long * const pulInterruptCTRLState = ( ( volatile unsigned long *) 0xe000ed04 );
+const unsigned long ulSysTickPendingBit = 0x04000000UL;
+
+	/* NOTE: There are potentially race conditions here.  It is ok to keep
+	things simple, without using any additional timer peripherals. */
+
+
+	/* The SysTick is a down counter.  How many clocks have passed since it was
+	last reloaded? */
+	ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
+	
+	/* How many times has it overflowed? */
+	ulTickCount = xTaskGetTickCountFromISR();
+	
+	/* Is there a SysTick interrupt pending? */
+	if( ( *pulInterruptCTRLState & ulSysTickPendingBit ) != 0UL )
+	{
+		/* There is a SysTick interrupt pending, so the SysTick has overflowed
+		but the tick count not yet incremented. */
+		ulTickCount++;
+		
+		/* Read the SysTick again, as the overflow might have occurred since
+		it was read last. */
+		ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
+	}	
+	
+	/* Convert the tick count into tenths of a millisecond. */
+	ulReturn = ( ulTickCount * 10UL ) ;
+		
+	/* Add on the number of tenths of a millisecond that have passed since the
+	tick count last got updated. */
+	ulReturn += ( ulSysTickCounts / ulClocksPer10thOfAMilliSecond );
+	
+	return ulReturn;	
+}
+/*-----------------------------------------------------------*/
+

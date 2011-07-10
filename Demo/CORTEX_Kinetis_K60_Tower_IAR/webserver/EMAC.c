@@ -529,6 +529,9 @@ unsigned long usReturn = 0;
 
 void vEMAC_TxISRHandler( void )
 {
+	/* Clear the interrupt. */
+	ENET_EIR = ENET_EIR_TXF_MASK;
+
 	/* Check the buffers have not already been freed in the first of the
 	two Tx interrupts - which could potentially happen if the second Tx completed
 	during the interrupt for the first Tx. */
@@ -554,6 +557,9 @@ const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 long lHigherPriorityTaskWoken = pdFALSE;
 extern xQueueHandle xEMACEventQueue;
 
+	/* Clear the interrupt. */
+	ENET_EIR = ENET_EIR_RXF_MASK;
+
 	/* An Ethernet Rx event has occurred. */
 	xQueueSendFromISR( xEMACEventQueue, &ulRxEvent, &lHigherPriorityTaskWoken );
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
@@ -562,59 +568,13 @@ extern xQueueHandle xEMACEventQueue;
 
 void vEMAC_ErrorISRHandler( void )
 {
-	portDISABLE_INTERRUPTS();
-	for( ;; );
+	/* Clear the interrupt. */
+	ENET_EIR = ENET_EIR & ENET_EIMR;
+
+	/* Attempt recovery.  Not very sophisticated. */
+	prvInitialiseDescriptors();
+	ENET_RDAR = ENET_RDAR_RDAR_MASK;
 }
 /*-----------------------------------------------------------*/
 
-volatile unsigned long ulEvent, ulMask;
-void vEMAC_ISRHandler( void )
-{
-//unsigned long ulEvent;
-long lHigherPriorityTaskWoken = pdFALSE;
-const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
-extern xQueueHandle xEMACEventQueue;
-
-	/* What caused the interrupt? */
-	ulMask = ENET_EIMR;
-	ulEvent = ENET_EIR;
-	ulEvent &= ulMask;
-	
-	ENET_EIR = ulEvent;
-
-	if( ( ulEvent & ENET_EIR_TXF_MASK ) != 0UL )
-	{
-		/* Transmit complete.
-		Check the buffers have not already been freed in the first of the
-		two Tx interrupts - which could potentially happen if the second Tx completed
-		during the interrupt for the first Tx. */
-		if( xTxDescriptors[ 0 ].data != NULL )
-		{
-			if( ( ( xTxDescriptors[ 0 ].status & TX_BD_R ) == 0 ) && ( ( xTxDescriptors[ 0 ].status & TX_BD_R ) == 0 ) )
-			{
-				configASSERT( xTxDescriptors[ 0 ].data == xTxDescriptors[ 1 ].data );
-				
-				xTxDescriptors[ 0 ].data = ( uint8_t* ) __REV( ( unsigned long ) xTxDescriptors[ 0 ].data );
-				prvReturnBuffer( xTxDescriptors[ 0 ].data );
-				
-				/* Just to mark the fact that the buffer has already been released. */
-				xTxDescriptors[ 0 ].data = NULL;
-			}
-		}
-	}
-
-	if( ( ulEvent & ENET_EIR_RXF_MASK ) != 0UL )
-	{
-		/* Packet Rxed. */
-		xQueueSendFromISR( xEMACEventQueue, &ulRxEvent, &lHigherPriorityTaskWoken );
-		portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
-	}
-
-	if( ulEvent & ( ENET_EIR_UN_MASK | ENET_EIR_RL_MASK | ENET_EIR_LC_MASK | ENET_EIR_EBERR_MASK | ENET_EIR_BABT_MASK | ENET_EIR_BABR_MASK | ENET_EIR_EBERR_MASK ) )
-	{
-		/* Error. */
-		prvInitialiseDescriptors();
-		ENET_RDAR = ENET_RDAR_RDAR_MASK;
-	}
-}
 

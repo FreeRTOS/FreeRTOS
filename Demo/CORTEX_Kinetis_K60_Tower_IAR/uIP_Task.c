@@ -319,6 +319,7 @@ static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;
 void vApplicationProcessFormInput( char *pcInputString )
 {
 char *c;
+const unsigned long ulYellowLED = 2UL;
 
 	/* Only interested in processing form input if this is the IO page. */
 	c = strstr( pcInputString, "io.shtml" );
@@ -333,21 +334,18 @@ char *c;
 			if( strstr( c, "LED0=1" ) != NULL )
 			{
 				/* Turn the LEDs on. */
-				vParTestSetLED( 3, 1 );
-				vParTestSetLED( 4, 1 );
+				vParTestSetLED( ulYellowLED, pdTRUE );
 			}
 			else
 			{
 				/* Turn the LEDs off. */
-				vParTestSetLED( 3, 0 );
-				vParTestSetLED( 4, 0 );
+				vParTestSetLED( ulYellowLED, pdFALSE );
 			}
 	    }
 		else
 		{
-			/* Commands to turn LEDs off are not always explicit. */
-			vParTestSetLED( 3, 0 );
-			vParTestSetLED( 4, 0 );
+			/* Some browsers will only imply that a check box is off. */
+			vParTestSetLED( ulYellowLED, pdFALSE );
 		}
 	}
 }

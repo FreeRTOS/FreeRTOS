@@ -87,7 +87,7 @@
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	0
+#define configGENERATE_RUN_TIME_STATS	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configUSE_MALLOC_FAILED_HOOK	1
@@ -113,6 +113,13 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+
+#ifdef __ICCARM__ /* Stop these prototypes being included in the asm files. */
+	void vMainConfigureTimerForRunTimeStats( void );
+	unsigned long ulMainGetRunTimeCounterValue( void );
+#endif
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vMainConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue()
 
 /* Use the system definition, if there is one */
 #ifdef __NVIC_PRIO_BITS

@@ -85,7 +85,7 @@ void vParTestInitialise( void )
 	GPIOA_PDDR=GPIO_PDDR_PDD( ulLEDs[ 0 ] | ulLEDs[ 1 ] | ulLEDs[ 2 ] | ulLEDs[ 3 ] );	
 
 	/* Start with LEDs off. */
-	GPIOA_PTOR = ~0U;
+	GPIOA_PTOR = ~0U;	
 }
 /*-----------------------------------------------------------*/
 
@@ -93,20 +93,14 @@ void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
 {
 	if( ulLED < partstMAX_LEDS )
 	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
+		if( xValue == pdTRUE )
 		{
-			if( xValue == pdTRUE )
-			{
-				GPIOA_PDOR &= ~GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
-			}
-			else
-			{
-				GPIOA_PDOR |= GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
-			}
+			GPIOA_PCOR = ulLEDs[ ulLED ];
 		}
-		taskEXIT_CRITICAL();
+		else
+		{
+			GPIOA_PSOR = ulLEDs[ ulLED ];
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -115,35 +109,7 @@ void vParTestToggleLED( unsigned long ulLED )
 {
 	if( ulLED < partstMAX_LEDS )
 	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
-		{
-			GPIOA_PTOR |= GPIO_PDOR_PDO( ulLEDs[ ulLED ] );		
-		}
-		taskEXIT_CRITICAL();
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestSetLEDFromISR( unsigned long ulLED, signed portBASE_TYPE xValue )
-{
-unsigned portBASE_TYPE uxInterruptFlags;
-
-	if( ulLED < partstMAX_LEDS )
-	{
-		uxInterruptFlags = portSET_INTERRUPT_MASK_FROM_ISR();
-		{
-			if( xValue == pdTRUE )
-			{
-				GPIOA_PDOR &= ~GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
-			}
-			else
-			{
-				GPIOA_PDOR |= GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
-			}
-		}
-		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxInterruptFlags );
+		GPIOA_PTOR = ulLEDs[ ulLED ];
 	}
 }
 /*-----------------------------------------------------------*/
@@ -154,22 +120,16 @@ long lReturn = pdFALSE;
 
 	if( ulLED < partstMAX_LEDS )
 	{
-		/* A critical section is used as the LEDs are also accessed from an
-		interrupt. */
-		taskENTER_CRITICAL();
+		lReturn = GPIOA_PDOR & ulLEDs[ ulLED ];
+		
+		if( lReturn == 0 )
 		{
-			lReturn = GPIO_PDOR_PDO( ulLEDs[ ulLED ] );
-			
-			if( lReturn == 0 )
-			{
-				lReturn = pdTRUE;
-			}
-			else
-			{
-				lReturn = pdFALSE;
-			}
+			lReturn = pdTRUE;
 		}
-		taskEXIT_CRITICAL();
+		else
+		{
+			lReturn = pdFALSE;
+		}
 	}
 
 	return lReturn;

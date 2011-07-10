@@ -221,7 +221,7 @@ static void prvButtonLEDTimerCallback( xTimerHandle xTimer )
 	a critical section because it is accessed from multiple tasks, and the
 	button interrupt - in this trivial case, for simplicity, the critical
 	section is omitted. */
-	GPIOA_PDOR |= GPIO_PDOR_PDO( mainTIMER_CONTROLLED_LED );
+	GPIOA_PSOR = mainTIMER_CONTROLLED_LED;
 }
 /*-----------------------------------------------------------*/
 
@@ -233,7 +233,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* The button was pushed, so ensure the LED is on before resetting the
 	LED timer.  The LED timer will turn the LED off if the button is not
 	pushed within 5000ms. */
-	GPIOA_PDOR &= ~GPIO_PDOR_PDO( mainTIMER_CONTROLLED_LED );
+	GPIOA_PCOR = mainTIMER_CONTROLLED_LED;
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
@@ -293,11 +293,7 @@ unsigned long ulReceivedValue;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
-			/* NOTE - accessing the LED port should use a critical section
-			because it is accessed from multiple tasks, and the button interrupt
-			- in this trivial case, for simplicity, the critical section is
-			omitted. */
-		    GPIOA_PTOR |= GPIO_PDOR_PDO( mainTASK_CONTROLLED_LED );
+		    GPIOA_PTOR = mainTASK_CONTROLLED_LED;
 		}
 	}
 }
@@ -378,6 +374,22 @@ volatile size_t xFreeHeapSpace;
 	}
 }
 /*-----------------------------------------------------------*/
+
+/* The Blinky build configuration does not include Ethernet functionality,
+however, the Full and Blinky build configurations share a vectors.h header file.
+Therefore, dummy Ethernet interrupt handers need to be defined to keep the
+linker happy. */
+void vEMAC_TxISRHandler( void ) {}
+void vEMAC_RxISRHandler( void ){}
+void vEMAC_ErrorISRHandler( void ) {}
+
+/* The Blinky build configuration does not include run time stats gathering,
+however, the Full and Blinky build configurations share a FreeRTOSConfig.h
+file.  Therefore, dummy run time stats functions need to be defined to keep the
+linker happy. */
+void vMainConfigureTimerForRunTimeStats( void ) {}
+unsigned long ulMainGetRunTimeCounterValue( void ) { return 0UL; }
+
 
 
 

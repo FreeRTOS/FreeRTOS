@@ -60,7 +60,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
+#include "queue.h"
 
 /* uIP includes. */
 #include "net/uip.h"
@@ -70,25 +70,26 @@
 
 /* The number of times emacBUFFER_WAIT_DELAY_ms should be waited before giving
 up on attempting to obtain a free buffer all together. */
-#define emacBUFFER_WAIT_ATTEMPTS	( 30 )
+#define emacBUFFER_WAIT_ATTEMPTS		( 30 )
 
 /* The number of Rx descriptors. */
-#define emacNUM_RX_DESCRIPTORS	8
+#define emacNUM_RX_DESCRIPTORS			8
 
 /* The number of Tx descriptors.  When using uIP there is not point in having
 more than two. */
-#define emacNUM_TX_BUFFERS	2
+#define emacNUM_TX_BUFFERS				2
 
 /* The total number of EMAC buffers to allocate. */
-#define emacNUM_BUFFERS		( emacNUM_RX_DESCRIPTORS + emacNUM_TX_BUFFERS )
+#define emacNUM_BUFFERS					( emacNUM_RX_DESCRIPTORS + emacNUM_TX_BUFFERS )
 
 /* The time to wait for the Tx descriptor to become free. */
-#define emacTX_WAIT_DELAY_ms ( 10 / portTICK_RATE_MS )
+#define emacTX_WAIT_DELAY_ms 			( 10 / portTICK_RATE_MS )
 
 /* The total number of times to wait emacTX_WAIT_DELAY_ms for the Tx descriptor to
 become free. */
-#define emacTX_WAIT_ATTEMPTS ( 50 )
+#define emacTX_WAIT_ATTEMPTS 			( 50 )
 
+/* Constants used for set up and initialisation. */
 #define emacTX_INTERRUPT_NO			( 76 )
 #define emacRX_INTERRUPT_NO			( 77 )
 #define emacERROR_INTERRUPT_NO		( 78 )
@@ -154,7 +155,7 @@ one of the Ethernet buffers when its actually in use. */
 unsigned char *uip_buf = NULL;
 
 /*-----------------------------------------------------------*/
-#define ENET_HARDWARE_CHECKSUM 0	//_RB_ for test only
+
 void vEMACInit( void )
 {
 int iData;
@@ -262,19 +263,6 @@ const unsigned portCHAR ucMACAddress[] =
 
     ENET_ECR = ENET_ECR_EN1588_MASK;
 
-#if 0
-//_RB_	
-// Enable Ethernet header alignment for rx
-ENET_RACC |= 0
-					 | ENET_RACC_SHIFT16_MASK
-					 ;
-
-// Enable Ethernet header alignment for tx
-ENET_TACC |= 0
-					 | ENET_TACC_SHIFT16_MASK
-					 ;
-#endif
-	
 	/* Store and forward checksum. */
 	ENET_TFWR = ENET_TFWR_STRFWD_MASK;
 
@@ -293,9 +281,9 @@ ENET_TACC |= 0
 	/* Enable interrupts. */
 	ENET_EIMR = 0
 			/*rx irqs*/
-			| ENET_EIMR_RXF_MASK/*FSL: only for complete frame, not partial buffer descriptor | ENET_EIMR_RXB_MASK*/
+			| ENET_EIMR_RXF_MASK/* only for complete frame, not partial buffer descriptor | ENET_EIMR_RXB_MASK*/
 			/*xmit irqs*/
-			| ENET_EIMR_TXF_MASK/*FSL: only for complete frame, not partial buffer descriptor | ENET_EIMR_TXB_MASK*/
+			| ENET_EIMR_TXF_MASK/* only for complete frame, not partial buffer descriptor | ENET_EIMR_TXB_MASK*/
 			/*enet irqs*/
 			| ENET_EIMR_UN_MASK | ENET_EIMR_RL_MASK | ENET_EIMR_LC_MASK | ENET_EIMR_BABT_MASK | ENET_EIMR_BABR_MASK | ENET_EIMR_EBERR_MASK
 			;

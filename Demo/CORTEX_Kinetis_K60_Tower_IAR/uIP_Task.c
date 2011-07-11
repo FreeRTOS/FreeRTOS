@@ -72,7 +72,7 @@
 #include "ParTest.h"
 
 /* The buffer used by the uIP stack to both receive and send.  In this case,
-because the Ethernet driver has been modified to be zero copy - the uip_buf
+because the Ethernet driver is implemented to be zero copy - the uip_buf
 variable is just a pointer to an Ethernet buffer, and not a buffer in its own
 right. */
 extern unsigned char *uip_buf;
@@ -90,14 +90,8 @@ driver to the uIP stack. */
 /* A block time of zero simply means "don't block". */
 #define uipDONT_BLOCK				0UL
 
-/* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT    ( 100 / portTICK_RATE_MS )
-
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
-
-/* Standard constant. */
-#define uipTOTAL_FRAME_HEADER_SIZE	54
 
 /*-----------------------------------------------------------*/
 
@@ -138,7 +132,7 @@ clock_time_t clock_time( void )
 
 void vuIP_Task( void *pvParameters )
 {
-portBASE_TYPE i;
+long i;
 unsigned long ulNewEvent = 0UL, ulUIP_Events = 0UL;
 unsigned short usPacketLength;
 
@@ -161,7 +155,6 @@ unsigned short usPacketLength;
 		{
 			uip_len = usPacketLength;
 			
-			/* Standard uIP loop taken from the uIP manual. */
 			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 			{
 				uip_arp_ipin();
@@ -330,7 +323,7 @@ const unsigned long ulYellowLED = 2UL;
 		c = strstr( pcInputString, "?" );
 	    if( c )
 	    {
-			/* Turn the LED's on or off in accordance with the check box status. */
+			/* Turn the LEDs on or off in accordance with the check box status. */
 			if( strstr( c, "LED0=1" ) != NULL )
 			{
 				/* Turn the LEDs on. */

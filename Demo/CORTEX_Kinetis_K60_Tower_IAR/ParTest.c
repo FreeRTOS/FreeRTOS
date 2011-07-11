@@ -52,7 +52,7 @@
 */
 
 /*-----------------------------------------------------------
- * Simple parallel port IO routines.
+ * Simple GPIO (parallel port) IO routines.
  *-----------------------------------------------------------*/
 
 /* Kernel includes. */
@@ -68,6 +68,7 @@
 /* Only the LEDs on one of the two seven segment displays are used. */
 #define partstMAX_LEDS		4
 
+/* The bits used to control the LEDs on the TWR-K60N512. */
 const unsigned long ulLEDs[ partstMAX_LEDS ] = { ( 1UL << 10UL ), ( 1UL << 29UL ), ( 1UL << 28UL ), ( 1UL << 11UL ) };
 
 /*-----------------------------------------------------------*/

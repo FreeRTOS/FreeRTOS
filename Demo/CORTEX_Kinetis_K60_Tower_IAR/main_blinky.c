@@ -65,8 +65,9 @@
  * one queue, and one timer.  It also demonstrates how Cortex-M3 interrupts can
  * interact with FreeRTOS tasks/timers.
  *
- * This simple demo project runs on the SK-FM3-100PMC evaluation board, which
- * is populated with an MB9B500 microcontroller.
+ * This simple demo project runs 'stand alone' (without the rest of the tower
+ * system) on the TWR-K60N512 tower module, which is populated with a K60N512
+ * Cortex-M4 microcontroller.
  *
  * The idle hook function:
  * The idle hook function demonstrates how to query the amount of FreeRTOS heap
@@ -88,23 +89,23 @@
  * in this file.  prvQueueReceiveTask() sits in a loop that causes it to
  * repeatedly attempt to read data from the queue that was created within
  * main().  When data is received, the task checks the value of the data, and
- * if the value equals the expected 100, toggles an LED on the 7 segment
- * display.  The 'block time' parameter passed to the queue receive function
- * specifies that the task should be held in the Blocked state indefinitely to
- * wait for data to be available on the queue.  The queue receive task will only
- * leave the Blocked state when the queue send task writes to the queue.  As the
- * queue send task writes to the queue every 200 milliseconds, the queue receive
- * task leaves the Blocked state every 200 milliseconds, and therefore toggles
- * the LED every 200 milliseconds.
+ * if the value equals the expected 100, toggles the blue LED.  The 'block 
+ * time' parameter passed to the queue receive function specifies that the task 
+ * should be held in the Blocked state indefinitely to wait for data to be 
+ * available on the queue.  The queue receive task will only leave the Blocked 
+ * state when the queue send task writes to the queue.  As the queue send task 
+ * writes to the queue every 200 milliseconds, the queue receive task leaves the 
+ * Blocked state every 200 milliseconds, and therefore toggles the blue LED 
+ * every 200 milliseconds.
  *
  * The LED Software Timer and the Button Interrupt:
  * The user button SW2 is configured to generate an interrupt each time it is
- * pressed.  The interrupt service routine switches an LED in the 7 segment
- * display on, and resets the LED software timer.  The LED timer has a 5000
- * millisecond (5 second) period, and uses a callback function that is defined
- * to just turn the LED off again.  Therefore, pressing the user button will
- * turn the LED on, and the LED will remain on until a full five seconds pass
- * without the button being pressed.
+ * pressed.  The interrupt service routine switches the green LED on, and 
+ * resets the LED software timer.  The LED timer has a 5000 millisecond (5 
+ * second) period, and uses a callback function that is defined to just turn the 
+ * LED off again.  Therefore, pressing the user button will turn the LED on, and 
+ * the LED will remain on until a full five seconds pass without the button 
+ * being pressed.
  */
 
 /* Kernel includes. */
@@ -136,12 +137,13 @@ the queue empty. */
 /* The LED toggle by the queue receive task (blue). */
 #define mainTASK_CONTROLLED_LED				( 1UL << 10UL )
 
-/* The LED turned on by the button interrupt, and turned off by the LED timer. */
+/* The LED turned on by the button interrupt, and turned off by the LED timer
+(green). */
 #define mainTIMER_CONTROLLED_LED			( 1UL << 29UL )
 
 /* The vector used by the GPIO port E.  Button SW2 is configured to generate
-an interrput on this port. */
-#define mainGPIO_E_VECTOR					( 107 - 16 )
+an interrupt on this port. */
+#define mainGPIO_E_VECTOR					( 91 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -217,10 +219,7 @@ void main( void )
 static void prvButtonLEDTimerCallback( xTimerHandle xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
-	five seconds - turn the LED off.  NOTE - accessing the LED port should use
-	a critical section because it is accessed from multiple tasks, and the
-	button interrupt - in this trivial case, for simplicity, the critical
-	section is omitted. */
+	five seconds - turn the LED off. */
 	GPIOA_PSOR = mainTIMER_CONTROLLED_LED;
 }
 /*-----------------------------------------------------------*/
@@ -237,11 +236,10 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* This interrupt safe FreeRTOS function can be called from this interrupt
 	because the interrupt priority is below the
-	configMAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
+	configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY setting in FreeRTOSConfig.h. */
 	xTimerResetFromISR( xButtonLEDTimer, &xHigherPriorityTaskWoken );
 
-	/* Clear the interrupt before leaving.  This just clears all the interrupts
-	for simplicity, as only one is actually used in this simple demo anyway. */
+	/* Clear the interrupt before leaving. */
 	PORTE_ISFR = 0xFFFFFFFFUL;
 
 	/* If calling xTimerResetFromISR() caused a task (in this case the timer
@@ -303,8 +301,10 @@ static void prvSetupHardware( void )
 {
 	/* Enable the interrupt on SW1. */
 	PORTE_PCR26 = PORT_PCR_MUX( 1 ) | PORT_PCR_IRQC( 0xA ) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
-
 	enable_irq( mainGPIO_E_VECTOR );
+	
+	/* The interrupt calls an interrupt safe API function - so its priority must
+	be equal to or lower than configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
 	set_irq_priority( mainGPIO_E_VECTOR, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
 	
 	/* Set PTA10, PTA11, PTA28, and PTA29 (connected to LED's) for GPIO
@@ -340,19 +340,10 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	( void ) pxTask;
 
 	/* Run time stack overflow checking is performed if
-	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationTickHook( void )
-{
-	/* A tick hook is used by the "Full" build configuration.  The Full and
-	blinky build configurations share a FreeRTOSConfig.h header file, so this
-	simple build configuration also has to define a tick hook - even though it
-	does not actually use it for anything. */
 }
 /*-----------------------------------------------------------*/
 
@@ -389,6 +380,14 @@ file.  Therefore, dummy run time stats functions need to be defined to keep the
 linker happy. */
 void vMainConfigureTimerForRunTimeStats( void ) {}
 unsigned long ulMainGetRunTimeCounterValue( void ) { return 0UL; }
+
+/* A tick hook is used by the "Full" build configuration.  The Full and blinky 
+build configurations share a FreeRTOSConfig.h header file, so this simple build 
+configuration also has to define a tick hook - even though it does not actually 
+use it for anything. */
+void vApplicationTickHook( void ) {}
+
+
 
 
 

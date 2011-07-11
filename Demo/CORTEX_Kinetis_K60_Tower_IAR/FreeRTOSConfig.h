@@ -80,14 +80,13 @@
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 60 * 1024 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 30 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
-#define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	1
+#define configQUEUE_REGISTRY_SIZE		8
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configUSE_MALLOC_FAILED_HOOK	1
@@ -114,33 +113,53 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 
-#ifdef __ICCARM__ /* Stop these prototypes being included in the asm files. */
+/* Run time stats gathering definitions. */
+#ifdef __ICCARM__
+	/* The #ifdef just prevents this C specific syntax from being included in
+	assembly files. */
 	void vMainConfigureTimerForRunTimeStats( void );
 	unsigned long ulMainGetRunTimeCounterValue( void );
 #endif
+#define configGENERATE_RUN_TIME_STATS	1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vMainConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue()
 
-/* Use the system definition, if there is one */
+/* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
+	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
 	#define configPRIO_BITS       		__NVIC_PRIO_BITS
 #else
 	#define configPRIO_BITS       		4        /* 15 priority levels */
 #endif
 
+/* The lowest interrupt priority that can be used in a call to a "set priority"
+function. */
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0xf
+
+/* The highest interrupt priority that can be used by any interrupt service
+routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+PRIORITY THAN THIS! (higher priorities are lower numeric values. */
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	5
 
-/* The lowest priority. */
-#define configKERNEL_INTERRUPT_PRIORITY 	( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-/* Priority 5, or 160 as only the top three bits are implemented. */
+/* Interrupt priorities used by the kernel port layer itself.  These are generic
+to all Cortex-M ports, and do not rely on any particular library functions. */
+#define configKERNEL_INTERRUPT_PRIORITY 		( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 	
+/* Normal assert() semantics without relying on the provision of an assert.h
+header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
 	
+/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
+standard names. */
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
+
+/******************************************************************************
+ * Network configuration constants follow from here.
+ *****************************************************************************/
 
 /* MAC address configuration. */
 #define configMAC_ADDR0	0x00

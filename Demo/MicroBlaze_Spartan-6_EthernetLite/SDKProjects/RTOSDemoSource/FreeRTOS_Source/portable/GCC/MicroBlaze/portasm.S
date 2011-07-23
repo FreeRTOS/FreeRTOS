@@ -68,6 +68,7 @@
 back into the caller stack. */
 #if XPAR_MICROBLAZE_0_USE_FPU == 1
 	#define portCONTEXT_SIZE 136
+	#define portMINUS_CONTEXT_SIZE -136
 #else
 	#define portCONTEXT_SIZE 132
 #endif
@@ -125,7 +126,7 @@ back into the caller stack. */
 .macro portSAVE_CONTEXT
 
 	/* Make room for the context on the stack. */
-	addik r1, r1, -portCONTEXT_SIZE
+	addik r1, r1, portMINUS_CONTEXT_SIZE
 
 	/* Stack general registers. */
 	swi r31, r1, portR31_OFFSET

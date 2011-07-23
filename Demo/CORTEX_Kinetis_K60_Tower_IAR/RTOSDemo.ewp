@@ -1825,12 +1825,6 @@
       <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
-      <excluded>
-        <configuration>Full</configuration>
-      </excluded>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
     </file>
     <file>

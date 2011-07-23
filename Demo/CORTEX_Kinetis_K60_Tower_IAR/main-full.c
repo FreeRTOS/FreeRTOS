@@ -90,11 +90,12 @@
  *
  *
  * The Demo Specific "LED" Timers and Callback Function:
- * Two very simple LED timers are created.  All they do is toggle and LED timer
- * callback function is executed.  The two timers share a callback function, so 
- * the callback function parameter is used to determine which timer actually 
- * expired, and therefore, which LED to toggle.  Both timers use a different 
- * frequency, one toggles the blue LED and the other the green LED.
+ * Two very simple LED timers are created.  All they do is toggle an LED each
+ * when the timer callback function is executed.  The two timers share a 
+ * callback function, so the callback function parameter is used to determine 
+ * which timer actually expired, and therefore, which LED to toggle.  Both 
+ * timers use a different frequency, one toggles the blue LED and the other the 
+ * green LED.
  *
  * The LED/Button Software Timer and the Button Interrupt:
  * The user button SW2 is configured to generate an interrupt each time it is

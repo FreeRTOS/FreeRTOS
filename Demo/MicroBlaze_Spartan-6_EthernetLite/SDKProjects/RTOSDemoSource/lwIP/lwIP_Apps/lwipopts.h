@@ -32,6 +32,17 @@
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
 
+#include "xparameters.h"
+
+/* Define platform endianness (might already be defined) */
+#ifndef BYTE_ORDER
+	#if XPAR_MICROBLAZE_0_ENDIANNESS == 1
+		#define BYTE_ORDER LITTLE_ENDIAN
+	#else
+		#define BYTE_ORDER BIG_ENDIAN
+	#endif
+#endif /* BYTE_ORDER */
+
 /* SSI options. */
 #define TCPIP_THREAD_NAME              "tcpip"
 #define LWIP_HTTPD_MAX_TAG_NAME_LEN 20

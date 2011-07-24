@@ -32,37 +32,22 @@
 #ifndef __ARCH_CC_H__
 #define __ARCH_CC_H__
 
-#if 1
 /* Include some files for defining library routines */
 #include <stdio.h> /* printf, fflush, FILE */
 #include <stdlib.h> /* abort */
-#else
-/* Declare fuction prototypes for assert/diag/error - leads to some warnings,
- * but good to test if no includes are missing. */
-int printf(const char *format, ...);
-void abort(void);
-struct _iobuf;
-typedef struct _iobuf FILE;
-int fflush(FILE *stream);
-#endif
 
 
 
 /** @todo fix some warnings: don't use #pragma if compiling with cygwin gcc */
 #ifndef __GNUC__
-#include <limits.h>
-#pragma warning (disable: 4244) /* disable conversion warning (implicit integer promotion!) */
-#pragma warning (disable: 4127) /* conditional expression is constant */
-#pragma warning (disable: 4996) /* 'strncpy' was declared deprecated */
-#pragma warning (disable: 4103) /* structure packing changed by including file */
+	#include <limits.h>
+	#pragma warning (disable: 4244) /* disable conversion warning (implicit integer promotion!) */
+	#pragma warning (disable: 4127) /* conditional expression is constant */
+	#pragma warning (disable: 4996) /* 'strncpy' was declared deprecated */
+	#pragma warning (disable: 4103) /* structure packing changed by including file */
 #endif
 
 #define LWIP_PROVIDE_ERRNO
-
-/* Define platform endianness (might already be defined) */
-#ifndef BYTE_ORDER
-#define BYTE_ORDER LITTLE_ENDIAN
-#endif /* BYTE_ORDER */
 
 /* Define generic types used in lwIP */
 typedef unsigned   char    u8_t;

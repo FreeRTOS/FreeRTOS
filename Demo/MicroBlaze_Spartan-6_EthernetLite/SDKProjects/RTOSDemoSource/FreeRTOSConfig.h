@@ -83,12 +83,11 @@
 #define configMAX_PRIORITIES			( 6 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 64 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		0
-#define configGENERATE_RUN_TIME_STATS	0
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configUSE_MALLOC_FAILED_HOOK	1
@@ -132,6 +131,45 @@ to exclude the API function. */
 #define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 	
 
+/* Run time stats gathering definitions.  The conditional compilation is to
+prevent the C syntax being included in assembly files. */
+#ifndef __ASSEMBLER__
+	unsigned long ulMainGetRunTimeCounterValue( void );
+	void vMainConfigureTimerForRunTimeStats( void );
+#endif
+#define configGENERATE_RUN_TIME_STATS	1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vMainConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue()
+
+
+
+#define configLWIP_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
+
+/* MAC address configuration. */
+#define configMAC_ADDR0	0x00
+#define configMAC_ADDR1	0x12
+#define configMAC_ADDR2	0x13
+#define configMAC_ADDR3	0x10
+#define configMAC_ADDR4	0x15
+#define configMAC_ADDR5	0x11
+
+/* IP address configuration. */
+#define configIP_ADDR0		192
+#define configIP_ADDR1		168
+#define configIP_ADDR2		0
+#define configIP_ADDR3		200
+
+/* Gateway IP address configuration. */
+#define configGW_IP_ADDR0	192
+#define configGW_IP_ADDR1	168
+#define configGW_IP_ADDR2	0
+#define configGW_IP_ADDR3	3
+
+/* Netmask configuration. */
+#define configNET_MASK0		255
+#define configNET_MASK1		255
+#define configNET_MASK2		255
+#define configNET_MASK3		0
 
 #endif /* FREERTOS_CONFIG_H */
 

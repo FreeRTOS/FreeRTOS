@@ -2218,7 +2218,7 @@ lwip_setsockopt_internal(void *arg)
   case IPPROTO_UDPLITE:
     switch (optname) {
     case UDPLITE_SEND_CSCOV:
-      if ((*(int*)optval != 0) && ((*(int*)optval < 8)) || (*(int*)optval > 0xffff)) {
+      if ( ( (*(int*)optval != 0) && ((*(int*)optval < 8)) ) || (*(int*)optval > 0xffff)) {
         /* don't allow illegal values! */
         sock->conn->pcb.udp->chksum_len_tx = 8;
       } else {
@@ -2228,7 +2228,7 @@ lwip_setsockopt_internal(void *arg)
                   s, (*(int*)optval)) );
       break;
     case UDPLITE_RECV_CSCOV:
-      if ((*(int*)optval != 0) && ((*(int*)optval < 8)) || (*(int*)optval > 0xffff)) {
+      if ( ((*(int*)optval != 0) && ((*(int*)optval < 8)) ) || (*(int*)optval > 0xffff)) {
         /* don't allow illegal values! */
         sock->conn->pcb.udp->chksum_len_rx = 8;
       } else {

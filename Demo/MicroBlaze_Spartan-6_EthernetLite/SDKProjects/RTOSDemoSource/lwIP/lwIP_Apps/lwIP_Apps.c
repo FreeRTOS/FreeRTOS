@@ -51,6 +51,9 @@
     licensing and training services.
 */
 
+/* Standard includes. */
+#include <string.h>
+
 /* lwIP core includes */
 #include "lwip/opt.h"
 #include "lwip/sys.h"
@@ -71,21 +74,21 @@
 
 /* applications includes */
 #include "apps/httpserver_raw/httpd.h"
-#include "apps/httpserver/httpserver-netconn.h"
-#include "apps/netio/netio.h"
-#include "apps/netbios/netbios.h"
-#include "apps/ping/ping.h"
-#include "apps/rtp/rtp.h"
-#include "apps/sntp/sntp.h"
-#include "apps/chargen/chargen.h"
-#include "apps/shell/shell.h"
-#include "apps/tcpecho/tcpecho.h"
-#include "apps/udpecho/udpecho.h"
-#include "apps/tcpecho_raw/echo.h"
-#include "apps/socket_examples/socket_examples.h"
 
-/* include the port-dependent configuration */
-#include "lwipcfg_msvc.h"
+
+#define LWIP_PORT_INIT_IPADDR(addr)   IP4_ADDR((addr), configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 )
+#define LWIP_PORT_INIT_GW(addr)       IP4_ADDR((addr), configGW_IP_ADDR0, configGW_IP_ADDR1, configGW_IP_ADDR2, configGW_IP_ADDR3 )
+#define LWIP_PORT_INIT_NETMASK(addr)  IP4_ADDR((addr), configNET_MASK0,configNET_MASK1,configNET_MASK2,configNET_MASK3)
+
+/* remember to change this MAC address to suit your needs!
+   the last octet will be increased by netif->num for each netif */
+#define LWIP_MAC_ADDR_BASE            { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 }
+
+/* configuration for applications */
+
+#define LWIP_CHARGEN_APP              0
+#define LWIP_DNS_APP                  0
+#define LWIP_HTTPD_APP                1
 
 static struct netif netif;
 
@@ -128,13 +131,6 @@ extern err_t ethernetif_init( struct netif *netif );
 
 	netif_set_default(netif_add(&netif, &ipaddr, &netmask, &gw, NULL, ethernetif_init, tcpip_input));
 
-	#if LWIP_NETIF_STATUS_CALLBACK
-		netif_set_status_callback(&netif, status_callback);
-	#endif /* LWIP_NETIF_STATUS_CALLBACK */
-	#if LWIP_NETIF_LINK_CALLBACK
-		netif_set_link_callback(&netif, link_callback);
-	#endif /* LWIP_NETIF_LINK_CALLBACK */
-
 	netif_set_up( &netif );
 	apps_init();
 	http_set_ssi_handler( uslwIPAppsSSIHandler, pccSSITags, sizeof( pccSSITags ) / sizeof( char * ) );
@@ -146,64 +142,11 @@ static void apps_init( void )
 {
 	/* Taken from the lwIP example code. */
 	
-	#if LWIP_DNS_APP && LWIP_DNS
-		/* wait until the netif is up (for dhcp, autoip or ppp) */
-		sys_timeout(5000, dns_dorequest, NULL);
-	#endif /* LWIP_DNS_APP && LWIP_DNS */
-
-	#if LWIP_CHARGEN_APP && LWIP_SOCKET
-		chargen_init();
-	#endif /* LWIP_CHARGEN_APP && LWIP_SOCKET */
-
-	#if LWIP_PING_APP && LWIP_RAW && LWIP_ICMP
-		ping_init();
-	#endif /* LWIP_PING_APP && LWIP_RAW && LWIP_ICMP */
-
-	#if LWIP_NETBIOS_APP && LWIP_UDP
-		netbios_init();
-	#endif /* LWIP_NETBIOS_APP && LWIP_UDP */
-
 	#if LWIP_HTTPD_APP && LWIP_TCP
 	{
-		#ifdef LWIP_HTTPD_APP_NETCONN
-			http_server_netconn_init();
-		#else /* LWIP_HTTPD_APP_NETCONN */
-			httpd_init();
-		#endif /* LWIP_HTTPD_APP_NETCONN */
+		httpd_init();
 	}
 	#endif /* LWIP_HTTPD_APP && LWIP_TCP */
-
-	#if LWIP_NETIO_APP && LWIP_TCP
-		netio_init();
-	#endif /* LWIP_NETIO_APP && LWIP_TCP */
-
-	#if LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP
-		rtp_init();
-	#endif /* LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP */
-
-	#if LWIP_SNTP_APP && LWIP_SOCKET
-		sntp_init();
-	#endif /* LWIP_SNTP_APP && LWIP_SOCKET */
-
-	#if LWIP_SHELL_APP && LWIP_NETCONN
-		shell_init();
-	#endif /* LWIP_SHELL_APP && LWIP_NETCONN */
-
-	#if LWIP_TCPECHO_APP
-		#if LWIP_NETCONN && defined(LWIP_TCPECHO_APP_NETCONN)
-			tcpecho_init();
-		#else /* LWIP_NETCONN && defined(LWIP_TCPECHO_APP_NETCONN) */
-			echo_init();
-		#endif
-	#endif /* LWIP_TCPECHO_APP && LWIP_NETCONN */
-
-	#if LWIP_UDPECHO_APP && LWIP_NETCONN
-		udpecho_init();
-	#endif /* LWIP_UDPECHO_APP && LWIP_NETCONN */
-	
-	#if LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET
-		socket_examples_init();
-	#endif /* LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET */
 }
 /*-----------------------------------------------------------*/
 
@@ -221,11 +164,11 @@ extern char *pcMainGetTaskStatusMessage( void );
 	switch( iIndex )
 	{
 		case ssiTASK_STATS_INDEX :
-			vTaskList( pcBuffer );
+			vTaskList( ( signed char * ) pcBuffer );
 			break;
 
 		case ssiRUN_TIME_STATS_INDEX :
-			vTaskGetRunTimeStats( pcBuffer );
+			vTaskGetRunTimeStats( ( signed char * ) pcBuffer );
 			break;
 	}
 

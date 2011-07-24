@@ -597,7 +597,7 @@ int result;
  *---------------------------------------------------------------------------*/
 sys_prot_t sys_arch_protect(void)
 {
-	vPortEnterCritical();
+	taskENTER_CRITICAL();
 	return 1;
 }
 

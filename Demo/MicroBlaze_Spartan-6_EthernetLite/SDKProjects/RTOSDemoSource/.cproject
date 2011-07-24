@@ -40,8 +40,6 @@
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.788537379" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
@@ -105,7 +103,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="serial.c|src/testperiph.c|ParTest.c|src/xuartlite_selftest_example.c|src/xtmrctr_selftest_example.c|src/xtmrctr_intr_example.c|src/xintc_tapp_example.c|src/xgpio_tapp_example.c|src/xgpio_intr_tapp_example.c|src/xemaclite_polled_example.c|src/xemaclite_intr_example.c|Demo_Source|RegisterTests.c|main-full.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lwIP|lwIP/lwIP_Apps/apps/httpserver_raw/fsdata.c|serial.c|src/testperiph.c|ParTest.c|src/xuartlite_selftest_example.c|src/xtmrctr_selftest_example.c|src/xtmrctr_intr_example.c|src/xintc_tapp_example.c|src/xgpio_tapp_example.c|src/xgpio_intr_tapp_example.c|src/xemaclite_polled_example.c|src/xemaclite_intr_example.c|Demo_Source|RegisterTests.c|main-full.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -1014,6 +1012,11 @@
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.1539819216" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/netif/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps/apps/httpserver_raw}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include/ipv4}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
@@ -1077,8 +1080,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="xilinx.gnu.mb.exe.debug.1890710697.1391169017.1608696955" name="fsdata.c" rcbsApplicability="disable" resourcePath="lwIP/lwIP_Apps/apps/httpserver_raw/fsdata.c" toolsToInvoke="xilinx.gnu.mb.c.toolchain.compiler.debug.1610218702.1428026378">
+						<tool id="xilinx.gnu.mb.c.toolchain.compiler.debug.1610218702.1428026378" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.debug.1610218702"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="src/xuartlite_selftest_example.c|src/xtmrctr_selftest_example.c|src/xtmrctr_intr_example.c|src/xintc_tapp_example.c|src/xgpio_tapp_example.c|src/xgpio_intr_tapp_example.c|src/xemaclite_polled_example.c|src/xemaclite_intr_example.c|src/testperiph.c|main-blinky.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lwIP/lwIP_Apps/apps/httpserver_raw/fsdata.c|src/xuartlite_selftest_example.c|src/xtmrctr_selftest_example.c|src/xtmrctr_intr_example.c|src/xintc_tapp_example.c|src/xgpio_tapp_example.c|src/xgpio_intr_tapp_example.c|src/xemaclite_polled_example.c|src/xemaclite_intr_example.c|src/testperiph.c|main-blinky.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

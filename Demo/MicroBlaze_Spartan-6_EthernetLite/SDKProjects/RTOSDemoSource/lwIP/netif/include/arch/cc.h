@@ -86,8 +86,7 @@ typedef u32_t sys_prot_t;
 #define SZT_F U32_F
 
 /* Compiler hints for packing structures */
-#define PACK_STRUCT_STRUCT
-#define PACK_STRUCT_USE_INCLUDES
+#define PACK_STRUCT_STRUCT __attribute__( (packed) )
 
 /* Plaform specific diagnostic output */
 #define LWIP_PLATFORM_DIAG(x)   do { printf x; } while(0)

@@ -573,3 +573,30 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
+void vMainConfigureTimerForRunTimeStats( void )
+{
+unsigned long ulRunTimeStatsDivisor;
+
+	/* How many times does the counter counter increment in 10ms? */
+	ulRunTimeStatsDivisor = 0UL / 1000UL; //_RB_
+}
+/*-----------------------------------------------------------*/
+
+unsigned long ulMainGetRunTimeCounterValue( void )
+{
+unsigned long ulReturn, ulCurrentCount;
+
+	ulCurrentCount = 0UL;
+	ulReturn = 0UL;
+
+	return ulReturn;
+}
+/*-----------------------------------------------------------*/
+
+char *pcMainGetTaskStatusMessage( void )
+{
+	return ( char * ) pcStatusMessage;
+}
+
+
+

@@ -43,9 +43,9 @@
 #define LWIP_SOCKET               (NO_SYS==0)
 #define LWIP_NETCONN              (NO_SYS==0)
 
-#define LWIP_IGMP                  1
+#define LWIP_IGMP                  0
 #define LWIP_ICMP                  1
-#define LWIP_SNMP                  1
+#define LWIP_SNMP                  0
 
 #define LWIP_DNS                   1
 

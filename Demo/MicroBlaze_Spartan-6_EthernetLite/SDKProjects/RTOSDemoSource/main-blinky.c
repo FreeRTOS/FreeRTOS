@@ -533,3 +533,8 @@ unsigned long ulCSR;
 }
 /*-----------------------------------------------------------*/
 
+/* These functions are not used by the Blinky build configuration.  However,
+they need to be defined because the Blinky and Full build configurations share
+a FreeRTOSConifg.h configuration file. */
+void vMainConfigureTimerForRunTimeStats( void ) {}
+unsigned long ulMainGetRunTimeCounterValue( void ) { return 1; }

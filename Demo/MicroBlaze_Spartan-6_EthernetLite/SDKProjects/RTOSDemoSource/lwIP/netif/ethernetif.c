@@ -51,9 +51,9 @@
     licensing and training services.
 */
 
-/* WinPCap includes. */
-#define HAVE_REMOTE
-#include "pcap.h"
+#if 0
+
+//_RB_
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -593,4 +593,6 @@ unsigned long ulNetMask;
 	is available. */
 	xTaskCreate( prvInterruptSimulator, ( signed char * ) "MAC_ISR", configMINIMAL_STACK_SIZE, NULL, configMAC_ISR_SIMULATOR_PRIORITY, NULL );
 }
+
+#endif
 

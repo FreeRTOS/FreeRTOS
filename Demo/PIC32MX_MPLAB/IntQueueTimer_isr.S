@@ -70,7 +70,11 @@
 
 /******************************************************************/
 
- 	.section 	.FreeRTOS, "ax", @progbits
+	#if (__C32_VERSION__ >= 2 )
+		.section 	.FreeRTOS, code
+	#else
+		.section 	.FreeRTOS, "ax", @progbits
+	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		vT3InterruptWrapper
@@ -88,7 +92,11 @@ vT3InterruptWrapper:
 
 /******************************************************************/
 
- 	.section 	.FreeRTOS, "ax", @progbits
+	#if (__C32_VERSION__ >= 2 )
+		.section 	.FreeRTOS, code
+	#else
+		.section 	.FreeRTOS, "ax", @progbits
+	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		vT4InterruptWrapper

@@ -71,7 +71,11 @@
 
 /******************************************************************/
 
- 	.section 	.FreeRTOS, "ax", @progbits
+	#if (__C32_VERSION__ >= 2 )
+		.section	.FreeRTOS, code
+	#else
+		.section 	.FreeRTOS, "ax", @progbits
+	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		vT1InterruptHandler
@@ -89,7 +93,11 @@ vT1InterruptHandler:
 
 /******************************************************************/
 
- 	.section 	.FreeRTOS, "ax", @progbits
+	#if (__C32_VERSION__ >= 2 )
+		.section 	.FreeRTOS, code
+	#else
+		.section 	.FreeRTOS, "ax", @progbits
+	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		xPortStartScheduler
@@ -106,7 +114,11 @@ vPortStartFirstTask:
 
 /*******************************************************************/
 
- 	.section 	.FreeRTOS, "ax", @progbits
+	#if (__C32_VERSION__ >= 2 )
+		.section 	.FreeRTOS, code
+	#else
+		.section 	.FreeRTOS, "ax", @progbits
+	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		vPortYieldISR

@@ -1,9 +1,0 @@
-elfcheck
-Xilinx EDK 13.1 Build EDK_O.40d
-Copyright (c) 1995-2010 Xilinx, Inc.  All rights reserved.
-
-Command Line: elfcheck -hw ../../HardwareWithEthernetLite/system.xml -pe
-microblaze_0 RTOSDemoSource.elf 
-
-ELF file	: RTOSDemoSource.elf
-elfcheck passed.

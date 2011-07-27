@@ -125,6 +125,10 @@
 #include "comtest_strings.h"
 #include "TimerDemo.h"
 
+/* lwIP includes. */
+#include "lwip/tcpip.h"
+
+
 /* Priorities at which the various tasks are created. */
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -189,6 +193,9 @@ static void vCheckTimerCallback( xTimerHandle xTimer );
  */
 static void prvSetupHardware( void );
 
+/* Defined in lwIPApps.c. */
+extern void lwIPAppsInit( void *pvArguments );
+
 /*-----------------------------------------------------------*/
 
 /* The check timer callback function sets pcStatusMessage to a string that
@@ -216,6 +223,9 @@ int main( void )
 
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
+
+	/* This call creates the TCP/IP thread. */
+	tcpip_init( lwIPAppsInit, NULL );
 
 	/* Start the reg test tasks, as described in the comments at the top of this
 	file. */
@@ -472,6 +482,9 @@ void vApplicationMallocFailedHook( void )
 
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
+	( void ) pcTaskName;
+	( void ) pxTask;
+
 	/* vApplicationStackOverflowHook() will only be called if
 	configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2.  The handle and name
 	of the offending task will be passed into the hook function via its 
@@ -509,6 +522,9 @@ static long lCheckTimerStarted = pdFALSE;
 		xTimerStart( xCheckTimer, mainDONT_BLOCK ); 
 		lCheckTimerStarted = pdTRUE;
 	}
+
+	extern void vTemp( void );
+	vTemp();
 }
 /*-----------------------------------------------------------*/
 
@@ -526,6 +542,8 @@ void vApplicationTickHook( void )
 
 void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
 {
+	( void ) xRegisterDump;
+
 	/* If configINSTALL_EXCEPTION_HANDLERS is set to 1 in FreeRTOSConfig.h, then 
 	the kernel will	automatically install its own exception handlers before the 
 	kernel is started, if the application writer has not already caused them to 

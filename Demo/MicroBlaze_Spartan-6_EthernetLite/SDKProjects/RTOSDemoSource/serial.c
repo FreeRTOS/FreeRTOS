@@ -156,6 +156,8 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, po
 
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned portBASE_TYPE uxStringLength )
 {
+	( void ) pxPort;
+
 	/* Output uxStringLength bytes starting from pcString. */
 	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, uxStringLength );
 }
@@ -165,6 +167,9 @@ static void prvRxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount )
 {
 signed char cRxedChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+	( void ) pvUnused;
+	( void ) uxByteCount;
 
 	/* Place any received characters into the receive queue. */
 	while( XUartLite_IsReceiveEmpty( xUartLiteInstance.RegBaseAddress ) == pdFALSE )
@@ -186,6 +191,9 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void prvTxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount )
 {
+	( void ) pvUnused;
+	( void ) uxByteCount;
+
 	/* Nothing to do here.  The Xilinx library function takes care of the
 	transmission. */
 	portNOP();

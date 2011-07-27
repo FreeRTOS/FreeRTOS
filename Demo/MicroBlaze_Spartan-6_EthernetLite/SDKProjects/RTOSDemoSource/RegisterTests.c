@@ -177,6 +177,8 @@ void vRegisterTest1( void *pvParameters )
 					"	bri 0				\n\t" \
 					"	nop					\n\t" \
 				 );
+
+	( void ) pvParameters;
 }
 /*-----------------------------------------------------------*/
 
@@ -294,6 +296,8 @@ void vRegisterTest2( void *pvParameters )
 					"	bri 0				\n\t" \
 					"	nop					\n\t" \
 				 );
+
+	( void ) pvParameters;
 }
 
 

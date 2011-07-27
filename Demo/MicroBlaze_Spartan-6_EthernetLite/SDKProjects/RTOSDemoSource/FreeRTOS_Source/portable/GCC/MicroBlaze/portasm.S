@@ -71,6 +71,7 @@ back into the caller stack. */
 	#define portMINUS_CONTEXT_SIZE -136
 #else
 	#define portCONTEXT_SIZE 132
+	#define portMINUS_CONTEXT_SIZE -132
 #endif
 
 /* Offsets from the stack pointer at which saved registers are placed. */

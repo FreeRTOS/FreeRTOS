@@ -116,6 +116,8 @@ implementation will be called instead. */
 extern void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump ) __attribute__((weak));
 void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
 {
+	( void ) xRegisterDump;
+
 	for( ;; )
 	{
 		portNOP();

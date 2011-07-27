@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/SVG/DTD/svg10.dtd">
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>Table of Contents</TITLE>
+<BASE target="system_main">
+<STYLE type="text/css">
+	.trigger {
+		cursor : hand;
+		cursor : pointer;
+	}
+	
+	.branch {
+		display     : none;
+		margin-left : 16px;
+	}
+</STYLE>
+<SCRIPT type="text/javascript">
+	var openImg  = new Image();
+	var clseImg  = new Image();
+	
+	openImg.src   = "imgs/IMG_openBranch.png";
+	clseImg.src   = "imgs/IMG_closeBranch.png";
+		
+	function showBranch(iBranchId) {
+		
+		var branchObj = document.getElementById(iBranchId).style;
+			
+		if(branchObj.display== "block")
+		   branchObj.display = "none";
+		else   
+		   branchObj.display = "block";
+	}
+		
+	function swapBranchImg(iBranchImgId) {
+		
+		branchImg = document.getElementById(iBranchImgId);
+		
+		if(branchImg.src.indexOf('imgs/IMG_closeBranch.png') > -1)
+			branchImg.src = openImg.src;
+		else   
+		    branchImg.src = clseImg.src;
+	}
+</SCRIPT>
+</HEAD>
+<BODY class="main_body"><TABLE BGCOLOR="#FFFFFF" WIDTH="200" COLS="1" cellspacing="0" cellpadding="0" border="0"><TD COLSPAN="1" VALIGN="Top">
+<A HREF="system_main.html#ANCHOR_OVERVIEW" style="text-decoration:none"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif">Overview</SPAN></A><BR><A HREF="system_main.html#ANCHOR_BLOCKDIAGRAM" style="text-decoration:none"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif">Block Diagram</SPAN></A><BR><A HREF="system_main.html#ANCHOR_EXTERNALPORTS" style="text-decoration:none"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif">External Ports</SPAN></A><BR><DIV class="trigger" onClick="showBranch('Processors'); swapBranchImg('BranchImg_Processors');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Processors"><SPAN style="color:#000000; font: bold 16px Verdana ArialHelvetica,sans-serif"> Processor</SPAN>
+</DIV>
+<SPAN class="branch" id="Processors"><A HREF="system_main.html#ANCHOR_microblaze_0" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('Debuggers'); swapBranchImg('BranchImg_Debuggers');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Debuggers"><SPAN style="color:#000000; font: bold 16px Verdana ArialHelvetica,sans-serif"> Debuggers</SPAN>
+</DIV>
+<SPAN class="branch" id="Debuggers"><A HREF="system_main.html#ANCHOR_debug_module" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   debug_module</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('Interrupt_Cntlrs'); swapBranchImg('BranchImg_Interrupt_Cntlrs');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Interrupt_Cntlrs"><SPAN style="color:#000000; font: bold 16px Verdana ArialHelvetica,sans-serif"> Interrupt Controllers</SPAN>
+</DIV>
+<SPAN class="branch" id="Interrupt_Cntlrs"><A HREF="system_main.html#ANCHOR_microblaze_0_intc" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0_intc</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('Busses'); swapBranchImg('BranchImg_Busses');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Busses"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif"> Busses</SPAN>
+</DIV>
+<SPAN class="branch" id="Busses"><A HREF="system_main.html#ANCHOR_axi4_0" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   axi4_0</SPAN></A><BR><A HREF="system_main.html#ANCHOR_axi4lite_0" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   axi4lite_0</SPAN></A><BR><A HREF="system_main.html#ANCHOR_microblaze_0_dlmb" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0_dlmb</SPAN></A><BR><A HREF="system_main.html#ANCHOR_microblaze_0_ilmb" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0_ilmb</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('Memory'); swapBranchImg('BranchImg_Memory');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Memory"><SPAN style="color:#000000; font: bold 16px Verdana ArialHelvetica,sans-serif"> Memory</SPAN>
+</DIV>
+<SPAN class="branch" id="Memory"><A HREF="system_main.html#ANCHOR_microblaze_0_bram_block" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0_bram_block</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('Memory_Cntlrs'); swapBranchImg('BranchImg_Memory_Cntlrs');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Memory_Cntlrs"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif"> Memory Controllers</SPAN>
+</DIV>
+<SPAN class="branch" id="Memory_Cntlrs"><A HREF="system_main.html#ANCHOR_MCB_DDR3" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   MCB_DDR3</SPAN></A><BR><A HREF="system_main.html#ANCHOR_microblaze_0_d_bram_ctrl" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0_d_bram_ctrl</SPAN></A><BR><A HREF="system_main.html#ANCHOR_microblaze_0_i_bram_ctrl" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   microblaze_0_i_bram_ctrl</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('Peripherals'); swapBranchImg('BranchImg_Peripherals');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Peripherals"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif"> Peripherals</SPAN>
+</DIV>
+<SPAN class="branch" id="Peripherals"><A HREF="system_main.html#ANCHOR_Ethernet_Lite" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   Ethernet_Lite</SPAN></A><BR><A HREF="system_main.html#ANCHOR_LEDs_4Bits" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   LEDs_4Bits</SPAN></A><BR><A HREF="system_main.html#ANCHOR_Push_Buttons_4Bits" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   Push_Buttons_4Bits</SPAN></A><BR><A HREF="system_main.html#ANCHOR_RS232_Uart_1" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   RS232_Uart_1</SPAN></A><BR><A HREF="system_main.html#ANCHOR_axi_timer_0" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   axi_timer_0</SPAN></A><BR></SPAN><DIV class="trigger" onClick="showBranch('IP'); swapBranchImg('BranchImg_Ips');">
+<IMG src="imgs/IMG_openBranch.png" border="0" id="BranchImg_Ips"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif"> IP</SPAN>
+</DIV>
+<SPAN class="branch" id="IP"><A HREF="system_main.html#ANCHOR_clock_generator_0" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   clock_generator_0</SPAN></A><BR><A HREF="system_main.html#ANCHOR_proc_sys_reset_0" style="text-decoration:none"><SPAN style="color:#AA0017; font: italic 14px Verdana Arial,Helvetica,sans-serif">   proc_sys_reset_0</SPAN></A><BR></SPAN><A HREF="system_main.html#ANCHOR_TIMINGINFO" style="text-decoration:none"><SPAN style="color:#000000; font: bold 16px Verdana Arial,Helvetica,sans-serif">Timing Information</SPAN></A><BR>
+</TD></TABLE></BODY>
+</HTML>

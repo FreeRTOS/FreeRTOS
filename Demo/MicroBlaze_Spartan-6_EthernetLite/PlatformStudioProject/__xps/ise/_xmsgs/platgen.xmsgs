@@ -23,10 +23,10 @@
 <msg type="info" file="EDK" num="0" delta="new" >IPNAME: <arg fmt="%s" index="1">axi_s6_ddrx</arg>, INSTANCE:<arg fmt="%s" index="2">MCB_DDR3</arg> - <arg fmt="%s" index="3">tcl</arg> is overriding <arg fmt="%s" index="4">PARAMETER</arg> <arg fmt="%s" index="5">C_SYS_RST_PRESENT</arg> value to <arg fmt="%s" index="6">1</arg> - <arg fmt="%s" index="7">C:\devtools\Xilinx\13.1\ISE_DS\EDK\hw\XilinxProcessorIPLib\pcores\axi_s6_ddrx_v1_02_a\data\axi_s6_ddrx_v2_1_0.mpd line 228</arg> 
 </msg>
 
-<msg type="info" file="EDK" num="740" delta="new" >Cannot determine the input clock associated with port : <arg fmt="%s" index="1">microblaze_0_i_bram_ctrl</arg>:<arg fmt="%s" index="2">BRAM_Clk_A</arg>. Clock DRCs will not be performed on this core and cores connected to it. 
+<msg type="info" file="EDK" num="740" delta="old" >Cannot determine the input clock associated with port : <arg fmt="%s" index="1">microblaze_0_i_bram_ctrl</arg>:<arg fmt="%s" index="2">BRAM_Clk_A</arg>. Clock DRCs will not be performed on this core and cores connected to it. 
 </msg>
 
-<msg type="info" file="EDK" num="740" delta="new" >Cannot determine the input clock associated with port : <arg fmt="%s" index="1">microblaze_0_d_bram_ctrl</arg>:<arg fmt="%s" index="2">BRAM_Clk_A</arg>. Clock DRCs will not be performed on this core and cores connected to it. 
+<msg type="info" file="EDK" num="740" delta="old" >Cannot determine the input clock associated with port : <arg fmt="%s" index="1">microblaze_0_d_bram_ctrl</arg>:<arg fmt="%s" index="2">BRAM_Clk_A</arg>. Clock DRCs will not be performed on this core and cores connected to it. 
 </msg>
 
 <msg type="info" file="EDK" num="0" delta="new" >IPNAME: <arg fmt="%s" index="1">axi_ethernetlite</arg>, INSTANCE: <arg fmt="%s" index="2">Ethernet_Lite</arg> - <arg fmt="%s" index="3">This design requires design constraints to guarantee performance.
@@ -133,7 +133,7 @@ The AXI clock frequency must be greater than or equal to 50 MHz for 100 Mbs Ethe
 <msg type="info" file="EDK" num="0" delta="new" >The following instances are synthesized with <arg fmt="%s" index="1">XST</arg>. The MPD option IMP_NETLIST=TRUE indicates that a NGC file is to be produced using <arg fmt="%s" index="2">XST</arg> synthesis. IMP_NETLIST=FALSE (default) instances are not synthesized. 
 </msg>
 
-<msg type="info" file="EDK" num="3509" delta="new" >NCF files should not be modified as they will be regenerated.
+<msg type="info" file="EDK" num="3509" delta="old" >NCF files should not be modified as they will be regenerated.
 If any constraint needs to be overridden, this should be done by modifying the data/<arg fmt="%s" index="1">system</arg>.ucf file.
 </msg>
 

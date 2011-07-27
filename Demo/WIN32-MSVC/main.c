@@ -86,6 +86,8 @@
 #include <FreeRTOS.h>
 #include "task.h"
 #include "queue.h"
+#include "timers.h"
+#include "semphr.h"
 
 /* Standard demo includes. */
 #include "BlockQ.h"
@@ -116,6 +118,13 @@
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
 
+/* The variable into which error messages are latched. */
+static char *pcStatusMessage = "OK";
+
+/* This semaphore is created purely to test using the vSemaphoreDelete() API
+function.  It has no other purpose. */
+static xSemaphoreHandle xSemaphoreToDelete = NULL;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -135,6 +144,10 @@ int main( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartCountingSemaphoreTasks();
 
+	/* Create the semaphore that will be deleted in the idle task hook.  This
+	is done purely to test the use of vSemaphoreDelete(). */
+	xSemaphoreToDelete = xSemaphoreCreateMutex();
+
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
@@ -148,7 +161,6 @@ static void prvCheckTask( void *pvParameters )
 {
 portTickType xNextWakeTime;
 const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
-char *pcStatusMessage = "OK";
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -213,10 +225,41 @@ char *pcStatusMessage = "OK";
 void vApplicationIdleHook( void )
 {
 const unsigned long ulMSToSleep = 5;
+xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
+signed char *pcTaskName;
 
 	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
 	tasks waiting to be terminated by the idle task. */
 	Sleep( ulMSToSleep );
+
+	/* Demonstrate the use of the xTimerGetTimerTaskHandle() and 
+	xTaskGetIdleTaskHandle() functions. */
+	xIdleTaskHandle = xTaskGetIdleTaskHandle();
+	xTimerTaskHandle = xTimerGetTimerTaskHandle();
+
+	/* This is the idle hook, so the current task handle should equal the 
+	returned idle task handle. */
+	if( xTaskGetCurrentTaskHandle() != xIdleTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned idle task handle was incorrect";
+	}
+
+	/* Check the timer task handle was returned correctly. */
+	pcTaskName = pcTaskGetTaskName( xTimerTaskHandle );
+	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
+	{
+		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
+	}
+
+	/* If xSemaphoreToDelete has not already been deleted, then delete it now.
+	This is done purely to demonstrate the use of, and test, the 
+	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
+	that has tasks blocked on it. */
+	if( xSemaphoreToDelete != NULL )
+	{
+		vSemaphoreDelete( xSemaphoreToDelete );
+		xSemaphoreToDelete = NULL;
+	}
 }
 /*-----------------------------------------------------------*/
 

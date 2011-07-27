@@ -58,6 +58,7 @@
 
 /* BSP includes. */
 #include "xemaclite.h"
+#include "xintc_l.h"
 
 /* lwIP includes. */
 #include "lwip/opt.h"
@@ -72,6 +73,14 @@
 /* Define those to better describe your network interface. */
 #define IFNAME0 'e'
 #define IFNAME1 'l'
+
+/* When a packet is ready to be sent, if it cannot be sent immediately then
+ * the task performing the transmit will block for netifTX_BUFFER_FREE_WAIT
+ * milliseconds.  It will do this a maximum of netifMAX_TX_ATTEMPTS before
+ * giving up.
+ */
+#define netifTX_BUFFER_FREE_WAIT	( ( portTickType ) 5UL / portTICK_RATE_MS )
+#define netifMAX_TX_ATTEMPTS		( 5 )
 
 #define netifMAX_MTU 1500
 
@@ -90,7 +99,7 @@ static void prvEthernetInput( struct netif *pxNetIf, const unsigned char * const
 /*
  * Copy the received data into a pbuf.
  */
-static struct pbuf *prvLowLevelInput( const unsigned char * const pucInputData, long lDataLength );
+static struct pbuf *prvLowLevelInput( const unsigned char * const pucInputData, unsigned short usDataLength );
 
 /*
  * Send data from a pbuf to the hardware.
@@ -101,6 +110,19 @@ static err_t prvLowLevelOutput( struct netif *pxNetIf, struct pbuf *p );
  * Perform any hardware and/or driver initialisation necessary.
  */
 static void prvLowLevelInit( struct netif *pxNetIf );
+
+/*
+ * Functions that get registered as the Rx and Tx interrupt handers
+ * respectively.
+ */
+static void prvRxHandler( void *pvNetIf );
+static void prvTxHandler( void *pvUnused );
+
+
+/*-----------------------------------------------------------*/
+
+/* The instance of the xEmacLite IP being used in this driver. */
+static XEmacLite xEMACInstance;
 
 /*-----------------------------------------------------------*/
 
@@ -113,6 +135,8 @@ static void prvLowLevelInit( struct netif *pxNetIf );
  */
 static void prvLowLevelInit( struct netif *pxNetIf )
 {
+portBASE_TYPE xStatus;
+
 	/* set MAC hardware address length */
 	pxNetIf->hwaddr_len = ETHARP_HWADDR_LEN;
 
@@ -125,30 +149,44 @@ static void prvLowLevelInit( struct netif *pxNetIf )
 	pxNetIf->hwaddr[ 5 ] = configMAC_ADDR5;
 
 	/* device capabilities */
-	/* don't set pxNetIf_FLAG_ETHARP if this device is not an ethernet one */
 	pxNetIf->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
-#if 0
-_RB_
+	/* maximum transfer unit */
+	pxNetIf->mtu = netifMAX_MTU;
 
-	/* Query the computer the simulation is being executed on to find the
-	network interfaces it has installed. */
-	pxAllNetworkInterfaces = prvPrintAvailableNetworkInterfaces();
+	/* Broadcast capability */
+	pxNetIf->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
-	/* Open the network interface.  The number of the interface to be opened is
-	set by the configNETWORK_INTERFACE_TO_USE constant in FreeRTOSConfig.h.
-	Calling this function will set the pxOpenedInterfaceHandle variable.  If,
-	after calling this function, pxOpenedInterfaceHandle is equal to NULL, then
-	the interface could not be opened. */
-	if( pxAllNetworkInterfaces != NULL )
+	/* Initialize the mac */
+	xStatus = XEmacLite_Initialize( &xEMACInstance, XPAR_EMACLITE_0_DEVICE_ID );
+
+	if( xStatus == XST_SUCCESS )
 	{
-		prvOpenSelectedNetworkInterface( pxAllNetworkInterfaces );
+		/* Set mac address */
+		XEmacLite_SetMacAddress( &xEMACInstance, ( Xuint8* )( pxNetIf->hwaddr ) );
+
+		/* Flush any frames already received */
+		XEmacLite_FlushReceive( &xEMACInstance );
+
+		/* Set Rx, Tx interrupt handlers */
+		XEmacLite_SetRecvHandler( &xEMACInstance, ( void * ) pxNetIf, prvRxHandler );
+		XEmacLite_SetSendHandler( &xEMACInstance, NULL, prvTxHandler );
+
+		/* Enable Rx, Tx interrupts */
+		XEmacLite_EnableInterrupts( &xEMACInstance );
+
+		/* Install the standard Xilinx library interrupt handler itself.
+		*NOTE* The xPortInstallInterruptHandler() API function must be used
+		for	this purpose. */
+		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_EMACLITE_0_VEC_ID, ( XInterruptHandler ) XEmacLite_InterruptHandler, &xEMACInstance );
+
+		/* Enable the interrupt in the interrupt controller.
+		*NOTE* The vPortEnableInterrupt() API function must be used for this
+		purpose. */
+		vPortEnableInterrupt( XPAR_INTC_0_EMACLITE_0_VEC_ID );
 	}
 
-	/* Remember which interface was opened as it is used in the interrupt
-	simulator task. */
-	pxlwIPNetIf = pxNetIf;
-#endif
+	configASSERT( xStatus == pdPASS );
 }
 
 /**
@@ -174,12 +212,13 @@ static err_t prvLowLevelOutput( struct netif *pxNetIf, struct pbuf *p )
 	to the FreeRTOS coding standard. */
 
 struct pbuf *q;
-static unsigned char ucBuffer[ 1520 ];
+static unsigned char ucBuffer[ 1520 ] __attribute__((aligned(32)));
 unsigned char *pucBuffer = ucBuffer;
 unsigned char *pucChar;
 struct eth_hdr *pxHeader;
 u16_t usTotalLength = p->tot_len - ETH_PAD_SIZE;
 err_t xReturn = ERR_OK;
+long x;
 
 	#if defined(LWIP_DEBUG) && LWIP_NETIF_TX_SINGLE_PBUF
 		LWIP_ASSERT("p->next == NULL && p->len == p->tot_len", p->next == NULL && p->len == p->tot_len);
@@ -211,7 +250,7 @@ err_t xReturn = ERR_OK;
 				time. The size of the data in each pbuf is kept in the ->len
 				variable. */
 				/* send data from(q->payload, q->len); */
-				LWIP_DEBUGF( NETIF_DEBUG, ("NETIF: send pucChar %p q->payload %p q->len %i q->next %p\n", pucChar, q->payload, ( int ) q->len, ( void* ) q->next ) );
+				LWIP_DEBUGF( NETIF_DEBUG, ( "NETIF: send pucChar %p q->payload %p q->len %i q->next %p\n", pucChar, q->payload, ( int ) q->len, ( void* ) q->next ) );
 				if( q == p )
 				{
 					memcpy( pucChar, &( ( char * ) q->payload )[ ETH_PAD_SIZE ], q->len - ETH_PAD_SIZE );
@@ -228,10 +267,20 @@ err_t xReturn = ERR_OK;
 
 	if( xReturn == ERR_OK )
 	{
-#if 0
-_RB_
-		/* signal that packet should be sent */
-		if( pcap_sendpacket( pxOpenedInterfaceHandle, pucBuffer, usTotalLength ) < 0 ) 
+		for( x = 0; x < netifMAX_TX_ATTEMPTS; x++ )
+		{
+			xReturn =  XEmacLite_Send( &xEMACInstance, pucBuffer, ( int ) usTotalLength );
+			if( xReturn == XST_SUCCESS )
+			{
+				break;
+			}
+			else
+			{
+				vTaskDelay( netifTX_BUFFER_FREE_WAIT );
+			}
+		}
+
+		if( xReturn != XST_SUCCESS )
 		{
 			LINK_STATS_INC( link.memerr );
 			LINK_STATS_INC( link.drop );
@@ -255,7 +304,6 @@ _RB_
 				snmp_inc_ifoutucastpkts( pxNetIf );
 			}
 		}
-#endif
 	}
 
 	return xReturn;
@@ -269,18 +317,18 @@ _RB_
  * @return a pbuf filled with the received packet (including MAC header)
  *		 NULL on memory error
  */
-static struct pbuf *prvLowLevelInput( const unsigned char * const pucInputData, long lDataLength )
+static struct pbuf *prvLowLevelInput( const unsigned char * const pucInputData, unsigned short usDataLength )
 {
 struct pbuf *p = NULL, *q;
 
-	if( lDataLength > 0 )
+	if( usDataLength > 0U )
 	{
 		#if ETH_PAD_SIZE
 			len += ETH_PAD_SIZE; /* allow room for Ethernet padding */
 		#endif
 
 		/* We allocate a pbuf chain of pbufs from the pool. */
-		p = pbuf_alloc( PBUF_RAW, lDataLength, PBUF_POOL );
+		p = pbuf_alloc( PBUF_RAW, usDataLength, PBUF_POOL );
   
 		if( p != NULL ) 
 		{
@@ -290,7 +338,7 @@ struct pbuf *p = NULL, *q;
 
 			/* We iterate over the pbuf chain until we have read the entire
 			* packet into the pbuf. */
-			lDataLength = 0;
+			usDataLength = 0U;
 			for( q = p; q != NULL; q = q->next ) 
 			{
 				/* Read enough bytes to fill this pbuf in the chain. The
@@ -301,8 +349,8 @@ struct pbuf *p = NULL, *q;
 				* actually received size. In this case, ensure the usTotalLength member of the
 				* pbuf is the sum of the chained pbuf len members.
 				*/
-				memcpy( q->payload, &( pucInputData[ lDataLength ] ), q->len );
-				lDataLength += q->len;
+				memcpy( q->payload, &( pucInputData[ usDataLength ] ), q->len );
+				usDataLength += q->len;
 			}
 
 			#if ETH_PAD_SIZE
@@ -425,3 +473,131 @@ struct xEthernetIf *pxEthernetIf;
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
+
+static void prvRxHandler( void *pvNetIf )
+{
+	/* This is taken from lwIP example code and therefore does not conform
+	to the FreeRTOS coding standard. */
+
+struct eth_hdr *pxHeader;
+struct pbuf *p;
+unsigned short usInputLength;
+static unsigned char ucBuffer[ 1520 ] __attribute__((aligned(32)));
+extern portBASE_TYPE xInsideISR;
+struct netif *pxNetIf = ( struct netif * ) pvNetIf;
+
+	XIntc_AckIntr( XPAR_ETHERNET_LITE_BASEADDR, XPAR_ETHERNET_LITE_IP2INTC_IRPT_MASK );
+
+	/* Ensure the pbuf handling functions don't attempt to use critical
+	sections. */
+	xInsideISR++;
+
+	usInputLength = ( long ) XEmacLite_Recv( &xEMACInstance, ucBuffer );
+
+	/* move received packet into a new pbuf */
+	p = prvLowLevelInput( ucBuffer, usInputLength );
+
+	/* no packet could be read, silently ignore this */
+	if( p != NULL )
+	{
+		/* points to packet payload, which starts with an Ethernet header */
+		pxHeader = p->payload;
+
+		switch( htons( pxHeader->type ) )
+		{
+			/* IP or ARP packet? */
+			case ETHTYPE_IP:
+			case ETHTYPE_ARP:
+								/* full packet send to tcpip_thread to process */
+								if( pxNetIf->input( p, pxNetIf ) != ERR_OK )
+								{
+									LWIP_DEBUGF(NETIF_DEBUG, ( "ethernetif_input: IP input error\n" ) );
+									pbuf_free(p);
+									p = NULL;
+								}
+								break;
+
+			default:
+								pbuf_free( p );
+								p = NULL;
+			break;
+		}
+	}
+
+	xInsideISR--;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTxHandler( void *pvUnused )
+{
+	XIntc_AckIntr( XPAR_ETHERNET_LITE_BASEADDR, XPAR_ETHERNET_LITE_IP2INTC_IRPT_MASK );
+}
+
+
+void vTemp( void )
+{
+char *pc;
+
+	XEmacLite_Recv( &xEMACInstance, pc );
+}
+
+
+
+
+
+
+#if 0
+
+static void
+xemacif_recv_handler(void *arg) {
+	struct xemac_s *xemac = (struct xemac_s *)(arg);
+	xemacliteif_s *xemacliteif = (xemacliteif_s *)(xemac->state);
+	XEmacLite *instance = xemacliteif->instance;
+	struct pbuf *p;
+	int len = 0;
+	struct xtopology_t *xtopologyp = &xtopology[xemac->topology_index];
+
+	XIntc_AckIntr(xtopologyp->intc_baseaddr, 1 << xtopologyp->intc_emac_intr);
+	p = pbuf_alloc(PBUF_RAW, XEL_MAX_FRAME_SIZE, PBUF_POOL);
+	if (!p) {
+#if LINK_STATS
+		lwip_stats.link.memerr++;
+		lwip_stats.link.drop++;
+#endif
+		/* receive and just ignore the frame.
+		 * we need to receive the frame because otherwise emaclite will
+		 * not generate any other interrupts since it cannot receive,
+		 * and we do not actively poll the emaclite
+		 */
+		XEmacLite_Recv(instance, xemac_tx_frame);
+		return;
+	}
+
+	/* receive the packet */
+	len = XEmacLite_Recv(instance, p->payload);
+
+	if (len == 0) {
+#if LINK_STATS
+		lwip_stats.link.drop++;
+#endif
+		return;
+	}
+
+	/* store it in the receive queue, where it'll be processed by xemacif input thread */
+	if (pq_enqueue(xemacliteif->recv_q, (void*)p) < 0) {
+#if LINK_STATS
+		lwip_stats.link.memerr++;
+		lwip_stats.link.drop++;
+#endif
+		return;
+	}
+
+#if !NO_SYS
+	sys_sem_signal(xemac->sem_rx_data_available);
+#endif
+
+}
+
+#endif
+
+

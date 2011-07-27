@@ -127,7 +127,6 @@ extern err_t ethernetif_init( struct netif *netif );
 	LWIP_PORT_INIT_GW(&gw);
 	LWIP_PORT_INIT_IPADDR(&ipaddr);
 	LWIP_PORT_INIT_NETMASK(&netmask);
-	printf("Starting lwIP, local interface IP is %s\n", ip_ntoa(&ipaddr));
 
 	netif_set_default(netif_add(&netif, &ipaddr, &netmask, &gw, NULL, ethernetif_init, tcpip_input));
 

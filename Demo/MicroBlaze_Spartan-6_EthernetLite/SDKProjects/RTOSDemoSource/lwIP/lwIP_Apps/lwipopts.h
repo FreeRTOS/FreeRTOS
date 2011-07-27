@@ -43,6 +43,8 @@
 	#endif
 #endif /* BYTE_ORDER */
 
+#define XLWIP_CONFIG_INCLUDE_EMACLITE 1
+
 /* SSI options. */
 #define TCPIP_THREAD_NAME              "tcpip"
 #define LWIP_HTTPD_MAX_TAG_NAME_LEN 20

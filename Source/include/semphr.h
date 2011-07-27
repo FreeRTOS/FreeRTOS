@@ -711,6 +711,19 @@ typedef xQueueHandle xSemaphoreHandle;
  */
 #define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ) )
 
+/**
+ * semphr. h
+ * <pre>void vSemaphoreDelete( xSemaphoreHandle xSemaphore );</pre>
+ *
+ * Delete a semaphore.  This function must be used with care.  For example,
+ * do not delete a mutex type semaphore if the mutex is held by a task.
+ *
+ * @param xSemaphore A handle to the semaphore to be deleted.
+ *
+ * \page vSemaphoreDelete vSemaphoreDelete
+ * \ingroup Semaphores
+ */
+#define vSemaphoreDelete( xSemaphore ) vQueueDelete( ( xQueueHandle ) xSemaphore )
 
 #endif /* SEMAPHORE_H */
 

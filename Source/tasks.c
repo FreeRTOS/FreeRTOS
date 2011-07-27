@@ -157,6 +157,12 @@ PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been r
 
 #endif
 
+#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+	
+	PRIVILEGED_DATA static xTaskHandle xIdleTaskHandle = NULL;
+	
+#endif
+
 /* File private variables. --------------------------------*/
 PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxCurrentNumberOfTasks 	= ( unsigned portBASE_TYPE ) 0;
 PRIVILEGED_DATA static volatile portTickType xTickCount 						= ( portTickType ) 0;
@@ -1090,7 +1096,18 @@ void vTaskStartScheduler( void )
 portBASE_TYPE xReturn;
 
 	/* Add the idle task at the lowest priority. */
-	xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), ( xTaskHandle * ) NULL );
+	#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+	{
+		/* Create the idle task, storing its handle in xIdleTaskHandle so it can
+		be returned by the xTaskGetIdleTaskHandle() function. */
+		xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle );
+	}
+	#else
+	{
+		/* Create the idle task without storing its handle. */
+		xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), NULL );
+	}
+	#endif
 
 	#if ( configUSE_TIMERS == 1 )
 	{
@@ -1281,6 +1298,17 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
+signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery )
+{
+tskTCB *pxTCB;
+
+	/* If null is passed in here then the name of the calling task is being queried. */
+	pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+	configASSERT( pxTCB );
+	return &( pxTCB->pcTaskName[ 0 ] );
+}
+/*-----------------------------------------------------------*/
+
 #if ( configUSE_TRACE_FACILITY == 1 )
 
 	void vTaskList( signed char *pcWriteBuffer )
@@ -1455,8 +1483,19 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 	}
 
 #endif
+/*----------------------------------------------------------*/
 
+#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
 
+	xTaskHandle xTaskGetIdleTaskHandle( void )
+	{
+		/* If xTaskGetIdleTaskHandle() is called before the scheduler has been
+		started, then xIdleTaskHandle will be NULL. */
+		configASSERT( ( xIdleTaskHandle != NULL ) );
+		return xIdleTaskHandle;
+	}
+	
+#endif
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

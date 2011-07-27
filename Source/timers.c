@@ -110,6 +110,12 @@ PRIVILEGED_DATA static xList *pxOverflowTimerList;
 /* A queue that is used to send commands to the timer service task. */
 PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
 
+#if ( INCLUDE_xTimerGetTimerTaskHandle == 1 )
+	
+	PRIVILEGED_DATA static xTaskHandle xTimerTaskHandle = NULL;
+	
+#endif
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -183,7 +189,18 @@ portBASE_TYPE xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
-		xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, NULL);
+		#if ( INCLUDE_xTimerGetTimerTaskHandle == 1 )
+		{
+			/* Create the timer task, storing its handle in xTimerTaskHandle so
+			it can be returned by the xTimerGetTimerTaskHandle() function. */
+			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, &xTimerTaskHandle );	
+		}
+		#else
+		{
+			/* Create the timer task without storing its handle. */
+			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, NULL);
+		}
+		#endif
 	}
 
 	configASSERT( xReturn );
@@ -265,6 +282,19 @@ xTIMER_MESSAGE xMessage;
 	
 	return xReturn;
 }
+/*-----------------------------------------------------------*/
+
+#if ( INCLUDE_xTimerGetTimerTaskHandle == 1 )
+
+	xTaskHandle xTimerGetTimerTaskHandle( void )
+	{
+		/* If xTimerGetTimerTaskHandle() is called before the scheduler has been
+		started, then xTimerTaskHandle will be NULL. */
+		configASSERT( ( xTimerTaskHandle != NULL ) );
+		return xTimerTaskHandle;
+	}
+	
+#endif
 /*-----------------------------------------------------------*/
 
 static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xTimeNow )

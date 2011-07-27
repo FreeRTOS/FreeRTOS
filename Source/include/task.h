@@ -1007,6 +1007,19 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
+ * <PRE>signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );</PRE>
+ *
+ * @return The text (human readable) name of the task referenced by the handle
+ * xTaskToQueury.  A task can query its own name by either passing in its own
+ * handle, or by setting xTaskToQuery to NULL.
+ *
+ * \page pcTaskGetTaskName pcTaskGetTaskName
+ * \ingroup TaskUtils
+ */
+signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );
+
+/**
+ * task. h
  * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
  *
  * configUSE_TRACE_FACILITY must be defined as 1 for this function to be
@@ -1157,6 +1170,14 @@ constant. */
  */
 portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter ) PRIVILEGED_FUNCTION;
 
+/**
+ * xTaskGetIdleTaskHandle() is only available if 
+ * INCLUDE_xTaskGetIdleTaskHandle is set to 1 in FreeRTOSConfig.h.
+ *
+ * Simply returns the handle of the idle task.  It is not valid to call
+ * xTaskGetIdleTaskHandle() before the scheduler has been started.
+ */
+xTaskHandle xTaskGetIdleTaskHandle( void );
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

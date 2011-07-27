@@ -195,15 +195,3 @@ xList * pxList;
 }
 /*-----------------------------------------------------------*/
 
-void vlistGET_OWNER_OF_NEXT_ENTRY( void *pxTCB, xList *pxList )
-{
-xList * const pxConstList = ( pxList );
-	/* Increment the index to the next item and return the item, ensuring */
-	/* we don't return the marker used at the end of the list.  */
-	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;
-	if( ( pxConstList )->pxIndex == ( xListItem * ) &( ( pxConstList )->xListEnd ) )
-	{
-		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;
-	}
-	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;
-}

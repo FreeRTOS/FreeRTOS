@@ -14,7 +14,7 @@ IF EXIST FreeRTOS_Source Goto END
     MD FreeRTOS_Source
     MD FreeRTOS_Source\include    
     MD FreeRTOS_Source\portable\GCC
-    MD FreeRTOS_Source\portable\GCC\MicroBlaze
+    MD FreeRTOS_Source\portable\GCC\MicroBlazeV8
     MD FreeRTOS_Source\portable\MemMang    
     MD Demo_Source
     MD Demo_Source\include
@@ -40,7 +40,7 @@ IF EXIST FreeRTOS_Source Goto END
     copy ..\..\..\..\Source\include\*.* FreeRTOS_Source\include
     
     REM Copy the portable layer files
-    copy ..\..\..\..\Source\portable\GCC\MicroBlaze\*.* FreeRTOS_Source\portable\GCC\MicroBlaze
+    copy ..\..\..\..\Source\portable\GCC\MicroBlazeV8\*.* FreeRTOS_Source\portable\GCC\MicroBlazeV8
     
     REM Copy the basic memory allocation files
     copy ..\..\..\..\Source\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang

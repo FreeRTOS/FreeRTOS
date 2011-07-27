@@ -1529,15 +1529,8 @@ signed portBASE_TYPE xReturn;
 		prvLockQueue( pxQueue );
 		if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0U )
 		{
-			/* There is nothing in the queue, block for the specified period,
-			provided the period is not zero.  This guards against the case
-			where the time to wake is set to zero because there are no active
-			timers, but the tick count value also happens to be zero - creating
-			a block time of zero which confuses the logic. */
-			if( 1 )//_RB_if( xTicksToWait != 0U ) //_RB_ This should not be needed as the scheduler is suspended so the tick count cannot increment.
-			{
-				vTaskPlaceOnEventListRestricted( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
-			}
+			/* There is nothing in the queue, block for the specified period. */
+			vTaskPlaceOnEventListRestricted( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
 		}
 		prvUnlockQueue( pxQueue );
 	}

@@ -154,12 +154,12 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, po
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned portBASE_TYPE uxStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
 	( void ) pxPort;
 
 	/* Output uxStringLength bytes starting from pcString. */
-	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, uxStringLength );
+	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, usStringLength );
 }
 /*-----------------------------------------------------------*/
 

@@ -522,9 +522,6 @@ static long lCheckTimerStarted = pdFALSE;
 		xTimerStart( xCheckTimer, mainDONT_BLOCK ); 
 		lCheckTimerStarted = pdTRUE;
 	}
-
-	extern void vTemp( void );
-	vTemp();
 }
 /*-----------------------------------------------------------*/
 

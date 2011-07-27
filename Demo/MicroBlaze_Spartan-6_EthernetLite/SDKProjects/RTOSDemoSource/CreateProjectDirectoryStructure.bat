@@ -72,7 +72,7 @@ IF EXIST FreeRTOS_Source Goto END
     copy ..\..\..\Common\include\QPeek.h           Demo_Source\include
     copy ..\..\..\Common\include\recmutex.h        Demo_Source\include
     copy ..\..\..\Common\include\flop.h            Demo_Source\include
-    copy ..\..\..\Common\include\flash.h           Demo_Source\includeREM
+    copy ..\..\..\Common\include\flash.h           Demo_Source\include
     copy ..\..\..\Common\include\comtest_strings.h Demo_Source\include
     copy ..\..\..\Common\include\serial.h          Demo_Source\include
     copy ..\..\..\Common\include\comtest.h         Demo_Source\include

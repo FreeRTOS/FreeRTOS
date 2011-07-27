@@ -40,9 +40,14 @@
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.788537379" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/netif/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps/apps/httpserver_raw}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include/ipv4}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlazeV8}&quot;"/>
 								</option>
 								<option id="xilinx.gnu.compiler.symbols.defined.522894226" name="Defined symbols (-D)" superClass="xilinx.gnu.compiler.symbols.defined"/>
 								<inputType id="xilinx.gnu.compiler.input.264309084" name="C source files" superClass="xilinx.gnu.compiler.input"/>
@@ -59,6 +64,17 @@
 								<option id="xilinx.gnu.mb.compiler.inferred.mul.901018577" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.579575146" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
+								</option>
+								<option id="xilinx.gnu.compiler.dircategory.includes.877153321" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/netif/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps/apps/httpserver_raw}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlazeV8}&quot;"/>
 								</option>
 							</tool>
 							<tool id="xilinx.gnu.mb.toolchain.archiver.1048677661" name="MicroBlaze archiver" superClass="xilinx.gnu.mb.toolchain.archiver"/>
@@ -1019,7 +1035,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include/ipv4}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlaze}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlazeV8}&quot;"/>
 								</option>
 								<option id="xilinx.gnu.compiler.misc.other.1660455181" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -fno-strict-aliasing -Wextra" valueType="string"/>
 								<option id="xilinx.gnu.compiler.option.warnings.pedantic.86490975" name="Pedantic (-pedantic)" superClass="xilinx.gnu.compiler.option.warnings.pedantic" value="false" valueType="boolean"/>
@@ -1037,6 +1053,17 @@
 								<option id="xilinx.gnu.mb.compiler.inferred.mul.147816156" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.1260701076" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
+								</option>
+								<option id="xilinx.gnu.compiler.dircategory.includes.747654423" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/netif/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps/apps/httpserver_raw}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/lwIP_Apps}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Demo_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/MicroBlazeV8}&quot;"/>
 								</option>
 							</tool>
 							<tool id="xilinx.gnu.mb.toolchain.archiver.1361288263" name="MicroBlaze archiver" superClass="xilinx.gnu.mb.toolchain.archiver"/>

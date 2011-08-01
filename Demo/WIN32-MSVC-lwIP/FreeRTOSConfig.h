@@ -65,15 +65,13 @@
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *----------------------------------------------------------*/
 
-#define configINCLUDE_STANDARD_DEMO_TASKS 1
-
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 0 ) /* This parameter has no effect when heap_3.c is included in the project. */
-#define configMAX_TASK_NAME_LEN			( 6 )
+#define configMAX_TASK_NAME_LEN			( 7 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
@@ -121,8 +119,8 @@ void vMainConfigureTimerForRunTimeStats( void );
 #define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue()
 
 
-/*extern void vAssertCalled( void );
-#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()*/
+extern void vAssertCalled( void );
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
 
 #define configNETWORK_INTERFACE_TO_USE 1L
 

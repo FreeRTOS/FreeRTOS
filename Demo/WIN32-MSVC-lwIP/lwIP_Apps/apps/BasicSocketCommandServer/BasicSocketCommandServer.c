@@ -69,7 +69,7 @@
 
 /*-----------------------------------------------------------*/
 
-void vBasicTelnetServer( void *pvParameters )
+void vBasicSocketsCommandInterpreterTask( void *pvParameters )
 {
 long lSocket, lClientFd, lBytes, lAddrLen = sizeof( struct sockaddr_in );
 struct sockaddr_in sLocalAddr;

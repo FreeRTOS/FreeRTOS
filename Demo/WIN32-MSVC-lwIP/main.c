@@ -102,6 +102,7 @@
 
 /* lwIP includes. */
 #include "lwip/tcpip.h"
+#include "lwIP_Apps.h"
 
 /* Utils includes. */
 #include "CommandInterpreter.h"
@@ -318,7 +319,7 @@ unsigned long ulReturn;
 static const signed char *prvTaskStatsCommand( void )
 {
 static signed char *pcReturn = NULL;
-static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
+const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
 	/* This is the callback function that is executed when the command line
 	command defined by the xTaskStats structure is entered.  This function
@@ -328,8 +329,12 @@ static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
 	if( pcReturn == NULL )
 	{
 		/* Generate a table of task state. */
-		vTaskList( cTxBuffer );
-		pcReturn = cTxBuffer;
+		pcReturn = pcLwipAppsBlockingGetTxBuffer();
+		if( pcReturn != NULL )
+		{
+			strcpy( pcReturn, pcHeader );
+			vTaskList( pcReturn + strlen( pcHeader ) );
+		}
 	}
 	else
 	{
@@ -337,6 +342,7 @@ static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
 		called it just resets itself and returns NULL to say no more strings
 		are going to be generated. */
 		pcReturn = NULL;
+		vLwipAppsReleaseTxBuffer();
 	}
 
 	return pcReturn;
@@ -346,8 +352,7 @@ static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
 static const signed char *prvRunTimeStatsCommand( void )
 {
 static signed char *pcReturn = NULL;
-static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
-
+const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
 	/* This is the callback function that is executed when the command line
 	command defined by the xRunTimeStats structure is entered.  This function
@@ -358,8 +363,12 @@ static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
 	if( pcReturn == NULL )
 	{
 		/* Generate a table of run time stats. */
-		vTaskGetRunTimeStats( cTxBuffer );
-		pcReturn = cTxBuffer;
+		pcReturn = pcLwipAppsBlockingGetTxBuffer();
+		if( pcReturn != NULL )
+		{
+			strcpy( pcReturn, pcHeader );
+			vTaskGetRunTimeStats( pcReturn + strlen( pcHeader ) );
+		}
 	}
 	else
 	{
@@ -367,6 +376,7 @@ static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
 		called it just resets itself and returns NULL to say no more strings
 		are going to be generated. */
 		pcReturn = NULL;
+		vLwipAppsReleaseTxBuffer();
 	}
 
 	return pcReturn;

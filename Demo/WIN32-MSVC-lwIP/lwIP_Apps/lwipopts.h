@@ -32,6 +32,12 @@
 #ifndef __LWIPOPTS_H__
 #define __LWIPOPTS_H__
 
+/* Functions used to obtain and release exclusive access to the Tx buffer.  The
+Get function will block if the Tx buffer is not available - use with care! */
+signed char *pcLwipBlockingGetTxBuffer( void );
+void vLwipAppsReleaseTxBuffer( void );
+
+
 /* SSI options. */
 #define TCPIP_THREAD_NAME              "tcpip"
 #define LWIP_HTTPD_MAX_TAG_NAME_LEN 20

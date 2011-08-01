@@ -55,6 +55,12 @@
 #include "task.h"
 #include "CommandInterpreter.h"
 
+typedef struct xCOMMAND_INPUT_LIST
+{
+	const xCommandLineInput *pxCommandLineDefinition;
+	struct xCOMMAND_INPUT_LIST *pxNext;
+} xCommandLineInputListItem;
+
 /*
  * The callback function that is executed when "help" is entered.  This is the
  * only default command that is always present.
@@ -63,39 +69,77 @@ static const signed char *prvHelpCommand( void );
 
 /* The definition of the "help" command.  This command is always at the front
 of the list of registered commands. */
-const xCommandLineInput xHelpCommand = 
+static const xCommandLineInput xHelpCommand = 
 {
 	"help",
 	"help: Lists all the registered commands\r\n",
-	prvHelpCommand,
-	NULL
+	prvHelpCommand
+};
+
+/* The definition of the list of commands.  Commands that are registered are
+added to this list. */
+static xCommandLineInputListItem xRegisteredCommands =
+{	
+	&xHelpCommand,	/* The first command in the list is always the help command, defined in this file. */
+	NULL			/* The next pointer is initialised to NULL, as there are no other registered commands yet. */
 };
 
 /*-----------------------------------------------------------*/
 
-void vCmdIntRegisterCommand( const xCommandLineInput *pxCommandToRegister )
+portBASE_TYPE xCmdIntRegisterCommand( const xCommandLineInput * const pxCommandToRegister )
 {
-/* Used to point to the last command in the list of registered command, just to
-make registering commands faster. */
-static xCommandLineInput *pxLastCommandInList = &xHelpCommand;
+static xCommandLineInputListItem *pxLastCommandInList = &xRegisteredCommands;
+xCommandLineInputListItem *pxNewListItem;
+portBASE_TYPE xReturn = pdFAIL;
 
-	configASSERT( pxLastCommandInList );
-	pxLastCommandInList->pxNext = pxCommandToRegister;
-	pxLastCommandInLIst = pxCommandToRegister;
+	/* Check the parameter is not NULL. */
+	configASSERT( pxCommandToRegister );
+
+	/* Create a new list item that will reference the command being registered. */
+	pxNewListItem = ( xCommandLineInputListItem * ) pvPortMalloc( sizeof( xCommandLineInputListItem ) );
+	configASSERT( pxNewListItem );
+
+	if( pxNewListItem != NULL )
+	{
+		taskENTER_CRITICAL();
+		{
+			/* Reference the command being registered from the newly created 
+			list item. */
+			pxNewListItem->pxCommandLineDefinition = pxCommandToRegister;
+
+			/* The new list item will get added to the end of the list, so 
+			pxNext has nowhere to point. */
+			pxNewListItem->pxNext = NULL;
+
+			/* Add the newly created list item to the end of the already existing
+			list. */
+			pxLastCommandInList->pxNext = pxNewListItem;
+
+			/* Set the end of list marker to the new list item. */
+			pxLastCommandInList = pxNewListItem;
+		}
+		
+		xReturn = pdPASS;
+	}
+
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-const signed char *pcCmdIntProcessCommand( const signed char *pcCommandInput )
+const signed char *pcCmdIntProcessCommand( const signed char * const pcCommandInput )
 {
-static const xCommandLineInput *pxCommand = NULL;
+static const xCommandLineInputListItem *pxCommand = NULL;
 signed const char *pcReturn = NULL;
-	
+
+	/* Note:  This function is not re-entrant.  It must not be called from more
+	thank one task. */
+
 	if( pxCommand == NULL )
 	{
 		/* Search for the command string in the list of registered commands. */
-		for( pxCommand = &xHelpCommand; pxCommand != NULL; pxCommand = pxCommand->pxNext )
+		for( pxCommand = &xRegisteredCommands; pxCommand != NULL; pxCommand = pxCommand->pxNext )
 		{
-			if( strcmp( ( const char * ) pcCommandInput, ( const char * ) pxCommand->pcCommand ) == 0 )
+			if( strcmp( ( const char * ) pcCommandInput, ( const char * ) pxCommand->pxCommandLineDefinition->pcCommand ) == 0 )
 			{
 				/* The command has been found, the loop can exit so the command
 				can be executed. */
@@ -106,7 +150,7 @@ signed const char *pcReturn = NULL;
 
 	if( pxCommand != NULL )
 	{
-		pcReturn = pxCommand->pxCommandInterpreter();
+		pcReturn = pxCommand->pxCommandLineDefinition->pxCommandInterpreter();
 
 		/* If no strings were returned, then all the strings that are going to
 		be returned by the current command have already been returned, and
@@ -119,8 +163,10 @@ signed const char *pcReturn = NULL;
 	}
 	else
 	{
-		pcReturn = "Command not recognised\r\n\r\n";
-		pxCommand = &xHelpCommand;
+		pcReturn = "Command not recognised.  Available commands are listed below.\r\n\r\n";
+
+		/* Print out the help string. */
+		pxCommand = &xRegisteredCommands;
 	}
 
 	return pcReturn;
@@ -129,7 +175,7 @@ signed const char *pcReturn = NULL;
 
 static const signed char *prvHelpCommand( void )
 {
-static const xCommandLineInput * pxCommand = &xHelpCommand;
+static const xCommandLineInputListItem * pxCommand = &xRegisteredCommands;
 signed const char *pcReturn;
 
 	/* pxCommand will be NULL if all the commands in the list have already been
@@ -138,13 +184,13 @@ signed const char *pcReturn;
 	{
 		/* Return the next command help string, before moving the pointer on to
 		the next command in the list. */
-		pcReturn = pxCommand->pcHelpString;
+		pcReturn = pxCommand->pxCommandLineDefinition->pcHelpString;
 		pxCommand = pxCommand->pxNext;
 	}
 	else
 	{
 		/* Reset the pointer back to the start of the list. */
-		pxCommand = &xHelpCommand;
+		pxCommand = &xRegisteredCommands;
 
 		/* Return NULL to show that there are no more strings to return. */
 		pcReturn = NULL;

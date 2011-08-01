@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{38712199-cebf-4124-bf15-398f7c3419ea}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS Source">
+      <UniqueIdentifier>{af3445a1-4908-4170-89ed-39345d90d30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS Source\Source">
+      <UniqueIdentifier>{f32be356-4763-4cae-9020-974a2638cb08}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS Source\Include">
+      <UniqueIdentifier>{a60060e3-3949-4f60-b025-cb84164ae9ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo App Source">
+      <UniqueIdentifier>{34567deb-d5ab-4a56-8640-0aaec609521a}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Demo App Source\Common Demo Tasks">
+      <UniqueIdentifier>{2d4a700c-06e3-4dd2-afbe-ab1be71ebe2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS Source\Source\Portable">
+      <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo App Source\Common Demo Tasks\ModifiedForLowTickRate">
+      <UniqueIdentifier>{143cf5a3-f134-4439-9f71-a201ae23b44b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configuration Files">
+      <UniqueIdentifier>{19ff1a34-36de-4c48-9d10-3fb1fa0d1fa4}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="lwIP">
+      <UniqueIdentifier>{f1895f21-b338-4923-bec6-c20eba7b48af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Arch">
+      <UniqueIdentifier>{2d5e204f-7bfe-467c-b8fc-daf0120b3380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source">
+      <UniqueIdentifier>{ac8f3f6f-979d-4405-9b5d-d22ddab77efe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\API">
+      <UniqueIdentifier>{d0f66056-3a9d-4160-986b-6c770c5c05b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Include">
+      <UniqueIdentifier>{2c08d348-4005-406d-9941-735524db4bef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Core">
+      <UniqueIdentifier>{c791a789-07eb-46aa-9934-23684669793b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\NetIf">
+      <UniqueIdentifier>{d7b51b46-8083-4d4e-ba8b-03e7c96a79ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Core\IPv4">
+      <UniqueIdentifier>{268723e7-d189-420d-ba66-26c24054b16b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Include\IPv4">
+      <UniqueIdentifier>{ae3a6e4d-2101-4d1d-be3a-c19a72fe0ed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Include\netif">
+      <UniqueIdentifier>{aef10a28-c761-43f8-aad6-adc6e4963cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Include\lwIP">
+      <UniqueIdentifier>{2a415654-7006-4079-b071-86fe1b73e811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Include\IPv4\lwIP">
+      <UniqueIdentifier>{cc0c5b7c-cd80-4573-bdc1-122b1c9f685a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP\Source\Core\SNMP">
+      <UniqueIdentifier>{a8022720-9bfe-4681-b4ef-4785c87a815e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP_Apps">
+      <UniqueIdentifier>{c3366d35-95df-4c03-a752-3ae631ec6bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP_Apps\httpd_raw">
+      <UniqueIdentifier>{6c4a261d-ca37-4528-ad50-8f04032898cb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\list.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\queue.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\tasks.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\portable\MSVC-MingW\port.c">
+      <Filter>FreeRTOS Source\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\flop.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\GenQTest.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\integer.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\PollQ.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\QPeek.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\semtest.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\BlockQ.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\blocktim.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c">
+      <Filter>Demo App Source\Common Demo Tasks\ModifiedForLowTickRate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\timers.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\timerdemo.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\countsem.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\tcpip.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\api_lib.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\api_msg.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\err.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\netbuf.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\netdb.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\netifapi.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\sockets.c">
+      <Filter>lwIP\Source\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\ip_frag.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\autoip.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\icmp.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\igmp.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\inet.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\inet_chksum.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\ip.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\ip_addr.c">
+      <Filter>lwIP\Source\Core\IPv4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\udp.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\def.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\dhcp.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\dns.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\init.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\mem.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\memp.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\netif.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\pbuf.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\raw.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\stats.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\sys.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp_in.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp_out.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\ports\win32\sys_arch.c">
+      <Filter>lwIP\Arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\lwip_timers.c">
+      <Filter>lwIP\Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\netif\etharp.c">
+      <Filter>lwIP\Source\NetIf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\ports\win32\ethernetif.c">
+      <Filter>lwIP\Source\NetIf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\msg_out.c">
+      <Filter>lwIP\Source\Core\SNMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\asn1_dec.c">
+      <Filter>lwIP\Source\Core\SNMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\asn1_enc.c">
+      <Filter>lwIP\Source\Core\SNMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\mib2.c">
+      <Filter>lwIP\Source\Core\SNMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\mib_structs.c">
+      <Filter>lwIP\Source\Core\SNMP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\msg_in.c">
+      <Filter>lwIP\Source\Core\SNMP</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\httpd.c">
+      <Filter>lwIP_Apps\httpd_raw</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\fs.c">
+      <Filter>lwIP_Apps\httpd_raw</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\lwIP_Apps.c">
+      <Filter>lwIP_Apps</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\BasicSocketCommandServer.c">
+      <Filter>lwIP_Apps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Utils\CommandInterpreter.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FreeRTOSConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\croutine.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\FreeRTOS.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\list.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\portable.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\projdefs.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\queue.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\semphr.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\task.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\timers.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\timer_test.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\ip_frag.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\autoip.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\icmp.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\igmp.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\inet.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\inet_chksum.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\ip.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\ip_addr.h">
+      <Filter>lwIP\Source\Include\IPv4\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\netif\etharp.h">
+      <Filter>lwIP\Source\Include\netif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\udp.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\api.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\api_msg.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\arch.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\debug.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\def.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\dhcp.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\dns.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\err.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\init.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\mem.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\memp.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\memp_std.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netbuf.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netdb.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netif.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netifapi.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\opt.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\pbuf.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\raw.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\sio.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp_asn1.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp_msg.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp_structs.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\sockets.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\stats.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\sys.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\tcp.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\tcp_impl.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\tcpip.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\timers.h">
+      <Filter>lwIP\Source\Include\lwIP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\sys_arch.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\bpstruct.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\cc.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\epstruct.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\perf.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\lwipopts.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\lwippools.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\lwipcfg_msvc.h">
+      <Filter>lwIP\Arch</Filter>
+    </ClInclude>
+    <ClInclude Include="lwIP_Apps\lwipcfg_msvc.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lwIP_Apps\lwipopts.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

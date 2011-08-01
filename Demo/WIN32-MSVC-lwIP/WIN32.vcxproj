@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C686325E-3261-42F7-AEB1-DDE5280E1CEB}</ProjectGuid>
+    <ProjectName>RTOSDemo</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINSOCKAPI_;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Debug/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>wpcap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap</AdditionalLibraryDirectories>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Release/WIN32.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/WIN32.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalIncludeDirectories>..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\Include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0c09</Culture>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>.\Release/RTOSDemo.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ProgramDatabaseFile>.\Release/WIN32.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/WIN32.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c" />
+    <ClCompile Include="..\..\Source\timers.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\ports\win32\ethernetif.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\ports\win32\sys_arch.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\api_lib.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\api_msg.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\err.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\netbuf.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\netdb.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\netifapi.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\sockets.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\tcpip.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\def.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\dhcp.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\dns.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\init.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\autoip.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\icmp.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\igmp.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\inet.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\inet_chksum.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\ip.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\ip_addr.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\ipv4\ip_frag.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\lwip_timers.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\mem.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\memp.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\netif.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\pbuf.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\raw.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\asn1_dec.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\asn1_enc.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\mib2.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\mib_structs.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\msg_in.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\msg_out.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\stats.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\sys.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp_in.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp_out.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\udp.c" />
+    <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\netif\etharp.c" />
+    <ClCompile Include="..\Common\Minimal\BlockQ.c" />
+    <ClCompile Include="..\Common\Minimal\blocktim.c" />
+    <ClCompile Include="..\Common\Minimal\countsem.c" />
+    <ClCompile Include="..\Common\Minimal\flop.c" />
+    <ClCompile Include="..\Common\Minimal\GenQTest.c" />
+    <ClCompile Include="..\Common\Minimal\integer.c" />
+    <ClCompile Include="..\Common\Minimal\PollQ.c" />
+    <ClCompile Include="..\Common\Minimal\QPeek.c" />
+    <ClCompile Include="..\Common\Minimal\semtest.c" />
+    <ClCompile Include="..\Common\Minimal\timerdemo.c" />
+    <ClCompile Include="..\Common\Utils\CommandInterpreter.c" />
+    <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c" />
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\fs.c" />
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\httpd.c" />
+    <ClCompile Include="lwIP_Apps\BasicSocketCommandServer.c" />
+    <ClCompile Include="lwIP_Apps\lwIP_Apps.c" />
+    <ClCompile Include="main.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\list.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\portable\MSVC-MingW\port.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\queue.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\tasks.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\include\timers.h" />
+    <ClInclude Include="..\..\Source\include\timer_test.h" />
+    <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\bpstruct.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\cc.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\epstruct.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\perf.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\arch\sys_arch.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\include\lwipopts.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\lwipcfg_msvc.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\ports\win32\lwippools.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\autoip.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\icmp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\igmp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\inet.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\inet_chksum.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\ip.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\ip_addr.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\ip_frag.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\api.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\api_msg.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\arch.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\debug.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\def.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\dhcp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\dns.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\err.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\init.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\mem.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\memp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\memp_std.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netbuf.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netdb.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netif.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\netifapi.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\opt.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\pbuf.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\raw.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\sio.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp_asn1.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp_msg.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\snmp_structs.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\sockets.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\stats.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\sys.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\tcp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\tcpip.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\tcp_impl.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\timers.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\lwip\udp.h" />
+    <ClInclude Include="..\Common\ethernet\lwip-1.4.0\src\include\netif\etharp.h" />
+    <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="..\..\Source\include\croutine.h" />
+    <ClInclude Include="..\..\Source\include\FreeRTOS.h" />
+    <ClInclude Include="..\..\Source\include\list.h" />
+    <ClInclude Include="..\..\Source\include\portable.h" />
+    <ClInclude Include="..\..\Source\include\projdefs.h" />
+    <ClInclude Include="..\..\Source\include\queue.h" />
+    <ClInclude Include="..\..\Source\include\semphr.h" />
+    <ClInclude Include="..\..\Source\include\task.h" />
+    <ClInclude Include="lwIP_Apps\lwipcfg_msvc.h" />
+    <ClInclude Include="lwIP_Apps\lwipopts.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

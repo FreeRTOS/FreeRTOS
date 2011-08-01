@@ -54,7 +54,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common\Utils;..\Common\ethernet\lwip-1.4.0\ports\win32\WinPCap;..\Common\ethernet\lwip-1.4.0\src\include\ipv4;..\Common\ethernet\lwip-1.4.0\src\include;..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\ethernet\lwip-1.4.0\ports\win32\include;..\Common\Include;.\lwIP_Apps;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINSOCKAPI_;WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -168,21 +168,11 @@
     <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\tcp_out.c" />
     <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\udp.c" />
     <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\netif\etharp.c" />
-    <ClCompile Include="..\Common\Minimal\BlockQ.c" />
-    <ClCompile Include="..\Common\Minimal\blocktim.c" />
-    <ClCompile Include="..\Common\Minimal\countsem.c" />
-    <ClCompile Include="..\Common\Minimal\flop.c" />
     <ClCompile Include="..\Common\Minimal\GenQTest.c" />
-    <ClCompile Include="..\Common\Minimal\integer.c" />
-    <ClCompile Include="..\Common\Minimal\PollQ.c" />
-    <ClCompile Include="..\Common\Minimal\QPeek.c" />
-    <ClCompile Include="..\Common\Minimal\semtest.c" />
-    <ClCompile Include="..\Common\Minimal\timerdemo.c" />
     <ClCompile Include="..\Common\Utils\CommandInterpreter.c" />
-    <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c" />
-    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\fs.c" />
-    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\httpd.c" />
-    <ClCompile Include="lwIP_Apps\BasicSocketCommandServer.c" />
+    <ClCompile Include="lwIP_Apps\apps\BasicSocketCommandServer\BasicSocketCommandServer.c" />
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw_from_lwIP_download\fs.c" />
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw_from_lwIP_download\httpd.c" />
     <ClCompile Include="lwIP_Apps\lwIP_Apps.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

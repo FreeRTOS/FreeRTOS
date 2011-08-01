@@ -74,19 +74,7 @@
 #include "netif/etharp.h"
 
 /* applications includes */
-#include "apps/httpserver_raw/httpd.h"
-#include "apps/httpserver/httpserver-netconn.h"
-#include "apps/netio/netio.h"
-#include "apps/netbios/netbios.h"
-#include "apps/ping/ping.h"
-#include "apps/rtp/rtp.h"
-#include "apps/sntp/sntp.h"
-#include "apps/chargen/chargen.h"
-#include "apps/shell/shell.h"
-#include "apps/tcpecho/tcpecho.h"
-#include "apps/udpecho/udpecho.h"
-#include "apps/tcpecho_raw/echo.h"
-#include "apps/socket_examples/socket_examples.h"
+#include "apps/httpserver_raw_from_lwIP_download/httpd.h"
 
 /* include the port-dependent configuration */
 #include "lwipcfg_msvc.h"
@@ -149,67 +137,12 @@ extern err_t ethernetif_init( struct netif *netif );
 /* This function initializes applications */
 static void apps_init( void )
 {
-	/* Taken from the lwIP example code. */
-	
-	#if LWIP_DNS_APP && LWIP_DNS
-		/* wait until the netif is up (for dhcp, autoip or ppp) */
-		sys_timeout(5000, dns_dorequest, NULL);
-	#endif /* LWIP_DNS_APP && LWIP_DNS */
+	/* Create the httpd server from the standard lwIP code.  This demonstrates
+	use of the lwIP raw API. */
+	httpd_init();
 
-	#if LWIP_CHARGEN_APP && LWIP_SOCKET
-		chargen_init();
-	#endif /* LWIP_CHARGEN_APP && LWIP_SOCKET */
-
-	#if LWIP_PING_APP && LWIP_RAW && LWIP_ICMP
-		ping_init();
-	#endif /* LWIP_PING_APP && LWIP_RAW && LWIP_ICMP */
-
-	#if LWIP_NETBIOS_APP && LWIP_UDP
-		netbios_init();
-	#endif /* LWIP_NETBIOS_APP && LWIP_UDP */
-
-	#if LWIP_HTTPD_APP && LWIP_TCP
-	{
-		#ifdef LWIP_HTTPD_APP_NETCONN
-			http_server_netconn_init();
-		#else /* LWIP_HTTPD_APP_NETCONN */
-			httpd_init();
-		#endif /* LWIP_HTTPD_APP_NETCONN */
-	}
-	#endif /* LWIP_HTTPD_APP && LWIP_TCP */
-
-	#if LWIP_NETIO_APP && LWIP_TCP
-		netio_init();
-	#endif /* LWIP_NETIO_APP && LWIP_TCP */
-
-	#if LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP
-		rtp_init();
-	#endif /* LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP */
-
-	#if LWIP_SNTP_APP && LWIP_SOCKET
-		sntp_init();
-	#endif /* LWIP_SNTP_APP && LWIP_SOCKET */
-
-	#if LWIP_SHELL_APP && LWIP_NETCONN
-		shell_init();
-	#endif /* LWIP_SHELL_APP && LWIP_NETCONN */
-
-	#if LWIP_TCPECHO_APP
-		#if LWIP_NETCONN && defined(LWIP_TCPECHO_APP_NETCONN)
-			tcpecho_init();
-		#else /* LWIP_NETCONN && defined(LWIP_TCPECHO_APP_NETCONN) */
-			echo_init();
-		#endif
-	#endif /* LWIP_TCPECHO_APP && LWIP_NETCONN */
-
-	#if LWIP_UDPECHO_APP && LWIP_NETCONN
-		udpecho_init();
-	#endif /* LWIP_UDPECHO_APP && LWIP_NETCONN */
-	
-	#if LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET
-		socket_examples_init();
-	#endif /* LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET */
-
+	/* Create the FreeRTOS defined basic command server.  This demonstrates use
+	of the lwIP sockets API. */
 	xTaskCreate( vBasicTelnetServer, ( signed char * ) "Telnet", configMINIMAL_STACK_SIZE * 10, NULL, configMAX_PRIORITIES - 2, NULL );
 }
 /*-----------------------------------------------------------*/

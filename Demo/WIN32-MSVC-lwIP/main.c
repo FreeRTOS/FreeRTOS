@@ -60,44 +60,31 @@
  *
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  * - http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ * - Note that the above linked page describes the simulator environment.  It
+ * - is not the correct page to view for information on using this lwIP demo.
  *******************************************************************************
  *
- * main() creates all the demo application tasks, then starts the scheduler.  
- * The web documentation provides more details of the standard demo application 
- * tasks, which provide no particular functionality but do provide a good 
- * example of how to use the FreeRTOS API.
+ * This project demonstrates use of the lwIP stack.  The lwIP raw API is 
+ * demonstrated by a simple http server that comes as part of the lwIP 
+ * distribution - and executes in the tcpip task.  The lwIP sockets API
+ * is demonstrated by a simple command line interpreter interface, which
+ * executes in its own task.
  *
- * In addition to the standard demo tasks, the following tasks and tests are
- * defined and/or created within this file:
+ * Both the http and command line server can be used to view task stats, and
+ * run time stats.  Task stats give a snapshot of the state of each task in
+ * the system.  Run time stats show how much processing time has been allocated
+ * to each task.  A few of the standard demo tasks are created, just to ensure
+ * there is some data to be viewed.
  *
- * "Check" task - This only executes every five seconds but has a high priority
- * to ensure it gets processor time.  Its main function is to check that all the
- * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will print out "OK" and the current simulated tick
- * time.  If an error is discovered in the execution of a task then the check
- * task will print out an appropriate error message.
+ * Finally, a check timer is created.  The check timer is a software timer that
+ * inspects the few standard demo tasks that are created to ensure they are
+ * executing as expected.  It maintains a status string that can be viewed on
+ * the "task stats" page served by the web server.
  *
- * lwIP - This project also includes a simple lwIP example.  The implements a
- * web server that includes Server Side Include (SSI) functionality.  The web
- * server serves a page that shows task statistics, and another page that shows
- * run time statistics (how much CPU time each task is consuming).  Following
- * are some notes on the web server functionality:
- * - Configuration parameters (IP address, etc.) are set at the bottom of
- *   FreeRTOSConfig.h.  In particular, the number of the WinPCap interface to
- *   open is set by the configNETWORK_INTERFACE_TO_USE parameter.
- * - A WinPCap driver is provided in 
- *   FreeRTOS\Demo\Common\ethernet\lwip-1.4.0\ports\win32\ethernetif.c.
- * - Currently, the files served by the web server are converted into C structs,
- *   and built into the executable image.  The html and image files are converted
- *   to C structs using the makefsdata.exe binary found in
- *   FreeRTOS\Demo\WIN32-MSVC\lwIP_Apps\apps\httpserver_raw\makefsdata.  A
- *   Microsoft Visual Studio Express 10 project file that builds the .exe is
- *   located in the same directory.
- * - Makefsdata.exe outputs a file called fsdata.c.  fsdata.c must be copied
- *   into FreeRTOS\Demo\WIN32-MSVC\lwIP_Apps\apps\httpserver_raw prior to the
- *   project being built.
- * - The SSI generator functions are located in 
- *   FreeRTOS\Demo\WIN32-MSVC\lwIP_Apps\lwIP_Apps.c
+ * More information about this demo, including details of how to set up the 
+ * network interface, and the command line commands that are available, is
+ * available on the documentation page for this demo on the 
+ * http://www.FreeRTOS.org web site.
  *
  */
 
@@ -108,19 +95,10 @@
 /* Kernel includes. */
 #include <FreeRTOS.h>
 #include "task.h"
-#include "queue.h"
+#include "timers.h"
 
 /* Standard demo includes. */
-#include "BlockQ.h"
-#include "integer.h"
-#include "semtest.h"
-#include "PollQ.h"
 #include "GenQTest.h"
-#include "QPeek.h"
-#include "recmutex.h"
-#include "flop.h"
-#include "TimerDemo.h"
-#include "countsem.h"
 
 /* lwIP includes. */
 #include "lwip/tcpip.h"
@@ -129,21 +107,15 @@
 #include "CommandInterpreter.h"
 
 /* Priorities at which the tasks are created. */
-#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
-#define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
-#define mainTIMER_TEST_PERIOD			( 50 )
+/* The period at which the check timer will expire, in ms, provided no errors
+have been reported by any of the standard demo tasks.  ms are converted to the
+equivalent in ticks using the portTICK_RATE_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
 
-/* Task function prototypes. */
-static void prvCheckTask( void *pvParameters );
+/* Check timer callback function. */
+static void prvCheckTimerCallback( xTimerHandle xTimer );
 
 /* Defined in lwIPApps.c. */
 extern void lwIPAppsInit( void *pvArguments );
@@ -162,13 +134,16 @@ static char *pcStatusMessage = "All tasks running without error";
 stats record how much time each task spends in the Running state. */
 long long llInitialRunTimeCounterValue = 0LL, llRunTimeStatsDivisor = 0LL;
 
+/* The check timer.  This uses prvCheckTimerCallback() as its callback
+function. */
+static xTimerHandle xCheckTimer = NULL;
+
 /* Structure that defines the "run-time-stats" command line command. */
 static const xCommandLineInput xRunTimeStats =
 {
 	"run-time-stats",
 	"run-time-stats: Displays a table showing how much processing time each FreeRTOS task has used\r\n",
 	prvRunTimeStatsCommand,
-	NULL
 };
 
 /* Structure that defines the "task-stats" command line command. */
@@ -177,110 +152,67 @@ static const xCommandLineInput xTaskStats =
 	"task-stats",
 	"task-stats: Displays a table showing the state of each FreeRTOS task\r\n",
 	prvTaskStatsCommand,
-	&xRunTimeStats
 };
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
+const unsigned long ulLongTime_ms = 1000UL;
+
 	/* This call creates the TCP/IP thread. */
 	tcpip_init( lwIPAppsInit, NULL );
 
-	#if configINCLUDE_STANDARD_DEMO_TASKS == 1
-	{
-		/* Start the check task as described at the top of this file. */
-		xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	/* Create and start the check timer, as described at the top of this file. */
+	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
+								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) 0,						/* The ID is not used, so can be set to anything. */
+								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+							  );
 
-		/* Create the standard demo tasks. */
-		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
-		vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-		vStartQueuePeekTasks();
-		vStartMathTasks( mainFLOP_TASK_PRIORITY );
-		vStartRecursiveMutexTasks();
-		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-		vStartCountingSemaphoreTasks();
-	}
-	#endif
+	/* Sanity check that the timer was created. */
+	configASSERT( xCheckTimer );
+
+	/* Start the check timer. */
+	xTimerStart( xCheckTimer, 0UL );
+
+	/* Create a few standard demo tasks, just so there are tasks running to
+	view on the web server and via the command line command interpreter. */
+	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 
 	/* Register two command line commands to show task stats and run time stats
 	respectively. */
-	vCmdIntRegisterCommand( &xTaskStats );
-	vCmdIntRegisterCommand( &xRunTimeStats );
+	xCmdIntRegisterCommand( &xTaskStats );
+	xCmdIntRegisterCommand( &xRunTimeStats );
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
-    /* Should never get here unless there was not enough heap space to create 
-	the idle and other system tasks. */
-    return 0;
+	/* This line should never be reached.  If it does execute then there was
+	insufficient FreeRTOS heap memory available for the idle and/or timer
+	tasks to be created. */
+	for( ;; )
+	{
+		Sleep( ulLongTime_ms );
+	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
-portTickType xNextWakeTime;
-const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
+	/* The parameter is not used in this case. */
+	( void ) xTimer;
 
-	/* Just to remove compiler warning. */
-	( void ) pvParameters;
-
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
-	for( ;; )
+	/* Check the standard demo tasks are running without error.   Latch the
+	latest reported error in the pcStatusMessage character pointer.  The latched
+	string can be viewed using the embedded web server and the command line
+	interpreter.  This project is really to demonstrate the lwIP stack - so very
+	few tasks are created - and those that are created are created purely so
+	there is something to view. */
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
-
-		/* Check the standard demo tasks are running without error. */
-		if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
-		{
-			pcStatusMessage = "Error: TimerDemo";
-		}
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: IntMath";
-	    }	
-		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{			
-			pcStatusMessage = "Error: GenQueue";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: QueuePeek";
-		}
-		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: BlockQueue";
-		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: SemTest";
-	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: PollQueue";
-	    }
-		else if( xAreMathsTaskStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Flop";
-		}
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: RecMutex";
-		}
-		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: CountSem";
-		}
-
-		/* This is the only task that uses stdout so its ok to call printf() 
-		directly. */
-		printf( "%s - %d\r\n", pcStatusMessage, xTaskGetTickCount() );
+		pcStatusMessage = "Error: The GenQueue test reported an error.";
 	}
 }
 /*-----------------------------------------------------------*/
@@ -320,18 +252,6 @@ const unsigned long ulLongSleep = 1000UL;
 	{
 		Sleep( ulLongSleep );
 	}
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationTickHook( void )
-{
-	#if configINCLUDE_STANDARD_DEMO_TASKS == 1
-	{
-		/* Call the periodic timer test, which tests the timer API functions that
-		can be called from an ISR. */
-		vTimerPeriodicISRTests();
-	}
-	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -398,6 +318,7 @@ unsigned long ulReturn;
 static const signed char *prvTaskStatsCommand( void )
 {
 static signed char *pcReturn = NULL;
+static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
 
 	/* This is the callback function that is executed when the command line
 	command defined by the xTaskStats structure is entered.  This function
@@ -425,6 +346,8 @@ static signed char *pcReturn = NULL;
 static const signed char *prvRunTimeStatsCommand( void )
 {
 static signed char *pcReturn = NULL;
+static char cTxBuffer[ 1024 ]; /*_RB_ Remove this. */
+
 
 	/* This is the callback function that is executed when the command line
 	command defined by the xRunTimeStats structure is entered.  This function

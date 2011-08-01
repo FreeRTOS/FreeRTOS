@@ -25,9 +25,6 @@
     <Filter Include="FreeRTOS Source\Source\Portable">
       <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Demo App Source\Common Demo Tasks\ModifiedForLowTickRate">
-      <UniqueIdentifier>{143cf5a3-f134-4439-9f71-a201ae23b44b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Configuration Files">
       <UniqueIdentifier>{19ff1a34-36de-4c48-9d10-3fb1fa0d1fa4}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
@@ -74,7 +71,10 @@
     <Filter Include="lwIP_Apps">
       <UniqueIdentifier>{c3366d35-95df-4c03-a752-3ae631ec6bba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lwIP_Apps\httpd_raw">
+    <Filter Include="lwIP_Apps\BasicSocketCommandServer">
+      <UniqueIdentifier>{92b32a46-5658-4c53-b5de-3b174955a777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lwIP_Apps\httpd_raw_from_lwIP_download">
       <UniqueIdentifier>{6c4a261d-ca37-4528-ad50-8f04032898cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -97,41 +97,11 @@
     <ClCompile Include="..\..\Source\portable\MSVC-MingW\port.c">
       <Filter>FreeRTOS Source\Source\Portable</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Minimal\flop.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Minimal\GenQTest.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Minimal\integer.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\PollQ.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\QPeek.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\semtest.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\BlockQ.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\blocktim.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c">
-      <Filter>Demo App Source\Common Demo Tasks\ModifiedForLowTickRate</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\timers.c">
       <Filter>FreeRTOS Source\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\timerdemo.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\Minimal\countsem.c">
-      <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\api\tcpip.c">
       <Filter>lwIP\Source\API</Filter>
@@ -256,20 +226,20 @@
     <ClCompile Include="..\Common\ethernet\lwip-1.4.0\src\core\snmp\msg_in.c">
       <Filter>lwIP\Source\Core\SNMP</Filter>
     </ClCompile>
-    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\httpd.c">
-      <Filter>lwIP_Apps\httpd_raw</Filter>
-    </ClCompile>
-    <ClCompile Include="lwIP_Apps\apps\httpserver_raw\fs.c">
-      <Filter>lwIP_Apps\httpd_raw</Filter>
-    </ClCompile>
     <ClCompile Include="lwIP_Apps\lwIP_Apps.c">
-      <Filter>lwIP_Apps</Filter>
-    </ClCompile>
-    <ClCompile Include="lwIP_Apps\BasicSocketCommandServer.c">
       <Filter>lwIP_Apps</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Utils\CommandInterpreter.c">
       <Filter>Demo App Source</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\apps\BasicSocketCommandServer\BasicSocketCommandServer.c">
+      <Filter>lwIP_Apps\BasicSocketCommandServer</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw_from_lwIP_download\httpd.c">
+      <Filter>lwIP_Apps\httpd_raw_from_lwIP_download</Filter>
+    </ClCompile>
+    <ClCompile Include="lwIP_Apps\apps\httpserver_raw_from_lwIP_download\fs.c">
+      <Filter>lwIP_Apps\httpd_raw_from_lwIP_download</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

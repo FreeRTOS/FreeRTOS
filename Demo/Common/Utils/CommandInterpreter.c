@@ -51,8 +51,14 @@
     licensing and training services.
 */
 
+/* Standard includes. */
+#include <string.h>
+
+/* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+
+/* Utils includes. */
 #include "CommandInterpreter.h"
 
 typedef struct xCOMMAND_INPUT_LIST
@@ -71,8 +77,8 @@ static const signed char *prvHelpCommand( void );
 of the list of registered commands. */
 static const xCommandLineInput xHelpCommand = 
 {
-	"help",
-	"help: Lists all the registered commands\r\n",
+	( const signed char * const ) "help",
+	( const signed char * const ) "help: Lists all the registered commands\r\n",
 	prvHelpCommand
 };
 
@@ -163,7 +169,7 @@ signed const char *pcReturn = NULL;
 	}
 	else
 	{
-		pcReturn = "Command not recognised.  Available commands are listed below.\r\n\r\n";
+		pcReturn = ( const signed char * const ) "Command not recognised.  Available commands are listed below.\r\n\r\n";
 
 		/* Print out the help string. */
 		pxCommand = &xRegisteredCommands;

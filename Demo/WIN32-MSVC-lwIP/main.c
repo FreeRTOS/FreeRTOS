@@ -122,11 +122,11 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 extern void lwIPAppsInit( void *pvArguments );
 
 /* Callbacks to handle the command line commands defined by the xTaskStats and
-xRunTimeStats command definitions respectively.  These functions are not
-reentrant!  They must be used from one task only - or at least by only one task
-at a time. */
-static const signed char *prvTaskStatsCommand( void );
-static const signed char *prvRunTimeStatsCommand( void );
+xRunTimeStats command definitions respectively.  These functions are not 
+necessarily reentrant!  They must be used from one task only - or at least by 
+only one task at a time. */
+static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen );
+static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen );
 
 /* The string that latches the current demo status. */
 static char *pcStatusMessage = "All tasks running without error";
@@ -316,70 +316,41 @@ unsigned long ulReturn;
 }
 /*-----------------------------------------------------------*/
 
-static const signed char *prvTaskStatsCommand( void )
+static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
 {
-static signed char *pcReturn = NULL;
 const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
-	/* This is the callback function that is executed when the command line
-	command defined by the xTaskStats structure is entered.  This function
-	is called repeatedly until it returns NULL.  It is therefore not re-entrant
-	and must not be called from more than one task - or at least - not from
-	more than one task at the same time. */
-	if( pcReturn == NULL )
-	{
-		/* Generate a table of task state. */
-		pcReturn = pcLwipAppsBlockingGetTxBuffer();
-		if( pcReturn != NULL )
-		{
-			strcpy( pcReturn, pcHeader );
-			vTaskList( pcReturn + strlen( pcHeader ) );
-		}
-	}
-	else
-	{
-		/* This command only returns one string, so the second time it is
-		called it just resets itself and returns NULL to say no more strings
-		are going to be generated. */
-		pcReturn = NULL;
-		vLwipAppsReleaseTxBuffer();
-	}
+	configASSERT( pcWriteBuffer );
 
-	return pcReturn;
+	/* This function assumes the buffer length is adequate. */
+	( void ) xWriteBufferLen;
+
+	/* Generate a table of task stats. */
+	strcpy( pcWriteBuffer, pcHeader );
+	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
+
+	/* There is no more data to return after this single string, so return 
+	pdFALSE. */
+	return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static const signed char *prvRunTimeStatsCommand( void )
+static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
 {
-static signed char *pcReturn = NULL;
 const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
-	/* This is the callback function that is executed when the command line
-	command defined by the xRunTimeStats structure is entered.  This function
-	is called repeatedly until it returns NULL.  It is therefore not re-entrant
-	and must not be called from more than one task - or at least - not from
-	more than one task at the same time. */
+	configASSERT( pcWriteBuffer );
 
-	if( pcReturn == NULL )
-	{
-		/* Generate a table of run time stats. */
-		pcReturn = pcLwipAppsBlockingGetTxBuffer();
-		if( pcReturn != NULL )
-		{
-			strcpy( pcReturn, pcHeader );
-			vTaskGetRunTimeStats( pcReturn + strlen( pcHeader ) );
-		}
-	}
-	else
-	{
-		/* This command only returns one string, so the second time it is
-		called it just resets itself and returns NULL to say no more strings
-		are going to be generated. */
-		pcReturn = NULL;
-		vLwipAppsReleaseTxBuffer();
-	}
+	/* This function assumes the buffer length is adequate. */
+	( void ) xWriteBufferLen;
 
-	return pcReturn;
+	/* Generate a table of task stats. */
+	strcpy( pcWriteBuffer, pcHeader );
+	vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
+
+	/* There is no more data to return after this single string, so return 
+	pdFALSE. */
+	return pdFALSE;
 }
 
 

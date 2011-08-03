@@ -71,7 +71,7 @@ typedef struct xCOMMAND_INPUT_LIST
  * The callback function that is executed when "help" is entered.  This is the
  * only default command that is always present.
  */
-static const signed char *prvHelpCommand( void );
+static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen );
 
 /* The definition of the "help" command.  This command is always at the front
 of the list of registered commands. */
@@ -132,10 +132,10 @@ portBASE_TYPE xReturn = pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
-const signed char *pcCmdIntProcessCommand( const signed char * const pcCommandInput )
+portBASE_TYPE xCmdIntProcessCommand( const signed char * const pcCommandInput, signed char * pcWriteBuffer, size_t xWriteBufferLen  )
 {
 static const xCommandLineInputListItem *pxCommand = NULL;
-signed const char *pcReturn = NULL;
+portBASE_TYPE xReturn;
 
 	/* Note:  This function is not re-entrant.  It must not be called from more
 	thank one task. */
@@ -156,52 +156,53 @@ signed const char *pcReturn = NULL;
 
 	if( pxCommand != NULL )
 	{
-		pcReturn = pxCommand->pxCommandLineDefinition->pxCommandInterpreter();
+		/* Call the callback function that is registered to this command. */
+		xReturn = pxCommand->pxCommandLineDefinition->pxCommandInterpreter( pcWriteBuffer, xWriteBufferLen );
 
-		/* If no strings were returned, then all the strings that are going to
-		be returned by the current command have already been returned, and
-		pxCommand can be reset to NULL ready to search for the next entered
-		command. */
-		if( pcReturn == NULL )
+		/* If xReturn is pdFALSE, then no further strings will be returned
+		after this one, and	pxCommand can be reset to NULL ready to search 
+		for the next entered command. */
+		if( xReturn == pdFALSE )
 		{
 			pxCommand = NULL;
 		}
 	}
 	else
 	{
-		pcReturn = ( const signed char * const ) "Command not recognised.  Available commands are listed below.\r\n\r\n";
-
-		/* Print out the help string. */
-		pxCommand = &xRegisteredCommands;
+		strncpy( ( char * ) pcWriteBuffer, ( const char * const ) "Command not recognised.  Enter \"help\" to view a list of available commands.\r\n\r\n", xWriteBufferLen );
+		xReturn = pdFALSE;
 	}
 
-	return pcReturn;
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static const signed char *prvHelpCommand( void )
+static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
 {
-static const xCommandLineInputListItem * pxCommand = &xRegisteredCommands;
-signed const char *pcReturn;
+static const xCommandLineInputListItem * pxCommand = NULL;
+signed portBASE_TYPE xReturn;
 
-	/* pxCommand will be NULL if all the commands in the list have already been
-	returned. */
-	if( pxCommand != NULL )
+	if( pxCommand == NULL )
 	{
-		/* Return the next command help string, before moving the pointer on to
-		the next command in the list. */
-		pcReturn = pxCommand->pxCommandLineDefinition->pcHelpString;
-		pxCommand = pxCommand->pxNext;
+		/* Reset the pxCommand pointer back to the start of the list. */
+		pxCommand = &xRegisteredCommands;
+	}
+
+	/* Return the next command help string, before moving the pointer on to
+	the next command in the list. */
+	strncpy( ( char * ) pcWriteBuffer, ( const char * ) pxCommand->pxCommandLineDefinition->pcHelpString, xWriteBufferLen );
+	pxCommand = pxCommand->pxNext;
+
+	if( pxCommand == NULL )
+	{
+		/* There are no more commands in the list, so there will be no more
+		strings to return after this one and pdFALSE should be returned. */
+		xReturn = pdFALSE;
 	}
 	else
 	{
-		/* Reset the pointer back to the start of the list. */
-		pxCommand = &xRegisteredCommands;
-
-		/* Return NULL to show that there are no more strings to return. */
-		pcReturn = NULL;
+		xReturn = pdTRUE;
 	}
-	
-	return pcReturn;
-}
 
+	return xReturn;
+}

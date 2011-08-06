@@ -54,20 +54,14 @@
 /* Standard includes. */
 #include <string.h>
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+
 /* lwIP core includes */
 #include "lwip/opt.h"
-#include "lwip/sys.h"
-#include "lwip/timers.h"
-#include "lwip/debug.h"
-#include "lwip/stats.h"
-#include "lwip/init.h"
 #include "lwip/tcpip.h"
-#include "lwip/netif.h"
-#include "lwip/tcp.h"
-#include "lwip/udp.h"
-#include "lwip/dns.h"
-#include "lwip/dhcp.h"
-#include "lwip/autoip.h"
 
 /* lwIP netif includes */
 #include "netif/etharp.h"
@@ -75,77 +69,62 @@
 /* applications includes */
 #include "apps/httpserver_raw/httpd.h"
 
-
+/* The constants that define the IP address, net mask, gateway address and MAC
+address are located at the bottom of FreeRTOSConfig.h. */
 #define LWIP_PORT_INIT_IPADDR(addr)   IP4_ADDR((addr), configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 )
 #define LWIP_PORT_INIT_GW(addr)       IP4_ADDR((addr), configGW_IP_ADDR0, configGW_IP_ADDR1, configGW_IP_ADDR2, configGW_IP_ADDR3 )
 #define LWIP_PORT_INIT_NETMASK(addr)  IP4_ADDR((addr), configNET_MASK0,configNET_MASK1,configNET_MASK2,configNET_MASK3)
-
-/* remember to change this MAC address to suit your needs!
-   the last octet will be increased by netif->num for each netif */
 #define LWIP_MAC_ADDR_BASE            { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 }
 
-/* configuration for applications */
-
-#define LWIP_CHARGEN_APP              0
-#define LWIP_DNS_APP                  0
-#define LWIP_HTTPD_APP                1
-
-static struct netif netif;
-
-static void apps_init( void );
-
+/* Definitions of the various SSI callback functions within the pccSSITags 
+array.  If pccSSITags is updated, then these definitions must also be updated. */
 #define ssiTASK_STATS_INDEX			0
 #define ssiRUN_TIME_STATS_INDEX		1
-
 
 /*
  * The SSI handler callback function passed to lwIP.
  */
 static unsigned short uslwIPAppsSSIHandler( int iIndex, char *pcBuffer, int iBufferLength );
 
+/*-----------------------------------------------------------*/
 
-/* The SSI strings that are embedded in the served html files. */
+/* The SSI strings that are embedded in the served html files.  If this array
+is changed, then the index position defined by the #defines such as 
+ssiTASK_STATS_INDEX above must also be updated. */
 static const char *pccSSITags[] = 
 {
 	"rtos_stats",
 	"run_stats"
 };
 
+/*-----------------------------------------------------------*/
 
 /* Called from the TCP/IP thread. */
 void lwIPAppsInit( void *pvArgument )
 {
-ip_addr_t ipaddr, netmask, gw;
-extern err_t ethernetif_init( struct netif *netif );
+ip_addr_t xIPAddr, xNetMask, xGateway;
+extern err_t ethernetif_init( struct netif *xNetIf );
+static struct netif xNetIf;
 
 	( void ) pvArgument;
 
-	ip_addr_set_zero( &gw );
-	ip_addr_set_zero( &ipaddr );
-	ip_addr_set_zero( &netmask );
+	/* Set up the network interface. */
+	ip_addr_set_zero( &xGateway );
+	ip_addr_set_zero( &xIPAddr );
+	ip_addr_set_zero( &xNetMask );
 
-	LWIP_PORT_INIT_GW(&gw);
-	LWIP_PORT_INIT_IPADDR(&ipaddr);
-	LWIP_PORT_INIT_NETMASK(&netmask);
+	LWIP_PORT_INIT_GW(&xGateway);
+	LWIP_PORT_INIT_IPADDR(&xIPAddr);
+	LWIP_PORT_INIT_NETMASK(&xNetMask);
 
-	netif_set_default(netif_add(&netif, &ipaddr, &netmask, &gw, NULL, ethernetif_init, tcpip_input));
+	netif_set_default( netif_add( &xNetIf, &xIPAddr, &xNetMask, &xGateway, NULL, ethernetif_init, tcpip_input ) );
+	netif_set_up( &xNetIf );
 
-	netif_set_up( &netif );
-	apps_init();
+	/* Initialise the raw http server. */
+	httpd_init();
+
+	/* Install the server side include handler. */
 	http_set_ssi_handler( uslwIPAppsSSIHandler, pccSSITags, sizeof( pccSSITags ) / sizeof( char * ) );
-}
-/*-----------------------------------------------------------*/
-
-/* This function initializes applications */
-static void apps_init( void )
-{
-	/* Taken from the lwIP example code. */
-	
-	#if LWIP_HTTPD_APP && LWIP_TCP
-	{
-		httpd_init();
-	}
-	#endif /* LWIP_HTTPD_APP && LWIP_TCP */
 }
 /*-----------------------------------------------------------*/
 
@@ -155,6 +134,7 @@ static unsigned int uiUpdateCount = 0;
 static char cUpdateString[ 200 ];
 extern char *pcMainGetTaskStatusMessage( void );
 
+	/* Unused parameter. */
 	( void ) iBufferLength;
 
 	/* The SSI handler function that generates text depending on the index of
@@ -171,6 +151,8 @@ extern char *pcMainGetTaskStatusMessage( void );
 			break;
 	}
 
+	/* Include a count of the number of times an SSI function has been executed
+	in the returned string. */
 	uiUpdateCount++;
 	sprintf( cUpdateString, "\r\n\r\n%u\r\nStatus - %s", uiUpdateCount, pcMainGetTaskStatusMessage() );
 	strcat( pcBuffer, cUpdateString );

@@ -134,12 +134,16 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#error Missing definition:  configUSE_16_BIT_TICKS should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef INCLUDE_xTaskGetIdleTaskHandle
-	#define INCLUDE_xTaskGetIdleTaskHandle 0
+#ifndef INCLUDE_xTaskIdleTaskHandleGet
+	#define INCLUDE_xTaskIdleTaskHandleGet 0
 #endif
 
-#ifndef INCLUDE_xTimerGetTimerTaskHandle
-	#define INCLUDE_xTimerGetTimerTaskHandle 0
+#ifndef INCLUDE_xTimerDaemonTaskHandleGet
+	#define INCLUDE_xTimerDaemonTaskHandleGet 0
+#endif
+
+#ifndef INCLUDE_pcTaskNameGet
+	#define INCLUDE_pcTaskNameGet 0
 #endif
 
 #ifndef configUSE_APPLICATION_TASK_TAG

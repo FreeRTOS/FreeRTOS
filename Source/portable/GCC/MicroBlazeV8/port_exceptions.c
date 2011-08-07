@@ -135,7 +135,7 @@ extern void *pxCurrentTCB;
 	/* First fill in the name and handle of the task that was in the Running 
 	state when the exception occurred. */
 	xRegisterDump.xCurrentTaskHandle = pxCurrentTCB;
-	xRegisterDump.pcCurrentTaskName = pcTaskGetTaskName( NULL );
+	xRegisterDump.pcCurrentTaskName = pcTaskNameGet( NULL );
 
 	configASSERT( pulStackPointerOnFunctionEntry );
 

@@ -110,7 +110,7 @@ PRIVILEGED_DATA static xList *pxOverflowTimerList;
 /* A queue that is used to send commands to the timer service task. */
 PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
 
-#if ( INCLUDE_xTimerGetTimerTaskHandle == 1 )
+#if ( INCLUDE_xTimerDaemonTaskHandleGet == 1 )
 	
 	PRIVILEGED_DATA static xTaskHandle xTimerTaskHandle = NULL;
 	
@@ -189,10 +189,10 @@ portBASE_TYPE xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
-		#if ( INCLUDE_xTimerGetTimerTaskHandle == 1 )
+		#if ( INCLUDE_xTimerDaemonTaskHandleGet == 1 )
 		{
 			/* Create the timer task, storing its handle in xTimerTaskHandle so
-			it can be returned by the xTimerGetTimerTaskHandle() function. */
+			it can be returned by the xTimerDaemonTaskHandleGet() function. */
 			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, &xTimerTaskHandle );	
 		}
 		#else
@@ -284,11 +284,11 @@ xTIMER_MESSAGE xMessage;
 }
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_xTimerGetTimerTaskHandle == 1 )
+#if ( INCLUDE_xTimerDaemonTaskHandleGet == 1 )
 
-	xTaskHandle xTimerGetTimerTaskHandle( void )
+	xTaskHandle xTimerDaemonTaskHandleGet( void )
 	{
-		/* If xTimerGetTimerTaskHandle() is called before the scheduler has been
+		/* If xTimerDaemonTaskHandleGet() is called before the scheduler has been
 		started, then xTimerTaskHandle will be NULL. */
 		configASSERT( ( xTimerTaskHandle != NULL ) );
 		return xTimerTaskHandle;

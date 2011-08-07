@@ -157,7 +157,7 @@ PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been r
 
 #endif
 
-#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+#if ( INCLUDE_xTaskIdleTaskHandleGet == 1 )
 	
 	PRIVILEGED_DATA static xTaskHandle xIdleTaskHandle = NULL;
 	
@@ -1096,10 +1096,10 @@ void vTaskStartScheduler( void )
 portBASE_TYPE xReturn;
 
 	/* Add the idle task at the lowest priority. */
-	#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+	#if ( INCLUDE_xTaskIdleTaskHandleGet == 1 )
 	{
 		/* Create the idle task, storing its handle in xIdleTaskHandle so it can
-		be returned by the xTaskGetIdleTaskHandle() function. */
+		be returned by the xTaskIdleTaskHandleGet() function. */
 		xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle );
 	}
 	#else
@@ -1298,15 +1298,19 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery )
-{
-tskTCB *pxTCB;
+#if ( INCLUDE_pcTaskNameGet == 1 )
 
-	/* If null is passed in here then the name of the calling task is being queried. */
-	pxTCB = prvGetTCBFromHandle( xTaskToQuery );
-	configASSERT( pxTCB );
-	return &( pxTCB->pcTaskName[ 0 ] );
-}
+	signed char *pcTaskNameGet( xTaskHandle xTaskToQuery )
+	{
+	tskTCB *pxTCB;
+
+		/* If null is passed in here then the name of the calling task is being queried. */
+		pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+		configASSERT( pxTCB );
+		return &( pxTCB->pcTaskName[ 0 ] );
+	}
+
+#endif
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
@@ -1485,11 +1489,11 @@ tskTCB *pxTCB;
 #endif
 /*----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+#if ( INCLUDE_xTaskIdleTaskHandleGet == 1 )
 
-	xTaskHandle xTaskGetIdleTaskHandle( void )
+	xTaskHandle xTaskIdleTaskHandleGet( void )
 	{
-		/* If xTaskGetIdleTaskHandle() is called before the scheduler has been
+		/* If xTaskIdleTaskHandleGet() is called before the scheduler has been
 		started, then xIdleTaskHandle will be NULL. */
 		configASSERT( ( xIdleTaskHandle != NULL ) );
 		return xIdleTaskHandle;

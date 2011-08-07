@@ -1,4 +1,4 @@
-<EDKSYSTEM EDKVERSION="13.1" EDWVERSION="1.2" TIMESTAMP="Wed Jul 27 11:10:40 2011">
+<EDKSYSTEM EDKVERSION="13.1" EDWVERSION="1.2" TIMESTAMP="Wed Jul 27 13:20:01 2011">
 
   <SYSTEMINFO ARCH="spartan6" DEVICE="xc6slx45t" PACKAGE="fgg484" PART="xc6slx45tfgg484-3" SOURCE="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/MicroBlaze_Spartan-6_EthernetLite/PlatformStudioProject/system.xmp" SPEEDGRADE="-3"/>
 

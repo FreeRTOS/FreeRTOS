@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2011-07-27T11:10:44</DateModified>
+  <DateModified>2011-07-27T13:20:02</DateModified>
   <ModuleName>system</ModuleName>
-  <SummaryTimeStamp>2011-07-27T11:10:42</SummaryTimeStamp>
+  <SummaryTimeStamp>2011-07-27T13:20:02</SummaryTimeStamp>
   <SavedFilePath>C:/E/Dev/FreeRTOS/WorkingCopy/Demo/MicroBlaze_Spartan-6_EthernetLite/PlatformStudioProject/__xps/ise/system.xreport</SavedFilePath>
   <FilterFile>filter.filter</FilterFile>
   <SavedFilterFilePath>C:/E/Dev/FreeRTOS/WorkingCopy/Demo/MicroBlaze_Spartan-6_EthernetLite/PlatformStudioProject/__xps/ise</SavedFilterFilePath>

@@ -448,18 +448,6 @@ volatile size_t xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationTickHook( void )
-{
-	/* vApplicationTickHook() will only be called if configUSE_TICK_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It executes from an interrupt context so must
-	not use any FreeRTOS API functions that do not end in ...FromISR().
-
-	This simple blinky demo does not use the tick hook, but a tick hook is
-	required to be defined as the blinky and full demos share a
-	FreeRTOSConfig.h header file. */
-}
-/*-----------------------------------------------------------*/
-
 /* This is an application defined callback function used to install the tick
 interrupt handler.  It is provided as an application callback because the kernel
 will run on lots of different MicroBlaze and FPGA configurations - not all of

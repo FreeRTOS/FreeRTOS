@@ -77,10 +77,10 @@
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				1
+#define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( XPAR_MICROBLAZE_CORE_CLOCK_FREQ_HZ ) /* Not actually used in this demo as the timer is set up in main() and uses the peripheral clock, not the CPU clock. */
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES			( 6 )
+#define configMAX_PRIORITIES			( 7 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 64 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		1
@@ -114,7 +114,7 @@ designs will only include on interrupt controller. */
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 4 )
 #define configTIMER_QUEUE_LENGTH		10
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
 
@@ -127,6 +127,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+#define INCLUDE_pcTaskNameGet			1
+#define INCLUDE_pcTaskNameGet			1
 
 #define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 	
@@ -143,7 +145,11 @@ prevent the C syntax being included in assembly files. */
 
 
 
-#define configLWIP_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
+
+
+/* Networking configuration follows. */
+
+#define configLWIP_TASK_PRIORITY	( configMAX_PRIORITIES - 4 )
 
 /* MAC address configuration. */
 #define configMAC_ADDR0	0x00

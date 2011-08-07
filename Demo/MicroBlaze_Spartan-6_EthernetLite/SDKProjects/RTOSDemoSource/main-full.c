@@ -70,13 +70,18 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * TCP/IP ("lwIP") task - TBD _RB_
+ * TCP/IP ("lwIP") task - lwIP is used to create a basic web server.  The web
+ * server uses server side includes (SSI) to generate tables of task statistics,
+ * and run time statistics (run time statistics show how much processing time
+ * each task has consumed).  See
+ * http://www.FreeRTOS.org/Free-RTOS-for-Xilinx-MicroBlaze-on-Spartan-6-FPGA.html
+ * for details on setting up and using the embedded web server.
  *
  * "Reg test" tasks - These test the task context switch mechanism by first 
  * filling the MicroBlaze registers with known values, before checking that each
  * register maintains the value that was written to it as the tasks are switched
  * in and out.  The two register test tasks do not use the same values, and
- * execute at a very low priority to ensure they are pre-empted regularly.
+ * execute at a very low priority, to ensure they are pre-empted regularly.
  *
  * "Check" timer - The check timer period is initially set to five seconds.  
  * The check timer callback function checks that all the standard demo tasks,
@@ -88,9 +93,15 @@
  * indication of the system status:  If the LED toggles every five seconds then
  * no issues have been discovered.  If the LED toggles every 200ms then an issue
  * has been discovered with at least one task.  The last reported issue is
- * latched into the pcStatusMessage variable.
+ * latched into the pcStatusMessage variable, and can also be viewed at the
+ * bottom of the pages served by the embedded web server.
  *
- * This file also includes example implementations of the vApplicationTickHook(),
+ * ***NOTE*** This demo uses the standard comtest tasks, which has special
+ * hardware requirements.  See
+ * http://www.FreeRTOS.org/Free-RTOS-for-Xilinx-MicroBlaze-on-Spartan-6-FPGA.html
+ * for more information.
+ *
+ * This file also includes example implementations of the
  * vApplicationIdleHook(), vApplicationStackOverflowHook(),
  * vApplicationMallocFailedHook(), vApplicationClearTimerInterrupt(), and
  * vApplicationSetupTimerInterrupt() callback (hook) functions.
@@ -131,11 +142,10 @@
 
 /* Priorities at which the various tasks are created. */
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
@@ -209,6 +219,13 @@ static XTmrCtr xTimer0Instance;
 
 /* The 'check' timer, as described at the top of this file. */
 static xTimerHandle xCheckTimer = NULL;
+
+/* Used in the run time stats calculations. */
+static unsigned long ulClocksPer10thOfAMilliSecond = 0UL;
+
+/* Constants used to set up the AXI timer to generate ticks. */
+static const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
+static const unsigned long ulCounterReloadValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
 
 /*-----------------------------------------------------------*/
 
@@ -290,64 +307,68 @@ portTickType xExecutionRate = mainNO_ERROR_CHECK_TIMER_PERIOD;
 	/* This is the callback function used by the 'check' timer, as described
 	in the comments at the top of this file. */
 
-	/* Check the standard demo tasks are running without error. */
-	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+	/* Don't overwrite any errors that have already been latched. */
+	if( pcStatusMessage == NULL )
 	{
-		pcStatusMessage = "Error: GenQueue";
-	}
-	else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: QueuePeek\r\n";
-	}
-	else if( xAreBlockingQueuesStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: BlockQueue\r\n";
-	}
-	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: BlockTime\r\n";
-	}
-	else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: SemTest\r\n";
-	}
-	else if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: PollQueue\r\n";
-	}
-	else if( xIsCreateTaskStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: Death\r\n";
-	}
-	else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	{
-		pcStatusMessage = "Error: RecMutex\r\n";
-	}
-	else if( xAreMathsTaskStillRunning() != pdPASS )
-	{
-		pcStatusMessage = "Error: Flop\r\n";
-	}
-	else if( xAreComTestTasksStillRunning() != pdPASS )
-	{
-		pcStatusMessage = "Error: Comtest\r\n";
-	}
-	else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
-	{
-		pcStatusMessage = "Error: Dynamic\r\n";
-	}
-	else if( xAreTimerDemoTasksStillRunning( xExecutionRate ) != pdTRUE )
-	{
-		pcStatusMessage = "Error: TimerDemo";
-	}
-	else if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
-	{
-		/* Check the reg test tasks are still cycling.  They will stop
-		incrementing their loop counters if they encounter an error. */
-		pcStatusMessage = "Error: RegTest1\r\n";
-	}
-	else if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
-	{
-		pcStatusMessage = "Error: RegTest2\r\n";
+		/* Check the standard demo tasks are running without error. */
+		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: GenQueue";
+		}
+		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: QueuePeek\r\n";
+		}
+		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: BlockQueue\r\n";
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: BlockTime\r\n";
+		}
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: SemTest\r\n";
+		}
+		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: PollQueue\r\n";
+		}
+		else if( xIsCreateTaskStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: Death\r\n";
+		}
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: RecMutex\r\n";
+		}
+		else if( xAreMathsTaskStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Flop\r\n";
+		}
+		else if( xAreComTestTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Comtest\r\n";
+		}
+		else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Dynamic\r\n";
+		}
+		else if( xAreTimerDemoTasksStillRunning( xExecutionRate ) != pdTRUE )
+		{
+			pcStatusMessage = "Error: TimerDemo";
+		}
+		else if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+		{
+			/* Check the reg test tasks are still cycling.  They will stop
+			incrementing their loop counters if they encounter an error. */
+			pcStatusMessage = "Error: RegTest1\r\n";
+		}
+		else if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
+		{
+			pcStatusMessage = "Error: RegTest2\r\n";
+		}
 	}
 
 	/* Store a local copy of the current reg test loop counters.  If these have
@@ -401,8 +422,6 @@ function below declares as an extern. */
 void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
-const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
-const unsigned long ulCounterValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
 extern void vPortTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
@@ -427,7 +446,7 @@ extern void vPortTickISR( void *pvUnused );
 		XTmrCtr_SetHandler( &xTimer0Instance, ( void * ) vPortTickISR, NULL );
 
 		/* Set the correct period for the timer. */
-		XTmrCtr_SetResetValue( &xTimer0Instance, ucTimerCounterNumber, ulCounterValue );
+		XTmrCtr_SetResetValue( &xTimer0Instance, ucTimerCounterNumber, ulCounterReloadValue );
 
 		/* Enable the interrupts.  Auto-reload mode is used to generate a
 		periodic tick.  Note that interrupts are disabled when this function is
@@ -525,18 +544,6 @@ static long lCheckTimerStarted = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationTickHook( void )
-{
-	/* vApplicationTickHook() will only be called if configUSE_TICK_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It executes from an interrupt context so must
-	not use any FreeRTOS API functions that do not end in ...FromISR(). */
-
-	/* Call the periodic timer test, which tests the timer API functions that
-	can be called from an ISR. */
-	vTimerPeriodicISRTests();
-}
-/*-----------------------------------------------------------*/
-
 void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
 {
 	( void ) xRegisterDump;
@@ -590,19 +597,53 @@ static void prvSetupHardware( void )
 
 void vMainConfigureTimerForRunTimeStats( void )
 {
-unsigned long ulRunTimeStatsDivisor;
-
 	/* How many times does the counter counter increment in 10ms? */
-	ulRunTimeStatsDivisor = 0UL / 1000UL; //_RB_
+	ulClocksPer10thOfAMilliSecond = XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ / 10000UL;
 }
 /*-----------------------------------------------------------*/
 
 unsigned long ulMainGetRunTimeCounterValue( void )
 {
-unsigned long ulReturn, ulCurrentCount;
+unsigned long ulTimerCounts1, ulTimerCounts2, ulTickCount, ulReturn;
 
-	ulCurrentCount = 0UL;
-	ulReturn = 0UL;
+	/* NOTE: This can get called from a yield, in which case interrupts are
+	disabled, or from a tick ISR, in which case the effect is the same as if
+	interrupts were disabled.  In either case, it is going to run atomically. */
+
+	/* The timer is in down count mode.  How many clocks have passed since it
+	was last reloaded? */
+	ulTimerCounts1 = ulCounterReloadValue - XTmrCtr_GetValue( &xTimer0Instance, ucTimerCounterNumber );
+
+	/* How many times has it overflowed? */
+	ulTickCount = xTaskGetTickCountFromISR();
+
+	/* If this is being called from a yield, has the counter overflowed since
+	it was read?  If that is the case then ulTickCounts will need incrementing
+	again as it will not yet have been incremented from the tick interrupt. */
+	ulTimerCounts2 = ulCounterReloadValue - XTmrCtr_GetValue( &xTimer0Instance, ucTimerCounterNumber );
+	if( ulTimerCounts2 < ulTimerCounts1 )
+	{
+		/* There is a tick interrupt pending but the tick count not yet
+		incremented. */
+		ulTickCount++;
+
+		/* Use the second timer reading. */
+		ulTimerCounts1 = ulTimerCounts2;
+	}
+
+	/* Convert the tick count into tenths of a millisecond.  THIS ASSUMES
+	configTICK_RATE_HZ is 1000! */
+	ulReturn = ( ulTickCount * 10UL );
+
+	/* Add on the number of tenths of a millisecond that have passed since the
+	tick count last got updated. */
+	ulReturn += ( ulTimerCounts1 / ulClocksPer10thOfAMilliSecond );
+
+	/* Some crude rounding. */
+	if( ( ulTimerCounts1 % ulClocksPer10thOfAMilliSecond ) > ( ulClocksPer10thOfAMilliSecond >> 1UL ) )
+	{
+		ulReturn++;
+	}
 
 	return ulReturn;
 }
@@ -610,7 +651,18 @@ unsigned long ulReturn, ulCurrentCount;
 
 char *pcMainGetTaskStatusMessage( void )
 {
-	return ( char * ) pcStatusMessage;
+char * pcReturn;
+
+	if( pcStatusMessage == NULL )
+	{
+		pcReturn = ( char * ) "OK";
+	}
+	else
+	{
+		pcReturn = ( char * ) pcStatusMessage;
+	}
+
+	return pcReturn;
 }
 
 

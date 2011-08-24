@@ -7,6 +7,16 @@ REM FreeRTOS directory structure to under the Eclipse project directory.
 REM This permits the Eclipse project to be used in 'managed' mode and without
 REM having to setup any linked resources.
 
+REM Files will also be copied into the BSP directory, which can be used to
+REM generate FreeRTOS BSP packages directly from within the Xilinx SDK.
+SET BSP_SOURCE=..\..\KernelAwareBSPRepository\bsp\freertos_v2_00_a\src\Source
+
+REM Standard paths
+SET FREERTOS_SOURCE=..\..\..\..\Source
+SET COMMON_SOURCE=..\..\..\Common\minimal
+SET COMMON_INCLUDE=..\..\..\Common\include
+SET LWIP_SOURCE=..\..\..\Common\ethernet\lwip-1.4.0
+
 REM Have the files already been copied?
 IF EXIST FreeRTOS_Source Goto END
 
@@ -30,63 +40,78 @@ IF EXIST FreeRTOS_Source Goto END
     MD lwIP\netif\include
     MD lwIP\netif\include\arch
     
-    REM Copy the core kernel files.
-    copy ..\..\..\..\Source\tasks.c FreeRTOS_Source
-    copy ..\..\..\..\Source\queue.c FreeRTOS_Source
-    copy ..\..\..\..\Source\list.c FreeRTOS_Source
-    copy ..\..\..\..\Source\timers.c FreeRTOS_Source
+    REM Copy the core kernel files into the SDK projects directory
+    copy %FREERTOS_SOURCE%\tasks.c FreeRTOS_Source
+    copy %FREERTOS_SOURCE%\queue.c FreeRTOS_Source
+    copy %FREERTOS_SOURCE%\list.c FreeRTOS_Source
+    copy %FREERTOS_SOURCE%\timers.c FreeRTOS_Source
+
+    REM Copy the core kernel files into the BSP directory
+    copy %FREERTOS_SOURCE%\tasks.c %BSP_SOURCE%
+    copy %FREERTOS_SOURCE%\queue.c %BSP_SOURCE%
+    copy %FREERTOS_SOURCE%\list.c %BSP_SOURCE%
+    copy %FREERTOS_SOURCE%\timers.c %BSP_SOURCE%
     
-    REM Copy the common header files
-    copy ..\..\..\..\Source\include\*.* FreeRTOS_Source\include
+    REM Copy the common header files into the SDK projects directory
+    copy %FREERTOS_SOURCE%\include\*.* FreeRTOS_Source\include
     
-    REM Copy the portable layer files
-    copy ..\..\..\..\Source\portable\GCC\MicroBlazeV8\*.* FreeRTOS_Source\portable\GCC\MicroBlazeV8
+    REM Copy the common header files into the BSP directory
+    copy %FREERTOS_SOURCE%\include\*.* %BSP_SOURCE%\include
+
+    REM Copy the portable layer files into the SDK projects directory
+    copy %FREERTOS_SOURCE%\portable\GCC\MicroBlazeV8\*.* FreeRTOS_Source\portable\GCC\MicroBlazeV8
     
-    REM Copy the basic memory allocation files
-    copy ..\..\..\..\Source\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang
+    REM Copy the portable layer files into the BSP projects directory
+    copy %FREERTOS_SOURCE%\portable\GCC\MicroBlazeV8\*.* %BSP_SOURCE%\portable\GCC\MicroBlazeV8
+
+    REM Copy the basic memory allocation files into the SDK projects directory
+    copy %FREERTOS_SOURCE%\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang
+
+    REM Copy the basic memory allocation files into the BSP directory
+    copy %FREERTOS_SOURCE%\portable\MemMang\heap_2.c %BSP_SOURCE%\portable\MemMang
 
     REM Copy the files that define the common demo tasks.
-    copy ..\..\..\Common\minimal\dynamic.c         Demo_Source
-    copy ..\..\..\Common\minimal\BlockQ.c          Demo_Source
-    copy ..\..\..\Common\minimal\death.c           Demo_Source
-    copy ..\..\..\Common\minimal\blocktim.c        Demo_Source
-    copy ..\..\..\Common\minimal\semtest.c         Demo_Source
-    copy ..\..\..\Common\minimal\PollQ.c           Demo_Source
-    copy ..\..\..\Common\minimal\GenQTest.c        Demo_Source
-    copy ..\..\..\Common\minimal\QPeek.c           Demo_Source
-    copy ..\..\..\Common\minimal\recmutex.c        Demo_Source
-    copy ..\..\..\Common\minimal\sp_flop.c         Demo_Source
-    copy ..\..\..\Common\minimal\flash.c           Demo_Source
-    copy ..\..\..\Common\minimal\comtest_strings.c Demo_Source
-    copy ..\..\..\Common\minimal\TimerDemo.c       Demo_Source
+    copy %COMMON_SOURCE%\dynamic.c         Demo_Source
+    copy %COMMON_SOURCE%\BlockQ.c          Demo_Source
+    copy %COMMON_SOURCE%\death.c           Demo_Source
+    copy %COMMON_SOURCE%\blocktim.c        Demo_Source
+    copy %COMMON_SOURCE%\semtest.c         Demo_Source
+    copy %COMMON_SOURCE%\PollQ.c           Demo_Source
+    copy %COMMON_SOURCE%\GenQTest.c        Demo_Source
+    copy %COMMON_SOURCE%\QPeek.c           Demo_Source
+    copy %COMMON_SOURCE%\recmutex.c        Demo_Source
+    copy %COMMON_SOURCE%\sp_flop.c         Demo_Source
+    copy %COMMON_SOURCE%\flash.c           Demo_Source
+    copy %COMMON_SOURCE%\comtest_strings.c Demo_Source
+    copy %COMMON_SOURCE%\TimerDemo.c       Demo_Source
     
     REM Copy the common demo file headers.
-    copy ..\..\..\Common\include\dynamic.h         Demo_Source\include
-    copy ..\..\..\Common\include\partest.h         Demo_Source\include
-    copy ..\..\..\Common\include\BlockQ.h          Demo_Source\include
-    copy ..\..\..\Common\include\death.h           Demo_Source\include
-    copy ..\..\..\Common\include\blocktim.h        Demo_Source\include
-    copy ..\..\..\Common\include\semtest.h         Demo_Source\include
-    copy ..\..\..\Common\include\PollQ.h           Demo_Source\include
-    copy ..\..\..\Common\include\GenQTest.h        Demo_Source\include
-    copy ..\..\..\Common\include\QPeek.h           Demo_Source\include
-    copy ..\..\..\Common\include\recmutex.h        Demo_Source\include
-    copy ..\..\..\Common\include\flop.h            Demo_Source\include
-    copy ..\..\..\Common\include\flash.h           Demo_Source\include
-    copy ..\..\..\Common\include\comtest_strings.h Demo_Source\include
-    copy ..\..\..\Common\include\serial.h          Demo_Source\include
-    copy ..\..\..\Common\include\comtest.h         Demo_Source\include
-    copy ..\..\..\Common\include\TimerDemo.h       Demo_Source\include
+    copy %COMMON_INCLUDE%\dynamic.h         Demo_Source\include
+    copy %COMMON_INCLUDE%\partest.h         Demo_Source\include
+    copy %COMMON_INCLUDE%\BlockQ.h          Demo_Source\include
+    copy %COMMON_INCLUDE%\death.h           Demo_Source\include
+    copy %COMMON_INCLUDE%\blocktim.h        Demo_Source\include
+    copy %COMMON_INCLUDE%\semtest.h         Demo_Source\include
+    copy %COMMON_INCLUDE%\PollQ.h           Demo_Source\include
+    copy %COMMON_INCLUDE%\GenQTest.h        Demo_Source\include
+    copy %COMMON_INCLUDE%\QPeek.h           Demo_Source\include
+    copy %COMMON_INCLUDE%\recmutex.h        Demo_Source\include
+    copy %COMMON_INCLUDE%\flop.h            Demo_Source\include
+    copy %COMMON_INCLUDE%\flash.h           Demo_Source\include
+    copy %COMMON_INCLUDE%\comtest_strings.h Demo_Source\include
+    copy %COMMON_INCLUDE%\serial.h          Demo_Source\include
+    copy %COMMON_INCLUDE%\comtest.h         Demo_Source\include
+    copy %COMMON_INCLUDE%\TimerDemo.h       Demo_Source\include
     
     REM Copy the required lwIP files
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\api\*.c                       lwIP\api
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\core\*.c                      lwIP\core
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\core\ipv4\*.c                 lwIP\core\ipv4
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\include\ipv4\lwip\*.h         lwIP\include\ipv4\lwip
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\include\lwip\*.h              lwIP\include\lwip
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\include\netif\*.h             lwIP\include\netif
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\src\netif\etharp.c                lwIP\netif
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\ports\MicroBlaze-Ethernet-Lite    lwip\netif
-    copy ..\..\..\Common\ethernet\lwip-1.4.0\ports\MicroBlaze-Ethernet-Lite\include\arch lwip\netif\include\arch
+    copy %LWIP_SOURCE%\src\api\*.c                       lwIP\api
+    copy %LWIP_SOURCE%\src\core\*.c                      lwIP\core
+    copy %LWIP_SOURCE%\src\core\ipv4\*.c                 lwIP\core\ipv4
+    copy %LWIP_SOURCE%\src\include\ipv4\lwip\*.h         lwIP\include\ipv4\lwip
+    copy %LWIP_SOURCE%\src\include\lwip\*.h              lwIP\include\lwip
+    copy %LWIP_SOURCE%\src\include\netif\*.h             lwIP\include\netif
+    copy %LWIP_SOURCE%\src\netif\etharp.c                lwIP\netif
+    copy %LWIP_SOURCE%\ports\MicroBlaze-Ethernet-Lite    lwip\netif
+    copy %LWIP_SOURCE%\ports\MicroBlaze-Ethernet-Lite\include\arch lwip\netif\include\arch
 
 : END

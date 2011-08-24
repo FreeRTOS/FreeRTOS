@@ -13,7 +13,7 @@ proc get_os {} {
     if { $os == "" } {
         error "No Operating System specified in the Board Support Package.";
     }
-    
+
     return $os;
 }
 
@@ -24,11 +24,9 @@ proc get_stdout {} {
 }
 
 proc check_stdout_hw {} {
-    set p7_uarts [xget_ips "type" "ps7_uart"];
     set uartlites [xget_ips "type" "uartlite"];
     set uart16550s [xget_ips "type" "uart16550"];
-    if { ([llength $p7_uarts] == 0) && ([llength $uartlites] == 0) &&
-	 ([llength $uart16550s] == 0) } {
+    if { ([llength $uartlites] == 0) && ([llength $uart16550s] == 0) } {
         # Check for MDM-Uart peripheral. The MDM would be listed as a peripheral
         # only if it has a UART interface. So no further check is required
         set mdmlist [xget_ips "type" "mdm"]
@@ -45,9 +43,35 @@ proc check_stdout_sw {} {
     }
 }
 
+proc get_mem_size { memlist } {
+    return [lindex $memlist 4];
+}
+
+proc require_memory {memsize} {
+    set imemlist [xget_memory_ranges "access_type" "I"];
+    set idmemlist [xget_memory_ranges "access_type" "ID"];
+    set dmemlist [xget_memory_ranges "access_type" "D"];
+
+    set memlist [concat $imemlist $idmemlist $dmemlist];
+
+    while { [llength $memlist] > 3 } {
+        set mem [lrange $memlist 0 4];
+        set memlist [lreplace $memlist 0 4];
+
+        if { [get_mem_size $mem] >= $memsize } {
+            return 1;
+        }
+    }
+
+    error "This application requires atleast $memsize bytes of memory.";
+}
+
 proc swapp_is_supported_hw {} {
     # check for uart peripheral
     check_stdout_hw;
+
+    # require about 1M of memory
+    require_memory "1000000";
 
     return 1;
 }
@@ -65,8 +89,7 @@ proc generate_stdout_config { fid } {
     # if stdout is uartlite, we don't have to generate anything
     set stdout_type [xget_ip_attribute "type" $stdout];
 
-    if { [regexp -nocase "uartlite" $stdout_type] || [string match -nocase "mdm" $stdout_type] ||
-	 [regexp -nocase "ps7_uart" $stdout_type]} {
+    if { [regexp -nocase "uartlite" $stdout_type] || [string match -nocase "mdm" $stdout_type] } {
         return;
     } elseif { [regexp -nocase "uart16550" $stdout_type] } {
 	# mention that we have a 16550
@@ -81,23 +104,9 @@ proc generate_stdout_config { fid } {
     }
 }
 
-proc generate_cache_mask { fid } {
-    set mask [format "0x%x" [xget_ppc_cache_mask]]
-    puts $fid "#ifdef __PPC__"
-    puts $fid "#define CACHEABLE_REGION_MASK $mask"
-    puts $fid "#endif\n"
-}
-
 # depending on the type of os (standalone|xilkernel), choose
 # the correct source files
 proc swapp_generate {} {
-    set os [get_os];
-
-    if { $os == "xilkernel" } {
-        file rename -force "helloworld_xmk.c" "helloworld.c"
-    } else {
-        file delete -force "helloworld_xmk.c"
-    }
 
     # cleanup this file for writing
     set fid [open "platform_config.h" "w+"];
@@ -107,20 +116,12 @@ proc swapp_generate {} {
     # if we have a uart16550 as stdout, then generate some config for that
     generate_stdout_config $fid;
 
-    # for ppc, generate cache mask string
-    generate_cache_mask $fid;
-
     puts $fid "#endif";
     close $fid;
 }
 
 proc swapp_get_linker_constraints {} {
-    # this app does not require a .vectors section if it is being run w/ the standalone OS on PPC
-    set os [get_os];
 
-    if { $os == "standalone" } {
-        return "vector_section no";
-    }
-
-    return "";
+    # we need a 4k heap
+    return "stack 40k heap 40k";
 }

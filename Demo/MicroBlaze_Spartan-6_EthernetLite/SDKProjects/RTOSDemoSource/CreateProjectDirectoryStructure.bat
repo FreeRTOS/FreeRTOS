@@ -65,7 +65,7 @@ IF EXIST FreeRTOS_Source Goto END
     copy %FREERTOS_SOURCE%\portable\GCC\MicroBlazeV8\*.* %BSP_SOURCE%\portable\GCC\MicroBlazeV8
 
     REM Copy the basic memory allocation files into the SDK projects directory
-    copy %FREERTOS_SOURCE%\portable\MemMang\heap_2.c FreeRTOS_Source\portable\MemMang
+    copy %FREERTOS_SOURCE%\portable\MemMang\heap_3.c FreeRTOS_Source\portable\MemMang
 
     REM Copy the basic memory allocation files into the BSP directory
     copy %FREERTOS_SOURCE%\portable\MemMang\heap_2.c %BSP_SOURCE%\portable\MemMang

@@ -176,7 +176,7 @@ proc generate {os_handle} {
     file copy -force [file join src Source queue.c] src
     file copy -force [file join src Source list.c] src
     file copy -force [file join src Source timers.c] src
-    file copy -force [file join src Source portable MemMang heap_2.c] src
+    file copy -force [file join src Source portable MemMang heap_3.c] src
     file copy -force [file join src Source portable GCC MicroBlazeV8 port.c] src
     file copy -force [file join src Source portable GCC MicroBlazeV8 port_exceptions.c] src
     file copy -force [file join src Source portable GCC MicroBlazeV8 portasm.S] src

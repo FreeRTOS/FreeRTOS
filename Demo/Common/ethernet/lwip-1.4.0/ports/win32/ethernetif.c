@@ -215,6 +215,8 @@ struct eth_hdr *pxHeader;
 u16_t usTotalLength = p->tot_len - ETH_PAD_SIZE;
 err_t xReturn = ERR_OK;
 
+	( void ) pxNetIf;
+
 	#if defined(LWIP_DEBUG) && LWIP_NETIF_TX_SINGLE_PBUF
 		LWIP_ASSERT("p->next == NULL && p->len == p->tot_len", p->next == NULL && p->len == p->tot_len);
 	#endif

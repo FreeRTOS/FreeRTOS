@@ -143,7 +143,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
    connections. */
-#define MEMP_NUM_TCP_PCB		30
+#define MEMP_NUM_TCP_PCB		40
 
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
    connections. */

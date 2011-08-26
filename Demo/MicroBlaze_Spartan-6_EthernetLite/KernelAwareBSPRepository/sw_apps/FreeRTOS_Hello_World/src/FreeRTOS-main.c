@@ -59,7 +59,7 @@
 */
 
 /*
- * main-blinky.c (this file) defines a very simple demo that creates two tasks,
+ * FreeRTOS-main.c (this file) defines a very simple demo that creates two tasks,
  * one queue, and one timer.
  *
  * The main() Function:
@@ -87,7 +87,7 @@
  * leaves the Blocked state every 200 milliseconds, and therefore toggles the LED
  * every 200 milliseconds.
  *
- * The Software Timer
+ * The Software Timer:
  * The software timer is configured to be an "auto reset" timer.  Its callback
  * function simply increments the ulCallback variable each time it executes.
  */

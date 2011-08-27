@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>RTOSDemoSource</name>
-	<comment>RTOSDemoBSP - microblaze_0</comment>
+	<name>RTOSDemo</name>
+	<comment></comment>
 	<projects>
+		<project>StandAloneBSP</project>
 		<project>RTOSDemoBSP</project>
 	</projects>
 	<buildSpec>

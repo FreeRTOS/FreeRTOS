@@ -9,6 +9,7 @@
 				<extensions/>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
 		</cconfiguration>
 	</storageModule>
 </cproject>

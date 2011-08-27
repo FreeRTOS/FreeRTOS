@@ -36,7 +36,7 @@
 								<option id="xilinx.gnu.mb.compiler.inferred.fpu.889919540" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.compiler.inferred.mul.769937239" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.702422111" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/include"/>
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.788537379" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
@@ -63,9 +63,9 @@
 								<option id="xilinx.gnu.mb.compiler.inferred.fpu.548710489" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.compiler.inferred.mul.901018577" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.579575146" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/include"/>
 								</option>
-								<option id="xilinx.gnu.compiler.dircategory.includes.877153321" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+								<option id="xilinx.gnu.compiler.dircategory.includes.877153321" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/netif/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
@@ -87,7 +87,7 @@
 								<option id="xilinx.gnu.mb.linker.inferred.fpu.563163194" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.linker.inferred.mul.1195982521" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.989668099" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.176750025" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 								<option id="xilinx.gnu.c.link.option.ldflags.1590675094" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
@@ -106,7 +106,7 @@
 								<option id="xilinx.gnu.mb.linker.inferred.fpu.186398214" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.linker.inferred.mul.1765763083" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.771165792" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.664782973" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 								<option id="xilinx.gnu.c.link.option.ldflags.1516959028" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
@@ -1024,7 +1024,7 @@
 								<option id="xilinx.gnu.mb.compiler.inferred.fpu.2033157740" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.compiler.inferred.mul.2087417140" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.729428302" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/include"/>
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.1539819216" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
@@ -1052,9 +1052,9 @@
 								<option id="xilinx.gnu.mb.compiler.inferred.fpu.1268286956" name="FPU" superClass="xilinx.gnu.mb.compiler.inferred.fpu" value="xilinx.gnu.mb.compiler.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.compiler.inferred.mul.147816156" name="Hardware Multiplier" superClass="xilinx.gnu.mb.compiler.inferred.mul" value="xilinx.gnu.mb.compiler.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.1260701076" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/include"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/include"/>
 								</option>
-								<option id="xilinx.gnu.compiler.dircategory.includes.747654423" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+								<option id="xilinx.gnu.compiler.dircategory.includes.747654423" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/netif/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/lwIP/include}&quot;"/>
@@ -1076,7 +1076,7 @@
 								<option id="xilinx.gnu.mb.linker.inferred.fpu.1355435021" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.linker.inferred.mul.1335029834" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1334512887" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.1073578867" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 								<option id="xilinx.gnu.c.link.option.ldflags.471396681" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
@@ -1096,7 +1096,7 @@
 								<option id="xilinx.gnu.mb.linker.inferred.fpu.484719747" name="FPU" superClass="xilinx.gnu.mb.linker.inferred.fpu" value="xilinx.gnu.mb.linker.inferred.fpu.basic" valueType="enumerated"/>
 								<option id="xilinx.gnu.mb.linker.inferred.mul.494988599" name="Hardware Multiplier" superClass="xilinx.gnu.mb.linker.inferred.mul" value="xilinx.gnu.mb.linker.inferred.mul.32bit" valueType="enumerated"/>
 								<option id="xilinx.gnu.linker.inferred.swplatform.lpath.1681875689" name="Software Platform Library Path" superClass="xilinx.gnu.linker.inferred.swplatform.lpath" valueType="libPaths">
-									<listOptionValue builtIn="false" value="../../RTOSDemoBSP/microblaze_0/lib"/>
+									<listOptionValue builtIn="false" value="../../StandAloneBSP/microblaze_0/lib"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.480905448" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
 								<option id="xilinx.gnu.c.link.option.ldflags.548655668" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>

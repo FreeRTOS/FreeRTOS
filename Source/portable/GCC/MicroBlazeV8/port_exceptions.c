@@ -230,7 +230,6 @@ extern void *pxCurrentTCB;
 		#if XPAR_MICROBLAZE_0_USE_FPU == 1
 
 			case XEXC_ID_FPU :
-						/*_RB_ More decoding required here and in other exceptions. */
 						xRegisterDump.pcExceptionCause = ( signed char * const ) "XEXC_ID_FPU see ulFSR value";
 						break;
 

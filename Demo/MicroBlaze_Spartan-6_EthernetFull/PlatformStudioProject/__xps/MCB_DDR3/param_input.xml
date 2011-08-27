@@ -93,7 +93,7 @@
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_INTERCONNECT_S0_AXI_MASTERS</spirit:name>
-        <spirit:value spirit:format="string" spirit:resolve="OPTIONAL" spirit:id="MCB_DDR3.C_INTERCONNECT_S0_AXI_MASTERS"> "ETHERNET_dma.M_AXI_SG &amp; ETHERNET_dma.M_AXI_MM2S &amp; ETHERNET_dma.M_AXI_S2MM" </spirit:value>
+        <spirit:value spirit:format="string" spirit:resolve="OPTIONAL" spirit:id="MCB_DDR3.C_INTERCONNECT_S0_AXI_MASTERS"> "microblaze_0.M_AXI_DC &amp; microblaze_0.M_AXI_IC &amp; ETHERNET_dma.M_AXI_SG &amp; ETHERNET_dma.M_AXI_MM2S &amp; ETHERNET_dma.M_AXI_S2MM" </spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_INTERCONNECT_S0_AXI_R_REGISTER</spirit:name>
@@ -569,11 +569,11 @@
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_S0_AXI_HIGHADDR</spirit:name>
-        <spirit:value spirit:format="STD_LOGIC_VECTOR" spirit:resolve="OPTIONAL" spirit:id="MCB_DDR3.C_S0_AXI_HIGHADDR"> "0x87ffffff" </spirit:value>
+        <spirit:value spirit:format="STD_LOGIC_VECTOR" spirit:resolve="OPTIONAL" spirit:id="MCB_DDR3.C_S0_AXI_HIGHADDR"> "0x807FFFFF" </spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_S0_AXI_ID_WIDTH</spirit:name>
-        <spirit:value spirit:format="INTEGER" spirit:resolve="UPDATE" spirit:id="MCB_DDR3.C_S0_AXI_ID_WIDTH"> "2" </spirit:value>
+        <spirit:value spirit:format="INTEGER" spirit:resolve="UPDATE" spirit:id="MCB_DDR3.C_S0_AXI_ID_WIDTH"> "3" </spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_S0_AXI_PROTOCOL</spirit:name>

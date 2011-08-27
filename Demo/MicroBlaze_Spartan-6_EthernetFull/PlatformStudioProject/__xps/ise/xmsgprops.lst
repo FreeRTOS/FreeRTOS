@@ -1,0 +1,3 @@
+MessageCaptureEnabled: TRUE
+MessageFilteringEnabled: FALSE
+IncrementalMessagingEnabled: TRUE

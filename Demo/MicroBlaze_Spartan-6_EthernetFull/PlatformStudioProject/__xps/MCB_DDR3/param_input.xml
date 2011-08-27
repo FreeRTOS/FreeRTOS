@@ -589,7 +589,7 @@
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_S0_AXI_STRICT_COHERENCY</spirit:name>
-        <spirit:value spirit:format="INTEGER" spirit:resolve="OPTIONAL_UPDATE" spirit:id="MCB_DDR3.C_S0_AXI_STRICT_COHERENCY"> "1" </spirit:value>
+        <spirit:value spirit:format="INTEGER" spirit:resolve="OPTIONAL_UPDATE" spirit:id="MCB_DDR3.C_S0_AXI_STRICT_COHERENCY"> "0" </spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter>
         <spirit:name>C_S0_AXI_SUPPORTS_NARROW_BURST</spirit:name>

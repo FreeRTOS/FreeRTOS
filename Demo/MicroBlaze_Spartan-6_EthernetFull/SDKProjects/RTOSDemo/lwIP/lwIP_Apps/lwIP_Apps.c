@@ -117,7 +117,7 @@ static struct netif xNetIf;
 	LWIP_PORT_INIT_IPADDR(&xIPAddr);
 	LWIP_PORT_INIT_NETMASK(&xNetMask);
 
-	netif_set_default( netif_add( &xNetIf, &xIPAddr, &xNetMask, &xGateway, NULL, ethernetif_init, tcpip_input ) );
+//	netif_set_default( netif_add( &xNetIf, &xIPAddr, &xNetMask, &xGateway, NULL, ethernetif_init, tcpip_input ) );
 	netif_set_up( &xNetIf );
 
 	/* Initialise the raw http server. */

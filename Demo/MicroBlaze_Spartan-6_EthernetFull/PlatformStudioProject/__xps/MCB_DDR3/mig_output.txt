@@ -1,0 +1,4 @@
+SET_ERROR_CODE 0
+SET_XMDF_PATH ./MCB_DDR3_xmdf.tcl
+SET_PARAMETER component_name MCB_DDR3
+SET_PARAMETER xml_input_file ./MCB_DDR3/user_design/mig.prj

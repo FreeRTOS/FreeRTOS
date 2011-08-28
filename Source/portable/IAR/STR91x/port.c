@@ -147,6 +147,10 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 	pxOriginalTOS = pxTopOfStack;
 
+	/* To ensure asserts in tasks.c don't fail, although in this case the assert
+	is not really required. */
+	pxTopOfStack--;
+
 	/* Setup the initial stack of the task.  The stack is set exactly as
 	expected by the portRESTORE_CONTEXT() macro. */
 

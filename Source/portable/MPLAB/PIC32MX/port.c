@@ -65,11 +65,10 @@
 /* Bits within various registers. */
 #define portIE_BIT					( 0x00000001 )
 #define portEXL_BIT					( 0x00000002 )
-#define portSW0_ENABLE				( 0x00000100 )
 
 /* The EXL bit is set to ensure interrupts do not occur while the context of
 the first task is being restored. */
-#define portINITIAL_SR				( portIE_BIT | portEXL_BIT | portSW0_ENABLE )
+#define portINITIAL_SR				( portIE_BIT | portEXL_BIT )
 
 /* Records the interrupt nesting depth.  This starts at one as it will be
 decremented to 0 when the first task starts. */

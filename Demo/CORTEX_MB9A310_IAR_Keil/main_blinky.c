@@ -326,7 +326,7 @@ const unsigned short usButtonInputBit = 0x01U;
 	FM3_GPIO->PFR5 = 0x0000;
 
 	/* Assign the button input as GPIO. */
-	FM3_GPIO->PFR1 |= usButtonInputBit;
+	FM3_GPIO->PFR5 |= usButtonInputBit;
 	
 	/* Button interrupt on falling edge. */
 	FM3_EXTI->ELVR  = 0x0003;

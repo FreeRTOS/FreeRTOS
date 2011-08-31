@@ -80,7 +80,7 @@
         <Book>
           <Number>0</Number>
           <Title>Data Sheet</Title>
-          <Path>DATASHTS\FUJITSU\MB9BF500NR-DS.pdf</Path>
+          <Path>DATASHTS\FUJITSU\MB9AF312L-DS706-00012-0v01-E.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
@@ -90,11 +90,11 @@
       </Books>
       <DllOpt>
         <SimDllName>SARMCM3.DLL</SimDllName>
-        <SimDllArguments>-MPU</SimDllArguments>
+        <SimDllArguments></SimDllArguments>
         <SimDlgDllName>DCM.DLL</SimDlgDllName>
         <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
         <TargetDllName>SARMCM3.DLL</TargetDllName>
-        <TargetDllArguments>-MPU</TargetDllArguments>
+        <TargetDllArguments></TargetDllArguments>
         <TargetDlgDllName>TCM.DLL</TargetDlgDllName>
         <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
       </DllOpt>
@@ -203,7 +203,7 @@
         <aSer4>0</aSer4>
         <StkLoc>0</StkLoc>
         <TrcWin>0</TrcWin>
-        <newCpu>0</newCpu>
+        <newCpu>3</newCpu>
         <uProt>0</uProt>
       </DebugFlag>
       <LintExecutable></LintExecutable>
@@ -271,7 +271,7 @@
         <Book>
           <Number>0</Number>
           <Title>Data Sheet</Title>
-          <Path>DATASHTS\FUJITSU\MB9BF500NR-DS.pdf</Path>
+          <Path>DATASHTS\FUJITSU\MB9AF312L-DS706-00012-0v01-E.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
@@ -281,11 +281,11 @@
       </Books>
       <DllOpt>
         <SimDllName>SARMCM3.DLL</SimDllName>
-        <SimDllArguments>-MPU</SimDllArguments>
+        <SimDllArguments></SimDllArguments>
         <SimDlgDllName>DCM.DLL</SimDlgDllName>
         <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
         <TargetDllName>SARMCM3.DLL</TargetDllName>
-        <TargetDllArguments>-MPU</TargetDllArguments>
+        <TargetDllArguments></TargetDllArguments>
         <TargetDlgDllName>TCM.DLL</TargetDlgDllName>
         <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
       </DllOpt>
@@ -340,7 +340,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>-UM1129BUE -O207 -S0 -C0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx06_512 -FS00 -FL080000</Name>
+          <Name>-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx04_256 -FS00 -FL040000)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <MemoryWindow1>
@@ -462,7 +462,7 @@
         <Book>
           <Number>0</Number>
           <Title>Data Sheet</Title>
-          <Path>DATASHTS\FUJITSU\MB9BF500NR-DS.pdf</Path>
+          <Path>DATASHTS\FUJITSU\MB9AF312L-DS706-00012-0v01-E.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
@@ -472,11 +472,11 @@
       </Books>
       <DllOpt>
         <SimDllName>SARMCM3.DLL</SimDllName>
-        <SimDllArguments>-MPU</SimDllArguments>
+        <SimDllArguments></SimDllArguments>
         <SimDlgDllName>DCM.DLL</SimDlgDllName>
         <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
         <TargetDllName>SARMCM3.DLL</TargetDllName>
-        <TargetDllArguments>-MPU</TargetDllArguments>
+        <TargetDllArguments></TargetDllArguments>
         <TargetDlgDllName>TCM.DLL</TargetDlgDllName>
         <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
       </DllOpt>
@@ -585,7 +585,7 @@
         <aSer4>0</aSer4>
         <StkLoc>0</StkLoc>
         <TrcWin>0</TrcWin>
-        <newCpu>0</newCpu>
+        <newCpu>3</newCpu>
         <uProt>0</uProt>
       </DebugFlag>
       <LintExecutable></LintExecutable>
@@ -595,23 +595,9 @@
 
   <Group>
     <GroupName>Fujitsu Source</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
-    <File>
-      <GroupNumber>1</GroupNumber>
-      <FileNumber>1</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
-      <bDave2>0</bDave2>
-      <PathWithFileName>.\Fujitu_source\system_mb9bf50x.c</PathWithFileName>
-      <FilenameWithoutPath>system_mb9bf50x.c</FilenameWithoutPath>
-    </File>
     <File>
       <GroupNumber>1</GroupNumber>
       <FileNumber>2</FileNumber>
@@ -628,7 +614,7 @@
     </File>
     <File>
       <GroupNumber>1</GroupNumber>
-      <FileNumber>3</FileNumber>
+      <FileNumber>0</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -637,8 +623,22 @@
       <TopLine>0</TopLine>
       <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Fujitu_source\startup_keil\startup_mb9bf50x.s</PathWithFileName>
-      <FilenameWithoutPath>startup_mb9bf50x.s</FilenameWithoutPath>
+      <PathWithFileName>.\Fujitu_source\startup_keil\startup_mb9af31x.s</PathWithFileName>
+      <FilenameWithoutPath>startup_mb9af31x.s</FilenameWithoutPath>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>0</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Fujitu_source\system_mb9af31x.c</PathWithFileName>
+      <FilenameWithoutPath>system_mb9af31x.c</FilenameWithoutPath>
     </File>
   </Group>
 
@@ -990,19 +990,19 @@
     <ActiveMDIGroup>0</ActiveMDIGroup>
     <MDIGroup>
       <Size>100</Size>
-      <ActiveTab>0</ActiveTab>
+      <ActiveTab>1</ActiveTab>
       <Documents>
-        <Doc>
-          <Name>.\main_blinky.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>58</TopLine>
-          <CurrentLine>58</CurrentLine>
-        </Doc>
         <Doc>
           <Name>.\main-full.c</Name>
           <ColumnNumber>19</ColumnNumber>
           <TopLine>56</TopLine>
           <CurrentLine>56</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\main_blinky.c</Name>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>58</TopLine>
+          <CurrentLine>58</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

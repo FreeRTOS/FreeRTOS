@@ -12,14 +12,14 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>MB9BF506N</Device>
+          <Device>MB9AF314L</Device>
           <Vendor>Fujitsu Semiconductors</Vendor>
-          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0x00000000-0x0007FFFF) CLOCK(4000000) CPUTYPE("Cortex-M3")</Cpu>
+          <Cpu>IRAM(0x20000000-0x20003FFF) IRAM2(0x1FFFC000-0x1FFFFFFF) IROM(0x00000000-0x0003FFFF) CLOCK(4000000) CPUTYPE("Cortex-M3")</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"Startup\Fujitsu\MB9B500\startup_MB9BF50x.s" ("Fujitsu MB9BF50x Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx06_512 -FS00 -FL080000)</FlashDriverDll>
-          <DeviceId>5215</DeviceId>
-          <RegisterFile>MB9BF506N.h</RegisterFile>
+          <StartupFile>"Startup\Fujitsu\MB9A310\startup_mb9af31x.s" ("Fujitsu MB9AF31x Startup Code")</StartupFile>
+          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx04_256 -FS00 -FL040000)</FlashDriverDll>
+          <DeviceId>5773</DeviceId>
+          <RegisterFile>mb9af314l.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -34,8 +34,8 @@
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>Fujitsu\MB9B500\</RegisterFilePath>
-          <DBRegisterFilePath>Fujitsu\MB9B500\</DBRegisterFilePath>
+          <RegisterFilePath>Fujitsu\MB9A310\</RegisterFilePath>
+          <DBRegisterFilePath>Fujitsu\MB9A310\</DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -98,11 +98,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments>-MPU</SimDllArguments>
+          <SimDllArguments></SimDllArguments>
           <SimDlgDll>DCM.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments>-MPU</TargetDllArguments>
+          <TargetDllArguments></TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
         </DllOption>
@@ -163,7 +163,7 @@
             <DriverSelection>4096</DriverSelection>
           </Flash1>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
         </Utilities>
         <TargetArmAds>
@@ -205,7 +205,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <hadIRAM2>0</hadIRAM2>
+            <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
             <useUlib>0</useUlib>
@@ -264,12 +264,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -294,7 +294,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -318,8 +318,8 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x1fff8000</StartAddress>
-                <Size>0x10000</Size>
+                <StartAddress>0x1fffc000</StartAddress>
+                <Size>0x8000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -346,7 +346,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_MB9B500_IAR_Keil;.\Fujitu_source;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM3</IncludePath>
+              <IncludePath>.\Fujitu_source;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM3;.</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -387,19 +387,19 @@
           <GroupName>Fujitsu Source</GroupName>
           <Files>
             <File>
-              <FileName>system_mb9bf50x.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Fujitu_source\system_mb9bf50x.c</FilePath>
-            </File>
-            <File>
               <FileName>core_cm3.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Fujitu_source\core_cm3.c</FilePath>
             </File>
             <File>
-              <FileName>startup_mb9bf50x.s</FileName>
+              <FileName>startup_mb9af31x.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\Fujitu_source\startup_keil\startup_mb9bf50x.s</FilePath>
+              <FilePath>.\Fujitu_source\startup_keil\startup_mb9af31x.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_mb9af31x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Fujitu_source\system_mb9af31x.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -712,14 +712,14 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>MB9BF506N</Device>
+          <Device>MB9AF314L</Device>
           <Vendor>Fujitsu Semiconductors</Vendor>
-          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0x00000000-0x0007FFFF) CLOCK(4000000) CPUTYPE("Cortex-M3")</Cpu>
+          <Cpu>IRAM(0x20000000-0x20003FFF) IRAM2(0x1FFFC000-0x1FFFFFFF) IROM(0x00000000-0x0003FFFF) CLOCK(4000000) CPUTYPE("Cortex-M3")</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"Startup\Fujitsu\MB9B500\startup_MB9BF50x.s" ("Fujitsu MB9BF50x Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx06_512 -FS00 -FL080000)</FlashDriverDll>
-          <DeviceId>5215</DeviceId>
-          <RegisterFile>MB9BF506N.h</RegisterFile>
+          <StartupFile>"Startup\Fujitsu\MB9A310\startup_mb9af31x.s" ("Fujitsu MB9AF31x Startup Code")</StartupFile>
+          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx04_256 -FS00 -FL040000)</FlashDriverDll>
+          <DeviceId>5773</DeviceId>
+          <RegisterFile>mb9af314l.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -734,8 +734,8 @@
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>Fujitsu\MB9B500\</RegisterFilePath>
-          <DBRegisterFilePath>Fujitsu\MB9B500\</DBRegisterFilePath>
+          <RegisterFilePath>Fujitsu\MB9A310\</RegisterFilePath>
+          <DBRegisterFilePath>Fujitsu\MB9A310\</DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -798,11 +798,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments>-MPU</SimDllArguments>
+          <SimDllArguments></SimDllArguments>
           <SimDlgDll>DCM.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments>-MPU</TargetDllArguments>
+          <TargetDllArguments></TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
         </DllOption>
@@ -905,7 +905,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <hadIRAM2>0</hadIRAM2>
+            <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
             <useUlib>0</useUlib>
@@ -964,12 +964,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -994,7 +994,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -1018,8 +1018,8 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x1fff8000</StartAddress>
-                <Size>0x10000</Size>
+                <StartAddress>0x1fffc000</StartAddress>
+                <Size>0x8000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -1031,7 +1031,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -1046,7 +1046,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_MB9B500_IAR_Keil;.\Fujitu_source;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM3</IncludePath>
+              <IncludePath>.\Fujitu_source;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM3;.</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1087,19 +1087,19 @@
           <GroupName>Fujitsu Source</GroupName>
           <Files>
             <File>
-              <FileName>system_mb9bf50x.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Fujitu_source\system_mb9bf50x.c</FilePath>
-            </File>
-            <File>
               <FileName>core_cm3.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Fujitu_source\core_cm3.c</FilePath>
             </File>
             <File>
-              <FileName>startup_mb9bf50x.s</FileName>
+              <FileName>startup_mb9af31x.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\Fujitu_source\startup_keil\startup_mb9bf50x.s</FilePath>
+              <FilePath>.\Fujitu_source\startup_keil\startup_mb9af31x.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_mb9af31x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Fujitu_source\system_mb9af31x.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1451,14 +1451,14 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>MB9BF506N</Device>
+          <Device>MB9AF314L</Device>
           <Vendor>Fujitsu Semiconductors</Vendor>
-          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0x00000000-0x0007FFFF) CLOCK(4000000) CPUTYPE("Cortex-M3")</Cpu>
+          <Cpu>IRAM(0x20000000-0x20003FFF) IRAM2(0x1FFFC000-0x1FFFFFFF) IROM(0x00000000-0x0003FFFF) CLOCK(4000000) CPUTYPE("Cortex-M3")</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"Startup\Fujitsu\MB9B500\startup_MB9BF50x.s" ("Fujitsu MB9BF50x Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx06_512 -FS00 -FL080000)</FlashDriverDll>
-          <DeviceId>5215</DeviceId>
-          <RegisterFile>MB9BF506N.h</RegisterFile>
+          <StartupFile>"Startup\Fujitsu\MB9A310\startup_mb9af31x.s" ("Fujitsu MB9AF31x Startup Code")</StartupFile>
+          <FlashDriverDll>UL2CM3(-O207 -S0 -C0 -FO7 -FD20000000 -FC800 -FN1 -FF0MB9BFx04_256 -FS00 -FL040000)</FlashDriverDll>
+          <DeviceId>5773</DeviceId>
+          <RegisterFile>mb9af314l.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -1473,8 +1473,8 @@
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>Fujitsu\MB9B500\</RegisterFilePath>
-          <DBRegisterFilePath>Fujitsu\MB9B500\</DBRegisterFilePath>
+          <RegisterFilePath>Fujitsu\MB9A310\</RegisterFilePath>
+          <DBRegisterFilePath>Fujitsu\MB9A310\</DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -1537,11 +1537,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments>-MPU</SimDllArguments>
+          <SimDllArguments></SimDllArguments>
           <SimDlgDll>DCM.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments>-MPU</TargetDllArguments>
+          <TargetDllArguments></TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM3</TargetDlgDllArguments>
         </DllOption>
@@ -1602,7 +1602,7 @@
             <DriverSelection>4096</DriverSelection>
           </Flash1>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
         </Utilities>
         <TargetArmAds>
@@ -1644,7 +1644,7 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <hadIRAM2>0</hadIRAM2>
+            <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
             <useUlib>0</useUlib>
@@ -1703,12 +1703,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -1733,7 +1733,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -1757,8 +1757,8 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x1fff8000</StartAddress>
-                <Size>0x10000</Size>
+                <StartAddress>0x1fffc000</StartAddress>
+                <Size>0x8000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -1770,7 +1770,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -1785,7 +1785,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_MB9B500_IAR_Keil;.\Fujitu_source;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM3</IncludePath>
+              <IncludePath>.\Fujitu_source;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM3;.</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1826,19 +1826,19 @@
           <GroupName>Fujitsu Source</GroupName>
           <Files>
             <File>
-              <FileName>system_mb9bf50x.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Fujitu_source\system_mb9bf50x.c</FilePath>
-            </File>
-            <File>
               <FileName>core_cm3.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Fujitu_source\core_cm3.c</FilePath>
             </File>
             <File>
-              <FileName>startup_mb9bf50x.s</FileName>
+              <FileName>startup_mb9af31x.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\Fujitu_source\startup_keil\startup_mb9bf50x.s</FilePath>
+              <FilePath>.\Fujitu_source\startup_keil\startup_mb9af31x.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_mb9af31x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Fujitu_source\system_mb9af31x.c</FilePath>
             </File>
           </Files>
         </Group>

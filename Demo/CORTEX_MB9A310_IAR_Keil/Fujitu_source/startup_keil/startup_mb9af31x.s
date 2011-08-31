@@ -5,7 +5,7 @@
 ;/* used for reference and in an evaluation laboratory environment.      */
 ;/* It is provided on an as-is basis without charge and is subject to    */
 ;/* alterations.                                                         */
-;/* It is the user’s obligation to fully test the software in its        */
+;/* It is the user's obligation to fully test the software in its        */
 ;/* environment and to ensure proper functionality, qualification and    */
 ;/* compliance with component specifications.                            */
 ;/*                                                                      */
@@ -31,9 +31,9 @@
 ;/* (V1.4)                                                               */
 ;/************************************************************************/
 ;/*  Startup for ARM                                                     */
-;/*  Version     V1.02                                                   */
-;/*  Date        2011-01-12                                              */
-;/*  Target-mcu  MB9B5xx                                                 */
+;/*  Version     V1.03                                                   */
+;/*  Date        2011-05-17                                              */
+;/*  Target-mcu  MB9A310                                                 */
 ;/************************************************************************/
 
 ; Stack Configuration
@@ -117,8 +117,8 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     MFT_IPC_IRQHandler        ; 29: Input Capture
                 DCD     MFT_OPC_IRQHandler        ; 30: Output Compare
                 DCD     BT_IRQHandler             ; 31: Base Timer ch.0 to ch.7
-                DCD     CAN0_IRQHandler           ; 32: CAN ch.0
-                DCD     CAN1_IRQHandler           ; 33: CAN ch.1
+                DCD     DummyHandler              ; 32: Reserved
+                DCD     DummyHandler              ; 33: Reserved
                 DCD     USBF_Handler              ; 34: USB Function
                 DCD     USB_Handler               ; 35: USB Function / USB HOST
                 DCD     DummyHandler              ; 36: Reserved
@@ -231,8 +231,6 @@ Default_Handler PROC
                 EXPORT  MFT_IPC_IRQHandler        [WEAK]
                 EXPORT  MFT_OPC_IRQHandler        [WEAK]
                 EXPORT  BT_IRQHandler             [WEAK]
-                EXPORT  CAN0_IRQHandler           [WEAK]
-                EXPORT  CAN1_IRQHandler           [WEAK]
                 EXPORT  USBF_Handler              [WEAK]
                 EXPORT  USB_Handler               [WEAK]
                 EXPORT  DMAC0_Handler             [WEAK]
@@ -277,8 +275,6 @@ MFT_FRT_IRQHandler
 MFT_IPC_IRQHandler
 MFT_OPC_IRQHandler
 BT_IRQHandler
-CAN0_IRQHandler
-CAN1_IRQHandler
 USBF_Handler
 USB_Handler
 DMAC0_Handler

@@ -65,8 +65,8 @@
  * tasks, queues, semaphores and timers.  It also demonstrates how Cortex-M3
  * interrupts can interact with FreeRTOS tasks/timers.
  *
- * This project runs on the SK-FM3-100PMC evaluation board, which is populated
- * with an MB9BF5006N Cortex-M3 based microcontroller.
+ * This demo project runs on the SK-FM3-64PMC1 evaluation board, which is
+ * populated with an MB9A300 microcontroller.
  *
  * The main() Function:
  * main() creates three demo specific software timers, one demo specific queue,

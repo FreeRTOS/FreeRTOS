@@ -66,7 +66,7 @@
  * interact with FreeRTOS tasks/timers.
  *
  * This simple demo project runs on the SK-FM3-64PMC1 evaluation board, which
- * is populated with an MB9A300 microcontroller.
+ * is populated with an MB9A314 microcontroller.
  *
  * The idle hook function:
  * The idle hook function demonstrates how to query the amount of FreeRTOS heap

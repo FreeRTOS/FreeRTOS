@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log>
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>912</ColumnWidth1></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>684</ColumnWidth1><ColumnWidth2>182</ColumnWidth2><ColumnWidth3>45</ColumnWidth3></Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>270</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+        
+      <MixedMode>1</MixedMode><CodeCovShow>1</CodeCovShow><InstrProfShow>1</InstrProfShow></Disassembly>
+    </Static>
+    <Windows>
+      
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-30626-17561</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-30103-17570</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-8606-17564</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>RTOSDemo</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>123</YPos><SelStart>6138</SelStart><SelEnd>6138</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\include\portable.h</Filename><XPos>0</XPos><YPos>41</YPos><SelStart>9284</SelStart><SelEnd>9284</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\tasks.c</Filename><XPos>0</XPos><YPos>455</YPos><SelStart>20208</SelStart><SelEnd>20208</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>95</YPos><SelStart>5356</SelStart><SelEnd>5356</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\portable\IAR\RL78\port.c</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\queue.c</Filename><XPos>0</XPos><YPos>20</YPos><SelStart>2846</SelStart><SelEnd>2846</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\portable\IAR\RL78\portasm.s87</Filename><XPos>0</XPos><YPos>35</YPos><SelStart>2965</SelStart><SelEnd>2965</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\include\FreeRTOS.h</Filename><XPos>0</XPos><YPos>118</YPos><SelStart>6432</SelStart><SelEnd>6476</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\portable\IAR\RL78\portmacro.h</Filename><XPos>0</XPos><YPos>51</YPos><SelStart>3711</SelStart><SelEnd>3711</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\Source\list.c</Filename><XPos>0</XPos><YPos>30</YPos><SelStart>0</SelStart><SelEnd>3157</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\RegTest.s87</Filename><XPos>0</XPos><YPos>183</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\Common\Minimal\dynamic.c</Filename><XPos>0</XPos><YPos>344</YPos><SelStart>14819</SelStart><SelEnd>14819</SelEnd></Tab><ActiveTab>11</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-013361d0><key>iaridepm.enu1</key></Toolbar-013361d0></Sizes></Row0><Row1><Sizes><Toolbar-04b9a7e8><key>debuggergui.enu1</key></Toolbar-04b9a7e8><Toolbar-0b7be258><key>rl78ocd.enu1</key></Toolbar-0b7be258></Sizes></Row1></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>662</Bottom><Right>344</Right><x>-2</x><y>-2</y><xscreen>346</xscreen><yscreen>254</yscreen><sizeHorzCX>205952</sizeHorzCX><sizeHorzCY>258656</sizeHorzCY><sizeVertCX>205952</sizeVertCX><sizeVertCY>676171</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>252</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>254</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>258656</sizeHorzCY><sizeVertCX>205952</sizeVertCX><sizeVertCY>258656</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+

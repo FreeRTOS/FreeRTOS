@@ -1,0 +1,164 @@
+;/*
+;    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+;	
+;
+;    ***************************************************************************
+;     *                                                                       *
+;     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+;     *    Complete, revised, and edited pdf reference manuals are also       *
+;     *    available.                                                         *
+;     *                                                                       *
+;     *    Purchasing FreeRTOS documentation will not only help you, by       *
+;     *    ensuring you get running as quickly as possible and with an        *
+;     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+;     *    the FreeRTOS project to continue with its mission of providing     *
+;     *    professional grade, cross platform, de facto standard solutions    *
+;     *    for microcontrollers - completely free of charge!                  *
+;     *                                                                       *
+;     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+;     *                                                                       *
+;     *    Thank you for using FreeRTOS, and thank you for your support!      *
+;     *                                                                       *
+;    ***************************************************************************
+;
+;
+;    This file is part of the FreeRTOS distribution.
+;
+;    FreeRTOS is free software; you can redistribute it and/or modify it under
+;    the terms of the GNU General Public License (version 2) as published by the
+;    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+;    >>>NOTE<<< The modification to the GPL is included to allow you to
+;    distribute a combined work that includes FreeRTOS without being obliged to
+;    provide the source code for proprietary components outside of the FreeRTOS
+;    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+;    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+;    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;    more details. You should have received a copy of the GNU General Public
+;    License and the FreeRTOS license exception along with FreeRTOS; if not it
+;    can be viewed here: http://www.freertos.org/a00114.html and also obtained
+;    by writing to Richard Barry, contact details for whom are available on the
+;    FreeRTOS WEB site.
+;
+;    1 tab == 4 spaces!
+;
+;    http://www.FreeRTOS.org - Documentation, latest information, license and
+;    contact details.
+;
+;    http://www.SafeRTOS.com - A version that is certified for use in safety
+;    critical systems.
+;
+;    http://www.OpenRTOS.com - Commercial support, development, porting,
+;    licensing and training services.
+;*/
+
+#include "ISR_Support.h"
+;------------------------------------------------------------------------------
+
+#if __CORE__ != __RL78_1__
+	#error "This file is only for RL78 Devices"
+#endif
+
+#define CS                    0xFFFFC
+#define ES                    0xFFFFD
+
+; Functions implemented in this file
+;------------------------------------------------------------------------------
+	PUBLIC    vPortYield
+	PUBLIC    vPortStart
+
+; Functions used by scheduler
+;------------------------------------------------------------------------------
+	EXTERN    vTaskSwitchContext
+	EXTERN    vTaskIncrementTick
+
+; Tick ISR Prototype
+;------------------------------------------------------------------------------
+	EXTERN    ?CLRL78_V1_0_L00
+
+	PUBWEAK   `??MD_INTIT??INTVEC 56`
+	PUBLIC    MD_INTIT
+
+MD_INTIT    SYMBOL "MD_INTIT"
+`??MD_INTIT??INTVEC 56` SYMBOL "??INTVEC 56", MD_INTIT
+
+
+
+;------------------------------------------------------------------------------
+;   Yield to another task.  Implemented as a software interrupt.  The return
+;   address and PSW will have been saved to the stack automatically before
+;   this code runs.
+;
+;   Input:  NONE
+;
+;   Call:   CALL    vPortYield
+;
+;   Output: NONE
+;
+;------------------------------------------------------------------------------
+    RSEG CODE:CODE
+vPortYield:
+	portSAVE_CONTEXT		        ; Save the context of the current task.
+	call      vTaskSwitchContext    ; Call the scheduler to select the next task.
+	portRESTORE_CONTEXT		        ; Restore the context of the next task to run.
+	retb
+
+	
+;------------------------------------------------------------------------------
+;   Restore the context of the first task that is going to run.
+;
+;   Input:  NONE
+;
+;   Call:   CALL    vPortStart
+;
+;   Output: NONE
+;
+;------------------------------------------------------------------------------	
+    RSEG CODE:CODE
+vPortStart:
+	portRESTORE_CONTEXT	            ; Restore the context of whichever task the ...
+	reti					        ; An interrupt stack frame is used so the task
+                                    ; is started using a RETI instruction.
+
+;------------------------------------------------------------------------------
+;   Perform the necessary steps of the Tick Count Increment and Task Switch
+;   depending on the chosen kernel configuration
+;
+;   Input:  NONE
+;
+;   Call:   ISR
+;
+;   Output: NONE
+;
+;------------------------------------------------------------------------------	
+
+MD_INTIT:
+
+	portSAVE_CONTEXT		        ; Save the context of the current task.
+	call      vTaskIncrementTick    ; Call the timer tick function.
+#if configUSE_PREEMPTION == 1
+	call      vTaskSwitchContext    ; Call the scheduler to select the next task.
+#endif
+	portRESTORE_CONTEXT		        ; Restore the context of the next task to run.
+	reti
+
+
+
+	REQUIRE ?CLRL78_V1_0_L00
+	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
+	ORG 56
+`??MD_INTIT??INTVEC 56`:
+	DW MD_INTIT
+
+	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
+	ORG 126
+`??vPortYield??INTVEC 126`:
+	DW vPortYield
+
+									; Set value for the usCriticalNesting.
+	RSEG NEAR_ID:CONST:SORT:NOROOT(1)
+`?<Initializer for usCriticalNesting>`:
+	DW 10
+
+;#endif
+
+      END

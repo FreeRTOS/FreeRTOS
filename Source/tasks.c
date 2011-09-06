@@ -3,8 +3,8 @@
 	
 
 	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
-	Atollic AB - Atollic provides professional embedded systems development 
-	tools for C/C++ development, code analysis and test automation.  
+	Atollic AB - Atollic provides professional embedded systems development
+	tools for C/C++ development, code analysis and test automation.
 	See http://www.atollic.com
 	
 
@@ -473,7 +473,7 @@ tskTCB * pxNewTCB;
 		#if( portSTACK_GROWTH < 0 )
 		{
 			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( unsigned short ) 1 );
-			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( unsigned long ) pxTopOfStack ) & ( ( unsigned long ) ~portBYTE_ALIGNMENT_MASK  ) );
+			pxTopOfStack = ( portSTACK_TYPE * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK  ) );
 
 			/* Check the alignment of the calculated top of stack is correct. */
 			configASSERT( ( ( ( unsigned long ) pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
@@ -950,7 +950,7 @@ tskTCB * pxNewTCB;
 				/* The scheduler is not running, but the task that was pointed
 				to by pxCurrentTCB has just been suspended and pxCurrentTCB
 				must be adjusted to point to a different task. */
-				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == uxCurrentNumberOfTasks ) 
+				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == uxCurrentNumberOfTasks )
 				{
 					/* No other tasks are ready, so set pxCurrentTCB back to
 					NULL so when the next task is created pxCurrentTCB will
@@ -1532,18 +1532,18 @@ tskTCB * pxTCB;
 	
 			if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
 			{
-				/* The new current delayed list is empty.  Set 
-				xNextTaskUnblockTime to the maximum possible value so it is 
+				/* The new current delayed list is empty.  Set
+				xNextTaskUnblockTime to the maximum possible value so it is
 				extremely unlikely that the	
-				if( xTickCount >= xNextTaskUnblockTime ) test will pass until 
+				if( xTickCount >= xNextTaskUnblockTime ) test will pass until
 				there is an item in the delayed list. */
 				xNextTaskUnblockTime = portMAX_DELAY;
 			}
 			else
 			{
-				/* The new current delayed list is not empty, get the value of 
-				the item at the head of the delayed list.  This is the time at 
-				which the task at the head of the delayed list should be removed 
+				/* The new current delayed list is not empty, get the value of
+				the item at the head of the delayed list.  This is the time at
+				which the task at the head of the delayed list should be removed
 				from the Blocked state. */
 				pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
 				xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );

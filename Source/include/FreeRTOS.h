@@ -3,8 +3,8 @@
 	
 
 	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
-	Atollic AB - Atollic provides professional embedded systems development 
-	tools for C/C++ development, code analysis and test automation.  
+	Atollic AB - Atollic provides professional embedded systems development
+	tools for C/C++ development, code analysis and test automation.
 	See http://www.atollic.com
 	
 
@@ -242,6 +242,9 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define vQueueUnregisterQueue( xQueue )
 #endif
 
+#ifndef portPOINTER_SIZE_TYPE
+	#define portPOINTER_SIZE_TYPE unsigned long
+#endif
 
 /* Remove any unused trace macros. */
 #ifndef traceSTART

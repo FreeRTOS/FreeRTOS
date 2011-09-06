@@ -88,19 +88,19 @@ asm file.  It is valid in a C file, but not valid in an asm file. */
 #endif /* __IAR_SYSTEMS_ICC__ */
 
 #define configUSE_PREEMPTION			1
-#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
+#define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			1
 #define configIDLE_SHOULD_YIELD			1
-#define configTOTAL_HEAP_SIZE			( (size_t ) ( 2900 ) )
+#define configTOTAL_HEAP_SIZE			( (size_t ) ( 3500 ) )
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_MUTEXES				1
 
 /* Hook function definitions. */
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configUSE_MALLOC_FAILED_HOOK	1
 

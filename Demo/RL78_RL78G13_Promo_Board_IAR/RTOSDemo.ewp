@@ -96,11 +96,11 @@
         <option>
           <name>GenLibOutFormatter</name>
           <version>0</version>
-          <state>2</state>
+          <state>3</state>
         </option>
         <option>
           <name>GenLibOutFormatterDescription</name>
-          <state>No specifier a or A, no specifier n, no float.</state>
+          <state>No specifier a or A, no specifier n, no float, no flags.</state>
         </option>
         <option>
           <name>GenStackSize</name>
@@ -108,7 +108,7 @@
         </option>
         <option>
           <name>GenNearHeapSize</name>
-          <state>256</state>
+          <state>0</state>
         </option>
         <option>
           <name>GenFarHeapSize</name>
@@ -1718,13 +1718,7 @@
     <group>
       <name>StandardDemos</name>
       <file>
-        <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>

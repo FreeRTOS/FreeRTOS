@@ -68,6 +68,8 @@
 
 /* Standard demo includes. */
 #include "dynamic.h"
+#include "PollQ.h"
+#include "semtest.h"
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
@@ -139,6 +141,8 @@ short main( void )
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
 	vStartDynamicPriorityTasks();
+	vStartPolledQueueTasks( tskIDLE_PRIORITY );
+	vStartSemaphoreTasks( tskIDLE_PRIORITY + 1U );
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
@@ -172,6 +176,16 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
 
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+	{
+		xErrorStatus = pdFAIL;
+	}
+	
+	if( xArePollingQueuesStillRunning() != pdTRUE )
+	{
+		xErrorStatus = pdFAIL;
+	}
+	
+	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		xErrorStatus = pdFAIL;
 	}
@@ -310,3 +324,19 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+volatile size_t xFreeHeapSpace;
+
+	/* This is just a trivial example of an idle hook.  It is called on each
+	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+	idle task just queries the amount of FreeRTOS heap that remains.  See the
+	memory management section on the http://www.FreeRTOS.org web site for memory
+	management options.  If there is a lot of heap memory free then the
+	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+	RAM. */
+	xFreeHeapSpace = xPortGetFreeHeapSize();	
+}
+

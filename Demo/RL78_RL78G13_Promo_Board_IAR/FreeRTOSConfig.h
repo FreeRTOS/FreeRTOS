@@ -90,12 +90,12 @@ asm file.  It is valid in a C file, but not valid in an asm file. */
 #define configUSE_PREEMPTION			1
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			1
 #define configIDLE_SHOULD_YIELD			1
-#define configTOTAL_HEAP_SIZE			( (size_t ) ( 3500 ) )
+#define configTOTAL_HEAP_SIZE			( (size_t ) ( 3420 ) )
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_MUTEXES				1
 
@@ -137,15 +137,6 @@ to exclude the API function. */
  * 0 = use external Clock Source
  */
 #define configCLOCK_SOURCE			  1
-
-/*
- * RL78/G13 Memory Model
- * 1 = use far memory mode
- * 0 = use near memory mode
- *
- * This setting must match the setting in the IAR project options.
- */
-#define configMEMORY_MODE			   0
 
 #if configCLOCK_SOURCE == 0
 	#define configCPU_CLOCK_HZ		( ( unsigned long ) 20000000 )  /* using the external clock source */

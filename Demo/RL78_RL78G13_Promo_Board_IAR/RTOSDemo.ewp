@@ -78,7 +78,7 @@
         </option>
         <option>
           <name>GenRTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nn1n.r87</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78nf1n.r87</state>
         </option>
         <option>
           <name>GenHwSupport</name>
@@ -104,7 +104,7 @@
         </option>
         <option>
           <name>GenStackSize</name>
-          <state>128</state>
+          <state>130</state>
         </option>
         <option>
           <name>GenNearHeapSize</name>
@@ -112,7 +112,7 @@
         </option>
         <option>
           <name>GenFarHeapSize</name>
-          <state>4096</state>
+          <state>0</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -462,7 +462,7 @@
         <option>
           <name>AsmDefines</name>
           <state>__NEAR_MODEL__</state>
-          <state>__NEAR_DATA_MODEL__</state>
+          <state>__FAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>AsmPreprocOutput</name>
@@ -1718,13 +1718,13 @@
     <group>
       <name>StandardDemos</name>
       <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
       </file>
     </group>
     <file>

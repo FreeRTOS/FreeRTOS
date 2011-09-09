@@ -94,7 +94,7 @@ vRegTest1:
 	MOVW	HL, #0x7788
 	MOV		CS, #0x01
 	
-#if configMEMORY_MODE == 1	
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__
 
 	; ES is not saved or restored when using the near memory model so only
 	; test it when using the far model.
@@ -135,7 +135,8 @@ loop1:
 	BZ		+5
 	BR		vRegTestError
 
-#if configMEMORY_MODE == 1	
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__
+
 	; ES is not saved or restored when using the near memory model so only
 	; test it when using the far model.
 	MOV		A, ES
@@ -170,7 +171,7 @@ vRegTest2:
 	MOVW	HL, #0xff12
 	MOV		CS, #0x03
 
-#if configMEMORY_MODE == 1	
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__
 
 	MOV		ES, #0x04	
 
@@ -197,7 +198,7 @@ loop2:
 	BZ		+5
 	BR		vRegTestError
 
-#if configMEMORY_MODE == 1		
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__
 
 	MOV		A, ES
 	CMP		A, #0x04

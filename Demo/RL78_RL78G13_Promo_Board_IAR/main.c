@@ -69,12 +69,19 @@
 /* Standard demo includes. */
 #include "dynamic.h"
 #include "PollQ.h"
-#include "semtest.h"
+#include "blocktim.h"
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_RATE_MS constant. */
 #define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+
+/* These are used to set the period of the demo timer.  The demo timer period
+is always relative to the check timer period, so the check timer can determine
+if the demo timer has expired the expected number of times between its own
+executions. */
+#define mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT	( 100UL )
+#define mainDEMO_TIMER_PERIOD_MS			( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
@@ -93,6 +100,11 @@ in ticks using the portTICK_RATE_MS constant. */
  * The 'check' timer callback function, as described at the top of this file.
  */
 static void prvCheckTimerCallback( xTimerHandle xTimer );
+
+/*
+ * The 'demo' timer callback function, as described at the top of this file.
+ */
+static void prvDemoTimerCallback( xTimerHandle xTimer );
 
 /*
  * This function is called from the C startup routine to setup the processor -
@@ -118,6 +130,12 @@ static short sRegTestStatus = pdPASS;
 function. */
 static xTimerHandle xCheckTimer = NULL;
 
+/* This time is just for demo purposes. */
+static xTimerHandle xDemoTimer = NULL;
+
+/* This variable is incremented each time the demo timer expires. */
+static volatile unsigned long ulDemoTimerCounter = 0UL;
+
 /* RL78/G13 Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
 enabled. */
 __root __far const unsigned char OptionByte[] @ 0x00C0 =
@@ -142,7 +160,7 @@ short main( void )
 	is provided on the FreeRTOS.org WEB site. */
 	vStartDynamicPriorityTasks();
 	vStartPolledQueueTasks( tskIDLE_PRIORITY );
-	vStartSemaphoreTasks( tskIDLE_PRIORITY + 1U );
+	vCreateBlockTimeTasks();
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
@@ -157,10 +175,19 @@ short main( void )
 								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 							  );
 							
+	/* Create the software timer that just increments a variable for demo
+	purposes. */
+	xDemoTimer = xTimerCreate( ( const signed char * ) "DemoTimer",/* A text name, purely to help debugging. */
+								( mainDEMO_TIMER_PERIOD_MS ),		/* The timer period, in this case it is always calculated relative to the check timer period (see the definition of mainDEMO_TIMER_PERIOD_MS). */
+								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) 0,						/* The ID is not used, so can be set to anything. */
+								prvDemoTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+							  );
 	
-	/* Send a command to start the check timer.  It will not actually start
-	until the scheduler is running (when vTaskStartScheduler() is called). */
+	/* Start both the check timer and the demo timer.  The timers won't actually
+	start until the scheduler is started. */
 	xTimerStart( xCheckTimer, mainDONT_BLOCK );
+	xTimerStart( xDemoTimer, mainDONT_BLOCK );
 	
 	/* Finally start the scheduler running. */
 	vTaskStartScheduler();
@@ -171,9 +198,20 @@ short main( void )
 }
 /*-----------------------------------------------------------*/
 
+static void prvDemoTimerCallback( xTimerHandle xTimer )
+{
+	/* The demo timer has expired.  All it does is increment a variable.  The
+	period of the demo timer is relative to that of the check timer, so the
+	check timer knows how many times this variable should have been incremented
+	between each execution of the check timer's own callback. */
+	ulDemoTimerCounter++;
+}
+/*-----------------------------------------------------------*/
+
 static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
 static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
+static unsigned long ulLastDemoTimerCounter = 0UL;
 
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
@@ -185,7 +223,7 @@ static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS
 		xErrorStatus = pdFAIL;
 	}
 	
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		xErrorStatus = pdFAIL;
 	}
@@ -194,6 +232,16 @@ static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS
 	{
 		xErrorStatus = pdFAIL;
 	}
+	
+	/* Ensure that the demo timer has expired at
+	mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT times in between
+	each call of this function. */
+	if( ( ulDemoTimerCounter - ulLastDemoTimerCounter ) < ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT - 1 ) )
+	{
+		xErrorStatus = pdFAIL;
+	}
+	
+	ulLastDemoTimerCounter = ulDemoTimerCounter;
 
 	if( ( xErrorStatus == pdFAIL ) && ( xChangedTimerPeriodAlready == pdFALSE ) )
 	{

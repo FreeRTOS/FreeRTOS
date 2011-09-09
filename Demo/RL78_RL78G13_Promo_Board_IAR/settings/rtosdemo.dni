@@ -15,7 +15,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=-185012109
+Checksum=-1910636464
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -177,7 +177,8 @@ Mode=0
 Graph=0
 Symbiont=0
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c}.121.4@1" 1 0 0 0 "" 0 ""
+Count=1
 [Aliases]
 A0=_ "C:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87" "E:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87"
 Count=1

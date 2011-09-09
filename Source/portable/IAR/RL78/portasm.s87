@@ -61,40 +61,15 @@
 #define CS                    0xFFFFC
 #define ES                    0xFFFFD
 
-; Functions implemented in this file
-;------------------------------------------------------------------------------
 	PUBLIC    vPortYield
-	PUBLIC    vPortStart
+	PUBLIC    vPortStartFirstTask
+	PUBLIC    vPortTickISR
 
-; Functions used by scheduler
-;------------------------------------------------------------------------------
 	EXTERN    vTaskSwitchContext
 	EXTERN    vTaskIncrementTick
 
-; Tick ISR Prototype
-;------------------------------------------------------------------------------
-	EXTERN    ?CLRL78_V1_0_L00
-
-	PUBWEAK   `??MD_INTIT??INTVEC 56`
-	PUBLIC    MD_INTIT
-
-MD_INTIT    SYMBOL "MD_INTIT"
-`??MD_INTIT??INTVEC 56` SYMBOL "??INTVEC 56", MD_INTIT
-
-
-
-;------------------------------------------------------------------------------
-;   Yield to another task.  Implemented as a software interrupt.  The return
-;   address and PSW will have been saved to the stack automatically before
-;   this code runs.
-;
-;   Input:  NONE
-;
-;   Call:   CALL    vPortYield
-;
-;   Output: NONE
-;
-;------------------------------------------------------------------------------
+; FreeRTOS yield handler.  This is installed as the BRK software interrupt
+; handler.
     RSEG CODE:CODE
 vPortYield:
 	portSAVE_CONTEXT		        ; Save the context of the current task.
@@ -103,35 +78,17 @@ vPortYield:
 	retb
 
 	
-;------------------------------------------------------------------------------
-;   Restore the context of the first task that is going to run.
-;
-;   Input:  NONE
-;
-;   Call:   CALL    vPortStart
-;
-;   Output: NONE
-;
-;------------------------------------------------------------------------------	
+; Starts the scheduler by restoring the context of the task that will execute
+; first.
     RSEG CODE:CODE
-vPortStart:
+vPortStartFirstTask:
 	portRESTORE_CONTEXT	            ; Restore the context of whichever task the ...
 	reti					        ; An interrupt stack frame is used so the task
                                     ; is started using a RETI instruction.
 
-;------------------------------------------------------------------------------
-;   Perform the necessary steps of the Tick Count Increment and Task Switch
-;   depending on the chosen kernel configuration
-;
-;   Input:  NONE
-;
-;   Call:   ISR
-;
-;   Output: NONE
-;
-;------------------------------------------------------------------------------	
-
-MD_INTIT:
+; FreeRTOS tick handler.  This is installed as the interval timer interrupt
+; handler.
+vPortTickISR:
 
 	portSAVE_CONTEXT		        ; Save the context of the current task.
 	call      vTaskIncrementTick    ; Call the timer tick function.
@@ -142,23 +99,15 @@ MD_INTIT:
 	reti
 
 
+; Install the interrupt handlers
 
-	REQUIRE ?CLRL78_V1_0_L00
-	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
+	COMMON INTVEC:CODE:ROOT(1)
 	ORG 56
-`??MD_INTIT??INTVEC 56`:
-	DW MD_INTIT
+	DW vPortTickISR
 
-	COMMON INTVEC:CODE:ROOT(1)      ; Set ISR location to the Interrupt vector table.
+	COMMON INTVEC:CODE:ROOT(1)
 	ORG 126
-`??vPortYield??INTVEC 126`:
 	DW vPortYield
 
-									; Set value for the usCriticalNesting.
-	RSEG NEAR_ID:CONST:SORT:NOROOT(1)
-`?<Initializer for usCriticalNesting>`:
-	DW 10
-
-;#endif
 
       END

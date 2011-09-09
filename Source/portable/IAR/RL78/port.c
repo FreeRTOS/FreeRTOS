@@ -76,7 +76,7 @@ interrupts don't accidentally become enabled before the scheduler is started. */
  *   |--------------------- Zero Flag set
  *   ---------------------- Global Interrupt Flag set (enabled)
  */
-#define portPSW		  ( 0xc6U )
+#define portPSW		  ( 0xc6UL )
 
 /* The address of the pxCurrentTCB variable, but don't know or need to know its
 type. */
@@ -99,6 +99,12 @@ volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
  * Sets up the periodic ISR used for the RTOS tick.
  */
 static void prvSetupTimerInterrupt( void );
+
+/*
+ * Defined in portasm.s87, this function starts the scheduler by loading the
+ * context of the first task to run.
+ */
+extern void vPortStartFirstTask( void );
 
 /*-----------------------------------------------------------*/
 
@@ -192,7 +198,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	prvSetupTimerInterrupt();
 
 	/* Restore the context of the first task that is going to run. */
-	vPortStart();
+	vPortStartFirstTask();
 
 	/* Execution should not reach here as the tasks are now running! */
 	return pdTRUE;

@@ -57,16 +57,13 @@
     licensing and training services.
 */
 
-/* Standard includes. */
-#include <stdlib.h>
-
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
 /* The critical nesting value is initialised to a non zero value to ensure
 interrupts don't accidentally become enabled before the scheduler is started. */
-#define portINITIAL_CRITICAL_NESTING  (( unsigned short ) 10)
+#define portINITIAL_CRITICAL_NESTING  ( ( unsigned short ) 10 )
 
 /* Initial PSW value allocated to a newly created task.
  *   1100011000000000
@@ -79,32 +76,30 @@ interrupts don't accidentally become enabled before the scheduler is started. */
  *   |--------------------- Zero Flag set
  *   ---------------------- Global Interrupt Flag set (enabled)
  */
-#define portPSW		  (0xc6UL)
+#define portPSW		  ( 0xc6U )
 
-/* We require the address of the pxCurrentTCB variable, but don't want to know
-any details of its type. */
+/* The address of the pxCurrentTCB variable, but don't know or need to know its
+type. */
 typedef void tskTCB;
 extern volatile tskTCB * volatile pxCurrentTCB;
 
-/* Most ports implement critical sections by placing the interrupt flags on
-the stack before disabling interrupts.  Exiting the critical section is then
-simply a case of popping the flags from the stack.  As 78K0 IAR does not use
-a frame pointer this cannot be done as modifying the stack will clobber all
-the stack variables.  Instead each task maintains a count of the critical
-section nesting depth.  Each time a critical section is entered the count is
-incremented.  Each time a critical section is left the count is decremented -
-with interrupts only being re-enabled if the count is zero.
+/* Each task maintains a count of the critical section nesting depth.  Each time
+a critical section is entered the count is incremented.  Each time a critical
+section is exited the count is decremented - with interrupts only being
+re-enabled if the count is zero.
 
 usCriticalNesting will get set to zero when the scheduler starts, but must
-not be initialised to zero as this will cause problems during the startup
+not be initialised to zero as that could cause problems during the startup
 sequence. */
 volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
+
 /*-----------------------------------------------------------*/
 
 /*
  * Sets up the periodic ISR used for the RTOS tick.
  */
 static void prvSetupTimerInterrupt( void );
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -184,8 +179,8 @@ unsigned long *pulLocal;
 	first starts. */
 	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
 
-	/* Return a pointer to the top of the stack we have generated so this can
-	be stored in the task control block for the task. */
+	/* Return a pointer to the top of the stack that has beene generated so it
+	can	be stored in the task control block for the task. */
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -199,7 +194,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Restore the context of the first task that is going to run. */
 	vPortStart();
 
-	/* Should not get here as the tasks are now running! */
+	/* Execution should not reach here as the tasks are now running! */
 	return pdTRUE;
 }
 /*-----------------------------------------------------------*/

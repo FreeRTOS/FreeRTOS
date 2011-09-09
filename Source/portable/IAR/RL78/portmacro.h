@@ -74,6 +74,14 @@ extern "C" {
  *-----------------------------------------------------------
  */
 
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__ && __CODE_MODEL__ == __CODE_MODEL_NEAR__
+	#warning This port has not been tested with your selected memory model combination. If a far data model is required it is recommended to also use a far code model.
+#endif
+
+#if __DATA_MODEL__ == __DATA_MODEL_NEAR__ && __CODE_MODEL__ == __CODE_MODEL_FAR__
+	#warning This port has not been tested with your selected memory model combination. If a far code model is required it is recommended to also use a far data model.
+#endif
+	
 /* Type definitions. */
 
 #define portCHAR        char

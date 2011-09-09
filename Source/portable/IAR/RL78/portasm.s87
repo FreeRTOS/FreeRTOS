@@ -52,7 +52,7 @@
 ;*/
 
 #include "ISR_Support.h"
-;------------------------------------------------------------------------------
+
 
 #if __CORE__ != __RL78_1__
 	#error "This file is only for RL78 Devices"
@@ -88,6 +88,7 @@ vPortStartFirstTask:
 
 ; FreeRTOS tick handler.  This is installed as the interval timer interrupt
 ; handler.
+	 RSEG CODE:CODE
 vPortTickISR:
 
 	portSAVE_CONTEXT		        ; Save the context of the current task.

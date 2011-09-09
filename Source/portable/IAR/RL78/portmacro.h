@@ -91,7 +91,7 @@ extern "C" {
 #endif
 
 	
-#if (configUSE_16_BIT_TICKS==1)
+#if ( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned int portTickType;
 	#define portMAX_DELAY ( portTickType ) 0xffff
 #else

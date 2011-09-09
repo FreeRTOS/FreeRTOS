@@ -57,9 +57,56 @@
     licensing and training services.
 */
 
-/* Standard includes. */
-#include <stdlib.h>
-#include <string.h>
+/*
+ *
+ * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
+ * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
+ * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
+ *
+ *
+ * main() creates the demo application tasks and timers, then starts the
+ * scheduler.
+ *
+ * This demo is configured to run on the RL78/G13 Promotion Board, which is
+ * fitted with a R5F100LEA microcontroller.  The R5F100LEA contains a little
+ * under 4K bytes of usable internal RAM.  The RAM size restricts the number of
+ * demo tasks that can be created, and the demo creates 13 tasks, 4 queues and
+ * two timers.  The RL78 range does however include parts with up to 32K bytes
+ * of RAM (at the time of writing).  Using FreeRTOS on such a part will allow an
+ * application to make a more comprehensive use of FreeRTOS tasks, and other
+ * FreeRTOS features.
+ *
+ * In addition to the standard demo tasks, the following tasks, tests and timers
+ * are created within this file:
+ *
+ * "Reg test" tasks - These fill the registers with known values, then check
+ * that each register still contains its expected value.  Each task uses a
+ * different set of values.  The reg test tasks execute with a very low priority,
+ * so get preempted very frequently.  A register containing an unexpected value
+ * is indicative of an error in the context switching mechanism.
+ *
+ * The "Demo" Timer and Callback Function:
+ * The demo timer callback function does nothing more than increment a variable.
+ * The period of the demo timer is set relative to the period of the check timer
+ * (described below).  This allows the check timer to know how many times the
+ * demo timer callback function should execute between each execution of the
+ * check timer callback function.  The variable incremented in the demo timer
+ * callback function is used to determine how many times the callback function
+ * has executed.
+ *
+ * The "Check" Timer and Callback Function:
+ * The check timer period is initially set to three seconds.  The check timer
+ * callback function checks that all the standard demo tasks, the reg test tasks,
+ * and the demo timer are not only still executing, but are executing without
+ * reporting any errors.  If the check timer discovers that a task or timer has
+ * stalled, or reported an error, then it changes its own period from the
+ * initial three seconds, to just 200ms.  The check timer callback function also
+ * toggles the user LED each time it is called.  This provides a visual
+ * indication of the system status:  If the LED toggles every three seconds,
+ * then no issues have been discovered.  If the LED toggles every 200ms, then an
+ * issue has been discovered with at least one task.
+ *
+ */
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -76,19 +123,20 @@ have been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_RATE_MS constant. */
 #define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
 
-/* These are used to set the period of the demo timer.  The demo timer period
-is always relative to the check timer period, so the check timer can determine
-if the demo timer has expired the expected number of times between its own
-executions. */
-#define mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT	( 100UL )
-#define mainDEMO_TIMER_PERIOD_MS			( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT )
-
 /* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
+reported in one of the standard demo tasks, the check tasks, or the demo timer.
+ms are converted to the equivalent in ticks using the portTICK_RATE_MS
+constant. */
 #define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
 
-/* The LED toggled by the check task. */
+/* These two definitions are used to set the period of the demo timer.  The demo
+timer period is always relative to the check timer period, so the check timer
+can determine if the demo timer has expired the expected number of times between
+its own executions. */
+#define mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT	( 100UL )
+#define mainDEMO_TIMER_PERIOD_MS			( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT )
+
+/* The LED toggled by the check timer. */
 #define mainLED_0   						P7_bit.no7
 
 /* A block time of zero simple means "don't block". */
@@ -113,7 +161,7 @@ static void prvDemoTimerCallback( xTimerHandle xTimer );
 int __low_level_init(void);
 
 /*
- * Functions that define the RegTest tasks as described at the top of this file.
+ * Functions that define the RegTest tasks, as described at the top of this file.
  */
 extern void vRegTest1( void *pvParameters );
 extern void vRegTest2( void *pvParameters );
@@ -122,7 +170,7 @@ extern void vRegTest2( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* If an error is discovered by one of the RegTest tasks then this flag is set
-to pdFAIL.  The 'check' task then inspects this flag to detect errors within
+to pdFAIL.  The 'check' timer then inspects this flag to detect errors within
 the RegTest tasks. */
 static short sRegTestStatus = pdPASS;
 
@@ -130,7 +178,7 @@ static short sRegTestStatus = pdPASS;
 function. */
 static xTimerHandle xCheckTimer = NULL;
 
-/* This time is just for demo purposes. */
+/* The demo timer.  This uses prvDemoTimerCallback() as its callback function. */
 static xTimerHandle xDemoTimer = NULL;
 
 /* This variable is incremented each time the demo timer expires. */
@@ -213,6 +261,7 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
 static unsigned long ulLastDemoTimerCounter = 0UL;
 
+	/* Inspect the status of the standard demo tasks. */
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
 		xErrorStatus = pdFAIL;
@@ -228,15 +277,16 @@ static unsigned long ulLastDemoTimerCounter = 0UL;
 		xErrorStatus = pdFAIL;
 	}
 
+	/* Inspect the status of the reg test tasks. */
 	if( sRegTestStatus != pdPASS )
 	{
 		xErrorStatus = pdFAIL;
 	}
 	
 	/* Ensure that the demo timer has expired at
-	mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT times in between
+	mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT times in between
 	each call of this function. */
-	if( ( ulDemoTimerCounter - ulLastDemoTimerCounter ) < ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEROUT - 1 ) )
+	if( ( ulDemoTimerCounter - ulLastDemoTimerCounter ) < ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT - 1 ) )
 	{
 		xErrorStatus = pdFAIL;
 	}

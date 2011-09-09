@@ -182,7 +182,7 @@ static xTimerHandle xCheckTimer = NULL;
 static xTimerHandle xDemoTimer = NULL;
 
 /* This variable is incremented each time the demo timer expires. */
-static volatile unsigned long ulDemoTimerCounter = 0UL;
+static volatile unsigned long ulDemoSoftwareTimerCounter = 0UL;
 
 /* RL78/G13 Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
 enabled. */
@@ -252,14 +252,13 @@ static void prvDemoTimerCallback( xTimerHandle xTimer )
 	period of the demo timer is relative to that of the check timer, so the
 	check timer knows how many times this variable should have been incremented
 	between each execution of the check timer's own callback. */
-	ulDemoTimerCounter++;
+	ulDemoSoftwareTimerCounter++;
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
 static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
-static unsigned long ulLastDemoTimerCounter = 0UL;
 
 	/* Inspect the status of the standard demo tasks. */
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
@@ -283,16 +282,23 @@ static unsigned long ulLastDemoTimerCounter = 0UL;
 		xErrorStatus = pdFAIL;
 	}
 	
-	/* Ensure that the demo timer has expired at
+	/* Ensure that the demo software timer has expired
 	mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT times in between
-	each call of this function. */
-	if( ( ulDemoTimerCounter - ulLastDemoTimerCounter ) < ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT - 1 ) )
+	each call of this function.  A critical section is not required to access
+	ulDemoSoftwareTimerCounter as the variable is only accessed from another
+	software timer callback, and only one software timer callback can be
+	executing at any time. */
+	if( ( ulDemoSoftwareTimerCounter < ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT - 1 ) ) ||
+	    ( ulDemoSoftwareTimerCounter > ( mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT + 1 ) )
+	  )
 	{
 		xErrorStatus = pdFAIL;
 	}
+	else
+	{
+		ulDemoSoftwareTimerCounter = 0UL;
+	}
 	
-	ulLastDemoTimerCounter = ulDemoTimerCounter;
-
 	if( ( xErrorStatus == pdFAIL ) && ( xChangedTimerPeriodAlready == pdFALSE ) )
 	{
 		/* An error has occurred, but the timer's period has not yet been changed,

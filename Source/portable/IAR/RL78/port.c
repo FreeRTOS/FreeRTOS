@@ -117,7 +117,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 {
 unsigned long *pulLocal;
 
-	#if configMEMORY_MODE == 1
+	#if __DATA_MODEL__ == __DATA_MODEL_FAR__
 	{
 		/* Parameters are passed in on the stack, and written using a 32bit value
 		hence a space is left for the second two bytes. */

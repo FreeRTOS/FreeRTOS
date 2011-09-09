@@ -83,8 +83,13 @@ extern "C" {
 #define portSHORT       short
 #define portSTACK_TYPE  unsigned short
 #define portBASE_TYPE   short
-#define portPOINTER_SIZE_TYPE unsigned short
-#warning pointer size type will depend on data model.
+
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__
+	#define portPOINTER_SIZE_TYPE unsigned long
+#else
+	#define portPOINTER_SIZE_TYPE unsigned short
+#endif
+
 	
 #if (configUSE_16_BIT_TICKS==1)
 	typedef unsigned int portTickType;

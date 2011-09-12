@@ -72,11 +72,7 @@ err_t xReturn = ERR_MEM;
 	if( *pxMailBox != NULL )
 	{
 		xReturn = ERR_OK;
-		#if SYS_STATS
-		{
-			SYS_STATS_INC( mbox.used );
-		}
-		#endif /* SYS_STATS */
+		SYS_STATS_INC_USED( mbox );
 	}
 
 	return xReturn;
@@ -165,11 +161,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	{
 		/* The queue was already full. */
 		xReturn = ERR_MEM;
-		#if SYS_STATS
-		{
-			SYS_STATS_INC( mbox.err );
-		}
-		#endif /* SYS_STATS */
+		SYS_STATS_INC( mbox.err );
 	}
 
 	return xReturn;
@@ -233,7 +225,7 @@ unsigned long ulReturn;
 	}
 	else
 	{
-		while( pdTRUE != xQueueReceive( pxMailBox, &( *ppvBuffer ), portMAX_DELAY ) );
+		while( pdTRUE != xQueueReceive( *pxMailBox, &( *ppvBuffer ), portMAX_DELAY ) );
 		xEndTime = xTaskGetTickCount();
 		xElapsed = ( xEndTime - xStartTime ) * portTICK_RATE_MS;
 
@@ -322,20 +314,11 @@ err_t xReturn = ERR_MEM;
 		}
 
 		xReturn = ERR_OK;
-
-		#if SYS_STATS
-		{
-			SYS_STATS_INC( sem.used );
-		}
-		#endif
+		SYS_STATS_INC_USED( sem );
 	}
 	else
 	{
-		#if SYS_STATS
-		{
-			SYS_STATS_INC( sem.err );
-		}
-		#endif
+		SYS_STATS_INC( sem.err );
 	}
 
 	return xReturn;
@@ -386,7 +369,7 @@ unsigned long ulReturn;
 	}
 	else
 	{
-		while( xSemaphoreTake( pxSemaphore, portMAX_DELAY ) != pdTRUE );
+		while( xSemaphoreTake( *pxSemaphore, portMAX_DELAY ) != pdTRUE );
 		xEndTime = xTaskGetTickCount();
 		xElapsed = ( xEndTime - xStartTime ) * portTICK_RATE_MS;
 
@@ -410,22 +393,14 @@ err_t xReturn = ERR_MEM;
 
 	*pxMutex = xQueueCreateMutex();
 
-	if( *pxMutex != NULL )
+	if( *pxMutex != NULL ) 
 	{
 		xReturn = ERR_OK;
-		#if SYS_STATS
-		{
-			SYS_STATS_INC( mutex.used );
-		}
-		#endif
+		SYS_STATS_INC_USED( mutex );
 	} 
 	else 
 	{
-		#if SYS_STATS
-		{
-			SYS_STATS_INC( mutex.err );
-		}
-		#endif
+		SYS_STATS_INC( mutex.err );
 	}
 	
 	return xReturn;
@@ -450,11 +425,7 @@ void sys_mutex_unlock(sys_mutex_t *pxMutex )
  * @param mutex the mutex to delete */
 void sys_mutex_free( sys_mutex_t *pxMutex )
 {
-	#if SYS_STATS
-	{
-		SYS_STATS_DEC( mutex.used );
-	}
-	#endif /* SYS_STATS */
+	SYS_STATS_DEC( mutex.used );
 	vQueueDelete( *pxMutex );
 }
 
@@ -491,12 +462,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
  *---------------------------------------------------------------------------*/
 void sys_sem_free( sys_sem_t *pxSemaphore )
 {
-	#if SYS_STATS
-	{
-		SYS_STATS_DEC(sem.used);
-	}
-	#endif
-
+	SYS_STATS_DEC(sem.used);
 	vQueueDelete( *pxSemaphore );
 }
 

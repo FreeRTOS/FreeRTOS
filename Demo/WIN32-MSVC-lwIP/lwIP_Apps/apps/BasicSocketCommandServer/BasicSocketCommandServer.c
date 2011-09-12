@@ -189,5 +189,8 @@ portBASE_TYPE xReturned;
 			}
 		} 
 	}
+
+	/* Will only get here if a listening socket could not be created. */
+	vTaskDelete( NULL );
 }
 

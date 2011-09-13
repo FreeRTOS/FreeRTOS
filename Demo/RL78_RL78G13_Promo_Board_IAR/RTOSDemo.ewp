@@ -74,11 +74,11 @@
         </option>
         <option>
           <name>GenRTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nf1n.h</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78nn1n.h</state>
         </option>
         <option>
           <name>GenRTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nf1n.r87</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78nn1n.r87</state>
         </option>
         <option>
           <name>GenHwSupport</name>
@@ -289,7 +289,7 @@
         </option>
         <option>
           <name>CCListCFile</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCListCMnemonics</name>
@@ -301,7 +301,7 @@
         </option>
         <option>
           <name>CCListAssFile</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCListAssSource</name>
@@ -462,7 +462,7 @@
         <option>
           <name>AsmDefines</name>
           <state></state>
-          <state>__FAR_DATA_MODEL__</state>
+          <state>__NEAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>AsmPreprocOutput</name>

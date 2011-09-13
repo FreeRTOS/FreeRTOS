@@ -10,6 +10,6 @@
 @REM 
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\bin\rl78proc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\bin\rl78ocd.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\bin\rl78bat.dll" --backend -B "--core" "rl78_1" "--near_const_location" "rom0" "--near_const_start" "0xf2000" "--near_const_size" "51.75" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\CONFIG\DDF\ior5f100le.ddf" "-d" "e1" 
+"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\bin\rl78proc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\bin\rl78ocd.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\bin\rl78bat.dll" --backend -B "--core" "rl78_1" "--near_const_location" "rom0" "--near_const_start" "0xf2000" "--near_const_size" "51.75" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\rl78\CONFIG\DDF\ior5f100le.ddf" "-d" "tk" 
 
 

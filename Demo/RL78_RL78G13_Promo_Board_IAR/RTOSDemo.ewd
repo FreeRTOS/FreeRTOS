@@ -49,7 +49,7 @@
         </option>
         <option>
           <name>DynDriver</name>
-          <state>E1RL78</state>
+          <state>TKRL78</state>
         </option>
         <option>
           <name>DebugDDFOverride</name>
@@ -253,10 +253,6 @@
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\embOS\embOSPlugin.ewplugin</file>
-        <loadFlag>0</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\FreeRTOS\OpenRTOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>

@@ -15,7 +15,7 @@ TypeViolation=1
 UnspecRange=1
 ActionState=1
 [DebugChecksum]
-Checksum=1452732143
+Checksum=-1460440724
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -74,12 +74,12 @@ SeqData24=0,0,0,0,0,0
 TraceSettings=64,0,0,0,0,0,8192
 TimerSettings=0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 CoverSettings=1048192,1048207,0
-Version=1,trace.txt
+Version=1,xxx.txt
 LastDevFile=DR5F100LE.DVF
 EmulType=64
 BreakToggle=0
 EventLimits=0, 1, 1, 0, 0, 0, 2
-LastSetupFailed=0
+LastSetupFailed=1
 [StackPlugin]
 Enabled=1
 OverflowWarningsEnabled=1
@@ -91,13 +91,13 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [TK]
-LastSetupFailed=1
+LastSetupFailed=0
 Map0=0,0,65535,65536
 Map1=1,1044224,1048319,4096
 MapEntries=2
 HWsettings=1,0,0,2,4,0,1,0,16,1
 HWsettingsCube=2,4294967295,2,4294967295,0,1,0,0
-HWsettingsRsuid=AAAAAAAAAAAAAAAAAAAA
+HWsettingsRsuid=55555555555555555554
 EventEntries=0
 SeqName0=
 SeqData0=0,0
@@ -142,11 +142,11 @@ SeqData24=0,0,0,0,0,0
 TraceSettings=64,0,0,0,0,0,8192
 TimerSettings=0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 CoverSettings=1048192,1048207,0
-Version=1,xxx.txt
+Version=1,trace.txt
 LastDevFile=DR5F100LE.DVF
-EmulType=0
+EmulType=256
 BreakToggle=0
-EventLimits=3, 14, 8, 0, 0, 0, 9999
+EventLimits=0, 1, 1, 0, 0, 0, 2
 [Stack]
 FillEnabled=0
 OverflowWarningsEnabled=1

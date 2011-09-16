@@ -41,8 +41,7 @@ Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
 #include <stdint.h>
 #include "iodefine.h"
-//#include "r_ether.h"
-#include "rskrx62ndef.h"
+#include "rskrx210def.h"
 #include "hd44780.h"  /* EZ-LCD include file */
 
 /******************************************************************************
@@ -101,7 +100,6 @@ void HardwareSetup(void)
 void EnablePeripheralModules(void)
 {
 	/*  Module standby clear */
-//	SYSTEM.MSTPCRB.BIT.MSTPB15 = 0;				/* EtherC, EDMAC */
     SYSTEM.MSTPCRA.BIT.MSTPA15 = 0;             /* CMT0 */
 }
 
@@ -119,65 +117,6 @@ state changes on the external ports.
 Many peripheral modules will override the setting of the port registers. Ensure
 that the state is safe for external devices if the internal peripheral module is
 disabled or powered down. */
-#if(0)
-	/* ==== MII/RMII Pins setting ==== */
-	/*--------------------------------------*/
-	/*    Port Function Control Register    */
-	/*--------------------------------------*/
-#if ETH_MODE_SEL == ETH_MII_MODE
-	/*	EE=1, PHYMODE=1, ENETE3=1, ENETE2=0, ENETE1=1, ENETE0=0 (Ethernet)	*/
-	IOPORT.PFENET.BYTE = 0x9A;
-#endif	/*	ETH_MODE_SEL	*/
-#if ETH_MODE_SEL == ETH_RMII_MODE
-	/*	EE=1, PHYMODE=0, ENETE3=0, ENETE2=0, ENETE1=1, ENETE0=0 (Ethernet)	*/
-	IOPORT.PFENET.BYTE = 0x82;
-#endif	/*	ETH_MODE_SEL	*/
-	/*-------------------------------------------*/
-	/*    Input Buffer Control Register (ICR)    */
-	/*-------------------------------------------*/
-#if ETH_MODE_SEL == ETH_MII_MODE
-	/*	P54=1 Set ET_LINKSTA input	*/
-	PORT5.ICR.BIT.B4 = 1;
-	/*	P71=1 Set ET_MDIO input	*/
-	PORT7.ICR.BIT.B1 = 1;
-	/*	P74=1 Set ET_ERXD1 input	*/
-	PORT7.ICR.BIT.B4 = 1;
-	/*	P75=1 Set ET_ERXD0 input	*/
-	PORT7.ICR.BIT.B5 = 1;
-	/*	P76=1 Set ET_RX_CLK input	*/
-	PORT7.ICR.BIT.B6 = 1;
-	/*	P77=1 Set ET_RX_ER input	*/
-	PORT7.ICR.BIT.B7 = 1;
-	/*	P83=1 Set ET_CRS input	*/
-	PORT8.ICR.BIT.B3 = 1;
-	/*	PC0=1 Set ET_ERXD3 input	*/
-	PORTC.ICR.BIT.B0 = 1;
-	/*	PC1=1 Set ET_ERXD2 input	*/
-	PORTC.ICR.BIT.B1 = 1;
-	/*	PC2=1 Set ET_RX_DV input	*/
-	PORTC.ICR.BIT.B2 = 1;
-	/*	PC4=1 Set EX_TX_CLK input	*/
-	PORTC.ICR.BIT.B4 = 1;
-	/*	PC7=1 Set ET_COL input	*/
-	PORTC.ICR.BIT.B7 = 1;
-#endif	/*	ETH_MODE_SEL	*/
-#if ETH_MODE_SEL == ETH_RMII_MODE
-	/*	P54=1 Set ET_LINKSTA input	*/
-	PORT5.ICR.BIT.B4 = 1;
-	/*	P71=1 Set ET_MDIO input	*/
-	PORT7.ICR.BIT.B1 = 1;
-	/* P74=1 Set RMII_RXD1 input	*/
-	PORT7.ICR.BIT.B4 = 1;
-	/* P75=1 Set RMII_RXD0 input	*/
-	PORT7.ICR.BIT.B5 = 1;
-	/* P76=1 Set REF50CLK input	*/
-	PORT7.ICR.BIT.B6 = 1;
-	/* P77=1 Set RMII_RX_ER input	*/
-	PORT7.ICR.BIT.B7 = 1;
-	/* P83=1 Set RMII_CRS_DV input	*/
-	PORT8.ICR.BIT.B3 = 1;
-#endif	/*	ETH_MODE_SEL	*/
-#endif
     /* Configure LED 0-4 pin settings */
     PORT1.PODR.BIT.B4 = 1; 
     PORT1.PODR.BIT.B5 = 1;
@@ -215,50 +154,64 @@ void io_set_cpg(void)
 changes to the debugger and flash kernel BRR settings. */
 
 	/* ==== CPG setting ==== */
-//	SYSTEM.SCKCR.LONG = 0x00020100;	/* Clockin = 12MHz */
-//									/* I Clock = 96MHz, B Clock = 24MHz, */
-//									/* P Clock = 48MHz */
 
 	unsigned int i;
 
-	SYSTEM.PRCR.WORD = 0xA503;						/* Protect on */
+	SYSTEM.PRCR.WORD = 0xA503;				/* Protect off 						*/
 
-//	SYSTEM.SOSCCR.BYTE = 0x01;				/* stop sub-clock */
-						/* delete when you use sub-clock */
-	
-//	SYSTEM.HOCOPCR.BYTE = 0x01;				/* HOCO power supply off */
-						/* delete when you use HOCO */
+#if (CLK_SRC_HOCO == 1)	
+	SYSTEM.HOCOPCR.BYTE = 0x00;				/* HOCO power supply on */
+	SYSTEM.HOCOCR2.BYTE = 0x03;				/* Select - 50MHz */
+	SYSTEM.HOCOCR.BYTE  = 0x01;				/* HOCO is operating */
 
-	SYSTEM.MOSCWTCR.BYTE = 0x0D;			/* 131072 state */
-											/* wait over 10ms  @12.5MHz */
+	for(i=0; i<10; i++){					/* wait over 60us */
+	}
+#else
+	SYSTEM.MOSCWTCR.BYTE = 0x0C;			/* Main Clock Oscillator Wait Control Register */
+											/* 65536 states 					*/
+											/* wait over 2 ms  @20MHz 			*/
 
-	SYSTEM.PLLWTCR.BYTE = 0x0E;				/* 2097152 state */
-						/* wait over 12ms  @PLL=100MHz(12.5MHz*8) */
+	SYSTEM.PLLWTCR.BYTE = 0x0B;				/* PLL Wait Control Register 		*/
+											/* 262144 states 					*/
+											/* wait over 2.1 ms  @PLL = 80Hz	*/
+											/*					(20/2x8*8) 		*/
 	
-//	SYSTEM.PLLCR.WORD = 0x0902;				/* x10 @PLL */
-											/* Input to PLL (EXTAL in) / 2 */
+	SYSTEM.PLLCR.WORD = 0x0701;				/* x8 @PLL 							*/
+											/* Input to PLL (EXTAL in) / 2 		*/
+											/* Therefore: 
+													PLL = EXTAL / 2 	
+														= 20M / 2
+														= 10MHz														
+												PLL * 8 = 80Mhz					*/	
 	
-//	SYSTEM.MOSCCR.BYTE = 0x02;				/* EXTAL ON */
+	SYSTEM.MOSCCR.BYTE = 0x02;				/* EXTAL ON */
 											/* External oscillation input selection */
-//	SYSTEM.PLLCR2.BYTE = 0x00;				/* PLL ON */
+	SYSTEM.PLLCR2.BYTE = 0x00;				/* PLL ON */
 	
-//	for(i = 0;i< 0x168;i++)				/* wait over 12ms */
-//	{
-//  }
+	for(i = 0; i<263; i++){					/* wait over 2.1ms */
+	}
+#endif
 	
-//	SYSTEM.SCKCR.LONG = 0x21022222;			/* ICK=PLL/2,FCK,PCK,BCL=PLL/4 */
-//	SYSTEM.SCKCR3.WORD = 0x0400;			/* LOCO -> PLL */
+//	SYSTEM.SCKCR.LONG = 0x21823333;			/* ICK=PLL/2,FCK,PCK,BCL=PLL/4 */
+/************************************************************************/
+/*  If setting bits individually, rather than a single long write, 		*/
+/*	set the BCK value before that of ICK 								*/
+/************************************************************************/
+	SYSTEM.SCKCR.BIT.PCKD 	= 3;			/* PLL/8 = 10MHz		*/
+	SYSTEM.SCKCR.BIT.PCKC 	= 3;			/* PLL/8 = 10MHz		*/	
+	SYSTEM.SCKCR.BIT.PCKB 	= 3;			/* PLL/8 = 10MHz		*/
+	SYSTEM.SCKCR.BIT.PCKA 	= 3;			/* PLL/8 = 10MHz		*/
+	SYSTEM.SCKCR.BIT.BCK 	= 3;			/* PLL/8 = 10MHz		*/
+	SYSTEM.SCKCR.BIT.PSTOP1 = 1;			/* BUS CLK OUT Disabled */
+	SYSTEM.SCKCR.BIT.ICK 	= 1;			/* PLL/2 = 40MHz		*/
+	SYSTEM.SCKCR.BIT.FCK 	= 2;			/* PLL/4 = 20MHz		*/
 
-    
-    /*************************************************************************/
-    /* Using HOCO set to 50MHz to run device                                 */ 
-    /* ICLK = 50MHz                                                          */ 
-    /* PCLKD (12ADC) = 50MHz                                                 */ 
-    /* All other clocks = CLK / 2 = 25MHz                                    */ 
-    /*************************************************************************/
-    
-    SYSTEM.HOCOCR2.BYTE = 0x03;			    /* 50MHz        */
-    SYSTEM.SCKCR.LONG = 0x10811110;			
-    SYSTEM.SCKCR3.WORD = 0x0100;			/* LOCO -> HOCO */
+	while(SYSTEM.OPCCR.BIT.OPCMTSF == 1);
+	SYSTEM.OPCCR.BIT.OLPCM = 0;
+	while(SYSTEM.OPCCR.BIT.OPCMTSF == 1);
+#if (CLK_SRC_HOCO == 1)	
+	SYSTEM.SCKCR3.WORD = 0x0100;			/* LOCO -> HOCO */
+#else
+	SYSTEM.SCKCR3.WORD = 0x0400;			/* LOCO -> PLL */
+#endif
 }
-

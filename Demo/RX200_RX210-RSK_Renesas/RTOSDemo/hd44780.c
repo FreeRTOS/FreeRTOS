@@ -21,7 +21,7 @@
 
 /* Bus controls */
 #include "iodefine.h"			/* Device specific include file */
-#include "rskrx62ndef.h"
+#include "rskrx210def.h"
 
 #define	IF_BUS		4			/* Data bus width (4 or 8) */
 #define	IF_INIT()	{}			/* Initialize control port */

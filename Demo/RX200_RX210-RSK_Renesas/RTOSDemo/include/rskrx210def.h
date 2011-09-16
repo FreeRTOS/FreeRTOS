@@ -29,16 +29,34 @@ Macro definitions
 ******************************************************************************/
 
 /* System Clock Settings */
+#define		CLK_SRC_HOCO	0
 
 /* DETAIL THIS LATER !!!! */
-
+#if (CLK_SRC_HOCO == 0)
+/* External xtal and PLL circuit */
+#define     XTAL_FREQUENCY  (20000000L)	
+#define     PLL_MUL         (8)
+#define     PLL_INPUT_FREQ_DIV         (2)
+#define     ICLK_DIV        (2)
+#define     PCLK_DIV        (8)
+#define     BCLK_DIV        (8)
+#define     PLL_FREQUENCY   (XTAL_FREQUENCY * (PLL_MUL / PLL_INPUT_FREQ_DIV))	
+#define     ICLK_FREQUENCY  (PLL_FREQUENCY / ICLK_DIV)
+#define     PCLK_FREQUENCY  (PLL_FREQUENCY / PCLK_DIV)
+#define     BCLK_FREQUENCY  (PLL_FREQUENCY / BCLK_DIV)
+#else
+/* Internal high speed on-chip oscillator (HOCO) */
 #define     XTAL_FREQUENCY  (50000000L)	
-#define     ICLK_MUL        (1)
-#define     PCLK_MUL        (2)
-#define     BCLK_MUL        (2)
-#define     ICLK_FREQUENCY  (XTAL_FREQUENCY * ICLK_MUL)
-#define     PCLK_FREQUENCY  (XTAL_FREQUENCY / PCLK_MUL)
-#define     BCLK_FREQUENCY  (XTAL_FREQUENCY / BCLK_MUL)
+#define     PLL_MUL         (1)
+#define     PLL_INPUT_FREQ_DIV         (1)
+#define     ICLK_DIV        (2)
+#define     PCLK_DIV        (8)
+#define     BCLK_DIV        (8)
+#define     PLL_FREQUENCY   (XTAL_FREQUENCY * (PLL_MUL / PLL_INPUT_FREQ_DIV))	
+#define     ICLK_FREQUENCY  (PLL_FREQUENCY / ICLK_DIV)
+#define     PCLK_FREQUENCY  (PLL_FREQUENCY / PCLK_DIV)
+#define     BCLK_FREQUENCY  (PLL_FREQUENCY / BCLK_DIV)
+#endif
 
 #define     CMT0_CLK_SELECT (512)
 

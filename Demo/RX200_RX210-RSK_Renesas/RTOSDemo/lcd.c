@@ -27,7 +27,7 @@ User Includes
 /* iodefine.h provides a structure to access all of the device registers. */
 #include "iodefine.h"
 /* rsk1664def.h provides common defines for widely used items. */
-#include "rskrx62ndef.h"
+#include "rskrx210def.h"
 #include "lcd.h"
 
 /* Kernel includes. */

@@ -12,13 +12,13 @@
 "Debug_with_optimisation" 
 "SimDebug_RX600" 
 [CURRENT_CONFIGURATION]
-"Debug_with_optimisation" 
+"Blinky" 
 [CURRENT_SESSION]
 "SessionRX200_E1_E20_SYSTEM" 
 [GENERAL_DATA_PROJECT]
 "FDT_UserBootAreaFiles" "" 
 [GENERAL_DATA_CONFIGURATION_Blinky]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
 [SESSIONS_Blinky]
 "DefaultSession" 
 "SessionRX200_E1_E20_SYSTEM" 
@@ -33,7 +33,7 @@
 "DefaultSession" 
 "SessionRX200_E1_E20_SYSTEM" 
 [GENERAL_DATA_CONFIGURATION_Debug_with_optimisation]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
 [SESSIONS_Debug_with_optimisation]
 "DefaultSession" 
 "SessionRX200_E1_E20_SYSTEM" 

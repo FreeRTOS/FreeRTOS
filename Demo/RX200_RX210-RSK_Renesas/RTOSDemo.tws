@@ -7,7 +7,15 @@
 [GENERAL_DATA]
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\FreeRTOSConfig.h" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\lcd.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-blinky.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\timers.c" 
 [WORKSPACE_FILE_STATES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\FreeRTOSConfig.h" 0 0 1114 363 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\lcd.c" -4 -23 1302 566 1 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-blinky.c" 154 154 1118 363 0 1 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\timers.c" 176 176 1118 363 0 2 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

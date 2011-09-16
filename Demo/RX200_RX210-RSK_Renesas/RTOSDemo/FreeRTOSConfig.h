@@ -55,7 +55,7 @@
 #define FREERTOS_CONFIG_H
 
 /* Board specifics. */
-#include "rskrx62ndef.h"
+#include "rskrx210def.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.

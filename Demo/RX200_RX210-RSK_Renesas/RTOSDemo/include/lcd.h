@@ -35,10 +35,6 @@ struct _LCD_Params {
 	char *ptr_str;
 };
 
-void prvLCDTaskLine1( void *pvParameters );
-void prvLCDTaskLine2( void *pvParameters );
-
-
 /* RS Register Select pin */
 #define RS_PIN			PORTJ.PODR.BIT.B1
 /* Display Enable pin */  

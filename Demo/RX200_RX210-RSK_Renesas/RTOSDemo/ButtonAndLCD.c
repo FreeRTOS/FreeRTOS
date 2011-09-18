@@ -83,13 +83,13 @@ to accept a button press as a unique press rather than just a bounce. */
 #define lcdMIN_TIME_BETWEEN_INTERRUPTS_MS ( 125UL / portTICK_RATE_MS )
 
 /* Button interrupt handlers. */
-#pragma interrupt (prvIRQ1_Handler(vect=65))
+#pragma interrupt ( prvIRQ1_Handler( vect = 65, enable ) )
 static void prvIRQ1_Handler( void );
 
-#pragma interrupt (prvIRQ3_Handler(vect=67))
+#pragma interrupt ( prvIRQ3_Handler( vect = 67, enable ) )
 static void prvIRQ3_Handler( void );
 
-#pragma interrupt (prvIRQ4_Handler(vect=68))
+#pragma interrupt ( prvIRQ4_Handler(vect = 68, enable ) )
 static void prvIRQ4_Handler( void );
 
 /* 
@@ -155,12 +155,12 @@ static const char cDataString2[] = "........Rx210 Highlights....1.56 DMips/MHz..
 display, how long to delay for, and which string to use. */
 struct _LCD_Params xLCDLine1 = 
 {
-	LCD_LINE1, 215, cDataString1	
+	LCD_LINE1, 215, ( char * ) cDataString1	
 };
 
 struct _LCD_Params xLCDLine2 = 
 {
-	LCD_LINE2, 350, cDataString2
+	LCD_LINE2, 350, ( char * ) cDataString2
 };
 
 

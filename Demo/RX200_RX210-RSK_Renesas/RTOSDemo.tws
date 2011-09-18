@@ -10,8 +10,8 @@
 "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-blinky.c" 
 "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-full.c" 
 [WORKSPACE_FILE_STATES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-blinky.c" 154 154 1096 423 0 1 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-full.c" -4 -23 1302 648 1 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-blinky.c" 110 110 1092 419 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX200_RX210-RSK_Renesas\RTOSDemo\main-full.c" 132 132 1092 419 0 1 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

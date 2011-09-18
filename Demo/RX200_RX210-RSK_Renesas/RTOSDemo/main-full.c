@@ -304,52 +304,62 @@ extern void HardwareSetup( void );
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-
+volatile long temp = 0;
 static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE, lErrorStatus = pdPASS;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
-
+volatile long temp2;
 	/* Check the standard demo tasks are running without error. */
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 1;
 	}
 	else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 2;
 	}
 	else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 3;
 	}
 	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 4;
 	}
 	else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 5;
 	}
 	else if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 6;
 	}
 	else if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 7;
 	}
 	else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 8;
 	}
 	else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 9;
 	}
 	else if( xAreIntQueueTasksStillRunning() != pdPASS )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 10;
 	}
 
 	/* Check the reg test tasks are still cycling.  They will stop incrementing
@@ -357,11 +367,13 @@ static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2Cycl
 	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 11;
 	}
 
 	if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 	{
 		lErrorStatus = pdFAIL;
+		temp = 12;
 	}
 
 	ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -375,6 +387,7 @@ static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2Cycl
 	/* Was an error detected this time through the callback execution? */
 	if( lErrorStatus != pdPASS )
 	{
+		temp2 = temp;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;

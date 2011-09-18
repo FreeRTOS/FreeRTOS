@@ -70,7 +70,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ICLK_FREQUENCY ) /* Set in rskrx210def.h. */
 #define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY ) /* Set in rskrx210def.h. */
@@ -92,6 +92,7 @@
 
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		( 3 )

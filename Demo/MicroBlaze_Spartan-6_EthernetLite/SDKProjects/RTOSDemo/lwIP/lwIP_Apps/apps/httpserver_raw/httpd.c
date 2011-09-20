@@ -2092,7 +2092,6 @@ http_accept(void *arg, struct tcp_pcb *pcb, err_t err)
 
   /* Tell TCP that this is the structure we wish to be passed for our
      callbacks. */
-  tcp_nagle_disable(pcb);//_RB_
   tcp_arg(pcb, hs);
 
   /* Set up the various callback functions */

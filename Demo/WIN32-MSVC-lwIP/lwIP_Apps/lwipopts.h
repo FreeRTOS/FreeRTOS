@@ -68,23 +68,23 @@ void vLwipAppsReleaseTxBuffer( void );
 #ifdef LWIP_DEBUG
 
 #define LWIP_DBG_MIN_LEVEL         0
-#define PPP_DEBUG                  LWIP_DBG_OFF
-#define MEM_DEBUG                  LWIP_DBG_OFF
-#define MEMP_DEBUG                 LWIP_DBG_OFF
-#define PBUF_DEBUG                 LWIP_DBG_OFF
+#define PPP_DEBUG                  LWIP_DBG_ON
+#define MEM_DEBUG                  LWIP_DBG_ON
+#define MEMP_DEBUG                 LWIP_DBG_ON
+#define PBUF_DEBUG                 LWIP_DBG_ON
 #define API_LIB_DEBUG              LWIP_DBG_ON
 #define API_MSG_DEBUG              LWIP_DBG_ON
 #define TCPIP_DEBUG                LWIP_DBG_ON
 #define NETIF_DEBUG                LWIP_DBG_ON
-#define SOCKETS_DEBUG              LWIP_DBG_OFF
-#define DNS_DEBUG                  LWIP_DBG_OFF
-#define AUTOIP_DEBUG               LWIP_DBG_OFF
-#define DHCP_DEBUG                 LWIP_DBG_OFF
-#define IP_DEBUG                   LWIP_DBG_O
+#define SOCKETS_DEBUG              LWIP_DBG_ON
+#define DNS_DEBUG                  LWIP_DBG_ON
+#define AUTOIP_DEBUG               LWIP_DBG_ON
+#define DHCP_DEBUG                 LWIP_DBG_ON
+#define IP_DEBUG                   LWIP_DBG_ON
 #define IP_REASS_DEBUG             LWIP_DBG_ON
-#define ICMP_DEBUG                 LWIP_DBG_OFF
-#define IGMP_DEBUG                 LWIP_DBG_OFF
-#define UDP_DEBUG                  LWIP_DBG_OFF
+#define ICMP_DEBUG                 LWIP_DBG_ON
+#define IGMP_DEBUG                 LWIP_DBG_ON
+#define UDP_DEBUG                  LWIP_DBG_ON
 #define TCP_DEBUG                  LWIP_DBG_ON
 #define TCP_INPUT_DEBUG            LWIP_DBG_ON
 #define TCP_OUTPUT_DEBUG           LWIP_DBG_ON
@@ -189,7 +189,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_MSS					1460
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF				2048
+#define TCP_SND_BUF				( TCP_MSS * 2 )
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 *
    TCP_SND_BUF/TCP_MSS for things to work. */
@@ -201,7 +201,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_SNDLOWAT			(TCP_SND_BUF/2)
 
 /* TCP receive window. */
-#define TCP_WND					4048
+#define TCP_WND					( PBUF_POOL_SIZE * PBUF_POOL_BUFSIZE )
 
 /* Maximum number of retransmissions of data segments. */
 #define TCP_MAXRTX				12

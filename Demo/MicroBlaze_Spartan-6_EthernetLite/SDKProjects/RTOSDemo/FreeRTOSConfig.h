@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -127,8 +127,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
-#define INCLUDE_pcTaskNameGet			1
-#define INCLUDE_pcTaskNameGet			1
+#define INCLUDE_pcTaskGetTaskName			1
+#define INCLUDE_pcTaskGetTaskName			1
 
 #define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 	

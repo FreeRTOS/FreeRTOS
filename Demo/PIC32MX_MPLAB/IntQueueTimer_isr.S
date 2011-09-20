@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -70,11 +70,6 @@
 
 /******************************************************************/
 
-	#if (__C32_VERSION__ >= 2 )
-		.section 	.FreeRTOS, code
-	#else
-		.section 	.FreeRTOS, "ax", @progbits
-	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		vT3InterruptWrapper
@@ -92,11 +87,6 @@ vT3InterruptWrapper:
 
 /******************************************************************/
 
-	#if (__C32_VERSION__ >= 2 )
-		.section 	.FreeRTOS, code
-	#else
-		.section 	.FreeRTOS, "ax", @progbits
-	#endif
  	.set		noreorder
 	.set 		noat
  	.ent		vT4InterruptWrapper

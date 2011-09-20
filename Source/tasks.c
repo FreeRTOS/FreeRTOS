@@ -1,11 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
-
-	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
-	Atollic AB - Atollic provides professional embedded systems development
-	tools for C/C++ development, code analysis and test automation.
-	See http://www.atollic.com
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -157,7 +151,7 @@ PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been r
 
 #endif
 
-#if ( INCLUDE_xTaskIdleTaskHandleGet == 1 )
+#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
 	
 	PRIVILEGED_DATA static xTaskHandle xIdleTaskHandle = NULL;
 	
@@ -1096,10 +1090,10 @@ void vTaskStartScheduler( void )
 portBASE_TYPE xReturn;
 
 	/* Add the idle task at the lowest priority. */
-	#if ( INCLUDE_xTaskIdleTaskHandleGet == 1 )
+	#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
 	{
 		/* Create the idle task, storing its handle in xIdleTaskHandle so it can
-		be returned by the xTaskIdleTaskHandleGet() function. */
+		be returned by the xTaskGetIdleTaskHandle() function. */
 		xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle );
 	}
 	#else
@@ -1298,9 +1292,9 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_pcTaskNameGet == 1 )
+#if ( INCLUDE_pcTaskGetTaskName == 1 )
 
-	signed char *pcTaskNameGet( xTaskHandle xTaskToQuery )
+	signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery )
 	{
 	tskTCB *pxTCB;
 
@@ -1489,11 +1483,11 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 #endif
 /*----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskIdleTaskHandleGet == 1 )
+#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
 
-	xTaskHandle xTaskIdleTaskHandleGet( void )
+	xTaskHandle xTaskGetIdleTaskHandle( void )
 	{
-		/* If xTaskIdleTaskHandleGet() is called before the scheduler has been
+		/* If xTaskGetIdleTaskHandle() is called before the scheduler has been
 		started, then xIdleTaskHandle will be NULL. */
 		configASSERT( ( xIdleTaskHandle != NULL ) );
 		return xIdleTaskHandle;

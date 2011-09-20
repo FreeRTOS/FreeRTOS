@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -232,10 +232,10 @@ signed char *pcTaskName;
 	tasks waiting to be terminated by the idle task. */
 	Sleep( ulMSToSleep );
 
-	/* Demonstrate the use of the xTimerGetTimerTaskHandle() and 
+	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and 
 	xTaskGetIdleTaskHandle() functions. */
 	xIdleTaskHandle = xTaskGetIdleTaskHandle();
-	xTimerTaskHandle = xTimerGetTimerTaskHandle();
+	xTimerTaskHandle = xTimerGetTimerDaemonTaskHandle();
 
 	/* This is the idle hook, so the current task handle should equal the 
 	returned idle task handle. */

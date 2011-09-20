@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -228,11 +228,11 @@ int main( void )
 	vStartInterruptQueueTasks();
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvTestTask1, "Tst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvTestTask2, "Tst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvTestTask1, ( const signed char * const ) "Tst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvTestTask2, ( const signed char * const ) "Tst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* prvCheckTask uses sprintf so requires more stack. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, ( const signed char * const ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Finally start the scheduler. */
 	vTaskStartScheduler();

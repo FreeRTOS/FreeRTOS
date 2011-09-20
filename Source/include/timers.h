@@ -1,12 +1,6 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 
-	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
-	Atollic AB - Atollic provides professional embedded systems development 
-	tools for C/C++ development, code analysis and test automation.  
-	See http://www.atollic.com
-	
 
     ***************************************************************************
      *                                                                       *
@@ -285,13 +279,13 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
 /**
- * xTimerDaemonTaskHandleGet() is only available if 
- * INCLUDE_xTimerDaemonTaskHandleGet is set to 1 in FreeRTOSConfig.h.
+ * xTimerGetTimerDaemonTaskHandle() is only available if 
+ * INCLUDE_xTimerGetTimerDaemonTaskHandle is set to 1 in FreeRTOSConfig.h.
  *
  * Simply returns the handle of the timer service/daemon task.  It it not valid
- * to call xTimerDaemonTaskHandleGet() before the scheduler has been started.
+ * to call xTimerGetTimerDaemonTaskHandle() before the scheduler has been started.
  */
-xTaskHandle xTimerDaemonTaskHandleGet( void );
+xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
 
 /**
  * portBASE_TYPE xTimerStart( xTimerHandle xTimer, portTickType xBlockTime );

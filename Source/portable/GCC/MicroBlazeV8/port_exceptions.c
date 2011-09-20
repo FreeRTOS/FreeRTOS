@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -135,7 +135,7 @@ extern void *pxCurrentTCB;
 	/* First fill in the name and handle of the task that was in the Running 
 	state when the exception occurred. */
 	xRegisterDump.xCurrentTaskHandle = pxCurrentTCB;
-	xRegisterDump.pcCurrentTaskName = pcTaskNameGet( NULL );
+	xRegisterDump.pcCurrentTaskName = pcTaskGetTaskName( NULL );
 
 	configASSERT( pulStackPointerOnFunctionEntry );
 

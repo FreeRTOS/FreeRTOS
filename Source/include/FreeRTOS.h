@@ -1,11 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
-
-	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
-	Atollic AB - Atollic provides professional embedded systems development
-	tools for C/C++ development, code analysis and test automation.
-	See http://www.atollic.com
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -134,16 +128,16 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#error Missing definition:  configUSE_16_BIT_TICKS should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef INCLUDE_xTaskIdleTaskHandleGet
-	#define INCLUDE_xTaskIdleTaskHandleGet 0
+#ifndef INCLUDE_xTaskGetIdleTaskHandle
+	#define INCLUDE_xTaskGetIdleTaskHandle 0
 #endif
 
-#ifndef INCLUDE_xTimerDaemonTaskHandleGet
-	#define INCLUDE_xTimerDaemonTaskHandleGet 0
+#ifndef INCLUDE_xTimerGetTimerDaemonTaskHandle
+	#define INCLUDE_xTimerGetTimerDaemonTaskHandle 0
 #endif
 
-#ifndef INCLUDE_pcTaskNameGet
-	#define INCLUDE_pcTaskNameGet 0
+#ifndef INCLUDE_pcTaskGetTaskName
+	#define INCLUDE_pcTaskGetTaskName 0
 #endif
 
 #ifndef configUSE_APPLICATION_TASK_TAG

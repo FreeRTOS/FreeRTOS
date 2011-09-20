@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -111,7 +111,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
-#define INCLUDE_xTimerGetTimerTaskHandle	1
+#define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
 #define INCLUDE_xTaskGetIdleTaskHandle		1
 
 extern void vAssertCalled( void );

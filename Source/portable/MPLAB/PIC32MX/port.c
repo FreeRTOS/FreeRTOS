@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -82,7 +82,7 @@ portSTACK_TYPE xISRStack[ configISR_STACK_SIZE ] = { 0 };
 
 /* The top of stack value ensures there is enough space to store 6 registers on 
 the callers stack, as some functions seem to want to do this. */
-const portBASE_TYPE * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 ] );
+const portSTACK_TYPE * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 ] );
 
 /* 
  * Place the prototype here to ensure the interrupt vector is correctly installed. 

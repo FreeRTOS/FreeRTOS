@@ -43,9 +43,6 @@
 	#endif
 #endif /* BYTE_ORDER */
 
-/* Using the Lite Ethernet IP. */
-#define XLWIP_CONFIG_INCLUDE_EMACLITE 1
-
 /* SSI options. */
 #define TCPIP_THREAD_NAME			  	"tcpip"
 #define LWIP_HTTPD_MAX_TAG_NAME_LEN 	20
@@ -204,7 +201,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_MSS					1460
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF				2048
+#define TCP_SND_BUF				( TCP_MSS * 2 )
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 *
    TCP_SND_BUF/TCP_MSS for things to work. */
@@ -216,7 +213,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_SNDLOWAT			(TCP_SND_BUF/2)
 
 /* TCP receive window. */
-#define TCP_WND					4048
+#define TCP_WND					( PBUF_POOL_SIZE * PBUF_POOL_BUFSIZE )
 
 /* Maximum number of retransmissions of data segments. */
 #define TCP_MAXRTX				12

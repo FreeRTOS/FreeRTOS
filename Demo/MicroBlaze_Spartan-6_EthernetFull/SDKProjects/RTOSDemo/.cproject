@@ -96,8 +96,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="xilinx.gnu.mb.exe.debug.2007678521.1631804544" name="xaxiemacif_fifo.c" rcbsApplicability="disable" resourcePath="lwIP/netif/xaxiemacif_fifo.c" toolsToInvoke="xilinx.gnu.mb.c.toolchain.compiler.debug.858164244.1486409758">
+						<tool id="xilinx.gnu.mb.c.toolchain.compiler.debug.858164244.1486409758" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.debug.858164244"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="lwIP/lwIP_Apps/apps/httpserver_raw/fsdata.c|main-blinky.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="lwIP/netif/xaxiemacif_fifo.c|lwIP/lwIP_Apps/apps/httpserver_raw/fsdata.c|main-blinky.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

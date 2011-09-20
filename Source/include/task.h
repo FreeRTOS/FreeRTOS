@@ -1,12 +1,6 @@
 /*
-    FreeRTOS V7.0.1 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 
-	FreeRTOS supports many tools and architectures. V7.0.0 is sponsored by:
-	Atollic AB - Atollic provides professional embedded systems development 
-	tools for C/C++ development, code analysis and test automation.  
-	See http://www.atollic.com
-	
 
     ***************************************************************************
      *                                                                       *
@@ -1007,17 +1001,17 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>signed char *pcTaskNameGet( xTaskHandle xTaskToQuery );</PRE>
+ * <PRE>signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );</PRE>
  *
  * @return The text (human readable) name of the task referenced by the handle
  * xTaskToQueury.  A task can query its own name by either passing in its own
- * handle, or by setting xTaskToQuery to NULL.  INCLUDE_pcTaskNameGet must be
- * set to 1 in FreeRTOSConfig.h for pcTaskNameGet() to be available.
+ * handle, or by setting xTaskToQuery to NULL.  INCLUDE_pcTaskGetTaskName must be
+ * set to 1 in FreeRTOSConfig.h for pcTaskGetTaskName() to be available.
  *
- * \page pcTaskNameGet pcTasknameGet
+ * \page pcTaskGetTaskName pcTaskGetTaskName
  * \ingroup TaskUtils
  */
-signed char *pcTaskNameGet( xTaskHandle xTaskToQuery );
+signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );
 
 /**
  * task. h
@@ -1172,13 +1166,13 @@ constant. */
 portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter ) PRIVILEGED_FUNCTION;
 
 /**
- * xTaskIdleTaskHandleGet() is only available if 
- * INCLUDE_xTaskIdleTaskHandleGet is set to 1 in FreeRTOSConfig.h.
+ * xTaskGetIdleTaskHandle() is only available if 
+ * INCLUDE_xTaskGetIdleTaskHandle is set to 1 in FreeRTOSConfig.h.
  *
  * Simply returns the handle of the idle task.  It is not valid to call
- * xTaskIdleTaskHandleGet() before the scheduler has been started.
+ * xTaskGetIdleTaskHandle() before the scheduler has been started.
  */
-xTaskHandle xTaskIdleTaskHandleGet( void );
+xTaskHandle xTaskGetIdleTaskHandle( void );
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

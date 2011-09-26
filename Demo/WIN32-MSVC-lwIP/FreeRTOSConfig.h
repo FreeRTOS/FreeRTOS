@@ -122,7 +122,7 @@ void vMainConfigureTimerForRunTimeStats( void );
 extern void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
 
-#define configNETWORK_INTERFACE_TO_USE 1L
+#define configNETWORK_INTERFACE_TO_USE 2L
 
 #define configMAC_ISR_SIMULATOR_PRIORITY	( 6 )
 #define configLWIP_TASK_PRIORITY			( 5 )
@@ -136,9 +136,9 @@ extern void vAssertCalled( void );
 #define configMAC_ADDR5	0x16
 
 /* IP address configuration. */
-#define configIP_ADDR0		192
-#define configIP_ADDR1		168
-#define configIP_ADDR2		0
+#define configIP_ADDR0		172
+#define configIP_ADDR1		25
+#define configIP_ADDR2		218
 #define configIP_ADDR3		200
 
 /* Netmask configuration. */
@@ -146,5 +146,14 @@ extern void vAssertCalled( void );
 #define configNET_MASK1		255
 #define configNET_MASK2		255
 #define configNET_MASK3		0
+
+/* The size of the global output buffer that is available for use when there
+are multiple command interpreters running at once (for example, one on a UART
+and one on TCP/IP).  This is done to prevent an output buffer being defined by
+each implementation - which would waste RAM.  In this case, there is only one
+command interpreter running, and it has its own local output buffer, so the
+global buffer is just set to be one byte long as it is not used and should not
+take up unnecessary RAM. */
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 1
 
 #endif /* FREERTOS_CONFIG_H */

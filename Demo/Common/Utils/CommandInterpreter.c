@@ -90,6 +90,16 @@ static xCommandLineInputListItem xRegisteredCommands =
 	NULL			/* The next pointer is initialised to NULL, as there are no other registered commands yet. */
 };
 
+/* A buffer into which command outputs can be written is declared here, rather
+than in the command console implementation, to allow multiple command consoles
+to share the same buffer.  For example, an application may allow access to the
+command interpreter by UART and by Ethernet.  Sharing a buffer is done purely
+to save RAM.  Note, however, that the command console itself is not re-entrant,
+so only one command interpreter interface can be used at any one time.  For that
+reason, no attempt at providing mutual exclusion to the cOutputBuffer array is
+attempted. */
+static signed char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+
 /*-----------------------------------------------------------*/
 
 portBASE_TYPE xCmdIntRegisterCommand( const xCommandLineInput * const pxCommandToRegister )
@@ -124,6 +134,7 @@ portBASE_TYPE xReturn = pdFAIL;
 			/* Set the end of list marker to the new list item. */
 			pxLastCommandInList = pxNewListItem;
 		}
+		taskEXIT_CRITICAL();
 		
 		xReturn = pdPASS;
 	}
@@ -177,6 +188,18 @@ portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
+signed char *pcCmdIntGetOutputBuffer( void )
+{
+	return cOutputBuffer;
+}
+/*-----------------------------------------------------------*/
+
+unsigned portBASE_TYPE uxCmdIntGetOutputBufferSizeBytes( void )
+{
+	return configCOMMAND_INT_MAX_OUTPUT_SIZE;
+}
+/*-----------------------------------------------------------*/
+
 static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
 {
 static const xCommandLineInputListItem * pxCommand = NULL;
@@ -206,3 +229,4 @@ signed portBASE_TYPE xReturn;
 
 	return xReturn;
 }
+

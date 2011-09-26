@@ -91,6 +91,25 @@ portBASE_TYPE xCmdIntRegisterCommand( const xCommandLineInput * const pxCommandT
  */
 portBASE_TYPE xCmdIntProcessCommand( const signed char * const pcCommandInput, signed char * pcWriteBuffer, size_t xWriteBufferLen  );
 
+/*-----------------------------------------------------------*/
+
+/*
+ * A buffer into which command outputs can be written is declared in the
+ * main command interpreter, rather than in the command console implementation,
+ * to allow application that provide access to the command console via multiple
+ * interfaces to share a buffer, and therefore save RAM.  Note, however, that
+ * the command interpreter itself is not re-entrant, so only one command
+ * console interface can be used at any one time.  For that reason, no attempt
+ * is made to provide any mutual exclusion mechanism on the output buffer.
+ *
+ * pcCmdIntGetOutputBuffer() returns the address of the output buffer.
+ *
+ * uxCmdIntGetOutputBufferSizeBytes() returns the size, in bytes, of the output
+ * buffer returned by pcCmdIntGetOutputBuffer();
+ */
+signed char *pcCmdIntGetOutputBuffer( void );
+unsigned portBASE_TYPE uxCmdIntGetOutputBufferSizeBytes( void );
+
 #endif /* COMMAND_INTERPRETER_H */
 
 

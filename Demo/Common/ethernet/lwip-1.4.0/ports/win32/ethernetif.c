@@ -453,6 +453,15 @@ struct xEthernetIf *pxEthernetIf;
   
 		/* initialize the hardware */
 		prvLowLevelInit( pxNetIf );
+
+		/* Was an interface opened? */
+		if( pxOpenedInterfaceHandle == NULL )
+		{
+			/* Probably an invalid adapter number was defined in 
+			FreeRTOSConfig.h. */
+			xReturn = ERR_VAL;
+			configASSERT( pxOpenedInterfaceHandle );
+		}
 	}
 
 	return xReturn;

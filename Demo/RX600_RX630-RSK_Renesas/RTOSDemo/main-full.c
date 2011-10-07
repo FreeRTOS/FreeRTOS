@@ -54,7 +54,8 @@
 /* ****************************************************************************
  * This project includes a lot of tasks and tests and is therefore complex.
  * If you would prefer a much simpler project to get started with then select
- * the 'Blinky' build configuration within the HEW IDE.
+ * the 'Blinky' build configuration within the HEW IDE.  The Blinky build
+ * configuration uses main-blinky.c instead of main-full.c.
  * ****************************************************************************
  *
  * Creates all the demo application tasks, then starts the scheduler.  The web
@@ -67,33 +68,35 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Reg test" tasks - These fill the registers with known values, then check
- * that each register still contains its expected value.  Each task uses
- * different values.  The tasks run with very low priority so get preempted
- * very frequently.  A check variable is incremented on each iteration of the
- * test loop.  A register containing an unexpected value is indicative of an
- * error in the context switching mechanism and will result in a branch to a
- * null loop - which in turn will prevent the check variable from incrementing
- * any further and allow the check task (described below) to determine that an
- * error has occurred.  The nature of the reg test tasks necessitates that they
- * are written in assembly code.
+ * "Reg test" tasks - These fill the registers with known values, then 
+ * repeatedly check that each register still contains its expected value for 
+ * the lifetime of the tasks.  Each task uses different values.  The tasks run 
+ * with very low priority so get preempted very frequently.  A check variable 
+ * is incremented on each iteration of the test loop.  A register containing an 
+ * unexpected value is indicative of an error in the context switching 
+ * mechanism and will result in a branch to a null loop - which in turn will 
+ * prevent the check variable from incrementing any further and allow the check 
+ * timer (described below) to determine that an error has occurred.  The nature 
+ * of the reg test tasks necessitates that they are written in assembly code.
  *
- * "Check" task - This only executes every five seconds but has a high priority
- * to ensure it gets processor time.  Its main function is to check that all the
- * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will toggle LED 5 every 5 seconds - the toggle
- * rate increasing to 200ms being a visual indication that at least one task has
- * reported unexpected behaviour.
+ * "Check Timer" and Callback Function - The check timer period is initially 
+ * set to five seconds.  The check timer callback function checks that all the 
+ * standard demo tasks are not only still executing, but are executing without 
+ * reporting any errors.  If the check timer discovers that a task has either 
+ * stalled, or reported an error, then it changes its own period from the 
+ * initial five seconds, to just 200ms.  The check timer callback function 
+ * also toggles LED 3 each time it is called.  This provides a visual 
+ * indication of the system status:  If the LED toggles every five seconds, 
+ * then no issues have been discovered.  If the LED toggles every 200ms, then 
+ * an issue has been discovered with at least one task.
  *
  * "High frequency timer test" - A high frequency periodic interrupt is
  * generated using a timer - the interrupt is assigned a priority above
- * configMAX_SYSCALL_INTERRUPT_PRIORITY so should not be effected by anything
+ * configMAX_SYSCALL_INTERRUPT_PRIORITY, so will not be effected by anything
  * the kernel is doing.  The frequency and priority of the interrupt, in
- * combination with other standard tests executed in this demo, should result
+ * combination with other standard tests executed in this demo, will result
  * in interrupts nesting at least 3 and probably 4 deep.  This test is only
- * included in build configurations that have the optimiser switched on.  In
- * optimised builds the count of high frequency ticks is used as the time base
- * for the run time stats.
+ * included in build configurations that have the optimiser switched on.
  *
  * *NOTE 1* If LED3 is toggling every 5 seconds then all the demo application
  * tasks are executing as expected and no errors have been reported in any
@@ -118,6 +121,8 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
+#include "semphr.h"
 
 /* Standard demo includes. */
 #include "partest.h"
@@ -140,33 +145,30 @@ tasks check that the values are passed in correctly. */
 #define mainREG_TEST_2_PARAMETER	( 0x12345678UL )
 
 /* Priorities at which the tasks are created. */
-#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
-/* The WEB server uses string handling functions, which in turn use a bit more
-stack than most of the other tasks. */
-#define mainuIP_STACK_SIZE			( configMINIMAL_STACK_SIZE * 3 )
-
-/* The LED toggled by the check task. */
+/* The LED toggled by the check timer. */
 #define mainCHECK_LED				( 3 )
 
-/* The rate at which mainCHECK_LED will toggle when all the tasks are running
-without error.  Controlled by the check task as described at the top of this
-file. */
-#define mainNO_ERROR_CYCLE_TIME		( 5000 / portTICK_RATE_MS )
+/* The period at which the check timer will expire, in ms, provided no errors
+have been reported by any of the standard demo tasks.  ms are converted to the
+equivalent in ticks using the portTICK_RATE_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 5000UL / portTICK_RATE_MS )
 
-/* The rate at which mainCHECK_LED will toggle when an error has been reported
-by at least one task.  Controlled by the check task as described at the top of
-this file. */
-#define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
+/* The period at which the check timer will expire, in ms, if an error has been
+reported in one of the standard demo tasks.  ms are converted to the equivalent
+in ticks using the portTICK_RATE_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+
+/* A block time of zero simple means "Don't Block". */
+#define mainDONT_BLOCK				( 0UL )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -214,27 +216,22 @@ static void prvRegTest1Implementation( void );
 static void prvRegTest2Implementation( void );
 
 /*
- * The check task as described at the top of this file.
+ * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTask( void *pvParameters );
+static void prvCheckTimerCallback( xTimerHandle xTimer );
 
-/*
- * Contains the implementation of the WEB server.
- */
-extern void vuIP_Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
 /* Variables that are incremented on each iteration of the reg test tasks -
-provided the tasks have not reported any errors.  The check task inspects these
+provided the tasks have not reported any errors.  The check timer inspects these
 variables to ensure they are still incrementing as expected.  If a variable
 stops incrementing then it is likely that its associate task has stalled. */
 unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
-/* The status message that is displayed at the bottom of the "task stats" web
-page, which is served by the uIP task.  This will report any errors picked up
-by the reg test task. */
-const char *pcStatusMessage = "All tasks executing without error.";
+/* The check timer.  This uses prvCheckTimerCallback() as its callback
+function. */
+static xTimerHandle xCheckTimer = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -252,9 +249,6 @@ extern void HardwareSetup( void );
 	/* Start the reg test tasks which test the context switching mechanism. */
 	xTaskCreate( prvRegTest1Task, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
-
-	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE * 3, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -274,119 +268,117 @@ extern void HardwareSetup( void );
 	or not the correct/expected number of tasks are running at any given time. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
+	/* Create the software timer that performs the 'check' functionality,
+	as described at the top of this file. */
+	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 5000ms (5s). */
+								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) 0,						/* The ID is not used, so can be set to anything. */
+								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+							  );
+							  
+	/* Sanity check that the check timer was indeed created. */
+	configASSERT( xCheckTimer );
+	
+	/* Start the check timer.  It will actually start when the scheduler is
+	started. */
+	xTimerStart( xCheckTimer, mainDONT_BLOCK );
+
 	/* Start the tasks running. */
 	vTaskStartScheduler();
 
-	/* If all is well we will never reach here as the scheduler will now be
-	running.  If we do reach here then it is likely that there was insufficient
-	heap available for the idle task to be created. */
+	/* If all is well, the following line will never be reached as the scheduler 
+	will be	running.  If the following line is reached, there was insufficient
+	FreeRTOS heap available for the idle task to be created.  See
+	http://www.freertos.org/a00111.html and the malloc failed hook function for
+	more information. */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
+static long lChangedTimerPeriodAlready = pdFALSE, lErrorStatus = pdPASS;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
-portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
-extern void vSetupHighFrequencyTimer( void );
 
-	/* If this is being executed then the kernel has been started.  Start the high
-	frequency timer test as described at the top of this file.  This is only
-	included in the optimised build configuration - otherwise it takes up too much
-	CPU time and can disrupt other tests. */
-	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
-		vSetupHighFrequencyTimer();
-	#endif
-
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
-	for( ;; )
+	/* Check the standard demo tasks are running without error. */
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreBlockingQueuesStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xArePollingQueuesStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xIsCreateTaskStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreIntQueueTasksStillRunning() != pdPASS )
+	{
+		lErrorStatus = pdFAIL;
+	}
+	else if( xAreMathsTaskStillRunning() != pdPASS )
+	{
+		lErrorStatus = pdFAIL;
+	}
 
-		/* Check the standard demo tasks are running without error. */
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			/* Increase the rate at which this task cycles, which will increase the
-			rate at which mainCHECK_LED flashes to give visual feedback that an error
-			has occurred. */
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: GenQueue";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: QueuePeek";
-		}
-		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: BlockQueue";
-		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: BlockTime";
-		}
-		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: SemTest";
-		}
-		else if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: PollQueue";
-		}
-		else if( xIsCreateTaskStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: Death";
-		}
-		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: IntMath";
-		}
-		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: RecMutex";
-		}
-		else if( xAreIntQueueTasksStillRunning() != pdPASS )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: IntQueue";
-		}
-		else if( xAreMathsTaskStillRunning() != pdPASS )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: Flop";
-		}
+	/* Check the reg test tasks are still cycling.  They will stop incrementing
+	their loop counters if they encounter an error. */
+	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+	{
+		lErrorStatus = pdFAIL;
+	}
 
-		/* Check the reg test tasks are still cycling.  They will stop incrementing
-		their loop counters if they encounter an error. */
-		if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
+	if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
+	{
+		lErrorStatus = pdFAIL;
+	}
+
+	ulLastRegTest1CycleCount = ulRegTest1CycleCount;
+	ulLastRegTest2CycleCount = ulRegTest2CycleCount;
+
+	/* Toggle the check LED to give an indication of the system status.  If
+	the LED toggles every 5 seconds then everything is ok.  A faster toggle
+	indicates an error. */
+	vParTestToggleLED( mainCHECK_LED );
+	
+	/* Was an error detected this time through the callback execution? */
+	if( lErrorStatus != pdPASS )
+	{
+		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: RegTest1";
+			lChangedTimerPeriodAlready = pdTRUE;
+			
+			/* This call to xTimerChangePeriod() uses a zero block time.  
+			Functions called from inside of a timer callback function must 
+			*never* attempt	to block. */
+			xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 		}
-
-		if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
-		{
-			xCycleFrequency = mainERROR_CYCLE_TIME;
-			pcStatusMessage = "Error: RegTest2";
-		}
-
-		ulLastRegTest1CycleCount = ulRegTest1CycleCount;
-		ulLastRegTest2CycleCount = ulRegTest2CycleCount;
-
-		/* Toggle the check LED to give an indication of the system status.  If
-		the LED toggles every 5 seconds then everything is ok.  A faster toggle
-		indicates an error. */
-		vParTestToggleLED( mainCHECK_LED );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -438,6 +430,19 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName
 of this file. */
 void vApplicationIdleHook( void )
 {
+	/* If this is being executed then the kernel has been started.  Start the high
+	frequency timer test as described at the top of this file.  This is only
+	included in the optimised build configuration - otherwise it takes up too much
+	CPU time and can disrupt other tests. */
+	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
+	static portBASE_TYPE xTimerTestStarted = pdFALSE;
+	extern void vSetupHighFrequencyTimer( void );
+		if( xTimerTestStarted == pdFALSE )
+		{
+			vSetupHighFrequencyTimer();
+			xTimerTestStarted = pdTRUE;
+		}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -559,7 +564,7 @@ TestLoop1:
 
 RegTest1Error:
 	; A compare failed, just loop here so the loop counter stops incrementing
-	; causing the check task to indicate the error.
+	; causing the check timer to indicate the error.
 	BRA RegTest1Error
 }
 /*-----------------------------------------------------------*/
@@ -637,18 +642,8 @@ TestLoop2:
 
 RegTest2Error:
 	; A compare failed, just loop here so the loop counter stops incrementing
-	; - causing the check task to indicate the error.
+	; - causing the check timer to indicate the error.
 	BRA RegTest2Error
 }
 /*-----------------------------------------------------------*/
-
-char *pcGetTaskStatusMessage( void )
-{
-	/* Not bothered about a critical section here although technically because of
-	the task priorities the pointer could change it will be atomic if not near
-	atomic and its not critical. */
-	return ( char * ) pcStatusMessage;
-}
-/*-----------------------------------------------------------*/
-
 

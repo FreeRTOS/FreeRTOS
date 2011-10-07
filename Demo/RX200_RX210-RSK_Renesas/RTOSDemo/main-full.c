@@ -82,7 +82,7 @@
  * standard demo tasks are not only still executing, but are executing without 
  * reporting any errors.  If the check timer discovers that a task has either 
  * stalled, or reported an error, then it changes its own period from the 
- * initial three seconds, to just 200ms.  The check timer callback function 
+ * initial five seconds, to just 200ms.  The check timer callback function 
  * also toggles LED 3 each time it is called.  This provides a visual 
  * indication of the system status:  If the LED toggles every five seconds, 
  * then no issues have been discovered.  If the LED toggles every 200ms, then 
@@ -164,7 +164,7 @@ The tasks check that the values are passed in correctly. */
 #define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
-/* The LED toggled by the check task. */
+/* The LED toggled by the check timer. */
 #define mainCHECK_LED				( 3 )
 
 /* The period at which the check timer will expire, in ms, provided no errors
@@ -234,7 +234,7 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 /*-----------------------------------------------------------*/
 
 /* Variables that are incremented on each iteration of the reg test tasks -
-provided the tasks have not reported any errors.  The check task inspects these
+provided the tasks have not reported any errors.  The check timer inspects these
 variables to ensure they are still incrementing as expected.  If a variable
 stops incrementing then it is likely that its associate task has stalled. */
 unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
@@ -304,62 +304,52 @@ extern void HardwareSetup( void );
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-volatile long temp = 0;
+
 static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE, lErrorStatus = pdPASS;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
-volatile long temp2;
+
 	/* Check the standard demo tasks are running without error. */
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 1;
 	}
 	else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 2;
 	}
 	else if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 3;
 	}
 	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 4;
 	}
 	else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 5;
 	}
 	else if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 6;
 	}
 	else if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 7;
 	}
 	else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 8;
 	}
 	else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 9;
 	}
 	else if( xAreIntQueueTasksStillRunning() != pdPASS )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 10;
 	}
 
 	/* Check the reg test tasks are still cycling.  They will stop incrementing
@@ -367,13 +357,11 @@ volatile long temp2;
 	if( ulRegTest1CycleCount == ulLastRegTest1CycleCount )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 11;
 	}
 
 	if( ulRegTest2CycleCount == ulLastRegTest2CycleCount )
 	{
 		lErrorStatus = pdFAIL;
-		temp = 12;
 	}
 
 	ulLastRegTest1CycleCount = ulRegTest1CycleCount;
@@ -387,7 +375,6 @@ volatile long temp2;
 	/* Was an error detected this time through the callback execution? */
 	if( lErrorStatus != pdPASS )
 	{
-		temp2 = temp;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
@@ -582,7 +569,7 @@ TestLoop1:
 
 RegTest1Error:
 	; A compare failed, just loop here so the loop counter stops incrementing
-	; causing the check task to indicate the error.
+	; causing the check timer to indicate the error.
 	BRA RegTest1Error
 }
 /*-----------------------------------------------------------*/
@@ -660,7 +647,7 @@ TestLoop2:
 
 RegTest2Error:
 	; A compare failed, just loop here so the loop counter stops incrementing
-	; - causing the check task to indicate the error.
+	; - causing the check timer to indicate the error.
 	BRA RegTest2Error
 }
 /*-----------------------------------------------------------*/

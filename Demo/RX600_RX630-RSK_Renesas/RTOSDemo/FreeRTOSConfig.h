@@ -70,7 +70,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( ICLK_FREQUENCY ) /* Set in rskrx630def.h. */
 #define configPERIPHERAL_CLOCK_HZ		( PCLKB_FREQUENCY ) /* Set in rskrx630def.h. */

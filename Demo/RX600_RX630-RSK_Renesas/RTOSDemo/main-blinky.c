@@ -92,7 +92,8 @@ static void prvQueueSendTask( void *pvParameters );
 static xQueueHandle xQueue = NULL;
 
 /* This variable is not used by this simple Blinky example.  It is defined 
-purely to allow the project to link as it is used by the full project. */
+purely to allow the project to link as it is used by the full build 
+configuration. */
 volatile unsigned long ulHighFrequencyTickCount = 0UL;
 /*-----------------------------------------------------------*/
 
@@ -120,9 +121,9 @@ extern void HardwareSetup( void );
 		vTaskStartScheduler();
 	}
 	
-	/* If all is well we will never reach here as the scheduler will now be
-	running.  If we do reach here then it is likely that there was insufficient
-	heap available for the idle task to be created. */
+	/* If all is well the next line of code will not be reached as the scheduler 
+	will be	running.  If the next line is reached then it is likely that there was 
+	insufficient heap available for the idle task to be created. */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -144,8 +145,10 @@ const unsigned long ulValueToSend = 100UL;
 
 		/* Send to the queue - causing the queue receive task to flash its LED.  0
 		is used so the send does not block - it shouldn't need to as the queue
-		should always be empty here. */
-		xQueueSend( xQueue, &ulValueToSend, 0 );
+		should always be empty here (it should always be empty because the task
+		removing items from the queue has a higher priority than the task adding
+		things to the queue). */
+		xQueueSend( xQueue, &ulValueToSend, 0UL );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -171,6 +174,11 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
+/* A callback function named vApplicationSetupTimerInterrupt() must be defined
+to configure a tick interrupt source, and configTICK_VECTOR set in 
+FreeRTOSConfig.h to install the tick interrupt handler in the correct position
+in the vector table.  This example uses a compare match timer.  It can be
+into any FreeRTOS project, provided the same compare match timer is available. */
 void vApplicationSetupTimerInterrupt( void )
 {
 	/* Enable compare match timer 0. */
@@ -196,24 +204,28 @@ void vApplicationSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-/* This function is explained by the comments above its prototype at the top
-of this file. */
+/* If configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h, then this
+function will be called if pvPortMalloc() returns NULL because it has exhausted
+the available FreeRTOS heap space.  See http://www.freertos.org/a00111.html. */
 void vApplicationMallocFailedHook( void )
 {
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
-/* This function is explained by the comments above its prototype at the top
-of this file. */
+/* If configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2 in 
+FreeRTOSConfig.h, then this function will be called if a task overflows its 
+stack space.  See 
+http://www.freertos.org/Stacks-and-stack-overflow-checking.html. */
 void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
-/* This function is explained by the comments above its prototype at the top
-of this file. */
+/* If configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h, then this function
+will be called on each iteration of the idle task.  See 
+http://www.freertos.org/a00016.html */
 void vApplicationIdleHook( void )
 {
 	/* Just to prevent the variable getting optimised away. */

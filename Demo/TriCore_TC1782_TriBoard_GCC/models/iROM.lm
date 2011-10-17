@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinkerModel:LinkerDescriptionFile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:LinkerModel="http://LinkerModel" xmlns:memorydescription="http://MemoryDescription" Description="internal flash configuration" Name="iROM">
+  <Output>
+    <Code>
+      <DeepOutputSection Description="Startup code for TriCore" Name=".startup_code" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Startup code for TriCore" Name=".startup_code" InputSection="//@Input/@InputSection.0"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Code section" Name=".text" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Code section" Name=".text" InputSection="//@Input/@InputSection.3"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Code executed before calling main" Name=".init" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Code executed before calling main" Name=".init" InputSection="//@Input/@InputSection.5" KEEP="true"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Code executed before exiting program" Name=".fini" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Code executed before exiting program" Name=".fini" InputSection="//@Input/@InputSection.6" KEEP="true"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Section for trap table" Name=".traptab" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Section for trap table" Name=".traptab" InputSection="//@Input/@InputSection.7"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Section for interrupt table" Name=".inttab" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Section for interrupt table" Name=".inttab" InputSection="//@Input/@InputSection.8"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Exception handling frame for C++ exceptions" Name=".eh_frame" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Exception handling frame for C++ exceptions" Name=".eh_frame" InputSection="//@Input/@InputSection.17"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Section for constructors" Name=".ctors" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Section for constructors" Name=".ctors" InputSection="//@Input/@InputSection.18" KEEP="true"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="Section for destructors" Name=".dtors" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <InputEntry Description="Section for destructors" Name=".dtors" InputSection="//@Input/@InputSection.19" KEEP="true"/>
+      </DeepOutputSection>
+    </Code>
+    <Data>
+      <Absolute>
+        <DeepOutputSection Description="Initialised data addressed as absolute" Name=".zdata">
+          <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+          <InputEntry Description="Initialised data addressed as absolute" Name=".zdata" InputSection="//@Input/@InputSection.13"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Not initialised data addressed as absolute" Name=".zbss" NOLOAD="true">
+          <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+          <InputEntry Description="Not Initialised data addressed as absolute" Name=".zbss" InputSection="//@Input/@InputSection.14"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Not initialised bit data" Name=".bbss" NOLOAD="true">
+          <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+          <InputEntry Description="Not initialised bit data" Name=".bbss" InputSection="//@Input/@InputSection.16"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Bit variables" Name=".bdata">
+          <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+          <InputEntry Description="Bit variables" Name=".bdata" InputSection="//@Input/@InputSection.20"/>
+        </DeepOutputSection>
+      </Absolute>
+      <Small>
+        <DeepOutputSection Description="Storage of write-protected data addressed as small" Name=".sdata2" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+          <InputEntry Description="Storage of write-protected data addressed as small" Name=".sdata.rodata" InputSection="//@Input/@InputSection.10"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Section stores initialised data which is addressable by small data area pointer (%a0)" Name=".sdata" RuntimeAddressVMA="//@LocalAliases/@Alias.0">
+          <InputEntry Description="Section stores initialised data which is addressable by small data area pointer (%a0)" Name=".sdata" InputSection="//@Input/@InputSection.11"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Not initialised data in section ’.sbss’, addressable by small data area pointer (%a0)" Name=".sbss" RuntimeAddressVMA="//@LocalAliases/@Alias.0" NOLOAD="true">
+          <InputEntry Description="Not initialised data in section ’.sbss’, addressable by small data area pointer (%a0)" Name=".sbss" InputSection="//@Input/@InputSection.15"/>
+        </DeepOutputSection>
+      </Small>
+      <Normal>
+        <DeepOutputSection Description="Storage of write-protected data" Name=".rodata" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+          <InputEntry Description="Storage of write-protected data" Name=".rodata" InputSection="//@Input/@InputSection.1"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Initialised data" Name=".data" RuntimeAddressVMA="//@LocalAliases/@Alias.0">
+          <InputEntry Description="Initialised data" Name=".data" InputSection="//@Input/@InputSection.2"/>
+        </DeepOutputSection>
+        <DeepOutputSection Description="Not Initialised data" Name=".bss" RuntimeAddressVMA="//@LocalAliases/@Alias.0" NOLOAD="true">
+          <InputEntry Description="Not Initialised data" Name=".bss" InputSection="//@Input/@InputSection.4"/>
+        </DeepOutputSection>
+      </Normal>
+    </Data>
+    <PCP>
+      <DeepOutputSection Description="PCP Code Section" Name=".pcptext" LoadMachineAddressLMA="//@LocalAliases/@Alias.1">
+        <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.3/@Region.0"/>
+        <InputEntry Description="PCP Code Section" Name=".pcptext" InputSection="//@Input/@InputSection.9" KEEP="true"/>
+      </DeepOutputSection>
+      <DeepOutputSection Description="PCP Data Section" Name=".pcpdata" LoadMachineAddressLMA="//@LocalAliases/@Alias.1">
+        <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.3/@Region.1"/>
+        <InputEntry Description="PCP Data Section" Name=".pcpdata" InputSection="//@Input/@InputSection.12" KEEP="true"/>
+      </DeepOutputSection>
+    </PCP>
+    <Environment IStackSize="256" IStackUnit="B" UStackUnit="KB" UStackSize="1" CSASize="16" CSAUnit="KB" ClearTableRegion="//@LocalAliases/@Alias.1" CopyTableRegion="//@LocalAliases/@Alias.1" HeapSize="4" HeapUnit="KB">
+      <CSARegionRef xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+      <IStackRegion xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+      <UStackRegion xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+      <HeapRegion xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+    </Environment>
+  </Output>
+  <Input>
+    <InputSection Description="Startup code for TriCore" Name=".startup_code"/>
+    <InputSection Description="Storage of write-protected data" Name=".rodata"/>
+    <InputSection Description="Initialised data" Name=".data"/>
+    <InputSection Description="Code section" Name=".text"/>
+    <InputSection Description="Not Initialised data" Name=".bss"/>
+    <InputSection Description="Code executed before calling main" Name=".init"/>
+    <InputSection Description="Code executed before exiting program" Name=".fini"/>
+    <InputSection Description="Section for trap table" Name=".traptab"/>
+    <InputSection Description="Section for interrupt table" Name=".inttab"/>
+    <InputSection Description="PCP Code Section" Name=".pcptext"/>
+    <InputSection Description="Storage of write-protected data addressed as small" Name=".sdata.rodata"/>
+    <InputSection Description="Section stores initialised data which is addressable by small data area pointer (%a0)" Name=".sdata"/>
+    <InputSection Description="PCP Data Section" Name=".pcpdata"/>
+    <InputSection Description="Initialised data addressed as absolute" Name=".zdata"/>
+    <InputSection Description="Not Initialised data addressed as absolute" Name=".zbss"/>
+    <InputSection Description="Not initialised data in section ’.sbss’, addressable by small data area pointer (%a0)" Name=".sbss"/>
+    <InputSection Description="Not initialised bit data" Name=".bbss"/>
+    <InputSection Description="Exception handling frame for C++ exceptions" Name=".eh_frame"/>
+    <InputSection Description="Section for constructors" Name=".ctors"/>
+    <InputSection Description="Section for destructors" Name=".dtors"/>
+    <InputSection Description="Bit variables" Name=".bdata"/>
+  </Input>
+  <Files/>
+  <LocalAliases>
+    <Alias Description="Alias for RAM" Name="DATA">
+      <Region href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
+    </Alias>
+    <Alias Description="Alias for Code" Name="CODE">
+      <Region href="TriBoard-TC1782.mdm#//@Memory.0/@Region.0"/>
+    </Alias>
+  </LocalAliases>
+</LinkerModel:LinkerDescriptionFile>

@@ -51,6 +51,10 @@
     licensing and training services.
 */
 
+
+/* _RB_ Add description here. */
+
+
 /* Standard includes. */
 #include <stdlib.h>
 #include <string.h>
@@ -77,14 +81,14 @@
 /*-----------------------------------------------------------*/
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE	( ( unsigned long ) 115200 )
-#define mainCOM_TEST_LED		( 5 )
+#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
+#define mainCOM_TEST_LED			( 5 )
 
 /* Priorities for the demo application tasks. */
-#define mainLED_TASK_PRIORITY		( ( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT )
-#define mainCOM_TEST_PRIORITY		( ( tskIDLE_PRIORITY + 2 ) | portPRIVILEGE_BIT )
+#define mainLED_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+#define mainCOM_TEST_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCHECK_TASK_PRIORITY		( ( tskIDLE_PRIORITY + 4 ) | portPRIVILEGE_BIT )
+#define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
@@ -93,7 +97,7 @@ error. */
 #define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 5000 / portTICK_RATE_MS	)
 #define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
 #define mainON_BOARD_LED_BIT		( ( unsigned long ) 7 )
-#define mainREG_TEST_TASKS 			1
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -107,51 +111,43 @@ static long prvCheckOtherTasksAreStillRunning( void );
  * prvCheckOtherTasksAreStillRunning().	 See the description at the top
  * of the file.
  */
-static void vErrorChecks( void *pvParameters );
-/*-----------------------------------------------------------*/
+static void prvCheckTask( void *pvParameters );
 
 /*
- * Configure the processor for use with the Olimex demo board.	This includes
- * setup for the I/O, system clock, and access timings.
+ * Configure the processor ready to run this demo.
  */
 static void prvSetupHardware( void );
-
-/*
- * Function to create the heavily restricted RegTest tasks.
- */
-static void vStartRegTestTasks( unsigned portBASE_TYPE uxPriority );
-
-#if mainREG_TEST_TASKS == 1
 
 /*
  * Writes to and checks the value of each register that is used in the context
  * of a task.
  */
-static void vRegTask1( void *pvParameters );
-static void vRegTask2( void *pvParameters );
+static void prvRegTask1( void *pvParameters );
+static void prvRegTask2( void *pvParameters );
 
 /*
- * Specific check to see if the Register test functions are still operating.
+ * Specific check to see if the Register test functions are still operating
+ * correctly.
  */
-static portBASE_TYPE xAreRegTestTasksStillRunning( void );
+static portBASE_TYPE prvAreRegTestTasksStillRunning( void );
 
-#endif /* mainREG_TEST_TASKS */
 /*-----------------------------------------------------------*/
 
 /* Used by the register test tasks to indicated liveness. */
 static unsigned long ulRegisterTest1Count = 0;
 static unsigned long ulRegisterTest2Count = 0;
+
 /*-----------------------------------------------------------*/
 
 /*
- * Starts all the other tasks, then starts the scheduler.
+ * Starts all the tasks, then starts the scheduler.
  */
 int main( void )
 {
 	/* Setup the hardware for use with the TriCore evaluation board. */
 	prvSetupHardware();
 
-	/* Start the demo/test application tasks. */
+	/* Start standard demo/test application tasks. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -163,41 +159,60 @@ int main( void )
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartRecursiveMutexTasks();
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	vStartRegTestTasks( tskIDLE_PRIORITY );
+	/* _RB_ Create the timer test task here too. */
+
+	/* Create the register test tasks, as described at the top of this file. */
+	xTaskCreate( prvRegTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
 
 	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+	/* _RB_ start the death tasks here too. */
 
 	/* Now all the tasks have been started - start the scheduler. */
 	vTaskStartScheduler();
 
-	/* Should never reach here! */
+	/* If all is well then the following line will never be reached.  If
+	execution does reach here, then it is highly probably that the heap size
+	is too small for the idle and/or timer tasks to be created within
+	vTaskStartScheduler(). */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
-static void vErrorChecks( void *pvParameters )
+static void prvCheckTask( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+portTickType xLastExecutionTime;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
 
+	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
+	works correctly. */
+	xLastExecutionTime = xTaskGetTickCount();
+
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error.  If an error is detected then the delay period
 	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
-	the on board LED flash rate will increase. */
+	the on board LED flash rate will increase.  NOTE:  This task could easily
+	be replaced by a software timer callback to remove the overhead of having
+	an extra task. */
 
 	for( ;; )
 	{
 		/* Delay until it is time to execute again. */
-		vTaskDelay( xDelayPeriod );
+		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
 		/* Check all the standard demo application tasks are executing without
 		error.	*/
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
 		{
-			/* An error has been detected in one of the tasks - flash faster. */
+			/* An error has been detected in one of the tasks - flash the LED
+			at a higher frequency to give visible feedback that something has
+			gone wrong (it might just be that the loop back connector required
+			by the comtest tasks has not been fitted). */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
 		}
 
@@ -213,8 +228,7 @@ static long prvCheckOtherTasksAreStillRunning( void )
 long lReturn = pdPASS;
 
 	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none of them have detected
-	an error. */
+	that they are all still running, and that none have detected an error. */
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
@@ -261,7 +275,7 @@ long lReturn = pdPASS;
 		lReturn = pdFAIL;
 	}
 
-	if( xAreRegTestTasksStillRunning() != pdTRUE )
+	if( prvAreRegTestTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
@@ -284,53 +298,63 @@ extern void set_cpu_frequency(void);
 
 void vApplicationMallocFailedHook( void )
 {
-	/* This function will be called if a call to pvPortMalloc() fails to return
-	the requested memory.  pvPortMalloc() is called internally by the scheduler
-	whenever a task, queue or semaphore is created. */
+	/* vApplicationMallocFailedHook() will only be called if
+	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+	function that will get called if a call to pvPortMalloc() fails.
+	pvPortMalloc() is called internally by the kernel whenever a task, queue,
+	timer or semaphore is created.  It is also called by various parts of the
+	demo application.  If heap_1.c or heap_2.c are used, then the size of the
+	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+	to query the size of free heap space that remains (although it does not
+	provide information on how the remaining heap might be fragmented). */
 	_debug();
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
-	/*
-	 * This function will be called whenever the system tick is incremented.
-	 * Note that it is executed as part of an interrupt and as such should
-	 * not block nor be used for any long running execution.
-	 */
-	vParTestToggleLED( mainON_BOARD_LED_BIT - 1 );
+	/* vApplicationTickHook() will only be called if configUSE_TICK_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It is a hook function that will get called during
+	each FreeRTOS tick interrupt.  Note that vApplicationTickHook() is called
+	from an interrupt context. */
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	/*
-	 * This function will be called during the normal execution of the IDLE task.
-	 */
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+	task.  It is essential that code added to this hook function never attempts
+	to block in any way (for example, call xQueueReceive() with a block time
+	specified, or call vTaskDelay()).  If the application makes use of the
+	vTaskDelete() API function (as this demo application does) then it is also
+	important that vApplicationIdleHook() is permitted to return to its calling
+	function, because it is the responsibility of the idle task to clean up
+	memory allocated by the kernel to any task that has since been deleted. */
 }
 /*-----------------------------------------------------------*/
 
-#if mainREG_TEST_TASKS == 1
-
-static void vStartRegTestTasks( unsigned portBASE_TYPE uxPriority )
-{
-	(void)xTaskCreate( vRegTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, uxPriority, NULL );
-	(void)xTaskCreate( vRegTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, uxPriority, NULL );
-}
-/*-----------------------------------------------------------*/
-
-portBASE_TYPE xAreRegTestTasksStillRunning( void )
+static portBASE_TYPE prvAreRegTestTasksStillRunning( void )
 {
 static unsigned long ulPreviousRegisterTest1Count = 0;
 static unsigned long ulPreviousRegisterTest2Count = 0;
-portBASE_TYPE xReturn = pdFALSE;
+portBASE_TYPE xReturn = pdPASS;
 
 	/* Check to see if the Counts have changed since the last check. */
-	xReturn = ( ulPreviousRegisterTest1Count != ulRegisterTest1Count );
-	xReturn = xReturn && ( ulPreviousRegisterTest2Count != ulRegisterTest2Count );
+	if( ulRegisterTest1Count == ulPreviousRegisterTest1Count )
+	{
+		xReturn = pdFAIL;
+	}
 
-	/* Record the last count. */
+	if( ulRegisterTest2Count == ulPreviousRegisterTest2Count )
+	{
+		xReturn = pdFAIL;
+	}
+
+	/* Remember the current count for the next time this function is called. */
 	ulPreviousRegisterTest1Count = ulRegisterTest1Count;
 	ulPreviousRegisterTest2Count = ulRegisterTest2Count;
 
@@ -338,12 +362,7 @@ portBASE_TYPE xReturn = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-/*
- * Set all of the registers that are used as part of the task context
- * to known values and test that those values are maintained across
- * context switches.
- */
-void vRegTask1( void *pvParameters )
+static void prvRegTask1( void *pvParameters )
 {
 	/* Make space on the stack for the parameter and a counter. */
 	__asm volatile( " sub.a %sp, 4 			\n"
@@ -351,114 +370,107 @@ void vRegTask1( void *pvParameters )
 					" mov %d15, 0			\n"
 					" st.w [%sp]4, %d15		\n" );
 
-	for (;;)
-	{
-		/* Change all of the Context sensitive registers (except SP and RA). */
-		__asm volatile(
-				" mov %d0, 0		\n"
-				" mov %d1, 1		\n"
-				" mov %d2, 2		\n"
-				" mov %d3, 3		\n"
-				" mov %d4, 4		\n"
-				" mov %d5, 5		\n"
-				" mov %d6, 6		\n"
-				" mov %d7, 7		\n"
-				" mov %d8, 8		\n"
-				" mov %d9, 9		\n"
-				" mov %d10, 10		\n"
-				" mov %d11, 11		\n"
-				" mov %d12, 12		\n"
-				" mov %d13, 13		\n"
-				" mov %d14, 14		\n"
-				" mov %d15, 15		\n"
-				" mov.a %a2, 2		\n"
-				" mov.a %a3, 3		\n"
-				" mov.a %a4, 4		\n"
-				" mov.a %a5, 5		\n"
-				" mov.a %a6, 6		\n"
-				" mov.a %a7, 7		\n"
-				" mov.a %a12, 12	\n"
-				" mov.a %a13, 13	\n"
-				" mov.a %a14, 14	\n" );
-		/* Yield to force a context switch. */
-		taskYIELD();
-		/* Check the values of the registers. */
-		__asm(	" eq %d0, %d0, 0					\n" \
-				" jne %d0, 1, _task1_loop			\n" \
-				" eq %d1, %d1, 1					\n" \
-				" jne %d1, 1, _task1_loop			\n" \
-				" eq %d2, %d2, 2					\n" \
-				" jne %d2, 1, _task1_loop			\n" \
-				" eq %d3, %d3, 3					\n" \
-				" jne %d3, 1, _task1_loop			\n" \
-				" eq %d4, %d4, 4					\n" \
-				" jne %d4, 1, _task1_loop			\n" \
-				" eq %d5, %d5, 5					\n" \
-				" jne %d5, 1, _task1_loop			\n" \
-				" eq %d6, %d6, 6					\n" \
-				" jne %d6, 1, _task1_loop			\n" \
-				" eq %d7, %d7, 7					\n" \
-				" jne %d7, 1, _task1_loop			\n" \
-				" eq %d8, %d8, 8					\n" \
-				" jne %d8, 1, _task1_loop			\n" \
-				" eq %d9, %d9, 9					\n" \
-				" jne %d9, 1, _task1_loop			\n" \
-				" eq %d10, %d10, 10					\n" \
-				" jne %d10, 1, _task1_loop			\n" \
-				" eq %d11, %d11, 11					\n" \
-				" jne %d11, 1, _task1_loop			\n" \
-				" eq %d12, %d12, 12					\n" \
-				" jne %d12, 1, _task1_loop			\n" \
-				" eq %d13, %d13, 13					\n" \
-				" jne %d13, 1, _task1_loop			\n" \
-				" eq %d14, %d14, 14					\n" \
-				" jne %d14, 1, _task1_loop			\n" \
-				" eq %d15, %d15, 15					\n" \
-				" jne %d15, 1, _task1_loop			\n" \
-				" mov.a %a15, 2						\n" \
-				" jne.a %a15, %a2, _task1_loop		\n" \
-				" mov.a %a15, 3						\n" \
-				" jne.a %a15, %a3, _task1_loop		\n" \
-				" mov.a %a15, 4						\n" \
-				" jne.a %a15, %a4, _task1_loop		\n" \
-				" mov.a %a15, 5						\n" \
-				" jne.a %a15, %a5, _task1_loop		\n" \
-				" mov.a %a15, 6						\n" \
-				" jne.a %a15, %a6, _task1_loop		\n" \
-				" mov.a %a15, 7						\n" \
-				" jne.a %a15, %a7, _task1_loop		\n" \
-				" mov.a %a15, 12					\n" \
-				" jne.a %a15, %a12, _task1_loop		\n" \
-				" mov.a %a15, 13					\n" \
-				" jne.a %a15, %a13, _task1_loop		\n" \
-				" mov.a %a15, 14					\n" \
-				" jne.a %a15, %a14, _task1_loop		\n" \
-				" j _task1_skip						\n"	\
-				"_task1_loop:						\n"	\
-				"	debug							\n"	\
-				" j _task1_loop						\n"	\
-				"_task1_skip:						\n" );
+	/* Change all of the Context sensitive registers (except SP and RA). */
+	__asm volatile(
+			" mov %d0, 0		\n"
+			" mov %d1, 1		\n"
+			" mov %d2, 2		\n"
+			" mov %d3, 3		\n"
+			" mov %d4, 4		\n"
+			" mov %d5, 5		\n"
+			" mov %d6, 6		\n"
+			" mov %d7, 7		\n"
+			" mov %d8, 8		\n"
+			" mov %d9, 9		\n"
+			" mov %d10, 10		\n"
+			" mov %d11, 11		\n"
+			" mov %d12, 12		\n"
+			" mov %d13, 13		\n"
+			" mov %d14, 14		\n"
+			" mov %d15, 15		\n"
+			" mov.a %a2, 2		\n"
+			" mov.a %a3, 3		\n"
+			" mov.a %a4, 4		\n"
+			" mov.a %a5, 5		\n"
+			" mov.a %a6, 6		\n"
+			" mov.a %a7, 7		\n"
+			" mov.a %a12, 12	\n"
+			" mov.a %a13, 13	\n"
+			" mov.a %a14, 14	\n" );
 
-		/* Load the parameter address from the stack and modify the value. */
-		__asm volatile(								\
-				" ld.w %d15, [%sp]4					\n"	\
-				" add %d15, %d15, 1					\n"	\
-				" st.w [%sp]4, %d15					\n"	\
-				" ld.a %a4, [%sp]					\n"	\
-				" st.w [%a4], %d15					\n"	);
-	}
+	/* Check the values of the registers. */
+	__asm(	" _task1_loop:							\n" \
+			" eq %d1, %d0, 0						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d1, 1						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d2, 2						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d3, 3						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d4, 4						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d5, 5						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d6, 6						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d7, 7						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d8, 8						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d9, 9						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d10, 10						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d11, 11						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d12, 12						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d13, 13						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d14, 14						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" eq %d1, %d15, 15						\n" \
+			" jne %d1, 1, _task1_error_loop			\n" \
+			" mov.a %a15, 2							\n" \
+			" jne.a %a15, %a2, _task1_error_loop	\n" \
+			" mov.a %a15, 3							\n" \
+			" jne.a %a15, %a3, _task1_error_loop	\n" \
+			" mov.a %a15, 4							\n" \
+			" jne.a %a15, %a4, _task1_error_loop	\n" \
+			" mov.a %a15, 5							\n" \
+			" jne.a %a15, %a5, _task1_error_loop	\n" \
+			" mov.a %a15, 6							\n" \
+			" jne.a %a15, %a6, _task1_error_loop	\n" \
+			" mov.a %a15, 7							\n" \
+			" jne.a %a15, %a7, _task1_error_loop	\n" \
+			" mov.a %a15, 12						\n" \
+			" jne.a %a15, %a12, _task1_error_loop	\n" \
+			" mov.a %a15, 13						\n" \
+			" jne.a %a15, %a13, _task1_error_loop	\n" \
+			" mov.a %a15, 14						\n" \
+			" jne.a %a15, %a14, _task1_error_loop	\n" \
+			" j _task1_skip_error_loop				\n"	\
+			"_task1_error_loop:						\n"	/* Hitting this error loop will stop the counter incrementing, allowing the check task to recognise an error. */ \
+			"	debug								\n"	\
+			" j _task1_error_loop					\n"	\
+			"_task1_skip_error_loop:				\n" );
+
+	/* Load the parameter address from the stack and modify the value. */
+	__asm volatile(									\
+			" ld.w %d1, [%sp]4						\n"	\
+			" add %d1, %d15, 1						\n"	\
+			" st.w [%sp]4, %d1						\n"	\
+			" ld.a %a15, [%sp]						\n"	\
+			" st.w [%a15], %d1						\n"	\
+			" j _task1_loop							\n" );
 
 	/* The parameter is used but in the assembly. */
 	(void)pvParameters;
 }
 /*-----------------------------------------------------------*/
 
-/*
- * Set all of the registers that are used as part of the task context
- * to known values and test that those values are maintained across
- * context switches.
- */
-void vRegTask2( void *pvParameters )
+static void prvRegTask2( void *pvParameters )
 {
 	/* Make space on the stack for the parameter and a counter. */
 	__asm volatile( " sub.a %sp, 4 		\n" \
@@ -466,103 +478,102 @@ void vRegTask2( void *pvParameters )
 					" mov %d15, 0		\n" \
 					" st.w [%sp]4, %d15	\n" );
 
-	for (;;)
-	{
-		/* Change all of the Context sensitive registers (except SP and RA). */
-		__asm(	" mov %d0, 7		\n" \
-				" mov %d1, 6		\n" \
-				" mov %d2, 5		\n" \
-				" mov %d3, 4		\n" \
-				" mov %d4, 3		\n" \
-				" mov %d5, 2		\n" \
-				" mov %d6, 1		\n" \
-				" mov %d7, 0		\n" \
-				" mov %d8, 15		\n" \
-				" mov %d9, 14		\n" \
-				" mov %d10, 13		\n" \
-				" mov %d11, 12		\n" \
-				" mov %d12, 11		\n" \
-				" mov %d13, 10		\n" \
-				" mov %d14, 9		\n" \
-				" mov %d15, 8		\n" \
-				" mov.a %a2, 14		\n" \
-				" mov.a %a3, 13		\n" \
-				" mov.a %a4, 12		\n" \
-				" mov.a %a5, 7		\n" \
-				" mov.a %a6, 6		\n" \
-				" mov.a %a7, 5		\n" \
-				" mov.a %a12, 4		\n" \
-				" mov.a %a13, 3		\n" \
-				" mov.a %a14, 2		\n" );
-		/* Yield to force a context switch. */
-		taskYIELD();
-		/* Check the values of the registers. */
-		__asm(	" eq %d0, %d0, 7				\n" \
-				" jne %d0, 1, _task2_loop		\n" \
-				" eq %d1, %d1, 6				\n" \
-				" jne %d1, 1, _task2_loop		\n" \
-				" eq %d2, %d2, 5				\n" \
-				" jne %d2, 1, _task2_loop		\n" \
-				" eq %d3, %d3, 4				\n" \
-				" jne %d3, 1, _task2_loop		\n" \
-				" eq %d4, %d4, 3				\n" \
-				" jne %d4, 1, _task2_loop		\n" \
-				" eq %d5, %d5, 2				\n" \
-				" jne %d5, 1, _task2_loop		\n" \
-				" eq %d6, %d6, 1				\n" \
-				" jne %d6, 1, _task2_loop		\n" \
-				" eq %d7, %d7, 0				\n" \
-				" jne %d7, 1, _task2_loop		\n" \
-				" eq %d8, %d8, 15				\n" \
-				" jne %d8, 1, _task2_loop		\n" \
-				" eq %d9, %d9, 14				\n" \
-				" jne %d9, 1, _task2_loop		\n" \
-				" eq %d10, %d10, 13				\n" \
-				" jne %d10, 1, _task2_loop		\n" \
-				" eq %d11, %d11, 12				\n" \
-				" jne %d11, 1, _task2_loop		\n" \
-				" eq %d12, %d12, 11				\n" \
-				" jne %d12, 1, _task2_loop		\n" \
-				" eq %d13, %d13, 10				\n" \
-				" jne %d13, 1, _task2_loop		\n" \
-				" eq %d14, %d14, 9				\n" \
-				" jne %d14, 1, _task2_loop		\n" \
-				" eq %d15, %d15, 8				\n" \
-				" jne %d15, 1, _task2_loop		\n" \
-				" mov.a %a15, 14				\n" \
-				" jne.a %a15, %a2, _task2_loop	\n" \
-				" mov.a %a15, 13				\n" \
-				" jne.a %a15, %a3, _task2_loop	\n" \
-				" mov.a %a15, 12				\n" \
-				" jne.a %a15, %a4, _task2_loop	\n" \
-				" mov.a %a15, 7					\n" \
-				" jne.a %a15, %a5, _task2_loop	\n" \
-				" mov.a %a15, 6					\n" \
-				" jne.a %a15, %a6, _task2_loop	\n" \
-				" mov.a %a15, 5					\n" \
-				" jne.a %a15, %a7, _task2_loop	\n" \
-				" mov.a %a15, 4					\n" \
-				" jne.a %a15, %a12, _task2_loop	\n" \
-				" mov.a %a15, 3					\n" \
-				" jne.a %a15, %a13, _task2_loop	\n" \
-				" mov.a %a15, 2					\n" \
-				" jne.a %a15, %a14, _task2_loop	\n" \
-				" j _task2_skip	\n"	\
-				"_task2_loop:	\n"	\
-				" j _task2_loop	\n"	\
-				"_task2_skip:	\n"	);
+	/* Change all of the Context sensitive registers (except SP and RA). */
+	__asm volatile(	" mov %d0, 7		\n" \
+					" mov %d1, 1		\n" \
+					" mov %d2, 5		\n" \
+					" mov %d3, 4		\n" \
+					" mov %d4, 3		\n" \
+					" mov %d5, 2		\n" \
+					" mov %d6, 1		\n" \
+					" mov %d7, 0		\n" \
+					" mov %d8, 15		\n" \
+					" mov %d9, 14		\n" \
+					" mov %d10, 13		\n" \
+					" mov %d11, 12		\n" \
+					" mov %d12, 11		\n" \
+					" mov %d13, 10		\n" \
+					" mov %d14, 9		\n" \
+					" mov %d15, 8		\n" \
+					" mov.a %a2, 14		\n" \
+					" mov.a %a3, 13		\n" \
+					" mov.a %a4, 12		\n" \
+					" mov.a %a5, 7		\n" \
+					" mov.a %a6, 6		\n" \
+					" mov.a %a7, 5		\n" \
+					" mov.a %a12, 4		\n" \
+					" mov.a %a13, 3		\n" \
+					" mov.a %a14, 2		\n" );
+	/* Yield to force a context switch. */
+	taskYIELD();
 
-		/* Load the parameter address from the stack and modify the value. */
-		__asm volatile(								\
-				" ld.w %d15, [%sp]4				\n"	\
-				" add %d15, %d15, 1				\n"	\
-				" st.w [%sp]4, %d15				\n"	\
-				" ld.a %a4, [%sp]				\n"	\
-				" st.w [%a4], %d15				\n"	);
-	}
+	/* Check the values of the registers. */
+	__asm volatile(	" _task2_loop:							\n" \
+					" eq %d1, %d0, 7						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d1, 1						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d2, 5						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d3, 4						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d4, 3						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d5, 2						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d6, 1						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d7, 0						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d8, 15						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d9, 14						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d10, 13						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d11, 12						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d12, 11						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d13, 10						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d14, 9						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" eq %d1, %d15, 8						\n" \
+					" jne %d1, 1, _task2_error_loop			\n" \
+					" mov.a %a15, 14						\n" \
+					" jne.a %a15, %a2, _task2_error_loop	\n" \
+					" mov.a %a15, 13						\n" \
+					" jne.a %a15, %a3, _task2_error_loop	\n" \
+					" mov.a %a15, 12						\n" \
+					" jne.a %a15, %a4, _task2_error_loop	\n" \
+					" mov.a %a15, 7							\n" \
+					" jne.a %a15, %a5, _task2_error_loop	\n" \
+					" mov.a %a15, 6							\n" \
+					" jne.a %a15, %a6, _task2_error_loop	\n" \
+					" mov.a %a15, 5							\n" \
+					" jne.a %a15, %a7, _task2_error_loop	\n" \
+					" mov.a %a15, 4							\n" \
+					" jne.a %a15, %a12, _task2_error_loop 	\n" \
+					" mov.a %a15, 3							\n" \
+					" jne.a %a15, %a13, _task2_error_loop	\n" \
+					" mov.a %a15, 2							\n" \
+					" jne.a %a15, %a14, _task2_error_loop	\n" \
+					" j _task2_skip_error_loop				\n"	\
+					"_task2_error_loop:						\n"	/* Hitting this error loop will stop the counter incrementing, allowing the check task to recognise an error. */ \
+					" j _task2_error_loop					\n"	\
+					"_task2_skip_error_loop:				\n"	);
+
+	/* Load the parameter address from the stack and modify the value. */
+	__asm volatile(	" ld.w %d1, [%sp]4						\n"	\
+					" add %d1, %d1, 1						\n"	\
+					" st.w [%sp]4, %d1						\n"	\
+					" ld.a %a15, [%sp]						\n"	\
+					" st.w [%a15], %d1						\n"	\
+					" j _task2_loop                			\n"  );
 
 	/* The parameter is used but in the assembly. */
 	(void)pvParameters;
 }
 /*-----------------------------------------------------------*/
-#endif /* mainREG_TEST_TASKS */
+

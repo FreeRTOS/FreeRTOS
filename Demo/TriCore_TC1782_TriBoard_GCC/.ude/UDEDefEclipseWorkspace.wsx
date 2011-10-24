@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <stg format="2.0">
-	<OriginalWsp type="string">UDEDefEclipseWorkspace.wsx</OriginalWsp><BackupWspFlag type="flag">0</BackupWspFlag><UseWspCnt type="int">0</UseWspCnt><WspCloseCnt type="int">5</WspCloseCnt><ProdInfo type="bin" size="52">vQTv/gAAAQAQAAIAoAgKAAAAAwAAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo><ProdInfoString type="string">3.0</ProdInfoString><CreationDate type="string">09.10.2011 23:28:09:000</CreationDate><MainFrame type="key"><EclipsePlacementRoot type="key"><UDEPerspectiveSettings type="innerxml"><UDEPersistance editorAreaTrimState="0" editorAreaVisible="1" fixed="0" version="0.016">
+	<OriginalWsp type="string">UDEDefEclipseWorkspace.wsx</OriginalWsp><BackupWspFlag type="flag">0</BackupWspFlag><UseWspCnt type="int">0</UseWspCnt><WspCloseCnt type="int">11</WspCloseCnt><ProdInfo type="bin" size="52">vQTv/gAAAQAQAAIAoAgKAAAAAwAAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo><ProdInfoString type="string">3.0</ProdInfoString><CreationDate type="string">09.10.2011 23:28:09:000</CreationDate><MainFrame type="key"><EclipsePlacementRoot type="key"><UDEPerspectiveSettings type="innerxml"><UDEPersistance editorAreaTrimState="0" editorAreaVisible="1" fixed="0" version="0.016">
 					<descriptor class="com.pls.ude.eclipse.Perspective" id="com.pls.ude.eclipse.perspective" label="UDE Perspective"/>
 					<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
 					<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
@@ -43,14 +43,17 @@
 					<hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
 					<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0"/>
-					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0"/>
-					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0"/>
-					<view id="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0"/>
+					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0"/>
 					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.0"/>
 					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1"/>
 					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2"/>
 					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3"/>
 					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4"/>
+					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.5"/>
+					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0"/>
+					<view id="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0"/>
+					<view id="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0"/>
+					<view id="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0"/>
 					<fastViewBars/>
 					<layout>
 						<mainWindow>
@@ -65,9 +68,9 @@
 								</folder>
 							</info>
 							<info folder="true" part="ude.views.folder.left" ratio="0.19915701" ratioLeft="189" ratioRight="760" relationship="4" relative="ude.views.folder.top">
-								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0" appearance="2" expanded="2">
+								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0" appearance="2" expanded="2">
 									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0" label="Symbol Explorer View"/>
-									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0" label="Locals View at Location 0x80006082 - current Instruction Pointer"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0" label="Locals View"/>
 									<page content="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0" label="Call Stack Window"/>
 									<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 										<part id="0"/>
@@ -76,39 +79,52 @@
 									</presentation>
 								</folder>
 							</info>
-							<info folder="true" part="ude.views.folder.bottom" ratio="0.7492097" ratioLeft="711" ratioRight="238" relationship="4" relative="ude.views.folder.left">
-								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0" appearance="2" expanded="2">
+							<info folder="true" part="ude.views.folder.bottom" ratio="0.75503355" ratioLeft="675" ratioRight="219" relationship="4" relative="ude.views.folder.left">
+								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0" appearance="2" expanded="2">
 									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0" label="Command View"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0" label="Watch View1"/>
+									<page content="org.eclipse.debug.ui.MemoryView" label="LabelNotFound"/>
+									<page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
+									<page content="org.eclipse.debug.ui.VariableView" label="LabelNotFound"/>
+									<page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
 									<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
 									<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 										<part id="0"/>
+										<part id="1"/>
 									</presentation>
 								</folder>
 							</info>
-							<info part="org.eclipse.ui.editorss" ratio="0.124026366" ratioLeft="207" ratioRight="1462" relationship="2" relative="ude.views.folder.left"/>
+							<info part="org.eclipse.ui.editorss" ratio="0.22898903" ratioLeft="376" ratioRight="1266" relationship="2" relative="ude.views.folder.left"/>
 							<info folder="true" part="ude.views.folder.center" ratio="0.20630568" ratioLeft="301" ratioRight="1158" relationship="2" relative="org.eclipse.ui.editorss">
-								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" appearance="2" expanded="2">
+								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.0" appearance="2" expanded="2">
 									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.0" label="C:\...\RTOSDemo\main.c"/>
-									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" label="code &lt;0x80006000-0x800063FF&gt;"/>
-									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" label="C:\...\FreeRTOS_Source\tasks.c"/>
-									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3" label="C:\...\GCC\TriCore_1782\port.c"/>
-									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4" label="C:\...\Common_Demo_Source\flash.c"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" label="C:\...\Common_Demo_Source\death.c"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" label="C:\...\TriCore_1782\porttrap.c"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4" label="C:\...\GCC\TriCore_1782\port.c"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3" label="C:\...\FreeRTOS_Source\tasks.c"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.5" label="C:\...\FreeRTOS_Source\queue.c"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.6" label="LabelNotFound"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEMemWin.Controller0.Core.0" label="LabelNotFound"/>
+									<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.1" label="LabelNotFound"/>
 									<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 										<part id="0"/>
 										<part id="1"/>
 										<part id="2"/>
 										<part id="3"/>
 										<part id="4"/>
+										<part id="5"/>
 									</presentation>
 								</folder>
 							</info>
 							<info folder="true" part="ude.views.folder.right" ratio="0.75" ratioLeft="717" ratioRight="239" relationship="2" relative="ude.views.folder.center">
 								<folder appearance="2" expanded="2"/>
 							</info>
-							<info folder="true" part="org.eclipse.ui.internal.ViewStack@cc1bf0" ratio="0.5" ratioLeft="345" ratioRight="345" relationship="4" relative="ude.views.folder.left">
-								<folder appearance="2" expanded="2">
-									<page content="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" label="LabelNotFound"/>
-									<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+							<info folder="true" part="org.eclipse.ui.internal.ViewStack@cc1bf0" ratio="0.28335834" ratioLeft="189" ratioRight="478" relationship="4" relative="ude.views.folder.left">
+								<folder activePageID="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" appearance="2" expanded="2">
+									<page content="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" label="CPU Window"/>
+									<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+										<part id="0"/>
+									</presentation>
 								</folder>
 							</info>
 						</mainWindow>
@@ -120,70 +136,134 @@
 					</perspectiveBar>
 					<coolbarLayout locked="0">
 						<coolItem id="group.file" itemType="typeGroupMarker"/>
-						<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="335" y="22"/>
+						<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="154" y="22"/>
 						<coolItem id="additions" itemType="typeGroupMarker"/>
 						<coolItem id="com.pls.ude.eclipse.toolbar.file" itemType="typeToolBarContribution" x="151" y="22"/>
-						<coolItem id="com.pls.ude.eclipse.toolbar.views" itemType="typeToolBarContribution" x="452" y="22"/>
+						<coolItem id="com.pls.ude.eclipse.toolbar.views" itemType="typeToolBarContribution" x="450" y="22"/>
 						<coolItem id="com.pls.ude.eclipse.toolbar.config" itemType="typeToolBarContribution" x="105" y="22"/>
-						<coolItem id="com.pls.ude.eclipse.toolbar.macro" itemType="typeToolBarContribution" x="255" y="22"/>
+						<coolItem id="com.pls.ude.eclipse.toolbar.macro" itemType="typeToolBarContribution" x="327" y="22"/>
 						<coolItem id="com.rt.hightec.buildsystem.tricore.contact.actionSet" itemType="typeToolBarContribution" x="37" y="22"/>
 						<coolItem id="com.rt.hightec.dave.project.start" itemType="typeToolBarContribution" x="37" y="22"/>
 						<coolItem id="com.rt.hightec.framework.buildsystem.actionset.build" itemType="typeToolBarContribution" x="50" y="22"/>
 						<coolItem id="com.rt.hightec.framework.buildsystem.toolbar" itemType="typeToolBarContribution" x="37" y="22"/>
 						<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="50" y="22"/>
 						<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="98" y="22"/>
-						<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="109" y="22"/>
+						<coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="61" y="22"/>
 						<coolItem id="group.nav" itemType="typeGroupMarker"/>
 						<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="185" y="22"/>
 						<coolItem id="group.editor" itemType="typeGroupMarker"/>
+						<coolItem id="com.rt.hightec.tricore.editor.linker.editor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 						<coolItem id="org.eclipse.cdt.ui.editor.CEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 						<coolItem id="group.help" itemType="typeGroupMarker"/>
 						<coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 						<coolItem id="com.pls.ude.eclipse.toolbar.debug" itemType="typeToolBarContribution" x="536" y="22"/>
 						<coolItem id="com.pls.ude.eclipse.toolbar.tools" itemType="typeToolBarContribution" x="136" y="22"/>
 					</coolbarLayout>
-					<page focus="true" label="Workspace - UDE Perspective">
+					<page aggregateWorkingSetId="Aggregate for window 1319185709593" focus="true" label="Workspace - UDE Perspective">
 						<editors>
 							<editorArea activeWorkbook="DefaultEditorWorkbook">
 								<info part="DefaultEditorWorkbook">
 									<folder appearance="1" expanded="0">
 										<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 											<part id="0"/>
+											<part id="1"/>
+											<part id="2"/>
+											<part id="3"/>
+											<part id="4"/>
+											<part id="5"/>
+											<part id="6"/>
+											<part id="7"/>
+											<part id="8"/>
 										</presentation>
 									</folder>
 								</info>
 							</editorArea>
-							<editor focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="flash.c" partName="flash.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/Common_Demo_Source/flash.c" title="flash.c" tooltip="FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/flash.c" workbook="DefaultEditorWorkbook">
-								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/flash.c"/>
-								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3729" selectionTopPixel="1122"/>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" partName="port.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c" title="port.c" tooltip="FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="13709" selectionTopPixel="5695"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="portmacro.h" partName="portmacro.h" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/portmacro.h" title="portmacro.h" tooltip="FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/portmacro.h" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/portmacro.h"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="4" selectionOffset="5096" selectionTopPixel="2567"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="integer.c" partName="integer.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/Common_Demo_Source/integer.c" title="integer.c" tooltip="FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/integer.c" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/integer.c"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5512" selectionTopPixel="1887"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="port.c" partName="port.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c" title="port.c" tooltip="FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="13879" selectionTopPixel="5555"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="FreeRTOSConfig.h" partName="FreeRTOSConfig.h" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/FreeRTOSConfig.h" title="FreeRTOSConfig.h" tooltip="FreeRTOS_Demo/RTOSDemo/FreeRTOSConfig.h" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOSConfig.h"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="16" selectionOffset="5193" selectionTopPixel="1363"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="death.c" partName="death.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/Common_Demo_Source/death.c" title="death.c" tooltip="FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/death.c" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/death.c"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="7859" selectionTopPixel="3179"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="porttrap.c" partName="porttrap.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/porttrap.c" title="porttrap.c" tooltip="FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/porttrap.c" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/porttrap.c"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="9590" selectionTopPixel="3988"/>
+							</editor>
+							<editor id="org.eclipse.cdt.ui.editor.CEditor" name="tasks.c" partName="tasks.c" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/RTOSDemo/FreeRTOS_Source/tasks.c" title="tasks.c" tooltip="FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/tasks.c" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/tasks.c"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="77233" selectionTopPixel="39695"/>
+							</editor>
+							<editor focus="true" id="com.rt.hightec.tricore.editor.linker.editor" name="iRAM.ld" partName="iRAM.ld" path="C:/E/Dev/FreeRTOS/WorkingCopy/Demo/TriCore_TC1782_TriBoard_GCC/ld/iRAM.ld" title="iRAM.ld" tooltip="FreeRTOS_Demo/ld/iRAM.ld" workbook="DefaultEditorWorkbook">
+								<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/FreeRTOS_Demo/ld/iRAM.ld"/>
+								<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1256" selectionTopPixel="561"/>
 							</editor>
 						</editors>
 						<views>
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0" partName="Watch View1">
+								<viewState/>
+							</view>
 							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0" partName="Symbol Explorer View">
 								<viewState/>
 							</view>
-							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0" partName="Locals View at Location 0x80006082 - current Instruction Pointer">
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0" partName="Locals View">
 								<viewState/>
 							</view>
+							<view id="com.pls.ude.eclipse.welcomeview" partName="UDE Welcome Page">
+								<viewState>
+									<ude_welcomeview welcome_last_path="file://C:/E/Dev/workspaces/Tricore/.metadata/.plugins/com.pls.ude.eclipse/universal debug engine.mht"/>
+								</viewState>
+							</view>
 							<view id="org.eclipse.ui.views.TaskList" partName="Tasks"/>
-							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3" partName="C:\...\GCC\TriCore_1782\port.c">
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.5" partName="C:\...\FreeRTOS_Source\queue.c">
+								<viewState/>
+							</view>
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3" partName="C:\...\FreeRTOS_Source\tasks.c">
 								<viewState/>
 							</view>
 							<view id="com.rt.hightec.framework.buildsystem.project.explorer" partName="HighTec Project Explorer">
 								<viewState CommonNavigator.LINKING_ENABLED="0" CommonNavigator.LINKING_ENABLED.delayed="0" org.eclipse.cdt.ui.cview.groupincludes="false" org.eclipse.cdt.ui.cview.groupmacros="false" org.eclipse.cdt.ui.editor.CUChildren="true" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
 							</view>
-							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4" partName="C:\...\Common_Demo_Source\flash.c">
-								<viewState/>
-							</view>
 							<view id="org.eclipse.ui.views.PropertySheet" partName="Properties"/>
-							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" partName="code &lt;0x80006000-0x800063FF&gt;">
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4" partName="C:\...\GCC\TriCore_1782\port.c">
 								<viewState/>
 							</view>
-							<view id="org.eclipse.ui.views.ProblemView" partName="Problems"/>
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" partName="C:\...\Common_Demo_Source\death.c">
+								<viewState/>
+							</view>
 							<view id="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0" partName="Call Stack Window">
 								<viewState/>
 							</view>
-							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" partName="C:\...\FreeRTOS_Source\tasks.c">
+							<view id="org.eclipse.ui.views.ProblemView" partName="Problems">
+								<viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+									<expanded>
+										<category IMemento.internal.id="Warnings"/>
+									</expanded>
+									<columnWidths org.eclipse.ui.ide.locationField="0" org.eclipse.ui.ide.markerType="0" org.eclipse.ui.ide.pathField="0" org.eclipse.ui.ide.resourceField="0" org.eclipse.ui.ide.severityAndDescriptionField="0"/>
+									<visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
+									<visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
+									<visible IMemento.internal.id="org.eclipse.ui.ide.pathField"/>
+									<visible IMemento.internal.id="org.eclipse.ui.ide.locationField"/>
+									<visible IMemento.internal.id="org.eclipse.ui.ide.markerType"/>
+								</viewState>
+							</view>
+							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" partName="C:\...\TriCore_1782\porttrap.c">
 								<viewState/>
 							</view>
 							<view id="org.eclipse.ui.console.ConsoleView" partName="Console">
@@ -195,8 +275,11 @@
 							<view id="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0" partName="Command View">
 								<viewState/>
 							</view>
+							<view id="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" partName="CPU Window">
+								<viewState/>
+							</view>
 						</views>
-						<perspectives activePerspective="com.pls.ude.eclipse.perspective">
+						<perspectives activePart="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" activePerspective="com.pls.ude.eclipse.perspective">
 							<perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 								<descriptor class="com.rt.hightec.framework.buildsystem.ui.perspective.HighTecPerspectiveFactory" id="com.rt.hightec.framework.buildsystem.perspective.hightec" label="HighTec"/>
 								<alwaysOnActionSet id="org.eclipse.mylyn.context.ui.actionSet"/>
@@ -241,6 +324,7 @@
 								<view id="org.eclipse.ui.views.ProblemView"/>
 								<view id="org.eclipse.ui.views.TaskList"/>
 								<view id="org.eclipse.ui.views.PropertySheet"/>
+								<view id="com.pls.ude.eclipse.welcomeview"/>
 								<fastViewBars/>
 								<layout>
 									<mainWindow>
@@ -260,18 +344,21 @@
 												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 											</folder>
 										</info>
-										<info part="org.eclipse.ui.editorss" ratio="0.26782504" ratioLeft="447" ratioRight="1222" relationship="2" relative="topLeft"/>
-										<info folder="true" part="bottom" ratio="0.67358077" ratioLeft="617" ratioRight="299" relationship="4" relative="org.eclipse.ui.editorss">
+										<info part="org.eclipse.ui.editorss" ratio="0.15398443" ratioLeft="257" ratioRight="1412" relationship="2" relative="topLeft"/>
+										<info folder="true" part="bottom" ratio="0.7882096" ratioLeft="722" ratioRight="194" relationship="4" relative="org.eclipse.ui.editorss">
 											<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 												<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 												<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 												<page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
 												<page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
+												<page content="com.pls.ude.eclipse.welcomeview" label="UDE Welcome Page"/>
+												<page content="org.eclipse.debug.ui.VariableView" label="LabelNotFound"/>
 												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 													<part id="0"/>
 													<part id="1"/>
 													<part id="2"/>
 													<part id="3"/>
+													<part id="4"/>
 												</presentation>
 											</folder>
 										</info>
@@ -321,14 +408,17 @@
 								<hide_toolbar_item_id id="org.eclipse.jdt.ui.actions.OpenProjectWizard"/>
 								<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
 								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0"/>
-								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0"/>
-								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0"/>
-								<view id="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0"/>
+								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0"/>
 								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.0"/>
 								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1"/>
 								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2"/>
 								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3"/>
 								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4"/>
+								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.5"/>
+								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0"/>
+								<view id="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0"/>
+								<view id="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0"/>
+								<view id="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0"/>
 								<fastViewBars/>
 								<layout>
 									<mainWindow>
@@ -343,9 +433,9 @@
 											</folder>
 										</info>
 										<info folder="true" part="ude.views.folder.left" ratio="0.19915701" ratioLeft="189" ratioRight="760" relationship="4" relative="ude.views.folder.top">
-											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0" appearance="2" expanded="2">
+											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0" appearance="2" expanded="2">
 												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDESymbolExplWin.Controller0.Core.0" label="Symbol Explorer View"/>
-												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0" label="Locals View at Location 0x80006082 - current Instruction Pointer"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDELocalsWin.Controller0.Core.0" label="Locals View"/>
 												<page content="com.pls.ude.eclipse.udeinterface.view:UDEStackWin.Controller0.Core.0" label="Call Stack Window"/>
 												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 													<part id="0"/>
@@ -354,39 +444,52 @@
 												</presentation>
 											</folder>
 										</info>
-										<info folder="true" part="ude.views.folder.bottom" ratio="0.7492097" ratioLeft="711" ratioRight="238" relationship="4" relative="ude.views.folder.left">
-											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0" appearance="2" expanded="2">
+										<info folder="true" part="ude.views.folder.bottom" ratio="0.75503355" ratioLeft="675" ratioRight="219" relationship="4" relative="ude.views.folder.left">
+											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0" appearance="2" expanded="2">
 												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDECmdWin.0" label="Command View"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.0" label="Watch View1"/>
+												<page content="org.eclipse.debug.ui.MemoryView" label="LabelNotFound"/>
+												<page content="org.eclipse.debug.ui.ExpressionView" label="LabelNotFound"/>
+												<page content="org.eclipse.debug.ui.VariableView" label="LabelNotFound"/>
+												<page content="org.eclipse.debug.ui.BreakpointView" label="LabelNotFound"/>
 												<page content="org.eclipse.ui.console.ConsoleView" label="LabelNotFound"/>
 												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 													<part id="0"/>
+													<part id="1"/>
 												</presentation>
 											</folder>
 										</info>
-										<info part="org.eclipse.ui.editorss" ratio="0.124026366" ratioLeft="207" ratioRight="1462" relationship="2" relative="ude.views.folder.left"/>
+										<info part="org.eclipse.ui.editorss" ratio="0.22898903" ratioLeft="376" ratioRight="1266" relationship="2" relative="ude.views.folder.left"/>
 										<info folder="true" part="ude.views.folder.center" ratio="0.20630568" ratioLeft="301" ratioRight="1158" relationship="2" relative="org.eclipse.ui.editorss">
-											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" appearance="2" expanded="2">
+											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.0" appearance="2" expanded="2">
 												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.0" label="C:\...\RTOSDemo\main.c"/>
-												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" label="code &lt;0x80006000-0x800063FF&gt;"/>
-												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" label="C:\...\FreeRTOS_Source\tasks.c"/>
-												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3" label="C:\...\GCC\TriCore_1782\port.c"/>
-												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4" label="C:\...\Common_Demo_Source\flash.c"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.1" label="C:\...\Common_Demo_Source\death.c"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.2" label="C:\...\TriCore_1782\porttrap.c"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.4" label="C:\...\GCC\TriCore_1782\port.c"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.3" label="C:\...\FreeRTOS_Source\tasks.c"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.5" label="C:\...\FreeRTOS_Source\queue.c"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEProgWin.Controller0.Core.6" label="LabelNotFound"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEMemWin.Controller0.Core.0" label="LabelNotFound"/>
+												<page content="com.pls.ude.eclipse.udeinterface.view:StdUDEWatchWin.Controller0.Core.1" label="LabelNotFound"/>
 												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 													<part id="0"/>
 													<part id="1"/>
 													<part id="2"/>
 													<part id="3"/>
 													<part id="4"/>
+													<part id="5"/>
 												</presentation>
 											</folder>
 										</info>
 										<info folder="true" part="ude.views.folder.right" ratio="0.75" ratioLeft="717" ratioRight="239" relationship="2" relative="ude.views.folder.center">
 											<folder appearance="2" expanded="2"/>
 										</info>
-										<info folder="true" part="org.eclipse.ui.internal.ViewStack@cc1bf0" ratio="0.5" ratioLeft="345" ratioRight="345" relationship="4" relative="ude.views.folder.left">
-											<folder appearance="2" expanded="2">
-												<page content="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" label="LabelNotFound"/>
-												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+										<info folder="true" part="org.eclipse.ui.internal.ViewStack@cc1bf0" ratio="0.28335834" ratioLeft="189" ratioRight="478" relationship="4" relative="ude.views.folder.left">
+											<folder activePageID="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" appearance="2" expanded="2">
+												<page content="com.pls.ude.eclipse.udeinterface.view:TriCoreCpuWin.Controller0.Core.0" label="CPU Window"/>
+												<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+													<part id="0"/>
+												</presentation>
 											</folder>
 										</info>
 									</mainWindow>
@@ -396,160 +499,163 @@
 						<workingSets/>
 						<navigationHistory>
 							<editors>
-								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/main.c"/>
-								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/tasks.c"/>
 								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/port.c"/>
-								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/flash.c"/>
+								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/tasks.c"/>
+								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/Common_Demo_Source/death.c"/>
+								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.rt.hightec.tricore.editor.linker.editor" path="/FreeRTOS_Demo/ld/iRAM.ld"/>
+								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/include/FreeRTOS.h"/>
+								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782/porttrap.c"/>
+								<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/FreeRTOS_Demo/RTOSDemo/FreeRTOSConfig.h"/>
 							</editors>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6176" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="14753" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="9556" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15190" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="9613" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15236" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="9637" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15416" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6247" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15429" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6293" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15534" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6341" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15644" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6394" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15657" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6443" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15734" y="0"/>
 							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6475" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6527" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6554" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6588" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6635" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6666" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6758" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="6864" y="0"/>
-							</item>
-							<item historyLabel="main.c" index="0">
-								<position info="not_deleted" x="7054" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15751" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="38446" y="0"/>
+								<position info="not_deleted" x="25731" y="0"/>
+							</item>
+							<item historyLabel="death.c" index="2">
+								<position info="not_deleted" x="7919" y="0"/>
+							</item>
+							<item historyLabel="death.c" index="2">
+								<position info="not_deleted" x="7859" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="38949" y="0"/>
+								<position info="not_deleted" x="24436" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="39243" y="0"/>
+								<position info="not_deleted" x="24459" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="39697" y="0"/>
+								<position info="not_deleted" x="24569" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="39728" y="0"/>
+								<position info="not_deleted" x="24720" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="39759" y="0"/>
+								<position info="not_deleted" x="25025" y="0"/>
 							</item>
 							<item historyLabel="tasks.c" index="1">
-								<position info="not_deleted" x="40122" y="0"/>
+								<position info="not_deleted" x="25124" y="0"/>
 							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9120" y="0"/>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25238" y="0"/>
 							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9123" y="0"/>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25518" y="0"/>
 							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9161" y="0"/>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25673" y="0"/>
 							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9205" y="0"/>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25695" y="0"/>
 							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9285" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9393" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9458" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9628" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9640" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9788" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9861" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9887" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="9921" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10015" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10093" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10145" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10180" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10192" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10202" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10214" y="0"/>
-							</item>
-							<item historyLabel="port.c" index="2">
-								<position info="not_deleted" x="10224" y="0"/>
-							</item>
-							<item historyLabel="flash.c" index="3">
+							<item historyLabel="iRAM.ld" index="3">
 								<position info="not_deleted" x="0" y="0"/>
 							</item>
-							<item historyLabel="flash.c" index="3">
-								<position info="not_deleted" x="4320" y="17"/>
+							<item historyLabel="iRAM.ld" index="3">
+								<position info="not_deleted" x="1227" y="10"/>
 							</item>
-							<item historyLabel="flash.c" index="3">
-								<position info="not_deleted" x="3695" y="17"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="15751" y="0"/>
 							</item>
-							<item active="true" historyLabel="flash.c" index="3">
-								<position info="not_deleted" x="3729" y="0"/>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="13709" y="0"/>
+							</item>
+							<item historyLabel="port.c" index="0">
+								<position info="not_deleted" x="13709" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25695" y="0"/>
+							</item>
+							<item historyLabel="FreeRTOS.h" index="4">
+								<position info="not_deleted" x="12601" y="16"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25698" y="16"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25731" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="80901" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="80942" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="80993" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="81038" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="81092" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="81137" y="0"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25827" y="0"/>
+							</item>
+							<item historyLabel="porttrap.c" index="5">
+								<position info="not_deleted" x="9671" y="0"/>
+							</item>
+							<item historyLabel="porttrap.c" index="5">
+								<position info="not_deleted" x="9590" y="0"/>
+							</item>
+							<item historyLabel="FreeRTOSConfig.h" index="6">
+								<position info="not_deleted" x="5220" y="56"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25924" y="23"/>
+							</item>
+							<item historyLabel="FreeRTOSConfig.h" index="6">
+								<position info="not_deleted" x="5193" y="16"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="25924" y="23"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="63967" y="31"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="69344" y="31"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="70084" y="12"/>
+							</item>
+							<item historyLabel="tasks.c" index="1">
+								<position info="not_deleted" x="77233" y="0"/>
+							</item>
+							<item active="true" historyLabel="iRAM.ld" index="3">
+								<position info="not_deleted" x="1256" y="0"/>
 							</item>
 						</navigationHistory>
 						<input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -567,12 +673,11 @@
 							<trimItem IMemento.internal.id="org.eclise.ui.internal.FastViewBar"/>
 							<trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
 							<trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
-							<trimItem IMemento.internal.id="org.eclipse.ui.internal.intro.impl.presentations.IntroLaunchBar"/>
 						</trimArea>
 					</trimLayout>
 				</UDEPersistance></UDEWorkbenchSettings></EclipsePlacementRoot><UDEDebugSelWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></UDEDebugSelWin><StdUDECmdWin type="key"><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:28:11:619</FrameCreated><ViewSrv type="key"><History0 type="string"></History0><History1 type="string"></History1><History2 type="string"></History2><History3 type="string"></History3><History4 type="string"></History4><History5 type="string"></History5><History6 type="string"></History6><History7 type="string"></History7><History8 type="string"></History8><History9 type="string"></History9><History10 type="string"></History10><History11 type="string"></History11><History12 type="string"></History12><History13 type="string"></History13><History14 type="string"></History14><History15 type="string"></History15><History16 type="string"></History16><History17 type="string"></History17><History18 type="string"></History18><History19 type="string"></History19><History20 type="string"></History20><History21 type="string"></History21><History22 type="string"></History22><History23 type="string"></History23><History24 type="string"></History24><History25 type="string"></History25><History26 type="string"></History26><History27 type="string"></History27><History28 type="string"></History28><History29 type="string"></History29><History30 type="string"></History30><History31 type="string"></History31><History32 type="string"></History32><History33 type="string"></History33><History34 type="string"></History34><History35 type="string"></History35><History36 type="string"></History36><History37 type="string"></History37><History38 type="string"></History38><History39 type="string"></History39><History40 type="string"></History40><History41 type="string"></History41><History42 type="string"></History42><History43 type="string"></History43><History44 type="string"></History44><History45 type="string"></History45><History46 type="string"></History46><History47 type="string"></History47><History48 type="string"></History48><History49 type="string"></History49><History50 type="string"></History50><History51 type="string"></History51><History52 type="string"></History52><History53 type="string"></History53><History54 type="string"></History54><History55 type="string"></History55><History56 type="string"></History56><History57 type="string"></History57><History58 type="string"></History58><History59 type="string"></History59><History60 type="string"></History60><History61 type="string"></History61><History62 type="string"></History62><History63 type="string"></History63><History64 type="string"></History64><History65 type="string"></History65><History66 type="string"></History66><History67 type="string"></History67><History68 type="string"></History68><History69 type="string"></History69><History70 type="string"></History70><History71 type="string"></History71><History72 type="string"></History72><History73 type="string"></History73><History74 type="string"></History74><History75 type="string"></History75><History76 type="string"></History76><History77 type="string"></History77><History78 type="string"></History78><History79 type="string"></History79><History80 type="string"></History80><History81 type="string"></History81><History82 type="string"></History82><History83 type="string"></History83><History84 type="string"></History84><History85 type="string"></History85><History86 type="string"></History86><History87 type="string"></History87><History88 type="string"></History88><History89 type="string"></History89><History90 type="string"></History90><History91 type="string"></History91><History92 type="string"></History92><History93 type="string"></History93><History94 type="string"></History94><History95 type="string"></History95><History96 type="string"></History96><History97 type="string"></History97><History98 type="string"></History98><History99 type="string"></History99><DefParaFormat type="bin" size="156">nAAAAD8AAYAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat></ViewSrv><EclipseFrameMode type="int">151552</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDECmdWin><StdUDEWspHTMLView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEWspHTMLView><SelectedPrinter type="string">Samsung SCX-3200 Series</SelectedPrinter></MainFrame><INI_SECTION type="key"><Macro type="key"><MacroLib type="string">..\..\..\..\Program Files (x86)\pls\UDE 3.0\StdLibrary.mso</MacroLib></Macro><Loader type="key"><LOADER_REGKEY_WSP type="string">{7c641d47-534f-4ed9-9070-088b60a3befa}</LOADER_REGKEY_WSP></Loader></INI_SECTION><AddOns type="key"><UDE.Script type="key"><MacroGuiEntries type="key"><LastScriptFilePath type="string">..\..\..\..\Users\Public\Documents\pls\UDE 3.0</LastScriptFilePath><Macro_11_10_11_22_13_44_0 type="key"><ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat></ViewSrv><EclipseFrameMode type="int">151552</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDECmdWin><StdUDEWspHTMLView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEWspHTMLView><SelectedPrinter type="string">Samsung SCX-3200 Series</SelectedPrinter></MainFrame><INI_SECTION type="key"><Macro type="key"><MacroLib type="string">..\..\..\..\Program Files (x86)\pls\UDE 3.0\StdLibrary.mso</MacroLib></Macro><Loader type="key"><LOADER_REGKEY_WSP type="string">{7c641d47-534f-4ed9-9070-088b60a3befa}</LOADER_REGKEY_WSP></Loader></INI_SECTION><AddOns type="key"><UDE.Script type="key"><MacroGuiEntries type="key"><LastScriptFilePath type="string">..\..\..\..\Users\Public\Documents\pls\UDE 3.0</LastScriptFilePath><Macro_21_10_11_12_37_40_0 type="key"><ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
 and fill target memory ranges</ScriptDescription><ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath><ScriptSource type="string">'	
 '	$Header: /Ude/AddOns/Macro/MacroLibrary/StdMacros.dsm 3     30.04.04 9:34 Weisses $
 '_______________________________________________________
@@ -842,4 +947,4 @@ Sub FillDWord(ParameterObj)
 		debugger.Write Address,udearrayobj
 	Next
 
-End Sub</ScriptSource><ScriptArchitecture type="int">63</ScriptArchitecture><ScriptEngine type="string">VBScript</ScriptEngine><MacroFileTime type="string">24.11.2006 14:43:20:000</MacroFileTime><ScriptFromStg type="flag">1</ScriptFromStg><LocalComputerName type="string">WS_CORE_DUO</LocalComputerName><ExternalScriptPath type="string"></ExternalScriptPath><NextNodeName type="string">Macro_17_10_11_12_00_09_0</NextNodeName><UnAss type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute UnAss ..</MenuString><ToolTipString type="string">Macro UnAss</ToolTipString><MessageString type="string">Execute macro UnAss</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">2</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></UnAss><SaveHEX type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute SaveHEX ..</MenuString><ToolTipString type="string">Macro SaveHEX</ToolTipString><MessageString type="string">Execute macro SaveHEX</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">2</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></SaveHEX><FillByte type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute FillByte ..</MenuString><ToolTipString type="string">Macro FillByte</ToolTipString><MessageString type="string">Execute macro FillByte</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">1</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></FillByte><FillWord type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute FillWord ..</MenuString><ToolTipString type="string">Macro FillWord</ToolTipString><MessageString type="string">Execute macro FillWord</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">1</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></FillWord><FillDWord type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute FillDWord ..</MenuString><ToolTipString type="string">Macro FillDWord</ToolTipString><MessageString type="string">Execute macro FillDWord</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">1</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></FillDWord><NoOfFunctions type="int">5</NoOfFunctions></Macro_11_10_11_22_13_44_0></MacroGuiEntries><LastSelectedMacro type="string"></LastSelectedMacro></UDE.Script></AddOns><Core type="key"><ViewSrv type="key"><TriCoreCpuWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS><OPEN_VIEW type="key"><FrameCreated type="string">11.10.2011 21:18:03:945</FrameCreated><ViewSrv type="key"><History0 type="string">0x00000000</History0><History1 type="string"></History1><History2 type="string"></History2><History3 type="string"></History3><History4 type="string"></History4><History5 type="string"></History5><History6 type="string"></History6><History7 type="string"></History7><History8 type="string"></History8><History9 type="string"></History9></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW type="int">0</SAVED_VIEW></TriCoreCpuWin><StdUDESymbolExplWin type="key"><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:28:11:737</FrameCreated><ViewSrv type="key"/><EclipseFrameMode type="int">139264</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDESymbolExplWin><StdUDEProgWin type="key"><OPEN_VIEW00 type="key"><FrameCreated type="string">09.10.2011 23:28:17:413</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\main.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW00><SAVED_VIEW_OBJS type="int">5</SAVED_VIEW_OBJS><SAVED_VIEW00 type="int">0</SAVED_VIEW00><OPEN_VIEW01 type="key"><FrameCreated type="string">17.10.2011 11:43:03:982</FrameCreated><ViewSrv type="key"/><SourceFile type="string">code &lt;0x80006000-0x800063FF&gt;</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW01><SAVED_VIEW01 type="int">1</SAVED_VIEW01><OPEN_VIEW02 type="key"><FrameCreated type="string">17.10.2011 11:45:47:602</FrameCreated><ViewSrv type="key"/><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex><SourceFile type="string">..\RTOSDemo\FreeRTOS_Source\tasks.c</SourceFile></OPEN_VIEW02><OPEN_VIEW03 type="key"><FrameCreated type="string">17.10.2011 11:45:58:240</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW03><SAVED_VIEW02 type="int">2</SAVED_VIEW02><SAVED_VIEW03 type="int">3</SAVED_VIEW03><OPEN_VIEW04 type="key"><FrameCreated type="string">17.10.2011 11:48:11:741</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\Common_Demo_Source\flash.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW04><SAVED_VIEW04 type="int">4</SAVED_VIEW04></StdUDEProgWin><StdUDESFRView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDESFRView><StdUDELocalsWin type="key"><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:54:28:219</FrameCreated><ViewSrv type="key"><NameWidth type="int">288</NameWidth><AddressWidth type="int">0</AddressWidth><ValueWidth type="int">192</ValueWidth><Value2Width type="int">0</Value2Width><MinMaxWidth type="int">0</MinMaxWidth></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDELocalsWin><StdUDEWatchWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEWatchWin><StdUDESimIOWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDESimIOWin><StdUDEHtmlDocWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEHtmlDocWin><StdUDEGraphWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEGraphWin><StdUDETimeSampleGraphWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDETimeSampleGraphWin><StdUDEIPTraceView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEIPTraceView><StdUDEMemWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEMemWin><UDEStackWin type="key"><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:57:15:537</FrameCreated><ViewSrv type="key"><_ExtentX type="bin" size="8">AAAAAA==</_ExtentX><_ExtentY type="bin" size="8">AAAAAA==</_ExtentY><_StockProps type="bin" size="8">AAAAAA==</_StockProps><Columns type="bin" size="8">AgAAAA==</Columns><ColName00 type="bin" size="8">UABDAAAA</ColName00><TypeName00 type="bin" size="8">UABDAAAA</TypeName00><Format00 type="bin" size="8">AAAAAA==</Format00><Size00 type="bin" size="8">YAAAAA==</Size00><ColName01 type="bin" size="24">RgB1AG4AYwB0AGkAbwBuAAAA</ColName01><TypeName01 type="bin" size="24">RgB1AG4AYwB0AGkAbwBuAAAA</TypeName01><Format01 type="bin" size="8">AAAAAA==</Format01><Size01 type="bin" size="8">QAYAAA==</Size01></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW type="int">0</SAVED_VIEW></UDEStackWin></ViewSrv><UDE.StdDbgSrv type="key"><INI_SECTION type="key"/><UDE.TriCoreArchSrv type="key"><UDE.TcCoreTargIntf type="key"><NewWorkspace type="flag">0</NewWorkspace><Ocds type="key"><TR0EVT.Susp type="flag">1</TR0EVT.Susp><TR0EVT.Bbm type="flag">0</TR0EVT.Bbm><TR0EVT.Action type="int">0</TR0EVT.Action><TR0EVT.Reserved type="flag">0</TR0EVT.Reserved><TR0EVT.DataAdr1 type="string">0x0</TR0EVT.DataAdr1><TR0EVT.DataAdr2 type="string">0x0</TR0EVT.DataAdr2><TR0EVT.bDataReadAdr1 type="flag">0</TR0EVT.bDataReadAdr1><TR0EVT.bDataReadAdr2 type="flag">0</TR0EVT.bDataReadAdr2><TR0EVT.bDataReadRange type="flag">0</TR0EVT.bDataReadRange><TR0EVT.bDataWriteAdr1 type="flag">0</TR0EVT.bDataWriteAdr1><TR0EVT.bDataWriteAdr2 type="flag">0</TR0EVT.bDataWriteAdr2><TR0EVT.bDataWriteRange type="flag">0</TR0EVT.bDataWriteRange><TR0EVT.CodeAdr1 type="string">0x0</TR0EVT.CodeAdr1><TR0EVT.CodeAdr2 type="string">0x0</TR0EVT.CodeAdr2><TR0EVT.bCodeAdr1 type="flag">0</TR0EVT.bCodeAdr1><TR0EVT.bCodeAdr2 type="flag">0</TR0EVT.bCodeAdr2><TR0EVT.bCodeRange type="flag">0</TR0EVT.bCodeRange><TR0EVT.Fct type="int">0</TR0EVT.Fct><TR0EVT.DataRangeLocked type="flag">0</TR0EVT.DataRangeLocked><TR0EVT.CodeRangeLocked type="flag">0</TR0EVT.CodeRangeLocked><TR0EVT.CprReserved type="flag">0</TR0EVT.CprReserved><TR0EVT.DprReserved type="flag">0</TR0EVT.DprReserved><TR1EVT.Susp type="flag">1</TR1EVT.Susp><TR1EVT.Bbm type="flag">0</TR1EVT.Bbm><TR1EVT.Action type="int">0</TR1EVT.Action><TR1EVT.Reserved type="flag">0</TR1EVT.Reserved><TR1EVT.DataAdr1 type="string">0x0</TR1EVT.DataAdr1><TR1EVT.DataAdr2 type="string">0x0</TR1EVT.DataAdr2><TR1EVT.bDataReadAdr1 type="flag">0</TR1EVT.bDataReadAdr1><TR1EVT.bDataReadAdr2 type="flag">0</TR1EVT.bDataReadAdr2><TR1EVT.bDataReadRange type="flag">0</TR1EVT.bDataReadRange><TR1EVT.bDataWriteAdr1 type="flag">0</TR1EVT.bDataWriteAdr1><TR1EVT.bDataWriteAdr2 type="flag">0</TR1EVT.bDataWriteAdr2><TR1EVT.bDataWriteRange type="flag">0</TR1EVT.bDataWriteRange><TR1EVT.CodeAdr1 type="string">0x0</TR1EVT.CodeAdr1><TR1EVT.CodeAdr2 type="string">0x0</TR1EVT.CodeAdr2><TR1EVT.bCodeAdr1 type="flag">0</TR1EVT.bCodeAdr1><TR1EVT.bCodeAdr2 type="flag">0</TR1EVT.bCodeAdr2><TR1EVT.bCodeRange type="flag">0</TR1EVT.bCodeRange><TR1EVT.Fct type="int">0</TR1EVT.Fct><TR1EVT.DataRangeLocked type="flag">0</TR1EVT.DataRangeLocked><TR1EVT.CodeRangeLocked type="flag">0</TR1EVT.CodeRangeLocked><TR1EVT.CprReserved type="flag">0</TR1EVT.CprReserved><TR1EVT.DprReserved type="flag">0</TR1EVT.DprReserved><EXEVT.Susp type="flag">1</EXEVT.Susp><EXEVT.Bbm type="flag">0</EXEVT.Bbm><EXEVT.Action type="int">0</EXEVT.Action><EXEVT.Reserved type="flag">0</EXEVT.Reserved><SWEVT.Susp type="flag">1</SWEVT.Susp><SWEVT.Bbm type="flag">1</SWEVT.Bbm><SWEVT.Action type="int">2</SWEVT.Action><SWEVT.Reserved type="flag">0</SWEVT.Reserved><CREVT.Susp type="flag">1</CREVT.Susp><CREVT.Bbm type="flag">0</CREVT.Bbm><CREVT.Action type="int">0</CREVT.Action><CREVT.Reserved type="flag">0</CREVT.Reserved><SBSRC.Enable type="flag">0</SBSRC.Enable><SBSRC.Priority type="int">0</SBSRC.Priority><SBSRC.Tos type="int">0</SBSRC.Tos><SBSRC.Reserved type="flag">0</SBSRC.Reserved><PrsUsage type="int">1</PrsUsage></Ocds><Suspend type="key"><STM type="int">4294967295</STM><GPTA0 type="int">4294967295</GPTA0><ADC0 type="int">4294967295</ADC0><ASC0 type="int">4294967295</ASC0><CAN type="int">4294967295</CAN><DMA type="int">4294967295</DMA><FADC type="int">4294967295</FADC><MSC0 type="int">4294967295</MSC0><SSC0 type="int">4294967295</SSC0><SSC1 type="int">4294967295</SSC1><ERAY type="int">4294967295</ERAY></Suspend></UDE.TcCoreTargIntf></UDE.TriCoreArchSrv><UDE.UDESymbol type="key"><BinaryFiles type="key"><Number type="int">1</Number><BinaryFile1 type="key"><FullPath type="string">..\iROM\FreeRTOS_Demo.elf</FullPath><Breakpoints type="key"><Breakpoint1 type="string">Software;enabled;0;disabled;'vLEDFlashTask {C:\E\Dev\FreeRTOS\WorkingCopy\Demo\TriCore_TC1782_TriBoard_GCC\RTOSDemo\Common_Demo_Source\flash.c} .105';flash.c;1;0;;$disabled; ;disabled; ;</Breakpoint1><Number type="int">1</Number></Breakpoints></BinaryFile1><BinaryFile-1 type="key"/></BinaryFiles><ExpressionClipboard type="key"><Number type="int">0</Number></ExpressionClipboard></UDE.UDESymbol><STG_ADDON_PROF type="key"><UDELicense_Server type="key" name="UDELicense Server"><LOAD_STATE type="flag">1</LOAD_STATE></UDELicense_Server><UDEMemtool type="key"><LOAD_STATE type="flag">1</LOAD_STATE><FlashMod_PFLASH type="key"/><FlashMod_DFLASH type="key"/><Frontend type="key"><AutoStartProgAfterDownload type="flag">0</AutoStartProgAfterDownload><AutoCloseExecCmdDialog type="flag">0</AutoCloseExecCmdDialog><AllowOverwrite type="flag">0</AllowOverwrite><LastModule type="int">0</LastModule><VerifyProt type="flag">0</VerifyProt><VerifyProtFile type="string">verify.txt</VerifyProtFile><VerifyOnExit type="flag">0</VerifyOnExit><StoreLoadedSections type="flag">0</StoreLoadedSections></Frontend></UDEMemtool><ADD_ON_DEL_FLAG type="flag">0</ADD_ON_DEL_FLAG></STG_ADDON_PROF><CommQueueHndlStg type="key"><Beep type="flag">0</Beep><Retry type="flag">0</Retry><RetryPeriod type="int">0</RetryPeriod></CommQueueHndlStg><TargetStateHndlStg type="key"/></UDE.StdDbgSrv><MRUSourceFileList type="key"><NoOfMRUSrcFileEntries type="int">5</NoOfMRUSrcFileEntries><MRUSrcFile0 type="string">..\RTOSDemo\main.c</MRUSrcFile0><MRUSrcFile1 type="string">code &lt;0x80006000-0x800063FF&gt;</MRUSrcFile1><MRUSrcFile2 type="string">..\RTOSDemo\FreeRTOS_Source\tasks.c</MRUSrcFile2><MRUSrcFile3 type="string">..\RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.c</MRUSrcFile3><MRUSrcFile4 type="string">..\RTOSDemo\Common_Demo_Source\flash.c</MRUSrcFile4></MRUSourceFileList></Core><TargetInfoFile type="string">.target\TriBoard_TC1782.cfg</TargetInfoFile><LastWriteDate type="string">17.10.2011 12:00:09:000</LastWriteDate></stg>
+End Sub</ScriptSource><ScriptArchitecture type="int">63</ScriptArchitecture><ScriptEngine type="string">VBScript</ScriptEngine><MacroFileTime type="string">24.11.2006 14:43:20:000</MacroFileTime><ScriptFromStg type="flag">1</ScriptFromStg><LocalComputerName type="string">WS_CORE_DUO</LocalComputerName><ExternalScriptPath type="string"></ExternalScriptPath><NextNodeName type="string">Macro_24_10_11_12_23_52_0</NextNodeName><UnAss type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute UnAss ..</MenuString><ToolTipString type="string">Macro UnAss</ToolTipString><MessageString type="string">Execute macro UnAss</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">2</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></UnAss><SaveHEX type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute SaveHEX ..</MenuString><ToolTipString type="string">Macro SaveHEX</ToolTipString><MessageString type="string">Execute macro SaveHEX</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">2</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></SaveHEX><FillByte type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute FillByte ..</MenuString><ToolTipString type="string">Macro FillByte</ToolTipString><MessageString type="string">Execute macro FillByte</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">1</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></FillByte><FillWord type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute FillWord ..</MenuString><ToolTipString type="string">Macro FillWord</ToolTipString><MessageString type="string">Execute macro FillWord</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">1</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></FillWord><FillDWord type="key"><GUIEntry type="key"><MenuID type="int">10</MenuID><MenuString type="string">Execute FillDWord ..</MenuString><ToolTipString type="string">Macro FillDWord</ToolTipString><MessageString type="string">Execute macro FillDWord</MessageString><DebugFlag type="flag">0</DebugFlag></GUIEntry><FuncParameterCnt type="int">1</FuncParameterCnt><GUIEntryDescription type="string"></GUIEntryDescription></FillDWord><NoOfFunctions type="int">5</NoOfFunctions></Macro_21_10_11_12_37_40_0></MacroGuiEntries><LastSelectedMacro type="string"></LastSelectedMacro></UDE.Script></AddOns><Core type="key"><ViewSrv type="key"><TriCoreCpuWin type="key"><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><OPEN_VIEW type="key"><FrameCreated type="string">18.10.2011 12:08:31:083</FrameCreated><ViewSrv type="key"><History0 type="string">0x00000000</History0><History1 type="string"></History1><History2 type="string"></History2><History3 type="string"></History3><History4 type="string"></History4><History5 type="string"></History5><History6 type="string"></History6><History7 type="string"></History7><History8 type="string"></History8><History9 type="string"></History9></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW type="int">0</SAVED_VIEW></TriCoreCpuWin><StdUDESymbolExplWin type="key"><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:28:11:737</FrameCreated><ViewSrv type="key"/><EclipseFrameMode type="int">139264</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDESymbolExplWin><StdUDEProgWin type="key"><OPEN_VIEW00 type="key"><FrameCreated type="string">09.10.2011 23:28:17:413</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\main.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW00><SAVED_VIEW_OBJS type="int">6</SAVED_VIEW_OBJS><SAVED_VIEW00 type="int">0</SAVED_VIEW00><OPEN_VIEW01 type="key"><FrameCreated type="string">24.10.2011 10:48:48:675</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\FreeRTOS_Source\tasks.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW01><SAVED_VIEW01 type="int">2</SAVED_VIEW01><OPEN_VIEW02 type="key"><FrameCreated type="string">21.10.2011 11:09:25:634</FrameCreated><ViewSrv type="key"/><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex><SourceFile type="string">..\RTOSDemo\Common_Demo_Source\death.c</SourceFile></OPEN_VIEW02><OPEN_VIEW03 type="key"><FrameCreated type="string">21.10.2011 11:09:53:005</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\porttrap.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW03><SAVED_VIEW02 type="int">3</SAVED_VIEW02><SAVED_VIEW03 type="int">5</SAVED_VIEW03><OPEN_VIEW04 type="key"><FrameCreated type="string">24.10.2011 10:49:13:935</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\FreeRTOS_Source\queue.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW04><SAVED_VIEW04 type="int">1</SAVED_VIEW04><OPEN_VIEW05 type="key"><FrameCreated type="string">21.10.2011 11:11:16:772</FrameCreated><ViewSrv type="key"/><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex><SourceFile type="string">..\RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.c</SourceFile></OPEN_VIEW05><OPEN_VIEW06 type="key"><FrameCreated type="string">21.10.2011 12:09:01:970</FrameCreated><ViewSrv type="key"/><SourceFile type="string">..\RTOSDemo\Common_Demo_Source\integer.c</SourceFile><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW06><SAVED_VIEW05 type="int">4</SAVED_VIEW05><SAVED_VIEW06 type="int">6</SAVED_VIEW06></StdUDEProgWin><StdUDESFRView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDESFRView><StdUDELocalsWin type="key"><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:54:28:219</FrameCreated><ViewSrv type="key"><NameWidth type="int">288</NameWidth><AddressWidth type="int">0</AddressWidth><ValueWidth type="int">192</ValueWidth><Value2Width type="int">0</Value2Width><MinMaxWidth type="int">0</MinMaxWidth></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW type="int">0</SAVED_VIEW></StdUDELocalsWin><StdUDEWatchWin type="key"><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><OPEN_VIEW00 type="key"><FrameCreated type="string">21.10.2011 12:11:03:525</FrameCreated><ViewSrv type="key"><TopIndex type="int">0</TopIndex><CaretIndex type="int">8</CaretIndex><LastSelectedPropPage type="string"></LastSelectedPropPage><NameWidth type="int">972</NameWidth><AddressWidth type="int">0</AddressWidth><ValueWidth type="int">663</ValueWidth><Value2Width type="int">0</Value2Width><MinMaxWidth type="int">0</MinMaxWidth><Watches type="key"><IntegralFormatForValue1 type="int">3</IntegralFormatForValue1><IntegralFormatForValue2 type="int">3</IntegralFormatForValue2><ASCIIForValue1 type="int">0</ASCIIForValue1><ASCIIForValue2 type="int">0</ASCIIForValue2><FloatFormatForValue1 type="int">3</FloatFormatForValue1><FloatFormatForValue2 type="int">3</FloatFormatForValue2><Watch1 type="key"><Name type="string">ulRegisterTest1Count [C:\E\Dev\FreeRTOS\WorkingCopy\Demo\TriCore_TC1782_TriBoard_GCC\RTOSDemo\main.c] @1</Name></Watch1><Watch2 type="key"><Name type="string">pxHeadCSA (global) @1</Name><Status2 type="string">#0$1,1$</Status2><Status type="string">#0$1,1$</Status></Watch2><Watch3 type="key"><Name type="string">pxTailCSA (global) @1</Name><Status2 type="string">#0$1,1$</Status2><Status type="string">#0$1,1$</Status></Watch3><Watch4 type="key"><Name type="string">pucTemp (global) @1</Name><Status2 type="string">#0,0$1,1$</Status2><Status type="string">#0#0,0$1,1$</Status></Watch4><Watch5 type="key"><Name type="string">ucTemp (global) @1</Name><Status2 type="string">#0$1,1$</Status2><Status type="string">#0$1,1$</Status></Watch5><Watch6 type="key"><Name type="string">pulNextCSA (global) @1</Name><Status2 type="string">#0,0$1,1$</Status2><Status type="string">#0#0,0$1,1$</Status></Watch6><Watch7 type="key"><Name type="string">pxTCBx (global) @1</Name></Watch7></Watches></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW00><SAVED_VIEW00 type="int">0</SAVED_VIEW00><OPEN_VIEW01 type="key"><FrameCreated type="string">24.10.2011 11:39:29:875</FrameCreated><ViewSrv type="key"><TopIndex type="int">0</TopIndex><CaretIndex type="int">1</CaretIndex><Watches type="key"><IntegralFormatForValue1 type="int">3</IntegralFormatForValue1><IntegralFormatForValue2 type="int">3</IntegralFormatForValue2><ASCIIForValue1 type="int">0</ASCIIForValue1><ASCIIForValue2 type="int">0</ASCIIForValue2><FloatFormatForValue1 type="int">3</FloatFormatForValue1><FloatFormatForValue2 type="int">3</FloatFormatForValue2><Watch1 type="key"><Name type="string">?(*((unsigned long *)0xD000AB80))</Name><Status type="string">#0$1,1$</Status><Status2 type="string">#0$1,1$</Status2></Watch1></Watches><NameWidth type="int">753</NameWidth><AddressWidth type="int">0</AddressWidth><ValueWidth type="int">503</ValueWidth><Value2Width type="int">0</Value2Width><MinMaxWidth type="int">0</MinMaxWidth></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW01></StdUDEWatchWin><StdUDESimIOWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDESimIOWin><StdUDEHtmlDocWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEHtmlDocWin><StdUDEGraphWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEGraphWin><StdUDETimeSampleGraphWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDETimeSampleGraphWin><StdUDEIPTraceView type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS></StdUDEIPTraceView><StdUDEMemWin type="key"><SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS><OPEN_VIEW00 type="key"><FrameCreated type="string">24.10.2011 11:37:39:758</FrameCreated><ViewSrv type="key"><FindAdr0 type="string">0xD000AB80</FindAdr0><FindAdr1 type="string"></FindAdr1><FindAdr2 type="string"></FindAdr2><FindAdr3 type="string"></FindAdr3><FindAdr4 type="string"></FindAdr4><FindAdr5 type="string"></FindAdr5><FindAdr6 type="string"></FindAdr6><FindAdr7 type="string"></FindAdr7><FindAdr8 type="string"></FindAdr8><FindAdr9 type="string"></FindAdr9><FindVal0 type="string"></FindVal0><FindVal1 type="string"></FindVal1><FindVal2 type="string"></FindVal2><FindVal3 type="string"></FindVal3><FindVal4 type="string"></FindVal4><FindVal5 type="string"></FindVal5><FindVal6 type="string"></FindVal6><FindVal7 type="string"></FindVal7><FindVal8 type="string"></FindVal8><FindVal9 type="string"></FindVal9><FindFormat type="bin" size="8">AAAAAA==</FindFormat><FindDirection type="bin" size="8">AAAAAA==</FindDirection><LastSelectedPropPage type="string"></LastSelectedPropPage><Mode type="bin" size="8">AgAAAA==</Mode><ASCII type="bin" size="8">AQAAAA==</ASCII><AutoSize type="bin" size="8">AAAAAA==</AutoSize><Dec type="bin" size="8">AAAAAA==</Dec><Width type="bin" size="8">BAAAAA==</Width><Address type="bin" size="8">EIXr0Q==</Address><AutoWrite type="int">1305339880</AutoWrite><VerifyAfterWrite type="int">1307275768</VerifyAfterWrite></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW00></StdUDEMemWin><UDEStackWin type="key"><SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS><OPEN_VIEW type="key"><FrameCreated type="string">09.10.2011 23:57:15:537</FrameCreated><ViewSrv type="key"><_ExtentX type="bin" size="8">1CUAAA==</_ExtentX><_ExtentY type="bin" size="8">vhAAAA==</_ExtentY><_StockProps type="bin" size="8">AAAAAA==</_StockProps><Columns type="bin" size="8">AgAAAA==</Columns><ColName00 type="bin" size="8">UABDAAAA</ColName00><TypeName00 type="bin" size="8">UABDAAAA</TypeName00><Format00 type="bin" size="8">AAAAAA==</Format00><Size00 type="bin" size="8">YAAAAA==</Size00><ColName01 type="bin" size="24">RgB1AG4AYwB0AGkAbwBuAAAA</ColName01><TypeName01 type="bin" size="24">RgB1AG4AYwB0AGkAbwBuAAAA</TypeName01><Format01 type="bin" size="8">AAAAAA==</Format01><Size01 type="bin" size="8">QAYAAA==</Size01></ViewSrv><EclipseFrameMode type="int">135168</EclipseFrameMode><EclipseFrameSaveIndex type="int">4294967295</EclipseFrameSaveIndex></OPEN_VIEW><SAVED_VIEW type="int">0</SAVED_VIEW></UDEStackWin></ViewSrv><UDE.StdDbgSrv type="key"><INI_SECTION type="key"><System type="key"><MIXEDMODE type="string">OFF</MIXEDMODE></System></INI_SECTION><UDE.TriCoreArchSrv type="key"><UDE.TcCoreTargIntf type="key"><NewWorkspace type="flag">0</NewWorkspace><Ocds type="key"><TR0EVT.Susp type="flag">1</TR0EVT.Susp><TR0EVT.Bbm type="flag">0</TR0EVT.Bbm><TR0EVT.Action type="int">0</TR0EVT.Action><TR0EVT.Reserved type="flag">0</TR0EVT.Reserved><TR0EVT.DataAdr1 type="string">0x0</TR0EVT.DataAdr1><TR0EVT.DataAdr2 type="string">0x0</TR0EVT.DataAdr2><TR0EVT.bDataReadAdr1 type="flag">0</TR0EVT.bDataReadAdr1><TR0EVT.bDataReadAdr2 type="flag">0</TR0EVT.bDataReadAdr2><TR0EVT.bDataReadRange type="flag">0</TR0EVT.bDataReadRange><TR0EVT.bDataWriteAdr1 type="flag">0</TR0EVT.bDataWriteAdr1><TR0EVT.bDataWriteAdr2 type="flag">0</TR0EVT.bDataWriteAdr2><TR0EVT.bDataWriteRange type="flag">0</TR0EVT.bDataWriteRange><TR0EVT.CodeAdr1 type="string">0x0</TR0EVT.CodeAdr1><TR0EVT.CodeAdr2 type="string">0x0</TR0EVT.CodeAdr2><TR0EVT.bCodeAdr1 type="flag">0</TR0EVT.bCodeAdr1><TR0EVT.bCodeAdr2 type="flag">0</TR0EVT.bCodeAdr2><TR0EVT.bCodeRange type="flag">0</TR0EVT.bCodeRange><TR0EVT.Fct type="int">0</TR0EVT.Fct><TR0EVT.DataRangeLocked type="flag">0</TR0EVT.DataRangeLocked><TR0EVT.CodeRangeLocked type="flag">0</TR0EVT.CodeRangeLocked><TR0EVT.CprReserved type="flag">0</TR0EVT.CprReserved><TR0EVT.DprReserved type="flag">0</TR0EVT.DprReserved><TR1EVT.Susp type="flag">1</TR1EVT.Susp><TR1EVT.Bbm type="flag">0</TR1EVT.Bbm><TR1EVT.Action type="int">0</TR1EVT.Action><TR1EVT.Reserved type="flag">0</TR1EVT.Reserved><TR1EVT.DataAdr1 type="string">0x0</TR1EVT.DataAdr1><TR1EVT.DataAdr2 type="string">0x0</TR1EVT.DataAdr2><TR1EVT.bDataReadAdr1 type="flag">0</TR1EVT.bDataReadAdr1><TR1EVT.bDataReadAdr2 type="flag">0</TR1EVT.bDataReadAdr2><TR1EVT.bDataReadRange type="flag">0</TR1EVT.bDataReadRange><TR1EVT.bDataWriteAdr1 type="flag">0</TR1EVT.bDataWriteAdr1><TR1EVT.bDataWriteAdr2 type="flag">0</TR1EVT.bDataWriteAdr2><TR1EVT.bDataWriteRange type="flag">0</TR1EVT.bDataWriteRange><TR1EVT.CodeAdr1 type="string">0x0</TR1EVT.CodeAdr1><TR1EVT.CodeAdr2 type="string">0x0</TR1EVT.CodeAdr2><TR1EVT.bCodeAdr1 type="flag">0</TR1EVT.bCodeAdr1><TR1EVT.bCodeAdr2 type="flag">0</TR1EVT.bCodeAdr2><TR1EVT.bCodeRange type="flag">0</TR1EVT.bCodeRange><TR1EVT.Fct type="int">0</TR1EVT.Fct><TR1EVT.DataRangeLocked type="flag">0</TR1EVT.DataRangeLocked><TR1EVT.CodeRangeLocked type="flag">0</TR1EVT.CodeRangeLocked><TR1EVT.CprReserved type="flag">0</TR1EVT.CprReserved><TR1EVT.DprReserved type="flag">0</TR1EVT.DprReserved><EXEVT.Susp type="flag">1</EXEVT.Susp><EXEVT.Bbm type="flag">0</EXEVT.Bbm><EXEVT.Action type="int">0</EXEVT.Action><EXEVT.Reserved type="flag">0</EXEVT.Reserved><SWEVT.Susp type="flag">1</SWEVT.Susp><SWEVT.Bbm type="flag">1</SWEVT.Bbm><SWEVT.Action type="int">2</SWEVT.Action><SWEVT.Reserved type="flag">0</SWEVT.Reserved><CREVT.Susp type="flag">1</CREVT.Susp><CREVT.Bbm type="flag">0</CREVT.Bbm><CREVT.Action type="int">0</CREVT.Action><CREVT.Reserved type="flag">0</CREVT.Reserved><SBSRC.Enable type="flag">0</SBSRC.Enable><SBSRC.Priority type="int">0</SBSRC.Priority><SBSRC.Tos type="int">0</SBSRC.Tos><SBSRC.Reserved type="flag">0</SBSRC.Reserved><PrsUsage type="int">1</PrsUsage></Ocds><Suspend type="key"><STM type="int">4294967295</STM><GPTA0 type="int">4294967295</GPTA0><ADC0 type="int">4294967295</ADC0><ASC0 type="int">4294967295</ASC0><CAN type="int">4294967295</CAN><DMA type="int">4294967295</DMA><FADC type="int">4294967295</FADC><MSC0 type="int">4294967295</MSC0><SSC0 type="int">4294967295</SSC0><SSC1 type="int">4294967295</SSC1><ERAY type="int">4294967295</ERAY></Suspend></UDE.TcCoreTargIntf></UDE.TriCoreArchSrv><UDE.UDESymbol type="key"><BinaryFiles type="key"><Number type="int">1</Number><BinaryFile1 type="key"><FullPath type="string">..\iRAM\FreeRTOS_Demo.elf</FullPath></BinaryFile1><BinaryFile-1 type="key"/></BinaryFiles><PosHistory0 type="string">vCreateTasks</PosHistory0><PosHistory1 type="string"></PosHistory1><PosHistory2 type="string"></PosHistory2><PosHistory3 type="string"></PosHistory3><PosHistory4 type="string"></PosHistory4><PosHistory5 type="string"></PosHistory5><PosHistory6 type="string"></PosHistory6><PosHistory7 type="string"></PosHistory7><PosHistory8 type="string"></PosHistory8><PosHistory9 type="string"></PosHistory9><ExpressionClipboard type="key"><Number type="int">0</Number></ExpressionClipboard></UDE.UDESymbol><STG_ADDON_PROF type="key"><UDELicense_Server type="key" name="UDELicense Server"><LOAD_STATE type="flag">1</LOAD_STATE></UDELicense_Server><UDEMemtool type="key"><LOAD_STATE type="flag">1</LOAD_STATE><FlashMod_PFLASH type="key"/><FlashMod_DFLASH type="key"/><Frontend type="key"><AutoStartProgAfterDownload type="flag">0</AutoStartProgAfterDownload><AutoCloseExecCmdDialog type="flag">0</AutoCloseExecCmdDialog><AllowOverwrite type="flag">0</AllowOverwrite><LastModule type="int">0</LastModule><VerifyProt type="flag">0</VerifyProt><VerifyProtFile type="string">verify.txt</VerifyProtFile><VerifyOnExit type="flag">0</VerifyOnExit><StoreLoadedSections type="flag">0</StoreLoadedSections></Frontend></UDEMemtool><ADD_ON_DEL_FLAG type="flag">0</ADD_ON_DEL_FLAG></STG_ADDON_PROF><CommQueueHndlStg type="key"><Beep type="flag">0</Beep><Retry type="flag">0</Retry><RetryPeriod type="int">0</RetryPeriod></CommQueueHndlStg><TargetStateHndlStg type="key"/></UDE.StdDbgSrv><MRUSourceFileList type="key"><NoOfMRUSrcFileEntries type="int">9</NoOfMRUSrcFileEntries><MRUSrcFile0 type="string">..\RTOSDemo\Common_Demo_Source\flash.c</MRUSrcFile0><MRUSrcFile1 type="string">..\RTOSDemo\ThirdPartyCode\cpufreq.c</MRUSrcFile1><MRUSrcFile2 type="string">..\RTOSDemo\Common_Demo_Source\integer.c</MRUSrcFile2><MRUSrcFile3 type="string">..\RTOSDemo\main.c</MRUSrcFile3><MRUSrcFile4 type="string">..\RTOSDemo\Common_Demo_Source\death.c</MRUSrcFile4><MRUSrcFile5 type="string">..\RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\porttrap.c</MRUSrcFile5><MRUSrcFile6 type="string">..\RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.c</MRUSrcFile6><MRUSrcFile7 type="string">..\RTOSDemo\FreeRTOS_Source\tasks.c</MRUSrcFile7><MRUSrcFile8 type="string">..\RTOSDemo\FreeRTOS_Source\queue.c</MRUSrcFile8></MRUSourceFileList></Core><TargetInfoFile type="string">.target\TriBoard_TC1782.cfg</TargetInfoFile><LastWriteDate type="string">24.10.2011 12:23:52:000</LastWriteDate></stg>

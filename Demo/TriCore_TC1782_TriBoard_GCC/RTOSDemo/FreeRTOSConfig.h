@@ -113,7 +113,5 @@
 
 #define BLOCKQ_1						0
 
-#define portCLEANUP_TCB( pxTCB )		vPortReclaimCSA( ( unsigned portBASE_TYPE *) ( pxTCB ) )
-
 #endif /* FREERTOS_CONFIG_H */
 

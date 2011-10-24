@@ -78,6 +78,7 @@
 #include "GenQTest.h"
 #include "recmutex.h"
 #include "serial.h"
+#include "death.h"
 /*-----------------------------------------------------------*/
 
 /* Constants for the ComTest tasks. */
@@ -91,6 +92,7 @@
 #define mainCHECK_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY	( tskIDLE_PRIORITY + 3 )
 
 /* The rate at which the on board LED will toggle when there is/is not an
 error. */
@@ -168,7 +170,9 @@ int main( void )
 	/* Start the check task - which is defined in this file. */
 	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* _RB_ start the death tasks here too. */
+	/* This task has to be created last as it keeps account of the number of tasks
+	it expects to see running. */
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Now all the tasks have been started - start the scheduler. */
 	vTaskStartScheduler();
@@ -276,6 +280,11 @@ long lReturn = pdPASS;
 	}
 
 	if( prvAreRegTestTasksStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
+
+	if( xIsCreateTaskStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
 	}
@@ -459,7 +468,7 @@ static void prvRegTask1( void *pvParameters )
 	/* Load the parameter address from the stack and modify the value. */
 	__asm volatile(									\
 			" ld.w %d1, [%sp]4						\n"	\
-			" add %d1, %d15, 1						\n"	\
+			" add %d1, 1							\n"	\
 			" st.w [%sp]4, %d1						\n"	\
 			" ld.a %a15, [%sp]						\n"	\
 			" st.w [%a15], %d1						\n"	\
@@ -504,11 +513,10 @@ static void prvRegTask2( void *pvParameters )
 					" mov.a %a12, 4		\n" \
 					" mov.a %a13, 3		\n" \
 					" mov.a %a14, 2		\n" );
-	/* Yield to force a context switch. */
-	taskYIELD();
 
 	/* Check the values of the registers. */
 	__asm volatile(	" _task2_loop:							\n" \
+					" syscall 0								\n" \
 					" eq %d1, %d0, 7						\n" \
 					" jne %d1, 1, _task2_error_loop			\n" \
 					" eq %d1, %d1, 1						\n" \
@@ -561,6 +569,7 @@ static void prvRegTask2( void *pvParameters )
 					" jne.a %a15, %a14, _task2_error_loop	\n" \
 					" j _task2_skip_error_loop				\n"	\
 					"_task2_error_loop:						\n"	/* Hitting this error loop will stop the counter incrementing, allowing the check task to recognise an error. */ \
+					" debug									\n" \
 					" j _task2_error_loop					\n"	\
 					"_task2_skip_error_loop:				\n"	);
 

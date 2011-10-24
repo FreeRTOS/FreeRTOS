@@ -226,6 +226,9 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) ( void ) uxSavedStatusValue
 #endif
 
+#ifndef portCLEAN_UP_TCB
+	#define portCLEAN_UP_TCB( pxTCB ) ( void ) pxTCB
+#endif
 
 #ifndef configQUEUE_REGISTRY_SIZE
 	#define configQUEUE_REGISTRY_SIZE 0U

@@ -75,6 +75,7 @@
 
 #define portINITIAL_SYSCON								( (unsigned portBASE_TYPE) 0x00000000 )	/* MPU Disable. */
 
+/* This macro should be used when the MPU is being used. */
 #define portSELECT_PROGRAM_STATUS_WORD( xRunPrivileged )		( ( xRunPrivileged ) ? portINITIAL_PRIVILEGED_PROGRAM_STATUS_WORD : portINITIAL_UNPRIVILEGED_PROGRAM_STATUS_WORD )
 
 /* CSA manipulation macros. */
@@ -173,7 +174,7 @@ unsigned portBASE_TYPE *pxLowerCSA = NULL;
 
 	/* Upper Context. */
 	pxUpperCSA[ 2 ] = (unsigned portBASE_TYPE)pxTopOfStack;				/* A10;	Stack Return aka Stack Pointer */
-	pxUpperCSA[ 1 ] = portSELECT_PROGRAM_STATUS_WORD( pdTRUE );			/* PSW	*/
+	pxUpperCSA[ 1 ] = portSYSTEM_PROGRAM_STATUS_WORD;					/* PSW	*/
 
 	/* Clear the CSA. */
 	memset( pxLowerCSA, 0, 16 * sizeof( unsigned portBASE_TYPE ) );
@@ -318,50 +319,57 @@ void vPortSystemTickHandler( int iArg )
 void vPortReclaimCSA( unsigned portBASE_TYPE *pxTCB )
 {
 unsigned portBASE_TYPE pxHeadCSA, pxTailCSA, pxFreeCSA;
+unsigned portBASE_TYPE *pulNextCSA;
 
-	/* The first element in a TCB is the Last Used CSA.
-	 * These simply need to be free'd to add them back to
-	 * the global pool of CSAs.
-	 */
-
-	/* Lookup the first element from the TCB. */
+	/* A pointer to the first CSA in the list of CSAs consumed by the task is
+	stored in the first element of the tasks TCB structure (where the stack
+	pointer would be on a traditional stack based architecture). */
 	pxHeadCSA = ( *pxTCB ) & portCSA_FCX_MASK;
 
-	/* If there is something to reclaim. */
-	if ( 0UL != ( pxHeadCSA & portCSA_FCX_MASK ) )
+	/* Mask off everything in the CSA link field other than the address.  If
+	the	address is NULL, then the CSA is not linking anywhere and there is
+	nothing	to do. */
+	pxTailCSA = pxHeadCSA;
+
+	/* Convert the link value to contain just a raw address and store this
+	in a local variable. */
+	pulNextCSA = portCSA_TO_ADDRESS( pxTailCSA );
+
+	/* Iterate over the CSAs that were consumed as part of the task.  The
+	first field in the CSA is the pointer to then next CSA.  Mask off
+	everything in the pointer to the next CSA, other than the link address.
+	If this is NULL, then the CSA currently being pointed to is the last in
+	the chain. */
+	while( 0UL != ( pulNextCSA[ 0 ] & portCSA_FCX_MASK ) )
 	{
-		/* Iterate over the CSAs that were consumed as part of the task. */
-		pxTailCSA = pxHeadCSA;
-		while ( 0UL != ( portCSA_TO_ADDRESS( pxTailCSA )[ 0 ] & portCSA_FCX_MASK ) )
-		{
-			/* Clear any extra bits from the link words. */
-			portCSA_TO_ADDRESS( pxTailCSA )[ 0 ] = pxTailCSA & portCSA_FCX_MASK;
+		/* Clear all bits of the pointer to the next in the chain, other
+		than the address bits themselves. */
+		pulNextCSA[ 0 ] = pulNextCSA[ 0 ] & portCSA_FCX_MASK;
 
-			/* Iterate to the next CSA. */
-			pxTailCSA = portCSA_TO_ADDRESS( pxTailCSA )[ 0 ];
-		}
+		/* Move the pointer to point to the next CSA in the list. */
+		pxTailCSA = pulNextCSA[ 0 ];
 
-		/* pxHeadCSA points to the first in the chain
-		 * pxNextCSA points to the Head or the last in the chain.
-		 */
-
-		portENTER_CRITICAL();
-		{
-			/* Look up the current free CSA. */
-			_dsync();
-			pxFreeCSA = _mfcr( $FCX );
-
-			/* Join the current Free onto the Tail of what is being reclaimed. */
-			portCSA_TO_ADDRESS( pxTailCSA )[ 0 ] = pxFreeCSA;
-
-			/* Move the head of the reclaimed into the Free. */
-			_dsync();
-			_mtcr( $FCX, pxHeadCSA );
-			/* ISync to commit the change to the FCX. */
-			_isync();
-		}
-		portEXIT_CRITICAL();
+		/* Update the local pointer to the CSA. */
+		pulNextCSA = portCSA_TO_ADDRESS( pxTailCSA );
 	}
+
+	taskENTER_CRITICAL();
+	{
+		/* Look up the current free CSA head. */
+		_dsync();
+		pxFreeCSA = _mfcr( $FCX );
+
+		/* Join the current Free onto the Tail of what is being reclaimed. */
+		portCSA_TO_ADDRESS( pxTailCSA )[ 0 ] = pxFreeCSA;
+
+		/* Move the head of the reclaimed into the Free. */
+		_dsync();
+		_mtcr( $FCX, pxHeadCSA );
+
+		/* ISync to commit the change to the FCX. */
+		_isync();
+	}
+	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 

@@ -2347,6 +2347,10 @@ tskTCB *pxNewTCB;
 
 	static void prvDeleteTCB( tskTCB *pxTCB )
 	{
+		/* This call is required specifically for the TriCore port.  It must be
+		above the vPortFree() calls. */
+		portCLEAN_UP_TCB( pxTCB );
+
 		/* Free up the memory allocated by the scheduler for the task.  It is up to
 		the task to free any memory allocated at the application level. */
 		vPortFreeAligned( pxTCB->pxStack );

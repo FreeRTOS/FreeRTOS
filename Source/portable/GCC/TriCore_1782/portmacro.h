@@ -187,6 +187,13 @@ unsigned portBASE_TYPE xUpperCSA = 0UL;							\
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*---------------------------------------------------------------------------*/
 
+/*
+ * Port specific clean up macro required to free the CSAs that were consumed by
+ * a task that has since been deleted.
+ */
+void vPortReclaimCSA( unsigned portBASE_TYPE *pxTCB );
+#define portCLEAN_UP_TCB( pxTCB )		vPortReclaimCSA( ( unsigned portBASE_TYPE *) ( pxTCB ) )
+
 #ifdef __cplusplus
 }
 #endif

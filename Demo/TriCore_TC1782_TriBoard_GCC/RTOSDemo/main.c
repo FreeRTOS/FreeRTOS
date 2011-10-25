@@ -51,9 +51,52 @@
     licensing and training services.
 */
 
-
-/* _RB_ Add description here. */
-
+/******************************************************************************
+ * >>>>>> NOTE: <<<<<<
+ *
+ * main() can be configured to create either a very simple LED flasher demo, or
+ * a more comprehensive test/demo application.
+ *
+ * To create a very simple LED flasher example, set the
+ * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY constant (defined below) to 1.  When
+ * this is done, only the standard demo flash tasks are created, whereby three
+ * tasks each toggle an LED at a fixed but different frequency.
+ *
+ * To create a more comprehensive test and demo application, set
+ * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0.
+ ******************************************************************************
+ *
+ * main() creates all the demo application tasks and timers, then starts the
+ * scheduler.  The web documentation provides more details of the standard demo
+ * application tasks, which provide no particular functionality, but do provide
+ * a good example of how to use the FreeRTOS API.
+ *
+ * In addition to the standard demo tasks, the following tasks and tests are
+ * defined and/or created within this file:
+ *
+ * "Reg test" tasks - These fill the registers with known values, then check
+ * that each register maintains its expected value for the lifetime of the
+ * task.  Each task uses a different set of values.  The reg test tasks execute
+ * with a very low priority, so get preempted very frequently.  A register
+ * containing an unexpected value is indicative of an error in the context
+ * switching mechanism.
+ *
+ * "Check" task - The check task period is initially set to five seconds.
+ * Each time it executes, the check task checks that all the standard demo
+ * tasks, and the register check tasks, are not only still executing, but are
+ * executing without reporting any errors.  If the check task discovers that a
+ * task has either stalled, or reported an error, then it changes its own
+ * execution period from the initial five seconds, to just 500ms.  The check
+ * task  also toggles an LED each time it is called.  This provides a visual
+ * indication of the system status:  If the LED toggles every five seconds,
+ * then no issues have been discovered.  If the LED toggles every 500ms, then
+ * an issue has been discovered with at least one task.
+ *
+ * ***NOTE*** This demo uses the standard comtest tasks, which has special
+ * hardware requirements as a loopback connector, or UART echo server are
+ * required.  See the documentation page for this demo on the FreeRTOS.org web
+ * site for more information.
+ */
 
 /* Standard includes. */
 #include <stdlib.h>
@@ -79,6 +122,8 @@
 #include "recmutex.h"
 #include "serial.h"
 #include "death.h"
+#include "TimerDemo.h"
+
 /*-----------------------------------------------------------*/
 
 /* Constants for the ComTest tasks. */
@@ -99,6 +144,14 @@ error. */
 #define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 5000 / portTICK_RATE_MS	)
 #define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
 #define mainON_BOARD_LED_BIT		( ( unsigned long ) 7 )
+
+/* Constant used by the standard timer test functions. */
+#define mainTIMER_TEST_PERIOD		( 50 )
+
+/* Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 1 to create a simple demo.
+Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0 to create a much more
+comprehensive test application.  See the comments at the top of this file. */
+#define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY		0
 
 /*-----------------------------------------------------------*/
 
@@ -124,14 +177,25 @@ static void prvSetupHardware( void );
  * Writes to and checks the value of each register that is used in the context
  * of a task.
  */
-static void prvRegTask1( void *pvParameters );
-static void prvRegTask2( void *pvParameters );
+static void prvRegisterCheckTask1( void *pvParameters );
+static void prvRegisterCheckTask2( void *pvParameters );
 
 /*
  * Specific check to see if the Register test functions are still operating
  * correctly.
  */
 static portBASE_TYPE prvAreRegTestTasksStillRunning( void );
+
+/*
+ * This file can be used to create either a simple LED flasher example, or a
+ * comprehensive test/demo application - depending on the setting of the
+ * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY constant defined above.  If
+ * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 1, then the following
+ * function will create a lot of additional tasks and timers.  If
+ * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 0, then the following
+ * function will do nothing.
+ */
+static void prvOptionallyCreateComprehensveTestApplication( void );
 
 /*-----------------------------------------------------------*/
 
@@ -149,30 +213,17 @@ int main( void )
 	/* Setup the hardware for use with the TriCore evaluation board. */
 	prvSetupHardware();
 
-	/* Start standard demo/test application tasks. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
+	/* Start standard demo/test application tasks.  See the comments at the
+	top of this file.  The LED flash tasks are always created.  The other tasks
+	are only created if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 1 (at
+	the top of this file).  See the comments at the top of this file for more
+	information. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	/* _RB_ Create the timer test task here too. */
 
-	/* Create the register test tasks, as described at the top of this file. */
-	xTaskCreate( prvRegTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
-
-	/* Start the check task - which is defined in this file. */
-	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
-	/* This task has to be created last as it keeps account of the number of tasks
-	it expects to see running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	/* The following function will only create more tasks and timers if
+	mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 1 (at the top of this
+	file).  See the comments at the top of this file for more information. */
+	prvOptionallyCreateComprehensveTestApplication();
 
 	/* Now all the tasks have been started - start the scheduler. */
 	vTaskStartScheduler();
@@ -289,6 +340,17 @@ long lReturn = pdPASS;
 		lReturn = pdFAIL;
 	}
 
+	#if configUSE_TIMERS == 1
+	{
+		/* For space constraint reasons, do not include the timer demo in
+		builds that execute from RAM. */
+		if( xAreTimerDemoTasksStillRunning( mainNO_ERROR_FLASH_PERIOD ) != pdTRUE )
+		{
+			lReturn = pdFAIL;
+		}
+	}
+	#endif
+
 	return lReturn;
 }
 /*-----------------------------------------------------------*/
@@ -325,10 +387,18 @@ void vApplicationMallocFailedHook( void )
 
 void vApplicationTickHook( void )
 {
-	/* vApplicationTickHook() will only be called if configUSE_TICK_HOOK is set
-	to 1 in FreeRTOSConfig.h.  It is a hook function that will get called during
-	each FreeRTOS tick interrupt.  Note that vApplicationTickHook() is called
-	from an interrupt context. */
+	#if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY != 1
+	{
+		/* vApplicationTickHook() will only be called if configUSE_TICK_HOOK is set
+		to 1 in FreeRTOSConfig.h.  It is a hook function that will get called during
+		each FreeRTOS tick interrupt.  Note that vApplicationTickHook() is called
+		from an interrupt context. */
+
+		/* Call the periodic timer test, which tests the timer API functions that
+		can be called from an ISR. */
+		vTimerPeriodicISRTests();
+	}
+	#endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 
@@ -371,7 +441,7 @@ portBASE_TYPE xReturn = pdPASS;
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTask1( void *pvParameters )
+static void prvRegisterCheckTask1( void *pvParameters )
 {
 	/* Make space on the stack for the parameter and a counter. */
 	__asm volatile( " sub.a %sp, 4 			\n"
@@ -479,7 +549,7 @@ static void prvRegTask1( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static void prvRegTask2( void *pvParameters )
+static void prvRegisterCheckTask2( void *pvParameters )
 {
 	/* Make space on the stack for the parameter and a counter. */
 	__asm volatile( " sub.a %sp, 4 		\n" \
@@ -584,5 +654,52 @@ static void prvRegTask2( void *pvParameters )
 	/* The parameter is used but in the assembly. */
 	(void)pvParameters;
 }
+/*-----------------------------------------------------------*/
+
+static void prvOptionallyCreateComprehensveTestApplication( void )
+{
+	#if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY == 0
+	{
+		vStartIntegerMathTasks( tskIDLE_PRIORITY );
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+		vStartDynamicPriorityTasks();
+		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+		vCreateBlockTimeTasks();
+		vStartCountingSemaphoreTasks();
+		vStartGenericQueueTasks( tskIDLE_PRIORITY );
+		vStartRecursiveMutexTasks();
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+
+		#if configUSE_TIMERS == 1
+		{
+			/* For space constraint reasons, do not include the timer demo in
+			builds that execute from RAM. */
+			vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+		}
+		#endif /* configUSE_TIMERS */
+
+		/* Create the register test tasks, as described at the top of this file. */
+		xTaskCreate( prvRegisterCheckTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( prvRegisterCheckTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
+
+		/* Start the check task - which is defined in this file. */
+		xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+		/* This task has to be created last as it keeps account of the number of tasks
+		it expects to see running. */
+		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	}
+	#else /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
+	{
+		/* Just to prevent compiler warnings when the configuration options are
+		set such that these static functions are not used. */
+		( void ) prvCheckTask;
+		( void ) prvRegisterCheckTask1;
+		( void ) prvRegisterCheckTask2;
+	}
+	#endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
+}
+
 /*-----------------------------------------------------------*/
 

@@ -68,50 +68,58 @@
 
 /*----------------------------------------------------------*/
 
-#define configUSE_PREEMPTION		1
-#define configUSE_IDLE_HOOK			0
-#define configUSE_TICK_HOOK			0
-/* CPU is actually 150MHz but FPIDIV is 1 meaning divide by 2. */
-#define configCPU_CLOCK_HZ			( ( unsigned long ) 150000000UL )
-#define configPERIPHERAL_CLOCK_HZ	( ( unsigned long ) configCPU_CLOCK_HZ / 2UL )
-#define configTICK_RATE_HZ			( ( portTickType ) 1000UL )
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 128 )
-#define configTOTAL_HEAP_SIZE		( ( size_t ) ( 32 * 1024 ) )
-#define configMAX_TASK_NAME_LEN		( 16 )
-#define configUSE_TRACE_FACILITY	0
-#define configUSE_16_BIT_TICKS		0
-#define configIDLE_SHOULD_YIELD		0
-#define configUSE_MALLOC_FAILED_HOOK 1
-#define configCHECK_FOR_STACK_OVERFLOW	0
+#define configUSE_PREEMPTION				1
+#define configUSE_IDLE_HOOK					0
+/* CPU is actually 150MHz but FPIDIV is 1 meaning divide by 2 for the
+peripheral clock. */
+#define configCPU_CLOCK_HZ					( ( unsigned long ) 150000000UL )
+#define configPERIPHERAL_CLOCK_HZ			( ( unsigned long ) configCPU_CLOCK_HZ / 2UL )
+#define configTICK_RATE_HZ					( ( portTickType ) 1000UL )
+#define configMAX_PRIORITIES				( ( unsigned portBASE_TYPE ) 5 )
+#define configMINIMAL_STACK_SIZE			( ( unsigned short ) 128 )
+#define configTOTAL_HEAP_SIZE				( ( size_t ) ( 32 * 1024 ) )
+#define configMAX_TASK_NAME_LEN				( 16 )
+#define configUSE_TRACE_FACILITY			0
+#define configUSE_16_BIT_TICKS				0
+#define configIDLE_SHOULD_YIELD				0
+#define configUSE_MALLOC_FAILED_HOOK 		1
+#define configCHECK_FOR_STACK_OVERFLOW		0
+
+#define configUSE_COUNTING_SEMAPHORES 		1
+#define configUSE_RECURSIVE_MUTEXES			1
+#define configUSE_MUTEXES					1
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 					0
-#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
+#define configUSE_CO_ROUTINES 				0
+#define configMAX_CO_ROUTINE_PRIORITIES 	( 2 )
 
-/* Mutual Exclusion. */
-#define configUSE_COUNTING_SEMAPHORES 			1
-#define configUSE_RECURSIVE_MUTEXES				1
-#define configUSE_MUTEXES						1
+/* Timer functionality.  For space constraint reasons, the standard demo timer
+tests are only included in the build configuration that generates code that
+runs from Flash, and not in the build configuration that generates code that
+runs from RAM. */
+#ifdef BUILD_FOR_RAM_EXECUTION
+	#define configUSE_TIMERS					0
+	#define configUSE_TICK_HOOK					0
+#else
+	#define configUSE_TIMER						1
+	#define configUSE_TICK_HOOK					1
+#endif
 
-/* Timer functionality. */
-#define configUSE_TIMERS				0
-#define configTIMER_TASK_PRIORITY		( 4 )
-#define configTIMER_QUEUE_LENGTH		( 2 )
+#define configTIMER_TASK_PRIORITY			( 4 )
+#define configTIMER_QUEUE_LENGTH			( 5 )
+#define configTIMER_TASK_STACK_DEPTH		configMINIMAL_STACK_SIZE
 
 /* Set the following definitions to 1 to include the API function, or zero
  to exclude the API function.
  We use --gc-sections when linking, so there is no harm is setting all of these to 1 */
 
-#define INCLUDE_vTaskPrioritySet		1
-#define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete				1
-#define INCLUDE_vTaskCleanUpResources	1
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
-
-#define BLOCKQ_1						0
+#define INCLUDE_vTaskPrioritySet			1
+#define INCLUDE_uxTaskPriorityGet			1
+#define INCLUDE_vTaskDelete					1
+#define INCLUDE_vTaskCleanUpResources		1
+#define INCLUDE_vTaskSuspend				1
+#define INCLUDE_vTaskDelayUntil				1
+#define INCLUDE_vTaskDelay					1
 
 #endif /* FREERTOS_CONFIG_H */
 

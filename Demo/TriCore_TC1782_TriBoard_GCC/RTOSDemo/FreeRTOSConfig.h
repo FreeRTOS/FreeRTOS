@@ -105,21 +105,27 @@ runs from RAM. */
 	#define configUSE_TICK_HOOK					1
 #endif
 
-#define configTIMER_TASK_PRIORITY			( 4 )
-#define configTIMER_QUEUE_LENGTH			( 5 )
-#define configTIMER_TASK_STACK_DEPTH		configMINIMAL_STACK_SIZE
+#define configTIMER_TASK_PRIORITY				( 4 )
+#define configTIMER_QUEUE_LENGTH				( 5 )
+#define configTIMER_TASK_STACK_DEPTH			configMINIMAL_STACK_SIZE
 
 /* Set the following definitions to 1 to include the API function, or zero
  to exclude the API function.
  We use --gc-sections when linking, so there is no harm is setting all of these to 1 */
 
-#define INCLUDE_vTaskPrioritySet			1
-#define INCLUDE_uxTaskPriorityGet			1
-#define INCLUDE_vTaskDelete					1
-#define INCLUDE_vTaskCleanUpResources		1
-#define INCLUDE_vTaskSuspend				1
-#define INCLUDE_vTaskDelayUntil				1
-#define INCLUDE_vTaskDelay					1
+#define INCLUDE_vTaskPrioritySet				1
+#define INCLUDE_uxTaskPriorityGet				1
+#define INCLUDE_vTaskDelete						1
+#define INCLUDE_vTaskCleanUpResources			1
+#define INCLUDE_vTaskSuspend					1
+#define INCLUDE_vTaskDelayUntil					1
+#define INCLUDE_vTaskDelay						1
+
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY	64
+#define configKERNEL_INTERRUPT_PRIORITY			1
+
+/* Default definition of configASSERT(). */
+//#define configASSERT( x ) if( ( x ) == 0 ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 
 #endif /* FREERTOS_CONFIG_H */
 

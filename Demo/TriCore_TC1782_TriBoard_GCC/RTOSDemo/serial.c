@@ -51,6 +51,7 @@
     licensing and training services.
 */
 
+/* Hardware specific includes. */
 #include <tc1782.h>
 #include <machine/intrinsics.h>
 #include <machine/cint.h>
@@ -63,44 +64,53 @@
 
 /* Demo Includes. */
 #include "serial.h"
+
 /*---------------------------------------------------------------------------*/
 
+/* Interrupt priorities. */
 #define serialINTERRUPT_PRIORITY_TX			16
 #define serialINTERRUPT_PRIORITY_RX			18
+
 /*---------------------------------------------------------------------------*/
 
 /*
- * This reference is required by the Save/Restore Context Macros.
- */
-extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
-/*-----------------------------------------------------------*/
-
-/**
- * This function will check to see whether the Serial Transmit Interrupt is currently
- * activated, meaning that the interrupt is working through the back log of bytes
- * that it needs to send. If the ISR is not enabled, then it will be triggered to send
- * the first byte and it will be automatically re-triggered when that byte has been
+ * See if the Serial Transmit Interrupt is currently activated, meaning that
+ * the interrupt is working through the back log of bytes that it needs to
+ * send. If the ISR is not enabled, then it will be triggered to send the first
+ * byte, and it will be automatically re-triggered when that byte has been
  * sent. When the queue is exhausted, the ISR disables itself.
- * This function is privileged because it will trigger an interrupt.
  */
-static void prvCheckTransmit( void ) PRIVILEGED_FUNCTION;
+static void prvCheckTransmit( void );
+
+/*
+ * The transmit and receive interrupt handlers.
+ */
+static void prvTxBufferInterruptHandler( int iArg ) __attribute__( ( longcall ) );
+static void prvRxInterruptHandler( int iArg )__attribute__( ( longcall ) );
+
 /*-----------------------------------------------------------*/
 
-void vSerialTransmitBufferInterrupt( int iArg ) __attribute__((longcall));
-void vSerialReceiveInterrupt( int iArg )__attribute__((longcall));
-/*-----------------------------------------------------------*/
-
+/* Queues used to pass bytes into and out of the interrupt handlers.
+NOTE:  This is not intended to be an example of an efficient interrupt handler,
+but instead to load the kernel and interrupt mechanisms in order to test the
+FreeRTOS port.  Using a FIFO, DMA, circular buffer, etc. architecture will
+to improve efficiency. */
 static xQueueHandle xSerialTransmitQueue = NULL;
 static xQueueHandle xSerialReceiveQueue = NULL;
 static volatile portBASE_TYPE xTransmitStatus = 0UL;
-/*---------------------------------------------------------------------------*/
+
+/* This reference is required by the Save/Restore Context Macros. */
+extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
+
+/*-----------------------------------------------------------*/
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 unsigned long ulReloadValue = 0UL;
+
 	ulReloadValue = ( configPERIPHERAL_CLOCK_HZ / ( 32 * ulWantedBaud ) ) - 1;
 
-	if ( NULL == xSerialTransmitQueue )
+	if( NULL == xSerialTransmitQueue )
 	{
 		xSerialTransmitQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
 		xSerialReceiveQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
@@ -108,8 +118,10 @@ unsigned long ulReloadValue = 0UL;
 
 	/* Enable ASC0 Module. */
 	unlock_wdtcon();
+	{
 		while ( 0 != ( WDT_CON0.reg & 0x1UL ) );
 		ASC0_CLC.reg = 0x0200UL;
+	}
 	lock_wdtcon();
 
 	/* Disable the Operation. */
@@ -117,9 +129,8 @@ unsigned long ulReloadValue = 0UL;
 
 	/* Set-up the GPIO Ports. */
 	P3_IOCR0.reg = 0x00009000;	/* 3.0 ASC In, 3.1 Alt ASC Out */
-	/* Do we need to set 3.1 high? OMR.PS1 = 1??? */
 
-	/* Write the Baudrate. */
+	/* Write the baud rate. */
 	ASC0_BG.reg = ulReloadValue;
 
 	/* Reconfigure and re-initialise the Operation. */
@@ -127,14 +138,14 @@ unsigned long ulReloadValue = 0UL;
 	ASC0_CON.reg = 0x00008011;	/* 1 Start, 1 Stop, 8 Data, No Parity, No Error Checking, Receive On, Module On. */
 
 	/* Install the Tx interrupt. */
-	if ( 0 != _install_int_handler( serialINTERRUPT_PRIORITY_TX, vSerialTransmitBufferInterrupt, 0 ) )
+	if( 0 != _install_int_handler( serialINTERRUPT_PRIORITY_TX, prvTxBufferInterruptHandler, 0 ) )
 	{
 		ASC0_TBSRC.reg = serialINTERRUPT_PRIORITY_TX | 0x5000UL;
 		xTransmitStatus = 0UL;
 	}
 
 	/* Install the Rx interrupt. */
-	if ( 0 != _install_int_handler( serialINTERRUPT_PRIORITY_RX, vSerialReceiveInterrupt, 0 ) )
+	if( 0 != _install_int_handler( serialINTERRUPT_PRIORITY_RX, prvRxInterruptHandler, 0 ) )
 	{
 		ASC0_RSRC.reg = serialINTERRUPT_PRIORITY_RX | 0x5000UL;
 	}
@@ -147,23 +158,29 @@ unsigned long ulReloadValue = 0UL;
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
 unsigned short usChar;
-	for ( usChar = 0; usChar < usStringLength; usChar++ )
+
+	for( usChar = 0; usChar < usStringLength; usChar++ )
 	{
-		(void)xSerialPutChar( pxPort, pcString[ usChar ], portMAX_DELAY );
+		xSerialPutChar( pxPort, pcString[ usChar ], portMAX_DELAY );
 	}
 }
 /*---------------------------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
+	/* Just to remove compiler warnings about unused parameters. */
+	( void )pxPort;
+
 	return xQueueReceive( xSerialReceiveQueue, pcRxedChar, xBlockTime );
-	(void)pxPort;
 }
 /*---------------------------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 portBASE_TYPE xReturn = pdPASS;
+
+	/* Just to remove compiler warnings about unused parameters. */
+	( void )pxPort;
 
 	/* Send the character to the interrupt handler. */
 	xReturn = xQueueSend( xSerialTransmitQueue, &cOutChar, xBlockTime );
@@ -172,75 +189,66 @@ portBASE_TYPE xReturn = pdPASS;
 	prvCheckTransmit();
 
 	return xReturn;
-
-	(void)pxPort;
 }
 /*---------------------------------------------------------------------------*/
 
-void vSerialTransmitBufferInterrupt( int iArg )
+static void prvTxBufferInterruptHandler( int iArg )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned char ucTx;
+
+	/* Just to remove compiler warnings about unused parameters. */
+	( void ) iArg;
 
 	/* ACK. */
 	ASC0_TBSRC.reg |= 0x4000UL;
 	xTransmitStatus = 1UL;
 
-	/* Enter the Critical Section. */
-	portINTERRUPT_ENTER_CRITICAL();
+	/* TBUF Can be refilled. */
+	if( pdPASS == xQueueReceiveFromISR( xSerialTransmitQueue, &ucTx, &xHigherPriorityTaskWoken ) )
 	{
-		/* TBUF Can be refilled. */
-		if ( pdPASS == xQueueReceiveFromISR( xSerialTransmitQueue, &ucTx, &xHigherPriorityTaskWoken ) )
-		{
-			ASC0_TBUF.reg = ucTx;
-		}
-		else
-		{
-			/* Failed to get a character out of the Queue. No longer busy. */
-			xTransmitStatus = 0UL;
-		}
+		ASC0_TBUF.reg = ucTx;
 	}
-	portINTERRUPT_EXIT_CRITICAL();
+	else
+	{
+		/* Failed to get a character out of the Queue. No longer busy. */
+		xTransmitStatus = 0UL;
+	}
 
 	/* Finally end ISR and switch Task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-
-	(void)iArg;
 }
 /*---------------------------------------------------------------------------*/
 
-void vSerialReceiveInterrupt( int iArg )
+static void prvRxInterruptHandler( int iArg )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned char ucRx;
 
+	/* Just to remove compiler warnings about unused parameters. */
+	( void ) iArg;
+
 	/* Grab the character as early as possible. */
-	ucRx = (unsigned char)ASC0_RBUF.reg;
+	ucRx = ( unsigned char ) ASC0_RBUF.reg;
 
 	/* ACK. */
 	ASC0_RSRC.reg |= 0x4000UL;
 
-	/* Enter the Critical Section. */
-	portINTERRUPT_ENTER_CRITICAL();
+	/* Frame available in RBUF. */
+	if( pdPASS != xQueueSendFromISR( xSerialReceiveQueue, &ucRx, &xHigherPriorityTaskWoken ) )
 	{
-		/* Frame available in RBUF. */
-		if ( pdPASS != xQueueSendFromISR( xSerialReceiveQueue, &ucRx, &xHigherPriorityTaskWoken ) )
-		{
-			/* Need some error handling code. */
-		}
+		/* Error handling code can go here. */
 	}
-	portINTERRUPT_EXIT_CRITICAL();
 
 	/* Finally end ISR and switch Task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-
-	(void)iArg;
 }
 /*---------------------------------------------------------------------------*/
 
 void prvCheckTransmit( void )
 {
-	/* Check to see if the interrupt handler is working its way through the buffer. */
+	/* Check to see if the interrupt handler is working its way through the
+	buffer. */
 	if ( 0 == xTransmitStatus )
 	{
 		/* Not currently operational so kick off the first byte. */

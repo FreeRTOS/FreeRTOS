@@ -63,7 +63,7 @@
 /*
  * This reference is required by the Save/Restore Context Macros.
  */
-extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
+extern volatile unsigned long *pxCurrentTCB;
 /*-----------------------------------------------------------*/
 
 /*
@@ -129,13 +129,13 @@ extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
 #define portTIN_NMI_NON_MASKABLE_INTERRUPT					0
 /*---------------------------------------------------------------------------*/
 
-void vMMUTrap( int iTrapIdentification );
-void vInternalProtectionTrap( int iTrapIdentification );
-void vInstructionErrorTrap( int iTrapIdentification );
-void vContextManagementTrap( int iTrapIdentification );
-void vSystemBusAndPeripheralsTrap( int iTrapIdentification );
-void vAssertionTrap( int iTrapIdentification );
-void vNonMaskableInterruptTrap( int iTrapIdentification );
+void vMMUTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
+void vInternalProtectionTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
+void vInstructionErrorTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
+void vContextManagementTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
+void vSystemBusAndPeripheralsTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
+void vAssertionTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
+void vNonMaskableInterruptTrap( int iTrapIdentification ) __attribute__( ( longcall, weak ) );
 /*---------------------------------------------------------------------------*/
 
 void vTrapInstallHandlers( void )
@@ -193,102 +193,116 @@ void vMMUTrap( int iTrapIdentification )
 
 void vInternalProtectionTrap( int iTrapIdentification )
 {
+	/* Deliberate fall through to default. */
 	switch ( iTrapIdentification )
 	{
-	case portTIN_IPT_PRIVILIGED_INSTRUCTION:
-		/* Instruction is not allowed at current execution level, eg DISABLE at User-0. */
-	case portTIN_IPT_MEMORY_PROTECTION_READ:
-		/* Load word using invalid address. */
-	case portTIN_IPT_MEMORY_PROTECTION_WRITE:
-		/* Store Word using invalid address. */
-	case portTIN_IPT_MEMORY_PROTECTION_EXECUTION:
-		/* PC jumped to an address outside of the valid range. */
-	case portTIN_IPT_MEMORY_PROTECTION_PERIPHERAL_ACCESS:
-		/* Access to a peripheral denied at current execution level. */
-	case portTIN_IPT_MEMORY_PROTECTION_NULL_ADDRESS:
-		/* NULL Pointer. */
-	case portTIN_IPT_MEMORY_PROTECTION_GLOBAL_REGISTER_WRITE_PROTECTION:
-		/* Tried to modify a global address pointer register. */
-	default:
-		pxCurrentTCB[ 0 ] = _mfcr( $PCXI );
-		_debug();
-		break;
+		case portTIN_IPT_PRIVILIGED_INSTRUCTION:
+			/* Instruction is not allowed at current execution level, eg DISABLE at User-0. */
+
+		case portTIN_IPT_MEMORY_PROTECTION_READ:
+			/* Load word using invalid address. */
+			
+		case portTIN_IPT_MEMORY_PROTECTION_WRITE:
+			/* Store Word using invalid address. */
+			
+		case portTIN_IPT_MEMORY_PROTECTION_EXECUTION:
+			/* PC jumped to an address outside of the valid range. */
+			
+		case portTIN_IPT_MEMORY_PROTECTION_PERIPHERAL_ACCESS:
+			/* Access to a peripheral denied at current execution level. */
+			
+		case portTIN_IPT_MEMORY_PROTECTION_NULL_ADDRESS:
+			/* NULL Pointer. */
+			
+		case portTIN_IPT_MEMORY_PROTECTION_GLOBAL_REGISTER_WRITE_PROTECTION:
+			/* Tried to modify a global address pointer register. */
+			
+		default:
+		
+			pxCurrentTCB[ 0 ] = _mfcr( $PCXI );
+			_debug();
+			break;
 	}
 }
 /*---------------------------------------------------------------------------*/
 
 void vInstructionErrorTrap( int iTrapIdentification )
 {
+	/* Deliberate fall through to default. */
 	switch ( iTrapIdentification )
 	{
-	case portTIN_IE_ILLEGAL_OPCODE:
-	case portTIN_IE_UNIMPLEMENTED_OPCODE:
-	case portTIN_IE_INVALID_OPERAND:
-	case portTIN_IE_DATA_ADDRESS_ALIGNMENT:
-	case portTIN_IE_INVALID_LOCAL_MEMORY_ADDRESS:
-	default:
-		_debug();
-		break;
+		case portTIN_IE_ILLEGAL_OPCODE:
+		case portTIN_IE_UNIMPLEMENTED_OPCODE:
+		case portTIN_IE_INVALID_OPERAND:
+		case portTIN_IE_DATA_ADDRESS_ALIGNMENT:
+		case portTIN_IE_INVALID_LOCAL_MEMORY_ADDRESS:
+		default:
+			_debug();
+			break;
 	}
 }
 /*---------------------------------------------------------------------------*/
 
 void vContextManagementTrap( int iTrapIdentification )
 {
+	/* Deliberate fall through to default. */
 	switch ( iTrapIdentification )
 	{
-	case portTIN_CM_FREE_CONTEXT_LIST_DEPLETION:
-	case portTIN_CM_CALL_DEPTH_OVERFLOW:
-	case portTIN_CM_CALL_DEPTH_UNDEFLOW:
-	case portTIN_CM_FREE_CONTEXT_LIST_UNDERFLOW:
-	case portTIN_CM_CALL_STACK_UNDERFLOW:
-	case portTIN_CM_CONTEXT_TYPE:
-	case portTIN_CM_NESTING_ERROR:
-	default:
-		_debug();
-		break;
+		case portTIN_CM_FREE_CONTEXT_LIST_DEPLETION:
+		case portTIN_CM_CALL_DEPTH_OVERFLOW:
+		case portTIN_CM_CALL_DEPTH_UNDEFLOW:
+		case portTIN_CM_FREE_CONTEXT_LIST_UNDERFLOW:
+		case portTIN_CM_CALL_STACK_UNDERFLOW:
+		case portTIN_CM_CONTEXT_TYPE:
+		case portTIN_CM_NESTING_ERROR:
+		default:
+			_debug();
+			break;
 	}
 }
 /*---------------------------------------------------------------------------*/
 
 void vSystemBusAndPeripheralsTrap( int iTrapIdentification )
 {
+	/* Deliberate fall through to default. */
 	switch ( iTrapIdentification )
 	{
-	case portTIN_SBP_PROGRAM_FETCH_SYNCHRONOUS_ERROR:
-	case portTIN_SBP_DATA_ACCESS_SYNCHRONOUS_ERROR:
-	case portTIN_SBP_DATA_ACCESS_ASYNCHRONOUS_ERROR:
-	case portTIN_SBP_COPROCESSOR_TRAP_ASYNCHRONOUS_ERROR:
-	case portTIN_SBP_PROGRAM_MEMORY_INTEGRITY_ERROR:
-	case portTIN_SBP_DATA_MEMORY_INTEGRITY_ERROR:
-	default:
-		_debug();
-		break;
+		case portTIN_SBP_PROGRAM_FETCH_SYNCHRONOUS_ERROR:
+		case portTIN_SBP_DATA_ACCESS_SYNCHRONOUS_ERROR:
+		case portTIN_SBP_DATA_ACCESS_ASYNCHRONOUS_ERROR:
+		case portTIN_SBP_COPROCESSOR_TRAP_ASYNCHRONOUS_ERROR:
+		case portTIN_SBP_PROGRAM_MEMORY_INTEGRITY_ERROR:
+		case portTIN_SBP_DATA_MEMORY_INTEGRITY_ERROR:
+		default:
+			_debug();
+			break;
 	}
 }
 /*---------------------------------------------------------------------------*/
 
 void vAssertionTrap( int iTrapIdentification )
 {
+	/* Deliberate fall through to default. */
 	switch ( iTrapIdentification )
 	{
-	case portTIN_ASSERT_ARITHMETIC_OVERFLOW:
-	case portTIN_ASSERT_STICKY_ARITHMETIC_OVERFLOW:
-	default:
-		_debug();
-		break;
+		case portTIN_ASSERT_ARITHMETIC_OVERFLOW:
+		case portTIN_ASSERT_STICKY_ARITHMETIC_OVERFLOW:
+		default:
+			_debug();
+			break;
 	}
 }
 /*---------------------------------------------------------------------------*/
 
 void vNonMaskableInterruptTrap( int iTrapIdentification )
 {
+	/* Deliberate fall through to default. */
 	switch ( iTrapIdentification )
 	{
-	case portTIN_NMI_NON_MASKABLE_INTERRUPT:
-	default:
-		_debug();
-		break;
+		case portTIN_NMI_NON_MASKABLE_INTERRUPT:
+		default:
+			_debug();
+			break;
 	}
 }
 /*---------------------------------------------------------------------------*/

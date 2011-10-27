@@ -54,6 +54,8 @@
 /* Standard includes. */
 #include <stdlib.h>
 #include <string.h>
+
+/* TriCore specific includes. */
 #include <tc1782.h>
 #include <machine/intrinsics.h>
 #include <machine/cint.h>
@@ -63,6 +65,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "list.h"
+
+#if configCHECK_FOR_STACK_OVERFLOW > 0
+	#error "Stack checking cannot be used with this port, as, unlike most ports, the pxTopOfStack member of the TCB is consumed CSA.  CSA starvation, loosely equivalent to stack overflow, will result in a trap exception."
+	/* The stack pointer is accessible using portCSA_TO_ADDRESS( portCSA_TO_ADDRESS( pxCurrentTCB->pxTopOfStack )[ 0 ] )[ 2 ]; */
+#endif /* configCHECK_FOR_STACK_OVERFLOW */
+
+
 /*-----------------------------------------------------------*/
 
 /* System register Definitions. */
@@ -70,38 +79,17 @@
 #define portINITIAL_PRIVILEGED_PROGRAM_STATUS_WORD		( (unsigned portBASE_TYPE) 0x000014FF ) /* IO Level 1, MPU Register Set 1 and Call Depth Counting disabled. */
 #define portINITIAL_UNPRIVILEGED_PROGRAM_STATUS_WORD	( (unsigned portBASE_TYPE) 0x000010FF ) /* IO Level 0, MPU Register Set 1 and Call Depth Counting disabled. */
 #define portINITIAL_PCXI_UPPER_CONTEXT_WORD				( (unsigned portBASE_TYPE) 0x00C00000 )	/* The lower 20 bits identify the CSA address. */
-#define portINITIAL_PCXI_LOWER_CONTEXT_WORD				( (unsigned portBASE_TYPE) 0x00000000 )	/* The lower 20 bits identify the CSA address. */
-#define portUPPER_CONTEXT_BIT							( (unsigned portBASE_TYPE) 0x00400000 )	/* Bit that indicates whether the context is upper or lower. */
-
 #define portINITIAL_SYSCON								( (unsigned portBASE_TYPE) 0x00000000 )	/* MPU Disable. */
-
-/* This macro should be used when the MPU is being used. */
-#define portSELECT_PROGRAM_STATUS_WORD( xRunPrivileged )		( ( xRunPrivileged ) ? portINITIAL_PRIVILEGED_PROGRAM_STATUS_WORD : portINITIAL_UNPRIVILEGED_PROGRAM_STATUS_WORD )
 
 /* CSA manipulation macros. */
 #define portCSA_FCX_MASK					( 0x000FFFFFUL )
 
 /* OS Interrupt and Trap mechanisms. */
 #define portRESTORE_PSW_MASK				( ~( 0x000000FFUL ) )
-#define portSYSCALL_TRAP					6
-#define portCCPN_MASK						( 0x000000FFUL )
+#define portSYSCALL_TRAP					( 6 )
 
-#define portSYSTEM_DATA_PRIVILEGES			( 0xC0C0C0C0UL )
-#define portSYSTEM_CODE_PRIVILEGES			( 0x00008080UL )
-
-#define portSYSTEM_PRIVILEGE_PROGRAM_STATUS_WORD	( (unsigned portBASE_TYPE) 0x00000800 ) /* Supervisor Mode. */
-/*-----------------------------------------------------------*/
-
-#if configCHECK_FOR_STACK_OVERFLOW > 0
-	#error "pxTopOfStack is used to store the last used CSA so it is not appropriate to enable stack checking."
-	/* The stack pointer is accessible using portCSA_TO_ADDRESS( portCSA_TO_ADDRESS( pxCurrentTCB->pxTopOfStack )[ 0 ] )[ 2 ]; */
-#endif /* configCHECK_FOR_STACK_OVERFLOW */
-/*-----------------------------------------------------------*/
-
-/*
- * This reference is required by the Save/Restore Context Macros.
- */
-extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
+/* Each CSA contains 16 words of data. */
+#define portNUM_WORDS_IN_CSA				( 16 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -109,84 +97,91 @@ extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
  */
 void vPortSystemTickHandler( int ) __attribute__((longcall));
 static void prvSetupTimerInterrupt( void );
-/*-----------------------------------------------------------*/
 
 /*
- * The Yield Handler and Syscalls when using the MPU build.
+ * Trap handler for yields.
  */
-void vPortYield( int iTrapIdentification );
+static void prvPortYield( int iTrapIdentification );
+/*-----------------------------------------------------------*/
+
+/* This reference is required by the save/restore context macros. */
+extern volatile unsigned long *pxCurrentTCB;
+
 /*-----------------------------------------------------------*/
 
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned portBASE_TYPE *pxUpperCSA = NULL;
-unsigned portBASE_TYPE *pxLowerCSA = NULL;
+unsigned long *pulUpperCSA = NULL;
+unsigned long *pulLowerCSA = NULL;
 
-	/* 16 Address Registers (4 Address registers are global) and 16 Data Registers. */
-	/* 3 System Registers */
+	/* 16 Address Registers (4 Address registers are global), 16 Data
+	Registers, and 3 System Registers.
 
-	/* There are 3 registers that track the CSAs. */
-	/* FCX points to the head of globally free set of CSAs.
-	 * PCX for the task needs to point to Lower->Upper->NULL arrangement.
-	 * LCX points to the last free CSA so that corrective action can be taken.
-	 */
+	There are 3 registers that track the CSAs.
+		FCX points to the head of globally free set of CSAs.
+		PCX for the task needs to point to Lower->Upper->NULL arrangement.
+		LCX points to the last free CSA so that corrective action can be taken.
 
-	/* Need two CSAs to store the context of a task.
-	 * The upper context contains D8-D15, A10-A15, PSW and PCXI->NULL.
-	 * The lower context contains D0-D7, A2-A7, A11 and PCXI->UpperContext.
-	 * The pxCurrentTCB->pxTopOfStack points to the Lower Context RSLCX matching the initial BISR.
-	 * The Lower Context points to the Upper Context ready for the ready return from the interrupt handler.
-	 * The Real stack pointer for the task is stored in the A10 which is restored with the upper context.
-	 */
+	Need two CSAs to store the context of a task.
+		The upper context contains D8-D15, A10-A15, PSW and PCXI->NULL.
+		The lower context contains D0-D7, A2-A7, A11 and PCXI->UpperContext.
+		The pxCurrentTCB->pxTopOfStack points to the Lower Context RSLCX matching the initial BISR.
+		The Lower Context points to the Upper Context ready for the return from the interrupt handler.
 
-	/* Have to disable interrupts here because we are manipulating the CSAs. */
+	 The Real stack pointer for the task is stored in the A10 which is restored
+	 with the upper context. */
+
+	/* Have to disable interrupts here because the CSAs are going to be
+	manipulated. */
 	portENTER_CRITICAL();
 	{
 		/* DSync to ensure that buffering is not a problem. */
 		_dsync();
 
-		/* Consume two Free CSAs. */
-		pxLowerCSA = portCSA_TO_ADDRESS( _mfcr( $FCX ) );
-		if ( NULL != pxLowerCSA )
+		/* Consume two free CSAs. */
+		pulLowerCSA = portCSA_TO_ADDRESS( _mfcr( $FCX ) );
+		if( NULL != pulLowerCSA )
 		{
 			/* The Lower Links to the Upper. */
-			pxUpperCSA = portCSA_TO_ADDRESS( pxLowerCSA[ 0 ] );
+			pulUpperCSA = portCSA_TO_ADDRESS( pulLowerCSA[ 0 ] );
 		}
 
 		/* Check that we have successfully reserved two CSAs. */
-		if ( ( NULL != pxLowerCSA ) && ( NULL != pxUpperCSA ) )
+		if( ( NULL != pulLowerCSA ) && ( NULL != pulUpperCSA ) )
 		{
-			/* Remove the two consumed CSAs from the Free List. */
-			_mtcr( $FCX, pxUpperCSA[ 0 ] );
+			/* Remove the two consumed CSAs from the free CSA list. */
+			_mtcr( $FCX, pulUpperCSA[ 0 ] );
+
 			/* ISync to commit the change to the FCX. */
 			_isync();
 		}
 		else
 		{
-			/* For the time being, simply trigger a context list depletion trap. */
+			/* Simply trigger a context list depletion trap. */
 			_svlcx();
 		}
 	}
 	portEXIT_CRITICAL();
 
-	/* Clear the CSA. */
-	memset( pxUpperCSA, 0, 16 * sizeof( unsigned portBASE_TYPE ) );
+	/* Clear the upper CSA. */
+	memset( pulUpperCSA, 0, portNUM_WORDS_IN_CSA * sizeof( unsigned portBASE_TYPE ) );
 
 	/* Upper Context. */
-	pxUpperCSA[ 2 ] = (unsigned portBASE_TYPE)pxTopOfStack;				/* A10;	Stack Return aka Stack Pointer */
-	pxUpperCSA[ 1 ] = portSYSTEM_PROGRAM_STATUS_WORD;					/* PSW	*/
+	pulUpperCSA[ 2 ] = ( unsigned long )pxTopOfStack;		/* A10;	Stack Return aka Stack Pointer */
+	pulUpperCSA[ 1 ] = portSYSTEM_PROGRAM_STATUS_WORD;		/* PSW	*/
 
-	/* Clear the CSA. */
-	memset( pxLowerCSA, 0, 16 * sizeof( unsigned portBASE_TYPE ) );
+	/* Clear the lower CSA. */
+	memset( pulLowerCSA, 0, portNUM_WORDS_IN_CSA * sizeof( unsigned portBASE_TYPE ) );
 
 	/* Lower Context. */
-	pxLowerCSA[ 8 ] = (unsigned portBASE_TYPE)pvParameters;			/* A4;	Address Type Parameter Register	*/
-	pxLowerCSA[ 1 ] = (unsigned portBASE_TYPE)pxCode;				/* A11;	Return Address aka RA */
-	/* PCXI pointing to the Upper context. */
-	pxLowerCSA[ 0 ] = ( portINITIAL_PCXI_UPPER_CONTEXT_WORD | (unsigned portBASE_TYPE)portADDRESS_TO_CSA( pxUpperCSA ) );
+	pulLowerCSA[ 8 ] = ( unsigned long ) pvParameters;		/* A4;	Address Type Parameter Register	*/
+	pulLowerCSA[ 1 ] = ( unsigned long ) pxCode;			/* A11;	Return Address aka RA */
 
-	/* Save the link to the CSA in the Top of Stack. */
-	pxTopOfStack = (unsigned portBASE_TYPE *)portADDRESS_TO_CSA( pxLowerCSA );
+	/* PCXI pointing to the Upper context. */
+	pulLowerCSA[ 0 ] = ( portINITIAL_PCXI_UPPER_CONTEXT_WORD | ( unsigned long ) portADDRESS_TO_CSA( pulUpperCSA ) );
+
+	/* Save the link to the CSA in the top of stack. */
+	pxTopOfStack = (unsigned long * ) portADDRESS_TO_CSA( pulLowerCSA );
 
 	/* DSync to ensure that buffering is not a problem. */
 	_dsync();
@@ -197,21 +192,22 @@ unsigned portBASE_TYPE *pxLowerCSA = NULL;
 
 portBASE_TYPE xPortStartScheduler( void )
 {
-unsigned portBASE_TYPE uxMFCR = 0UL;
-unsigned portBASE_TYPE *pxUpperCSA = NULL;
-unsigned portBASE_TYPE *pxLowerCSA = NULL;
+extern void vTrapInstallHandlers( void );
+unsigned long ulMFCR = 0UL;
+unsigned long *pulUpperCSA = NULL;
+unsigned long *pulLowerCSA = NULL;
+
 	/* Set-up the timer interrupt. */
 	prvSetupTimerInterrupt();
 
 	/* Install the Trap Handlers. */
-extern void vTrapInstallHandlers( void );
 	vTrapInstallHandlers();
 
 	/* Install the Syscall Handler. */
-	if ( 0 == _install_trap_handler( portSYSCALL_TRAP, vPortYield ) )
+	if( 0 == _install_trap_handler( portSYSCALL_TRAP, prvPortYield ) )
 	{
-		/* Failed to install the Yield handler. */
-		_debug();
+		/* Failed to install the yield handler, force an assert. */
+		configASSERT( ( ( volatile void * ) NULL ) );
 	}
 
 	/* Load the initial SYSCON. */
@@ -220,23 +216,23 @@ extern void vTrapInstallHandlers( void );
 
 	/* ENDINIT has already been applied in the 'cstart.c' code. */
 
-	/* Set-up the Task switching ISR. */
-	CPU_SRC0.reg = 0x00001001UL;
-
-	/* Clear the PSW.CDC to enable RFE */
-	uxMFCR = _mfcr( $PSW );
-	uxMFCR &= portRESTORE_PSW_MASK;
-	_mtcr( $PSW, uxMFCR );
+	/* Clear the PSW.CDC to enable the use of an RFE without it generating an
+	exception because this code is not genuinely in an exception. */
+	ulMFCR = _mfcr( $PSW );
+	ulMFCR &= portRESTORE_PSW_MASK;
+	_mtcr( $PSW, ulMFCR );
 
 	/* Finally, perform the equivalent of a portRESTORE_CONTEXT() */
-	pxLowerCSA = portCSA_TO_ADDRESS( *(unsigned portBASE_TYPE *)pxCurrentTCB );
-	pxUpperCSA = portCSA_TO_ADDRESS( pxLowerCSA[0] );
+	pulLowerCSA = portCSA_TO_ADDRESS( ( *pxCurrentTCB ) );
+	pulUpperCSA = portCSA_TO_ADDRESS( pulLowerCSA[0] );
 	_mtcr( $PCXI, *pxCurrentTCB );
 
 	_dsync();
 	_nop();
 	_rslcx();
 	_nop();
+
+	/* Return to the first task selected to execute. */
 	__asm volatile( "rfe" );
 
 	/* Will not get here. */
@@ -248,20 +244,25 @@ static void prvSetupTimerInterrupt( void )
 {
 	/* Set-up the clock divider. */
 	unlock_wdtcon();
-		while ( 0 != ( WDT_CON0.reg & 0x1UL ) );
+	{
+		/* Wait until access to Endint protected register is enabled. */
+		while( 0 != ( WDT_CON0.reg & 0x1UL ) );
+
 		/* RMC == 1 so STM Clock == FPI */
 		STM_CLC.reg = ( 1UL << 8 );
+	}
 	lock_wdtcon();
 
-    /* Set-up the Compare value. */
-	STM_CMCON.reg = ( 31UL - __CLZ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) );
+    /* Set-up the Compare value.  Determine how many bits are used. */
+	STM_CMCON.reg = ( 0x1fUL - __CLZ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) );
+
 	/* Take into account the current time so a tick doesn't happen immediately. */
 	STM_CMP0.reg = ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) + STM_TIM0.reg;
 
-	if ( 0 != _install_int_handler( portKERNEL_INTERRUPT_PRIORITY_LEVEL, vPortSystemTickHandler, 0 ) )
+	if( 0 != _install_int_handler( configKERNEL_INTERRUPT_PRIORITY, vPortSystemTickHandler, 0 ) )
 	{
 		/* Set-up the interrupt. */
-		STM_SRC0.reg = ( portKERNEL_INTERRUPT_PRIORITY_LEVEL | 0x00005000UL );
+		STM_SRC0.reg = ( configKERNEL_INTERRUPT_PRIORITY | 0x00005000UL );
 
 		/* Enable the Interrupt. */
 		STM_ISRR.reg = 0x1UL;
@@ -270,31 +271,37 @@ static void prvSetupTimerInterrupt( void )
 	else
 	{
 		/* Failed to install the Tick Interrupt. */
-		_debug();
+		configASSERT( ( ( volatile void * ) NULL ) );
 	}
 }
 /*-----------------------------------------------------------*/
 
 void vPortSystemTickHandler( int iArg )
 {
+unsigned long ulSavedInterruptMask;
+
+	/* Just to avoid compiler warnings about unused parameters. */
+	( void ) iArg;
+
 	/* Clear the interrupt source. */
 	STM_ISRR.reg = 1UL;
+
 	/* Reload the Compare Match register for X ticks into the future. */
 	STM_CMP0.reg += ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ );
 
 	/* Kernel API calls require Critical Sections. */
-	portINTERRUPT_ENTER_CRITICAL();
+	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* Increment the Tick. */
 		vTaskIncrementTick();
 	}
-	portINTERRUPT_EXIT_CRITICAL();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
 
-#if configUSE_PREEMPTION == 1
-	portYIELD_FROM_ISR( pdTRUE );
-#endif
-
-	(void)iArg;
+	#if configUSE_PREEMPTION == 1
+	{
+		portYIELD_FROM_ISR( pdTRUE );
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -379,18 +386,37 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( int iTrapIdentification )
+static void prvPortYield( int iTrapIdentification )
 {
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
-	case portSYSCALL_TASK_YIELD:
-		/* Select another task to run. */
-		portYIELD_FROM_ISR( pdTRUE );
-		break;
+		case portSYSCALL_TASK_YIELD:
+			/* Select another task to run. */
+			portYIELD_FROM_ISR( pdTRUE );
+			break;
 
-	default:
-		_debug();
-		break;
+		default:
+			/* Unimplemented trap called. */
+			configASSERT( ( ( volatile void * ) NULL ) );
+			break;
 	}
 }
 /*-----------------------------------------------------------*/
+
+unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void )
+{
+unsigned portBASE_TYPE uxReturn = 0UL;
+
+	uxReturn = _mfcr( $ICR );
+	_mtcr( $ICR, ( ( uxReturn & ~portCCPN_MASK ) | configMAX_SYSCALL_INTERRUPT_PRIORITY ) );
+
+	return ( uxReturn & portCCPN_MASK );
+}
+/*-----------------------------------------------------------*/
+
+void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedStatusValue )
+{
+	_mtcr( $ICR, ( uxSavedStatusValue & portCCPN_MASK ) );
+}
+/*-----------------------------------------------------------*/
+

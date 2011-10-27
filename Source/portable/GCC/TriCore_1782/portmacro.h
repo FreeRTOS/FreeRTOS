@@ -97,14 +97,16 @@ extern "C" {
 #define portNOP()									__asm volatile( " nop " )
 #define portCRITICAL_NESTING_IN_TCB					1
 #define portRESTORE_FIRST_TASK_PRIORITY_LEVEL		1
-#define portKERNEL_INTERRUPT_PRIORITY_LEVEL			4
-#define portSYSTEM_INTERRUPT_PRIORITY_LEVEL			64
+
+
 /*---------------------------------------------------------------------------*/
 
 typedef struct MPU_SETTINGS { unsigned long ulNotUsed; } xMPU_SETTINGS;
 
 /* Define away the instruction from the Restore Context Macro. */
 #define portPRIVILEGE_BIT							0x0UL
+
+#define portCCPN_MASK						( 0x000000FFUL )
 
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
@@ -129,13 +131,20 @@ extern void vPortReclaimCSA( unsigned portBASE_TYPE *pxTCB );
 
 /* Critical section management. */
 
-/* Clear the ICR.IE bit. */		/* Or set ICR.CCPN to portSYSTEM_INTERRUPT_PRIORITY_LEVEL */
-#define portDISABLE_INTERRUPTS()			_disable()
-/* Set the ICR.IE bit. */		/* Or set ICR.CCPN to 0 */
-#define portENABLE_INTERRUPTS()				_enable()
+/* Clear the ICR.IE bit. */
+#define portDISABLE_INTERRUPTS()			_mtcr( $ICR, ( ( _mfcr( $ICR ) & ~portCCPN_MASK ) | configMAX_SYSCALL_INTERRUPT_PRIORITY ) )
 
-#define portINTERRUPT_ENTER_CRITICAL()		_disable()
-#define portINTERRUPT_EXIT_CRITICAL()		_enable()
+/* Set the ICR.IE bit. */
+#define portENABLE_INTERRUPTS()				{ unsigned long ulCurrentICR = _mfcr( $ICR ); _mtcr( $ICR, ( ulCurrentICR & ~portCCPN_MASK ) ) }
+
+extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void );
+extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedStatusValue );
+
+/* Set ICR.CCPN to configMAX_SYSCALL_INTERRUPT_PRIORITY */
+#define portSET_INTERRUPT_MASK_FROM_ISR() 	uxPortSetInterruptMaskFromISR()
+
+/* Set ICR.CCPN to uxSavedInterruptStatus */
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) vPortClearInterruptMaskFromISR( uxSavedStatusValue )
 
 /*---------------------------------------------------------------------------*/
 
@@ -166,8 +175,7 @@ unsigned portBASE_TYPE *pxUpperCSA = NULL;						\
 unsigned portBASE_TYPE xUpperCSA = 0UL;							\
 	if ( pdTRUE == xHigherPriorityTaskWoken )					\
 	{															\
-		/*_disable();*/											\
-		portINTERRUPT_ENTER_CRITICAL();							\
+		_disable();												\
 		_isync();												\
 		xUpperCSA = _mfcr( $PCXI );								\
 		pxUpperCSA = portCSA_TO_ADDRESS( xUpperCSA );			\

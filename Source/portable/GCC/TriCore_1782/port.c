@@ -95,7 +95,7 @@
 /*
  * Perform any hardware configuration necessary to generate the tick interrupt.
  */
-void vPortSystemTickHandler( int ) __attribute__((longcall));
+static void prvSystemTickHandler( int ) __attribute__((longcall));
 static void prvSetupTimerInterrupt( void );
 
 /*
@@ -106,6 +106,9 @@ static void prvPortYield( int iTrapIdentification );
 
 /* This reference is required by the save/restore context macros. */
 extern volatile unsigned long *pxCurrentTCB;
+
+/* Precalculate the compare match value at compile time. */
+static const unsigned long ulCompareMatchValue = ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ );
 
 /*-----------------------------------------------------------*/
 
@@ -253,20 +256,23 @@ static void prvSetupTimerInterrupt( void )
 	}
 	lock_wdtcon();
 
-    /* Set-up the Compare value.  Determine how many bits are used. */
-	STM_CMCON.reg = ( 0x1fUL - __CLZ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) );
+    /* Determine how many bits are used without changing other bits in the CMCON register. */
+	STM_CMCON.reg &= ~( 0x1fUL );
+	STM_CMCON.reg |= ( 0x1fUL - __CLZ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) );
 
 	/* Take into account the current time so a tick doesn't happen immediately. */
-	STM_CMP0.reg = ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ ) + STM_TIM0.reg;
+	STM_CMP0.reg = ulCompareMatchValue + STM_TIM0.reg;
 
-	if( 0 != _install_int_handler( configKERNEL_INTERRUPT_PRIORITY, vPortSystemTickHandler, 0 ) )
+	if( 0 != _install_int_handler( configKERNEL_INTERRUPT_PRIORITY, prvSystemTickHandler, 0 ) )
 	{
 		/* Set-up the interrupt. */
 		STM_SRC0.reg = ( configKERNEL_INTERRUPT_PRIORITY | 0x00005000UL );
 
 		/* Enable the Interrupt. */
-		STM_ISRR.reg = 0x1UL;
-		STM_ICR.reg = 0x1UL;
+		STM_ISRR.reg &= ~( 0x03UL );
+		STM_ISRR.reg |= 0x1UL;
+		STM_ISRR.reg &= ~( 0x07UL );
+		STM_ICR.reg |= 0x1UL;
 	}
 	else
 	{
@@ -276,7 +282,7 @@ static void prvSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortSystemTickHandler( int iArg )
+static void prvSystemTickHandler( int iArg )
 {
 unsigned long ulSavedInterruptMask;
 
@@ -286,8 +292,24 @@ unsigned long ulSavedInterruptMask;
 	/* Clear the interrupt source. */
 	STM_ISRR.reg = 1UL;
 
-	/* Reload the Compare Match register for X ticks into the future. */
-	STM_CMP0.reg += ( configPERIPHERAL_CLOCK_HZ / configTICK_RATE_HZ );
+	/* Reload the Compare Match register for X ticks into the future.
+
+	If critical section or interrupt nesting budgets are exceeded, then
+	it is possible that the calculated next compare match value is in the
+	past.  If this occurs (unlikely), it is possible that the resulting
+	time slippage will exceed a single tick period.  Any adverse effect of
+	this is time bounded by the fact that only the first n bits of the 56 bit
+	STM timer are being used for a compare match, so another compare match
+	will occur after an overflow in just those n bits (not the entire 56 bits).
+	As an example, if the peripheral clock is 75MHz, and the tick rate is 1KHz,
+	a missed tick could result in the next tick interrupt occurring within a
+	time that is 1.7 times the desired period.  The fact that this is greater
+	than a single tick period is an effect of using a timer that cannot be
+	automatically reset, in hardware, by the occurrence of a tick interrupt.
+	Changing the tick source to a timer that has an automatic reset on compare
+	match (such as a GPTA timer) will reduce the maximum possible additional
+	period to exactly 1 times the desired period. */
+	STM_CMP0.reg += ulCompareMatchValue;
 
 	/* Kernel API calls require Critical Sections. */
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();

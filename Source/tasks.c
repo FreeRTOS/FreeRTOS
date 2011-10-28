@@ -504,7 +504,7 @@ tskTCB * pxNewTCB;
 		#endif
 
 		/* Check the alignment of the initialised stack. */
-		configASSERT( ( ( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+		portALIGNMENT_ASSERT_pxCurrentTCB( ( ( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 
 		if( ( void * ) pxCreatedTask != NULL )
 		{

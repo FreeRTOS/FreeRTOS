@@ -146,6 +146,10 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedStatus
 /* Set ICR.CCPN to uxSavedInterruptStatus */
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) vPortClearInterruptMaskFromISR( uxSavedStatusValue )
 
+/* As this port holds a CSA address in pxTopOfStack, the assert that checks the
+pxTopOfStack alignment is removed. */
+#define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
+
 /*---------------------------------------------------------------------------*/
 
 /*
@@ -173,6 +177,7 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedStatus
 {																\
 unsigned portBASE_TYPE *pxUpperCSA = NULL;						\
 unsigned portBASE_TYPE xUpperCSA = 0UL;							\
+extern volatile unsigned long *pxCurrentTCB;					\
 	if ( pdTRUE == xHigherPriorityTaskWoken )					\
 	{															\
 		_disable();												\

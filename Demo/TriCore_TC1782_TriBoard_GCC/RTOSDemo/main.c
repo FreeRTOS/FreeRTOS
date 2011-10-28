@@ -123,6 +123,7 @@
 #include "serial.h"
 #include "death.h"
 #include "TimerDemo.h"
+#include "InterruptNestTest.h"
 
 /*-----------------------------------------------------------*/
 
@@ -141,9 +142,9 @@
 
 /* The rate at which the on board LED will toggle when there is/is not an
 error. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 5000 / portTICK_RATE_MS	)
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
-#define mainON_BOARD_LED_BIT		( ( unsigned long ) 7 )
+#define mainNO_ERROR_FLASH_PERIOD_MS	( ( portTickType ) 5000 / portTICK_RATE_MS	)
+#define mainERROR_FLASH_PERIOD_MS		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainON_BOARD_LED_BIT			( ( unsigned long ) 7 )
 
 /* Constant used by the standard timer test functions. */
 #define mainTIMER_TEST_PERIOD		( 50 )
@@ -238,7 +239,7 @@ int main( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD_MS;
 portTickType xLastExecutionTime;
 
 	/* Just to stop compiler warnings. */
@@ -250,7 +251,7 @@ portTickType xLastExecutionTime;
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error.  If an error is detected then the delay period
-	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
+	is decreased from mainNO_ERROR_FLASH_PERIOD_MS to mainERROR_FLASH_PERIOD_MS so
 	the on board LED flash rate will increase.  NOTE:  This task could easily
 	be replaced by a software timer callback to remove the overhead of having
 	an extra task. */
@@ -268,7 +269,7 @@ portTickType xLastExecutionTime;
 			at a higher frequency to give visible feedback that something has
 			gone wrong (it might just be that the loop back connector required
 			by the comtest tasks has not been fitted). */
-			xDelayPeriod = mainERROR_FLASH_PERIOD;
+			xDelayPeriod = mainERROR_FLASH_PERIOD_MS;
 		}
 
 		/* The toggle rate of the LED depends on how long this task delays for.
@@ -281,6 +282,7 @@ portTickType xLastExecutionTime;
 static long prvCheckOtherTasksAreStillRunning( void )
 {
 long lReturn = pdPASS;
+unsigned long ulHighFrequencyTimerTaskIterations, ulExpectedIncFrequency_ms;
 
 	/* Check all the demo tasks (other than the flash tasks) to ensure
 	that they are all still running, and that none have detected an error. */
@@ -340,11 +342,23 @@ long lReturn = pdPASS;
 		lReturn = pdFAIL;
 	}
 
+	/* Obtain the number of times the task associated with the high frequency
+	(interrupt nesting) timer test has increment since the check task last
+	executed, and the frequency at which it is expected to execute in ms. */
+	ulHighFrequencyTimerTaskIterations = ulInterruptNestingTestGetIterationCount( &ulExpectedIncFrequency_ms );
+	if( ulHighFrequencyTimerTaskIterations < ( ( mainNO_ERROR_FLASH_PERIOD_MS / ulExpectedIncFrequency_ms ) - 1 ) )
+	{
+		/* Would have expected the high frequency timer task to have
+		incremented its execution count more times that reported. */
+		lReturn = pdFAIL;
+	}
+
+
 	#if configUSE_TIMERS == 1
 	{
 		/* For space constraint reasons, do not include the timer demo in
 		builds that execute from RAM. */
-		if( xAreTimerDemoTasksStillRunning( mainNO_ERROR_FLASH_PERIOD ) != pdTRUE )
+		if( xAreTimerDemoTasksStillRunning( mainNO_ERROR_FLASH_PERIOD_MS ) != pdTRUE )
 		{
 			lReturn = pdFAIL;
 		}
@@ -670,6 +684,7 @@ static void prvOptionallyCreateComprehensveTestApplication( void )
 		vStartGenericQueueTasks( tskIDLE_PRIORITY );
 		vStartRecursiveMutexTasks();
 		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+		vSetupInterruptNestingTest();
 
 		#if configUSE_TIMERS == 1
 		{

@@ -99,9 +99,6 @@ static xQueueHandle xSerialTransmitQueue = NULL;
 static xQueueHandle xSerialReceiveQueue = NULL;
 static volatile portBASE_TYPE xTransmitStatus = 0UL;
 
-/* This reference is required by the Save/Restore Context Macros. */
-extern volatile unsigned portBASE_TYPE * pxCurrentTCB;
-
 /*-----------------------------------------------------------*/
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )

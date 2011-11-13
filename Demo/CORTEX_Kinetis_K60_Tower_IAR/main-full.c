@@ -624,6 +624,12 @@ const unsigned long ulSysTickPendingBit = 0x04000000UL;
 	
 	/* How many times has it overflowed? */
 	ulTickCount = xTaskGetTickCountFromISR();
+
+	/* This is called from the context switch, so will be called from a
+	critical section.  xTaskGetTickCountFromISR() contains its own critical
+	section, and the ISR safe critical sections are not designed to nest,
+	so reset the critical section. */
+	portSET_INTERRUPT_MASK_FROM_ISR();
 	
 	/* Is there a SysTick interrupt pending? */
 	if( ( *pulInterruptCTRLState & ulSysTickPendingBit ) != 0UL )

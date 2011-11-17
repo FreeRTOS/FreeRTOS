@@ -114,16 +114,12 @@ extern void vTaskExitCritical( void );
 #define portEXIT_CRITICAL()				vTaskExitCritical()
 /*---------------------------------------------------------------------------*/
 
-/* Task utilities. */
-
-extern void vPortReclaimCSA( unsigned portBASE_TYPE *pxTCB );
-
 /* CSA Manipulation. */
-#define portCSA_TO_ADDRESS( pCSA )			( ( unsigned portBASE_TYPE * )( ( ( ( pCSA ) & 0x000F0000 ) << 12 ) | ( ( ( pCSA ) & 0x0000FFFF ) << 6 ) ) )
-#define portADDRESS_TO_CSA( pAddress )		( ( unsigned portBASE_TYPE )( ( ( ( (unsigned portBASE_TYPE)( pAddress ) ) & 0xF0000000 ) >> 12 ) | ( ( (unsigned portBASE_TYPE)( pAddress ) & 0x003FFFC0 ) >> 6 ) ) )
+#define portCSA_TO_ADDRESS( pCSA )			( ( unsigned long * )( ( ( ( pCSA ) & 0x000F0000 ) << 12 ) | ( ( ( pCSA ) & 0x0000FFFF ) << 6 ) ) )
+#define portADDRESS_TO_CSA( pAddress )		( ( unsigned long )( ( ( ( (unsigned long)( pAddress ) ) & 0xF0000000 ) >> 12 ) | ( ( ( unsigned long )( pAddress ) & 0x003FFFC0 ) >> 6 ) ) )
 /*---------------------------------------------------------------------------*/
 
-#define portYIELD()								_syscall(0)
+#define portYIELD()								_syscall( 0 )
 /* Port Restore is implicit in the platform when the function is returned from the original PSW is automatically replaced. */
 #define portSYSCALL_TASK_YIELD					0
 #define portSYSCALL_RAISE_PRIORITY				1
@@ -131,68 +127,53 @@ extern void vPortReclaimCSA( unsigned portBASE_TYPE *pxTCB );
 
 /* Critical section management. */
 
-/* Clear the ICR.IE bit. */
-#define portDISABLE_INTERRUPTS()			_mtcr( $ICR, ( ( _mfcr( $ICR ) & ~portCCPN_MASK ) | configMAX_SYSCALL_INTERRUPT_PRIORITY ) )
+/* Set ICR.CCPN to configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+#define portDISABLE_INTERRUPTS()	{																									\
+										unsigned long ulICR;																			\
+										_disable();																						\
+										ulICR = _mfcr( $ICR ); 		/* Get current ICR value. */										\
+										ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */											\
+										ulICR |= configMAX_SYSCALL_INTERRUPT_PRIORITY; /* Set mask bits to required priority mask. */	\
+										_mtcr( $ICR, ulICR );		/* Write back updated ICR. */										\
+										_isync();																						\
+										_enable();																						\
+									}
 
-/* Set the ICR.IE bit. */
-#define portENABLE_INTERRUPTS()				{ unsigned long ulCurrentICR = _mfcr( $ICR ); _mtcr( $ICR, ( ulCurrentICR & ~portCCPN_MASK ) ) }
+/* Clear ICR.CCPN to allow all interrupt priorities. */
+#define portENABLE_INTERRUPTS()		{																	\
+										unsigned long ulICR;											\
+										_disable();														\
+										ulICR = _mfcr( $ICR );		/* Get current ICR value. */		\
+										ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */			\
+										_mtcr( $ICR, ulICR );		/* Write back updated ICR. */		\
+										_isync();														\
+										_enable();														\
+									}
 
-extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void );
-extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE uxSavedStatusValue );
+/* Set ICR.CCPN to uxSavedMaskValue. */
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedMaskValue ) 	{																						\
+																	unsigned long ulICR;																\
+																	_disable();																			\
+																	ulICR = _mfcr( $ICR );		/* Get current ICR value. */							\
+																	ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */								\
+																	ulICR |= uxSavedMaskValue;	/* Set mask bits to previously saved mask value. */		\
+																	_mtcr( $ICR, ulICR );		/* Write back updated ICR. */							\
+																	_isync();																			\
+																	_enable();																			\
+																}
+
 
 /* Set ICR.CCPN to configMAX_SYSCALL_INTERRUPT_PRIORITY */
+extern unsigned long uxPortSetInterruptMaskFromISR( void );
 #define portSET_INTERRUPT_MASK_FROM_ISR() 	uxPortSetInterruptMaskFromISR()
-
-/* Set ICR.CCPN to uxSavedInterruptStatus */
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) vPortClearInterruptMaskFromISR( uxSavedStatusValue )
 
 /* As this port holds a CSA address in pxTopOfStack, the assert that checks the
 pxTopOfStack alignment is removed. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
 
-/*---------------------------------------------------------------------------*/
+/* Pend a priority 1 interrupt, which will take care of the context switch. */
+#define portYIELD_FROM_ISR( xHigherPriorityTaskWoken ) 		if( xHigherPriorityTaskWoken != pdFALSE ) {	CPU_SRC0.bits.SETR = 1; _isync(); }
 
-/*
- * Save the context of a task.
- * The upper context is automatically saved when entering a trap or interrupt.
- * Need to save the lower context as well and copy the PCXI CSA ID into
- * pxCurrentTCB->pxTopOfStack. Only Lower Context CSA IDs may be saved to the
- * TCB of a task.
- *
- * Call vTaskSwitchContext to select the next task, note that this changes the
- * value of pxCurrentTCB so that it needs to be reloaded.
- *
- * Call vPortSetMPURegisterSetOne to change the MPU mapping for the task
- * that has just been switched in.
- *
- * Load the context of the task.
- * Need to restore the lower context by loading the CSA from
- * pxCurrentTCB->pxTopOfStack into PCXI (effectively changing the call stack).
- * In the Interrupt handler post-amble, RSLCX will restore the lower context
- * of the task. RFE will restore the upper context of the task, jump to the
- * return address and restore the previous state of interrupts being
- * enabled/disabled.
- */
-#define portYIELD_FROM_ISR( xHigherPriorityTaskWoken )			\
-{																\
-unsigned portBASE_TYPE *pxUpperCSA = NULL;						\
-unsigned portBASE_TYPE xUpperCSA = 0UL;							\
-extern volatile unsigned long *pxCurrentTCB;					\
-	if ( pdTRUE == xHigherPriorityTaskWoken )					\
-	{															\
-		_disable();												\
-		_isync();												\
-		xUpperCSA = _mfcr( $PCXI );								\
-		pxUpperCSA = portCSA_TO_ADDRESS( xUpperCSA );			\
-		*pxCurrentTCB = pxUpperCSA[0];							\
-		vTaskSwitchContext();									\
-		pxUpperCSA[0] = *pxCurrentTCB;							\
-		_dsync();												\
-		_isync();												\
-		_nop();													\
-		_nop();													\
-	}															\
-}
 /*---------------------------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
@@ -204,8 +185,8 @@ extern volatile unsigned long *pxCurrentTCB;					\
  * Port specific clean up macro required to free the CSAs that were consumed by
  * a task that has since been deleted.
  */
-void vPortReclaimCSA( unsigned portBASE_TYPE *pxTCB );
-#define portCLEAN_UP_TCB( pxTCB )		vPortReclaimCSA( ( unsigned portBASE_TYPE *) ( pxTCB ) )
+void vPortReclaimCSA( unsigned long *pxTCB );
+#define portCLEAN_UP_TCB( pxTCB )		vPortReclaimCSA( ( unsigned long * ) ( pxTCB ) )
 
 #ifdef __cplusplus
 }

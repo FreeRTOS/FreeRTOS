@@ -67,12 +67,6 @@
 
 /*---------------------------------------------------------------------------*/
 
-/* Interrupt priorities. */
-#define serialINTERRUPT_PRIORITY_TX			16
-#define serialINTERRUPT_PRIORITY_RX			18
-
-/*---------------------------------------------------------------------------*/
-
 /*
  * See if the Serial Transmit Interrupt is currently activated, meaning that
  * the interrupt is working through the back log of bytes that it needs to
@@ -135,16 +129,16 @@ unsigned long ulReloadValue = 0UL;
 	ASC0_CON.reg = 0x00008011;	/* 1 Start, 1 Stop, 8 Data, No Parity, No Error Checking, Receive On, Module On. */
 
 	/* Install the Tx interrupt. */
-	if( 0 != _install_int_handler( serialINTERRUPT_PRIORITY_TX, prvTxBufferInterruptHandler, 0 ) )
+	if( 0 != _install_int_handler( configINTERRUPT_PRIORITY_TX, prvTxBufferInterruptHandler, 0 ) )
 	{
-		ASC0_TBSRC.reg = serialINTERRUPT_PRIORITY_TX | 0x5000UL;
+		ASC0_TBSRC.reg = configINTERRUPT_PRIORITY_TX | 0x5000UL;
 		xTransmitStatus = 0UL;
 	}
 
 	/* Install the Rx interrupt. */
-	if( 0 != _install_int_handler( serialINTERRUPT_PRIORITY_RX, prvRxInterruptHandler, 0 ) )
+	if( 0 != _install_int_handler( configINTERRUPT_PRIORITY_RX, prvRxInterruptHandler, 0 ) )
 	{
-		ASC0_RSRC.reg = serialINTERRUPT_PRIORITY_RX | 0x5000UL;
+		ASC0_RSRC.reg = configINTERRUPT_PRIORITY_RX | 0x5000UL;
 	}
 
 	/* COM Handle is never used by demo code. */
@@ -194,6 +188,8 @@ static void prvTxBufferInterruptHandler( int iArg )
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned char ucTx;
 
+COUNT_NEST();
+
 	/* Just to remove compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -214,6 +210,7 @@ unsigned char ucTx;
 
 	/* Finally end ISR and switch Task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+ulNest--;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -221,7 +218,7 @@ static void prvRxInterruptHandler( int iArg )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned char ucRx;
-
+COUNT_NEST();
 	/* Just to remove compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -239,6 +236,7 @@ unsigned char ucRx;
 
 	/* Finally end ISR and switch Task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+ulNest--;
 }
 /*---------------------------------------------------------------------------*/
 

@@ -53,8 +53,8 @@ IF EXIST FreeRTOS_Source Goto END
     copy %COMMON_SOURCE%\flash.c           Common_Demo_Source
     copy %COMMON_SOURCE%\comtest.c         Common_Demo_Source
     copy %COMMON_SOURCE%\TimerDemo.c       Common_Demo_Source
-	copy %COMMON_SOURCE%\countsem.c        Common_Demo_Source
-	copy %COMMON_SOURCE%\integer.c         Common_Demo_Source
+    copy %COMMON_SOURCE%\countsem.c        Common_Demo_Source
+    copy %COMMON_SOURCE%\integer.c         Common_Demo_Source
     
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              Common_Demo_Source\include

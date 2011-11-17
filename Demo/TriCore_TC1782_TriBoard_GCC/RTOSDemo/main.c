@@ -1,3 +1,4 @@
+volatile unsigned long ulNest = 0UL, ulMaxNest = 0UL;
 /*
     FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 
@@ -297,16 +298,6 @@ unsigned long ulHighFrequencyTimerTaskIterations, ulExpectedIncFrequency_ms;
 		lReturn = pdFAIL;
 	}
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
-
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		lReturn = pdFAIL;
-	}
-
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
 		lReturn = pdFAIL;
@@ -342,6 +333,21 @@ unsigned long ulHighFrequencyTimerTaskIterations, ulExpectedIncFrequency_ms;
 		lReturn = pdFAIL;
 	}
 
+	if( xAreTimerDemoTasksStillRunning( mainNO_ERROR_FLASH_PERIOD_MS ) != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
+
+	if( xArePollingQueuesStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
+
+	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		lReturn = pdFAIL;
+	}
+
 	/* Obtain the number of times the task associated with the high frequency
 	(interrupt nesting) timer test has increment since the check task last
 	executed, and the frequency at which it is expected to execute in ms. */
@@ -352,18 +358,6 @@ unsigned long ulHighFrequencyTimerTaskIterations, ulExpectedIncFrequency_ms;
 		incremented its execution count more times that reported. */
 		lReturn = pdFAIL;
 	}
-
-
-	#if configUSE_TIMERS == 1
-	{
-		/* For space constraint reasons, do not include the timer demo in
-		builds that execute from RAM. */
-		if( xAreTimerDemoTasksStillRunning( mainNO_ERROR_FLASH_PERIOD_MS ) != pdTRUE )
-		{
-			lReturn = pdFAIL;
-		}
-	}
-	#endif
 
 	return lReturn;
 }
@@ -393,7 +387,6 @@ void vApplicationMallocFailedHook( void )
 	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
 	to query the size of free heap space that remains (although it does not
 	provide information on how the remaining heap might be fragmented). */
-	_debug();
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
 }
@@ -452,6 +445,46 @@ portBASE_TYPE xReturn = pdPASS;
 	ulPreviousRegisterTest2Count = ulRegisterTest2Count;
 
 	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+static void prvOptionallyCreateComprehensveTestApplication( void )
+{
+	#if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY == 0
+	{
+		vStartIntegerMathTasks( tskIDLE_PRIORITY );
+		vStartDynamicPriorityTasks();
+		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
+		vCreateBlockTimeTasks();
+		vStartCountingSemaphoreTasks();
+		vStartGenericQueueTasks( tskIDLE_PRIORITY );
+		vStartRecursiveMutexTasks();
+		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+		vSetupInterruptNestingTest();
+		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+
+		/* Create the register test tasks, as described at the top of this file. */
+		xTaskCreate( prvRegisterCheckTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( prvRegisterCheckTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
+
+		/* Start the check task - which is defined in this file. */
+		xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+
+		/* This task has to be created last as it keeps account of the number of tasks
+		it expects to see running. */
+		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+	}
+	#else /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
+	{
+		/* Just to prevent compiler warnings when the configuration options are
+		set such that these static functions are not used. */
+		( void ) prvCheckTask;
+		( void ) prvRegisterCheckTask1;
+		( void ) prvRegisterCheckTask2;
+	}
+	#endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 
@@ -667,53 +700,6 @@ static void prvRegisterCheckTask2( void *pvParameters )
 
 	/* The parameter is used but in the assembly. */
 	(void)pvParameters;
-}
-/*-----------------------------------------------------------*/
-
-static void prvOptionallyCreateComprehensveTestApplication( void )
-{
-	#if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY == 0
-	{
-		vStartIntegerMathTasks( tskIDLE_PRIORITY );
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-		vStartDynamicPriorityTasks();
-		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vCreateBlockTimeTasks();
-		vStartCountingSemaphoreTasks();
-		vStartGenericQueueTasks( tskIDLE_PRIORITY );
-		vStartRecursiveMutexTasks();
-		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-		vSetupInterruptNestingTest();
-
-		#if configUSE_TIMERS == 1
-		{
-			/* For space constraint reasons, do not include the timer demo in
-			builds that execute from RAM. */
-			vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-		}
-		#endif /* configUSE_TIMERS */
-
-		/* Create the register test tasks, as described at the top of this file. */
-		xTaskCreate( prvRegisterCheckTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( prvRegisterCheckTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
-
-		/* Start the check task - which is defined in this file. */
-		xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
-		/* This task has to be created last as it keeps account of the number of tasks
-		it expects to see running. */
-		vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	}
-	#else /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
-	{
-		/* Just to prevent compiler warnings when the configuration options are
-		set such that these static functions are not used. */
-		( void ) prvCheckTask;
-		( void ) prvRegisterCheckTask1;
-		( void ) prvRegisterCheckTask2;
-	}
-	#endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
 }
 
 /*-----------------------------------------------------------*/

@@ -69,10 +69,11 @@
 #include <machine/cint.h>
 #include <machine/wdtcon.h>
 
+#warning DOCUMENT THIS
 /* This constant is specific to this test application.  It allows the high
 frequency (interrupt nesting test) timer to know how often to trigger, and the
 check task to know how many iterations to expect at any given time. */
-#define tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ		( 1931UL )
+#define tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ		( 8931UL )
 
 static void prvPortHighFrequencyTimerHandler( int iArg ) __attribute__((longcall));
 static void prvHighFrequencyTimerTask( void *pvParameters );
@@ -101,19 +102,9 @@ unsigned long ulCompareMatchBits;
 	
 	/* Setup the interrupt itself.	The STM module clock divider is setup when 
 	the tick interrupt is configured - which is when the scheduler is started - 
-	so there is no need	to do it here. */
+	so there is no need	to do it here.
 
-	unlock_wdtcon();
-	{
-		/* Wait until access to Endint protected register is enabled. */
-		while( 0 != ( WDT_CON0.reg & 0x1UL ) );
-
-		/* RMC == 1 so STM Clock == FPI */
-		STM_CLC.reg = ( 1UL << 8 );
-	}
-	lock_wdtcon();
-
-	/* The tick interrupt uses compare match 0, so this test uses compare match
+	The tick interrupt uses compare match 0, so this test uses compare match
 	1, which means shifting up the values by 16 before writing them to the
 	register. */
 	ulCompareMatchBits = ( 0x1fUL - __CLZ( ulCompareMatchValue ) );
@@ -127,10 +118,10 @@ unsigned long ulCompareMatchBits;
 		STM_CMCON.reg |= ulCompareMatchBits;
 		STM_CMP1.reg = ulCompareMatchValue;
 
-		if( 0 != _install_int_handler( configMAX_SYSCALL_INTERRUPT_PRIORITY - 5, prvPortHighFrequencyTimerHandler, 0 ) )
+		if( 0 != _install_int_handler( configHIGH_FREQUENCY_TIMER_PRIORITY, prvPortHighFrequencyTimerHandler, 0 ) )
 		{
 			/* Set-up the interrupt. */
-			STM_SRC1.reg = ( ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 5 ) | 0x00005000UL );
+			STM_SRC1.reg = ( configHIGH_FREQUENCY_TIMER_PRIORITY | 0x00005000UL );
 	
 			/* Enable the Interrupt. */
 			STM_ISRR.reg &= ~( 0x03UL << 2UL );
@@ -177,6 +168,7 @@ static void prvPortHighFrequencyTimerHandler( int iArg )
 static volatile unsigned long ulExecutionCounter = 0UL;
 unsigned long ulHigherPriorityTaskWoken = pdFALSE;
 
+COUNT_NEST();
 	/* Just to avoid compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -200,4 +192,5 @@ unsigned long ulHigherPriorityTaskWoken = pdFALSE;
 	}
 	
 	portYIELD_FROM_ISR( ulHigherPriorityTaskWoken );
+ulNest--;
 }

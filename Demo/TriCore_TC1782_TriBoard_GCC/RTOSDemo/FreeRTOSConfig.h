@@ -69,7 +69,7 @@
 /*----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION				1
-#define configUSE_IDLE_HOOK					0
+#define configUSE_IDLE_HOOK					1
 /* CPU is actually 150MHz but FPIDIV is 1 meaning divide by 2 for the
 peripheral clock. */
 #define configCPU_CLOCK_HZ					( ( unsigned long ) 150000000UL )
@@ -77,14 +77,14 @@ peripheral clock. */
 #define configTICK_RATE_HZ					( ( portTickType ) 1000UL )
 #define configMAX_PRIORITIES				( ( unsigned portBASE_TYPE ) 6 )
 #define configMINIMAL_STACK_SIZE			( ( unsigned short ) 128 )
-#define configTOTAL_HEAP_SIZE				( ( size_t ) ( 32 * 1024 ) )
+#define configTOTAL_HEAP_SIZE				( ( size_t ) ( 35U * 1024U ) )
 #define configMAX_TASK_NAME_LEN				( 16 )
 #define configUSE_TRACE_FACILITY			0
 #define configUSE_16_BIT_TICKS				0
 #define configIDLE_SHOULD_YIELD				0
 #define configUSE_MALLOC_FAILED_HOOK 		1
 #define configCHECK_FOR_STACK_OVERFLOW		0
-
+#define configUSE_TICK_HOOK					1
 #define configUSE_COUNTING_SEMAPHORES 		1
 #define configUSE_RECURSIVE_MUTEXES			1
 #define configUSE_MUTEXES					1
@@ -93,21 +93,11 @@ peripheral clock. */
 #define configUSE_CO_ROUTINES 				0
 #define configMAX_CO_ROUTINE_PRIORITIES 	( 2 )
 
-/* Timer functionality.  For space constraint reasons, the standard demo timer
-tests are only included in the build configuration that generates code that
-runs from Flash, and not in the build configuration that generates code that
-runs from RAM. */
-#ifdef BUILD_FOR_RAM_EXECUTION
-	#define configUSE_TIMERS					0
-	#define configUSE_TICK_HOOK					0
-#else
-	#define configUSE_TIMER						1
-	#define configUSE_TICK_HOOK					1
-#endif
-
-#define configTIMER_TASK_PRIORITY				( 4 )
-#define configTIMER_QUEUE_LENGTH				( 5 )
-#define configTIMER_TASK_STACK_DEPTH			configMINIMAL_STACK_SIZE
+/* Software timer configuration. */
+#define configUSE_TIMERS					1
+#define configTIMER_TASK_PRIORITY			( 4 )
+#define configTIMER_QUEUE_LENGTH			( 5 )
+#define configTIMER_TASK_STACK_DEPTH		configMINIMAL_STACK_SIZE
 
 /* Set the following definitions to 1 to include the API function, or zero
  to exclude the API function. */
@@ -120,11 +110,27 @@ runs from RAM. */
 #define INCLUDE_vTaskDelayUntil					1
 #define INCLUDE_vTaskDelay						1
 
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY	64
-#define configKERNEL_INTERRUPT_PRIORITY			1
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY	64 /* Interrupt above priority 64 are not effected by critical sections, but cannot call interrupt safe FreeRTOS functions. */
+#define configKERNEL_INTERRUPT_PRIORITY			2  /* This is defined here for clarity, but the value must not be changed from 2. */
+#define configKERNEL_YIELD_PRIORITY				1  /* This is defined here for clarity, but must not be changed from its default value of 1. */
+
+/* Interrupt priorities. */
+#define configINTERRUPT_PRIORITY_TX				16
+#define configINTERRUPT_PRIORITY_RX				18
+#define configHIGH_FREQUENCY_TIMER_PRIORITY		( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1UL )
 
 /* Default definition of configASSERT(). */
 #define configASSERT( x ) if( ( x ) == 0 ) 		{ portDISABLE_INTERRUPTS(); for( ;; ); }
+
+extern volatile unsigned long ulNest, ulMaxNest;
+#define COUNT_NEST()			\
+{								\
+	ulNest++;					\
+	if( ulNest > ulMaxNest )	\
+	{							\
+		ulMaxNest = ulNest;		\
+	}							\
+}
 
 #endif /* FREERTOS_CONFIG_H */
 

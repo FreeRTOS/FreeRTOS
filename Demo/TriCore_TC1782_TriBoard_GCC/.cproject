@@ -76,7 +76,6 @@
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\recmutex.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\semtest.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\list.o&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\MPU_Wrappers.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\porttrap.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\MemMang\heap_2.o&quot;"/>
@@ -87,6 +86,7 @@
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\ThirdPartyCode\cpufreq.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\main.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\serial.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\InterruptNestTest.o&quot;"/>
 								</option>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.1129393828" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="&quot;..\ld\iROM.ld&quot;" valueType="string"/>
 							</tool>
@@ -547,7 +547,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/RTOSDemo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/RTOSDemo/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${TRICORE_TOOLS}/tricore/include&quot;"/>
 								</option>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.assembler.symbols.defined.212143771" name="Defined symbols (-D)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.assembler.symbols.defined" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value=""/>
@@ -557,7 +556,6 @@
 							<tool id="com.rt.hightec.buildsystem.tricore.new.compiler.c.1160628898" name="TriCore C Compiler" superClass="com.rt.hightec.buildsystem.tricore.new.compiler.c">
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.symbols.defined.827024089" name="Defined symbols (-D)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.symbols.defined" valueType="stringList">
 									<listOptionValue builtIn="false" value="TRIBOARD_TC1782"/>
-									<listOptionValue builtIn="false" value="BUILD_FOR_RAM_EXECUTION"/>
 								</option>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.general.paths.666426724" name="Include Paths" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.general.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/RTOSDemo/Common_Demo_Source/include}&quot;"/>
@@ -566,7 +564,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/portable/PLS/TriCore_1782_MPU}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/RTOSDemo/FreeRTOS_Source/portable/GCC/TriCore_1782}&quot;"/>
 								</option>
-								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.optimization.optimization.1251458415" name="Optimization Level" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.optimization.optimization" value="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.code.optimization.0" valueType="enumerated"/>
+								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.optimization.optimization.1251458415" name="Optimization Level" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.optimization.optimization" value="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.code.optimization.s" valueType="enumerated"/>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.miscellaneous.options.538537192" name="Other options" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.miscellaneous.options" valueType="stringList">
 									<listOptionValue builtIn="false" value="-Wextra"/>
 									<listOptionValue builtIn="false" value="-ffunction-sections"/>
@@ -582,9 +580,37 @@
 								</option>
 							</tool>
 							<tool id="com.rt.hightec.buildsystem.tricore.new.linker.c.1929159535" name="TriCore C Linker" superClass="com.rt.hightec.buildsystem.tricore.new.linker.c">
-								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.filesToLink.236609617" name="Link order" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.filesToLink" valueType="stringList"/>
+								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.filesToLink.236609617" name="Link order" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.filesToLink" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\BlockQ.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\GenQTest.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\PollQ.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\QPeek.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\TimerDemo.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\blocktim.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\comtest.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\countsem.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\death.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\dynamic.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\flash.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\flop.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\integer.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\recmutex.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\Common_Demo_Source\semtest.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\list.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\porttrap.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\portable\MemMang\heap_2.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\queue.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\tasks.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\FreeRTOS_Source\timers.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\InterruptNestTest.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\ParTest.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\ThirdPartyCode\cpufreq.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\main.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;RTOSDemo\serial.o&quot;"/>
+								</option>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.1135546526" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="&quot;..\ld\iRAM.ld&quot;" valueType="string"/>
-								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options.695697518" name="Other options" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options" valueType="stringList"/>
+								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options.695697518" name="Other options" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options"/>
 							</tool>
 							<tool id="com.rt.hightec.buildsystem.tricore.new.linker.cpp.2086148347" name="TriCore C++ Linker" superClass="com.rt.hightec.buildsystem.tricore.new.linker.cpp">
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.998677471" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="..\ld\iRAM.ld&quot;" valueType="string"/>

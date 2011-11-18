@@ -99,7 +99,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 {
 unsigned long ulReloadValue = 0UL;
 
-	ulReloadValue = ( configPERIPHERAL_CLOCK_HZ / ( 32 * ulWantedBaud ) ) - 1;
+	ulReloadValue = ( configPERIPHERAL_CLOCK_HZ / ( 48UL * ulWantedBaud ) ) - 1UL;
 
 	if( NULL == xSerialTransmitQueue )
 	{
@@ -126,7 +126,13 @@ unsigned long ulReloadValue = 0UL;
 
 	/* Reconfigure and re-initialise the Operation. */
 	ASC0_PISEL.reg = 0UL;
-	ASC0_CON.reg = 0x00008011;	/* 1 Start, 1 Stop, 8 Data, No Parity, No Error Checking, Receive On, Module On. */
+	ASC0_CON.reg = 0UL;
+	ASC0_CON.bits.M = 0x01; /* 8bit async. */
+	ASC0_CON.bits.REN = 0x01; /* Receiver enabled. */
+	ASC0_CON.bits.FDE = 0x01; /* Fractional divider enabled. */
+	ASC0_CON.bits.BRS = 0x01; /* Divide by three. */
+	ASC0_CON.bits.LB = 0x01; /* Loopback enabled. */
+	ASC0_CON.bits.R = 0x01; /* Enable the baud rate generator. */
 
 	/* Install the Tx interrupt. */
 	if( 0 != _install_int_handler( configINTERRUPT_PRIORITY_TX, prvTxBufferInterruptHandler, 0 ) )
@@ -188,8 +194,6 @@ static void prvTxBufferInterruptHandler( int iArg )
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned char ucTx;
 
-COUNT_NEST();
-
 	/* Just to remove compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -210,7 +214,6 @@ COUNT_NEST();
 
 	/* Finally end ISR and switch Task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-ulNest--;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -218,7 +221,7 @@ static void prvRxInterruptHandler( int iArg )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 unsigned char ucRx;
-COUNT_NEST();
+
 	/* Just to remove compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -236,7 +239,6 @@ COUNT_NEST();
 
 	/* Finally end ISR and switch Task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-ulNest--;
 }
 /*---------------------------------------------------------------------------*/
 

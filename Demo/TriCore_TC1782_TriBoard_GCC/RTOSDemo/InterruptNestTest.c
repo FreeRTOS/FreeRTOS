@@ -168,7 +168,6 @@ static void prvPortHighFrequencyTimerHandler( int iArg )
 static volatile unsigned long ulExecutionCounter = 0UL;
 unsigned long ulHigherPriorityTaskWoken = pdFALSE;
 
-COUNT_NEST();
 	/* Just to avoid compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -192,5 +191,4 @@ COUNT_NEST();
 	}
 	
 	portYIELD_FROM_ISR( ulHigherPriorityTaskWoken );
-ulNest--;
 }

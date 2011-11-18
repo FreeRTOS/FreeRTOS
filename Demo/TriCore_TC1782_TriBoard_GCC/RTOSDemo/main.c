@@ -1,4 +1,3 @@
-volatile unsigned long ulNest = 0UL, ulMaxNest = 0UL;
 /*
     FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
 
@@ -60,11 +59,17 @@ volatile unsigned long ulNest = 0UL, ulMaxNest = 0UL;
  *
  * To create a very simple LED flasher example, set the
  * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY constant (defined below) to 1.  When
- * this is done, only the standard demo flash tasks are created, whereby three
- * tasks each toggle an LED at a fixed but different frequency.
+ * this is done, only the standard demo flash tasks are created.  The standard
+ * demo flash example creates three tasks, each toggle an LED at a fixed but
+ * different frequency.
  *
  * To create a more comprehensive test and demo application, set
  * mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0.
+ *
+ * Two build configurations are provided, one that executes from RAM and one
+ * that executes from Flash.  The RAM build uses size optimisation, the Flash
+ * build has optimisation completely turned off.  The documentation page for
+ * this port on the FreeRTOS.org web site provides full information.
  ******************************************************************************
  *
  * main() creates all the demo application tasks and timers, then starts the
@@ -96,7 +101,10 @@ volatile unsigned long ulNest = 0UL, ulMaxNest = 0UL;
  * ***NOTE*** This demo uses the standard comtest tasks, which has special
  * hardware requirements as a loopback connector, or UART echo server are
  * required.  See the documentation page for this demo on the FreeRTOS.org web
- * site for more information.
+ * site for more information.  Note that the comtest tasks were tested by
+ * placing the UART into loopback mode directly in the serial initialisation
+ * sequence, and as such, the baud rate used has not been verified as actually
+ * being correct.
  */
 
 /* Standard includes. */
@@ -129,7 +137,8 @@ volatile unsigned long ulNest = 0UL, ulMaxNest = 0UL;
 /*-----------------------------------------------------------*/
 
 /* Constants for the ComTest tasks. */
-#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
+#define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 200000 )
+
 #define mainCOM_TEST_LED			( 5 )
 
 /* Priorities for the demo application tasks. */
@@ -147,12 +156,16 @@ error. */
 #define mainERROR_FLASH_PERIOD_MS		( ( portTickType ) 500 / portTICK_RATE_MS  )
 #define mainON_BOARD_LED_BIT			( ( unsigned long ) 7 )
 
-/* Constant used by the standard timer test functions. */
-#define mainTIMER_TEST_PERIOD		( 50 )
+/* Constant used by the standard timer test functions.  The timers created by
+the timer test functions will all have a period that is a multiple of this
+value. */
+#define mainTIMER_TEST_PERIOD		( 200 )
 
 /* Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 1 to create a simple demo.
 Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0 to create a much more
-comprehensive test application.  See the comments at the top of this file. */
+comprehensive test application.  See the comments at the top of this file, and
+the documentation page on the http://www.FreeRTOS.org web site for more
+information. */
 #define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY		0
 
 /*-----------------------------------------------------------*/
@@ -177,13 +190,13 @@ static void prvSetupHardware( void );
 
 /*
  * Writes to and checks the value of each register that is used in the context
- * of a task.
+ * of a task.  See the comments at the top of this file.
  */
 static void prvRegisterCheckTask1( void *pvParameters );
 static void prvRegisterCheckTask2( void *pvParameters );
 
 /*
- * Specific check to see if the Register test functions are still operating
+ * Specific check to see if the register test functions are still operating
  * correctly.
  */
 static portBASE_TYPE prvAreRegTestTasksStillRunning( void );
@@ -215,11 +228,11 @@ int main( void )
 	/* Setup the hardware for use with the TriCore evaluation board. */
 	prvSetupHardware();
 
-	/* Start standard demo/test application tasks.  See the comments at the
-	top of this file.  The LED flash tasks are always created.  The other tasks
-	are only created if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 1 (at
-	the top of this file).  See the comments at the top of this file for more
-	information. */
+	/* Start standard demo/test application flash tasks.  See the comments at
+	the top of this file.  The LED flash tasks are always created.  The other
+	tasks are only created if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to
+	1 (at the top of this file).  See the comments at the top of this file for
+	more information. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 
 	/* The following function will only create more tasks and timers if

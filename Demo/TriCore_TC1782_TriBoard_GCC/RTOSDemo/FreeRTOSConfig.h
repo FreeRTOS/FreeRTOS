@@ -122,15 +122,6 @@ peripheral clock. */
 /* Default definition of configASSERT(). */
 #define configASSERT( x ) if( ( x ) == 0 ) 		{ portDISABLE_INTERRUPTS(); for( ;; ); }
 
-extern volatile unsigned long ulNest, ulMaxNest;
-#define COUNT_NEST()			\
-{								\
-	ulNest++;					\
-	if( ulNest > ulMaxNest )	\
-	{							\
-		ulMaxNest = ulNest;		\
-	}							\
-}
 
 #endif /* FREERTOS_CONFIG_H */
 

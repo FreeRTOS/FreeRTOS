@@ -365,7 +365,10 @@ unsigned long ulHighFrequencyTimerTaskIterations, ulExpectedIncFrequency_ms;
 	(interrupt nesting) timer test has increment since the check task last
 	executed, and the frequency at which it is expected to execute in ms. */
 	ulHighFrequencyTimerTaskIterations = ulInterruptNestingTestGetIterationCount( &ulExpectedIncFrequency_ms );
-	if( ulHighFrequencyTimerTaskIterations < ( ( mainNO_ERROR_FLASH_PERIOD_MS / ulExpectedIncFrequency_ms ) - 1 ) )
+	if( ( ulHighFrequencyTimerTaskIterations < ( ( mainNO_ERROR_FLASH_PERIOD_MS / ulExpectedIncFrequency_ms ) - 1 ) )
+		||
+		( ulHighFrequencyTimerTaskIterations > ( ( mainNO_ERROR_FLASH_PERIOD_MS / ulExpectedIncFrequency_ms ) +5 ) )
+	  )
 	{
 		/* Would have expected the high frequency timer task to have
 		incremented its execution count more times that reported. */

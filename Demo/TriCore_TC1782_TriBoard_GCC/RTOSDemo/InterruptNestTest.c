@@ -51,6 +51,28 @@
     licensing and training services.
 */
 
+/*
+ * It is intended that the tasks and timers in this file cause interrupts to
+ * nest at least one level deeper than they would otherwise.
+ *
+ * A timer is configured to create an interrupt at moderately high frequency,
+ * as defined by the tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ constant.  The
+ * interrupt priority is by configHIGH_FREQUENCY_TIMER_PRIORITY, which is set
+ * to ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1UL ), the second highest
+ * priority from which interrupt safe FreeRTOS API calls can be made.
+ *
+ * The timer interrupt handler counts the number of times it is called.  When
+ * it has determined that the number of calls means that 10ms has passed, it
+ * 'gives' a semaphore, and resets it call count.
+ *
+ * A high priority task is used to receive the data posted to the queue by the
+ * interrupt service routine.  The task should, then, leave the blocked state
+ * and 'take' the available semaphore every 10ms.  The frequency at which it
+ * actually leaves the blocked state is verified by the demo's check task (see
+ * the the documentation for the entire demo on the FreeRTOS.org web site),
+ * which then flags an error if the frequency lower than expected.
+ */
+
 /* Standard includes. */
 #include <stdlib.h>
 #include <string.h>
@@ -69,21 +91,33 @@
 #include <machine/cint.h>
 #include <machine/wdtcon.h>
 
-#warning DOCUMENT THIS
 /* This constant is specific to this test application.  It allows the high
 frequency (interrupt nesting test) timer to know how often to trigger, and the
 check task to know how many iterations to expect at any given time. */
 #define tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ		( 8931UL )
 
+/*
+ * The handler for the high priority timer interrupt.
+ */
 static void prvPortHighFrequencyTimerHandler( int iArg ) __attribute__((longcall));
+
+/*
+ * The task that receives messages posted to a queue by the higher priority
+ * timer interrupt.
+ */
 static void prvHighFrequencyTimerTask( void *pvParameters );
 
+/* Constants used to configure the timer and determine how often the task
+should receive data. */
 static const unsigned long ulCompareMatchValue = configPERIPHERAL_CLOCK_HZ / tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ;
 static const unsigned long ulInterruptsPer10ms = tmrtestHIGH_FREQUENCY_TIMER_TEST_HZ / 100UL;
 static const unsigned long ulSemaphoreGiveRate_ms = 10UL;
 
+/* The semaphore used to synchronise the interrupt with the task. */
 static xSemaphoreHandle xHighFrequencyTimerSemaphore = NULL;
-static unsigned long ulHighFrequencyCounterIterations = 0UL;
+
+/* Holds the count of the number of times the task is unblocked by the timer. */
+static volatile unsigned long ulHighFrequencyTaskIterations = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -141,8 +175,16 @@ unsigned long ulCompareMatchBits;
 
 unsigned long ulInterruptNestingTestGetIterationCount( unsigned long *pulExpectedIncFrequency_ms )
 {
+unsigned long ulReturn;
+
 	*pulExpectedIncFrequency_ms = ulSemaphoreGiveRate_ms;
-	return ulHighFrequencyCounterIterations;
+	portENTER_CRITICAL();
+	{
+		ulReturn = ulHighFrequencyTaskIterations;
+		ulHighFrequencyTaskIterations = 0UL;
+	}
+
+	return ulReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -158,7 +200,7 @@ static void prvHighFrequencyTimerTask( void *pvParameters )
 		
 		/* Just count how many times the task has been unblocked before
 		returning to wait for the semaphore again. */
-		ulHighFrequencyCounterIterations++;
+		ulHighFrequencyTaskIterations++;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -190,5 +232,6 @@ unsigned long ulHigherPriorityTaskWoken = pdFALSE;
 		ulExecutionCounter = 0UL;
 	}
 	
+	/* Context switch on exit if necessary. */
 	portYIELD_FROM_ISR( ulHigherPriorityTaskWoken );
 }

@@ -65,6 +65,21 @@
 /* Demo Includes. */
 #include "serial.h"
 
+/*****************************************************************************
+ * Please note!
+ *
+ * This file is here to provide a means of generating interrupts to test the
+ * FreeRTOS tricore port.  First - it configures the UART into loopback mode,
+ * and has only been used in loopback mode.  Therefore, the baud rate
+ * calculation used has never been verified for correctness.  Second -
+ * characters are passed into and out of the interrupt service routines using
+ * character queues.  This provides a good test of the interrupt interaction,
+ * context switching mechanism, and kernel loading, it is however highly
+ * inefficient if the UART is being used to handle even moderate amounts of
+ * data throughput.
+ */
+
+
 /*---------------------------------------------------------------------------*/
 
 /*
@@ -212,7 +227,7 @@ unsigned char ucTx;
 		xTransmitStatus = 0UL;
 	}
 
-	/* Finally end ISR and switch Task. */
+	/* Finally end ISR and switch Task if necessary. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*---------------------------------------------------------------------------*/
@@ -237,7 +252,7 @@ unsigned char ucRx;
 		/* Error handling code can go here. */
 	}
 
-	/* Finally end ISR and switch Task. */
+	/* Finally end ISR and switch Task if necessary. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 /*---------------------------------------------------------------------------*/
@@ -246,7 +261,7 @@ void prvCheckTransmit( void )
 {
 	/* Check to see if the interrupt handler is working its way through the
 	buffer. */
-	if ( 0 == xTransmitStatus )
+	if( 0 == xTransmitStatus )
 	{
 		/* Not currently operational so kick off the first byte. */
 		ASC0_TBSRC.reg |= 0x8000UL;

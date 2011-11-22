@@ -708,7 +708,7 @@ static portTickType uxTick = ( portTickType ) -1;
 /* The xHigherPriorityTaskWoken parameter is not used in this case as this
 function is called from the tick hook anyway.  However the API required it
 to be present. */
-portBASE_TYPE xHigherPriorityTaskWoken = pdTRUE;
+signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 portTickType xMargin;
 
 	if( configTIMER_TASK_PRIORITY != ( configMAX_PRIORITIES - 1 ) )

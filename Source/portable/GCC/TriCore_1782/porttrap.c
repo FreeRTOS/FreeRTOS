@@ -140,38 +140,37 @@ void vNonMaskableInterruptTrap( int iTrapIdentification ) __attribute__( ( longc
 
 void vTrapInstallHandlers( void )
 {
-	if ( 0 == _install_trap_handler ( portMMU_TRAP, vMMUTrap ) )
+	if( 0 == _install_trap_handler ( portMMU_TRAP, vMMUTrap ) )
 	{
 		_debug();
 	}
-	if ( 0 == _install_trap_handler ( portIPT_TRAP, vInternalProtectionTrap ) )
+
+	if( 0 == _install_trap_handler ( portIPT_TRAP, vInternalProtectionTrap ) )
 	{
 		_debug();
 	}
-	if ( 0 == _install_trap_handler ( portIE_TRAP, vInstructionErrorTrap ) )
+
+	if( 0 == _install_trap_handler ( portIE_TRAP, vInstructionErrorTrap ) )
 	{
 		_debug();
 	}
-	if ( 0 == _install_trap_handler ( portCM_TRAP, vContextManagementTrap ) )
+
+	if( 0 == _install_trap_handler ( portCM_TRAP, vContextManagementTrap ) )
 	{
 		_debug();
 	}
-	if ( 0 == _install_trap_handler ( portSBP_TRAP, vSystemBusAndPeripheralsTrap ) )
+
+	if( 0 == _install_trap_handler ( portSBP_TRAP, vSystemBusAndPeripheralsTrap ) )
 	{
 		_debug();
 	}
-	if ( 0 == _install_trap_handler ( portASSERT_TRAP, vAssertionTrap ) )
+
+	if( 0 == _install_trap_handler ( portASSERT_TRAP, vAssertionTrap ) )
 	{
 		_debug();
 	}
-/*	Trap Handler 6 (Syscall) is installed in port.c as it is fundamental to
- * 	the OS operation. These trap handlers is are place holders.
- * 	if ( 0 != _install_trap_handler ( portMMU_TRAP, vMMUTrap ) )
-	{
-		_debug();
-	}
-*/
-	if ( 0 == _install_trap_handler ( portNMI_TRAP, vNonMaskableInterruptTrap ) )
+
+	if( 0 == _install_trap_handler ( portNMI_TRAP, vNonMaskableInterruptTrap ) )
 	{
 		_debug();
 	}
@@ -180,7 +179,7 @@ void vTrapInstallHandlers( void )
 
 void vMMUTrap( int iTrapIdentification )
 {
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 	case portTIN_MMU_VIRTUAL_ADDRESS_FILL:
 	case portTIN_MMU_VIRTUAL_ADDRESS_PROTECTION:
@@ -194,7 +193,7 @@ void vMMUTrap( int iTrapIdentification )
 void vInternalProtectionTrap( int iTrapIdentification )
 {
 	/* Deliberate fall through to default. */
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 		case portTIN_IPT_PRIVILIGED_INSTRUCTION:
 			/* Instruction is not allowed at current execution level, eg DISABLE at User-0. */
@@ -229,7 +228,7 @@ void vInternalProtectionTrap( int iTrapIdentification )
 void vInstructionErrorTrap( int iTrapIdentification )
 {
 	/* Deliberate fall through to default. */
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 		case portTIN_IE_ILLEGAL_OPCODE:
 		case portTIN_IE_UNIMPLEMENTED_OPCODE:
@@ -246,7 +245,7 @@ void vInstructionErrorTrap( int iTrapIdentification )
 void vContextManagementTrap( int iTrapIdentification )
 {
 	/* Deliberate fall through to default. */
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 		case portTIN_CM_FREE_CONTEXT_LIST_DEPLETION:
 		case portTIN_CM_CALL_DEPTH_OVERFLOW:
@@ -265,7 +264,7 @@ void vContextManagementTrap( int iTrapIdentification )
 void vSystemBusAndPeripheralsTrap( int iTrapIdentification )
 {
 	/* Deliberate fall through to default. */
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 		case portTIN_SBP_PROGRAM_FETCH_SYNCHRONOUS_ERROR:
 		case portTIN_SBP_DATA_ACCESS_SYNCHRONOUS_ERROR:
@@ -283,7 +282,7 @@ void vSystemBusAndPeripheralsTrap( int iTrapIdentification )
 void vAssertionTrap( int iTrapIdentification )
 {
 	/* Deliberate fall through to default. */
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 		case portTIN_ASSERT_ARITHMETIC_OVERFLOW:
 		case portTIN_ASSERT_STICKY_ARITHMETIC_OVERFLOW:
@@ -297,7 +296,7 @@ void vAssertionTrap( int iTrapIdentification )
 void vNonMaskableInterruptTrap( int iTrapIdentification )
 {
 	/* Deliberate fall through to default. */
-	switch ( iTrapIdentification )
+	switch( iTrapIdentification )
 	{
 		case portTIN_NMI_NON_MASKABLE_INTERRUPT:
 		default:

@@ -315,8 +315,6 @@ unsigned long *pxUpperCSA = NULL;
 unsigned long xUpperCSA = 0UL;
 extern volatile unsigned long *pxCurrentTCB;
 
-COUNT_NEST();
-
 	/* Just to avoid compiler warnings about unused parameters. */
 	( void ) iArg;
 
@@ -381,7 +379,6 @@ COUNT_NEST();
 		CPU_SRC0.bits.SETR = 0;
 		_isync();
 	}
-ulNest--;
 	#endif
 }
 /*-----------------------------------------------------------*/
@@ -517,7 +514,7 @@ static void prvInterruptYield( int iId )
 unsigned long *pxUpperCSA = NULL;
 unsigned long xUpperCSA = 0UL;
 extern volatile unsigned long *pxCurrentTCB;
-COUNT_NEST();
+
 	/* Just to remove compiler warnings. */
 	( void ) iId;
 
@@ -549,7 +546,6 @@ COUNT_NEST();
 	pxUpperCSA[ 0 ] = *pxCurrentTCB;
 	CPU_SRC0.bits.SETR = 0;
 	_isync();
-ulNest--;
 }
 /*-----------------------------------------------------------*/
 

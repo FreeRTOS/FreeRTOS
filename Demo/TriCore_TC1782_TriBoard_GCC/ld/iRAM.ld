@@ -309,7 +309,7 @@ SECTIONS
 	 	PROVIDE(__zdata_end = .);
 	 	. = ALIGN(8);
 	 	
-	 } > DMI_LDRAM /* DMI_LDRAM: Local Data RAM (LDRAM) */ 
+	 } > DMI_LDRAM AT > PMI_SPRAM /* DMI_LDRAM: Local Data RAM (LDRAM) */ /* PMI_SPRAM: Scratch-Pad RAM (SPRAM) */ 
 	 
 	 /*
 	  * Not initialised data addressed as absolute
@@ -406,7 +406,7 @@ SECTIONS
 	 	PROVIDE(__sdata2_end = .);
 	 	. = ALIGN(8);
 	 	
-	 } > PMI_SPRAM /* PMI_SPRAM: Scratch-Pad RAM (SPRAM) */ 
+	 } > PMI_SPRAM AT > PMI_SPRAM /* PMI_SPRAM: Scratch-Pad RAM (SPRAM) */ /* PMI_SPRAM: Scratch-Pad RAM (SPRAM) */ 
 	 
 	 /*
 	  * Section stores initialised data which is addressable by small data area pointer (%a0)
@@ -430,7 +430,7 @@ SECTIONS
 	 	PROVIDE(__sdata_end = .);
 	 	. = ALIGN(8);
 	 	
-	 } > DMI_LDRAM /* DMI_LDRAM: Local Data RAM (LDRAM) */ 
+	 } > DMI_LDRAM AT > PMI_SPRAM /* DMI_LDRAM: Local Data RAM (LDRAM) */ /* PMI_SPRAM: Scratch-Pad RAM (SPRAM) */ 
 	 
 	 /*
 	  * Not initialised data in section ’.sbss’, addressable by small data area pointer (%a0)
@@ -506,7 +506,7 @@ SECTIONS
 	 	PROVIDE(__data_end = .);
 	 	. = ALIGN(8);
 	 	
-	 } > DMI_LDRAM /* DMI_LDRAM: Local Data RAM (LDRAM) */ 
+	 } > DMI_LDRAM AT > PMI_SPRAM /* DMI_LDRAM: Local Data RAM (LDRAM) */ /* PMI_SPRAM: Scratch-Pad RAM (SPRAM) */ 
 	 
 	 /*
 	  * Not Initialised data
@@ -607,6 +607,9 @@ SECTIONS
 		. = ALIGN(8);
 		PROVIDE(__copy_table = .) ;
 	
+			LONG(LOADADDR(.data));	LONG(0 + ADDR(.data));	LONG(SIZEOF(.data));
+			LONG(LOADADDR(.sdata));	LONG(0 + ADDR(.sdata));	LONG(SIZEOF(.sdata));
+			LONG(LOADADDR(.zdata));	LONG(0 + ADDR(.zdata));	LONG(SIZEOF(.zdata));
 			LONG(LOADADDR(.pcptext));	LONG(0 + ADDR(.pcptext));	LONG(SIZEOF(.pcptext));
 			LONG(LOADADDR(.pcpdata));	LONG(0 + ADDR(.pcpdata));	LONG(SIZEOF(.pcpdata));
 	

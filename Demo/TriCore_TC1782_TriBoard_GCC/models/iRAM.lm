@@ -32,7 +32,7 @@
     </Code>
     <Data>
       <Absolute>
-        <DeepOutputSection Description="Initialised data addressed as absolute" Name=".zdata">
+        <DeepOutputSection Description="Initialised data addressed as absolute" Name=".zdata" LoadMachineAddressLMA="//@LocalAliases/@Alias.1">
           <RuntimeAddressVMA xsi:type="memorydescription:Region" href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>
           <InputEntry Description="Initialised data addressed as absolute" Name=".zdata" InputSection="//@Input/@InputSection.13"/>
         </DeepOutputSection>
@@ -50,10 +50,10 @@
         </DeepOutputSection>
       </Absolute>
       <Small>
-        <DeepOutputSection Description="Storage of write-protected data addressed as small" Name=".sdata2" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
+        <DeepOutputSection Description="Storage of write-protected data addressed as small" Name=".sdata2" RuntimeAddressVMA="//@LocalAliases/@Alias.1" LoadMachineAddressLMA="//@LocalAliases/@Alias.1">
           <InputEntry Description="Storage of write-protected data addressed as small" Name=".sdata.rodata" InputSection="//@Input/@InputSection.10"/>
         </DeepOutputSection>
-        <DeepOutputSection Description="Section stores initialised data which is addressable by small data area pointer (%a0)" Name=".sdata" RuntimeAddressVMA="//@LocalAliases/@Alias.0">
+        <DeepOutputSection Description="Section stores initialised data which is addressable by small data area pointer (%a0)" Name=".sdata" RuntimeAddressVMA="//@LocalAliases/@Alias.0" LoadMachineAddressLMA="//@LocalAliases/@Alias.1">
           <InputEntry Description="Section stores initialised data which is addressable by small data area pointer (%a0)" Name=".sdata" InputSection="//@Input/@InputSection.11"/>
         </DeepOutputSection>
         <DeepOutputSection Description="Not initialised data in section ’.sbss’, addressable by small data area pointer (%a0)" Name=".sbss" RuntimeAddressVMA="//@LocalAliases/@Alias.0" NOLOAD="true">
@@ -64,7 +64,7 @@
         <DeepOutputSection Description="Storage of write-protected data" Name=".rodata" RuntimeAddressVMA="//@LocalAliases/@Alias.1">
           <InputEntry Description="Storage of write-protected data" Name=".rodata" InputSection="//@Input/@InputSection.1"/>
         </DeepOutputSection>
-        <DeepOutputSection Description="Initialised data" Name=".data" RuntimeAddressVMA="//@LocalAliases/@Alias.0">
+        <DeepOutputSection Description="Initialised data" Name=".data" RuntimeAddressVMA="//@LocalAliases/@Alias.0" LoadMachineAddressLMA="//@LocalAliases/@Alias.1">
           <InputEntry Description="Initialised data" Name=".data" InputSection="//@Input/@InputSection.2"/>
         </DeepOutputSection>
         <DeepOutputSection Description="Not Initialised data" Name=".bss" RuntimeAddressVMA="//@LocalAliases/@Alias.0" NOLOAD="true">
@@ -111,8 +111,338 @@
     <InputSection Description="Section for constructors" Name=".ctors"/>
     <InputSection Description="Section for destructors" Name=".dtors"/>
     <InputSection Description="Bit variables" Name=".bdata"/>
+    <InputSection Name=".bss.xContinousIncrementHandle"/>
+    <InputSection Name=".text.vTaskDelayUntil"/>
+    <InputSection Name=".version_info"/>
+    <InputSection Name=".bss.xActiveTimerList2"/>
+    <InputSection Name=".text.prvSampleTimeNow"/>
+    <InputSection Name=".data.sBlockingConsumerCount"/>
+    <InputSection Name=".text.vSystemBusAndPeripheralsTrap"/>
+    <InputSection Name=".bss.xPendingReadyList"/>
+    <InputSection Name=".text.prvHighFrequencyTimerTask"/>
+    <InputSection Name=".bss.xDelayedTaskList1"/>
+    <InputSection Name=".data.xSchedulerRunning"/>
+    <InputSection Name=".text.vTaskExitCritical"/>
+    <InputSection Name=".data.uxTasksDeleted"/>
+    <InputSection Name=".data.uxLastPollingCycles.2"/>
+    <InputSection Name=".debug_str"/>
+    <InputSection Name=".text.prvRegisterCheckTask2"/>
+    <InputSection Name=".text.vPrimaryBlockTimeTestTask"/>
+    <InputSection Name=".text.uxTaskPriorityGet"/>
+    <InputSection Name=".text.vCreateTasks"/>
+    <InputSection Name=".text.vListInsert"/>
+    <InputSection Name=".text.xPortStartScheduler"/>
+    <InputSection Name=".text.set_cpu_frequency"/>
+    <InputSection Name=".text.xAreCountingSemaphoreTasksStillRunning"/>
+    <InputSection Name=".text.vStartTimerDemoTask"/>
+    <InputSection Name=".text.get_cpu_frequency"/>
+    <InputSection Name=".text.xQueueCreate"/>
+    <InputSection Name=".text.xPortGetFreeHeapSize"/>
+    <InputSection Name=".bss.xHighPriorityTask"/>
+    <InputSection Name=".bss.xTasksWaitingTermination"/>
+    <InputSection Name=".text.xQueueTakeMutexRecursive"/>
+    <InputSection Name=".text.prvIdleTask"/>
+    <InputSection Name=".data.xHighFrequencyTimerSemaphore"/>
+    <InputSection Name=".text.vCreateSuicidalTasks"/>
+    <InputSection Name=".bss.xControllingTaskHandle"/>
+    <InputSection Name=".text.xQueueGiveMutexRecursive"/>
+    <InputSection Name=".text.xArePollingQueuesStillRunning"/>
+    <InputSection Name=".bss.xEnd"/>
+    <InputSection Name=".text.xSerialPortInitMinimal"/>
+    <InputSection Name=".bss.xSecondary"/>
+    <InputSection Name=".debug_macinfo"/>
+    <InputSection Name=".data.xAutoReloadTimers"/>
+    <InputSection Name=".text.xTimerIsTimerActive"/>
+    <InputSection Name=".text.xTaskRemoveFromEventList"/>
+    <InputSection Name=".text.xAreSemaphoreTasksStillRunning"/>
+    <InputSection Name=".data.xFreeBytesRemaining"/>
+    <InputSection Name=".bss.pxCurrentTimerList"/>
+    <InputSection Name=".data.ulExpectedValue.1"/>
+    <InputSection Name=".text.vTaskPlaceOnEventListRestricted"/>
+    <InputSection Name=".bss.xHighPriorityMutexTask"/>
+    <InputSection Name=".text.vTaskEndScheduler"/>
+    <InputSection Name=".data.freq_init"/>
+    <InputSection Name=".data.xErrorOccurred"/>
+    <InputSection Name=".text.ulInterruptNestingTestGetIterationCount"/>
+    <InputSection Name=".text.vTaskDelay"/>
+    <InputSection Name=".text.prvCopyDataToQueue"/>
+    <InputSection Name=".text.prvRecursiveMutexControllingTask"/>
+    <InputSection Name=".text.xTaskGetTickCount"/>
+    <InputSection Name=".text.vSetupInterruptNestingTest"/>
+    <InputSection Name=".data.ulHighFrequencyTaskIterations"/>
+    <InputSection Name=".text.pvPortMalloc"/>
+    <InputSection Name=".data.ulLastLoopCounter.0"/>
+    <InputSection Name=".bss.xPolledQueue.0"/>
+    <InputSection Name=".bss.xMutex"/>
+    <InputSection Name=".text.vComTxTask"/>
+    <InputSection Name=".text.vContextManagementTrap"/>
+    <InputSection Name=".data.uxTopUsedPriority"/>
+    <InputSection Name=".text.xQueueGenericSend"/>
+    <InputSection Name=".text.xAreTimerDemoTasksStillRunning"/>
+    <InputSection Name=".text.pvTimerGetTimerID"/>
+    <InputSection Name=".bss.pxOverflowTimerList"/>
+    <InputSection Name=".text.vQueueReceiveWhenSuspendedTask"/>
+    <InputSection Name=".data.xTestStatus"/>
+    <InputSection Name=".data.usCheckVariable"/>
+    <InputSection Name=".bss.xActiveTimerList1"/>
+    <InputSection Name=".text.vTaskResume"/>
+    <InputSection Name=".text.xQueueReceiveFromISR"/>
+    <InputSection Name=".bss.xLimitedIncrementHandle"/>
+    <InputSection Name=".data.usLastTaskCheck.0"/>
+    <InputSection Name=".text.vStartQueuePeekTasks"/>
+    <InputSection Name=".text.vTaskSuspend"/>
+    <InputSection Name=".text.vCompetingMathTask4"/>
+    <InputSection Name=".bss.pxDelayedTaskList"/>
+    <InputSection Name=".data.xControllingIsSuspended"/>
+    <InputSection Name=".data.xNumOfOverflows"/>
+    <InputSection Name=".text.vStartSemaphoreTasks"/>
+    <InputSection Name=".text.vPolledQueueProducer"/>
+    <InputSection Name=".text.vStartRecursiveMutexTasks"/>
+    <InputSection Name=".text.prvRxInterruptHandler"/>
+    <InputSection Name=".data.ucOneShotTimerCounter"/>
+    <InputSection Name=".text.prvMediumPriorityMutexTask"/>
+    <InputSection Name=".text.vTaskSetTimeOutState"/>
+    <InputSection Name=".text.vInstructionErrorTrap"/>
+    <InputSection Name=".text.vSecondaryBlockTimeTestTask"/>
+    <InputSection Name=".text.vTaskMissedYield"/>
+    <InputSection Name=".data.ucISROneShotTimerCounter"/>
+    <InputSection Name=".text.vCounterControlTask"/>
+    <InputSection Name=".text.prvAutoReloadTimerCallback"/>
+    <InputSection Name=".data.xISROneShotTimer"/>
+    <InputSection Name=".text.vTaskStartScheduler"/>
+    <InputSection Name=".text.xAreRecursiveMutexTasksStillRunning"/>
+    <InputSection Name=".text.xQueueIsQueueEmptyFromISR"/>
+    <InputSection Name=".bss.xHighestPriorityTask"/>
+    <InputSection Name=".text.vListInsertEnd"/>
+    <InputSection Name=".text.xTimerCreateTimerTask"/>
+    <InputSection Name=".data.ulRegisterTest2Count"/>
+    <InputSection Name=".data.xBasePeriod"/>
+    <InputSection Name=".data.ulExecutionCounter.0"/>
+    <InputSection Name=".text.xAreBlockingQueuesStillRunning"/>
+    <InputSection Name=".text.prvISRAutoReloadTimerCallback"/>
+    <InputSection Name=".text.xSerialGetChar"/>
+    <InputSection Name=".text.vTaskPrioritySet"/>
+    <InputSection Name=".text.prvCheckForValidListAndQueue"/>
+    <InputSection Name=".data.xSecondaryCycles"/>
+    <InputSection Name=".data.xPrimaryCycles"/>
+    <InputSection Name=".data.xMissedYield"/>
+    <InputSection Name=".data.sNextCheckVariable"/>
+    <InputSection Name=".data.xTickCount"/>
+    <InputSection Name=".bss.xTestQueue"/>
+    <InputSection Name=".text.prvInsertTimerInActiveList"/>
+    <InputSection Name=".text.vListInitialiseItem"/>
+    <InputSection Name=".text.vMMUTrap"/>
+    <InputSection Name=".bss.ulCounter"/>
+    <InputSection Name=".text.xSerialPutChar"/>
+    <InputSection Name=".text.vStartBlockingQueueTasks"/>
+    <InputSection Name=".data.uxFlashTaskNumber"/>
+    <InputSection Name=".text.vStartMathTasks"/>
+    <InputSection Name=".data.xBlockingIsSuspended"/>
+    <InputSection Name=".bss.xSuspendedTaskList"/>
+    <InputSection Name=".text.vListRemove"/>
+    <InputSection Name=".bss.uxTasksRunningNow.1"/>
+    <InputSection Name=".data.xPollingConsumerCount"/>
+    <InputSection Name=".text.prvTxBufferInterruptHandler"/>
+    <InputSection Name=".data.sLastBlockingProducerCount.1"/>
+    <InputSection Name=".data.uxPollingCycles"/>
+    <InputSection Name=".data.xLastPrimaryCycleCount.0"/>
+    <InputSection Name=".text.vSerialPutString"/>
+    <InputSection Name=".data.uxControllingCycles"/>
+    <InputSection Name=".text.prvLowPriorityMutexTask"/>
+    <InputSection Name=".text.vStartIntegerMathTasks"/>
+    <InputSection Name=".data.uxLastBlockingCycles.1"/>
+    <InputSection Name=".data.xISRAutoReloadTimer"/>
+    <InputSection Name=".text.main"/>
+    <InputSection Name=".text.xAreComTestTasksStillRunning"/>
+    <InputSection Name=".bss.xMediumPriorityMutexTask"/>
+    <InputSection Name=".data.xSuspendedQueueSendError"/>
+    <InputSection Name=".text.vNonMaskableInterruptTrap"/>
+    <InputSection Name=".bss.xMediumPriorityTask"/>
+    <InputSection Name=".data.usCreationCount"/>
+    <InputSection Name=".text.vSuicidalTask"/>
+    <InputSection Name=".data.uxLastCount1.1"/>
+    <InputSection Name=".data.xPort"/>
+    <InputSection Name=".text.vQueueSendWhenSuspendedTask"/>
+    <InputSection Name=".text.prvHighPriorityMutexTask"/>
+    <InputSection Name=".text.vCreateBlockTimeTasks"/>
+    <InputSection Name=".text.vPortInitialiseBlocks"/>
+    <InputSection Name=".text.prvTrapYield"/>
+    <InputSection Name=".text.prvSemaphoreTest"/>
+    <InputSection Name=".text.vContinuousIncrementTask"/>
+    <InputSection Name=".data.uxTasksRunningAtStart"/>
+    <InputSection Name=".text.uxQueueMessagesWaiting"/>
+    <InputSection Name=".text.vTaskPlaceOnEventList"/>
+    <InputSection Name=".text.xAreBlockTimeTestTasksStillRunning"/>
+    <InputSection Name=".text.vTaskIncrementTick"/>
+    <InputSection Name=".data.sLastCheckVariables.0"/>
+    <InputSection Name=".text.xTimerGenericCommand"/>
+    <InputSection Name=".text.xTaskCheckForTimeOut"/>
+    <InputSection Name=".data.sBlockingProducerCount"/>
+    <InputSection Name=".data.ulPreviousRegisterTest2Count.1"/>
+    <InputSection Name=".text.pxPortInitialiseStack"/>
+    <InputSection Name=".bss.pxReadyTasksLists"/>
+    <InputSection Name=".text.prvSystemTickHandler"/>
+    <InputSection Name=".data.ulLastLoopCounter.1"/>
+    <InputSection Name=".text.vTaskPriorityInherit"/>
+    <InputSection Name=".text.xAreGenericQueueTasksStillRunning"/>
+    <InputSection Name=".text.xTaskGetTickCountFromISR"/>
+    <InputSection Name=".bss.xStart"/>
+    <InputSection Name=".data.ulPreviousRegisterTest1Count.0"/>
+    <InputSection Name=".data.ulLastLoopCounter2.1"/>
+    <InputSection Name=".text.vApplicationIdleHook"/>
+    <InputSection Name=".text.prvTimerTask"/>
+    <InputSection Name=".text.vQueueDelete"/>
+    <InputSection Name=".text.vLEDFlashTask"/>
+    <InputSection Name=".data.ulRegisterTest1Count"/>
+    <InputSection Name=".bss.xParameters"/>
+    <InputSection Name=".data.ulLoopCounter"/>
+    <InputSection Name=".text.vTaskEnterCritical"/>
+    <InputSection Name=".data.xPollingProducerCount"/>
+    <InputSection Name=".data.uxTick.0"/>
+    <InputSection Name=".text.xAreQueuePeekTasksStillRunning"/>
+    <InputSection Name=".text.vLimitedIncrementTask"/>
+    <InputSection Name=".text.xQueueGenericReceive"/>
+    <InputSection Name=".data.sLastBlockingConsumerCount.0"/>
+    <InputSection Name=".text.xAreDynamicPriorityTasksStillRunning"/>
+    <InputSection Name=".text.xTaskIsTaskSuspended"/>
+    <InputSection Name=".data.ulValueToSend.3"/>
+    <InputSection Name=".text.uxPortSetInterruptMaskFromISR"/>
+    <InputSection Name=".data.ulLoopCounter2"/>
+    <InputSection Name=".data.xIterationsWithoutCounterIncrement.2"/>
+    <InputSection Name=".text.vCompetingMathTask1"/>
+    <InputSection Name=".data.xTimerQueue"/>
+    <InputSection Name=".text.prvHighPriorityPeekTask"/>
+    <InputSection Name=".text.vTaskSuspendAll"/>
+    <InputSection Name=".text.vInternalProtectionTrap"/>
+    <InputSection Name=".bss.xBlockingTaskHandle"/>
+    <InputSection Name=".data.xHeapHasBeenInitialised.0"/>
+    <InputSection Name=".text.xTaskResumeAll"/>
+    <InputSection Name=".data.xErrorDetected"/>
+    <InputSection Name=".text.prvRecursiveMutexBlockingTask"/>
+    <InputSection Name=".text.uxQueueMessagesWaitingFromISR"/>
+    <InputSection Name=".data.xTransmitStatus"/>
+    <InputSection Name=".text.vAltStartComTestTasks"/>
+    <InputSection Name=".text.vStartLEDFlashTasks"/>
+    <InputSection Name=".text.vAssertionTrap"/>
+    <InputSection Name=".text.xQueueGenericSendFromISR"/>
+    <InputSection Name=".text.vPortReclaimCSA"/>
+    <InputSection Name=".bss.xCreatedTask"/>
+    <InputSection Name=".data.xSuspendedQueueReceiveError"/>
+    <InputSection Name=".text.xQueueIsQueueFullFromISR"/>
+    <InputSection Name=".text.vTimerPeriodicISRTests"/>
+    <InputSection Name=".data.xLastTime.0"/>
+    <InputSection Name=".data.usLastCreationCount.0"/>
+    <InputSection Name=".text.vParTestToggleLED"/>
+    <InputSection Name=".bss.xRunIndicator"/>
+    <InputSection Name=".bss.xLastCycleFrequency.3"/>
+    <InputSection Name=".data.uxTaskNumber"/>
+    <InputSection Name=".bss.ulReceivedValue.2"/>
+    <InputSection Name=".data.ucISRAutoReloadTimerCounter"/>
+    <InputSection Name=".text.prvHighestPriorityPeekTask"/>
+    <InputSection Name=".data.xSerialTransmitQueue"/>
+    <InputSection Name=".text.vBlockingQueueProducer"/>
+    <InputSection Name=".bss.xSuspendedTestQueue"/>
+    <InputSection Name=".text.vTrapInstallHandlers"/>
+    <InputSection Name=".text.xIsCreateTaskStillRunning"/>
+    <InputSection Name=".data.uxTopReadyPriority"/>
+    <InputSection Name=".text.vCompetingMathTask2"/>
+    <InputSection Name=".text.xTimerCreate"/>
+    <InputSection Name=".text.vPortFree"/>
+    <InputSection Name=".text.prvISROneShotTimerCallback"/>
+    <InputSection Name=".text.prvPortHighFrequencyTimerHandler"/>
+    <InputSection Name=".text.prvRecursiveMutexPollingTask"/>
+    <InputSection Name=".data.sCheckVariables"/>
+    <InputSection Name=".text.xTaskGenericCreate"/>
+    <InputSection Name=".data.xOneShotTimer"/>
+    <InputSection Name=".data.pxCurrentTCB"/>
+    <InputSection Name=".text.vApplicationMallocFailedHook"/>
+    <InputSection Name=".text.vParTestSetLED"/>
+    <InputSection Name=".text.prvUnlockQueue"/>
+    <InputSection Name=".text.prvMediumPriorityPeekTask"/>
+    <InputSection Name=".text.xQueueCreateCountingSemaphore"/>
+    <InputSection Name=".text.vPortEndScheduler"/>
+    <InputSection Name=".text.prvTimerTestTask"/>
+    <InputSection Name=".text.xTaskGetCurrentTaskHandle"/>
+    <InputSection Name=".text.prvLowPriorityPeekTask"/>
+    <InputSection Name=".text.vStartPolledQueueTasks"/>
+    <InputSection Name=".text.uxTaskGetNumberOfTasks"/>
+    <InputSection Name=".text.prvAddCurrentTaskToDelayedList"/>
+    <InputSection Name=".text.prvCopyDataFromQueue"/>
+    <InputSection Name=".text.vTaskDelete"/>
+    <InputSection Name=".data.uxBaseLED"/>
+    <InputSection Name=".text.xTaskResumeFromISR"/>
+    <InputSection Name=".text.vStartGenericQueueTasks"/>
+    <InputSection Name=".bss.xDelayedTaskList2"/>
+    <InputSection Name=".text.vStartCountingSemaphoreTasks"/>
+    <InputSection Name=".text.prvOneShotTimerCallback"/>
+    <InputSection Name=".text.vCompetingMathTask3"/>
+    <InputSection Name=".text.prvInterruptYield"/>
+    <InputSection Name=".data.uxMissedTicks"/>
+    <InputSection Name=".data.xSerialReceiveQueue"/>
+    <InputSection Name=".text.vCompeteingIntMathTask"/>
+    <InputSection Name=".text.vTaskSwitchContext"/>
+    <InputSection Name=".text.xTaskGetSchedulerState"/>
+    <InputSection Name=".text.prvRegisterCheckTask1"/>
+    <InputSection Name=".data.xNextTaskUnblockTime"/>
+    <InputSection Name=".data.uxRxLoops"/>
+    <InputSection Name=".data.ucAutoReloadTimerCounters"/>
+    <InputSection Name=".text.vTaskPriorityDisinherit"/>
+    <InputSection Name=".bss.xHeap"/>
+    <InputSection Name=".data.uxBlockingCycles"/>
+    <InputSection Name=".text.vListInitialise"/>
+    <InputSection Name=".bss.pxOverflowDelayedTaskList"/>
+    <InputSection Name=".text.vComRxTask"/>
+    <InputSection Name=".text.vApplicationTickHook"/>
+    <InputSection Name=".data.uxLastCount0.0"/>
+    <InputSection Name=".data.uxLastControllingCycles.0"/>
+    <InputSection Name=".data.xTaskCheck"/>
+    <InputSection Name=".text.prvCheckTask"/>
+    <InputSection Name=".text.prvSendFrontAndBackTest"/>
+    <InputSection Name=".text.vQueueWaitForMessageRestricted"/>
+    <InputSection Name=".data.uxCurrentNumberOfTasks"/>
+    <InputSection Name=".data.ulGuardedVariable"/>
+    <InputSection Name=".text.xQueueCreateMutex"/>
+    <InputSection Name=".text.prvCountingSemaphoreTask"/>
+    <InputSection Name=".text.xAreIntegerMathsTaskStillRunning"/>
+    <InputSection Name=".data.uxSchedulerSuspended"/>
+    <InputSection Name=".text.vParTestInitialise"/>
+    <InputSection Name=".data.usTaskCheck"/>
+    <InputSection Name=".data.xLastSecondaryCycleCount.1"/>
+    <InputSection Name=".text.xAreMathsTaskStillRunning"/>
+    <InputSection Name=".text.vPolledQueueConsumer"/>
+    <InputSection Name=".text.prvDecrementSemaphoreCount"/>
+    <InputSection Name=".text.vStartDynamicPriorityTasks"/>
+    <InputSection Name=".text.vBlockingQueueConsumer"/>
   </Input>
-  <Files/>
+  <Files>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\BlockQ.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\blocktim.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\comtest.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\countsem.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\death.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\dynamic.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\flash.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\flop.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\GenQTest.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\integer.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\PollQ.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\QPeek.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\recmutex.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\semtest.o"/>
+    <ObjectFile Name="RTOSDemo\Common_Demo_Source\TimerDemo.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\list.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\port.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\portable\GCC\TriCore_1782\porttrap.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\portable\MemMang\heap_2.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\queue.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\tasks.o"/>
+    <ObjectFile Name="RTOSDemo\FreeRTOS_Source\timers.o"/>
+    <ObjectFile Name="RTOSDemo\InterruptNestTest.o"/>
+    <ObjectFile Name="RTOSDemo\main.o"/>
+    <ObjectFile Name="RTOSDemo\ParTest.o"/>
+    <ObjectFile Name="RTOSDemo\serial.o"/>
+    <ObjectFile Name="RTOSDemo\ThirdPartyCode\cpufreq.o"/>
+  </Files>
   <LocalAliases>
     <Alias Description="Alias for RAM" Name="DATA">
       <Region href="TriBoard-TC1782.mdm#//@Memory.2/@Region.0"/>

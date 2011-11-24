@@ -88,7 +88,7 @@
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\serial.o&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\InterruptNestTest.o&quot;"/>
 								</option>
-								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.1129393828" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="&quot;..\ld\iROM.ld&quot;" valueType="string"/>
+								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.1129393828" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="..\ld\iROM.ld&quot;" valueType="string"/>
 							</tool>
 							<tool id="com.rt.hightec.buildsystem.tricore.new.linker.cpp.923887675" name="TriCore C++ Linker" superClass="com.rt.hightec.buildsystem.tricore.new.linker.cpp">
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.1316923784" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="..\ld\iROM.ld&quot;" valueType="string"/>
@@ -567,8 +567,6 @@
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.optimization.optimization.1251458415" name="Optimization Level" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.optimization.optimization" value="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.code.optimization.s" valueType="enumerated"/>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.miscellaneous.options.538537192" name="Other options" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.miscellaneous.options" valueType="stringList">
 									<listOptionValue builtIn="false" value="-Wextra"/>
-									<listOptionValue builtIn="false" value="-ffunction-sections"/>
-									<listOptionValue builtIn="false" value="-fdata-sections"/>
 								</option>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.CodeGeneration.FShortDouble.640153542" name="Treat double as float (-fshort-double)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.CodeGeneration.FShortDouble" value="false" valueType="boolean"/>
 								<inputType id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.c.inputType.1866405312" name="INPUT" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.compiler.c.inputType"/>
@@ -610,7 +608,7 @@
 									<listOptionValue builtIn="false" value="&quot;RTOSDemo\serial.o&quot;"/>
 								</option>
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.1135546526" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="&quot;..\ld\iRAM.ld&quot;" valueType="string"/>
-								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options.695697518" name="Other options" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options"/>
+								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options.695697518" name="Other options" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.miscellaneous.options" valueType="stringList"/>
 							</tool>
 							<tool id="com.rt.hightec.buildsystem.tricore.new.linker.cpp.2086148347" name="TriCore C++ Linker" superClass="com.rt.hightec.buildsystem.tricore.new.linker.cpp">
 								<option id="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file.998677471" name="Browse Linker Description File (-T)" superClass="com.rt.hightec.framework.buildsystem.abstract.hightec.tool.linker.general.description.file" value="..\ld\iRAM.ld&quot;" valueType="string"/>

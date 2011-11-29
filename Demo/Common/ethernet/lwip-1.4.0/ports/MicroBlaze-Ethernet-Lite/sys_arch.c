@@ -391,7 +391,7 @@ err_t sys_mutex_new( sys_mutex_t *pxMutex )
 {
 err_t xReturn = ERR_MEM;
 
-	*pxMutex = xQueueCreateMutex();
+	*pxMutex = xSemaphoreCreateMutex();
 
 	if( *pxMutex != NULL ) 
 	{

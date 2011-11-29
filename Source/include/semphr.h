@@ -105,13 +105,14 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup vSemaphoreCreateBinary vSemaphoreCreateBinary
  * \ingroup Semaphores
  */
-#define vSemaphoreCreateBinary( xSemaphore )		{																									\
-														( xSemaphore ) = xQueueCreate( ( unsigned portBASE_TYPE ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH );	\
-														if( ( xSemaphore ) != NULL )																	\
-														{																								\
-															xSemaphoreGive( ( xSemaphore ) );															\
-														}																								\
-													}
+#define vSemaphoreCreateBinary( xSemaphore )																									\
+	{																																			\
+		( xSemaphore ) = xQueueGenericCreate( ( unsigned portBASE_TYPE ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_BINARY_SEMAPHORE );	\
+		if( ( xSemaphore ) != NULL )																											\
+		{																																		\
+			xSemaphoreGive( ( xSemaphore ) );																									\
+		}																																		\
+	}
 
 /**
  * semphr. h
@@ -585,7 +586,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup vSemaphoreCreateMutex vSemaphoreCreateMutex
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateMutex() xQueueCreateMutex()
+#define xSemaphoreCreateMutex() xQueueCreateMutex( queueQUEUE_TYPE_MUTEX )
 
 
 /**
@@ -640,7 +641,7 @@ typedef xQueueHandle xSemaphoreHandle;
  * \defgroup vSemaphoreCreateMutex vSemaphoreCreateMutex
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateRecursiveMutex() xQueueCreateMutex()
+#define xSemaphoreCreateRecursiveMutex() xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX )
 
 /**
  * semphr. h

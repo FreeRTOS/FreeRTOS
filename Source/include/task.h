@@ -1301,6 +1301,18 @@ void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUN
  */
 signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
 
+/*
+ * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.
+ */
+unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
+
+/* 
+ * Set the uxTCBNumber of the task referenced by the xTask parameter to
+ * ucHandle.
+ */
+void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -194,58 +194,6 @@ PRIVILEGED_DATA static portTickType xNextTaskUnblockTime						= ( portTickType )
 #define tskDELETED_CHAR		( ( signed char ) 'D' )
 #define tskSUSPENDED_CHAR	( ( signed char ) 'S' )
 
-/*
- * Macros and private variables used by the trace facility.
- */
-#if ( configUSE_TRACE_FACILITY == 1 )
-
-	#define tskSIZE_OF_EACH_TRACE_LINE			( ( unsigned long ) ( sizeof( unsigned long ) + sizeof( unsigned long ) ) )
-	PRIVILEGED_DATA static volatile signed char * volatile pcTraceBuffer;
-	PRIVILEGED_DATA static signed char *pcTraceBufferStart;
-	PRIVILEGED_DATA static signed char *pcTraceBufferEnd;
-	PRIVILEGED_DATA static signed portBASE_TYPE xTracing = pdFALSE;
-	static unsigned portBASE_TYPE uxPreviousTask = 255U;
-	PRIVILEGED_DATA static char pcStatusString[ 50 ];
-
-#endif
-
-/*-----------------------------------------------------------*/
-
-/*
- * Macro that writes a trace of scheduler activity to a buffer.  This trace
- * shows which task is running when and is very useful as a debugging tool.
- * As this macro is called each context switch it is a good idea to undefine
- * it if not using the facility.
- */
-#if ( configUSE_TRACE_FACILITY == 1 )
-
-	#define vWriteTraceToBuffer()																	\
-	{																								\
-		if( xTracing != pdFALSE )																	\
-		{																							\
-			if( uxPreviousTask != pxCurrentTCB->uxTCBNumber )										\
-			{																						\
-				if( ( pcTraceBuffer + tskSIZE_OF_EACH_TRACE_LINE ) < pcTraceBufferEnd )				\
-				{																					\
-					uxPreviousTask = pxCurrentTCB->uxTCBNumber;										\
-					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) xTickCount;				\
-					pcTraceBuffer += sizeof( unsigned long );										\
-					*( unsigned long * ) pcTraceBuffer = ( unsigned long ) uxPreviousTask;			\
-					pcTraceBuffer += sizeof( unsigned long );										\
-				}																					\
-				else																				\
-				{																					\
-					xTracing = pdFALSE;																\
-				}																					\
-			}																						\
-		}																							\
-	}
-
-#else
-
-	#define vWriteTraceToBuffer()
-
-#endif
 /*-----------------------------------------------------------*/
 
 /*
@@ -818,7 +766,7 @@ tskTCB * pxNewTCB;
 			priority of the calling function. */
 			pxTCB = prvGetTCBFromHandle( pxTask );
 
-			traceTASK_PRIORITY_SET( pxTask, uxNewPriority );
+			traceTASK_PRIORITY_SET( pxTCB, uxNewPriority );
 
 			#if ( configUSE_MUTEXES == 1 )
 			{
@@ -1450,44 +1398,6 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 #endif
 /*----------------------------------------------------------*/
 
-#if ( configUSE_TRACE_FACILITY == 1 )
-
-	void vTaskStartTrace( signed char * pcBuffer, unsigned long ulBufferSize )
-	{
-		configASSERT( pcBuffer );
-		configASSERT( ulBufferSize );
-
-		taskENTER_CRITICAL();
-		{
-			pcTraceBuffer = ( signed char * )pcBuffer;
-			pcTraceBufferStart = pcBuffer;
-			pcTraceBufferEnd = pcBuffer + ( ulBufferSize - tskSIZE_OF_EACH_TRACE_LINE );
-			xTracing = pdTRUE;
-		}
-		taskEXIT_CRITICAL();
-	}
-
-#endif
-/*----------------------------------------------------------*/
-
-#if ( configUSE_TRACE_FACILITY == 1 )
-
-	unsigned long ulTaskEndTrace( void )
-	{
-	unsigned long ulBufferLength;
-
-		taskENTER_CRITICAL();
-			xTracing = pdFALSE;
-		taskEXIT_CRITICAL();
-
-		ulBufferLength = ( unsigned long ) ( pcTraceBuffer - pcTraceBufferStart );
-
-		return ulBufferLength;
-	}
-
-#endif
-/*----------------------------------------------------------*/
-
 #if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
 
 	xTaskHandle xTaskGetIdleTaskHandle( void )
@@ -1714,7 +1624,6 @@ void vTaskSwitchContext( void )
 		listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &( pxReadyTasksLists[ uxTopReadyPriority ] ) );
 	
 		traceTASK_SWITCHED_IN();
-		vWriteTraceToBuffer();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -1910,6 +1819,42 @@ void vTaskMissedYield( void )
 {
 	xMissedYield = pdTRUE;
 }
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+	unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask )
+	{
+	unsigned portBASE_TYPE uxReturn;
+	tskTCB *pxTCB;
+	
+		if( xTask != NULL )
+		{
+			pxTCB = ( tskTCB * ) xTask;
+			uxReturn = pxTCB->uxTCBNumber;
+		}
+		else
+		{
+			uxReturn = 0U;
+		}
+		
+		return uxReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+	void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle )
+	{
+	tskTCB *pxTCB;
+	
+		if( xTask != NULL )
+		{
+			pxTCB = ( tskTCB * ) xTask;
+			pxTCB->uxTCBNumber = uxHandle;
+		}
+	}
+#endif
+
 
 /*
  * -----------------------------------------------------------
@@ -2204,6 +2149,7 @@ tskTCB *pxNewTCB;
 	{
 	volatile tskTCB *pxNextTCB, *pxFirstTCB;
 	unsigned short usStackRemaining;
+	PRIVILEGED_DATA static char pcStatusString[ 50 ];
 
 		/* Write the details of all the TCB's in pxList into the buffer. */
 		listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
@@ -2441,6 +2387,8 @@ tskTCB *pxNewTCB;
 				/* Just inherit the priority. */
 				pxTCB->uxPriority = pxCurrentTCB->uxPriority;
 			}
+
+			traceTASK_PRIORITY_INHERIT( pxTCB, pxCurrentTCB->uxPriority );
 		}
 	}
 
@@ -2461,8 +2409,9 @@ tskTCB *pxNewTCB;
 				Remove ourselves from the ready list we currently appear in. */
 				vListRemove( &( pxTCB->xGenericListItem ) );
 
-				/* Disinherit the priority before adding ourselves into the new
+				/* Disinherit the priority before adding the task into the new
 				ready list. */
+				traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
 				pxTCB->uxPriority = pxTCB->uxBasePriority;
 				listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) pxTCB->uxPriority );
 				prvAddTaskToReadyQueue( pxTCB );

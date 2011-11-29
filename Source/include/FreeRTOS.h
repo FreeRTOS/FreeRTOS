@@ -272,6 +272,23 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceTASK_SWITCHED_OUT()
 #endif
 
+#ifndef traceTASK_PRIORITY_INHERIT
+	/* Called when a task attempts to take a mutex that is already held by a
+	lower priority task.  pxTCBOfMutexHolder is a pointer to the TCB of the task
+	that holds the mutex.  uxInheritedPriority is the priority the mutex holder
+	will inherit (the priority of the task that is attempting to obtain the
+	muted. */
+	#define traceTASK_PRIORITY_INHERIT( pxTCBOfMutexHolder, uxInheritedPriority )
+#endif
+
+#ifndef traceTASK_PRIORITY_DISINHERIT
+	/* Called when a task releases a mutex, the holding of which had resulted in
+	the task inheriting the priority of a higher priority task.  
+	pxTCBOfMutexHolder is a pointer to the TCB of the task that is releasing the
+	mutex.  uxOriginalPriority is the task's configured (base) priority. */
+	#define traceTASK_PRIORITY_DISINHERIT( pxTCBOfMutexHolder, uxOriginalPriority )
+#endif
+
 #ifndef traceBLOCKING_ON_QUEUE_RECEIVE
 	/* Task is about to block because it cannot read from a
 	queue/mutex/semaphore.  pxQueue is a pointer to the queue/mutex/semaphore
@@ -299,7 +316,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 #ifndef traceQUEUE_CREATE_FAILED
-	#define traceQUEUE_CREATE_FAILED()
+	#define traceQUEUE_CREATE_FAILED( ucQueueType )
 #endif
 
 #ifndef traceCREATE_MUTEX

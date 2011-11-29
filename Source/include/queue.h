@@ -78,6 +78,12 @@ typedef void * xQueueHandle;
 #define	queueSEND_TO_BACK	( 0 )
 #define	queueSEND_TO_FRONT	( 1 )
 
+/* For internal use only.  These definitions *must* match those in queue.c. */
+#define queueQUEUE_TYPE_BASE				( 0U )
+#define queueQUEUE_TYPE_MUTEX 				( 1U )
+#define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
+#define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
+#define queueQUEUE_TYPE_RECURSIVE_MUTEX		( 4U )
 
 /**
  * queue. h
@@ -135,7 +141,7 @@ typedef void * xQueueHandle;
  * \defgroup xQueueCreate xQueueCreate
  * \ingroup QueueManagement
  */
-xQueueHandle xQueueCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize );
+#define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
 
 /**
  * queue. h
@@ -1218,7 +1224,7 @@ signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, port
  * For internal use only.  Use xSemaphoreCreateMutex() or
  * xSemaphoreCreateCounting() instead of calling these functions directly.
  */
-xQueueHandle xQueueCreateMutex( void );
+xQueueHandle xQueueCreateMutex( unsigned char ucQueueType );
 xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount );
 
 /*
@@ -1252,7 +1258,15 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName );
 #endif
 
-/* Not a public API function, hence the 'Restricted' in the name. */
+/*
+ * Generic version of the queue creation function, which is in turn called by 
+ * any queue, semaphore or mutex creation function or macro.
+ */
+xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType );
+
+/* 
+ * Not a public API function, hence the 'Restricted' in the name. 
+ */
 void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );
 
 

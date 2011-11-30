@@ -100,7 +100,8 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if ( configUSE_TRACE_FACILITY == 1 )
-		unsigned portBASE_TYPE	uxTCBNumber;	/*< This is used for tracing the scheduler and making debugging easier only. */
+		unsigned portBASE_TYPE	uxTCBNumber;	/*< This stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
+		unsigned portBASE_TYPE  uxTaskNumber;	/*< This stores a number specifically for use by third party trace code. */
 	#endif
 
 	#if ( configUSE_MUTEXES == 1 )
@@ -167,7 +168,7 @@ PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxSchedulerSuspended	 	= 
 PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxMissedTicks 			= ( unsigned portBASE_TYPE ) 0U;
 PRIVILEGED_DATA static volatile portBASE_TYPE xMissedYield 						= ( portBASE_TYPE ) pdFALSE;
 PRIVILEGED_DATA static volatile portBASE_TYPE xNumOfOverflows 					= ( portBASE_TYPE ) 0;
-PRIVILEGED_DATA static unsigned portBASE_TYPE uxTaskNumber 						= ( unsigned portBASE_TYPE ) 0U;
+PRIVILEGED_DATA static unsigned portBASE_TYPE uxTCBNumber 						= ( unsigned portBASE_TYPE ) 0U;
 PRIVILEGED_DATA static portTickType xNextTaskUnblockTime						= ( portTickType ) portMAX_DELAY;
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
@@ -505,10 +506,10 @@ tskTCB * pxNewTCB;
 			#if ( configUSE_TRACE_FACILITY == 1 )
 			{
 				/* Add a counter into the TCB for tracing only. */
-				pxNewTCB->uxTCBNumber = uxTaskNumber;
+				pxNewTCB->uxTCBNumber = uxTCBNumber;
 			}
 			#endif
-			uxTaskNumber++;
+			uxTCBNumber++;
 
 			prvAddTaskToReadyQueue( pxNewTCB );
 
@@ -579,7 +580,7 @@ tskTCB * pxNewTCB;
 
 			/* Increment the uxTaskNumberVariable also so kernel aware debuggers
 			can detect that the task lists need re-generating. */
-			uxTaskNumber++;
+			uxTCBNumber++;
 
 			traceTASK_DELETE( pxTCB );
 		}
@@ -1830,7 +1831,7 @@ void vTaskMissedYield( void )
 		if( xTask != NULL )
 		{
 			pxTCB = ( tskTCB * ) xTask;
-			uxReturn = pxTCB->uxTCBNumber;
+			uxReturn = pxTCB->uxTaskNumber;
 		}
 		else
 		{
@@ -1850,7 +1851,7 @@ void vTaskMissedYield( void )
 		if( xTask != NULL )
 		{
 			pxTCB = ( tskTCB * ) xTask;
-			pxTCB->uxTCBNumber = uxHandle;
+			pxTCB->uxTaskNumber = uxHandle;
 		}
 	}
 #endif

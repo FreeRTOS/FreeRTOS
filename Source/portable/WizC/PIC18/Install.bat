@@ -1,3 +1,57 @@
+REM/*
+REM    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
+REM
+REM
+REM    ***************************************************************************
+REM     *                                                                       *
+REM     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+REM     *    Complete, revised, and edited pdf reference manuals are also       *
+REM     *    available.                                                         *
+REM     *                                                                       *
+REM     *    Purchasing FreeRTOS documentation will not only help you, by       *
+REM     *    ensuring you get running as quickly as possible and with an        *
+REM     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+REM     *    the FreeRTOS project to continue with its mission of providing     *
+REM     *    professional grade, cross platform, de facto standard solutions    *
+REM     *    for microcontrollers - completely free of charge!                  *
+REM     *                                                                       *
+REM     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+REM     *                                                                       *
+REM     *    Thank you for using FreeRTOS, and thank you for your support!      *
+REM     *                                                                       *
+REM    ***************************************************************************
+REM
+REM
+REM    This file is part of the FreeRTOS distribution.
+REM
+REM    FreeRTOS is free softwareREM you can redistribute it and/or modify it under
+REM    the terms of the GNU General Public License (version 2) as published by the
+REM    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+REM    >>>NOTE<<< The modification to the GPL is included to allow you to
+REM    distribute a combined work that includes FreeRTOS without being obliged to
+REM    provide the source code for proprietary components outside of the FreeRTOS
+REM    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+REM    WITHOUT ANY WARRANTYREM without even the implied warranty of MERCHANTABILITY
+REM    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+REM    more details. You should have received a copy of the GNU General Public
+REM    License and the FreeRTOS license exception along with FreeRTOSREM if not it
+REM    can be viewed here: http://www.freertos.org/a00114.html and also obtained
+REM    by writing to Richard Barry, contact details for whom are available on the
+REM    FreeRTOS WEB site.
+REM
+REM    1 tab == 4 spaces!
+REM
+REM    http://www.FreeRTOS.org - Documentation, latest information, license and
+REM    contact details.
+REM
+REM    http://www.SafeRTOS.com - A version that is certified for use in safety
+REM    critical systems.
+REM
+REM    http://www.OpenRTOS.com - Commercial support, development, porting,
+REM    licensing and training services.
+REM*/
+
+
 @echo off
 cls
 

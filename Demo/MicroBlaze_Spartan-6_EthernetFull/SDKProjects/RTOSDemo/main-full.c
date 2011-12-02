@@ -241,6 +241,9 @@ int main( void )
 	/* Configure the interrupt controller, LED outputs and button inputs. */
 	prvSetupHardware();
 
+	xil_printf( "Hello world2. %s %u\r\n", "string", 100 );
+	printf( "Hello world2. %s %u\r\n", "string", 100 );
+
 	/* This call creates the TCP/IP thread. */
 	tcpip_init( lwIPAppsInit, NULL );
 
@@ -258,7 +261,7 @@ int main( void )
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
-	vStartComTestStringsTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
+//	vStartComTestStringsTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartDynamicPriorityTasks();
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
@@ -499,7 +502,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;
@@ -616,7 +619,7 @@ unsigned long ulTimerCounts1, ulTimerCounts2, ulTickCount, ulReturn;
 
 	/* How many times has it overflowed? */
 	ulTickCount = xTaskGetTickCountFromISR();
-
+	
 	/* If this is being called from a yield, has the counter overflowed since
 	it was read?  If that is the case then ulTickCounts will need incrementing
 	again as it will not yet have been incremented from the tick interrupt. */

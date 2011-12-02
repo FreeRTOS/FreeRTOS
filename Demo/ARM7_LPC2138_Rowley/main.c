@@ -390,7 +390,7 @@ extern void (vButtonISRWrapper) ( void );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
 {
 	/* Check pcTaskName for the name of the offending task, or pxCurrentTCB
 	if pcTaskName has itself been corrupted. */

@@ -401,7 +401,7 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
 {
 	/* Just to remove compiler warnings.  This function will only actually
 	get called if configCHECK_FOR_STACK_OVERFLOW is set to a non zero value.

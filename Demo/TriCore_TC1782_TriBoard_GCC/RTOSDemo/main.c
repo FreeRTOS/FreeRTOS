@@ -231,12 +231,12 @@ int main( void )
 	/* Start standard demo/test application flash tasks.  See the comments at
 	the top of this file.  The LED flash tasks are always created.  The other
 	tasks are only created if mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to
-	1 (at the top of this file).  See the comments at the top of this file for
+	0 (at the top of this file).  See the comments at the top of this file for
 	more information. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 
 	/* The following function will only create more tasks and timers if
-	mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 1 (at the top of this
+	mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY is set to 0 (at the top of this
 	file).  See the comments at the top of this file for more information. */
 	prvOptionallyCreateComprehensveTestApplication();
 

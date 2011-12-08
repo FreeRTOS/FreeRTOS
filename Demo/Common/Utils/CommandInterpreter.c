@@ -71,7 +71,12 @@ typedef struct xCOMMAND_INPUT_LIST
  * The callback function that is executed when "help" is entered.  This is the
  * only default command that is always present.
  */
-static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen );
+static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char *pcCommandString );
+
+/*
+ * Return the number of parameters that follow the command name.
+ */
+static signed char prvGetNumberOfParameters( const signed char * pcCommandString );
 
 /* The definition of the "help" command.  This command is always at the front
 of the list of registered commands. */
@@ -79,7 +84,8 @@ static const xCommandLineInput xHelpCommand =
 {
 	( const signed char * const ) "help",
 	( const signed char * const ) "help: Lists all the registered commands\r\n",
-	prvHelpCommand
+	prvHelpCommand,
+	0
 };
 
 /* The definition of the list of commands.  Commands that are registered are
@@ -146,7 +152,8 @@ portBASE_TYPE xReturn = pdFAIL;
 portBASE_TYPE xCmdIntProcessCommand( const signed char * const pcCommandInput, signed char * pcWriteBuffer, size_t xWriteBufferLen  )
 {
 static const xCommandLineInputListItem *pxCommand = NULL;
-portBASE_TYPE xReturn;
+portBASE_TYPE xReturn = pdTRUE;
+const signed char *pcRegisteredCommandString;
 
 	/* Note:  This function is not re-entrant.  It must not be called from more
 	thank one task. */
@@ -156,19 +163,37 @@ portBASE_TYPE xReturn;
 		/* Search for the command string in the list of registered commands. */
 		for( pxCommand = &xRegisteredCommands; pxCommand != NULL; pxCommand = pxCommand->pxNext )
 		{
-			if( strcmp( ( const char * ) pcCommandInput, ( const char * ) pxCommand->pxCommandLineDefinition->pcCommand ) == 0 )
+			pcRegisteredCommandString = pxCommand->pxCommandLineDefinition->pcCommand;
+			if( strncmp( ( const char * ) pcCommandInput, ( const char * ) pcRegisteredCommandString, strlen( ( const char * ) pcRegisteredCommandString ) ) == 0 )
 			{
-				/* The command has been found, the loop can exit so the command
-				can be executed. */
+				/* The command has been found.  Check it has the expected
+				number of parameters.  If cExpectedNumberOfParameters is -1,
+				then there could be a variable number of parameters and no
+				check is made. */
+				if( pxCommand->pxCommandLineDefinition->cExpectedNumberOfParameters >= 0 )
+				{
+					if( prvGetNumberOfParameters( pcCommandInput ) != pxCommand->pxCommandLineDefinition->cExpectedNumberOfParameters )
+					{
+						xReturn = pdFALSE;
+					}
+				}
+
 				break;
 			}
 		}
 	}
 
-	if( pxCommand != NULL )
+	if( ( pxCommand != NULL ) && ( xReturn == pdFALSE ) )
+	{
+		/* The command was found, but the number of parameters with the command
+		was incorrect. */
+		strncpy( ( char * ) pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.\r\n\r\n", xWriteBufferLen );
+		pxCommand = NULL;
+	}
+	else if( pxCommand != NULL )
 	{
 		/* Call the callback function that is registered to this command. */
-		xReturn = pxCommand->pxCommandLineDefinition->pxCommandInterpreter( pcWriteBuffer, xWriteBufferLen );
+		xReturn = pxCommand->pxCommandLineDefinition->pxCommandInterpreter( pcWriteBuffer, xWriteBufferLen, pcCommandInput );
 
 		/* If xReturn is pdFALSE, then no further strings will be returned
 		after this one, and	pxCommand can be reset to NULL ready to search 
@@ -180,6 +205,7 @@ portBASE_TYPE xReturn;
 	}
 	else
 	{
+		/* pxCommand was NULL, the command was not found. */
 		strncpy( ( char * ) pcWriteBuffer, ( const char * const ) "Command not recognised.  Enter \"help\" to view a list of available commands.\r\n\r\n", xWriteBufferLen );
 		xReturn = pdFALSE;
 	}
@@ -200,10 +226,63 @@ unsigned portBASE_TYPE uxCmdIntGetOutputBufferSizeBytes( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
+const signed char *pcCmdIntGetParameter( const signed char *pcCommandString, unsigned portBASE_TYPE uxWantedParameter, portBASE_TYPE *pxParameterStringLength )
+{
+unsigned portBASE_TYPE uxParametersFound = 0;
+const signed char *pcReturn = NULL;
+
+	*pxParameterStringLength = 0;
+
+	while( uxParametersFound < uxWantedParameter )
+	{
+		/* Index the character pointer past the current word.  If this is the start
+		of the command string then the first word is the command itself. */
+		while( ( ( *pcCommandString ) != 0x00 ) && ( ( *pcCommandString ) != ' ' ) )
+		{
+			pcCommandString++;
+		}
+
+		/* Find the start of the next string. */
+		while( ( ( *pcCommandString ) != 0x00 ) && ( ( *pcCommandString ) == ' ' ) )
+		{
+			pcCommandString++;
+		}
+
+		/* Was a string found? */
+		if( *pcCommandString != 0x00 )
+		{
+			/* Is this the start of the required parameter? */
+			uxParametersFound++;
+
+			if( uxParametersFound == uxWantedParameter )
+			{
+				/* How long is the parameter? */
+				pcReturn = pcCommandString;
+				while( ( ( *pcCommandString ) != 0x00 ) && ( ( *pcCommandString ) != ' ' ) )
+				{
+					( *pxParameterStringLength )++;
+					pcCommandString++;
+				}
+
+				break;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return pcReturn;
+}
+/*-----------------------------------------------------------*/
+
+static portBASE_TYPE prvHelpCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char *pcCommandString )
 {
 static const xCommandLineInputListItem * pxCommand = NULL;
 signed portBASE_TYPE xReturn;
+
+	( void ) pcCommandString;
 
 	if( pxCommand == NULL )
 	{
@@ -228,5 +307,35 @@ signed portBASE_TYPE xReturn;
 	}
 
 	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+static signed char prvGetNumberOfParameters( const signed char * pcCommandString )
+{
+signed char cParameters = 0;
+portBASE_TYPE xLastCharacterWasSpace = pdFALSE;
+
+	/* Count the number of space delimited words in pcCommandString. */
+	while( *pcCommandString != 0x00 )
+	{
+		if( ( *pcCommandString ) == ' ' )
+		{
+			if( xLastCharacterWasSpace != pdTRUE )
+			{
+				cParameters++;
+				xLastCharacterWasSpace = pdTRUE;
+			}
+		}
+		else
+		{
+			xLastCharacterWasSpace = pdFALSE;
+		}
+
+		pcCommandString++;
+	}
+
+	/* The value returned is one less than the number of space delimited words,
+	as the first word should be the command itself. */
+	return cParameters;
 }
 

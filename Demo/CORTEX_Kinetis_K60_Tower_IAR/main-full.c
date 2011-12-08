@@ -389,7 +389,6 @@ static long lChangedTimerPeriodAlready = pdFALSE;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-			printf( "%s", pcStatusMessage );
 			
 			/* This call to xTimerChangePeriod() uses a zero block time.  
 			Functions called from inside of a timer callback function must 
@@ -561,7 +560,6 @@ volatile size_t xFreeHeapSpace;
 		xTimerStart( xLED2Timer, portMAX_DELAY );
 		
 		xFreeHeapSpace = xPortGetFreeHeapSize();
-		printf( "%d bytes of FreeRTOS heap remain unused\nconfigTOTAL_HEAP_SIZE can be reduced\n", xFreeHeapSpace );
 		
 		if( xFreeHeapSpace > 100 )
 		{

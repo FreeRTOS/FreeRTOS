@@ -300,10 +300,7 @@ typedef void (*vector_entry)(void);
 
 void default_isr(void)
 {
-   #define VECTORNUM                     (*(volatile uint8_t*)(0xE000ED04))
-
-   printf("\n****default_isr entered on vector %d*****\r\n\n",VECTORNUM);
-   return;
+   for( ;; );
 }
 /******************************************************************************/
 /* End of "vectors.c" */

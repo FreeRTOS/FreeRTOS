@@ -397,17 +397,10 @@ eth_phy_reg_dump(int ch, int phy_addr)
 {
     int j, settings;
     
-    printf("\n    MII Register Block\n");
-    printf("--------------------------------");
     for (j = 0; j < 32; j++)
     {
         mii_read(ch, phy_addr, j, &settings);
-        if (!(j % 4))
-            printf("\n0x%02X-0x%02X : %04X ", j, j + 3, settings);
-        else
-            printf("%04X ", settings);
     }
-    printf("\n");
     
     return 0;
 }

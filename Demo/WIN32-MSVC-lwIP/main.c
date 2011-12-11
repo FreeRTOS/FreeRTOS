@@ -125,8 +125,8 @@ extern void lwIPAppsInit( void *pvArguments );
 xRunTimeStats command definitions respectively.  These functions are not 
 necessarily reentrant!  They must be used from one task only - or at least by 
 only one task at a time. */
-static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen );
-static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen );
+static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char * pcCommandString );
+static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char * pcCommandString );
 
 /* The string that latches the current demo status. */
 static char *pcStatusMessage = "All tasks running without error";
@@ -145,6 +145,7 @@ static const xCommandLineInput xRunTimeStats =
 	"run-time-stats",
 	"run-time-stats: Displays a table showing how much processing time each FreeRTOS task has used\r\n",
 	prvRunTimeStatsCommand,
+	0
 };
 
 /* Structure that defines the "task-stats" command line command. */
@@ -153,6 +154,7 @@ static const xCommandLineInput xTaskStats =
 	"task-stats",
 	"task-stats: Displays a table showing the state of each FreeRTOS task\r\n",
 	prvTaskStatsCommand,
+	0
 };
 
 /*-----------------------------------------------------------*/
@@ -316,14 +318,16 @@ unsigned long ulReturn;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
+static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char * pcCommandString )
 {
 const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
 	configASSERT( pcWriteBuffer );
 
-	/* This function assumes the buffer length is adequate. */
+	/* This function assumes the buffer length is adequate and does not look
+	for parameters. */
 	( void ) xWriteBufferLen;
+	( void ) pcCommandString;
 
 	/* Generate a table of task stats. */
 	strcpy( pcWriteBuffer, pcHeader );
@@ -335,14 +339,16 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen )
+static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char * pcCommandString )
 {
 const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
 	configASSERT( pcWriteBuffer );
 
-	/* This function assumes the buffer length is adequate. */
+	/* This function assumes the buffer length is adequate and does not look
+	for parameters. */
 	( void ) xWriteBufferLen;
+	( void ) pcCommandString;
 
 	/* Generate a table of task stats. */
 	strcpy( pcWriteBuffer, pcHeader );

@@ -24,6 +24,8 @@ LR_IROM1 0x1C000000 0x400000  {    ; load region size_region
   RW_IRAM1 +0 (0x18000 - 0xC0) {  ; RW data
 
    .ANY (+RW +ZI)
+   Hitex_Fast_Startup.o (+RO +ZI +RW)
+   lpc43xx_cgu.o (+RO +ZI +RW)
   }
 
 ; #define M4_BUF_START	0x20000000

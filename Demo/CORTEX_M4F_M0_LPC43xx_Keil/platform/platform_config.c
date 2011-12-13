@@ -22,7 +22,7 @@ void platformInit(void) {
 	
 	fpuInit();	
 	
-	clockInit();
+	/* clockInit(); the clock is set in Hitex_CGU_Init */
 
 	vIOInit();
 
@@ -50,12 +50,12 @@ void vIOInit(void)
 	#if (PLATFORM == NXP_VALIDATION_BOARD)
 		// P9.2 : GPIO4_14: LD11 (LED)
 		scu_pinmux(0x9 ,2 , PDN_ENABLE, FUNC0); 	
-		LPC_GPIO4->DIR |= (1UL << 14);
+		LPC_GPIO_PORT->DIR[4] |= (1UL << 14);
 	#endif
 	#if (PLATFORM == HITEX_A2_BOARD)
 		// P9.3 : GPIO4_15
 		scu_pinmux(0x9 , 3 , PDN_ENABLE, FUNC0); 	
-		LPC_GPIO4->DIR |= (1UL << 15);
+		LPC_GPIO_PORT->DIR[4] |= (1UL << 15);
 	#endif	
 }
 	

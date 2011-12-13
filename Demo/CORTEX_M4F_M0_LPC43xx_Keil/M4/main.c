@@ -196,7 +196,7 @@ volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
 
-int main(void)
+int main( void )
 {
 	/* Configure the hardware ready to run the test. */
 	prvSetupHardware();
@@ -320,8 +320,13 @@ unsigned long ulErrorFound = pdFALSE;
 
 static void prvSetupHardware( void )
 {
+extern void Hitex_CGU_Init( void );
+
 	/* Setup system (clock, PLL and Flash configuration) */
 	platformInit();
+
+	/* Wind the clock speed up in steps to its maximum. */
+	Hitex_CGU_Init();
 	
 	/* Ensure all priority bits are assigned as preemption priority bits. */
 	NVIC_SetPriorityGrouping( 0 );

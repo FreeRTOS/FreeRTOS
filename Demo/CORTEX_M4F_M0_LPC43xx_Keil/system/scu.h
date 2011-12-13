@@ -25,15 +25,16 @@
 #define PIN_OFFSET  0x04
 
 /* Pin modes */
-//#define MD_PUP  (0x0<<3)
-//#define MD_BUK  (0x1<<3)
-//#define MD_PLN  (0x2<<3)
-//#define MD_PDN  (0x3<<3)
-//#define MD_EHS  (0x1<<5)
-//#define MD_EZI  (0x1<<6)
-//#define MD_ZI   (0x1<<7)
-//#define MD_EHD0 (0x1<<8)
-//#define MD_EHD1 (0x1<<8)
+#define MD_PUP  (0x0<<3)
+#define MD_BUK  (0x1<<3)
+#define MD_PLN  (0x2<<3)
+#define MD_PDN  (0x3<<3)
+#define MD_EHS  (0x1<<5)
+#define MD_EZI  (0x1<<6)
+#define MD_ZI   (0x1<<7)
+#define MD_EHD0 (0x1<<8)
+#define MD_EHD1 (0x1<<8)
+#define MD_PLN_FAST (MD_PLN | MD_EHS | MD_EZI | MD_ZI)
 
 /* Pin modes
 *  ========= 

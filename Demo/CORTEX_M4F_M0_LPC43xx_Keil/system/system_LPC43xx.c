@@ -22,14 +22,14 @@
 
 #include <stdint.h>
 #if defined CORE_M4
-#include "LPC43xx.h"                    /* LPC18xx definitions                */
+#include "LPC43xx.h"   
 #endif
 
 #ifdef CORE_M0
-#include "LPC43xx_M0.h"                /* LPC18xx definitions                */
+#include "LPC43xx_M0.h"                
 #endif
 
-#include "scu.h"
+#include "scu.h" 
 #include "type.h"
 #include "config.h"
 
@@ -145,27 +145,6 @@ uint32_t SPARE1Frequency = 0;
  */
 void SystemInit(void)
 {
-#ifdef OTP   	
-	// Set IRC trim if OTP is not programmed.
-	if( *(uint32_t *)LPC_OTP_CTRL_BASE == 0x00FF || 
-		*(uint32_t *)(LPC_OTP_CTRL_BASE+4) == 0x0000)
-	{
-		LPC_CREG->IRCTRM = IRC_TRIM_VAL;
-	}
-#else
-	LPC_CREG->IRCTRM = IRC_TRIM_VAL;
-#endif
-
-	// Set all GPIO as input.
-	LPC_GPIO0->DIR = 0x0000;
-	LPC_GPIO1->DIR = 0x0000;
-	LPC_GPIO2->DIR = 0x0000;
-	LPC_GPIO3->DIR = 0x0000;
-	LPC_GPIO4->DIR = 0x0000;
-	LPC_GPIO5->DIR = 0x0000;
-	LPC_GPIO6->DIR = 0x0000;
-	LPC_GPIO7->DIR = 0x0000;
-
 	// M4 runs on IRC by default
 	M4Frequency = IRC_OSC; 
 	XtalFrequency = XTAL_FREQ;
@@ -548,14 +527,16 @@ void SetPLLUSB(CLKSRC_Type src_clk, uint8_t enable)
 void EnableSourceClk(CLKSRC_Type src_clk)
 {
 	uint32_t i=0;
+	const uint32_t PlainEnable = (0x2 << 3);	/* no pull up, no pull down (plain) */
+
 
 	if(src_clk == SRC_OSC32K)
 	{
 		LPC_CREG->CREG0 &= ~((1<<3)|(1<<2));		// Active mode of 32 KHz osc and release reset
 		LPC_CREG->CREG0 |= (1<<1)|(1<<0);			// Enable 32 kHz & 1 kHz on osc32k
 	}
-	if(src_clk == SRC_ENET_RX_CLK)scu_pinmux(0xC ,0 , PLAIN_ENABLE, FUNC3); 	// enet_rx_clk on PC_0 func 3
-	if(src_clk == SRC_ENET_TX_CLK)scu_pinmux(0x1 ,19, PLAIN_ENABLE, FUNC0); 	// enet_tx_clk on P1_19 func 0
+	if(src_clk == SRC_ENET_RX_CLK)scu_pinmux(0xC ,0 , PlainEnable, FUNC3); 	// enet_rx_clk on PC_0 func 3
+	if(src_clk == SRC_ENET_TX_CLK)scu_pinmux(0x1 ,19, PlainEnable, FUNC0); 	// enet_tx_clk on P1_19 func 0
 	if(src_clk == SRC_XTAL && (LPC_CGU->XTAL_OSC_CTRL&0x1))
 	{
 		LPC_CGU->XTAL_OSC_CTRL &= ~(1<<0);								// Enable Xo50M
@@ -574,14 +555,15 @@ void EnableSourceClk(CLKSRC_Type src_clk)
 void DisableSourceClk(CLKSRC_Type src_clk)
 {
 	uint32_t i=0;
+	const uint32_t PlainEnable = (0x2 << 3);	/* no pull up, no pull down (plain) */
 
 	if(src_clk == SRC_OSC32K)
 	{
 		LPC_CREG->CREG0 &= ~((1<<1)|(1<<0));	// Disable 32 kHz & 1 kHz on osc32k
 		LPC_CREG->CREG0 |= ((1<<3)|(1<<2));		// osc32k in power down and in reset mode
 	}
-	if(src_clk == SRC_ENET_RX_CLK)scu_pinmux(0xC ,0 , PLAIN_ENABLE, FUNC0); 	// nc on PC_0 func 0
-	if(src_clk == SRC_ENET_TX_CLK)scu_pinmux(0x1 ,19, PLAIN_ENABLE, FUNC2); 	// nc on P1_19 func 2
+	if(src_clk == SRC_ENET_RX_CLK)scu_pinmux(0xC ,0 , PlainEnable, FUNC0); 	// nc on PC_0 func 0
+	if(src_clk == SRC_ENET_TX_CLK)scu_pinmux(0x1 ,19, PlainEnable, FUNC2); 	// nc on P1_19 func 2
 	if(src_clk == SRC_XTAL)
 	{
 		LPC_CGU->XTAL_OSC_CTRL = (1<<0);		// Disable Xo50M

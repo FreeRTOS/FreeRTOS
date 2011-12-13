@@ -31,7 +31,7 @@
 
 /* Includes ------------------------------------------------------------------- */
 #include "lpc_types.h"
-#include "lpc43xx_scu.h"
+#include "scu.h"
 #include "lpc43xx_cgu.h"
 
 /** This define used to fix mistake when run with IAR compiler */

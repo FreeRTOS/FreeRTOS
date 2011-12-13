@@ -161,6 +161,7 @@ signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue ) PRIV
 unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
 unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
@@ -1123,6 +1124,16 @@ void vQueueDelete( xQueueHandle pxQueue )
 	unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue )
 	{
 		return pxQueue->ucQueueNumber;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+
+	void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber )
+	{
+		pxQueue->ucQueueNumber = ucQueueNumber;
 	}
 
 #endif

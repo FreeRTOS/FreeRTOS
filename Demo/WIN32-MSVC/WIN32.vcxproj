@@ -67,6 +67,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalOptions>/wd4210 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -129,6 +130,8 @@
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />
     <ClCompile Include="..\Common\Minimal\blocktim.c" />
     <ClCompile Include="..\Common\Minimal\countsem.c" />
+    <ClCompile Include="..\Common\Minimal\death.c" />
+    <ClCompile Include="..\Common\Minimal\dynamic.c" />
     <ClCompile Include="..\Common\Minimal\flop.c" />
     <ClCompile Include="..\Common\Minimal\GenQTest.c" />
     <ClCompile Include="..\Common\Minimal\integer.c" />

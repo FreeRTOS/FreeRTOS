@@ -100,6 +100,8 @@
 #include "flop.h"
 #include "TimerDemo.h"
 #include "countsem.h"
+#include "death.h"
+#include "dynamic.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
@@ -121,9 +123,9 @@ static void prvCheckTask( void *pvParameters );
 /* The variable into which error messages are latched. */
 static char *pcStatusMessage = "OK";
 
-/* This semaphore is created purely to test using the vSemaphoreDelete() API
-function.  It has no other purpose. */
-static xSemaphoreHandle xSemaphoreToDelete = NULL;
+/* This semaphore is created purely to test using the vSemaphoreDelete() and
+semaphore tracing API functions.  It has no other purpose. */
+static xSemaphoreHandle xMutexToDelete = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -143,10 +145,17 @@ int main( void )
 	vStartRecursiveMutexTasks();
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartCountingSemaphoreTasks();
+	vStartDynamicPriorityTasks();
+
+	/* The suicide tasks must be created last as they need to know how many
+	tasks were running prior to their creation.  This then allows them to 
+	ascertain whether or not the correct/expected number of tasks are running at 
+	any given time. */
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Create the semaphore that will be deleted in the idle task hook.  This
 	is done purely to test the use of vSemaphoreDelete(). */
-	xSemaphoreToDelete = xSemaphoreCreateMutex();
+	xMutexToDelete = xSemaphoreCreateMutex();
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -214,6 +223,14 @@ const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
 		{
 			pcStatusMessage = "Error: CountSem";
 		}
+		else if( xIsCreateTaskStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: Death";
+		}
+		else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Dynamic\r\n";
+		}
 
 		/* This is the only task that uses stdout so its ok to call printf() 
 		directly. */
@@ -227,15 +244,27 @@ void vApplicationIdleHook( void )
 const unsigned long ulMSToSleep = 5;
 xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
 signed char *pcTaskName;
+const unsigned char ucConstQueueNumber = 0xaaU, ucConstTaskNumber = 0x55U;
+
+/* These three functions are only meant for use by trace code, and not for
+direct use from application code, hence their prototypes are not in queue.h. */
+extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber );
+extern unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue );
+extern unsigned char ucQueueGetQueueType( xQueueHandle pxQueue );
+extern void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
+extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 
 	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
 	tasks waiting to be terminated by the idle task. */
 	Sleep( ulMSToSleep );
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and 
-	xTaskGetIdleTaskHandle() functions. */
+	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
+	the task number. */
 	xIdleTaskHandle = xTaskGetIdleTaskHandle();
 	xTimerTaskHandle = xTimerGetTimerDaemonTaskHandle();
+	vTaskSetTaskNumber( xIdleTaskHandle, ( unsigned long ) ucConstTaskNumber );
+	configASSERT( uxTaskGetTaskNumber( xIdleTaskHandle ) == ucConstTaskNumber );
 
 	/* This is the idle hook, so the current task handle should equal the 
 	returned idle task handle. */
@@ -251,14 +280,24 @@ signed char *pcTaskName;
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
 	}
 
-	/* If xSemaphoreToDelete has not already been deleted, then delete it now.
+	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the 
 	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
 	that has tasks blocked on it. */
-	if( xSemaphoreToDelete != NULL )
+	if( xMutexToDelete != NULL )
 	{
-		vSemaphoreDelete( xSemaphoreToDelete );
-		xSemaphoreToDelete = NULL;
+		/* Before deleting the semaphore, test the function used to set its
+		number.  This would normally only be done from trace software, rather
+		than application code. */
+		vQueueSetQueueNumber( xMutexToDelete, ucConstQueueNumber );
+
+		/* Before deleting the semaphore, test the functions used to get its
+		type and number.  Again, these would normally only be done from trace
+		software, rather than application code. */
+		configASSERT( ucQueueGetQueueNumber( xMutexToDelete ) == ucConstQueueNumber );
+		configASSERT( ucQueueGetQueueType( xMutexToDelete ) == queueQUEUE_TYPE_MUTEX );
+		vSemaphoreDelete( xMutexToDelete );
+		xMutexToDelete = NULL;
 	}
 }
 /*-----------------------------------------------------------*/

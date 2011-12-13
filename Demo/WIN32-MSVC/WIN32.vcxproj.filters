@@ -88,6 +88,12 @@
     <ClCompile Include="..\Common\Minimal\countsem.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Minimal\death.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\dynamic.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

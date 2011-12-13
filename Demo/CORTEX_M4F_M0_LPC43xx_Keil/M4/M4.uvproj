@@ -207,7 +207,7 @@
             <RvdsVP>2</RvdsVP>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
-            <StupSel>0</StupSel>
+            <StupSel>8</StupSel>
             <useUlib>1</useUlib>
             <EndSel>1</EndSel>
             <uLtcg>0</uLtcg>
@@ -223,12 +223,12 @@
             <Ro1Chk>0</Ro1Chk>
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
-            <Ir1Chk>0</Ir1Chk>
+            <Ir1Chk>1</Ir1Chk>
             <Ir2Chk>0</Ir2Chk>
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
-            <Im1Chk>0</Im1Chk>
+            <Im1Chk>1</Im1Chk>
             <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
@@ -331,7 +331,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -415,6 +415,16 @@
               <FileName>fpu_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\system\fpu_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>Hitex_Fast_Startup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\system\Hitex_Fast_Startup.c</FilePath>
+            </File>
+            <File>
+              <FileName>lpc43xx_emc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\platform\M4_PeripheralLibraryFiles\lpc43xx_emc.c</FilePath>
             </File>
           </Files>
         </Group>

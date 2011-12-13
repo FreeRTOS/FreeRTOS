@@ -1,5 +1,5 @@
 REM/*
-REM    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
+REM    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
 REM
 REM
 REM    ***************************************************************************

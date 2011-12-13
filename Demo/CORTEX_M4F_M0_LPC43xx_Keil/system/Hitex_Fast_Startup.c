@@ -27,7 +27,6 @@
 #include "LPC43xx.h"
 #include "lpc43xx_cgu.h"
 #include "lpc43xx_emc.h"
-#include "spifi_rom_api.h"
 
 void WaitMinUS( volatile uint32_t us, uint32_t SystemClock )
 {

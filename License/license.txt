@@ -1,7 +1,12 @@
-The FreeRTOS.org source code is licensed by the modified GNU General Public 
-License (GPL) text provided below.  The FreeRTOS download also includes 
-demo application source code, some of which is provided by third parties 
-AND IS LICENSED SEPARATELY FROM FREERTOS.ORG.  
+The FreeRTOS.org source code is licensed by the *modified* GNU General Public
+License (GPL), text provided below.  A special exception to the GPL is 
+included to allow you to distribute a combined work that includes FreeRTOS 
+without being obliged to provide the source code for any proprietary 
+components.  See the licensing section of http://www.FreeRTOS.org for full 
+details.  The exception text is also included at the bottom of this file.
+
+The FreeRTOS download also includes demo application source code, some of 
+which is provided by third parties AND IS LICENSED SEPARATELY FROM FREERTOS.
 
 For the avoidance of any doubt refer to the comment included at the top
 of each source and header file for license and copyright information.

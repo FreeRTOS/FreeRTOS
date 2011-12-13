@@ -1,4 +1,0 @@
-The necessary files are copied to this BSP directory structure by executing 
-the CreateProjectDirectoryStructure.bat batch file located in the 
-FreeRTOS\\Demo\MicroBlaze_Spartan-6_EthernetLite\SDKProjects\RTOSDemoSource
-folder.

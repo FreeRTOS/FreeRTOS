@@ -163,6 +163,7 @@ void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksTo
 unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
 unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Co-routine queue functions differ from task queue functions.  Co-routines are
@@ -261,6 +262,45 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
  * PUBLIC QUEUE MANAGEMENT API documented in queue.h
  *----------------------------------------------------------*/
 
+portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue )
+{
+portBASE_TYPE xReturn = pdPASS;
+
+	configASSERT( pxQueue );
+
+	/* If the queue being reset has already been used (has not just been
+	created), then only reset the queue if its event lists are empty. */
+	if( xNewQueue != pdTRUE )
+	{
+		if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+		{
+			xReturn = pdFAIL;
+		}
+
+		if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+		{
+			xReturn = pdFAIL;
+		}
+	}
+
+	if( xReturn == pdPASS )
+	{
+		pxQueue->pcTail = pxQueue->pcHead + ( pxQueue->uxLength * pxQueue->uxItemSize );
+		pxQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
+		pxQueue->pcWriteTo = pxQueue->pcHead;
+		pxQueue->pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - ( unsigned portBASE_TYPE ) 1U ) * pxQueue->uxItemSize );
+		pxQueue->xRxLock = queueUNLOCKED;
+		pxQueue->xTxLock = queueUNLOCKED;
+
+		/* Ensure the event queues start with the correct state. */
+		vListInitialise( &( pxQueue->xTasksWaitingToSend ) );
+		vListInitialise( &( pxQueue->xTasksWaitingToReceive ) );
+	}
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
 xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType )
 {
 xQUEUE *pxNewQueue;
@@ -286,23 +326,14 @@ xQueueHandle xReturn = NULL;
 			{
 				/* Initialise the queue members as described above where the
 				queue type is defined. */
-				pxNewQueue->pcTail = pxNewQueue->pcHead + ( uxQueueLength * uxItemSize );
-				pxNewQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
-				pxNewQueue->pcWriteTo = pxNewQueue->pcHead;
-				pxNewQueue->pcReadFrom = pxNewQueue->pcHead + ( ( uxQueueLength - ( unsigned portBASE_TYPE ) 1U ) * uxItemSize );
 				pxNewQueue->uxLength = uxQueueLength;
 				pxNewQueue->uxItemSize = uxItemSize;
-				pxNewQueue->xRxLock = queueUNLOCKED;
-				pxNewQueue->xTxLock = queueUNLOCKED;
+				xQueueGenericReset( pxNewQueue, pdTRUE );
 				#if ( configUSE_TRACE_FACILITY == 1 )
 				{
 					pxNewQueue->ucQueueType = ucQueueType;
 				}
 				#endif /* configUSE_TRACE_FACILITY */
-
-				/* Likewise ensure the event queues start with the correct state. */
-				vListInitialise( &( pxNewQueue->xTasksWaitingToSend ) );
-				vListInitialise( &( pxNewQueue->xTasksWaitingToReceive ) );
 
 				traceQUEUE_CREATE( pxNewQueue );
 				xReturn = pxNewQueue;

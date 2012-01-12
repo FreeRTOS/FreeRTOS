@@ -1235,6 +1235,14 @@ portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBloc
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
 
 /*
+ * Reset a queue back to its original empty state.  pdPASS is returned if the
+ * queue is successfully reset.  pdFAIL is returned if the queue could not be
+ * reset because there are tasks blocked on the queue waiting to either
+ * receive from the queue or send to the queue.
+ */
+#define xQueueReset( pxQueue ) xQueueGenericReset( pxQueue, pdFALSE )
+
+/*
  * The registry is provided as a means for kernel aware debuggers to
  * locate queues, semaphores and mutexes.  Call vQueueAddToRegistry() add
  * a queue, semaphore or mutex handle to the registry if you want the handle
@@ -1264,10 +1272,9 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
  */
 xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType );
 
-/* 
- * Not a public API function, hence the 'Restricted' in the name. 
- */
+/* Not public API functions. */
 void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );
+portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue );
 
 
 #ifdef __cplusplus

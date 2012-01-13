@@ -74,6 +74,14 @@ PSW is set with U and I set, and PM and IPL clear. */
 
 /*-----------------------------------------------------------*/
 
+/* The following lines are to ensure vSoftwareInterruptEntry can be referenced,
+ and therefore installed in the vector table, when the FreeRTOS code is built
+as a library. */
+extern portBASE_TYPE vSoftwareInterruptEntry;
+const portBASE_TYPE * p_vSoftwareInterruptEntry = &vSoftwareInterruptEntry;
+
+/*-----------------------------------------------------------*/
+
 /*
  * Function to start the first task executing - written in asm code as direct
  * access to registers is required. 

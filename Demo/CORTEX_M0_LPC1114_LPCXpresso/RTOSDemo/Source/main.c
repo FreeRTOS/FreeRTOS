@@ -51,6 +51,9 @@
     licensing and training services.
 */
 
+/* Standard includes. */
+#include "string.h"
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -63,6 +66,7 @@
 #include "countsem.h"
 #include "GenQTest.h"
 #include "recmutex.h"
+#include "IntQueue.h"
 
 /* Hardware specific includes. */
 #include "lpc11xx.h"
@@ -82,6 +86,12 @@ in ticks using the portTICK_RATE_MS constant. */
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
+
+#define mainCHECK_INTERRUPT_STACK			1
+
+#if mainCHECK_INTERRUPT_STACK == 1
+	const unsigned char ucExpectedInterruptStackValues[] = { 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC };
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -128,11 +138,12 @@ xTimerHandle xCheckTimer = NULL;
 	prvSetupHardware();
 
 	/* Create the standard demo tasks. */
-	vStartDynamicPriorityTasks();
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
+//	vStartDynamicPriorityTasks();
+//	vCreateBlockTimeTasks();
+//	vStartCountingSemaphoreTasks();
+//	vStartGenericQueueTasks( tskIDLE_PRIORITY );
+//	vStartRecursiveMutexTasks();
+	vStartInterruptQueueTasks();
 
 	/* Create the register test tasks as described at the top of this file. */
 	xTaskCreate( 	vRegTest1Task,			/* Function that implements the task. */
@@ -183,7 +194,10 @@ unsigned long ulErrorFound = pdFALSE;
 
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
-
+	if( xAreIntQueueTasksStillRunning() != pdPASS )
+	{
+		ulErrorFound |= ( 0x01UL << 0UL );
+	}
 
 	/* Check that the register test 1 task is still running. */
 	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
@@ -225,11 +239,31 @@ unsigned long ulErrorFound = pdFALSE;
 
 static void prvSetupHardware( void )
 {
-	/* Enable AHB clock to the GPIO domain. */
-	LPC_SYSCON->SYSAHBCLKCTRL |= (1<<6);
+extern unsigned long _vStackTop[], _pvHeapStart[];
+unsigned long ulInterruptStackSize;
+
+	/* Enable AHB clock for GPIO. */
+	LPC_SYSCON->SYSAHBCLKCTRL |= ( 1 << 6 );
 
 	/* Configure GPIO for LED output. */
 	xGPIO0->DIR |= mainLED_BIT;
+
+	/* The size of the stack used by main and interrupts is not defined in
+	the linker, but just uses whatever RAM is left.  Calculate the amount of
+	RAM available for the main/interrupt/system stack, and check it against
+	a reasonable number.  If this assert is hit then it is likely you don't
+	have enough stack to start the kernel, or to allow interrupts to nest.
+	Note - this is separate to the stacks that are used by tasks.  The stacks
+	that are used by tasks are automatically checked if
+	configCHECK_FOR_STACK_OVERFLOW is not 0 in FreeRTOSConfig.h - but the stack
+	used by interrupts is not.  Reducing the conifgTOTAL_HEAP_SIZE setting will
+	increase the stack available to main() and interrupts. */
+	ulInterruptStackSize = ( ( unsigned long ) _vStackTop ) - ( ( unsigned long ) _pvHeapStart );
+	configASSERT( ulInterruptStackSize > 350UL );
+
+	/* Fill the stack used by main() and interrupts to a known value, so its
+	use can be manually checked. */
+	memcpy( ( void * ) _pvHeapStart, ucExpectedInterruptStackValues, sizeof( ucExpectedInterruptStackValues ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -296,11 +330,21 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 
 void vApplicationTickHook( void )
 {
+#if mainCHECK_INTERRUPT_STACK == 1
+extern unsigned long _pvHeapStart[];
+
 	/* This function will be called by each tick interrupt if
 	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
 	functions can be used (those that end in FromISR()). */
+
+	/* Manually check the last few bytes of the interrupt stack to check they
+	have not been overwritten.  Note - the task stacks are automatically
+	checked for overflow if configCHECK_FOR_STACK_OVERFLOW is set to 1 or 2
+	in FreeRTOSConifg.h, but the interrupt stack is not. */
+	configASSERT( memcmp( ( void * ) _pvHeapStart, ucExpectedInterruptStackValues, sizeof( ucExpectedInterruptStackValues ) ) == 0U );
+#endif /* mainCHECK_INTERRUPT_STACK */
 }
 /*-----------------------------------------------------------*/
 

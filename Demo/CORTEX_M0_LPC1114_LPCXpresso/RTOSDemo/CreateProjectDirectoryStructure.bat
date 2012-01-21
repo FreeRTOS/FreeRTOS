@@ -31,7 +31,7 @@ IF EXIST Source\FreeRTOS_Source Goto END
 	copy ..\..\..\Source\include\*.* Source\FreeRTOS_Source\include
 	
 	REM Copy the portable layer files
-	copy ..\..\..\Source\portable\GCC\ARM_CM3\*.* Source\FreeRTOS_Source\portable\GCC\ARM_CM0
+	copy ..\..\..\Source\portable\GCC\ARM_CM0\*.* Source\FreeRTOS_Source\portable\GCC\ARM_CM0
 	
 	REM Copy the basic memory allocation files
 	copy ..\..\..\Source\portable\MemMang\heap_1.c Source\FreeRTOS_Source\portable\MemMang

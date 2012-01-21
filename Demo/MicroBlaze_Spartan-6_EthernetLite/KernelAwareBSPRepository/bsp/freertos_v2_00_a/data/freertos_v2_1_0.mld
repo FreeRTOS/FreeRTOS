@@ -58,7 +58,7 @@ BEGIN OS freertos
   PARAM name = stdout, type = peripheral_instance, requires_interface = stdout, default=none, desc = "Specify the instance name of the standard output peripheral";
 
   # System timer specification
-  PARAM name = systmr_interval, type = int, default = 10, desc = "Specify the time interval for each kernel tick (in milliseconds). This controls the CPU budget for each process. If the timer is fit_timer, then this parameter is automatically determined";	
+  PARAM name = systmr_interval, type = int, default = 10, desc = "Specify the frequency of the kernel tick (in Hz).";	
 
   # System interrupt controller specification
   # PARAM name = sysintc_spec, type = peripheral_instance, range = (opb_intc, xps_intc, dcr_intc, axi_intc), default = none, desc = "Specify the instance name of the interrupt controller device driving system interrupts";

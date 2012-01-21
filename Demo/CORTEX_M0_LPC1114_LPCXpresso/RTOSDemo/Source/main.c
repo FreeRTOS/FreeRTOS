@@ -67,6 +67,8 @@
  *
  *****************************************************************************/
 
+//#error The batch file Demo\CORTEX_M0_LPC1114_LPCXpresso\RTOSDemo\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
+
 /* Standard includes. */
 #include "string.h"
 
@@ -79,7 +81,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /* The bit on port 0 to which the LED is wired. */
 #define mainLED_BIT		( 1UL << 7UL )
@@ -136,6 +138,8 @@ int main( void )
 		main_full();
 	}
 	#endif
+
+	return 0;
 }
 /*-----------------------------------------------------------*/
 

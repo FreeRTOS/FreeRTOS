@@ -103,60 +103,16 @@ static void vPortStartFirstTask( void ) __attribute__ (( naked ));
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-	/* Ordering the registers in numerical order on the stack allows a context
-	switch using 4 ldmia and 2 arithmetic instructions.  The alternative, of
-	having a group of four high registers and a group of four low registers,
-	and then placing the group of low before the group of high, would require
-	4 ldmia and 4 arithmetic instructions.  Therefore a numerical ordering is
-	preferred. */
-#if 0
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
 	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
-	pxTopOfStack--;
-	*pxTopOfStack = 0;	/* LR */
-	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
+	pxTopOfStack -= 6;	/* LR, R12, R3..R1 */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
-	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
-#else
-	/* Simulate the stack frame as it would be created by a context switch
-	interrupt. */
-	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
-	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x14;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x12;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x3;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x2;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x1;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x11;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x10;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x09;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x08;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x07;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x06;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x05;	/* LR */
-	pxTopOfStack--;
-	*pxTopOfStack = 0x04;
-#endif
+	pxTopOfStack -= 8; /* R11..R4. */
+
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -277,7 +233,7 @@ void PendSV_Handler( void )
 	" 	mov r7, r11							\n"
 	" 	stmia r0!, {r4-r7}              	\n"
 	"										\n"
-	"	push {r3, r14}							\n"
+	"	push {r3, r14}						\n"
 	"	cpsid i								\n"
 	"	bl vTaskSwitchContext				\n"
 	"	cpsie i								\n"

@@ -51,56 +51,52 @@
     licensing and training services.
 */
 
+/******************************************************************************
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
+ * select between the two.  The simply blinky demo is implemented and described
+ * in main_blinky.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
+ *
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and FreeRTOS hook functions.  It also contains a dummy
+ * interrupt service routine called Dummy_IRQHandler() that is provided as an
+ * example of how to use interrupt safe FreeRTOS API functions (those that end
+ * in "FromISR").
+ *
+ *****************************************************************************/
+
 /* Standard includes. */
 #include "string.h"
 
-/* Kernel includes. */
+/* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "queue.h"
-#include "timers.h"
-
-/* Common demo includes. */
-#include "dynamic.h"
-#include "blocktim.h"
-#include "countsem.h"
-#include "GenQTest.h"
-#include "recmutex.h"
-#include "IntQueue.h"
 
 /* Hardware specific includes. */
 #include "lpc11xx.h"
 
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+
 /* The bit on port 0 to which the LED is wired. */
 #define mainLED_BIT		( 1UL << 7UL )
 
-/* The period after which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
-
-/* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
-
-/* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0UL )
-
+/* The configCHECK_FOR_STACK_OVERFLOW setting in FreeRTOSConifg can be used to
+check task stacks for overflows.  It does not however check the stack used by
+interrupts.  This demo has a simple addition that will also check the stack used
+by interrupts if mainCHECK_INTERRUPT_STACK is set to 1.  Note that this check is
+only performed from the tick hook function (which runs in an interrupt context).
+It is a good debugging aid - but won't catch interrupt stack problems until the
+tick interrupt next executes. */
 #define mainCHECK_INTERRUPT_STACK			1
-
 #if mainCHECK_INTERRUPT_STACK == 1
 	const unsigned char ucExpectedInterruptStackValues[] = { 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC };
 #endif
 
 /*-----------------------------------------------------------*/
-
-/*
- * Register check tasks, as described at the top of this file.  The nature of
- * these files necessitates that they are written in an assembly file.
- */
-extern void vRegTest1Task( void *pvParameters );
-extern void vRegTest2Task( void *pvParameters );
 
 /*
  * Perform any application specific hardware configuration.  The clocks,
@@ -111,129 +107,52 @@ static void prvSetupHardware( void );
 /*
  * The hardware only has a single LED.  Simply toggle it.
  */
-static void prvToggleLED( void );
+void vMainToggleLED( void );
 
-/*
- * The check timer callback function, as described at the top of this file.
- */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+/* main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0. */
+void main_blinky( void );
+void main_full( void );
 
 /*-----------------------------------------------------------*/
 
 /* The GPIO port to which the LED is attached. */
 static LPC_GPIO_TypeDef * const xGPIO0 = LPC_GPIO0;
 
-/* The following two variables are used to communicate the status of the
-register check tasks to the check software timer.  If the variables keep
-incrementing, then the register check tasks has not discovered any errors.  If
-a variable stops incrementing, then an error has been found. */
-volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
-
 /*-----------------------------------------------------------*/
-
 int main( void )
 {
-xTimerHandle xCheckTimer = NULL;
-
+	/* Prepare the hardware to run this demo. */
 	prvSetupHardware();
 
-	/* Create the standard demo tasks. */
-//	vStartDynamicPriorityTasks();
-//	vCreateBlockTimeTasks();
-//	vStartCountingSemaphoreTasks();
-//	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-//	vStartRecursiveMutexTasks();
-	vStartInterruptQueueTasks();
-
-	/* Create the register test tasks as described at the top of this file. */
-	xTaskCreate( 	vRegTest1Task,			/* Function that implements the task. */
-					( signed char * ) "Reg1", /* Text name of the task. */
-					configMINIMAL_STACK_SIZE, /* Stack allocated to the task. */
-					NULL, 					/* The task parameter is not used. */
-					tskIDLE_PRIORITY, 		/* The priority to assign to the task. */
-					NULL );					/* Don't receive a handle back, it is not needed. */
-
-	xTaskCreate( 	vRegTest2Task,			/* Function that implements the task. */
-					( signed char * ) "Reg2", /* Text name of the task. */
-					configMINIMAL_STACK_SIZE, /* Stack allocated to the task. */
-					NULL, 					/* The task parameter is not used. */
-					tskIDLE_PRIORITY, 		/* The priority to assign to the task. */
-					NULL );					/* Don't receive a handle back, it is not needed. */
-
-	/* Create the software timer that performs the 'check' functionality,
-	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,						/* The ID is not used, so can be set to anything. */
-								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
-							  );
-
-	if( xCheckTimer != NULL )
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
 	{
-		xTimerStart( xCheckTimer, mainDONT_BLOCK );
+		main_blinky();
 	}
-
-	/* Start the kernel.  From here on, only tasks and interrupts will run. */
-	vTaskStartScheduler();
-
-	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached.  If the following line does execute, then there
-	was	insufficient FreeRTOS heap memory available for the idle and/or timer
-	tasks to be created.  See the memory management section on the FreeRTOS web
-	site, or the FreeRTOS tutorial books for more details. */
-	for( ;; );
+	#else
+	{
+		main_full();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+void vMainToggleLED( void )
 {
-static long lChangedTimerPeriodAlready = pdFALSE;
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-unsigned long ulErrorFound = pdFALSE;
+static unsigned long ulLEDState = 0UL;
 
-	/* Check all the demo and test tasks to ensure that they are all still
-	running, and that none have detected an error. */
-	if( xAreIntQueueTasksStillRunning() != pdPASS )
+	if( ulLEDState == 0UL )
 	{
-		ulErrorFound |= ( 0x01UL << 0UL );
+		xGPIO0->MASKED_ACCESS[ mainLED_BIT ] = 0UL;
+	}
+	else
+	{
+		xGPIO0->MASKED_ACCESS[ mainLED_BIT ] = mainLED_BIT;
 	}
 
-	/* Check that the register test 1 task is still running. */
-	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
-	{
-		ulErrorFound |= ( 0x01UL << 10UL );
-	}
-	ulLastRegTest1Value = ulRegTest1LoopCounter;
-
-	/* Check that the register test 2 task is still running. */
-	if( ulLastRegTest2Value == ulRegTest2LoopCounter )
-	{
-		ulErrorFound |= ( 0x01UL << 11UL );
-	}
-	ulLastRegTest2Value = ulRegTest2LoopCounter;
-
-	/* Toggle the check LED to give an indication of the system status.  If
-	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
-	everything is ok.  A faster toggle indicates an error. */
-	prvToggleLED();
-
-	/* Have any errors been latched in ulErrorFound?  If so, shorten the
-	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
-	This will result in an increase in the rate at which mainCHECK_LED
-	toggles. */
-	if( ulErrorFound != pdFALSE )
-	{
-		if( lChangedTimerPeriodAlready == pdFALSE )
-		{
-			lChangedTimerPeriodAlready = pdTRUE;
-
-			/* This call to xTimerChangePeriod() uses a zero block time.
-			Functions called from inside of a timer callback function must
-			*never* attempt	to block. */
-			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
-		}
-	}
+	ulLEDState = !ulLEDState;
 }
 /*-----------------------------------------------------------*/
 
@@ -264,23 +183,6 @@ unsigned long ulInterruptStackSize;
 	/* Fill the stack used by main() and interrupts to a known value, so its
 	use can be manually checked. */
 	memcpy( ( void * ) _pvHeapStart, ucExpectedInterruptStackValues, sizeof( ucExpectedInterruptStackValues ) );
-}
-/*-----------------------------------------------------------*/
-
-static void prvToggleLED( void )
-{
-static unsigned long ulLEDState = 0UL;
-
-	if( ulLEDState == 0UL )
-	{
-		xGPIO0->MASKED_ACCESS[ mainLED_BIT ] = 0UL;
-	}
-	else
-	{
-		xGPIO0->MASKED_ACCESS[ mainLED_BIT ] = mainLED_BIT;
-	}
-
-	ulLEDState = !ulLEDState;
 }
 /*-----------------------------------------------------------*/
 
@@ -348,6 +250,32 @@ extern unsigned long _pvHeapStart[];
 }
 /*-----------------------------------------------------------*/
 
+#ifdef JUST_AN_EXAMPLE_ISR
+
+void Dummy_IRQHandler(void)
+{
+long lHigherPriorityTaskWoken = pdFALSE;
+
+	/* Clear the interrupt if necessary. */
+	Dummy_ClearITPendingBit();
+
+	/* This interrupt does nothing more than demonstrate how to synchronise a
+	task with an interrupt.  A semaphore is used for this purpose.  Note
+	lHigherPriorityTaskWoken is initialised to zero. */
+	xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
+
+	/* If there was a task that was blocked on the semaphore, and giving the
+	semaphore caused the task to unblock, and the unblocked task has a priority
+	higher than the current Running state task (the task that this interrupt
+	interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE
+	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the
+	portEND_SWITCHING_ISR() macro will result in a context switch being pended to
+	ensure this interrupt returns directly to the unblocked, higher priority,
+	task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
+	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
+}
+
+#endif /* JUST_AN_EXAMPLE_ISR */
 
 
 

@@ -77,7 +77,7 @@ extern uint32_t SystemCoreClock;
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 6800 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 6500 ) )
 #define configMAX_TASK_NAME_LEN			( 5 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
@@ -86,7 +86,7 @@ extern uint32_t SystemCoreClock;
 #define configQUEUE_REGISTRY_SIZE		8
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
-#define configUSE_MALLOC_FAILED_HOOK	2
+#define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configGENERATE_RUN_TIME_STATS	0
@@ -99,7 +99,7 @@ extern uint32_t SystemCoreClock;
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		( 2 )
 #define configTIMER_QUEUE_LENGTH		2
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+#define configTIMER_TASK_STACK_DEPTH	( 80 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

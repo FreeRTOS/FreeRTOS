@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -217,7 +217,7 @@ void vStartInterruptQueueTasks( void )
 	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
 	xTaskCreate( prvLowerPriorityNormallyEmptyTask, ( signed portCHAR * ) "LQRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
 	xTaskCreate( prv1stHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
-	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
+	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H2QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
 	xTaskCreate( prvLowerPriorityNormallyFullTask, ( signed portCHAR * ) "LQRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
 
 	/* Create the queues that are accessed by multiple tasks and multiple
@@ -280,7 +280,7 @@ static void prvQueueAccessLogError( unsigned portBASE_TYPE uxLine )
 
 static void prvHigherPriorityNormallyEmptyTask( void *pvParameters )
 {
-unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorCount2 = 0;
+unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxInterrupts, uxErrorCount1 = 0, uxErrorCount2 = 0;
 
 	/* The timer should not be started until after the scheduler has started.
 	More than one task is running this code so we check the parameter value
@@ -317,6 +317,7 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorC
 
 				uxTask1 = 0;
 				uxTask2 = 0;
+				uxInterrupts = 0;
 
 				/* Loop through the array, checking that both tasks have
 				placed values into the array, and that no values are missing.
@@ -339,6 +340,10 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorC
 						{
 							/* Value was placed into the array by task 2. */
 							uxTask2++;
+						}
+						else if( ucNormallyEmptyReceivedValues[ ux ] == intqSECOND_INTERRUPT )
+						{
+							uxInterrupts++;
 						}
 					}
 				}
@@ -369,6 +374,11 @@ unsigned portBASE_TYPE uxRxed, ux, uxTask1, uxTask2, uxErrorCount1 = 0, uxErrorC
 				else
 				{
 					uxErrorCount2 = 0;
+				}
+
+				if( uxInterrupts == 0 )
+				{
+					prvQueueAccessLogError( __LINE__ );
 				}
 
 				/* Clear the array again, ready to start a new cycle. */
@@ -441,7 +451,7 @@ unsigned portBASE_TYPE uxValue, uxRxed;
 
 static void prv1stHigherPriorityNormallyFullTask( void *pvParameters )
 {
-unsigned portBASE_TYPE uxValueToTx, ux;
+unsigned portBASE_TYPE uxValueToTx, ux, uxInterrupts;
 
 	/* The parameters are not being used so avoid compiler warnings. */
 	( void ) pvParameters;
@@ -499,6 +509,9 @@ unsigned portBASE_TYPE uxValueToTx, ux;
 			task recognises a time out when it is unsuspended. */
 			xWasSuspended = pdTRUE;
 
+			/* Check interrupts are also sending. */
+			uxInterrupts = 0U;
+
 			/* Start at 1 as we expect position 0 to be unused. */
 			for( ux = 1; ux < intqNUM_VALUES_TO_LOG; ux++ )
 			{
@@ -507,6 +520,17 @@ unsigned portBASE_TYPE uxValueToTx, ux;
 					/* A value was missing. */
 					prvQueueAccessLogError( __LINE__ );
 				}
+				else if( ucNormallyFullReceivedValues[ ux ] == intqSECOND_INTERRUPT )
+				{
+					uxInterrupts++;
+				}
+			}
+
+			if( uxInterrupts == 0 )
+			{
+				/* No writes from interrupts were found.  Are interrupts
+				actually running? */
+				prvQueueAccessLogError( __LINE__ );
 			}
 
 			/* Reset the array ready for the next cycle. */

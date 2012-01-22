@@ -63,11 +63,12 @@
  * required to configure the hardware, are defined in main.c.
  ******************************************************************************
  *
- * main_full() creates all the demo application tasks (including a set of tasks
- * that test the interrupt nesting behaviour) and a timer, then starts the
- * scheduler.  The web documentation provides more details of the standard demo
- * application tasks, which provide no particular functionality, but do provide
- * a good example of how to use the FreeRTOS API.
+ * main_full() creates a set of standard demo tasks (including a set of tasks
+ * that test the interrupt nesting behaviour), some application specific tasks,
+ * and a timer.  It then starts the scheduler.  The web documentation provides
+ * more details of the standard demo application tasks, which provide no
+ * particular functionality, but do provide a good example of how to use the
+ * FreeRTOS API.
  *
  * The interrupt nesting test tasks require that two timers are configured to
  * generate interrupts.  The interrupt service routines are defined in
@@ -92,7 +93,7 @@
  * without reporting any errors.  If the check timer callback discovers that a
  * task has either stalled, or reported an error, then it changes the period of
  * the check timer from the initial three seconds, to just 200ms.  The callback
- * function also toggles an LED each time it is called.  This provides a visual
+ * function also toggles the LED each time it is called.  This provides a visual
  * indication of the system status:  If the LED toggles every three seconds,
  * then no issues have been discovered.  If the LED toggles every 200ms, then
  * an issue has been discovered with at least one task.

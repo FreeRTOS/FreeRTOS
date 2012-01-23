@@ -390,7 +390,6 @@ static void prvOptionallyCreateComprehensveTestApplication( void )
 		( void ) vRegTest1Task;
 		( void ) vRegTest2Task;
 		( void ) prvCheckTimerCallback;
-		( void ) prvSetupNestedFPUInterruptsTest;
 	}
 	#endif /* mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY */
 }

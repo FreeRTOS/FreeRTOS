@@ -87,9 +87,9 @@ static void prvSetupTimerInterrupt( void );
 /*
  * Exception handlers.
  */
-void PendSV_Handler( void ) __attribute__ (( naked ));
-void SysTick_Handler( void );
-void SVCall_Handler( void ) __attribute__ (( naked ));
+void xPortPendSVHandler( void ) __attribute__ (( naked ));
+void xPortSysTickHandler( void );
+void vPortSVCHandler( void ) __attribute__ (( naked ));
 
 /*
  * Start first task is a separate function so it can be tested in isolation.
@@ -117,7 +117,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 }
 /*-----------------------------------------------------------*/
 
-void SVCall_Handler( void )
+void vPortSVCHandler( void )
 {
 	__asm volatile (
 					"	ldr	r3, pxCurrentTCBConst2		\n" /* Restore the context. */
@@ -213,7 +213,7 @@ void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-void PendSV_Handler( void )
+void xPortPendSVHandler( void )
 {
 	/* This is a naked function. */
 
@@ -261,7 +261,7 @@ void PendSV_Handler( void )
 }
 /*-----------------------------------------------------------*/
 
-void SysTick_Handler( void )
+void xPortSysTickHandler( void )
 {
 unsigned long ulDummy;
 

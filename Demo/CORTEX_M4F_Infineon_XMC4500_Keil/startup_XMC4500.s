@@ -2,8 +2,8 @@
 ; * @file     startup_XMC4500.s
 ; * @brief    CMSIS Cortex-M4 Core Device Startup File for
 ; *           Infineon XMC4500 Device Series
-; * @version  V1.02
-; * @date     6. December 2011
+; * @version  V1.03
+; * @date     16. Jan. 2012
 ; *
 ; * @note
 ; * Copyright (C) 2009-2011 ARM Limited. All rights reserved.
@@ -56,15 +56,15 @@ __heap_limit
 ;* ================== START OF VECTOR TABLE DEFINITION ====================== */
 ;* Vector Table - This gets programed into VTOR register */
                 AREA    RESET, DATA, READONLY
-                EXPORT  __cs3_interrupt_vector_cortex_m
-                EXPORT  __cs3_interrupt_vector_cortex_m_End
-                EXPORT  __cs3_interrupt_vector_cortex_m_Size
+                EXPORT  __Vectors
+                EXPORT  __Vectors_End
+                EXPORT  __Vectors_Size
 
 
 
-__cs3_interrupt_vector_cortex_m
+__Vectors
     DCD   __initial_sp                ;* Top of Stack                 */
-    DCD   Reset_Handler        		  ;* Reset Handler                */
+    DCD   Reset_Handler               ;* Reset Handler                */
     DCD   NMI_Handler                 ;* NMI Handler                  */
     DCD   HardFault_Handler           ;* Hard Fault Handler           */
     DCD   MemManage_Handler           ;* MPU Fault Handler            */
@@ -92,9 +92,9 @@ __cs3_interrupt_vector_cortex_m
     DCD   ERU1_3_IRQHandler           ;* Handler name for SR ERU1_3    */
     DCD   0                           ;* Not Available                 */
     DCD   0                           ;* Not Available                 */
-    DCD   0              			  ;* Not Available                 */
+    DCD   0                           ;* Not Available                 */
     DCD   PMU0_0_IRQHandler           ;* Handler name for SR PMU0_0    */
-    DCD   0              			  ;* Not Available                 */
+    DCD   0                           ;* Not Available                 */
     DCD   VADC0_C0_0_IRQHandler       ;* Handler name for SR VADC0_C0_0  */
     DCD   VADC0_C0_1_IRQHandler       ;* Handler name for SR VADC0_C0_1  */
     DCD   VADC0_C0_2_IRQHandler       ;* Handler name for SR VADC0_C0_1  */
@@ -193,9 +193,9 @@ __cs3_interrupt_vector_cortex_m
     DCD   0                           ;* Not Available                 */
     DCD   GPDMA1_0_IRQHandler         ;* Handler name for SR GPDMA1_0  */
     DCD   0                           ;* Not Available                 */
-__cs3_interrupt_vector_cortex_m_End
+__Vectors_End
 
-__cs3_interrupt_vector_cortex_m_Size  EQU  __cs3_interrupt_vector_cortex_m_End - __cs3_interrupt_vector_cortex_m
+__Vectors_Size  EQU  __Vectors_End - __Vectors
 
 ;* ================== END OF VECTOR TABLE DEFINITION ======================= */
 
@@ -207,37 +207,51 @@ __cs3_interrupt_vector_cortex_m_Size  EQU  __cs3_interrupt_vector_cortex_m_End -
 Reset_Handler    PROC
                  EXPORT  Reset_Handler             [WEAK]
         IMPORT  SystemInit  
-		IMPORT  __main
+        IMPORT  __main
 
-		;* Remap vector table 
-		LDR R0, =__cs3_interrupt_vector_cortex_m 
-		LDR R1, =0xE000ED08 ;*VTOR register
-		STR R0,[R1]
+        ; Remap vector table 
+        LDR     R0, =__Vectors 
+        LDR     R1, =0xE000ED08 ;*VTOR register
+        STR     R0,[R1]
 
-		;enable un-aligned memory access 
-		LDR 	R1, =0xE000ED14 
-        LDR.W 	R0,[R1,#0x0]
-		BIC     R0,R0,#0x8
-		STR.W   R0,[R1,#0x0]
+				; switch off branch prediction required in A11 step to use cached memory
+        LDR R0,=0x58004000  ;PREF_PCON         
+				LDR R1,[R0]
+				ORR R1,R1,#0x00010000
+				STR R1,[R0]
+
+        ; Clear existing parity errors if any required in A11 step 
+				LDR R0,=0x50004150  ;SCU_GCU_PEFLAG
+				LDR R1,=0xFFFFFFFF
+				STR R1,[R0]
+
+				; Disable parity  required in A11 step
+				LDR R0,=0x5000413C ; SCU_GCU_PEEN
+				MOV R1,#0
+				STR R1,[R0]
+
+        ;enable un-aligned memory access 
+        LDR     R1, =0xE000ED14 
+        LDR.W   R0,[R1,#0x0]
+        BIC     R0,R0,#0x8
+        STR.W   R0,[R1,#0x0]
 
 
-    	;* C routines are likely to be called. Setup the stack now 
-    	LDR SP,=__initial_sp
+        ;* C routines are likely to be called. Setup the stack now 
+        LDR     SP,=__initial_sp
 
 
-	    LDR     R0, = SystemInit 
-	    BLX     R0
-	    
+        LDR     R0, = SystemInit 
+        BLX     R0
+   
  
-		;* Reset stack pointer before zipping off to user application 
-		LDR SP,=__initial_sp
-	
-	    LDR     R0, =__main 
-	    BX	    R0
+        ;* Reset stack pointer before zipping off to user application 
+        LDR     SP,=__initial_sp
 
-		ENDP
+        LDR     R0, =__main 
+        BX      R0
 
-
+        ENDP
 
 
 ;* ========== START OF EXCEPTION HANDLER DEFINITION ======================== */
@@ -291,107 +305,107 @@ SysTick_Handler PROC
 ;* ============= START OF INTERRUPT HANDLER DEFINITION ====================== */
 
 ;* IRQ Handlers */
-               EXPORT	SCU_0_IRQHandler     [WEAK]
-               EXPORT	ERU0_0_IRQHandler     [WEAK]
-               EXPORT	ERU0_1_IRQHandler     [WEAK]
-               EXPORT	ERU0_2_IRQHandler     [WEAK]
-               EXPORT	ERU0_3_IRQHandler     [WEAK]
-               EXPORT	ERU1_0_IRQHandler     [WEAK]
-               EXPORT	ERU1_1_IRQHandler     [WEAK]
-               EXPORT	ERU1_2_IRQHandler     [WEAK]
-               EXPORT	ERU1_3_IRQHandler     [WEAK]
-               EXPORT	PMU0_0_IRQHandler     [WEAK]
-               EXPORT	VADC0_C0_0_IRQHandler     [WEAK]
-               EXPORT	VADC0_C0_1_IRQHandler     [WEAK]
-               EXPORT	VADC0_C0_2_IRQHandler     [WEAK]
-               EXPORT	VADC0_C0_3_IRQHandler     [WEAK]
-               EXPORT	VADC0_G0_0_IRQHandler     [WEAK]
-               EXPORT	VADC0_G0_1_IRQHandler     [WEAK]
-               EXPORT	VADC0_G0_2_IRQHandler     [WEAK]
-               EXPORT	VADC0_G0_3_IRQHandler     [WEAK]
-               EXPORT	VADC0_G1_0_IRQHandler     [WEAK]
-               EXPORT	VADC0_G1_1_IRQHandler     [WEAK]
-               EXPORT	VADC0_G1_2_IRQHandler     [WEAK]
-               EXPORT	VADC0_G1_3_IRQHandler     [WEAK]
-               EXPORT	VADC0_G2_0_IRQHandler     [WEAK]
-               EXPORT	VADC0_G2_1_IRQHandler     [WEAK]
-               EXPORT	VADC0_G2_2_IRQHandler     [WEAK]
-               EXPORT	VADC0_G2_3_IRQHandler     [WEAK]
-               EXPORT	VADC0_G3_0_IRQHandler     [WEAK]
-               EXPORT	VADC0_G3_1_IRQHandler     [WEAK]
-               EXPORT	VADC0_G3_2_IRQHandler     [WEAK]
-               EXPORT	VADC0_G3_3_IRQHandler     [WEAK]
-               EXPORT	DSD0_0_IRQHandler     [WEAK]
-               EXPORT	DSD0_1_IRQHandler     [WEAK]
-               EXPORT	DSD0_2_IRQHandler     [WEAK]
-               EXPORT	DSD0_3_IRQHandler     [WEAK]
-               EXPORT	DSD0_4_IRQHandler     [WEAK]
-               EXPORT	DSD0_5_IRQHandler     [WEAK]
-               EXPORT	DSD0_6_IRQHandler     [WEAK]
-               EXPORT	DSD0_7_IRQHandler     [WEAK]
-               EXPORT	DAC0_0_IRQHandler     [WEAK]
-               EXPORT	DAC0_1_IRQHandler     [WEAK]
-               EXPORT	CCU40_0_IRQHandler     [WEAK]
-               EXPORT	CCU40_1_IRQHandler     [WEAK]
-               EXPORT	CCU40_2_IRQHandler     [WEAK]
-               EXPORT	CCU40_3_IRQHandler     [WEAK]
-               EXPORT	CCU41_0_IRQHandler     [WEAK]
-               EXPORT	CCU41_1_IRQHandler     [WEAK]
-               EXPORT	CCU41_2_IRQHandler     [WEAK]
-               EXPORT	CCU41_3_IRQHandler     [WEAK]
-               EXPORT	CCU42_0_IRQHandler     [WEAK]
-               EXPORT	CCU42_1_IRQHandler     [WEAK]
-               EXPORT	CCU42_2_IRQHandler     [WEAK]
-               EXPORT	CCU42_3_IRQHandler     [WEAK]
-               EXPORT	CCU43_0_IRQHandler     [WEAK]
-               EXPORT	CCU43_1_IRQHandler     [WEAK]
-               EXPORT	CCU43_2_IRQHandler     [WEAK]
-               EXPORT	CCU43_3_IRQHandler     [WEAK]
-               EXPORT	CCU80_0_IRQHandler     [WEAK]
-               EXPORT	CCU80_1_IRQHandler     [WEAK]
-               EXPORT	CCU80_2_IRQHandler     [WEAK]
-               EXPORT	CCU80_3_IRQHandler     [WEAK]
-               EXPORT	CCU81_0_IRQHandler     [WEAK]
-               EXPORT	CCU81_1_IRQHandler     [WEAK]
-               EXPORT	CCU81_2_IRQHandler     [WEAK]
-               EXPORT	CCU81_3_IRQHandler     [WEAK]
-               EXPORT	POSIF0_0_IRQHandler     [WEAK]
-               EXPORT	POSIF0_1_IRQHandler     [WEAK]
-               EXPORT	POSIF1_0_IRQHandler     [WEAK]
-               EXPORT	POSIF1_1_IRQHandler     [WEAK]
-               EXPORT	CAN0_0_IRQHandler     [WEAK]
-               EXPORT	CAN0_1_IRQHandler     [WEAK]
-               EXPORT	CAN0_2_IRQHandler     [WEAK]
-               EXPORT	CAN0_3_IRQHandler     [WEAK]
-               EXPORT	CAN0_4_IRQHandler     [WEAK]
-               EXPORT	CAN0_5_IRQHandler     [WEAK]
-               EXPORT	CAN0_6_IRQHandler     [WEAK]
-               EXPORT	CAN0_7_IRQHandler     [WEAK]
-               EXPORT	USIC0_0_IRQHandler     [WEAK]
-               EXPORT	USIC0_1_IRQHandler     [WEAK]
-               EXPORT	USIC0_2_IRQHandler     [WEAK]
-               EXPORT	USIC0_3_IRQHandler     [WEAK]
-               EXPORT	USIC0_4_IRQHandler     [WEAK]
-               EXPORT	USIC0_5_IRQHandler     [WEAK]
-               EXPORT	USIC1_0_IRQHandler     [WEAK]
-               EXPORT	USIC1_1_IRQHandler     [WEAK]
-               EXPORT	USIC1_2_IRQHandler     [WEAK]
-               EXPORT	USIC1_3_IRQHandler     [WEAK]
-               EXPORT	USIC1_4_IRQHandler     [WEAK]
-               EXPORT	USIC1_5_IRQHandler     [WEAK]
-               EXPORT	USIC2_0_IRQHandler     [WEAK]
-               EXPORT	USIC2_1_IRQHandler     [WEAK]
-               EXPORT	USIC2_2_IRQHandler     [WEAK]
-               EXPORT	USIC2_3_IRQHandler     [WEAK]
-               EXPORT	USIC2_4_IRQHandler     [WEAK]
-               EXPORT	USIC2_5_IRQHandler     [WEAK]
-               EXPORT	LEDTS0_0_IRQHandler     [WEAK]
-               EXPORT	FCE0_0_IRQHandler     [WEAK]
-               EXPORT	GPDMA0_0_IRQHandler     [WEAK]
-               EXPORT	SDMMC0_0_IRQHandler     [WEAK]
-               EXPORT	USB0_0_IRQHandler     [WEAK]
-               EXPORT	ETH0_0_IRQHandler     [WEAK]
-               EXPORT	GPDMA1_0_IRQHandler     [WEAK]
+               EXPORT   SCU_0_IRQHandler           [WEAK]
+               EXPORT   ERU0_0_IRQHandler          [WEAK]
+               EXPORT   ERU0_1_IRQHandler          [WEAK]
+               EXPORT   ERU0_2_IRQHandler          [WEAK]
+               EXPORT   ERU0_3_IRQHandler          [WEAK]
+               EXPORT   ERU1_0_IRQHandler          [WEAK]
+               EXPORT   ERU1_1_IRQHandler          [WEAK]
+               EXPORT   ERU1_2_IRQHandler          [WEAK]
+               EXPORT   ERU1_3_IRQHandler          [WEAK]
+               EXPORT   PMU0_0_IRQHandler          [WEAK]
+               EXPORT   VADC0_C0_0_IRQHandler      [WEAK]
+               EXPORT   VADC0_C0_1_IRQHandler      [WEAK]
+               EXPORT   VADC0_C0_2_IRQHandler      [WEAK]
+               EXPORT   VADC0_C0_3_IRQHandler      [WEAK]
+               EXPORT   VADC0_G0_0_IRQHandler      [WEAK]
+               EXPORT   VADC0_G0_1_IRQHandler      [WEAK]
+               EXPORT   VADC0_G0_2_IRQHandler      [WEAK]
+               EXPORT   VADC0_G0_3_IRQHandler      [WEAK]
+               EXPORT   VADC0_G1_0_IRQHandler      [WEAK]
+               EXPORT   VADC0_G1_1_IRQHandler      [WEAK]
+               EXPORT   VADC0_G1_2_IRQHandler      [WEAK]
+               EXPORT   VADC0_G1_3_IRQHandler      [WEAK]
+               EXPORT   VADC0_G2_0_IRQHandler      [WEAK]
+               EXPORT   VADC0_G2_1_IRQHandler      [WEAK]
+               EXPORT   VADC0_G2_2_IRQHandler      [WEAK]
+               EXPORT   VADC0_G2_3_IRQHandler      [WEAK]
+               EXPORT   VADC0_G3_0_IRQHandler      [WEAK]
+               EXPORT   VADC0_G3_1_IRQHandler      [WEAK]
+               EXPORT   VADC0_G3_2_IRQHandler      [WEAK]
+               EXPORT   VADC0_G3_3_IRQHandler      [WEAK]
+               EXPORT   DSD0_0_IRQHandler          [WEAK]
+               EXPORT   DSD0_1_IRQHandler          [WEAK]
+               EXPORT   DSD0_2_IRQHandler          [WEAK]
+               EXPORT   DSD0_3_IRQHandler          [WEAK]
+               EXPORT   DSD0_4_IRQHandler          [WEAK]
+               EXPORT   DSD0_5_IRQHandler          [WEAK]
+               EXPORT   DSD0_6_IRQHandler          [WEAK]
+               EXPORT   DSD0_7_IRQHandler          [WEAK]
+               EXPORT   DAC0_0_IRQHandler          [WEAK]
+               EXPORT   DAC0_1_IRQHandler          [WEAK]
+               EXPORT   CCU40_0_IRQHandler         [WEAK]
+               EXPORT   CCU40_1_IRQHandler         [WEAK]
+               EXPORT   CCU40_2_IRQHandler         [WEAK]
+               EXPORT   CCU40_3_IRQHandler         [WEAK]
+               EXPORT   CCU41_0_IRQHandler         [WEAK]
+               EXPORT   CCU41_1_IRQHandler         [WEAK]
+               EXPORT   CCU41_2_IRQHandler         [WEAK]
+               EXPORT   CCU41_3_IRQHandler         [WEAK]
+               EXPORT   CCU42_0_IRQHandler         [WEAK]
+               EXPORT   CCU42_1_IRQHandler         [WEAK]
+               EXPORT   CCU42_2_IRQHandler         [WEAK]
+               EXPORT   CCU42_3_IRQHandler         [WEAK]
+               EXPORT   CCU43_0_IRQHandler         [WEAK]
+               EXPORT   CCU43_1_IRQHandler         [WEAK]
+               EXPORT   CCU43_2_IRQHandler         [WEAK]
+               EXPORT   CCU43_3_IRQHandler         [WEAK]
+               EXPORT   CCU80_0_IRQHandler         [WEAK]
+               EXPORT   CCU80_1_IRQHandler         [WEAK]
+               EXPORT   CCU80_2_IRQHandler         [WEAK]
+               EXPORT   CCU80_3_IRQHandler         [WEAK]
+               EXPORT   CCU81_0_IRQHandler         [WEAK]
+               EXPORT   CCU81_1_IRQHandler         [WEAK]
+               EXPORT   CCU81_2_IRQHandler         [WEAK]
+               EXPORT   CCU81_3_IRQHandler         [WEAK]
+               EXPORT   POSIF0_0_IRQHandler        [WEAK]
+               EXPORT   POSIF0_1_IRQHandler        [WEAK]
+               EXPORT   POSIF1_0_IRQHandler        [WEAK]
+               EXPORT   POSIF1_1_IRQHandler        [WEAK]
+               EXPORT   CAN0_0_IRQHandler          [WEAK]
+               EXPORT   CAN0_1_IRQHandler          [WEAK]
+               EXPORT   CAN0_2_IRQHandler          [WEAK]
+               EXPORT   CAN0_3_IRQHandler          [WEAK]
+               EXPORT   CAN0_4_IRQHandler          [WEAK]
+               EXPORT   CAN0_5_IRQHandler          [WEAK]
+               EXPORT   CAN0_6_IRQHandler          [WEAK]
+               EXPORT   CAN0_7_IRQHandler          [WEAK]
+               EXPORT   USIC0_0_IRQHandler         [WEAK]
+               EXPORT   USIC0_1_IRQHandler         [WEAK]
+               EXPORT   USIC0_2_IRQHandler         [WEAK]
+               EXPORT   USIC0_3_IRQHandler         [WEAK]
+               EXPORT   USIC0_4_IRQHandler         [WEAK]
+               EXPORT   USIC0_5_IRQHandler         [WEAK]
+               EXPORT   USIC1_0_IRQHandler         [WEAK]
+               EXPORT   USIC1_1_IRQHandler         [WEAK]
+               EXPORT   USIC1_2_IRQHandler         [WEAK]
+               EXPORT   USIC1_3_IRQHandler         [WEAK]
+               EXPORT   USIC1_4_IRQHandler         [WEAK]
+               EXPORT   USIC1_5_IRQHandler         [WEAK]
+               EXPORT   USIC2_0_IRQHandler         [WEAK]
+               EXPORT   USIC2_1_IRQHandler         [WEAK]
+               EXPORT   USIC2_2_IRQHandler         [WEAK]
+               EXPORT   USIC2_3_IRQHandler         [WEAK]
+               EXPORT   USIC2_4_IRQHandler         [WEAK]
+               EXPORT   USIC2_5_IRQHandler         [WEAK]
+               EXPORT   LEDTS0_0_IRQHandler        [WEAK]
+               EXPORT   FCE0_0_IRQHandler          [WEAK]
+               EXPORT   GPDMA0_0_IRQHandler        [WEAK]
+               EXPORT   SDMMC0_0_IRQHandler        [WEAK]
+               EXPORT   USB0_0_IRQHandler          [WEAK]
+               EXPORT   ETH0_0_IRQHandler          [WEAK]
+               EXPORT   GPDMA1_0_IRQHandler        [WEAK]
 
 
 SCU_0_IRQHandler     
@@ -500,13 +514,13 @@ GPDMA1_0_IRQHandler
 ;* ============= END OF INTERRUPT HANDLER DEFINITION ======================== */
 
 ;*  Definition of the default weak SystemInit_DAVE3 function.
-;*	This function will be called by the CMSIS SystemInit function. 
-;*	If DAVE3 requires an extended SystemInit it will create its own SystemInit_DAVE3
-;*	which will overule this weak definition
+;*  This function will be called by the CMSIS SystemInit function. 
+;*  If DAVE3 requires an extended SystemInit it will create its own SystemInit_DAVE3
+;*  which will overule this weak definition
 
 ;*SystemInit_DAVE3
-;*	NOP
-;*	BX LR
+;*  NOP
+;*  BX LR
 
 ;*******************************************************************************
 ; User Stack and Heap initialization

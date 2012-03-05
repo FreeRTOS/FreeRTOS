@@ -331,7 +331,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>0</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -415,6 +415,16 @@
               <FileName>RegTest.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\RegTest.c</FilePath>
+            </File>
+            <File>
+              <FileName>main_full.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main_full.c</FilePath>
+            </File>
+            <File>
+              <FileName>main_blinky.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main_blinky.c</FilePath>
             </File>
           </Files>
         </Group>

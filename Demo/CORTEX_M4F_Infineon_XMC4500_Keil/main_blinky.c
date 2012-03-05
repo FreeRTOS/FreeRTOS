@@ -78,7 +78,7 @@
  * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
  * blocks on attempts to read data from the queue that was created within
  * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, toggles LED 1.  The 'block
+ * data, and if the value equals the expected 100, toggles the LED.  The 'block
  * time' parameter passed to the queue receive function specifies that the
  * task should be held in the Blocked state indefinitely to wait for data to
  * be available on the queue.  The queue receive task will only leave the
@@ -88,16 +88,17 @@
  * the LED every 200 milliseconds.
  */
 
+/* Standard includes. */
+#include <stdio.h>
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "queue.h"
-
-/* Demo includes. */
-#include "ParTest.h"
+#include "semphr.h"
 
 /* Hardware includes. */
-#include "stm320518_eval.h"
+#include "XMC4500.h"
+#include "System_XMC4500.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
@@ -116,6 +117,10 @@ the queue empty. */
 functionality. */
 #define mainQUEUE_SEND_PARAMETER			( 0x1111UL )
 #define mainQUEUE_RECEIVE_PARAMETER			( 0x22UL )
+
+/* To toggle the single LED */
+#define mainTOGGLE_LED()					( PORT3->OMR =	0x02000200 )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -219,7 +224,7 @@ unsigned long ulReceivedValue;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
-			vParTestToggleLED( LED1 );
+			mainTOGGLE_LED();
 			ulReceivedValue = 0U;
 		}
 	}

@@ -55,7 +55,7 @@
 #define SEMAPHORE_H
 
 #ifndef INC_FREERTOS_H
-	#error "#include FreeRTOS.h" must appear in source files before "#include semphr.h"
+	#error "include FreeRTOS.h" must appear in source files before "include semphr.h"
 #endif
 
 #include "queue.h"
@@ -718,7 +718,22 @@ typedef xQueueHandle xSemaphoreHandle;
  * \page vSemaphoreDelete vSemaphoreDelete
  * \ingroup Semaphores
  */
-#define vSemaphoreDelete( xSemaphore ) vQueueDelete( ( xQueueHandle ) xSemaphore )
+#define vSemaphoreDelete( xSemaphore ) vQueueDelete( ( xQueueHandle ) ( xSemaphore ) )
+
+/**
+ * semphr.h
+ * <pre>xTaskHandle xSemaphoreGetMutexHolder( xSemaphoreHandle xMutex );</pre>
+ *
+ * If xMutex is indeed a mutex type semaphore, return the current mutex holder.
+ * If xMutex is not a mutex type semaphore, or the mutex is available (not held
+ * by a task), return NULL.
+ *
+ * Note: This Is is a good way of determining if the calling task is the mutex 
+ * holder, but not a good way of determining the identity of the mutex holder as
+ * the holder may change between the function exiting and the returned value
+ * being tested.
+ */
+#define xSemaphoreGetMutexHolder( xSemaphore ) xQueueGetMutexHolder( ( xSemaphore ) )
 
 #endif /* SEMAPHORE_H */
 

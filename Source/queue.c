@@ -164,6 +164,7 @@ unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
 unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue ) PRIVILEGED_FUNCTION;
+xTaskHandle xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;
 
 /*
  * Co-routine queue functions differ from task queue functions.  Co-routines are
@@ -307,7 +308,7 @@ xQUEUE *pxNewQueue;
 size_t xQueueSizeInBytes;
 xQueueHandle xReturn = NULL;
 
-	/* Remove compiler warnings about unused parameters should 
+	/* Remove compiler warnings about unused parameters should
 	configUSE_TRACE_FACILITY not be set to 1. */
 	( void ) ucQueueType;
 
@@ -361,7 +362,7 @@ xQueueHandle xReturn = NULL;
 		/* Prevent compiler warnings about unused parameters if
 		configUSE_TRACE_FACILITY does not equal 1. */
 		( void ) ucQueueType;
-	
+
 		/* Allocate the new queue structure. */
 		pxNewQueue = ( xQUEUE * ) pvPortMalloc( sizeof( xQUEUE ) );
 		if( pxNewQueue != NULL )
@@ -383,7 +384,7 @@ xQueueHandle xReturn = NULL;
 			pxNewQueue->uxItemSize = ( unsigned portBASE_TYPE ) 0U;
 			pxNewQueue->xRxLock = queueUNLOCKED;
 			pxNewQueue->xTxLock = queueUNLOCKED;
-			
+
 			#if ( configUSE_TRACE_FACILITY == 1 )
 			{
 				pxNewQueue->ucQueueType = ucQueueType;
@@ -411,7 +412,37 @@ xQueueHandle xReturn = NULL;
 #endif /* configUSE_MUTEXES */
 /*-----------------------------------------------------------*/
 
-#if configUSE_RECURSIVE_MUTEXES == 1
+#if ( configUSE_MUTEXES == 1 )
+
+	void* xQueueGetMutexHolder( xQueueHandle xSemaphore )
+	{
+	void *pxReturn;
+
+		/* This function is called by xSemaphoreGetMutexHolder(), and should not
+		be called directly.  Note:  This is is a good way of determining if the
+		calling task is the mutex holder, but not a good way of determining the
+		identity of the mutex holder, as the holder may change between the 
+		following critical section exiting and the function returning. */
+		taskENTER_CRITICAL();
+		{
+			if( xSemaphore->uxQueueType == queueQUEUE_IS_MUTEX )
+			{
+				pxReturn = ( void * ) xSemaphore->pxMutexHolder;
+			}
+			else
+			{
+				pxReturn = NULL;
+			}
+		}
+		taskEXIT_CRITICAL();
+		
+		return pxReturn;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
 	portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex )
 	{

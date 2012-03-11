@@ -63,8 +63,8 @@
  * required to configure the hardware, are defined in main.c.
  ******************************************************************************
  *
- * main_blinky() creates one software timer, one queue, and two tasks.  It then
- * starts the scheduler.
+ * main_blinky() creates one queue, and two tasks.  It then starts the 
+ * scheduler.
  *
  * The Queue Send Task:
  * The queue send task is implemented by the prvQueueSendTask() function in

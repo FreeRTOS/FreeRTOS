@@ -265,7 +265,8 @@ long lHigherPriorityTaskWoken = pdFALSE;
 
 	/* This interrupt does nothing more than demonstrate how to synchronise a
 	task with an interrupt.  A semaphore is used for this purpose.  Note
-	lHigherPriorityTaskWoken is initialised to zero. */
+	lHigherPriorityTaskWoken is initialised to zero.  Only FreeRTOS API functions
+	that end in "FromISR" can be called from an ISR. */
 	xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
 
 	/* If there was a task that was blocked on the semaphore, and giving the

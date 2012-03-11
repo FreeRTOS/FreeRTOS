@@ -21,11 +21,11 @@ SECTIONS
 	} >flash
 
 	__end_of_text__ = .;
+	__data_beg_src__ = __end_of_text__;
 
 	.data : 
 	{
-		__data_beg__ = .;
-		__data_beg_src__ = __end_of_text__;
+		__data_beg__ = .;		
 		*(.data)
 		__data_end__ = .;
 	} >ram AT>flash

@@ -135,7 +135,7 @@ void vPortSVCHandler( void )
 					"	sub r0, r0, #32					\n" /* Go back for the low registers that are not automatically restored. */
 					" 	ldmia r0!, {r4-r7}              \n" /* Pop low registers.  */
 					"	mov r1, r14						\n" /* OR R14 with 0x0d. */
-					"	mov r0, #0x0d					\n"
+					"	movs r0, #0x0d					\n"
 					"	orr r1, r0						\n"
 					"	bx r1							\n"
 					"									\n"
@@ -148,7 +148,7 @@ void vPortSVCHandler( void )
 void vPortStartFirstTask( void )
 {
 	__asm volatile(
-					" mov r0, #0x00 	\n" /* Locate the top of stack. */
+					" movs r0, #0x00 	\n" /* Locate the top of stack. */
 					" ldr r0, [r0] 		\n"
 					" msr msp, r0		\n" /* Set the msp back to the start of the stack. */
 					" cpsie i			\n" /* Globally enable interrupts. */

@@ -93,7 +93,7 @@
 /*-----------------------------------------------------------*/	
 
 /* Interrupt control macros. */
-#define portDISABLE_INTERRUPTS()	_DINT()
+#define portDISABLE_INTERRUPTS()	_DINT();_NOP()
 #define portENABLE_INTERRUPTS()		_EINT()
 /*-----------------------------------------------------------*/
 

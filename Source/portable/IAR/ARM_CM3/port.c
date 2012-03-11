@@ -51,13 +51,6 @@
     licensing and training services.
 */
 
-/*
-	Change from V4.2.1:
-
-	+ Introduced usage of configKERNEL_INTERRUPT_PRIORITY macro to set the
-	  interrupt priority used by the kernel.
-*/
-
 /*-----------------------------------------------------------
  * Implementation of functions defined in portable.h for the ARM CM3 port.
  *----------------------------------------------------------*/

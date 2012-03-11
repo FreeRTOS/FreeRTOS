@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -104,7 +104,7 @@ void vPortSVCHandler( void ) __attribute__ (( naked ));
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-void vPortStartFirstTask( void ) __attribute__ (( naked ));
+static void prvPortStartFirstTask( void ) __attribute__ (( naked ));
 
 /*-----------------------------------------------------------*/
 
@@ -148,7 +148,7 @@ void vPortSVCHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortStartFirstTask( void )
+static void prvPortStartFirstTask( void )
 {
 	__asm volatile(
 					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
@@ -179,7 +179,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	uxCriticalNesting = 0;
 
 	/* Start the first task. */
-	vPortStartFirstTask();
+	prvPortStartFirstTask();
 
 	/* Should not get here! */
 	return 0;

@@ -93,7 +93,7 @@
 /*-----------------------------------------------------------*/	
 
 /* Interrupt control macros. */
-#define portDISABLE_INTERRUPTS()	_disable_interrupt()
+#define portDISABLE_INTERRUPTS()	_disable_interrupt(); _nop()
 #define portENABLE_INTERRUPTS()		_enable_interrupt()
 /*-----------------------------------------------------------*/
 

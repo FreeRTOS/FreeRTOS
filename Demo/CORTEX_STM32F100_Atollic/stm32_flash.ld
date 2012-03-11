@@ -103,7 +103,7 @@ SECTIONS
   } >FLASH
 
   /* used by the startup to initialize data */
-  _sidata = .;
+  _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : AT ( _sidata )

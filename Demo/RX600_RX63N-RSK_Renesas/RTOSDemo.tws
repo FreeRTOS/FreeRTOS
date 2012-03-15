@@ -7,9 +7,13 @@
 [GENERAL_DATA]
 [BREAKPOINTS]
 [OPEN_WORKSPACE_FILES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Renesas-Files\hwsetup.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\main-full.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Renesas-Files\resetprg.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" 
 [WORKSPACE_FILE_STATES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Renesas-Files\hwsetup.c" -4 -23 1396 612 1 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Renesas-Files\resetprg.c" 22 22 1142 391 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\main-full.c" 154 154 835 366 0 1 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" -4 -23 1019 569 1 2 
 [LOADED_PROJECTS]
 "RTOSDemo" 
 [END]

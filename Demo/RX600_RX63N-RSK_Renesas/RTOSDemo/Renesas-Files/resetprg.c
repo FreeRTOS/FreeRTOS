@@ -28,102 +28,115 @@
 *               And Renesas Solutions Corp.,All Rights Reserved. 
 *
 *********************************************************************/
+/* Types used in this file. */
+#include 	"typedefine.h"
 
-#include	<machine.h>
-#include	<_h_c_lib.h>
-//#include	<stddef.h>					// Remove the comment when you use errno
-//#include 	<stdlib.h>					// Remove the comment when you use rand()
-#include	"typedefine.h"
-#include	"stacksct.h"
+/* Defines machine level functions used in this file */
+#include    <machine.h>
 
-#pragma inline_asm Change_PSW_PM_to_UserMode
-static void Change_PSW_PM_to_UserMode(void);
+/* Defines MCU configuration functions used in this file */
+#include    <_h_c_lib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void PowerON_Reset_PC(void);
-void main(void);
-#ifdef __cplusplus
-}
-#endif
+/* Hardware definitions" */
+#include    "iodefine.h"
 
-#ifdef __cplusplus				// Use SIM I/O
-extern "C" {
-#endif
-extern void _INIT_IOLIB(void);
-extern void _CLOSEALL(void);
-#ifdef __cplusplus
-}
-#endif
+/* Defines the size of the stack which configured in this file */
+#include    "stacksct.h"
 
 #define PSW_init  0x00010000
 #define FPSW_init 0x00000100
 
-//extern void srand(_UINT);		// Remove the comment when you use rand()
-//extern _SBYTE *_s1ptr;				// Remove the comment when you use strtok()
-		
-//#ifdef __cplusplus				// Use Hardware Setup
-//extern "C" {
-//#endif
-//extern void HardwareSetup(void);
-//#ifdef __cplusplus
-//}
-//#endif
-	
-//#ifdef __cplusplus			// Remove the comment when you use global class object
-//extern "C" {					// Sections C$INIT and C$END will be generated
-//#endif
-//extern void _CALL_INIT(void);
-//extern void _CALL_END(void);
-//#ifdef __cplusplus
-//}
-//#endif
+extern void HardwareSetup( void );
 
 #pragma section ResetPRG
-
 #pragma entry PowerON_Reset_PC
 
+/* It is ok to use stack variables here because "#pragma entry" is used, so the
+stack is setup in the compiler generated prologue. */
 void PowerON_Reset_PC(void)
 { 
+volatile unsigned int i;
+
 	set_intb((unsigned long)__sectop("C$VECT"));
 	set_fpsw(FPSW_init);
 
+    /* MCU boots using the LOCO, so turn the speed up before setting up the C
+	run-time environment.
+
+    Clock Description              Frequency
+    ----------------------------------------
+    Input Clock Frequency............  12 MHz
+    PLL frequency (x16).............. 192 MHz
+    Internal Clock Frequency.........  96 MHz    
+    Peripheral Clock Frequency.......  48 MHz
+    USB Clock Frequency..............  48 MHz
+    External Bus Clock Frequency.....  24 MHz */
+
+    /* Protect off. */
+    SYSTEM.PRCR.WORD = 0xA50B;			
+	
+    /* Uncomment if not using sub-clock */
+	//SYSTEM.SOSCCR.BYTE = 0x01;          /* stop sub-clock */
+    SYSTEM.SOSCCR.BYTE = 0x00;			/* Enable sub-clock for RTC */
+
+    /* Wait 131,072 cycles * 12 MHz = 10.9 ms */
+    SYSTEM.MOSCWTCR.BYTE = 0x0D;		
+
+    /* PLL wait is 4,194,304 cycles (default) * 192 MHz (12 MHz * 16) = 20.1 ms*/
+    SYSTEM.PLLWTCR.BYTE = 0x04;			
+
+    /* x16 @PLL */
+    SYSTEM.PLLCR.WORD = 0x0F00;			
+
+    /* EXTAL ON */
+    SYSTEM.MOSCCR.BYTE = 0x00;			
+
+    /* PLL ON */
+    SYSTEM.PLLCR2.BYTE = 0x00;			
+
+	for(i = 0;i< 0x168;i++)             
+    {
+        /* Wait over 12ms */
+        nop() ;
+	}
+
+    /* Setup system clocks
+    SCKCR - System Clock Control Register
+    b31:b28 FCK[3:0]  0x02 = Flash clock: PLL/4 = (192 / 4) = 48 MHz
+    b27:b24 ICK[3:0]  0x01 = System clock: PLL/2 = (192 / 2) = 96 MHz
+    b23     PSTOP1    0x00 = BCLK pin output is enabled
+    b19:b16 BCK[3:0]  0x03 = BCLK: PLL/8 = 24 MHz
+    b11:b8  PCKB[3:0] 0x02 = Peripheral clock B: PLL/4 = 48 MHz
+    */
+	SYSTEM.SCKCR.LONG = 0x21031222;		/* ICK=PLL/2,BCK,FCK,PCK=PLL/4 */
+
+    /* Setup IEBUS and USB clocks
+    SCKCR2 - System Clock Control Register 2 
+    b7:b4 UCK[3:0]   0x03 = USB clock is PLL/4 = 48 MHz
+    b3:b0 IEBCK[3:0] 0x01 = IE Bus clock is PLL/2 = 96 MHz
+    */
+    SYSTEM.SCKCR2.WORD = 0x0031;
+
+    /* ICLK, PCLKB, FCLK, BCLK, IECLK, and USBCLK all come from PLL circuit */
+    SYSTEM.SCKCR3.WORD = 0x0400;		
+
+    /* Protect on. */
+    SYSTEM.PRCR.WORD = 0xA500;
+
+    /* Initialize C runtime environment */
 	_INITSCT();
 
-//	_INIT_IOLIB();					// Remove the comment when you use SIM I/O
-
-//	errno=0;						// Remove the comment when you use errno
-//	srand((_UINT)1);				// Remove the comment when you use rand()
-//	_s1ptr=NULL;					// Remove the comment when you use strtok()
-		
-//	HardwareSetup();				// Use Hardware Setup
+	/* Setup the hardware for the RSK. */
+	HardwareSetup();
     nop();
 
-//	_CALL_INIT();					// Remove the comment when you use global class object
+	/* Set Ubit and Ibit for PSW. */
+	set_psw(PSW_init);
 
-	set_psw(PSW_init);				// Set Ubit & Ibit for PSW
-//	Change_PSW_PM_to_UserMode();	// DO NOT CHANGE TO USER MODE IF USING FREERTOS!
-	( void ) Change_PSW_PM_to_UserMode; // Just to avoid compiler warnings.
-
+	/* Call the application code. */
 	main();
 
-//	_CLOSEALL();					// Use SIM I/O
-	
-//	_CALL_END();					// Remove the comment when you use global class object
-
+	/* Main should not return. */
 	brk();
 }
 
-static void Change_PSW_PM_to_UserMode(void)
-{
-	MVFC   PSW,R1
-	OR     #00100000h,R1
-	PUSH.L R1
-	MVFC   PC,R1
-	ADD    #10,R1
-	PUSH.L R1
-	RTE
-	NOP
-	NOP
-}

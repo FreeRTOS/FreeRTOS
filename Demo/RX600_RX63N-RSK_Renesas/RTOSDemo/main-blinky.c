@@ -52,15 +52,19 @@
 */
 
 /* 
- * This is a very simple demo that creates two tasks and one queue.  One task
- * (the queue receive task) blocks on the queue to wait for data to arrive, 
- * toggling an LED each time '100' is received.  The other task (the queue send
- * task) repeatedly blocks for a fixed period before sending '100' to the queue
- * (causing the first task to toggle the LED). 
+ * This is a very simple demo that creates two tasks, one queue, and one 
+ * software timer.  For a much more complete and complex example select either 
+ * the Debug or Debug_with_optimisation build configurations within the HEW,
+ * which build main_full.c in place of this file.
+ * 
+ * One task (the queue receive task) blocks on the queue to wait for data to 
+ * arrive, toggling LED0 each time '100' is received.  The other task (the 
+ * queue send task) repeatedly blocks for a fixed period before sending '100' 
+ * to the queue (causing the first task to toggle the LED). 
  *
- * For a much more complete and complex example select either the Debug or
- * Debug_with_optimisation build configurations within the HEW IDE. 
-*/
+ * The software timer is configured to auto-reload.  The timer callback 
+ * function periodically toggles LED1.
+ */
 
 /* Hardware specific includes. */
 #include "iodefine.h"
@@ -68,6 +72,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "queue.h"
 
 /* Priorities at which the tasks are created. */
@@ -75,18 +80,30 @@
 #define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 500 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_PERIOD_MS			( 500 / portTICK_RATE_MS )
+
+/* The period of the software timer, specified in milliseconds. */
+#define mainSOFTWARE_TIMER_PERIOD_MS		( 150 / portTICK_RATE_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added so the send task should always find the
 queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
+/* The LEDs toggle by the task and timer respectively. */
+#define mainTASK_LED						( 0 )
+#define mainTIMER_LED						( 1 )
+
 /*
  * The tasks as defined at the top of this file.
  */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
+
+/*
+ * The callback function used by the software timer.
+ */
+static void prvBlinkyTimerCallback( xTimerHandle xTimer );
 
 /* The queue used by both tasks. */
 static xQueueHandle xQueue = NULL;
@@ -98,22 +115,40 @@ volatile unsigned long ulHighFrequencyTickCount = 0UL;
 
 void main(void)
 {
-extern void HardwareSetup( void );
+xTimerHandle xTimer;
 
-	/* Renesas provided CPU configuration routine.  The clocks are configured in
-	here. */
-	HardwareSetup();
-	
 	/* Turn all LEDs off. */
 	vParTestInitialise();
 	
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
+	/* Create the software timer, as described at the top of this file. */
+	xTimer = xTimerCreate( "BlinkyTimer", 					/* Just a text name to make debugging easier - not used by the scheduler. */
+							mainSOFTWARE_TIMER_PERIOD_MS, 	/* The timer period. */
+							pdTRUE, 						/* Set to pdTRUE for periodic timer, or pdFALSE for one-shot timer. */
+							NULL, 							/* The timer ID is not required. */
+							prvBlinkyTimerCallback );		/* The function executed when the timer expires. */
+							
+	if( xTimer != NULL )
+	{
+		/* Start the timer - it will not actually start running until the
+		scheduler has started.  The block time is set to 0, although, because
+		xTimerStart() is being called before the scheduler has been started,
+		the any block time specified would be ignored anyway. */
+		xTimerStart( xTimer, 0UL );
+	}
+	
 	if( xQueue != NULL )
 	{
 		/* Start the two tasks as described at the top of this file. */
-		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, configQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueReceiveTask, 					/* The function that implements the task. */
+					 "Rx", 									/* Just a text name to make debugging easier - not used by the scheduler. */
+					 configMINIMAL_STACK_SIZE, 				/* The size of the task stack, in words. */
+					 NULL, 									/* The task parameter is not used. */
+					 configQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task when it is created. */
+					 NULL );								/* The task handle is not used. */
+					 
 		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, configQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Start the tasks running. */
@@ -140,7 +175,7 @@ const unsigned long ulValueToSend = 100UL;
 		/* Place this task in the blocked state until it is time to run again. 
 		The block state is specified in ticks, the constant used converts ticks
 		to ms. */
-		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
+		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_PERIOD_MS );
 
 		/* Send to the queue - causing the queue receive task to flash its LED.  0
 		is used so the send does not block - it shouldn't need to as the queue
@@ -165,9 +200,16 @@ unsigned long ulReceivedValue;
 		value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
-			vParTestToggleLED( 0 );
+			vParTestToggleLED( mainTASK_LED );
 		}
 	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvBlinkyTimerCallback( xTimerHandle xTimer )
+{
+	/* The software timer does nothing but toggle an LED. */
+	vParTestToggleLED( mainTIMER_LED );
 }
 /*-----------------------------------------------------------*/
 

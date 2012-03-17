@@ -57,7 +57,7 @@ void PowerON_Reset_PC(void)
 { 
 volatile unsigned int i;
 
-	set_intb((unsigned long)__sectop("C$VECT"));
+	set_intb(__sectop("C$VECT"));
 	set_fpsw(FPSW_init);
 
     /* MCU boots using the LOCO, so turn the speed up before setting up the C

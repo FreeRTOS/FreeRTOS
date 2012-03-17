@@ -64,4 +64,4 @@
  */
 void vStartLEDFlashTimers( unsigned portBASE_TYPE xNumberOfLEDs );
 
-#endif FLASH_TIMER_H
+#endif /* FLASH_TIMER_H */

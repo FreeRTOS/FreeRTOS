@@ -152,7 +152,7 @@
 #include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
-//#include "flop.h"
+#include "flop.h"
 
 /* Values that are passed into the reg test tasks using the task parameter.  The
 tasks check that the values are passed in correctly. */
@@ -289,7 +289,7 @@ extern void HardwareSetup( void );
 	vStartQueuePeekTasks();
 	vStartRecursiveMutexTasks();
 	vStartInterruptQueueTasks();
-//	vStartMathTasks( mainFLOP_TASK_PRIORITY );
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* Create the timers used to toggle the LEDs. */
 	vStartLEDFlashTimers( mainNUMBER_OF_LEDS_TO_FLASH );
@@ -390,7 +390,7 @@ long lErrorFound = pdFALSE;
 		lErrorFound = pdTRUE;
 		pcStatusMessage = "Error: IntQueue";
 	}
-if( 0 )//		else if( xAreMathsTaskStillRunning() != pdPASS )
+	else if( xAreMathsTaskStillRunning() != pdPASS )
 	{
 		lErrorFound = pdTRUE;
 		pcStatusMessage = "Error: Flop";

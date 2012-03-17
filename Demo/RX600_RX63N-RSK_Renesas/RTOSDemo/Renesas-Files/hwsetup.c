@@ -41,7 +41,7 @@ Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
 #include <stdint.h>
 #include "iodefine.h"
-//#include "r_ether.h"
+#include "r_ether.h"
 #include "rskrx63ndef.h"
 
 /******************************************************************************
@@ -100,7 +100,7 @@ void HardwareSetup(void)
 void EnablePeripheralModules(void)
 {
 	/*  Module standby clear */
-//	SYSTEM.MSTPCRB.BIT.MSTPB15 = 0;				/* EtherC, EDMAC */
+	SYSTEM.MSTPCRB.BIT.MSTPB15 = 0;				/* EtherC, EDMAC */
     SYSTEM.MSTPCRA.BIT.MSTPA15 = 0;             /* CMT0 */
 }
 
@@ -118,7 +118,7 @@ state changes on the external ports.
 Many peripheral modules will override the setting of the port registers. Ensure
 that the state is safe for external devices if the internal peripheral module is
 disabled or powered down. */
-#if(0)
+#if(0) /* NOTE: ETHERNET PORT IS NOT YET CONFIGURED FOR THE RX63N. */
 	/* ==== MII/RMII Pins setting ==== */
 	/*--------------------------------------*/
 	/*    Port Function Control Register    */
@@ -176,7 +176,7 @@ disabled or powered down. */
 	/* P83=1 Set RMII_CRS_DV input	*/
 	PORT8.ICR.BIT.B3 = 1;
 #endif	/*	ETH_MODE_SEL	*/
-#endif
+#endif /* 0 */
     /* Configure LED 0-4 pin settings */
     PORT1.PODR.BIT.B4 = 1; 
     PORT1.PODR.BIT.B5 = 1;

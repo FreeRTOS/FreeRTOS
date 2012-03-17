@@ -1,41 +1,41 @@
 /*
-    FreeRTOS V6.1.1 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+	
 
     ***************************************************************************
-    *                                                                         *
-    * If you are:                                                             *
-    *                                                                         *
-    *    + New to FreeRTOS,                                                   *
-    *    + Wanting to learn FreeRTOS or multitasking in general quickly       *
-    *    + Looking for basic training,                                        *
-    *    + Wanting to improve your FreeRTOS skills and productivity           *
-    *                                                                         *
-    * then take a look at the FreeRTOS books - available as PDF or paperback  *
-    *                                                                         *
-    *        "Using the FreeRTOS Real Time Kernel - a Practical Guide"        *
-    *                  http://www.FreeRTOS.org/Documentation                  *
-    *                                                                         *
-    * A pdf reference manual is also available.  Both are usually delivered   *
-    * to your inbox within 20 minutes to two hours when purchased between 8am *
-    * and 8pm GMT (although please allow up to 24 hours in case of            *
-    * exceptional circumstances).  Thank you for your support!                *
-    *                                                                         *
+     *                                                                       *
+     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+     *    Complete, revised, and edited pdf reference manuals are also       *
+     *    available.                                                         *
+     *                                                                       *
+     *    Purchasing FreeRTOS documentation will not only help you, by       *
+     *    ensuring you get running as quickly as possible and with an        *
+     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+     *    the FreeRTOS project to continue with its mission of providing     *
+     *    professional grade, cross platform, de facto standard solutions    *
+     *    for microcontrollers - completely free of charge!                  *
+     *                                                                       *
+     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+     *                                                                       *
+     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *                                                                       *
     ***************************************************************************
+
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    ***NOTE*** The exception to the GPL is included to allow you to distribute
-    a combined work that includes FreeRTOS without being obliged to provide the
-    source code for proprietary components outside of the FreeRTOS kernel.
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public 
-    License and the FreeRTOS license exception along with FreeRTOS; if not it 
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained 
+    >>>NOTE<<< The modification to the GPL is included to allow you to
+    distribute a combined work that includes FreeRTOS without being obliged to
+    provide the source code for proprietary components outside of the FreeRTOS
+    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
     by writing to Richard Barry, contact details for whom are available on the
     FreeRTOS WEB site.
 
@@ -57,7 +57,8 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
+#include "timers.h"
+#include "queue.h"
 
 /* uip includes. */
 #include "net/uip.h"
@@ -81,6 +82,15 @@
 /* Standard constant. */
 #define uipTOTAL_FRAME_HEADER_SIZE	54
 
+/* The ARP timer and the periodic timer share a callback function, so the
+respective timer IDs are used to determine which timer actually expired.  These
+constants are assigned to the timer IDs. */
+#define uipARP_TIMER				0
+#define uipPERIODIC_TIMER			1
+
+/* A block time of zero ticks simply means, "don't block". */
+#define uipDONT_BLOCK				0UL
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -89,22 +99,26 @@
 static void prvSetMACAddress( void );
 
 /*
+ * Perform any uIP initialisation necessary. 
+ */
+static void prvInitialise_uIP( void );
+
+/*
+ * The callback function that is assigned to both the periodic timer and the
+ * ARP timer.
+ */
+static void prvUIPTimerCallback( xTimerHandle xTimer );
+
+/*
  * Port functions required by the uIP stack.
  */
-void clock_init( void );
 clock_time_t clock_time( void );
 
 /*-----------------------------------------------------------*/
 
-/* The semaphore used by the ISR to wake the uIP task. */
-xSemaphoreHandle xEMACSemaphore = NULL;
+/* The queue used to send TCP/IP events to the uIP stack. */
+xQueueHandle xEMACEventQueue = NULL;
 
-/*-----------------------------------------------------------*/
-
-void clock_init(void)
-{
-	/* This is done when the scheduler starts. */
-}
 /*-----------------------------------------------------------*/
 
 clock_time_t clock_time( void )
@@ -115,25 +129,14 @@ clock_time_t clock_time( void )
 
 void vuIP_Task( void *pvParameters )
 {
-portBASE_TYPE i, xDoneSomething;
-uip_ipaddr_t xIPAddr;
-struct timer periodic_timer, arp_timer;
+portBASE_TYPE i;
+unsigned long ulNewEvent = 0UL;
+unsigned long ulUIP_Events = 0UL;
 
 	( void ) pvParameters;
-
+	
 	/* Initialise the uIP stack. */
-	timer_set( &periodic_timer, configTICK_RATE_HZ / 2 );
-	timer_set( &arp_timer, configTICK_RATE_HZ * 10 );
-	uip_init();
-	uip_ipaddr( &xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
-	uip_sethostaddr( &xIPAddr );
-	uip_ipaddr( &xIPAddr, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 );
-	uip_setnetmask( &xIPAddr );
-	prvSetMACAddress();
-	httpd_init();
-
-	/* Create the semaphore used to wake the uIP task. */
-	vSemaphoreCreateBinary( xEMACSemaphore );
+	prvInitialise_uIP();
 
 	/* Initialise the MAC. */
 	vInitEmac();
@@ -145,49 +148,51 @@ struct timer periodic_timer, arp_timer;
 
 	for( ;; )
 	{
-		xDoneSomething = pdFALSE;
-		
-		/* Is there received data ready to be processed? */
-		uip_len = ( unsigned short ) ulEMACRead();
-		
-		if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
-		{
-			/* Standard uIP loop taken from the uIP manual. */
-			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
+		if( ( ulUIP_Events & uipETHERNET_RX_EVENT ) != 0UL )
+		{		
+			/* Is there received data ready to be processed? */
+			uip_len = ( unsigned short ) ulEMACRead();
+			
+			if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 			{
-				uip_arp_ipin();
-				uip_input();
-
-				/* If the above function invocation resulted in data that
-				should be sent out on the network, the global variable
-				uip_len is set to a value > 0. */
-				if( uip_len > 0 )
+				/* Standard uIP loop taken from the uIP manual. */
+				if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 				{
-					uip_arp_out();
-					vEMACWrite();
+					uip_arp_ipin();
+					uip_input();
+
+					/* If the above function invocation resulted in data that
+					should be sent out on the network, the global variable
+					uip_len is set to a value > 0. */
+					if( uip_len > 0 )
+					{
+						uip_arp_out();
+						vEMACWrite();
+					}
 				}
-				
-				xDoneSomething = pdTRUE;
+				else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
+				{
+					uip_arp_arpin();
+
+					/* If the above function invocation resulted in data that
+					should be sent out on the network, the global variable
+					uip_len is set to a value > 0. */
+					if( uip_len > 0 )
+					{
+						vEMACWrite();
+					}
+				}
 			}
-			else if( xHeader->type == htons( UIP_ETHTYPE_ARP ) )
+			else
 			{
-				uip_arp_arpin();
-
-				/* If the above function invocation resulted in data that
-				should be sent out on the network, the global variable
-				uip_len is set to a value > 0. */
-				if( uip_len > 0 )
-				{
-					vEMACWrite();
-				}
-				
-				xDoneSomething = pdTRUE;
+				ulUIP_Events &= ~uipETHERNET_RX_EVENT;
 			}
 		}
-
-		if( timer_expired( &periodic_timer ) && ( uip_buf != NULL ) )
+		
+		if( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL )
 		{
-			timer_reset( &periodic_timer );
+			ulUIP_Events &= ~uipPERIODIC_TIMER_EVENT;
+					
 			for( i = 0; i < UIP_CONNS; i++ )
 			{
 				uip_periodic( i );
@@ -201,25 +206,82 @@ struct timer periodic_timer, arp_timer;
 					vEMACWrite();
 				}
 			}
-
-			/* Call the ARP timer function every 10 seconds. */
-			if( timer_expired( &arp_timer ) )
-			{
-				timer_reset( &arp_timer );
-				uip_arp_timer();
-			}
-			
-			xDoneSomething = pdTRUE;
 		}
 		
-		if( xDoneSomething == pdFALSE )
+		/* Call the ARP timer function every 10 seconds. */
+		if( ( ulUIP_Events & uipARP_TIMER_EVENT ) != 0 )
 		{
-			/* We did not receive a packet, and there was no periodic
-			processing to perform.  Block for a fixed period.  If a packet
-			is received during this period we will be woken by the ISR
-			giving us the Semaphore. */
-			xSemaphoreTake( xEMACSemaphore, configTICK_RATE_HZ / 20 );
+			ulUIP_Events &= ~uipARP_TIMER_EVENT;
+			uip_arp_timer();
 		}
+			
+		if( ulUIP_Events == pdFALSE )
+		{
+			xQueueReceive( xEMACEventQueue, &ulNewEvent, portMAX_DELAY );
+			ulUIP_Events |= ulNewEvent;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvInitialise_uIP( void )
+{
+xTimerHandle xARPTimer, xPeriodicTimer;
+uip_ipaddr_t xIPAddr;
+const unsigned long ul_uIPEventQueueLength = 10UL;
+
+	/* Initialise the uIP stack. */
+	uip_init();
+	uip_ipaddr( &xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
+	uip_sethostaddr( &xIPAddr );
+	uip_ipaddr( &xIPAddr, configNET_MASK0, configNET_MASK1, configNET_MASK2, configNET_MASK3 );
+	uip_setnetmask( &xIPAddr );
+	prvSetMACAddress();
+	httpd_init();
+
+	/* Create the queue used to sent TCP/IP events to the uIP stack. */
+	xEMACEventQueue = xQueueCreate( ul_uIPEventQueueLength, sizeof( unsigned long ) );
+
+	/* Create and start the uIP timers. */
+	xARPTimer = xTimerCreate( 	( const signed char * const ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
+								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
+								pdTRUE, /* Autor-reload. */
+								( void * ) uipARP_TIMER,
+								prvUIPTimerCallback
+							);
+
+	xPeriodicTimer = xTimerCreate( 	( const signed char * const ) "PeriodicTimer",
+									( 500 / portTICK_RATE_MS ),
+									pdTRUE, /* Autor-reload. */
+									( void * ) uipPERIODIC_TIMER,
+									prvUIPTimerCallback
+								);
+
+	configASSERT( xARPTimer );
+	configASSERT( xPeriodicTimer );
+
+	xTimerStart( xARPTimer, portMAX_DELAY );
+	xTimerStart( xPeriodicTimer, portMAX_DELAY );
+}
+/*-----------------------------------------------------------*/
+
+static void prvUIPTimerCallback( xTimerHandle xTimer )
+{
+static const unsigned long ulARPTimerExpired = uipARP_TIMER_EVENT;
+static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;
+
+	/* This is a time callback, so calls to xQueueSend() must not attempt to
+	block. */
+	switch( ( int ) pvTimerGetTimerID( xTimer ) )
+	{
+		case uipARP_TIMER		:	xQueueSend( xEMACEventQueue, &ulARPTimerExpired, uipDONT_BLOCK );
+									break;
+
+		case uipPERIODIC_TIMER	:	xQueueSend( xEMACEventQueue, &ulPeriodicTimerExpired, uipDONT_BLOCK );
+									break;
+
+		default					:  	/* Should not get here. */
+									break;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -250,28 +312,33 @@ char *c;
 	{
 		/* Is there a command in the string? */
 		c = strstr( pcInputString, "?" );
-		if( c )
-		{
+	    if( c )
+	    {
 			/* Turn the LED's on or off in accordance with the check box status. */
 			if( strstr( c, "LED0=1" ) != NULL )
 			{
-				/* Turn LEDs on. */
-				vParTestSetLED( 3, 1 );
-				vParTestSetLED( 4, 1 );
+				/* Turn the LEDs on. */
+				vParTestSetLED( 7, 1 );
+				vParTestSetLED( 8, 1 );
+				vParTestSetLED( 9, 1 );
+				vParTestSetLED( 10, 1 );
 			}
 			else
 			{
-				/* Turn LED 4 off. */
-				vParTestSetLED( 3, 0 );
-				vParTestSetLED( 4, 0 );
+				/* Turn the LEDs off. */
+				vParTestSetLED( 7, 0 );
+				vParTestSetLED( 8, 0 );
+				vParTestSetLED( 9, 0 );
+				vParTestSetLED( 10, 0 );
 			}
-		}
+	    }
 		else
 		{
-			/* Commands to turn LEDs off are not always explicit, turn LED 4
-			off. */
-			vParTestSetLED( 3, 0 );
-			vParTestSetLED( 4, 0 );
+			/* Commands to turn LEDs off are not always explicit. */
+			vParTestSetLED( 7, 0 );
+			vParTestSetLED( 8, 0 );
+			vParTestSetLED( 9, 0 );
+			vParTestSetLED( 10, 0 );
 		}
 	}
 }

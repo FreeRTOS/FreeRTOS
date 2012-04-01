@@ -98,7 +98,7 @@ void vPortSetupTimerInterrupt( void );
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 unsigned short *pusTopOfStack;
-unsigned long *pulTopOfStack;
+unsigned long *pulTopOfStack, ulTemp;
 
 	/*
 		Place a few bytes of known values on the bottom of the stack.
@@ -117,7 +117,8 @@ unsigned long *pulTopOfStack;
 	if( sizeof( pxCode ) == sizeof( unsigned short ) )
 	{
 		pusTopOfStack = ( unsigned short * ) pxTopOfStack;
-		*pusTopOfStack = ( unsigned short ) pxCode;
+		ulTemp = ( unsigned long ) pxCode;
+		*pusTopOfStack = ( unsigned short ) ulTemp;
 	}
 	else
 	{

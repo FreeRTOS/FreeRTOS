@@ -3797,6 +3797,9 @@
   <group>
     <name>F5XX_6XX_Core_Lib</name>
     <file>
+      <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\HAL_PMM.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\F5XX_6XX_Core_Lib\hal_UCS.c</name>
     </file>
   </group>

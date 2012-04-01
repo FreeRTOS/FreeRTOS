@@ -443,14 +443,10 @@ xQueueMessage xMessage;
 
 static void prvSetupHardware( void )
 {
-/* Convert a Hz value to a KHz value, as required by the Init_FLL_Settle()
-function. */
-unsigned long ulCPU_Clock_KHz = ( configCPU_CLOCK_HZ / 1000UL );
-
 	halBoardInit();
 
 	LFXT_Start( XT1DRIVE_0 );
-	Init_FLL_Settle( ( unsigned short ) ulCPU_Clock_KHz, 488 );
+	hal430SetSystemClock( configCPU_CLOCK_HZ, configLFXT_CLOCK_HZ );
 
 	halButtonsInit( BUTTON_ALL );
 	halButtonsInterruptEnable( BUTTON_SELECT );

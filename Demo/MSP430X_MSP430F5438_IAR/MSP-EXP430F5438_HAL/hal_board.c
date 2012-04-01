@@ -66,3 +66,43 @@ void halBoardInit(void)
   PJDIR  = 0xFF;
   P11SEL = 0;
 }
+
+/**********************************************************************//**
+ * @brief  Set function for MCLK frequency.
+ *
+ *
+ * @return none
+ *************************************************************************/
+void hal430SetSystemClock(unsigned long req_clock_rate, unsigned long ref_clock_rate)
+{
+  /* Convert a Hz value to a KHz value, as required
+   *  by the Init_FLL_Settle() function. */
+  unsigned long ulCPU_Clock_KHz = req_clock_rate / 1000UL;
+
+  //Make sure we aren't overclocking
+  if(ulCPU_Clock_KHz > 25000L)
+  {
+    ulCPU_Clock_KHz = 25000L;
+  }
+
+  //Set VCore to a level sufficient for the requested clock speed.
+  if(ulCPU_Clock_KHz <= 8000L)
+  {
+    SetVCore(PMMCOREV_0);
+  }
+  else if(ulCPU_Clock_KHz <= 12000L)
+  {
+    SetVCore(PMMCOREV_1);
+  }
+  else if(ulCPU_Clock_KHz <= 20000L)
+  {
+    SetVCore(PMMCOREV_2);
+  }
+  else
+  {
+    SetVCore(PMMCOREV_3);
+  }
+
+  //Set the DCO
+  Init_FLL_Settle( ( unsigned short )ulCPU_Clock_KHz, req_clock_rate / ref_clock_rate );
+}

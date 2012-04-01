@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -69,7 +69,8 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 25000000UL )	
+#define configCPU_CLOCK_HZ				( 25000000UL )
+#define configLFXT_CLOCK_HZ       		( 32768L )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
@@ -125,7 +126,7 @@ The timer is configured to interrupt each time it overflows so a count of
 overflows can be kept - that way a 32 bit time value can be constructed from
 the timers current count value and the number of overflows. */
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-	
+
 /* Construct a 32 bit time value for use as the run time stats time base.  This
 comes from the current value of a 16 bit timer combined with the number of times
 the timer has overflowed. */

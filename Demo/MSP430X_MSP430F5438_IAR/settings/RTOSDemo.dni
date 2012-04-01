@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=131837655
+Checksum=1421140093
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -28,6 +28,16 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -35,13 +45,16 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[CallStack]
+ShowArgs=0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=152238872
+Mode=0
 Graph=0
 Symbiont=0
+Exclusions=
 [Breakpoints]
 Count=0
 [FET]

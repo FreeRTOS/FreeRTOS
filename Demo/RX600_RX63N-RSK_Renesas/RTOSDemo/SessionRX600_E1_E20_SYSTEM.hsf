@@ -559,9 +559,7 @@
 [DEBUGGER_OPTIONS]
 "" 
 [DOWNLOAD_MODULES]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Debug\RTOSDemo.abs" 0 "Elf/Dwarf2" 0 0 1 0 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Debug_with_optimisation\RTOSDemo.abs" 0 "Elf/Dwarf2" 0 0 1 0 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RSK_Renesas\RTOSDemo\Blinky\RTOSDemo.abs" 0 "Elf/Dwarf2" 0 0 1 0 
+"$(CONFIGDIR)\$(PROJECTNAME).abs" 0 "Elf/Dwarf2" 0 0 1 0 
 [CONNECT_ON_GO]
 "FALSE" 
 [DOWNLOAD_MODULES_AFTER_BUILD]

@@ -997,12 +997,12 @@ portTickType xMargin;
 
 static void prvAutoReloadTimerCallback( xTimerHandle pxExpiredTimer )
 {
-portBASE_TYPE xTimerID;
+unsigned long ulTimerID;
 
-	xTimerID = ( portBASE_TYPE ) pvTimerGetTimerID( pxExpiredTimer );
-	if( xTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
+	ulTimerID = ( unsigned long ) pvTimerGetTimerID( pxExpiredTimer );
+	if( ulTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
 	{
-		( ucAutoReloadTimerCounters[ xTimerID ] )++;
+		( ucAutoReloadTimerCounters[ ulTimerID ] )++;
 	}
 	else
 	{

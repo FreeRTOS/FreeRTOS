@@ -5,6 +5,11 @@
   <BreakpointListItem line="184" action="" hardwareBreakpoint="" trigger="" useHWbreakpoint="false" group="Breakpoints" type="Breakpoint" state="4" counter="0" isFunctionBreakpoint="false" filename="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Host\usbhost_lpc17xx.c" expression="" />
   <BreakpointListItem line="46" action="" hardwareBreakpoint="" trigger="" useHWbreakpoint="false" group="Breakpoints" type="Breakpoint" state="4" counter="0" isFunctionBreakpoint="false" filename="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\UsbHost\Main\usbhost_task.c" expression="" />
  </Breakpoints>
+ <ETMWindow>
+  <ETMRegister number="0" value="800" />
+  <ETMRegister number="8" value="6f" />
+  <ETMRegister number="9" value="1000000" />
+ </ETMWindow>
  <ExecutionCountWindow/>
  <Memory1>
   <MemoryWindow autoEvaluate="0" addressText="0x10003c24" numColumns="8" sizeText="100" dataSize="1" radix="16" addressSpace="" />
@@ -20,23 +25,18 @@
  </Memory4>
  <Project>
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;LPCUSB" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;System Files" name="unnamed" />
  </Project>
  <Register1>
-  <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1]" binaryNodes="" unsignedNodes="" visibleGroups="CPU" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1]" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="CPU" decimalNodes="" octalNodes="" asciiNodes="" />
  </Register1>
  <Register2>
-  <RegisterWindow openNodes="" binaryNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
  </Register2>
  <Register3>
-  <RegisterWindow openNodes="" binaryNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
  </Register3>
  <Register4>
-  <RegisterWindow openNodes="" binaryNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
  </Register4>
  <TargetWindow programAction="" uploadFileType="" programLoadAddress="" programSize="" uploadFileName="" uploadMemoryInterface="" programFileName="" uploadStartAddress="" programFileType="" uploadSize="" programMemoryInterface="" />
  <TraceWindow>
@@ -54,8 +54,6 @@
  <Watch4>
   <Watches active="0" update="Never" />
  </Watch4>
- <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" y="141" path="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\main.c" left="0" selected="1" name="unnamed" top="138" />
- </Files>
+ <Files/>
  <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="USB CrossConnect for ARM" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\CORTEX_LPC1768_GCC_Rowley\LPCUSB" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

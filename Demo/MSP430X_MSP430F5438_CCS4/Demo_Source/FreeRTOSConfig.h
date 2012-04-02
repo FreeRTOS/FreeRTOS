@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -53,8 +53,8 @@
 
 
 /* The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within CCS4!  Once it has been executed, re-open or refresh 
+ * executed prior to this project being built.  The batch file *cannot* be
+ * executed from within CCS4!  Once it has been executed, re-open or refresh
  * the CCS4 project and remove the #error line below.
  */
 //#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
@@ -78,7 +78,8 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 25000000UL )	
+#define configCPU_CLOCK_HZ				( 25000000UL )
+#define configLFXT_CLOCK_HZ       		( 32768L )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
@@ -128,8 +129,8 @@ vector for the chosen tick interrupt source.  This implementation of
 vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this
 case configTICK_VECTOR is set to TIMER0_A0_VECTOR. */
 #define configTICK_VECTOR				TIMER0_A0_VECTOR
-	
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
-	
+
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 #endif /* FREERTOS_CONFIG_H */
 

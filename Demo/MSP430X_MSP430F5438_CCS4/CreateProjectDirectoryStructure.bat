@@ -13,8 +13,8 @@ IF EXIST FreeRTOS_Source Goto END
 	REM Create the required directory structure.
 	MD FreeRTOS_Source
 	MD FreeRTOS_Source\include	
-	MD FreeRTOS_Source\portable\CCS4
-	MD FreeRTOS_Source\portable\CCS4\MSP430X
+	MD FreeRTOS_Source\portable\CCS
+	MD FreeRTOS_Source\portable\CCS\MSP430X
 	MD FreeRTOS_Source\portable\MemMang	
 	MD Demo_Source\Common_Demo_Files
 	MD Demo_Source\Common_Demo_Files\include
@@ -30,7 +30,7 @@ IF EXIST FreeRTOS_Source Goto END
 	copy ..\..\Source\include\*.* FreeRTOS_Source\include
 	
 	REM Copy the portable layer files
-	copy ..\..\Source\portable\CCS4\MSP430X\*.* FreeRTOS_Source\portable\CCS4\MSP430X
+	copy ..\..\Source\portable\CCS\MSP430X\*.* FreeRTOS_Source\portable\CCS\MSP430X
 	
 	REM Copy the basic memory allocation files
 	copy ..\..\Source\portable\MemMang\heap_1.c FreeRTOS_Source\portable\MemMang

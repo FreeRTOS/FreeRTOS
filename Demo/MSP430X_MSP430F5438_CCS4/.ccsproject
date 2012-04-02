@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?ccsproject version="1.0"?>
 
 <projectOptions>
@@ -8,4 +8,5 @@
 <isElfFormat value="false"/>
 <linkerCommandFile value="lnk_msp430f5438a.cmd"/>
 <rts value="libc.a"/>
+<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
 </projectOptions>

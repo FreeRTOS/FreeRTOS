@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_mkfs</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_mkfs</h2>
+<p>ドライブ上にFATファイル・システムを作成(フォーマット)します。</p>
+<pre>
+FRESULT f_mkfs (
+  BYTE  <em>Drive</em>,              /* 論理ドライブ番号 */
+  BYTE  <em>PartitioningRule</em>,   /* 区画作成方法 */
+  WORD  <em>AllocSize</em>           /* クラス・タサイズ */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>Drive</dt>
+<dd>フォーマットする論理ドライブ(0-9)。</dd>
+<dt>PartitioningRule</dt>
+<dd>0を指定すると、ドライブの全領域を占める基本DOS区画を作成したあとその区画にファイル・システムを作成します(FDISKフォーマット)。1を指定すると、区画テーブルを作成せずドライブの先頭セクタから直接ファイル・システムを作成します(super floppy (SFD) フォーマット)。</dd>
+<dt>AllocSize</dt>
+<dd>クラスタ・サイズをバイト単位で指定します。0または512～32768の範囲でかつ2の累乗でなければなりません。0を指定するとドライブ・サイズに応じたデフォルトのクラスタ・サイズを選択します。FAT64(64KB/クラスタ)は選択できません。</dd>
+</dl>
+</div>
+
+<div class="para">
+<h4>戻り値</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>正常終了。</dd>
+<dt>FR_INVALID_DRIVE</dt>
+<dd>ドライブ番号が無効。</dd>
+<dt>FR_NOT_READY</dt>
+<dd>メディアがセットされていないなど、物理ドライブが動作不能状態。</dd>
+<dt>FR_WRITE_PROTECTED</dt>
+<dd>メディアが書き込み禁止状態。</dd>
+<dt>FR_NOT_ENABLED</dt>
+<dd>その論理ドライブにワーク・エリアが割り当てられていない。</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>ディスク・エラーによる失敗。</dd>
+<dt>FR_MKFS_ABORTED</dt>
+<dd>次の理由で開始前に処理が中断された。
+<ul>
+<li>ディスク・サイズが小さすぎる。</li>
+<li>何らかの引数が不正。</li>
+<li>そのクラスタ・サイズが使えない。クラスタ数が0xFF7と0xFFF7近辺になるとき発生する可能性がある。</li>
+</ul>
+</dd>
+</dl>
+</div>
+
+<div class="para">
+<h4>説明</h4>
+<p>f_mkfs関数はFATファイル・システムをドライブ上に作成します。リムーバブル・メディアのパーテーショニング・ルールとしてはFDISK形式とSFD形式があり、メモリ・カードではFDISK形式が普通です。この関数は<em>複数区画には対応していない</em>ので、その物理ドライブの既存の区画は全て削除され、全体が一つの区画になります。</p>
+<p>FATタイプ(FAT12/FAT16/FAT32)は、その論理ドライブ上の<em>クラスタ数によってのみ決定</em>される[FAT仕様書より]決まりになっていて、それ以外の要因はありません。したがって、どのFATタイプになるかはドライブ・サイズと指定されたクラスタ・サイズに依存します。クラスタ・サイズは大きくするほど性能が上がり、逆にディスク利用効率は落ちます。</p>
+</div>
+
+
+<div class="para">
+<h4>対応情報</h4>
+<p><tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_MKFS == 1</tt>のとき使用可能です。</p>
+</div>
+
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
+</body>
+</html>

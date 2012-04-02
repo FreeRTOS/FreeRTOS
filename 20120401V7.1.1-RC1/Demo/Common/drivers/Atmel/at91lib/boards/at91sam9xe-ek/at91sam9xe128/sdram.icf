@@ -1,0 +1,46 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\a_v1_0.xml" */
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_SDRAM_start__ = 0x20000000;
+define symbol __ICFEDIT_region_SDRAM_end__   = 0x21FFFFFF;
+define symbol __ICFEDIT_region_RAM_start__   = 0x300000;
+define symbol __ICFEDIT_region_RAM_end__     = 0x303FFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_startup__  = 0x100;
+define symbol __ICFEDIT_size_vectors__  = 0x100;
+define symbol __ICFEDIT_size_cstack__   = 0x1000;
+define symbol __ICFEDIT_size_svcstack__ = 0x60;
+define symbol __ICFEDIT_size_irqstack__ = 0x60;
+define symbol __ICFEDIT_size_heap__     = 0x0;
+/*-Exports-*/
+export symbol __ICFEDIT_region_SDRAM_start__;
+export symbol __ICFEDIT_region_SDRAM_end__;
+export symbol __ICFEDIT_region_RAM_start__;
+export symbol __ICFEDIT_region_RAM_end__;
+export symbol __ICFEDIT_size_startup__;
+export symbol __ICFEDIT_size_vectors__;
+export symbol __ICFEDIT_size_cstack__;
+export symbol __ICFEDIT_size_svcstack__;
+export symbol __ICFEDIT_size_irqstack__;
+export symbol __ICFEDIT_size_heap__;
+/**** End of ICF editor section. ###ICF###*/
+
+define memory mem with size = 4G;
+define region STA_region =   mem:[from __ICFEDIT_region_SDRAM_start__ size __ICFEDIT_size_startup__];
+define region SDRAM_region = mem:[from __ICFEDIT_region_SDRAM_start__+__ICFEDIT_size_startup__ to __ICFEDIT_region_SDRAM_end__];
+define region VEC_region =   mem:[from __ICFEDIT_region_RAM_start__ size __ICFEDIT_size_vectors__];
+define region RAM_region =   mem:[from __ICFEDIT_region_RAM_start__+__ICFEDIT_size_vectors__ to __ICFEDIT_region_RAM_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block SVC_STACK with alignment = 8, size = __ICFEDIT_size_svcstack__ { };
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy { section .vectors };
+do not initialize  { section .noinit };
+
+place in STA_region { section .cstartup };
+place in VEC_region { section .vectors };
+place in SDRAM_region { readonly, readwrite, block IRQ_STACK, block SVC_STACK, block CSTACK, block HEAP };
+

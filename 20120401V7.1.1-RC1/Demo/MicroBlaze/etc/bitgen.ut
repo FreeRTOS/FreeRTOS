@@ -1,0 +1,21 @@
+-g ConfigRate:4
+-g CclkPin:PULLUP
+-g TdoPin:PULLNONE
+-g M1Pin:PULLDOWN
+-g DonePin:PULLUP
+-g DriveDone:No
+-g StartUpClk:JTAGCLK
+-g DONE_cycle:4
+-g GTS_cycle:5
+-g M0Pin:PULLUP
+-g M2Pin:PULLUP
+-g ProgPin:PULLUP
+-g TckPin:PULLUP
+-g TdiPin:PULLUP
+-g TmsPin:PULLUP
+-g DonePipe:No
+-g GWE_cycle:6
+-g LCK_cycle:NoWait
+-g Security:NONE
+-m
+-g Persist:No

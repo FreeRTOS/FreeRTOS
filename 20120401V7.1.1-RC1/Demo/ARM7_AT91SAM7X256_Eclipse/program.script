@@ -1,0 +1,11 @@
+arm7_9 dcc_downloads enable
+halt
+wait_halt
+sleep 10
+poll
+flash probe 0
+#flash protect 0 0 26 'off'
+flash erase 0 0 15
+flash write 0 ./RTOSDemo/RTOSDemo.bin 0x0
+sleep 10
+shutdown

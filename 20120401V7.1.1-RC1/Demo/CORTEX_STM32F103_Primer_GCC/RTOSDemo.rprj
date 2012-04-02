@@ -1,0 +1,4 @@
+
+<Project Header="Project 'RTOSDemo'" Path=".\RTOSDemo.rprj" Project="Yes" OutputFile="" sate="96" ActiveApp="RTOSDemo" >
+	<ApplicationBuild Header="RTOSDemo" Extern=".\RTOSDemo.rapp" Path=".\RTOSDemo.rapp" OutputFile=".\RTOSDemo.elf" sate="98" />
+</Project>

@@ -1,0 +1,194 @@
+// ---------------------------------------------------------
+//		 Microcontroller Software Support  -  ROUSSET  -
+// ---------------------------------------------------------
+// The software is delivered "AS IS" without warranty or 
+// condition of any  kind, either express, implied or 
+// statutory. This includes without limitation any warranty 
+// or condition with respect to merchantability or fitness 
+// for any particular purpose, or against the infringements of
+// intellectual property rights of others.
+// ---------------------------------------------------------
+//  File: SAM7.mac
+//
+//  1.0 08/Mar/04 JPP    : Creation
+//  1.1 23/Mar/05 JPP    : Change Variable name
+//
+//  $Revision: 1.5 $
+//
+// ---------------------------------------------------------
+
+__var __mac_i;
+__var __mac_pt;
+
+execUserReset()
+{
+   AIC();
+//*  Watchdog Disable
+   Watchdog();
+}
+
+execUserPreload()
+{
+//*  Set the RAM memory at 0x0020 0000 for code AT 0 flash area 
+     CheckRemap();
+//*  Get the Chip ID (AT91C_DBGU_C1R & AT91C_DBGU_C2R
+    __mac_i =__readMemory32(0xFFFFF240,"Memory");
+    __message " ---------------------------------------- Chip ID   0x",__mac_i:%X;  
+    __mac_i =__readMemory32(0xFFFFF244,"Memory");
+    __message " ---------------------------------------- Extention 0x",__mac_i:%X;  
+//* Get the chip status
+
+//* Init AIC
+   AIC();
+//*  Watchdog Disable
+   Watchdog();
+
+}
+
+
+//-----------------------------------------------------------------------------
+// Watchdog
+//-------------------------------
+// Normally, the Watchdog is enable at the reset for load it's preferable to
+// Disable.
+//-----------------------------------------------------------------------------
+Watchdog()
+{
+//* Watchdog Disable
+//      AT91C_BASE_WDTC->WDTC_WDMR= AT91C_WDTC_WDDIS;
+   __writeMemory32(0x00008000,0xFFFFFD44,"Memory");
+   __message "------------------------------- Watchdog Disable ----------------------------------------";  
+}
+
+
+//-----------------------------------------------------------------------------
+// Check Remap
+//-------------
+//-----------------------------------------------------------------------------
+CheckRemap()
+{
+//* Read the value at 0x0
+    __mac_i =__readMemory32(0x00000000,"Memory");
+    __mac_i =__mac_i+1;
+    __writeMemory32(__mac_i,0x00,"Memory");
+    __mac_pt =__readMemory32(0x00000000,"Memory");
+    
+ if (__mac_i == __mac_pt)  
+ {
+   __message "------------------------------- The Remap is done ----------------------------------------";  
+//*   Toggel RESET The remap
+    __writeMemory32(0x00000001,0xFFFFFF00,"Memory");
+   
+ } else {  
+   __message "------------------------------- The Remap is NOT -----------------------------------------";  
+ }
+
+}
+
+
+execUserSetup()
+{
+ ini();
+     __message "-------------------------------Set PC ----------------------------------------";  
+     __writeMemory32(0x00000000,0xB4,"Register");
+}
+
+//-----------------------------------------------------------------------------
+// Reset the Interrupt Controller
+//-------------------------------
+// Normally, the code is executed only if a reset has been actually performed.
+// So, the AIC initialization resumes at setting up the default vectors.
+//-----------------------------------------------------------------------------
+AIC()
+{
+// Mask All interrupt pAic->AIC_IDCR = 0xFFFFFFFF;
+    __writeMemory32(0xffffffff,0xFFFFF124,"Memory");
+    __writeMemory32(0xffffffff,0xFFFFF128,"Memory");
+// disable peripheral clock  Peripheral Clock Disable Register
+    __writeMemory32(0xffffffff,0xFFFFFC14,"Memory");
+
+// #define AT91C_TC0_SR    ((AT91_REG *) 	0xFFFA0020) // (TC0) Status Register
+// #define AT91C_TC1_SR    ((AT91_REG *) 	0xFFFA0060) // (TC1) Status Register
+// #define AT91C_TC2_SR    ((AT91_REG *) 	0xFFFA00A0) // (TC2) Status Register
+    __readMemory32(0xFFFA0020,"Memory");
+    __readMemory32(0xFFFA0060,"Memory");
+    __readMemory32(0xFFFA00A0,"Memory");
+
+    for (__mac_i=0;__mac_i < 8; __mac_i++)
+    {
+      // AT91C_BASE_AIC->AIC_EOICR
+      __mac_pt  =  __readMemory32(0xFFFFF130,"Memory");
+    
+    }
+   __message "------------------------------- AIC 2 INIT ---------------------------------------------";  
+}
+
+ini()
+{
+__writeMemory32(0x0,0x00,"Register");
+__writeMemory32(0x0,0x04,"Register");
+__writeMemory32(0x0,0x08,"Register");
+__writeMemory32(0x0,0x0C,"Register");
+__writeMemory32(0x0,0x10,"Register");
+__writeMemory32(0x0,0x14,"Register");
+__writeMemory32(0x0,0x18,"Register");
+__writeMemory32(0x0,0x1C,"Register");
+__writeMemory32(0x0,0x20,"Register");
+__writeMemory32(0x0,0x24,"Register");
+__writeMemory32(0x0,0x28,"Register");
+__writeMemory32(0x0,0x2C,"Register");
+__writeMemory32(0x0,0x30,"Register");
+__writeMemory32(0x0,0x34,"Register");
+__writeMemory32(0x0,0x38,"Register");
+
+// Set CPSR
+__writeMemory32(0x0D3,0x98,"Register");
+
+
+}
+
+RG()
+{
+
+__mac_i =__readMemory32(0x00,"Register");   __message "R00 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x04,"Register");   __message "R01 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x08,"Register");   __message "R02 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x0C,"Register");   __message "R03 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x10,"Register");   __message "R04 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x14,"Register");   __message "R05 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x18,"Register");   __message "R06 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x1C,"Register");   __message "R07 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x20,"Register");   __message "R08 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x24,"Register");   __message "R09 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x28,"Register");   __message "R10 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x2C,"Register");   __message "R11 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x30,"Register");   __message "R12 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x34,"Register");   __message "R13 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x38,"Register");   __message "R14 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x3C,"Register");   __message "R13 SVC 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x40,"Register");   __message "R14 SVC 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x44,"Register");   __message "R13 ABT 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x48,"Register");   __message "R14 ABT 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x4C,"Register");   __message "R13 UND 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x50,"Register");   __message "R14 UND 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x54,"Register");   __message "R13 IRQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x58,"Register");   __message "R14 IRQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x5C,"Register");   __message "R08 FIQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x60,"Register");   __message "R09 FIQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x64,"Register");   __message "R10 FIQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x68,"Register");   __message "R11 FIQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x6C,"Register");   __message "R12 FIQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x70,"Register");   __message "R13 FIQ 0x",__mac_i:%X;  
+__mac_i =__readMemory32(0x74,"Register");   __message "R14 FIQ0x",__mac_i:%X; 
+__mac_i =__readMemory32(0x98,"Register");   __message "CPSR     ",__mac_i:%X; 
+__mac_i =__readMemory32(0x94,"Register");   __message "SPSR     ",__mac_i:%X; 
+__mac_i =__readMemory32(0x9C,"Register");   __message "SPSR ABT ",__mac_i:%X; 
+__mac_i =__readMemory32(0xA0,"Register");   __message "SPSR ABT ",__mac_i:%X; 
+__mac_i =__readMemory32(0xA4,"Register");   __message "SPSR UND ",__mac_i:%X; 
+__mac_i =__readMemory32(0xA8,"Register");   __message "SPSR IRQ ",__mac_i:%X; 
+__mac_i =__readMemory32(0xAC,"Register");   __message "SPSR FIQ ",__mac_i:%X; 
+
+__mac_i =__readMemory32(0xB4,"Register");   __message "PC 0x",__mac_i:%X;  
+
+}
+

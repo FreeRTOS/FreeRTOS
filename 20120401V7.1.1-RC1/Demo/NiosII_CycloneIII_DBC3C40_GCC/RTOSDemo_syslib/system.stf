@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<stf>
+	<project ptf="..\cpu.ptf" target="Nios II System Library">
+	</project>
+	<cpu name="cpu_0">
+	</cpu>
+	<os_spec clean_exit="yes" direct_drivers="no" exception_stack="no" instruction_emulation="no" name="none (single-threaded)" no_c_plus_plus="no" no_exit="no" profiling="no" small_footprint="no" sopc_component_dir="altera_hal" stack_checking="no" stderr="jtag_uart_0" stdin="jtag_uart_0" stdout="jtag_uart_0">
+	<sys_defines>
+<define name="alt_max_fd" quote="no" value="32"/>
+<define name="alt_sys_clk" quote="no" value="SYS_CLK"/>
+<define name="alt_timestamp_clk" quote="no" value="none"/>
+</sys_defines>
+<make_macros>
+<macro name="alt_sim_optimize" quote="no" value="0"/>
+</make_macros>
+</os_spec>
+	<link_spec auto_gen_script="yes">
+		<script name="none">
+		<section memory="sdram" name=".text"/>
+<section memory="sdram" name=".rodata"/>
+<section memory="sdram" name=".rwdata"/>
+<section memory="sdram" name=".stack"/>
+<section memory="sdram" name=".heap"/>
+<section memory="sdram" name=".exceptionstack" size="0x400"/>
+</script>
+	</link_spec>
+</stf>

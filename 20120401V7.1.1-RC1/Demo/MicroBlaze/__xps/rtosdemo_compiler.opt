@@ -1,0 +1,23 @@
+microblaze_0
+RTOSDEMO_SOURCES = main.c ParTest/ParTest.c ../../Source/tasks.c ../../Source/queue.c ../../Source/list.c ../../Source/portable/MemMang/heap_1.c ../../Source/portable/GCC/MicroBlaze/port.c ../../Source/portable/GCC/MicroBlaze/portasm.s ../Common/Minimal/flash.c serial/serial.c ../Common/Minimal/comtest.c ../Common/Minimal/integer.c ../Common/Minimal/semtest.c ../Common/Minimal/dynamic.c ../Common/Minimal/PollQ.c ../Common/Minimal/BlockQ.c 
+RTOSDEMO_HEADERS = FreeRTOSConfig.h 
+RTOSDEMO_CC = mb-gcc
+RTOSDEMO_CC_SIZE = mb-size
+RTOSDEMO_CC_OPT = -Os
+RTOSDEMO_CFLAGS = -D MICROBLAZE_GCC -Wall
+RTOSDEMO_CC_SEARCH = # -B
+RTOSDEMO_LIBPATH = -L./microblaze_0/lib/ # -L
+RTOSDEMO_INCLUDES = -I./microblaze_0/include/  -IDev/FreeRTOS/Demo/MicroBlaze/   -I. -I../Common/include -I../../Source/include -I../../Source/portable/GCC/MicroBlaze 
+RTOSDEMO_LFLAGS = # -l
+RTOSDEMO_CC_PREPROC_FLAG = # -Wp,
+RTOSDEMO_CC_ASM_FLAG = # -Wa,
+RTOSDEMO_CC_LINKER_FLAG =   -Wl,-Map=rtosdemo.map 
+RTOSDEMO_LINKER_SCRIPT = 
+RTOSDEMO_CC_DEBUG_FLAG =  -g 
+RTOSDEMO_CC_GLOBPTR_FLAG= # -mxl-gp-opt
+RTOSDEMO_MODE = executable
+RTOSDEMO_LIBG_OPT = -$(RTOSDEMO_MODE) microblaze_0
+RTOSDEMO_CC_SOFTMUL_FLAG= -mno-xl-soft-mul 
+RTOSDEMO_CC_START_ADDR_FLAG=  # -Wl,-defsym -Wl,_TEXT_START_ADDR=
+RTOSDEMO_CC_STACK_SIZE_FLAG=  # -Wl,-defsym -Wl,_STACK_SIZE=
+                  $(RTOSDEMO_CC_SOFTMUL_FLAG)  \

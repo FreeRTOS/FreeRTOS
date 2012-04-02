@@ -1,0 +1,74 @@
+#Please do not modify this file by hand
+XmpVersion: 10.1.01
+VerMgmt: 10.1.01
+IntStyle: default
+MHS File: system.mhs
+MSS File: system.mss
+NPL File: projnav/system.ise
+Architecture: virtex4
+Device: xc4vfx12
+Package: ff668
+SpeedGrade: -10
+UserCmd1: 
+UserCmd1Type: 0
+UserCmd2: 
+UserCmd2Type: 0
+TopInst: system_i
+GenSimTB: 0
+InsertNoPads: 0
+WarnForEAArch: 1
+HdlLang: VHDL
+Simulator: mti
+SimModel: BEHAVIORAL
+MixLangSim: 1
+UcfFile: data/system.ucf
+FpgaImpMode: 0
+EnableParTimingError: 1
+EnableResetOptimization: 0
+ShowLicenseDialog: 1
+ICacheAddr: SRAM,
+DCacheAddr: SRAM,
+Processor: ppc405_0
+BootLoop: 1
+XmdStub: 0
+SwProj: RTOSDemo
+Processor: ppc405_0
+Executable: RTOSDemo/executable.elf
+Source: RTOSDemo/../../Common/Minimal/BlockQ.c
+Source: RTOSDemo/../../Common/Minimal/blocktim.c
+Source: RTOSDemo/../../Common/Minimal/comtest.c
+Source: RTOSDemo/../../Common/Minimal/countsem.c
+Source: RTOSDemo/../../Common/Minimal/death.c
+Source: RTOSDemo/../../Common/Minimal/dynamic.c
+Source: RTOSDemo/../../Common/Minimal/flash.c
+Source: RTOSDemo/../../Common/Minimal/GenQTest.c
+Source: RTOSDemo/../../Common/Minimal/integer.c
+Source: RTOSDemo/../../Common/Minimal/QPeek.c
+Source: RTOSDemo/../../Common/Minimal/recmutex.c
+Source: RTOSDemo/../../Common/Minimal/semtest.c
+Source: RTOSDemo/../../../Source/tasks.c
+Source: RTOSDemo/../../../Source/list.c
+Source: RTOSDemo/../../../Source/queue.c
+Source: RTOSDemo/../../../Source/portable/GCC/PPC405_Xilinx/port.c
+Source: RTOSDemo/main.c
+Source: RTOSDemo/serial/serial.c
+Source: RTOSDemo/partest/partest.c
+Source: RTOSDemo/../../../Source/portable/GCC/PPC405_Xilinx/portasm.S
+Source: RTOSDemo/../../../Source/portable/MemMang/heap_2.c
+Source: RTOSDemo/flop/flop.c
+Source: RTOSDemo/flop/flop-reg-test.c
+Header: RTOSDemo/FreeRTOSConfig.h
+DefaultInit: EXECUTABLE
+InitBram: 0
+Active: 1
+CompilerOptLevel: 0
+GlobPtrOpt: 0
+DebugSym: 1
+ProfileFlag: 0
+ProgStart: 
+StackSize: 
+HeapSize: 
+LinkerScript: RTOSDemo/RTOSDemo_linker_script.ld
+ProgCCFlags: -I./RTOSDemo/flop -I../../Source/portable/GCC/PPC405_Xilinx -I./ppc405_0/include/  -IRTOSDemo/   -I. -I./RTOSDemo/ -I../Common/include/ -I../../Source/include/ -I./ppc405_0/include/ -I./ppc405_0/include -D GCC_PPC405 -mregnames
+CompileInXps: 1
+NonXpsApp: 0

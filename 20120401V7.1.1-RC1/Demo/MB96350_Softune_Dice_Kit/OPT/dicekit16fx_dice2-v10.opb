@@ -1,0 +1,22 @@
+-dt s,d,r,a
+-pl 60
+-pw 132
+-g
+-cwno
+-cpu MB96F356RSA
+"C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\ABS\RTOSDemo.abs"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\vectors.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\main.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\mb96356rs.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\START.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\tasks.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\list.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\queue.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\port.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\__STD_LIB_sbrk.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\heap_1.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\croutine.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\DiceTask.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\ParTest.obj"
+-a "C:\E\Dev\FreeRTOS\WorkingCopy3\Demo\MB96350_Softune_Dice_Kit\OBJ\SegmentToggleTasks.obj"
+

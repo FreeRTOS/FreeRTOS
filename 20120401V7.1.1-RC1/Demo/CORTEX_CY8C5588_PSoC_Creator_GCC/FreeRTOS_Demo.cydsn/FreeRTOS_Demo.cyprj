@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<CyXmlSerializer>
+<!--This file is machine generated and read. It is not intended to be edited by hand.-->
+<!--Due to this, there is no schema for this file.-->
+<CyGuid_fec8f9e8-2365-4bdb-96d3-a4380222e01b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtProjectPSoCExe" version="4">
+<CyGuid_60697ce6-dce2-4816-8680-4de0635742eb type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtProjectExe" version="3">
+<CyGuid_49cfd574-032a-4a64-b7be-d4eeeaf25e43 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtProject" version="7">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="FreeRTOS_Demo" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_409391e1-c2a7-4709-8a6b-4622593f7390 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtNameRestrictedFile" version="1">
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="FreeRTOS_Demo.cydwr" persistent="./FreeRTOS_Demo.cydwr">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</CyGuid_409391e1-c2a7-4709-8a6b-4622593f7390>
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Header Files" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Common_Demo" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="BlockQ.h" persistent="../../Common/include/BlockQ.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="blocktim.h" persistent="../../Common/include/blocktim.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="comtest.h" persistent="../../Common/include/comtest.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="countsem.h" persistent="../../Common/include/countsem.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="crhook.h" persistent="../../Common/include/crhook.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="death.h" persistent="../../Common/include/death.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="dynamic.h" persistent="../../Common/include/dynamic.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="flash.h" persistent="../../Common/include/flash.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="flop.h" persistent="../../Common/include/flop.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="GenQTest.h" persistent="../../Common/include/GenQTest.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="integer.h" persistent="../../Common/include/integer.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="IntQueue.h" persistent="../../Common/include/IntQueue.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="mevents.h" persistent="../../Common/include/mevents.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="partest.h" persistent="../../Common/include/partest.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="PollQ.h" persistent="../../Common/include/PollQ.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="print.h" persistent="../../Common/include/print.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="QPeek.h" persistent="../../Common/include/QPeek.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="semtest.h" persistent="../../Common/include/semtest.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="serial.h" persistent="../../Common/include/serial.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters />
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Kernel" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="croutine.h" persistent="../../../Source/include/croutine.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="FreeRTOS.h" persistent="../../../Source/include/FreeRTOS.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="list.h" persistent="../../../Source/include/list.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="mpu_wrappers.h" persistent="../../../Source/include/mpu_wrappers.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="portable.h" persistent="../../../Source/include/portable.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="portmacro.h" persistent="../../../Source/portable/GCC/ARM_CM3/portmacro.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="projdefs.h" persistent="../../../Source/include/projdefs.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="queue.h" persistent="../../../Source/include/queue.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="semphr.h" persistent="../../../Source/include/semphr.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="StackMacros.h" persistent="../../../Source/include/StackMacros.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="task.h" persistent="../../../Source/include/task.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters />
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="device.h" persistent="./device.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="FreeRTOSConfig.h" persistent="./FreeRTOSConfig.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="IntQueueTimer.h" persistent="./IntQueueTimer.h">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters>
+<filter v="h" />
+</filters>
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Source Files" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Common_Demo" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="BlockQ.c" persistent="../../Common/Minimal/BlockQ.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="blocktim.c" persistent="../../Common/Minimal/blocktim.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="comtest.c" persistent="../../Common/Minimal/comtest.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="countsem.c" persistent="../../Common/Minimal/countsem.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="death.c" persistent="../../Common/Minimal/death.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="dynamic.c" persistent="../../Common/Minimal/dynamic.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="flash.c" persistent="../../Common/Minimal/flash.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="flop.c" persistent="../../Common/Minimal/flop.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="GenQTest.c" persistent="../../Common/Minimal/GenQTest.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="integer.c" persistent="../../Common/Minimal/integer.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="IntQueue.c" persistent="../../Common/Minimal/IntQueue.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="PollQ.c" persistent="../../Common/Minimal/PollQ.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="QPeek.c" persistent="../../Common/Minimal/QPeek.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="semtest.c" persistent="../../Common/Minimal/semtest.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters />
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Kernel" persistent="">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="croutine.c" persistent="../../../Source/croutine.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="heap_2.c" persistent="../../../Source/portable/MemMang/heap_2.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="list.c" persistent="../../../Source/list.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="port.c" persistent="../../../Source/portable/GCC/ARM_CM3/port.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="queue.c" persistent="../../../Source/queue.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="tasks.c" persistent="../../../Source/tasks.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters />
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="IntQueueTimer.c" persistent="./IntQueueTimer.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="main.c" persistent="./main.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="ParTest.c" persistent="./ParTest.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="Serial.c" persistent="./Serial.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="TimerTest.c" persistent="./TimerTest.c">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="C_FILE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters>
+<filter v="c" />
+<filter v="s" />
+<filter v="asm" />
+<filter v="a51" />
+</filters>
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+<CyGuid_4429d4ed-fe84-42d0-9e9f-19aee0ff4e7e type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBlock" version="1">
+<CyGuid_813b8d13-518a-4dc8-91ba-cda6042dfb52 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtPhyFolder" version="1">
+<CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFolder" version="2">
+<CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBaseContainer" version="1">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="TopDesign" persistent="./TopDesign">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<CyGuid_0820c2e7-528d-4137-9a08-97257b946089 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItemList" version="2">
+<dependencies>
+<CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtFile" version="3">
+<CyGuid_31768f72-0253-412b-af77-e7dba74d1330 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtItem" version="2" name="TopDesign.cysch" persistent="./TopDesign/TopDesign.cysch">
+<Hidden v="False" />
+</CyGuid_31768f72-0253-412b-af77-e7dba74d1330>
+<build_action v="NONE" />
+<PropertyDeltas />
+</CyGuid_8b8ab257-35d3-4473-b57b-36315200b38b>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<filters />
+</CyGuid_ebc4f06d-207f-49c2-a540-72acf4adabc0>
+</CyGuid_813b8d13-518a-4dc8-91ba-cda6042dfb52>
+</CyGuid_4429d4ed-fe84-42d0-9e9f-19aee0ff4e7e>
+</dependencies>
+</CyGuid_0820c2e7-528d-4137-9a08-97257b946089>
+</CyGuid_2f73275c-45bf-46ba-b3b1-00a2fe0c8dd8>
+<name v="GlobalSettings">
+<GlobalPages />
+<GlobalTools name="Code Generation">
+<GlobalPages>
+<name_val_pair name="General@Synthesis Goal" v="Speed" />
+<name_val_pair name="General@Synthesis Optimization Effort" v="Exhaustive" />
+<name_val_pair name="General@Quiet Output" v="True" />
+<name_val_pair name="General@Custom Synthesis Options" v="" />
+<name_val_pair name="General@Skip Code Generation" v="False" />
+<name_val_pair name="General@Custom Code Gen Options" v="" />
+<name_val_pair name="General@Virtual Node Substitution" v="3" />
+<name_val_pair name="General@Application Type" v="Normal" />
+<name_val_pair name="General@Custom Fitter Options" v="" />
+</GlobalPages>
+</GlobalTools>
+<GlobalTools name="Debug Page">
+<GlobalPages>
+<name_val_pair name="General@Debug Target" v="Application Code and Data" />
+</GlobalPages>
+</GlobalTools>
+<GlobalTools name="Customizer">
+<GlobalPages>
+<name_val_pair name="General@Customizer Build Mode" v="Release" />
+<name_val_pair name="General@Command Line Options" v="" />
+<name_val_pair name="General@Assembly References" v="" />
+</GlobalPages>
+</GlobalTools>
+</name>
+<platforms>
+<platform>
+<name v="c9323d49-d323-40b8-9b59-cc008d68a989">
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Additional Include Directories" v="../../../Source/include; ../../../Source/portable/GCC/ARM_CM3; ../../Common/include" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Warnings as Errors" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Warning Level" v="High" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Pedantic Compilation" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Preprocessor Definitions" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@General@Create Listing File" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@Optimization@Optimization Level" v="None" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@Optimization@Remove Unused Functions" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@Code Generation@Struct Return Method" v="System Default" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@Code Generation@Verbose Asm" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@General@Difference Tables" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@General@Join Data and Text Sections" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@General@Create Listing File" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Use Debugging Information" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Remove Unused Functions" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@Library Generation@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Warnings as Errors" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Warning Level" v="High" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Pedantic Compilation" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@General@Create Listing File" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@Optimization@Optimization Level" v="Size" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@Optimization@Remove Unused Functions" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@Code Generation@Struct Return Method" v="System Default" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@Code Generation@Verbose Asm" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@General@Difference Tables" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@General@Join Data and Text Sections" v="False" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@General@Create Listing File" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Use Debugging Information" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Remove Unused Functions" v="True" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Release@Library Generation@Command Line@Command Line" v="" />
+</name>
+</platform>
+<platform>
+<name v="b98f980c-3bd1-4fc7-a887-c56a20a46fdd">
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Warnings as Errors" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Warning Level" v="High" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Pedantic Compilation" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Preprocessor Definitions" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@General@Create Listing File" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@Optimization@Optimization Level" v="None" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@Optimization@Remove Unused Functions" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@Code Generation@Struct Return Method" v="System Default" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@Code Generation@Verbose Asm" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@General@Difference Tables" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@General@Join Data and Text Sections" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@General@Create Listing File" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Use Debugging Information" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Remove Unused Functions" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Debug@Library Generation@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Warnings as Errors" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Warning Level" v="High" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Pedantic Compilation" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@General@Create Listing File" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@Optimization@Optimization Level" v="Size" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@Optimization@Remove Unused Functions" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@Code Generation@Struct Return Method" v="System Default" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@Code Generation@Verbose Asm" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@General@Difference Tables" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@General@Join Data and Text Sections" v="False" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@General@Create Listing File" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Use Debugging Information" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Remove Unused Functions" v="True" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="b98f980c-3bd1-4fc7-a887-c56a20a46fdd@Release@Library Generation@Command Line@Command Line" v="" />
+</name>
+</platform>
+<platform>
+<name v="5bca58cd-5542-421c-b08d-9513dbb687fd">
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@General@Strict Compilation" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@General@Preprocessor Definitions" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@General@Generate List Files" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@Optimization@Optimization Level" v="None" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@Optimization@Split Sections" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Assembly@General@Generate List Files" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@General@Generate Debugging Information" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Debug@Library Generation@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@General@Strict Compilation" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@General@Generate List Files" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@Optimization@Optimization Level" v="Size" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@Optimization@Split Sections" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Assembly@General@Generate List Files" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@General@Generate Debugging Information" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="5bca58cd-5542-421c-b08d-9513dbb687fd@Release@Library Generation@Command Line@Command Line" v="" />
+</name>
+</platform>
+<platform>
+<name v="fdb8e1ae-f83a-46cf-9446-1d703716f38a">
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@General@Strict Compilation" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@General@Preprocessor Definitions" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@General@Generate List Files" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@Optimization@Optimization Level" v="None" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@Optimization@Split Sections" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Assembly@General@Generate List Files" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@General@Generate Debugging Information" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Debug@Library Generation@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@General@Strict Compilation" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@General@Generate Debugging Information" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@General@Default Char Unsigned" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@General@Generate List Files" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@Optimization@Optimization Level" v="Size" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@Optimization@Inline Functions" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@Optimization@Split Sections" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Assembly@General@Suppress Warnings" v="False" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Assembly@General@Generate Debugging Information" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Assembly@General@Generate List Files" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@General@Additional Libraries" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@General@Additional Library Directories" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@General@Generate Debugging Information" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@General@Generate Map File" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@General@Use Default Libs" v="True" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@General@Custom Linker Script" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="fdb8e1ae-f83a-46cf-9446-1d703716f38a@Release@Library Generation@Command Line@Command Line" v="" />
+</name>
+</platform>
+<platform>
+<name v="c659702b-5f69-4783-8160-eb7977f1c97a">
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@Preprocessor Definitions" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@BrowseInformation" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@PrintListingFile" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@AssemblyCodeList" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@ListInclude" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@GenerateDebugInfo" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@FloatFuzzy" v="3" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@WarningLevel" v="2" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@IntPromote" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@General@InlineAsm" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@Optimization@OptimizationEmphasis" v="Size" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@Optimization@OptimizationLevel" v="2" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@Optimization@ObjectAdvanced" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@AssemblyConditionalList" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@AssemblyMacroList" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@AssemblyMacroExpansion" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@AssemblyGenDebugInfo" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@Preprocessor Definitions" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@General@PrintListingFile" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@PrintMapFile" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@CrossRef" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@GenMemoryMap" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@GenerateCodeListing" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@DisableUnrefWarnings" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@Recursions" v="10" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@RemoveUnused" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@General@WarningLevel" v="2" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@Debugging@GenDebugLines" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@Debugging@GenDebugPublicSyms" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@Debugging@GenDebugLocalSyms" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@Debugging@SymbolTypeInfoInOutput" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@CustomClasses@IDATALayout" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@CustomClasses@CODELayout" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@CustomClasses@DATALayout" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@CustomClasses@CustomClasses" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Debug@Library Generation@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@BrowseInformation" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@PrintListingFile" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@AssemblyCodeList" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@ListInclude" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@GenerateDebugInfo" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@FloatFuzzy" v="3" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@WarningLevel" v="2" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@IntPromote" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@General@InlineAsm" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@Optimization@OptimizationEmphasis" v="Size" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@Optimization@OptimizationLevel" v="8" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@Optimization@ObjectAdvanced" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@AssemblyConditionalList" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@AssemblyMacroList" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@AssemblyMacroExpansion" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@AssemblyGenDebugInfo" v="False" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@General@PrintListingFile" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@PrintMapFile" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@CrossRef" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@GenMemoryMap" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@GenerateCodeListing" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@DisableUnrefWarnings" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@Recursions" v="10" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@RemoveUnused" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@General@WarningLevel" v="2" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@Debugging@GenDebugLines" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@Debugging@GenDebugPublicSyms" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@Debugging@GenDebugLocalSyms" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@Debugging@SymbolTypeInfoInOutput" v="True" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@CustomClasses@IDATALayout" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@CustomClasses@CODELayout" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@CustomClasses@DATALayout" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@CustomClasses@CustomClasses" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="c659702b-5f69-4783-8160-eb7977f1c97a@Release@Library Generation@Command Line@Command Line" v="" />
+</name>
+</platform>
+<platform>
+<name v="4bd5669a-0e4e-4e1c-9625-e982dd945372">
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@Preprocessor Definitions" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@BrowseInformation" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@PrintListingFile" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@AssemblyCodeList" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@ListInclude" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@GenerateDebugInfo" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@FloatFuzzy" v="3" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@WarningLevel" v="2" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@IntPromote" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@General@InlineAsm" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@Optimization@OptimizationEmphasis" v="Size" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@Optimization@OptimizationLevel" v="2" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@Optimization@ObjectAdvanced" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@AssemblyConditionalList" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@AssemblyMacroList" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@AssemblyMacroExpansion" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@AssemblyGenDebugInfo" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@Preprocessor Definitions" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@General@PrintListingFile" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@PrintMapFile" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@CrossRef" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@GenMemoryMap" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@GenerateCodeListing" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@DisableUnrefWarnings" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@Recursions" v="10" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@RemoveUnused" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@General@WarningLevel" v="2" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@Debugging@GenDebugLines" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@Debugging@GenDebugPublicSyms" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@Debugging@GenDebugLocalSyms" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@Debugging@SymbolTypeInfoInOutput" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@CustomClasses@IDATALayout" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@CustomClasses@CODELayout" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@CustomClasses@DATALayout" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@CustomClasses@CustomClasses" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Debug@Library Generation@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@General@Output Directory" v="${ProjectDir}\${Platform}\${Config}" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@Additional Include Directories" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@BrowseInformation" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@PrintListingFile" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@AssemblyCodeList" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@ListInclude" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@GenerateDebugInfo" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@FloatFuzzy" v="3" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@WarningLevel" v="2" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@IntPromote" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@General@InlineAsm" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@Optimization@OptimizationEmphasis" v="Size" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@Optimization@OptimizationLevel" v="8" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@Optimization@ObjectAdvanced" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@C/C++@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@Additional Include Directories" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@AssemblyConditionalList" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@AssemblyMacroList" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@AssemblyMacroExpansion" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@AssemblyGenDebugInfo" v="False" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@Preprocessor Definitions" v="NDEBUG" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@General@PrintListingFile" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Assembly@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@Additional Link Files" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@PrintMapFile" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@CrossRef" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@GenMemoryMap" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@GenerateCodeListing" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@DisableUnrefWarnings" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@Recursions" v="10" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@RemoveUnused" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@General@WarningLevel" v="2" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@Debugging@GenDebugLines" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@Debugging@GenDebugPublicSyms" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@Debugging@GenDebugLocalSyms" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@Debugging@SymbolTypeInfoInOutput" v="True" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@CustomClasses@IDATALayout" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@CustomClasses@CODELayout" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@CustomClasses@DATALayout" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@CustomClasses@CustomClasses" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Linker@Command Line@Command Line" v="" />
+<name_val_pair name="4bd5669a-0e4e-4e1c-9625-e982dd945372@Release@Library Generation@Command Line@Command Line" v="" />
+</name>
+</platform>
+</platforms>
+<project_current_platform v="c9323d49-d323-40b8-9b59-cc008d68a989" />
+<project_current_config v="Debug" />
+<component_generation v="PSoC Creator  1.0 Beta 5.0" />
+<WriteAppVersionLastSavedWith v="1.0.0.7006" />
+<WriteAppMarketingVersionLastSavedWith v=" 1.0 Beta 5.0" />
+<project_id v="9e9f5d40-8225-42bc-b37e-a422e69434ee" />
+<custom_data>
+<CyGuid_7a7929f8-5e3b-4f86-a093-2d4ee6513111 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtProjectCustomData" version="1">
+<CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997 type_name="CyDesigner.Common.Base.CyCustomData" version="2">
+<userData />
+</CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
+<properties />
+</CyGuid_7a7929f8-5e3b-4f86-a093-2d4ee6513111>
+</custom_data><project_id v="f3237b51-6524-4c88-8fd2-578f081fa3cc" /><project_id v="a40b281b-c9dd-4dea-8c29-577cbf2827c6" /><project_id v="a5adff5a-ef88-4aef-8958-534c46b4ecae" /><project_id v="25e06190-d84f-4785-91f2-d0dc31acd6f6" /><project_id v="288b4b35-9586-4050-8d50-b7e055397c48" /><project_id v="ebca069e-cadd-4f4e-bda5-0098cdb2ad9c" /><project_id v="f1b49ebe-e60a-4689-ad06-e0a0f9543b86" /><project_id v="e3686af0-bc0a-4254-814b-d614be05e424" /><project_id v="f711005c-6526-4dbe-afbf-e1196d5d44d9" /><project_id v="40b6d9c0-3101-4ee8-bb63-23e10f0c70e6" /><project_id v="7c9345be-0311-4ce6-a2f9-fb7088551671" /><project_id v="c0c8462f-b958-4cb6-ace7-2525f1aa65b7" /><project_id v="202f1ba6-720f-466d-9aa4-ea3ad3bf1f27" /><project_id v="9e5086cb-987a-49c6-b35f-d03367cdf392" /><project_id v="e6a8ea23-2a82-47f5-8219-24c9f1c83691" /></CyGuid_49cfd574-032a-4a64-b7be-d4eeeaf25e43>
+</CyGuid_60697ce6-dce2-4816-8680-4de0635742eb>
+<top_block v="TopDesign" />
+<selected_device v="CY8C5588AXI-060" />
+<CyGuid_495451fe-d201-4d01-b22d-5d3f5609ac37 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtBlockMgr" version="4">
+<library_deps />
+<CyGuid_b0d670ad-d48f-47cb-9d0b-b1642bab195c type_name="CyDesigner.Common.Base.CyExprTypeMgr" version="1" />
+<ignored_deps />
+</CyGuid_495451fe-d201-4d01-b22d-5d3f5609ac37>
+<selected_device_revision v="ES1" />
+<boot_component v="cy_boot_v2_0" />
+<BootloaderTag v="" />
+</CyGuid_fec8f9e8-2365-4bdb-96d3-a4380222e01b>
+</CyXmlSerializer>

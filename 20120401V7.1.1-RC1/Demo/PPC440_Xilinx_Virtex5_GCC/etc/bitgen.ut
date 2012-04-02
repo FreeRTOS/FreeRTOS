@@ -1,0 +1,14 @@
+-g TdoPin:PULLNONE
+-g DriveDone:No
+-g StartUpClk:JTAGCLK
+-g DONE_cycle:4
+-g GTS_cycle:5
+-g TckPin:PULLUP
+-g TdiPin:PULLUP
+-g TmsPin:PULLUP
+-g DonePipe:No
+-g GWE_cycle:6
+-g LCK_cycle:NoWait
+-g Security:NONE
+-g Persist:No
+

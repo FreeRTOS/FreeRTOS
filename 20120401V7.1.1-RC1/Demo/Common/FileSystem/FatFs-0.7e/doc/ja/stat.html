@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_stat</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_stat</h2>
+<pre>
+FRESULT f_stat (
+  const char* <em>FileName</em>,  /* ファイルまたはディレクトリ名へのポインタ */
+  FILINFO* <em>FileInfo</em>      /* ファイル情報構造体へのポインタ *
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>FileName</dt>
+<dd>情報を得るファイルまたはディレクトリ名の<tt>'\0'</tt>で終わる文字列を指すポインタを指定します。</dd>
+<dt>FileInfo</dt>
+<dd>読み出したファイル情報を格納するファイル情報構造体へのポインタを指定します。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>戻り値</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>正常終了。</dd>
+<dt>FR_NO_FILE</dt>
+<dd>ファイルまたはディレクトリが見つからない。</dd>
+<dt>FR_NO_PATH</dt>
+<dd>パスが見つからない。</dd>
+<dt>FR_INVALID_NAME</dt>
+<dd>パス名が不正。</dd>
+<dt>FR_INVALID_DRIVE</dt>
+<dd>ドライブ番号が不正。</dd>
+<dt>FR_NOT_READY</dt>
+<dd>メディアがセットされていないなど、物理ドライブが動作不能状態。</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>ディスク・エラーによる失敗。</dd>
+<dt>FR_INT_ERR</dt>
+<dd>不正なFAT構造または内部エラーによる失敗。</dd>
+<dt>FR_NOT_ENABLED</dt>
+<dd>論理ドライブにワークエリアが割り当てられていない。</dd>
+<dt>FR_NO_FILESYSTEM</dt>
+<dd>ディスク上に有効なFATボリュームが見つからない。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>解説</h4>
+<p>ファイルまたはディレクトリに関する情報を得ます。得られるファイル情報の詳細については <tt>FILINFO</tt>構造体を参照してください。</p>
+</div>
+
+
+<div class="para">
+<h4>対応情報</h4>
+<p><tt>_FS_MINIMIZE == 0</tt>のときに使用可能です。</p>
+</div>
+
+
+<div class="para">
+<h4>参照</h4>
+<p><tt><a href="opendir.html">f_opendir</a>, <a href="readdir.html">f_readdir</a>, <a href="sfileinfo.html">FILINFO</a>, <a href="sdir.html">DIR</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

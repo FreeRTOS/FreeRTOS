@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_j.html">
+<link rel="stylesheet" href="../css_j.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_read</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_read</h2>
+<p>ファイルからデータを読み出します。</p>
+<pre>
+FRESULT f_read (
+  FIL* <em>FileObject</em>,    /* ファイル・オブジェクト構造体 */
+  void* <em>Buffer</em>,       /* 読み出したデータを格納するバッファ */
+  UINT <em>ByteToRead</em>,    /* 読み出すバイト数 */
+  UINT* <em>ByteRead</em>      /* 読み出されたバイト数 */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>引数</h4>
+<dl class="par">
+<dt>FileObject</dt>
+<dd>ファイル・オブジェクト構造体へのポインタを指定します。</dd>
+<dt>Buffer</dt>
+<dd>読み出したデータを格納するバッファを指すポインタを指定します。</dd>
+<dt>ByteToRead</dt>
+<dd>読み出すバイト数(0～UINTの最大値)を指定します。</dd>
+<dt>ByteRead</dt>
+<dd>実際に読み出されたバイト数を格納する変数を指すポインタを指定します。戻り値は関数の成否にかかわらず常に有効です。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>戻り値</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>正常終了。</dd>
+<dt>FR_DENIED</dt>
+<dd>非読み込みモードで開いたファイルから読み込もうとした。</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>ディスク・エラーによる失敗。</dd>
+<dt>FR_INT_ERR</dt>
+<dd>不正なFAT構造または内部エラーによる失敗。</dd>
+<dt>FR_NOT_READY</dt>
+<dd>メディアがセットされていないなど、物理ドライブが動作不能状態。</dd>
+<dt>FR_INVALID_OBJECT</dt>
+<dd>無効なファイル・オブジェクト。</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>解説</h4>
+<p>読み込み開始位置は、現在のファイルR/Wポインタからになります。ファイルR/Wポインタは読み込まれたバイト数だけ進みます。読み込み中にファイルの終端に達すると、<tt>*ByteRead</tt>は<tt>ByteToRead</tt>よりも小さくなります。</p>
+</div>
+
+
+<div class="para">
+<h4>対応情報</h4>
+<p>全ての構成で使用可能です。</p>
+</div>
+
+
+<div class="para">
+<h4>参照</h4>
+<p><tt><a href="open.html">f_open</a>, <a href="gets.html">fgets</a>, <a href="write.html">f_write</a>, <a href="close.html">f_close</a>, <a href="sfile.html">FIL</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_j.html">戻る</a></p>
+</body>
+</html>

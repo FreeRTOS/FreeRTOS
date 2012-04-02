@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_e.html">
+<link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
+<title>FatFs - f_readdir</title>
+</head>
+
+<body>
+
+<div class="para">
+<h2>f_readdir</h2>
+<p>The f_readdir function reads directory entries.</p>
+<pre>
+FRESULT f_readdir (
+  DIR* <em>DirObject</em>,    /* Pointer to the open directory object */
+  FILINFO* <em>FileInfo</em>  /* Pointer to the file information structure */
+);
+</pre>
+</div>
+
+<div class="para">
+<h4>Parameters</h4>
+<dl class="par">
+<dt>DirObject</dt>
+<dd>Pointer to the open directory object.</dd>
+<dt>FileInfo</dt>
+<dd>Pointer to the file information structure to store the read item.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Return Values</h4>
+<dl class="ret">
+<dt>FR_OK (0)</dt>
+<dd>The function succeeded.</dd>
+<dt>FR_NOT_READY</dt>
+<dd>The disk drive cannot work due to no medium in the drive or any other reason.</dd>
+<dt>FR_DISK_ERR</dt>
+<dd>The function failed due to an error in the disk function.</dd>
+<dt>FR_INT_ERR</dt>
+<dd>The function failed due to a wrong FAT structure or an internal error.</dd>
+<dt>FR_INVALID_OBJECT</dt>
+<dd>The directory object is invalid.</dd>
+</dl>
+</div>
+
+
+<div class="para">
+<h4>Description</h4>
+<p>The f_readdir function reads directory entries in sequence. All items in the directory can be read by calling f_readdir function repeatedly. When all directory entries have been read and no item to read, the function returns a null string into <tt>f_name[]</tt> member without any error. When a null pointer is given to the <tt>FileInfo</tt>, the read index of the directory object will be rewinded.</p>
+<p>When LFN feature is enabled, <tt>lfname</tt> and <tt>lfsize</tt> in the file information structure must be initialized with valid value prior to use the f_readdir function. The <tt>lfname</tt> is a pointer to the string buffer to return the long file name. The <tt>lfsize</tt> is the size of the string buffer in unit of character. If either the size of read buffer or LFN working buffer is insufficient for the LFN or the object has no LFN, a null string will be returned to the LFN read buffer. If the LFN contains any charactrer that cannot be converted to OEM code, a null string will be returned but this is not the case on Unicode API configuration. When <tt>lfname</tt> is a NULL, nothing of the LFN is returned. When the object has no LFN, any small capitals can be contained in the SFN.</p>
+<p>When relative path feature is enabled <tt>(_FS_RPATH == 1)</tt>, "." and ".." entries are not filtered out and it will appear in the read entries.</p>
+</div>
+
+
+<div class="para">
+<h4>QuickInfo</h4>
+<p>Available when <tt>_FS_MINIMIZE &lt;= 1</tt>.</p>
+</div>
+
+
+<div class="para">
+<h4>Sample Code</h4>
+<pre>
+FRESULT scan_files (char* path)
+{
+    FRESULT res;
+    FILINFO fno;
+    DIR dir;
+    int i;
+    char *fn;
+#if _USE_LFN
+    static char lfn[_MAX_LFN * (_DF1S ? 2 : 1) + 1];
+    fno.lfname = lfn;
+    fno.lfsize = sizeof(lfn);
+#endif
+
+
+    res = f_opendir(&amp;dir, path);
+    if (res == FR_OK) {
+        i = strlen(path);
+        for (;;) {
+            res = f_readdir(&amp;dir, &amp;fno);
+            if (res != FR_OK || fno.fname[0] == 0) break;
+            if (fno.fname[0] == '.') continue;
+#if _USE_LFN
+            fn = *fno.lfname ? fno.lfname : fno.fname;
+#else
+            fn = fno.fname;
+#endif
+            if (fno.fattrib &amp; AM_DIR) {
+                sprintf(&amp;path[i], "/%s", fn);
+                res = scan_files(path);
+                if (res != FR_OK) break;
+                path[i] = 0;
+            } else {
+                printf("%s/%s\n", path, fn);
+            }
+        }
+    }
+
+    return res;
+}
+</pre>
+</div>
+
+
+<div class="para">
+<h4>See Also</h4>
+<p><tt><a href="opendir.html">f_opendir</a>, <a href="stat.html">f_stat</a>, <a href="sfileinfo.html">FILINFO</a>, <a href="sdir.html">DIR</a></tt></p>
+</div>
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
+</body>
+</html>

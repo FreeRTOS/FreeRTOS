@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="alternate" hreflang="ja" title="Japanese version" href="00index_j.html">
+<link rel="stylesheet" href="css_e.css" type="text/css" media="screen" title="ELM Default">
+<title>ELM - FAT File System Module</title>
+</head>
+
+<body>
+<h1>FAT File System Module</h1>
+<hr>
+
+<div class="abst">
+<img src="img/layers.png" class="rset" width="245" height="255" alt="layer">
+<p>FatFs is a generic FAT file system module for small embedded systems. The FatFs is written in compliance with ANSI C and completely separated from the disk I/O layer. Therefore it is independent of hardware architecture. It can be incorporated into low cost microcontrollers, such as AVR, 8051, PIC, ARM, Z80 and etc..., without any change. Petit FatFs module is also available <a href="http://elm-chan.org/fsw/ff/00index_p.html">here</a>.</p>
+
+<h4>Features</h4>
+<ul>
+ <li>Windows compatible FAT12/16/32 file system.</li>
+ <li>Platform independent. Easy to port.</li>
+ <li>Very small footprint for code and work area.</li>
+ <li>Various configuration options:
+  <ul>
+   <li>Multiple volumes (physical drives and partitions).</li>
+   <li>Multiple OEM code pages including DBCS.</li>
+   <li>Long file name (LFN) support in OEM code or Unicode.</li>
+   <li>RTOS support.</li>
+   <li>Multiple sector size support.</li>
+   <li>Read-only, minimized API, I/O buffer and etc...</li>
+  </ul>
+ </li>
+</ul>
+</div>
+
+
+<div class="para">
+<h3>Application Interface</h3>
+<p>FatFs module provides following functions to access the FAT volumes.</p>
+<ul>
+<li><a href="en/mount.html">f_mount</a> - Register/Unregister a Work Area</li>
+<li><a href="en/open.html">f_open</a> - Open/Create a File</li>
+<li><a href="en/close.html">f_close</a> - Close a File</li>
+<li><a href="en/read.html">f_read</a> - Read File</li>
+<li><a href="en/write.html">f_write</a> - Write File</li>
+<li><a href="en/lseek.html">f_lseek</a> - Move R/W Pointer, Expand File Size</li>
+<li><a href="en/truncate.html">f_truncate</a> - Truncate File Size</li>
+<li><a href="en/sync.html">f_sync</a> - Flush Cached Data</li>
+<li><a href="en/opendir.html">f_opendir</a> - Open a Directory</li>
+<li><a href="en/readdir.html">f_readdir</a> - Read a Directory Item</li>
+<li><a href="en/getfree.html">f_getfree</a> - Get Free Clusters</li>
+<li><a href="en/stat.html">f_stat</a> - Get File Status</li>
+<li><a href="en/mkdir.html">f_mkdir</a> - Create a Directory</li>
+<li><a href="en/unlink.html">f_unlink</a> - Remove a File or Directory</li>
+<li><a href="en/chmod.html">f_chmod</a> - Change Attribute</li>
+<li><a href="en/utime.html">f_utime</a> - Change Timestamp</li>
+<li><a href="en/rename.html">f_rename</a> - Rename/Move a File or Directory</li>
+<li><a href="en/mkfs.html">f_mkfs</a> - Create a File System on the Drive</li>
+<li><a href="en/forward.html">f_forward</a> - Forward file data to the stream directly</li>
+<li><a href="en/chdir.html">f_chdir</a> - Change current directory</li>
+<li><a href="en/chdrive.html">f_chdrive</a> - Change current drive</li>
+<li><a href="en/gets.html">f_gets</a> - Read a string</li>
+<li><a href="en/putc.html">f_putc</a> - Write a character</li>
+<li><a href="en/puts.html">f_puts</a> - Write a string</li>
+<li><a href="en/printf.html">f_printf</a> - Write a formatted string</li>
+</ul>
+</div>
+
+
+<div class="para">
+<h3>Disk I/O Interface</h3>
+<p>Since the FatFs module is completely separated from disk I/O layer, it requires following functions to lower layer to read/write the physical disk and to get current time. The low level disk I/O module is not a part of FatFs module so that it must be provided by user. The sample drivers are also available in the resources.</p>
+<ul>
+<li><a href="en/dinit.html">disk_initialize</a> - Initialize disk drive</li>
+<li><a href="en/dstat.html">disk_status</a> - Get disk status</li>
+<li><a href="en/dread.html">disk_read</a> - Read sector(s)</li>
+<li><a href="en/dwrite.html">disk_write</a> - Write sector(s)</li>
+<li><a href="en/dioctl.html">disk_ioctl</a> - Control device dependent features</li>
+<li><a href="en/fattime.html">get_fattime</a> - Get current time</li>
+</ul>
+</div>
+
+
+<div class="para">
+<h3>Resources</h3>
+<p>The FatFs module is a free software opened for education, research and development. You can use, modify and/or republish it for personal, non-profit use or commercial products without any restriction under your responsibility.</p>
+<ul>
+<li><a href="http://elm-chan.org/fsw/ff/bd/"><em>FatFs User Forum</em></a></li>
+<li><a href="en/appnote.html">FatFs module application note</a></li>
+<li><a href="http://www.siwawi.arubi.uni-kl.de/avr_projects/arm_projects/">ARM-Projects by Martin THOMAS</a> (examples for LPC2000, AT91SAM and STM32)</li>
+<li><a href="http://www.microsoft.com/whdc/system/platform/firmware/fatgen.mspx">FAT32 Specification by Microsoft</a> (The reference document on FAT file system)</li>
+<li><a href="http://elm-chan.org/docs/mmc/mmc_e.html">How to Use MMC/SDC</a></li>
+<li><a href="img/rwtest.png">Benchmark 1</a> (ATmega64/9.2MHz with MMC via SPI, HDD/CFC via GPIO)</li>
+<li><a href="img/rwtest2.png">Benchmark 2</a> (LPC2368/72MHz with MMC via MCI)</li>
+</ul>
+</div>
+
+
+</body>
+</html>

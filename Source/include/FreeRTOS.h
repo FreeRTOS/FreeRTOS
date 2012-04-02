@@ -234,6 +234,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define portCLEAN_UP_TCB( pxTCB ) ( void ) pxTCB
 #endif
 
+#ifndef portSETUP_TCB
+	#define portSETUP_TCB( pxTCB ) ( void ) pxTCB
+#endif
+
 #ifndef configQUEUE_REGISTRY_SIZE
 	#define configQUEUE_REGISTRY_SIZE 0U
 #endif
@@ -310,6 +314,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 /* The following event macros are embedded in the kernel API calls. */
+
+#ifndef traceMOVED_TASK_TO_READY_STATE
+	#define traceMOVED_TASK_TO_READY_STATE( pxTCB )
+#endif
 
 #ifndef traceQUEUE_CREATE	
 	#define traceQUEUE_CREATE( pxNewQueue )

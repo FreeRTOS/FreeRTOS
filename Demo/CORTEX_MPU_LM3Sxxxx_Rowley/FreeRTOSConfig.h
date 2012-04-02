@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -79,6 +79,7 @@
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				0
+#define configUSE_COUNTING_SEMAPHORES	0
 #define configCHECK_FOR_STACK_OVERFLOW	0
 #define configUSE_RECURSIVE_MUTEXES		0
 #define configQUEUE_REGISTRY_SIZE		0

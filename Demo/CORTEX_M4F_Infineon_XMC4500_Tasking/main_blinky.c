@@ -174,7 +174,10 @@ void main_blinky( void )
 	there was insufficient FreeRTOS heap memory available for the idle and/or
 	timer tasks	to be created.  See the memory management section on the
 	FreeRTOS web site for more details. */
-	for( ;; );
+	for( ;; )
+	{
+		__asm volatile( "NOP" );
+	}
 }
 /*-----------------------------------------------------------*/
 

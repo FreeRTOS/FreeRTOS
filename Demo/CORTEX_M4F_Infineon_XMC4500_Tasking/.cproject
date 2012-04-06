@@ -59,6 +59,62 @@
 				<toolInfo>TASKING program builder v4.2r1 Build 063</toolInfo>
 			</storageModule>
 		</cconfiguration>
+		<cconfiguration id="com.tasking.config.arm.abs.debug.1826238485.654381753">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.tasking.config.arm.abs.debug.1826238485.654381753" moduleId="org.eclipse.cdt.core.settings" name="Optimised">
+				<externalSettings/>
+				<extensions>
+					<extension id="com.tasking.managedbuilder.TASKING_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.tasking.managedbuilder.TskRegexErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="abs" artifactName="RTOSDemo" buildArtefactType="com.tasking.arm.buildArtefactType.elf" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=com.tasking.arm.buildArtefactType.elf" cleanCommand="&quot;${PRODDIR}/bin/rm&quot; -rf" description="" id="com.tasking.config.arm.abs.debug.1826238485.654381753" name="Optimised" parent="com.tasking.config.arm.abs.debug">
+					<folderInfo id="com.tasking.config.arm.abs.debug.1826238485.654381753." name="/" resourcePath="">
+						<toolChain id="com.tasking.arm.abs.debug.88571467" name="TASKING VX-toolset for ARM" superClass="com.tasking.arm.abs.debug">
+							<option id="com.tasking.arm.pluginVersion.2020974908" name="Plugin version" superClass="com.tasking.arm.pluginVersion" value="1.77.0.0" valueType="string"/>
+							<option id="com.tasking.arm.prodDir.543770190" name="Product directory:" superClass="com.tasking.arm.prodDir" value="${eclipse_home}/.." valueType="string"/>
+							<option id="com.tasking.arm.cpu.407790444" name="Processor:" superClass="com.tasking.arm.cpu" value="xmc4500x1024" valueType="string"/>
+							<targetPlatform archList="all" binaryParser="com.tasking.managedbuilder.TASKING_ELF" id="com.tasking.arm.platform.abs.debug.1538796444" name="Debug" osList="" superClass="com.tasking.arm.platform.abs.debug"/>
+							<builder buildPath="${workspace_loc:/RTOSDemo/Debug}" id="com.tasking.arm.builder.abs.debug.362325101" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="TASKING ARM Makefile generator" parallelBuildOn="true" parallelizationNumber="-1" superClass="com.tasking.arm.builder.abs.debug"/>
+							<tool id="com.tasking.arm.cc.abs.debug.2020315503" name="C/C++ Compiler" superClass="com.tasking.arm.cc.abs.debug">
+								<option id="com.tasking.arm.cc.pr36858.710990228" name="workaround for PR36858" superClass="com.tasking.arm.cc.pr36858" value="true" valueType="string"/>
+								<option id="com.tasking.arm.cc.includePaths.179492897" name="Include paths" superClass="com.tasking.arm.cc.includePaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_M4F_Infineon_XMC4500_Tasking\FreeRTOS_Source\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_M4F_Infineon_XMC4500_Tasking\FreeRTOS_Source\portable\Tasking\ARM_CM4F&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_M4F_Infineon_XMC4500_Tasking&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_M4F_Infineon_XMC4500_Tasking\src\Common_Demo_Source\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_M4F_Infineon_XMC4500_Tasking\Common_Demo_Source\include&quot;"/>
+								</option>
+								<option id="com.tasking.arm.cc.optimize.1645610939" name="Optimization level:" superClass="com.tasking.arm.cc.optimize" value="com.tasking.arm.cc.optimize.3" valueType="enumerated"/>
+								<option id="com.tasking.arm.cc.globalTypeChecking.651396284" name="Perform global type checking on C code" superClass="com.tasking.arm.cc.globalTypeChecking" value="false" valueType="boolean"/>
+								<inputType id="com.tasking.arm.cppInputType.480346809" name="C++" superClass="com.tasking.arm.cppInputType"/>
+								<inputType id="com.tasking.arm.cpp.cInputType.1700855572" name="C" superClass="com.tasking.arm.cpp.cInputType"/>
+								<inputType id="com.tasking.arm.cc.msInputType.2058110844" name="MS" superClass="com.tasking.arm.cc.msInputType"/>
+							</tool>
+							<tool id="com.tasking.arm.as.abs.debug.946900032" name="Assembler" superClass="com.tasking.arm.as.abs.debug">
+								<option id="com.tasking.arm.as.nowarning.596975067" name="Suppress warnings" superClass="com.tasking.arm.as.nowarning" valueType="stringList"/>
+								<option id="com.tasking.arm.as.symbolScopeGlobal.979702489" name="Set default symbol scope to global" superClass="com.tasking.arm.as.symbolScopeGlobal" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.as.emitLocals.equ.1925547304" name="Emit local EQU symbols" superClass="com.tasking.arm.as.emitLocals.equ" value="false" valueType="boolean"/>
+								<inputType id="com.tasking.arm.asmInputType.307080549" name="ASM" superClass="com.tasking.arm.asmInputType"/>
+							</tool>
+							<tool id="com.tasking.arm.lk.abs.debug.694435973" name="Linker" superClass="com.tasking.arm.lk.abs.debug">
+								<option id="com.tasking.arm.lk.nowarning.460535977" name="Suppress warnings" superClass="com.tasking.arm.lk.nowarning" valueType="stringList">
+									<listOptionValue builtIn="false" value="163"/>
+								</option>
+								<option id="com.tasking.arm.lk.optimize.deleteUnreferencedSections.646779268" name="Delete unreferenced sections" superClass="com.tasking.arm.lk.optimize.deleteUnreferencedSections" value="true" valueType="boolean"/>
+								<option id="com.tasking.arm.lk.misc.longBranchVeneers.1482188034" name="Generate long-branch veneers" superClass="com.tasking.arm.lk.misc.longBranchVeneers" value="false" valueType="boolean"/>
+								<inputType id="com.tasking.arm.lkObjInputType.543385366" name="OBJ" superClass="com.tasking.arm.lkObjInputType"/>
+								<inputType id="com.tasking.arm.lkLibInputType.787930413" name="LIB" superClass="com.tasking.arm.lkLibInputType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="com.tasking.toolInfo">
+				<toolInfo>TASKING program builder v4.2r1 Build 063</toolInfo>
+			</storageModule>
+		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="RTOSDemo.com.tasking.arm.target.abs.112448275" name="TASKING ARM Application" projectType="com.tasking.arm.target.abs"/>

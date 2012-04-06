@@ -30,19 +30,23 @@
 									<listOptionValue builtIn="false" value="&quot;C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_M4F_Infineon_XMC4500_Tasking\Common_Demo_Source\include&quot;"/>
 								</option>
 								<option id="com.tasking.arm.cc.optimize.1219621169" name="Optimization level:" superClass="com.tasking.arm.cc.optimize" value="com.tasking.arm.cc.optimize.0" valueType="enumerated"/>
-								<option id="com.tasking.arm.cc.globalTypeChecking.1886266211" superClass="com.tasking.arm.cc.globalTypeChecking" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.cc.globalTypeChecking.1886266211" name="Perform global type checking on C code" superClass="com.tasking.arm.cc.globalTypeChecking" value="false" valueType="boolean"/>
 								<inputType id="com.tasking.arm.cppInputType.1974521058" name="C++" superClass="com.tasking.arm.cppInputType"/>
 								<inputType id="com.tasking.arm.cpp.cInputType.1635312661" name="C" superClass="com.tasking.arm.cpp.cInputType"/>
 								<inputType id="com.tasking.arm.cc.msInputType.1200945921" name="MS" superClass="com.tasking.arm.cc.msInputType"/>
 							</tool>
 							<tool id="com.tasking.arm.as.abs.debug.1112996000" name="Assembler" superClass="com.tasking.arm.as.abs.debug">
 								<option id="com.tasking.arm.as.nowarning.1719279978" name="Suppress warnings" superClass="com.tasking.arm.as.nowarning" valueType="stringList"/>
+								<option id="com.tasking.arm.as.symbolScopeGlobal.2097182133" name="Set default symbol scope to global" superClass="com.tasking.arm.as.symbolScopeGlobal" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.as.emitLocals.equ.620078414" name="Emit local EQU symbols" superClass="com.tasking.arm.as.emitLocals.equ" value="false" valueType="boolean"/>
 								<inputType id="com.tasking.arm.asmInputType.1386473095" name="ASM" superClass="com.tasking.arm.asmInputType"/>
 							</tool>
 							<tool id="com.tasking.arm.lk.abs.debug.1964647065" name="Linker" superClass="com.tasking.arm.lk.abs.debug">
 								<option id="com.tasking.arm.lk.nowarning.595656818" name="Suppress warnings" superClass="com.tasking.arm.lk.nowarning" valueType="stringList">
 									<listOptionValue builtIn="false" value="163"/>
 								</option>
+								<option id="com.tasking.arm.lk.optimize.deleteUnreferencedSections.135265458" name="Delete unreferenced sections" superClass="com.tasking.arm.lk.optimize.deleteUnreferencedSections" value="true" valueType="boolean"/>
+								<option id="com.tasking.arm.lk.misc.longBranchVeneers.1174777913" superClass="com.tasking.arm.lk.misc.longBranchVeneers" value="true" valueType="boolean"/>
 								<inputType id="com.tasking.arm.lkObjInputType.747815267" name="OBJ" superClass="com.tasking.arm.lkObjInputType"/>
 								<inputType id="com.tasking.arm.lkLibInputType.124974190" name="LIB" superClass="com.tasking.arm.lkLibInputType"/>
 							</tool>
@@ -54,9 +58,7 @@
 			<storageModule moduleId="com.tasking.toolInfo">
 				<toolInfo>TASKING VX-toolset for ARM Cortex: object linker v4.2r1 Build 135 SN 00521976</toolInfo>
 				<toolInfo>TASKING VX-toolset for ARM Cortex: control program v4.2r1 Build 118</toolInfo>
-				<toolInfo>TASKING VX-toolset for ARM Cortex: assembler v4.2r1 Build 141</toolInfo>
 				<toolInfo>TASKING program builder v4.2r1 Build 063</toolInfo>
-				<toolInfo>TASKING VX-toolset for ARM Cortex: C compiler v4.2r1 Build 652 SN 00521976</toolInfo>
 			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="com.tasking.config.arm.abs.release.1347721718">

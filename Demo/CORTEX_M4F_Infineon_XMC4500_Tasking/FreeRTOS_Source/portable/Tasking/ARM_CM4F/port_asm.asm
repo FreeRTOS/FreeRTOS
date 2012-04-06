@@ -87,7 +87,7 @@ PendSV_Handler: .type func
 	ldr r0, ulMaxSyscallInterruptPriorityConst
 	ldr r0, [r0]
 	msr basepri, r0
-;	bl vTaskSwitchContext
+	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
 	ldmia sp!, {r3, r14}

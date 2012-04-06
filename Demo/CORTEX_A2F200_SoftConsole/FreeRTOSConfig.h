@@ -52,10 +52,11 @@
 */
 
 
-/* The following #error directive is to remind users that a batch file must be
+/* 
+ * The following #error directive is to remind users that a batch file must be
  * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within CCS4!  Once it has been executed, re-open or refresh 
- * the CCS4 project and remove the #error line below.
+ * executed from within the IDE!  Once it has been executed, re-open or refresh 
+ * the Eclipse project and remove the #error line below.
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 

@@ -55,11 +55,7 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule moduleId="com.tasking.toolInfo">
-				<toolInfo>TASKING VX-toolset for ARM Cortex: object linker v4.2r1 Build 135 SN 00521976</toolInfo>
-				<toolInfo>TASKING VX-toolset for ARM Cortex: control program v4.2r1 Build 118</toolInfo>
-				<toolInfo>TASKING VX-toolset for ARM Cortex: assembler v4.2r1 Build 141</toolInfo>
 				<toolInfo>TASKING program builder v4.2r1 Build 063</toolInfo>
-				<toolInfo>TASKING VX-toolset for ARM Cortex: C compiler v4.2r1 Build 652 SN 00521976</toolInfo>
 			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="com.tasking.config.arm.abs.debug.1826238485.654381753">

@@ -17,7 +17,8 @@ IF EXIST src\FreeRTOS_Source Goto END
 
     REM Create the required directory structure.
     MD src\FreeRTOS_Source
-    MD src\FreeRTOS_Source\include    
+    MD src\FreeRTOS_Source\include
+    MD src\FreeRTOS_Source\portable
     MD src\FreeRTOS_Source\portable\GCC
     MD src\FreeRTOS_Source\portable\GCC\ARM_CM4F
     MD src\FreeRTOS_Source\portable\MemMang    

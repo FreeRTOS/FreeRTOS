@@ -69,7 +69,7 @@ PendSV_Handler: .type func
 	mrs r0, psp
 
 	;Get the location of the current TCB.
-	ldr	r3, =pxCurrentTCB
+	ldr.w	r3, =pxCurrentTCB
 	ldr	r2, [r3]
 
 	;Is the task using the FPU context?  If so, push high vfp registers.
@@ -84,8 +84,7 @@ PendSV_Handler: .type func
 	str r0, [r2]
 
 	stmdb sp!, {r3, r14}
-	ldr r0, ulMaxSyscallInterruptPriorityConst
-	ldr r0, [r0]
+	ldr.w r0, =ulMaxSyscallInterruptPriorityConst
 	msr basepri, r0
 	bl vTaskSwitchContext
 	mov r0, #0
@@ -117,7 +116,7 @@ PendSV_Handler: .type func
 	.align 4
 SVC_Handler: .type func
 	;Get the location of the current TCB.
-	ldr	r3, =pxCurrentTCB
+	ldr.w	r3, =pxCurrentTCB
 	ldr r1, [r3]
 	ldr r0, [r1]
 	;Pop the core registers.
@@ -136,7 +135,7 @@ SVC_Handler: .type func
 	.align 4
 vPortStartFirstTask .type func
 	;Use the NVIC offset register to locate the stack.
-	ldr r0, =0xE000ED08
+	ldr.w r0, =0xE000ED08
 	ldr r0, [r0]
 	ldr r0, [r0]
 	;Set the msp back to the start of the stack.
@@ -154,7 +153,7 @@ vPortStartFirstTask .type func
 	.align 4
 vPortEnableVFP .type func
 	;The FPU enable bits are in the CPACR.
-	ldr r0, =0xE000ED88
+	ldr.w r0, =0xE000ED88
 	ldr	r1, [r0]
 
 	;Enable CP10 and CP11 coprocessors, then save back.

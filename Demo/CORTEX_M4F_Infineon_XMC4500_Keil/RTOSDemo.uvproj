@@ -464,16 +464,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Other</GroupName>
-          <Files>
-            <File>
-              <FileName>readme.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\readme.txt</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Common_Demo_Source</GroupName>
           <Files>
             <File>

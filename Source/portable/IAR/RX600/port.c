@@ -99,7 +99,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 {
 	/* R0 is not included as it is the stack pointer. */
 	
-	*pxTopOfStack = 0xdeadbeef;
+	*pxTopOfStack = 0x00;
 	pxTopOfStack--;
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;

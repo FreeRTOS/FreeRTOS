@@ -56,11 +56,9 @@
 	RSEG    CODE:CODE(2)
 	thumb
 
-	EXTERN vPortYieldFromISR
 	EXTERN pxCurrentTCB
 	EXTERN vTaskSwitchContext
 
-	PUBLIC vSetMSP
 	PUBLIC xPortPendSVHandler
 	PUBLIC vPortSetInterruptMask
 	PUBLIC vPortClearInterruptMask
@@ -68,12 +66,7 @@
 	PUBLIC vPortStartFirstTask
 	PUBLIC vPortEnableVFP
 
-/*-----------------------------------------------------------*/
 
-vSetMSP
-	msr msp, r0
-	bx lr
-	
 /*-----------------------------------------------------------*/
 
 xPortPendSVHandler:
@@ -137,7 +130,7 @@ vPortClearInterruptMask:
 
 /*-----------------------------------------------------------*/
 
-vPortSVCHandler;
+vPortSVCHandler:
 	/* Get the location of the current TCB. */
 	ldr	r3, =pxCurrentTCB
 	ldr r1, [r3]
@@ -151,7 +144,7 @@ vPortSVCHandler;
 
 /*-----------------------------------------------------------*/
 
-vPortStartFirstTask
+vPortStartFirstTask:
 	/* Use the NVIC offset register to locate the stack. */
 	ldr r0, =0xE000ED08
 	ldr r0, [r0]
@@ -164,7 +157,7 @@ vPortStartFirstTask
 
 /*-----------------------------------------------------------*/
 
-vPortEnableVFP
+vPortEnableVFP:
 	/* The FPU enable bits are in the CPACR. */
 	ldr.w r0, =0xE000ED88
 	ldr	r1, [r0]

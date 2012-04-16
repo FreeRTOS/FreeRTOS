@@ -119,7 +119,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	
 	/* Offset added to account for the way the MCU uses the stack on entry/exit
 	of interrupts, and to ensure alignment. */
-	pxTopOfStack -= 2;
+	pxTopOfStack--;
 		
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
@@ -131,7 +131,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
 
-	/* A save method is being used that requiers each task to maintain its
+	/* A save method is being used that requires each task to maintain its
 	own exec return value. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_EXEC_RETURN;

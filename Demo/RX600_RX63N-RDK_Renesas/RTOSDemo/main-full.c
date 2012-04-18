@@ -130,9 +130,6 @@
 
 #include <string.h>
 
-/* Hardware specific includes. */
-#include "iodefine.h"
-
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"

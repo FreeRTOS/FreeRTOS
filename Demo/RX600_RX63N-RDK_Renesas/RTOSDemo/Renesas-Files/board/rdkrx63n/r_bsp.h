@@ -46,8 +46,8 @@ INCLUDE APPROPRIATE MCU AND BOARD FILES
 #include    ".\board\rdkrx63n\yrdkrx63n.h"
 #include    ".\board\rdkrx63n\mcu_info.h"
 #include    ".\board\rdkrx63n\hwsetup.h"
-#include    ".\board\rdkrx63n\lcd.h"
-#include    ".\board\rdkrx63n\locking.h"
+/* #include    ".\board\rdkrx63n\lcd.h" The LCD is not used yet. */
+/* #include    ".\board\rdkrx63n\locking.h" Locking is not used. */
 
 #endif /* PLATFORM_BOARD_RDKRX63N */
 

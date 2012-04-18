@@ -58,9 +58,6 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 
-/* Hardware specifics. */
-#include "iodefine.h"
-
 /* The set frequency of the interrupt.  Deviations from this are measured as
 the jitter. */
 #define timerINTERRUPT_FREQUENCY		( 20000UL )

@@ -65,9 +65,6 @@
 #include "IntQueueTimer.h"
 #include "IntQueue.h"
 
-/* Hardware specifics. */
-#include "iodefine.h"
-
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
 #define tmrTIMER_2_3_FREQUENCY	( 2001UL )
 

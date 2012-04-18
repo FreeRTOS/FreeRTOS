@@ -61,7 +61,7 @@
 "{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_16" "0000000000000000" 
 "{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_17" "0000000000000000" 
 "{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_18" "0000000000000000" 
-"{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_19" "00000000FFF80000" 
+"{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_19" "00000000FFF82490" 
 "{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_2" "0000000000000000" 
 "{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_20" "0000000000000000" 
 "{64753FED-D387-4B8C-A91D-D3419C869C07}C_REGISTER_REG_21" "0000000080000000" 
@@ -154,11 +154,11 @@
 "{WK_TB00000004_TEMPLATES}" "TOOLBAR 0" 59419 1 0 "0.00" 0 0 0 0 0 17 0 "" "0.0" 
 "{WK_TB00000005_SEARCH}" "TOOLBAR 0" 59419 0 2 "0.00" 0 0 0 0 0 18 0 "" "0.0" 
 "{WK_TB00000007_DEBUG}" "TOOLBAR 0" 59419 0 1 "0.00" 0 914 231 0 0 18 0 "" "0.0" 
-"{WK_TB00000008_DEBUGRUN}" "TOOLBAR 0" 59419 2 3 "0.00" 0 298 189 0 0 18 0 "" "0.0" 
+"{WK_TB00000008_DEBUGRUN}" "TOOLBAR 0" 59419 2 1 "0.00" 0 298 189 0 0 18 0 "" "0.0" 
 "{WK_TB00000009_VERSIONCONTROL}" "TOOLBAR 0" 59419 1 3 "0.00" 0 0 0 0 0 17 0 "" "0.0" 
-"{WK_TB00000011_CPU}" "TOOLBAR 0" 59419 2 1 "0.00" 0 0 0 0 0 18 0 "" "0.0" 
+"{WK_TB00000011_CPU}" "TOOLBAR 0" 59419 2 2 "0.00" 0 0 0 0 0 18 0 "" "0.0" 
 "{WK_TB00000012_MAP}" "TOOLBAR 0" 59419 1 4 "0.00" 0 0 0 0 0 17 0 "" "0.0" 
-"{WK_TB00000013_SYMBOL}" "TOOLBAR 0" 59419 2 2 "0.00" 0 0 0 0 0 18 0 "" "0.0" 
+"{WK_TB00000013_SYMBOL}" "TOOLBAR 0" 59419 2 3 "0.00" 0 0 0 0 0 18 0 "" "0.0" 
 "{WK_TB00000014_CODE}" "TOOLBAR 0" 59419 3 2 "0.00" 0 0 0 0 0 17 0 "" "0.0" 
 "{WK_TB00000015_PERFORMANCE}" "TOOLBAR 0" 59419 3 3 "0.00" 0 0 0 0 0 17 0 "" "0.0" 
 "{WK_TB00000016_GRAPHIC}" "TOOLBAR 0" 59419 3 1 "0.00" 0 0 0 0 0 17 0 "" "0.0" 
@@ -175,19 +175,13 @@
 [WINDOW_Z_ORDER]
 "{WK_TB00000028_RTOSDEBUG} TOOLBAR 0" 
 "{WK_TB00000025_HELPSYSTEMTOOL} TOOLBAR 0" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\vecttbl.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\locking.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\hwsetup.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\flash_options.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\FreeRTOSConfig.h" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\r_bsp_config.h" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lcd.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\ParTest.c" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\yrdkrx63n.h" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\platform.h" 
-"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\sp_flop.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\EMAC.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\phy.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\uIP_Task.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-full.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\IntQueueTimer.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\HighFrequencyTimerTest.c" 
 [TARGET_NAME]
 "RX600 Segger J-Link" "" 0 
 [STATUSBAR_STATEINFO_VD1]
@@ -210,8 +204,8 @@
 "SBK_TAR_EMUE100|Exception" 1 
 "SBK_TAR_EMUE100|BreakCondition" 1 
 "SBK_TAR_EMUE100|TaskID" 1 
-"SBK_TAR_EMUE100|PC" 1 
 "SBK_TAR_EMUE100|ExecutionTime" 1 
+"SBK_TAR_EMUE100|PC" 1 
 [STATUSBAR_DEBUGGER_PANESTATE_VD2]
 [STATUSBAR_DEBUGGER_PANESTATE_VD3]
 [STATUSBAR_DEBUGGER_PANESTATE_VD4]
@@ -239,5 +233,6 @@
 [FLASH_DETAILS]
 "" 0 0 "" 0 "" 0 0 "" 0 0 0 0 0 0 0 "" "" "" "" "" 
 [BREAKPOINTS]
-"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\renesas-files\resetprg.c" 137 33344456 1 "{00000000-0000-0000-C000-000000000046}" "" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\renesas-files\resetprg.c" 137 0 1 "{00000000-0000-0000-C000-000000000046}" "" 
+"c:\e\dev\freertos\workingcopy\demo\rx600_rx63n-rdk_renesas\rtosdemo\renesas-files\board\rdkrx63n\resetprg.c" 178 0 1 "{00000000-0000-0000-C000-000000000046}" "" 
 [END]

@@ -51,16 +51,14 @@
     licensing and training services.
 */
 
-/* Hardware specific includes. */
-#include "iodefine.h"
-#include "typedefine.h"
-#include "r_ether.h"
-#include "phy.h"
-
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+
+/* Hardware specific includes. */
+#include "r_ether.h"
+#include "phy.h"
 
 /* uIP includes. */
 #include "net/uip.h"

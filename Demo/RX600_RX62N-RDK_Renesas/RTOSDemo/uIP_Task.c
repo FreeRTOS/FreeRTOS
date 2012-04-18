@@ -251,7 +251,7 @@ const unsigned long ul_uIPEventQueueLength = 10UL;
 							);
 
 	xPeriodicTimer = xTimerCreate( 	( const signed char * const ) "PeriodicTimer",
-									( 500 / portTICK_RATE_MS ),
+									( 50 / portTICK_RATE_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,
 									prvUIPTimerCallback

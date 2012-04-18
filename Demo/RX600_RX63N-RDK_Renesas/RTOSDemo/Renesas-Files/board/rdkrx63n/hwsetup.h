@@ -14,50 +14,29 @@
 * following link:
 * http://www.renesas.com/disclaimer 
 *
-* Copyright (C) 2011 Renesas Electronics Corporation. All rights reserved.    
+* Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.    
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
-* File Name	   : locking.h
-* Description  : This implements a locking mechanism that can be used by all code. The locking is done atomically so
-*                common resources can be accessed safely.
+* File Name	   : hwsetup.h
+* Description  : Hardware setup header file..
 ***********************************************************************************************************************/
-/**********************************************************************************************************************
+/***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
-*         : 07.03.2012 1.00     First Release
+*         : 26.10.2011 1.00     First Release
 ***********************************************************************************************************************/
-
-/***********************************************************************************************************************
-Includes   <System Includes> , "Project Includes"
-***********************************************************************************************************************/
-/* Fixed-size integer typedefs. */
-#include <stdint.h>
-/* bool support. */
-#include <stdbool.h>
 
 /***********************************************************************************************************************
 Macro definitions
 ***********************************************************************************************************************/
-
-/***********************************************************************************************************************
-Typedef definitions
-***********************************************************************************************************************/
-typedef struct
-{
-    /* The actual lock. int32_t is used because this is what the xchg() instruction takes as parameters. */
-    int32_t     lock;
-    /* Could add a ID for locking and unlocking. In this could protect against any function being able to unlock. */
-} bsp_lock_t;
-
-/***********************************************************************************************************************
-Exported global variables
-***********************************************************************************************************************/
+/* Multiple inclusion prevention macro */
+#ifndef HWSETUP_H
+#define HWSETUP_H
 
 /***********************************************************************************************************************
 Exported global functions (to be accessed by other files)
 ***********************************************************************************************************************/
-bool R_BSP_Lock(bsp_lock_t * plock);
-bool R_BSP_Unlock(bsp_lock_t * plock);
+/* Hardware setup funtion declaration */
+void hardware_setup(void);
 
-
-
-
+/* End of multiple inclusion prevention macro */
+#endif

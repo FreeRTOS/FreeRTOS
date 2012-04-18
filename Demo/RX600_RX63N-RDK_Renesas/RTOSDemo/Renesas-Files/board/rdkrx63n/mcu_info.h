@@ -17,26 +17,43 @@
 * Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.    
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
-* File Name	   : hwsetup.h
-* Description  : Hardware setup header file.
+* File Name	   : mcu_info.h
+* Device(s)    : RX
+* H/W Platform : YRDKRX63N
+* Description  : Information about the MCU on this board (RDKRX63N).
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 26.10.2011 1.00     First Release
+*         : 13.03.2012 1.10     System clock speeds are now calculated from macros in r_bsp_config.h. 
 ***********************************************************************************************************************/
 
-/***********************************************************************************************************************
-Macro definitions
-***********************************************************************************************************************/
-/* Multiple inclusion prevention macro */
-#ifndef HWSETUP_H
-#define HWSETUP_H
+#ifndef _MCU_INFO
+#define _MCU_INFO
 
-/***********************************************************************************************************************
-Exported global functions (to be accessed by other files)
-***********************************************************************************************************************/
-/* Hardware setup funtion declaration */
-void hardware_setup(void);
+/* MCU that is used. */
+#define MCU_RX63N           (1)
 
-/* End of multiple inclusion prevention macro */
-#endif
+/* Package. */
+#define PACKAGE_LQFP100     (1)
+
+/* Memory size of your MCU. */
+#define ROM_SIZE_BYTES      (1048576)
+#define RAM_SIZE_BYTES      (131072)
+#define DF_SIZE_BYTES       (32768)
+
+/* System clock speed in Hz. */
+#define ICLK_HZ             (((XTAL_HZ/PLL_DIV) * PLL_MUL) / ICK_DIV)
+/* Peripheral Module Clock A speed in Hz. Used for ETHERC and EDMAC. */
+#define PCLKA_HZ            (((XTAL_HZ/PLL_DIV) * PLL_MUL) / PCKA_DIV)
+/* Peripheral Module Clock B speed in Hz. */
+#define PCLKB_HZ            (((XTAL_HZ/PLL_DIV) * PLL_MUL) / PCKB_DIV)
+/* External bus clock speed in Hz. */
+#define BCLK_HZ             (((XTAL_HZ/PLL_DIV) * PLL_MUL) / BCK_DIV)
+/* FlashIF clock speed in Hz. */
+#define FCLK_HZ             (((XTAL_HZ/PLL_DIV) * PLL_MUL) / FCK_DIV)
+/* USB clock speed in Hz. */
+#define UCLK_HZ             (((XTAL_HZ/PLL_DIV) * PLL_MUL) / UCK_DIV) 
+
+#endif /* _MCU_INFO */
+

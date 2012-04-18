@@ -18,18 +18,18 @@
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * File Name	   : r_bsp.h
-* H/W Platform : RSK+RX63N
+* H/W Platform : RDKRX63N 
 * Description  : Has the header files that should be included for this platform.
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
 *         : 13.01.2012 1.00     First Release
-*         : 13.03.2012 1.10     Added locking.h and r_bsp_config.h #includes. Removed sbrk.h since heap size is not
+*         : 12.03.2012 1.10     Added locking.h and r_bsp_config.h #includes. Removed sbrk.h since heap size is not
 *                               defined in r_bsp_config.h.
 ***********************************************************************************************************************/
 
-#ifndef PLATFORM_BOARD_RSKRX63N
-#define PLATFORM_BOARD_RSKRX63N
+#ifndef PLATFORM_BOARD_RDKRX63N
+#define PLATFORM_BOARD_RDKRX63N
 
 /* Make sure that no other platforms have already been defined. Do not touch this! */
 #ifdef  PLATFORM_DEFINED
@@ -43,12 +43,12 @@ INCLUDE APPROPRIATE MCU AND BOARD FILES
 ***********************************************************************************************************************/
 #include    "r_bsp_config.h"
 #include    ".\mcu\rx63n\iodefine.h"
-#include    ".\board\rskrx63n\rskrx63n.h"
-#include    ".\board\rskrx63n\mcu_info.h"
-#include    ".\board\rskrx63n\hwsetup.h"
-#include    ".\board\rskrx63n\lcd.h"
-#include    ".\board\rskrx63n\locking.h"
+#include    ".\board\rdkrx63n\yrdkrx63n.h"
+#include    ".\board\rdkrx63n\mcu_info.h"
+#include    ".\board\rdkrx63n\hwsetup.h"
+#include    ".\board\rdkrx63n\lcd.h"
+#include    ".\board\rdkrx63n\locking.h"
 
-#endif /* PLATFORM_BOARD_RSKRX63N */
+#endif /* PLATFORM_BOARD_RDKRX63N */
 
 

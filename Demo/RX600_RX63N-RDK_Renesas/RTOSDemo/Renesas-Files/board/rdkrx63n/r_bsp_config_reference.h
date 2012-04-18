@@ -42,7 +42,7 @@ Configuration Options
 #endif
 
 /* Heap size in bytes. */
-#define HEAP_BYTES              (0x4)
+#define HEAP_BYTES              (0x400)
 
 /* After reset MCU will operate in Supervisor mode. To switch to User mode, set this macro to '1'. For more information
    on the differences between these 2 modes see the CPU >> Processor Mode section of your MCU's hardware manual.

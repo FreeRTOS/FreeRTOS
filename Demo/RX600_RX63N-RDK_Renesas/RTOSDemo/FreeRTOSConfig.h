@@ -55,7 +55,7 @@
 #define FREERTOS_CONFIG_H
 
 /* Board specifics. */
-#include "rskrx63ndef.h"
+#include "platform.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -72,8 +72,8 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ				( ICLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
-#define configPERIPHERAL_CLOCK_HZ		( PCLK_FREQUENCY ) /* Set in rskrx62ndef.h. */
+#define configCPU_CLOCK_HZ				( 96000000UL )
+#define configPERIPHERAL_CLOCK_HZ		( 48000000UL )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )

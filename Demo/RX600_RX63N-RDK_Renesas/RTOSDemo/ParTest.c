@@ -62,9 +62,6 @@
 /* Demo includes. */
 #include "partest.h"
 
-/* Hardware specifics. */
-#include "iodefine.h"
-
 #define partestNUM_LEDS ( 4 )
 
 long lParTestGetLEDState( unsigned long ulLED );
@@ -89,13 +86,13 @@ void vParTestSetLED( unsigned long ulLED, signed long xValue )
 			{
 				switch( ulLED )
 				{
-					case 0:	LED0 = LED_ON;
+					case 0:	LED4 = LED_ON;
 							break;
-					case 1:	LED1 = LED_ON;
+					case 1:	LED5 = LED_ON;
 							break;
-					case 2:	LED2 = LED_ON;
+					case 2:	LED6 = LED_ON;
 							break;
-					case 3:	LED3 = LED_ON;
+					case 3:	LED7 = LED_ON;
 							break;
 				}
 			}
@@ -108,13 +105,13 @@ void vParTestSetLED( unsigned long ulLED, signed long xValue )
 			{
 				switch( ulLED )
 				{
-					case 0:	LED0 = LED_OFF;
+					case 0:	LED4 = LED_OFF;
 							break;
-					case 1:	LED1 = LED_OFF;
+					case 1:	LED5 = LED_OFF;
 							break;
-					case 2:	LED2 = LED_OFF;
+					case 2:	LED6 = LED_OFF;
 							break;
-					case 3:	LED3 = LED_OFF;
+					case 3:	LED7 = LED_OFF;
 							break;
 				}
 
@@ -153,22 +150,22 @@ long lReturn = pdTRUE;
 	{
 		switch( ulLED )
 		{
-			case 0	:	if( LED0 != 0 )
+			case 0	:	if( LED4 != 0 )
 						{
 							lReturn =  pdFALSE;
 						}
 						break;					
-			case 1	:	if( LED1 != 0 )
+			case 1	:	if( LED5 != 0 )
 						{
 							lReturn =  pdFALSE;
 						}
 						break;					
-			case 2	:	if( LED2 != 0 )
+			case 2	:	if( LED6 != 0 )
 						{
 							lReturn =  pdFALSE;
 						}
 						break;					
-			case 3	:	if( LED3 != 0 )
+			case 3	:	if( LED7 != 0 )
 						{
 							lReturn =  pdFALSE;
 						}

@@ -19,21 +19,20 @@
 /***********************************************************************************************************************
 * File Name	   : hwsetup.c
 * Device(s)    : RX
-* H/W Platform : RSK+RX63N
+* H/W Platform : YRDKRX63N
 * Description  : Defines the initialisation routines used each time the MCU is restarted.
 ***********************************************************************************************************************/
 /***********************************************************************************************************************
 * History : DD.MM.YYYY Version  Description
-*         : 22.11.2011 1.00     First Release
+*         : 26.10.2011 1.00     First Release
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
 Includes   <System Includes> , "Project Includes"
 ***********************************************************************************************************************/
+#include <stdint.h>
 /* I/O Register and board definitions */
 #include "platform.h"
-/* Contains delcarations for the functions defined in this file */
-#include "hwsetup.h"
 
 /***********************************************************************************************************************
 Private global variables and functions
@@ -69,69 +68,86 @@ void hardware_setup(void)
 ***********************************************************************************************************************/
 void output_ports_configure(void)
 {
-    /* Enable LEDs. */
-    /* Start with LEDs off. */
-    LED0 = LED_OFF;
-    LED1 = LED_OFF;
-    LED2 = LED_OFF;
-    LED3 = LED_OFF;
+    SYSTEM.PRCR.WORD = 0xA50B;			/* Protect off */
+    MPC.PWPR.BIT.B0WI = 0 ;     		/* Unlock protection register */
+    MPC.PWPR.BIT.PFSWE = 1 ;    		/* Unlock MPC registers */
+    
+    MSTP(EDMAC) = 0 ;                   /* Power up ethernet block */
+    
+    /* Port 0 - DAC & ethernet IRQ */
+    PORT0.PODR.BYTE = 0x00 ;    /* All outputs low to start */
+    PORT0.PDR.BYTE  = 0x10 ;    /* DA1 is an ouput, all others are inputs */
+    
+    /* Port 1 - I2C and USB over-current & pull-up control */
+    PORT1.PODR.BYTE = 0x00 ;    /* All outputs low to start */
+    PORT1.PDR.BYTE  = 0x80 ;    /* AUD_R (P1.7) is an output, all others are inputs (I2C lines setup by 
+    *                              I2C driver later */
+    
+    /* Port 2 - USB control and some expansion signals */
+    PORT2.PODR.BYTE = 0x02 ;    /* All outputs low to start except backlight enable */
+    PORT2.PDR.BYTE  = 0x02 ;    /* All inputs except backlight enable - some will be overridden by USB driver later */
+    
+    /* Port 3 - Serial port & JTAG */
+    PORT3.PODR.BYTE = 0x00 ;    /* All outputs low to start */
+    PORT3.PDR.BIT.B2  = 0x01 ;  /* Transmit line for SCI6/ CAN 0 TxD is an output */
+    
+    /* Port 4 -  */
+    PORT4.PODR.BYTE = 0x00 ;    /* These are all inputs */
+    PORT4.PDR.BYTE  = 0x00 ;    /* Analog inputs and switches, all inputs */
+    PORT4.PMR.BYTE  = 0x00 ;
 
-    /* Set LED pins as outputs. */
-    LED0_PDR = 1;
-    LED1_PDR = 1;
-    LED2_PDR = 1;
-    LED3_PDR = 1;
+    /* Port 5 -  */
+    PORT5.PODR.BYTE = 0x00 ;    /* All outputs low to start */
+    PORT5.PDR.BYTE  = 0x13 ;    /* SCI 2 TxD, LCD_RS, PWMLP_OUT are outputs */
+    MPC.P50PFS.BYTE = 0x0A ;    /* P50 is TXD2. */
+    MPC.P52PFS.BYTE = 0x0A ;    /* P52 is RXD2. */
+    PORT5.PMR.BYTE  = 0x05 ;    /* P50 and P52 are used for SCI2. */
 
-    /* Enable switches. */
-    /* Set pins as inputs. */
-    SW1_PDR = 0;
-    SW2_PDR = 0;
-    SW3_PDR = 0;
+    /* Port A - Ethernet MDIO */
+    PORTA.PODR.BYTE = 0x00 ;    /* */
+    PORTA.PMR.BYTE  = 0x00 ;    /* All GPIO for now */
+    MPC.PA3PFS.BYTE = 0x11 ;    /* PA3 is RMII MDIO */
+    MPC.PA4PFS.BYTE = 0x11 ;    /* PA4 is RMII MDC */
+    MPC.PA5PFS.BYTE = 0x11 ;    /* PA5 is RMII LINK_STA */
+    PORTA.PMR.BYTE  = 0x38 ;    /* PA3-5 are used by Ethernet peripheral */
+    PORTA.PDR.BYTE  = 0xFF ;    /* */
+    
+    /* Port B - Ethernet signals */
+    PORTB.PODR.BYTE = 0x00 ;    /* */
+    PORTB.PMR.BYTE  = 0x00 ;    /* All GPIO for now */
+    MPC.PB0PFS.BYTE = 0x12 ;    /* PB0 is RMII_RXD1 */
+    MPC.PB1PFS.BYTE = 0x12 ;    /* PB1 is RMII_RXD0 */
+    MPC.PB2PFS.BYTE = 0x12 ;    /* PB2 is REF50CK */
+    MPC.PB3PFS.BYTE = 0x12 ;    /* PB3 is RMI_RX_ERR */
+    MPC.PB4PFS.BYTE = 0x12 ;    /* PB4 is RMII_TXD_EN */
+    MPC.PB5PFS.BYTE = 0x12 ;    /* PB5 is RMII_TXD0 */
+    MPC.PB6PFS.BYTE = 0x12 ;    /* PB6 is RMII_TXD1 */
+    MPC.PB7PFS.BYTE = 0x12 ;    /* PB7 is RMII_CRS_DV */
+    PORTB.PMR.BYTE  = 0xFF ;    /* All pins assigned to peripheral */
+    PORTB.PDR.BYTE  = 0xF0 ;    /* */
+    
+    /* Port C -  SPI signals, chip selects, peripheral reset */
+    PORTC.PODR.BYTE = 0x00 ;    /* */
+    PORTC.PMR.BYTE  = 0x00 ;    /* All GPIO for now */
+    MPC.PC5PFS.BYTE = 0x0D ;    /* PC5 is RSPCKA */
+    MPC.PC6PFS.BYTE = 0x0D ;    /* PC6 is MOSIA */
+    MPC.PC7PFS.BYTE = 0x0D ;    /* PC7 is MISOA */
+    PORTC.PMR.BYTE  = 0xE0 ;    /* PC5-7 assigned to SPI peripheral */
+    PORTC.PODR.BYTE = 0x17 ;    /* All outputs low to start */
+    PORTC.PDR.BYTE  = 0x7F ;    /* All outputs except MISO */
 
-    /* Set port mode registers for switches. */
-    SW1_PMR = 0;
-    SW2_PMR = 0;
-    SW3_PMR = 0;
-    
-    /* Initialize RSPI pins that are used with on-board SPI flash. */
-    /* Set pin outputs to low to begin with. */
-    PORT2.PODR.BIT.B7 = 0x00;    /* RSPCKB */
-    PORT2.PODR.BIT.B6 = 0x00;    /* MOSIB */
-    PORT3.PODR.BIT.B0 = 0x00;    /* MISOB */
-    PORT3.PODR.BIT.B1 = 0x00;    /* SSLB0 */
-    
-    /* All GPIO for now */
-    PORT2.PMR.BIT.B7 = 0x00;    
-    PORT2.PMR.BIT.B6 = 0x00;    
-    PORT3.PMR.BIT.B0 = 0x00;
-    PORT3.PMR.BIT.B1 = 0x00;
 
-    /* Unlock MPC registers to enable writing to them. */
-    MPC.PWPR.BIT.B0WI = 0 ;     /* Unlock protection register */
-    MPC.PWPR.BIT.PFSWE = 1 ;    /* Unlock MPC registers */
-        
-    /* Set MPC for RSPI pins */
-    MPC.P27PFS.BYTE = 0x0D;    
-    MPC.P26PFS.BYTE = 0x0D;    
-    MPC.P30PFS.BYTE = 0x0D;    
-    
-    /* RSPI pins assigned to RSPI peripheral. */
-    PORT2.PMR.BIT.B7 = 1;    
-    PORT2.PMR.BIT.B6 = 1;    
-    PORT3.PMR.BIT.B0 = 1;
-    PORT3.PMR.BIT.B1 = 1;    
-    
-    /* RSPCKB is output. */
-    PORT2.PDR.BIT.B7 = 1;
-    /* MOSIB is output. */
-    PORT2.PDR.BIT.B6 = 1;
-    /* MISOB is input. */
-    PORT3.PDR.BIT.B0 = 0;
-    /* SSLB0 is output. */
-    PORT3.PDR.BIT.B1 = 1;
-    
-    /* Configure the pin connected to the ADC Pot as an input */
-    PORT4.PDR.BIT.B0 = 0;
+    /* Port D -  LED's */
+    PORTD.PODR.BYTE = 0xFF ;    /* All outputs LED's off */
+    PORTD.PDR.BYTE  = 0xFF ;    /* All outputs */
+
+    /* Port E -  LED's, WiFi & PMOD control */
+    PORTE.PODR.BYTE = 0xFF ;    /* All LED's off, all chip selects inactive */
+    PORTE.PDR.BYTE  = 0x7F ;    /* All outputs except PMOD_MISO */
+
+    /* Port J -  WiFi chip select */
+    PORTJ.PODR.BYTE = 0x04 ;    /* WiFi CS de-asserted at power up */
+    PORTJ.PDR.BYTE  = 0x04 ;    /* WiFi CS is an output */
 }
 
 /***********************************************************************************************************************

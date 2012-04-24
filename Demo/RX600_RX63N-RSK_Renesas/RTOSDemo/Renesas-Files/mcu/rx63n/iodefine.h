@@ -1,7 +1,7 @@
 /***********************************************************************/
 /*                                                                     */
 /*  FILE        :iodefine.h                                            */
-/*  DATE        :Fri, Sep 02, 2011                                     */
+/*  DATE        :Mon, Jul 11, 2011                                     */
 /*  DESCRIPTION :Definition of I/O Register                            */
 /*  CPU TYPE    :RX63N                                                 */
 /*                                                                     */
@@ -7108,7 +7108,14 @@ struct st_rspi {
 			unsigned char OVRF:1;
 		} BIT;
 	} SPSR;
-	unsigned long  SPDR;
+	//unsigned long  SPDR;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned short H;
+			unsigned short L;
+		} WORD;
+	} SPDR;
 	union {
 		unsigned char BYTE;
 		struct {
@@ -9666,11 +9673,35 @@ struct st_usb0 {
 		} BIT;
 	} DVSTCTR0;
 	char           wk2[10];
-	unsigned short CFIFO;
+	//ORIG: unsigned short CFIFO;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char L;
+			unsigned char H;
+		} BYTE;
+	} CFIFO;
+    //ENDORIG
 	char           wk3[2];
-	unsigned short D0FIFO;
+	//ORIG: unsigned short D0FIFO;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char L;
+			unsigned char H;
+		} BYTE;
+	} D0FIFO;
+    //ENDORIG
 	char           wk4[2];
-	unsigned short D1FIFO;
+	//ORIG: unsigned short D1FIFO;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char L;
+			unsigned char H;
+		} BYTE;
+	} D1FIFO;
+    //ENDORIG
 	char           wk5[2];
 	union {
 		unsigned short WORD;
@@ -11708,6 +11739,7 @@ GCR_RSPI0_SPEI0=12,GCR_RSPI1_SPEI1=12,GCR_RSPI2_SPEI2=12
 #define	MSTP_USB0	SYSTEM.MSTPCRB.BIT.MSTPB19
 #define	MSTP_RSPI0	SYSTEM.MSTPCRB.BIT.MSTPB17
 #define	MSTP_RSPI1	SYSTEM.MSTPCRB.BIT.MSTPB16
+#define	MSTP_EDMAC  SYSTEM.MSTPCRB.BIT.MSTPB15
 #define	MSTP_TEMPS	SYSTEM.MSTPCRB.BIT.MSTPB8
 #define	MSTP_SCI12	SYSTEM.MSTPCRB.BIT.MSTPB4
 #define	MSTP_SMCI12	SYSTEM.MSTPCRB.BIT.MSTPB4

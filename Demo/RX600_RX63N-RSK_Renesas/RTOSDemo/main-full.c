@@ -125,8 +125,7 @@
  * *NOTE 4* The IntQueue common demo tasks test interrupt nesting and make use
  * of all the 8bit timers (as two cascaded 16bit units).
  *
- * *
-*/
+ */
 
 #include <string.h>
 

@@ -52,8 +52,7 @@
 */
 
 /* Hardware specific includes. */
-#include "iodefine.h"
-#include "typedefine.h"
+#include "platform.h"
 #include "r_ether.h"
 #include "phy.h"
 

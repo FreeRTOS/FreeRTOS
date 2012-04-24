@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.1.1-rc1 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -77,7 +77,6 @@ static void prvProcessSimulatedInterrupts( void );
  * Interrupt handlers used by the kernel itself.  These are executed from the
  * simulated interrupt handler thread.
  */
-static unsigned long prvProcessDeleteThreadInterrupt( void );
 static unsigned long prvProcessYieldInterrupt( void );
 static unsigned long prvProcessTickInterrupt( void );
 
@@ -150,7 +149,7 @@ portTickType xMinimumWindowsBlockTime = ( portTickType ) 20;
 		{
 			Sleep( portTICK_RATE_MS );
 		}
-	
+
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
 		/* The timer has expired, generate the simulated tick event. */
@@ -204,7 +203,6 @@ xThreadState *pxThreadState;
 	/* Install the interrupt handlers used by the scheduler itself. */
 	vPortSetInterruptHandler( portINTERRUPT_YIELD, prvProcessYieldInterrupt );
 	vPortSetInterruptHandler( portINTERRUPT_TICK, prvProcessTickInterrupt );
-	vPortSetInterruptHandler( portINTERRUPT_DELETE_THREAD, prvProcessDeleteThreadInterrupt );
 
 	/* Create the events and mutexes that are used to synchronise all the
 	threads. */
@@ -267,12 +265,6 @@ xThreadState *pxThreadState;
 	/* Would not expect to return from prvProcessSimulatedInterrupts(), so should 
 	not get here. */
 	return 0;
-}
-/*-----------------------------------------------------------*/
-
-static unsigned long prvProcessDeleteThreadInterrupt( void )
-{
-	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
@@ -361,15 +353,7 @@ void *pvObjectList[ 2 ];
 			{
 				/* Suspend the old thread. */
 				pxThreadState = ( xThreadState *) *( ( unsigned long * ) pvOldCurrentTCB );
-
-				if( ( ulSwitchRequired & ( 1 << portINTERRUPT_DELETE_THREAD ) ) != pdFALSE )
-				{
-					TerminateThread( pxThreadState->pvThread, 0 );
-				}
-				else
-				{
-					SuspendThread( pxThreadState->pvThread );
-				}							
+				SuspendThread( pxThreadState->pvThread );
 
 				/* Obtain the state of the task now selected to enter the 
 				Running state. */
@@ -387,23 +371,13 @@ void vPortDeleteThread( void *pvTaskToDelete )
 {
 xThreadState *pxThreadState;
 
-	if( pvTaskToDelete == pxCurrentTCB )
-	{
-		/* The task is deleting itself, and so the thread that is running now
-		is also to be deleted.  This has to be deferred until this thread is
-		no longer running, so its done in the simulated interrupt handler thread. */
-		vPortGenerateSimulatedInterrupt( portINTERRUPT_DELETE_THREAD );
-	}
-	else
-	{
-		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+	WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
-		/* Find the handle of the thread being deleted. */
-		pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
-		TerminateThread( pxThreadState->pvThread, 0 );
+	/* Find the handle of the thread being deleted. */
+	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
+	TerminateThread( pxThreadState->pvThread, 0 );
 
-		ReleaseMutex( pvInterruptEventMutex );
-	}
+	ReleaseMutex( pvInterruptEventMutex );
 }
 /*-----------------------------------------------------------*/
 

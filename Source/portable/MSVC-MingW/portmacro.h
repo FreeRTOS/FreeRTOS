@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.1.1-rc1 - Copyright (C) 2011 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -84,7 +84,7 @@
 #define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
 void vPortDeleteThread( void *pvThreadToDelete );
-#define traceTASK_DELETE( pxTCB )	vPortDeleteThread( pxTCB )
+#define portCLEAN_UP_TCB( pxTCB )	vPortDeleteThread( pxTCB )
 #define portDISABLE_INTERRUPTS()
 #define portENABLE_INTERRUPTS()
 
@@ -102,7 +102,6 @@ void vPortExitCritical( void );
 
 #define portINTERRUPT_YIELD				( 0UL )
 #define portINTERRUPT_TICK				( 1UL )
-#define portINTERRUPT_DELETE_THREAD		( 2UL )
 
 /* 
  * Raise a simulated interrupt represented by the bit mask in ulInterruptMask.

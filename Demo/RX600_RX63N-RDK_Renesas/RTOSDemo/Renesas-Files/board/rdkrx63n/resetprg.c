@@ -144,8 +144,8 @@ void PowerON_Reset_PC(void)
     /* Initialize C runtime environment */
     _INITSCT();
 
-    /* Comment this out if not using I/O lib */
-    _INIT_IOLIB();
+    /* Comment this out if not using I/O lib
+    _INIT_IOLIB(); */
 
     /* Configure the MCU and YRDK hardware */
     hardware_setup();

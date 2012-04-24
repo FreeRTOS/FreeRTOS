@@ -121,7 +121,7 @@ Configuration Options
 /* Peripheral Module Clock A Divider (PCKA). 
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define PCKA_DIV                (4)
+#define PCKA_DIV                (2) /* WAS 4 for 48MHz, attempting to make it equal ICLK by setting it to 2. */
 /* Peripheral Module Clock B Divider (PCKB). 
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */

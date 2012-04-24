@@ -187,7 +187,7 @@ void vInitEmac( void )
 	uip_buf = NULL;
 
 	/* Initialize the PHY */
-	phy_init();
+	configASSERT( phy_init() == R_PHY_OK );
 }
 /*-----------------------------------------------------------*/
 

@@ -9,7 +9,7 @@
 "Debug" 
 "Debug-with-optimisation" 
 [CURRENT_CONFIGURATION]
-"Blinky" 
+"Debug" 
 [CURRENT_SESSION]
 "RDK_Jlink" 
 [GENERAL_DATA_PROJECT]
@@ -23,7 +23,7 @@
 [SESSIONS_Debug]
 "RDK_Jlink" 
 [GENERAL_DATA_CONFIGURATION_Debug-with-optimisation]
-"PROJECT_FILES_MODIFIED_DATA_TAG" "FALSE" 
+"PROJECT_FILES_MODIFIED_DATA_TAG" "TRUE" 
 [SESSIONS_Debug-with-optimisation]
 "RDK_Jlink" 
 [GENERAL_DATA_CONFIGURATION_SESSION_Debug-with-optimisation_RDK_Jlink]

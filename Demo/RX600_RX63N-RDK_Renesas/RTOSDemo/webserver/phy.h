@@ -42,7 +42,7 @@ Macro definitions
 #define  PHY_ST    1
 #define  PHY_READ  2
 #define  PHY_WRITE 1
-#define  PHY_ADDR  0x1F
+#define  PHY_ADDR  0x1
 
 #define  MDC_WAIT  2
 

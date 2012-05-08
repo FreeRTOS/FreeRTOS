@@ -3,15 +3,15 @@
 #include "ISR_Support.h"
 
 	.set	nomips16
- 	.set 	noreorder
+	.set 	noreorder
  	
- 	.extern vU2InterruptHandler
+	.extern vU2InterruptHandler
 	.extern xISRStackTop
- 	.global	vU2InterruptWrapper
+	.global	vU2InterruptWrapper
 
-	.set		noreorder
-	.set 		noat
-	.ent		vU2InterruptWrapper
+	.set	noreorder
+	.set 	noat
+	.ent	vU2InterruptWrapper
 
 vU2InterruptWrapper:
 
@@ -20,5 +20,5 @@ vU2InterruptWrapper:
 	nop
 	portRESTORE_CONTEXT
 
-	.end		vU2InterruptWrapper
+	.end	vU2InterruptWrapper
 

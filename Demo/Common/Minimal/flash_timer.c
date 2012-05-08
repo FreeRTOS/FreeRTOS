@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -40,15 +40,28 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
+    
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?                                      *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
 
-    http://www.FreeRTOS.org - Documentation, latest information, license and
-    contact details.
+    
+    http://www.FreeRTOS.org - Documentation, training, latest information, 
+    license and contact details.
+    
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool.
 
-    http://www.SafeRTOS.com - A version that is certified for use in safety
-    critical systems.
-
-    http://www.OpenRTOS.com - Commercial support, development, porting,
-    licensing and training services.
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
+    the code with commercial support, indemnification, and middleware, under 
+    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
+    provide a safety engineered and independently SIL3 certified version under 
+    the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
 /**
@@ -90,11 +103,11 @@ xTimerHandle xTimer;
 	for( xLEDTimer = 0; xLEDTimer < xNumberOfLEDs; ++xLEDTimer )
 	{
 		/* Create the timer. */
-		xTimer = xTimerCreate( 	"Flasher",						/* A text name, purely to help debugging. */
+		xTimer = xTimerCreate( 	( const signed char * const ) "Flasher",/* A text name, purely to help debugging. */
 								ledFLASH_RATE_BASE * ( xLEDTimer + 1 ),	/* The timer period, which is a multiple of ledFLASH_RATE_BASE. */
-								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) xLEDTimer,			/* The ID is used to identify the timer within the timer callback function, as each timer uses the same callback. */
-								prvLEDTimerCallback				/* Each timer uses the same callback. */
+								pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) xLEDTimer,					/* The ID is used to identify the timer within the timer callback function, as each timer uses the same callback. */
+								prvLEDTimerCallback						/* Each timer uses the same callback. */
 							  );
 				
 		/* If the timer was created successfully, attempt to start it.  If the

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -40,169 +40,81 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
+    
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?                                      *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
 
-    http://www.FreeRTOS.org - Documentation, latest information, license and
-    contact details.
+    
+    http://www.FreeRTOS.org - Documentation, training, latest information, 
+    license and contact details.
+    
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool.
 
-    http://www.SafeRTOS.com - A version that is certified for use in safety
-    critical systems.
-
-    http://www.OpenRTOS.com - Commercial support, development, porting,
-    licensing and training services.
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
+    the code with commercial support, indemnification, and middleware, under 
+    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
+    provide a safety engineered and independently SIL3 certified version under 
+    the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/*
- * Creates all the demo application tasks, then starts the scheduler.  The WEB
- * documentation provides more details of the standard demo application tasks.
- * In addition to the standard demo tasks, the following tasks and tests are
- * defined and/or created within this file:
+/******************************************************************************
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
+ * select between the two.  The simply blinky demo is implemented and described
+ * in main_blinky.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
  *
- * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
- * is permitted to access the display directly.  Other tasks wishing to write a
- * message to the LCD send the message on a queue to the LCD task instead of
- * accessing the LCD themselves.  The LCD task just blocks on the queue waiting
- * for messages - waking and displaying the messages as they arrive.
- *
- * "Check" task -  This only executes every three seconds but has the highest
- * priority so is guaranteed to get processor time.  Its main function is to 
- * check that all the standard demo tasks are still operational.  Should any 
- * unexpected behaviour within a demo task be discovered the check task will 
- * write an error to the LCD (via the LCD task).  If all the demo tasks are 
- * executing with their expected behaviour then the check task instead writes 
- * a count of the number of times the high frequency interrupt has incremented
- * ulHighFrequencyTimerInterrupts - which is one in every 20,000 interrupts.
- *
- * "Register test" tasks - These tasks are used in part to test the kernel port.
- * They set each processor register to a known value, then check that the 
- * register still contains that value.  Each of the tasks sets the registers
- * to different values, and will get swapping in and out between setting and 
- * then subsequently checking the register values.  Discovery of an incorrect
- * value would be indicative of an error in the task switching mechanism.
- *
- * By way of demonstration, the demo application defines 
- * configMAX_SYSCALL_INTERRUPT_PRIORITY to be 3, configKERNEL_INTERRUPT_PRIORITY 
- * to be 1, and all other interrupts as follows:
- *
- *	+ The UART is allocated a priority of 2. This means it can interrupt the 
- *    RTOS tick, and can also safely use queues.
- *  + Two timers are configured to generate interrupts just to test the nesting 
- *    and queue access mechanisms. These timers are allocated priorities 2 and 3 
- *    respectively. Even though they both access the same two queues, the 
- *    priority 3 interrupt can safely interrupt the priority 2 interrupt. Both 
- *    can interrupt the RTOS tick.
- *  + Finally a high frequency timer interrupt is configured to use priority 4 - 
- *    therefore kernel activity will never prevent the high frequency timer from 
- *    executing immediately that the interrupt is raised (within the limitations 
- *    of the hardware itself). It would not be safe to access a queue from this 
- *    interrupt as it is above configMAX_SYSCALL_INTERRUPT_PRIORITY. 
- *
- * See the online documentation for this demo for more information on interrupt
- * usage.
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and FreeRTOS hook functions.
  */
 
-/* Standard includes. */
-#include <stdio.h>
-
-/* Scheduler includes. */
+/* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "queue.h"
 
-/* Demo application includes. */
+/* Standard demo includes. */
 #include "partest.h"
-#include "blocktim.h"
-#include "flash.h"
-#include "semtest.h"
-#include "GenQTest.h"
-#include "QPeek.h"
-#include "lcd.h"
-#include "comtest2.h"
-#include "timertest.h"
-#include "IntQueue.h"
 
+/* Core configuratin fuse settings */
 #pragma config FPLLMUL = MUL_20, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
 #pragma config POSCMOD = HS, FNOSC = PRIPLL, FPBDIV = DIV_2
+#pragma config CP = OFF, BWP = OFF, PWP = OFF
+
+/* Additional config fuse settings for other supported processors */
+#if defined(__32MX460F512L__)
+	#pragma config UPLLEN = OFF
+#elif defined(__32MX795F512L__)
+	#pragma config UPLLEN = OFF
+	#pragma config FSRSSEL = PRIORITY_7
+#endif
 
 /*-----------------------------------------------------------*/
 
-/* The rate at which the LED controlled by the 'check' task will flash when no
-errors have been detected. */
-#define mainNO_ERROR_PERIOD	( 3000 / portTICK_RATE_MS )
-
-/* The rate at which the LED controlled by the 'check' task will flash when an
-error has been detected. */
-#define mainERROR_PERIOD 	( 500 / portTICK_RATE_MS )
-
-/* The priorities of the various demo application tasks. */
-#define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 4 )
-#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
-#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
-
-/* The LED controlled by the 'check' task. */
-#define mainCHECK_LED						( 7 )
-
-/* The LED used by the comtest tasks.  mainCOM_TEST_LED + 1 is also used.
-See the comtest.c file for more information. */
-#define mainCOM_TEST_LED					( 4 )
-
-/* Baud rate used by the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( 115200 )
-
-/* Misc. */
-#define mainDONT_WAIT						( 0 )
-
-/* Dimension the buffer used to hold the value of the high frequency timer 
-count when it is converted to a string. */
-#define mainMAX_STRING_LENGTH				( 20 )
-
-/* The frequency at which the "fast interrupt test" interrupt will occur. */
-#define mainTEST_INTERRUPT_FREQUENCY		( 20000 )
-
-/* The number of timer clocks we expect to occur between each "fast
-interrupt test" interrupt. */
-#define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ( ( configCPU_CLOCK_HZ >> 1 ) / mainTEST_INTERRUPT_FREQUENCY )
-
-/* The number of nano seconds between each core clock. */
-#define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) ( configCPU_CLOCK_HZ >> 1 ) ) * 1000000000.0 ) )
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
 /*
- * Setup the processor ready for the demo.
+ * Set up the hardware ready to run this demo.
  */
 static void prvSetupHardware( void );
 
 /*
- * Implements the 'check' task functionality as described at the top of this 
- * file. 
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
-static void prvCheckTask( void *pvParameters ) __attribute__((noreturn));
-
-/*
- * Tasks that test the context switch mechanism by filling the processor 
- * registers with known values, then checking that the values contained
- * within the registers is as expected.  The tasks are likely to get swapped
- * in and out between setting the register values and checking the register
- * values. */
-static void prvTestTask1( void *pvParameters );
-static void prvTestTask2( void *pvParameters );
-
-/*-----------------------------------------------------------*/
-
-/* The queue used to send messages to the LCD task. */
-static xQueueHandle xLCDQueue;
-
-/* Flag used by prvTestTask1() and prvTestTask2() to indicate their status
-(pass/fail). */
-unsigned long ulStatus1 = pdPASS;
-
-/* Variables incremented by prvTestTask1() and prvTestTask2() respectively on 
-each iteration of their function.  This is used to detect either task stopping
-their execution.. */
-unsigned long ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
+extern void main_blinky( void );
+extern void main_full( void );
 
 /*-----------------------------------------------------------*/
 
@@ -211,74 +123,29 @@ unsigned long ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
  */
 int main( void )
 {
-	/* Configure any hardware required for this demo. */
+	/* Prepare the hardware to run this demo. */
 	prvSetupHardware();
 
-	/* Create the LCD task - this returns the queue to use when writing 
-	messages to the LCD. */
-	xLCDQueue = xStartLCDTask();
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	{
+		main_blinky();
+	}
+	#else
+	{
+		main_full();
+	}
+	#endif
 
-	/* Create all the other standard demo tasks. */
-	vStartLEDFlashTasks( tskIDLE_PRIORITY );
-    vCreateBlockTimeTasks();
-    vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-    vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-    vStartQueuePeekTasks();
-	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	vStartInterruptQueueTasks();
-
-	/* Create the tasks defined within this file. */
-	xTaskCreate( prvTestTask1, ( const signed char * const ) "Tst1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvTestTask2, ( const signed char * const ) "Tst2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-
-	/* prvCheckTask uses sprintf so requires more stack. */
-	xTaskCreate( prvCheckTask, ( const signed char * const ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
-	/* Finally start the scheduler. */
-	vTaskStartScheduler();
-
-	/* Will only reach here if there is insufficient heap available to start
-	the scheduler. */
 	return 0;
-}
-/*-----------------------------------------------------------*/
-
-static void prvTestTask1( void *pvParameters )
-{
-extern void vRegTest1( unsigned long * );
-
-	for( ;; )
-	{
-		/* Perform the register test function. */
-		vRegTest1( &ulStatus1 );
-
-		/* Increment the counter so the check task knows we are still 
-		running. */
-		ulRegTest1Cycles++;
-	}
-}
-/*-----------------------------------------------------------*/
-
-static void prvTestTask2( void *pvParameters )
-{
-extern void vRegTest2( unsigned long * );
-
-	for( ;; )
-	{
-		/* Perform the register test function. */
-		vRegTest2( &ulStatus1 );
-
-		/* Increment the counter so the check task knows we are still
-		running. */
-		ulRegTest2Cycles++;
-	}
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
 	/* Set the system and peripheral bus speeds and enable the program cache*/
-    SYSTEMConfigPerformance( configCPU_CLOCK_HZ - 1 );
+	SYSTEMConfigPerformance( configCPU_CLOCK_HZ - 1 );
 	mOSCSetPBDIV( OSC_PB_DIV_2 );
 
 	/* Setup to use the external interrupt controller. */
@@ -291,103 +158,58 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTask( void *pvParameters )
+void vApplicationMallocFailedHook( void )
 {
-unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0, ulTicksToWait = mainNO_ERROR_PERIOD;
-portTickType xLastExecutionTime;
-
-/* Buffer into which the high frequency timer count is written as a string. */
-static char cStringBuffer[ mainMAX_STRING_LENGTH ];
-
-/* The count of the high frequency timer interrupts. */
-extern unsigned long ulHighFrequencyTimerInterrupts;
-xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
-
-	/* Setup the high frequency, high priority, timer test.  It is setup here
-	to ensure it does not fire before the scheduler is started. */
-	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
-
-	/* Initialise the variable used to control our iteration rate prior to
-	its first use. */
-	xLastExecutionTime = xTaskGetTickCount();
-
-	for( ;; )
-	{
-		/* Wait until it is time to run the tests again. */
-		vTaskDelayUntil( &xLastExecutionTime, ulTicksToWait );
-
-		/* Has either register check 1 or 2 task discovered an error? */
-		if( ulStatus1 != pdPASS )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Reg test1";
-		}
-
-		/* Check that the register test 1 task is still running. */
-		if( ulLastRegTest1Value == ulRegTest1Cycles )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Reg test2";
-		}
-		ulLastRegTest1Value = ulRegTest1Cycles;
-
-		
-		/* Check that the register test 2 task is still running. */
-		if( ulLastRegTest2Value == ulRegTest2Cycles )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Reg test3";
-		}
-		ulLastRegTest2Value = ulRegTest2Cycles;
-		
-
-		/* Have any of the standard demo tasks detected an error in their 
-		operation? */
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Gen Q";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Q Peek";
-		}
-		else if( xAreComTestTasksStillRunning() != pdTRUE )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: COM test";
-		}
-		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Blck time";
-		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-	        ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Sem test";
-	    }
-		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
-		{
-			ulTicksToWait = mainERROR_PERIOD;
-			xMessage.pcMessage = "Error: Int queue";
-		}
-
-		/* Write the ulHighFrequencyTimerInterrupts value to the string 
-		buffer.  It will only be displayed if no errors have been detected. */
-		sprintf( cStringBuffer, "Pass %u", ( unsigned int ) ulHighFrequencyTimerInterrupts );
-
-		xQueueSend( xLCDQueue, &xMessage, mainDONT_WAIT );
-		vParTestToggleLED( mainCHECK_LED );
-	}
+	/* vApplicationMallocFailedHook() will only be called if
+	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+	function that will get called if a call to pvPortMalloc() fails.
+	pvPortMalloc() is called internally by the kernel whenever a task, queue,
+	timer or semaphore is created.  It is also called by various parts of the
+	demo application.  If heap_1.c or heap_2.c are used, then the size of the
+	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+	to query the size of free heap space that remains (although it does not
+	provide information on how the remaining heap might be fragmented). */
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( void )
+void vApplicationIdleHook( void )
 {
-	/* Look at pxCurrentTCB to see which task overflowed its stack. */
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+	task.  It is essential that code added to this hook function never attempts
+	to block in any way (for example, call xQueueReceive() with a block time
+	specified, or call vTaskDelay()).  If the application makes use of the
+	vTaskDelete() API function (as this demo application does) then it is also
+	important that vApplicationIdleHook() is permitted to return to its calling
+	function, because it is the responsibility of the idle task to clean up
+	memory allocated by the kernel to any task that has since been deleted. */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
+
+	/* Run time task stack overflow checking is performed if
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook	function is 
+	called if a task stack overflow is detected.  Note the system/interrupt
+	stack is not checked. */
+	taskDISABLE_INTERRUPTS();
 	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* This function will be called by each tick interrupt if
+	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	added here, but the tick hook is called from an interrupt context, so
+	code must not attempt to block, and only the interrupt safe FreeRTOS API
+	functions can be used (those that end in FromISR()). */
 }
 /*-----------------------------------------------------------*/
 

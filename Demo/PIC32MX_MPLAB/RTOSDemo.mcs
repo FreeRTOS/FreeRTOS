@@ -2,6 +2,6 @@
 MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
 Version=1.0
 [TOOL_LOC_STAMPS]
-tool_loc{92E15EC6-5E91-4BF4-B5FA-C80AD2601AA7}=C:\devtools\Microchip\mplabc32\v1.12\bin\pic32-as.exe
-tool_loc{430F471F-7ECB-4852-A80D-DEF9A5C8E751}=C:\devtools\Microchip\mplabc32\v1.12\bin\pic32-gcc.exe
-tool_loc{C68E5105-1196-4333-A0BF-3DC57271E614}=C:\devtools\Microchip\mplabc32\v1.12\bin\pic32-ld.exe
+tool_loc{92E15EC6-5E91-4BF4-B5FA-C80AD2601AA7}=C:\devtools\Microchip\mplabc32\v2.02\bin\pic32-ar.exe
+tool_loc{430F471F-7ECB-4852-A80D-DEF9A5C8E751}=C:\devtools\Microchip\mplabc32\v2.02\bin\pic32-gcc.exe
+tool_loc{C68E5105-1196-4333-A0BF-3DC57271E614}=C:\devtools\Microchip\mplabc32\v2.02\bin\pic32-ld.exe

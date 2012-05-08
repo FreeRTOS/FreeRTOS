@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -40,15 +40,28 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
+    
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?                                      *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
 
-    http://www.FreeRTOS.org - Documentation, latest information, license and
-    contact details.
+    
+    http://www.FreeRTOS.org - Documentation, training, latest information, 
+    license and contact details.
+    
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool.
 
-    http://www.SafeRTOS.com - A version that is certified for use in safety
-    critical systems.
-
-    http://www.OpenRTOS.com - Commercial support, development, porting,
-    licensing and training services.
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
+    the code with commercial support, indemnification, and middleware, under 
+    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
+    provide a safety engineered and independently SIL3 certified version under 
+    the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
 
@@ -86,7 +99,7 @@ static portBASE_TYPE xTxHasEnded;
 entry point the IPL setting in the following prototype has no effect.  The
 interrupt priority is set by the call to  ConfigIntUART2() in 
 xSerialPortInitMinimal(). */
-void __attribute__( (interrupt(ipl1), vector(_UART2_VECTOR))) vU2InterruptWrapper( void );
+void __attribute__( (interrupt(ipl0), vector(_UART2_VECTOR))) vU2InterruptWrapper( void );
 
 /*-----------------------------------------------------------*/
 
@@ -144,7 +157,7 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 	if( xTxHasEnded )
 	{
 		xTxHasEnded = pdFALSE;
-		IFS1bits.U2TXIF = serSET_FLAG;
+		IFS1SET = _IFS1_U2TXIF_MASK;
 	}
 
 	return pdPASS;
@@ -165,7 +178,7 @@ static portBASE_TYPE xHigherPriorityTaskWoken;
 	xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Are any Rx interrupts pending? */
-	if( mU2RXGetIntFlag() )
+	if( IFS1bits.U2RXIF == 1)
 	{
 		while( U2STAbits.URXDA )
 		{
@@ -174,11 +187,11 @@ static portBASE_TYPE xHigherPriorityTaskWoken;
 			cChar = U2RXREG;
 			xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken );
 		}
-		mU2RXClearIntFlag();
+		IFS1CLR = _IFS1_U2RXIF_MASK;
 	}
 
 	/* Are any Tx interrupts pending? */
-	if( mU2TXGetIntFlag() )
+	if( IFS1bits.U2TXIF == 1 )
 	{
 		while( !( U2STAbits.UTXBF ) )
 		{
@@ -195,7 +208,7 @@ static portBASE_TYPE xHigherPriorityTaskWoken;
 			}
 		}
 
-		mU2TXClearIntFlag();
+		IFS1CLR = _IFS1_U2TXIF_MASK;
 	}
 
 	/* If sending or receiving necessitates a context switch, then switch now. */

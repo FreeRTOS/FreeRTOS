@@ -149,6 +149,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define INCLUDE_xTimerGetTimerDaemonTaskHandle 0
 #endif
 
+#ifndef INCLUDE_xQueueGetMutexHolder
+	#define INCLUDE_xQueueGetMutexHolder 0
+#endif
+
 #ifndef INCLUDE_pcTaskGetTaskName
 	#define INCLUDE_pcTaskGetTaskName 0
 #endif

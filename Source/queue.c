@@ -278,26 +278,9 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
 
 portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue )
 {
-portBASE_TYPE xReturn = pdPASS;
-
 	configASSERT( pxQueue );
 
-	/* If the queue being reset has already been used (has not just been
-	created), then only reset the queue if its event lists are empty. */
-	if( xNewQueue != pdTRUE )
-	{
-		if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
-		{
-			xReturn = pdFAIL;
-		}
-
-		if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
-		{
-			xReturn = pdFAIL;
-		}
-	}
-
-	if( xReturn == pdPASS )
+	taskENTER_CRITICAL();
 	{
 		pxQueue->pcTail = pxQueue->pcHead + ( pxQueue->uxLength * pxQueue->uxItemSize );
 		pxQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
@@ -306,12 +289,33 @@ portBASE_TYPE xReturn = pdPASS;
 		pxQueue->xRxLock = queueUNLOCKED;
 		pxQueue->xTxLock = queueUNLOCKED;
 
-		/* Ensure the event queues start with the correct state. */
-		vListInitialise( &( pxQueue->xTasksWaitingToSend ) );
-		vListInitialise( &( pxQueue->xTasksWaitingToReceive ) );
+		if( xNewQueue == pdFALSE )
+		{
+			/* If there are tasks blocked waiting to read from the queue, then 
+			the tasks will remain blocked as after this function exits the queue 
+			will still be empty.  If there are tasks blocked waiting to	write to 
+			the queue, then one should be unblocked as after this function exits 
+			it will be possible to write to it. */
+			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+			{
+				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) == pdTRUE )
+				{
+					portYIELD_WITHIN_API();
+				}
+			}
+		}
+		else
+		{
+			/* Ensure the event queues start in the correct state. */
+			vListInitialise( &( pxQueue->xTasksWaitingToSend ) );
+			vListInitialise( &( pxQueue->xTasksWaitingToReceive ) );		
+		}
 	}
+	taskEXIT_CRITICAL();
 
-	return xReturn;
+	/* A value is returned for calling semantic consistency with previous
+	versions. */
+	return pdPASS;
 }
 /*-----------------------------------------------------------*/
 
@@ -425,7 +429,7 @@ xQueueHandle xReturn = NULL;
 #endif /* configUSE_MUTEXES */
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_MUTEXES == 1 )
+#if ( ( configUSE_MUTEXES == 1 ) && ( INCLUDE_xQueueGetMutexHolder == 1 ) )
 
 	void* xQueueGetMutexHolder( xQueueHandle xSemaphore )
 	{
@@ -1024,7 +1028,6 @@ signed char *pcOriginalReadPosition;
 							portYIELD_WITHIN_API();
 						}
 					}
-
 				}
 
 				taskEXIT_CRITICAL();

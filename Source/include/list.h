@@ -140,6 +140,15 @@ typedef struct xLIST
 #define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )		( pxListItem )->pvOwner = ( void * ) ( pxOwner )
 
 /*
+ * Access macro to get the owner of a list item.  The owner of a list item
+ * is the object (usually a TCB) that contains the list item.
+ *
+ * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
+ * \ingroup LinkedList
+ */
+#define listGET_LIST_ITEM_OWNER( pxListItem )		( pxListItem )->pvOwner
+
+/*
  * Access macro to set the value of the list item.  In most cases the value is
  * used to sort the list in descending order.
  *
@@ -149,7 +158,7 @@ typedef struct xLIST
 #define listSET_LIST_ITEM_VALUE( pxListItem, xValue )		( pxListItem )->xItemValue = ( xValue )
 
 /*
- * Access macro the retrieve the value of the list item.  The value can
+ * Access macro to retrieve the value of the list item.  The value can
  * represent anything - for example a the priority of a task, or the time at
  * which a task should be unblocked.
  *
@@ -243,6 +252,13 @@ xList * const pxConstList = ( pxList );													\
  * pointer against
  */
 #define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) )
+
+/*
+ * This provides a crude means of knowing if a list has been initialised, as
+ * pxList->xListEnd.xItemValue is set to portMAX_DELAY by the vListInitialise()
+ * function.
+ */
+#define listLIST_IS_INITIALISED( pxList ) ( ( pxList )->xListEnd.xItemValue == portMAX_DELAY )
 
 /*
  * Must be called before a list is used!  This initialises all the members

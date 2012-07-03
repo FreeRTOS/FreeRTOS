@@ -157,12 +157,12 @@ typedef xQUEUE * xQueueHandle;
  * functions are documented in the API header file.
  */
 xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
 unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
 signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 xQueueHandle xQueueCreateMutex( unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
 xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
@@ -905,7 +905,6 @@ signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
 
 	configASSERT( pxQueue );
-	configASSERT( pxHigherPriorityTaskWoken );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
 	/* Similar to xQueueGenericSend, except we don't block if there is no room
@@ -931,7 +930,10 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 					{
 						/* The task waiting has a higher priority so record that a
 						context	switch is required. */
-						*pxHigherPriorityTaskWoken = pdTRUE;
+						if( pxHigherPriorityTaskWoken != NULL )
+						{
+							*pxHigherPriorityTaskWoken = pdTRUE;
+						}
 					}
 				}
 			}
@@ -1105,13 +1107,12 @@ signed char *pcOriginalReadPosition;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxTaskWoken )
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
 
 	configASSERT( pxQueue );
-	configASSERT( pxTaskWoken );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -1135,7 +1136,10 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 					{
 						/* The task waiting has a higher priority than us so
 						force a context switch. */
-						*pxTaskWoken = pdTRUE;
+						if( pxHigherPriorityTaskWoken != NULL )
+						{
+							*pxHigherPriorityTaskWoken = pdTRUE;
+						}
 					}
 				}
 			}

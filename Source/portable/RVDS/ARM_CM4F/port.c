@@ -76,6 +76,10 @@
 	#error This port can only be used when the project options are configured to enable hardware floating point support.
 #endif
 
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY == 0
+	#error configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.  See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html
+#endif
+
 /* Constants required to manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL		( ( volatile unsigned long *) 0xe000e010 )
 #define portNVIC_SYSTICK_LOAD		( ( volatile unsigned long *) 0xe000e014 )

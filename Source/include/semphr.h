@@ -556,6 +556,40 @@ typedef xQueueHandle xSemaphoreHandle;
 
 /**
  * semphr. h
+ * <pre>
+ xSemaphoreTakeFromISR( 
+                          xSemaphoreHandle xSemaphore, 
+                          signed portBASE_TYPE *pxHigherPriorityTaskWoken
+                      )</pre>
+ *
+ * <i>Macro</i> to  take a semaphore from an ISR.  The semaphore must have 
+ * previously been created with a call to vSemaphoreCreateBinary() or 
+ * xSemaphoreCreateCounting().
+ *
+ * Mutex type semaphores (those created using a call to xSemaphoreCreateMutex())
+ * must not be used with this macro.
+ *
+ * This macro can be used from an ISR, however taking a semaphore from an ISR
+ * is not a common operation.  It is likely to only be useful when taking a
+ * counting semaphore when an interrupt is obtaining an object from a resource
+ * pool (when the semaphore count indicates the number of resources available).
+ *
+ * @param xSemaphore A handle to the semaphore being taken.  This is the
+ * handle returned when the semaphore was created.
+ *
+ * @param pxHigherPriorityTaskWoken xSemaphoreTakeFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if taking the semaphore caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xSemaphoreTakeFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
+ *
+ * @return pdTRUE if the semaphore was successfully taken, otherwise 
+ * pdFALSE
+ */
+#define xSemaphoreTakeFromISR( xSemaphore, pxHigherPriorityTaskWoken )			xQueueReceiveFromISR( ( xQueueHandle ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ) )
+
+/**
+ * semphr. h
  * <pre>xSemaphoreHandle xSemaphoreCreateMutex( void )</pre>
  *
  * <i>Macro</i> that implements a mutex semaphore by using the existing queue 

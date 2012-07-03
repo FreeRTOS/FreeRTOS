@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "RTOSDemo", "RTOSDemo.cproj", "{3D8959CD-73CA-4147-9C1B-CFCF2EE40326}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D8959CD-73CA-4147-9C1B-CFCF2EE40326}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3D8959CD-73CA-4147-9C1B-CFCF2EE40326}.Debug|ARM.Build.0 = Debug|ARM
+		{3D8959CD-73CA-4147-9C1B-CFCF2EE40326}.Release|ARM.ActiveCfg = Release|ARM
+		{3D8959CD-73CA-4147-9C1B-CFCF2EE40326}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

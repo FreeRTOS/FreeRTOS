@@ -1,0 +1,797 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>6.0</ProjectVersion>
+    <ProjectGuid>{3d8959cd-73ca-4147-9c1b-cfcf2ee40326}</ProjectGuid>
+    <Name>$(MSBuildProjectName)</Name>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+    <AsfVersion>3.1.3</AsfVersion>
+    <AsfFrameworkConfig>
+      <framework-data>
+        <options>
+          <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.pio" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.utils.cmsis.sam4s.source.template" value="Add" config="" content-id="Atmel.ASF" />
+        </options>
+        <configurations />
+        <files>
+          <file framework="" version="3.1.3" path="src/asf.h" source="./common/applications/user_application/sam4s16c_sam4s_ek/as5_arm_template/asf.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/main.c" source="common/applications/user_application/main.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/config/conf_board.h" source="common/applications/user_application/sam4s16c_sam4s_ek/conf_board.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/common/boards/board.h" source="common/boards/board.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/common/services/gpio/gpio.h" source="common/services/gpio/gpio.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/common/services/gpio/sam_ioport/sam_gpio.h" source="common/services/gpio/sam_ioport/sam_gpio.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/common/utils/interrupt.h" source="common/utils/interrupt.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/common/utils/interrupt/interrupt_sam_nvic.c" source="common/utils/interrupt/interrupt_sam_nvic.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/common/utils/interrupt/interrupt_sam_nvic.h" source="common/utils/interrupt/interrupt_sam_nvic.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/boards/sam4s_ek/init.c" source="sam/boards/sam4s_ek/init.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/boards/sam4s_ek/sam4s_ek.h" source="sam/boards/sam4s_ek/sam4s_ek.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/drivers/pio/pio.c" source="sam/drivers/pio/pio.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/drivers/pio/pio.h" source="sam/drivers/pio/pio.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/drivers/pio/pio_handler.c" source="sam/drivers/pio/pio_handler.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/drivers/pio/pio_handler.h" source="sam/drivers/pio/pio_handler.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_acc.h" source="sam/utils/cmsis/sam4s/include/component/component_acc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_adc.h" source="sam/utils/cmsis/sam4s/include/component/component_adc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_chipid.h" source="sam/utils/cmsis/sam4s/include/component/component_chipid.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_crccu.h" source="sam/utils/cmsis/sam4s/include/component/component_crccu.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_dacc.h" source="sam/utils/cmsis/sam4s/include/component/component_dacc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_efc.h" source="sam/utils/cmsis/sam4s/include/component/component_efc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_gpbr.h" source="sam/utils/cmsis/sam4s/include/component/component_gpbr.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_hsmci.h" source="sam/utils/cmsis/sam4s/include/component/component_hsmci.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_matrix.h" source="sam/utils/cmsis/sam4s/include/component/component_matrix.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_pdc.h" source="sam/utils/cmsis/sam4s/include/component/component_pdc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_pio.h" source="sam/utils/cmsis/sam4s/include/component/component_pio.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_pmc.h" source="sam/utils/cmsis/sam4s/include/component/component_pmc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_pwm.h" source="sam/utils/cmsis/sam4s/include/component/component_pwm.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_rstc.h" source="sam/utils/cmsis/sam4s/include/component/component_rstc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_rtc.h" source="sam/utils/cmsis/sam4s/include/component/component_rtc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_rtt.h" source="sam/utils/cmsis/sam4s/include/component/component_rtt.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_smc.h" source="sam/utils/cmsis/sam4s/include/component/component_smc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_spi.h" source="sam/utils/cmsis/sam4s/include/component/component_spi.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_ssc.h" source="sam/utils/cmsis/sam4s/include/component/component_ssc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_supc.h" source="sam/utils/cmsis/sam4s/include/component/component_supc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_tc.h" source="sam/utils/cmsis/sam4s/include/component/component_tc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_twi.h" source="sam/utils/cmsis/sam4s/include/component/component_twi.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_uart.h" source="sam/utils/cmsis/sam4s/include/component/component_uart.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_udp.h" source="sam/utils/cmsis/sam4s/include/component/component_udp.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_usart.h" source="sam/utils/cmsis/sam4s/include/component/component_usart.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/component/component_wdt.h" source="sam/utils/cmsis/sam4s/include/component/component_wdt.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_acc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_acc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_adc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_adc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_chipid.h" source="sam/utils/cmsis/sam4s/include/instance/instance_chipid.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_crccu.h" source="sam/utils/cmsis/sam4s/include/instance/instance_crccu.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_dacc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_dacc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_efc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_efc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_gpbr.h" source="sam/utils/cmsis/sam4s/include/instance/instance_gpbr.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_hsmci.h" source="sam/utils/cmsis/sam4s/include/instance/instance_hsmci.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_matrix.h" source="sam/utils/cmsis/sam4s/include/instance/instance_matrix.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_pioa.h" source="sam/utils/cmsis/sam4s/include/instance/instance_pioa.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_piob.h" source="sam/utils/cmsis/sam4s/include/instance/instance_piob.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_pioc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_pioc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_pmc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_pmc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_pwm.h" source="sam/utils/cmsis/sam4s/include/instance/instance_pwm.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_rstc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_rstc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_rtc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_rtc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_rtt.h" source="sam/utils/cmsis/sam4s/include/instance/instance_rtt.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_smc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_smc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_spi.h" source="sam/utils/cmsis/sam4s/include/instance/instance_spi.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_ssc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_ssc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_supc.h" source="sam/utils/cmsis/sam4s/include/instance/instance_supc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_tc0.h" source="sam/utils/cmsis/sam4s/include/instance/instance_tc0.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_tc1.h" source="sam/utils/cmsis/sam4s/include/instance/instance_tc1.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_twi0.h" source="sam/utils/cmsis/sam4s/include/instance/instance_twi0.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_twi1.h" source="sam/utils/cmsis/sam4s/include/instance/instance_twi1.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_uart0.h" source="sam/utils/cmsis/sam4s/include/instance/instance_uart0.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_uart1.h" source="sam/utils/cmsis/sam4s/include/instance/instance_uart1.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_udp.h" source="sam/utils/cmsis/sam4s/include/instance/instance_udp.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_usart0.h" source="sam/utils/cmsis/sam4s/include/instance/instance_usart0.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_usart1.h" source="sam/utils/cmsis/sam4s/include/instance/instance_usart1.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/instance/instance_wdt.h" source="sam/utils/cmsis/sam4s/include/instance/instance_wdt.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/pio/pio_sam4s16c.h" source="sam/utils/cmsis/sam4s/include/pio/pio_sam4s16c.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/sam4s.h" source="sam/utils/cmsis/sam4s/include/sam4s.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/include/sam4s16c.h" source="sam/utils/cmsis/sam4s/include/sam4s16c.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/source/templates/exceptions.c" source="sam/utils/cmsis/sam4s/source/templates/exceptions.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/source/templates/exceptions.h" source="sam/utils/cmsis/sam4s/source/templates/exceptions.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.c" source="sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/source/templates/system_sam4s.c" source="sam/utils/cmsis/sam4s/source/templates/system_sam4s.c" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/cmsis/sam4s/source/templates/system_sam4s.h" source="sam/utils/cmsis/sam4s/source/templates/system_sam4s.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/compiler.h" source="sam/utils/compiler.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/header_files/io.h" source="sam/utils/header_files/io.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld" source="sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/make/Makefile.in" source="sam/utils/make/Makefile.in" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/parts.h" source="sam/utils/parts.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/preprocessor/mrepeat.h" source="sam/utils/preprocessor/mrepeat.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/preprocessor/preprocessor.h" source="sam/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/preprocessor/stringz.h" source="sam/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/preprocessor/tpaste.h" source="sam/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/sam/utils/status_codes.h" source="sam/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" source="thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/Include/arm_math.h" source="thirdparty/CMSIS/Include/arm_math.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/Include/core_cm4.h" source="thirdparty/CMSIS/Include/core_cm4.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/Include/core_cm4_simd.h" source="thirdparty/CMSIS/Include/core_cm4_simd.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/Include/core_cmFunc.h" source="thirdparty/CMSIS/Include/core_cmFunc.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/Include/core_cmInstr.h" source="thirdparty/CMSIS/Include/core_cmInstr.h" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/Lib/GCC/libarm_cortexM4l_math.a" source="thirdparty/CMSIS/Lib/GCC/libarm_cortexM4l_math.a" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/README.txt" source="thirdparty/CMSIS/README.txt" changed="False" content-id="Atmel.ASF" />
+          <file framework="" version="3.1.3" path="src/asf/thirdparty/CMSIS/license.txt" source="thirdparty/CMSIS/license.txt" changed="False" content-id="Atmel.ASF" />
+        </files>
+        <documentation help="http://asf.atmel.com/docs/3.1.3/common.applications.user_application.sam4s_ek/html/index.html" />
+      </framework-data>
+    </AsfFrameworkConfig>
+    <avrdevice>ATSAM4S16C</avrdevice>
+    <avrdeviceseries>sam4s</avrdeviceseries>
+    <Language>C</Language>
+    <ToolchainName>com.Atmel.ARMGCC</ToolchainName>
+    <ArmGccProjectExtensions />
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputType>Executable</OutputType>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <OverrideVtorValue />
+    <eraseonlaunchrule>1</eraseonlaunchrule>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <ArmGcc>
+        <armgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>ARM_MATH_CM4=true</Value>
+            <Value>BOARD=SAM4S_EK</Value>
+            <Value>__SAM4S16C__</Value>
+          </ListValues>
+        </armgcc.compiler.symbols.DefSymbols>
+        <armgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/services/gpio</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/sam/boards/sam4s_ek</Value>
+            <Value>../src/asf/sam/drivers/pio</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src/config</Value>
+          </ListValues>
+        </armgcc.compiler.directories.IncludePaths>
+        <armgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/services/gpio</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/sam/boards/sam4s_ek</Value>
+            <Value>../src/asf/sam/drivers/pio</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src/config</Value>
+          </ListValues>
+        </armgcc.assembler.general.IncludePaths>
+        <armgcc.preprocessingassembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/services/gpio</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/sam/boards/sam4s_ek</Value>
+            <Value>../src/asf/sam/drivers/pio</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src/config</Value>
+          </ListValues>
+        </armgcc.preprocessingassembler.general.IncludePaths>
+        <!-- Project configurable options -->
+        <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
+        <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
+        <armgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>arm_cortexM4l_math</Value>
+          </ListValues>
+        </armgcc.linker.libraries.Libraries>
+        <armgcc.linker.libraries.LibrarySearchPaths>
+          <ListValues>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+          </ListValues>
+        </armgcc.linker.libraries.LibrarySearchPaths>
+        <armgcc.linker.general.DoNotUseStandardStartFiles />
+        <armgcc.linker.general.DoNotUseDefaultLibraries />
+        <armgcc.linker.general.NoStartupOrDefaultLibs />
+        <!-- Fixed options, according to ASF 2 AVR32 Makefile -->
+        <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+        <armgcc.compiler.optimization.DebugLevel>None</armgcc.compiler.optimization.DebugLevel>
+        <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+        <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
+        <armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
+        <armgcc.assembler.general.AssemblerFlags />
+        <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4S_EK -D__SAM4S16C__</armgcc.preprocessingassembler.general.AssemblerFlags>
+      </ArmGcc>
+    </ToolchainSettings>
+    <GenerateHexFile>True</GenerateHexFile>
+    <GenerateMapFile>True</GenerateMapFile>
+    <GenerateListFile>True</GenerateListFile>
+    <GenerateEepFile>True</GenerateEepFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>ARM_MATH_CM4=true</Value>
+      <Value>BOARD=SAM4S_EK</Value>
+      <Value>__SAM4S16C__</Value>
+    </ListValues>
+  </armgcc.compiler.symbols.DefSymbols>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>../src</Value>
+      <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+      <Value>../src/asf/common/boards</Value>
+      <Value>../src/asf/common/services/gpio</Value>
+      <Value>../src/asf/common/utils</Value>
+      <Value>../src/asf/sam/boards</Value>
+      <Value>../src/asf/sam/boards/sam4s_ek</Value>
+      <Value>../src/asf/sam/drivers/pio</Value>
+      <Value>../src/asf/sam/utils</Value>
+      <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+      <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+      <Value>../src/asf/sam/utils/header_files</Value>
+      <Value>../src/asf/sam/utils/preprocessor</Value>
+      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/config</Value>
+      <Value>../src/FreeRTOS-Source/include</Value>
+      <Value>../src/FreeRTOS-Source/portable/GCC/ARM_CM3</Value>
+      <Value>../src/Common-Demo-Source/include</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
+  <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+  <armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>arm_cortexM4l_math</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
+  <armgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src</Value>
+      <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+      <Value>../src/asf/common/boards</Value>
+      <Value>../src/asf/common/services/gpio</Value>
+      <Value>../src/asf/common/utils</Value>
+      <Value>../src/asf/sam/boards</Value>
+      <Value>../src/asf/sam/boards/sam4s_ek</Value>
+      <Value>../src/asf/sam/drivers/pio</Value>
+      <Value>../src/asf/sam/utils</Value>
+      <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+      <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+      <Value>../src/asf/sam/utils/header_files</Value>
+      <Value>../src/asf/sam/utils/preprocessor</Value>
+      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/config</Value>
+    </ListValues>
+  </armgcc.assembler.general.IncludePaths>
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4S_EK -D__SAM4S16C__</armgcc.preprocessingassembler.general.AssemblerFlags>
+  <armgcc.preprocessingassembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src</Value>
+      <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+      <Value>../src/asf/common/boards</Value>
+      <Value>../src/asf/common/services/gpio</Value>
+      <Value>../src/asf/common/utils</Value>
+      <Value>../src/asf/sam/boards</Value>
+      <Value>../src/asf/sam/boards/sam4s_ek</Value>
+      <Value>../src/asf/sam/drivers/pio</Value>
+      <Value>../src/asf/sam/utils</Value>
+      <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+      <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+      <Value>../src/asf/sam/utils/header_files</Value>
+      <Value>../src/asf/sam/utils/preprocessor</Value>
+      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/config</Value>
+    </ListValues>
+  </armgcc.preprocessingassembler.general.IncludePaths>
+</ArmGcc>
+    </ToolchainSettings>
+    <GenerateHexFile>True</GenerateHexFile>
+    <GenerateMapFile>True</GenerateMapFile>
+    <GenerateListFile>True</GenerateListFile>
+    <GenerateEepFile>True</GenerateEepFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src\asf\common\utils\interrupt\interrupt_sam_nvic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\sam\boards\sam4s_ek\init.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\sam\drivers\pio\pio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\sam\drivers\pio\pio_handler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\sam\utils\cmsis\sam4s\source\templates\exceptions.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\sam\utils\cmsis\sam4s\source\templates\gcc\startup_sam4s.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\sam\utils\cmsis\sam4s\source\templates\system_sam4s.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\BlockQ.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\blocktim.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\countsem.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\death.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\dynamic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\GenQTest.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\BlockQ.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\blocktim.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\countsem.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\death.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\dynamic.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\GenQTest.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\integer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\partest.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\PollQ.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\recmutex.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\include\semtest.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\integer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\PollQ.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\recmutex.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\semtest.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\include\FreeRTOS.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\include\queue.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\include\semphr.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\include\task.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\include\timers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\list.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\portable\GCC\ARM_CM3\port.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\portable\MemMang\heap_2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\queue.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\tasks.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\FreeRTOS-Source\timers.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\main_blinky.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\main_full.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ParTest.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\asf.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\common\boards\board.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\common\services\gpio\gpio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\common\services\gpio\sam_ioport\sam_gpio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\common\utils\interrupt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\common\utils\interrupt\interrupt_sam_nvic.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\boards\sam4s_ek\sam4s_ek.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\drivers\pio\pio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\drivers\pio\pio_handler.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_acc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_chipid.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_crccu.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_dacc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_efc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_gpbr.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_hsmci.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_matrix.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_pdc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_pio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_pmc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_pwm.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_rstc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_rtc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_rtt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_smc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_spi.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_ssc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_supc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_tc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_twi.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_uart.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_udp.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_usart.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\component\component_wdt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_acc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_chipid.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_crccu.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_dacc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_efc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_gpbr.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_hsmci.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_matrix.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_pioa.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_piob.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_pioc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_pmc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_pwm.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_rstc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_rtc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_rtt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_smc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_spi.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_ssc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_supc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_tc0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_tc1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_twi0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_twi1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_uart0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_uart1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_udp.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_usart0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_usart1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\instance\instance_wdt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\pio\pio_sam4s16c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\sam4s.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\include\sam4s16c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\source\templates\exceptions.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\cmsis\sam4s\source\templates\system_sam4s.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\compiler.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\header_files\io.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\linker_scripts\sam4s\sam4s16\gcc\flash.ld">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\make\Makefile.in">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\parts.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\preprocessor\mrepeat.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\preprocessor\preprocessor.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\preprocessor\stringz.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\preprocessor\tpaste.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\sam\utils\status_codes.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\CMSIS END USER LICENCE AGREEMENT.pdf">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\Include\arm_math.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\Include\core_cm4.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\Include\core_cm4_simd.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\Include\core_cmFunc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\Include\core_cmInstr.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\Lib\GCC\libarm_cortexM4l_math.a">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\README.txt">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf\thirdparty\CMSIS\license.txt">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_board.h">
+      <SubType>compile</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
+    <Folder Include="src\asf\" />
+    <Folder Include="src\asf\common\" />
+    <Folder Include="src\asf\common\boards\" />
+    <Folder Include="src\asf\common\services\" />
+    <Folder Include="src\asf\common\services\gpio\" />
+    <Folder Include="src\asf\common\services\gpio\sam_ioport\" />
+    <Folder Include="src\asf\common\utils\" />
+    <Folder Include="src\asf\common\utils\interrupt\" />
+    <Folder Include="src\asf\sam\" />
+    <Folder Include="src\asf\sam\boards\" />
+    <Folder Include="src\asf\sam\boards\sam4s_ek\" />
+    <Folder Include="src\asf\sam\drivers\" />
+    <Folder Include="src\asf\sam\drivers\pio\" />
+    <Folder Include="src\asf\sam\utils\" />
+    <Folder Include="src\asf\sam\utils\cmsis\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\include\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\include\component\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\include\instance\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\include\pio\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\source\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\source\templates\" />
+    <Folder Include="src\asf\sam\utils\cmsis\sam4s\source\templates\gcc\" />
+    <Folder Include="src\asf\sam\utils\header_files\" />
+    <Folder Include="src\asf\sam\utils\linker_scripts\" />
+    <Folder Include="src\asf\sam\utils\linker_scripts\sam4s\" />
+    <Folder Include="src\asf\sam\utils\linker_scripts\sam4s\sam4s16\" />
+    <Folder Include="src\asf\sam\utils\linker_scripts\sam4s\sam4s16\gcc\" />
+    <Folder Include="src\asf\sam\utils\make\" />
+    <Folder Include="src\asf\sam\utils\preprocessor\" />
+    <Folder Include="src\asf\thirdparty\" />
+    <Folder Include="src\asf\thirdparty\CMSIS\" />
+    <Folder Include="src\asf\thirdparty\CMSIS\Include\" />
+    <Folder Include="src\asf\thirdparty\CMSIS\Lib\" />
+    <Folder Include="src\asf\thirdparty\CMSIS\Lib\GCC\" />
+    <Folder Include="src\Common-Demo-Source\include" />
+    <Folder Include="src\config\" />
+    <Folder Include="src\FreeRTOS-Source" />
+    <Folder Include="src\FreeRTOS-Source\include" />
+    <Folder Include="src\FreeRTOS-Source\portable" />
+    <Folder Include="src\FreeRTOS-Source\portable\GCC" />
+    <Folder Include="src\FreeRTOS-Source\portable\GCC\ARM_CM3" />
+    <Folder Include="src\Common-Demo-Source" />
+    <Folder Include="src\FreeRTOS-Source\portable\MemMang" />
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>

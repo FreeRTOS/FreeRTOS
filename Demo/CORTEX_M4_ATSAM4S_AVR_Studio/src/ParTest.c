@@ -98,7 +98,7 @@ static const uint32_t ulLED[] = { LED2_GPIO, LED0_GPIO, LED1_GPIO };
 
 void vParTestInitialise( void )
 {
-long l;
+unsigned long ul;
 
 	for( l = 0; l < partestNUM_LEDS; l++ )
 	{

@@ -251,6 +251,9 @@
       <Value>ARM_MATH_CM4=true</Value>
       <Value>BOARD=SAM4S_EK</Value>
       <Value>__SAM4S16C__</Value>
+      <Value>XMEGA=0</Value>
+      <Value>MEGA=0</Value>
+      <Value>UC3=0</Value>
     </ListValues>
   </armgcc.compiler.symbols.DefSymbols>
   <armgcc.compiler.directories.IncludePaths>
@@ -271,17 +274,16 @@
       <Value>../src/asf/thirdparty/CMSIS/Include</Value>
       <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
       <Value>../src/config</Value>
-      <Value>../src/FreeRTOS-Source/include</Value>
-      <Value>../src/FreeRTOS-Source/portable/GCC/ARM_CM3</Value>
+      <Value>../src/asf/thirdparty/FreeRTOS/include</Value>
+      <Value>../src/asf/thirdparty/FreeRTOS/portable/GCC/ARM_CM3</Value>
       <Value>../src/Common-Demo-Source/include</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
-  <armgcc.compiler.optimization.level>Optimize (-O1)</armgcc.compiler.optimization.level>
   <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
   <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
   <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
   <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
-  <armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wextra -std=gnu99 -ffunction-sections -fdata-sections --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
   <armgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>arm_cortexM4l_math</Value>
@@ -364,6 +366,60 @@
     <Compile Include="src\asf\sam\utils\cmsis\sam4s\source\templates\system_sam4s.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\croutine.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\FreeRTOS.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\mpu_wrappers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\portable.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\projdefs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\queue.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\semphr.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\StackMacros.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\task.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\include\timers.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\list.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\portable\GCC\ARM_CM3\port.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\portable\GCC\ARM_CM3\portmacro.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\portable\MemMang\heap_2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\queue.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\tasks.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\timers.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\Common-Demo-Source\BlockQ.c">
       <SubType>compile</SubType>
     </Compile>
@@ -427,37 +483,7 @@
     <Compile Include="src\Common-Demo-Source\semtest.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\FreeRTOS-Source\include\FreeRTOS.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\include\queue.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\include\semphr.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\include\task.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\include\timers.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\list.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\portable\GCC\ARM_CM3\port.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\portable\MemMang\heap_2.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\queue.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\tasks.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\FreeRTOS-Source\timers.c">
+    <Compile Include="src\FreeRTOSConfig.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">
@@ -783,15 +809,15 @@
     <Folder Include="src\asf\thirdparty\CMSIS\Include\" />
     <Folder Include="src\asf\thirdparty\CMSIS\Lib\" />
     <Folder Include="src\asf\thirdparty\CMSIS\Lib\GCC\" />
+    <Folder Include="src\asf\thirdparty\FreeRTOS\" />
+    <Folder Include="src\asf\thirdparty\FreeRTOS\include\" />
+    <Folder Include="src\asf\thirdparty\FreeRTOS\portable\" />
+    <Folder Include="src\asf\thirdparty\FreeRTOS\portable\GCC\" />
+    <Folder Include="src\asf\thirdparty\FreeRTOS\portable\GCC\ARM_CM3\" />
+    <Folder Include="src\asf\thirdparty\FreeRTOS\portable\MemMang\" />
     <Folder Include="src\Common-Demo-Source\include" />
     <Folder Include="src\config\" />
-    <Folder Include="src\FreeRTOS-Source" />
-    <Folder Include="src\FreeRTOS-Source\include" />
-    <Folder Include="src\FreeRTOS-Source\portable" />
-    <Folder Include="src\FreeRTOS-Source\portable\GCC" />
-    <Folder Include="src\FreeRTOS-Source\portable\GCC\ARM_CM3" />
     <Folder Include="src\Common-Demo-Source" />
-    <Folder Include="src\FreeRTOS-Source\portable\MemMang" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

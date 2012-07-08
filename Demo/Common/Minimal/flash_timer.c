@@ -94,19 +94,19 @@ static void prvLEDTimerCallback( xTimerHandle xTimer );
 
 /*-----------------------------------------------------------*/
 
-void vStartLEDFlashTimers( unsigned portBASE_TYPE xNumberOfLEDs )
+void vStartLEDFlashTimers( unsigned portBASE_TYPE uxNumberOfLEDs )
 {
-portBASE_TYPE xLEDTimer;
+unsigned portBASE_TYPE uxLEDTimer;
 xTimerHandle xTimer;
 
 	/* Create and start the requested number of timers. */
-	for( xLEDTimer = 0; xLEDTimer < xNumberOfLEDs; ++xLEDTimer )
+	for( uxLEDTimer = 0; uxLEDTimer < uxNumberOfLEDs; ++uxLEDTimer )
 	{
 		/* Create the timer. */
 		xTimer = xTimerCreate( 	( const signed char * const ) "Flasher",/* A text name, purely to help debugging. */
-								ledFLASH_RATE_BASE * ( xLEDTimer + 1 ),	/* The timer period, which is a multiple of ledFLASH_RATE_BASE. */
+								ledFLASH_RATE_BASE * ( uxLEDTimer + 1 ),	/* The timer period, which is a multiple of ledFLASH_RATE_BASE. */
 								pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) xLEDTimer,					/* The ID is used to identify the timer within the timer callback function, as each timer uses the same callback. */
+								( void * ) uxLEDTimer,					/* The ID is used to identify the timer within the timer callback function, as each timer uses the same callback. */
 								prvLEDTimerCallback						/* Each timer uses the same callback. */
 							  );
 				

@@ -67,7 +67,14 @@
 #include <pio.h>
 #include <pio_handler.h>
 
-// From module: SAM4S startup code
-#include <exceptions.h>
+// From module: PMC - Power Management Controller
+#include <pmc.h>
+#include <sleep.h>
+
+// From module: System Clock Control - SAM4S implementation
+#include <sysclk.h>
+
+// From module: USART - Univ. Syn Async Rec/Trans
+#include <usart.h>
 
 #endif // ASF_H

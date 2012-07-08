@@ -128,7 +128,7 @@ will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
-/* Values passed to the two tasks just to check the task parameter
+/* Values passed to the two tasks just to check the task parameter 
 functionality. */
 #define mainQUEUE_SEND_PARAMETER			( 0x1111UL )
 #define mainQUEUE_RECEIVE_PARAMETER			( 0x22UL )
@@ -146,11 +146,6 @@ static void prvQueueSendTask( void *pvParameters );
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  */
 void main_blinky( void );
-
-/*
- * The hardware only has a single LED.  Simply toggle it.
- */
-extern void vMainToggleLED( void );
 
 /*-----------------------------------------------------------*/
 

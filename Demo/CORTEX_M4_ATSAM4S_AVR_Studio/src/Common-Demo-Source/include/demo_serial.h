@@ -64,89 +64,74 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/*-----------------------------------------------------------
- * Simple IO routines to control the LEDs.
- *-----------------------------------------------------------*/
+#ifndef SERIAL_COMMS_H
+#define SERIAL_COMMS_H
 
-/* Scheduler includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+typedef void * xComPortHandle;
 
-/* Demo includes. */
-#include "partest.h"
+typedef enum
+{ 
+	serCOM1, 
+	serCOM2, 
+	serCOM3, 
+	serCOM4, 
+	serCOM5, 
+	serCOM6, 
+	serCOM7, 
+	serCOM8 
+} eCOMPort;
 
-/* Library includes. */
-#include <board.h>
-#include <gpio.h>
+typedef enum 
+{ 
+	serNO_PARITY, 
+	serODD_PARITY, 
+	serEVEN_PARITY, 
+	serMARK_PARITY, 
+	serSPACE_PARITY 
+} eParity;
 
-/* The number of LEDs available to the user on the evaluation kit. */
-#define partestNUM_LEDS			( 3UL )
+typedef enum 
+{ 
+	serSTOP_1, 
+	serSTOP_2 
+} eStopBits;
 
-/* Definitions not included in sam3s_ek.h. */
-#define LED2_GPIO 				( PIO_PC20_IDX )
+typedef enum 
+{ 
+	serBITS_5, 
+	serBITS_6, 
+	serBITS_7, 
+	serBITS_8 
+} eDataBits;
 
-/* One of the LEDs is wired in the inverse to the others as it is also used as
-the power LED. */
-#define partstsINVERTED_LED		( 0UL )
+typedef enum 
+{ 
+	ser50,		
+	ser75,		
+	ser110,		
+	ser134,		
+	ser150,    
+	ser200,
+	ser300,		
+	ser600,		
+	ser1200,	
+	ser1800,	
+	ser2400,   
+	ser4800,
+	ser9600,		
+	ser19200,	
+	ser38400,	
+	ser57600,	
+	ser115200
+} eBaud;
 
-/* The index of the pins to which the LEDs are connected.  The ordering of the
-LEDs in this array is intentional and matches the order they appear on the 
-hardware. */
-static const uint32_t ulLED[] = { LED2_GPIO, LED0_GPIO, LED1_GPIO };
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength );
+xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned portBASE_TYPE uxBufferLength );
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength );
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime );
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime );
+portBASE_TYPE xSerialWaitForSemaphore( xComPortHandle xPort );
+void vSerialClose( xComPortHandle xPort );
 
-/*-----------------------------------------------------------*/
-
-void vParTestInitialise( void )
-{
-unsigned long ul;
-
-	for( ul = 0; ul < partestNUM_LEDS; ul++ )
-	{
-		/* Configure the LED, before ensuring it starts in the off state. */
-		gpio_configure_pin( ulLED[ ul ],  ( PIO_OUTPUT_1 | PIO_DEFAULT ) );
-		vParTestSetLED( ul, pdFALSE );
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{	
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( uxLED == partstsINVERTED_LED )
-		{
-			xValue = !xValue;					
-		}
-		
-		if( xValue != pdFALSE )
-		{
-			/* Turn the LED on. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_low( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_high( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-	if( uxLED < partestNUM_LEDS )
-	{
-		gpio_toggle_pin( ulLED[ uxLED ] );
-	}
-}
-							
-
+#endif
 

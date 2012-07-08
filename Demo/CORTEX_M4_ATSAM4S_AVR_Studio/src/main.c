@@ -44,7 +44,7 @@
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    not run, what could be wrong?"                                      *
      *                                                                       *
      *    http://www.FreeRTOS.org/FAQHelp.html                               *
      *                                                                       *
@@ -75,16 +75,6 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
- * 
- * Additional code:
- * 
- * This demo does not contain a non-kernel interrupt service routine that
- * can be used as an example for application writers to use as a reference.
- * Therefore, the framework of a dummy (not installed) handler is provided
- * in this file.  The dummy function is called Dummy_IRQHandler().  Please
- * ensure to read the comments in the function itself, but more importantly,
- * the notes on the function contained on the documentation page for this demo
- * that is found on the FreeRTOS.org web site.
  */
 
 /* Standard includes. */
@@ -94,12 +84,16 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Standard demo includes - just needed for the LED (ParTest) initialisation
+function. */
+#include "partest.h"
+
 /* Atmel library includes. */
 #include <asf.h>
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
@@ -116,6 +110,9 @@ extern void main_blinky( void );
 extern void main_full( void );
 
 /*-----------------------------------------------------------*/
+
+/* See the documentation page for this demo on the FreeRTOS.org web site for
+full information - including hardware setup requirements. */
 
 int main( void )
 {
@@ -142,14 +139,18 @@ static void prvSetupHardware( void )
 {
 extern void SystemCoreClockUpdate( void );
 
-	/* Ensure SystemCoreClock variable is set. */
-	SystemCoreClockUpdate();
+	/* ASF function to setup clocking. */
+	sysclk_init();
 
 	/* Ensure all priority bits are assigned as preemption priority bits. */
 	NVIC_SetPriorityGrouping( 0 );
 	
 	/* Atmel library function to setup for the evaluation kit being used. */
 	board_init();
+
+	/* Perform any configuration necessary to use the ParTest LED output 
+	functions. */
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
@@ -207,29 +208,3 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-#ifdef JUST_AN_EXAMPLE_ISR
-
-void Dummy_IRQHandler(void)
-{
-long lHigherPriorityTaskWoken = pdFALSE;
-
-	/* Clear the interrupt if necessary. */
-	Dummy_ClearITPendingBit();
-	
-	/* This interrupt does nothing more than demonstrate how to synchronise a
-	task with an interrupt.  A semaphore is used for this purpose.  Note
-	lHigherPriorityTaskWoken is initialised to zero. */
-	xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
-	
-	/* If there was a task that was blocked on the semaphore, and giving the
-	semaphore caused the task to unblock, and the unblocked task has a priority
-	higher than the current Running state task (the task that this interrupt
-	interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE
-	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the 
-	portEND_SWITCHING_ISR() macro will result in a context switch being pended to
-	ensure this interrupt returns directly to the unblocked, higher priority, 
-	task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
-	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
-}
-
-#endif /* JUST_AN_EXAMPLE_ISR */

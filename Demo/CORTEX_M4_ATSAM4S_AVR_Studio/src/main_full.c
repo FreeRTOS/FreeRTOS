@@ -84,24 +84,20 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Reg test" tasks - These fill both the core and floating point registers with
- * known values, then check that each register maintains its expected value for
- * the lifetime of the task.  Each task uses a different set of values.  The reg
- * test tasks execute with a very low priority, so get preempted very
- * frequently.  A register containing an unexpected value is indicative of an
- * error in the context switching mechanism.
- *
  * "Check" timer - The check software timer period is initially set to three
  * seconds.  The callback function associated with the check software timer
- * checks that all the standard demo tasks, and the register check tasks, are
- * not only still executing, but are executing without reporting any errors.  If
- * the check software timer discovers that a task has either stalled, or
- * reported an error, then it changes its own execution period from the initial
- * three seconds, to just 200ms.  The check software timer callback function
- * also toggles the single LED each time it is called.  This provides a visual
- * indication of the system status:  If the LED toggles every three seconds,
- * then no issues have been discovered.  If the LED toggles every 200ms, then
- * an issue has been discovered with at least one task.
+ * checks that all the standard demo tasks are not only still executing, but 
+ * are executing without reporting any errors.  If the check software timer 
+ * discovers that a task has either stalled, or reported an error, then it 
+ * changes its own execution period from the initial three seconds, to just 
+ * 200ms.  The check software timer callback function also toggles the green 
+ * LED each time it is called.  This provides a visual indication of the system 
+ * status:  If the green LED toggles every three seconds, then no issues have 
+ * been discovered.  If the green LED toggles every 200ms, then an issue has 
+ * been discovered with at least one task.
+ *
+ * See the documentation page for this demo on the FreeRTOS.org web site for
+ * full information, including hardware setup requirements. 
  */
 
 /* Standard includes. */
@@ -124,7 +120,10 @@
 #include "GenQTest.h"
 #include "recmutex.h"
 #include "death.h"
+#include "flash_timer.h"
 #include "partest.h"
+#include "comtest2.h"
+
 
 /* Atmel library includes. */
 #include "asf.h"
@@ -135,6 +134,7 @@
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
 #define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
+#define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -149,8 +149,21 @@ reported in one of the standard demo tasks.  ms are converted to the equivalent
 in ticks using the portTICK_RATE_MS constant. */
 #define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
 
-/* The LED toggles by the check timer. */
-#define mainCHECK_LED						( 3 )
+/* The standard demo flash timers can be used to flash any number of LEDs.  In
+this case, because only three LEDs are available, and one is in use by the
+check timer, only two are used by the flash timers. */
+#define mainNUMBER_OF_FLASH_TIMERS_LEDS		( 2 )
+
+/* The LED toggled by the check timer.  The first two LEDs are toggle by the
+standard demo flash timers. */
+#define mainCHECK_LED						( 2 )
+
+/* Baud rate used by the comtest tasks. */
+#define mainCOM_TEST_BAUD_RATE				( 115200 )
+
+/* The LED used by the comtest tasks. In this case, there are no LEDs available
+for the comtest, so the LED number is deliberately out of range. */
+#define mainCOM_TEST_LED					( 3 )
 
 /*-----------------------------------------------------------*/
 
@@ -177,6 +190,8 @@ xTimerHandle xCheckTimer = NULL;
 	vStartRecursiveMutexTasks();
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartLEDFlashTimers( mainNUMBER_OF_FLASH_TIMERS_LEDS );
+	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -215,7 +230,7 @@ static long lChangedTimerPeriodAlready = pdFALSE;
 unsigned long ulErrorFound = pdFALSE;
 
 	/* Check all the demo tasks (other than the flash tasks) to ensure
-	that they are all still running, and that none have detected an error. */
+	they are all still running, and that none have detected an error. */
 
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
@@ -262,6 +277,11 @@ unsigned long ulErrorFound = pdFALSE;
 		ulErrorFound = pdTRUE;
 	}
 	
+	if( xAreComTestTasksStillRunning() != pdTRUE )
+	{
+		ulErrorFound = pdTRUE;
+	}
+
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */

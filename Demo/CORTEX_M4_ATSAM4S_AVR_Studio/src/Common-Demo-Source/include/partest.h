@@ -64,89 +64,14 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/*-----------------------------------------------------------
- * Simple IO routines to control the LEDs.
- *-----------------------------------------------------------*/
+#ifndef PARTEST_H
+#define PARTEST_H
 
-/* Scheduler includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+#define partstDEFAULT_PORT_ADDRESS		( ( unsigned short ) 0x378 )
 
-/* Demo includes. */
-#include "partest.h"
+void vParTestInitialise( void );
+void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue );
+void vParTestToggleLED( unsigned portBASE_TYPE uxLED );
 
-/* Library includes. */
-#include <board.h>
-#include <gpio.h>
-
-/* The number of LEDs available to the user on the evaluation kit. */
-#define partestNUM_LEDS			( 3UL )
-
-/* Definitions not included in sam3s_ek.h. */
-#define LED2_GPIO 				( PIO_PC20_IDX )
-
-/* One of the LEDs is wired in the inverse to the others as it is also used as
-the power LED. */
-#define partstsINVERTED_LED		( 0UL )
-
-/* The index of the pins to which the LEDs are connected.  The ordering of the
-LEDs in this array is intentional and matches the order they appear on the 
-hardware. */
-static const uint32_t ulLED[] = { LED2_GPIO, LED0_GPIO, LED1_GPIO };
-
-/*-----------------------------------------------------------*/
-
-void vParTestInitialise( void )
-{
-unsigned long ul;
-
-	for( ul = 0; ul < partestNUM_LEDS; ul++ )
-	{
-		/* Configure the LED, before ensuring it starts in the off state. */
-		gpio_configure_pin( ulLED[ ul ],  ( PIO_OUTPUT_1 | PIO_DEFAULT ) );
-		vParTestSetLED( ul, pdFALSE );
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{	
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( uxLED == partstsINVERTED_LED )
-		{
-			xValue = !xValue;					
-		}
-		
-		if( xValue != pdFALSE )
-		{
-			/* Turn the LED on. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_low( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_high( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-	if( uxLED < partestNUM_LEDS )
-	{
-		gpio_toggle_pin( ulLED[ uxLED ] );
-	}
-}
-							
-
+#endif
 

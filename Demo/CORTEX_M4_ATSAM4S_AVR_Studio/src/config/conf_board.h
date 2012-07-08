@@ -43,7 +43,7 @@
 #define CONF_BOARD_H
 
 /* Configure UART pins */
-#define CONF_BOARD_UART_CONSOLE
+//#define CONF_BOARD_UART_CONSOLE
 
 /* Configure ADC example pins */
 //#define CONF_BOARD_ADC
@@ -65,10 +65,10 @@
 //#define CONF_BOARD_SPI_NPCS3
 
 /* Configure USART RXD pin */
-//#define CONF_BOARD_USART_RXD
+#define CONF_BOARD_USART_RXD
 
 /* Configure USART TXD pin */
-//#define CONF_BOARD_USART_TXD
+#define CONF_BOARD_USART_TXD
 
 /* Configure USART CTS pin */
 //#define CONF_BOARD_USART_CTS
@@ -80,7 +80,7 @@
 //#define CONF_BOARD_USART_SCK
 
 /* Configure ADM33312 enable pin */
-//#define CONF_BOARD_ADM3312_EN
+#define CONF_BOARD_ADM3312_EN
 
 /* Configure IrDA transceiver shutdown pin */
 //#define CONF_BOARD_TFDU4300_SD

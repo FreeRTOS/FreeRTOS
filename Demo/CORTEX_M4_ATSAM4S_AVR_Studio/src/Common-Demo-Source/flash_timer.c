@@ -64,89 +64,74 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/*-----------------------------------------------------------
- * Simple IO routines to control the LEDs.
- *-----------------------------------------------------------*/
-
-/* Scheduler includes. */
+/**
+ * Repeatedly toggles one or more LEDs using software timers - one timer per
+ * LED.
+ */
+ 
+/* Scheduler include files. */
 #include "FreeRTOS.h"
-#include "task.h"
+#include "timers.h"
 
-/* Demo includes. */
+/* Demo program include files. */
 #include "partest.h"
+#include "flash_timer.h"
 
-/* Library includes. */
-#include <board.h>
-#include <gpio.h>
+/* The toggle rates are all a multple of ledFLASH_RATE_BASE. */
+#define ledFLASH_RATE_BASE	( ( ( portTickType ) 333 ) / portTICK_RATE_MS )
 
-/* The number of LEDs available to the user on the evaluation kit. */
-#define partestNUM_LEDS			( 3UL )
-
-/* Definitions not included in sam3s_ek.h. */
-#define LED2_GPIO 				( PIO_PC20_IDX )
-
-/* One of the LEDs is wired in the inverse to the others as it is also used as
-the power LED. */
-#define partstsINVERTED_LED		( 0UL )
-
-/* The index of the pins to which the LEDs are connected.  The ordering of the
-LEDs in this array is intentional and matches the order they appear on the 
-hardware. */
-static const uint32_t ulLED[] = { LED2_GPIO, LED0_GPIO, LED1_GPIO };
+/* A block time of zero simple means "don't block". */
+#define ledDONT_BLOCK		( ( portTickType ) 0 )
 
 /*-----------------------------------------------------------*/
 
-void vParTestInitialise( void )
+/*
+ * The callback function used by each LED flashing timer.  All the timers use
+ * this function, and the timer ID is used within the function to determine
+ * which timer has actually expired.
+ */
+static void prvLEDTimerCallback( xTimerHandle xTimer );
+
+/*-----------------------------------------------------------*/
+
+void vStartLEDFlashTimers( unsigned portBASE_TYPE uxNumberOfLEDs )
 {
-unsigned long ul;
+unsigned portBASE_TYPE uxLEDTimer;
+xTimerHandle xTimer;
 
-	for( ul = 0; ul < partestNUM_LEDS; ul++ )
+	/* Create and start the requested number of timers. */
+	for( uxLEDTimer = 0; uxLEDTimer < uxNumberOfLEDs; ++uxLEDTimer )
 	{
-		/* Configure the LED, before ensuring it starts in the off state. */
-		gpio_configure_pin( ulLED[ ul ],  ( PIO_OUTPUT_1 | PIO_DEFAULT ) );
-		vParTestSetLED( ul, pdFALSE );
+		/* Create the timer. */
+		xTimer = xTimerCreate( 	( const signed char * const ) "Flasher",/* A text name, purely to help debugging. */
+								ledFLASH_RATE_BASE * ( uxLEDTimer + 1 ),	/* The timer period, which is a multiple of ledFLASH_RATE_BASE. */
+								pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) uxLEDTimer,					/* The ID is used to identify the timer within the timer callback function, as each timer uses the same callback. */
+								prvLEDTimerCallback						/* Each timer uses the same callback. */
+							  );
+				
+		/* If the timer was created successfully, attempt to start it.  If the
+		scheduler has not yet been started then the timer command queue must
+		be long enough to hold each command sent to it until such time that the
+		scheduler is started.  The timer command queue length is set by
+		configTIMER_QUEUE_LENGTH in FreeRTOSConfig.h. */
+		if( xTimer != NULL )
+		{
+			xTimerStart( xTimer, ledDONT_BLOCK );
+		}							  
 	}
 }
 /*-----------------------------------------------------------*/
 
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{	
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( uxLED == partstsINVERTED_LED )
-		{
-			xValue = !xValue;					
-		}
-		
-		if( xValue != pdFALSE )
-		{
-			/* Turn the LED on. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_low( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_high( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
+static void prvLEDTimerCallback( xTimerHandle xTimer )
 {
-	if( uxLED < partestNUM_LEDS )
-	{
-		gpio_toggle_pin( ulLED[ uxLED ] );
-	}
+portBASE_TYPE xTimerID;
+
+	/* The timer ID is used to identify the timer that has actually expired as
+	each timer uses the same callback.  The ID is then also used as the number
+	of the LED that is to be toggled. */
+	xTimerID = ( portBASE_TYPE ) pvTimerGetTimerID( xTimer );
+	vParTestToggleLED( xTimerID );
 }
-							
 
 

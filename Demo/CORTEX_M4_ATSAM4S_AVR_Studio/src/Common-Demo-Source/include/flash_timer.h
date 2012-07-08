@@ -64,89 +64,17 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/*-----------------------------------------------------------
- * Simple IO routines to control the LEDs.
- *-----------------------------------------------------------*/
+#ifndef FLASH_TIMER_H
+#define FLASH_TIMER_H
 
-/* Scheduler includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+/*
+ * Creates the LED flashing timers.  xNumberOfLEDs specifies how many timers to
+ * create, with each timer toggling a different LED.  The first LED to be 
+ * toggled is LED 0, with subsequent LEDs following on in numerical order.  Each
+ * timer uses the exact same callback function, with the timer ID being used
+ * within the callback function to determine which timer has actually expired
+ * (and therefore which LED to toggle).
+ */
+void vStartLEDFlashTimers( unsigned portBASE_TYPE uxNumberOfLEDs );
 
-/* Demo includes. */
-#include "partest.h"
-
-/* Library includes. */
-#include <board.h>
-#include <gpio.h>
-
-/* The number of LEDs available to the user on the evaluation kit. */
-#define partestNUM_LEDS			( 3UL )
-
-/* Definitions not included in sam3s_ek.h. */
-#define LED2_GPIO 				( PIO_PC20_IDX )
-
-/* One of the LEDs is wired in the inverse to the others as it is also used as
-the power LED. */
-#define partstsINVERTED_LED		( 0UL )
-
-/* The index of the pins to which the LEDs are connected.  The ordering of the
-LEDs in this array is intentional and matches the order they appear on the 
-hardware. */
-static const uint32_t ulLED[] = { LED2_GPIO, LED0_GPIO, LED1_GPIO };
-
-/*-----------------------------------------------------------*/
-
-void vParTestInitialise( void )
-{
-unsigned long ul;
-
-	for( ul = 0; ul < partestNUM_LEDS; ul++ )
-	{
-		/* Configure the LED, before ensuring it starts in the off state. */
-		gpio_configure_pin( ulLED[ ul ],  ( PIO_OUTPUT_1 | PIO_DEFAULT ) );
-		vParTestSetLED( ul, pdFALSE );
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{	
-	if( uxLED < partestNUM_LEDS )
-	{
-		if( uxLED == partstsINVERTED_LED )
-		{
-			xValue = !xValue;					
-		}
-		
-		if( xValue != pdFALSE )
-		{
-			/* Turn the LED on. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_low( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-		else
-		{
-			/* Turn the LED off. */
-			portENTER_CRITICAL();
-			{
-				gpio_set_pin_high( ulLED[ uxLED ]);
-			}
-			portEXIT_CRITICAL();
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-	if( uxLED < partestNUM_LEDS )
-	{
-		gpio_toggle_pin( ulLED[ uxLED ] );
-	}
-}
-							
-
-
+#endif /* FLASH_TIMER_H */

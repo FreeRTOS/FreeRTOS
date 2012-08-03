@@ -110,6 +110,7 @@ static xQueueHandle xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
+
 /*
  * See the serial.h header file.
  */
@@ -239,6 +240,14 @@ void vSerialClose( xComPortHandle xPort )
 }
 /*-----------------------------------------------------------*/
 
+/* 
+ * It should be noted that the com test tasks (which use make use of this file) 
+ * are included to demonstrate queues being used to communicate between tasks 
+ * and interrupts, and to demonstrate a context switch being performed from 
+ * inside an interrupt service routine.  The serial driver used here is *not* 
+ * intended to represent an efficient implementation.  Real applications should 
+ * make use of the USARTS peripheral DMA channel (PDC).
+ */
 void USART1_Handler( void )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;

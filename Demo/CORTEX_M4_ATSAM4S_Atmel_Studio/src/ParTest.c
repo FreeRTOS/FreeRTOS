@@ -82,7 +82,7 @@
 /* The number of LEDs available to the user on the evaluation kit. */
 #define partestNUM_LEDS			( 3UL )
 
-/* Definitions not included in sam3s_ek.h. */
+/* Definitions not included in sam4s_ek.h. */
 #define LED2_GPIO 				( PIO_PC20_IDX )
 
 /* One of the LEDs is wired in the inverse to the others as it is also used as
@@ -121,20 +121,20 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 		if( xValue != pdFALSE )
 		{
 			/* Turn the LED on. */
-			portENTER_CRITICAL();
+			taskENTER_CRITICAL();
 			{
 				gpio_set_pin_low( ulLED[ uxLED ]);
 			}
-			portEXIT_CRITICAL();
+			taskEXIT_CRITICAL();
 		}
 		else
 		{
 			/* Turn the LED off. */
-			portENTER_CRITICAL();
+			taskENTER_CRITICAL();
 			{
 				gpio_set_pin_high( ulLED[ uxLED ]);
 			}
-			portEXIT_CRITICAL();
+			taskEXIT_CRITICAL();
 		}
 	}
 }
@@ -144,7 +144,11 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
 	if( uxLED < partestNUM_LEDS )
 	{
-		gpio_toggle_pin( ulLED[ uxLED ] );
+		taskENTER_CRITICAL();
+		{			
+			gpio_toggle_pin( ulLED[ uxLED ] );
+		}
+		taskEXIT_CRITICAL();		
 	}
 }
 							

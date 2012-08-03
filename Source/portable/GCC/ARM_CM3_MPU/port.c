@@ -210,6 +210,7 @@ portBASE_TYPE MPU_xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE MPU_xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE MPU_xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 void MPU_vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName );
+void MPU_vQueueDelete( xQueueHandle xQueue );
 void *MPU_pvPortMalloc( size_t xSize );
 void MPU_vPortFree( void *pv );
 void MPU_vPortInitialiseBlocks( void );
@@ -1069,6 +1070,16 @@ signed portBASE_TYPE xReturn;
 		portRESET_PRIVILEGE( xRunningPrivileged );
 	}
 #endif
+/*-----------------------------------------------------------*/
+
+void MPU_vQueueDelete( xQueueHandle xQueue )
+{
+portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+	vQueueDelete( xQueue );
+	
+	portRESET_PRIVILEGE( xRunningPrivileged );
+}
 /*-----------------------------------------------------------*/
 
 void *MPU_pvPortMalloc( size_t xSize )

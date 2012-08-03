@@ -200,12 +200,12 @@ portBASE_TYPE xReturn = pdFAIL;
 		{
 			/* Create the timer task, storing its handle in xTimerTaskHandle so
 			it can be returned by the xTimerGetTimerDaemonTaskHandle() function. */
-			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, &xTimerTaskHandle );	
+			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );	
 		}
 		#else
 		{
 			/* Create the timer task without storing its handle. */
-			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY, NULL);
+			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL);
 		}
 		#endif
 	}
@@ -442,7 +442,7 @@ portTickType xNextExpireTime;
 static portTickType prvSampleTimeNow( portBASE_TYPE *pxTimerListsWereSwitched )
 {
 portTickType xTimeNow;
-static portTickType xLastTime = ( portTickType ) 0U;
+PRIVILEGED_DATA static portTickType xLastTime = ( portTickType ) 0U;
 
 	xTimeNow = xTaskGetTickCount();
 	

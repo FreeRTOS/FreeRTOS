@@ -85,7 +85,7 @@ task.h is included from an application file. */
  * PUBLIC LIST API documented in list.h
  *----------------------------------------------------------*/
 
-/* Constants used with the cRxLock and cTxLock structure members. */
+/* Constants used with the cRxLock and xTxLock structure members. */
 #define queueUNLOCKED					( ( signed portBASE_TYPE ) -1 )
 #define queueLOCKED_UNMODIFIED			( ( signed portBASE_TYPE ) 0 )
 
@@ -133,8 +133,8 @@ typedef struct QueueDefinition
 	unsigned portBASE_TYPE uxLength;		/*< The length of the queue defined as the number of items it will hold, not the number of bytes. */
 	unsigned portBASE_TYPE uxItemSize;		/*< The size of each items that the queue will hold. */
 
-	signed portBASE_TYPE xRxLock;			/*< Stores the number of items received from the queue (removed from the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
-	signed portBASE_TYPE xTxLock;			/*< Stores the number of items transmitted to the queue (added to the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
+	volatile signed portBASE_TYPE xRxLock;	/*< Stores the number of items received from the queue (removed from the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
+	volatile signed portBASE_TYPE xTxLock;	/*< Stores the number of items transmitted to the queue (added to the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
 	
 	#if ( configUSE_TRACE_FACILITY == 1 )
 		unsigned char ucQueueNumber;

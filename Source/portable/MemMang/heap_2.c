@@ -67,10 +67,11 @@
 /*
  * A sample implementation of pvPortMalloc() and vPortFree() that permits
  * allocated blocks to be freed, but does not combine adjacent free blocks
- * into a single larger block.
+ * into a single larger block (and so will fragment memory).  See heap_4.c for 
+ * an aquivalent that does combine adjacent blocks into single larger blocks.
  *
- * See heap_1.c and heap_3.c for alternative implementations, and the memory
- * management pages of http://www.FreeRTOS.org for more information.
+ * See heap_1.c, heap_3.c and heap_4.c for alternative implementations, and the 
+ * memory management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
 
@@ -200,7 +201,7 @@ void *pvReturn = NULL;
 			(smallest) block until one of adequate size is found. */
 			pxPreviousBlock = &xStart;
 			pxBlock = xStart.pxNextFreeBlock;
-			while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock ) )
+			while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != NULL ) )
 			{
 				pxPreviousBlock = pxBlock;
 				pxBlock = pxBlock->pxNextFreeBlock;
@@ -213,7 +214,7 @@ void *pvReturn = NULL;
 				at its start. */
 				pvReturn = ( void * ) ( ( ( unsigned char * ) pxPreviousBlock->pxNextFreeBlock ) + heapSTRUCT_SIZE );
 
-				/* This block is being returned for use so must be taken our of the
+				/* This block is being returned for use so must be taken out of the
 				list of free blocks. */
 				pxPreviousBlock->pxNextFreeBlock = pxBlock->pxNextFreeBlock;
 
@@ -259,7 +260,7 @@ void vPortFree( void *pv )
 unsigned char *puc = ( unsigned char * ) pv;
 xBlockLink *pxLink;
 
-	if( pv )
+	if( pv != NULL )
 	{
 		/* The memory being freed will have an xBlockLink structure immediately
 		before it. */

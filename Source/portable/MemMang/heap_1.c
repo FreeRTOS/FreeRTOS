@@ -69,8 +69,8 @@
  * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
  *
- * See heap_2.c and heap_3.c for alternative implementations, and the memory
- * management pages of http://www.FreeRTOS.org for more information.
+ * See heap_2.c, heap_3.c and heap_4.c for alternative implementations, and the 
+ * memory management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
 
@@ -142,8 +142,8 @@ void *pvReturn = NULL;
 
 void vPortFree( void *pv )
 {
-	/* Memory cannot be freed using this scheme.  See heap_2.c and heap_3.c 
-	for alternative implementations, and the memory management pages of 
+	/* Memory cannot be freed using this scheme.  See heap_2.c, heap_3.c and
+	heap_4.c for alternative implementations, and the memory management pages of 
 	http://www.FreeRTOS.org for more information. */
 	( void ) pv;
 }

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{38712199-cebf-4124-bf15-398f7c3419ea}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Demo App Source">
+      <UniqueIdentifier>{34567deb-d5ab-4a56-8640-0aaec609521a}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS">
+      <UniqueIdentifier>{af3445a1-4908-4170-89ed-39345d90d30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS\Source">
+      <UniqueIdentifier>{f32be356-4763-4cae-9020-974a2638cb08}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\Portable">
+      <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+">
+      <UniqueIdentifier>{e5ad4ec7-23dc-4295-8add-2acaee488f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\CyaSSL">
+      <UniqueIdentifier>{8b481200-a9e5-48a4-98ad-49d2783cd652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\CyaSSL\ctaocrypt">
+      <UniqueIdentifier>{738eaad9-4e49-4309-9074-c3d9e102fb4a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_3.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\list.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\src\internal.c">
+      <Filter>FreeRTOS+\CyaSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\src\io.c">
+      <Filter>FreeRTOS+\CyaSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\src\keys.c">
+      <Filter>FreeRTOS+\CyaSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\src\ssl.c">
+      <Filter>FreeRTOS+\CyaSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\src\tls.c">
+      <Filter>FreeRTOS+\CyaSSL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\aes.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\arc4.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\asn.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\coding.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\des3.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\dh.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\dsa.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\hc128.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\hmac.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\integer.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\logging.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\md4.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\md5.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\memory.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\misc.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\pwdbased.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\rabbit.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\random.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\rsa.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\sha256.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CyaSSL\ctaocrypt\src\sha.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="SecureTCPServerTask.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
+    <ClCompile Include="SecureTCPClientTask.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FreeRTOSConfig.h">
+      <Filter>Demo App Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

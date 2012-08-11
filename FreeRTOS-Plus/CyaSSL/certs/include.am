@@ -1,0 +1,40 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+#
+
+certs_DATA+= \
+	     certs/ca-cert.pem \
+	     certs/ca-key.pem \
+	     certs/client-cert.pem \
+	     certs/client-keyEnc.pem \
+	     certs/client-key.pem \
+	     certs/ecc-key.pem \
+	     certs/ecc-keyPkcs8.pem \
+	     certs/ecc-client-key.pem \
+	     certs/client-ecc-cert.pem \
+	     certs/ntru-cert.pem \
+	     certs/dh2048.pem \
+	     certs/server-cert.pem \
+	     certs/server-ecc.pem \
+	     certs/server-keyEnc.pem \
+	     certs/server-key.pem \
+	     certs/server-keyPkcs8Enc12.pem \
+	     certs/server-keyPkcs8Enc2.pem \
+	     certs/server-keyPkcs8Enc.pem \
+	     certs/server-keyPkcs8.pem
+
+certs_DATA+= \
+	     certs/ca-key.der \
+	     certs/client-cert.der \
+	     certs/client-key.der \
+	     certs/dh2048.der \
+	     certs/rsa2048.der \
+	     certs/dsa2048.der \
+	     certs/ecc-key.der
+
+EXTRA_DIST+= ${certs_DATA}
+
+doc_DATA+= certs/taoCert.txt
+
+EXTRA_DIST+= certs/ntru-key.raw
+

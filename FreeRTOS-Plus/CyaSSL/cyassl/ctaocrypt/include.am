@@ -1,0 +1,36 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+nobase_include_HEADERS+= \
+                         cyassl/ctaocrypt/aes.h \
+                         cyassl/ctaocrypt/arc4.h \
+                         cyassl/ctaocrypt/asn.h \
+                         cyassl/ctaocrypt/asn_public.h \
+                         cyassl/ctaocrypt/coding.h \
+                         cyassl/ctaocrypt/des3.h \
+                         cyassl/ctaocrypt/dh.h \
+                         cyassl/ctaocrypt/dsa.h \
+                         cyassl/ctaocrypt/ecc.h \
+                         cyassl/ctaocrypt/error.h \
+                         cyassl/ctaocrypt/hc128.h \
+                         cyassl/ctaocrypt/hmac.h \
+                         cyassl/ctaocrypt/integer.h \
+                         cyassl/ctaocrypt/md4.h \
+                         cyassl/ctaocrypt/md5.h \
+                         cyassl/ctaocrypt/misc.h \
+                         cyassl/ctaocrypt/pwdbased.h \
+                         cyassl/ctaocrypt/rabbit.h \
+                         cyassl/ctaocrypt/random.h \
+                         cyassl/ctaocrypt/ripemd.h \
+                         cyassl/ctaocrypt/rsa.h \
+                         cyassl/ctaocrypt/settings.h \
+                         cyassl/ctaocrypt/sha256.h \
+                         cyassl/ctaocrypt/sha512.h \
+                         cyassl/ctaocrypt/sha.h \
+                         cyassl/ctaocrypt/tfm.h \
+                         cyassl/ctaocrypt/types.h \
+                         cyassl/ctaocrypt/visibility.h \
+                         cyassl/ctaocrypt/logging.h \
+                         cyassl/ctaocrypt/memory.h \
+                         cyassl/ctaocrypt/mpi_class.h \
+                         cyassl/ctaocrypt/mpi_superclass.h

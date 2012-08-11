@@ -1,0 +1,9 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+#
+
+certs_DATA+= \
+	     certs/crl/crl.pem
+
+EXTRA_DIST+= ${certs_DATA}
+

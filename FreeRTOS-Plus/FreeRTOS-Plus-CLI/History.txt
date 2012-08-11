@@ -1,0 +1,7 @@
+Changes between V1.0.0 and V1.0.1 released 05/07/2012
+
+	+ Change the name of the structure used to map a function that implements
+	  a CLI command to the string used to call the command from 
+	  xCommandLineInput to CLI_Command_Definition_t, as it was always intended
+	  to be.  A #define was added to map the old name to the new name for
+	  reasons of backward compatibility.

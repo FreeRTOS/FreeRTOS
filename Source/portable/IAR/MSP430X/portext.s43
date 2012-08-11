@@ -95,12 +95,6 @@ portRESTORE_CONTEXT macro
 	pop_x	r15
 	mov.w	r15, &usCriticalNesting
 	popm_x	#12, r15
-		
-	/* The last thing on the stack will be the status register.
-	Ensure the power down bits are clear ready for the next
-	time this power down register is popped from the stack. */
-	bic.w   #0xf0, 0( sp )
-		
 	pop.w	sr
 	reta
 	endm
@@ -115,23 +109,25 @@ portRESTORE_CONTEXT macro
  *
  * If the preemptive scheduler is in use a context switch can also occur.
  */
-	
+
 	RSEG CODE
 	EVEN
-	
+
 vPortTickISR:
-	
+
 	/* The sr is not saved in portSAVE_CONTEXT() because vPortYield() needs
-	to save it manually before it gets modified (interrupts get disabled). */
+	to save it manually before it gets modified (interrupts get disabled).
+	Entering through this interrupt means the SR is already on the stack, but
+	this keeps the stack frames identical. */
 	push.w sr
 	portSAVE_CONTEXT
-				
+
 	calla	#vTaskIncrementTick
 
 	#if configUSE_PREEMPTION == 1
 		calla	#vTaskSwitchContext
 	#endif
-		
+
 	portRESTORE_CONTEXT
 /*-----------------------------------------------------------*/
 
@@ -139,21 +135,21 @@ vPortTickISR:
  * Manual context switch called by the portYIELD() macro.
  */
  	EVEN
-	
+
 vPortYield:
 
 	/* The sr needs saving before it is modified. */
 	push.w	sr
-	
+
 	/* Now the SR is stacked we can disable interrupts. */
-	dint	
+	dint
 	nop
-				
+
 	/* Save the context of the current task. */
-	portSAVE_CONTEXT			
+	portSAVE_CONTEXT
 
 	/* Select the next task to run. */
-	calla	#vTaskSwitchContext		
+	calla	#vTaskSwitchContext
 
 	/* Restore the context of the new task. */
 	portRESTORE_CONTEXT
@@ -165,7 +161,7 @@ vPortYield:
  * the context of the first task.
  */
  	EVEN
-	
+
 xPortStartScheduler:
 
 	/* Setup the hardware to generate the tick.  Interrupts are disabled
@@ -175,6 +171,6 @@ xPortStartScheduler:
 	/* Restore the context of the first task that is going to run. */
 	portRESTORE_CONTEXT
 /*-----------------------------------------------------------*/
-      		
+
 	END
-		
+

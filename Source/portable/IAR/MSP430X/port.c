@@ -214,6 +214,7 @@ __interrupt __raw void vTickISREntry( void )
 {
 extern void vPortTickISR( void );
 
+	__bic_SR_register_on_exit( SCG1 + SCG0 + OSCOFF + CPUOFF );
 	vPortTickISR();
 }
 

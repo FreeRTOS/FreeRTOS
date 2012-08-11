@@ -88,12 +88,6 @@ portRESTORE_CONTEXT .macro
 	pop_x	r15
 	mov.w	r15, &usCriticalNesting
 	popm_x	#12, r15
-		
-	;The last thing on the stack will be the status register.
-    ;Ensure the power down bits are clear ready for the next
-    ;time this power down register is popped from the stack.
-	bic.w   #0xf0, 0( sp )
-		
 	pop.w	sr
 	ret_x
 	.endm

@@ -356,7 +356,7 @@ unsigned char *puc;
 }
 
 
-#define INCLUDE_TEST_CODE 1
+#define INCLUDE_TEST_CODE 0
 #if INCLUDE_TEST_CODE == 1
 
 #define heapMAX_TEST_BLOCKS 6
@@ -366,6 +366,7 @@ void vTestHeap4( void )
 void *pvReturned;
 static void *pvUsedBlocks[ heapMAX_TEST_BLOCKS ];
 unsigned long ulIndex = 0, ulSize, ulRandSample;
+size_t xSize1, xSize2, xSize3;
 static const unsigned long ulCombinations[ 6 ][ 3 ] =
 {
 	{ 0, 1, 2 },
@@ -530,13 +531,17 @@ static const unsigned long ulCombinations[ 6 ][ 3 ] =
 	}
 
 	/* Do the same, but using random block sizes. */
-	for( ulRandSample = 0; ulRandSample < 0x5ffff; ulRandSample++ )
+	for( ulRandSample = 0; ulRandSample < 0xffffffUL; ulRandSample++ )
 	{
+		xSize1 = rand();
+		xSize2 = rand();
+		xSize3 = rand();
+
 		for( ulIndex = 0; ulIndex < 6; ulIndex++ )
 		{
-			pvUsedBlocks[ 0 ] = pvPortMalloc( rand() );
-			pvUsedBlocks[ 1 ] = pvPortMalloc( rand() );
-			pvUsedBlocks[ 2 ] = pvPortMalloc( rand() );
+			pvUsedBlocks[ 0 ] = pvPortMalloc( xSize1 );
+			pvUsedBlocks[ 1 ] = pvPortMalloc( xSize2 );
+			pvUsedBlocks[ 2 ] = pvPortMalloc( xSize3 );
 
 			vPortFree( pvUsedBlocks[ ulCombinations[ ulIndex ][ 0 ] ] );
 			vPortFree( pvUsedBlocks[ ulCombinations[ ulIndex ][ 1 ] ] );

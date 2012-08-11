@@ -1,0 +1,7 @@
+Note the CyaSSL license terms are different to the FreeRTOS license terms.
+
+CyaSSL is dual licensed.  The files are provided here under an unmodified open
+source GNU GPL license.  Commercial licenses are also available.  
+See http://www.FreeRTOS.org/ssl
+
+

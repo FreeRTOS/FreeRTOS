@@ -1,0 +1,9 @@
+Note the FreeRTOS+CLI license terms are different to the FreeRTOS license terms.
+
+FreeRTOS+CLI is dual licensed.  The files are provided here under an unmodified 
+open source GNU GPL license.  Commercial licenses are also available.  
+See http://www.FreeRTOS.org/ssl
+
+USERS OF NXP MICROCONTROLLERS CAN OBTAIN FREE COMMERCIAL LICENSES.
+
+

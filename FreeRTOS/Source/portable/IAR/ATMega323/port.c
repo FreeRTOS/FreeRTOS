@@ -280,7 +280,6 @@ portBASE_TYPE xPortStartScheduler( void )
 	compiler does not fully support inline assembler we have to make a call.*/
 	vPortStart();
 
-
 	/* Should not get here! */
 	return pdTRUE;
 }

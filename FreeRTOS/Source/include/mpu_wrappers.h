@@ -92,8 +92,6 @@ only for ports that are using the MPU. */
 		#define uxTaskGetNumberOfTasks			MPU_uxTaskGetNumberOfTasks
 		#define vTaskList						MPU_vTaskList
 		#define vTaskGetRunTimeStats			MPU_vTaskGetRunTimeStats
-		#define vTaskStartTrace					MPU_vTaskStartTrace
-		#define ulTaskEndTrace					MPU_ulTaskEndTrace
 		#define vTaskSetApplicationTaskTag		MPU_vTaskSetApplicationTaskTag
 		#define xTaskGetApplicationTaskTag		MPU_xTaskGetApplicationTaskTag
 		#define xTaskCallApplicationTaskHook	MPU_xTaskCallApplicationTaskHook

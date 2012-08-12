@@ -98,10 +98,10 @@ void vPortSysTickHandler( void * context, alt_u32 id );
 
 /*-----------------------------------------------------------*/
 
-void prvReadGp( unsigned long *ulValue )
-{ 
-	asm( "stw gp, (r4) " );
-};
+static void prvReadGp( unsigned long *ulValue )
+{
+	asm( "stw gp, (%0)" :: "r"(ulValue) );
+}
 /*-----------------------------------------------------------*/
 
 /* 

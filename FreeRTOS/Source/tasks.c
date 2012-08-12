@@ -399,7 +399,7 @@ signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
 
 	configASSERT( pxTaskCode );
-	configASSERT( ( uxPriority < configMAX_PRIORITIES ) );
+	configASSERT( ( ( uxPriority & ( ~portPRIVILEGE_BIT ) ) < configMAX_PRIORITIES ) );
 
 	/* Allocate the memory required by the TCB and stack for the new task,
 	checking that the allocation was successful. */

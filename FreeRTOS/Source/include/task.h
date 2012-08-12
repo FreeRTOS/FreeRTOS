@@ -1086,40 +1086,6 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
 void vTaskGetRunTimeStats( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
 
 /**
- * task. h
- * <PRE>void vTaskStartTrace( char * pcBuffer, unsigned portBASE_TYPE uxBufferSize );</PRE>
- *
- * Starts a real time kernel activity trace.  The trace logs the identity of
- * which task is running when.
- *
- * The trace file is stored in binary format.  A separate DOS utility called
- * convtrce.exe is used to convert this into a tab delimited text file which
- * can be viewed and plotted in a spread sheet.
- *
- * @param pcBuffer The buffer into which the trace will be written.
- *
- * @param ulBufferSize The size of pcBuffer in bytes.  The trace will continue
- * until either the buffer in full, or ulTaskEndTrace () is called.
- *
- * \page vTaskStartTrace vTaskStartTrace
- * \ingroup TaskUtils
- */
-void vTaskStartTrace( signed char * pcBuffer, unsigned long ulBufferSize ) PRIVILEGED_FUNCTION;
-
-/**
- * task. h
- * <PRE>unsigned long ulTaskEndTrace( void );</PRE>
- *
- * Stops a kernel activity trace.  See vTaskStartTrace ().
- *
- * @return The number of bytes that have been written into the trace buffer.
- *
- * \page usTaskEndTrace usTaskEndTrace
- * \ingroup TaskUtils
- */
-unsigned long ulTaskEndTrace( void ) PRIVILEGED_FUNCTION;
-
-/**
  * task.h
  * <PRE>unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask );</PRE>
  *

@@ -301,111 +301,111 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <ArmGcc>
-  <armgcc.common.general.symbols>__SAM4S16C__</armgcc.common.general.symbols>
-  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
-  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
-  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
-  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
-  <armgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>ARM_MATH_CM4=true</Value>
-      <Value>BOARD=SAM4S_EK</Value>
-      <Value>__SAM4S16C__</Value>
-      <Value>XMEGA=0</Value>
-      <Value>MEGA=0</Value>
-      <Value>UC3=0</Value>
-    </ListValues>
-  </armgcc.compiler.symbols.DefSymbols>
-  <armgcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../src</Value>
-      <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/common/services/gpio</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/asf/sam/boards</Value>
-      <Value>../src/asf/sam/boards/sam4s_ek</Value>
-      <Value>../src/asf/sam/drivers/pio</Value>
-      <Value>../src/asf/sam/utils</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
-      <Value>../src/asf/sam/utils/header_files</Value>
-      <Value>../src/asf/sam/utils/preprocessor</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/thirdparty/FreeRTOS/include</Value>
-      <Value>../src/asf/thirdparty/FreeRTOS/portable/GCC/ARM_CM3</Value>
-      <Value>../src/Common-Demo-Source/include</Value>
-      <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles</Value>
-      <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles\CMSIS\Include</Value>
-      <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles\Device\ATMEL</Value>
-      <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles\Device\ATMEL\sam4s\include</Value>
-      <Value>../src/asf/sam/drivers/pmc</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/sam/drivers/usart</Value>
-    </ListValues>
-  </armgcc.compiler.directories.IncludePaths>
-  <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
-  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
-  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
-  <armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wextra -std=gnu99 -ffunction-sections -fdata-sections --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
-  <armgcc.linker.libraries.LibrarySearchPaths>
-    <ListValues>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-    </ListValues>
-  </armgcc.linker.libraries.LibrarySearchPaths>
-  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
-  <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
-  <armgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src</Value>
-      <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/common/services/gpio</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/asf/sam/boards</Value>
-      <Value>../src/asf/sam/boards/sam4s_ek</Value>
-      <Value>../src/asf/sam/drivers/pio</Value>
-      <Value>../src/asf/sam/utils</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
-      <Value>../src/asf/sam/utils/header_files</Value>
-      <Value>../src/asf/sam/utils/preprocessor</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/sam/drivers/pmc</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/sam/drivers/usart</Value>
-    </ListValues>
-  </armgcc.assembler.general.IncludePaths>
-  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4S_EK -D__SAM4S16C__</armgcc.preprocessingassembler.general.AssemblerFlags>
-  <armgcc.preprocessingassembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src</Value>
-      <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/common/services/gpio</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/asf/sam/boards</Value>
-      <Value>../src/asf/sam/boards/sam4s_ek</Value>
-      <Value>../src/asf/sam/drivers/pio</Value>
-      <Value>../src/asf/sam/utils</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
-      <Value>../src/asf/sam/utils/header_files</Value>
-      <Value>../src/asf/sam/utils/preprocessor</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/sam/drivers/pmc</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/sam/drivers/usart</Value>
-    </ListValues>
-  </armgcc.preprocessingassembler.general.IncludePaths>
-</ArmGcc>
+        <armgcc.common.general.symbols>__SAM4S16C__</armgcc.common.general.symbols>
+        <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+        <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+        <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+        <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+        <armgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>ARM_MATH_CM4=true</Value>
+            <Value>BOARD=SAM4S_EK</Value>
+            <Value>__SAM4S16C__</Value>
+            <Value>XMEGA=0</Value>
+            <Value>MEGA=0</Value>
+            <Value>UC3=0</Value>
+          </ListValues>
+        </armgcc.compiler.symbols.DefSymbols>
+        <armgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/services/gpio</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/sam/boards/sam4s_ek</Value>
+            <Value>../src/asf/sam/drivers/pio</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/thirdparty/FreeRTOS/include</Value>
+            <Value>../src/asf/thirdparty/FreeRTOS/portable/GCC/ARM_CM3</Value>
+            <Value>../src/Common-Demo-Source/include</Value>
+            <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles</Value>
+            <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles\CMSIS\Include</Value>
+            <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles\Device\ATMEL</Value>
+            <Value>C:\devtools\Atmel\Atmel Studio 6.0\extensions\Atmel\ARMGCC\3.3.1.83\ARMSupportFiles\Device\ATMEL\sam4s\include</Value>
+            <Value>../src/asf/sam/drivers/pmc</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/sam/drivers/usart</Value>
+          </ListValues>
+        </armgcc.compiler.directories.IncludePaths>
+        <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
+        <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+        <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+        <armgcc.compiler.miscellaneous.OtherFlags>-pipe -Wall -Wextra -std=gnu99 -ffunction-sections -fdata-sections --param max-inline-insns-single=500 -Dprintf=iprintf</armgcc.compiler.miscellaneous.OtherFlags>
+        <armgcc.linker.libraries.LibrarySearchPaths>
+          <ListValues>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+          </ListValues>
+        </armgcc.linker.libraries.LibrarySearchPaths>
+        <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+        <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
+        <armgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/services/gpio</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/sam/boards/sam4s_ek</Value>
+            <Value>../src/asf/sam/drivers/pio</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/sam/drivers/pmc</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/sam/drivers/usart</Value>
+          </ListValues>
+        </armgcc.assembler.general.IncludePaths>
+        <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4S_EK -D__SAM4S16C__</armgcc.preprocessingassembler.general.AssemblerFlags>
+        <armgcc.preprocessingassembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/common/applications/user_application/sam4s16c_sam4s_ek</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/services/gpio</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/sam/boards/sam4s_ek</Value>
+            <Value>../src/asf/sam/drivers/pio</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/include</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4s/source/templates</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/sam/drivers/pmc</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/sam/drivers/usart</Value>
+          </ListValues>
+        </armgcc.preprocessingassembler.general.IncludePaths>
+      </ArmGcc>
     </ToolchainSettings>
     <GenerateHexFile>True</GenerateHexFile>
     <GenerateMapFile>True</GenerateMapFile>
@@ -419,6 +419,9 @@
     <None Include="src\asf\sam\drivers\usart\usart.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\portable\MemMang\heap_4.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\Common-Demo-Source\include\demo_serial.h">
       <SubType>compile</SubType>
     </Compile>
@@ -522,9 +525,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\asf\thirdparty\FreeRTOS\portable\GCC\ARM_CM3\portmacro.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\asf\thirdparty\FreeRTOS\portable\MemMang\heap_2.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\asf\thirdparty\FreeRTOS\queue.c">

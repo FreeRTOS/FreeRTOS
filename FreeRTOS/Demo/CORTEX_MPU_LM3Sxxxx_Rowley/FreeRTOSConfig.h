@@ -122,6 +122,8 @@ to exclude the API function. */
 #define configUNUSED_PRIO_BITS ( ( unsigned char ) ( 8 - configPRIO_BITS ) )
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned char ) 7 << configUNUSED_PRIO_BITS )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
+/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned char ) 5 << configUNUSED_PRIO_BITS )  /* Priority 5, or 160 as only the top three bits are implemented. */
 
 #endif /* FREERTOS_CONFIG_H */

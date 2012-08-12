@@ -114,6 +114,8 @@ to exclude the API function. */
 
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( 0x0f << 4 )	/* Priority 15, or 255 as only the top four bits are implemented.  This is the lowest priority. */
+/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 << 4 )  	/* Priority 5, or 80 as only the top four bits are implemented. */
 
 

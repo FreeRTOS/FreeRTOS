@@ -294,10 +294,8 @@ __asm void vPortSetInterruptMask( void )
 {
 	PRESERVE8
 
-	push { r0 }
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
-	pop { r0 }
 	bx r14
 }
 
@@ -307,9 +305,9 @@ __asm void vPortClearInterruptMask( void )
 {
 	PRESERVE8
 
-	push { r0 }
+	/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
 	mov r0, #0
 	msr basepri, r0
-	pop { r0 }
 	bx r14
 }

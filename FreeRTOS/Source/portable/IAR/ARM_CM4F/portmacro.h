@@ -127,6 +127,9 @@ extern void vPortClearInterruptMask( void );
 #define portENABLE_INTERRUPTS()		vPortClearInterruptMask()
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
+
+/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
 #define portSET_INTERRUPT_MASK_FROM_ISR()		0;vPortSetInterruptMask()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask();(void)x
 

@@ -123,20 +123,18 @@ xPortPendSVHandler:
 /*-----------------------------------------------------------*/
 
 vPortSetInterruptMask:
-	push { r0 }
-	mov R0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
-	msr BASEPRI, R0
-	pop { R0 }
+	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr BASEPRI, r0
 
 	bx r14
 	
 /*-----------------------------------------------------------*/
 
 vPortClearInterruptMask:
-	PUSH { r0 }
-	MOV R0, #0
-	MSR BASEPRI, R0
-	POP	 { R0 }
+	/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
+	mov r0, #0
+	msr BASEPRI, r0
 
 	bx r14
 

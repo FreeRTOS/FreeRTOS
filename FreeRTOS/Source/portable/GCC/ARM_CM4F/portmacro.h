@@ -132,7 +132,8 @@ extern void vPortYieldFromISR( void );
 	
 /*
  * Set basepri back to 0 without effective other registers.
- * r0 is clobbered.
+ * r0 is clobbered.  FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+ * http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing.
  */
 #define portCLEAR_INTERRUPT_MASK()			\
 	__asm volatile							\
@@ -142,6 +143,9 @@ extern void vPortYieldFromISR( void );
 		:::"r0"								\
 	)
 
+/* FAQ:  Setting BASEPRI to 0 in portCLEAR_INTERRUPT_MASK_FROM_ISR() is not a 
+bug.  Please see http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before 
+disagreeing. */
 #define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
 

@@ -136,6 +136,8 @@ vPortSetInterruptMask:
 /*-----------------------------------------------------------*/
 
 vPortClearInterruptMask:
+	/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
 	mov r0, #0
 	msr BASEPRI, r0
 

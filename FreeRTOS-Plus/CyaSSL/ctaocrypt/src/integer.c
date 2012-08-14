@@ -2762,6 +2762,9 @@ int fast_s_mp_sqr (mp_int * a, mp_int * b)
     }
   }
 
+  if (pa > MP_WARRAY)
+    return MP_RANGE;  /* TAO range check */
+
 #ifdef CYASSL_SMALL_STACK
   W = (mp_digit*)XMALLOC(sizeof(mp_digit) * MP_WARRAY, 0, DYNAMIC_TYPE_BIGINT);
   if (W == NULL)    
@@ -2878,6 +2881,8 @@ int fast_s_mp_mul_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
 
   /* number of output digits to produce */
   pa = MIN(digs, a->used + b->used);
+  if (pa > MP_WARRAY)
+    return MP_RANGE;  /* TAO range check */
 
 #ifdef CYASSL_SMALL_STACK
   W = (mp_digit*)XMALLOC(sizeof(mp_digit) * MP_WARRAY, 0, DYNAMIC_TYPE_BIGINT);
@@ -3598,6 +3603,9 @@ int fast_s_mp_mul_high_digs (mp_int * a, mp_int * b, mp_int * c, int digs)
     }
   }
 
+  if (pa > MP_WARRAY)
+    return MP_RANGE;  /* TAO range check */
+  
 #ifdef CYASSL_SMALL_STACK
   W = (mp_digit*)XMALLOC(sizeof(mp_digit) * MP_WARRAY, 0, DYNAMIC_TYPE_BIGINT);
   if (W == NULL)    

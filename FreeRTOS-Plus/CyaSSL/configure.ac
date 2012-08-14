@@ -1,12 +1,12 @@
 # configure.ac
 #
-# Copyright (C) 2006-2011 Sawtooth Consulting Ltd.
+# Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
 #
 # This file is part of CyaSSL.
 #
 #
 
-AC_INIT([cyassl],[2.2.0],[http://www.yassl.com])
+AC_INIT([cyassl],[2.3.0],[http://www.yassl.com])
 
 AC_CONFIG_AUX_DIR(config)
 
@@ -289,6 +289,38 @@ fi
 
 AM_CONDITIONAL([BUILD_SNIFFER], [test "x$ENABLED_SNIFFER" = "xyes"])
 
+# AES-GCM
+AC_ARG_ENABLE(aesgcm,
+    [  --enable-aesgcm         Enable CyaSSL AES-GCM support (default: disabled)],
+    [ ENABLED_AESGCM=$enableval ],
+    [ ENABLED_AESGCM=no ]
+    )
+
+if test "$ENABLED_AESGCM" = "word32"
+then
+    AM_CFLAGS="$AM_CFLAGS -DGCM_WORD32"
+    ENABLED_AESGCM=yes
+fi
+
+if test "$ENABLED_AESGCM" = "small"
+then
+    AM_CFLAGS="$AM_CFLAGS -DGCM_SMALL"
+    ENABLED_AESGCM=yes
+fi
+
+if test "$ENABLED_AESGCM" = "table"
+then
+    AM_CFLAGS="$AM_CFLAGS -DGCM_TABLE"
+    ENABLED_AESGCM=yes
+fi
+
+if test "$ENABLED_AESGCM" = "yes"
+then
+    AM_CFLAGS="$AM_CFLAGS -DHAVE_AESGCM -DCYASSL_SHA384 -DCYASSL_SHA512"
+fi
+
+AM_CONDITIONAL([BUILD_AESGCM], [test "x$ENABLED_AESGCM" = "xyes"])
+
 # AES-NI
 AC_ARG_ENABLE(aesni,
     [  --enable-aesni          Enable CyaSSL AES-NI support (default: disabled)],
@@ -309,6 +341,26 @@ fi
 AM_CONDITIONAL([BUILD_AESNI], [test "x$ENABLED_AESNI" = "xyes"])
 
 
+# MD2
+AC_ARG_ENABLE(md2,
+    [  --enable-md2            Enable CyaSSL MD2 support (default: disabled)],
+    [ ENABLED_MD2=$enableval ],
+    [ ENABLED_MD2=no ]
+    )
+
+if test "$ENABLED_BUMP" = "yes"
+then
+    ENABLED_MD2="yes"
+fi
+
+if test "$ENABLED_MD2" = "yes"
+then
+    AM_CFLAGS="$AM_CFLAGS -DCYASSL_MD2"
+fi
+
+AM_CONDITIONAL([BUILD_MD2], [test "x$ENABLED_MD2" = "xyes"])
+
+
 # RIPEMD
 AC_ARG_ENABLE(ripemd,
     [  --enable-ripemd         Enable CyaSSL RIPEMD-160 support (default: disabled)],
@@ -326,7 +378,7 @@ AM_CONDITIONAL([BUILD_RIPEMD], [test "x$ENABLED_RIPEMD" = "xyes"])
 
 # SHA512
 AC_ARG_ENABLE(sha512,
-    [  --enable-sha512         Enable CyaSSL SHA-160 support (default: disabled)],
+    [  --enable-sha512         Enable CyaSSL SHA-512 support (default: disabled)],
     [ ENABLED_SHA512=$enableval ],
     [ ENABLED_SHA512=no ]
     )
@@ -337,6 +389,11 @@ then
 fi
 
 if test "$ENABLED_FORTRESS" = "yes"
+then
+    ENABLED_SHA512="yes"
+fi
+
+if test "$ENABLED_AESGCM" = "yes"
 then
     ENABLED_SHA512="yes"
 fi
@@ -506,6 +563,21 @@ fi
 AM_CONDITIONAL([BUILD_CRL], [test "x$ENABLED_CRL" = "xyes"])
 
 
+# CRL Monitor
+AC_ARG_ENABLE(crl-monitor,
+    [  --enable-crl-monitor    Enable CRL Monitor (default: disabled)],
+    [ ENABLED_CRL_MONITOR=$enableval ],
+    [ ENABLED_CRL_MONITOR=no ],
+    )
+
+if test "$ENABLED_CRL_MONITOR" = "yes"
+then
+    AM_CFLAGS="$AM_CFLAGS -DHAVE_CRL_MONITOR"
+fi
+
+AM_CONDITIONAL([BUILD_CRL_MONITOR], [test "x$ENABLED_CRL_MONITOR" = "xyes"])
+
+
 # NTRU
 ntruHome=`pwd`/NTRU_algorithm
 ntruInclude=$ntruHome/cryptolib
@@ -610,16 +682,21 @@ AX_PTHREAD([
 LIB_SOCKET_NSL
 
 dnl Various GCC warnings that should never fire for release quality code
-GCCWARNINGS="-Wall -fno-strict-aliasing -W -Wfloat-equal -Wundef        \
+GCCWARNINGS="-Wall -fno-strict-aliasing -W -Wfloat-equal -Wundef          \
   -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes                \
   -Wwrite-strings -Wredundant-decls -Wchar-subscripts -Wcomment           \
   -Wformat=2 -Wwrite-strings -Wmissing-declarations -Wredundant-decls     \
   -Wnested-externs -Wbad-function-cast -Wswitch-enum -Winit-self          \
   -Wmissing-field-initializers -Wdeclaration-after-statement              \
   -Wold-style-definition -Waddress -Wmissing-noreturn -Wnormalized=id     \
-  -Woverride-init -Wstrict-overflow=1 -Wextra -Warray-bounds              \
-  -Wstack-protector -Wformat -Wformat-security -Wpointer-sign -Wshadow    \
-  -Wswitch-default"
+  -Woverride-init -Wstrict-overflow=1 -Wextra -Wstack-protector -Wformat  \
+  -Wformat-security -Wpointer-sign -Wshadow -Wswitch-default"
+
+case "$host_os" in
+  *linux*)
+GCCWARNINGS="$GCCWARNINGS -Warray-bounds"
+  ;;
+esac
 
 AC_ARG_ENABLE(gcc-lots-o-warnings,
 AS_HELP_STRING(--enable-gcc-lots-o-warnings, Enable lots of gcc warnings (default: disabled)),

@@ -161,7 +161,8 @@ static void vUART0Task( void *pvParameters )
 
 		Puts0( "\n\r1: To call vTaskList() and display current task status " );
 
-		Puts0( "\n\r2: To call vTaskStartTrace() and to display trace results once the trace ends" );
+		/* The legacy trace is no longer supported.  Use FreeRTOS+Trace instead.
+		Puts0( "\n\r2: To call vTaskStartTrace() and to display trace results once the trace ends" ); */
 
 		/* Block on the semaphore.  The UART interrupt will use the semaphore to
 		wake this task when required. */
@@ -179,6 +180,7 @@ static void vUART0Task( void *pvParameters )
 				Puts0( "\r----------------------------------------------" );
 				break;
 
+			/* The legacy trace is no longer supported.  Use FreeRTOS+Trace instead.
 			case '2':
 				vTaskStartTrace( (signed char *) buff, sizeof( buff ) );
 				Puts0( "\n\rThe trace started!!" );
@@ -207,7 +209,7 @@ static void vUART0Task( void *pvParameters )
 				}
 
 				Puts0( "\r--------------------------------------------------------" );
-				break;
+				break; */
 
 			default:
 				break;

@@ -33,7 +33,7 @@
 #include <cyassl/ctaocrypt/ripemd.h>
 #include <cyassl/ctaocrypt/hmac.h>
 
-#include "unit.h"
+#include <tests/unit.h>
 
 typedef struct testVector {
     char*  input;
@@ -54,6 +54,8 @@ int  hmac_test(void);
 int HashTest(void)
 {
     int ret = 0;
+
+    printf(" Begin HASH Tests\n");
 
 #ifndef NO_MD4
     if ( (ret = md4_test()) ) {
@@ -114,6 +116,8 @@ int HashTest(void)
     } else
         printf( "   HMAC     test passed!\n");
 #endif
+
+    printf(" End HASH Tests\n");
     
     return 0;
 }

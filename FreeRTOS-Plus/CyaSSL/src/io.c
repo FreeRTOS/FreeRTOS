@@ -200,6 +200,52 @@ int EmbedSend(char *buf, int sz, void *ctx)
 }
 
 
+#ifdef CYASSL_DTLS
+
+#include <cyassl/ctaocrypt/sha.h>
+
+/* The DTLS Generate Cookie callback
+ *  return : number of bytes copied into buf, or error
+ */
+int EmbedGenerateCookie(byte *buf, int sz, void *ctx)
+{
+    CYASSL* ssl = (CYASSL*)ctx;
+    int sd = ssl->wfd;
+    struct sockaddr_storage peer;
+    socklen_t peerSz = sizeof(peer);
+    byte cookieSrc[sizeof(struct in6_addr) + sizeof(int)];
+    int cookieSrcSz = 0;
+    Sha sha;
+
+    getpeername(sd, (struct sockaddr*)&peer, &peerSz);
+    
+    if (peer.ss_family == AF_INET) {
+        struct sockaddr_in *s = (struct sockaddr_in*)&peer;
+
+        cookieSrcSz = sizeof(struct in_addr) + sizeof(s->sin_port);
+        XMEMCPY(cookieSrc, &s->sin_port, sizeof(s->sin_port));
+        XMEMCPY(cookieSrc + sizeof(s->sin_port),
+                                     &s->sin_addr, sizeof(struct in_addr));
+    }
+    else if (peer.ss_family == AF_INET6) {
+        struct sockaddr_in6 *s = (struct sockaddr_in6*)&peer;
+
+        cookieSrcSz = sizeof(struct in6_addr) + sizeof(s->sin6_port);
+        XMEMCPY(cookieSrc, &s->sin6_port, sizeof(s->sin6_port));
+        XMEMCPY(cookieSrc + sizeof(s->sin6_port),
+                                    &s->sin6_addr, sizeof(struct in6_addr));
+    }
+
+    InitSha(&sha);
+    ShaUpdate(&sha, cookieSrc, cookieSrcSz);
+    ShaFinal(&sha, buf);
+
+    return SHA_DIGEST_SIZE;
+}
+
+#endif /* CYASSL_DTLS */
+
+
 #endif /* CYASSL_USER_IO */
 
 CYASSL_API void CyaSSL_SetIORecv(CYASSL_CTX *ctx, CallbackIORecv CBIORecv)

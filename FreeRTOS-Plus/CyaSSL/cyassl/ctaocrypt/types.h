@@ -157,6 +157,8 @@ enum {
 
 #ifndef STRING_USER
     #include <string.h>
+    char* mystrnstr(const char* s1, const char* s2, unsigned int n);
+
     #define XMEMCPY(d,s,l)    memcpy((d),(s),(l))
     #define XMEMSET(b,c,l)    memset((b),(c),(l))
     #define XMEMCMP(s1,s2,n)  memcmp((s1),(s2),(n))
@@ -167,6 +169,7 @@ enum {
     /* strstr, strncmp, and strncat only used by CyaSSL proper, not required for
        CTaoCrypt only */
     #define XSTRSTR(s1,s2)    strstr((s1),(s2))
+    #define XSTRNSTR(s1,s2,n) mystrnstr((s1),(s2),(n))
     #define XSTRNCMP(s1,s2,n) strncmp((s1),(s2),(n))
     #define XSTRNCAT(s1,s2,n) strncat((s1),(s2),(n))
 #endif
@@ -205,7 +208,11 @@ enum {
     DYNAMIC_TYPE_CRL        = 22,
     DYNAMIC_TYPE_REVOKED    = 23,
     DYNAMIC_TYPE_CRL_ENTRY  = 24,
-    DYNAMIC_TYPE_CERT_MANAGER = 25
+    DYNAMIC_TYPE_CERT_MANAGER = 25,
+    DYNAMIC_TYPE_CRL_MONITOR  = 26,
+    DYNAMIC_TYPE_OCSP_STATUS  = 27,
+    DYNAMIC_TYPE_OCSP_ENTRY   = 28,
+    DYNAMIC_TYPE_ALTNAME      = 29
 };
 
 /* stack protection */

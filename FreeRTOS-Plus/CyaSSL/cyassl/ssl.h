@@ -43,6 +43,12 @@
     #define CYASSL_VERSION LIBCYASSL_VERSION_STRING
 #endif
 
+#ifdef _WIN32
+    /* wincrypt.h clashes */
+    #undef OCSP_REQUEST
+    #undef OCSP_RESPONSE
+#endif
+
 
 
 #ifdef __cplusplus
@@ -686,6 +692,8 @@ CYASSL_API const unsigned char* CyaSSL_X509_get_der(CYASSL_X509*, int*);
 
 CYASSL_API int CyaSSL_cmp_peer_cert_to_file(CYASSL*, const char*);
 
+CYASSL_API char* CyaSSL_X509_get_next_altname(CYASSL_X509*);
+
 /* connect enough to get peer cert */
 CYASSL_API int  CyaSSL_connect_cert(CYASSL* ssl);
 
@@ -763,10 +771,15 @@ CYASSL_API void CyaSSL_SetIOWriteCtx(CYASSL* ssl, void *ctx);
 
 /* CA cache callbacks */
 enum {
+    CYASSL_SSLV3    = 0,
+    CYASSL_TLSV1    = 1,
+    CYASSL_TLSV1_1  = 2,
+    CYASSL_TLSV1_2  = 3,
     CYASSL_USER_CA  = 1,          /* user added as trusted */
     CYASSL_CHAIN_CA = 2           /* added to cache from trusted chain */
 };
 
+CYASSL_API int CyaSSL_SetVersion(CYASSL* ssl, int version);
 CYASSL_API int CyaSSL_KeyPemToDer(const unsigned char*, int sz, unsigned char*,
                                   int, const char*);
 
@@ -783,6 +796,8 @@ CYASSL_API int CyaSSL_CertManagerLoadCA(CYASSL_CERT_MANAGER*, const char* f,
                                         const char* d);
 CYASSL_API int CyaSSL_CertManagerVerify(CYASSL_CERT_MANAGER*, const char* f,
                                         int format);
+CYASSL_API int CyaSSL_CertManagerVerifyBuffer(CYASSL_CERT_MANAGER* cm,
+                                 const unsigned char* buff, int sz, int format);
 CYASSL_API int CyaSSL_CertManagerCheckCRL(CYASSL_CERT_MANAGER*, unsigned char*,
                                           int sz);
 CYASSL_API int CyaSSL_CertManagerEnableCRL(CYASSL_CERT_MANAGER*, int options);
@@ -801,7 +816,8 @@ CYASSL_API int CyaSSL_CTX_DisableCRL(CYASSL_CTX* ctx);
 CYASSL_API int CyaSSL_CTX_LoadCRL(CYASSL_CTX*, const char*, int, int);
 CYASSL_API int CyaSSL_CTX_SetCRL_Cb(CYASSL_CTX*, CbMissingCRL);
 
-
+#define CYASSL_CRL_MONITOR   0x01   /* monitor this dir flag */
+#define CYASSL_CRL_START_MON 0x02   /* start monitoring flag */
 
 #ifdef CYASSL_CALLBACKS
 

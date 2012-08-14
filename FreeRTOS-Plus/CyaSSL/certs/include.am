@@ -2,7 +2,7 @@
 # All paths should be given relative to the root
 #
 
-certs_DATA+= \
+EXTRA_DIST += \
 	     certs/ca-cert.pem \
 	     certs/ca-key.pem \
 	     certs/client-cert.pem \
@@ -16,6 +16,7 @@ certs_DATA+= \
 	     certs/dh2048.pem \
 	     certs/server-cert.pem \
 	     certs/server-ecc.pem \
+	     certs/server-ecc-rsa.pem \
 	     certs/server-keyEnc.pem \
 	     certs/server-key.pem \
 	     certs/server-keyPkcs8Enc12.pem \
@@ -23,7 +24,7 @@ certs_DATA+= \
 	     certs/server-keyPkcs8Enc.pem \
 	     certs/server-keyPkcs8.pem
 
-certs_DATA+= \
+EXTRA_DIST += \
 	     certs/ca-key.der \
 	     certs/client-cert.der \
 	     certs/client-key.der \
@@ -32,7 +33,6 @@ certs_DATA+= \
 	     certs/dsa2048.der \
 	     certs/ecc-key.der
 
-EXTRA_DIST+= ${certs_DATA}
 
 doc_DATA+= certs/taoCert.txt
 

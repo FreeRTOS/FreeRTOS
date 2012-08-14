@@ -26,38 +26,18 @@
 #define CYASSL_OCSP_H
 
 
+#include <cyassl/ssl.h>
 #include <cyassl/ctaocrypt/asn.h>
-
 
 #ifdef __cplusplus
     extern "C" {
 #endif
 
 typedef struct CYASSL_OCSP CYASSL_OCSP;
-typedef struct CertStatus CertStatus;
-
-struct CertStatus {
-    byte issuerHash[SHA_SIZE];
-    byte issuerKeyHash[SHA_SIZE];
-    byte serial[EXTERNAL_SERIAL_SIZE];
-    int serialSz;
-    int status;
-};
-
-struct CYASSL_OCSP {
-    byte enabled;
-    byte useOverrideUrl;
-    char overrideName[80];
-    char overridePath[80];
-    int  overridePort;
-    int statusLen;
-    CertStatus status[1];
-};
-
-
 
 CYASSL_LOCAL int  CyaSSL_OCSP_Init(CYASSL_OCSP*);
 CYASSL_LOCAL void CyaSSL_OCSP_Cleanup(CYASSL_OCSP*);
+
 CYASSL_LOCAL int  CyaSSL_OCSP_set_override_url(CYASSL_OCSP*, const char*);
 CYASSL_LOCAL int  CyaSSL_OCSP_Lookup_Cert(CYASSL_OCSP*, DecodedCert*);
 

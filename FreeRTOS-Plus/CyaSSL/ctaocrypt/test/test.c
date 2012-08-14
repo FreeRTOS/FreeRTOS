@@ -32,6 +32,7 @@
 #else
     #include <cyassl/ctaocrypt/asn_public.h>
 #endif
+#include <cyassl/ctaocrypt/md2.h>
 #include <cyassl/ctaocrypt/md5.h>
 #include <cyassl/ctaocrypt/md4.h>
 #include <cyassl/ctaocrypt/sha.h>
@@ -86,6 +87,7 @@ typedef struct testVector {
     size_t outLen;
 } testVector;
 
+int  md2_test();
 int  md5_test();
 int  md4_test();
 int  sha_test();
@@ -99,6 +101,7 @@ int  rabbit_test();
 int  des_test();
 int  des3_test();
 int  aes_test();
+int  aesgcm_test();
 int  rsa_test();
 int  dh_test();
 int  dsa_test();
@@ -147,6 +150,13 @@ void ctaocrypt_test(void* args)
         err_sys("MD5      test failed!\n", ret);
     else
         printf( "MD5      test passed!\n");
+
+#ifdef CYASSL_MD2
+    if ( (ret = md2_test()) ) 
+        err_sys("MD2      test failed!\n", ret);
+    else
+        printf( "MD2      test passed!\n");
+#endif
 
 #ifndef NO_MD4
     if ( (ret = md4_test()) ) 
@@ -233,6 +243,13 @@ void ctaocrypt_test(void* args)
         err_sys("AES      test failed!\n", ret);
     else
         printf( "AES      test passed!\n");
+
+#ifdef HAVE_AESGCM
+    if ( (ret = aesgcm_test()) )
+        err_sys("AES-GCM  test failed!\n", ret);
+    else
+        printf( "AES-GCM  test passed!\n");
+#endif
 #endif
 
     if ( (ret = random_test()) )
@@ -299,6 +316,83 @@ void ctaocrypt_test(void* args)
     }
 
 #endif /* NO_MAIN_DRIVER */
+
+
+#ifdef CYASSL_MD2
+int md2_test()
+{
+    Md2  md2;
+    byte hash[MD2_DIGEST_SIZE];
+
+    testVector a, b, c, d, e, f, g;
+    testVector test_md2[7];
+    int times = sizeof(test_md2) / sizeof(testVector), i;
+
+    a.input  = "";
+    a.output = "\x83\x50\xe5\xa3\xe2\x4c\x15\x3d\xf2\x27\x5c\x9f\x80\x69"
+               "\x27\x73";
+    a.inLen  = strlen(a.input);
+    a.outLen = strlen(a.output);
+
+    b.input  = "a";
+    b.output = "\x32\xec\x01\xec\x4a\x6d\xac\x72\xc0\xab\x96\xfb\x34\xc0"
+               "\xb5\xd1";
+    b.inLen  = strlen(b.input);
+    b.outLen = strlen(b.output);
+
+    c.input  = "abc";
+    c.output = "\xda\x85\x3b\x0d\x3f\x88\xd9\x9b\x30\x28\x3a\x69\xe6\xde"
+               "\xd6\xbb";
+    c.inLen  = strlen(c.input);
+    c.outLen = strlen(c.output);
+
+    d.input  = "message digest";
+    d.output = "\xab\x4f\x49\x6b\xfb\x2a\x53\x0b\x21\x9f\xf3\x30\x31\xfe"
+               "\x06\xb0";
+    d.inLen  = strlen(d.input);
+    d.outLen = strlen(d.output);
+
+    e.input  = "abcdefghijklmnopqrstuvwxyz";
+    e.output = "\x4e\x8d\xdf\xf3\x65\x02\x92\xab\x5a\x41\x08\xc3\xaa\x47"
+               "\x94\x0b";
+    e.inLen  = strlen(e.input);
+    e.outLen = strlen(e.output);
+
+    f.input  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345"
+               "6789";
+    f.output = "\xda\x33\xde\xf2\xa4\x2d\xf1\x39\x75\x35\x28\x46\xc3\x03"
+               "\x38\xcd";
+    f.inLen  = strlen(f.input);
+    f.outLen = strlen(f.output);
+
+    g.input  = "1234567890123456789012345678901234567890123456789012345678"
+               "9012345678901234567890";
+    g.output = "\xd5\x97\x6f\x79\xd8\x3d\x3a\x0d\xc9\x80\x6c\x3c\x66\xf3"
+               "\xef\xd8";
+    g.inLen  = strlen(g.input);
+    g.outLen = strlen(g.output);
+
+    test_md2[0] = a;
+    test_md2[1] = b;
+    test_md2[2] = c;
+    test_md2[3] = d;
+    test_md2[4] = e;
+    test_md2[5] = f;
+    test_md2[6] = g;
+
+    InitMd2(&md2);
+
+    for (i = 0; i < times; ++i) {
+        Md2Update(&md2, (byte*)test_md2[i].input, (word32)test_md2[i].inLen);
+        Md2Final(&md2, hash);
+
+        if (memcmp(hash, test_md2[i].output, MD2_DIGEST_SIZE) != 0)
+            return -155 - i;
+    }
+
+    return 0;
+}
+#endif 
 
 
 int md5_test()
@@ -1146,6 +1240,99 @@ int aes_test()
 
     return 0;
 }
+
+#ifdef HAVE_AESGCM
+int aesgcm_test()
+{
+    Aes enc;
+
+    /*
+     * This is Test Case 16 from the document Galois/
+     * Counter Mode of Operation (GCM) by McGrew and
+     * Viega.
+     */
+    const byte k[] =
+    {
+        0xfe, 0xff, 0xe9, 0x92, 0x86, 0x65, 0x73, 0x1c,
+        0x6d, 0x6a, 0x8f, 0x94, 0x67, 0x30, 0x83, 0x08,
+        0xfe, 0xff, 0xe9, 0x92, 0x86, 0x65, 0x73, 0x1c,
+        0x6d, 0x6a, 0x8f, 0x94, 0x67, 0x30, 0x83, 0x08
+    };
+
+    const byte iv[] =
+    {
+        0xca, 0xfe, 0xba, 0xbe, 0xfa, 0xce, 0xdb, 0xad,
+        0xde, 0xca, 0xf8, 0x88, 0x00, 0x00, 0x00, 0x00
+    };
+    
+    const byte p[] =
+    {
+        0xd9, 0x31, 0x32, 0x25, 0xf8, 0x84, 0x06, 0xe5,
+        0xa5, 0x59, 0x09, 0xc5, 0xaf, 0xf5, 0x26, 0x9a,
+        0x86, 0xa7, 0xa9, 0x53, 0x15, 0x34, 0xf7, 0xda,
+        0x2e, 0x4c, 0x30, 0x3d, 0x8a, 0x31, 0x8a, 0x72,
+        0x1c, 0x3c, 0x0c, 0x95, 0x95, 0x68, 0x09, 0x53,
+        0x2f, 0xcf, 0x0e, 0x24, 0x49, 0xa6, 0xb5, 0x25,
+        0xb1, 0x6a, 0xed, 0xf5, 0xaa, 0x0d, 0xe6, 0x57,
+        0xba, 0x63, 0x7b, 0x39
+    };
+    
+    const byte a[] =
+    {
+        0xfe, 0xed, 0xfa, 0xce, 0xde, 0xad, 0xbe, 0xef,
+        0xfe, 0xed, 0xfa, 0xce, 0xde, 0xad, 0xbe, 0xef,
+        0xab, 0xad, 0xda, 0xd2
+    };
+    
+    const byte c[] =
+    {
+        0x52, 0x2d, 0xc1, 0xf0, 0x99, 0x56, 0x7d, 0x07,
+        0xf4, 0x7f, 0x37, 0xa3, 0x2a, 0x84, 0x42, 0x7d,
+        0x64, 0x3a, 0x8c, 0xdc, 0xbf, 0xe5, 0xc0, 0xc9,
+        0x75, 0x98, 0xa2, 0xbd, 0x25, 0x55, 0xd1, 0xaa,
+        0x8c, 0xb0, 0x8e, 0x48, 0x59, 0x0d, 0xbb, 0x3d,
+        0xa7, 0xb0, 0x8b, 0x10, 0x56, 0x82, 0x88, 0x38,
+        0xc5, 0xf6, 0x1e, 0x63, 0x93, 0xba, 0x7a, 0x0a,
+        0xbc, 0xc9, 0xf6, 0x62
+    };
+
+    const byte t[] =
+    {
+        0x76, 0xfc, 0x6e, 0xce, 0x0f, 0x4e, 0x17, 0x68,
+        0xcd, 0xdf, 0x88, 0x53, 0xbb, 0x2d, 0x55, 0x1b
+    };
+
+    byte t2[16];
+    byte p2[60];
+    byte c2[60];
+
+    int result;
+
+    memset(t2, 0, 16);
+    memset(c2, 0, 60);
+    memset(p2, 0, 60);
+
+    AesGcmSetKey(&enc, k, sizeof(k), iv);
+    AesGcmSetExpIV(&enc, iv + /*AES_GCM_IMP_IV_SZ*/ 4);
+    /* AES-GCM encrypt and decrypt both use AES encrypt internally */
+    AesGcmEncrypt(&enc, c2, p, sizeof(c2), t2, sizeof(t2), a, sizeof(a));
+    if (memcmp(c, c2, sizeof(c2)))
+        return -68;
+    if (memcmp(t, t2, sizeof(t2)))
+        return -69;
+
+    result = AesGcmDecrypt(&enc,
+                        p2, c2, sizeof(p2), t2, sizeof(t2), a, sizeof(a));
+    if (result != 0)
+        return -70;
+    if (memcmp(p, p2, sizeof(p2)))
+        return -71;
+
+    return 0;
+}
+#endif /* HAVE_AESGCM */
+
+
 #endif /* NO_AES */
 
 

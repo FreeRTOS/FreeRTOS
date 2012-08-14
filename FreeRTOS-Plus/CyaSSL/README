@@ -34,7 +34,26 @@ before calling SSL_new();  Though it's not recommended.
 
 *** end Note ***
 
-CyaSSL Release 2.2.0 (5/18/2012)
+CyaSSL Release 2.3.0 (8/10/2012)
+
+Release 2.3.0 CyaSSL has bug fixes and a few new features including:
+- AES-GCM crypto and cipher suites
+- make test cipher suite checks
+- Subject AltName processing
+- Command line support for client/server examples
+- Sniffer SessionTicket support
+- SHA-384 cipher suites
+- Verify cipher suite validity when user overrides
+- CRL dir monitoring
+- DTLS Cookie support, reliability coming soon
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+
+***************CyaSSL Release 2.2.0 (5/18/2012)
 
 Release 2.2.0 CyaSSL has bug fixes and a few new features including:
 - Initial CRL support (--enable-crl)

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+#include <cyassl/ssl.h>
 #include <cyassl/ctaocrypt/types.h>
 
 #ifdef USE_WINDOWS_API 
@@ -43,6 +44,7 @@
     /* 4996 warning to use MS extensions e.g., strcpy_s instead of strncpy */
     #pragma warning(disable:4244 4996)
 #endif
+
 
 #if defined(__MACH__) || defined(USE_WINDOWS_API)
     #ifndef _SOCKLEN_T
@@ -96,20 +98,23 @@
 #endif
    
 
+#define SERVER_DEFAULT_VERSION 3
+#define CLIENT_DEFAULT_VERSION 3
+
 /* all certs relative to CyaSSL home directory now */
-static const char* caCert   = "./certs/ca-cert.pem";
-static const char* eccCert  = "./certs/server-ecc.pem";
-static const char* eccKey   = "./certs/ecc-key.pem";
-static const char* svrCert  = "./certs/server-cert.pem";
-static const char* svrKey   = "./certs/server-key.pem";
-static const char* cliCert  = "./certs/client-cert.pem";
-static const char* cliKey   = "./certs/client-key.pem";
-static const char* ntruCert = "./certs/ntru-cert.pem";
-static const char* ntruKey  = "./certs/ntru-key.raw";
-static const char* dhParam  = "./certs/dh2048.pem";
-static const char* cliEccKey  = "./certs/ecc-client-key.pem";
-static const char* cliEccCert = "./certs/client-ecc-cert.pem";
-static const char* crlPemDir  = "./certs/crl";
+#define caCert     "./certs/ca-cert.pem"
+#define eccCert    "./certs/server-ecc.pem"
+#define eccKey     "./certs/ecc-key.pem"
+#define svrCert    "./certs/server-cert.pem"
+#define svrKey     "./certs/server-key.pem"
+#define cliCert    "./certs/client-cert.pem"
+#define cliKey     "./certs/client-key.pem"
+#define ntruCert   "./certs/ntru-cert.pem"
+#define ntruKey    "./certs/ntru-key.raw"
+#define dhParam    "./certs/dh2048.pem"
+#define cliEccKey  "./certs/ecc-client-key.pem"
+#define cliEccCert "./certs/client-ecc-cert.pem"
+#define crlPemDir  "./certs/crl"
 
 typedef struct tcp_ready {
     int ready;              /* predicate */
@@ -131,6 +136,7 @@ typedef struct func_args {
     tcp_ready* signal;
 } func_args;
 
+void wait_tcp_ready(func_args*);
 
 typedef THREAD_RETURN CYASSL_THREAD THREAD_FUNC(void*);
 
@@ -149,9 +155,77 @@ static INLINE void err_sys(const char* msg)
 }
 
 
+#define MY_EX_USAGE 2
+
+extern int   myoptind;
+extern char* myoptarg;
+
+static INLINE int mygetopt(int argc, char** argv, char* optstring)
+{
+    static char* next = NULL;
+
+    char  c;
+    char* cp;
+
+    if (myoptind == 0)
+        next = NULL;   /* we're starting new/over */
+
+    if (next == NULL || *next == '\0') {
+        if (myoptind == 0)
+            myoptind++;
+
+        if (myoptind >= argc || argv[myoptind][0] != '-' ||
+                                argv[myoptind][1] == '\0') {
+            myoptarg = NULL;
+            if (myoptind < argc)
+                myoptarg = argv[myoptind];
+
+            return -1;
+        }
+
+        if (strcmp(argv[myoptind], "--") == 0) {
+            myoptind++;
+            myoptarg = NULL;
+
+            if (myoptind < argc)
+                myoptarg = argv[myoptind];
+
+            return -1;
+        }
+
+        next = argv[myoptind];
+        next++;                  /* skip - */
+        myoptind++;
+    }
+
+    c  = *next++;
+    cp = strchr(optstring, c);
+
+    if (cp == NULL || c == ':') 
+        return '?';
+
+    cp++;
+
+    if (*cp == ':') {
+        if (*next != '\0') {
+            myoptarg = next;
+            next     = NULL;
+        }
+        else if (myoptind < argc) {
+            myoptarg = argv[myoptind];
+            myoptind++;
+        }
+        else 
+            return '?';
+    }
+
+    return c;
+}
+
+
 #ifdef OPENSSL_EXTRA
 
-static int PasswordCallBack(char* passwd, int sz, int rw, void* userdata)
+static INLINE int PasswordCallBack(char* passwd, int sz, int rw, void* userdata)
 {
     strncpy(passwd, "yassl123", sz);
     return 8;
@@ -167,6 +241,7 @@ static INLINE void showPeer(CYASSL* ssl)
     CYASSL_CIPHER* cipher;
     CYASSL_X509*   peer = CyaSSL_get_peer_certificate(ssl);
     if (peer) {
+        char* altName;
         char* issuer  = CyaSSL_X509_NAME_oneline(
                                        CyaSSL_X509_get_issuer_name(peer), 0, 0);
         char* subject = CyaSSL_X509_NAME_oneline(
@@ -177,6 +252,10 @@ static INLINE void showPeer(CYASSL* ssl)
         
         printf("peer's cert info:\n issuer : %s\n subject: %s\n", issuer,
                                                                   subject);
+
+        while ( (altName = CyaSSL_X509_get_next_altname(peer)) )
+            printf(" altname = %s\n", altName);
+
         ret = CyaSSL_X509_get_serial_number(peer, serial, &sz);
         if (ret == 0) {
             int  i;
@@ -204,8 +283,8 @@ static INLINE void showPeer(CYASSL* ssl)
 
 #if defined(SESSION_CERTS) && defined(SHOW_CERTS)
     {
-        X509_CHAIN* chain = CyaSSL_get_peer_chain(ssl);
-        int         count = CyaSSL_get_chain_count(chain);
+        CYASSL_X509_CHAIN* chain = CyaSSL_get_peer_chain(ssl);
+        int                count = CyaSSL_get_chain_count(chain);
         int i;
 
         for (i = 0; i < count; i++) {
@@ -223,7 +302,7 @@ static INLINE void showPeer(CYASSL* ssl)
 
 
 static INLINE void tcp_socket(SOCKET_T* sockfd, SOCKADDR_IN_T* addr,
-                              const char* peer, word16 port)
+                              const char* peer, word16 port, int udp)
 {
 #ifndef TEST_IPV6
     const char* host = peer;
@@ -244,11 +323,10 @@ static INLINE void tcp_socket(SOCKET_T* sockfd, SOCKADDR_IN_T* addr,
     }
 #endif
 
-#ifdef CYASSL_DTLS
-    *sockfd = socket(AF_INET_V, SOCK_DGRAM, 0);
-#else
-    *sockfd = socket(AF_INET_V, SOCK_STREAM, 0);
-#endif
+    if (udp)
+        *sockfd = socket(AF_INET_V, SOCK_DGRAM, 0);
+    else
+        *sockfd = socket(AF_INET_V, SOCK_STREAM, 0);
     memset(addr, 0, sizeof(SOCKADDR_IN_T));
 
 #ifndef TEST_IPV6
@@ -275,7 +353,8 @@ static INLINE void tcp_socket(SOCKET_T* sockfd, SOCKADDR_IN_T* addr,
     }
 #endif
 
-#if defined(TCP_NODELAY) && !defined(CYASSL_DTLS)
+#if defined(TCP_NODELAY)
+    if (!udp)
     {
         int       on = 1;
         socklen_t len = sizeof(on);
@@ -288,27 +367,28 @@ static INLINE void tcp_socket(SOCKET_T* sockfd, SOCKADDR_IN_T* addr,
 }
 
 
-static INLINE void tcp_connect(SOCKET_T* sockfd, const char* ip, word16 port)
+static INLINE void tcp_connect(SOCKET_T* sockfd, const char* ip, word16 port,
+                               int udp)
 {
     SOCKADDR_IN_T addr;
-    tcp_socket(sockfd, &addr, ip, port);
+    tcp_socket(sockfd, &addr, ip, port, udp);
 
     if (connect(*sockfd, (const struct sockaddr*)&addr, sizeof(addr)) != 0)
         err_sys("tcp connect failed");
 }
 
 
-static INLINE void tcp_listen(SOCKET_T* sockfd)
+static INLINE void tcp_listen(SOCKET_T* sockfd, int port, int useAnyAddr,
+                              int udp)
 {
     SOCKADDR_IN_T addr;
 
     /* don't use INADDR_ANY by default, firewall may block, make user switch
        on */
-#ifdef USE_ANY_ADDR
-    tcp_socket(sockfd, &addr, INADDR_ANY, yasslPort);
-#else
-    tcp_socket(sockfd, &addr, yasslIP, yasslPort);
-#endif
+    if (useAnyAddr)
+        tcp_socket(sockfd, &addr, INADDR_ANY, port, udp);
+    else
+        tcp_socket(sockfd, &addr, yasslIP, port, udp);
 
 #ifndef USE_WINDOWS_API 
     {
@@ -320,10 +400,10 @@ static INLINE void tcp_listen(SOCKET_T* sockfd)
 
     if (bind(*sockfd, (const struct sockaddr*)&addr, sizeof(addr)) != 0)
         err_sys("tcp bind failed");
-#ifndef CYASSL_DTLS
-    if (listen(*sockfd, 5) != 0)
-        err_sys("tcp listen failed");
-#endif
+    if (!udp) {
+        if (listen(*sockfd, 5) != 0)
+            err_sys("tcp listen failed");
+    }
 }
 
 
@@ -351,7 +431,7 @@ static INLINE void udp_accept(SOCKET_T* sockfd, int* clientfd, func_args* args)
 {
     SOCKADDR_IN_T addr;
 
-    tcp_socket(sockfd, &addr, yasslIP, yasslPort);
+    tcp_socket(sockfd, &addr, yasslIP, yasslPort, 1);
 
 
 #ifndef USE_WINDOWS_API 
@@ -379,17 +459,18 @@ static INLINE void udp_accept(SOCKET_T* sockfd, int* clientfd, func_args* args)
     *clientfd = udp_read_connect(*sockfd);
 }
 
-static INLINE void tcp_accept(SOCKET_T* sockfd, int* clientfd, func_args* args)
+static INLINE void tcp_accept(SOCKET_T* sockfd, int* clientfd, func_args* args,
+                              int port, int useAnyAddr, int udp)
 {
     SOCKADDR_IN_T client;
     socklen_t client_len = sizeof(client);
 
-    #ifdef CYASSL_DTLS
+    if (udp) {
         udp_accept(sockfd, clientfd, args);
         return;
-    #endif
+    }
 
-    tcp_listen(sockfd);
+    tcp_listen(sockfd, port, useAnyAddr, udp);
 
 #if defined(_POSIX_THREADS) && defined(NO_MAIN_DRIVER)
     /* signal ready to tcp_accept */
@@ -545,7 +626,7 @@ static INLINE unsigned int my_psk_server_cb(CYASSL* ssl, const char* identity,
 
 #ifdef VERIFY_CALLBACK
 
-static int myVerify(int preverify, CYASSL_X509_STORE_CTX* store)
+static INLINE int myVerify(int preverify, CYASSL_X509_STORE_CTX* store)
 {
     char buffer[80];
 
@@ -577,7 +658,7 @@ static int myVerify(int preverify, CYASSL_X509_STORE_CTX* store)
 
 #ifdef HAVE_CRL
 
-static void CRL_CallBack(char* url)
+static void INLINE CRL_CallBack(const char* url)
 {
     printf("CRL callback url = %s\n", url);
 }

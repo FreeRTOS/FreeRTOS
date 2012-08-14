@@ -36,6 +36,10 @@ if BUILD_AESNI
 src_libcyassl_la_SOURCES += ctaocrypt/src/aes_asm.s
 endif
 
+if BUILD_MD2
+src_libcyassl_la_SOURCES += ctaocrypt/src/md2.c
+endif
+
 if BUILD_RIPEMD
 src_libcyassl_la_SOURCES += ctaocrypt/src/ripemd.c
 endif
@@ -72,5 +76,10 @@ endif
 
 if BUILD_CRL
 src_libcyassl_la_SOURCES += src/crl.c
+endif
+
+if BUILD_CRL_MONITOR
+src_libcyassl_la_CFLAGS += $(PTHREAD_CFLAGS)
+src_libcyassl_la_LIBADD += $(PTHREAD_LIBS)
 endif
 

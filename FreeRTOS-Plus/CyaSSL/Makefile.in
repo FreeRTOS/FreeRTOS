@@ -134,16 +134,19 @@ DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	config/config.sub config/depcomp config/install-sh \
 	config/ltmain.sh config/missing
 @BUILD_AESNI_TRUE@am__append_1 = ctaocrypt/src/aes_asm.s
-@BUILD_RIPEMD_TRUE@am__append_2 = ctaocrypt/src/ripemd.c
-@BUILD_SHA512_TRUE@am__append_3 = ctaocrypt/src/sha512.c
-@BUILD_SNIFFER_TRUE@am__append_4 = src/sniffer.c
-@BUILD_HC128_TRUE@am__append_5 = ctaocrypt/src/hc128.c
-@BUILD_NOINLINE_TRUE@am__append_6 = ctaocrypt/src/misc.c
-@BUILD_FASTMATH_TRUE@am__append_7 = ctaocrypt/src/tfm.c
-@BUILD_FASTMATH_FALSE@am__append_8 = ctaocrypt/src/integer.c
-@BUILD_ECC_TRUE@am__append_9 = ctaocrypt/src/ecc.c
-@BUILD_OCSP_TRUE@am__append_10 = src/ocsp.c
-@BUILD_CRL_TRUE@am__append_11 = src/crl.c
+@BUILD_MD2_TRUE@am__append_2 = ctaocrypt/src/md2.c
+@BUILD_RIPEMD_TRUE@am__append_3 = ctaocrypt/src/ripemd.c
+@BUILD_SHA512_TRUE@am__append_4 = ctaocrypt/src/sha512.c
+@BUILD_SNIFFER_TRUE@am__append_5 = src/sniffer.c
+@BUILD_HC128_TRUE@am__append_6 = ctaocrypt/src/hc128.c
+@BUILD_NOINLINE_TRUE@am__append_7 = ctaocrypt/src/misc.c
+@BUILD_FASTMATH_TRUE@am__append_8 = ctaocrypt/src/tfm.c
+@BUILD_FASTMATH_FALSE@am__append_9 = ctaocrypt/src/integer.c
+@BUILD_ECC_TRUE@am__append_10 = ctaocrypt/src/ecc.c
+@BUILD_OCSP_TRUE@am__append_11 = src/ocsp.c
+@BUILD_CRL_TRUE@am__append_12 = src/crl.c
+@BUILD_CRL_MONITOR_TRUE@am__append_13 = $(PTHREAD_CFLAGS)
+@BUILD_CRL_MONITOR_TRUE@am__append_14 = $(PTHREAD_LIBS)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_pthread.m4 \
@@ -166,13 +169,14 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
-	"$(DESTDIR)$(certsdir)" "$(DESTDIR)$(docdir)" \
-	"$(DESTDIR)$(exampledir)" "$(DESTDIR)$(includedir)" \
-	"$(DESTDIR)$(includedir)"
+	"$(DESTDIR)$(docdir)" "$(DESTDIR)$(exampledir)" \
+	"$(DESTDIR)$(includedir)" "$(DESTDIR)$(includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-src_libcyassl_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+@BUILD_CRL_MONITOR_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+src_libcyassl_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_2)
 am__src_libcyassl_la_SOURCES_DIST = src/internal.c src/io.c src/keys.c \
 	src/ssl.c src/tls.c ctaocrypt/src/asn.c ctaocrypt/src/coding.c \
 	ctaocrypt/src/des3.c ctaocrypt/src/hmac.c ctaocrypt/src/md5.c \
@@ -181,28 +185,30 @@ am__src_libcyassl_la_SOURCES_DIST = src/internal.c src/io.c src/keys.c \
 	ctaocrypt/src/dh.c ctaocrypt/src/dsa.c ctaocrypt/src/arc4.c \
 	ctaocrypt/src/rabbit.c ctaocrypt/src/pwdbased.c \
 	ctaocrypt/src/logging.c ctaocrypt/src/memory.c \
-	ctaocrypt/src/aes_asm.s ctaocrypt/src/ripemd.c \
-	ctaocrypt/src/sha512.c src/sniffer.c ctaocrypt/src/hc128.c \
-	ctaocrypt/src/misc.c ctaocrypt/src/tfm.c \
+	ctaocrypt/src/aes_asm.s ctaocrypt/src/md2.c \
+	ctaocrypt/src/ripemd.c ctaocrypt/src/sha512.c src/sniffer.c \
+	ctaocrypt/src/hc128.c ctaocrypt/src/misc.c ctaocrypt/src/tfm.c \
 	ctaocrypt/src/integer.c ctaocrypt/src/ecc.c src/ocsp.c \
 	src/crl.c
 am__dirstamp = $(am__leading_dot)dirstamp
 @BUILD_AESNI_TRUE@am__objects_1 = ctaocrypt/src/aes_asm.lo
-@BUILD_RIPEMD_TRUE@am__objects_2 =  \
+@BUILD_MD2_TRUE@am__objects_2 = ctaocrypt/src/src_libcyassl_la-md2.lo
+@BUILD_RIPEMD_TRUE@am__objects_3 =  \
 @BUILD_RIPEMD_TRUE@	ctaocrypt/src/src_libcyassl_la-ripemd.lo
-@BUILD_SHA512_TRUE@am__objects_3 =  \
+@BUILD_SHA512_TRUE@am__objects_4 =  \
 @BUILD_SHA512_TRUE@	ctaocrypt/src/src_libcyassl_la-sha512.lo
-@BUILD_SNIFFER_TRUE@am__objects_4 = src/src_libcyassl_la-sniffer.lo
-@BUILD_HC128_TRUE@am__objects_5 =  \
+@BUILD_SNIFFER_TRUE@am__objects_5 = src/src_libcyassl_la-sniffer.lo
+@BUILD_HC128_TRUE@am__objects_6 =  \
 @BUILD_HC128_TRUE@	ctaocrypt/src/src_libcyassl_la-hc128.lo
-@BUILD_NOINLINE_TRUE@am__objects_6 =  \
+@BUILD_NOINLINE_TRUE@am__objects_7 =  \
 @BUILD_NOINLINE_TRUE@	ctaocrypt/src/src_libcyassl_la-misc.lo
-@BUILD_FASTMATH_TRUE@am__objects_7 =  \
+@BUILD_FASTMATH_TRUE@am__objects_8 =  \
 @BUILD_FASTMATH_TRUE@	ctaocrypt/src/src_libcyassl_la-tfm.lo
-@BUILD_FASTMATH_FALSE@am__objects_8 = ctaocrypt/src/src_libcyassl_la-integer.lo
-@BUILD_ECC_TRUE@am__objects_9 = ctaocrypt/src/src_libcyassl_la-ecc.lo
-@BUILD_OCSP_TRUE@am__objects_10 = src/src_libcyassl_la-ocsp.lo
-@BUILD_CRL_TRUE@am__objects_11 = src/src_libcyassl_la-crl.lo
+@BUILD_FASTMATH_FALSE@am__objects_9 = ctaocrypt/src/src_libcyassl_la-integer.lo
+@BUILD_ECC_TRUE@am__objects_10 =  \
+@BUILD_ECC_TRUE@	ctaocrypt/src/src_libcyassl_la-ecc.lo
+@BUILD_OCSP_TRUE@am__objects_11 = src/src_libcyassl_la-ocsp.lo
+@BUILD_CRL_TRUE@am__objects_12 = src/src_libcyassl_la-crl.lo
 am_src_libcyassl_la_OBJECTS = src/src_libcyassl_la-internal.lo \
 	src/src_libcyassl_la-io.lo src/src_libcyassl_la-keys.lo \
 	src/src_libcyassl_la-ssl.lo src/src_libcyassl_la-tls.lo \
@@ -227,7 +233,7 @@ am_src_libcyassl_la_OBJECTS = src/src_libcyassl_la-internal.lo \
 	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
 	$(am__objects_5) $(am__objects_6) $(am__objects_7) \
 	$(am__objects_8) $(am__objects_9) $(am__objects_10) \
-	$(am__objects_11)
+	$(am__objects_11) $(am__objects_12)
 src_libcyassl_la_OBJECTS = $(am_src_libcyassl_la_OBJECTS)
 src_libcyassl_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(src_libcyassl_la_CFLAGS) \
@@ -261,7 +267,9 @@ sslSniffer_sslSnifferTest_snifftest_OBJECTS =  \
 am_tests_unit_OBJECTS = tests/tests_unit-unit.$(OBJEXT) \
 	tests/tests_unit-api.$(OBJEXT) \
 	tests/tests_unit-suites.$(OBJEXT) \
-	tests/tests_unit-hash.$(OBJEXT)
+	tests/tests_unit-hash.$(OBJEXT) \
+	examples/client/tests_unit-client.$(OBJEXT) \
+	examples/server/tests_unit-server.$(OBJEXT)
 tests_unit_OBJECTS = $(am_tests_unit_OBJECTS)
 tests_unit_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(tests_unit_CFLAGS) \
@@ -311,10 +319,9 @@ DIST_SOURCES = $(am__src_libcyassl_la_SOURCES_DIST) \
 	$(examples_server_server_SOURCES) \
 	$(sslSniffer_sslSnifferTest_snifftest_SOURCES) \
 	$(tests_unit_SOURCES) $(testsuite_testsuite_SOURCES)
-certsDATA_INSTALL = $(INSTALL_DATA)
 docDATA_INSTALL = $(INSTALL_DATA)
 exampleDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(certs_DATA) $(doc_DATA) $(example_DATA)
+DATA = $(doc_DATA) $(example_DATA)
 includeHEADERS_INSTALL = $(INSTALL_HEADER)
 nobase_includeHEADERS_INSTALL = $(install_sh_DATA)
 HEADERS = $(include_HEADERS) $(nobase_include_HEADERS) \
@@ -483,19 +490,19 @@ nobase_include_HEADERS = cyassl/ctaocrypt/aes.h \
 	cyassl/ctaocrypt/dsa.h cyassl/ctaocrypt/ecc.h \
 	cyassl/ctaocrypt/error.h cyassl/ctaocrypt/hc128.h \
 	cyassl/ctaocrypt/hmac.h cyassl/ctaocrypt/integer.h \
-	cyassl/ctaocrypt/md4.h cyassl/ctaocrypt/md5.h \
-	cyassl/ctaocrypt/misc.h cyassl/ctaocrypt/pwdbased.h \
-	cyassl/ctaocrypt/rabbit.h cyassl/ctaocrypt/random.h \
-	cyassl/ctaocrypt/ripemd.h cyassl/ctaocrypt/rsa.h \
-	cyassl/ctaocrypt/settings.h cyassl/ctaocrypt/sha256.h \
-	cyassl/ctaocrypt/sha512.h cyassl/ctaocrypt/sha.h \
-	cyassl/ctaocrypt/tfm.h cyassl/ctaocrypt/types.h \
-	cyassl/ctaocrypt/visibility.h cyassl/ctaocrypt/logging.h \
-	cyassl/ctaocrypt/memory.h cyassl/ctaocrypt/mpi_class.h \
-	cyassl/ctaocrypt/mpi_superclass.h cyassl/openssl/asn1.h \
-	cyassl/openssl/bio.h cyassl/openssl/bn.h cyassl/openssl/conf.h \
-	cyassl/openssl/crypto.h cyassl/openssl/des.h \
-	cyassl/openssl/dh.h cyassl/openssl/dsa.h \
+	cyassl/ctaocrypt/md2.h cyassl/ctaocrypt/md4.h \
+	cyassl/ctaocrypt/md5.h cyassl/ctaocrypt/misc.h \
+	cyassl/ctaocrypt/pwdbased.h cyassl/ctaocrypt/rabbit.h \
+	cyassl/ctaocrypt/random.h cyassl/ctaocrypt/ripemd.h \
+	cyassl/ctaocrypt/rsa.h cyassl/ctaocrypt/settings.h \
+	cyassl/ctaocrypt/sha256.h cyassl/ctaocrypt/sha512.h \
+	cyassl/ctaocrypt/sha.h cyassl/ctaocrypt/tfm.h \
+	cyassl/ctaocrypt/types.h cyassl/ctaocrypt/visibility.h \
+	cyassl/ctaocrypt/logging.h cyassl/ctaocrypt/memory.h \
+	cyassl/ctaocrypt/mpi_class.h cyassl/ctaocrypt/mpi_superclass.h \
+	cyassl/openssl/asn1.h cyassl/openssl/bio.h cyassl/openssl/bn.h \
+	cyassl/openssl/conf.h cyassl/openssl/crypto.h \
+	cyassl/openssl/des.h cyassl/openssl/dh.h cyassl/openssl/dsa.h \
 	cyassl/openssl/ecdsa.h cyassl/openssl/ec.h \
 	cyassl/openssl/engine.h cyassl/openssl/err.h \
 	cyassl/openssl/evp.h cyassl/openssl/hmac.h \
@@ -513,13 +520,25 @@ nobase_include_HEADERS = cyassl/ctaocrypt/aes.h \
 	cyassl/version.h cyassl/ocsp.h cyassl/crl.h
 EXTRA_HEADERS = 
 BUILT_SOURCES = 
-EXTRA_DIST = $(example_DATA) $(certs_DATA) $(doc_DATA) lib/dummy \
-	cyassl-ntru.vcproj cyassl.vcproj \
-	cyassl-iphone.xcodeproj/project.pbxproj cyassl-ntru.sln \
-	cyassl.sln cyassl/sniffer_error.rc ${certs_DATA} \
-	certs/ntru-key.raw ${certs_DATA} swig/PythonBuild.sh \
-	swig/README swig/cyassl.i swig/cyassl_adds.c \
-	swig/python_cyassl.vcproj swig/rsasign.py swig/runme.py \
+EXTRA_DIST = $(example_DATA) $(doc_DATA) lib/dummy cyassl-ntru.vcproj \
+	cyassl.vcproj cyassl-iphone.xcodeproj/project.pbxproj \
+	cyassl-ntru.sln cyassl.sln cyassl/sniffer_error.rc \
+	certs/ca-cert.pem certs/ca-key.pem certs/client-cert.pem \
+	certs/client-keyEnc.pem certs/client-key.pem certs/ecc-key.pem \
+	certs/ecc-keyPkcs8.pem certs/ecc-client-key.pem \
+	certs/client-ecc-cert.pem certs/ntru-cert.pem certs/dh2048.pem \
+	certs/server-cert.pem certs/server-ecc.pem \
+	certs/server-ecc-rsa.pem certs/server-keyEnc.pem \
+	certs/server-key.pem certs/server-keyPkcs8Enc12.pem \
+	certs/server-keyPkcs8Enc2.pem certs/server-keyPkcs8Enc.pem \
+	certs/server-keyPkcs8.pem certs/ca-key.der \
+	certs/client-cert.der certs/client-key.der certs/dh2048.der \
+	certs/rsa2048.der certs/dsa2048.der certs/ecc-key.der \
+	certs/ntru-key.raw certs/crl/crl.pem certs/crl/cliCrl.pem \
+	certs/crl/eccSrvCRL.pem certs/crl/eccCliCRL.pem \
+	certs/crl/crl.revoked swig/PythonBuild.sh swig/README \
+	swig/cyassl.i swig/cyassl_adds.c swig/python_cyassl.vcproj \
+	swig/rsasign.py swig/runme.py \
 	ctaocrypt/benchmark/benchmark.sln \
 	ctaocrypt/benchmark/benchmark.vcproj ctaocrypt/src/misc.c \
 	ctaocrypt/src/asm.c ctaocrypt/src/ecc_fp.c \
@@ -557,25 +576,18 @@ EXTRA_DIST = $(example_DATA) $(certs_DATA) $(doc_DATA) lib/dummy \
 	examples/echoserver/echoserver-ntru.vcproj \
 	examples/echoserver/echoserver.vcproj testsuite/testsuite.sln \
 	testsuite/testsuite-ntru.vcproj testsuite/testsuite.vcproj \
-	input quit tests/unit.h sslSniffer/sslSniffer.vcproj \
+	input quit tests/unit.h tests/test.conf \
+	tests/test-openssl.conf tests/test-hc128.conf \
+	tests/test-psk.conf tests/test-ntru.conf tests/test-ecc.conf \
+	tests/test-aesgcm.conf tests/test-aesgcm-ecc.conf \
+	tests/test-aesgcm-openssl.conf tests/test-dtls.conf \
+	sslSniffer/sslSniffer.vcproj \
 	sslSniffer/sslSnifferTest/sslSniffTest.vcproj
 doc_DATA = certs/taoCert.txt doc/README.txt
 exampledir = $(docdir)/@PACKAGE@/example
 example_DATA = examples/client/client.c examples/server/server.c \
 	examples/echoclient/echoclient.c \
 	examples/echoserver/echoserver.c
-certsdir = $(sysconfdir)/ssl/certs
-certs_DATA = certs/ca-cert.pem certs/ca-key.pem certs/client-cert.pem \
-	certs/client-keyEnc.pem certs/client-key.pem certs/ecc-key.pem \
-	certs/ecc-keyPkcs8.pem certs/ecc-client-key.pem \
-	certs/client-ecc-cert.pem certs/ntru-cert.pem certs/dh2048.pem \
-	certs/server-cert.pem certs/server-ecc.pem \
-	certs/server-keyEnc.pem certs/server-key.pem \
-	certs/server-keyPkcs8Enc12.pem certs/server-keyPkcs8Enc2.pem \
-	certs/server-keyPkcs8Enc.pem certs/server-keyPkcs8.pem \
-	certs/ca-key.der certs/client-cert.der certs/client-key.der \
-	certs/dh2048.der certs/rsa2048.der certs/dsa2048.der \
-	certs/ecc-key.der certs/crl/crl.pem
 ACLOCAL_AMFLAGS = -I m4 --install
 src_libcyassl_la_SOURCES = src/internal.c src/io.c src/keys.c \
 	src/ssl.c src/tls.c ctaocrypt/src/asn.c ctaocrypt/src/coding.c \
@@ -588,10 +600,11 @@ src_libcyassl_la_SOURCES = src/internal.c src/io.c src/keys.c \
 	$(am__append_2) $(am__append_3) $(am__append_4) \
 	$(am__append_5) $(am__append_6) $(am__append_7) \
 	$(am__append_8) $(am__append_9) $(am__append_10) \
-	$(am__append_11)
+	$(am__append_11) $(am__append_12)
 src_libcyassl_la_LDFLAGS = ${AM_LDFLAGS} -no-undefined -version-info ${CYASSL_LIBRARY_VERSION}
-src_libcyassl_la_LIBADD = $(LIBM)
-src_libcyassl_la_CFLAGS = -DBUILDING_CYASSL $(AM_CFLAGS)
+src_libcyassl_la_LIBADD = $(LIBM) $(am__append_14)
+src_libcyassl_la_CFLAGS = -DBUILDING_CYASSL $(AM_CFLAGS) \
+	$(am__append_13)
 src_libcyassl_la_CPPFLAGS = -DBUILDING_CYASSL $(AM_CPPFLAGS)
 ctaocrypt_benchmark_benchmark_SOURCES = ctaocrypt/benchmark/benchmark.c
 ctaocrypt_benchmark_benchmark_LDADD = src/libcyassl.la
@@ -626,9 +639,11 @@ tests_unit_SOURCES = \
 			      tests/unit.c \
 			      tests/api.c \
 			      tests/suites.c \
-                  tests/hash.c
+                  tests/hash.c \
+			      examples/client/client.c \
+			      examples/server/server.c
 
-tests_unit_CFLAGS = $(AM_CFLAGS) $(PTHREAD_CFLAGS)
+tests_unit_CFLAGS = -DNO_MAIN_DRIVER $(AM_CFLAGS) $(PTHREAD_CFLAGS)
 tests_unit_LDADD = src/libcyassl.la  $(PTHREAD_LIBS)
 tests_unit_DEPENDENCIES = src/libcyassl.la
 sslSniffer_sslSnifferTest_snifftest_SOURCES = sslSniffer/sslSnifferTest/snifftest.c
@@ -798,6 +813,8 @@ ctaocrypt/src/src_libcyassl_la-memory.lo:  \
 	ctaocrypt/src/$(DEPDIR)/$(am__dirstamp)
 ctaocrypt/src/aes_asm.lo: ctaocrypt/src/$(am__dirstamp) \
 	ctaocrypt/src/$(DEPDIR)/$(am__dirstamp)
+ctaocrypt/src/src_libcyassl_la-md2.lo: ctaocrypt/src/$(am__dirstamp) \
+	ctaocrypt/src/$(DEPDIR)/$(am__dirstamp)
 ctaocrypt/src/src_libcyassl_la-ripemd.lo:  \
 	ctaocrypt/src/$(am__dirstamp) \
 	ctaocrypt/src/$(DEPDIR)/$(am__dirstamp)
@@ -961,6 +978,12 @@ tests/tests_unit-suites.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
 tests/tests_unit-hash.$(OBJEXT): tests/$(am__dirstamp) \
 	tests/$(DEPDIR)/$(am__dirstamp)
+examples/client/tests_unit-client.$(OBJEXT):  \
+	examples/client/$(am__dirstamp) \
+	examples/client/$(DEPDIR)/$(am__dirstamp)
+examples/server/tests_unit-server.$(OBJEXT):  \
+	examples/server/$(am__dirstamp) \
+	examples/server/$(DEPDIR)/$(am__dirstamp)
 tests/unit$(EXEEXT): $(tests_unit_OBJECTS) $(tests_unit_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/unit$(EXEEXT)
 	$(tests_unit_LINK) $(tests_unit_OBJECTS) $(tests_unit_LDADD) $(LIBS)
@@ -1020,6 +1043,8 @@ mostlyclean-compile:
 	-rm -f ctaocrypt/src/src_libcyassl_la-integer.lo
 	-rm -f ctaocrypt/src/src_libcyassl_la-logging.$(OBJEXT)
 	-rm -f ctaocrypt/src/src_libcyassl_la-logging.lo
+	-rm -f ctaocrypt/src/src_libcyassl_la-md2.$(OBJEXT)
+	-rm -f ctaocrypt/src/src_libcyassl_la-md2.lo
 	-rm -f ctaocrypt/src/src_libcyassl_la-md4.$(OBJEXT)
 	-rm -f ctaocrypt/src/src_libcyassl_la-md4.lo
 	-rm -f ctaocrypt/src/src_libcyassl_la-md5.$(OBJEXT)
@@ -1049,12 +1074,14 @@ mostlyclean-compile:
 	-rm -f ctaocrypt/test/test.$(OBJEXT)
 	-rm -f ctaocrypt/test/testsuite_testsuite-test.$(OBJEXT)
 	-rm -f examples/client/client.$(OBJEXT)
+	-rm -f examples/client/tests_unit-client.$(OBJEXT)
 	-rm -f examples/client/testsuite_testsuite-client.$(OBJEXT)
 	-rm -f examples/echoclient/echoclient.$(OBJEXT)
 	-rm -f examples/echoclient/testsuite_testsuite-echoclient.$(OBJEXT)
 	-rm -f examples/echoserver/echoserver.$(OBJEXT)
 	-rm -f examples/echoserver/testsuite_testsuite-echoserver.$(OBJEXT)
 	-rm -f examples/server/server.$(OBJEXT)
+	-rm -f examples/server/tests_unit-server.$(OBJEXT)
 	-rm -f examples/server/testsuite_testsuite-server.$(OBJEXT)
 	-rm -f src/src_libcyassl_la-crl.$(OBJEXT)
 	-rm -f src/src_libcyassl_la-crl.lo
@@ -1095,6 +1122,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-hmac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-integer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-logging.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-md2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-md4.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-md5.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-memory.Plo@am__quote@
@@ -1111,12 +1139,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/test/$(DEPDIR)/test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ctaocrypt/test/$(DEPDIR)/testsuite_testsuite-test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/client/$(DEPDIR)/client.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@examples/client/$(DEPDIR)/tests_unit-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/client/$(DEPDIR)/testsuite_testsuite-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/echoclient/$(DEPDIR)/echoclient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/echoclient/$(DEPDIR)/testsuite_testsuite-echoclient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/echoserver/$(DEPDIR)/echoserver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/echoserver/$(DEPDIR)/testsuite_testsuite-echoserver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/server/$(DEPDIR)/server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@examples/server/$(DEPDIR)/tests_unit-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/server/$(DEPDIR)/testsuite_testsuite-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libcyassl_la-crl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_libcyassl_la-internal.Plo@am__quote@
@@ -1318,6 +1348,13 @@ ctaocrypt/src/src_libcyassl_la-memory.lo: ctaocrypt/src/memory.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libcyassl_la_CPPFLAGS) $(CPPFLAGS) $(src_libcyassl_la_CFLAGS) $(CFLAGS) -c -o ctaocrypt/src/src_libcyassl_la-memory.lo `test -f 'ctaocrypt/src/memory.c' || echo '$(srcdir)/'`ctaocrypt/src/memory.c
 
+ctaocrypt/src/src_libcyassl_la-md2.lo: ctaocrypt/src/md2.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libcyassl_la_CPPFLAGS) $(CPPFLAGS) $(src_libcyassl_la_CFLAGS) $(CFLAGS) -MT ctaocrypt/src/src_libcyassl_la-md2.lo -MD -MP -MF ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-md2.Tpo -c -o ctaocrypt/src/src_libcyassl_la-md2.lo `test -f 'ctaocrypt/src/md2.c' || echo '$(srcdir)/'`ctaocrypt/src/md2.c
+@am__fastdepCC_TRUE@	mv -f ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-md2.Tpo ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-md2.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ctaocrypt/src/md2.c' object='ctaocrypt/src/src_libcyassl_la-md2.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libcyassl_la_CPPFLAGS) $(CPPFLAGS) $(src_libcyassl_la_CFLAGS) $(CFLAGS) -c -o ctaocrypt/src/src_libcyassl_la-md2.lo `test -f 'ctaocrypt/src/md2.c' || echo '$(srcdir)/'`ctaocrypt/src/md2.c
+
 ctaocrypt/src/src_libcyassl_la-ripemd.lo: ctaocrypt/src/ripemd.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_libcyassl_la_CPPFLAGS) $(CPPFLAGS) $(src_libcyassl_la_CFLAGS) $(CFLAGS) -MT ctaocrypt/src/src_libcyassl_la-ripemd.lo -MD -MP -MF ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-ripemd.Tpo -c -o ctaocrypt/src/src_libcyassl_la-ripemd.lo `test -f 'ctaocrypt/src/ripemd.c' || echo '$(srcdir)/'`ctaocrypt/src/ripemd.c
 @am__fastdepCC_TRUE@	mv -f ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-ripemd.Tpo ctaocrypt/src/$(DEPDIR)/src_libcyassl_la-ripemd.Plo
@@ -1444,6 +1481,34 @@ tests/tests_unit-hash.obj: tests/hash.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -c -o tests/tests_unit-hash.obj `if test -f 'tests/hash.c'; then $(CYGPATH_W) 'tests/hash.c'; else $(CYGPATH_W) '$(srcdir)/tests/hash.c'; fi`
 
+examples/client/tests_unit-client.o: examples/client/client.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -MT examples/client/tests_unit-client.o -MD -MP -MF examples/client/$(DEPDIR)/tests_unit-client.Tpo -c -o examples/client/tests_unit-client.o `test -f 'examples/client/client.c' || echo '$(srcdir)/'`examples/client/client.c
+@am__fastdepCC_TRUE@	mv -f examples/client/$(DEPDIR)/tests_unit-client.Tpo examples/client/$(DEPDIR)/tests_unit-client.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='examples/client/client.c' object='examples/client/tests_unit-client.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -c -o examples/client/tests_unit-client.o `test -f 'examples/client/client.c' || echo '$(srcdir)/'`examples/client/client.c
+
+examples/client/tests_unit-client.obj: examples/client/client.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -MT examples/client/tests_unit-client.obj -MD -MP -MF examples/client/$(DEPDIR)/tests_unit-client.Tpo -c -o examples/client/tests_unit-client.obj `if test -f 'examples/client/client.c'; then $(CYGPATH_W) 'examples/client/client.c'; else $(CYGPATH_W) '$(srcdir)/examples/client/client.c'; fi`
+@am__fastdepCC_TRUE@	mv -f examples/client/$(DEPDIR)/tests_unit-client.Tpo examples/client/$(DEPDIR)/tests_unit-client.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='examples/client/client.c' object='examples/client/tests_unit-client.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -c -o examples/client/tests_unit-client.obj `if test -f 'examples/client/client.c'; then $(CYGPATH_W) 'examples/client/client.c'; else $(CYGPATH_W) '$(srcdir)/examples/client/client.c'; fi`
+
+examples/server/tests_unit-server.o: examples/server/server.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -MT examples/server/tests_unit-server.o -MD -MP -MF examples/server/$(DEPDIR)/tests_unit-server.Tpo -c -o examples/server/tests_unit-server.o `test -f 'examples/server/server.c' || echo '$(srcdir)/'`examples/server/server.c
+@am__fastdepCC_TRUE@	mv -f examples/server/$(DEPDIR)/tests_unit-server.Tpo examples/server/$(DEPDIR)/tests_unit-server.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='examples/server/server.c' object='examples/server/tests_unit-server.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -c -o examples/server/tests_unit-server.o `test -f 'examples/server/server.c' || echo '$(srcdir)/'`examples/server/server.c
+
+examples/server/tests_unit-server.obj: examples/server/server.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -MT examples/server/tests_unit-server.obj -MD -MP -MF examples/server/$(DEPDIR)/tests_unit-server.Tpo -c -o examples/server/tests_unit-server.obj `if test -f 'examples/server/server.c'; then $(CYGPATH_W) 'examples/server/server.c'; else $(CYGPATH_W) '$(srcdir)/examples/server/server.c'; fi`
+@am__fastdepCC_TRUE@	mv -f examples/server/$(DEPDIR)/tests_unit-server.Tpo examples/server/$(DEPDIR)/tests_unit-server.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='examples/server/server.c' object='examples/server/tests_unit-server.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(tests_unit_CFLAGS) $(CFLAGS) -c -o examples/server/tests_unit-server.obj `if test -f 'examples/server/server.c'; then $(CYGPATH_W) 'examples/server/server.c'; else $(CYGPATH_W) '$(srcdir)/examples/server/server.c'; fi`
+
 ctaocrypt/test/testsuite_testsuite-test.o: ctaocrypt/test/test.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testsuite_testsuite_CFLAGS) $(CFLAGS) -MT ctaocrypt/test/testsuite_testsuite-test.o -MD -MP -MF ctaocrypt/test/$(DEPDIR)/testsuite_testsuite-test.Tpo -c -o ctaocrypt/test/testsuite_testsuite-test.o `test -f 'ctaocrypt/test/test.c' || echo '$(srcdir)/'`ctaocrypt/test/test.c
 @am__fastdepCC_TRUE@	mv -f ctaocrypt/test/$(DEPDIR)/testsuite_testsuite-test.Tpo ctaocrypt/test/$(DEPDIR)/testsuite_testsuite-test.Po
@@ -1547,23 +1612,6 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool
-install-certsDATA: $(certs_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(certsdir)" || $(MKDIR_P) "$(DESTDIR)$(certsdir)"
-	@list='$(certs_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(certsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(certsdir)/$$f'"; \
-	  $(certsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(certsdir)/$$f"; \
-	done
-
-uninstall-certsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(certs_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(certsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(certsdir)/$$f"; \
-	done
 install-docDATA: $(doc_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(docdir)" || $(MKDIR_P) "$(DESTDIR)$(docdir)"
@@ -1891,7 +1939,7 @@ all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(certsdir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(exampledir)" "$(DESTDIR)$(includedir)" "$(DESTDIR)$(includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(exampledir)" "$(DESTDIR)$(includedir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -1967,7 +2015,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-certsDATA install-docDATA install-exampleDATA \
+install-data-am: install-docDATA install-exampleDATA \
 	install-includeHEADERS install-nobase_includeHEADERS
 
 install-dvi: install-dvi-am
@@ -2006,10 +2054,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS uninstall-certsDATA \
-	uninstall-docDATA uninstall-exampleDATA \
-	uninstall-includeHEADERS uninstall-libLTLIBRARIES \
-	uninstall-nobase_includeHEADERS
+uninstall-am: uninstall-binPROGRAMS uninstall-docDATA \
+	uninstall-exampleDATA uninstall-includeHEADERS \
+	uninstall-libLTLIBRARIES uninstall-nobase_includeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -2021,19 +2068,18 @@ uninstall-am: uninstall-binPROGRAMS uninstall-certsDATA \
 	distclean-compile distclean-generic distclean-hdr \
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-certsDATA \
-	install-data install-data-am install-docDATA install-dvi \
-	install-dvi-am install-exampleDATA install-exec \
-	install-exec-am install-html install-html-am \
-	install-includeHEADERS install-info install-info-am \
-	install-libLTLIBRARIES install-man \
+	install install-am install-binPROGRAMS install-data \
+	install-data-am install-docDATA install-dvi install-dvi-am \
+	install-exampleDATA install-exec install-exec-am install-html \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLTLIBRARIES install-man \
 	install-nobase_includeHEADERS install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-certsDATA uninstall-docDATA uninstall-exampleDATA \
+	uninstall-docDATA uninstall-exampleDATA \
 	uninstall-includeHEADERS uninstall-libLTLIBRARIES \
 	uninstall-nobase_includeHEADERS
 

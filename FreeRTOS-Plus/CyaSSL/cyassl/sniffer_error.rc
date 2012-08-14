@@ -74,5 +74,12 @@ STRINGTABLE
     60, "Received an Overlap Reassembly End Duplicate Packet"
     
     61, "Missed the Client Hello Entirely"
+    62, "Got Hello Request msg"
+    63, "Got Session Ticket msg"
+    64, "Bad Input"
+    65, "Bad Decrypt Type"
+
+    66, "Bad Finished Message Processing"
+    67, "Bad Compression Type"
 }
 

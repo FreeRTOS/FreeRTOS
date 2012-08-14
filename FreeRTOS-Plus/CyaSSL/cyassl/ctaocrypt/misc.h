@@ -49,6 +49,19 @@ CYASSL_LOCAL
 void XorWords(word*, const word*, word32);
 CYASSL_LOCAL
 void xorbuf(byte*, const byte*, word32);
+
+#ifdef WORD64_AVAILABLE
+CYASSL_LOCAL
+word64 rotlFixed64(word64, word64);
+CYASSL_LOCAL
+word64 rotrFixed64(word64, word64);
+
+CYASSL_LOCAL
+word64 ByteReverseWord64(word64);
+CYASSL_LOCAL
+void   ByteReverseWords64(word64*, const word64*, word32);
+#endif /* WORD64_AVAILABLE */
+
 #endif /* NO_INLINE */
 
 

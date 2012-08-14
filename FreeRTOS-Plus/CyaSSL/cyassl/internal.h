@@ -44,6 +44,9 @@
 #ifdef HAVE_OCSP
     #include <cyassl/ocsp.h>
 #endif
+#ifdef CYASSL_SHA512
+    #include <cyassl/ctaocrypt/sha512.h>
+#endif
 
 #ifdef CYASSL_CALLBACKS
     #include <cyassl/openssl/cyassl_callbacks.h>
@@ -59,10 +62,6 @@
             #include <winsock2.h>
         #endif
         #include <windows.h>
-        #if defined(FREERTOS_WINSIM) && !defined(SINGLE_THREADED)
-            #include "FreeRTOS.h"
-            #include "semphr.h"
-        #endif
     #endif
 #elif defined(THREADX)
     #ifndef SINGLE_THREADED
@@ -71,10 +70,7 @@
 #elif defined(MICRIUM)
     /* do nothing, just don't pick Unix */
 #elif defined(FREERTOS)
-    #ifndef SINGLE_THREADED
-		#include "FreeRTOS.h"
-		#include "semphr.h"
-    #endif
+    /* do nothing */
 #else
     #ifndef SINGLE_THREADED
         #define CYASSL_PTHREADS
@@ -156,6 +152,10 @@ void c32to24(word32 in, word24 out);
         #define BUILD_TLS_RSA_WITH_AES_128_CBC_SHA256
         #define BUILD_TLS_RSA_WITH_AES_256_CBC_SHA256
     #endif
+    #if defined (HAVE_AESGCM)
+        #define BUILD_TLS_RSA_WITH_AES_128_GCM_SHA256
+        #define BUILD_TLS_RSA_WITH_AES_256_GCM_SHA384
+    #endif
 #endif
 
 #if !defined(NO_HC128) && !defined(NO_TLS)
@@ -173,6 +173,10 @@ void c32to24(word32 in, word24 out);
     #if !defined (NO_SHA256)
         #define BUILD_TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
         #define BUILD_TLS_DHE_RSA_WITH_AES_256_CBC_SHA256
+        #if defined (HAVE_AESGCM)
+            #define BUILD_TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+            #define BUILD_TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+        #endif
     #endif
 #endif
 
@@ -187,6 +191,18 @@ void c32to24(word32 in, word24 out);
         #define BUILD_TLS_ECDH_RSA_WITH_AES_256_CBC_SHA
         #define BUILD_TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA
         #define BUILD_TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA
+
+        #if defined (HAVE_AESGCM)
+            #define BUILD_TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+            #define BUILD_TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+            #define BUILD_TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256
+            #define BUILD_TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256
+
+            #define BUILD_TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+            #define BUILD_TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+            #define BUILD_TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384
+            #define BUILD_TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384
+        #endif
     #endif
     #if !defined(NO_RC4)
         #define BUILD_TLS_ECDHE_RSA_WITH_RC4_128_SHA
@@ -217,6 +233,10 @@ void c32to24(word32 in, word24 out);
 #if defined(BUILD_TLS_RSA_WITH_AES_128_CBC_SHA) || \
     defined(BUILD_TLS_RSA_WITH_AES_256_CBC_SHA)
     #define BUILD_AES
+#endif
+
+#if defined(BUILD_TLS_RSA_WITH_AES_128_GCM_SHA256)
+    #define BUILD_AESGCM
 #endif
 
 #if defined(BUILD_TLS_RSA_WITH_HC_128_CBC_SHA) || \
@@ -284,7 +304,23 @@ enum {
     TLS_DHE_RSA_WITH_AES_256_CBC_SHA256 = 0x6b,
     TLS_DHE_RSA_WITH_AES_128_CBC_SHA256 = 0x67,
     TLS_RSA_WITH_AES_256_CBC_SHA256     = 0x3d,
-    TLS_RSA_WITH_AES_128_CBC_SHA256     = 0x3c
+    TLS_RSA_WITH_AES_128_CBC_SHA256     = 0x3c,
+
+    /* AES-GCM */
+    TLS_RSA_WITH_AES_128_GCM_SHA256          = 0x9c,
+    TLS_RSA_WITH_AES_256_GCM_SHA384          = 0x9d,
+    TLS_DHE_RSA_WITH_AES_128_GCM_SHA256      = 0x9e,
+    TLS_DHE_RSA_WITH_AES_256_GCM_SHA384      = 0x9f,
+
+    /* ECC AES-GCM, first byte is 0xC0 (ECC_BYTE) */
+    TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256  = 0x2b,
+    TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384  = 0x2c,
+    TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256   = 0x2d,
+    TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384   = 0x2e,
+    TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256    = 0x2f,
+    TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384    = 0x30,
+    TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256     = 0x31,
+    TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384     = 0x32
 };
 
 
@@ -306,12 +342,15 @@ enum Misc {
     TLSv1_2_MINOR   = 3,        /* TLSv1_2 minor version number */
     NO_COMPRESSION  =  0,
     ZLIB_COMPRESSION = 221,     /* CyaSSL zlib compression */
+    HELLO_EXT_SIG_ALGO = 13,    /* ID for the sig_algo hello extension */
     SECRET_LEN      = 48,       /* pre RSA and all master */
     ENCRYPT_LEN     = 512,      /* allow 4096 bit static buffer */
     SIZEOF_SENDER   =  4,       /* clnt or srvr           */
     FINISHED_SZ     = MD5_DIGEST_SIZE + SHA_DIGEST_SIZE,
     MAX_RECORD_SIZE = 16384,    /* 2^14, max size by standard */
-    MAX_MSG_EXTRA   = 68,       /* max added to msg, mac + pad */
+    MAX_MSG_EXTRA   = 70,       /* max added to msg, mac + pad  from */
+                                /* RECORD_HEADER_SZ + BLOCK_SZ (pad) + SHA_256
+                                   digest sz + BLOC_SZ (iv) + pad byte (1) */
     MAX_COMP_EXTRA  = 1024,     /* max compression extra */
     MAX_MTU         = 1500,     /* max expected MTU */
     MAX_UDP_SIZE    = MAX_MTU - 100,   /* don't exceed MTU w/ 100 byte header */
@@ -335,6 +374,7 @@ enum Misc {
     SEED_LEN     = RAN_LEN * 2, /* tls prf seed length    */
     ID_LEN       = 32,         /* session id length       */
     MAX_COOKIE_LEN = 32,       /* max dtls cookie size    */
+    COOKIE_SZ    = 20,         /* use a 20 byte cookie    */
     SUITE_LEN    =  2,         /* cipher suite sz length  */
     ENUM_LEN     =  1,         /* always a byte           */
     COMP_LEN     =  1,         /* compression length      */
@@ -345,6 +385,10 @@ enum Misc {
     CERT_HEADER_SZ      = 3,   /* always 3 bytes          */
     REQ_HEADER_SZ       = 2,   /* cert request header sz  */
     HINT_LEN_SZ         = 2,   /* length of hint size field */
+    HELLO_EXT_SZ        = 14,  /* total length of the lazy hello extensions */
+    HELLO_EXT_LEN       = 12,  /* length of the lazy hello extensions */
+    HELLO_EXT_SIGALGO_SZ  = 8, /* length of signature algo extension  */
+    HELLO_EXT_SIGALGO_LEN = 6, /* number of items in the signature algo list */
 
     DTLS_HANDSHAKE_HEADER_SZ = 12, /* normal + seq(2) + offset(3) + length(3) */
     DTLS_RECORD_HEADER_SZ    = 13, /* normal + epoch(2) + seq_num(6) */
@@ -368,7 +412,18 @@ enum Misc {
     AES_256_KEY_SIZE    = 32,  /* for 256 bit             */
     AES_192_KEY_SIZE    = 24,  /* for 192 bit             */
     AES_IV_SIZE         = 16,  /* always block size       */
+    AES_GCM_IMP_IV_SZ   = 4,   /* Implicit part of IV     */
+    AES_GCM_EXP_IV_SZ   = 8,   /* Explicit part of IV     */
+    AES_GCM_CTR_IV_SZ   = 4,   /* Counter part of IV      */
     AES_128_KEY_SIZE    = 16,  /* for 128 bit             */
+
+    AEAD_SEQ_OFFSET     = 4,        /* Auth Data: Sequence number */
+    AEAD_TYPE_OFFSET    = 8,        /* Auth Data: Type            */
+    AEAD_VMAJ_OFFSET    = 9,        /* Auth Data: Major Version   */
+    AEAD_VMIN_OFFSET    = 10,       /* Auth Data: Minor Version   */
+    AEAD_LEN_OFFSET     = 11,       /* Auth Data: Length          */
+    AEAD_AUTH_TAG_SZ    = 16,       /* Size of the authentication tag   */
+    AEAD_AUTH_DATA_SZ   = 13,       /* Size of the data to authenticate */
 
     HC_128_KEY_SIZE     = 16,  /* 128 bits                */
     HC_128_IV_SIZE      = 16,  /* also 128 bits           */
@@ -394,7 +449,7 @@ enum Misc {
     MAX_EX_DATA        =   3,  /* allow for three items of ex_data */
     MAX_CHAIN_DEPTH    =   9,  /* max cert chain peer depth, FORTRESS option */
 #else
-    MAX_CHAIN_DEPTH    =   4,  /* max cert chain peer depth */
+    MAX_CHAIN_DEPTH    =   6,  /* max cert chain peer depth */
 #endif
     MAX_X509_SIZE      = 2048, /* max static x509 buffer size */
     CERT_MIN_SIZE      =  256, /* min PEM cert size with header/footer */
@@ -484,9 +539,6 @@ struct CYASSL_BIO {
 struct CYASSL_METHOD {
     ProtocolVersion version;
     byte            side;         /* connection side, server or client */
-    byte            verifyPeer;   /* request or send certificate       */
-    byte            verifyNone;   /* whether to verify certificate     */
-    byte            failNoCert;   /* fail if no certificate            */
     byte            downgrade;    /* whether to downgrade version, default no */
 };
 
@@ -520,9 +572,9 @@ enum {
     #define COMP_EXTRA 0
 #endif
 
-/* only the sniffer needs space in the buffer for an extra MTU record */
+/* only the sniffer needs space in the buffer for extra MTU record(s) */
 #ifdef CYASSL_SNIFFER
-    #define MTU_EXTRA MAX_MTU
+    #define MTU_EXTRA MAX_MTU * 3 
 #else
     #define MTU_EXTRA 0
 #endif
@@ -600,6 +652,8 @@ int  SetCipherList(Suites*, const char* list);
 
 #ifdef CYASSL_DTLS
     CYASSL_LOCAL
+    int EmbedGenerateCookie(byte *buf, int sz, void *ctx);
+    CYASSL_LOCAL
     int IsUDP(void*);
 #endif
 
@@ -613,7 +667,7 @@ struct CYASSL_CIPHER {
 #ifdef SINGLE_THREADED
     typedef int CyaSSL_Mutex;
 #else /* MULTI_THREADED */
-    /* Comes first to enable use of FreeRTOS Windows simulator only. */
+    /* FREERTOS comes first to enable use of FreeRTOS Windows simulator only */
     #ifdef FREERTOS
         typedef xSemaphoreHandle CyaSSL_Mutex;
     #elif defined(USE_WINDOWS_API)
@@ -636,6 +690,28 @@ CYASSL_LOCAL int UnLockMutex(CyaSSL_Mutex*);
 
 
 
+typedef struct OCSP_Entry OCSP_Entry;
+
+struct OCSP_Entry {
+    OCSP_Entry* next;                       /* next entry             */
+    byte    issuerHash[SHA_DIGEST_SIZE];    /* issuer hash            */ 
+    byte    issuerKeyHash[SHA_DIGEST_SIZE]; /* issuer public key hash */
+    CertStatus* status;                     /* OCSP response list     */
+    int         totalStatus;                /* number on list         */
+};
+
+
+/* CyaSSL OCSP controller */
+struct CYASSL_OCSP {
+    byte enabled;
+    byte useOverrideUrl;
+    char overrideName[80];
+    char overridePath[80];
+    int  overridePort;
+    OCSP_Entry* ocspList;
+};
+
+
 typedef struct CRL_Entry CRL_Entry;
 
 /* Complete CRL */
@@ -645,8 +721,19 @@ struct CRL_Entry {
     byte    crlHash[MD5_DIGEST_SIZE];     /* raw crl data hash           */ 
     byte    lastDate[MAX_DATE_SIZE]; /* last date updated  */
     byte    nextDate[MAX_DATE_SIZE]; /* next update date   */
+    byte    lastDateFormat;          /* last date format */
+    byte    nextDateFormat;          /* next date format */
     RevokedCert* certs;              /* revoked cert list  */
     int          totalCerts;         /* number on list     */
+};
+
+
+typedef struct CRL_Monitor CRL_Monitor;
+
+/* CRL directory monitor */
+struct CRL_Monitor {
+    char* path;      /* full dir path, if valid pointer we're using */
+    int   type;      /* PEM or ASN1 type */
 };
 
 
@@ -655,6 +742,10 @@ struct CYASSL_CRL {
     CYASSL_CERT_MANAGER* cm;            /* pointer back to cert manager */
     CRL_Entry*           crlList;       /* our CRL list */
     CyaSSL_Mutex         crlLock;       /* CRL list lock */
+    CRL_Monitor          monitors[2];   /* PEM and DER possible */
+#ifdef HAVE_CRL_MONITOR
+    pthread_t            tid;           /* monitoring thread */
+#endif
 };
 
 
@@ -693,7 +784,7 @@ struct CYASSL_CTX {
     byte        sendVerify;       /* for client side */
     byte        haveDH;           /* server DH parms set by user */
     byte        haveNTRU;         /* server private NTRU  key loaded */
-    byte        haveECDSA;        /* server cert signed w/ ECDSA loaded */
+    byte        haveECDSAsig;     /* server cert signed w/ ECDSA */
     byte        haveStaticECC;    /* static server ECC private key */
     byte        partialWrite;     /* only one msg per write call */
     byte        quietShutdown;    /* don't send close notify */
@@ -741,7 +832,7 @@ int AlreadySigner(CYASSL_CERT_MANAGER* cm, byte* hash);
 /* All cipher suite related info */
 typedef struct CipherSpecs {
     byte bulk_cipher_algorithm;
-    byte cipher_type;               /* block or stream */
+    byte cipher_type;               /* block, stream, or aead */
     byte mac_algorithm;
     byte kea;                       /* key exchange algo */
     byte sig_algo;
@@ -765,6 +856,7 @@ enum BulkCipherAlgorithm {
     des40,
     idea,
     aes,
+    aes_gcm,
     hc128,                  /* CyaSSL extensions */
     rabbit
 };
@@ -772,7 +864,7 @@ enum BulkCipherAlgorithm {
 
 /* Supported Message Authentication Codes from page 43 */
 enum MACAlgorithm { 
-    no_mac = 0,
+    no_mac,
     md5_mac,
     sha_mac,
     sha224_mac,
@@ -785,19 +877,20 @@ enum MACAlgorithm {
 
 /* Supported Key Exchange Protocols */
 enum KeyExchangeAlgorithm { 
-    no_kea = 0,
+    no_kea,
     rsa_kea, 
     diffie_hellman_kea, 
     fortezza_kea,
     psk_kea,
     ntru_kea,
-    ecc_diffie_hellman_kea
+    ecc_diffie_hellman_kea,
+    ecc_static_diffie_hellman_kea       /* for verify suite only */
 };
 
 
 /* Supported Authentication Schemes */
 enum SignatureAlgorithm {
-    anonymous_sa_algo = 0,
+    anonymous_sa_algo,
     rsa_sa_algo,
     dsa_sa_algo,
     ecc_dsa_sa_algo
@@ -834,7 +927,7 @@ enum ClientCertificateType {
 };
 
 
-enum CipherType { stream, block };
+enum CipherType { stream, block, aead };
 
 
 /* keys and secrets */
@@ -1011,7 +1104,7 @@ typedef struct Options {
     byte            usingCompression;   /* are we using compression */
     byte            haveDH;             /* server DH parms set by user */
     byte            haveNTRU;           /* server NTRU  private key loaded */
-    byte            haveECDSA;          /* server ECDSA signed cert */
+    byte            haveECDSAsig;       /* server ECDSA signed cert */
     byte            haveStaticECC;      /* static server ECC private key */
     byte            havePeerCert;       /* do we have peer's cert */
     byte            usingPSK_cipher;    /* whether we're using psk as cipher */
@@ -1037,6 +1130,7 @@ typedef struct Arrays {
     byte            masterSecret[SECRET_LEN];
 #ifdef CYASSL_DTLS
     byte            cookie[MAX_COOKIE_LEN];
+    byte            cookieSz;
 #endif
 #ifndef NO_PSK
     char            client_identity[MAX_PSK_ID_LEN];
@@ -1061,6 +1155,8 @@ struct CYASSL_X509 {
     byte             serial[EXTERNAL_SERIAL_SIZE];
     char             subjectCN[ASN_NAME_MAX];        /* common name short cut */
     buffer           derCert;                        /* may need  */
+    DNS_entry*       altNames;                       /* alt names list */
+    DNS_entry*       altNamesNext;                   /* hint for retrieval */
 };
 
 
@@ -1104,6 +1200,9 @@ struct CYASSL {
     Sha             hashSha;            /* sha hash of handshake msgs */
 #ifndef NO_SHA256
     Sha256          hashSha256;         /* sha256 hash of handshake msgs */
+#endif
+#ifdef CYASSL_SHA384
+    Sha384          hashSha384;         /* sha384 hash of handshake msgs */
 #endif
     Hashes          verifyHashes;
     Hashes          certHashes;         /* for cert verify */
@@ -1241,6 +1340,7 @@ enum HandShakeType {
     client_hello        = 1, 
     server_hello        = 2,
     hello_verify_request = 3,       /* DTLS addition */
+    session_ticket      =  4,
     certificate         = 11, 
     server_key_exchange = 12,
     certificate_request = 13, 

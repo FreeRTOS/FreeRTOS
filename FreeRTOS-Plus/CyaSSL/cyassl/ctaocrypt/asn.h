@@ -61,6 +61,7 @@ enum ASN_Tags {
     ASN_SEQUENCE          = 0x10,
     ASN_SET               = 0x11,
     ASN_UTC_TIME          = 0x17,
+    ASN_DNS_TYPE          = 0x02,
     ASN_GENERALIZED_TIME  = 0x18,
     CRL_EXTENSIONS        = 0xa0,
     ASN_EXTENSIONS        = 0xa3,
@@ -138,6 +139,8 @@ enum Misc_ASN {
     #endif
                                    /* Max total extensions, id + len + others */
 #endif
+    MAX_OCSP_EXT_SZ     = 58,      /* Max OCSP Extension length */
+    MAX_OCSP_NONCE_SZ   = 18,      /* OCSP Nonce size           */
     MAX_PUBLIC_KEY_SZ   = MAX_NTRU_ENC_SZ + MAX_ALGO_SZ + MAX_SEQ_SZ * 2
                                    /* use bigger NTRU size */
 };
@@ -198,6 +201,13 @@ enum VerifyType {
 };
 
 
+typedef struct DNS_entry   DNS_entry;
+
+struct DNS_entry {
+    DNS_entry* next;   /* next on DNS list */
+    char*      name;   /* actual DNS name */
+};
+
 typedef struct DecodedCert DecodedCert;
 typedef struct Signer      Signer;
 
@@ -211,6 +221,7 @@ struct DecodedCert {
     word32  sigLength;               /* length of signature              */
     word32  signatureOID;            /* sum of algorithm object id       */
     word32  keyOID;                  /* sum of key algo  object id       */
+    DNS_entry* altNames;             /* alt names list of dns entries    */
     byte    subjectHash[SHA_SIZE];   /* hash of all Names                */
     byte    issuerHash[SHA_SIZE];    /* hash of all Names                */
 #ifdef HAVE_OCSP
@@ -219,6 +230,7 @@ struct DecodedCert {
     byte*   signature;               /* not owned, points into raw cert  */
     char*   subjectCN;               /* CommonName                       */
     int     subjectCNLen;
+    int     subjectCNStored;         /* have we saved a copy we own      */
     char    issuer[ASN_NAME_MAX];    /* full name including common name  */
     char    subject[ASN_NAME_MAX];   /* full name including common name  */
     int     verify;                  /* Default to yes, but could be off */
@@ -278,6 +290,7 @@ struct Signer {
     #define CYASSL_TEST_API CYASSL_LOCAL
 #endif
 
+CYASSL_TEST_API void FreeAltNames(DNS_entry*, void*);
 CYASSL_TEST_API void InitDecodedCert(DecodedCert*, byte*, word32, void*);
 CYASSL_TEST_API void FreeDecodedCert(DecodedCert*);
 CYASSL_TEST_API int  ParseCert(DecodedCert*, int type, int verify, void* cm);
@@ -295,6 +308,7 @@ CYASSL_LOCAL void    FreeSigners(Signer*, void*);
 CYASSL_LOCAL int ToTraditional(byte* buffer, word32 length);
 CYASSL_LOCAL int ToTraditionalEnc(byte* buffer, word32 length,const char*, int);
 
+CYASSL_LOCAL int ValidateDate(const byte* date, byte format, int dateType);
 
 #ifdef HAVE_ECC
     /* ASN sig helpers */
@@ -321,6 +335,10 @@ enum cert_enums {
 #endif /* CYASSL_CERT_GEN */
 
 
+
+/* for pointer use */
+typedef struct CertStatus CertStatus;
+
 #ifdef HAVE_OCSP
 
 enum Ocsp_Response_Status {
@@ -341,47 +359,82 @@ enum Ocsp_Cert_Status {
 
 
 enum Ocsp_Sums {
-    OCSP_BASIC_OID = 117
+    OCSP_BASIC_OID = 117,
+    OCSP_NONCE_OID = 118
 };
 
 
-#define STATUS_LIST_SIZE 5
-
-
+typedef struct OcspRequest  OcspRequest;
 typedef struct OcspResponse OcspResponse;
+
+
+struct CertStatus {
+    CertStatus* next;
+
+    byte serial[EXTERNAL_SERIAL_SIZE];
+    int serialSz;
+
+    int status;
+
+    byte thisDate[MAX_DATE_SIZE];
+    byte nextDate[MAX_DATE_SIZE];
+    byte thisDateFormat;
+    byte nextDateFormat;
+};
 
 
 struct OcspResponse {
     int     responseStatus;  /* return code from Responder */
 
-    word32  respBegin;       /* index to beginning of OCSP Response */
-    word32  respLength;      /* length of the OCSP Response */
+    byte*   response;        /* Pointer to beginning of OCSP Response */
+    word32  responseSz;      /* length of the OCSP Response */
 
-    int     version;         /* Response version number */
+    byte    producedDate[MAX_DATE_SIZE];
+							 /* Date at which this response was signed */
+    byte    producedDateFormat; /* format of the producedDate */
+    byte*   issuerHash;
+    byte*   issuerKeyHash;
 
-    word32  sigIndex;        /* Index into source for start of sig */
-    word32  sigLength;       /* Length in octets for the sig */
+    byte*   cert;
+    word32  certSz;
+
+    byte*   sig;             /* Pointer to sig in source */
+    word32  sigSz;           /* Length in octets for the sig */
     word32  sigOID;          /* OID for hash used for sig */
 
-    int     certStatusCount; /* Count of certificate statuses, Note
-                              * 1:1 correspondence between certStatus
-                              * and certSerialNumber */
-    byte    certSN[STATUS_LIST_SIZE][EXTERNAL_SERIAL_SIZE];
-    int     certSNsz[STATUS_LIST_SIZE];
-                             /* Certificate serial number array. */
-    word32  certStatus[STATUS_LIST_SIZE];
-                             /* Certificate status array */
+    CertStatus* status;      /* certificate status to fill out */
+
+    byte*   nonce;           /* pointer to nonce inside ASN.1 response */
+    int     nonceSz;         /* length of the nonce string */
 
     byte*   source;          /* pointer to source buffer, not owned */
     word32  maxIdx;          /* max offset based on init size */
-    void*   heap;            /* for user memory overrides */
 };
 
 
-CYASSL_LOCAL void InitOcspResponse(OcspResponse*, byte*, word32, void*);
-CYASSL_LOCAL void FreeOcspResponse(OcspResponse*);
+struct OcspRequest {
+    DecodedCert* cert;
+
+    byte    nonce[MAX_OCSP_NONCE_SZ];
+    int     nonceSz;
+
+    byte*   issuerHash;      /* pointer to issuerHash in source cert */
+    byte*   issuerKeyHash;   /* pointer to issuerKeyHash in source cert */
+    byte*   serial;          /* pointer to serial number in source cert */
+    int     serialSz;        /* length of the serial number */
+
+    byte*   dest;            /* pointer to the destination ASN.1 buffer */
+    word32  destSz;          /* length of the destination buffer */
+};
+
+
+CYASSL_LOCAL void InitOcspResponse(OcspResponse*, CertStatus*, byte*, word32);
 CYASSL_LOCAL int  OcspResponseDecode(OcspResponse*);
-CYASSL_LOCAL int  EncodeOcspRequest(DecodedCert*, byte*, word32);
+
+CYASSL_LOCAL void InitOcspRequest(OcspRequest*, DecodedCert*, byte*, word32);
+CYASSL_LOCAL int  EncodeOcspRequest(OcspRequest*);
+
+CYASSL_LOCAL int  CompareOcspReqResp(OcspRequest*, OcspResponse*);
 
 
 #endif /* HAVE_OCSP */
@@ -410,12 +463,14 @@ struct DecodedCRL {
     byte    crlHash[MD5_DIGEST_SIZE];     /* raw crl data hash           */ 
     byte    lastDate[MAX_DATE_SIZE]; /* last date updated  */
     byte    nextDate[MAX_DATE_SIZE]; /* next update date   */
+    byte    lastDateFormat;          /* format of last date */
+    byte    nextDateFormat;          /* format of next date */
     RevokedCert* certs;              /* revoked cert list  */
     int          totalCerts;         /* number on list     */
 };
 
 CYASSL_LOCAL void InitDecodedCRL(DecodedCRL*);
-CYASSL_LOCAL int  ParseCRL(DecodedCRL*, const byte* buff, long sz);
+CYASSL_LOCAL int  ParseCRL(DecodedCRL*, const byte* buff, long sz, void* cm);
 CYASSL_LOCAL void FreeDecodedCRL(DecodedCRL*);
 
 

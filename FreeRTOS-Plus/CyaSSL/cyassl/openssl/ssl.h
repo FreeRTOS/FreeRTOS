@@ -37,8 +37,6 @@
 #ifdef _WIN32
     /* wincrypt.h clashes */
     #undef X509_NAME
-    #undef OCSP_REQUEST 
-    #undef OCSP_RESPONSE
 #endif
 
 

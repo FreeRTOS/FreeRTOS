@@ -98,6 +98,8 @@ enum {
     NO_PASSWORD        = -176,  /* no password provided by user */
     ALT_NAME_E         = -177,  /* alt name size problem, too big */
 
+    AES_GCM_AUTH_E     = -180,  /* AES-GCM Authentication check failure */
+
     MIN_CODE_E         = -200   /* errors -101 - -199 */
 };
 

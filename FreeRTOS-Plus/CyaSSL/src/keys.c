@@ -311,6 +311,142 @@ int SetCipherSpecs(CYASSL* ssl)
         break;
 #endif
 
+#ifdef BUILD_TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    case TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha256_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA256_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_128_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+    case TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha384_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA384_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_256_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+    case TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha256_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = ecc_dsa_sa_algo;
+        ssl->specs.hash_size             = SHA256_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_128_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+    case TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha384_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = ecc_dsa_sa_algo;
+        ssl->specs.hash_size             = SHA384_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_256_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256
+    case TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha256_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA256_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 1;
+        ssl->specs.key_size              = AES_128_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384
+    case TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha384_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA384_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 1;
+        ssl->specs.key_size              = AES_256_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256
+    case TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha256_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = ecc_dsa_sa_algo;
+        ssl->specs.hash_size             = SHA256_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 1;
+        ssl->specs.key_size              = AES_128_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384
+    case TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha384_mac;
+        ssl->specs.kea                   = ecc_diffie_hellman_kea;
+        ssl->specs.sig_algo              = ecc_dsa_sa_algo;
+        ssl->specs.hash_size             = SHA384_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 1;
+        ssl->specs.key_size              = AES_256_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
     default:
         CYASSL_MSG("Unsupported cipher suite, SetCipherSpecs ECC");
         return UNSUPPORTED_SUITE;
@@ -646,6 +782,74 @@ int SetCipherSpecs(CYASSL* ssl)
         break;
 #endif
 
+#ifdef BUILD_TLS_RSA_WITH_AES_128_GCM_SHA256
+    case TLS_RSA_WITH_AES_128_GCM_SHA256 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha256_mac;
+        ssl->specs.kea                   = rsa_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA256_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_128_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_RSA_WITH_AES_256_GCM_SHA384
+    case TLS_RSA_WITH_AES_256_GCM_SHA384 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha384_mac;
+        ssl->specs.kea                   = rsa_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA384_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_256_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+    case TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha256_mac;
+        ssl->specs.kea                   = diffie_hellman_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA256_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_128_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
+#ifdef BUILD_TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+    case TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 :
+        ssl->specs.bulk_cipher_algorithm = aes_gcm;
+        ssl->specs.cipher_type           = aead;
+        ssl->specs.mac_algorithm         = sha384_mac;
+        ssl->specs.kea                   = diffie_hellman_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = SHA384_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_SHA;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = AES_256_KEY_SIZE;
+        ssl->specs.block_size            = AES_BLOCK_SIZE;
+        ssl->specs.iv_size               = AES_GCM_IMP_IV_SZ;
+
+        break;
+#endif
+
     default:
         CYASSL_MSG("Unsupported cipher suite, SetCipherSpecs");
         return UNSUPPORTED_SUITE;
@@ -802,6 +1006,23 @@ static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
     }
 #endif
 
+#ifdef BUILD_AESGCM
+    if (specs->bulk_cipher_algorithm == aes_gcm) {
+        if (side == CLIENT_END) {
+            AesGcmSetKey(&enc->aes, keys->client_write_key, specs->key_size,
+                        keys->client_write_IV);
+            AesGcmSetKey(&dec->aes, keys->server_write_key, specs->key_size,
+                        keys->server_write_IV);
+        }
+        else {
+            AesGcmSetKey(&enc->aes, keys->server_write_key, specs->key_size,
+                        keys->server_write_IV);
+            AesGcmSetKey(&dec->aes, keys->client_write_key, specs->key_size,
+                        keys->client_write_IV);
+        }
+    }
+#endif
+
     keys->sequence_number      = 0;
     keys->peer_sequence_number = 0;
     keys->encryptionOn         = 0;
@@ -813,12 +1034,24 @@ static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
 /* TLS can call too */
 int StoreKeys(CYASSL* ssl, const byte* keyData)
 {
-    int sz = ssl->specs.hash_size, i;
+    int sz, i = 0;
 
-    XMEMCPY(ssl->keys.client_write_MAC_secret, keyData, sz);
-    i = sz;
-    XMEMCPY(ssl->keys.server_write_MAC_secret,&keyData[i], sz);
-    i += sz;
+    if (ssl->specs.cipher_type != aead) {
+        sz = ssl->specs.hash_size;
+        XMEMCPY(ssl->keys.client_write_MAC_secret,&keyData[i], sz);
+        i += sz;
+        XMEMCPY(ssl->keys.server_write_MAC_secret,&keyData[i], sz);
+        i += sz;
+    }
+#ifdef BUILD_AESGCM
+    else if (ssl->specs.bulk_cipher_algorithm == aes_gcm) {
+        byte iv[AES_GCM_EXP_IV_SZ];
+
+        /* Initialize the AES-GCM explicit IV to a random number. */
+        RNG_GenerateBlock(&ssl->rng, iv, sizeof(iv));
+        AesGcmSetExpIV(&ssl->encrypt.aes, iv);
+    }
+#endif
 
     sz = ssl->specs.key_size;
     XMEMCPY(ssl->keys.client_write_key, &keyData[i], sz);

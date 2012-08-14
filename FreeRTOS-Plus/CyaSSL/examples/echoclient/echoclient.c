@@ -44,6 +44,7 @@ void echoclient_test(void* args)
     SSL_CTX*    ctx    = 0;
     SSL*        ssl    = 0;
 
+    int doDTLS = 0;
     int sendSz;
     int argc    = 0;
     char** argv = 0;
@@ -64,12 +65,16 @@ void echoclient_test(void* args)
     if (!fin)  err_sys("can't open input file");
     if (!fout) err_sys("can't open output file");
 
-    tcp_connect(&sockfd, yasslIP, yasslPort);
+#ifdef CYASSL_DTLS
+    doDTLS  = 1;
+#endif
+
+    tcp_connect(&sockfd, yasslIP, yasslPort, doDTLS);
 
 #if defined(CYASSL_DTLS)
     method  = DTLSv1_client_method();
 #elif  !defined(NO_TLS)
-    method = TLSv1_client_method();
+    method = CyaSSLv23_client_method();
 #else
     method = SSLv3_client_method();
 #endif
@@ -105,7 +110,7 @@ void echoclient_test(void* args)
 
     while (fgets(send, sizeof(send), fin)) {
 
-        sendSz = (int)strlen(send) + 1;
+        sendSz = (int)strlen(send);
 
         if (SSL_write(ssl, send, sendSz) != sendSz)
             err_sys("SSL_write failed");
@@ -115,7 +120,7 @@ void echoclient_test(void* args)
             break;
         }
 
-        if (strncmp(send, "break", 4) == 0) {
+        if (strncmp(send, "break", 5) == 0) {
             fputs("sending server session close: break!\n", fout);
             break;
         }
@@ -123,6 +128,7 @@ void echoclient_test(void* args)
         while (sendSz) {
             int got;
             if ( (got = SSL_read(ssl, reply, sizeof(reply))) > 0) {
+                reply[got] = 0;
                 fputs(reply, fout);
                 sendSz -= got;
             }
@@ -165,6 +171,9 @@ void echoclient_test(void* args)
         args.argv = argv;
 
         CyaSSL_Init();
+#ifdef DEBUG_CYASSL
+        CyaSSL_Debugging_ON();
+#endif
         if (CurrentDir("echoclient") || CurrentDir("build"))
             ChangeDirBack(2);
         echoclient_test(&args);
@@ -172,6 +181,9 @@ void echoclient_test(void* args)
 
         return args.return_code;
     }
+
+    int myoptind = 0;
+    char* myoptarg = NULL;
 
 #endif /* NO_MAIN_DRIVER */
 

@@ -56,8 +56,10 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
     CYASSL_METHOD* method = 0;
     CYASSL_CTX*    ctx    = 0;
 
+    int    doDTLS = 0;
     int    outCreated = 0;
     int    shutdown = 0;
+    int    useAnyAddr = 0;
     int    argc = ((func_args*)args)->argc;
     char** argv = ((func_args*)args)->argv;
 
@@ -72,7 +74,11 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
 
     ((func_args*)args)->return_code = -1; /* error state */
 
-    tcp_listen(&sockfd);
+#ifdef CYASSL_DTLS
+    doDTLS  = 1;
+#endif
+
+    tcp_listen(&sockfd, yasslPort, useAnyAddr, doDTLS);
 
 #if defined(CYASSL_DTLS)
     method  = CyaDTLSv1_server_method();
@@ -126,6 +132,11 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
 #else
     load_buffer(ctx, svrCert, CYASSL_CERT);
     load_buffer(ctx, svrKey,  CYASSL_KEY);
+#endif
+
+#if defined(CYASSL_SNIFFER) && !defined(HAVE_NTRU) && !defined(HAVE_ECC)
+    /* don't use EDH, can't sniff tmp keys */
+    CyaSSL_CTX_set_cipher_list(ctx, "AES256-SHA");
 #endif
 
     SignalReady(args);
@@ -231,7 +242,7 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
         CyaSSL_free(ssl);
         CloseSocket(clientfd);
 #ifdef CYASSL_DTLS
-        tcp_listen(&sockfd);
+        tcp_listen(&sockfd, yasslPort, useAnyAddr, doDTLS);
         SignalReady(args);
 #endif
     }
@@ -272,6 +283,9 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
 
         return args.return_code;
     }
+
+    int myoptind = 0;
+    char* myoptarg = NULL;
 
 #endif /* NO_MAIN_DRIVER */
 

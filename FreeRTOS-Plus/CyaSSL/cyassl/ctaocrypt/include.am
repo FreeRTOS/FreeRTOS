@@ -15,6 +15,7 @@ nobase_include_HEADERS+= \
                          cyassl/ctaocrypt/hc128.h \
                          cyassl/ctaocrypt/hmac.h \
                          cyassl/ctaocrypt/integer.h \
+                         cyassl/ctaocrypt/md2.h \
                          cyassl/ctaocrypt/md4.h \
                          cyassl/ctaocrypt/md5.h \
                          cyassl/ctaocrypt/misc.h \

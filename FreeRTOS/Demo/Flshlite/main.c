@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
+    FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -303,12 +303,13 @@ static void	 prvCheckForKeyPresses( void )
 								vWriteMessageToDisk( pcWriteBuffer );
 								break;
 
+					/* The legacy trace is no longer supported.  Use FreeRTOS+Trace instead.
 					case 's' :	vTaskStartTrace( pcWriteBuffer, mainDEBUG_LOG_BUFFER_SIZE );
 								break;
 
 					case 'e' :	ulBufferLength = ulTaskEndTrace();
 								vWriteBufferToDisk( pcWriteBuffer, ulBufferLength );
-								break;
+								break;*/
 				#endif
 
 				default  :	vTaskEndScheduler();

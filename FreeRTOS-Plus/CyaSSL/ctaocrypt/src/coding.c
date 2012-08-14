@@ -54,6 +54,7 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
     word32 i = 0;
     word32 j = 0;
     word32 plainSz = inLen - ((inLen + (PEM_LINE_SZ - 1)) / PEM_LINE_SZ );
+    const byte maxIdx = (byte)sizeof(base64Decode) + 0x2B - 1;
 
     plainSz = (plainSz * 3 + 3) / 4;
     if (plainSz > *outLen) return BAD_FUNC_ARG;
@@ -74,6 +75,16 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
             pad3 = 1;
         if (e4 == PAD)
             pad4 = 1;
+
+        if (e1 < 0x2B || e2 < 0x2B || e3 < 0x2B || e4 < 0x2B) {
+            CYASSL_MSG("Bad Base64 Decode data, too small");
+            return ASN_INPUT_E;
+        }
+
+        if (e1 > maxIdx || e2 > maxIdx || e3 > maxIdx || e4 > maxIdx) {
+            CYASSL_MSG("Bad Base64 Decode data, too big");
+            return ASN_INPUT_E;
+        }
 
         e1 = base64Decode[e1 - 0x2B];
         e2 = base64Decode[e2 - 0x2B];

@@ -1404,5 +1404,753 @@ void AesCtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz)
 
 #endif /* CYASSL_AES_COUNTER */
 
+
+#ifdef HAVE_AESGCM
+
+/*
+ * The IV for AES GCM, stored in struct Aes's member reg, is comprised of
+ * three parts in order:
+ *   1. The implicit IV. This is generated from the PRF using the shared
+ *      secrets between endpoints. It is 4 bytes long.
+ *   2. The explicit IV. This is set by the user of the AES. It needs to be
+ *      unique for each call to encrypt. The explicit IV is shared with the
+ *      other end of the transaction in the clear.
+ *   3. The counter. Each block of data is encrypted with its own sequence
+ *      number counter.
+ */
+
+enum {
+    IMPLICIT_IV_SZ = 4,
+    EXPLICIT_IV_SZ = 8,
+    CTR_SZ = 4
+};
+
+
+static INLINE void InitGcmCounter(byte* inOutCtr)
+{
+    inOutCtr[AES_BLOCK_SIZE - 4] = 0;
+    inOutCtr[AES_BLOCK_SIZE - 3] = 0;
+    inOutCtr[AES_BLOCK_SIZE - 2] = 0;
+    inOutCtr[AES_BLOCK_SIZE - 1] = 1;
+}
+
+
+static INLINE void IncrementGcmCounter(byte* inOutCtr)
+{
+    int i;
+
+    /* in network byte order so start at end and work back */
+    for (i = AES_BLOCK_SIZE - 1; i >= AES_BLOCK_SIZE - CTR_SZ; i--) {
+        if (++inOutCtr[i])  /* we're done unless we overflow */
+            return;
+    }
+}
+
+
+/*
+ * The explicit IV is set by the caller. A common practice is to treat it as
+ * a sequence number seeded with a random number. The caller manages
+ * incrementing the explicit IV when appropriate.
+ */
+
+void AesGcmSetExpIV(Aes* aes, const byte* iv)
+{
+    XMEMCPY((byte*)aes->reg + IMPLICIT_IV_SZ, iv, EXPLICIT_IV_SZ);
+}
+
+
+void AesGcmGetExpIV(Aes* aes, byte* iv)
+{
+    XMEMCPY(iv, (byte*)aes->reg + IMPLICIT_IV_SZ, EXPLICIT_IV_SZ);
+}
+
+
+void AesGcmIncExpIV(Aes* aes)
+{
+    int i;
+    byte* iv = (byte*)aes->reg + IMPLICIT_IV_SZ;
+
+    for (i = EXPLICIT_IV_SZ - 1; i >= 0; i--) {
+        if (++iv[i])
+            return;
+    }
+}
+
+
+#if defined(GCM_SMALL) || defined(GCM_TABLE)
+
+static INLINE void FlattenSzInBits(byte* buf, word32 sz)
+{
+    /* Multiply the sz by 8 */
+    word32 szHi = (sz >> (8*sizeof(sz) - 3));
+    sz <<= 3;
+
+    /* copy over the words of the sz into the destination buffer */
+    buf[0] = (szHi >> 24) & 0xff;
+    buf[1] = (szHi >> 16) & 0xff;
+    buf[2] = (szHi >>  8) & 0xff;
+    buf[3] = szHi & 0xff;
+    buf[4] = (sz >> 24) & 0xff;
+    buf[5] = (sz >> 16) & 0xff;
+    buf[6] = (sz >>  8) & 0xff;
+    buf[7] = sz & 0xff;
+}
+
+
+static INLINE void RIGHTSHIFTX(byte* x)
+{
+    int i;
+    int carryOut = 0;
+    int carryIn = 0;
+    int borrow = x[15] & 0x01;
+
+    for (i = 0; i < AES_BLOCK_SIZE; i++) {
+        carryOut = x[i] & 0x01;
+        x[i] = (x[i] >> 1) | (carryIn ? 0x80 : 0);
+        carryIn = carryOut;
+    }
+    if (borrow) x[0] ^= 0xE1;
+}
+
+#endif /* defined(GCM_SMALL) || defined(GCM_TABLE) */
+
+
+#ifdef GCM_TABLE
+
+static void GenerateM0(Aes* aes)
+{
+    int i, j;
+    byte (*m)[AES_BLOCK_SIZE] = aes->M0;
+
+    XMEMCPY(m[128], aes->H, AES_BLOCK_SIZE);
+
+    for (i = 64; i > 0; i /= 2) {
+        XMEMCPY(m[i], m[i*2], AES_BLOCK_SIZE);
+        RIGHTSHIFTX(m[i]);
+    }
+
+    for (i = 2; i < 256; i *= 2) {
+        for (j = 1; j < i; j++) {
+            XMEMCPY(m[i+j], m[i], AES_BLOCK_SIZE);
+            xorbuf(m[i+j], m[j], AES_BLOCK_SIZE);
+        }
+    }
+
+    XMEMSET(m[0], 0, AES_BLOCK_SIZE);
+}
+
+#endif /* GCM_TABLE */
+
+
+void AesGcmSetKey(Aes* aes, const byte* key, word32 len,
+                                                    const byte* implicitIV)
+{
+    byte fullIV[AES_BLOCK_SIZE];
+
+    XMEMSET(fullIV, 0, AES_BLOCK_SIZE);
+    XMEMCPY(fullIV, implicitIV, IMPLICIT_IV_SZ);
+    AesSetKey(aes, key, len, fullIV, AES_ENCRYPTION);
+
+    XMEMSET(fullIV, 0, AES_BLOCK_SIZE);
+    AesEncrypt(aes, fullIV, aes->H);
+#ifdef GCM_TABLE
+    GenerateM0(aes);
+#endif /* GCM_TABLE */
+}
+
+
+#if defined(GCM_SMALL)
+
+static void GMULT(byte* X, byte* Y)
+{
+    byte Z[AES_BLOCK_SIZE];
+    byte V[AES_BLOCK_SIZE];
+    int i, j;
+
+    XMEMSET(Z, 0, AES_BLOCK_SIZE);
+    XMEMCPY(V, X, AES_BLOCK_SIZE);
+    for (i = 0; i < AES_BLOCK_SIZE; i++)
+    {
+        byte y = Y[i];
+        for (j = 0; j < 8; j++)
+        {
+            if (y & 0x80) {
+                xorbuf(Z, V, AES_BLOCK_SIZE);
+            }
+
+            RIGHTSHIFTX(V);
+            y = y << 1;
+        }
+    }
+    XMEMCPY(X, Z, AES_BLOCK_SIZE);
+}
+
+
+static void GHASH(Aes* aes, const byte* a, word32 aSz,
+                                const byte* c, word32 cSz, byte* s, word32 sSz)
+{
+    byte x[AES_BLOCK_SIZE];
+    byte scratch[AES_BLOCK_SIZE];
+    word32 blocks, partial;
+    byte* h = aes->H;
+
+    XMEMSET(x, 0, AES_BLOCK_SIZE);
+
+    /* Hash in A, the Additional Authentication Data */
+    if (aSz != 0 && a != NULL) {
+        blocks = aSz / AES_BLOCK_SIZE;
+        partial = aSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            xorbuf(x, a, AES_BLOCK_SIZE);
+            GMULT(x, h);
+            a += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(scratch, 0, AES_BLOCK_SIZE);
+            XMEMCPY(scratch, a, partial);
+            xorbuf(x, scratch, AES_BLOCK_SIZE);
+            GMULT(x, h);
+        }
+    }
+
+    /* Hash in C, the Ciphertext */
+    if (cSz != 0 && c != NULL) {
+        blocks = cSz / AES_BLOCK_SIZE;
+        partial = cSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            xorbuf(x, c, AES_BLOCK_SIZE);
+            GMULT(x, h);
+            c += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(scratch, 0, AES_BLOCK_SIZE);
+            XMEMCPY(scratch, c, partial);
+            xorbuf(x, scratch, AES_BLOCK_SIZE);
+            GMULT(x, h);
+        }
+    }
+
+    /* Hash in the lengths of A and C in bits */
+    FlattenSzInBits(&scratch[0], aSz);
+    FlattenSzInBits(&scratch[8], cSz);
+    xorbuf(x, scratch, AES_BLOCK_SIZE);
+    GMULT(x, h);
+
+    /* Copy the result into s. */
+    XMEMCPY(s, x, sSz);
+}
+
+/* end GCM_SMALL */
+#elif defined(GCM_TABLE)
+
+static const byte R[256][2] = {
+    {0x00, 0x00}, {0x01, 0xc2}, {0x03, 0x84}, {0x02, 0x46},
+    {0x07, 0x08}, {0x06, 0xca}, {0x04, 0x8c}, {0x05, 0x4e},
+    {0x0e, 0x10}, {0x0f, 0xd2}, {0x0d, 0x94}, {0x0c, 0x56},
+    {0x09, 0x18}, {0x08, 0xda}, {0x0a, 0x9c}, {0x0b, 0x5e},
+    {0x1c, 0x20}, {0x1d, 0xe2}, {0x1f, 0xa4}, {0x1e, 0x66},
+    {0x1b, 0x28}, {0x1a, 0xea}, {0x18, 0xac}, {0x19, 0x6e},
+    {0x12, 0x30}, {0x13, 0xf2}, {0x11, 0xb4}, {0x10, 0x76},
+    {0x15, 0x38}, {0x14, 0xfa}, {0x16, 0xbc}, {0x17, 0x7e},
+    {0x38, 0x40}, {0x39, 0x82}, {0x3b, 0xc4}, {0x3a, 0x06},
+    {0x3f, 0x48}, {0x3e, 0x8a}, {0x3c, 0xcc}, {0x3d, 0x0e},
+    {0x36, 0x50}, {0x37, 0x92}, {0x35, 0xd4}, {0x34, 0x16},
+    {0x31, 0x58}, {0x30, 0x9a}, {0x32, 0xdc}, {0x33, 0x1e},
+    {0x24, 0x60}, {0x25, 0xa2}, {0x27, 0xe4}, {0x26, 0x26},
+    {0x23, 0x68}, {0x22, 0xaa}, {0x20, 0xec}, {0x21, 0x2e},
+    {0x2a, 0x70}, {0x2b, 0xb2}, {0x29, 0xf4}, {0x28, 0x36},
+    {0x2d, 0x78}, {0x2c, 0xba}, {0x2e, 0xfc}, {0x2f, 0x3e},
+    {0x70, 0x80}, {0x71, 0x42}, {0x73, 0x04}, {0x72, 0xc6},
+    {0x77, 0x88}, {0x76, 0x4a}, {0x74, 0x0c}, {0x75, 0xce},
+    {0x7e, 0x90}, {0x7f, 0x52}, {0x7d, 0x14}, {0x7c, 0xd6},
+    {0x79, 0x98}, {0x78, 0x5a}, {0x7a, 0x1c}, {0x7b, 0xde},
+    {0x6c, 0xa0}, {0x6d, 0x62}, {0x6f, 0x24}, {0x6e, 0xe6},
+    {0x6b, 0xa8}, {0x6a, 0x6a}, {0x68, 0x2c}, {0x69, 0xee},
+    {0x62, 0xb0}, {0x63, 0x72}, {0x61, 0x34}, {0x60, 0xf6},
+    {0x65, 0xb8}, {0x64, 0x7a}, {0x66, 0x3c}, {0x67, 0xfe},
+    {0x48, 0xc0}, {0x49, 0x02}, {0x4b, 0x44}, {0x4a, 0x86},
+    {0x4f, 0xc8}, {0x4e, 0x0a}, {0x4c, 0x4c}, {0x4d, 0x8e},
+    {0x46, 0xd0}, {0x47, 0x12}, {0x45, 0x54}, {0x44, 0x96},
+    {0x41, 0xd8}, {0x40, 0x1a}, {0x42, 0x5c}, {0x43, 0x9e},
+    {0x54, 0xe0}, {0x55, 0x22}, {0x57, 0x64}, {0x56, 0xa6},
+    {0x53, 0xe8}, {0x52, 0x2a}, {0x50, 0x6c}, {0x51, 0xae},
+    {0x5a, 0xf0}, {0x5b, 0x32}, {0x59, 0x74}, {0x58, 0xb6},
+    {0x5d, 0xf8}, {0x5c, 0x3a}, {0x5e, 0x7c}, {0x5f, 0xbe},
+    {0xe1, 0x00}, {0xe0, 0xc2}, {0xe2, 0x84}, {0xe3, 0x46},
+    {0xe6, 0x08}, {0xe7, 0xca}, {0xe5, 0x8c}, {0xe4, 0x4e},
+    {0xef, 0x10}, {0xee, 0xd2}, {0xec, 0x94}, {0xed, 0x56},
+    {0xe8, 0x18}, {0xe9, 0xda}, {0xeb, 0x9c}, {0xea, 0x5e},
+    {0xfd, 0x20}, {0xfc, 0xe2}, {0xfe, 0xa4}, {0xff, 0x66},
+    {0xfa, 0x28}, {0xfb, 0xea}, {0xf9, 0xac}, {0xf8, 0x6e},
+    {0xf3, 0x30}, {0xf2, 0xf2}, {0xf0, 0xb4}, {0xf1, 0x76},
+    {0xf4, 0x38}, {0xf5, 0xfa}, {0xf7, 0xbc}, {0xf6, 0x7e},
+    {0xd9, 0x40}, {0xd8, 0x82}, {0xda, 0xc4}, {0xdb, 0x06},
+    {0xde, 0x48}, {0xdf, 0x8a}, {0xdd, 0xcc}, {0xdc, 0x0e},
+    {0xd7, 0x50}, {0xd6, 0x92}, {0xd4, 0xd4}, {0xd5, 0x16},
+    {0xd0, 0x58}, {0xd1, 0x9a}, {0xd3, 0xdc}, {0xd2, 0x1e},
+    {0xc5, 0x60}, {0xc4, 0xa2}, {0xc6, 0xe4}, {0xc7, 0x26},
+    {0xc2, 0x68}, {0xc3, 0xaa}, {0xc1, 0xec}, {0xc0, 0x2e},
+    {0xcb, 0x70}, {0xca, 0xb2}, {0xc8, 0xf4}, {0xc9, 0x36},
+    {0xcc, 0x78}, {0xcd, 0xba}, {0xcf, 0xfc}, {0xce, 0x3e},
+    {0x91, 0x80}, {0x90, 0x42}, {0x92, 0x04}, {0x93, 0xc6},
+    {0x96, 0x88}, {0x97, 0x4a}, {0x95, 0x0c}, {0x94, 0xce},
+    {0x9f, 0x90}, {0x9e, 0x52}, {0x9c, 0x14}, {0x9d, 0xd6},
+    {0x98, 0x98}, {0x99, 0x5a}, {0x9b, 0x1c}, {0x9a, 0xde},
+    {0x8d, 0xa0}, {0x8c, 0x62}, {0x8e, 0x24}, {0x8f, 0xe6},
+    {0x8a, 0xa8}, {0x8b, 0x6a}, {0x89, 0x2c}, {0x88, 0xee},
+    {0x83, 0xb0}, {0x82, 0x72}, {0x80, 0x34}, {0x81, 0xf6},
+    {0x84, 0xb8}, {0x85, 0x7a}, {0x87, 0x3c}, {0x86, 0xfe},
+    {0xa9, 0xc0}, {0xa8, 0x02}, {0xaa, 0x44}, {0xab, 0x86},
+    {0xae, 0xc8}, {0xaf, 0x0a}, {0xad, 0x4c}, {0xac, 0x8e},
+    {0xa7, 0xd0}, {0xa6, 0x12}, {0xa4, 0x54}, {0xa5, 0x96},
+    {0xa0, 0xd8}, {0xa1, 0x1a}, {0xa3, 0x5c}, {0xa2, 0x9e},
+    {0xb5, 0xe0}, {0xb4, 0x22}, {0xb6, 0x64}, {0xb7, 0xa6},
+    {0xb2, 0xe8}, {0xb3, 0x2a}, {0xb1, 0x6c}, {0xb0, 0xae},
+    {0xbb, 0xf0}, {0xba, 0x32}, {0xb8, 0x74}, {0xb9, 0xb6},
+    {0xbc, 0xf8}, {0xbd, 0x3a}, {0xbf, 0x7c}, {0xbe, 0xbe} };
+
+
+static void GMULT(byte *x, byte m[256][AES_BLOCK_SIZE])
+{
+    int i, j;
+    byte Z[AES_BLOCK_SIZE];
+    byte a;
+
+    XMEMSET(Z, 0, sizeof(Z));
+
+    for (i = 15; i > 0; i--) {
+        xorbuf(Z, m[x[i]], AES_BLOCK_SIZE);
+        a = Z[15];
+
+        for (j = 15; j > 0; j--) {
+            Z[j] = Z[j-1];
+        }
+
+        Z[0] = R[a][0];
+        Z[1] ^= R[a][1];
+    }
+    xorbuf(Z, m[x[0]], AES_BLOCK_SIZE);
+
+    XMEMCPY(x, Z, AES_BLOCK_SIZE);
+}
+
+
+static void GHASH(Aes* aes, const byte* a, word32 aSz,
+                                const byte* c, word32 cSz, byte* s, word32 sSz)
+{
+    byte x[AES_BLOCK_SIZE];
+    byte scratch[AES_BLOCK_SIZE];
+    word32 blocks, partial;
+
+    XMEMSET(x, 0, AES_BLOCK_SIZE);
+
+    /* Hash in A, the Additional Authentication Data */
+    if (aSz != 0 && a != NULL) {
+        blocks = aSz / AES_BLOCK_SIZE;
+        partial = aSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            xorbuf(x, a, AES_BLOCK_SIZE);
+            GMULT(x, aes->M0);
+            a += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(scratch, 0, AES_BLOCK_SIZE);
+            XMEMCPY(scratch, a, partial);
+            xorbuf(x, scratch, AES_BLOCK_SIZE);
+            GMULT(x, aes->M0);
+        }
+    }
+
+    /* Hash in C, the Ciphertext */
+    if (cSz != 0 && c != NULL) {
+        blocks = cSz / AES_BLOCK_SIZE;
+        partial = cSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            xorbuf(x, c, AES_BLOCK_SIZE);
+            GMULT(x, aes->M0);
+            c += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(scratch, 0, AES_BLOCK_SIZE);
+            XMEMCPY(scratch, c, partial);
+            xorbuf(x, scratch, AES_BLOCK_SIZE);
+            GMULT(x, aes->M0);
+        }
+    }
+
+    /* Hash in the lengths of A and C in bits */
+    FlattenSzInBits(&scratch[0], aSz);
+    FlattenSzInBits(&scratch[8], cSz);
+    xorbuf(x, scratch, AES_BLOCK_SIZE);
+    GMULT(x, aes->M0);
+
+    /* Copy the result into s. */
+    XMEMCPY(s, x, sSz);
+}
+
+/* end GCM_TABLE */
+#elif defined(WORD64_AVAILABLE) && !defined(GCM_WORD32)
+
+static void GMULT(word64* X, word64* Y)
+{
+    word64 Z[2] = {0,0};
+    word64 V[2] = {X[0], X[1]};
+    int i, j;
+
+    for (i = 0; i < 2; i++)
+    {
+        word64 y = Y[i];
+        for (j = 0; j < 64; j++)
+        {
+            if (y & 0x8000000000000000) {
+                Z[0] ^= V[0];
+                Z[1] ^= V[1];
+            }
+
+            if (V[1] & 0x0000000000000001) {
+                V[1] >>= 1;
+                V[1] |= ((V[0] & 0x0000000000000001) ? 0x8000000000000000 : 0);
+                V[0] >>= 1;
+                V[0] ^= 0xE100000000000000;
+            }
+            else {
+                V[1] >>= 1;
+                V[1] |= ((V[0] & 0x0000000000000001) ? 0x8000000000000000 : 0);
+                V[0] >>= 1;
+            }
+            y <<= 1;
+        }
+    }
+    X[0] = Z[0];
+    X[1] = Z[1];
+}
+
+
+static void GHASH(Aes* aes, const byte* a, word32 aSz,
+                                const byte* c, word32 cSz, byte* s, word32 sSz)
+{
+    word64 x[2] = {0,0};
+    word32 blocks, partial;
+    word64 bigH[2];
+
+    XMEMCPY(bigH, aes->H, AES_BLOCK_SIZE);
+    #ifdef LITTLE_ENDIAN_ORDER
+        ByteReverseWords64(bigH, bigH, AES_BLOCK_SIZE); 
+    #endif
+
+    /* Hash in A, the Additional Authentication Data */
+    if (aSz != 0 && a != NULL) {
+        word64 bigA[2];
+        blocks = aSz / AES_BLOCK_SIZE;
+        partial = aSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            XMEMCPY(bigA, a, AES_BLOCK_SIZE);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords64(bigA, bigA, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigA[0];
+            x[1] ^= bigA[1];
+            GMULT(x, bigH);
+            a += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(bigA, 0, AES_BLOCK_SIZE);
+            XMEMCPY(bigA, a, partial);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords64(bigA, bigA, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigA[0];
+            x[1] ^= bigA[1];
+            GMULT(x, bigH);
+        }
+    }
+
+    /* Hash in C, the Ciphertext */
+    if (cSz != 0 && c != NULL) {
+        word64 bigC[2];
+        blocks = cSz / AES_BLOCK_SIZE;
+        partial = cSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            XMEMCPY(bigC, c, AES_BLOCK_SIZE);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords64(bigC, bigC, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigC[0];
+            x[1] ^= bigC[1];
+            GMULT(x, bigH);
+            c += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(bigC, 0, AES_BLOCK_SIZE);
+            XMEMCPY(bigC, c, partial);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords64(bigC, bigC, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigC[0];
+            x[1] ^= bigC[1];
+            GMULT(x, bigH);
+        }
+    }
+
+    /* Hash in the lengths in bits of A and C */
+    {
+        word64 len[2] = {aSz, cSz};
+
+        /* Lengths are in bytes. Convert to bits. */
+        len[0] *= 8;
+        len[1] *= 8;
+
+        x[0] ^= len[0];
+        x[1] ^= len[1];
+        GMULT(x, bigH);
+    }
+    #ifdef LITTLE_ENDIAN_ORDER
+        ByteReverseWords64(x, x, AES_BLOCK_SIZE);
+    #endif
+    XMEMCPY(s, x, sSz);
+}
+
+/* end defined(WORD64_AVAILABLE) && !defined(GCM_WORD32) */
+#else /* GCM_WORD32 */
+
+static void GMULT(word32* X, word32* Y)
+{
+    word32 Z[4] = {0,0,0,0};
+    word32 V[4] = {X[0], X[1], X[2], X[3]};
+    int i, j;
+
+    for (i = 0; i < 4; i++)
+    {
+        word32 y = Y[i];
+        for (j = 0; j < 32; j++)
+        {
+            if (y & 0x80000000) {
+                Z[0] ^= V[0];
+                Z[1] ^= V[1];
+                Z[2] ^= V[2];
+                Z[3] ^= V[3];
+            }
+
+            if (V[3] & 0x00000001) {
+                V[3] >>= 1;
+                V[3] |= ((V[2] & 0x00000001) ? 0x80000000 : 0);
+                V[2] >>= 1;
+                V[2] |= ((V[1] & 0x00000001) ? 0x80000000 : 0);
+                V[1] >>= 1;
+                V[1] |= ((V[0] & 0x00000001) ? 0x80000000 : 0);
+                V[0] >>= 1;
+                V[0] ^= 0xE1000000;
+            } else {
+                V[3] >>= 1;
+                V[3] |= ((V[2] & 0x00000001) ? 0x80000000 : 0);
+                V[2] >>= 1;
+                V[2] |= ((V[1] & 0x00000001) ? 0x80000000 : 0);
+                V[1] >>= 1;
+                V[1] |= ((V[0] & 0x00000001) ? 0x80000000 : 0);
+                V[0] >>= 1;
+            }
+            y <<= 1;
+        }
+    }
+    X[0] = Z[0];
+    X[1] = Z[1];
+    X[2] = Z[2];
+    X[3] = Z[3];
+}
+
+
+static void GHASH(Aes* aes, const byte* a, word32 aSz,
+                                const byte* c, word32 cSz, byte* s, word32 sSz)
+{
+    word32 x[4] = {0,0,0,0};
+    word32 blocks, partial;
+    word32 bigH[4];
+
+    XMEMCPY(bigH, aes->H, AES_BLOCK_SIZE);
+    #ifdef LITTLE_ENDIAN_ORDER
+        ByteReverseWords(bigH, bigH, AES_BLOCK_SIZE); 
+    #endif
+
+    /* Hash in A, the Additional Authentication Data */
+    if (aSz != 0 && a != NULL) {
+        word32 bigA[4];
+        blocks = aSz / AES_BLOCK_SIZE;
+        partial = aSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            XMEMCPY(bigA, a, AES_BLOCK_SIZE);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords(bigA, bigA, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigA[0];
+            x[1] ^= bigA[1];
+            x[2] ^= bigA[2];
+            x[3] ^= bigA[3];
+            GMULT(x, bigH);
+            a += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(bigA, 0, AES_BLOCK_SIZE);
+            XMEMCPY(bigA, a, partial);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords(bigA, bigA, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigA[0];
+            x[1] ^= bigA[1];
+            x[2] ^= bigA[2];
+            x[3] ^= bigA[3];
+            GMULT(x, bigH);
+        }
+    }
+
+    /* Hash in C, the Ciphertext */
+    if (cSz != 0 && c != NULL) {
+        word32 bigC[4];
+        blocks = cSz / AES_BLOCK_SIZE;
+        partial = cSz % AES_BLOCK_SIZE;
+        while (blocks--) {
+            XMEMCPY(bigC, c, AES_BLOCK_SIZE);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords(bigC, bigC, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigC[0];
+            x[1] ^= bigC[1];
+            x[2] ^= bigC[2];
+            x[3] ^= bigC[3];
+            GMULT(x, bigH);
+            c += AES_BLOCK_SIZE;
+        }
+        if (partial != 0) {
+            XMEMSET(bigC, 0, AES_BLOCK_SIZE);
+            XMEMCPY(bigC, c, partial);
+            #ifdef LITTLE_ENDIAN_ORDER
+                ByteReverseWords(bigC, bigC, AES_BLOCK_SIZE);
+            #endif
+            x[0] ^= bigC[0];
+            x[1] ^= bigC[1];
+            x[2] ^= bigC[2];
+            x[3] ^= bigC[3];
+            GMULT(x, bigH);
+        }
+    }
+
+    /* Hash in the lengths in bits of A and C */
+    {
+        word32 len[4];
+
+        /* Lengths are in bytes. Convert to bits. */
+        len[0] = (aSz >> (8*sizeof(aSz) - 3));
+        len[1] = aSz << 3;
+        len[2] = (cSz >> (8*sizeof(cSz) - 3));
+        len[3] = cSz << 3;
+
+        x[0] ^= len[0];
+        x[1] ^= len[1];
+        x[2] ^= len[2];
+        x[3] ^= len[3];
+        GMULT(x, bigH);
+    }
+    #ifdef LITTLE_ENDIAN_ORDER
+        ByteReverseWords(x, x, AES_BLOCK_SIZE);
+    #endif
+    XMEMCPY(s, x, sSz);
+}
+
+#endif /* end GCM_WORD32 */
+
+
+void AesGcmEncrypt(Aes* aes, byte* out, const byte* in, word32 sz,
+                   byte* authTag, word32 authTagSz,
+                   const byte* authIn, word32 authInSz)
+{
+    word32 blocks = sz / AES_BLOCK_SIZE;
+    word32 partial = sz % AES_BLOCK_SIZE;
+    const byte* p = in;
+    byte* c = out;
+    byte ctr[AES_BLOCK_SIZE];
+    byte scratch[AES_BLOCK_SIZE];
+
+    CYASSL_ENTER("AesGcmEncrypt");
+
+    /* Initialize the counter with the MS 96 bits of IV, and the counter
+     * portion set to "1". */
+    XMEMCPY(ctr, aes->reg, AES_BLOCK_SIZE);
+    InitGcmCounter(ctr);
+
+    while (blocks--) {
+        IncrementGcmCounter(ctr);
+        AesEncrypt(aes, ctr, scratch);
+        xorbuf(scratch, p, AES_BLOCK_SIZE);
+        XMEMCPY(c, scratch, AES_BLOCK_SIZE);
+
+        p += AES_BLOCK_SIZE;
+        c += AES_BLOCK_SIZE;
+    }
+    if (partial != 0) {
+        IncrementGcmCounter(ctr);
+        AesEncrypt(aes, ctr, scratch);
+        xorbuf(scratch, p, partial);
+        XMEMCPY(c, scratch, partial);
+    }
+    GHASH(aes, authIn, authInSz, out, sz, authTag, authTagSz);
+    InitGcmCounter(ctr);
+    AesEncrypt(aes, ctr, scratch);
+    xorbuf(authTag, scratch, authTagSz);
+}
+
+
+int  AesGcmDecrypt(Aes* aes, byte* out, const byte* in, word32 sz,
+                   const byte* authTag, word32 authTagSz,
+                   const byte* authIn, word32 authInSz)
+{
+    word32 blocks = sz / AES_BLOCK_SIZE;
+    word32 partial = sz % AES_BLOCK_SIZE;
+    const byte* c = in;
+    byte* p = out;
+    byte ctr[AES_BLOCK_SIZE];
+    byte scratch[AES_BLOCK_SIZE];
+
+    CYASSL_ENTER("AesGcmDecrypt");
+
+    /* Initialize the counter with the MS 96 bits of IV, and the counter
+     * portion set to "1". */
+    XMEMCPY(ctr, aes->reg, AES_BLOCK_SIZE);
+    InitGcmCounter(ctr);
+
+    /* Calculate the authTag again using the received auth data and the
+     * cipher text. */
+    {
+        byte Tprime[AES_BLOCK_SIZE];
+        byte EKY0[AES_BLOCK_SIZE];
+
+        GHASH(aes, authIn, authInSz, in, sz, Tprime, sizeof(Tprime));
+        AesEncrypt(aes, ctr, EKY0);
+        xorbuf(Tprime, EKY0, sizeof(Tprime));
+        if (XMEMCMP(authTag, Tprime, authTagSz) != 0) {
+            return AES_GCM_AUTH_E;
+        }
+    }
+
+    while (blocks--) {
+        IncrementGcmCounter(ctr);
+        AesEncrypt(aes, ctr, scratch);
+        xorbuf(scratch, c, AES_BLOCK_SIZE);
+        XMEMCPY(p, scratch, AES_BLOCK_SIZE);
+
+        p += AES_BLOCK_SIZE;
+        c += AES_BLOCK_SIZE;
+    }
+    if (partial != 0) {
+        IncrementGcmCounter(ctr);
+        AesEncrypt(aes, ctr, scratch);
+        xorbuf(scratch, c, partial);
+        XMEMCPY(p, scratch, partial);
+    }
+
+    return 0;
+}
+
+#endif /* HAVE_AESGCM */
+
+
 #endif /* NO_AES */
 

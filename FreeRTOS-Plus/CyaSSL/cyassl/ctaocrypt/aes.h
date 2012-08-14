@@ -68,6 +68,14 @@ typedef struct Aes {
 
     ALIGN16 word32 reg[AES_BLOCK_SIZE / sizeof(word32)];      /* for CBC mode */
     ALIGN16 word32 tmp[AES_BLOCK_SIZE / sizeof(word32)];      /* same         */
+
+#ifdef HAVE_AESGCM
+    ALIGN16 byte H[AES_BLOCK_SIZE];
+#ifdef GCM_TABLE
+    /* key-based fast multiplication table. */
+    ALIGN16 byte M0[256][AES_BLOCK_SIZE];
+#endif /* GCM_TABLE */
+#endif /* HAVE_AESGCM */
 } Aes;
 
 
@@ -79,6 +87,20 @@ CYASSL_API void AesCbcDecrypt(Aes* aes, byte* out, const byte* in, word32 sz);
 CYASSL_API void AesCtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz);
 CYASSL_API void AesEncryptDirect(Aes* aes, byte* out, const byte* in);
 CYASSL_API void AesDecryptDirect(Aes* aes, byte* out, const byte* in);
+
+#ifdef HAVE_AESGCM
+CYASSL_API void AesGcmSetKey(Aes* aes, const byte* key, word32 len,
+                              const byte* implicitIV);
+CYASSL_API void AesGcmSetExpIV(Aes* aes, const byte* iv);
+CYASSL_API void AesGcmGetExpIV(Aes* aes, byte* iv);
+CYASSL_API void AesGcmIncExpIV(Aes* aes);
+CYASSL_API void AesGcmEncrypt(Aes* aes, byte* out, const byte* in, word32 sz,
+                              byte* authTag, word32 authTagSz,
+                              const byte* authIn, word32 authInSz);
+CYASSL_API int  AesGcmDecrypt(Aes* aes, byte* out, const byte* in, word32 sz,
+                              const byte* authTag, word32 authTagSz,
+                              const byte* authIn, word32 authInSz);
+#endif /* HAVE_AESGCM */
 
 
 #ifdef __cplusplus

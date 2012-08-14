@@ -21,9 +21,8 @@
 
 #include <stdlib.h>
 #include <cyassl/ssl.h>
-#define NO_MAIN_DRIVER
 #include <cyassl/test.h>
-#include "unit.h"
+#include <tests/unit.h>
 
 #define TEST_FAIL       (-1)
 #define TEST_SUCCESS    (0)
@@ -54,7 +53,6 @@ static int test_lvl(CYASSL_CTX *ctx, const char* file, const char* path,
 
 THREAD_RETURN CYASSL_THREAD test_server_nofail(void*);
 void test_client_nofail(void*);
-void wait_tcp_ready(func_args*);
 #endif
 
 static const char* bogusFile  = "/dev/null";
@@ -603,10 +601,8 @@ THREAD_RETURN CYASSL_THREAD test_server_nofail(void* args)
         return 0;
     }
     ssl = CyaSSL_new(ctx);
-    tcp_accept(&sockfd, &clientfd, (func_args*)args);
-#ifndef CYASSL_DTLS
+    tcp_accept(&sockfd, &clientfd, (func_args*)args, yasslPort, 0, 0);
     CloseSocket(sockfd);
-#endif
 
     CyaSSL_set_fd(ssl, clientfd);
 
@@ -691,7 +687,7 @@ void test_client_nofail(void* args)
         return;
     }
 
-    tcp_connect(&sockfd, yasslIP, yasslPort);
+    tcp_connect(&sockfd, yasslIP, yasslPort, 0);
 
     ssl = CyaSSL_new(ctx);
     CyaSSL_set_fd(ssl, sockfd);
@@ -723,61 +719,7 @@ void test_client_nofail(void* args)
 
 
 
-void wait_tcp_ready(func_args* args)
-{
-#ifdef _POSIX_THREADS
-    pthread_mutex_lock(&args->signal->mutex);
-    
-    if (!args->signal->ready)
-        pthread_cond_wait(&args->signal->cond, &args->signal->mutex);
-    args->signal->ready = 0; /* reset */
 
-    pthread_mutex_unlock(&args->signal->mutex);
-#endif
-}
-
-
-void start_thread(THREAD_FUNC fun, func_args* args, THREAD_TYPE* thread)
-{
-#ifdef _POSIX_THREADS
-    pthread_create(thread, 0, fun, args);
-    return;
-#else
-    *thread = (THREAD_TYPE)_beginthreadex(0, 0, fun, args, 0, 0);
-#endif
-}
-
-
-void join_thread(THREAD_TYPE thread)
-{
-#ifdef _POSIX_THREADS
-    pthread_join(thread, 0);
-#else
-    int res = WaitForSingleObject(thread, INFINITE);
-    assert(res == WAIT_OBJECT_0);
-    res = CloseHandle(thread);
-    assert(res);
-#endif
-}
-
-
-void InitTcpReady(tcp_ready* ready)
-{
-    ready->ready = 0;
-#ifdef _POSIX_THREADS
-      pthread_mutex_init(&ready->mutex, 0);
-      pthread_cond_init(&ready->cond, 0);
-#endif
-}
-
-
-void FreeTcpReady(tcp_ready* ready)
-{
-#ifdef _POSIX_THREADS
-    pthread_mutex_destroy(&ready->mutex);
-    pthread_cond_destroy(&ready->cond);
-#endif
-}
 #endif /* NO_FILESYSTEM */
 
 

@@ -21,10 +21,6 @@ exampledir = $(docdir)/@PACKAGE@/example
 example_DATA=
 EXTRA_DIST+= $(example_DATA)
 
-certsdir = $(sysconfdir)/ssl/certs
-certs_DATA=
-EXTRA_DIST+= $(certs_DATA)
-
 EXTRA_DIST+= $(doc_DATA)
 
 ACLOCAL_AMFLAGS= -I m4 --install

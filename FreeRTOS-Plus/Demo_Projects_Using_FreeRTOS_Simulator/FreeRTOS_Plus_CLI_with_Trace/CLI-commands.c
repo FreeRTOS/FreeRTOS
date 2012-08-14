@@ -108,7 +108,7 @@ static portBASE_TYPE prvStartStopTraceCommand( int8_t *pcWriteBuffer, size_t xWr
 static const CLI_Command_Definition_t xRunTimeStats =
 {
 	( const int8_t * const ) "run-time-stats", /* The command string to type. */
-	( const int8_t * const ) "run-time-stats: Displays a table showing how much processing time each FreeRTOS task has used\r\n",
+	( const int8_t * const ) "\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n\r\n",
 	prvRunTimeStatsCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -117,7 +117,7 @@ static const CLI_Command_Definition_t xRunTimeStats =
 static const CLI_Command_Definition_t xTaskStats =
 {
 	( const int8_t * const ) "task-stats", /* The command string to type. */
-	( const int8_t * const ) "task-stats: Displays a table showing the state of each FreeRTOS task\r\n",
+	( const int8_t * const ) "\r\ntask-stats:\r\n Displays a table showing the state of each FreeRTOS task\r\n\r\n",
 	prvTaskStatsCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -128,7 +128,7 @@ time. */
 static const CLI_Command_Definition_t xThreeParameterEcho =
 {
 	( const int8_t * const ) "echo_3_parameters",
-	( const int8_t * const ) "echo_3_parameters: <param1> <param2> <param3> Expects three parameters, echos each in turn\r\n",
+	( const int8_t * const ) "\r\necho_3_parameters <param1> <param2> <param3>:\r\n Expects three parameters, echos each in turn\r\n\r\n",
 	prvThreeParameterEchoCommand, /* The function to run. */
 	3 /* Three parameters are expected, which can take any value. */
 };
@@ -139,7 +139,7 @@ a time. */
 static const CLI_Command_Definition_t xParameterEcho =
 {
 	( const int8_t * const ) "echo_parameters",
-	( const int8_t * const ) "echo_parameters: <...> Take variable number of parameters, echos each in turn\r\n",
+	( const int8_t * const ) "\r\necho_parameters <...>:\r\n Take variable number of parameters, echos each in turn\r\n\r\n",
 	prvParameterEchoCommand, /* The function to run. */
 	-1 /* The user can enter any number of commands. */
 };
@@ -149,7 +149,7 @@ parameter, which can be either "start" or "stop". */
 static const CLI_Command_Definition_t xStartTrace =
 {
 	( const int8_t * const ) "trace",
-	( const int8_t * const ) "trace: [start | stop] Starts or stops a trace recording for viewing in FreeRTOS+Trace\r\n",
+	( const int8_t * const ) "\r\ntrace [start | stop]:\r\n Starts or stops a trace recording for viewing in FreeRTOS+Trace\r\n\r\n",
 	prvStartStopTraceCommand, /* The function to run. */
 	1 /* One parameter is expected.  Valid values are "start" and "stop". */
 };

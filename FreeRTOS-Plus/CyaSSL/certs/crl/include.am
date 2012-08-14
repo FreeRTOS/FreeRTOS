@@ -2,8 +2,13 @@
 # All paths should be given relative to the root
 #
 
-certs_DATA+= \
-	     certs/crl/crl.pem
+EXTRA_DIST += \
+	     certs/crl/crl.pem \
+	     certs/crl/cliCrl.pem \
+	     certs/crl/eccSrvCRL.pem \
+	     certs/crl/eccCliCRL.pem
 
-EXTRA_DIST+= ${certs_DATA}
+EXTRA_DIST += \
+	     certs/crl/crl.revoked
+
 

@@ -32,7 +32,6 @@
            and the examples/ individually
 #endif
 
-void wait_tcp_ready(func_args*);
 void ctaocrypt_test(void*);
 
 void client_test(void*);
@@ -46,6 +45,10 @@ void file_test(char* file, byte* hash);
 enum {
     NUMARGS = 3
 };
+
+
+int myoptind = 0;
+char* myoptarg = NULL;
 
 
 int main(int argc, char** argv)

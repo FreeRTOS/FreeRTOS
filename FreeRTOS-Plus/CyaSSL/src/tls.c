@@ -33,6 +33,16 @@
 #ifndef NO_TLS
 
 
+#ifndef min
+
+    static INLINE word32 min(word32 a, word32 b)
+    {
+        return a > b ? b : a;
+    }
+
+#endif /* min */
+
+
 /* calculate XOR for TLSv1 PRF */
 static INLINE void get_xor(byte *digest, word32 digLen, byte* md5, byte* sha)
 {
@@ -43,28 +53,51 @@ static INLINE void get_xor(byte *digest, word32 digLen, byte* md5, byte* sha)
 }
 
 
+#ifdef CYASSL_SHA384
+    #define PHASH_MAX_DIGEST_SIZE SHA384_DIGEST_SIZE
+#else
+    #define PHASH_MAX_DIGEST_SIZE SHA256_DIGEST_SIZE
+#endif
 
-/* compute p_hash for MD5, SHA-1, or SHA-256 for TLSv1 PRF */
+/* compute p_hash for MD5, SHA-1, SHA-256, or SHA-384 for TLSv1 PRF */
 static void p_hash(byte* result, word32 resLen, const byte* secret,
                    word32 secLen, const byte* seed, word32 seedLen, int hash)
 {
-    word32   len = hash == md5_mac ? MD5_DIGEST_SIZE : hash == sha_mac ?
-                                           SHA_DIGEST_SIZE : SHA256_DIGEST_SIZE;
-    word32   times = resLen / len;
-    word32   lastLen = resLen % len;
+    word32   len = MD5_DIGEST_SIZE;
+    word32   times;
+    word32   lastLen;
     word32   lastTime;
     word32   i;
     word32   idx = 0;
-    byte     previous[SHA256_DIGEST_SIZE];  /* max size */
-    byte     current[SHA256_DIGEST_SIZE];   /* max size */
+    byte     previous[PHASH_MAX_DIGEST_SIZE];  /* max size */
+    byte     current[PHASH_MAX_DIGEST_SIZE];   /* max size */
 
     Hmac hmac;
 
+    if (hash == md5_mac) {
+        hash = MD5;
+    }
+    else if (hash == sha_mac) {
+        len = SHA_DIGEST_SIZE;
+        hash = SHA;
+    } else if (hash == sha256_mac) {
+        len = SHA256_DIGEST_SIZE;
+        hash = SHA256;
+    }
+#ifdef CYASSL_SHA384
+    else if (hash == sha384_mac)
+    {
+        len = SHA384_DIGEST_SIZE;
+        hash = SHA384;
+    }
+#endif
+
+    times = resLen / len;
+    lastLen = resLen % len;
     if (lastLen) times += 1;
     lastTime = times - 1;
 
-    HmacSetKey(&hmac, hash == md5_mac ? MD5 : hash == sha_mac ? SHA : SHA256,
-               secret, secLen);
+    HmacSetKey(&hmac, hash, secret, secLen);
     HmacUpdate(&hmac, seed, seedLen);       /* A0 = seed */
     HmacFinal(&hmac, previous);             /* A1 */
 
@@ -74,7 +107,7 @@ static void p_hash(byte* result, word32 resLen, const byte* secret,
         HmacFinal(&hmac, current);
 
         if ( (i == lastTime) && lastLen)
-            XMEMCPY(&result[idx], current, lastLen);
+            XMEMCPY(&result[idx], current, min(lastLen, sizeof(current)));
         else {
             XMEMCPY(&result[idx], current, len);
             idx += len;
@@ -89,7 +122,7 @@ static void p_hash(byte* result, word32 resLen, const byte* secret,
 /* compute TLSv1 PRF (pseudo random function using HMAC) */
 static void PRF(byte* digest, word32 digLen, const byte* secret, word32 secLen,
             const byte* label, word32 labLen, const byte* seed, word32 seedLen,
-            int useSha256)
+            int useAtLeastSha256, int hash_type)
 {
     word32 half = (secLen + 1) / 2;
 
@@ -112,9 +145,13 @@ static void PRF(byte* digest, word32 digLen, const byte* secret, word32 secLen,
     XMEMCPY(labelSeed, label, labLen);
     XMEMCPY(labelSeed + labLen, seed, seedLen);
 
-    if (useSha256) {
+    if (useAtLeastSha256) {
+        /* If a cipher suite wants an algorithm better than sha256, it
+         * should use better. */
+        if (hash_type < sha256_mac)
+            hash_type = sha256_mac;
         p_hash(digest, digLen, secret, secLen, labelSeed, labLen + seedLen,
-               sha256_mac);
+               hash_type);
         return;
     }
 
@@ -126,20 +163,35 @@ static void PRF(byte* digest, word32 digLen, const byte* secret, word32 secLen,
 }
 
 
+#ifdef CYASSL_SHA384
+    #define HSHASH_SZ SHA384_DIGEST_SIZE
+#else
+    #define HSHASH_SZ FINISHED_SZ
+#endif
+
+
 void BuildTlsFinished(CYASSL* ssl, Hashes* hashes, const byte* sender)
 {
     const byte* side;
-    byte        handshake_hash[FINISHED_SZ];
+    byte        handshake_hash[HSHASH_SZ];
     word32      hashSz = FINISHED_SZ;
 
     Md5Final(&ssl->hashMd5, handshake_hash);
     ShaFinal(&ssl->hashSha, &handshake_hash[MD5_DIGEST_SIZE]);
-#ifndef NO_SHA256
     if (IsAtLeastTLSv1_2(ssl)) {
-        Sha256Final(&ssl->hashSha256, handshake_hash);
-        hashSz = SHA256_DIGEST_SIZE;
-    }
+#ifndef NO_SHA256
+        if (ssl->specs.mac_algorithm <= sha256_mac) {
+            Sha256Final(&ssl->hashSha256, handshake_hash);
+            hashSz = SHA256_DIGEST_SIZE;
+        }
 #endif
+#ifdef CYASSL_SHA384
+        if (ssl->specs.mac_algorithm == sha384_mac) {
+            Sha384Final(&ssl->hashSha384, handshake_hash);
+            hashSz = SHA384_DIGEST_SIZE;
+        }
+#endif
+    }
    
     if ( XSTRNCMP((const char*)sender, (const char*)client, SIZEOF_SENDER) == 0)
         side = tls_client;
@@ -147,7 +199,8 @@ void BuildTlsFinished(CYASSL* ssl, Hashes* hashes, const byte* sender)
         side = tls_server;
 
     PRF(hashes->md5, TLS_FINISHED_SZ, ssl->arrays.masterSecret, SECRET_LEN,
-        side, FINISHED_LABEL_SZ, handshake_hash, hashSz, IsAtLeastTLSv1_2(ssl));
+        side, FINISHED_LABEL_SZ, handshake_hash, hashSz, IsAtLeastTLSv1_2(ssl),
+        ssl->specs.mac_algorithm);
 }
 
 
@@ -197,7 +250,8 @@ int DeriveTlsKeys(CYASSL* ssl)
     XMEMCPY(&seed[RAN_LEN], ssl->arrays.clientRandom, RAN_LEN);
 
     PRF(key_data, length, ssl->arrays.masterSecret, SECRET_LEN, key_label,
-        KEY_LABEL_SZ, seed, SEED_LEN, IsAtLeastTLSv1_2(ssl));
+        KEY_LABEL_SZ, seed, SEED_LEN, IsAtLeastTLSv1_2(ssl),
+        ssl->specs.mac_algorithm);
 
     return StoreKeys(ssl, key_data);
 }
@@ -213,7 +267,7 @@ int MakeTlsMasterSecret(CYASSL* ssl)
     PRF(ssl->arrays.masterSecret, SECRET_LEN,
         ssl->arrays.preMasterSecret, ssl->arrays.preMasterSz,
         master_label, MASTER_LABEL_SZ, 
-        seed, SEED_LEN, IsAtLeastTLSv1_2(ssl));
+        seed, SEED_LEN, IsAtLeastTLSv1_2(ssl), ssl->specs.mac_algorithm);
 
 #ifdef SHOW_SECRETS
     {

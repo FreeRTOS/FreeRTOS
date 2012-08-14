@@ -32,6 +32,10 @@
     #include <cyassl/ctaocrypt/sha256.h>
 #endif
 
+#ifdef CYASSL_SHA384
+    #include <cyassl/ctaocrypt/sha512.h>
+#endif
+
 #ifdef __cplusplus
     extern "C" {
 #endif
@@ -40,13 +44,19 @@
 enum {
     IPAD    = 0x36,
     OPAD    = 0x5C,
-#ifndef NO_SHA256
+#if defined(CYASSL_SHA384)
+    INNER_HASH_SIZE = SHA384_DIGEST_SIZE,
+    HMAC_BLOCK_SIZE = SHA384_BLOCK_SIZE
+#elif !defined(NO_SHA256)
     INNER_HASH_SIZE = SHA256_DIGEST_SIZE,
+    HMAC_BLOCK_SIZE = SHA256_BLOCK_SIZE,
+    SHA384          = 5
 #else
     INNER_HASH_SIZE = SHA_DIGEST_SIZE,
+    HMAC_BLOCK_SIZE = SHA_BLOCK_SIZE,
     SHA256          = 2,                     /* hash type unique */
+    SHA384          = 5
 #endif
-    HMAC_BLOCK_SIZE = MD5_BLOCK_SIZE
 };
 
 
@@ -56,6 +66,9 @@ typedef union {
     Sha sha;
     #ifndef NO_SHA256
         Sha256 sha256;
+    #endif
+    #ifdef CYASSL_SHA384
+        Sha384 sha384;
     #endif
 } Hash;
 

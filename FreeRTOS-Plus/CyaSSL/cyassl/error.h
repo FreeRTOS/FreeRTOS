@@ -92,14 +92,21 @@ enum CyaSSL_ErrorCodes {
     NOT_CA_ERROR           = -257,            /* Not a CA cert error */
     BAD_PATH_ERROR         = -258,            /* Bad path for opendir */
     BAD_CERT_MANAGER_ERROR = -259,            /* Bad Cert Manager */
-    OCSP_CERT_REVOKED      = -260,
+    OCSP_CERT_REVOKED      = -260,            /* OCSP Certificate revoked */
     CRL_CERT_REVOKED       = -261,            /* CRL Certificate revoked */
     CRL_MISSING            = -262,            /* CRL Not loaded */
+    MONITOR_RUNNING_E      = -263,            /* CRL Monitor already running */
+    THREAD_CREATE_E        = -264,            /* Thread Create Error */
+    OCSP_NEED_URL          = -265,            /* OCSP need an URL for lookup */
+    OCSP_CERT_UNKNOWN      = -266,            /* OCSP responder doesn't know */
+    OCSP_LOOKUP_FAIL       = -267,            /* OCSP lookup not successful */
+    MAX_CHAIN_ERROR        = -268,            /* max chain depth exceeded */
+    COOKIE_ERROR           = -269,            /* dtls cookie error */
     /* add strings to SetErrorString !!!!! */
 
     /* begin negotiation parameter errors */
-    UNSUPPORTED_SUITE      = -270,            /* unsupported cipher suite */
-    MATCH_SUITE_ERROR      = -271             /* can't match cipher suite */
+    UNSUPPORTED_SUITE      = -290,            /* unsupported cipher suite */
+    MATCH_SUITE_ERROR      = -291             /* can't match cipher suite */
     /* end negotiation parameter errors only 10 for now */
     /* add strings to SetErrorString !!!!! */
 };

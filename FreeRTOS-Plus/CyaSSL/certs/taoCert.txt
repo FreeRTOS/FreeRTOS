@@ -112,7 +112,7 @@ openssl dhparam -in dh2048.param -text > dh2048.pem
 
 1) create a crl
 
-a) openssl ca -gencrl -out crl.pem -keyfile ./ca-key.pem -cert ./ca-cert.pem
+a) openssl ca -gencrl -crldays 120 -out crl.pem -keyfile ./ca-key.pem -cert ./ca-cert.pem
 
 Error No ./CA root/index.txt so:
 

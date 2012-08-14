@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
+    FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 	
 
     ***************************************************************************
@@ -360,7 +360,8 @@ short sIn;
 			#if configUSE_TRACE_FACILITY == 1
 				case 't' :	vTaskList( pcWriteBuffer );
 							vWriteMessageToDisk( pcWriteBuffer );
-							break;			
+							break;
+				/* The legacy trace is no longer supported.  Use FreeRTOS+Trace instead
 				case 's' :	vTaskStartTrace( pcWriteBuffer, mainDEBUG_LOG_BUFFER_SIZE );
 							break;
 
@@ -370,6 +371,7 @@ short sIn;
 								vWriteBufferToDisk( pcWriteBuffer, ulBufferLength );
 							}
 							break;
+				*/
 			#endif
 
 			default  :	vTaskEndScheduler();

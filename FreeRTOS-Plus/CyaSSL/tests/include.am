@@ -9,8 +9,20 @@ tests_unit_SOURCES = \
 			      tests/unit.c \
 			      tests/api.c \
 			      tests/suites.c \
-                  tests/hash.c
-tests_unit_CFLAGS       = $(AM_CFLAGS) $(PTHREAD_CFLAGS)
+                  tests/hash.c \
+			      examples/client/client.c \
+			      examples/server/server.c
+tests_unit_CFLAGS       = -DNO_MAIN_DRIVER $(AM_CFLAGS) $(PTHREAD_CFLAGS)
 tests_unit_LDADD        = src/libcyassl.la  $(PTHREAD_LIBS)
 tests_unit_DEPENDENCIES = src/libcyassl.la
-EXTRA_DIST+=tests/unit.h
+EXTRA_DIST += tests/unit.h
+EXTRA_DIST += tests/test.conf \
+              tests/test-openssl.conf \
+              tests/test-hc128.conf \
+              tests/test-psk.conf \
+              tests/test-ntru.conf \
+              tests/test-ecc.conf \
+              tests/test-aesgcm.conf \
+              tests/test-aesgcm-ecc.conf \
+              tests/test-aesgcm-openssl.conf \
+              tests/test-dtls.conf

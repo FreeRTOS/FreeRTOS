@@ -54,6 +54,7 @@ void bench_arc4();
 void bench_hc128();
 void bench_rabbit();
 void bench_aes(int);
+void bench_aesgcm();
 
 void bench_md5();
 void bench_sha();
@@ -78,6 +79,9 @@ int main(int argc, char** argv)
 #ifndef NO_AES
     bench_aes(0);
     bench_aes(1);
+#endif
+#ifdef HAVE_AESGCM
+    bench_aesgcm();
 #endif
     bench_arc4();
 #ifdef HAVE_HC128
@@ -166,6 +170,34 @@ void bench_aes(int show)
 
     if (show)
         printf("AES      %d megs took %5.3f seconds, %6.2f MB/s\n", megs, total,
+                                                                    persec);
+}
+#endif
+
+
+byte additional[13];
+byte tag[16];
+
+
+#ifdef HAVE_AESGCM
+void bench_aesgcm()
+{
+    Aes    enc;
+    double start, total, persec;
+    int    i;
+
+    AesGcmSetKey(&enc, key, 16, iv);
+    AesGcmSetExpIV(&enc, iv+4);
+    start = current_time();
+
+    for(i = 0; i < megs; i++)
+        AesGcmEncrypt(&enc, cipher, plain, sizeof(plain),
+                        tag, 16, additional, 13);
+
+    total = current_time() - start;
+
+    persec = 1 / total * megs;
+    printf("AES-GCM  %d megs took %5.3f seconds, %6.2f MB/s\n", megs, total,
                                                                     persec);
 }
 #endif

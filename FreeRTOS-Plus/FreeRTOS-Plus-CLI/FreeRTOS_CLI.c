@@ -139,6 +139,7 @@ portBASE_TYPE FreeRTOS_CLIProcessCommand( const int8_t * const pcCommandInput, i
 static const CLI_Definition_List_Item_t *pxCommand = NULL;
 portBASE_TYPE xReturn = pdTRUE;
 const int8_t *pcRegisteredCommandString;
+size_t xCommandStringLength;
 
 	/* Note:  This function is not re-entrant.  It must not be called from more
 	thank one task. */
@@ -149,21 +150,30 @@ const int8_t *pcRegisteredCommandString;
 		for( pxCommand = &xRegisteredCommands; pxCommand != NULL; pxCommand = pxCommand->pxNext )
 		{
 			pcRegisteredCommandString = pxCommand->pxCommandLineDefinition->pcCommand;
-			if( strncmp( ( const char * ) pcCommandInput, ( const char * ) pcRegisteredCommandString, strlen( ( const char * ) pcRegisteredCommandString ) ) == 0 )
-			{
-				/* The command has been found.  Check it has the expected
-				number of parameters.  If cExpectedNumberOfParameters is -1,
-				then there could be a variable number of parameters and no
-				check is made. */
-				if( pxCommand->pxCommandLineDefinition->cExpectedNumberOfParameters >= 0 )
-				{
-					if( prvGetNumberOfParameters( pcCommandInput ) != pxCommand->pxCommandLineDefinition->cExpectedNumberOfParameters )
-					{
-						xReturn = pdFALSE;
-					}
-				}
+			xCommandStringLength = strlen( ( const char * ) pcRegisteredCommandString );
 
-				break;
+			/* To ensure the string lengths match exactly, so as not to pick up 
+			a sub-string of a longer command, check the byte after the expected
+			end of the string is either the end of the string or a space before
+			a parameter. */
+			if( ( pcCommandInput[ xCommandStringLength ] == ' ' ) || ( pcCommandInput[ xCommandStringLength ] == 0x00 ) )
+			{
+				if( strncmp( ( const char * ) pcCommandInput, ( const char * ) pcRegisteredCommandString, xCommandStringLength ) == 0 )
+				{
+					/* The command has been found.  Check it has the expected
+					number of parameters.  If cExpectedNumberOfParameters is -1,
+					then there could be a variable number of parameters and no
+					check is made. */
+					if( pxCommand->pxCommandLineDefinition->cExpectedNumberOfParameters >= 0 )
+					{
+						if( prvGetNumberOfParameters( pcCommandInput ) != pxCommand->pxCommandLineDefinition->cExpectedNumberOfParameters )
+						{
+							xReturn = pdFALSE;
+						}
+					}
+
+					break;
+				}
 			}
 		}
 	}
@@ -311,6 +321,13 @@ portBASE_TYPE xLastCharacterWasSpace = pdFALSE;
 		}
 
 		pcCommandString++;
+	}
+
+	/* If the command string ended with spaces, then there will have been too
+	many parameters counted. */
+	if( xLastCharacterWasSpace == pdTRUE )
+	{
+		cParameters--;
 	}
 
 	/* The value returned is one less than the number of space delimited words,

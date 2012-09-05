@@ -874,7 +874,9 @@ xTimeOutType xTimeOut;
 							if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 							{
 								portENTER_CRITICAL();
+								{
 									vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+								}
 								portEXIT_CRITICAL();
 							}
 						}

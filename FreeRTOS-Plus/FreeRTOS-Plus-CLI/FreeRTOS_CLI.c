@@ -152,7 +152,7 @@ size_t xCommandStringLength;
 			pcRegisteredCommandString = pxCommand->pxCommandLineDefinition->pcCommand;
 			xCommandStringLength = strlen( ( const char * ) pcRegisteredCommandString );
 
-			/* To ensure the string lengths match exactly, so as not to pick up 
+			/* To ensure the string lengths match exactly, so as not to pick up
 			a sub-string of a longer command, check the byte after the expected
 			end of the string is either the end of the string or a space before
 			a parameter. */
@@ -251,6 +251,11 @@ const int8_t *pcReturn = NULL;
 				{
 					( *pxParameterStringLength )++;
 					pcCommandString++;
+				}
+
+				if( *pxParameterStringLength == 0 )
+				{
+					pcReturn = NULL;
 				}
 
 				break;

@@ -2382,30 +2382,33 @@ tskTCB *pxNewTCB;
 	{
 	tskTCB * const pxTCB = ( tskTCB * ) pxMutexHolder;
 
-		configASSERT( pxMutexHolder );
-
-		if( pxTCB->uxPriority < pxCurrentTCB->uxPriority )
+		/* If the mutex was given back by an interrupt while the queue was
+		locked then the mutex holder might now be NULL. */
+		if( pxMutexHolder != NULL )
 		{
-			/* Adjust the mutex holder state to account for its new priority. */
-			listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority );
-
-			/* If the task being modified is in the ready state it will need to
-			be moved in to a new list. */
-			if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
+			if( pxTCB->uxPriority < pxCurrentTCB->uxPriority )
 			{
-				vListRemove( &( pxTCB->xGenericListItem ) );
+				/* Adjust the mutex holder state to account for its new priority. */
+				listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority );
 
-				/* Inherit the priority before being moved into the new list. */
-				pxTCB->uxPriority = pxCurrentTCB->uxPriority;
-				prvAddTaskToReadyQueue( pxTCB );
-			}
-			else
-			{
-				/* Just inherit the priority. */
-				pxTCB->uxPriority = pxCurrentTCB->uxPriority;
-			}
+				/* If the task being modified is in the ready state it will need to
+				be moved in to a new list. */
+				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
+				{
+					vListRemove( &( pxTCB->xGenericListItem ) );
 
-			traceTASK_PRIORITY_INHERIT( pxTCB, pxCurrentTCB->uxPriority );
+					/* Inherit the priority before being moved into the new list. */
+					pxTCB->uxPriority = pxCurrentTCB->uxPriority;
+					prvAddTaskToReadyQueue( pxTCB );
+				}
+				else
+				{
+					/* Just inherit the priority. */
+					pxTCB->uxPriority = pxCurrentTCB->uxPriority;
+				}
+
+				traceTASK_PRIORITY_INHERIT( pxTCB, pxCurrentTCB->uxPriority );
+			}
 		}
 	}
 

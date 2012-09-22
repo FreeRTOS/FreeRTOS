@@ -133,6 +133,10 @@
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
 
+/* A task that is created from the idle task to test the functionality of 
+eTaskStateGet(). */
+static void prvTestTask( void *pvParameters );
+
 /* The variable into which error messages are latched. */
 static char *pcStatusMessage = "OK";
 
@@ -252,10 +256,28 @@ const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIdleHook( void )
+static void prvTestTask( void *pvParameters )
 {
 const unsigned long ulMSToSleep = 5;
-xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
+
+	/* Just to remove compiler warnings. */
+	( void ) pvParameters;
+
+	/* This task is just used to test the eTaskStateGet() function.  It
+	does not have anything to do. */
+	for( ;; )
+	{
+		/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
+		tasks waiting to be terminated by the idle task. */
+		Sleep( ulMSToSleep );
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+const unsigned long ulMSToSleep = 15;
+xTaskHandle xIdleTaskHandle, xTimerTaskHandle, xTestTask;
 signed char *pcTaskName;
 const unsigned char ucConstQueueNumber = 0xaaU, ucConstTaskNumber = 0x55U;
 
@@ -293,6 +315,18 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
 	}
 
+	/* This task is running, make sure its state is returned as running. */
+	if( eTaskStateGet( xIdleTaskHandle ) != eRunning )
+	{
+		pcStatusMessage = "Error:  Returned idle task state was incorrect";
+	}
+
+	/* If this task is running, then the timer task must be blocked. */
+	if( eTaskStateGet( xTimerTaskHandle ) != eBlocked )
+	{
+		pcStatusMessage = "Error:  Returned timer task state was incorrect";
+	}
+
 	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the 
 	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
@@ -311,6 +345,35 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 		configASSERT( ucQueueGetQueueType( xMutexToDelete ) == queueQUEUE_TYPE_MUTEX );
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;
+
+		/* Other tests that should only be performed once follow.  The test task
+		is not created on each iteration because to do so would cause the death
+		task to report an error (too many tasks running). */
+
+		/* Create a test task to use to test other eTaskStateGet() return values. */
+		if( xTaskCreate( prvTestTask, "Test", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTestTask ) == pdPASS )
+		{
+			/* If this task is running, the test task must be in the ready state. */
+			if( eTaskStateGet( xTestTask ) != eReady )
+			{
+				pcStatusMessage = "Error: Returned test task state was incorrect 1";
+			}
+
+			/* Now suspend the test task and check its state is reported correctly. */
+			vTaskSuspend( xTestTask );
+			if( eTaskStateGet( xTestTask ) != eSuspended )
+			{
+				pcStatusMessage = "Error: Returned test task state was incorrect 2";
+			}
+
+			/* Now delete the task and check its state is reported correctly. */
+			vTaskDelete( xTestTask );
+			if( eTaskStateGet( xTestTask ) != eDeleted )
+			{
+				pcStatusMessage = "Error: Returned test task state was incorrect 3";
+			}
+		}
+
 	}
 }
 /*-----------------------------------------------------------*/

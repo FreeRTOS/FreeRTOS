@@ -127,6 +127,7 @@ to exclude the API function. */
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
 #define INCLUDE_xTaskGetIdleTaskHandle		1
 #define INCLUDE_pcTaskGetTaskName			1
+#define INCLUDE_eTaskStateGet				1
 
 extern void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()

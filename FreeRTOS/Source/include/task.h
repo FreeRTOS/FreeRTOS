@@ -131,6 +131,16 @@ typedef struct xTASK_PARAMTERS
 	xMemoryRegion xRegions[ portNUM_CONFIGURABLE_REGIONS ];
 } xTaskParameters;
 
+/* Task states returned by eTaskStateGet. */
+typedef enum
+{
+	eRunning = 0,	/* A task is querying the state of itself, so must be running. */
+	eReady,			/* The task being queried is in a read or pending ready list. */
+	eBlocked,		/* The task being queried is in the Blocked state. */
+	eSuspended,		/* The task being queried is in the Suspended state, or is in the Blocked state with an infinite time out. */
+	eDeleted		/* The task being queried has been deleted, but its TCB has not yet been freed. */
+} eTaskState;
+
 /*
  * Defines the priority used by the idle task.  This must not be modified.
  *
@@ -600,6 +610,24 @@ void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTim
  * \ingroup TaskCtrl
  */
 unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
+
+/**
+ * task. h
+ * <pre>eTaskState eTaskStateGet( xTaskHandle pxTask );</pre>
+ *
+ * INCLUDE_eTaskStateGet must be defined as 1 for this function to be available.
+ * See the configuration section for more information.
+ *
+ * Obtain the state of any task.  States are encoded by the eTaskState 
+ * enumerated type.
+ *
+ * @param pxTask Handle of the task to be queried.
+ *
+ * @return The state of pxTask at the time the function was called.  Note the
+ * state of the task might change between the function being called, and the
+ * functions return value being tested by the calling task.
+ */
+eTaskState eTaskStateGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h

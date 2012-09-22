@@ -733,6 +733,68 @@ tskTCB * pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( INCLUDE_eTaskStateGet == 1 )
+	
+	eTaskState eTaskStateGet( xTaskHandle pxTask )
+	{
+	eTaskState eReturn;
+	xList *pxStateList;
+	tskTCB *pxTCB;
+
+		pxTCB = ( tskTCB * ) pxTask;
+
+		if( pxTCB == pxCurrentTCB )
+		{
+			/* The task calling this function is querying its own state. */
+			eReturn = eRunning;
+		}
+		else
+		{
+			taskENTER_CRITICAL();
+			{
+				pxStateList = ( xList * ) listLIST_ITEM_CONTAINED( &( pxTCB->xGenericListItem ) );
+			}
+			taskEXIT_CRITICAL();
+
+			if( ( pxStateList == pxDelayedTaskList ) || ( pxStateList == pxOverflowDelayedTaskList ) )
+			{
+				/* The task being queried is referenced from one of the Blocked 
+				lists. */
+				eReturn = eBlocked;
+			}
+
+			#if ( INCLUDE_vTaskSuspend == 1 )
+				else if( pxStateList == &xSuspendedTaskList )
+				{
+					/* The task being queried is referenced from the suspended 
+					list. */
+					eReturn = eSuspended;
+				}
+			#endif
+
+			#if ( INCLUDE_vTaskDelete == 1 )
+				else if( pxStateList == &xTasksWaitingTermination )
+				{
+					/* The task being queried is referenced from the deleted 
+					tasks list. */
+					eReturn = eDeleted;
+				}
+			#endif
+
+			else
+			{
+				/* If the task is not in any other state, it must be in the
+				Ready (including pending ready) state. */
+				eReturn = eReady;
+			}
+		}
+
+		return eReturn;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
 	unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask )

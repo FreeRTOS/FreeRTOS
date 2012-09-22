@@ -165,6 +165,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define INCLUDE_uxTaskGetStackHighWaterMark 0
 #endif
 
+#ifndef INCLUDE_cTaskStateGet
+	#define INCLUDE_cTaskStateGet 0
+#endif
+
 #ifndef configUSE_RECURSIVE_MUTEXES
 	#define configUSE_RECURSIVE_MUTEXES 0
 #endif

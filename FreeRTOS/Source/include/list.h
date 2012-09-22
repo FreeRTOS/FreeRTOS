@@ -254,6 +254,14 @@ xList * const pxConstList = ( pxList );													\
 #define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) )
 
 /*
+ * Return the list a list item is contained within (referenced from).
+ *
+ * @param pxListItem The list item being queried.
+ * @return A pointer to the xList object that references the pxListItem
+ */
+#define listLIST_ITEM_CONTAINED( pxListItem ) ( ( pxListItem )->pvContainer )
+
+/*
  * This provides a crude means of knowing if a list has been initialised, as
  * pxList->xListEnd.xItemValue is set to portMAX_DELAY by the vListInitialise()
  * function.

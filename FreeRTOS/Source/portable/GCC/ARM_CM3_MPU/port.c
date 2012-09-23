@@ -178,6 +178,7 @@ void MPU_vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType 
 void MPU_vTaskDelay( portTickType xTicksToDelay );
 unsigned portBASE_TYPE MPU_uxTaskPriorityGet( xTaskHandle pxTask );
 void MPU_vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority );
+eTaskState MPU_eTaskStateGet( xTaskHandle pxTask );
 void MPU_vTaskSuspend( xTaskHandle pxTaskToSuspend );
 signed portBASE_TYPE MPU_xTaskIsTaskSuspended( xTaskHandle xTask );
 void MPU_vTaskResume( xTaskHandle pxTaskToResume );
@@ -729,6 +730,19 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
 		vTaskPrioritySet( pxTask, uxNewPriority );
         portRESET_PRIVILEGE( xRunningPrivileged );
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( INCLUDE_eTaskStateGet == 1 )
+	eTaskState MPU_eTaskStateGet( xTaskHandle pxTask )
+	{
+    portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+	eTaskState eReturn;
+
+		eReturn = eTaskStateGet( pxTask );
+        portRESET_PRIVILEGE( xRunningPrivileged );
+		return eReturn;
 	}
 #endif
 /*-----------------------------------------------------------*/

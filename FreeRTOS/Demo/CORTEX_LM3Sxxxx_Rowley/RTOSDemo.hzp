@@ -1,5 +1,5 @@
 <!DOCTYPE CrossStudio_Project_File>
-<solution Name="RTOSDemo" version="2">
+<solution Name="RTOSDemo" target="8" version="2">
   <project Name="RTOSDemo">
     <configuration Name="Common" Target="LM3S8962" arm_architecture="v7M" arm_core_type="Cortex-M3" arm_linker_fiq_stack_size="0" arm_linker_heap_size="0" arm_linker_irq_stack_size="0" arm_linker_stack_size="512" arm_simulator_memory_simulation_filename="$(PackagesDir)/targets/Luminary_LM3S/LM3SSimulatorMemory.dll" arm_simulator_memory_simulation_parameter="0x40000;0x10000" arm_target_debug_interface_type="ADIv5" arm_target_flash_loader_type="LIBMEM RPC Loader" build_remove_unused_symbols="No" c_preprocessor_definitions="PACK_STRUCT_END=__attribute((packed));ALIGN_STRUCT_END=__attribute((aligned(4)));sprintf=usprintf;snprintf=usnprintf;printf=uipprintf" c_user_include_directories="..\\Common\\ethernet\\uIP\\uip-1.0\\uip;..\\..\\Source\\include;..\\..\\Source\\portable\\GCC\\ARM_CM3;..\\Common\\include;..\\Common\\drivers\\LuminaryMicro;.\\webserver;.;$(SamplesDir)/Luminary_Stellaris_Driver_Library" linker_additional_files="" linker_memory_map_file="$(PackagesDir)/targets/Luminary_LM3S/LM3S8962_MemoryMap.xml" linker_output_format="None" linker_printf_fmt_level="int" linker_printf_width_precision_supported="No" linker_scanf_fmt_level="int" project_directory="" project_type="Executable" property_groups_file_path="$(PackagesDir)/targets/Luminary_LM3S/propertyGroups.xml"/>
     <configuration Name="Flash" Placement="Flash" arm_target_flash_loader_file_path="$(PackagesDir)/targets/Luminary_LM3S/Release/Loader.elf" linker_section_placement_file="$(PackagesDir)/targets/Luminary_LM3S/flash_placement.xml" target_reset_script="FLASHReset()"/>
@@ -22,7 +22,7 @@
         <file file_name="../../Source/list.c"/>
         <file file_name="../../Source/queue.c"/>
         <file file_name="../../Source/portable/GCC/ARM_CM3/port.c"/>
-        <file file_name="../../Source/portable/MemMang/heap_2.c"/>
+        <file file_name="../../Source/portable/MemMang/heap_4.c"/>
       </folder>
       <file file_name="main.c"/>
       <file file_name="timertest.c"/>

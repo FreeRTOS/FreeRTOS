@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>5.11.0.50615</state>
+          <state>6.30.7.53437</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -611,7 +611,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>13</version>
+        <version>15</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -781,10 +781,6 @@
           <state>1</state>
         </option>
         <option>
-          <name>CrcAlgo</name>
-          <state>1</state>
-        </option>
-        <option>
           <name>CrcPoly</name>
           <state>0x11021</state>
         </option>
@@ -872,6 +868,28 @@
         </option>
         <option>
           <name>IlinkOptForceVfe</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackAnalysisEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkStackControlFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IlinkStackCallGraphFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CrcAlgorithm</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcUnitSize</name>
+          <version>0</version>
           <state>0</state>
         </option>
       </data>
@@ -972,7 +990,7 @@
   <group>
     <name>Scheduler files</name>
     <file>
-      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_2.c</name>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\list.c</name>

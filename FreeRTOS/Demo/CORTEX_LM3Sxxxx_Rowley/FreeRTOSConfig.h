@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -40,7 +40,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -50,17 +50,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
+
+    http://www.FreeRTOS.org - Documentation, training, latest information,
     license and contact details.
-    
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -82,7 +82,7 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( ( unsigned long ) 50000000 )
+#define configCPU_CLOCK_HZ				( 50000000UL )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 24000 ) )
@@ -98,7 +98,7 @@
 #define configGENERATE_RUN_TIME_STATS	1
 #define configUSE_MALLOC_FAILED_HOOK	1
 
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( 5UL )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
@@ -125,5 +125,9 @@ extern volatile unsigned long ulHighFrequencyTimerTicks;
 to zero. */
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() ( ulHighFrequencyTimerTicks = 0UL )
 #define portGET_RUN_TIME_COUNTER_VALUE()	ulHighFrequencyTimerTicks
+
+/* Use Cortex-M3 optimised task selection rather than the generic C code
+version. */
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 
 #endif /* FREERTOS_CONFIG_H */

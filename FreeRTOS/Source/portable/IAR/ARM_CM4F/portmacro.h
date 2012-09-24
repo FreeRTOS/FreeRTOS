@@ -115,6 +115,24 @@ extern void vPortYieldFromISR( void );
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYieldFromISR()
 /*-----------------------------------------------------------*/
 
+#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+
+	/* Check the configuration. */
+	#if( configMAX_PRIORITIES >= 32 )
+		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
+	#endif
+
+	/* Store/clear the ready priorities in a bit map. */
+	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+
+	/*-----------------------------------------------------------*/
+
+	#include <intrinsics.h>
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - __CLZ( ( uxReadyPriorities ) ) )
+
+#endif /* taskRECORD_READY_PRIORITY */
+
 
 /* Critical section management. */
 

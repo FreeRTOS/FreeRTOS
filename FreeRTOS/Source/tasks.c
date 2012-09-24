@@ -818,7 +818,7 @@ tskTCB * pxNewTCB;
 		{
 			taskENTER_CRITICAL();
 			{
-				pxStateList = ( xList * ) listLIST_ITEM_CONTAINED( &( pxTCB->xGenericListItem ) );
+				pxStateList = ( xList * ) listLIST_ITEM_CONTAINER( &( pxTCB->xGenericListItem ) );
 			}
 			taskEXIT_CRITICAL();
 

@@ -259,7 +259,7 @@ xList * const pxConstList = ( pxList );													\
  * @param pxListItem The list item being queried.
  * @return A pointer to the xList object that references the pxListItem
  */
-#define listLIST_ITEM_CONTAINED( pxListItem ) ( ( pxListItem )->pvContainer )
+#define listLIST_ITEM_CONTAINER( pxListItem ) ( ( pxListItem )->pvContainer )
 
 /*
  * This provides a crude means of knowing if a list has been initialised, as

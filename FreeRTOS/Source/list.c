@@ -180,7 +180,7 @@ portTickType xValueOfInsertion;
 }
 /*-----------------------------------------------------------*/
 
-void vListRemove( xListItem *pxItemToRemove )
+unsigned portBASE_TYPE uxListRemove( xListItem *pxItemToRemove )
 {
 xList * pxList;
 
@@ -199,6 +199,8 @@ xList * pxList;
 
 	pxItemToRemove->pvContainer = NULL;
 	( pxList->uxNumberOfItems )--;
+	
+	return pxList->uxNumberOfItems;
 }
 /*-----------------------------------------------------------*/
 

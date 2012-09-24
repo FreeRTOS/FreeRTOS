@@ -329,13 +329,16 @@ void vListInsertEnd( xList *pxList, xListItem *pxNewListItem );
  * Remove an item from a list.  The list item has a pointer to the list that
  * it is in, so only the list item need be passed into the function.
  *
- * @param vListRemove The item to be removed.  The item will remove itself from
+ * @param uxListRemove The item to be removed.  The item will remove itself from
  * the list pointed to by it's pxContainer parameter.
+ * 
+ * @return The number of items that remain in the list after the list item has
+ * been removed.
  *
- * \page vListRemove vListRemove
+ * \page uxListRemove uxListRemove
  * \ingroup LinkedList
  */
-void vListRemove( xListItem *pxItemToRemove );
+unsigned portBASE_TYPE uxListRemove( xListItem *pxItemToRemove );
 
 #ifdef __cplusplus
 }

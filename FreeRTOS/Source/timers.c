@@ -312,7 +312,7 @@ portBASE_TYPE xResult;
 	/* Remove the timer from the list of active timers.  A check has already
 	been performed to ensure the list is not empty. */
 	pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
-	vListRemove( &( pxTimer->xTimerListItem ) );
+	uxListRemove( &( pxTimer->xTimerListItem ) );
 	traceTIMER_EXPIRED( pxTimer );
 
 	/* If the timer is an auto reload timer then calculate the next
@@ -526,7 +526,7 @@ portTickType xTimeNow;
 			if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
 			{
 				/* The timer is in a list, remove it. */
-				vListRemove( &( pxTimer->xTimerListItem ) );
+				uxListRemove( &( pxTimer->xTimerListItem ) );
 			}
 		}
 
@@ -596,7 +596,7 @@ portBASE_TYPE xResult;
 
 		/* Remove the timer from the list. */
 		pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
-		vListRemove( &( pxTimer->xTimerListItem ) );
+		uxListRemove( &( pxTimer->xTimerListItem ) );
 
 		/* Execute its callback, then send a command to restart the timer if
 		it is an auto-reload timer.  It cannot be restarted here as the lists

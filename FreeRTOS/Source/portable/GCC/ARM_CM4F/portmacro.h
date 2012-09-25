@@ -173,7 +173,7 @@ portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
 	/* Generic helper function. */
-	__attribute__( ( always_inline ) ) static unsigned char ucPortCountLeadingZeros( ulBitmap )
+	__attribute__( ( always_inline ) ) static inline unsigned char ucPortCountLeadingZeros( ulBitmap )
 	{
 	unsigned char ucReturn;
 

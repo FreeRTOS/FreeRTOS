@@ -168,7 +168,7 @@ extern void vPortExitCritical( void );
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
 	/* Generic helper function. */
-	__attribute__( ( always_inline ) ) static unsigned char ucPortCountLeadingZeros( unsigned long ulBitmap )
+	__attribute__( ( always_inline ) ) static inline unsigned char ucPortCountLeadingZeros( unsigned long ulBitmap )
 	{
 	unsigned char ucReturn;
 

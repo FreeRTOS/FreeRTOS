@@ -1,5 +1,295 @@
-/* main.c 
+#if 1
+/*
+    FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
+
+
+    ***************************************************************************
+     *                                                                       *
+     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+     *    Complete, revised, and edited pdf reference manuals are also       *
+     *    available.                                                         *
+     *                                                                       *
+     *    Purchasing FreeRTOS documentation will not only help you, by       *
+     *    ensuring you get running as quickly as possible and with an        *
+     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+     *    the FreeRTOS project to continue with its mission of providing     *
+     *    professional grade, cross platform, de facto standard solutions    *
+     *    for microcontrollers - completely free of charge!                  *
+     *                                                                       *
+     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+     *                                                                       *
+     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *                                                                       *
+    ***************************************************************************
+
+
+    This file is part of the FreeRTOS distribution.
+
+    FreeRTOS is free software; you can redistribute it and/or modify it under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    >>>NOTE<<< The modification to the GPL is included to allow you to
+    distribute a combined work that includes FreeRTOS without being obliged to
+    provide the source code for proprietary components outside of the FreeRTOS
+    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
+    by writing to Richard Barry, contact details for whom are available on the
+    FreeRTOS WEB site.
+
+    1 tab == 4 spaces!
+
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?"                                      *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
+
+
+    http://www.FreeRTOS.org - Documentation, training, latest information,
+    license and contact details.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool.
+
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
+    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
+    provide a safety engineered and independently SIL3 certified version under
+    the SafeRTOS brand: http://www.SafeRTOS.com.
+*/
+
+/******************************************************************************
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
+ * select between the two.  The simply blinky demo is implemented and described
+ * in main_blinky.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
  *
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and FreeRTOS hook functions.
+ *
+ */
+
+/* Standard includes. */
+#include <stdio.h>
+
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* Standard demo includes - just needed for the LED (ParTest) initialisation
+function. */
+#include "partest.h"
+
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+
+/*-----------------------------------------------------------*/
+
+/*
+ * Set up the hardware ready to run this demo.
+ */
+static void prvSetupHardware( void );
+
+/*
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ */
+extern void main_blinky( void );
+extern void main_full( void );
+
+/*-----------------------------------------------------------*/
+
+/* See the documentation page for this demo on the FreeRTOS.org web site for
+full information - including hardware setup requirements. */
+
+int main( void )
+{
+	/* Prepare the hardware to run this demo. */
+	prvSetupHardware();
+
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	{
+		main_blinky();
+	}
+	#else
+	{
+		main_full();
+	}
+	#endif
+
+	return 0;
+}
+/*-----------------------------------------------------------*/
+
+static void prvSetupHardware( void )
+{
+	/* Perform any configuration necessary to use the ParTest LED output
+	functions. */
+	gioInit();
+	vParTestInitialise();
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationMallocFailedHook( void )
+{
+	/* vApplicationMallocFailedHook() will only be called if
+	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+	function that will get called if a call to pvPortMalloc() fails.
+	pvPortMalloc() is called internally by the kernel whenever a task, queue,
+	timer or semaphore is created.  It is also called by various parts of the
+	demo application.  If heap_1.c or heap_2.c are used, then the size of the
+	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+	to query the size of free heap space that remains (although it does not
+	provide information on how the remaining heap might be fragmented). */
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationIdleHook( void )
+{
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+	task.  It is essential that code added to this hook function never attempts
+	to block in any way (for example, call xQueueReceive() with a block time
+	specified, or call vTaskDelay()).  If the application makes use of the
+	vTaskDelete() API function (as this demo application does) then it is also
+	important that vApplicationIdleHook() is permitted to return to its calling
+	function, because it is the responsibility of the idle task to clean up
+	memory allocated by the kernel to any task that has since been deleted. */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
+
+	/* Run time stack overflow checking is performed if
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	function is called if a stack overflow is detected. */
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* This function will be called by each tick interrupt if
+	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	added here, but the tick hook is called from an interrupt context, so
+	code must not attempt to block, and only the interrupt safe FreeRTOS API
+	functions can be used (those that end in FromISR()). */
+}
+/*-----------------------------------------------------------*/
+
+
+
+
+
+
+
+#else
+
+/*
+    FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
+
+
+    ***************************************************************************
+     *                                                                       *
+     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+     *    Complete, revised, and edited pdf reference manuals are also       *
+     *    available.                                                         *
+     *                                                                       *
+     *    Purchasing FreeRTOS documentation will not only help you, by       *
+     *    ensuring you get running as quickly as possible and with an        *
+     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+     *    the FreeRTOS project to continue with its mission of providing     *
+     *    professional grade, cross platform, de facto standard solutions    *
+     *    for microcontrollers - completely free of charge!                  *
+     *                                                                       *
+     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+     *                                                                       *
+     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *                                                                       *
+    ***************************************************************************
+
+
+    This file is part of the FreeRTOS distribution.
+
+    FreeRTOS is free software; you can redistribute it and/or modify it under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    >>>NOTE<<< The modification to the GPL is included to allow you to
+    distribute a combined work that includes FreeRTOS without being obliged to
+    provide the source code for proprietary components outside of the FreeRTOS
+    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+    more details. You should have received a copy of the GNU General Public
+    License and the FreeRTOS license exception along with FreeRTOS; if not it
+    can be viewed here: http://www.freertos.org/a00114.html and also obtained
+    by writing to Richard Barry, contact details for whom are available on the
+    FreeRTOS WEB site.
+
+    1 tab == 4 spaces!
+    
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?                                      *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
+
+    
+    http://www.FreeRTOS.org - Documentation, training, latest information, 
+    license and contact details.
+    
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool.
+
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
+    the code with commercial support, indemnification, and middleware, under 
+    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
+    provide a safety engineered and independently SIL3 certified version under 
+    the SafeRTOS brand: http://www.SafeRTOS.com.
+*/
+
+/* Standard includes. */
+#include <stdio.h>
+
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+#include "queue.h"
+
+/* Library includes. */
+#include "gio.h"
+
+/* Demo application includes. */
+#include "TimerDemo.h"
+#include "countsem.h"
+#include "GenQTest.h"
+#include "dynamic.h"
+
+
+/*
  * "Check" callback function - Called each time the 'check' timer expires.  The
  * check timer executes every five seconds.  Its main function is to check that 
  * all the standard demo tasks are still operational.  Each time it executes it 
@@ -23,101 +313,61 @@
  *
  */
 
-#include <stdio.h>
-#include "FreeRTOS.h"
-#include "task.h"
-#include "timers.h"
-#include "queue.h"
-#include "gio.h"
-#include "TimerDemo.h"
-#include "countsem.h"
-#include "GenQTest.h"
-#include "dynamic.h"
-
-
-/* ----------------------------------------------------------------------------------------------------------- */
-
 /* Codes sent within messages to the LCD task so the LCD task can interpret
 exactly what the message it just received was.  These are sent in the
 cMessageID member of the message structure (defined below). */
-//#define mainMESSAGE_BUTTON_UP			( 1 )
-//#define mainMESSAGE_BUTTON_SEL		( 2 )
-#define mainMESSAGE_STATUS				( 3 )
-
-/* When the cMessageID member of the message sent to the MSG task is
-mainMESSAGE_STATUS then these definitions are sent in the ulMessageValue member
-of the same message and indicate what the status actually is. */
 #define mainERROR_DYNAMIC_TASKS			( pdPASS + 1 )
-#define mainERROR_COM_TEST				( pdPASS + 2 )
 #define mainERROR_GEN_QUEUE_TEST		( pdPASS + 3 )
 #define mainERROR_REG_TEST				( pdPASS + 4 )
 #define mainERROR_TIMER_TEST			( pdPASS + 5 )
 #define mainERROR_COUNT_SEM_TEST		( pdPASS + 6 )
 
 /* Priorities used by the test and demo tasks. */
-#define mainMSG_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
-#define mainCOM_TEST_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainPRINT_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainGENERIC_QUEUE_TEST_PRIORITY	( tskIDLE_PRIORITY )
+#define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainSTAT_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
 /* Just used to ensure parameters are passed into tasks correctly. */
-#define mainTASK_PARAMETER_CHECK_VALUE	((void *)0xDEAD)
+#define mainTASK_PARAMETER_CHECK_VALUE	( ( void * ) 0xDEADBEEF )
 
 /* The length of the queue (the number of items the queue can hold) that is used
-to send messages from tasks and interrupts the the MSG task. */
+to send messages from tasks and interrupts the the Print task. */
 #define mainQUEUE_LENGTH				( 5 )
 
 /* The base period used by the timer test tasks. */
-#define mainTIMER_TEST_PERIOD			( 50 )
+#define mainTIMER_TEST_PERIOD			( 50 / portTICK_RATE_MS )
 
 /* The frequency at which the check timer (described in the comments at the top
 of this file) will call its callback function. */
 #define mainCHECK_TIMER_PERIOD			( 5000UL / ( unsigned long ) portTICK_RATE_MS )
 
-/* Misc. */
+/* A block time of 0 simply means "don't block". */
 #define mainDONT_BLOCK					( 0 )
 
-
-/* ----------------------------------------------------------------------------------------------------------- */
-/* external regsiter check tasks, this checks that the context store/restore works                             */
-
+/* 
+ * The register check tasks, as decribed in the comments at the top of this 
+ * file.  The nature of the tasks necessitates that they are written in 
+ * assembler. 
+ */
 extern void vRegTestTask1(void *pvParameters); 
 extern void vRegTestTask2(void *pvParameters); 
 
 /*
- * Definition of the MSG/controller task described in the comments at the top
- * of this file.
+ * Definition of the Print task described in the comments at the top of this 
+ * file.
  */
-static void prvMsgTask( void *pvParameters );
-
-/*
- * Converts a status message value into an appropriate string for display on
- * the LCD.  The string is written to pcBuffer.
- */
-static void prvGenerateStatusMessage( char *pcBuffer, unsigned long ulStatusValue );
+static void prvPrintTask( void *pvParameters );
 
 /*
  * Defines the 'check' functionality as described at the top of this file.  This
  * function is the callback function for the 'check' timer. */
 static void vCheckTimerCallback( xTimerHandle xTimer );
 
+extern void vLedTask( void * pvParameters );
+void vStatsTask(void *pvParameters);
 
-/* ----------------------------------------------------------------------------------------------------------- */
-
-static signed char buffer[1024];
-
-void vStatsTask(void *pvParameters)
-{
-	printf("**** Task Statistics Started\n");
-	for (;;)
-	{
-		vTaskDelay(15000);
-		vTaskGetRunTimeStats(buffer);
-		printf("%s\n", buffer);
-	}
-}
-
-
-/* ----------------------------------------------------------------------------------------------------------- */
+/*-----------------------------------------------------------*/
 
 /* variable incremente in the IDLE hook */
 volatile unsigned usIdleCounter = 0;
@@ -129,41 +379,33 @@ stops incrementing then it is likely that its associate task has stalled. */
 volatile unsigned usRegTest1Counter = 0, usRegTest2Counter = 0;
 
 /* The handle of the queue used to send messages from tasks and interrupts to
-   the MSG task. */
-static xQueueHandle xMsgQueue = NULL;
+   the Print task. */
+static xQueueHandle xPrintQueue = NULL;
 
 /* The 'check' timer, as described at the top of this file. */
 static xTimerHandle xCheckTimer = NULL;
 
-/* The definition of each message sent from tasks and interrupts to the MSG
-task. */
-typedef struct
-{
-	char     cMessageID;		/* << States what the message is. */
-	unsigned ulMessageValue; 	/* << States the message value (can be an integer, string pointer, etc. depending on the value of cMessageID). */
-} xQueueMessage;
 
-
-/* ----------------------------------------------------------------------------------------------------------- */
+/*-----------------------------------------------------------*/
 
 void main()
 {
 	/* initalise DIO ports */
 	gioInit();
-	
-	gioSetBit(gioPORTA, 0, 1);
-	gioSetBit(gioPORTA, 0, 0);
 
-
-	/* Create the queue used by tasks and interrupts to send strings to the MSG task. */
-	xMsgQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( xQueueMessage ) );
+	/* Create the queue used by tasks and interrupts to send strings to the 
+	print task. */
+	xPrintQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
 
 	/* If the queue could not be created then don't create any tasks that might
 	attempt to use the queue. */
-	if( xMsgQueue != NULL )
+	if( xPrintQueue != NULL )
 	{
 		/* Create STATS task, this prints out a summary of running tasks every 15s */
-		xTaskCreate(vStatsTask, (signed char *)"STATS..", 600, NULL, 6, NULL);
+		xTaskCreate(vStatsTask, (signed char *)"STATS..", 600, NULL, mainSTAT_TASK_PRIORITY, NULL);
+
+		/* Create LED task, this will flash the LEDs on the USB stick */
+		xTaskCreate(vLedTask, (signed char *)"LEDS...", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL);
 
 		/* Create the standard demo tasks. */
 		vStartDynamicPriorityTasks();
@@ -178,11 +420,10 @@ void main()
 		queue, freeing up space for more commands to be received). */
 		vStartTimerDemoTask(mainTIMER_TEST_PERIOD);
 		
-		/* Create the MSGl and register test tasks. */
-		xTaskCreate(prvMsgTask,    (signed char *)"MSG....",  500, mainTASK_PARAMETER_CHECK_VALUE, mainMSG_TASK_PRIORITY, NULL );
+		/* Create the Print and register test tasks. */
+		xTaskCreate(prvPrintTask, (signed char *)"Print..", 500, mainTASK_PARAMETER_CHECK_VALUE, mainPRINT_TASK_PRIORITY, NULL );
 		xTaskCreate(vRegTestTask1, (signed char *)"REG1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
 		xTaskCreate(vRegTestTask2, (signed char *)"REG2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
-		
 		
 		/* Create the 'check' timer - the timer that periodically calls the
 		check function as described at the top of this file.  Note that, for
@@ -201,16 +442,31 @@ void main()
 	hook function, if one is configured. */	
 	for (;;);
 }
+/*-----------------------------------------------------------*/
 
-
-/* ----------------------------------------------------------------------------------------------------------- */
-
-static void prvMsgTask( void *pvParameters )
+void vStatsTask(void *pvParameters)
 {
-	xQueueMessage xReceivedMessage;
-	static char   cBuffer[50];  
+/* Buffer used to hold the table of run time statistics.  This is static so it
+does not overflow the task stack. */
+static signed char cStatsBuffer[ 1024 ];
+const portTickType x15Seconds = 15000 / portTICK_RATE_MS;
 
-	printf("**** Msg Task Started\n");
+	printf("**** Task Statistics Started\n");
+	for (;;)
+	{
+		vTaskDelay( x15Seconds );
+		vTaskGetRunTimeStats( cStatsBuffer );
+		printf("%s\n", cStatsBuffer );
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvPrintTask( void *pvParameters )
+{
+unsigned long ulReceivedMessage;
+static signed char cPrintBuffer[ 50 ];  
+
+	printf( "**** Print Task Started\n" );
 
 	/* Now the scheduler has been started (it must have been for this task to
 	be running), start the check timer too.  The call to xTimerStart() will
@@ -224,7 +480,7 @@ static void prvMsgTask( void *pvParameters )
 	is done after a short delay to ensure all the demo tasks have created all
 	the objects they are going to use.  */
 	vTaskDelay( mainTIMER_TEST_PERIOD * 10 );
-	printf("**** %d heap free\n", (int)xPortGetFreeHeapSize());
+	printf( "**** %d heap free\n", ( int ) xPortGetFreeHeapSize() );
 	
 	/* Just as a test of the port, and for no functional reason, check the task
 	parameter contains its expected value. */
@@ -240,73 +496,33 @@ static void prvMsgTask( void *pvParameters )
 		set to 1 in FreeRTOSConfig.h, therefore there is no need to check the
 		function return value and the function will only return when a value
 		has been received. */
-		xQueueReceive( xMsgQueue, &xReceivedMessage, portMAX_DELAY );
+		xQueueReceive( xPrintQueue, &ulReceivedMessage, portMAX_DELAY );
 
 		/* What is this message?  What does it contain? */
-		switch( xReceivedMessage.cMessageID )
+		switch( ulReceivedMessage )
 		{
-#if 0			
-			case mainMESSAGE_BUTTON_UP		:	/* The button poll task has just
-												informed this task that the up
-												button on the joystick input has
-												been pressed or released. */
-												sprintf( cBuffer, "Button up = %d", ( int ) xReceivedMessage.ulMessageValue );
+			case pdPASS						:	sprintf( ( char * ) cPrintBuffer, "Status = PASS" );
 												break;
-
-			case mainMESSAGE_BUTTON_SEL		:	/* The select button interrupt
-												just informed this task that the
-												select button has been pressed.
-												In this case the pointer to the 
-												string to print is sent directly 
-												in the ulMessageValue member of 
-												the	message.  This just 
-												demonstrates a different 
-												communication technique. */
-												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.ulMessageValue );
+			case mainERROR_DYNAMIC_TASKS	:	sprintf( ( char * ) cPrintBuffer, "Err: Dynamic tsks" );
 												break;
-#endif												
-			case mainMESSAGE_STATUS			:	/* The tick interrupt hook
-												function has just informed this
-												task of the system status.
-												Generate a string in accordance
-												with the status value. */
-												prvGenerateStatusMessage( cBuffer, xReceivedMessage.ulMessageValue );
+			case mainERROR_GEN_QUEUE_TEST 	:	sprintf( ( char * ) cPrintBuffer, "Error: Gen Q test" );
 												break;
-												
-			default							:	sprintf( cBuffer, "Unknown message" );
+			case mainERROR_REG_TEST			:	sprintf( ( char * ) cPrintBuffer, "Error: Reg test" );
+												break;
+			case mainERROR_TIMER_TEST		:	sprintf( ( char * ) cPrintBuffer, "Error: Tmr test" );
+												break;
+			case mainERROR_COUNT_SEM_TEST	:	sprintf( ( char * ) cPrintBuffer, "Error: Count sem" );
+												break;
+			default							:	sprintf( ( char * ) cPrintBuffer, "Unknown status" );
 												break;
 		}
 		/* Output the message that was placed into the cBuffer array within the
 		switch statement above, then move onto the next line ready for the next
 		message to arrive on the queue. */
-		printf("**** Message Received: %s\n", cBuffer);
+		printf( "**** Message Received: %s\n", cPrintBuffer );
 	}		
 }
 
-static void prvGenerateStatusMessage(char *pcBuffer, unsigned long ulStatusValue)
-{
-	/* Just a utility function to convert a status value into a meaningful
-	string for output. */
-	switch( ulStatusValue )
-	{
-		case pdPASS						:	sprintf( pcBuffer, "Status = PASS" );
-											break;
-		case mainERROR_DYNAMIC_TASKS	:	sprintf( pcBuffer, "Err: Dynamic tsks" );
-											break;
-		case mainERROR_COM_TEST			:	sprintf( pcBuffer, "Err: COM test" );
-											break;
-		case mainERROR_GEN_QUEUE_TEST 	:	sprintf( pcBuffer, "Error: Gen Q test" );
-											break;
-		case mainERROR_REG_TEST			:	sprintf( pcBuffer, "Error: Reg test" );
-											break;
-		case mainERROR_TIMER_TEST		:	sprintf( pcBuffer, "Error: Tmr test" );
-											break;
-		case mainERROR_COUNT_SEM_TEST	:	sprintf( pcBuffer, "Error: Count sem" );
-											break;
-		default							:	sprintf( pcBuffer, "Unknown status" );
-											break;
-	}
-}
 
 /* ----------------------------------------------------------------------------------------------------------- */
 
@@ -316,7 +532,7 @@ static void vCheckTimerCallback( xTimerHandle xTimer )
 
 	/* Define the status message that is sent to the LCD task.  By default the
 	   status is PASS. */
-	static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
+	unsigned long ulStatus = pdPASS;
 
 	/* This is the callback function used by the 'check' timer, as described
 	at the top of this file. */
@@ -327,49 +543,43 @@ static void vCheckTimerCallback( xTimerHandle xTimer )
 	/* See if the standard demo tasks are executing as expected, changing
 	the message that is sent to the LCD task from PASS to an error code if
 	any tasks set reports an error. */
-#if 0	
-	if( xAreComTestTasksStillRunning() != pdPASS )
-	{
-		xStatusMessage.ulMessageValue = mainERROR_COM_TEST;
-	}
-#endif
 	if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 	{
-		xStatusMessage.ulMessageValue = mainERROR_DYNAMIC_TASKS;
+		ulStatus = mainERROR_DYNAMIC_TASKS;
 	}
 	
 	if( xAreGenericQueueTasksStillRunning() != pdPASS )
 	{
-		xStatusMessage.ulMessageValue = mainERROR_GEN_QUEUE_TEST;
+		ulStatus = mainERROR_GEN_QUEUE_TEST;
 	}			
 	
 	if( xAreCountingSemaphoreTasksStillRunning() != pdPASS )
 	{
-		xStatusMessage.ulMessageValue = mainERROR_COUNT_SEM_TEST;
+		ulStatus = mainERROR_COUNT_SEM_TEST;
 	}
 	
 	if( xAreTimerDemoTasksStillRunning( ( portTickType ) mainCHECK_TIMER_PERIOD ) != pdPASS )
 	{
-		xStatusMessage.ulMessageValue = mainERROR_TIMER_TEST;
+		ulStatus = mainERROR_TIMER_TEST;
 	}
 
 	/* Check the reg test tasks are still cycling.  They will stop
 	incrementing their loop counters if they encounter an error. */
 	if( usRegTest1Counter == usLastRegTest1Counter )
 	{
-		xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
+		ulStatus = mainERROR_REG_TEST;
 	}
 
 	if( usRegTest2Counter == usLastRegTest2Counter )
 	{
-		xStatusMessage.ulMessageValue = mainERROR_REG_TEST;
+		ulStatus = mainERROR_REG_TEST;
 	}
 
 	usLastRegTest1Counter = usRegTest1Counter;
 	usLastRegTest2Counter = usRegTest2Counter;
 	
 	/* This is called from a timer callback so must not block! */
-	xQueueSendToBack( xMsgQueue, &xStatusMessage, mainDONT_BLOCK );
+	xQueueSendToBack( xPrintQueue, &ulStatus, mainDONT_BLOCK );
 }
 
 
@@ -425,5 +635,6 @@ void vApplicationIdleHook(void)
 
 /* ----------------------------------------------------------------------------------------------------------- */
 
+#endif
 
 

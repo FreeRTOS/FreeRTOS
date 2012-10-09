@@ -34,37 +34,6 @@ void systemInit(void)
                        | (3U << 8U) 
                        | (1U << 4U) 
                        |  1U;
-#if 0
-    /** - Setup flash bank power modes */
-    flashWREG->FBFALLBACK = 0x05050000
-                          | (SYS_ACTIVE << 14U) 
-                          | (SYS_SLEEP << 12U) 
-                          | (SYS_SLEEP << 10U) 
-                          | (SYS_SLEEP << 8U) 
-                          | (SYS_SLEEP << 6U) 
-                          | (SYS_SLEEP << 4U) 
-                          | (SYS_ACTIVE << 2U) 
-                          |  SYS_ACTIVE;
-
-    /** @b Initialize @b Lpo: */
-
-    {
-        unsigned trim = *(volatile unsigned short *)0xF00801B4;
-        
-        if (trim != 0xFFFF)
-        {
-            systemREG1->LPOMONCTL = (1U << 24U) 
-                                  | (0U << 16U) 
-                                  | trim; 
-        }
-        else
-        {
-            systemREG1->LPOMONCTL = (1U << 24U) 
-                                  | (0U << 16U) 
-                                  | (systemREG1->LPOMONCTL & 0xFFFF);
-        }
-    }
-#endif
     /** @b Initialize @b Pll: */
 
     /** - Setup pll control register 1:

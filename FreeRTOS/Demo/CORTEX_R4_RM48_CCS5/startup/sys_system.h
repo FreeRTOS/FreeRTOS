@@ -166,7 +166,7 @@ typedef volatile struct systemBase1
     unsigned BMMCR1;                 /* 0x00C4 */
     unsigned BMMCR2;                 /* 0x00C8 */
     unsigned MMUGCR;                 /* 0x00CC */
-#ifdef _little_endian__
+#ifdef __little_endian__
     unsigned        : 8U;            /* 0x00D0 */
     unsigned PENA   : 1U;            /* 0x00D0 */
     unsigned        : 7U;            /* 0x00D0 */

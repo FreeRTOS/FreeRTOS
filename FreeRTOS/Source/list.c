@@ -40,7 +40,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -50,17 +50,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
+
+    http://www.FreeRTOS.org - Documentation, training, latest information,
     license and contact details.
-    
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -159,7 +159,7 @@ portTickType xValueOfInsertion;
 			   before vTaskStartScheduler() has been called?).
 		See http://www.freertos.org/FAQHelp.html for more tips.
 		**********************************************************************/
-		
+
 		for( pxIterator = ( xListItem * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue <= xValueOfInsertion; pxIterator = pxIterator->pxNext )
 		{
 			/* There is nothing to do here, we are just iterating to the
@@ -186,7 +186,7 @@ xList * pxList;
 
 	pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
 	pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;
-	
+
 	/* The list item knows which list it is in.  Obtain the list from the list
 	item. */
 	pxList = ( xList * ) pxItemToRemove->pvContainer;
@@ -199,7 +199,7 @@ xList * pxList;
 
 	pxItemToRemove->pvContainer = NULL;
 	( pxList->uxNumberOfItems )--;
-	
+
 	return pxList->uxNumberOfItems;
 }
 /*-----------------------------------------------------------*/

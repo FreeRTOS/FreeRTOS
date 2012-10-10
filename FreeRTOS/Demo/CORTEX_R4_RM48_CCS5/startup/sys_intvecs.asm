@@ -15,14 +15,14 @@
 ;-------------------------------------------------------------------------------
 ; interrupt vectors
 
-        b   _c_int00
-        b   #-8
-        b   vPortYieldProcessor
-        b   #-8
-        b   #-8
-        b   #-8
-        ldr pc,[pc,#-0x1b0]
-        ldr pc,[pc,#-0x1b0]
+        b   _c_int00				; reset
+        b   #-8						; undefined instruction
+        b   vPortYieldProcessor		; software interrupt
+        b   #-8						; Abort (prefetch)
+        b   #-8						; Abort (data)
+        b   #-8						; Reserved
+        ldr pc,[pc,#-0x1b0]			; IRQ
+        ldr pc,[pc,#-0x1b0]			; FIQ
 
 
 ;-------------------------------------------------------------------------------

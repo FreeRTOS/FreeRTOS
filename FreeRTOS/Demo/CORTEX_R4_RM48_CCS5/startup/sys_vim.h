@@ -43,8 +43,8 @@ typedef void (*t_isrFuncPTR)();
 
 extern void phantomInterrupt(void);
 extern void esmHighLevelInterrupt(void);
-extern void vPreemptiveTick(void);
-extern void vNonPreemptiveTick(void);
+extern void vPortPreemptiveTick(void);
+extern void vPortNonPreemptiveTick(void);
 extern void vPortYeildWithinAPI(void);
 
 

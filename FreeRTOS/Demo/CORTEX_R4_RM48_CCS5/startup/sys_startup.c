@@ -54,7 +54,7 @@ static const t_isrFuncPTR s_vim_init[] =
     phantomInterrupt,
     phantomInterrupt,
     phantomInterrupt,
-    vPreemptiveTick,		/* RTI */
+    vPortPreemptiveTick,		/* RTI */
     phantomInterrupt,
     phantomInterrupt,
     phantomInterrupt,

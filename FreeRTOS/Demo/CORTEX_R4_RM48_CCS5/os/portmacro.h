@@ -64,55 +64,20 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-#ifndef __OS_PORTMACRO_H__
-#define __OS_PORTMACRO_H__
+#ifndef __PORTMACRO_H__
+#define __PORTMACRO_H__
 
+/*-----------------------------------------------------------
+ * Port specific definitions.
+ *
+ * The settings in this file configure FreeRTOS correctly for the
+ * given hardware and compiler.
+ *
+ * These settings should not be altered.
+ *-----------------------------------------------------------
+ */
 
-/*----------------------------------------------------------------------------*/
-/* RTI Register Frame Definition                                              */
-
-struct rti
-{
-    unsigned GCTRL;
-    unsigned TBCTRL;
-    unsigned CAPCTRL;
-    unsigned COMPCTRL;
-    struct
-    {
-        unsigned FRCx;
-        unsigned UCx;
-        unsigned CPUCx;
-        unsigned : 32;
-        unsigned CAFRCx;
-        unsigned CAUCx;
-        unsigned : 32;
-        unsigned : 32;
-    } CNT[2U];
-    struct
-    {
-        unsigned COMPx;
-        unsigned UDCPx;
-    } CMP[4U];
-    unsigned TBLCOMP;
-    unsigned TBHCOMP;
-    unsigned : 32;
-    unsigned : 32;
-    unsigned SETINT;
-    unsigned CLEARINT;
-    unsigned INTFLAG;
-    unsigned : 32;
-    unsigned DWDCTRL;
-    unsigned DWDPRLD;
-    unsigned WDSTATUS;
-    unsigned WDKEY;
-    unsigned WDCNTR;
-};
-
-#define RTI ((volatile struct rti *)0xFFFFFC00U)
-
-/*----------------------------------------------------------------------------*/
-/* Type Definitions                                                           */
-
+/* Type definitions. */
 #define portCHAR        char
 #define portFLOAT       float
 #define portDOUBLE      double
@@ -130,48 +95,29 @@ struct rti
 #endif
 
 
-/*----------------------------------------------------------------------------*/
-/* Architecture Definitions                                                   */
-
+/* Architecture specifics. */
 #define portSTACK_GROWTH    (-1)
 #define portTICK_RATE_MS    ((portTickType) 1000 / configTICK_RATE_HZ)		
 #define portBYTE_ALIGNMENT  8
 
-/*----------------------------------------------------------------------------*/
-/* External Functions                                                         */
-
+/* Critical section handling. */
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
+#define portENTER_CRITICAL()		vPortEnterCritical()
+#define portEXIT_CRITICAL()			vPortExitCritical()
+#define portDISABLE_INTERRUPTS()	asm( " CPSID I" )
+#define portENABLE_INTERRUPTS()		asm( " CPSIE I" )
 
-/*----------------------------------------------------------------------------*/
-/* Functions Macros                                                           */
+/* Scheduler utilities. */
+#define portYIELD()             	_call_swi( 0 )
+#define portSYS_SSIR1_REG			( * ( ( volatile unsigned long * ) 0xFFFFFFB0 ) )
+#define portSYS_SSIR1_SSKEY			( 0x7500UL )
+#define portYIELD_WITHIN_API()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
+#define portYIELD_FROM_ISR()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
 
-#define portYIELD()              _call_swi(0)
-#define portYIELD_WITHIN_API()   { *(volatile unsigned *)0xFFFFFFB0 = 0x7500;  *(volatile unsigned *)0xFFFFFFB0; }
-#define portYIELD_FROM_ISR()     { *(volatile unsigned *)0xFFFFFFB0 = 0x7500;  *(volatile unsigned *)0xFFFFFFB0; }
-#define portENTER_CRITICAL()     vPortEnterCritical()
-#define portEXIT_CRITICAL()      vPortExitCritical()
-#define portDISABLE_INTERRUPTS() asm(" CPSID I")
-#define portENABLE_INTERRUPTS()	 asm(" CPSIE I")
-
+/* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION(vFunction, pvParameters)       void vFunction(void *pvParameters)
 #define portTASK_FUNCTION_PROTO(vFunction, pvParameters) void vFunction(void *pvParameters)
 
-#if (configGENERATE_RUN_TIME_STATS == 1)
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() \
-{ \
-    RTI->GCTRL         = 0x00000000U; \
-    RTI->TBCTRL        = 0x00000000U; \
-    RTI->COMPCTRL      = 0x00000000U; \
-    RTI->CNT[1U].UCx   = 0x00000000U; \
-    RTI->CNT[1U].FRCx  = 0x00000000U; \
-    RTI->CNT[1U].CPUCx = (configCPU_CLOCK_HZ / 2 / configTICK_RATE_HZ) / 16; \
-    RTI->CMP[1U].UDCPx = (configCPU_CLOCK_HZ / 2 / configTICK_RATE_HZ) / 16; \
-    RTI->GCTRL         = 0x00000002U; \
-}
-#define portGET_RUN_TIME_COUNTER_VALUE() (RTI->CNT[1].FRCx)
-#endif
+#endif /* __PORTMACRO_H__ */
 
-#endif
-
-/*----------------------------------------------------------------------------*/

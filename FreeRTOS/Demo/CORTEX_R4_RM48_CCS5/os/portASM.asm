@@ -144,10 +144,10 @@ vPortYeildWithinAPI
 ;-------------------------------------------------------------------------------
 ; Preemptive Tick
 
-        .def vPreemptiveTick
+        .def vPortPreemptiveTick
         .ref vTaskIncrementTick
 
-vPreemptiveTick
+vPortPreemptiveTick
         portSAVE_CONTEXT
         ; clear interrupt flag
         movw    r0, #0xFC88

@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -40,7 +40,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -50,184 +50,208 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
+
+    http://www.FreeRTOS.org - Documentation, training, latest information,
     license and contact details.
-    
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/*----------------------------------------------------------------------------*/
-/* Include Files                                                              */
-
+/* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
-/*----------------------------------------------------------------------------*/
-/* Global Variables                                                         */
+/*-----------------------------------------------------------*/
 
+/* Count of the critical section nesting depth. */
 unsigned portLONG ulCriticalNesting = 9999;
 
-/*----------------------------------------------------------------------------*/
-/* Macros                                                                     */
+/*-----------------------------------------------------------*/
 
-#define portINITIAL_SPSR                ((portSTACK_TYPE) 0x1F)
-#define portINITIAL_FPSCR               ((portSTACK_TYPE) 0x00)
-#define portINSTRUCTION_SIZE            ((portSTACK_TYPE) 0x04)
-#define portTHUMB_MODE_BIT				((portSTACK_TYPE) 0x20)
+/* Registers required to configure the RTI. */
+#define portRTI_GCTRL_REG  		( * ( ( volatile unsigned long * ) 0xFFFFFC00 ) )
+#define portRTI_TBCTRL_REG  	( * ( ( volatile unsigned long * ) 0xFFFFFC04 ) )
+#define portRTI_COMPCTRL_REG  	( * ( ( volatile unsigned long * ) 0xFFFFFC0C ) )
+#define portRTI_CNT0_FRC0_REG  	( * ( ( volatile unsigned long * ) 0xFFFFFC10 ) )
+#define portRTI_CNT0_UC0_REG  	( * ( ( volatile unsigned long * ) 0xFFFFFC14 ) )
+#define portRTI_CNT0_CPUC0_REG  ( * ( ( volatile unsigned long * ) 0xFFFFFC18 ) )
+#define portRTI_CNT0_COMP0_REG  ( * ( ( volatile unsigned long * ) 0xFFFFFC50 ) )
+#define portRTI_CNT0_UDCP0_REG  ( * ( ( volatile unsigned long * ) 0xFFFFFC54 ) )
+#define portRTI_SETINTENA_REG  	( * ( ( volatile unsigned long * ) 0xFFFFFC80 ) )
+#define portRTI_CLEARINTENA_REG ( * ( ( volatile unsigned long * ) 0xFFFFFC84 ) )
+#define portRTI_INTFLAG_REG  	( * ( ( volatile unsigned long * ) 0xFFFFFC88 ) )
 
-/*----------------------------------------------------------------------------*/
-/* pxPortInitialiseStack                                                      */
 
-portSTACK_TYPE * pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters)
+/* Constants required to set up the initial stack of each task. */
+#define portINITIAL_SPSR	   ( ( portSTACK_TYPE ) 0x1F )
+#define portINITIAL_FPSCR	  ( ( portSTACK_TYPE ) 0x00 )
+#define portINSTRUCTION_SIZE   ( ( portSTACK_TYPE ) 0x04 )
+#define portTHUMB_MODE_BIT		( ( portSTACK_TYPE ) 0x20 )
+
+/* The number of words on the stack frame between the saved Top Of Stack and
+R0 (in which the parameters are passed. */
+#define portSPACE_BETWEEN_TOS_AND_PARAMETERS	( 12 )
+
+/*-----------------------------------------------------------*/
+
+/* vPortStartFirstSTask() is defined in portASM.asm */
+extern void vPortStartFirstTask( void );
+
+/*-----------------------------------------------------------*/
+
+
+/*
+ * See header file for description.
+ */
+portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-    portSTACK_TYPE *pxOriginalTOS = pxTopOfStack;
-    
-    *pxTopOfStack-- = (portSTACK_TYPE) pxCode + portINSTRUCTION_SIZE;		
-    *pxTopOfStack-- = (portSTACK_TYPE) 0xaaaaaaaa;
-    *pxTopOfStack-- = (portSTACK_TYPE) pxOriginalTOS;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x12121212;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x11111111;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x10101010;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x09090909;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x08080808;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x07070707;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x06060606;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x05050505;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x04040404;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x03030303;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x02020202;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x01010101;
-    *pxTopOfStack-- = (portSTACK_TYPE) pvParameters;
+portSTACK_TYPE *pxOriginalTOS;
 
-#if __TI_VFPV3D16_SUPPORT__
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x3F3F3F3F;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x3E3E3E3E;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x3D3D3D3D;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x3C3C3C3C;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x3B3B3B3B;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x3A3A3A3A;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x39393939;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x38383838;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x37373737;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x36363636;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x35353535;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x34343434;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x33333333;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x32323232;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x31313131;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x30303030;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x2F2F2F2F;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x2E2E2E2E;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x2D2D2D2D;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x2C2C2C2C;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x2B2B2B2B;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x2A2A2A2A;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x29292929;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x28282828;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x27272727;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x26262626;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x25252525;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x24242424;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x23232323;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x22222222;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x21212121;
-    *pxTopOfStack-- = (portSTACK_TYPE) 0x20202020;
-    *pxTopOfStack-- = (portSTACK_TYPE) portINITIAL_FPSCR;
-#endif
+	pxOriginalTOS = pxTopOfStack;
 
+	/* Setup the initial stack of the task.  The stack is set exactly as
+	expected by the portRESTORE_CONTEXT() macro. */
 
-    *pxTopOfStack = (portSTACK_TYPE) ((_get_CPSR() & ~0xFF) | portINITIAL_SPSR);
+	/* First on the stack is the return address - which is the start of the as
+	the task has not executed yet.  The offset is added to make the return
+	address appear as it would within an IRQ ISR. */
+	*pxTopOfStack = ( portSTACK_TYPE ) pxCode + portINSTRUCTION_SIZE;
+	pxTopOfStack--;
 
-    if (((unsigned long) pxCode & 0x01UL) != 0x00)
-    {
-        *pxTopOfStack |= portTHUMB_MODE_BIT;
-    }
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;	/* R14 */
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) pxOriginalTOS; /* Stack used when task starts goes in R13. */
+	pxTopOfStack--;
 
-    return pxTopOfStack;
+	#ifdef portPRELOAD_TASK_REGISTERS
+	{
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x12121212;	/* R12 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x11111111;	/* R11 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x10101010;	/* R10 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x09090909;	/* R9 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x08080808;	/* R8 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x07070707;	/* R7 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x06060606;	/* R6 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x05050505;	/* R5 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x04040404;	/* R4 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x03030303;	/* R3 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x02020202;	/* R2 */
+		pxTopOfStack--;
+		*pxTopOfStack = ( portSTACK_TYPE ) 0x01010101;	/* R1 */
+		pxTopOfStack--;
+	}
+	#else
+	{
+		pxTopOfStack -= portSPACE_BETWEEN_TOS_AND_PARAMETERS;
+	}
+	#endif
+
+	/* Function parameters are passed in R0. */
+	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R0 */
+	pxTopOfStack--;
+
+	/* The last thing onto the stack is the status register, which is set for
+	system mode, with interrupts enabled. */
+	*pxTopOfStack = ( portSTACK_TYPE ) ( ( _get_CPSR() & ~0xFF ) | portINITIAL_SPSR );
+
+	if( ( ( unsigned long ) pxCode & 0x01UL ) != 0x00 )
+	{
+		/* The task will start in thumb mode. */
+		*pxTopOfStack |= portTHUMB_MODE_BIT;
+	}
+
+	return pxTopOfStack;
 }
-
-
-/*----------------------------------------------------------------------------*/
-/* prvSetupTimerInterrupt                                                     */
+/*-----------------------------------------------------------*/
 
 static void prvSetupTimerInterrupt(void)
 {
-#if (configGENERATE_RUN_TIME_STATS == 1)
-    RTI->GCTRL        &= ~0x00000001U;
-#else
-    RTI->GCTRL         =  0x00000000U;
-#endif
-    RTI->TBCTRL        =  0x00000000U;
-    RTI->COMPCTRL      =  0x00000000U;
-    RTI->CNT[0U].UCx   =  0x00000000U;
-    RTI->CNT[0U].FRCx  =  0x00000000U;
-    RTI->CNT[0U].CPUCx =  0x00000001U;
-    RTI->CMP[0U].COMPx =  configCPU_CLOCK_HZ / 2 / configTICK_RATE_HZ;
-    RTI->CMP[0U].UDCPx =  configCPU_CLOCK_HZ / 2 / configTICK_RATE_HZ;
-    RTI->INTFLAG       =  0x0007000FU;
-    RTI->CLEARINT      =  0x00070F0FU;
-    RTI->SETINT        =  0x00000001U;
-    RTI->GCTRL        |=  0x00000001U;
+	/* Disable timer 0. */
+	portRTI_GCTRL_REG &= 0xFFFFFFFEUL;
+
+	/* Use the internal counter. */
+	portRTI_TBCTRL_REG = 0x00000000U;
+
+	/* COMPSEL0 will use the RTIFRC0 counter. */
+	portRTI_COMPCTRL_REG = 0x00000000U;
+
+	/* Initialise the counter and the prescale counter registers. */
+	portRTI_CNT0_UC0_REG =  0x00000000U;
+	portRTI_CNT0_FRC0_REG =  0x00000000U;
+
+	/* Set Prescalar for RTI clock. */
+	portRTI_CNT0_CPUC0_REG = 0x00000001U;
+	portRTI_CNT0_COMP0_REG = ( configCPU_CLOCK_HZ / 2 ) / configTICK_RATE_HZ;
+	portRTI_CNT0_UDCP0_REG = ( configCPU_CLOCK_HZ / 2 ) / configTICK_RATE_HZ;
+
+	/* Clear interrupts. */
+	portRTI_INTFLAG_REG =  0x0007000FU;
+	portRTI_CLEARINTENA_REG	= 0x00070F0FU;
+
+	/* Enable the compare 0 interrupt. */
+	portRTI_SETINTENA_REG = 0x00000001U;
+	portRTI_GCTRL_REG |= 0x00000001U;
 }
+/*-----------------------------------------------------------*/
 
-
-/*----------------------------------------------------------------------------*/
-/* vPortStartFirstTask                                                        */
-
-/* vPortStartFirstSTask() is defined in portASM.asm */
-extern void vPortStartFirstTask(void);
-
-
-/*----------------------------------------------------------------------------*/
-/* xPortStartScheduler                                                        */
-
+/*
+ * See header file for description.
+ */
 portBASE_TYPE xPortStartScheduler(void)
 {
 	/* Start the timer that generates the tick ISR. */
-    prvSetupTimerInterrupt();
-    /* Enable critical sections */
-    ulCriticalNesting = 0;
+	prvSetupTimerInterrupt();
+
+	/* Reset the critical section nesting count read to execute the first task. */
+	ulCriticalNesting = 0;
+
 	/* Start the first task.  This is done from portASM.asm as ARM mode must be
 	used. */
-    vPortStartFirstTask();	
+	vPortStartFirstTask();
+
 	/* Should not get here! */
-    return 0;
+	return pdFAIL;
 }
+/*-----------------------------------------------------------*/
 
-
-/*----------------------------------------------------------------------------*/
-/* vPortEndScheduler                                                          */
-
+/*
+ * See header file for description.
+ */
 void vPortEndScheduler(void)
 {
-	/* It is unlikely that the ARM port will require this function as there
-	is nothing to return to.  If this is required - stop the tick ISR then
-	return back to main. */
+	/* It is unlikely that the port will require this function as there
+	is nothing to return to. */
 }
-
-
-/*----------------------------------------------------------------------------*/
-/* vNonPreemptiveTick / vPreemptiveTick                                       */
+/*-----------------------------------------------------------*/
 
 #if configUSE_PREEMPTION == 0
 
-	/* The cooperative scheduler requires a normal IRQ service routine to 
+	/* The cooperative scheduler requires a normal IRQ service routine to
 	 * simply increment the system tick. */
-	__interrupt void vNonPreemptiveTick( void ) 
+	__interrupt void vPortNonPreemptiveTick( void )
 	{
-        /* clear clock interrupt flag */
-        RTI->INTFLAG = 0x00000001;
+		/* clear clock interrupt flag */
+		RTI->INTFLAG = 0x00000001;
 
 		/* Increment the tick count - this may make a delaying task ready
-		to run - but a context switch is not performed. */		
+		to run - but a context switch is not performed. */
 		vTaskIncrementTick();
 	}
 
@@ -235,49 +259,51 @@ void vPortEndScheduler(void)
 
 	/*
 	 **************************************************************************
-	 * The preemptive scheduler ISR is written in assembler and can be found   
+	 * The preemptive scheduler ISR is written in assembler and can be found
 	 * in the portASM.asm file. This will only get used if portUSE_PREEMPTION
 	 * is set to 1 in portmacro.h
-	 ************************************************************************** 
+	 **************************************************************************
 	 */
-    void vPreemptiveTick(void);
+	void vPortPreemptiveTick( void );
 
 #endif
+/*-----------------------------------------------------------*/
 
 
-
-/*----------------------------------------------------------------------------*/
-/* vPortEnterCritical                                                         */
-
-void vPortEnterCritical(void)
+/*
+ * Disable interrupts, and keep a count of the nesting depth.
+ */
+void vPortEnterCritical( void )
 {
 	/* Disable interrupts as per portDISABLE_INTERRUPTS(); */
-    portDISABLE_INTERRUPTS();
-	/* Now interrupts are disabled ulCriticalNesting can be accessed 
+	portDISABLE_INTERRUPTS();
+
+	/* Now interrupts are disabled ulCriticalNesting can be accessed
 	directly.  Increment ulCriticalNesting to keep a count of how many times
 	portENTER_CRITICAL() has been called. */
-    ulCriticalNesting++;
+	ulCriticalNesting++;
 }
+/*-----------------------------------------------------------*/
 
-
-/*----------------------------------------------------------------------------*/
-/* vPortExitCritical                                                          */
-
-void vPortExitCritical(void)
+/*
+ * Decrement the critical nesting count, and if it has reached zero, re-enable
+ * interrupts.
+ */
+void vPortExitCritical( void )
 {
-    if(ulCriticalNesting > 0)
-    {
+	if( ulCriticalNesting > 0 )
+	{
 		/* Decrement the nesting count as we are leaving a critical section. */
-        ulCriticalNesting--;
+		ulCriticalNesting--;
 
-		/* If the nesting level has reached zero then interrupts should be 
-        re-enabled. */
-        if(ulCriticalNesting == 0)
-        {
+		/* If the nesting level has reached zero then interrupts should be
+		re-enabled. */
+		if( ulCriticalNesting == 0 )
+		{
 			/* Enable interrupts as per portENABLE_INTERRUPTS(). */
-            portENABLE_INTERRUPTS();
-        }
-    }
+			portENABLE_INTERRUPTS();
+		}
+	}
 }
+/*-----------------------------------------------------------*/
 
-/*----------------------------------------------------------------------------*/

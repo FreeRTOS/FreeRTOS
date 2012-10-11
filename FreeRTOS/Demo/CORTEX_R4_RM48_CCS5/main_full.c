@@ -185,8 +185,8 @@ xTimerHandle xTimer = NULL;
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 
 	/* Create the register test tasks, as described at the top of this file. */
-	xTaskCreate(vRegTestTask1, ( const signed char * ) "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate(vRegTestTask2, ( const signed char * ) "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTestTask1, ( const signed char * ) "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTestTask2, ( const signed char * ) "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */

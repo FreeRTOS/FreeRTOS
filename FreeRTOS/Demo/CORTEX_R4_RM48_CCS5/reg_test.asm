@@ -68,10 +68,20 @@
 ;
 		.def	vRegTestTask1
 		.ref	ulRegTest1Counter
+
+		.if (__TI_VFP_SUPPORT__)
+			.ref vPortTaskUsesFPU
+		.endif ;__TI_VFP_SUPPORT__
+
 		.text
 		.arm
 
 vRegTestTask1:
+	.if (__TI_VFP_SUPPORT__)
+		; Let the port layer know that this task needs its FPU context saving.
+		BL		vPortTaskUsesFPU
+	.endif
+
 		; Fill each general purpose register with a known value.
 		mov		r0,  #0xFF
 		mov		r1,  #0x11
@@ -87,11 +97,133 @@ vRegTestTask1:
 		mov     r11, #0xBB
 		mov     r12, #0xCC
 		mov		r14, #0xEE
+
+	.if (__TI_VFP_SUPPORT__)
+		; Fill each FPU register with a known value.
+		vmov 	d0, r0, r1
+		vmov 	d1, r2, r3
+		vmov 	d2, r4, r5
+		vmov 	d3, r6, r7
+		vmov 	d4, r8, r9
+		vmov 	d5, r10, r11
+		vmov 	d6, r0, r1
+		vmov 	d7, r2, r3
+		vmov 	d8, r4, r5
+		vmov 	d9, r6, r7
+		vmov 	d10, r8, r9
+		vmov 	d11, r10, r11
+		vmov 	d12, r0, r1
+		vmov 	d13, r2, r3
+		vmov 	d14, r4, r5
+		vmov 	d15, r6, r7
+	.endif
+
 	
 vRegTestLoop1:
 
 		; Force yeild
 		swi		#0
+
+	.if (__TI_VFP_SUPPORT__)
+		; Check all the VFP registers still contain the values set above.
+		; First save registers that are clobbered by the test.
+		push { r0-r1 }
+
+		vmov 	r0, r1, d0
+		cmp 	r0, #0xFF
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x11
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d1
+		cmp 	r0, #0x22
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x33
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d2
+		cmp 	r0, #0x44
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x55
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d3
+		cmp 	r0, #0x66
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x77
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d4
+		cmp 	r0, #0x88
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x99
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d5
+		cmp 	r0, #0xAA
+		bne 	reg1_error_loopf
+		cmp 	r1, #0xBB
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d6
+		cmp 	r0, #0xFF
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x11
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d7
+		cmp 	r0, #0x22
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x33
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d8
+		cmp 	r0, #0x44
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x55
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d9
+		cmp 	r0, #0x66
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x77
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d10
+		cmp 	r0, #0x88
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x99
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d11
+		cmp 	r0, #0xAA
+		bne 	reg1_error_loopf
+		cmp 	r1, #0xBB
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d12
+		cmp 	r0, #0xFF
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x11
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d13
+		cmp 	r0, #0x22
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x33
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d14
+		cmp 	r0, #0x44
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x55
+		bne 	reg1_error_loopf
+		vmov 	r0, r1, d15
+		cmp 	r0, #0x66
+		bne 	reg1_error_loopf
+		cmp 	r1, #0x77
+		bne 	reg1_error_loopf
+
+		; Restore the registers that were clobbered by the test.
+		pop 	{r0-r1}
+
+		; VFP register test passed.  Jump to the core register test.
+		b 		reg1_loopf_pass
+
+reg1_error_loopf:
+		; If this line is hit then a VFP register value was found to be
+		; incorrect.
+		b reg1_error_loopf
+
+reg1_loopf_pass:
+
+	.endif ;__TI_VFP_SUPPORT__
 
 		; Test each general purpose register to check that it still contains the
 		; expected known value, jumping to vRegTestError1 if any register contains
@@ -151,6 +283,11 @@ vRegTestError1:
 		.arm
 ;
 vRegTestTask2:
+	.if (__TI_VFP_SUPPORT__)
+		; Let the port layer know that this task needs its FPU context saving.
+		BL		vPortTaskUsesFPU
+	.endif
+
 		; Fill each general purpose register with a known value.
 		mov		r0,  #0xFF000000
 		mov		r1,  #0x11000000
@@ -167,7 +304,129 @@ vRegTestTask2:
 		mov     r12, #0xCC000000
 		mov     r14, #0xEE000000
 	
+	.if (__TI_VFP_SUPPORT__)
+
+		; Fill each FPU register with a known value.
+		vmov 	d0, r0, r1
+		vmov 	d1, r2, r3
+		vmov 	d2, r4, r5
+		vmov 	d3, r6, r7
+		vmov 	d4, r8, r9
+		vmov 	d5, r10, r11
+		vmov 	d6, r0, r1
+		vmov 	d7, r2, r3
+		vmov 	d8, r4, r5
+		vmov 	d9, r6, r7
+		vmov 	d10, r8, r9
+		vmov 	d11, r10, r11
+		vmov 	d12, r0, r1
+		vmov 	d13, r2, r3
+		vmov 	d14, r4, r5
+		vmov 	d15, r6, r7
+	.endif
+
 vRegTestLoop2:
+
+	.if (__TI_VFP_SUPPORT__)
+		; Check all the VFP registers still contain the values set above.
+		; First save registers that are clobbered by the test.
+		push { r0-r1 }
+
+		vmov r0, r1, d0
+		cmp r0, #0xFF000000
+		bne reg2_error_loopf
+		cmp r1, #0x11000000
+		bne reg2_error_loopf
+		vmov r0, r1, d1
+		cmp r0, #0x22000000
+		bne reg2_error_loopf
+		cmp r1, #0x33000000
+		bne reg2_error_loopf
+		vmov r0, r1, d2
+		cmp r0, #0x44000000
+		bne reg2_error_loopf
+		cmp r1, #0x55000000
+		bne reg2_error_loopf
+		vmov r0, r1, d3
+		cmp r0, #0x66000000
+		bne reg2_error_loopf
+		cmp r1, #0x77000000
+		bne reg2_error_loopf
+		vmov r0, r1, d4
+		cmp r0, #0x88000000
+		bne reg2_error_loopf
+		cmp r1, #0x99000000
+		bne reg2_error_loopf
+		vmov r0, r1, d5
+		cmp r0, #0xAA000000
+		bne reg2_error_loopf
+		cmp r1, #0xBB000000
+		bne reg2_error_loopf
+		vmov r0, r1, d6
+		cmp r0, #0xFF000000
+		bne reg2_error_loopf
+		cmp r1, #0x11000000
+		bne reg2_error_loopf
+		vmov r0, r1, d7
+		cmp r0, #0x22000000
+		bne reg2_error_loopf
+		cmp r1, #0x33000000
+		bne reg2_error_loopf
+		vmov r0, r1, d8
+		cmp r0, #0x44000000
+		bne reg2_error_loopf
+		cmp r1, #0x55000000
+		bne reg2_error_loopf
+		vmov r0, r1, d9
+		cmp r0, #0x66000000
+		bne reg2_error_loopf
+		cmp r1, #0x77000000
+		bne reg2_error_loopf
+		vmov r0, r1, d10
+		cmp r0, #0x88000000
+		bne reg2_error_loopf
+		cmp r1, #0x99000000
+		bne reg2_error_loopf
+		vmov r0, r1, d11
+		cmp r0, #0xAA000000
+		bne reg2_error_loopf
+		cmp r1, #0xBB000000
+		bne reg2_error_loopf
+		vmov r0, r1, d12
+		cmp r0, #0xFF000000
+		bne reg2_error_loopf
+		cmp r1, #0x11000000
+		bne reg2_error_loopf
+		vmov r0, r1, d13
+		cmp r0, #0x22000000
+		bne reg2_error_loopf
+		cmp r1, #0x33000000
+		bne reg2_error_loopf
+		vmov r0, r1, d14
+		cmp r0, #0x44000000
+		bne reg2_error_loopf
+		cmp r1, #0x55000000
+		bne reg2_error_loopf
+		vmov r0, r1, d15
+		cmp r0, #0x66000000
+		bne reg2_error_loopf
+		cmp r1, #0x77000000
+		bne reg2_error_loopf
+
+		; Restore the registers that were clobbered by the test.
+		pop {r0-r1}
+
+		; VFP register test passed.  Jump to the core register test.
+		b reg2_loopf_pass
+
+reg2_error_loopf:
+		; If this line is hit then a VFP register value was found to be
+		; incorrect.
+		b 	reg2_error_loopf
+
+reg2_loopf_pass:
+
+	.endif ;__TI_VFP_SUPPORT__
 
 		; Test each general purpose register to check that it still contains the
 		; expected known value, jumping to vRegTestError2 if any register contains

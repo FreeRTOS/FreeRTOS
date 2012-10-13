@@ -113,7 +113,6 @@ extern void main_full( void );
 
 /* See the documentation page for this demo on the FreeRTOS.org web site for
 full information - including hardware setup requirements. */
-
 int main( void )
 {
 	/* Prepare the hardware to run this demo. */

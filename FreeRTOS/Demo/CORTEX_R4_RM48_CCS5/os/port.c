@@ -90,9 +90,9 @@ unsigned portLONG ulCriticalNesting = 9999;
 
 
 /* Constants required to set up the initial stack of each task. */
-#define portINITIAL_SPSR	   ( ( portSTACK_TYPE ) 0x1F )
-#define portINITIAL_FPSCR	  ( ( portSTACK_TYPE ) 0x00 )
-#define portINSTRUCTION_SIZE   ( ( portSTACK_TYPE ) 0x04 )
+#define portINITIAL_SPSR	   	( ( portSTACK_TYPE ) 0x1F )
+#define portINITIAL_FPSCR	  	( ( portSTACK_TYPE ) 0x00 )
+#define portINSTRUCTION_SIZE   	( ( portSTACK_TYPE ) 0x04 )
 #define portTHUMB_MODE_BIT		( ( portSTACK_TYPE ) 0x20 )
 
 /* The number of words on the stack frame between the saved Top Of Stack and
@@ -106,6 +106,12 @@ extern void vPortStartFirstTask( void );
 
 /*-----------------------------------------------------------*/
 
+/* Saved as part of the task context.  Set to pdFALSE if the task does not
+require an FPU context. */
+unsigned long ulTaskHasFPUContext = 0;
+
+/*-----------------------------------------------------------*/
+
 
 /*
  * See header file for description.
@@ -115,6 +121,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 portSTACK_TYPE *pxOriginalTOS;
 
 	pxOriginalTOS = pxTopOfStack;
+
+	#if __TI_VFP_SUPPORT__
+	{
+		/* Ensure the stack is correctly aligned on exit. */
+		pxTopOfStack--;
+	}
+	#endif
 
 	/* Setup the initial stack of the task.  The stack is set exactly as
 	expected by the portRESTORE_CONTEXT() macro. */
@@ -167,8 +180,7 @@ portSTACK_TYPE *pxOriginalTOS;
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R0 */
 	pxTopOfStack--;
 
-	/* The last thing onto the stack is the status register, which is set for
-	system mode, with interrupts enabled. */
+	/* Set the status register for system mode, with interrupts enabled. */
 	*pxTopOfStack = ( portSTACK_TYPE ) ( ( _get_CPSR() & ~0xFF ) | portINITIAL_SPSR );
 
 	if( ( ( unsigned long ) pxCode & 0x01UL ) != 0x00 )
@@ -176,6 +188,17 @@ portSTACK_TYPE *pxOriginalTOS;
 		/* The task will start in thumb mode. */
 		*pxTopOfStack |= portTHUMB_MODE_BIT;
 	}
+
+	#ifdef __TI_VFP_SUPPORT__
+	{
+		pxTopOfStack--;
+
+		/* The last thing on the stack is the tasks ulUsingFPU value, which by
+		default is set to indicate that the stack frame does not include FPU
+		registers. */
+		*pxTopOfStack = pdFALSE;
+	}
+	#endif
 
 	return pxTopOfStack;
 }
@@ -305,5 +328,23 @@ void vPortExitCritical( void )
 		}
 	}
 }
+/*-----------------------------------------------------------*/
+
+#if __TI_VFP_SUPPORT__
+
+	void vPortTaskUsesFPU( void )
+	{
+	extern void vPortInitialiseFPSCR( void );
+
+		/* A task is registering the fact that it needs an FPU context.  Set the
+		FPU flag (saved as part of the task context. */
+		ulTaskHasFPUContext = pdTRUE;
+
+		/* Initialise the floating point status register. */
+		vPortInitialiseFPSCR();
+	}
+
+#endif /* __TI_VFP_SUPPORT__ */
+
 /*-----------------------------------------------------------*/
 

@@ -51,117 +51,203 @@
 ;    licensing and training services.
 ;*/
 
-; TCJ:  Using SSI interrupt todo portYIELD_WITHIN_API, means that we do not need
-;       to save ulCriticalNesting in the task context
-
         .text
         .arm
+        .ref vTaskSwitchContext
+        .ref vTaskIncrementTick
+        .ref ulTaskHasFPUContext
+		.ref pxCurrentTCB
 
-;-------------------------------------------------------------------------------
+;/*-----------------------------------------------------------*/
 ;
 ; Save Task Context 
 ;
 portSAVE_CONTEXT .macro
-        stmfd   sp!, {r0}
-        stmfd   sp,  {sp}^
-        sub     sp,  sp, #4
-        ldmfd   sp!, {r0}
-        stmfd   r0!, {lr}
-        mov	    lr,  r0
-        ldmfd   sp!, {r0}
-        stmfd   lr,  {r0-lr}^
-        sub     lr,  lr, #0x3C
-    .if (__TI_VFPV3D16_SUPPORT__)
-        fstmdbd lr!, {d0-d15}
-        mrs	    r0,  spsr
-        fmrx    r1,  fpscr
-        stmfd   lr!, {r0,r1}
-    .else
-        mrs	    r0,  spsr
-        stmfd   lr!, {r0}
-    .endif
-        ldr		r0,  curTCB
-        ldr	    r0,  [r0]
-        str	    lr,  [r0]
+		DSB
+
+		; Push R0 as we are going to use it
+		STMDB	SP!, {R0}
+
+		; Set R0 to point to the task stack pointer.
+		STMDB	SP,{SP}^
+		SUB	SP, SP, #4
+		LDMIA	SP!,{R0}
+
+		; Push the return address onto the stack.
+		STMDB	R0!, {LR}
+
+		; Now LR has been saved, it can be used instead of R0.
+		MOV	LR, R0
+
+		; Pop R0 so it can be saved onto the task stack.
+		LDMIA	SP!, {R0}
+
+		; Push all the system mode registers onto the task stack.
+		STMDB	LR,{R0-LR}^
+		SUB	LR, LR, #60
+
+		; Push the SPSR onto the task stack.
+		MRS	R0, SPSR
+		STMDB	LR!, {R0}
+
+    .if (__TI_VFP_SUPPORT__)
+		;Determine if the task maintains an FPU context.
+		LDR	R0, ulFPUContextConst
+		LDR	R0, [R0]
+
+		; Test the flag
+		CMP		R0, #0
+
+		; If the task is not using a floating point context then skip the
+		; saving of the FPU registers.
+		BEQ		PC+3
+		FSTMDBD	LR!, {D0-D15}
+		FMRX    R1,  FPSCR
+		STMFD   LR!, {R1}
+
+		; Save the flag
+		STMDB	LR!, {R0}
+	.endif
+
+		; Store the new top of stack for the task.
+		LDR	R0, pxCurrentTCBConst
+		LDR	R0, [R0]
+		STR	LR, [R0]
+
         .endm
 
-;-------------------------------------------------------------------------------
-
+;/*-----------------------------------------------------------*/
+;
 ; Restore Task Context
 ;
 portRESTORE_CONTEXT .macro
-        ldr		r0,  curTCB
-        ldr		r0,  [r0]
-        ldr		lr,  [r0]
-    .if (__TI_VFPV3D16_SUPPORT__)
-        ldmfd   lr!, {r0,r1}
-        fldmiad lr!, {d0-d15}
-        fmxr    fpscr, r1
-    .else
-        ldmfd   lr!, {r0}
-    .endif
-        msr		spsr_csxf, r0
-        ldmfd	lr, {r0-r14}^
-        ldr		lr, [lr, #0x3C]
-        subs	pc, lr, #4
+		LDR		R0, pxCurrentTCBConst
+		LDR		R0, [R0]
+		LDR		LR, [R0]
+
+	.if (__TI_VFP_SUPPORT__)
+		; The floating point context flag is the first thing on the stack.
+		LDR		R0, ulFPUContextConst
+		LDMFD	LR!, {R1}
+		STR		R1, [R0]
+
+		; Test the flag
+		CMP		R1, #0
+
+		; If the task is not using a floating point context then skip the
+		; VFP register loads.
+		BEQ		PC+3
+
+		; Restore the floating point context.
+		LDMFD   LR!, {R0}
+		FLDMIAD	LR!, {D0-D15}
+		FMXR    FPSCR, R0
+	.endif
+
+		; Get the SPSR from the stack.
+		LDMFD	LR!, {R0}
+		MSR		SPSR_CF, R0
+
+		; Restore all system mode registers for the task.
+		LDMFD	LR, {R0-R14}^
+
+		; Restore the return address.
+		LDR		LR, [LR, #+60]
+
+		; And return - correcting the offset in the LR to obtain the
+		; correct address.
+		SUBS	PC, LR, #4
         .endm
 
-;-------------------------------------------------------------------------------
-; Start First Task
+;/*-----------------------------------------------------------*/
+; Start the first task by restoring its context.
 
         .def vPortStartFirstTask
 
-vPortStartFirstTask
+vPortStartFirstTask:
         portRESTORE_CONTEXT
 
-;-------------------------------------------------------------------------------
-; Yield Processor
+;/*-----------------------------------------------------------*/
+; Yield to another task.
 
         .def vPortYieldProcessor
-        .ref vTaskSwitchContext
 
-vPortYieldProcessor
-        add     lr, lr, #4
+vPortYieldProcessor:
+		; Within an IRQ ISR the link register has an offset from the true return
+		; address.  SWI doesn't do this. Add the offset manually so the ISR
+		; return code can be used.
+        ADD     LR, LR, #4
+
+        ; First save the context of the current task.
         portSAVE_CONTEXT
-        bl      vTaskSwitchContext
+
+        ; Select the next task to execute. */
+        BL      vTaskSwitchContext
+
+        ; Restore the context of the task selected to execute.
         portRESTORE_CONTEXT
 
-;-------------------------------------------------------------------------------
-; Yield Processor From Within FreeRTOS API
+;/*-----------------------------------------------------------*/
+; Yield to another task from within the FreeRTOS API
 
 		.def vPortYeildWithinAPI
 
-vPortYeildWithinAPI
+vPortYeildWithinAPI:
+		; Save the context of the current task.
+
         portSAVE_CONTEXT
-		; clear SSI flag
-		movw    r0, #0xFFF4
-		movt 	r0, #0xFFFF
-		ldr     r0, [r0];
-		; switch task
-        bl      vTaskSwitchContext
+		; Clear SSI flag.
+		MOVW    R0, #0xFFF4
+		MOVT 	R0, #0xFFFF
+		LDR     R0, [R0]
+
+		; Select the next task to execute. */
+        BL      vTaskSwitchContext
+
+        ; Restore the context of the task selected to execute.
         portRESTORE_CONTEXT
 
-;-------------------------------------------------------------------------------
+;/*-----------------------------------------------------------*/
 ; Preemptive Tick
 
         .def vPortPreemptiveTick
-        .ref vTaskIncrementTick
 
-vPortPreemptiveTick
+vPortPreemptiveTick:
+
+		; Save the context of the current task.
         portSAVE_CONTEXT
-        ; clear interrupt flag
-        movw    r0, #0xFC88
-        movt    r0, #0xFFFF
-        mov     r1, #1
-        str     r1, [r0]
-        bl      vTaskIncrementTick
-        bl      vTaskSwitchContext
+
+        ; Clear interrupt flag
+        MOVW    R0, #0xFC88
+        MOVT    R0, #0xFFFF
+        MOV     R1, #1
+        STR     R1, [R0]
+
+        ; Increment the tick count, making any adjustments to the blocked lists
+        ; that may be necessary.
+        BL      vTaskIncrementTick
+
+        ; Select the next task to execute.
+        BL      vTaskSwitchContext
+
+        ; Restore the context of the task selected to execute.
         portRESTORE_CONTEXT
 
 ;-------------------------------------------------------------------------------
 
-		.ref    pxCurrentTCB
-curTCB	.word	pxCurrentTCB
+	.if (__TI_VFP_SUPPORT__)
 
+		.def vPortInitialiseFPSCR
+
+vPortInitialiseFPSCR:
+
+		MOV		R0, #0
+		FMXR    FPSCR, R0
+		BX		LR
+
+	.endif ;__TI_VFP_SUPPORT__
+
+pxCurrentTCBConst	.word	pxCurrentTCB
+ulFPUContextConst 	.word   ulTaskHasFPUContext
 ;-------------------------------------------------------------------------------
 

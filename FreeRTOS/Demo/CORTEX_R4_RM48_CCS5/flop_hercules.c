@@ -102,8 +102,12 @@ task gets a calculation wrong it will
 stop incrementing its check variable. */
 static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 
-/* Must be called by tasks that need to maintain a floating point context. */
-void vPortTaskUsesFPU( void );
+/* Must be called before any hardware floating point operations are
+performed to let the RTOS portable layer know that this task requires
+a floating point context. */
+#if __TI_VFP_SUPPORT__
+	extern void vPortTaskUsesFPU( void );
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -127,10 +131,13 @@ volatile unsigned short *pusTaskCheckVariable;
 volatile portDOUBLE dAnswer;
 short sError = pdFALSE;
 
-	/* Must be called before any floating point operations are performed to let
-	the RTOS portable layer know that this task requires a floating point 
-	context. */
-	vPortTaskUsesFPU();
+
+	/* Must be called before any hardware floating point operations are
+	performed to let the RTOS portable layer know that this task requires
+	a floating point context. */
+	#if __TI_VFP_SUPPORT__
+		vPortTaskUsesFPU();
+	#endif
 
 	d1 = 123.4567;
 	d2 = 2345.6789;
@@ -184,10 +191,12 @@ volatile unsigned short *pusTaskCheckVariable;
 volatile portDOUBLE dAnswer;
 short sError = pdFALSE;
 
-	/* Must be called before any floating point operations are performed to let
-	the RTOS portable layer know that this task requires a floating point 
-	context. */
-	vPortTaskUsesFPU();
+	/* Must be called before any hardware floating point operations are
+	performed to let the RTOS portable layer know that this task requires
+	a floating point context. */
+	#if __TI_VFP_SUPPORT__
+		vPortTaskUsesFPU();
+	#endif
 
 	d1 = -389.38;
 	d2 = 32498.2;
@@ -243,10 +252,12 @@ const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
-	/* Must be called before any floating point operations are performed to let
-	the RTOS portable layer know that this task requires a floating point 
-	context. */
-	vPortTaskUsesFPU();
+	/* Must be called before any hardware floating point operations are
+	performed to let the RTOS portable layer know that this task requires
+	a floating point context. */
+	#if __TI_VFP_SUPPORT__
+		vPortTaskUsesFPU();
+	#endif
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
@@ -305,10 +316,12 @@ const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
-	/* Must be called before any floating point operations are performed to let
-	the RTOS portable layer know that this task requires a floating point 
-	context. */
-	vPortTaskUsesFPU();
+	/* Must be called before any hardware floating point operations are
+	performed to let the RTOS portable layer know that this task requires
+	a floating point context. */
+	#if __TI_VFP_SUPPORT__
+		vPortTaskUsesFPU();
+	#endif
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */

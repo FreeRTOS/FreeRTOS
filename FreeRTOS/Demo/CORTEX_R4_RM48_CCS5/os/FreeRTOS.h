@@ -79,6 +79,12 @@
 /* Application specific configuration options. */
 #include "FreeRTOSConfig.h"
 
+/* configUSE_PORT_OPTIMISED_TASK_SELECTION must be defined before portable.h
+is included as it is used by the port layer. */
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+#endif
+
 /* Definitions specific to the port being used. */
 #include "portable.h"
 
@@ -163,6 +169,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef INCLUDE_uxTaskGetStackHighWaterMark
 	#define INCLUDE_uxTaskGetStackHighWaterMark 0
+#endif
+
+#ifndef INCLUDE_eTaskStateGet
+	#define INCLUDE_eTaskStateGet 0
 #endif
 
 #ifndef configUSE_RECURSIVE_MUTEXES
@@ -516,6 +526,18 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef vPortFreeAligned
 	#define vPortFreeAligned( pvBlockToFree ) vPortFree( pvBlockToFree )
+#endif
+
+#ifndef portSUPPRESS_TICKS_AND_SLEEP
+	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )
+#endif
+
+#ifndef portPRE_SLEEP_PROCESSING
+	#define portPRE_SLEEP_PROCESSING()
+#endif
+
+#ifndef portPOST_SLEEP_PROCESSING
+	#define portPOST_SLEEP_PROCESSING()
 #endif
 
 #endif /* INC_FREERTOS_H */

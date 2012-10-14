@@ -235,6 +235,15 @@ vPortPreemptiveTick:
 
 ;-------------------------------------------------------------------------------
 
+		.def ulPortCountLeadingZeros
+
+ulPortCountLeadingZeros:
+
+		CLZ		R0, R0
+		BX		LR
+
+;-------------------------------------------------------------------------------
+
 	.if (__TI_VFP_SUPPORT__)
 
 		.def vPortInitialiseFPSCR
@@ -246,6 +255,7 @@ vPortInitialiseFPSCR:
 		BX		LR
 
 	.endif ;__TI_VFP_SUPPORT__
+
 
 pxCurrentTCBConst	.word	pxCurrentTCB
 ulFPUContextConst 	.word   ulTaskHasFPUContext

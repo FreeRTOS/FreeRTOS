@@ -64,82 +64,12 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-#ifndef __PORTMACRO_H__
-#define __PORTMACRO_H__
+#ifndef FLOP_TASKS_H
+#define FLOP_TASKS_H
 
-/*-----------------------------------------------------------
- * Port specific definitions.
- *
- * The settings in this file configure FreeRTOS correctly for the
- * given hardware and compiler.
- *
- * These settings should not be altered.
- *-----------------------------------------------------------
- */
+void vStartMathTasks( unsigned portBASE_TYPE uxPriority );
+portBASE_TYPE xAreMathsTaskStillRunning( void );
 
-/* Type definitions. */
-#define portCHAR        char
-#define portFLOAT       float
-#define portDOUBLE      double
-#define portLONG        long
-#define portSHORT       short
-#define portSTACK_TYPE  unsigned long
-#define portBASE_TYPE   long
-
-#if (configUSE_16_BIT_TICKS == 1)
-    typedef unsigned portSHORT portTickType;
-    #define portMAX_DELAY (portTickType) 0xFFFF
-#else
-    typedef unsigned portLONG portTickType;
-    #define portMAX_DELAY (portTickType) 0xFFFFFFFFF
 #endif
 
-
-/* Architecture specifics. */
-#define portSTACK_GROWTH    (-1)
-#define portTICK_RATE_MS    ((portTickType) 1000 / configTICK_RATE_HZ)		
-#define portBYTE_ALIGNMENT  8
-
-/* Critical section handling. */
-extern void vPortEnterCritical(void);
-extern void vPortExitCritical(void);
-#define portENTER_CRITICAL()		vPortEnterCritical()
-#define portEXIT_CRITICAL()			vPortExitCritical()
-#define portDISABLE_INTERRUPTS()	asm( " CPSID I" )
-#define portENABLE_INTERRUPTS()		asm( " CPSIE I" )
-
-/* Scheduler utilities. */
-#define portYIELD()             	_call_swi( 0 )
-#define portSYS_SSIR1_REG			( * ( ( volatile unsigned long * ) 0xFFFFFFB0 ) )
-#define portSYS_SSIR1_SSKEY			( 0x7500UL )
-#define portYIELD_WITHIN_API()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
-#define portYIELD_FROM_ISR()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
-
-/* Architecture specific optimisations. */
-#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
-
-	/* Generic helper function. */
-	unsigned long ulPortCountLeadingZeros( unsigned long ulBitmap );
-
-	/* Check the configuration. */
-	#if( configMAX_PRIORITIES > 32 )
-		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
-	#endif
-
-	/* Store/clear the ready priorities in a bit map. */
-	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
-	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
-
-	/*-----------------------------------------------------------*/
-
-	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - ulPortCountLeadingZeros( ( uxReadyPriorities ) ) )
-
-#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
-
-
-/* Task function macros as described on the FreeRTOS.org WEB site. */
-#define portTASK_FUNCTION(vFunction, pvParameters)       void vFunction(void *pvParameters)
-#define portTASK_FUNCTION_PROTO(vFunction, pvParameters) void vFunction(void *pvParameters)
-
-#endif /* __PORTMACRO_H__ */
 

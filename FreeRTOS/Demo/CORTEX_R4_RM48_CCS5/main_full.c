@@ -76,25 +76,34 @@
  * required to configure the hardware, are defined in main.c.
  ******************************************************************************
  *
- * main_full() creates all the demo application tasks and a software timer, then
- * starts the scheduler.  The web documentation provides more details of the 
- * standard demo application tasks, which provide no particular functionality, 
- * but do provide a good example of how to use the FreeRTOS API.
+ * main_full() creates all the demo application tasks and two software timers,
+ * then starts the scheduler.  The web documentation provides more details of
+ * the standard demo application tasks, which provide no particular
+ * functionality, but do provide a good example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Check" timer - The check software timer period is initially set to three
- * seconds.  The callback function associated with the check software timer
- * checks that all the standard demo tasks are not only still executing, but 
- * are executing without reporting any errors.  If the check software timer 
- * discovers that a task has either stalled, or reported an error, then it 
- * changes its own execution period from the initial three seconds, to just 
- * 200ms.  The check software timer callback function also toggles the green 
- * LED each time it is called.  This provides a visual indication of the system 
- * status:  If the green LED toggles every three seconds, then no issues have 
- * been discovered.  If the green LED toggles every 200ms, then an issue has 
- * been discovered with at least one task.
+ * "Check" timer - The check software timer period is set to three seconds.
+ * The callback function associated with the check software timer checks that
+ * all the standard demo tasks are not only still executing, but are executing
+ * without reporting any errors.  If the check software timer discovers that a
+ * task has either stalled, or reported an error, then the error is logged and
+ * the check software timer toggles the red LEDs.  If an error has never been
+ * latched, the check software timer toggles the green LEDs.  Therefore, if the
+ * system is executing correctly, the green LEDs will toggle every three
+ * seconds, and if an error has ever been detected, the red LEDs will toggle
+ * every three seconds.
+ *
+ * "Reg test" tasks - These fill both the core and floating point registers
+ * with known values, then check that each register maintains its expected
+ * value for the lifetime of the tasks.  Each task uses a different set of
+ * values.  The reg test tasks execute with a very low priority, so get
+ * preempted very frequently.  A register containing an unexpected value is
+ * indicative of an error in the context switching mechanism.
+ *
+ * "LED" software timer - The callback function associated with the LED
+ * software time maintains a pattern of spinning white LEDs.
  *
  * See the documentation page for this demo on the FreeRTOS.org web site for
  * full information, including hardware setup requirements. 
@@ -121,6 +130,7 @@
 #include "recmutex.h"
 #include "death.h"
 #include "partest.h"
+#include "flop.h"
 
 /* Priorities for the demo application tasks. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -129,6 +139,7 @@
 #define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
 #define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -183,11 +194,13 @@ xTimerHandle xTimer = NULL;
 	vStartRecursiveMutexTasks();
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* Create the register test tasks, as described at the top of this file. */
 	xTaskCreate( vRegTestTask1, ( const signed char * ) "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegTestTask2, ( const signed char * ) "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	
+
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
 	xTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
@@ -202,7 +215,7 @@ xTimerHandle xTimer = NULL;
 		xTimerStart( xTimer, mainDONT_BLOCK );
 	}
 
-	/* Create the software timer that performs the 'LED toggle' functionality,
+	/* Create the software timer that performs the 'LED spin' functionality,
 	as described at the top of this file. */
 	xTimer = xTimerCreate( ( const signed char * ) "LEDTimer",	/* A text name, purely to help debugging. */
 							( mainLED_TIMER_PERIOD_MS ),		/* The timer period, in this case 75ms. */
@@ -290,7 +303,12 @@ const unsigned long ulRedLED1 = 6, ulRedLED2 = 9;
 	{
 		ulErrorFound = pdTRUE;
 	}
-	
+
+	if( xAreMathsTaskStillRunning() != pdTRUE )
+	{
+		ulErrorFound = pdTRUE;
+	}
+
 	/* Check the reg test tasks are still cycling.  They will stop
 	incrementing their loop counters if they encounter an error. */
 	if( ulRegTest1Counter == ulLastRegTest1Counter )

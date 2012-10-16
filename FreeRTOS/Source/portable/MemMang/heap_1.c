@@ -1,6 +1,6 @@
 /*
     FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+
 
     ***************************************************************************
      *                                                                       *
@@ -40,7 +40,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -50,17 +50,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
+
+    http://www.FreeRTOS.org - Documentation, training, latest information,
     license and contact details.
-    
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -69,7 +69,7 @@
  * The simplest possible implementation of pvPortMalloc().  Note that this
  * implementation does NOT allow allocated memory to be freed again.
  *
- * See heap_2.c, heap_3.c and heap_4.c for alternative implementations, and the 
+ * See heap_2.c, heap_3.c and heap_4.c for alternative implementations, and the
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
@@ -92,7 +92,7 @@ static union xRTOS_HEAP
 		volatile portDOUBLE dDummy;
 	#else
 		volatile unsigned long ulDummy;
-	#endif	
+	#endif
 	unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
 } xHeap;
 
@@ -101,7 +101,7 @@ static size_t xNextFreeByte = ( size_t ) 0;
 
 void *pvPortMalloc( size_t xWantedSize )
 {
-void *pvReturn = NULL; 
+void *pvReturn = NULL;
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if portBYTE_ALIGNMENT != 1
@@ -121,11 +121,11 @@ void *pvReturn = NULL;
 			/* Return the next free byte then increment the index past this
 			block. */
 			pvReturn = &( xHeap.ucHeap[ xNextFreeByte ] );
-			xNextFreeByte += xWantedSize;			
-		}	
+			xNextFreeByte += xWantedSize;
+		}
 	}
 	xTaskResumeAll();
-	
+
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
 		if( pvReturn == NULL )
@@ -134,7 +134,7 @@ void *pvReturn = NULL;
 			vApplicationMallocFailedHook();
 		}
 	}
-	#endif	
+	#endif
 
 	return pvReturn;
 }
@@ -143,10 +143,10 @@ void *pvReturn = NULL;
 void vPortFree( void *pv )
 {
 	/* Memory cannot be freed using this scheme.  See heap_2.c, heap_3.c and
-	heap_4.c for alternative implementations, and the memory management pages of 
+	heap_4.c for alternative implementations, and the memory management pages of
 	http://www.FreeRTOS.org for more information. */
 	( void ) pv;
-	
+
 	/* Force an assert as it is invalid to call this function. */
 	configASSERT( pv == NULL );
 }

@@ -106,15 +106,13 @@ extern "C" {
 #define portBYTE_ALIGNMENT			8
 /*-----------------------------------------------------------*/	
 
-
 /* Scheduler utilities. */
 extern void vPortYieldFromISR( void );
-
 #define portYIELD()					vPortYieldFromISR()
-
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYieldFromISR()
 /*-----------------------------------------------------------*/
 
+/* Architecture specific optimisations. */
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
 	/* Check the configuration. */
@@ -131,36 +129,42 @@ extern void vPortYieldFromISR( void );
 	#include <intrinsics.h>
 	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - __CLZ( ( uxReadyPriorities ) ) )
 
-#endif /* taskRECORD_READY_PRIORITY */
-
+#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+/*-----------------------------------------------------------*/
 
 /* Critical section management. */
-
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
-extern void vPortSetInterruptMask( void );
-extern void vPortClearInterruptMask( void );
+extern unsigned long ulPortSetInterruptMask( void );
+extern void vPortClearInterruptMask( unsigned long ulNewMask );
 
-#define portDISABLE_INTERRUPTS()	vPortSetInterruptMask()
-#define portENABLE_INTERRUPTS()		vPortClearInterruptMask()
+#define portDISABLE_INTERRUPTS()				ulPortSetInterruptMask()
+#define portENABLE_INTERRUPTS()					vPortClearInterruptMask( 0 )
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
-
-/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
-http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
-#define portSET_INTERRUPT_MASK_FROM_ISR()		0;vPortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask();(void)x
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask( x )
+/*-----------------------------------------------------------*/
 
 /* There are an uneven number of items on the initial stack, so 
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
+/*-----------------------------------------------------------*/
+
+/* Tickless/low power functionality. */
+extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
 
 /*-----------------------------------------------------------*/
 
-/* Task function macros as described on the FreeRTOS.org WEB site. */
+/* Task function macros as described on the FreeRTOS.org WEB site.  These are
+not necessary for to use this port.  They are defined so the common demo files
+(which build with all the ports) will build. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+/*-----------------------------------------------------------*/
 
+/* portNOP() is not required by this port. */
 #define portNOP()
 
 #ifdef __cplusplus

@@ -115,48 +115,17 @@ extern void vPortYieldFromISR( void );
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYieldFromISR()
 /*-----------------------------------------------------------*/
 
-
 /* Critical section management. */
-
-/* 
- * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
- * registers.  r0 is clobbered.
- */ 
-#define portSET_INTERRUPT_MASK()						\
-	__asm volatile										\
-	(													\
-		"	mov r0, %0								\n"	\
-		"	msr basepri, r0							\n" \
-		::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY):"r0"	\
-	)
-	
-/*
- * Set basepri back to 0 without effective other registers.
- * r0 is clobbered.  FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
- * http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing.
- */
-#define portCLEAR_INTERRUPT_MASK()			\
-	__asm volatile							\
-	(										\
-		"	mov r0, #0					\n"	\
-		"	msr basepri, r0				\n"	\
-		:::"r0"								\
-	)
-
-/* FAQ:  Setting BASEPRI to 0 in portCLEAR_INTERRUPT_MASK_FROM_ISR() is not a 
-bug.  Please see http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before 
-disagreeing. */
-#define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
-
-
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
-
-#define portDISABLE_INTERRUPTS()	portSET_INTERRUPT_MASK()
-#define portENABLE_INTERRUPTS()		portCLEAR_INTERRUPT_MASK()
-#define portENTER_CRITICAL()		vPortEnterCritical()
-#define portEXIT_CRITICAL()			vPortExitCritical()
+extern unsigned long ulPortSetInterruptMask( void );
+extern void vPortClearInterruptMask( unsigned long ulNewMaskValue );
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask(x)
+#define portDISABLE_INTERRUPTS()				ulPortSetInterruptMask()
+#define portENABLE_INTERRUPTS()					vPortClearInterruptMask(0)
+#define portENTER_CRITICAL()					vPortEnterCritical()
+#define portEXIT_CRITICAL()						vPortExitCritical()
 
 /* There are an uneven number of items on the initial stack, so 
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
@@ -164,16 +133,23 @@ portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 
 /*-----------------------------------------------------------*/
 
-/* Task function macros as described on the FreeRTOS.org WEB site. */
+/* Task function macros as described on the FreeRTOS.org WEB site.  These are
+not necessary for to use this port.  They are defined so the common demo files
+(which build with all the ports) will build. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+/*-----------------------------------------------------------*/
 
-#define portNOP()
+/* Tickless idle/low power functionality. */
+extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+/*-----------------------------------------------------------*/
 
+/* Architecture specific optimisations. */
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
 	/* Generic helper function. */
-	__attribute__( ( always_inline ) ) static inline unsigned char ucPortCountLeadingZeros( ulBitmap )
+	__attribute__( ( always_inline ) ) static inline unsigned char ucPortCountLeadingZeros( unsigned long ulBitmap )
 	{
 	unsigned char ucReturn;
 
@@ -194,8 +170,12 @@ portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 
 	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
 
-#endif /* taskRECORD_READY_PRIORITY */
+#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 
+/*-----------------------------------------------------------*/
+
+/* portNOP() is not required by this port. */
+#define portNOP()
 
 #ifdef __cplusplus
 }

@@ -40,7 +40,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -50,51 +50,36 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
+
+    http://www.FreeRTOS.org - Documentation, training, latest information,
     license and contact details.
-    
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
 #include <FreeRTOSConfig.h>
 
-/* For backward compatibility, ensure configKERNEL_INTERRUPT_PRIORITY is
-defined.  The value zero should also ensure backward compatibility.
-FreeRTOS.org versions prior to V4.3.0 did not include this definition. */
-#ifndef configKERNEL_INTERRUPT_PRIORITY
-	#define configKERNEL_INTERRUPT_PRIORITY 0
-#endif
-
-	
 	RSEG    CODE:CODE(2)
 	thumb
 
-	EXTERN vPortYieldFromISR
 	EXTERN pxCurrentTCB
 	EXTERN vTaskSwitchContext
 
-	PUBLIC vSetMSP
 	PUBLIC xPortPendSVHandler
-	PUBLIC vPortSetInterruptMask
+	PUBLIC ulPortSetInterruptMask
 	PUBLIC vPortClearInterruptMask
 	PUBLIC vPortSVCHandler
 	PUBLIC vPortStartFirstTask
 
 
-/*-----------------------------------------------------------*/
 
-vSetMSP
-	msr msp, r0
-	bx lr
-	
 /*-----------------------------------------------------------*/
 
 xPortPendSVHandler:
@@ -122,28 +107,26 @@ xPortPendSVHandler:
 
 /*-----------------------------------------------------------*/
 
-vPortSetInterruptMask:
-	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
-	msr BASEPRI, r0
-
+ulPortSetInterruptMask:
+	mrs r0, basepri
+	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r1
 	bx r14
 	
 /*-----------------------------------------------------------*/
 
 vPortClearInterruptMask:
-	/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
-	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
-	mov r0, #0
-	msr BASEPRI, r0
-
+	msr basepri, r0
 	bx r14
 
 /*-----------------------------------------------------------*/
 
-vPortSVCHandler;
+vPortSVCHandler:
+	/* Get the location of the current TCB. */
 	ldr	r3, =pxCurrentTCB
 	ldr r1, [r3]
 	ldr r0, [r1]
+	/* Pop the core registers. */
 	ldmia r0!, {r4-r11}
 	msr psp, r0
 	mov r0, #0

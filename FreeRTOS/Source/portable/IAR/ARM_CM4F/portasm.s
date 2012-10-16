@@ -73,7 +73,7 @@
 	EXTERN vTaskSwitchContext
 
 	PUBLIC xPortPendSVHandler
-	PUBLIC vPortSetInterruptMask
+	PUBLIC ulPortSetInterruptMask
 	PUBLIC vPortClearInterruptMask
 	PUBLIC vPortSVCHandler
 	PUBLIC vPortStartFirstTask
@@ -127,20 +127,16 @@ xPortPendSVHandler:
 
 /*-----------------------------------------------------------*/
 
-vPortSetInterruptMask:
-	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
-	msr BASEPRI, r0
-
+ulPortSetInterruptMask:
+	mrs r0, basepri
+	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r1
 	bx r14
 	
 /*-----------------------------------------------------------*/
 
 vPortClearInterruptMask:
-	/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
-	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
-	mov r0, #0
-	msr BASEPRI, r0
-
+	msr basepri, r0
 	bx r14
 
 /*-----------------------------------------------------------*/
@@ -159,7 +155,7 @@ vPortSVCHandler:
 
 /*-----------------------------------------------------------*/
 
-vPortStartFirstTask:
+vPortStartFirstTask
 	/* Use the NVIC offset register to locate the stack. */
 	ldr r0, =0xE000ED08
 	ldr r0, [r0]

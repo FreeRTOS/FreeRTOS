@@ -1320,6 +1320,27 @@ unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
  */
 void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
 
+/*
+ * Return the amount of time, in ticks, that will pass before the kernel will
+ * next move a task from the Blocked state to the Running state.
+ */
+portTickType xTaskGetExpectedIdleTime( void );
+
+/*
+ * If tickless mode is being used, or a low power mode is implemented, then
+ * the tick interrupt will not execute during idle periods.  When this is the
+ * case, the tick count value maintained by the scheduler needs to be kept up
+ * to date with the actual execution time by being skipped forward by the by
+ * a time equal to the idle period.
+ */
+void vTaskStepTick( portTickType xTicksToJump );
+
+/*
+ * Returns the number of tick interrupts that have occurred while the scheduler 
+ * has been suspended.  The count pending ticks is reset if xResetOnExit is set
+ * to pdTRUE.
+ */
+unsigned portBASE_TYPE uxTaskPendingTicksGet( portBASE_TYPE xResetOnExit );
 
 #ifdef __cplusplus
 }

@@ -6,8 +6,10 @@
 */
 
 /*
-    FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+    FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
+
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -51,15 +53,15 @@
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    not run, what could be wrong?"                                     *
      *                                                                       *
      *    http://www.FreeRTOS.org/FAQHelp.html                               *
      *                                                                       *
     ***************************************************************************
 
     
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
-    license and contact details.
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
+    and contact details.  
     
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.

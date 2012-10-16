@@ -1,6 +1,8 @@
 /*
-    FreeRTOS V7.2.0 - Copyright (C) 2012 Real Time Engineers Ltd.
-	
+    FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
+
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -44,15 +46,15 @@
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    not run, what could be wrong?"                                     *
      *                                                                       *
      *    http://www.FreeRTOS.org/FAQHelp.html                               *
      *                                                                       *
     ***************************************************************************
 
     
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
-    license and contact details.
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
+    and contact details.  
     
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
@@ -82,6 +84,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION					1
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_IDLE_HOOK						0
 #define configUSE_TICK_HOOK						0
 #define configTICK_RATE_HZ						( ( portTickType ) 1000 )
@@ -103,7 +106,6 @@
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configGENERATE_RUN_TIME_STATS			0
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0

@@ -79,16 +79,16 @@
  	
  	.global vPortStartFirstTask
 	.global vPortYieldISR
-	.global vT1InterruptHandler
+	.global vPortTickInterruptHandler
 
 
 /******************************************************************/
 
  	.set		noreorder
 	.set 		noat
- 	.ent		vT1InterruptHandler
+ 	.ent		vPortTickInterruptHandler
 	
-vT1InterruptHandler:
+vPortTickInterruptHandler:
 
 	portSAVE_CONTEXT
 
@@ -97,7 +97,7 @@ vT1InterruptHandler:
 
 	portRESTORE_CONTEXT
 
-	.end vT1InterruptHandler
+	.end vPortTickInterruptHandler
 
 /******************************************************************/
 

@@ -20,7 +20,7 @@ IF EXIST .\FreeRTOS_Source Goto END
     MD FreeRTOS\include
     MD FreeRTOS\portable
     MD FreeRTOS\portable\CCS
-    MD FreeRTOS\portable\CCS\ARM_Cortex-R4_RM48_TMS570
+    MD FreeRTOS\portable\CCS\ARM_Cortex-R4
     MD FreeRTOS\portable\MemMang    
 	MD Common-Demo-Source
     MD Common-Demo-Source\include
@@ -35,7 +35,7 @@ IF EXIST .\FreeRTOS_Source Goto END
     copy %FREERTOS_SOURCE%\include\*.* FreeRTOS\include
     
     REM Copy the portable layer files into the project directory
-    copy %FREERTOS_SOURCE%\portable\CCS\ARM_Cortex-R4_RM48_TMS570\*.* FreeRTOS\portable\CCS\ARM_Cortex-R4_RM48_TMS570
+    copy %FREERTOS_SOURCE%\portable\CCS\ARM_Cortex-R4\*.* FreeRTOS\portable\CCS\ARM_Cortex-R4
     
     REM Copy the memory allocation files into the project directory
     copy %FREERTOS_SOURCE%\portable\MemMang\heap_4.c FreeRTOS\portable\MemMang

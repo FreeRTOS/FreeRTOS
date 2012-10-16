@@ -127,7 +127,7 @@ static volatile unsigned portBASE_TYPE uxTasksRunningAtStart = 0;
 /* Tasks are deleted by the idle task.  Under heavy load the idle task might
 not get much processing time, so it would be legitimate for several tasks to
 remain undeleted for a short period. */
-static const unsigned portBASE_TYPE uxMaxNumberOfExtraTasksRunning = 2;
+static const unsigned portBASE_TYPE uxMaxNumberOfExtraTasksRunning = 3;
 
 /* Used to store a handle to the task that should be killed by a suicidal task,
 before it kills itself. */

@@ -146,7 +146,7 @@ portRESTORE_CONTEXT .macro
 
 		; Get the SPSR from the stack.
 		LDMFD	LR!, {R0}
-		MSR		SPSR_CF, R0
+		MSR		SPSR_CSXF, R0
 
 		; Restore all system mode registers for the task.
 		LDMFD	LR, {R0-R14}^

@@ -403,9 +403,9 @@ void xPortSysTickHandler( void )
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 
 			/* Sleep until something happens. */
-			portPRE_SLEEP_PROCESSING();
+			configPRE_SLEEP_PROCESSING();
 			__asm volatile( "wfi" );
-			portPOST_SLEEP_PROCESSING();
+			configPOST_SLEEP_PROCESSING();
 
 			/* Stop SysTick.  Again, the time the SysTick is stopped for is
 			accounted for as best it can be, but using the tickless mode will

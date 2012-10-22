@@ -143,8 +143,10 @@ not necessary for to use this port.  They are defined so the common demo files
 /*-----------------------------------------------------------*/
 
 /* Tickless idle/low power functionality. */
-extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
-#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+#ifndef portSUPPRESS_TICKS_AND_SLEEP
+	extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+#endif
 /*-----------------------------------------------------------*/
 
 /* Architecture specific optimisations. */

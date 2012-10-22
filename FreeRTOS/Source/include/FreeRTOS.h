@@ -534,12 +534,12 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )
 #endif
 
-#ifndef portPRE_SLEEP_PROCESSING
-	#define portPRE_SLEEP_PROCESSING()
+#ifndef configPRE_SLEEP_PROCESSING
+	#define configPRE_SLEEP_PROCESSING()
 #endif
 
-#ifndef portPOST_SLEEP_PROCESSING
-	#define portPOST_SLEEP_PROCESSING()
+#ifndef configPOST_SLEEP_PROCESSING
+	#define configPOST_SLEEP_PROCESSING()
 #endif
 
 #endif /* INC_FREERTOS_H */

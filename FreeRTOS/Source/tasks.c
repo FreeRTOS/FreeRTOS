@@ -460,6 +460,15 @@ static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TY
 
 #endif
 
+/*
+ * Return the amount of time, in ticks, that will pass before the kernel will
+ * next move a task from the Blocked state to the Running state.
+ */
+#if ( configUSE_TICKLESS_IDLE == 1 )
+
+	static portTickType prvGetExpectedIdleTime( void ) PRIVILEGED_FUNCTION;
+
+#endif
 
 /*lint +e956 */
 
@@ -1305,7 +1314,7 @@ void vTaskSuspendAll( void )
 }
 /*----------------------------------------------------------*/
 
-portTickType xTaskGetExpectedIdleTime( void )
+portTickType prvGetExpectedIdleTime( void )
 {
 portTickType xReturn;
 
@@ -1618,11 +1627,15 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 #endif
 /*----------------------------------------------------------*/
 
-void vTaskStepTick( portTickType xTicksToJump )
-{
-	configASSERT( xTicksToJump <= xNextTaskUnblockTime );
-	xTickCount += xTicksToJump;
-}
+#if ( configUSE_TICKLESS_IDLE == 1 )
+
+	void vTaskStepTick( portTickType xTicksToJump )
+	{
+		configASSERT( xTicksToJump <= xNextTaskUnblockTime );
+		xTickCount += xTicksToJump;
+	}
+
+#endif
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES
@@ -1917,6 +1930,8 @@ portTickType xTimeToWake;
 		/* Calculate the time at which the task should be woken if the event does
 		not occur.  This may overflow but this doesn't matter. */
 		xTimeToWake = xTickCount + xTicksToWait;
+		
+		traceTASK_DELAY_UNTIL();
 		prvAddCurrentTaskToDelayedList( xTimeToWake );
 	}
 
@@ -2150,7 +2165,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 				test of the expected idle time is performed without the
 				scheduler suspended.  The result here is not necessarily
 				valid. */
-				xExpectedIdleTime = xTaskGetExpectedIdleTime();
+				xExpectedIdleTime = prvGetExpectedIdleTime();
 
 				if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
 				{
@@ -2160,7 +2175,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 						time can be sampled again, and this time its value can
 						be used. */
 						configASSERT( xNextTaskUnblockTime >= xTickCount );
-						xExpectedIdleTime = xTaskGetExpectedIdleTime();
+						xExpectedIdleTime = prvGetExpectedIdleTime();
 
 						if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
 						{
@@ -2718,25 +2733,6 @@ tskTCB *pxNewTCB;
 				}
 			}
 		}
-	}
-
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_TICKLESS_IDLE == 1 )
-
-	unsigned portBASE_TYPE uxTaskPendingTicksGet( portBASE_TYPE xResetOnExit )
-	{
-	unsigned portBASE_TYPE uxReturn;
-
-		uxReturn = uxMissedTicks;
-
-		if( xResetOnExit == pdTRUE )
-		{
-			uxMissedTicks = 0;
-		}
-
-		return uxReturn;
 	}
 
 #endif

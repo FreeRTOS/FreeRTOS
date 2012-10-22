@@ -153,9 +153,11 @@ portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
 /*-----------------------------------------------------------*/
 
-/* Tickless/low power functionality. */
-extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
-#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+/* Tickless idle/low power functionality. */
+#ifndef portSUPPRESS_TICKS_AND_SLEEP
+	extern void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime ) vPortSuppressTicksAndSleep( xExpectedIdleTime )
+#endif
 
 /*-----------------------------------------------------------*/
 

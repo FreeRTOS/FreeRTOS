@@ -111,11 +111,13 @@ extern void vPortExitCritical(void);
 #define portENABLE_INTERRUPTS()		asm( " CPSIE I" )
 
 /* Scheduler utilities. */
-#define portYIELD()             	_call_swi( 0 )
+#pragma SWI_ALIAS( vPortYield, 0 )
+extern void vPortYield( void );
+#define portYIELD()             	vPortYield()
 #define portSYS_SSIR1_REG			( * ( ( volatile unsigned long * ) 0xFFFFFFB0 ) )
 #define portSYS_SSIR1_SSKEY			( 0x7500UL )
 #define portYIELD_WITHIN_API()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
-#define portYIELD_FROM_ISR()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
+#define portYIELD_FROM_ISR( x )		if( x != pdFALSE ){ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }
 
 /* Architecture specific optimisations. */
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1

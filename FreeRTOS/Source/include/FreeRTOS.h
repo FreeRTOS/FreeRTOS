@@ -535,11 +535,11 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #endif
 
 #ifndef configPRE_SLEEP_PROCESSING
-	#define configPRE_SLEEP_PROCESSING()
+	#define configPRE_SLEEP_PROCESSING( x )
 #endif
 
 #ifndef configPOST_SLEEP_PROCESSING
-	#define configPOST_SLEEP_PROCESSING()
+	#define configPOST_SLEEP_PROCESSING( x )
 #endif
 
 #endif /* INC_FREERTOS_H */

@@ -84,15 +84,16 @@
 
 #ifndef configSYSTICK_CLOCK_HZ
 	#define configSYSTICK_CLOCK_HZ configCPU_CLOCK_HZ
-	#if configUSE_TICKLESS_IDLE == 1
-		static const unsigned long ulStoppedTimerCompensation = 45UL;
-	#endif
-#else /* configSYSTICK_CLOCK_HZ */
-	#if configUSE_TICKLESS_IDLE == 1
-		/* Assumes the SysTick clock is slower than the CPU clock. */
-		static const unsigned long ulStoppedTimerCompensation = 45UL / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
-	#endif
-#endif	/* configSYSTICK_CLOCK_HZ */
+#endif
+
+/* The __weak attribute does not work as you might expect with the Keil tools
+so the configOVERRIDE_DEFAULT_TICK_CONFIGURATION constant must be set to 1 if
+the application writer wants to provide their own implementation of 
+vPortSetupTimerInterrupt().  Ensure configOVERRIDE_DEFAULT_TICK_CONFIGURATION
+is defined. */
+#ifndef configOVERRIDE_DEFAULT_TICK_CONFIGURATION
+	#define configOVERRIDE_DEFAULT_TICK_CONFIGURATION 0
+#endif
 
 /* Constants required to manipulate the core.  Registers first... */
 #define portNVIC_SYSTICK_CTRL_REG			( * ( ( volatile unsigned long * ) 0xe000e010 ) )
@@ -125,9 +126,11 @@ variable. */
 static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 
 /*
- * Setup the timer to generate the tick interrupts.
+ * Setup the timer to generate the tick interrupts.  The implementation in this
+ * file is weak to allow application writers to change the timer used to 
+ * generate the tick interrupt.
  */
-static void prvSetupTimerInterrupt( void );
+void vPortSetupTimerInterrupt( void );
 
 /*
  * Exception handlers.
@@ -150,7 +153,9 @@ static void prvEnableVFP( void );
 /*
  * The number of SysTick increments that make up one tick period.
  */
-static unsigned long ulTimerReloadValueForOneTick = 0;
+#if configUSE_TICKLESS_IDLE == 1
+	static unsigned long ulTimerReloadValueForOneTick = 0;
+#endif
 
 /*
  * The maximum number of tick periods that can be suppressed is limited by the
@@ -158,6 +163,14 @@ static unsigned long ulTimerReloadValueForOneTick = 0;
  */
 #if configUSE_TICKLESS_IDLE == 1
 	static unsigned long xMaximumPossibleSuppressedTicks = 0;
+#endif /* configUSE_TICKLESS_IDLE */
+
+/*
+ * Compensate for the CPU cycles that pass while the SysTick is stopped (low
+ * power functionality only.
+ */
+#if configUSE_TICKLESS_IDLE == 1
+	static unsigned long ulStoppedTimerCompensation = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*-----------------------------------------------------------*/
@@ -257,7 +270,7 @@ portBASE_TYPE xPortStartScheduler( void )
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
@@ -368,6 +381,10 @@ void xPortSysTickHandler( void )
 	}
 	#endif
 
+	/* Only reset the systick load register if configUSE_TICKLESS_IDLE is set to
+	1.  If it is set to 0 tickless idle is not being used.  If it is set to a 
+	value other than 0 or 1 then a timer other than the SysTick is being used
+	to generate the tick interrupt. */
 	#if configUSE_TICKLESS_IDLE == 1
 		portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
 	#endif
@@ -431,9 +448,12 @@ void xPortSysTickHandler( void )
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 
 			/* Sleep until something happens. */
-			configPRE_SLEEP_PROCESSING();
-			__wfi();
-			configPOST_SLEEP_PROCESSING();
+			configPRE_SLEEP_PROCESSING( xExpectedIdleTime );
+			if( xExpectedIdleTime > 0 )
+			{
+				__wfi();
+			}
+			configPOST_SLEEP_PROCESSING( xExpectedIdleTime );
 
 			/* Stop SysTick.  Again, the time the SysTick is stopped for is
 			accounted for as best it can be, but using the tickless mode will
@@ -486,21 +506,28 @@ void xPortSysTickHandler( void )
 /*-----------------------------------------------------------*/
 
 /*
- * Setup the systick timer to generate the tick interrupts at the required
+ * Setup the SysTick timer to generate the tick interrupts at the required
  * frequency.
  */
-void prvSetupTimerInterrupt( void )
-{
-	/* Calculate the constants required to configure the tick interrupt. */
-	ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
-	#if configUSE_TICKLESS_IDLE == 1
-		xMaximumPossibleSuppressedTicks = 0xffffffUL / ( ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
-	#endif /* configUSE_TICKLESS_IDLE */
+#if configOVERRIDE_DEFAULT_TICK_CONFIGURATION == 0
 
-	/* Configure SysTick to interrupt at the requested rate. */
-	portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
-	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
-}
+	void vPortSetupTimerInterrupt( void )
+	{
+		/* Calculate the constants required to configure the tick interrupt. */		
+		#if configUSE_TICKLESS_IDLE == 1
+		{
+			ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
+			xMaximumPossibleSuppressedTicks = 0xffffffUL / ( ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
+			ulStoppedTimerCompensation = 45UL / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
+		}
+		#endif /* configUSE_TICKLESS_IDLE */
+	
+		/* Configure SysTick to interrupt at the requested rate. */
+		portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;;
+		portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+	}
+	
+#endif /* configOVERRIDE_DEFAULT_TICK_CONFIGURATION */
 /*-----------------------------------------------------------*/
 
 __asm unsigned long ulPortSetInterruptMask( void )
@@ -512,7 +539,6 @@ __asm unsigned long ulPortSetInterruptMask( void )
 	msr basepri, r1
 	bx r14
 }
-
 /*-----------------------------------------------------------*/
 
 __asm void vPortClearInterruptMask( unsigned long ulNewMask )

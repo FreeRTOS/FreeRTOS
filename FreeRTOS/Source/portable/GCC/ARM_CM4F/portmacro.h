@@ -111,9 +111,7 @@ extern "C" {
 
 /* Scheduler utilities. */
 extern void vPortYieldFromISR( void );
-
 #define portYIELD()					vPortYieldFromISR()
-
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYieldFromISR()
 /*-----------------------------------------------------------*/
 

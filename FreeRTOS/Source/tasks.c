@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -463,8 +463,13 @@ static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TY
 /*
  * Return the amount of time, in ticks, that will pass before the kernel will
  * next move a task from the Blocked state to the Running state.
+ *
+ * This conditional compilation should use inequality to 0, not equality to 1.
+ * This is to ensure portSUPPRESS_TICKS_AND_SLEEP() can be called when user
+ * defined low power mode implementations require configUSE_TICKLESS_IDLE to be
+ * set to a value other than 1.
  */
-#if ( configUSE_TICKLESS_IDLE == 1 )
+#if ( configUSE_TICKLESS_IDLE != 0 )
 
 	static portTickType prvGetExpectedIdleTime( void ) PRIVILEGED_FUNCTION;
 
@@ -1314,28 +1319,32 @@ void vTaskSuspendAll( void )
 }
 /*----------------------------------------------------------*/
 
-portTickType prvGetExpectedIdleTime( void )
-{
-portTickType xReturn;
+#if ( configUSE_TICKLESS_IDLE != 0 )
 
-	if( pxCurrentTCB->uxPriority > tskIDLE_PRIORITY )
+	portTickType prvGetExpectedIdleTime( void )
 	{
-		xReturn = 0;
-	}
-	else if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > 1 )
-	{
-		/* There are other idle priority tasks in the ready state.  If
-		time slicing is used then the very next tick interrupt must be
-		processed. */
-		xReturn = 0;
-	}
-	else
-	{
-		xReturn = xNextTaskUnblockTime - xTickCount;
+	portTickType xReturn;
+	
+		if( pxCurrentTCB->uxPriority > tskIDLE_PRIORITY )
+		{
+			xReturn = 0;
+		}
+		else if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ tskIDLE_PRIORITY ] ) ) > 1 )
+		{
+			/* There are other idle priority tasks in the ready state.  If
+			time slicing is used then the very next tick interrupt must be
+			processed. */
+			xReturn = 0;
+		}
+		else
+		{
+			xReturn = xNextTaskUnblockTime - xTickCount;
+		}
+	
+		return xReturn;
 	}
 
-	return xReturn;
-}
+#endif /* configUSE_TICKLESS_IDLE != 0  */
 /*----------------------------------------------------------*/
 
 signed portBASE_TYPE xTaskResumeAll( void )
@@ -1627,7 +1636,11 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 #endif
 /*----------------------------------------------------------*/
 
-#if ( configUSE_TICKLESS_IDLE == 1 )
+/* This conditional compilation should use inequality to 0, not equality to 1.
+This is to ensure vTaskStepTick() is available when user defined low power mode	
+implementations require configUSE_TICKLESS_IDLE to be set to a value other than
+1. */
+#if ( configUSE_TICKLESS_IDLE != 0 )
 
 	void vTaskStepTick( portTickType xTicksToJump )
 	{
@@ -2146,7 +2159,11 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		}
 		#endif
 
-		#if ( configUSE_TICKLESS_IDLE == 1 )
+		/* This conditional compilation should use inequality to 0, not equality
+		to 1.  This is to ensure portSUPPRESS_TICKS_AND_SLEEP() is called when
+		user defined low power mode	implementations require
+		configUSE_TICKLESS_IDLE to be set to a value other than 1. */
+		#if ( configUSE_TICKLESS_IDLE != 0 )
 		{
 		portTickType xExpectedIdleTime;
 		/* If the expected idle time is 1 then the idle time would end at
@@ -2156,34 +2173,29 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		routines returns. */
 		const portTickType xMinimumExpectedIdleTime = ( portTickType ) 2;
 
-			/* Don't enter low power if there are still tasks waiting
-			deletion. */
-			if( uxTasksDeleted == 0 )
+			/* It is not desirable to suspend then resume the scheduler on
+			each iteration of the idle task.  Therefore, a preliminary
+			test of the expected idle time is performed without the
+			scheduler suspended.  The result here is not necessarily
+			valid. */
+			xExpectedIdleTime = prvGetExpectedIdleTime();
+
+			if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
 			{
-				/* It is not desirable to suspend then resume the scheduler on
-				each iteration of the idle task.  Therefore, a preliminary
-				test of the expected idle time is performed without the
-				scheduler suspended.  The result here is not necessarily
-				valid. */
-				xExpectedIdleTime = prvGetExpectedIdleTime();
-
-				if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
+				vTaskSuspendAll();
 				{
-					vTaskSuspendAll();
-					{
-						/* Now the scheduler is suspended, the expected idle
-						time can be sampled again, and this time its value can
-						be used. */
-						configASSERT( xNextTaskUnblockTime >= xTickCount );
-						xExpectedIdleTime = prvGetExpectedIdleTime();
+					/* Now the scheduler is suspended, the expected idle
+					time can be sampled again, and this time its value can
+					be used. */
+					configASSERT( xNextTaskUnblockTime >= xTickCount );
+					xExpectedIdleTime = prvGetExpectedIdleTime();
 
-						if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
-						{
-							portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime );
-						}
+					if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
+					{
+						portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime );
 					}
-					xTaskResumeAll();
 				}
+				xTaskResumeAll();
 			}
 		}
 		#endif
@@ -2328,7 +2340,7 @@ static void prvCheckTasksWaitingTermination( void )
 
 		/* ucTasksDeleted is used to prevent vTaskSuspendAll() being called
 		too often in the idle task. */
-		if( uxTasksDeleted > ( unsigned portBASE_TYPE ) 0U )
+		while( uxTasksDeleted > ( unsigned portBASE_TYPE ) 0U )
 		{
 			vTaskSuspendAll();
 				xListIsEmpty = listLIST_IS_EMPTY( &xTasksWaitingTermination );

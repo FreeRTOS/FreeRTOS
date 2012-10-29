@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,23 +52,26 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
 /*-----------------------------------------------------------
  * Implementation of functions defined in portable.h for the ARM CM4F port.
  *----------------------------------------------------------*/
+
+/* Compiler includes. */
+#include <intrinsics.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
@@ -84,15 +87,7 @@
 
 #ifndef configSYSTICK_CLOCK_HZ
 	#define configSYSTICK_CLOCK_HZ configCPU_CLOCK_HZ
-	#if configUSE_TICKLESS_IDLE == 1
-		static const unsigned long ulStoppedTimerCompensation = 45UL;
-	#endif
-#else /* configSYSTICK_CLOCK_HZ */
-	#if configUSE_TICKLESS_IDLE == 1
-		/* Assumes the SysTick clock is slower than the CPU clock. */
-		static const unsigned long ulStoppedTimerCompensation = 45UL / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
-	#endif
-#endif	/* configSYSTICK_CLOCK_HZ */
+#endif
 
 /* Constants required to manipulate the core.  Registers first... */
 #define portNVIC_SYSTICK_CTRL_REG			( * ( ( volatile unsigned long * ) 0xe000e010 ) )
@@ -125,9 +120,11 @@ variable. */
 static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 
 /*
- * Setup the timer to generate the tick interrupts.
+ * Setup the timer to generate the tick interrupts.  The implementation in this
+ * file is weak to allow application writers to change the timer used to
+ * generate the tick interrupt.
  */
-static void prvSetupTimerInterrupt( void );
+void vPortSetupTimerInterrupt( void );
 
 /*
  * Exception handlers.
@@ -149,7 +146,9 @@ extern void vPortEnableVFP( void );
 /*
  * The number of SysTick increments that make up one tick period.
  */
-static unsigned long ulTimerReloadValueForOneTick = 0;
+#if configUSE_TICKLESS_IDLE == 1
+	static unsigned long ulTimerReloadValueForOneTick = 0;
+#endif
 
 /*
  * The maximum number of tick periods that can be suppressed is limited by the
@@ -157,6 +156,14 @@ static unsigned long ulTimerReloadValueForOneTick = 0;
  */
 #if configUSE_TICKLESS_IDLE == 1
 	static unsigned long xMaximumPossibleSuppressedTicks = 0;
+#endif /* configUSE_TICKLESS_IDLE */
+
+/*
+ * Compensate for the CPU cycles that pass while the SysTick is stopped (low
+ * power functionality only.
+ */
+#if configUSE_TICKLESS_IDLE == 1
+	static unsigned long ulStoppedTimerCompensation = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*-----------------------------------------------------------*/
@@ -205,7 +212,7 @@ portBASE_TYPE xPortStartScheduler( void )
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
@@ -262,6 +269,10 @@ void xPortSysTickHandler( void )
 		portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 	#endif
 
+	/* Only reset the systick load register if configUSE_TICKLESS_IDLE is set to
+	1.  If it is set to 0 tickless idle is not being used.  If it is set to a
+	value other than 0 or 1 then a timer other than the SysTick is being used
+	to generate the tick interrupt. */
 	#if configUSE_TICKLESS_IDLE == 1
 		portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
 	#endif
@@ -325,9 +336,12 @@ void xPortSysTickHandler( void )
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 
 			/* Sleep until something happens. */
-			configPRE_SLEEP_PROCESSING();
-			__WFI();
-			configPOST_SLEEP_PROCESSING();
+			configPRE_SLEEP_PROCESSING( xExpectedIdleTime );
+			if( xExpectedIdleTime > 0 )
+			{
+				__WFI();
+			}
+			configPOST_SLEEP_PROCESSING( xExpectedIdleTime );
 
 			/* Stop SysTick.  Again, the time the SysTick is stopped for is
 			accounted for as best it can be, but using the tickless mode will
@@ -382,16 +396,19 @@ void xPortSysTickHandler( void )
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-void prvSetupTimerInterrupt( void )
+__weak void vPortSetupTimerInterrupt( void )
 {
-	/* Configure the constants required to setup the tick interrupt. */
-	ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
+	/* Calculate the constants required to configure the tick interrupt. */		
 	#if configUSE_TICKLESS_IDLE == 1
+	{
+		ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 		xMaximumPossibleSuppressedTicks = 0xffffffUL / ( ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
+		ulStoppedTimerCompensation = 45UL / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
+	}
 	#endif /* configUSE_TICKLESS_IDLE */
 
 	/* Configure SysTick to interrupt at the requested rate. */
-	portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
+	portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;;
 	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 }
 /*-----------------------------------------------------------*/

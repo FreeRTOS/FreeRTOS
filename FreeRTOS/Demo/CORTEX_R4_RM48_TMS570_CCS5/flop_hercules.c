@@ -102,7 +102,7 @@ static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 /* These variables are used to check that all the tasks are still running.  If a 
 task gets a calculation wrong it will
 stop incrementing its check variable. */
-static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
+static volatile unsigned long ulTaskCheck[ mathNUMBER_OF_TASKS ] = { 0 };
 
 /* Must be called before any hardware floating point operations are
 performed to let the RTOS portable layer know that this task requires
@@ -115,21 +115,21 @@ a floating point context. */
 
 void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 {
-	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, NULL );
-	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math1", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 0 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math2", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 1 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math3", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 2 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math4", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 3 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math5", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 4 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math6", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 5 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math7", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 6 ] ), uxPriority, NULL );
+	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math8", mathSTACK_SIZE, ( void * ) &( ulTaskCheck[ 7 ] ), uxPriority, NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
 {
 volatile portDOUBLE d1, d2, d3, d4;
-volatile unsigned short *pusTaskCheckVariable;
+volatile unsigned long *pulTaskCheckVariable;
 volatile portDOUBLE dAnswer;
 short sError = pdFALSE;
 
@@ -149,7 +149,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pulTaskCheckVariable = ( unsigned long * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
@@ -175,7 +175,7 @@ short sError = pdFALSE;
 		{
 			/* If the calculation has always been correct, increment the check 
 			variable so we know this task is still running okay. */
-			( *pusTaskCheckVariable )++;
+			( *pulTaskCheckVariable )++;
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -189,7 +189,7 @@ short sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
 {
 volatile portDOUBLE d1, d2, d3, d4;
-volatile unsigned short *pusTaskCheckVariable;
+volatile unsigned long *pulTaskCheckVariable;
 volatile portDOUBLE dAnswer;
 short sError = pdFALSE;
 
@@ -209,7 +209,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pulTaskCheckVariable = ( unsigned long * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -236,7 +236,7 @@ short sError = pdFALSE;
 			/* If the calculation has always been correct, increment the check 
 			variable so we know
 			this task is still running okay. */
-			( *pusTaskCheckVariable )++;
+			( *pulTaskCheckVariable )++;
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -249,7 +249,7 @@ short sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
 {
 volatile portDOUBLE *pdArray, dTotal1, dTotal2, dDifference;
-volatile unsigned short *pusTaskCheckVariable;
+volatile unsigned long *pulTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
@@ -263,7 +263,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pulTaskCheckVariable = ( unsigned long * ) pvParameters;
 
 	pdArray = ( portDOUBLE * ) pvPortMalloc( xArraySize * sizeof( portDOUBLE ) );
 
@@ -304,7 +304,7 @@ short sError = pdFALSE;
 		{
 			/* If the calculation has always been correct, increment the check 
 			variable so we know	this task is still running okay. */
-			( *pusTaskCheckVariable )++;
+			( *pulTaskCheckVariable )++;
 		}
 	}
 }
@@ -313,7 +313,7 @@ short sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
 {
 volatile portDOUBLE *pdArray, dTotal1, dTotal2, dDifference;
-volatile unsigned short *pusTaskCheckVariable;
+volatile unsigned long *pulTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
@@ -327,7 +327,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pulTaskCheckVariable = ( unsigned long * ) pvParameters;
 
 	pdArray = ( portDOUBLE * ) pvPortMalloc( xArraySize * sizeof( portDOUBLE ) );
 
@@ -368,7 +368,7 @@ short sError = pdFALSE;
 		{
 			/* If the calculation has always been correct, increment the check 
 			variable so we know	this task is still running okay. */
-			( *pusTaskCheckVariable )++;
+			( *pulTaskCheckVariable )++;
 		}
 	}
 }				 
@@ -379,20 +379,20 @@ portBASE_TYPE xAreMathsTaskStillRunning( void )
 {
 /* Keep a history of the check variables so we know if they have been incremented 
 since the last call. */
-static unsigned short usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
+static unsigned long ulLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdTRUE, xTask;
 
 	/* Check the maths tasks are still running by ensuring their check variables 
 	are still incrementing. */
 	for( xTask = 0; xTask < mathNUMBER_OF_TASKS; xTask++ )
 	{
-		if( usTaskCheck[ xTask ] == usLastTaskCheck[ xTask ] )
+		if( ulTaskCheck[ xTask ] == ulLastTaskCheck[ xTask ] )
 		{
 			/* The check has not incremented so an error exists. */
 			xReturn = pdFALSE;
 		}
 
-		usLastTaskCheck[ xTask ] = usTaskCheck[ xTask ];
+		ulLastTaskCheck[ xTask ] = ulTaskCheck[ xTask ];
 	}
 
 	return xReturn;

@@ -75,7 +75,7 @@ add back in the port.c and portasm.S files that are located in the
 FreeRTOS\Source\portable\GCC\ColdFire_V1 directory.  Remove the line below
 before compiling. */
 
-//#error Read the comment above this line, then delete this error statement!
+#error Read the comment above this line, then delete this error statement!
 
 
 #ifndef FREERTOS_CONFIG_H

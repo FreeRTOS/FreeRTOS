@@ -16,24 +16,26 @@
 
 #include "sys_system.h"
 
-
-/** @fn void systemInit(void)
-*   @brief Initializes System Driver
-*
-*   This function initializes the System driver.
-*
-*/
-
+#define startupCPU_100MHZ 1
 
 void systemInit(void)
 {
     /** @b Initialize @b Flash @b Wrapper: */
 
     /** - Setup flash read mode, address wait states and data wait states */
+#if	startupCPU_100MHZ == 1
+	/* 100MHz */
+    flashWREG->FRDCNTL =  0x01000000U
+                       | (2U << 8U)
+                       | (0U << 4U)
+                       |  1U;
+#else
+    /* 180MHz */
     flashWREG->FRDCNTL =  0x01000000U 
                        | (3U << 8U) 
                        | (1U << 4U) 
                        |  1U;
+#endif
 
 #if 0
     /** - Setup flash bank power modes */
@@ -77,6 +79,15 @@ void systemInit(void)
     *     - Setup Pll multiplier          
     */
 
+#if	startupCPU_100MHZ == 1
+	/* 100MHz */
+    systemREG1->PLLCTL1 =  0x00000000U
+                        |  0x20000000U
+                        | (0U << 24U)
+                        |  0x00000000U
+                        | (5U << 16U)
+                        | (74U << 8U);
+#else
     /* 180Mhz */
     systemREG1->PLLCTL1 =  0x00000000U 
                         |  0x20000000U 
@@ -84,6 +95,7 @@ void systemInit(void)
                         |  0x00000000U 
                         | (5U << 16U) 
                         | (134U << 8U);
+#endif
 
     /** - Setup pll control register 1 
     *     - Enable/Disable frequency modulation
@@ -131,8 +143,9 @@ void systemInit(void)
                           | 1U;
 
     /** - Setup RTICLK1 and RTICLK2 clocks */
+    /* 90MHz (180Mhz/2) */
     systemREG1->RCLKSRC = (1U << 24U)
-                        | (SYS_VCLK << 16U) 
+                        | (SYS_VCLK << 16U)
                         | (1U << 8U)  
                         |  SYS_VCLK;
 

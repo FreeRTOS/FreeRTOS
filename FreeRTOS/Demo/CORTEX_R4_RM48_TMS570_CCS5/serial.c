@@ -125,6 +125,8 @@
 #define serialVIM_REQMASKSET0_REG	( * ( ( volatile unsigned long * ) 0xFFFFFE30 ) )
 #define serialVIM_SCIHINT_RAM       ( * ( ( void (**)(void) ) 0xFFF82038 ) )
 
+/* Baudrate */
+#define serialBAURATE     	19200.0			/* Baudrate in Hz */
 
 /*-----------------------------------------------------------*/
 
@@ -174,7 +176,7 @@ xComPortHandle xReturn = ( xComPortHandle ) 0;
 	    /* Global control 1 */
 		serialSCI_GCR1_REG = 0x03010032UL;
 	    /* Baudrate */
-		serialSCI_BAUD_REG = 292;
+		serialSCI_BAUD_REG = ((unsigned long)((configCPU_CLOCK_HZ / (16.0 * serialBAURATE) + 0.5)) - 1) & 0x00FFFFFF;
 	    /* Transmission length (8-bit) */
 		serialSCI_LENGTH_REG = 8 - 1;
 	    /* Set SCI pins functional mode */

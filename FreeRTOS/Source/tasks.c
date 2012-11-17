@@ -614,12 +614,12 @@ tskTCB * pxNewTCB;
 			}
 			#endif
 			uxTaskNumber++;
+			traceTASK_CREATE( pxNewTCB );
 
 			prvAddTaskToReadyQueue( pxNewTCB );
 
 			xReturn = pdPASS;
-			portSETUP_TCB( pxNewTCB );
-			traceTASK_CREATE( pxNewTCB );
+			portSETUP_TCB( pxNewTCB );			
 		}
 		taskEXIT_CRITICAL();
 	}

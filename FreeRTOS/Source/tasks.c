@@ -191,7 +191,8 @@ PRIVILEGED_DATA static volatile portTickType xNextTaskUnblockTime				= ( portTic
 
 	PRIVILEGED_DATA static char pcStatsString[ 50 ] ;
 	PRIVILEGED_DATA static unsigned long ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
-	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTime ) PRIVILEGED_FUNCTION;
+	PRIVILEGED_DATA static unsigned long ulTotalRunTime;				/*< Holds the total amount of execution time as defined by the run time counter clock. */
+	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTimeDiv100 ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -1553,7 +1554,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
 	{
 	unsigned portBASE_TYPE uxQueue;
-	unsigned long ulTotalRunTime;
+	unsigned long ulTotalRunTimeDiv100;
 
 		/* This is a VERY costly function that should be used for debug only.
 		It leaves interrupts disabled for a LONG time. */
@@ -1568,7 +1569,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 			/* Divide ulTotalRunTime by 100 to make the percentage caluclations
 			simpler in the prvGenerateRunTimeStatsForTasksInList() function. */
-			ulTotalRunTime /= 100UL;
+			ulTotalRunTimeDiv100 = ulTotalRunTime / 100UL;
 
 			/* Run through all the lists that could potentially contain a TCB,
 			generating a table of run timer percentages in the provided
@@ -1585,25 +1586,25 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 				if( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) == pdFALSE )
 				{
-					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), ulTotalRunTime );
+					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), ulTotalRunTimeDiv100 );
 				}
 			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
 			if( listLIST_IS_EMPTY( pxDelayedTaskList ) == pdFALSE )
 			{
-				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, ulTotalRunTime );
+				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, ulTotalRunTimeDiv100 );
 			}
 
 			if( listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) == pdFALSE )
 			{
-				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, ulTotalRunTime );
+				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, ulTotalRunTimeDiv100 );
 			}
 
 			#if ( INCLUDE_vTaskDelete == 1 )
 			{
 				if( listLIST_IS_EMPTY( &xTasksWaitingTermination ) == pdFALSE )
 				{
-					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, &xTasksWaitingTermination, ulTotalRunTime );
+					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, &xTasksWaitingTermination, ulTotalRunTimeDiv100 );
 				}
 			}
 			#endif
@@ -1612,7 +1613,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 			{
 				if( listLIST_IS_EMPTY( &xSuspendedTaskList ) == pdFALSE )
 				{
-					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, &xSuspendedTaskList, ulTotalRunTime );
+					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, &xSuspendedTaskList, ulTotalRunTimeDiv100 );
 				}
 			}
 			#endif
@@ -1830,12 +1831,10 @@ void vTaskSwitchContext( void )
 
 		#if ( configGENERATE_RUN_TIME_STATS == 1 )
 		{
-			unsigned long ulTempCounter;
-
 				#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
-					portALT_GET_RUN_TIME_COUNTER_VALUE( ulTempCounter );
+					portALT_GET_RUN_TIME_COUNTER_VALUE( ulTotalRunTime );
 				#else
-					ulTempCounter = portGET_RUN_TIME_COUNTER_VALUE();
+					ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
 				#endif
 
 				/* Add the amount of time the task has been running to the accumulated
@@ -1843,8 +1842,8 @@ void vTaskSwitchContext( void )
 				ulTaskSwitchedInTime.  Note that there is no overflow protection here
 				so count values are only valid until the timer overflows.  Generally
 				this will be about 1 hour assuming a 1uS timer increment. */
-				pxCurrentTCB->ulRunTimeCounter += ( ulTempCounter - ulTaskSwitchedInTime );
-				ulTaskSwitchedInTime = ulTempCounter;
+				pxCurrentTCB->ulRunTimeCounter += ( ulTotalRunTime - ulTaskSwitchedInTime );
+				ulTaskSwitchedInTime = ulTotalRunTime;
 		}
 		#endif
 
@@ -2459,7 +2458,7 @@ tskTCB *pxNewTCB;
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
-	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTime )
+	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTimeDiv100 )
 	{
 	volatile tskTCB *pxNextTCB, *pxFirstTCB;
 	unsigned long ulStatsAsPercentage;
@@ -2472,7 +2471,7 @@ tskTCB *pxNewTCB;
 			listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
 
 			/* Divide by zero check. */
-			if( ulTotalRunTime > 0UL )
+			if( ulTotalRunTimeDiv100 > 0UL )
 			{
 				/* Has the task run at all? */
 				if( pxNextTCB->ulRunTimeCounter == 0UL )
@@ -2484,8 +2483,8 @@ tskTCB *pxNewTCB;
 				{
 					/* What percentage of the total run time has the task used?
 					This will always be rounded down to the nearest integer.
-					ulTotalRunTime has already been divided by 100. */
-					ulStatsAsPercentage = pxNextTCB->ulRunTimeCounter / ulTotalRunTime;
+					ulTotalRunTimeDiv100 has already been divided by 100. */
+					ulStatsAsPercentage = pxNextTCB->ulRunTimeCounter / ulTotalRunTimeDiv100;
 
 					if( ulStatsAsPercentage > 0UL )
 					{

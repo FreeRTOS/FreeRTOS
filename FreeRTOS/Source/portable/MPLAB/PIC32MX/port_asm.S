@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,33 +52,33 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
- 
+
 #include <p32xxxx.h>
 #include <sys/asm.h>
 #include "ISR_Support.h"
- 
+
 
 	.set	nomips16
  	.set 	noreorder
- 	
+
  	.extern pxCurrentTCB
  	.extern vTaskSwitchContext
  	.extern vPortIncrementTick
 	.extern xISRStackTop
- 	
+
  	.global vPortStartFirstTask
 	.global vPortYieldISR
 	.global vPortTickInterruptHandler
@@ -89,7 +89,7 @@
  	.set		noreorder
 	.set 		noat
  	.ent		vPortTickInterruptHandler
-	
+
 vPortTickInterruptHandler:
 
 	portSAVE_CONTEXT
@@ -125,8 +125,8 @@ vPortStartFirstTask:
 
 vPortYieldISR:
 
-	/* Make room for the context. First save the current status so we can 
-	manipulate it, and the cause and EPC registers so we capture their 
+	/* Make room for the context. First save the current status so we can
+	manipulate it, and the cause and EPC registers so we capture their
 	original values in case of interrupt nesting. */
 	mfc0		k0, _CP0_CAUSE
 	addiu		sp,	sp, -portCONTEXT_SIZE
@@ -216,14 +216,13 @@ vPortYieldISR:
 	ins 		s7, $0, 10, 6
 	ori			s6, s7, ( configMAX_SYSCALL_INTERRUPT_PRIORITY << 10 ) | 1
 
-	/* This mtc0 re-enables interrupts, but only above 
+	/* This mtc0 re-enables interrupts, but only above
 	configMAX_SYSCALL_INTERRUPT_PRIORITY. */
 	mtc0		s6, _CP0_STATUS
 
 	/* Clear the software interrupt in the core. */
 	mfc0		s6, _CP0_CAUSE
-	addiu       s4,zero,-257
-	and			s6, s6, s4
+	ins			s6, zero, 8, 1
 	mtc0		s6, _CP0_CAUSE
 
 	/* Clear the interrupt in the interrupt controller. */
@@ -296,10 +295,9 @@ vPortYieldISR:
 	/* Remove stack frame. */
 	addiu		sp,	sp,	portCONTEXT_SIZE
 
-	mtc0		k1, _CP0_STATUS	
+	mtc0		k1, _CP0_STATUS
 	mtc0 		k0, _CP0_EPC
-	ehb
-	eret 
+	eret
 	nop
 
 	.end		vPortYieldISR

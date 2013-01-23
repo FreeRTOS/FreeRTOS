@@ -235,15 +235,6 @@ vPortPreemptiveTick:
 
 ;-------------------------------------------------------------------------------
 
-		.def ulPortCountLeadingZeros
-
-ulPortCountLeadingZeros:
-
-		CLZ		R0, R0
-		BX		LR
-
-;-------------------------------------------------------------------------------
-
 	.if (__TI_VFP_SUPPORT__)
 
 		.def vPortInitialiseFPSCR

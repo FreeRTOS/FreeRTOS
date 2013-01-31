@@ -207,6 +207,9 @@ extern void vPortExitCritical( void );
 
 #define portNOP()
 
+/* There are an uneven number of items on the initial stack, so 
+portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
+#define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
 
 
 #ifdef __cplusplus

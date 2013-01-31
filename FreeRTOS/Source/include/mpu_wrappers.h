@@ -85,7 +85,7 @@ only for ports that are using the MPU. */
 		#define vTaskDelay						MPU_vTaskDelay
 		#define uxTaskPriorityGet				MPU_uxTaskPriorityGet
 		#define vTaskPrioritySet				MPU_vTaskPrioritySet
-		#define eTaskStateGet					MPU_eTaskStateGet
+		#define eTaskGetState					MPU_eTaskGetState
 		#define vTaskSuspend					MPU_vTaskSuspend
 		#define xTaskIsTaskSuspended			MPU_xTaskIsTaskSuspended
 		#define vTaskResume						MPU_vTaskResume

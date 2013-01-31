@@ -139,4 +139,6 @@ version of the Win32 simulator projects.  It will be ignored in the GCC
 version. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
+#define configUSE_QUEUE_SETS 1
+
 #endif /* FREERTOS_CONFIG_H */

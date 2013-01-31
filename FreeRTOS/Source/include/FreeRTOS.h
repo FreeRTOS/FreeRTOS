@@ -161,6 +161,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define INCLUDE_xQueueGetMutexHolder 0
 #endif
 
+#ifndef INCLUDE_xSemaphoreGetMutexHolder
+	#define INCLUDE_xSemaphoreGetMutexHolder INCLUDE_xQueueGetMutexHolder
+#endif
+
 #ifndef INCLUDE_pcTaskGetTaskName
 	#define INCLUDE_pcTaskGetTaskName 0
 #endif
@@ -173,8 +177,8 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define INCLUDE_uxTaskGetStackHighWaterMark 0
 #endif
 
-#ifndef INCLUDE_eTaskStateGet
-	#define INCLUDE_eTaskStateGet 0
+#ifndef INCLUDE_eTaskGetState
+	#define INCLUDE_eTaskGetState 0
 #endif
 
 #ifndef configUSE_RECURSIVE_MUTEXES
@@ -534,6 +538,14 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )
 #endif
 
+#ifndef configEXPECTED_IDLE_TIME_BEFORE_SLEEP
+	#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 2
+#endif
+
+#if configEXPECTED_IDLE_TIME_BEFORE_SLEEP < 2
+	#error configEXPECTED_IDLE_TIME_BEFORE_SLEEP must not be less than 2
+#endif
+
 #ifndef configUSE_TICKLESS_IDLE
 	#define configUSE_TICKLESS_IDLE 0
 #endif
@@ -545,6 +557,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 #ifndef configPOST_SLEEP_PROCESSING
 	#define configPOST_SLEEP_PROCESSING( x )
 #endif
+
+/* For backward compatability. */
+#define eTaskStateGet eTaskGetState
+#define INCLUDE_eTaskStateGet INCLUDE_eTaskGetState
 
 #endif /* INC_FREERTOS_H */
 

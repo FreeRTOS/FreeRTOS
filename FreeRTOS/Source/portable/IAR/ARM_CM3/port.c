@@ -265,6 +265,7 @@ void xPortSysTickHandler( void )
 	__weak void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 	{
 	unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
+	portTickType xModifiableIdleTime;
 
 		/* Make sure the SysTick reload value does not overflow the counter. */
 		if( xExpectedIdleTime > xMaximumPossibleSuppressedTicks )
@@ -310,9 +311,14 @@ void xPortSysTickHandler( void )
 			/* Restart SysTick. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 
-			/* Sleep until something happens. */
-			configPRE_SLEEP_PROCESSING( xExpectedIdleTime );
-			if( xExpectedIdleTime > 0 )
+			/* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
+			set its parameter to 0 to indicate that its implementation contains
+			its own wait for interrupt or wait for event instruction, and so wfi
+			should not be executed again.  However, the original expected idle
+			time variable must remain unmodified, so a copy is taken. */
+			xModifiableIdleTime = xExpectedIdleTime;
+			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
+			if( xModifiableIdleTime > 0 )
 			{
 				__WFI();
 			}
@@ -373,7 +379,7 @@ void xPortSysTickHandler( void )
  */
 __weak void vPortSetupTimerInterrupt( void )
 {
-	/* Calculate the constants required to configure the tick interrupt. */		
+	/* Calculate the constants required to configure the tick interrupt. */
 	#if configUSE_TICKLESS_IDLE == 1
 	{
 		ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;

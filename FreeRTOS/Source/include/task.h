@@ -131,7 +131,7 @@ typedef struct xTASK_PARAMTERS
 	xMemoryRegion xRegions[ portNUM_CONFIGURABLE_REGIONS ];
 } xTaskParameters;
 
-/* Task states returned by eTaskStateGet. */
+/* Task states returned by eTaskGetState. */
 typedef enum
 {
 	eRunning = 0,	/* A task is querying the state of itself, so must be running. */
@@ -613,9 +613,9 @@ unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTI
 
 /**
  * task. h
- * <pre>eTaskState eTaskStateGet( xTaskHandle pxTask );</pre>
+ * <pre>eTaskState eTaskGetState( xTaskHandle pxTask );</pre>
  *
- * INCLUDE_eTaskStateGet must be defined as 1 for this function to be available.
+ * INCLUDE_eTaskGetState must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
  * Obtain the state of any task.  States are encoded by the eTaskState 
@@ -627,7 +627,7 @@ unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTI
  * state of the task might change between the function being called, and the
  * functions return value being tested by the calling task.
  */
-eTaskState eTaskStateGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
+eTaskState eTaskGetState( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h

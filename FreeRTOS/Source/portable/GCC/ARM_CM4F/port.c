@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -118,7 +118,7 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 
 /*
  * Setup the timer to generate the tick interrupts.  The implementation in this
- * file is weak to allow application writers to change the timer used to 
+ * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
  */
 void vPortSetupTimerInterrupt( void );
@@ -379,7 +379,7 @@ void xPortSysTickHandler( void )
 	#endif
 
 	/* Only reset the systick load register if configUSE_TICKLESS_IDLE is set to
-	1.  If it is set to 0 tickless idle is not being used.  If it is set to a 
+	1.  If it is set to 0 tickless idle is not being used.  If it is set to a
 	value other than 0 or 1 then a timer other than the SysTick is being used
 	to generate the tick interrupt. */
 	#if configUSE_TICKLESS_IDLE == 1
@@ -399,6 +399,7 @@ void xPortSysTickHandler( void )
 	__attribute__((weak)) void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 	{
 	unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickIncrements;
+	portTickType xModifiableIdleTime;
 
 		/* Make sure the SysTick reload value does not overflow the counter. */
 		if( xExpectedIdleTime > xMaximumPossibleSuppressedTicks )
@@ -444,9 +445,14 @@ void xPortSysTickHandler( void )
 			/* Restart SysTick. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 
-			/* Sleep until something happens. */
-			configPRE_SLEEP_PROCESSING( xExpectedIdleTime );
-			if( xExpectedIdleTime > 0 )
+			/* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
+			set its parameter to 0 to indicate that its implementation contains
+			its own wait for interrupt or wait for event instruction, and so wfi
+			should not be executed again.  However, the original expected idle
+			time variable must remain unmodified, so a copy is taken. */
+			xModifiableIdleTime = xExpectedIdleTime;
+			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
+			if( xModifiableIdleTime > 0 )
 			{
 				__asm volatile( "wfi" );
 			}
@@ -507,7 +513,7 @@ void xPortSysTickHandler( void )
  */
 __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 {
-	/* Calculate the constants required to configure the tick interrupt. */		
+	/* Calculate the constants required to configure the tick interrupt. */
 	#if configUSE_TICKLESS_IDLE == 1
 	{
 		ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;

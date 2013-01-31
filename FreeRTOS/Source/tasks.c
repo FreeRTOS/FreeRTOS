@@ -620,7 +620,7 @@ tskTCB * pxNewTCB;
 			prvAddTaskToReadyQueue( pxNewTCB );
 
 			xReturn = pdPASS;
-			portSETUP_TCB( pxNewTCB );			
+			portSETUP_TCB( pxNewTCB );
 		}
 		taskEXIT_CRITICAL();
 	}
@@ -840,9 +840,9 @@ tskTCB * pxNewTCB;
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_eTaskStateGet == 1 )
+#if ( INCLUDE_eTaskGetState == 1 )
 
-	eTaskState eTaskStateGet( xTaskHandle pxTask )
+	eTaskState eTaskGetState( xTaskHandle pxTask )
 	{
 	eTaskState eReturn;
 	xList *pxStateList;
@@ -1322,10 +1322,10 @@ void vTaskSuspendAll( void )
 
 #if ( configUSE_TICKLESS_IDLE != 0 )
 
-	portTickType prvGetExpectedIdleTime( void )
+	static portTickType prvGetExpectedIdleTime( void )
 	{
 	portTickType xReturn;
-	
+
 		if( pxCurrentTCB->uxPriority > tskIDLE_PRIORITY )
 		{
 			xReturn = 0;
@@ -1341,7 +1341,7 @@ void vTaskSuspendAll( void )
 		{
 			xReturn = xNextTaskUnblockTime - xTickCount;
 		}
-	
+
 		return xReturn;
 	}
 
@@ -1638,14 +1638,14 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 /*----------------------------------------------------------*/
 
 /* This conditional compilation should use inequality to 0, not equality to 1.
-This is to ensure vTaskStepTick() is available when user defined low power mode	
+This is to ensure vTaskStepTick() is available when user defined low power mode
 implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 1. */
 #if ( configUSE_TICKLESS_IDLE != 0 )
 
 	void vTaskStepTick( portTickType xTicksToJump )
 	{
-		configASSERT( xTicksToJump <= xNextTaskUnblockTime );
+		configASSERT( ( xTickCount + xTicksToJump ) <= xNextTaskUnblockTime );
 		xTickCount += xTicksToJump;
 	}
 
@@ -1942,7 +1942,7 @@ portTickType xTimeToWake;
 		/* Calculate the time at which the task should be woken if the event does
 		not occur.  This may overflow but this doesn't matter. */
 		xTimeToWake = xTickCount + xTicksToWait;
-		
+
 		traceTASK_DELAY_UNTIL();
 		prvAddCurrentTaskToDelayedList( xTimeToWake );
 	}
@@ -2165,13 +2165,6 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		#if ( configUSE_TICKLESS_IDLE != 0 )
 		{
 		portTickType xExpectedIdleTime;
-		/* If the expected idle time is 1 then the idle time would end at
-		the end of the current time slice.  The idle time must be at least
-		2 to ensure any pended ticks between this point and the tick being
-		stopped can be legitimately stepped over when the tick suppression
-		routines returns. */
-		const portTickType xMinimumExpectedIdleTime = ( portTickType ) 2;
-
 			/* It is not desirable to suspend then resume the scheduler on
 			each iteration of the idle task.  Therefore, a preliminary
 			test of the expected idle time is performed without the
@@ -2179,7 +2172,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 			valid. */
 			xExpectedIdleTime = prvGetExpectedIdleTime();
 
-			if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
+			if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
 			{
 				vTaskSuspendAll();
 				{
@@ -2189,7 +2182,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 					configASSERT( xNextTaskUnblockTime >= xTickCount );
 					xExpectedIdleTime = prvGetExpectedIdleTime();
 
-					if( xExpectedIdleTime >= xMinimumExpectedIdleTime )
+					if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
 					{
 						portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime );
 					}

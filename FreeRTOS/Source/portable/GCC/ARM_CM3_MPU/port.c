@@ -180,7 +180,7 @@ void MPU_vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType 
 void MPU_vTaskDelay( portTickType xTicksToDelay );
 unsigned portBASE_TYPE MPU_uxTaskPriorityGet( xTaskHandle pxTask );
 void MPU_vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority );
-eTaskState MPU_eTaskStateGet( xTaskHandle pxTask );
+eTaskState MPU_eTaskGetState( xTaskHandle pxTask );
 void MPU_vTaskSuspend( xTaskHandle pxTaskToSuspend );
 signed portBASE_TYPE MPU_xTaskIsTaskSuspended( xTaskHandle xTask );
 void MPU_vTaskResume( xTaskHandle pxTaskToResume );
@@ -223,6 +223,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
 	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
+	pxTopOfStack--; /* Offset added to ensure 8-byte alignment is maintained. */
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
@@ -736,13 +737,13 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_eTaskStateGet == 1 )
-	eTaskState MPU_eTaskStateGet( xTaskHandle pxTask )
+#if ( INCLUDE_eTaskGetState == 1 )
+	eTaskState MPU_eTaskGetState( xTaskHandle pxTask )
 	{
     portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 	eTaskState eReturn;
 
-		eReturn = eTaskStateGet( pxTask );
+		eReturn = eTaskGetState( pxTask );
         portRESET_PRIVILEGE( xRunningPrivileged );
 		return eReturn;
 	}

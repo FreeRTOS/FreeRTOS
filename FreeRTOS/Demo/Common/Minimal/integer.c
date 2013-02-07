@@ -67,34 +67,11 @@
 */
 
 /*
- * This version of integer. c is for use on systems that have limited stack
- * space and no display facilities.  The complete version can be found in
- * the Demo/Common/Full directory.
- *
- * As with the full version, the tasks created in this file are a good test 
- * of the scheduler context switch mechanism.  The processor has to access 
- * 32bit variables in two or four chunks (depending on the processor).  The low 
- * priority of these tasks means there is a high probability that a context 
- * switch will occur mid calculation.  See flop. c documentation for 
- * more information.
- *
+ * Creates one or more tasks that repeatedly perform a set of integer
+ * calculations.  The result of each run-time calculation is compared to the 
+ * known expected result - with a mismatch being indicative of an error in the
+ * context switch mechanism.
  */
-
-/*
-Changes from V1.2.1
-
-	+ The constants used in the calculations are larger to ensure the
-	  optimiser does not truncate them to 16 bits.
-
-Changes from V1.2.3
-
-	+ uxTaskCheck is now just used as a boolean.  Instead of incrementing
-	  the variable each cycle of the task, the variable is simply set to
-	  true.  sAreIntegerMathsTaskStillRunning() sets it back to false and
-	  expects it to have been set back to true by the time it is called
-	  again.
-	+ A division has been included in the calculation.
-*/
 
 #include <stdlib.h>
 

@@ -560,7 +560,6 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 /* For backward compatability. */
 #define eTaskStateGet eTaskGetState
-#define INCLUDE_eTaskStateGet INCLUDE_eTaskGetState
 
 #endif /* INC_FREERTOS_H */
 

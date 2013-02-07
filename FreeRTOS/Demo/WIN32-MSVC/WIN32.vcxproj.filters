@@ -94,6 +94,9 @@
     <ClCompile Include="..\Common\Minimal\dynamic.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Minimal\QueueSet.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

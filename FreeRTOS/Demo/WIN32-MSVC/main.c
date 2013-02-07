@@ -117,18 +117,20 @@
 #include "countsem.h"
 #include "death.h"
 #include "dynamic.h"
+#include "QueueSet.h"
 
 /* Priorities at which the tasks are created. */
-#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
-#define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
-#define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
+#define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 1 )
+#define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 1 )
+#define mainSEM_TEST_PRIORITY			( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainCREATOR_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
+#define mainFLASH_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
+#define mainuIP_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainINTEGER_TASK_PRIORITY		( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY		( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainQUEUE_SET_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
 #define mainTIMER_TEST_PERIOD			( 50 )
 
@@ -165,6 +167,7 @@ int main( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
+	vStartQueueSetTasks( mainQUEUE_SET_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation.  This then allows them to 
@@ -249,6 +252,10 @@ const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
 		else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Dynamic\r\n";
+		}
+		else if( xAreQueueSetTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Queue set\r\n";
 		}
 
 		/* This is the only task that uses stdout so its ok to call printf() 

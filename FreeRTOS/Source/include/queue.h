@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -82,12 +82,18 @@ extern "C" {
 #include "mpu_wrappers.h"
 
 /**
- * Type by which queues are referenced.  For example, a call to xQueueCreate
- * returns (via a pointer parameter) an xQueueHandle variable that can then
- * be used as a parameter to xQueueSend(), xQueueReceive(), etc.
+ * Type by which queues are referenced.  For example, a call to xQueueCreate()
+ * returns an xQueueHandle variable that can then be used as a parameter to
+ * xQueueSend(), xQueueReceive(), etc.
  */
 typedef void * xQueueHandle;
 
+/**
+ * Type by which queue sets are referenced.  For example, a call to
+ * xQueueSetCreate() returns an xQueueSet variable that can then be used as a
+ * parameter to xQueueReadMultiple(), xQueueAddToQueueSet(), etc.
+ */
+typedef void * xQueueSetHandle;
 
 /* For internal use only. */
 #define	queueSEND_TO_BACK	( 0 )
@@ -1236,8 +1242,8 @@ signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQue
 signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait );
 
 /*
- * For internal use only.  Use xSemaphoreCreateMutex(), 
- * xSemaphoreCreateCounting() or xSemaphoreGetMutexHolder() instead of calling 
+ * For internal use only.  Use xSemaphoreCreateMutex(),
+ * xSemaphoreCreateCounting() or xSemaphoreGetMutexHolder() instead of calling
  * these functions directly.
  */
 xQueueHandle xQueueCreateMutex( unsigned char ucQueueType );
@@ -1284,10 +1290,127 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
 #endif
 
 /*
- * Generic version of the queue creation function, which is in turn called by 
+ * Generic version of the queue creation function, which is in turn called by
  * any queue, semaphore or mutex creation function or macro.
  */
 xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType );
+
+/*
+ * Queue sets provide a mechanism to allow a task to block (pend) on a read
+ * operation from multiple queues or semaphores simultaneously.
+ *
+ * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
+ * function.
+ *
+ * A queue set must be explicitly created using a call to xQueueSetCreate()
+ * before it can be used.  Once created, standard FreeRTOS queues and semaphores
+ * can be added to the set using calls to xQueueAddToQueueSet().
+ * xQueueReadMultiple() is then used to determine which, if any, of the queues
+ * or semaphores contained in the set is in a state where a queue read or
+ * semaphore take operation would be successful.
+ *
+ * Note 1:  See the documentation on http://wwwFreeRTOS.org for reasons why
+ * queue sets are very rarely needed in practice as there are simpler
+ * alternatives.  Queue sets are provided to allow FreeRTOS to be integrated
+ * with legacy third party driver code.
+ *
+ * Note 2:  Blocking on a queue set that contains a mutex will not cause the
+ * mutex holder to inherit the priority of the blocked task.
+ *
+ * Note 3:  An additional 4 bytes of RAM is required for each space in a every
+ * queue added to a queue set.  Therefore counting semaphores with large maximum
+ * counts should not be added to queue sets.
+ *
+ * @param uxEventQueueLength Queue sets themselves queue events that occur on
+ * the queues and semaphores contained in the set.  uxEventQueueLength specifies
+ * the maximum number of events that can be queued at once.  To be absolutely
+ * certain that events are not lost uxEventQueueLength should be set to the
+ * total sum of the length of the queues added to the set, where binary
+ * semaphores and mutexes have a length of 1, and counting semaphores have a
+ * length set by their maximum count value.  Examples:
+ *  + If a queue set is to hold a queue of length 5, another queue of length 12,
+ *    and a binary semaphore, then uxEventQueueLength should be set to
+ *    (5 + 12 + 1), or 18.
+ *  + If a queue set is to hold three binary semaphores then uxEventQueueLength
+ *    should be set to (1 + 1 + 1 ), or 3.
+ *  + If a queue set is to hold a counting semaphore that has a maximum count of
+ *    5, and a counting semaphore that has a maximum count of 3, then
+ *    uxEventQueueLength should be set to (5 + 3), or 8.
+ *
+ * @return If the queue set is created successfully then a handle to the created
+ * queue set is returned.  Otherwise NULL is returned.
+ */
+xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength );
+
+/*
+ * Adds a queue or semaphore to a queue set that was previously created by a
+ * call to xQueueSetCreate().
+ *
+ * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
+ * function.
+ *
+ * @param xQueue The handle of the queue or semaphore being added to the
+ * queue set.  Variables of type xSemaphoreHandle can be safely added to a
+ * queue set but may require casting to an xQueueHandle type to avoid compiler
+ * warnings.
+ *
+ * @param xQueueSet The handle of the queue set to which the queue or semaphore
+ * is being added.
+ *
+ * @return If the queue or semaphore was successfully added to the queue set 
+ * then pdPASS is returned.  If the queue could not be successfully added to the 
+ * queue set because it is already a member of a different queue set then pdFAIL 
+ * is returned.
+ */
+portBASE_TYPE xQueueAddToQueueSet( xQueueHandle xQueue, xQueueSetHandle xQueueSet );
+
+/*
+ * Removes a queue or semaphore from a queue set.
+ *
+ * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
+ * function.
+ *
+ * @param xQueue The handle of the queue or semaphore being removed from the
+ * queue set.  Variables of type xSemaphoreHandle can be safely used but may 
+ * require casting to an xQueueHandle type to avoid compiler warnings.
+ *
+ * @param xQueueSet The handle of the queue set in which the queue or semaphore
+ * is included.
+ *
+ * @return If the queue or semaphore was successfully removed from the queue set 
+ * then pdPASS is returned.  If the queue was not in the queue set then pdFAIL
+ * is returned.
+ */
+portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetHandle xQueueSet, xQueueHandle xQueue );
+
+/*
+ * xQueueReadMultiple() allows a task to block (pend) on a read operation on
+ * all the queues and semaphores in a queue set simultaneously.
+ *
+ * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
+ * function.
+ *
+ * Note 1:  See the documentation on http://wwwFreeRTOS.org for reasons why
+ * queue sets are very rarely needed in practice as there are simpler
+ * alternatives.  Queue sets are provided to allow FreeRTOS to be integrated
+ * with legacy third party driver code.
+ *
+ * Note 2:  Blocking on a queue set that contains a mutex will not cause the
+ * mutex holder to inherit the priority of the blocked task.
+ *
+ * @param xQueueSet The queue set on which the task will (potentially) block.
+ *
+ * @param xBlockTimeTicks The maximum time, in ticks, that the calling task will
+ * remain in the Blocked state (with other tasks executing) to wait for a member
+ * of the queue set to be ready for a successful queue read or semaphore take
+ * operation.
+ *
+ * @return xQueueReadMultiple() will return the handle of a queue contained 
+ * in the queue set that contains data, or the handle of a semaphore contained
+ * in the queue set that is available, or NULL if no such queue or semaphore 
+ * exists before before the specified block time expires.
+ */
+xQueueHandle xQueueReadMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
 
 /* Not public API functions. */
 void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );

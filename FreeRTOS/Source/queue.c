@@ -1385,6 +1385,18 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 				{
 					#if ( configUSE_QUEUE_SETS == 1 )
 					{
+						/* It is highly unlikely that this code will ever run,
+						for the following reason:
+						  + A task will only lock a queue that is part of a
+						    queue set when it is blocking on a write to the
+							queue.
+						  + An interrupt can only add something to a queue
+						    while the queue is locked (resulting in the
+							following code executing when the queue is unlocked)
+							if the queue is not full, meaning a task will never
+							have blocked on a write in the first place.
+						 The code could execute if an interrupt is also removing
+						 items from a queue. */
 						if( pxQueue->pxQueueSetContainer != NULL )
 						{
 							if( prvNotifyQueueSetContainer( pxQueue, queueSEND_TO_BACK ) == pdTRUE )

@@ -86,9 +86,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Standard demo includes - just needed for the LED (ParTest) initialisation
-function. */
+/* Standard demo includes. */
 #include "partest.h"
+#include "QueueSet.h"
 
 /* Atmel library includes. */
 #include <asf.h>
@@ -197,6 +197,23 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* This function will be called by each tick interrupt if
+	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	added here, but the tick hook is called from an interrupt context, so
+	code must not attempt to block, and only the interrupt safe FreeRTOS API
+	functions can be used (those that end in FromISR()).  */
+
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+	{
+		/* In this case the tick hook is used as part of the queue set test. */
+		vQueueSetWriteToQueueFromISR();
+	}
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 

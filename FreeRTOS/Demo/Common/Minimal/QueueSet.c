@@ -79,8 +79,11 @@
  * queuesetINITIAL_ISR_TX_VALUE to 0xffffffffUL;
  */
 
+/* Standard includes. */
+#include <stdlib.h>
+
 /* Kernel includes. */
-#include <FreeRTOS.h>
+#include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 
@@ -245,7 +248,7 @@ static unsigned long ulCallCount = 0;
 				if( xQueues[ x ] != NULL )
 				{
 					/* xQueues[ x ] can be written to.  Send the next value. */
-					if( xQueueSendFromISR( xQueues[ x ], &ulISRTxValue, NULL ) == pdPASS )
+					if( xQueueSendFromISR( xQueues[ x ], ( void * ) &ulISRTxValue, NULL ) == pdPASS )
 					{
 						ulISRTxValue++;
 

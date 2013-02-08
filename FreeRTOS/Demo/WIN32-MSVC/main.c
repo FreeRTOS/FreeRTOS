@@ -130,7 +130,6 @@
 #define mainINTEGER_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY			( tskIDLE_PRIORITY )
-#define mainQUEUE_SET_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
 #define mainTIMER_TEST_PERIOD			( 50 )
 
@@ -167,7 +166,7 @@ int main( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
-	vStartQueueSetTasks( mainQUEUE_SET_TASK_PRIORITY );
+	vStartQueueSetTasks();
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation.  This then allows them to 
@@ -406,6 +405,10 @@ void vApplicationTickHook( void )
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
 	vTimerPeriodicISRTests();
+
+	/* Write to a queue that is in use as part of the queue set demo to 
+	demonstrate using queue sets from an ISR. */
+	vQueueSetWriteToQueueFromISR();
 }
 /*-----------------------------------------------------------*/
 

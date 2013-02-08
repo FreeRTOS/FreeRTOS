@@ -91,10 +91,17 @@ typedef void * xQueueHandle;
 /**
  * Type by which queue sets are referenced.  For example, a call to
  * xQueueSetCreate() returns an xQueueSet variable that can then be used as a
- * parameter to xQueueReadMultiple(), xQueueAddToQueueSet(), etc.
+ * parameter to xQueueBlockMultiple(), xQueueAddToQueueSet(), etc.
  */
 typedef void * xQueueSetHandle;
 
+/**
+ * Queue sets can contain both queues and semaphores, so the 
+ * xQueueSetMemberHandle is defined as a type to be used where a parameter or
+ * return value can be either an xQueueHandle or an xSemaphoreHandle.
+ */
+typedef void * xQueueSetMemberHandle;
+ 
 /* For internal use only. */
 #define	queueSEND_TO_BACK	( 0 )
 #define	queueSEND_TO_FRONT	( 1 )
@@ -1305,7 +1312,7 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * A queue set must be explicitly created using a call to xQueueSetCreate()
  * before it can be used.  Once created, standard FreeRTOS queues and semaphores
  * can be added to the set using calls to xQueueAddToQueueSet().
- * xQueueReadMultiple() is then used to determine which, if any, of the queues
+ * xQueueBlockMultiple() is then used to determine which, if any, of the queues
  * or semaphores contained in the set is in a state where a queue read or
  * semaphore take operation would be successful.
  *
@@ -1349,10 +1356,8 @@ xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength );
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * @param xQueue The handle of the queue or semaphore being added to the
- * queue set.  Variables of type xSemaphoreHandle can be safely added to a
- * queue set but may require casting to an xQueueHandle type to avoid compiler
- * warnings.
+ * @param xQueueOrSemaphore The handle of the queue or semaphore being added to 
+ * the queue set (cast to an xQueueSetMemberHandle type).
  *
  * @param xQueueSet The handle of the queue set to which the queue or semaphore
  * is being added.
@@ -1362,7 +1367,7 @@ xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength );
  * queue set because it is already a member of a different queue set then pdFAIL 
  * is returned.
  */
-portBASE_TYPE xQueueAddToQueueSet( xQueueHandle xQueue, xQueueSetHandle xQueueSet );
+portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*
  * Removes a queue or semaphore from a queue set.
@@ -1370,9 +1375,8 @@ portBASE_TYPE xQueueAddToQueueSet( xQueueHandle xQueue, xQueueSetHandle xQueueSe
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * @param xQueue The handle of the queue or semaphore being removed from the
- * queue set.  Variables of type xSemaphoreHandle can be safely used but may 
- * require casting to an xQueueHandle type to avoid compiler warnings.
+ * @param xQueueOrSemaphore The handle of the queue or semaphore being removed 
+ * from the queue set (cast to an xQueueSetMemberHandle type).
  *
  * @param xQueueSet The handle of the queue set in which the queue or semaphore
  * is included.
@@ -1381,10 +1385,10 @@ portBASE_TYPE xQueueAddToQueueSet( xQueueHandle xQueue, xQueueSetHandle xQueueSe
  * then pdPASS is returned.  If the queue was not in the queue set then pdFAIL
  * is returned.
  */
-portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetHandle xQueueSet, xQueueHandle xQueue );
+portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*
- * xQueueReadMultiple() allows a task to block (pend) on a read operation on
+ * xQueueBlockMultiple() allows a task to block (pend) on a read operation on
  * all the queues and semaphores in a queue set simultaneously.
  *
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
@@ -1405,12 +1409,13 @@ portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetHandle xQueueSet, xQueueHandle 
  * of the queue set to be ready for a successful queue read or semaphore take
  * operation.
  *
- * @return xQueueReadMultiple() will return the handle of a queue contained 
- * in the queue set that contains data, or the handle of a semaphore contained
+ * @return xQueueBlockMultiple() will return the handle of a queue (cast to
+ * a xQueueSetMemberHandle type) contained in the queue set that contains data, 
+ * or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained
  * in the queue set that is available, or NULL if no such queue or semaphore 
  * exists before before the specified block time expires.
  */
-xQueueHandle xQueueReadMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
+xQueueSetMemberHandle xQueueBlockMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
 
 /* Not public API functions. */
 void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );

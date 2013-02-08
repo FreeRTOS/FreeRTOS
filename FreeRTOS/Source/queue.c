@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -148,15 +148,22 @@ typedef struct QueueDefinition
 /*-----------------------------------------------------------*/
 
 /*
- * Inside this file xQueueHandle is a pointer to a xQUEUE structure.
- * To keep the definition private the API header file defines it as a
- * pointer to void.
+ * Inside this file xQueueHandle and xQueueSetHandle are both pointers to xQUEUE
+ * structures.  To keep the definition private the API header file defines both
+ * as pointers to void.
  */
 typedef xQUEUE * xQueueHandle;
 typedef xQUEUE * xQueueSetHandle;
 
+/**
+ * Queue sets can contain both queues and semaphores, so the
+ * xQueueSetMemberHandle is defined as a type to be used where a parameter or
+ * return value can be either an xQueueHandle or an xSemaphoreHandle.
+ */
+typedef xQUEUE * xQueueSetMemberHandle;
+
 /*
- * In order to implement strict data hiding, the queue.h header file defines 
+ * In order to implement strict data hiding, the queue.h header file defines
  * xQueueHandle and xQueueSetHandle as pointers to void.  In this file
  * xQueueHandle and xQueueSetHandle are defined as pointers to xQUEUE objects.
  * Therefore the queue.h header file cannot be included in this source file,
@@ -185,9 +192,9 @@ unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue ) PRIVILEGED_FUNCTION;
 xTaskHandle xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;
 xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength ) PRIVILEGED_FUNCTION;
-xQueueHandle xQueueReadMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueAddToQueueSet( xQueueHandle xQueue, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetHandle xQueueSet, xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
+xQueueSetMemberHandle xQueueBlockMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
 
 /*
  * Co-routine queue functions differ from task queue functions.  Co-routines are
@@ -266,7 +273,7 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
 	 * the queue set that the queue contains data.
 	 */
-	static portBASE_TYPE prvCheckForMembershipOfQueueSet( xQUEUE *pxQueue, portBASE_TYPE xCopyPosition );
+	static portBASE_TYPE prvNotifyQueueSetContainer( xQUEUE *pxQueue, portBASE_TYPE xCopyPosition );
 #endif
 
 /*-----------------------------------------------------------*/
@@ -361,7 +368,7 @@ xQueueHandle xReturn = NULL;
 				pxNewQueue->uxLength = uxQueueLength;
 				pxNewQueue->uxItemSize = uxItemSize;
 				xQueueGenericReset( pxNewQueue, pdTRUE );
-				
+
 				#if ( configUSE_TRACE_FACILITY == 1 )
 				{
 					pxNewQueue->ucQueueType = ucQueueType;
@@ -640,12 +647,15 @@ xTimeOutType xTimeOut;
 				{
 					#if ( configUSE_QUEUE_SETS == 1 )
 					{
-						if( prvCheckForMembershipOfQueueSet( pxQueue, xCopyPosition ) == pdTRUE )
+						if( pxQueue->pxQueueSetContainer != NULL )
 						{
-							/* The queue is a member of a queue set, and posting to
-							the queue set caused a higher priority task to unblock.
-							A context switch is required. */
-							portYIELD_WITHIN_API();
+							if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) == pdTRUE )
+							{
+								/* The queue is a member of a queue set, and posting to
+								the queue set caused a higher priority task to unblock.
+								A context switch is required. */
+								portYIELD_WITHIN_API();
+							}
 						}
 					}
 					#endif /* configUSE_QUEUE_SETS */
@@ -985,7 +995,16 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 					{
 						if( pxQueue->pxQueueSetContainer != NULL )
 						{
-							xQueueGenericSendFromISR( pxQueue->pxQueueSetContainer, &pxQueue, pxHigherPriorityTaskWoken, queueSEND_TO_BACK );
+							if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) == pdTRUE )
+							{
+								/* The queue is a member of a queue set, and posting
+								to the queue set caused a higher priority task to
+								unblock.  A context switch is required. */
+								if( pxHigherPriorityTaskWoken != NULL )
+								{
+									*pxHigherPriorityTaskWoken = pdTRUE;
+								}
+							}
 						}
 					}
 					#endif /* configUSE_QUEUE_SETS */
@@ -1068,7 +1087,7 @@ signed char *pcOriginalReadPosition;
 				{
 					traceQUEUE_PEEK( pxQueue );
 
-					/* The data is not being removed, so reset the read	
+					/* The data is not being removed, so reset the read
 					pointer. */
 					pxQueue->pcReadFrom = pcOriginalReadPosition;
 
@@ -1083,17 +1102,6 @@ signed char *pcOriginalReadPosition;
 							/* The task waiting has a higher priority than this task. */
 							portYIELD_WITHIN_API();
 						}
-					}
-					else
-					{
-						#if ( configUSE_QUEUE_SETS == 1 )
-						{
-							if( pxQueue->pxQueueSetContainer != NULL )
-							{
-								xQueueGenericSend( pxQueue->pxQueueSetContainer, &pxQueue, 0, queueSEND_TO_BACK );
-							}
-						}
-						#endif /* configUSE_QUEUE_SETS */
 					}
 				}
 
@@ -1379,10 +1387,11 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 					{
 						if( pxQueue->pxQueueSetContainer != NULL )
 						{
-							portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-							xQueueGenericSendFromISR( pxQueue->pxQueueSetContainer, &pxQueue, &xHigherPriorityTaskWoken, queueSEND_TO_BACK );
-							if( xHigherPriorityTaskWoken != pdFALSE )
+							if( prvNotifyQueueSetContainer( pxQueue, queueSEND_TO_BACK ) == pdTRUE )
 							{
+								/* The queue is a member of a queue set, and posting to
+								the queue set caused a higher priority task to unblock.
+								A context switch is required. */
 								vTaskMissedYield();
 							}
 						}
@@ -1784,11 +1793,11 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	portBASE_TYPE xQueueAddToQueueSet( xQueueHandle xQueue, xQueueSetHandle xQueueSet )
+	portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
 	{
 	portBASE_TYPE xReturn;
 
-		if( xQueue->pxQueueSetContainer != NULL )
+		if( xQueueOrSemaphore->pxQueueSetContainer != NULL )
 		{
 			xReturn = pdFAIL;
 		}
@@ -1796,7 +1805,7 @@ signed portBASE_TYPE xReturn;
 		{
 			taskENTER_CRITICAL();
 			{
-				xQueue->pxQueueSetContainer = xQueueSet;
+				xQueueOrSemaphore->pxQueueSetContainer = xQueueSet;
 			}
 			taskEXIT_CRITICAL();
 			xReturn = pdPASS;
@@ -1810,11 +1819,11 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetHandle xQueueSet, xQueueHandle xQueue )
+	portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
 	{
 	portBASE_TYPE xReturn;
 
-		if( xQueue->pxQueueSetContainer != xQueueSet )
+		if( xQueueOrSemaphore->pxQueueSetContainer != xQueueSet )
 		{
 			xReturn = pdFAIL;
 		}
@@ -1822,7 +1831,7 @@ signed portBASE_TYPE xReturn;
 		{
 			taskENTER_CRITICAL();
 			{
-				xQueue->pxQueueSetContainer = NULL;
+				xQueueOrSemaphore->pxQueueSetContainer = NULL;
 			}
 			taskEXIT_CRITICAL();
 			xReturn = pdPASS;
@@ -1836,10 +1845,10 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	xQueueHandle xQueueReadMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks )
+	xQueueSetMemberHandle xQueueBlockMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks )
 	{
-	xQueueHandle xReturn = NULL;
-	
+	xQueueSetMemberHandle xReturn = NULL;
+
 		xQueueGenericReceive( ( xQueueHandle ) xQueueSet, &xReturn, xBlockTimeTicks, pdFALSE );
 		return xReturn;
 	}
@@ -1849,23 +1858,23 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	static portBASE_TYPE prvCheckForMembershipOfQueueSet( xQUEUE *pxQueue, portBASE_TYPE xCopyPosition )
+	static portBASE_TYPE prvNotifyQueueSetContainer( xQUEUE *pxQueue, portBASE_TYPE xCopyPosition )
 	{
 	xQUEUE *pxQueueSetContainer = pxQueue->pxQueueSetContainer;
 	portBASE_TYPE xReturn = pdFALSE;
 
-		if( pxQueueSetContainer != NULL )
+		configASSERT( pxQueueSetContainer );
+		configASSERT( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength );
+
+		if( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength )
 		{
-			if( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength )
+			prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
+			if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
 			{
-				prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
-				if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
+				if( xTaskRemoveFromEventList( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) != pdFALSE )
 				{
-					if( xTaskRemoveFromEventList( &( pxQueue->pxQueueSetContainer->xTasksWaitingToReceive ) ) != pdFALSE )
-					{
-						/* The task waiting has a higher priority */
-						xReturn = pdTRUE;
-					}
+					/* The task waiting has a higher priority */
+					xReturn = pdTRUE;
 				}
 			}
 		}

@@ -69,9 +69,10 @@
 #ifndef QUEUE_WAIT_MULTIPLE_H
 #define QUEUE_WAIT_MULTIPLE_H
 
-void vStartQueueSetTasks( unsigned portBASE_TYPE uxPriority );
+void vStartQueueSetTasks( void );
 portBASE_TYPE xAreQueueSetTasksStillRunning( void );
+void vQueueSetWriteToQueueFromISR( void );
 
-#endif
+#endif /* QUEUE_WAIT_MULTIPLE_H */
 
 

@@ -7,7 +7,7 @@
     <Name>$(MSBuildProjectName)</Name>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
-    <AsfVersion>3.1.3</AsfVersion>
+    <AsfVersion>2.11.1</AsfVersion>
     <AsfFrameworkConfig>
       <framework-data>
         <options>
@@ -154,19 +154,19 @@
     <avrtoolinterface>JTAG</avrtoolinterface>
     <avrtool>com.atmel.avrdbg.tool.samice</avrtool>
     <com_atmel_avrdbg_tool_samice>
-      <ToolType xmlns="">com.atmel.avrdbg.tool.samice</ToolType>
-      <ToolName xmlns="">SAM-ICE</ToolName>
-      <ToolNumber xmlns="">000158000789</ToolNumber>
-      <KeepTimersRunning xmlns="">true</KeepTimersRunning>
-      <OverrideVtor xmlns="">false</OverrideVtor>
-      <OverrideVtorValue xmlns="">
+      <ToolType>com.atmel.avrdbg.tool.samice</ToolType>
+      <ToolName>J-Link</ToolName>
+      <ToolNumber>000158008149</ToolNumber>
+      <KeepTimersRunning>true</KeepTimersRunning>
+      <OverrideVtor>false</OverrideVtor>
+      <OverrideVtorValue>
       </OverrideVtorValue>
-      <Channel xmlns="">
+      <Channel>
         <host>127.0.0.1</host>
-        <port>3166</port>
+        <port>1637</port>
         <ssl>False</ssl>
       </Channel>
-      <ToolOptions xmlns="">
+      <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
           <JtagDbgClock>4000000</JtagDbgClock>
@@ -423,6 +423,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\Common-Demo-Source\include\demo_serial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\QueueSet.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\serial.c">

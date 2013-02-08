@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -79,8 +79,8 @@
  ******************************************************************************
  *
  * main_full() creates all the demo application tasks and a software timer, then
- * starts the scheduler.  The web documentation provides more details of the 
- * standard demo application tasks, which provide no particular functionality, 
+ * starts the scheduler.  The web documentation provides more details of the
+ * standard demo application tasks, which provide no particular functionality,
  * but do provide a good example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
@@ -88,18 +88,18 @@
  *
  * "Check" timer - The check software timer period is initially set to three
  * seconds.  The callback function associated with the check software timer
- * checks that all the standard demo tasks are not only still executing, but 
- * are executing without reporting any errors.  If the check software timer 
- * discovers that a task has either stalled, or reported an error, then it 
- * changes its own execution period from the initial three seconds, to just 
- * 200ms.  The check software timer callback function also toggles the green 
- * LED each time it is called.  This provides a visual indication of the system 
- * status:  If the green LED toggles every three seconds, then no issues have 
- * been discovered.  If the green LED toggles every 200ms, then an issue has 
+ * checks that all the standard demo tasks are not only still executing, but
+ * are executing without reporting any errors.  If the check software timer
+ * discovers that a task has either stalled, or reported an error, then it
+ * changes its own execution period from the initial three seconds, to just
+ * 200ms.  The check software timer callback function also toggles the green
+ * LED each time it is called.  This provides a visual indication of the system
+ * status:  If the green LED toggles every three seconds, then no issues have
+ * been discovered.  If the green LED toggles every 200ms, then an issue has
  * been discovered with at least one task.
  *
  * See the documentation page for this demo on the FreeRTOS.org web site for
- * full information, including hardware setup requirements. 
+ * full information, including hardware setup requirements.
  */
 
 /* Standard includes. */
@@ -125,7 +125,7 @@
 #include "flash_timer.h"
 #include "partest.h"
 #include "comtest2.h"
-
+#include "QueueSet.h"
 
 /* Atmel library includes. */
 #include "asf.h"
@@ -194,7 +194,8 @@ xTimerHandle xCheckTimer = NULL;
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartLEDFlashTimers( mainNUMBER_OF_FLASH_TIMERS_LEDS );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	
+	vStartQueueSetTasks();
+
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
 	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
@@ -202,27 +203,27 @@ xTimerHandle xCheckTimer = NULL;
 								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */
 								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
-							  );	
-	
+							  );
+
 	if( xCheckTimer != NULL )
 	{
 		xTimerStart( xCheckTimer, mainDONT_BLOCK );
 	}
 
-	/* The set of tasks created by the following function call have to be 
-	created last as they keep account of the number of tasks they expect to see 
+	/* The set of tasks created by the following function call have to be
+	created last as they keep account of the number of tasks they expect to see
 	running. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
-	
+
 	/* If all is well, the scheduler will now be running, and the following line
 	will never be reached.  If the following line does execute, then there was
 	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
 	to be created.  See the memory management section on the FreeRTOS web site
 	for more details. */
-	for( ;; );	
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -278,8 +279,13 @@ unsigned long ulErrorFound = pdFALSE;
 	{
 		ulErrorFound = pdTRUE;
 	}
-	
+
 	if( xAreComTestTasksStillRunning() != pdTRUE )
+	{
+		ulErrorFound = pdTRUE;
+	}
+
+	if( xAreQueueSetTasksStillRunning() != pdPASS )
 	{
 		ulErrorFound = pdTRUE;
 	}
@@ -288,7 +294,7 @@ unsigned long ulErrorFound = pdFALSE;
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
 	vParTestToggleLED( mainCHECK_LED );
-	
+
 	/* Have any errors been latch in ulErrorFound?  If so, shorten the
 	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
 	This will result in an increase in the rate at which mainCHECK_LED
@@ -298,13 +304,25 @@ unsigned long ulErrorFound = pdFALSE;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-			
+
 			/* This call to xTimerChangePeriod() uses a zero block time.
 			Functions called from inside of a timer callback function must
 			*never* attempt	to block. */
 			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 		}
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* This function will be called by each tick interrupt if
+	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	added here, but the tick hook is called from an interrupt context, so
+	code must not attempt to block, and only the interrupt safe FreeRTOS API
+	functions can be used (those that end in FromISR()).  In this case the tick
+	hook is used as part of the queue set test. */
+	vQueueSetWriteToQueueFromISR();
 }
 /*-----------------------------------------------------------*/
 

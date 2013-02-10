@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcConfig.h
  *
@@ -38,10 +38,10 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
 #ifndef TRCCONFIG_H
@@ -61,11 +61,30 @@
  * vTracePrintF may use multiple records depending on the number of data args.
  ******************************************************************************/
 
-#ifdef WIN32
-    #define EVENT_BUFFER_SIZE 3000
-#else
-    #define EVENT_BUFFER_SIZE 1000 /* Adjust wrt. to available RAM */
-#endif
+#define EVENT_BUFFER_SIZE 1000 /* Adjust wrt. to available RAM */
+
+
+/*******************************************************************************
+ * USE_LINKER_PRAGMA
+ *
+ * Macro which should be defined as an integer value, default is 0.
+ *
+ * If this is 1, the header file "recorderdata_linker_pragma.h" is included just
+ * before the declaration of RecorderData (in trcBase.c), i.e., the trace data 
+ * structure. This allows the user to specify a pragma with linker options. 
+ *
+ * Example (for IAR Embedded Workbench and NXP LPC17xx):
+ * #pragma location="AHB_RAM_MEMORY"
+ * 
+ * This example instructs the IAR linker to place RecorderData in another RAM 
+ * bank, the AHB RAM. This can also be used for other compilers with a similar
+ * pragmas for linker options.
+ * 
+ * Note that this only applies if using static allocation, see below.
+ ******************************************************************************/
+
+#define USE_LINKER_PRAGMA 0
+
 
 /*******************************************************************************
  * SYMBOL_TABLE_SIZE
@@ -97,17 +116,20 @@
  * routine, which makes the error message appear when opening the trace data
  * in FreeRTOS+Trace. If you are using the recorder status monitor task,
  * any error messages are displayed in console prints, assuming that the
- * print macro has been defined properly (vConsolePrintMessage).
- * 
- * NOTE 2: If you include the monitor task (USE_TRACE_PROGRESS_MONITOR_TASK)
- * make sure to dimension NTask with this task accounted for.
+ * print macro has been defined properly (vConsolePrintMessage). 
  *
- * Also remember to account for all tasks created by FreeRTOS, such as the 
+ * It can be wise to start with very large values for these constants, 
+ * unless you are very confident on these numbers. Then do a recording and
+ * check the actual usage in FreeRTOS+Trace. This is shown by selecting
+ * View -> Trace Details -> Resource Usage -> Object Table
+ * 
+ * NOTE 2: Remember to account for all tasks created by FreeRTOS, such as the 
  * IDLE task, the FreeRTOS timer task, and any tasks created by other 3rd party 
- * software components, such as communication stacks.
- * Moreover, one task slot is used to indicate "(startup)", i.e., a "task" that 
- * represent the time before the first task starts. NTask should thus be at 
- * least 2-3 slots larger than your application task count.
+ * software components, such as communication stacks. The recorder also has an 
+ * optional monitor task to account for, if this is used.
+ * Moreover, one task slot is used to indicate "(startup)", i.e., a fictive 
+ * task that represent the time before the FreeRTOS scheduler starts. 
+ * NTask should thus be at least 2-3 slots larger than your application task count.
  *
  * NOTE 3: The FreeRTOS timer task creates a Queue, that should be accounted 
  * for in NQueue.
@@ -205,6 +227,18 @@
  * for User Events, they are not displayed in FreeRTOS+Trace Free Edition.
  *****************************************************************************/
 #define INCLUDE_USER_EVENTS 1
+
+/*****************************************************************************
+ * INCLUDE_READY_EVENTS
+ *
+ * Macro which should be defined as either zero (0) or one (1). 
+ * Default is 1.
+ *
+ * If this is zero (0), the code for recording Ready events is 
+ * excluded. Note, this will make it impossible to calculate the correct
+ * response times.
+ *****************************************************************************/
+#define INCLUDE_READY_EVENTS 1
 
 /*****************************************************************************
  * INCLUDE_ISR_TRACING

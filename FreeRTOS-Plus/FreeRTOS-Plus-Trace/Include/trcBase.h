@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcBase.h
  *
@@ -33,10 +33,10 @@
  * 
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
 #ifndef TRCBASE_H
@@ -44,12 +44,16 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdint.h>
+
 #include "FreeRTOS.h"
 #include "trcConfig.h"
 #include "trcTypes.h"
 #include "trcPort.h"
 
+extern volatile int recorder_busy;
+
+#define trcCRITICAL_SECTION_BEGIN() {taskENTER_CRITICAL(); recorder_busy++;}
+#define trcCRITICAL_SECTION_END() {recorder_busy--; taskEXIT_CRITICAL();}
 
 #define NCLASSES 5
 #define VERSION 0x1AA1
@@ -155,7 +159,7 @@ typedef struct
     uint8_t type;                
     objectHandleType objHandle;
     uint16_t dts;    /* differential timestamp - time since last event */            
-} TSEvent;
+} TSEvent, TREvent;
 
 typedef struct
 {
@@ -245,11 +249,11 @@ typedef struct
     uint8_t irq_priority_order;
             
     /* sizeof(RecorderDataType) - just for control */
-    uint32_t filesize;     
-        
+    uint32_t filesize;
+            
     /* Current number of events recorded */
     uint32_t numEvents;
-        
+
     /* The buffer size, in number of event records */
     uint32_t maxEvents;
         
@@ -382,11 +386,14 @@ typedef struct
 
 extern objectHandleStackType objectHandleStacks;
 
-extern uint8_t taskFlags[NTask];
+/* Structures to handle the exclude flags for all objects, tasks and event codes */
+#define NEventCodes 0x100
+extern uint8_t excludedFlags[(NEventCodes+NQueue+NSemaphore+NMutex+NTask) / 8 + 1];
+extern uint8_t ifeFlags[NTask / 8 + 1];
 
 /* Internal functions */
 
-uint32_t prvTraceGetDTS(uint32_t param_maxDTS);
+uint16_t prvTraceGetDTS(uint16_t param_maxDTS);
 
 void prvTraceGetChecksum(const char *pname, uint8_t* pcrc, uint8_t* plength);
 
@@ -404,7 +411,7 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel);
 
 void prvTraceUpdateCounters(void);
 
-void prvCheckDataToBeOverwrittenForMultiEntryUserEvents(uint32_t nEntries);
+void prvCheckDataToBeOverwrittenForMultiEntryUserEvents(uint8_t nEntries);
 
 objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass);
 
@@ -417,7 +424,7 @@ void vTraceSetObjectName(traceObjectClass objectclass,
 
 void* xTraceNextFreeEventBufferSlot(void);
 
-uint32_t uiIndexOfObject(objectHandleType objecthandle, 
+uint16_t uiIndexOfObject(objectHandleType objecthandle, 
     uint8_t objectclass);
 
 
@@ -427,7 +434,7 @@ uint32_t uiIndexOfObject(objectHandleType objecthandle,
  * Called by various parts in the recorder. Stops the recorder and stores a 
  * pointer to an error message, which is printed by the monitor task.
  ******************************************************************************/
-void vTraceError(char* msg);
+void vTraceError(const char* msg);
 
 /*******************************************************************************
  * xTraceGetLastError
@@ -470,17 +477,37 @@ RecorderDataPtr->ObjectPropertyTable.objbytes \
 [uiIndexOfObject(handle, TRACE_CLASS_TASK) \
 +  RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[TRACE_CLASS_TASK]+3]
 
-#define TASK_FLAG_BITMASK_ExcludeTaskFromTrace 1
-#define TASK_FLAG_BITMASK_MarkNextEventAsTaskInstanceFinish 2
+#define SET_FLAG_ISEXCLUDED(bitIndex) excludedFlags[(bitIndex) >> 3] |= (1 << ((bitIndex) & 7))
+#define CLEAR_FLAG_ISEXCLUDED(bitIndex) excludedFlags[(bitIndex) >> 3] &= ~(1 << ((bitIndex) & 7))
+#define GET_FLAG_ISEXCLUDED(bitIndex) (excludedFlags[(bitIndex) >> 3] & (1 << ((bitIndex) & 7)))
 
-#define SET_TASK_FLAG_ISEXCLUDED(taskHandle) taskFlags[taskHandle] |= 0x01
-#define CLEAR_TASK_FLAG_ISEXCLUDED(taskHandle) taskFlags[taskHandle] &= 0xFE
-#define GET_TASK_FLAG_ISEXCLUDED(taskHandle) (taskFlags[taskHandle] & 0x01)
+#define SET_FLAG_MARKIFE(bitIndex) ifeFlags[(bitIndex) >> 3] |= (1 << ((bitIndex) & 7))
+#define CLEAR_FLAG_MARKIFE(bitIndex) ifeFlags[(bitIndex) >> 3] &= ~(1 << ((bitIndex) & 7))
+#define GET_FLAG_MARKIFE(bitIndex) (ifeFlags[(bitIndex) >> 3] & (1 << ((bitIndex) & 7)))
 
-#define SET_TASK_FLAG_MARKIFE(taskHandle) taskFlags[taskHandle] |= 0x02
-#define CLEAR_TASK_FLAG_MARKIFE(taskHandle) taskFlags[taskHandle] &= 0xFD
-#define GET_TASK_FLAG_MARKIFE(taskHandle) (taskFlags[taskHandle] & 0x02)
+#define SET_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) SET_FLAG_ISEXCLUDED(eventCode)
+#define CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) CLEAR_FLAG_ISEXCLUDED(eventCode)
+#define GET_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) GET_FLAG_ISEXCLUDED(eventCode)
 
+#define SET_QUEUE_FLAG_ISEXCLUDED(queueHandle) SET_FLAG_ISEXCLUDED(NEventCodes+queueHandle-1)
+#define CLEAR_QUEUE_FLAG_ISEXCLUDED(queueHandle) CLEAR_FLAG_ISEXCLUDED(NEventCodes+queueHandle-1)
+#define GET_QUEUE_FLAG_ISEXCLUDED(queueHandle) GET_FLAG_ISEXCLUDED(NEventCodes+queueHandle-1)
+
+#define SET_SEMAPHORE_FLAG_ISEXCLUDED(semaphoreHandle) SET_FLAG_ISEXCLUDED(NEventCodes+NQueue+semaphoreHandle-1)
+#define CLEAR_SEMAPHORE_FLAG_ISEXCLUDED(semaphoreHandle) CLEAR_FLAG_ISEXCLUDED(NEventCodes+NQueue+semaphoreHandle-1)
+#define GET_SEMAPHORE_FLAG_ISEXCLUDED(semaphoreHandle) GET_FLAG_ISEXCLUDED(NEventCodes+NQueue+semaphoreHandle-1)
+
+#define SET_MUTEX_FLAG_ISEXCLUDED(mutexHandle) SET_FLAG_ISEXCLUDED(NEventCodes+NQueue+NSemaphore+mutexHandle-1)
+#define CLEAR_MUTEX_FLAG_ISEXCLUDED(mutexHandle) CLEAR_FLAG_ISEXCLUDED(NEventCodes+NQueue+NSemaphore+mutexHandle-1)
+#define GET_MUTEX_FLAG_ISEXCLUDED(mutexHandle) GET_FLAG_ISEXCLUDED(NEventCodes+NQueue+NSemaphore+mutexHandle-1)
+
+#define SET_TASK_FLAG_ISEXCLUDED(taskHandle) SET_FLAG_ISEXCLUDED(NEventCodes+NQueue+NSemaphore+NMutex+taskHandle-1)
+#define CLEAR_TASK_FLAG_ISEXCLUDED(taskHandle) CLEAR_FLAG_ISEXCLUDED(NEventCodes+NQueue+NSemaphore+NMutex+taskHandle-1)
+#define GET_TASK_FLAG_ISEXCLUDED(taskHandle) GET_FLAG_ISEXCLUDED(NEventCodes+NQueue+NSemaphore+NMutex+taskHandle-1)
+
+#define SET_TASK_FLAG_MARKIFE(bitIndex) SET_FLAG_MARKIFE(bitIndex-1)
+#define CLEAR_TASK_FLAG_MARKIFE(bitIndex) CLEAR_FLAG_MARKIFE(bitIndex-1)
+#define GET_TASK_FLAG_MARKIFE(bitIndex) GET_FLAG_MARKIFE(bitIndex-1)
 
 /* For debug printouts - the names of the object classes */
 extern char OBJECTCLASSNAME[NCLASSES][10];

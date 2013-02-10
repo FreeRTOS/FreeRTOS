@@ -1,4 +1,4 @@
-FreeRTOS+Trace v2.2.3
+FreeRTOS+Trace v2.3.0
 ---------------------
 
 This directory contains the recorder files that the typical FreeRTOS+Trace user needs to be aware of.
@@ -19,4 +19,4 @@ If you use this template, you will need to update the following macro definition
 Always remember to check the settings used in trcConfig.h.
 
 Percepio AB
-www.percepio.se
+www.percepio.com

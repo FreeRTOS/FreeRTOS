@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcUser.c
  *
@@ -33,22 +33,20 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
-#include "FreeRTOS.h"
+#include <string.h>
+#include <stdarg.h>
+
+#include "trcUser.h"
 #include "task.h"
-#include "queue.h"
+#include "semphr.h"
 
 #if (configUSE_TRACE_FACILITY == 1)
-
-#include "string.h"
-#include "stdarg.h"
-#include "trcUser.h"
-#include "trcKernel.h"
 
 extern uint8_t inExcludedTask;
 extern uint8_t nISRactive;
@@ -60,8 +58,8 @@ extern uint32_t hwtc_count_sum_after_tick_counter;
 extern unsigned char ucQueueGetQueueType(void*);
 extern unsigned char ucQueueGetQueueNumber(void*);
 extern char* traceErrorMessage;
-
 static void vTraceMonitorTask(void);
+static void prvTraceExcludeOrIncludeKernelServiceFromTrace(traceKernelService, uint8_t);
     
 /*******************************************************************************
  * vTraceMonitorTask
@@ -119,8 +117,8 @@ static void vTraceMonitorTask(void)
             {
                 sprintf(localsprintbuffer, 
                     "\n\r[FreeRTOS+Trace] Event count: %d, Duration: %d ms. [%d ticks]\n\r", 
-                    RecorderDataPtr->numEvents, 
-                    RecorderDataPtr->absTimeLastEventSecond*1000 + (RecorderDataPtr->absTimeLastEvent*1000)/ RecorderDataPtr->frequency, xTaskGetTickCount());
+                    (int)RecorderDataPtr->numEvents, 
+                    (int)(RecorderDataPtr->absTimeLastEventSecond*1000 + (RecorderDataPtr->absTimeLastEvent*1000)/ RecorderDataPtr->frequency), (int)xTaskGetTickCount());
                 vTraceConsoleMessage(localsprintbuffer);
             }
 
@@ -148,20 +146,21 @@ static void vTraceMonitorTask(void)
  ******************************************************************************/
 void vTraceClear(void)
 {
-    taskENTER_CRITICAL();
-
+    trcCRITICAL_SECTION_BEGIN();
+    
     RecorderDataPtr->absTimeLastEvent = 0;
     RecorderDataPtr->nextFreeIndex = 0;
     RecorderDataPtr->numEvents = 0;
     RecorderDataPtr->bufferIsFull = 0;
 
-    taskEXIT_CRITICAL();
+    trcCRITICAL_SECTION_END();
+    
 }
 
 /*******************************************************************************
  * vTraceStartStatusMonitor
  *
- * This starts a task to monitor the state of the recorder. 
+ * This starts a task to monitor the state of½ the recorder. 
  * This task periodically prints a line to the console window, which shows the 
  * number of events recorded and the latest timestamp. This task
  * calls vTracePortEnd when the recorder has been stopped, where custom
@@ -187,12 +186,15 @@ void vTraceStartStatusMonitor(void)
  * Any error message is also presented when opening a trace file in 
  * FreeRTOS+Trace v2.2.2 or later.
  ******************************************************************************/
+
 uint32_t uiTraceStart(void)
 {        
     if (traceErrorMessage == NULL)
     {
+        trcCRITICAL_SECTION_BEGIN();
         RecorderDataPtr->recorderActive = 1;
         vTraceStoreTaskswitch(); /* Register the currently running task */
+        trcCRITICAL_SECTION_END();
     }
 
     return RecorderDataPtr->recorderActive;
@@ -263,31 +265,335 @@ uint32_t uiTraceGetTraceBufferSize(void)
 }
 
 /*******************************************************************************
- * vTraceExcludeTask
- * Excludes a task from the recording using a flag in the Object Property Table.
+ * prvTraceExcludeOrIncludeKernelServiceFromTrace
+ * 
+ * Includes or excludes all events that is related to the kernel service.
+ ******************************************************************************/
+static void prvTraceExcludeOrIncludeKernelServiceFromTrace(traceKernelService kernelService, uint8_t flag)
+{
+    switch(kernelService)
+    {
+    case TRACE_KERNEL_SERVICE_TASK_CREATE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_TASK);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_TASK);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_TASK);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_TASK);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_TASK_DELETE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_TASK);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_TASK);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_TASK_DELAY:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(TASK_DELAY);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(TASK_DELAY_UNTIL);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(TASK_DELAY);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(TASK_DELAY_UNTIL);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_PRIORITY_SET:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(TASK_PRIORITY_SET);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(TASK_PRIORITY_SET);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_TASK_SUSPEND:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(TASK_SUSPEND);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(TASK_SUSPEND);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_TASK_RESUME:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(TASK_RESUME);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(TASK_RESUME_FROM_ISR);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(TASK_RESUME);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(TASK_RESUME_FROM_ISR);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_QUEUE_CREATE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_QUEUE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_QUEUE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_QUEUE_DELETE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_QUEUE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_QUEUE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_QUEUE_SEND:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_SEND + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND_FROM_ISR + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND_FROM_ISR + TRACE_CLASS_QUEUE);
+            
+            
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_SEND + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND_FROM_ISR + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND_FROM_ISR + TRACE_CLASS_QUEUE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_QUEUE_RECEIVE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_RECEIVE + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE_FROM_ISR + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TRACE_CLASS_QUEUE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_RECEIVE + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE_FROM_ISR + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TRACE_CLASS_QUEUE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_QUEUE_PEEK:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_PEEK + TRACE_CLASS_QUEUE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_PEEK + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_PEEK + TRACE_CLASS_MUTEX);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_PEEK + TRACE_CLASS_QUEUE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_PEEK + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_PEEK + TRACE_CLASS_MUTEX);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_MUTEX_CREATE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_MUTEX);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_MUTEX);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_MUTEX_DELETE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_MUTEX);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_MUTEX);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_MUTEX_GIVE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_SEND + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND_FROM_ISR + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND_FROM_ISR + TRACE_CLASS_MUTEX);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_SEND + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND_FROM_ISR + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND_FROM_ISR + TRACE_CLASS_MUTEX);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_MUTEX_TAKE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_RECEIVE + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE_FROM_ISR + TRACE_CLASS_MUTEX);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TRACE_CLASS_MUTEX);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_RECEIVE + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE_FROM_ISR + TRACE_CLASS_MUTEX);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TRACE_CLASS_MUTEX);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_SEMAPHORE_CREATE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_SEMAPHORE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_CREATE + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_SEMAPHORE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_SEMAPHORE_DELETE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_SEMAPHORE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_DELETE + TRACE_CLASS_SEMAPHORE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_SEMAPHORE_GIVE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_SEND + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_SEND + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_SEND_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_SEND_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+        }
+        break;
+    case TRACE_KERNEL_SERVICE_SEMAPHORE_TAKE:
+        if (flag)
+        {
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_RECEIVE + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+            SET_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+        }
+        else
+        {
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_BLOCK_ON_RECEIVE + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_RECEIVE_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+            CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TRACE_CLASS_SEMAPHORE);
+        }
+        break;
+    }
+}
+
+/******************************************************************************
+ * vTraceExclude______FromTrace
+ *
+ * Excludes a task or object from the trace.
  * This can be useful if some irrelevant task is very frequent and is "eating
  * up the buffer". This should be called after the task has been created, but 
- * preferably before starting the FreeRTOS scheduler.
- ******************************************************************************/
-void vTraceExcludeTaskFromSchedulingTrace(const char* name)
+ * before starting the FreeRTOS scheduler.
+ *****************************************************************************/
+void vTraceExcludeQueueFromTrace(void* handle)
 {
-    objectHandleType i;
-    int32_t found = 0;
-    for (i = 1; i < RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_TASK]; i++)
-    {
-        if (strncmp(name, 
-                    PROPERTY_NAME_GET(TRACE_CLASS_TASK, i), 
-                    RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[TRACE_CLASS_TASK]) == 0)
-        {
-            found = 1;
-            SET_TASK_FLAG_ISEXCLUDED(i);
-            break;
-        }
-    }
-    if (!found)
-    {
-        vTraceError("Could not find task to exclude!");
-    }
+    SET_QUEUE_FLAG_ISEXCLUDED(ucQueueGetQueueNumber(handle));
+}
+
+void vTraceExcludeSemaphoreFromTrace(void* handle)
+{
+    SET_SEMAPHORE_FLAG_ISEXCLUDED(ucQueueGetQueueNumber(handle));
+}
+
+void vTraceExcludeMutexFromTrace(void* handle)
+{
+    SET_MUTEX_FLAG_ISEXCLUDED(ucQueueGetQueueNumber(handle));
+}
+
+void vTraceExcludeTaskFromTrace(void* handle)
+{
+    SET_TASK_FLAG_ISEXCLUDED(uxTaskGetTaskNumber(handle));
+}
+
+void vTraceExcludeKernelServiceFromTrace(traceKernelService kernelService)
+{
+    prvTraceExcludeOrIncludeKernelServiceFromTrace(kernelService, 1);
+}
+
+/******************************************************************************
+ * vTraceInclude______InTrace
+ *
+ * Includes a task, object or kernel service in the trace. This is only
+ * necessary if the task or object has been previously exluded.
+ *****************************************************************************/
+void vTraceIncludeQueueInTrace(void* handle)
+{
+    CLEAR_QUEUE_FLAG_ISEXCLUDED(ucQueueGetQueueNumber(handle));
+}
+
+void vTraceIncludeSemaphoreInTrace(void* handle)
+{
+    CLEAR_SEMAPHORE_FLAG_ISEXCLUDED(ucQueueGetQueueNumber(handle));
+}
+
+void vTraceIncludeMutexInTrace(void* handle)
+{
+    CLEAR_MUTEX_FLAG_ISEXCLUDED(ucQueueGetQueueNumber(handle));
+}
+
+void vTraceIncludeTaskInTrace(void* handle)
+{
+    CLEAR_TASK_FLAG_ISEXCLUDED(uxTaskGetTaskNumber(handle));
+}
+
+void vTraceIncludeKernelServiceInTrace(traceKernelService kernelService)
+{
+    prvTraceExcludeOrIncludeKernelServiceFromTrace(kernelService, 0);
 }
 
 /*******************************************************************************
@@ -371,16 +677,20 @@ static uint8_t isrstack[MAX_ISR_NESTING];
  *     ...
  *     void ISR_handler()
  *     {
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
  *         vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
- *         portEXIT_CRITICAL();
  *         ...
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
  *         vTraceStoreISREnd();
- *         portEXIT_CRITICAL();
  *     }
+ *
+ * NOTE: To safely record ISRs, you need to make sure that all traced 
+ * interrupts actually are disabled by trcCRITICAL_SECTION_BEGIN(), which 
+ * typically is mapped to portENTER_CRITICAL(), which uses the macro 
+ * portDISABLE_INTERRUPTS. However, in some ports of FreeRTOS and depending on 
+ * FreeRTOS configuration, this does not disable high priority interrupts!
+ * If an ISR calls vTraceStoreISRBegin while the recorder is busy, it will
+ * stop the recording and give an error message.
  ******************************************************************************/
-void vTraceSetISRProperties(objectHandleType handle, char* name, char priority)
+void vTraceSetISRProperties(objectHandleType handle, const char* name, char priority)
 {
     vTraceSetObjectName(TRACE_CLASS_ISR, handle, name);
     vTraceSetPriorityProperty(TRACE_CLASS_ISR, handle, priority);
@@ -389,9 +699,7 @@ void vTraceSetISRProperties(objectHandleType handle, char* name, char priority)
 /*******************************************************************************
  * vTraceStoreISRBegin
  * 
- * Registers the beginning of an Interrupt Service Routine. This must not be
- * interrupted by another ISR containing recorder library calls, so if allowing
- * nested ISRs this must be called with interrupts disabled.
+ * Registers the beginning of an Interrupt Service Routine.
  *
  * Example:
  *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
@@ -401,26 +709,38 @@ void vTraceSetISRProperties(objectHandleType handle, char* name, char priority)
  *     ...
  *     void ISR_handler()
  *     {
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
  *         vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
- *         portEXIT_CRITICAL();
  *         ...
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
  *         vTraceStoreISREnd();
- *         portEXIT_CRITICAL();
  *     }
+ *
+ * NOTE: You need to make sure that any traced interrupts actually are 
+ * disabled by trcCRITICAL_SECTION_BEGIN(), i.e., taskENTER_CRITICAL() which
+ * uses portDISABLE_INTERRUPTS(). 
+ * In some ports of FreeRTOS, this does not disable high-priority interrupts,
+ * i.e., with priorities above configMAX_SYSCALL_INTERRUPT_PRIORITY.
+ * If an invalid call to vTraceStoreISRBegin is detected (i.e., that preempted
+ * a critical section of the recorder) this will generate a recorder error 
+ * using vTraceError.
  ******************************************************************************/
 void vTraceStoreISRBegin(objectHandleType handle)
 {
     uint16_t dts4;
     TSEvent* ts = NULL;
 
+    if (recorder_busy)
+    {
+      vTraceError("Illegal call to vTraceStoreISRBegin/End");
+      return;
+    }
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
     {    
+        trcCRITICAL_SECTION_BEGIN();
         dts4 = (uint16_t)prvTraceGetDTS(0xFFFF);
 
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */    
         {    
+
             if (nISRactive < MAX_ISR_NESTING)
             {    
                 isrstack[nISRactive] = handle;
@@ -438,17 +758,45 @@ void vTraceStoreISRBegin(objectHandleType handle)
             {            
                 /* This should not occur unless something is very wrong */            
                 vTraceError("Too many nested interrupts!");
-            }
+            }        
         }
+        trcCRITICAL_SECTION_END();        
     }
 }
+
+
+#if (SELECTED_PORT == PORT_ARM_CortexM)
+
+int tailchain_irq_pending(void);
+
+/*******************************************************************************
+ * tailchain_irq_pending
+ *
+ * For Cortex-M chips only. Returns 1 if an interrupt is pending, by checking 
+ * the 8 NVIC IRQ pend registers at 0xE000E200 to 0xE000E21C. Returns 0 if no 
+ * interrupt is pending. This is used to predict tailchaining of ISRs.
+ ******************************************************************************/
+int tailchain_irq_pending(void)
+{
+  uint32_t* pend_reg = ((uint32_t*)0xE000E200);
+  int i;
+
+  for (i=0; i<8; i++)
+  {
+    if (pend_reg[i] != 0)
+    {
+      return 1;
+    }
+  }
+  return 0;  
+}
+
+#endif
 
 /*******************************************************************************
  * vTraceStoreISREnd
  * 
- * Registers the end of an Interrupt Service Routine. This must not be
- * interrupted by another ISR containing recorder library calls, so if allowing
- * nested ISRs this must be called with interrupts disabled.
+ * Registers the end of an Interrupt Service Routine. 
  *
  * Example:
  *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
@@ -458,26 +806,49 @@ void vTraceStoreISRBegin(objectHandleType handle)
  *     ...
  *     void ISR_handler()
  *     {
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
  *         vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
- *         portEXIT_CRITICAL();
  *         ...
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
  *         vTraceStoreISREnd();
- *         portEXIT_CRITICAL();
  *     }
+ *
+ * NOTE: You need to make sure that any traced interrupts actually are 
+ * disabled by trcCRITICAL_SECTION_BEGIN(), i.e., taskENTER_CRITICAL() which
+ * uses portDISABLE_INTERRUPTS(). 
+ * In some ports of FreeRTOS, this does not disable high-priority interrupts,
+ * i.e., with priorities above configMAX_SYSCALL_INTERRUPT_PRIORITY.
+ * If an invalid call to vTraceStoreISREnd is detected (i.e., that preempted
+ * a critical section of the recorder) this will generate a recorder error 
+ * using vTraceError.
  ******************************************************************************/
 void vTraceStoreISREnd(void)
 {
     TSEvent* ts;
     uint16_t dts5;
 
+    if (recorder_busy)
+    {
+      vTraceError("Illegal call to vTraceStoreISRBegin/End");
+      return;
+    }
+    
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
-    {        
+    {
+        #if (SELECTED_PORT == PORT_ARM_CortexM)
+        if (tailchain_irq_pending() > 0)
+        {
+            nISRactive--; /* If an IRQ strikes exactly here, the resulting 
+            ISR tailchaining is not detected. The trace instead shows a very 
+            short fragment of the earlier preempted task/ISR, and then the new
+            ISR begins. */
+            return;
+        }
+        #endif
+      
+        trcCRITICAL_SECTION_BEGIN();
         dts5 = (uint16_t)prvTraceGetDTS(0xFFFF);
 
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */    
-        {                            
+        {    
             ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
             if (ts != NULL)
             {
@@ -498,9 +869,24 @@ void vTraceStoreISREnd(void)
                 prvTraceUpdateCounters();
             }
         }
+        trcCRITICAL_SECTION_END();        
     }
 }
 
+#else
+
+/* ISR tracing is turned off */
+void vTraceIncreaseISRActive(void)
+{
+    if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
+        nISRactive++;
+}
+
+void vTraceDecreaseISRActive(objectHandleType handle)
+{
+    if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
+        nISRactive--;
+}
 #endif
 
 
@@ -523,14 +909,14 @@ void vTraceUserEvent(traceLabel eventLabel)
     UserEvent* ue;
     uint8_t dts1;
 
-    if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive ) && handle_of_last_logged_task)    
-    {    
-        taskENTER_CRITICAL();
+    if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive ) && handle_of_last_logged_task)
+    {
+        trcCRITICAL_SECTION_BEGIN();
 
         dts1 = (uint8_t)prvTraceGetDTS(0xFF);
 
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */    
-        {                        
+        {       
             ue = (UserEvent*) xTraceNextFreeEventBufferSlot();
             if (ue != NULL)
             {
@@ -540,7 +926,7 @@ void vTraceUserEvent(traceLabel eventLabel)
                 prvTraceUpdateCounters();
             }
         }
-        taskEXIT_CRITICAL();
+        trcCRITICAL_SECTION_END();        
     }
 }
 
@@ -550,112 +936,139 @@ void vTraceUserEvent(traceLabel eventLabel)
 (8*32 bit = 32 byte) available for argument data */
 #define MAX_ARG_SIZE (4+32)    
 
-static uint8_t writeInt8(void * buffer, uint8_t index, uint8_t value);
-static uint8_t writeInt16(void * buffer, uint8_t index, uint16_t value);
-static uint8_t writeInt32(void * buffer, uint8_t index, uint32_t value);
+static uint8_t writeInt8(void * buffer, uint8_t i, uint8_t value);
+static uint8_t writeInt16(void * buffer, uint8_t i, uint16_t value);
+static uint8_t writeInt32(void * buffer, uint8_t i, uint32_t value);
 
 #if (INCLUDE_FLOAT_SUPPORT)
-static uint8_t writeFloat(void * buffer, uint8_t index, float value);
-static uint8_t writeDouble(void * buffer, uint8_t index, double value);
+static uint8_t writeFloat(void * buffer, uint8_t i, float value);
+static uint8_t writeDouble(void * buffer, uint8_t i, double value);
 #endif
 
 /*** Locally used in vTracePrintF ***/
-static uint8_t writeInt8(void * buffer, uint8_t index, uint8_t value)
+static uint8_t writeInt8(void * buffer, uint8_t i, uint8_t value)
 {    
     
-    if (index + 1 > MAX_ARG_SIZE)
+    if (i >= MAX_ARG_SIZE)
     {
         return 255;
     }
 
-    ((uint8_t*)buffer)[index] = value;
+    ((uint8_t*)buffer)[i] = value;
 
-    return index + 1;
+	if (i + 1 > MAX_ARG_SIZE)
+	{
+		return 255;
+	}
+
+    return i + 1;
 }
 
 /*** Locally used in vTracePrintF ***/
-static uint8_t writeInt16(void * buffer, uint8_t index, uint16_t value)
-{
+static uint8_t writeInt16(void * buffer, uint8_t i, uint16_t value)
+{	
     /* Align to multiple of 2 */
-    while ((index % 2) != 0)
-    {        
-        ((uint8_t*)buffer)[index] = 0;
-        index++;        
+    while ((i % 2) != 0)
+    {
+		if (i >= MAX_ARG_SIZE)
+		{
+			return 255;
+		}
+		        
+        ((uint8_t*)buffer)[i] = 0;
+        i++;        
     }
     
-    if (index + 2 > MAX_ARG_SIZE)
+    if (i + 2 > MAX_ARG_SIZE)
     {
         return 255;
     }
 
-    ((uint16_t*)buffer)[index/2] = value;
+    ((uint16_t*)buffer)[i/2] = value;
 
-    return index + 2;
+    return i + 2;
 }
 
 /*** Locally used in vTracePrintF ***/
-static uint8_t writeInt32(void * buffer, uint8_t index, uint32_t value)
+static uint8_t writeInt32(void * buffer, uint8_t i, uint32_t value)
 {
     
     /* A 32 bit value should begin at an even 4-byte address */
-    while ((index % 4) != 0)
+    while ((i % 4) != 0)
     {
-        ((uint8_t*)buffer)[index] = 0;
-        index++;
+		if (i >= MAX_ARG_SIZE)
+		{
+			return 255;
+		}
+		
+        ((uint8_t*)buffer)[i] = 0;
+        i++;
     }
     
-    if (index + 4 > MAX_ARG_SIZE)
+    if (i + 4 > MAX_ARG_SIZE)
     {
         return 255;
     }        
 
-    ((uint32_t*)buffer)[index/4] = value;
+    ((uint32_t*)buffer)[i/4] = value;
 
-    return index + 4;
+    return i + 4;
 }
 
 #if (INCLUDE_FLOAT_SUPPORT)
 
 /*** Locally used in vTracePrintF ***/
-static uint8_t writeFloat(void * buffer, uint8_t index, float value)
+static uint8_t writeFloat(void * buffer, uint8_t i, float value)
 {
     /* A 32 bit value should begin at an even 4-byte address */
-    while ((index % 4) != 0)
+    while ((i % 4) != 0)
     {
-        ((uint8_t*)buffer)[index] = 0;
-        index++;
+		if (i >= MAX_ARG_SIZE)
+		{
+			return 255;
+		}
+
+        ((uint8_t*)buffer)[i] = 0;
+        i++;
     }
 
-    if (index + 4 > MAX_ARG_SIZE)
+    if (i + 4 > MAX_ARG_SIZE)
     {
         return 255;
     }        
 
-    ((float*)buffer)[index/4] = value;
+    ((float*)buffer)[i/4] = value;
     
-    return index + 4;
+    return i + 4;
 }
 
 /*** Locally used in vTracePrintF ***/
-static uint8_t writeDouble(void * buffer, uint8_t index, double value)
+static uint8_t writeDouble(void * buffer, uint8_t i, double value)
 {
+    uint32_t * dest = buffer;
+    uint32_t * src = (void*)&value;
     /* The double is written as two 32 bit values, and should begin at an even 
     4-byte address (to avoid having to align with 8 byte) */
-    while (index % 4 != 0)
+    while (i % 4 != 0)
     {
-        ((uint8_t*)buffer)[index] = 0;
-        index++;        
+		if (i >= MAX_ARG_SIZE)
+		{
+			return 255;
+		}
+
+        ((uint8_t*)buffer)[i] = 0;
+        i++;        
     }
     
-    if (index + 8 > MAX_ARG_SIZE)
+    if (i + 8 > MAX_ARG_SIZE)
     {
         return 255;
     }       
     
-    ((uint32_t*)buffer)[index/4+0] = ((uint32_t*)&value)[0];
-    ((uint32_t*)buffer)[index/4+1] = ((uint32_t*)&value)[1];
-
-    return index + 8;
+    dest[i/4+0] = src[0];
+    dest[i/4+1] = src[1];
+    
+    return i + 8;
 }
 
 #endif
@@ -715,7 +1128,7 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...)
     UserEvent* ue1;
     va_list vl;
     uint8_t argCounter = 0;
-    uint8_t index = 0;
+    uint8_t i = 0;
     uint8_t nofEventEntries = 0;
     uint16_t formatStrIndex = 0;    
 
@@ -729,10 +1142,10 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...)
     * from different tasks overlaps (interrupts are only disabled in a small 
     * part of this function, otherwise enabled)
     ***************************************************************************/
-    uint32_t dummy = 0;                 /* for the alignment of tempDataBuffer*/
-    uint8_t tempDataBuffer[MAX_ARG_SIZE];   
-    dummy = dummy;                           /* to eliminate compiler warnings*/
-
+		
+    uint32_t tempDataBuffer[(3 + MAX_ARG_SIZE) / 4];   
+	
+	
     if ((inExcludedTask == 0) &&
         (nISRactive == 0) &&
         (RecorderDataPtr->recorderActive == 1) &&
@@ -744,7 +1157,7 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...)
         ue1 = (UserEvent*)(&tempDataBuffer[0]);         
         ue1->type = EVENT_BEING_WRITTEN;      /* Update this as the last step */
         
-        index = 4;
+        i = 4;
         formatStrIndex = 0;
         va_start(vl, formatStr);          /* Begin reading the arguments list */
 
@@ -759,7 +1172,7 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...)
                     vTraceError("vTracePrintF - Too many arguments, max 15 allowed!");
                     va_end(vl);                    
                     formatStr = "[vTracePrintF error] Too many arguments, max 15 allowed!";
-                    index = 4;
+                    i = 4;
                     break;            
                 }
 
@@ -788,35 +1201,35 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...)
                 formatStrIndex++;
                 switch (formatStr[formatStrIndex])
                 {
-                case 'd':    index = writeInt32(tempDataBuffer, 
-                                                index, 
+                case 'd':    i = writeInt32((uint8_t*)tempDataBuffer, 
+                                                i, 
                                                 (uint32_t)va_arg(vl, uint32_t)); 
                              break;
-                case 'u':    index = writeInt32(tempDataBuffer, 
-                                                index, 
+                case 'u':    i = writeInt32((uint8_t*)tempDataBuffer, 
+                                                i, 
                                                 (uint32_t)va_arg(vl, uint32_t)); 
                              break;
-                case 's':    index = writeInt16(tempDataBuffer, 
-                                                index, 
-                                                (uint16_t)xTraceOpenLabel((char*)va_arg(vl, uint32_t))); 
+                case 's':    i = writeInt16((uint8_t*)tempDataBuffer, 
+                                                i, 
+                                                (uint16_t)xTraceOpenLabel((char*)va_arg(vl, char*))); 
                              break;
 
 #if (INCLUDE_FLOAT_SUPPORT)
                              /* Yes, "double" as type also in the float 
                              case. This since "float" is promoted into "double" 
                              by the va_arg stuff. */
-                case 'f':    index = writeFloat(tempDataBuffer, 
-                                                index, 
+                case 'f':    i = writeFloat((uint8_t*)tempDataBuffer, 
+                                                i, 
                                                 (float)va_arg(vl, double)); 
                              break;    
 #else
 /* No support for floats, but attempt to store a float user event
 avoid a possible crash due to float reference. Instead store the 
 data on uint_32 format (will not be displayed anyway). This is just
-to keep va_arg and index consistent. */
+to keep va_arg and i consistent. */
 
-                case 'f':    index = writeInt32(tempDataBuffer,
-                                                index, 
+                case 'f':    i = writeInt32((uint8_t*)tempDataBuffer,
+                                                i, 
                                                 (uint32_t)va_arg(vl, double)); 
 #endif
                 case 'l':
@@ -824,20 +1237,20 @@ to keep va_arg and index consistent. */
                     switch (formatStr[formatStrIndex])
                     {
 #if (INCLUDE_FLOAT_SUPPORT)
-                    case 'f':     index = writeDouble(tempDataBuffer, 
-                                                      index, 
+                    case 'f':     i = writeDouble((uint8_t*)tempDataBuffer, 
+                                                      i, 
                                                       (double)va_arg(vl, double)); 
                                   break;
 #else
 /* No support for floats, but attempt to store a float user event
 avoid a possible crash due to float reference. Instead store the 
 data on uint_32 format (will not be displayed anyway). This is just
-to keep va_arg and index consistent. */
-                    case 'f':    index = writeInt32(tempDataBuffer, /* In this case, the value will not be shown anyway */
-                                                    index, 
+to keep va_arg and i consistent. */
+                    case 'f':    i = writeInt32((uint8_t*)tempDataBuffer, /* In this case, the value will not be shown anyway */
+                                                    i, 
                                                     (uint32_t)va_arg(vl, double)); 
-                                 index = writeInt32(tempDataBuffer, /* Do it twice, to write in total 8 bytes */
-                                                    index, 
+                                 i = writeInt32((uint8_t*)tempDataBuffer, /* Do it twice, to write in total 8 bytes */
+                                                    i, 
                                                     (uint32_t)va_arg(vl, double)); 
 #endif
 
@@ -847,12 +1260,12 @@ to keep va_arg and index consistent. */
                     formatStrIndex++;
                     switch (formatStr[formatStrIndex])
                     {
-                    case 'd':    index = writeInt16(tempDataBuffer, 
-                                                    index, 
+                    case 'd':    i = writeInt16((uint8_t*)tempDataBuffer, 
+                                                    i, 
                                                     (uint16_t)va_arg(vl, uint32_t)); 
                                  break;
-                    case 'u':    index = writeInt16(tempDataBuffer, 
-                                                    index, 
+                    case 'u':    i = writeInt16((uint8_t*)tempDataBuffer, 
+                                                    i, 
                                                     (uint16_t)va_arg(vl, uint32_t)); 
                                  break;
                     }
@@ -861,12 +1274,12 @@ to keep va_arg and index consistent. */
                     formatStrIndex++;
                     switch (formatStr[formatStrIndex])
                     {
-                    case 'd':    index = writeInt8(tempDataBuffer, 
-                                                   index, 
+                    case 'd':    i = writeInt8((uint8_t*)tempDataBuffer, 
+                                                   i, 
                                                    (uint8_t)va_arg(vl, uint32_t)); 
                                  break;
-                    case 'u':    index = writeInt8(tempDataBuffer, 
-                                                   index, 
+                    case 'u':    i = writeInt8((uint8_t*)tempDataBuffer, 
+                                                   i, 
                                                    (uint8_t)va_arg(vl, uint32_t)); 
                                  break;
                     }
@@ -874,33 +1287,35 @@ to keep va_arg and index consistent. */
                 }
             }                                    
             formatStrIndex++;    
-            if (index == 255)
+            if (i == 255)
             {
                 va_end(vl);
-                vTraceError("vTracePrintF - Too large arguments, max 32 byte allowed!");
+                //vTraceError("vTracePrintF - Too large arguments, max 32 byte allowed!");
                 formatStr = "[vTracePrintF error] Too large arguments, max 32 byte allowed!";
-                index = 4;
+                i = 4;
                 break;
             }
         }
 
         va_end(vl);
-
+		
         /* Store the format string, with a reference to the channel symbol */
         ue1->payload = prvTraceOpenSymbol(formatStr, eventLabel);     
 
-        taskENTER_CRITICAL();    
+        trcCRITICAL_SECTION_BEGIN();  
 
         ue1->dts = (uint8_t)prvTraceGetDTS(0xFF);
         if (! RecorderDataPtr->recorderActive)
         {
+
             /* Abort, since an XTS event (created by prvTraceGetDTS) filled the 
             buffer, and the recorder stopped since not circular buffer. */
-            taskEXIT_CRITICAL();    
+            trcCRITICAL_SECTION_END();
+        
             return;
         }
             
-        nofEventEntries = (index+3)/4;
+        nofEventEntries = (i+3)/4;
 
         /* If the data does not fit in the remaining main buffer, wrap around to 
         0 if allowed, otherwise stop the recorder and quit). */
@@ -915,8 +1330,10 @@ to keep va_arg and index consistent. */
 #else
             /* Abort and stop recorder, since the event data will not fit in the
             buffer and not circular buffer in this case... */
-            taskEXIT_CRITICAL();
+            trcCRITICAL_SECTION_END();
             vTraceStop();
+
+            
             return;
 #endif
         }
@@ -931,7 +1348,7 @@ to keep va_arg and index consistent. */
         /* Copy the local buffer to the main buffer */
         (void)memcpy(& RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4], 
                tempDataBuffer, 
-               index);
+               i);
 
         /* Update the event type, i.e., number of data entries following the 
         main USER_EVENT entry (Note: important that this is after the memcpy, 
@@ -956,8 +1373,8 @@ to keep va_arg and index consistent. */
 #endif
         }
 
-        taskEXIT_CRITICAL();
-    }
+        trcCRITICAL_SECTION_END();
+    }    
 }
     
 /*******************************************************************************
@@ -972,7 +1389,7 @@ to keep va_arg and index consistent. */
  * 
  *     xTraceOpenLabel()
  *
- * whihc adds the string to the symbol table (if not already present)
+ * which adds the string to the symbol table (if not already present)
  * and returns the corresponding handle.
  *
  * This can be used in two ways:
@@ -995,7 +1412,7 @@ to keep va_arg and index consistent. */
  * executed and/or located in time-critical code. The lookup operation is
  * however fairly fast due to the design of the symbol table.
  ******************************************************************************/
-traceLabel xTraceOpenLabel(char* label)
+traceLabel xTraceOpenLabel(const char* label)
 {
     return prvTraceOpenSymbol(label, 0);
 }

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcKernel.h
  *
@@ -33,32 +33,33 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
 #ifndef TRCKERNEL_H
 #define TRCKERNEL_H
 
-#include "trcTypes.h"
-
-#if (configUSE_TRACE_FACILITY == 1)
-
 #include "trcBase.h"
 
 /* Internal functions */
 
+
+#if !defined INCLUDE_READY_EVENTS || INCLUDE_READY_EVENTS == 1
+void vTraceStoreTaskReady(objectHandleType handle);
+#endif
+
 void vTraceStoreTaskswitch(void);
 
-void vTraceStoreKernelCall(uint32_t eventcode, uint32_t byteParam); 
+void vTraceStoreKernelCall(uint32_t eventcode, traceObjectClass objectClass, uint32_t byteParam); 
 
 void vTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode, 
                                                uint16_t param);
 
-void vTraceStoreKernelCallWithParam(uint32_t evtcode, uint32_t objectNumber, 
-                                    uint8_t param);
+void vTraceStoreKernelCallWithParam(uint32_t evtcode, traceObjectClass objectClass, 
+                                    uint32_t objectNumber, uint8_t param);
 
 void vTraceSetTaskInstanceFinished(objectHandleType handle);
 
@@ -84,6 +85,8 @@ void vTraceStoreObjectPropertiesOnCloseEvent(objectHandleType handle,
 #define TASK_STATE_INSTANCE_ACTIVE 1
 #define TASK_STATE_INSTANCE_MARKED_FINISHED 2
 
+extern objectHandleType handle_of_running_task;
+
 /* This defines the mapping between FreeRTOS queue types and our internal 
 class IDs */
 extern traceObjectClass TraceObjectClassTable[5];
@@ -102,8 +105,14 @@ extern traceObjectClass TraceObjectClassTable[5];
  ******************************************************************************/
 
 #define NULL_EVENT                   (0x00)  /* Ignored in the analysis*/
-#define RECORDING_START              (0x01)  /* Not yet used */
-#define RECORDING_STOP               (0x02)  /* Not yet used */
+
+/*******************************************************************************
+ * EVENTGROUP_RE
+ *
+ * Events that indicate that something is ready to execute.
+ ******************************************************************************/
+#define EVENTGROUP_RE                (NULL_EVENT + 2)                   /*0x02*/
+#define TR_TASK_READY                (EVENTGROUP_RE + 0)                /*0x02*/
 
 /*******************************************************************************
  * EVENTGROUP_TS
@@ -111,11 +120,11 @@ extern traceObjectClass TraceObjectClassTable[5];
  * Events for storing task-switches and interrupts. The RESUME events are 
  * generated if the task/interrupt is already marked active.
  ******************************************************************************/
-#define EVENTGROUP_TS                (0x04)
-#define TS_ISR_BEGIN                 (EVENTGROUP_TS + 0)                 /* 4 */
-#define TS_ISR_RESUME                (EVENTGROUP_TS + 1)                 /* 5 */
-#define TS_TASK_BEGIN                (EVENTGROUP_TS + 2)                 /* 6 */
-#define TS_TASK_RESUME               (EVENTGROUP_TS + 3)                 /* 7 */
+#define EVENTGROUP_TS                (EVENTGROUP_RE + 2)                /*0x04*/
+#define TS_ISR_BEGIN                 (EVENTGROUP_TS + 0)                /*0x04*/
+#define TS_ISR_RESUME                (EVENTGROUP_TS + 1)                /*0x05*/
+#define TS_TASK_BEGIN                (EVENTGROUP_TS + 2)                /*0x06*/
+#define TS_TASK_RESUME               (EVENTGROUP_TS + 3)                /*0x07*/
 
 /*******************************************************************************
  * EVENTGROUP_OBJCLOSE_NAME
@@ -126,7 +135,7 @@ extern traceObjectClass TraceObjectClassTable[5];
  * EVENTGROUP_OBJCLOSE_PROP), containg the handle-name mapping and object 
  * properties valid up to this point.
  ******************************************************************************/
-#define EVENTGROUP_OBJCLOSE_NAME     (0x08)
+#define EVENTGROUP_OBJCLOSE_NAME     (EVENTGROUP_TS + 4)                /*0x08*/
 
 /*******************************************************************************
  * EVENTGROUP_OBJCLOSE_PROP
@@ -214,14 +223,14 @@ extern traceObjectClass TraceObjectClassTable[5];
 
 /* Other events - object class is implied: TASK */
 #define EVENTGROUP_OTHERS            (EVENTGROUP_DELETE + 8)            /*0x88*/
-#define TASK_DELAY_UNTIL             (EVENTGROUP_OTHERS + 0)
-#define TASK_DELAY                   (EVENTGROUP_OTHERS + 1)
-#define TASK_SUSPEND                 (EVENTGROUP_OTHERS + 2)
-#define TASK_RESUME                  (EVENTGROUP_OTHERS + 3)
-#define TASK_RESUME_FROM_ISR         (EVENTGROUP_OTHERS + 4)
-#define TASK_PRIORITY_SET            (EVENTGROUP_OTHERS + 5)
-#define TASK_PRIORITY_INHERIT        (EVENTGROUP_OTHERS + 6)
-#define TASK_PRIORITY_DISINHERIT     (EVENTGROUP_OTHERS + 7)
+#define TASK_DELAY_UNTIL             (EVENTGROUP_OTHERS + 0)            /*0x88*/
+#define TASK_DELAY                   (EVENTGROUP_OTHERS + 1)            /*0x89*/
+#define TASK_SUSPEND                 (EVENTGROUP_OTHERS + 2)            /*0x8A*/
+#define TASK_RESUME                  (EVENTGROUP_OTHERS + 3)            /*0x8B*/
+#define TASK_RESUME_FROM_ISR         (EVENTGROUP_OTHERS + 4)            /*0x8C*/
+#define TASK_PRIORITY_SET            (EVENTGROUP_OTHERS + 5)            /*0x8D*/
+#define TASK_PRIORITY_INHERIT        (EVENTGROUP_OTHERS + 6)            /*0x8E*/
+#define TASK_PRIORITY_DISINHERIT     (EVENTGROUP_OTHERS + 7)            /*0x8F*/
 
 /* Not yet used */
 #define EVENTGROUP_FTRACE_PLACEHOLDER    (EVENTGROUP_OTHERS + 8)        /*0x90*/
@@ -231,9 +240,9 @@ extern traceObjectClass TraceObjectClassTable[5];
 #define USER_EVENT (EVENTGROUP_USEREVENT + 0)
 
 /* Allow for 0-15 arguments (the number of args is added to event code) */
-#define USER_EVENT_LAST (EVENTGROUP_USEREVENT + 15)
+#define USER_EVENT_LAST (EVENTGROUP_USEREVENT + 15)                     /*0xA7*/
 
-/******************************************************************************
+/*******************************************************************************
  * XTS Event - eXtended TimeStamp events
  * The timestamps used in the recorder are "differential timestamps" (DTS), i.e.
  * the time since the last stored event. The DTS fields are either 1 or 2 bytes 
@@ -261,7 +270,5 @@ extern traceObjectClass TraceObjectClassTable[5];
 #define EVENT_BEING_WRITTEN (EVENTGROUP_SYS + 2)                        /*0xAA*/
 
 #define RESERVED_DUMMY_CODE (EVENTGROUP_SYS + 3)                        /*0xAB*/
-
-#endif
 
 #endif

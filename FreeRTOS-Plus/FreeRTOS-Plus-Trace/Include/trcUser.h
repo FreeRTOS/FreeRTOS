@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcUser.h
  * The public API of the trace recorder library.
@@ -32,10 +32,10 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
 #ifndef TRCUSER_H
@@ -43,9 +43,9 @@
 
 #include "FreeRTOS.h"
 
-#if (configUSE_TRACE_FACILITY == 1)
+#include "trcKernel.h"
 
-#include "trcBase.h"
+#if (configUSE_TRACE_FACILITY == 1)
 
 #ifdef __cplusplus
 extern "C" {
@@ -147,14 +147,22 @@ void vTraceSetQueueName(void* queue, const char* name);
  *         portEXIT_CRITICAL();
  *     }
  ******************************************************************************/
-void vTraceSetISRProperties(objectHandleType handle, char* name, char priority);
+void vTraceSetISRProperties(objectHandleType handle, const char* name, char priority);
 
 /*******************************************************************************
  * vTraceStoreISRBegin
  * 
- * Registers the beginning of an Interrupt Service Routine. This must not be
- * interrupted by another ISR containing recorder library calls, so if allowing
- * nested ISRs this must be called with interrupts disabled.
+ * Registers the beginning of an Interrupt Service Routine.
+ *
+ * Note! This may only be used for interrupts affected by portENTER_CRITICAL.
+ * In some FreeRTOS ports, such as ARM Cortex M3, this does not disable all
+ * interrupts. Interrupts above configMAX_SYSCALL_INTERRUPT_PRIORITY are still 
+ * enabled, but may not call the FreeRTOS API. Such may not call the recorder 
+ * API, including this function.
+ *
+ * See http://www.freertos.org/a00110.html
+ * 
+ * If allowing nested ISRs, this must be called with interrupts disabled. 
  *
  * Example:
  *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
@@ -178,9 +186,17 @@ void vTraceStoreISRBegin(objectHandleType id);
 /*******************************************************************************
  * vTraceStoreISREnd
  * 
- * Registers the end of an Interrupt Service Routine. This must not be
- * interrupted by another ISR containing recorder library calls, so if allowing
- * nested ISRs this must be called with interrupts disabled.
+ * Registers the end of an Interrupt Service Routine.
+ *
+ * Note! This may only be used for interrupts affected by portENTER_CRITICAL.
+ * In some FreeRTOS ports, such as ARM Cortex M3, this does not disable all
+ * interrupts. Interrupts above configMAX_SYSCALL_INTERRUPT_PRIORITY are still 
+ * enabled, but may not call the FreeRTOS API. Such may not call the recorder 
+ * API, including this function.
+ *
+ * See http://www.freertos.org/a00110.html
+ * 
+ * If allowing nested ISRs, this must be called with interrupts disabled. 
  *
  * Example:
  *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
@@ -202,12 +218,15 @@ void vTraceStoreISRBegin(objectHandleType id);
 void vTraceStoreISREnd(void);
 
 #else
-
    /* If not including the ISR recording */
 
-   #define vTraceSetISRProperties(handle, name, priority)
-   #define vTraceStoreISRBegin(id)
-   #define vTraceStoreISREnd()
+void vTraceIncreaseISRActive(void);
+
+void vTraceDecreaseISRActive(void);
+
+#define vTraceSetISRProperties(handle, name, priority)
+#define vTraceStoreISRBegin(id) vTraceIncreaseISRActive()
+#define vTraceStoreISREnd() vTraceDecreaseISRActive()
 
 #endif
 
@@ -290,7 +309,7 @@ uint32_t uiTraceGetTraceBufferSize(void);
  * executed and/or located in time-critical code. The lookup operation is
  * however fairly fast due to the design of the symbol table.
  ******************************************************************************/
-traceLabel xTraceOpenLabel(char* label);
+traceLabel xTraceOpenLabel(const char* label);
 
  /******************************************************************************
  * vTraceUserEvent
@@ -341,16 +360,21 @@ void vTraceUserEvent(traceLabel eventLabel);
  *  %hu - 16 bit unsigned integer
  *  %bd - 8 bit signed integer
  *  %bu - 8 bit unsigned integer
- *  %lf - double-precision float
+ *  %lf - double-precision float (Note! See below...)
  * 
  * Up to 15 data arguments are allowed, with a total size of maximum 32 byte.
  * In case this is exceeded, the user event is changed into an error message.
  * 
  * The data is stored in trace buffer, and is packed to allow storing multiple 
  * smaller data entries in the same 4-byte record, e.g., four 8-bit values.
- * A string requires two bytes, as the symbol table is limited to 64K. Storing a 
- * double (%lf) uses two records, so this is quite costly. Use float (%f) unless
- * the higher precision is really necessary.
+ * A string requires two bytes, as the symbol table is limited to 64K. Storing 
+ * a double (%lf) uses two records, so this is quite costly. Use float (%f) 
+ * unless the higher precision is really necessary.
+ * 
+ * Note that the double-precision float (%lf) assumes a 64 bit double 
+ * representation. This does not seem to be the case on e.g. PIC24F. 
+ * Before using a %lf argument on a 16-bit MCU, please verify that 
+ * "sizeof(double)" actually gives 8 as expected. If not, use %f instead.
  ******************************************************************************/ 
 void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...);
 
@@ -363,14 +387,30 @@ void vTracePrintF(traceLabel eventLabel, const char* formatStr, ...);
 #endif
 
 /******************************************************************************
- * vTraceExcludeTask
+ * vTraceExclude______FromTrace
  *
- * Excludes a task from the recording using a flag in the Object Property Table.
+ * Excludes a task or object from the trace.
  * This can be useful if some irrelevant task is very frequent and is "eating
- * up the buffer". This should be called the task has been created, but 
+ * up the buffer". This should be called after the task has been created, but 
  * before starting the FreeRTOS scheduler.
  *****************************************************************************/
-void vTraceExcludeTaskFromSchedulingTrace(const char* name);
+void vTraceExcludeQueueFromTrace(void* handle);
+void vTraceExcludeSemaphoreFromTrace(void* handle);
+void vTraceExcludeMutexFromTrace(void* handle);
+void vTraceExcludeTaskFromTrace(void* handle);
+void vTraceExcludeKernelServiceFromTrace(traceKernelService kernelService);
+
+/******************************************************************************
+ * vTraceInclude______InTrace
+ *
+ * Includes a task, object or kernel service in the trace. This is only
+ * necessary if the task or object has been previously exluded.
+ *****************************************************************************/
+void vTraceIncludeQueueInTrace(void* handle);
+void vTraceIncludeSemaphoreInTrace(void* handle);
+void vTraceIncludeMutexInTrace(void* handle);
+void vTraceIncludeTaskInTrace(void* handle);
+void vTraceIncludeKernelServiceInTrace(traceKernelService kernelService);
 
 #ifdef __cplusplus
 }
@@ -381,9 +421,12 @@ void vTraceExcludeTaskFromSchedulingTrace(const char* name);
 #include "trcPort.h"
 
 #define vTraceInit()
+#define uiTraceStart() (1)
 #define vTraceStart()
 #define vTraceStop()
 #define vTraceClear()
+#define vTraceStartStatusMonitor()
+#define vTracePortSetOutFile(f)
 #define vTraceGetTraceBuffer() ((void*)0)
 #define uiTraceGetTraceBufferSize() 0
 #define xTraceOpenLabel(label) 0
@@ -391,9 +434,11 @@ void vTraceExcludeTaskFromSchedulingTrace(const char* name);
 #define vTracePrintF(eventLabel,formatStr,...)
 #define vTraceExcludeTaskFromSchedulingTrace(name)
 #define vTraceSetQueueName(queue, name)
+
 #define vTraceTaskSkipDefaultInstanceFinishedEvents()
 #define vTraceSetISRProperties(handle, name, priority)
 #define vTraceStoreISRBegin(id)
 #define vTraceStoreISREnd()
 #endif
 #endif
+

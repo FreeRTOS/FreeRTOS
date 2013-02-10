@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcTypes.h
  *
@@ -33,10 +33,10 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
 #ifndef TRCTYPES_H
@@ -55,5 +55,27 @@ typedef uint8_t traceObjectClass;
 #define TRACE_CLASS_MUTEX ((traceObjectClass)2)
 #define TRACE_CLASS_TASK ((traceObjectClass)3)
 #define TRACE_CLASS_ISR ((traceObjectClass)4)
+
+typedef uint8_t traceKernelService;
+
+#define TRACE_KERNEL_SERVICE_TASK_CREATE ((traceKernelService)0)
+#define TRACE_KERNEL_SERVICE_TASK_DELETE ((traceKernelService)1)
+#define TRACE_KERNEL_SERVICE_TASK_DELAY ((traceKernelService)2)
+#define TRACE_KERNEL_SERVICE_PRIORITY_SET ((traceKernelService)3)
+#define TRACE_KERNEL_SERVICE_TASK_SUSPEND ((traceKernelService)4)
+#define TRACE_KERNEL_SERVICE_TASK_RESUME ((traceKernelService)5)
+#define TRACE_KERNEL_SERVICE_QUEUE_CREATE ((traceKernelService)6)
+#define TRACE_KERNEL_SERVICE_QUEUE_DELETE ((traceKernelService)7)
+#define TRACE_KERNEL_SERVICE_QUEUE_SEND ((traceKernelService)8)
+#define TRACE_KERNEL_SERVICE_QUEUE_RECEIVE ((traceKernelService)9)
+#define TRACE_KERNEL_SERVICE_QUEUE_PEEK ((traceKernelService)10)
+#define TRACE_KERNEL_SERVICE_MUTEX_CREATE ((traceKernelService)11)
+#define TRACE_KERNEL_SERVICE_MUTEX_DELETE ((traceKernelService)12)
+#define TRACE_KERNEL_SERVICE_MUTEX_GIVE ((traceKernelService)13)
+#define TRACE_KERNEL_SERVICE_MUTEX_TAKE ((traceKernelService)14)
+#define TRACE_KERNEL_SERVICE_SEMAPHORE_CREATE ((traceKernelService)15)
+#define TRACE_KERNEL_SERVICE_SEMAPHORE_DELETE ((traceKernelService)16)
+#define TRACE_KERNEL_SERVICE_SEMAPHORE_GIVE ((traceKernelService)17)
+#define TRACE_KERNEL_SERVICE_SEMAPHORE_TAKE ((traceKernelService)18)
 
 #endif

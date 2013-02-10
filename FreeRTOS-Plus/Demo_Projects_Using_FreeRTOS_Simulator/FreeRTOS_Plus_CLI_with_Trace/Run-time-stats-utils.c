@@ -125,7 +125,17 @@ unsigned long ulReturn;
 	/* Subtract the performance counter value reading taken when the 
 	application started to get a count from that reference point, then
 	scale to (simulated) 1/100ths of a millisecond. */
-	ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
+	if( llTicksPerHundedthMillisecond == 0 )
+	{
+		/* The trace macros can call this function before the kernel has been
+		started, in which case llTicksPerHundedthMillisecond will not have been
+		initialised. */
+		ulReturn = 0;
+	}
+	else
+	{
+		ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
+	}
 
 	return ulReturn;
 }

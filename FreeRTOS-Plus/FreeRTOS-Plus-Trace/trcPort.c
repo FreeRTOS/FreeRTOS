@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcPort.c
  *
@@ -37,17 +37,16 @@
  * , hobbyists or early-phase startups) we have an attractive offer: 
  * Provide a hardware timer port and get a FREE single-user licence for
  * FreeRTOS+Trace Professional Edition. Read more about this offer at 
- * www.percepio.se or contact us directly at support@percepio.se.
+ * www.percepio.com or contact us directly at support@percepio.com.
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
-#include "FreeRTOS.h"
-#include "trcPort.h"
+
 #include "trcUser.h"
 
 #if (configUSE_TRACE_FACILITY == 1)
@@ -55,6 +54,7 @@
 #if (INCLUDE_SAVE_TO_FILE == 1)
 static char* prvFileName = NULL;
 #endif
+
 
 /*******************************************************************************
  * uiTraceTickCount
@@ -79,37 +79,60 @@ uint32_t uiTraceTickCount = 0;
  * OFFER FROM PERCEPIO:
  * For silicon companies and non-corporate FreeRTOS users (researchers, students
  * , hobbyists or early-phase startups) we have an attractive offer: 
- * Provide a hardware timer port and get a FREE single-user licence for
+ * Provide a hardware timer port and get a FREE single-user license for
  * FreeRTOS+Trace Professional Edition. Read more about this offer at 
- * www.percepio.se or contact us directly at support@percepio.se.
+ * www.percepio.com or contact us directly at support@percepio.com.
  ******************************************************************************/
-uint32_t uiTracePortGetTimeStamp()
+void uiTracePortGetTimeStamp(uint32_t *pTimestamp)
 {
-    /* Keep these static to avoid using more stack than necessary */
-    static uint32_t last_timestamp = 0;
-    static uint32_t timestamp;
-
+    static uint32_t last_traceTickCount = 0;
+    static uint32_t last_hwtc_count = 0;
+    uint32_t traceTickCount = 0;
+    uint32_t hwtc_count = 0;
+    
+    /* Retrieve HWTC_COUNT only once since the same value should be used all throughout this function. */
 #if (HWTC_COUNT_DIRECTION == DIRECTION_INCREMENTING)
-    timestamp = ((uiTraceTickCount * HWTC_PERIOD) + HWTC_COUNT) / HWTC_DIVISOR;
-#else
-#if (HWTC_COUNT_DIRECTION == DIRECTION_DECREMENTING)
-    timestamp = ((uiTraceTickCount * HWTC_PERIOD) + (HWTC_PERIOD - HWTC_COUNT)) / HWTC_DIVISOR;
+    hwtc_count = HWTC_COUNT;
+#elif (HWTC_COUNT_DIRECTION == DIRECTION_DECREMENTING)
+    hwtc_count = HWTC_PERIOD - HWTC_COUNT;
 #else
     Junk text to cause compiler error - HWTC_COUNT_DIRECTION is not set correctly!
     Should be DIRECTION_INCREMENTING or DIRECTION_DECREMENTING
 #endif
-#endif
-
-    /* May occur due to overflow, if the update of uiTraceTickCount has been 
-    delayed due to disabled interrupts. */
-    if (timestamp < last_timestamp)
+    
+    if (last_traceTickCount - uiTraceTickCount - 1 < 0x80000000)
     {
-        timestamp += (HWTC_PERIOD / HWTC_DIVISOR);
+        /* This means last_traceTickCount is higher than uiTraceTickCount,
+        so we have previously compensated for a missed tick.
+        Therefore we use the last stored value because that is more accurate. */
+        traceTickCount = last_traceTickCount;
+    }
+    else
+    {
+        /* Business as usual */
+        traceTickCount = uiTraceTickCount;
     }
 
-    last_timestamp = timestamp;
-
-    return timestamp;
+    /* Check for overflow. May occur if the update of uiTraceTickCount has been 
+    delayed due to disabled interrupts. */
+    if (traceTickCount == last_traceTickCount && hwtc_count < last_hwtc_count)
+    {
+        /* A trace tick has occurred but not been executed by the kernel, so we compensate manually. */
+        traceTickCount++;
+    }
+    
+    /* Check if the return address is OK, then we perform the calculation. */
+    if (pTimestamp)
+    {
+        /* Get timestamp from trace ticks. Scale down the period to avoid unwanted overflows. */
+        *pTimestamp = traceTickCount * (HWTC_PERIOD / HWTC_DIVISOR);
+        /* Increase timestamp by (hwtc_count + "lost hardware ticks from scaling down period") / HWTC_DIVISOR. */
+        *pTimestamp += (hwtc_count + traceTickCount * (HWTC_PERIOD % HWTC_DIVISOR)) / HWTC_DIVISOR;
+    }
+    
+    /* Store the previous values. */
+    last_traceTickCount = traceTickCount;
+    last_hwtc_count = hwtc_count;
 }
 
 /*******************************************************************************

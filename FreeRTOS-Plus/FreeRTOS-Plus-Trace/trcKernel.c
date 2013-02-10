@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcKernel.c
  *
@@ -34,17 +34,18 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
-#include "FreeRTOS.h"
+#include "trcUser.h"
 #include "task.h"
-#include "trcKernel.h"
 
 #if (configUSE_TRACE_FACILITY == 1)
+
+
 
 /******************************************************************************
  * TraceObjectClassTable
@@ -73,13 +74,72 @@ uint8_t nISRactive = 0;
 objectHandleType handle_of_last_logged_task = 0;
 uint8_t inExcludedTask = 0;
 
+static uint8_t prvTraceIsObjectExcluded(traceObjectClass, uint32_t);
+
+/*******************************************************************************
+ * prvTraceIsObjectExcluded
+ *
+ * Private function that accepts an object class and an object number and uses
+ * that to determine if the object has been flagged as excluded.
+ ******************************************************************************/
+static uint8_t prvTraceIsObjectExcluded(traceObjectClass objectClass, uint32_t objectNumber)
+{
+    switch(objectClass)
+    {
+    case TRACE_CLASS_QUEUE:
+        return GET_QUEUE_FLAG_ISEXCLUDED(objectNumber);
+        break;
+    case TRACE_CLASS_SEMAPHORE:
+        return GET_SEMAPHORE_FLAG_ISEXCLUDED(objectNumber);
+        break;
+    case TRACE_CLASS_MUTEX:
+        return GET_MUTEX_FLAG_ISEXCLUDED(objectNumber);
+        break;
+    case TRACE_CLASS_TASK:
+        return GET_TASK_FLAG_ISEXCLUDED(objectNumber);
+        break;
+    }
+    return 0;
+}
+
+#if !defined INCLUDE_READY_EVENTS || INCLUDE_READY_EVENTS == 1
+/*******************************************************************************
+ * vTraceStoreTaskReady
+ *
+ * This function stores a ready state for the task handle sent in as parameter.
+ ******************************************************************************/
+void vTraceStoreTaskReady(objectHandleType handle)
+{
+    uint16_t dts3;
+    TREvent* tr;
+
+    if (!GET_TASK_FLAG_ISEXCLUDED(handle))
+    {
+        dts3 = (uint16_t)prvTraceGetDTS(0xFFFF);
+        if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+        {
+            tr = (TREvent*)xTraceNextFreeEventBufferSlot();
+
+            if (tr != NULL)
+            {
+                tr->type = TR_TASK_READY;
+                tr->dts = dts3;
+                tr->objHandle = handle;
+
+                prvTraceUpdateCounters();    
+            }
+        }
+    }
+}
+#endif
+
 /*******************************************************************************
  * vTraceStoreKernelCall
  *
  * This is the main integration point for storing FreeRTOS kernel calls, and
  * is called by the hooks in FreeRTOS.h (see trcKernel.h for event codes).
  ******************************************************************************/
-void vTraceStoreKernelCall(uint32_t ecode, uint32_t objectNumber)
+void vTraceStoreKernelCall(uint32_t ecode, traceObjectClass objectClass, uint32_t objectNumber)
 {
     KernelCall * kse;
     uint16_t dts1;
@@ -88,38 +148,53 @@ void vTraceStoreKernelCall(uint32_t ecode, uint32_t objectNumber)
     {
         return;
     }
-
-    /* This checks if this is the first kernel call after a call to
-    vTraceTaskInstanceIsFinished. In that case, calls to this kernel service 
-    with this specific kernel object become the "instance finish event"
-    (IFE) of the calling task.*/
-    if (GET_TASK_FLAG_MARKIFE(handle_of_last_logged_task))
-    {
-        /* Reset the flag - this has been handled now */
-        CLEAR_TASK_FLAG_MARKIFE(handle_of_last_logged_task);
-
-        /* Store the kernel service tagged as instance finished event */
-        PROPERTY_TASK_IFE_SERVICECODE(handle_of_last_logged_task) = 
-          (uint8_t)ecode;                
-
-        /* Store the handle of the specific kernel object */
-        PROPERTY_TASK_IFE_OBJHANDLE(handle_of_last_logged_task) =
-          (objectHandleType)objectNumber;    
-    }
     
-    if (RecorderDataPtr->recorderActive && (!inExcludedTask || nISRactive))
+    if (RecorderDataPtr->recorderActive)
     {
-        dts1 = (uint16_t)prvTraceGetDTS(0xFFFF);
-
-        if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
-        {           
-            kse = (KernelCall*) xTraceNextFreeEventBufferSlot();
-            if (kse != NULL)
+        
+        /* If it is an ISR or NOT an excluded task, this kernel call will be stored in the trace */
+        if (nISRactive || !inExcludedTask)
+        {
+            /* Make sure ISRs never change the IFE flags of tasks */
+            if (!nISRactive)
             {
-                kse->dts = dts1;
-                kse->type = (uint8_t)ecode;
-                kse->objHandle = (uint8_t)objectNumber;
-                prvTraceUpdateCounters();
+                /* This checks if this is the first kernel call after a call to
+                vTraceTaskInstanceIsFinished. In that case, calls to this kernel service 
+                with this specific kernel object become the "instance finish event"
+                (IFE) of the calling task.*/
+                if (GET_TASK_FLAG_MARKIFE(handle_of_last_logged_task))
+                {
+                    /* Reset the flag - this has been handled now */
+                    CLEAR_TASK_FLAG_MARKIFE(handle_of_last_logged_task);
+
+                    /* Store the kernel service tagged as instance finished event */
+                    PROPERTY_TASK_IFE_SERVICECODE(handle_of_last_logged_task) = 
+                      (uint8_t)ecode;                
+
+                    /* Store the handle of the specific kernel object */
+                    PROPERTY_TASK_IFE_OBJHANDLE(handle_of_last_logged_task) =
+                      (objectHandleType)objectNumber;    
+                }
+            }
+            
+            /* Check if the referenced object or the event code is excluded */
+            if (!prvTraceIsObjectExcluded(objectClass, objectNumber) && !GET_EVENT_CODE_FLAG_ISEXCLUDED(ecode))
+            {
+                trcCRITICAL_SECTION_BEGIN();
+                dts1 = (uint16_t)prvTraceGetDTS(0xFFFF);
+
+                if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+                {           
+                    kse = (KernelCall*) xTraceNextFreeEventBufferSlot();
+                    if (kse != NULL)
+                    {
+                        kse->dts = dts1;
+                        kse->type = (uint8_t)ecode;
+                        kse->objHandle = (uint8_t)objectNumber;
+                        prvTraceUpdateCounters();
+                    }
+                }
+                trcCRITICAL_SECTION_END();
             }
         }
     }
@@ -131,8 +206,9 @@ void vTraceStoreKernelCall(uint32_t ecode, uint32_t objectNumber)
  * Used for storing kernel calls with a handle and a numeric parameter. This is
  * only used for traceTASK_PRIORITY_SET at the moment.
  ******************************************************************************/
-void vTraceStoreKernelCallWithParam(uint32_t evtcode, 
-                                    uint32_t objectNumber, 
+void vTraceStoreKernelCallWithParam(uint32_t evtcode,
+                                    traceObjectClass objectClass,
+                                    uint32_t objectNumber,
                                     uint8_t param)
 {
     KernelCallWithParamAndHandle * kse;
@@ -141,19 +217,25 @@ void vTraceStoreKernelCallWithParam(uint32_t evtcode,
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task && 
         (! inExcludedTask || nISRactive))
     {
-        dts2 = (uint8_t)prvTraceGetDTS(0xFF);
+        /* Check if the referenced object or the event code is excluded */
+        if (!prvTraceIsObjectExcluded(objectClass, objectNumber) && !GET_EVENT_CODE_FLAG_ISEXCLUDED(evtcode))
+        {
+            trcCRITICAL_SECTION_BEGIN();
+            dts2 = (uint8_t)prvTraceGetDTS(0xFF);
 
-        if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
-        {                
-            kse = (KernelCallWithParamAndHandle*) xTraceNextFreeEventBufferSlot();
-            if (kse != NULL)
-            {
-                kse->dts = dts2;
-                kse->type = (uint8_t)evtcode;
-                kse->objHandle = (uint8_t)objectNumber;
-                kse->param = param;
-                prvTraceUpdateCounters();    
+            if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+            {                
+                kse = (KernelCallWithParamAndHandle*) xTraceNextFreeEventBufferSlot();
+                if (kse != NULL)
+                {
+                    kse->dts = dts2;
+                    kse->type = (uint8_t)evtcode;
+                    kse->objHandle = (uint8_t)objectNumber;
+                    kse->param = param;
+                    prvTraceUpdateCounters();    
+                }
             }
+            trcCRITICAL_SECTION_END();
         }
     }
 }
@@ -172,70 +254,104 @@ void vTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode, uint16_t param)
 
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task 
         && (! inExcludedTask || nISRactive))
-    {        
-        dts6 = (uint8_t)prvTraceGetDTS(0xFF);
+    {
+        /* Check if the event code is excluded */
+        if (!GET_EVENT_CODE_FLAG_ISEXCLUDED(evtcode))
+        {
+            trcCRITICAL_SECTION_BEGIN();
+            dts6 = (uint8_t)prvTraceGetDTS(0xFF);
 
-        if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
-        {                
-            kse = (KernelCallWithParam16*) xTraceNextFreeEventBufferSlot();
-            if (kse != NULL)
-            {
-                kse->dts = dts6;
-                kse->type = (uint8_t)evtcode;
-                kse->param = param;
-                prvTraceUpdateCounters();    
+            if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+            {                
+                kse = (KernelCallWithParam16*) xTraceNextFreeEventBufferSlot();
+                if (kse != NULL)
+                {
+                    kse->dts = dts6;
+                    kse->type = (uint8_t)evtcode;
+                    kse->param = param;
+                    prvTraceUpdateCounters();    
+                }
             }
+            trcCRITICAL_SECTION_END();
         }
     }
 }
 
+objectHandleType handle_of_running_task = 0;
+
 /*******************************************************************************
  * vTraceStoreTaskswitch
- * Called by the scheduler, from the SWITCHED_OUT hook.
- * At this point interrupts are disabled, so no need to disable interrupts.
+ * Called by the scheduler from the SWITCHED_OUT hook, and by uiTraceStart.
+ * At this point interrupts are assumed to be disabled!
  ******************************************************************************/
 void vTraceStoreTaskswitch(void)
 {
     uint16_t dts3;
-    TSEvent* ts;
-    static objectHandleType handle_of_running_task = 0;
+    TSEvent* ts;        
     int8_t skipEvent = 0;
+    uint32_t schedulerState = 0;
     
-    if (xTaskGetSchedulerState() == 0)
+    /*************************************************************************** 
+    This is used to detect if a high-priority ISRs is illegally using the 
+    recorder ISR trace functions (vTraceStoreISRBegin and ...End) while the 
+    recorder is busy with a task-level event or lower priority ISR event.
+    
+    If this is detected, it triggers a call to vTraceError with the error 
+    "Illegal call to vTraceStoreISRBegin/End". If you get this error, it means
+    that the macro taskENTER_CRITICAL does not disable this ISR, as required.
+    You can solve this by adjusting the value of the FreeRTOS constant
+    configMAX_SYSCALL_INTERRUPT_PRIORITY, which is defined in FreeRTOSConfig.h
+
+    Note: Setting recorder_busy is normally handled in our macros
+    trcCRITICAL_SECTION_BEGIN and _END, but is needed explicitly in this 
+    function since critical sections should not be used in the context switch 
+    event...)    
+    ***************************************************************************/
+    recorder_busy++; 
+    
+    schedulerState = xTaskGetSchedulerState();
+
+    if (schedulerState == 0)
     {
         /* This occurs on the very first taskswitch event, generated by 
         vTraceStart and uiTraceStart if the scheduler is not yet started.
         This creates a dummy "(startup)" task entry internally in the
         recorder */
+        if (handle_of_running_task == 0)
+        {
+            handle_of_running_task = xTraceGetObjectHandle(TRACE_CLASS_TASK);
 
-        handle_of_running_task = xTraceGetObjectHandle(TRACE_CLASS_TASK);
-        vTraceSetObjectName(TRACE_CLASS_TASK, 
-            handle_of_running_task,
-            "(startup)");
-        vTraceSetPriorityProperty(TRACE_CLASS_TASK,
-            handle_of_running_task,
-            0);
+            vTraceSetObjectName(TRACE_CLASS_TASK, 
+                handle_of_running_task,
+                "(startup)");
+
+            vTraceSetPriorityProperty(TRACE_CLASS_TASK,
+                handle_of_running_task,
+                0);
+        }        
     }
     else
     {    
         handle_of_running_task = 
         (objectHandleType)uxTaskGetTaskNumber(xTaskGetCurrentTaskHandle());
     }
-
+    
     /* Skip the event if the task has been excluded, using vTraceExcludeTask */
     if (GET_TASK_FLAG_ISEXCLUDED(handle_of_running_task))
     {    
         skipEvent = 1;
         inExcludedTask = 1;            
-    }        
+    }
+    else
+        inExcludedTask = 0;
+        
 
     /* Skip the event if the same task is scheduled */
     if (handle_of_running_task == handle_of_last_logged_task)
     {
         skipEvent = 1;
     }
-    
-    
+  
     if (! RecorderDataPtr->recorderActive)
     {
         skipEvent = 1;
@@ -243,15 +359,12 @@ void vTraceStoreTaskswitch(void)
 
     /* If this event should be logged, log it! */
     if (skipEvent == 0)    
-    {
+    {    
         dts3 = (uint16_t)prvTraceGetDTS(0xFFFF);
         
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
-        {        
-            inExcludedTask = 0;
-
-            handle_of_last_logged_task = handle_of_running_task;
-            
+        {
+            handle_of_last_logged_task = handle_of_running_task;            
             ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
 
             if (ts != NULL)
@@ -276,8 +389,10 @@ void vTraceStoreTaskswitch(void)
                 prvTraceUpdateCounters();    
             }
         }
-    }
-    
+    }    
+
+    /* See comment on recorder_busy++ above. */
+    recorder_busy--; 
 }
 
 /*******************************************************************************
@@ -299,8 +414,9 @@ void vTraceStoreObjectNameOnCloseEvent(objectHandleType handle,
     name = PROPERTY_NAME_GET(objectclass, handle);
 
     idx = prvTraceOpenSymbol(name, 0);
-
-    ce = (ObjCloseNameEvent*) xTraceNextFreeEventBufferSlot();
+    
+    // Interrupt disable not necessary, already done in trcHooks.h macro
+    ce = (ObjCloseNameEvent*) xTraceNextFreeEventBufferSlot(); 
     if (ce != NULL)
     {
         ce->type = EVENTGROUP_OBJCLOSE_NAME + objectclass;
@@ -308,6 +424,7 @@ void vTraceStoreObjectNameOnCloseEvent(objectHandleType handle,
         ce->symbolIndex = idx;
         prvTraceUpdateCounters();
     }
+    
 }
 
 void vTraceStoreObjectPropertiesOnCloseEvent(objectHandleType handle, 
@@ -321,6 +438,7 @@ void vTraceStoreObjectPropertiesOnCloseEvent(objectHandleType handle,
         return;
     }
 
+    // Interrupt disable not necessary, already done in trcHooks.h macro
     pe = (ObjClosePropEvent*) xTraceNextFreeEventBufferSlot();
     if (pe != NULL)
     {
@@ -369,6 +487,5 @@ uint8_t uiTraceGetObjectState(uint8_t objectclass, uint8_t id)
 {
     return PROPERTY_OBJECT_STATE(objectclass, id);
 }
-
 
 #endif

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * FreeRTOS+Trace v2.2.3 Recorder Library
- * Percepio AB, www.percepio.se
+ * FreeRTOS+Trace v2.3.0 Recorder Library
+ * Percepio AB, www.percepio.com
  *
  * trcHooks.h
  *
@@ -45,26 +45,36 @@
  *
  * FreeRTOS+Trace is available as Free Edition and in two premium editions.
  * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.se/index.php?page=downloads
+ * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
  *
  * Copyright Percepio AB, 2012.
- * www.percepio.se
+ * www.percepio.com
  ******************************************************************************/
 
 #ifndef TRCHOOKS_H
 #define TRCHOOKS_H
 
-#include "trcKernel.h"
-
 #if (configUSE_TRACE_FACILITY == 1)
 
+    #include "trcUser.h"
+	
+    #undef INCLUDE_xTaskGetSchedulerState
     #define INCLUDE_xTaskGetSchedulerState 1
+	
+    #undef INCLUDE_xTaskGetCurrentTaskHandle
     #define INCLUDE_xTaskGetCurrentTaskHandle 1
-
-    /* Called on each OS tick */
+	
+#if !defined INCLUDE_READY_EVENTS || INCLUDE_READY_EVENTS == 1
+    /* Called for each task that becomes ready */
+    #undef traceMOVED_TASK_TO_READY_STATE
+    #define traceMOVED_TASK_TO_READY_STATE( pxTCB ) \
+    vTraceStoreTaskReady((unsigned char)pxTCB->uxTaskNumber);
+#endif
+	
+    /* Called on each OS tick. Will call uiPortGetTimestamp to make sure it is called at least once every OS tick. */
     #undef traceTASK_INCREMENT_TICK
     #define traceTASK_INCREMENT_TICK( xTickCount ) \
-      {extern uint32_t uiTraceTickCount; uiTraceTickCount = xTickCount;}
+      if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxMissedTicks == 0) {extern uint32_t uiTraceTickCount; uiTraceTickCount++; uiTracePortGetTimeStamp(0);}
 
     /* Called on each task-switch */
     #undef traceTASK_SWITCHED_IN
@@ -74,7 +84,7 @@
     /* Called on vTaskSuspend */
     #undef traceTASK_SUSPEND
     #define traceTASK_SUSPEND( pxTaskToSuspend ) \
-      vTraceStoreKernelCall(TASK_SUSPEND, pxTaskToSuspend->uxTaskNumber); \
+      vTraceStoreKernelCall(TASK_SUSPEND, TRACE_CLASS_TASK, pxTaskToSuspend->uxTaskNumber); \
       vTraceSetTaskInstanceFinished((uint8_t)pxTaskToSuspend->uxTaskNumber);
 
     /* Called on vTaskDelay - note the use of FreeRTOS variable xTicksToDelay */
@@ -93,16 +103,22 @@
       vTraceSetTaskInstanceFinished((uint8_t)pxCurrentTCB->uxTaskNumber); \
       portEXIT_CRITICAL();
 
+#ifndef INCLUDE_OBJECT_DELETE
+#define INCLUDE_OBJECT_DELETE 0
+#endif
+
 #if (INCLUDE_OBJECT_DELETE == 1)
     /* Called on vTaskDelete */
     #undef traceTASK_DELETE
     #define traceTASK_DELETE( pxTaskToDelete ) \
-      vTraceStoreKernelCall(EVENTGROUP_DELETE + TRACE_CLASS_TASK, pxTaskToDelete->uxTaskNumber); \
+      trcCRITICAL_SECTION_BEGIN(); \
+      vTraceStoreKernelCall(EVENTGROUP_DELETE + TRACE_CLASS_TASK, TRACE_CLASS_TASK, pxTaskToDelete->uxTaskNumber); \
       vTraceStoreObjectNameOnCloseEvent((objectHandleType)pxTaskToDelete->uxTaskNumber, TRACE_CLASS_TASK); \
       vTraceStoreObjectPropertiesOnCloseEvent((objectHandleType)pxTaskToDelete->uxTaskNumber, TRACE_CLASS_TASK); \
       vTraceSetPriorityProperty(TRACE_CLASS_TASK, (objectHandleType)pxTaskToDelete->uxTaskNumber, (uint8_t)pxTaskToDelete->uxPriority); \
       vTraceSetObjectState(TRACE_CLASS_TASK, (objectHandleType)pxTaskToDelete->uxTaskNumber, TASK_STATE_INSTANCE_NOT_ACTIVE); \
-      vTraceFreeObjectHandle(TRACE_CLASS_TASK, (objectHandleType)pxTaskToDelete->uxTaskNumber);
+      vTraceFreeObjectHandle(TRACE_CLASS_TASK, (objectHandleType)pxTaskToDelete->uxTaskNumber); \
+      trcCRITICAL_SECTION_END();
 #endif
 
     /* Called on vTaskCreate */
@@ -112,14 +128,14 @@
           pxNewTCB->uxTaskNumber = xTraceGetObjectHandle(TRACE_CLASS_TASK); \
           vTraceSetObjectName(TRACE_CLASS_TASK, (objectHandleType)pxNewTCB->uxTaskNumber, (char*)pxNewTCB->pcTaskName); \
           vTraceSetPriorityProperty(TRACE_CLASS_TASK, (objectHandleType)pxNewTCB->uxTaskNumber, (uint8_t)pxNewTCB->uxPriority); \
-          vTraceStoreKernelCall(EVENTGROUP_CREATE + TRACE_CLASS_TASK, (objectHandleType)pxNewTCB->uxTaskNumber);\
+          vTraceStoreKernelCall(EVENTGROUP_CREATE + TRACE_CLASS_TASK, TRACE_CLASS_TASK, pxNewTCB->uxTaskNumber);\
       }
 
-    /* Called in vTaskCreate, if it fails (typically if the stack fails can not be allocated) */
+    /* Called in vTaskCreate, if it fails (typically if the stack can not be allocated) */
     #undef traceTASK_CREATE_FAILED
     #define traceTASK_CREATE_FAILED() \
       portENTER_CRITICAL();\
-      vTraceStoreKernelCall(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_TASK, 0); \
+      vTraceStoreKernelCall(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_TASK, TRACE_CLASS_TASK, 0); \
       portEXIT_CRITICAL();
 
     /* Called in xQueueCreate, and thereby for all other object based on queues, such as semaphores. */
@@ -127,15 +143,15 @@
     #define traceQUEUE_CREATE( pxNewQueue )\
         portENTER_CRITICAL(); \
         pxNewQueue->ucQueueNumber = xTraceGetObjectHandle(TraceObjectClassTable[pxNewQueue->ucQueueType]);\
+        vTraceStoreKernelCall(EVENTGROUP_CREATE + TraceObjectClassTable[pxNewQueue->ucQueueType], TraceObjectClassTable[pxNewQueue->ucQueueType], pxNewQueue->ucQueueNumber); \
         vTraceSetObjectState(TraceObjectClassTable[pxNewQueue->ucQueueType], pxNewQueue->ucQueueNumber, 0); \
-        vTraceStoreKernelCall(EVENTGROUP_CREATE + TraceObjectClassTable[pxNewQueue->ucQueueType], pxNewQueue->ucQueueNumber); \
         portEXIT_CRITICAL();
 
     /* Called in xQueueCreate, if the queue creation fails */
     #undef traceQUEUE_CREATE_FAILED
     #define traceQUEUE_CREATE_FAILED( queueType ) \
         portENTER_CRITICAL();\
-        vTraceStoreKernelCall((uint8_t)(EVENTGROUP_FAILED_CREATE + TraceObjectClassTable[queueType]), (objectHandleType)0); \
+        vTraceStoreKernelCall((uint8_t)(EVENTGROUP_FAILED_CREATE + TraceObjectClassTable[queueType]), TraceObjectClassTable[queueType], 0); \
         portEXIT_CRITICAL();
     
     /* Called in xQueueCreateMutex, and thereby also from xSemaphoreCreateMutex and xSemaphoreCreateRecursiveMutex */
@@ -143,28 +159,28 @@
     #define traceCREATE_MUTEX( pxNewQueue ) \
       portENTER_CRITICAL();\
       pxNewQueue->ucQueueNumber = xTraceGetObjectHandle(TRACE_CLASS_MUTEX); \
-      vTraceStoreKernelCall(EVENTGROUP_CREATE + TraceObjectClassTable[pxNewQueue->ucQueueType], pxNewQueue->ucQueueNumber); \
-      vTraceSetObjectState(TRACE_CLASS_MUTEX, pxNewQueue->ucQueueNumber, 0); \
+      vTraceStoreKernelCall(EVENTGROUP_CREATE + TraceObjectClassTable[pxNewQueue->ucQueueType], TraceObjectClassTable[pxNewQueue->ucQueueType], pxNewQueue->ucQueueNumber); \
+      vTraceSetObjectState(TraceObjectClassTable[pxNewQueue->ucQueueType], pxNewQueue->ucQueueNumber, 0); \
       portEXIT_CRITICAL();
 
     /* Called in xQueueCreateMutex when the operation fails (when memory allocation fails) */
     #undef traceCREATE_MUTEX_FAILED
     #define traceCREATE_MUTEX_FAILED() \
         portENTER_CRITICAL();\
-        vTraceStoreKernelCall(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_MUTEX, 0);\
+        vTraceStoreKernelCall(EVENTGROUP_FAILED_CREATE + TRACE_CLASS_MUTEX, TRACE_CLASS_MUTEX, 0);\
         portEXIT_CRITICAL();
 
     /* Called when the Mutex can not be given, since not holder */
     #undef traceGIVE_MUTEX_RECURSIVE_FAILED
     #define traceGIVE_MUTEX_RECURSIVE_FAILED( pxMutex ) \
         portENTER_CRITICAL();\
-        vTraceStoreKernelCall(EVENTGROUP_FAILED_SEND + TRACE_CLASS_MUTEX, pxMutex->ucQueueNumber); \
+        vTraceStoreKernelCall(EVENTGROUP_FAILED_SEND + TRACE_CLASS_MUTEX, TRACE_CLASS_MUTEX, pxMutex->ucQueueNumber); \
         portEXIT_CRITICAL();
 
     /* Called when a message is sent to a queue */
     #undef traceQUEUE_SEND
     #define traceQUEUE_SEND( pxQueue ) \
-      vTraceStoreKernelCall(EVENTGROUP_SEND + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceStoreKernelCall(EVENTGROUP_SEND + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
       if (TraceObjectClassTable[pxQueue->ucQueueType] == TRACE_CLASS_MUTEX){\
           vTraceSetObjectState(TraceObjectClassTable[pxQueue->ucQueueType], (uint8_t)pxQueue->ucQueueNumber, (uint8_t)0); \
       }else{\
@@ -175,20 +191,20 @@
     #undef traceQUEUE_SEND_FAILED
     #define traceQUEUE_SEND_FAILED( pxQueue ) \
       portENTER_CRITICAL();\
-      vTraceStoreKernelCall(EVENTGROUP_FAILED_SEND + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceStoreKernelCall(EVENTGROUP_FAILED_SEND + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
       portEXIT_CRITICAL();
 
     /* Called when the task is blocked due to a send operation on a full queue */
     #undef traceBLOCKING_ON_QUEUE_SEND
     #define traceBLOCKING_ON_QUEUE_SEND( pxQueue ) \
       portENTER_CRITICAL();\
-      vTraceStoreKernelCall(EVENTGROUP_BLOCK_ON_SEND + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceStoreKernelCall(EVENTGROUP_BLOCK_ON_SEND + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
       portEXIT_CRITICAL();
                 
     /* Called when a message is received from a queue */
     #undef traceQUEUE_RECEIVE
     #define traceQUEUE_RECEIVE( pxQueue ) \
-      vTraceStoreKernelCall(EVENTGROUP_RECEIVE + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceStoreKernelCall(EVENTGROUP_RECEIVE + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
       if (TraceObjectClassTable[pxQueue->ucQueueType] == TRACE_CLASS_MUTEX){\
           extern volatile void * volatile pxCurrentTCB; \
           vTraceSetObjectState(TraceObjectClassTable[pxQueue->ucQueueType], (objectHandleType)pxQueue->ucQueueNumber, (objectHandleType)uxTaskGetTaskNumber((xTaskHandle)pxCurrentTCB)); /*For mutex, store the new owner rather than queue length */ \
@@ -200,7 +216,7 @@
     #undef traceBLOCKING_ON_QUEUE_RECEIVE
     #define traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue ) \
       portENTER_CRITICAL(); \
-      vTraceStoreKernelCall(EVENTGROUP_BLOCK_ON_RECEIVE + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceStoreKernelCall(EVENTGROUP_BLOCK_ON_RECEIVE + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
       if (TraceObjectClassTable[pxQueue->ucQueueType] != TRACE_CLASS_MUTEX){\
           extern volatile void * volatile pxCurrentTCB; \
           vTraceSetTaskInstanceFinished((objectHandleType)uxTaskGetTaskNumber((xTaskHandle)pxCurrentTCB)); \
@@ -210,36 +226,36 @@
     /* Called on xQueuePeek */
     #undef traceQUEUE_PEEK
     #define traceQUEUE_PEEK( pxQueue ) \
-        vTraceStoreKernelCall(EVENTGROUP_PEEK + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber);
+        vTraceStoreKernelCall(EVENTGROUP_PEEK + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber);
 
     /* Called when a receive operation on a queue fails (timeout) */
     #undef traceQUEUE_RECEIVE_FAILED
     #define traceQUEUE_RECEIVE_FAILED( pxQueue ) \
       portENTER_CRITICAL(); \
-      vTraceStoreKernelCall(EVENTGROUP_FAILED_RECEIVE + TraceObjectClassTable[pxQueue->ucQueueType],  pxQueue->ucQueueNumber); \
+      vTraceStoreKernelCall(EVENTGROUP_FAILED_RECEIVE + TraceObjectClassTable[pxQueue->ucQueueType],  TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
       portEXIT_CRITICAL();
         
     /* Called when a message is sent from interrupt context, e.g., using xQueueSendFromISR */
     #undef traceQUEUE_SEND_FROM_ISR
     #define traceQUEUE_SEND_FROM_ISR( pxQueue ) \
-      vTraceStoreKernelCall(EVENTGROUP_SEND_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
-      vTraceSetObjectState(TRACE_CLASS_QUEUE, (objectHandleType)pxQueue->ucQueueNumber, (uint8_t)(pxQueue->uxMessagesWaiting + 1));
+      vTraceStoreKernelCall(EVENTGROUP_SEND_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceSetObjectState(TraceObjectClassTable[pxQueue->ucQueueType], (objectHandleType)pxQueue->ucQueueNumber, (uint8_t)(pxQueue->uxMessagesWaiting + 1));
 
     /* Called when a message send from interrupt context fails (since the queue was full) */
     #undef traceQUEUE_SEND_FROM_ISR_FAILED
     #define traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue ) \
-      vTraceStoreKernelCall(EVENTGROUP_FAILED_SEND_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber);
+      vTraceStoreKernelCall(EVENTGROUP_FAILED_SEND_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber);
 
     /* Called when a message is received in interrupt context, e.g., using xQueueReceiveFromISR */
     #undef traceQUEUE_RECEIVE_FROM_ISR
     #define traceQUEUE_RECEIVE_FROM_ISR( pxQueue ) \
-      vTraceStoreKernelCall(EVENTGROUP_RECEIVE_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
-      vTraceSetObjectState(TRACE_CLASS_QUEUE, (objectHandleType)pxQueue->ucQueueNumber, (uint8_t)(pxQueue->uxMessagesWaiting - 1));
+      vTraceStoreKernelCall(EVENTGROUP_RECEIVE_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+      vTraceSetObjectState(TraceObjectClassTable[pxQueue->ucQueueType], (objectHandleType)pxQueue->ucQueueNumber, (uint8_t)(pxQueue->uxMessagesWaiting - 1));
     
     /* Called when a message receive from interrupt context fails (since the queue was empty) */
     #undef traceQUEUE_RECEIVE_FROM_ISR_FAILED
     #define traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue ) \
-      vTraceStoreKernelCall(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber);
+      vTraceStoreKernelCall(EVENTGROUP_FAILED_RECEIVE_FROM_ISR + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber);
 
 #if (INCLUDE_OBJECT_DELETE == 1)
     /* Called on vQueueDelete */
@@ -247,7 +263,7 @@
     #define traceQUEUE_DELETE( pxQueue ) \
     { \
         portENTER_CRITICAL();\
-        vTraceStoreKernelCall(EVENTGROUP_DELETE + TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
+        vTraceStoreKernelCall(EVENTGROUP_DELETE + TraceObjectClassTable[pxQueue->ucQueueType], TraceObjectClassTable[pxQueue->ucQueueType], pxQueue->ucQueueNumber); \
         vTraceStoreObjectNameOnCloseEvent((objectHandleType)pxQueue->ucQueueNumber, TraceObjectClassTable[pxQueue->ucQueueType]); \
         vTraceStoreObjectPropertiesOnCloseEvent((objectHandleType)pxQueue->ucQueueNumber, TraceObjectClassTable[pxQueue->ucQueueType]); \
         if (TraceObjectClassTable[pxQueue->ucQueueType] == TRACE_CLASS_MUTEX){ \
@@ -263,30 +279,30 @@
     /* Called in vTaskPrioritySet */
     #undef traceTASK_PRIORITY_SET
     #define traceTASK_PRIORITY_SET( pxTask, uxNewPriority ) \
-      vTraceStoreKernelCallWithParam(TASK_PRIORITY_SET, pxTask->uxTaskNumber, uiTraceGetPriorityProperty(TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber));\
+      vTraceStoreKernelCallWithParam(TASK_PRIORITY_SET, TRACE_CLASS_TASK, pxTask->uxTaskNumber, uiTraceGetPriorityProperty(TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber));\
       vTraceSetPriorityProperty( TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber, (uint8_t)uxNewPriority);
 
     /* Called in vTaskPriorityInherit, which is called by Mutex operations */
     #undef traceTASK_PRIORITY_INHERIT
     #define traceTASK_PRIORITY_INHERIT( pxTask, uxNewPriority ) \
-      vTraceStoreKernelCallWithParam(TASK_PRIORITY_INHERIT, pxTask->uxTaskNumber, uiTraceGetPriorityProperty(TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber));\
+      vTraceStoreKernelCallWithParam(TASK_PRIORITY_INHERIT, TRACE_CLASS_TASK, pxTask->uxTaskNumber, uiTraceGetPriorityProperty(TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber));\
       vTraceSetPriorityProperty( TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber, (uint8_t)uxNewPriority );
 
     /* Called in vTaskPriorityDisinherit, which is called by Mutex operations */
     #undef traceTASK_PRIORITY_DISINHERIT
     #define traceTASK_PRIORITY_DISINHERIT( pxTask, uxNewPriority ) \
-      vTraceStoreKernelCallWithParam(TASK_PRIORITY_DISINHERIT, pxTask->uxTaskNumber, uiTraceGetPriorityProperty(TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber));\
+      vTraceStoreKernelCallWithParam(TASK_PRIORITY_DISINHERIT, TRACE_CLASS_TASK, pxTask->uxTaskNumber, uiTraceGetPriorityProperty(TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber));\
       vTraceSetPriorityProperty( TRACE_CLASS_TASK, (uint8_t)pxTask->uxTaskNumber, (uint8_t)uxNewPriority );
 
     /* Called in vTaskResume */
     #undef traceTASK_RESUME
     #define traceTASK_RESUME( pxTaskToResume ) \
-      vTraceStoreKernelCall(TASK_RESUME, pxTaskToResume->uxTaskNumber);
+      vTraceStoreKernelCall(TASK_RESUME, TRACE_CLASS_TASK, pxTaskToResume->uxTaskNumber);
 
     /* Called in vTaskResumeFromISR */
     #undef traceTASK_RESUME_FROM_ISR
     #define traceTASK_RESUME_FROM_ISR( pxTaskToResume )\
-      vTraceStoreKernelCall(TASK_RESUME_FROM_ISR, pxTaskToResume->uxTaskNumber);
+      vTraceStoreKernelCall(TASK_RESUME_FROM_ISR, TRACE_CLASS_TASK, pxTaskToResume->uxTaskNumber);
 
 #endif
 #endif

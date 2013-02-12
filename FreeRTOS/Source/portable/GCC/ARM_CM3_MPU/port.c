@@ -196,8 +196,10 @@ portBASE_TYPE MPU_xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParam
 unsigned portBASE_TYPE MPU_uxTaskGetStackHighWaterMark( xTaskHandle xTask );
 xTaskHandle MPU_xTaskGetCurrentTaskHandle( void );
 portBASE_TYPE MPU_xTaskGetSchedulerState( void );
+xTaskHandle MPU_xTaskGetIdleTaskHandle( void );
 xQueueHandle MPU_xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType );
 signed portBASE_TYPE MPU_xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
+portBASE_TYPE MPU_xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue );
 unsigned portBASE_TYPE MPU_uxQueueMessagesWaiting( const xQueueHandle pxQueue );
 signed portBASE_TYPE MPU_xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 xQueueHandle MPU_xQueueCreateMutex( void );
@@ -212,6 +214,10 @@ void *MPU_pvPortMalloc( size_t xSize );
 void MPU_vPortFree( void *pv );
 void MPU_vPortInitialiseBlocks( void );
 size_t MPU_xPortGetFreeHeapSize( void );
+xQueueSetHandle MPU_xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength );
+xQueueSetMemberHandle MPU_xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
+portBASE_TYPE MPU_xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
+portBASE_TYPE MPU_xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*-----------------------------------------------------------*/
 
@@ -749,6 +755,19 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+	xTaskHandle MPU_xTaskGetIdleTaskHandle( void )
+	{
+	xTaskHandle xReturn;
+    portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+		xReturn = xTaskGetIdleTaskHandle();
+        portRESET_PRIVILEGE( xRunningPrivileged );
+		return eReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( INCLUDE_vTaskSuspend == 1 )
 	void MPU_vTaskSuspend( xTaskHandle pxTaskToSuspend )
 	{
@@ -935,6 +954,17 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
+portBASE_TYPE MPU_xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue )
+{
+portBASE_TYPE xReturn;
+portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+	xReturn = xQueueGenericReset( pxQueue, xNewQueue );
+	portRESET_PRIVILEGE( xRunningPrivileged );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
 signed portBASE_TYPE MPU_xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )
 {
 signed portBASE_TYPE xReturn;
@@ -1014,6 +1044,58 @@ signed portBASE_TYPE xReturn;
 	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
 		xReturn = xQueueGiveMutexRecursive( xMutex );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_QUEUE_SETS == 1 )
+	xQueueSetHandle MPU_xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength )
+	{
+	xQueueSetHandle xReturn;
+	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+		xReturn = xQueueCreateSet( uxEventQueueLength );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_QUEUE_SETS == 1 )
+	xQueueSetMemberHandle MPU_xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks )
+	{
+	xQueueSetMemberHandle xReturn;
+	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+		xReturn = xQueueSelectFromSet( xQueueSet, xBlockTimeTicks );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_QUEUE_SETS == 1 )
+	portBASE_TYPE MPU_xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
+	{
+	portBASE_TYPE xReturn;
+	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+		xReturn = xQueueAddToSet( xQueueOrSemaphore, xQueueSet );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_QUEUE_SETS == 1 )
+	portBASE_TYPE MPU_xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
+	{
+	portBASE_TYPE xReturn;
+	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+		xReturn = xQueueRemoveFromSet( xQueueOrSemaphore, xQueueSet );
 		portRESET_PRIVILEGE( xRunningPrivileged );
 		return xReturn;
 	}

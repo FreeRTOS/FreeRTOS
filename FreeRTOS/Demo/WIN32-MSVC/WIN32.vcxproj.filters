@@ -32,6 +32,9 @@
       <UniqueIdentifier>{19ff1a34-36de-4c48-9d10-3fb1fa0d1fa4}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
+    <Filter Include="Demo App Source\FreeRTOS+Trace Recorder">
+      <UniqueIdentifier>{90b56567-bab6-4d92-b319-b514d378329d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -97,6 +100,21 @@
     <ClCompile Include="..\Common\Minimal\QueueSet.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcUser.c">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcBase.c">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcKernel.c">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcPort.c">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="Run-time-stats-utils.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">
@@ -134,6 +152,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\include\timer_test.h">
       <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
+    </ClInclude>
+    <ClInclude Include="Trace_Recorder_Configuration\trcPort.h">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

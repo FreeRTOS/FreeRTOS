@@ -90,8 +90,8 @@ typedef void * xQueueHandle;
 
 /**
  * Type by which queue sets are referenced.  For example, a call to
- * xQueueSetCreate() returns an xQueueSet variable that can then be used as a
- * parameter to xQueueBlockMultiple(), xQueueAddToQueueSet(), etc.
+ * xQueueCreateSet() returns an xQueueSet variable that can then be used as a
+ * parameter to xQueueSelectFromSet(), xQueueAddToSet(), etc.
  */
 typedef void * xQueueSetHandle;
 
@@ -1309,10 +1309,10 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * A queue set must be explicitly created using a call to xQueueSetCreate()
+ * A queue set must be explicitly created using a call to xQueueCreateSet()
  * before it can be used.  Once created, standard FreeRTOS queues and semaphores
- * can be added to the set using calls to xQueueAddToQueueSet().
- * xQueueBlockMultiple() is then used to determine which, if any, of the queues
+ * can be added to the set using calls to xQueueAddToSet().
+ * xQueueSelectFromSet() is then used to determine which, if any, of the queues
  * or semaphores contained in the set is in a state where a queue read or
  * semaphore take operation would be successful.
  *
@@ -1327,6 +1327,10 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * Note 3:  An additional 4 bytes of RAM is required for each space in a every
  * queue added to a queue set.  Therefore counting semaphores with large maximum
  * counts should not be added to queue sets.
+ *
+ * Note 4:  A received (in the case of a queue) or take (in the case of a 
+ * semaphore) operation must not be performed on a member of a queue set unless 
+ * a call to xQueueSelect() has first returned a handle to that set member.
  *
  * @param uxEventQueueLength Queue sets themselves queue events that occur on
  * the queues and semaphores contained in the set.  uxEventQueueLength specifies
@@ -1347,14 +1351,18 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * @return If the queue set is created successfully then a handle to the created
  * queue set is returned.  Otherwise NULL is returned.
  */
-xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength );
+xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength );
 
 /*
  * Adds a queue or semaphore to a queue set that was previously created by a
- * call to xQueueSetCreate().
+ * call to xQueueCreateSet().
  *
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
+ *
+ * Note 1:  A received (in the case of a queue) or take (in the case of a 
+ * semaphore) operation must not be performed on a member of a queue set unless 
+ * a call to xQueueSelect() has first returned a handle to that set member.
  *
  * @param xQueueOrSemaphore The handle of the queue or semaphore being added to 
  * the queue set (cast to an xQueueSetMemberHandle type).
@@ -1367,10 +1375,11 @@ xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength );
  * queue set because it is already a member of a different queue set then pdFAIL 
  * is returned.
  */
-portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
+portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*
- * Removes a queue or semaphore from a queue set.
+ * Removes a queue or semaphore from a queue set.  A queue can only be removed
+ * from a set when it is empty.
  *
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
@@ -1385,11 +1394,14 @@ portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
  * then pdPASS is returned.  If the queue was not in the queue set then pdFAIL
  * is returned.
  */
-portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
+portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*
- * xQueueBlockMultiple() allows a task to block (pend) on a read operation on
- * all the queues and semaphores in a queue set simultaneously.
+ * xQueueSelectFromSet() selects from the members of a queue set a queue or 
+ * semaphore that either contains data (in the case of a queue) or is available
+ * to take (in the case of a semaphore).  xQueueSelectFromSet() effectively 
+ * allows a task to block (pend) on a read operation on all the queues and 
+ * semaphores in a queue set simultaneously.
  *
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
@@ -1402,6 +1414,10 @@ portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore,
  * Note 2:  Blocking on a queue set that contains a mutex will not cause the
  * mutex holder to inherit the priority of the blocked task.
  *
+ * Note 3:  A received (in the case of a queue) or take (in the case of a 
+ * semaphore) operation must not be performed on a member of a queue set unless 
+ * a call to xQueueSelect() has first returned a handle to that set member.
+ *
  * @param xQueueSet The queue set on which the task will (potentially) block.
  *
  * @param xBlockTimeTicks The maximum time, in ticks, that the calling task will
@@ -1409,13 +1425,18 @@ portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore,
  * of the queue set to be ready for a successful queue read or semaphore take
  * operation.
  *
- * @return xQueueBlockMultiple() will return the handle of a queue (cast to
+ * @return xQueueSelectFromSet() will return the handle of a queue (cast to
  * a xQueueSetMemberHandle type) contained in the queue set that contains data, 
  * or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained
  * in the queue set that is available, or NULL if no such queue or semaphore 
  * exists before before the specified block time expires.
  */
-xQueueSetMemberHandle xQueueBlockMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
+xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
+
+/*
+ * A version of xQueueSelectFromSet() that can be used from an ISR.
+ */
+xQueueSetMemberHandle xQueueSelectFromSetFromISR( xQueueSetHandle xQueueSet );
 
 /* Not public API functions. */
 void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );

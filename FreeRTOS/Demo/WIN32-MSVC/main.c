@@ -178,6 +178,10 @@ int main( void )
 	is done purely to test the use of vSemaphoreDelete(). */
 	xMutexToDelete = xSemaphoreCreateMutex();
 
+	/* Start the trace recording - the recording is written to a file if
+	configASSERT() is called. */
+	vTraceStart();
+
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
@@ -381,7 +385,6 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 				pcStatusMessage = "Error: Returned test task state was incorrect 3";
 			}
 		}
-
 	}
 }
 /*-----------------------------------------------------------*/
@@ -408,13 +411,19 @@ void vApplicationTickHook( void )
 
 	/* Write to a queue that is in use as part of the queue set demo to 
 	demonstrate using queue sets from an ISR. */
-	vQueueSetWriteToQueueFromISR();
+	vQueueSetAccessQueueSetFromISR();
 }
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( void )
 {
 	taskDISABLE_INTERRUPTS();
+
+	/* Stop the trace recording. */
+	vTraceStop();
+	vTracePortSave();
+		
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
 

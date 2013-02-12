@@ -67,7 +67,7 @@
 */
 
 /*
- * Demonstrates the creation an use of queue sets.
+ * Tests the use of queue sets.
  *
  * A receive task creates a number of queues and adds them to a queue set before
  * blocking on the queue set receive.  A transmit task and (optionally) an
@@ -76,11 +76,12 @@
  * the queues and flags an error if the received message does not match that
  * expected.  The task sends values in the range 0 to
  * queuesetINITIAL_ISR_TX_VALUE, and the ISR sends value in the range
- * queuesetINITIAL_ISR_TX_VALUE to 0xffffffffUL;
+ * queuesetINITIAL_ISR_TX_VALUE to ULONG_MAX.
  */
 
 /* Standard includes. */
 #include <stdlib.h>
+#include <limits.h>
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
@@ -102,7 +103,7 @@
 
 /* Messages are sent in incrementing order from both a task and an interrupt.
 The task sends values in the range 0 to 0xfffe, and the interrupt sends values
-in the range of 0xffff to 0xffffffff; */
+in the range of 0xffff to ULONG_MAX. */
 #define queuesetINITIAL_ISR_TX_VALUE 0xffffUL
 
 /* The priorities used in this demo. */
@@ -115,8 +116,13 @@ queuesetPRIORITY_CHANGE_LOOPS number of values are sent to a queue. */
 #define queuesetPRIORITY_CHANGE_LOOPS	100UL
 
 /* The ISR sends to the queue every queuesetISR_TX_PERIOD ticks. */
-#define queuesetISR_TX_PERIOD	( 100UL )
+#define queuesetISR_TX_PERIOD	2//( 100UL )
 
+/* The allowable maximum deviation between a received value and the expected
+received value.  A deviation will occur when data is received from a queue
+inside an ISR in between a task receiving from a queue and the task checking
+the received value. */
+#define queuesetALLOWABLE_RX_DEVIATION 5
 /*
  * The task that periodically sends to the queue set.
  */
@@ -126,6 +132,35 @@ static void prvQueueSetSendingTask( void *pvParameters );
  * The task that reads from the queue set.
  */
 static void prvQueueSetReceivingTask( void *pvParameters );
+
+/*
+ * Check the value received from a queue is the expected value.  Some values
+ * originate from the send task, some values originate from the ISR, with the
+ * range of the value being used to distinguish between the two message
+ * sources.
+ */
+static void prvCheckReceivedValue( unsigned long ulReceived );
+
+/*
+ * For purposes of test coverage, functions that read from and write to a
+ * queue set from an ISR respectively.
+ */
+static void prvReceiveFromQueueInSetFromISR( void );
+static void prvSendToQueueInSetFromISR( void );
+
+/*
+ * Create the queues and add them to a queue set before resuming the Tx
+ * task.
+ */
+static void prvSetupTest( xTaskHandle xQueueSetSendingTask );
+
+/*
+ * Checks a value received from a queue falls within the range of expected
+ * values.
+ */
+static portBASE_TYPE prvCheckReceivedValueWithinExpectedRange( unsigned long ulReceived, unsigned long ulExpectedReceived );
+
+/*-----------------------------------------------------------*/
 
 /* The queues that are added to the set. */
 static xQueueHandle xQueues[ queuesetNUM_QUEUES_IN_SET ] = { 0 };
@@ -166,8 +201,8 @@ xTaskHandle xQueueSetSendingTask;
 	/* Create the two queues.  The handle of the sending task is passed into
 	the receiving task using the task parameter.  The receiving task uses the
 	handle to resume the sending task after it has created the queues. */
-	xTaskCreate( prvQueueSetSendingTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, queuesetMEDIUM_PRIORITY, &xQueueSetSendingTask );
-	xTaskCreate( prvQueueSetReceivingTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, NULL );
+	xTaskCreate( prvQueueSetSendingTask, ( signed char * ) "SetTx", configMINIMAL_STACK_SIZE, NULL, queuesetMEDIUM_PRIORITY, &xQueueSetSendingTask );
+	xTaskCreate( prvQueueSetReceivingTask, ( signed char * ) "SetRx", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, NULL );
 
 	/* It is important that the sending task does not attempt to write to a
 	queue before the queue has been created.  It is therefore placed into the
@@ -226,48 +261,6 @@ portBASE_TYPE xReturn = pdPASS, x;
 }
 /*-----------------------------------------------------------*/
 
-void vQueueSetWriteToQueueFromISR( void )
-{
-portBASE_TYPE x = 0;
-static unsigned long ulCallCount = 0;
-
-	/* xSetupComplete is set to pdTRUE when the queues have been created and
-	are available for use. */
-	if( xSetupComplete == pdTRUE )
-	{
-		/* It is intended that this function is called from the tick hook
-		function, so each call is one tick period apart. */
-		ulCallCount++;
-		if( ulCallCount > queuesetISR_TX_PERIOD )
-		{
-			ulCallCount = 0;
-
-			/* Look for a queue that can be written to. */
-			for( x = 0; x < queuesetNUM_QUEUES_IN_SET; x++ )
-			{
-				if( xQueues[ x ] != NULL )
-				{
-					/* xQueues[ x ] can be written to.  Send the next value. */
-					if( xQueueSendFromISR( xQueues[ x ], ( void * ) &ulISRTxValue, NULL ) == pdPASS )
-					{
-						ulISRTxValue++;
-
-						/* If the Tx value has wrapped then set it back to its
-						initial	value. */
-						if( ulISRTxValue == 0UL )
-						{
-							ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
-						}
-					}
-
-					break;
-				}
-			}
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
 static void prvQueueSetSendingTask( void *pvParameters )
 {
 unsigned long ulTaskTxValue = 0;
@@ -299,41 +292,6 @@ unsigned portBASE_TYPE uxPriority = queuesetMEDIUM_PRIORITY, ulLoops = 0;
 			xQueueSetTasksStatus = pdFAIL;
 		}
 
-		/* Attempt to remove the queue from a queue set it does not belong
-		to (NULL being passed as the queue set in this case). */
-		if( xQueueRemoveFromQueueSet( xQueueInUse, NULL ) != pdFAIL )
-		{
-			/* It is not possible to successfully remove a queue from a queue
-			set it does not belong to. */
-			xQueueSetTasksStatus = pdFAIL;
-		}
-
-		/* Mark the space in the array of queues as being empty before actually
-		removing the queue from the queue set.  This is to prevent the code
-		that accesses the queue set from an interrupt from attempting to access
-		a queue that is no longer in the set. */
-		xQueues[ xQueueToWriteTo ] = 0;
-
-		/* Attempt to remove the queue from the queue set it does belong to. */
-		if( xQueueRemoveFromQueueSet( xQueueInUse, xQueueSet ) != pdPASS )
-		{
-			/* It should be possible to remove the queue from the queue set it
-			does belong to. */
-			xQueueSetTasksStatus = pdFAIL;
-		}
-
-		/* Add the queue back before cycling back to run again. */
-		if( xQueueAddToQueueSet( xQueueInUse, xQueueSet ) != pdPASS )
-		{
-			/* If the queue was successfully removed from the queue set then it
-			should be possible to add it back in again. */
-			xQueueSetTasksStatus = pdFAIL;
-		}
-
-		/* Now the queue is back in the set it is ok for the interrupt that
-		writes to the queues to access it again. */
-		xQueues[ xQueueToWriteTo ] = xQueueInUse;
-
 		ulTaskTxValue++;
 
 		/* If the Tx value has reached the range used by the ISR then set it
@@ -363,56 +321,21 @@ unsigned portBASE_TYPE uxPriority = queuesetMEDIUM_PRIORITY, ulLoops = 0;
 
 static void prvQueueSetReceivingTask( void *pvParameters )
 {
-unsigned long ulReceived, ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
+unsigned long ulReceived;
 xQueueHandle xActivatedQueue;
-portBASE_TYPE x;
 xTaskHandle xQueueSetSendingTask;
 
 	/* The handle to the sending task is passed in using the task parameter. */
 	xQueueSetSendingTask = ( xTaskHandle ) pvParameters;
 
-	/* Ensure the queues are created and the queue set configured before the
-	sending task is unsuspended.
-
-	First Create the queue set such that it will be able to hold a message for
-	every space in every queue in the set. */
-	xQueueSet = xQueueSetCreate( queuesetNUM_QUEUES_IN_SET * queuesetQUEUE_LENGTH );
-
-	for( x = 0; x < queuesetNUM_QUEUES_IN_SET; x++ )
-	{
-		/* Create the queue and add it to the set.  The queue is just holding
-		unsigned long value. */
-		xQueues[ x ] = xQueueCreate( queuesetQUEUE_LENGTH, sizeof( unsigned long ) );
-		configASSERT( xQueues[ x ] );
-		if( xQueueAddToQueueSet( xQueues[ x ], xQueueSet ) != pdPASS )
-		{
-			xQueueSetTasksStatus = pdFAIL;
-		}
-
-		/* The queue has now been added to the queue set and cannot be added to
-		another. */
-		if( xQueueAddToQueueSet( xQueues[ x ], xQueueSet ) != pdFAIL )
-		{
-			xQueueSetTasksStatus = pdFAIL;
-		}
-	}
-
-	/* The task that sends to the queues is not running yet, so attempting to
-	read from the queue set should fail, resulting in xActivatedQueue being set
-	to NULL. */
-	xActivatedQueue = xQueueBlockMultiple( xQueueSet, queuesetSHORT_DELAY );
-	configASSERT( xActivatedQueue == NULL );
-
-	/* Resume the task that writes to the queues. */
-	vTaskResume( xQueueSetSendingTask );
-
-	/* Let the ISR access the queues also. */
-	xSetupComplete = pdTRUE;
+	/* Create the queues and add them to the queue set before resuming the Tx
+	task. */
+	prvSetupTest( xQueueSetSendingTask );
 
 	for( ;; )
 	{
 		/* Wait for a message to arrive on one of the queues in the set. */
-		xActivatedQueue = xQueueBlockMultiple( xQueueSet, portMAX_DELAY );
+		xActivatedQueue = xQueueSelectFromSet( xQueueSet, portMAX_DELAY );
 		configASSERT( xActivatedQueue );
 
 		if( xActivatedQueue == NULL )
@@ -430,52 +353,14 @@ xTaskHandle xQueueSetSendingTask;
 				xQueueSetTasksStatus = pdFAIL;
 			}
 
-			/* If the received value is equal to or greater than
-			queuesetINITIAL_ISR_TX_VALUE then it was sent by an ISR. */
-			if( ulReceived >= queuesetINITIAL_ISR_TX_VALUE )
+			/* Ensure the value received was the value expected.  This function
+			manipulates file scope data and is also called from an ISR, hence
+			the critical section. */
+			taskENTER_CRITICAL();
 			{
-				/* The value was sent from the ISR.  Check it against its
-				expected value. */
-				configASSERT( ulReceived == ulExpectedReceivedFromISR );
-				if( ulReceived != ulExpectedReceivedFromISR )
-				{
-					xQueueSetTasksStatus = pdFAIL;
-				}
-				else
-				{
-					/* It is expected to receive an incrementing value. */
-					ulExpectedReceivedFromISR++;
-
-					/* If the expected value has wrapped then set it back to
-					its initial value. */
-					if( ulExpectedReceivedFromISR == 0 )
-					{
-						ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
-					}
-				}
+				prvCheckReceivedValue( ulReceived );
 			}
-			else
-			{
-				/* The value was sent from the Tx task.  Check it against its
-				expected value. */
-				configASSERT( ulReceived == ulExpectedReceivedFromTask );
-				if( ulReceived != ulExpectedReceivedFromTask )
-				{
-					xQueueSetTasksStatus = pdFAIL;
-				}
-				else
-				{
-					/* It is expected to receive an incrementing value. */
-					ulExpectedReceivedFromTask++;
-
-					/* If the expected value has reached the range of values
-					used by the ISR then set it back to 0. */
-					if( ulExpectedReceivedFromTask >= queuesetINITIAL_ISR_TX_VALUE )
-					{
-						ulExpectedReceivedFromTask = 0;
-					}
-				}
-			}
+			taskEXIT_CRITICAL();
 		}
 
 		if( xQueueSetTasksStatus == pdPASS )
@@ -484,4 +369,250 @@ xTaskHandle xQueueSetSendingTask;
 		}
 	}
 }
+/*-----------------------------------------------------------*/
 
+void vQueueSetAccessQueueSetFromISR( void )
+{
+static unsigned long ulCallCount = 0;
+
+	/* xSetupComplete is set to pdTRUE when the queues have been created and
+	are available for use. */
+	if( xSetupComplete == pdTRUE )
+	{
+		/* It is intended that this function is called from the tick hook
+		function, so each call is one tick period apart. */
+		ulCallCount++;
+		if( ulCallCount > queuesetISR_TX_PERIOD )
+		{
+			ulCallCount = 0;
+
+			/* First attempt to read from the queue set. */
+			prvReceiveFromQueueInSetFromISR();
+
+			/* Then write to the queue set. */
+			prvSendToQueueInSetFromISR();
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvCheckReceivedValue( unsigned long ulReceived )
+{
+static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
+
+	/* Values are received in tasks and interrupts.  It is likely that the
+	receiving task will sometimes get preempted by the receiving interrupt
+	between reading a value from the queue and calling this function.  When
+	that happens, if the receiving interrupt calls this function the values
+	will get passed into this function slightly out of order.  For that
+	reason the value passed in is tested against a small range of expected
+	values, rather than a single absolute value.  To make the range testing
+	easier values in the range limits are ignored. */
+
+	/* If the received value is equal to or greater than
+	queuesetINITIAL_ISR_TX_VALUE then it was sent by an ISR. */
+	if( ulReceived >= queuesetINITIAL_ISR_TX_VALUE )
+	{
+		/* The value was sent from the ISR. */
+		if( ( ulReceived - queuesetINITIAL_ISR_TX_VALUE ) < queuesetALLOWABLE_RX_DEVIATION )
+		{
+			/* The value received is at the lower limit of the expected range.
+			Don't test it and expect to receive one higher next time. */
+			ulExpectedReceivedFromISR++;
+		}
+		else if( ( ULONG_MAX - ulReceived ) <= queuesetALLOWABLE_RX_DEVIATION )
+		{
+			/* The value received is at the higher limit of the expected range.
+			Don't test it and expect to wrap soon. */
+			ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
+		}
+		else
+		{
+			/* Check the value against its expected value range. */
+			if( prvCheckReceivedValueWithinExpectedRange( ulReceived, ulExpectedReceivedFromISR ) != pdPASS )
+			{
+				xQueueSetTasksStatus = pdFAIL;
+			}
+			else
+			{
+				/* It is expected to receive an incrementing value. */
+				ulExpectedReceivedFromISR++;
+			}
+		}
+	}
+	else
+	{
+		/* The value was sent from the Tx task. */
+		if( ulReceived < queuesetALLOWABLE_RX_DEVIATION )
+		{
+			/* The value received is at the lower limit of the expected range.
+			Don't test it, and expect to receive one higher next time. */
+			ulExpectedReceivedFromTask++;
+		}
+		else if( ( ( queuesetINITIAL_ISR_TX_VALUE - 1 ) - ulReceived ) <= queuesetALLOWABLE_RX_DEVIATION )
+		{
+			/* The value received is at the higher limit of the expected range.
+			Don't test it and expect to wrap soon. */
+			ulExpectedReceivedFromTask = 0;
+		}
+		else
+		{
+			/* Check the value against its expected value range. */
+			if( prvCheckReceivedValueWithinExpectedRange( ulReceived, ulExpectedReceivedFromTask ) != pdPASS )
+			{
+				xQueueSetTasksStatus = pdFAIL;
+			}
+			else
+			{
+				/* It is expected to receive an incrementing value. */
+				ulExpectedReceivedFromTask++;
+			}
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static portBASE_TYPE prvCheckReceivedValueWithinExpectedRange( unsigned long ulReceived, unsigned long ulExpectedReceived )
+{
+portBASE_TYPE xReturn = pdPASS;
+
+	if( ulReceived > ulExpectedReceived )
+	{
+		configASSERT( ( ulReceived - ulExpectedReceived ) <= queuesetALLOWABLE_RX_DEVIATION );
+		if( ( ulReceived - ulExpectedReceived ) > queuesetALLOWABLE_RX_DEVIATION )
+		{
+			xReturn = pdFALSE;
+		}
+	}
+	else
+	{
+		configASSERT( ( ulExpectedReceived - ulReceived ) <= queuesetALLOWABLE_RX_DEVIATION );
+		if( ( ulExpectedReceived - ulReceived ) > queuesetALLOWABLE_RX_DEVIATION )
+		{
+			xReturn = pdFALSE;
+		}
+	}
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+static void prvReceiveFromQueueInSetFromISR( void )
+{
+xQueueSetMemberHandle xActivatedQueue;
+unsigned long ulReceived;
+
+	/* See if any of the queues in the set contain data. */
+	xActivatedQueue = xQueueSelectFromSetFromISR( xQueueSet );
+
+	if( xActivatedQueue != NULL )
+	{
+		/* Reading from the queue for test purposes only. */
+		if( xQueueReceiveFromISR( xActivatedQueue, &ulReceived, NULL ) != pdPASS )
+		{
+			/* Data should have been available as the handle was returned from
+			xQueueSelectFromSetFromISR(). */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Ensure the value received was the value expected. */
+		prvCheckReceivedValue( ulReceived );
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvSendToQueueInSetFromISR( void )
+{
+static portBASE_TYPE xQueueToWriteTo = 0;
+
+	if( xQueueSendFromISR( xQueues[ xQueueToWriteTo ], ( void * ) &ulISRTxValue, NULL ) == pdPASS )
+	{
+		ulISRTxValue++;
+
+		/* If the Tx value has wrapped then set it back to its
+		initial	value. */
+		if( ulISRTxValue == 0UL )
+		{
+			ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
+		}
+
+		/* Use a different queue next time. */
+		xQueueToWriteTo++;
+		if( xQueueToWriteTo >= queuesetNUM_QUEUES_IN_SET )
+		{
+			xQueueToWriteTo = 0;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvSetupTest( xTaskHandle xQueueSetSendingTask )
+{
+portBASE_TYPE x;
+xQueueSetMemberHandle xActivatedQueue;
+
+	/* Ensure the queues are created and the queue set configured before the
+	sending task is unsuspended.
+
+	First Create the queue set such that it will be able to hold a message for
+	every space in every queue in the set. */
+	xQueueSet = xQueueCreateSet( queuesetNUM_QUEUES_IN_SET * queuesetQUEUE_LENGTH );
+
+	for( x = 0; x < queuesetNUM_QUEUES_IN_SET; x++ )
+	{
+		/* Create the queue and add it to the set.  The queue is just holding
+		unsigned long value. */
+		xQueues[ x ] = xQueueCreate( queuesetQUEUE_LENGTH, sizeof( unsigned long ) );
+		configASSERT( xQueues[ x ] );
+		if( xQueueAddToSet( xQueues[ x ], xQueueSet ) != pdPASS )
+		{
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		else
+		{
+			/* The queue has now been added to the queue set and cannot be added to
+			another. */
+			if( xQueueAddToSet( xQueues[ x ], xQueueSet ) != pdFAIL )
+			{
+				xQueueSetTasksStatus = pdFAIL;
+			}
+		}
+	}
+
+	/* Attempt to remove a queue from a queue set it does not belong
+	to (NULL being passed as the queue set in this case). */
+	if( xQueueRemoveFromSet( xQueues[ 0 ], NULL ) != pdFAIL )
+	{
+		/* It is not possible to successfully remove a queue from a queue
+		set it does not belong to. */
+		xQueueSetTasksStatus = pdFAIL;
+	}
+
+	/* Attempt to remove a queue from the queue set it does belong to. */
+	if( xQueueRemoveFromSet( xQueues[ 0 ], xQueueSet ) != pdPASS )
+	{
+		/* It should be possible to remove the queue from the queue set it
+		does belong to. */
+		xQueueSetTasksStatus = pdFAIL;
+	}
+
+	/* Add the queue back again before starting the dynamic tests. */
+	if( xQueueAddToSet( xQueues[ 0 ], xQueueSet ) != pdPASS )
+	{
+		/* If the queue was successfully removed from the queue set then it
+		should be possible to add it back in again. */
+		xQueueSetTasksStatus = pdFAIL;
+	}
+
+	/* The task that sends to the queues is not running yet, so attempting to
+	read from the queue set should fail, resulting in xActivatedQueue being set
+	to NULL. */
+	xActivatedQueue = xQueueSelectFromSet( xQueueSet, queuesetSHORT_DELAY );
+	configASSERT( xActivatedQueue == NULL );
+
+	/* Resume the task that writes to the queues. */
+	vTaskResume( xQueueSetSendingTask );
+
+	/* Let the ISR access the queues also. */
+	xSetupComplete = pdTRUE;
+}

@@ -974,7 +974,11 @@ tskTCB * pxNewTCB;
 				/* Remember the ready list the task might be referenced from
 				before its uxPriority member is changed so the
 				taskRESET_READY_PRIORITY() macro can function correctly. */
-				uxPriorityUsedOnEntry = pxTCB->uxPriority;
+				#if ( configUSE_PORT_OPTIMISED_TASK_SELECTION != 0 )
+				{
+					uxPriorityUsedOnEntry = pxTCB->uxPriority;
+				}
+				#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 
 				#if ( configUSE_MUTEXES == 1 )
 				{
@@ -1274,11 +1278,13 @@ portBASE_TYPE xReturn;
 			/* Should only reach here if a task calls xTaskEndScheduler(). */
 		}
 	}
-
-	/* This line will only be reached if the kernel could not be started, or
-	vTaskEndScheduler() was called (vTaskEndScheduler() is not implemented for
-	most ports). */
-	configASSERT( xReturn );
+	else
+	{
+		/* This line will only be reached if the kernel could not be started, 
+		because there was not enough FreeRTOS heap to create the idle task
+		or the timer task. */
+		configASSERT( xReturn );
+	}
 }
 /*-----------------------------------------------------------*/
 

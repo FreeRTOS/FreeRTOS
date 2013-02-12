@@ -111,7 +111,7 @@ zero. */
 #define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
 #define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
 #define queueQUEUE_TYPE_RECURSIVE_MUTEX		( 4U )
-#define queueQUEUE_TYPE_SET					( 5U )
+#define queueQUEUE_TYPE_SET					( 0U )
 
 /*
  * Definition of the queue used by the scheduler.
@@ -191,10 +191,10 @@ void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber ) P
 unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue ) PRIVILEGED_FUNCTION;
 xTaskHandle xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;
-xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength ) PRIVILEGED_FUNCTION;
-xQueueSetMemberHandle xQueueBlockMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
+xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength ) PRIVILEGED_FUNCTION;
+xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
 
 /*
  * Co-routine queue functions differ from task queue functions.  Co-routines are
@@ -630,36 +630,52 @@ xTimeOutType xTimeOut;
 				traceQUEUE_SEND( pxQueue );
 				prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
-				/* If there was a task waiting for data to arrive on the
-				queue then unblock it now. */
-				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+				#if ( configUSE_QUEUE_SETS == 1 )
 				{
-					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) == pdTRUE )
+					if( pxQueue->pxQueueSetContainer != NULL )
 					{
-						/* The unblocked task has a priority higher than
-						our own so yield immediately.  Yes it is ok to do
-						this from within the critical section - the kernel
-						takes care of that. */
-						portYIELD_WITHIN_API();
-					}
-				}
-				else
-				{
-					#if ( configUSE_QUEUE_SETS == 1 )
-					{
-						if( pxQueue->pxQueueSetContainer != NULL )
+						if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) == pdTRUE )
 						{
-							if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) == pdTRUE )
+							/* The queue is a member of a queue set, and posting
+							to the queue set caused a higher priority task to
+							unblock. A context switch is required. */
+							portYIELD_WITHIN_API();
+						}
+					}
+					else
+					{
+						/* If there was a task waiting for data to arrive on the
+						queue then unblock it now. */
+						if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+						{
+							if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) == pdTRUE )
 							{
-								/* The queue is a member of a queue set, and posting to
-								the queue set caused a higher priority task to unblock.
-								A context switch is required. */
+								/* The unblocked task has a priority higher than
+								our own so yield immediately.  Yes it is ok to
+								do this from within the critical section - the
+								kernel takes care of that. */
 								portYIELD_WITHIN_API();
 							}
 						}
 					}
-					#endif /* configUSE_QUEUE_SETS */
 				}
+				#else /* configUSE_QUEUE_SETS */
+				{
+					/* If there was a task waiting for data to arrive on the
+					queue then unblock it now. */
+					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+					{
+						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) == pdTRUE )
+						{
+							/* The unblocked task has a priority higher than
+							our own so yield immediately.  Yes it is ok to do
+							this from within the critical section - the kernel
+							takes care of that. */
+							portYIELD_WITHIN_API();
+						}
+					}
+				}
+				#endif /* configUSE_QUEUE_SETS */
 
 				taskEXIT_CRITICAL();
 
@@ -977,29 +993,29 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 			be done when the queue is unlocked later. */
 			if( pxQueue->xTxLock == queueUNLOCKED )
 			{
-				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+				#if ( configUSE_QUEUE_SETS == 1 )
 				{
-					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+					if( pxQueue->pxQueueSetContainer != NULL )
 					{
-						/* The task waiting has a higher priority so record that a
-						context	switch is required. */
-						if( pxHigherPriorityTaskWoken != NULL )
+						if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) == pdTRUE )
 						{
-							*pxHigherPriorityTaskWoken = pdTRUE;
+							/* The queue is a member of a queue set, and posting
+							to the queue set caused a higher priority task to
+							unblock.  A context switch is required. */
+							if( pxHigherPriorityTaskWoken != NULL )
+							{
+								*pxHigherPriorityTaskWoken = pdTRUE;
+							}
 						}
 					}
-				}
-				else
-				{
-					#if ( configUSE_QUEUE_SETS == 1 )
+					else
 					{
-						if( pxQueue->pxQueueSetContainer != NULL )
+						if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 						{
-							if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) == pdTRUE )
+							if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 							{
-								/* The queue is a member of a queue set, and posting
-								to the queue set caused a higher priority task to
-								unblock.  A context switch is required. */
+								/* The task waiting has a higher priority so record that a
+								context	switch is required. */
 								if( pxHigherPriorityTaskWoken != NULL )
 								{
 									*pxHigherPriorityTaskWoken = pdTRUE;
@@ -1007,8 +1023,23 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 							}
 						}
 					}
-					#endif /* configUSE_QUEUE_SETS */
 				}
+				#else /* configUSE_QUEUE_SETS */
+				{
+					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+					{
+						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+						{
+							/* The task waiting has a higher priority so record that a
+							context	switch is required. */
+							if( pxHigherPriorityTaskWoken != NULL )
+							{
+								*pxHigherPriorityTaskWoken = pdTRUE;
+							}
+						}
+					}
+				}
+				#endif /* configUSE_QUEUE_SETS */
 			}
 			else
 			{
@@ -1371,52 +1402,58 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 		{
 			/* Data was posted while the queue was locked.  Are any tasks
 			blocked waiting for data to become available? */
-			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+			#if ( configUSE_QUEUE_SETS == 1 )
 			{
-				/* Tasks that are removed from the event list will get added to
-				the pending ready list as the scheduler is still suspended. */
-				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+				if( pxQueue->pxQueueSetContainer != NULL )
 				{
-					/* The task waiting has a higher priority so record that a
-					context	switch is required. */
-					vTaskMissedYield();
+					if( prvNotifyQueueSetContainer( pxQueue, queueSEND_TO_BACK ) == pdTRUE )
+					{
+						/* The queue is a member of a queue set, and posting to
+						the queue set caused a higher priority task to unblock.
+						A context switch is required. */
+						vTaskMissedYield();
+					}
 				}
 				else
 				{
-					#if ( configUSE_QUEUE_SETS == 1 )
+					/* Tasks that are removed from the event list will get added to
+					the pending ready list as the scheduler is still suspended. */
+					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 					{
-						/* It is highly unlikely that this code will ever run,
-						for the following reason:
-						  + A task will only lock a queue that is part of a
-						    queue set when it is blocking on a write to the
-							queue.
-						  + An interrupt can only add something to a queue
-						    while the queue is locked (resulting in the
-							following code executing when the queue is unlocked)
-							if the queue is not full, meaning a task will never
-							have blocked on a write in the first place.
-						 The code could execute if an interrupt is also removing
-						 items from a queue. */
-						if( pxQueue->pxQueueSetContainer != NULL )
+						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 						{
-							if( prvNotifyQueueSetContainer( pxQueue, queueSEND_TO_BACK ) == pdTRUE )
-							{
-								/* The queue is a member of a queue set, and posting to
-								the queue set caused a higher priority task to unblock.
-								A context switch is required. */
-								vTaskMissedYield();
-							}
+							/* The task waiting has a higher priority so record that a
+							context	switch is required. */
+							vTaskMissedYield();
 						}
 					}
-					#endif /* configUSE_QUEUE_SETS */
+					else
+					{
+						break;
+					}
 				}
-
-				--( pxQueue->xTxLock );
 			}
-			else
+			#else /* configUSE_QUEUE_SETS */
 			{
-				break;
+				/* Tasks that are removed from the event list will get added to
+				the pending ready list as the scheduler is still suspended. */
+				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+				{
+					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+					{
+						/* The task waiting has a higher priority so record that a
+						context	switch is required. */
+						vTaskMissedYield();
+					}
+				}
+				else
+				{
+					break;
+				}
 			}
+			#endif /* configUSE_QUEUE_SETS */
+
+			--( pxQueue->xTxLock );
 		}
 
 		pxQueue->xTxLock = queueUNLOCKED;
@@ -1791,7 +1828,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	xQueueSetHandle xQueueSetCreate( unsigned portBASE_TYPE uxEventQueueLength )
+	xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength )
 	{
 	xQUEUE *pxQueue;
 
@@ -1805,7 +1842,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	portBASE_TYPE xQueueAddToQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
+	portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
 	{
 	portBASE_TYPE xReturn;
 
@@ -1831,18 +1868,27 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	portBASE_TYPE xQueueRemoveFromQueueSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
+	portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
 	{
 	portBASE_TYPE xReturn;
 
 		if( xQueueOrSemaphore->pxQueueSetContainer != xQueueSet )
 		{
+			/* The queue was not a member of the set. */
+			xReturn = pdFAIL;
+		}
+		else if( xQueueOrSemaphore->uxMessagesWaiting != 0 )
+		{
+			/* It is dangerous to remove a queue from a set when the queue is
+			not empty because the queue set will still hold pending events for
+			the queue. */
 			xReturn = pdFAIL;
 		}
 		else
 		{
 			taskENTER_CRITICAL();
 			{
+				/* The queue is no longer contained in the set. */
 				xQueueOrSemaphore->pxQueueSetContainer = NULL;
 			}
 			taskEXIT_CRITICAL();
@@ -1857,11 +1903,24 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	xQueueSetMemberHandle xQueueBlockMultiple( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks )
+	xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks )
 	{
 	xQueueSetMemberHandle xReturn = NULL;
 
 		xQueueGenericReceive( ( xQueueHandle ) xQueueSet, &xReturn, xBlockTimeTicks, pdFALSE );
+		return xReturn;
+	}
+
+#endif /* configUSE_QUEUE_SETS */
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_QUEUE_SETS == 1 )
+
+	xQueueSetMemberHandle xQueueSelectFromSetFromISR( xQueueSetHandle xQueueSet )
+	{
+	xQueueSetMemberHandle xReturn = NULL;
+
+		xQueueReceiveFromISR( ( xQueueHandle ) xQueueSet, &xReturn, NULL );
 		return xReturn;
 	}
 
@@ -1880,6 +1939,8 @@ signed portBASE_TYPE xReturn;
 
 		if( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength )
 		{
+			traceQUEUE_SEND( pxQueueSetContainer );
+			/* The data copies is the handle of the queue that contains data. */
 			prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
 			if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
 			{

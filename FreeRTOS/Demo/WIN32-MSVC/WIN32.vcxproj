@@ -54,7 +54,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\Include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\include;..\..\Source\portable\MSVC-MingW;..\Common\Include;..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\Include;.\Trace_Recorder_Configuration;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -125,6 +125,10 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcBase.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcKernel.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcPort.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcUser.c" />
     <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c" />
     <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />
@@ -166,6 +170,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="Run-time-stats-utils.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\include\timers.h" />
@@ -180,6 +185,8 @@
     <ClInclude Include="..\..\Source\include\queue.h" />
     <ClInclude Include="..\..\Source\include\semphr.h" />
     <ClInclude Include="..\..\Source\include\task.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcPort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

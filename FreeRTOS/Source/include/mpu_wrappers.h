@@ -101,6 +101,7 @@ only for ports that are using the MPU. */
 		#define uxTaskGetStackHighWaterMark		MPU_uxTaskGetStackHighWaterMark
 		#define xTaskGetCurrentTaskHandle		MPU_xTaskGetCurrentTaskHandle
 		#define xTaskGetSchedulerState			MPU_xTaskGetSchedulerState
+		#define xTaskGetIdleTaskHandle			MPU_xTaskGetIdleTaskHandle
 
 		#define xQueueGenericCreate				MPU_xQueueGenericCreate
 		#define xQueueCreateMutex				MPU_xQueueCreateMutex
@@ -113,6 +114,11 @@ only for ports that are using the MPU. */
 		#define xQueueGenericReceive			MPU_xQueueGenericReceive
 		#define uxQueueMessagesWaiting			MPU_uxQueueMessagesWaiting
 		#define vQueueDelete					MPU_vQueueDelete
+		#define xQueueGenericReset				MPU_xQueueGenericReset
+		#define xQueueCreateSet					MPU_xQueueCreateSet
+		#define xQueueSelectFromSet				MPU_xQueueSelectFromSet
+		#define xQueueAddToSet					MPU_xQueueAddToSet
+		#define xQueueRemoveFromSet				MPU_xQueueRemoveFromSet
 
 		#define pvPortMalloc					MPU_pvPortMalloc
 		#define vPortFree						MPU_vPortFree

@@ -66,87 +66,78 @@
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
-
-/*-----------------------------------------------------------
- * Application specific definitions.
+/*
+ * Utility functions required to gather run time statistics.  See:
+ * http://www.freertos.org/rtos-run-time-stats.html
  *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
+ * Note that this is a simulated port, where simulated time is a lot slower than
+ * real time, therefore the run time counter values have no real meaningful
+ * units.
  *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
- *----------------------------------------------------------*/
+ * Also note that it is assumed this demo is going to be used for short periods
+ * of time only, and therefore timer overflows are not handled.
+*/
 
-#define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				1
-#define configTICK_RATE_HZ				( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 50 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE			( ( size_t ) 0 ) /* This parameter has no effect when heap_3.c is included in the project. */
-#define configMAX_TASK_NAME_LEN			( 12 )
-#define configUSE_TRACE_FACILITY		1
-#define configUSE_16_BIT_TICKS			0
-#define configIDLE_SHOULD_YIELD			1
-#define configUSE_CO_ROUTINES 			0
-#define configUSE_MUTEXES				1
-#define configCHECK_FOR_STACK_OVERFLOW	0
-#define configUSE_RECURSIVE_MUTEXES		1
-#define configQUEUE_REGISTRY_SIZE		0
-#define configUSE_MALLOC_FAILED_HOOK	1
-#define configUSE_APPLICATION_TASK_TAG	0
-#define configUSE_COUNTING_SEMAPHORES	1
-#define configUSE_ALTERNATIVE_API		1
-#define configUSE_QUEUE_SETS			1
+/* FreeRTOS includes. */
+#include <FreeRTOS.h>
 
-#define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		2
-#define configTIMER_QUEUE_LENGTH		20
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
+/* FreeRTOS+Trace includes. */
+#include "trcUser.h"
 
-#define configMAX_PRIORITIES			( 7 )
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+/* Variables used in the creation of the run time stats time base.  Run time 
+stats record how much time each task spends in the Running state. */
+static long long llInitialRunTimeCounterValue = 0LL, llTicksPerHundedthMillisecond = 0LL;
 
+/*-----------------------------------------------------------*/
 
-/* Run time stats gathering definitions. */
-unsigned long ulGetRunTimeCounterValue( void );
-void vConfigureTimerForRunTimeStats( void );
-#define configGENERATE_RUN_TIME_STATS	1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
+void vConfigureTimerForRunTimeStats( void )
+{
+LARGE_INTEGER liPerformanceCounterFrequency, liInitialRunTimeValue;
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 		0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+	/* Initialise the variables used to create the run time stats time base.
+	Run time stats record how much time each task spends in the Running 
+	state. */
 
-/* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
+	if( QueryPerformanceFrequency( &liPerformanceCounterFrequency ) == 0 )
+	{
+		llTicksPerHundedthMillisecond = 1;
+	}
+	else
+	{
+		/* How many times does the performance counter increment in 1/100th
+		millisecond. */
+		llTicksPerHundedthMillisecond = liPerformanceCounterFrequency.QuadPart / 100000LL;
 
-#define INCLUDE_vTaskPrioritySet				1
-#define INCLUDE_uxTaskPriorityGet				1
-#define INCLUDE_vTaskDelete						1
-#define INCLUDE_vTaskCleanUpResources			0
-#define INCLUDE_vTaskSuspend					1
-#define INCLUDE_vTaskDelayUntil					1
-#define INCLUDE_vTaskDelay						1
-#define INCLUDE_uxTaskGetStackHighWaterMark		1
-#define INCLUDE_xTaskGetSchedulerState			1
-#define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
-#define INCLUDE_xTaskGetIdleTaskHandle			1
-#define INCLUDE_pcTaskGetTaskName				1
-#define INCLUDE_eTaskGetState					1
+		/* What is the performance counter value now, this will be subtracted
+		from readings taken at run time. */
+		QueryPerformanceCounter( &liInitialRunTimeValue );
+		llInitialRunTimeCounterValue = liInitialRunTimeValue.QuadPart;
+	}
+}
+/*-----------------------------------------------------------*/
 
-extern void vAssertCalled( void );
-#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
+unsigned long ulGetRunTimeCounterValue( void )
+{
+LARGE_INTEGER liCurrentCount;
+unsigned long ulReturn;
 
-/* configUSE_PORT_OPTIMISED_TASK_SELECTION is only available in the MSVC 
-version of the Win32 simulator projects.  It will be ignored in the GCC
-version. */
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+	/* What is the performance counter value now? */
+	QueryPerformanceCounter( &liCurrentCount );
 
-/* Include the FreeRTOS+Trace recorder hooks. */
-#include "trcHooks.h"
+	/* Subtract the performance counter value reading taken when the 
+	application started to get a count from that reference point, then
+	scale to (simulated) 1/100ths of a millisecond. */
+	if( llTicksPerHundedthMillisecond == 0 )
+	{
+		/* The trace macros are probably calling this function before the
+		scheduler has been started. */
+		ulReturn = 0;
+	}
+	else
+	{
+		ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llTicksPerHundedthMillisecond );
+	}
 
-#endif /* FREERTOS_CONFIG_H */
+	return ulReturn;
+}
+/*-----------------------------------------------------------*/

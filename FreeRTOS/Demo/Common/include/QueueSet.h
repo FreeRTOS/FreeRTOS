@@ -71,7 +71,7 @@
 
 void vStartQueueSetTasks( void );
 portBASE_TYPE xAreQueueSetTasksStillRunning( void );
-void vQueueSetWriteToQueueFromISR( void );
+void vQueueSetAccessQueueSetFromISR( void );
 
 #endif /* QUEUE_WAIT_MULTIPLE_H */
 

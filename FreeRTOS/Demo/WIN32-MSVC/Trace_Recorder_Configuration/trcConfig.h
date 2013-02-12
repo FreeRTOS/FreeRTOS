@@ -112,11 +112,11 @@
  * NOTE 3: The FreeRTOS timer task creates a Queue, that should be accounted 
  * for in NQueue.
  ******************************************************************************/
-#define NTask             500
-#define NISR              500
-#define NQueue            500
-#define NSemaphore        500
-#define NMutex            500
+#define NTask             ( 200 )
+#define NISR              ( 200 )
+#define NQueue            ( 200 )
+#define NSemaphore        ( 200 )
+#define NMutex            ( 200 )
 
 /* Maximum object name length for each class (includes zero termination) */
 #define NameLenTask       configMAX_TASK_NAME_LEN

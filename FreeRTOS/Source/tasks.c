@@ -373,7 +373,7 @@ portTickType xItemValue;																\
 #define prvGetTCBFromHandle( pxHandle ) ( ( ( pxHandle ) == NULL ) ? ( tskTCB * ) pxCurrentTCB : ( tskTCB * ) ( pxHandle ) )
 
 /* Callback function prototypes. --------------------------*/
-extern void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
+extern void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName );
 extern void vApplicationTickHook( void );
 
 /* File private functions. --------------------------------*/
@@ -643,7 +643,7 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
-	void vTaskDelete( xTaskHandle pxTaskToDelete )
+	void vTaskDelete( xTaskHandle xTaskToDelete )
 	{
 	tskTCB *pxTCB;
 
@@ -651,13 +651,13 @@ tskTCB * pxNewTCB;
 		{
 			/* Ensure a yield is performed if the current task is being
 			deleted. */
-			if( pxTaskToDelete == pxCurrentTCB )
+			if( xTaskToDelete == pxCurrentTCB )
 			{
-				pxTaskToDelete = NULL;
+				xTaskToDelete = NULL;
 			}
 
 			/* If null is passed in here then we are deleting ourselves. */
-			pxTCB = prvGetTCBFromHandle( pxTaskToDelete );
+			pxTCB = prvGetTCBFromHandle( xTaskToDelete );
 
 			/* Remove task from the ready list and place in the	termination list.
 			This will stop the task from be scheduled.  The idle task will check
@@ -692,7 +692,7 @@ tskTCB * pxNewTCB;
 		/* Force a reschedule if we have just deleted the current task. */
 		if( xSchedulerRunning != pdFALSE )
 		{
-			if( ( void * ) pxTaskToDelete == NULL )
+			if( ( void * ) xTaskToDelete == NULL )
 			{
 				portYIELD_WITHIN_API();
 			}
@@ -828,13 +828,13 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_eTaskGetState == 1 )
 
-	eTaskState eTaskGetState( xTaskHandle pxTask )
+	eTaskState eTaskGetState( xTaskHandle xTask )
 	{
 	eTaskState eReturn;
 	xList *pxStateList;
 	tskTCB *pxTCB;
 
-		pxTCB = ( tskTCB * ) pxTask;
+		pxTCB = ( tskTCB * ) xTask;
 
 		if( pxTCB == pxCurrentTCB )
 		{
@@ -890,7 +890,7 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
-	unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask )
+	unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle xTask )
 	{
 	tskTCB *pxTCB;
 	unsigned portBASE_TYPE uxReturn;
@@ -899,7 +899,7 @@ tskTCB * pxNewTCB;
 		{
 			/* If null is passed in here then we are changing the
 			priority of the calling function. */
-			pxTCB = prvGetTCBFromHandle( pxTask );
+			pxTCB = prvGetTCBFromHandle( xTask );
 			uxReturn = pxTCB->uxPriority;
 		}
 		taskEXIT_CRITICAL();
@@ -912,7 +912,7 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskPrioritySet == 1 )
 
-	void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority )
+	void vTaskPrioritySet( xTaskHandle xTask, unsigned portBASE_TYPE uxNewPriority )
 	{
 	tskTCB *pxTCB;
 	unsigned portBASE_TYPE uxCurrentPriority, uxPriorityUsedOnEntry;
@@ -928,14 +928,14 @@ tskTCB * pxNewTCB;
 
 		taskENTER_CRITICAL();
 		{
-			if( pxTask == pxCurrentTCB )
+			if( xTask == pxCurrentTCB )
 			{
-				pxTask = NULL;
+				xTask = NULL;
 			}
 
 			/* If null is passed in here then we are changing the
 			priority of the calling function. */
-			pxTCB = prvGetTCBFromHandle( pxTask );
+			pxTCB = prvGetTCBFromHandle( xTask );
 
 			traceTASK_PRIORITY_SET( pxTCB, uxNewPriority );
 
@@ -955,7 +955,7 @@ tskTCB * pxNewTCB;
 				priority than the calling task. */
 				if( uxNewPriority > uxCurrentPriority )
 				{
-					if( pxTask != NULL )
+					if( xTask != NULL )
 					{
 						/* The priority of another task is being raised.  If we
 						were raising the priority of the currently running task
@@ -964,7 +964,7 @@ tskTCB * pxNewTCB;
 						xYieldRequired = pdTRUE;
 					}
 				}
-				else if( pxTask == NULL )
+				else if( xTask == NULL )
 				{
 					/* Setting our own priority down means there may now be another
 					task of higher priority that is ready to execute. */
@@ -1034,7 +1034,7 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	void vTaskSuspend( xTaskHandle pxTaskToSuspend )
+	void vTaskSuspend( xTaskHandle xTaskToSuspend )
 	{
 	tskTCB *pxTCB;
 
@@ -1042,13 +1042,13 @@ tskTCB * pxNewTCB;
 		{
 			/* Ensure a yield is performed if the current task is being
 			suspended. */
-			if( pxTaskToSuspend == pxCurrentTCB )
+			if( xTaskToSuspend == pxCurrentTCB )
 			{
-				pxTaskToSuspend = NULL;
+				xTaskToSuspend = NULL;
 			}
 
 			/* If null is passed in here then we are suspending ourselves. */
-			pxTCB = prvGetTCBFromHandle( pxTaskToSuspend );
+			pxTCB = prvGetTCBFromHandle( xTaskToSuspend );
 
 			traceTASK_SUSPEND( pxTCB );
 
@@ -1068,7 +1068,7 @@ tskTCB * pxNewTCB;
 		}
 		taskEXIT_CRITICAL();
 
-		if( ( void * ) pxTaskToSuspend == NULL )
+		if( ( void * ) xTaskToSuspend == NULL )
 		{
 			if( xSchedulerRunning != pdFALSE )
 			{
@@ -1135,16 +1135,16 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	void vTaskResume( xTaskHandle pxTaskToResume )
+	void vTaskResume( xTaskHandle xTaskToResume )
 	{
 	tskTCB *pxTCB;
 
 		/* It does not make sense to resume the calling task. */
-		configASSERT( pxTaskToResume );
+		configASSERT( xTaskToResume );
 
 		/* Remove the task from whichever list it is currently in, and place
 		it in the ready list. */
-		pxTCB = ( tskTCB * ) pxTaskToResume;
+		pxTCB = ( tskTCB * ) xTaskToResume;
 
 		/* The parameter cannot be NULL as it is impossible to resume the
 		currently executing task. */
@@ -1180,15 +1180,15 @@ tskTCB * pxNewTCB;
 
 #if ( ( INCLUDE_xTaskResumeFromISR == 1 ) && ( INCLUDE_vTaskSuspend == 1 ) )
 
-	portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume )
+	portBASE_TYPE xTaskResumeFromISR( xTaskHandle xTaskToResume )
 	{
 	portBASE_TYPE xYieldRequired = pdFALSE;
 	tskTCB *pxTCB;
 	unsigned portBASE_TYPE uxSavedInterruptStatus;
 
-		configASSERT( pxTaskToResume );
+		configASSERT( xTaskToResume );
 
-		pxTCB = ( tskTCB * ) pxTaskToResume;
+		pxTCB = ( tskTCB * ) xTaskToResume;
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{

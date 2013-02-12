@@ -96,18 +96,19 @@ typedef void * xQueueHandle;
 typedef void * xQueueSetHandle;
 
 /**
- * Queue sets can contain both queues and semaphores, so the 
+ * Queue sets can contain both queues and semaphores, so the
  * xQueueSetMemberHandle is defined as a type to be used where a parameter or
  * return value can be either an xQueueHandle or an xSemaphoreHandle.
  */
 typedef void * xQueueSetMemberHandle;
- 
+
 /* For internal use only. */
 #define	queueSEND_TO_BACK	( 0 )
 #define	queueSEND_TO_FRONT	( 1 )
 
 /* For internal use only.  These definitions *must* match those in queue.c. */
 #define queueQUEUE_TYPE_BASE				( 0U )
+#define queueQUEUE_TYPE_SET					( 0U )
 #define queueQUEUE_TYPE_MUTEX 				( 1U )
 #define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
 #define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
@@ -505,7 +506,7 @@ typedef void * xQueueSetMemberHandle;
  * \defgroup xQueueSend xQueueSend
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
+signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 
 /**
  * queue. h
@@ -528,7 +529,7 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const
  *
  * This macro must not be used in an interrupt service routine.
  *
- * @param pxQueue The handle to the queue from which the item is to be
+ * @param xQueue The handle to the queue from which the item is to be
  * received.
  *
  * @param pvBuffer Pointer to the buffer into which the received item will
@@ -621,7 +622,7 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const
  * This function must not be used in an interrupt service routine.  See
  * xQueueReceiveFromISR for an alternative that can.
  *
- * @param pxQueue The handle to the queue from which the item is to be
+ * @param xQueue The handle to the queue from which the item is to be
  * received.
  *
  * @param pvBuffer Pointer to the buffer into which the received item will
@@ -715,7 +716,7 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const
  * This function must not be used in an interrupt service routine.  See
  * xQueueReceiveFromISR for an alternative that can.
  *
- * @param pxQueue The handle to the queue from which the item is to be
+ * @param xQueue The handle to the queue from which the item is to be
  * received.
  *
  * @param pvBuffer Pointer to the buffer into which the received item will
@@ -820,13 +821,13 @@ unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue );
  * \page vQueueDelete vQueueDelete
  * \ingroup QueueManagement
  */
-void vQueueDelete( xQueueHandle pxQueue );
+void vQueueDelete( xQueueHandle xQueue );
 
 /**
  * queue. h
  * <pre>
  portBASE_TYPE xQueueSendToFrontFromISR(
-										 xQueueHandle pxQueue,
+										 xQueueHandle xQueue,
 										 const void *pvItemToQueue,
 										 portBASE_TYPE *pxHigherPriorityTaskWoken
 									  );
@@ -890,14 +891,14 @@ void vQueueDelete( xQueueHandle pxQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendToFrontFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( pxQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_FRONT )
+#define xQueueSendToFrontFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( xQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_FRONT )
 
 
 /**
  * queue. h
  * <pre>
  portBASE_TYPE xQueueSendToBackFromISR(
-										 xQueueHandle pxQueue,
+										 xQueueHandle xQueue,
 										 const void *pvItemToQueue,
 										 portBASE_TYPE *pxHigherPriorityTaskWoken
 									  );
@@ -961,13 +962,13 @@ void vQueueDelete( xQueueHandle pxQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendToBackFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( pxQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
+#define xQueueSendToBackFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( xQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
 
 /**
  * queue. h
  * <pre>
  portBASE_TYPE xQueueSendFromISR(
-									 xQueueHandle pxQueue,
+									 xQueueHandle xQueue,
 									 const void *pvItemToQueue,
 									 portBASE_TYPE *pxHigherPriorityTaskWoken
 								);
@@ -1035,13 +1036,13 @@ void vQueueDelete( xQueueHandle pxQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-#define xQueueSendFromISR( pxQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( pxQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
+#define xQueueSendFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( xQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
 
 /**
  * queue. h
  * <pre>
  portBASE_TYPE xQueueGenericSendFromISR(
-										   xQueueHandle	pxQueue,
+										   xQueueHandle		xQueue,
 										   const	void	*pvItemToQueue,
 										   portBASE_TYPE	*pxHigherPriorityTaskWoken,
 										   portBASE_TYPE	xCopyPosition
@@ -1113,22 +1114,22 @@ void vQueueDelete( xQueueHandle pxQueue );
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition );
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition );
 
 /**
  * queue. h
  * <pre>
  portBASE_TYPE xQueueReceiveFromISR(
-									   xQueueHandle	pxQueue,
+									   xQueueHandle	xQueue,
 									   void	*pvBuffer,
-									   portBASE_TYPE	*pxTaskWoken
+									   portBASE_TYPE *pxTaskWoken
 								   );
  * </pre>
  *
  * Receive an item from a queue.  It is safe to use this function from within an
  * interrupt service routine.
  *
- * @param pxQueue The handle to the queue from which the item is to be
+ * @param xQueue The handle to the queue from which the item is to be
  * received.
  *
  * @param pvBuffer Pointer to the buffer into which the received item will
@@ -1202,15 +1203,15 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void 
  * \defgroup xQueueReceiveFromISR xQueueReceiveFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken );
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken );
 
 /*
  * Utilities to query queues that are safe to use from an ISR.  These utilities
  * should be used only from witin an ISR, or within a critical section.
  */
-signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue );
-signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue );
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue );
+signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle xQueue );
+signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle xQueue );
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle xQueue );
 
 
 /*
@@ -1227,8 +1228,8 @@ unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue
  * responsiveness to gain execution speed, whereas the fully featured API
  * sacrifices execution speed to ensure better interrupt responsiveness.
  */
-signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
-signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
+signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
+signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
 #define xQueueAltSendToFront( xQueue, pvItemToQueue, xTicksToWait ) xQueueAltGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_FRONT )
 #define xQueueAltSendToBack( xQueue, pvItemToQueue, xTicksToWait ) xQueueAltGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
 #define xQueueAltReceive( xQueue, pvBuffer, xTicksToWait ) xQueueAltGenericReceive( ( xQueue ), ( pvBuffer ), ( xTicksToWait ), pdFALSE )
@@ -1243,10 +1244,10 @@ signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const
  * should not be called directly from application code.  Instead use the macro
  * wrappers defined within croutine.h.
  */
-signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken );
-signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle pxQueue, void *pvBuffer, signed portBASE_TYPE *pxTaskWoken );
-signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xTicksToWait );
-signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait );
+signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle xQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken );
+signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle xQueue, void *pvBuffer, signed portBASE_TYPE *pxTaskWoken );
+signed portBASE_TYPE xQueueCRSend( xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait );
+signed portBASE_TYPE xQueueCRReceive( xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait );
 
 /*
  * For internal use only.  Use xSemaphoreCreateMutex(),
@@ -1261,7 +1262,7 @@ void* xQueueGetMutexHolder( xQueueHandle xSemaphore );
  * For internal use only.  Use xSemaphoreTakeMutexRecursive() or
  * xSemaphoreGiveMutexRecursive() instead of calling these functions directly.
  */
-portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBlockTime );
+portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime );
 portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
 
 /*
@@ -1270,7 +1271,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex );
  * reset because there are tasks blocked on the queue waiting to either
  * receive from the queue or send to the queue.
  */
-#define xQueueReset( pxQueue ) xQueueGenericReset( pxQueue, pdFALSE )
+#define xQueueReset( xQueue ) xQueueGenericReset( xQueue, pdFALSE )
 
 /*
  * The registry is provided as a means for kernel aware debuggers to
@@ -1328,8 +1329,8 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * queue added to a queue set.  Therefore counting semaphores with large maximum
  * counts should not be added to queue sets.
  *
- * Note 4:  A received (in the case of a queue) or take (in the case of a 
- * semaphore) operation must not be performed on a member of a queue set unless 
+ * Note 4:  A received (in the case of a queue) or take (in the case of a
+ * semaphore) operation must not be performed on a member of a queue set unless
  * a call to xQueueSelect() has first returned a handle to that set member.
  *
  * @param uxEventQueueLength Queue sets themselves queue events that occur on
@@ -1360,19 +1361,19 @@ xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength );
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * Note 1:  A received (in the case of a queue) or take (in the case of a 
- * semaphore) operation must not be performed on a member of a queue set unless 
+ * Note 1:  A received (in the case of a queue) or take (in the case of a
+ * semaphore) operation must not be performed on a member of a queue set unless
  * a call to xQueueSelect() has first returned a handle to that set member.
  *
- * @param xQueueOrSemaphore The handle of the queue or semaphore being added to 
+ * @param xQueueOrSemaphore The handle of the queue or semaphore being added to
  * the queue set (cast to an xQueueSetMemberHandle type).
  *
  * @param xQueueSet The handle of the queue set to which the queue or semaphore
  * is being added.
  *
- * @return If the queue or semaphore was successfully added to the queue set 
- * then pdPASS is returned.  If the queue could not be successfully added to the 
- * queue set because it is already a member of a different queue set then pdFAIL 
+ * @return If the queue or semaphore was successfully added to the queue set
+ * then pdPASS is returned.  If the queue could not be successfully added to the
+ * queue set because it is already a member of a different queue set then pdFAIL
  * is returned.
  */
 portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
@@ -1384,23 +1385,23 @@ portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSet
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * @param xQueueOrSemaphore The handle of the queue or semaphore being removed 
+ * @param xQueueOrSemaphore The handle of the queue or semaphore being removed
  * from the queue set (cast to an xQueueSetMemberHandle type).
  *
  * @param xQueueSet The handle of the queue set in which the queue or semaphore
  * is included.
  *
- * @return If the queue or semaphore was successfully removed from the queue set 
+ * @return If the queue or semaphore was successfully removed from the queue set
  * then pdPASS is returned.  If the queue was not in the queue set then pdFAIL
  * is returned.
  */
 portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*
- * xQueueSelectFromSet() selects from the members of a queue set a queue or 
+ * xQueueSelectFromSet() selects from the members of a queue set a queue or
  * semaphore that either contains data (in the case of a queue) or is available
- * to take (in the case of a semaphore).  xQueueSelectFromSet() effectively 
- * allows a task to block (pend) on a read operation on all the queues and 
+ * to take (in the case of a semaphore).  xQueueSelectFromSet() effectively
+ * allows a task to block (pend) on a read operation on all the queues and
  * semaphores in a queue set simultaneously.
  *
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
@@ -1414,8 +1415,8 @@ portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
  * Note 2:  Blocking on a queue set that contains a mutex will not cause the
  * mutex holder to inherit the priority of the blocked task.
  *
- * Note 3:  A received (in the case of a queue) or take (in the case of a 
- * semaphore) operation must not be performed on a member of a queue set unless 
+ * Note 3:  A received (in the case of a queue) or take (in the case of a
+ * semaphore) operation must not be performed on a member of a queue set unless
  * a call to xQueueSelect() has first returned a handle to that set member.
  *
  * @param xQueueSet The queue set on which the task will (potentially) block.
@@ -1426,9 +1427,9 @@ portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
  * operation.
  *
  * @return xQueueSelectFromSet() will return the handle of a queue (cast to
- * a xQueueSetMemberHandle type) contained in the queue set that contains data, 
+ * a xQueueSetMemberHandle type) contained in the queue set that contains data,
  * or the handle of a semaphore (cast to a xQueueSetMemberHandle type) contained
- * in the queue set that is available, or NULL if no such queue or semaphore 
+ * in the queue set that is available, or NULL if no such queue or semaphore
  * exists before before the specified block time expires.
  */
 xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
@@ -1439,8 +1440,10 @@ xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickTy
 xQueueSetMemberHandle xQueueSelectFromSetFromISR( xQueueSetHandle xQueueSet );
 
 /* Not public API functions. */
-void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait );
-portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue );
+void vQueueWaitForMessageRestricted( xQueueHandle xQueue, portTickType xTicksToWait );
+portBASE_TYPE xQueueGenericReset( xQueueHandle xQueue, portBASE_TYPE xNewQueue );
+void vQueueSetQueueNumber( xQueueHandle xQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
+unsigned char ucQueueGetQueueType( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 
 
 #ifdef __cplusplus

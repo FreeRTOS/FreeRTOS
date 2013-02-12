@@ -19,6 +19,6 @@
 @REM 
 
 
-"C:\devtools\IAR Systems\Embedded Workbench 6.0\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armlmiftdi.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\config\flashloader\TexasInstruments\FlashLM3Sx8xx.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.0\arm\CONFIG\debugger\TexasInstruments\iolm3sxxxx.ddf" "--drv_verify_download" "--semihosting=none" "--device=LM3Sx9xx" "--lmiftdi_speed=500" 
+"C:\devtools\IAR Systems\Embedded Workbench 6.5\common\bin\cspybat" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armproc.dll" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armlmiftdi.dll"  %1 --plugin "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\bin\armbat.dll" --flash_loader "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\config\flashloader\TexasInstruments\FlashLM3Sx8xx.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "C:\devtools\IAR Systems\Embedded Workbench 6.5\arm\CONFIG\debugger\TexasInstruments\LM3S6965.ddf" "--drv_verify_download" "--semihosting=none" "--device=LM3S6965" "--lmiftdi_speed=500" 
 
 

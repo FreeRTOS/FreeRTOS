@@ -33,8 +33,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>19</version>
-          <state>37</state>
+          <version>20</version>
+          <state>38</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.30.7.53437</state>
+          <state>6.50.1.4445</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -99,7 +99,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>LM3Sx9xx	Luminary LM3Sx9xx</state>
+          <state>LM3S6965	TexasInstruments LM3S6965</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -137,13 +137,13 @@
         </option>
         <option>
           <name>GFPUCoreSlave</name>
-          <version>19</version>
-          <state>37</state>
+          <version>20</version>
+          <state>38</state>
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>19</version>
-          <state>37</state>
+          <version>20</version>
+          <state>38</state>
         </option>
         <option>
           <name>OGUseCmsis</name>
@@ -162,6 +162,10 @@
         <version>28</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>CCOptimizationNoSizeConstraints</name>
+          <state>0</state>
+        </option>
         <option>
           <name>CCDefines</name>
           <state>IAR_ARMCM3_LM</state>
@@ -205,7 +209,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>pa082, pe513, pe167, pe550, pe144, pe191, pe177, pa039, pa050</state>
+          <state>pe550, pe144, pa039</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -960,6 +964,9 @@
       <name>$PROJ_DIR$\..\Common\Minimal\QPeek.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\QueueSet.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
     </file>
     <file>
@@ -990,6 +997,9 @@
   <group>
     <name>Scheduler files</name>
     <file>
+      <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
     </file>
     <file>
@@ -1006,6 +1016,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\timers.c</name>
     </file>
   </group>
   <group>

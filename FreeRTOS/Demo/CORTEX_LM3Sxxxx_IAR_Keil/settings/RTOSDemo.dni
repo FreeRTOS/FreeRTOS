@@ -28,7 +28,7 @@ ByteLimit=50
 [LMIFTDIDriver]
 LMI_ResetMode=0x00000000
 [DebugChecksum]
-Checksum=-644613366
+Checksum=-42454089
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -54,9 +54,7 @@ Exclusions=
 [Disassemble mode]
 mode=1
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\WorkingCopy2\Demo\Common\Minimal\IntQueue.c}.363.2@1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\webserver\uIP_Task.c}.197.4" 1 0 0 0 "" 0 ""
-Count=2
+Count=0
 [Aliases]
 Count=0
 SuppressDialog=0

@@ -562,7 +562,6 @@ static portBASE_TYPE xQueueToWriteTo = 0;
 static void prvSetupTest( xTaskHandle xQueueSetSendingTask )
 {
 portBASE_TYPE x;
-xQueueSetMemberHandle xActivatedQueue;
 
 	/* Ensure the queues are created and the queue set configured before the
 	sending task is unsuspended.
@@ -618,10 +617,11 @@ xQueueSetMemberHandle xActivatedQueue;
 	}
 
 	/* The task that sends to the queues is not running yet, so attempting to
-	read from the queue set should fail, resulting in xActivatedQueue being set
-	to NULL. */
-	xActivatedQueue = xQueueSelectFromSet( xQueueSet, queuesetSHORT_DELAY );
-	configASSERT( xActivatedQueue == NULL );
+	read from the queue set should fail. */
+	if( xQueueSelectFromSet( xQueueSet, queuesetSHORT_DELAY ) != NULL )
+	{
+		xQueueSetTasksStatus = pdFAIL;
+	}
 
 	/* Resume the task that writes to the queues. */
 	vTaskResume( xQueueSetSendingTask );

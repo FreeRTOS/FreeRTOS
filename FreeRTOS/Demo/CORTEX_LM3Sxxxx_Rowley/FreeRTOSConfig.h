@@ -100,9 +100,18 @@
 #define configGENERATE_RUN_TIME_STATS	1
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_QUEUE_SETS			1
+#define configUSE_COUNTING_SEMAPHORES	1
+#define configUSE_ALTERNATIVE_API		1
 
 #define configMAX_PRIORITIES			( 5UL )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+
+/* Software timer related constants. */
+#define configUSE_TIMERS				0
+#define configTIMER_TASK_PRIORITY		2
+#define configTIMER_QUEUE_LENGTH		20
+#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
+
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
@@ -115,8 +124,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil				1
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
-
-
+#define INCLUDE_xSemaphoreGetMutexHolder	1
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned char ) 7 << ( unsigned char ) 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!

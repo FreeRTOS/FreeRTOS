@@ -412,7 +412,7 @@ void vTaskAllocateMPURegions( xTaskHandle xTask, const xMemoryRegion * const pxR
 
 /**
  * task. h
- * <pre>void vTaskDelete( xTaskHandle pxTask );</pre>
+ * <pre>void vTaskDelete( xTaskHandle xTask );</pre>
  *
  * INCLUDE_vTaskDelete must be defined as 1 for this function to be available.
  * See the configuration section for more information.
@@ -430,7 +430,7 @@ void vTaskAllocateMPURegions( xTaskHandle xTask, const xMemoryRegion * const pxR
  * See the demo application file death.c for sample code that utilises
  * vTaskDelete ().
  *
- * @param pxTask The handle of the task to be deleted.  Passing NULL will
+ * @param xTask The handle of the task to be deleted.  Passing NULL will
  * cause the calling task to be deleted.
  *
  * Example usage:
@@ -449,7 +449,7 @@ void vTaskAllocateMPURegions( xTaskHandle xTask, const xMemoryRegion * const pxR
  * \defgroup vTaskDelete vTaskDelete
  * \ingroup Tasks
  */
-void vTaskDelete( xTaskHandle pxTaskToDelete ) PRIVILEGED_FUNCTION;
+void vTaskDelete( xTaskHandle xTaskToDelete ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------
  * TASK CONTROL API
@@ -566,17 +566,17 @@ void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTim
 
 /**
  * task. h
- * <pre>unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask );</pre>
+ * <pre>unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle xTask );</pre>
  *
  * INCLUDE_xTaskPriorityGet must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
  * Obtain the priority of any task.
  *
- * @param pxTask Handle of the task to be queried.  Passing a NULL
+ * @param xTask Handle of the task to be queried.  Passing a NULL
  * handle results in the priority of the calling task being returned.
  *
- * @return The priority of pxTask.
+ * @return The priority of xTask.
  *
  * Example usage:
    <pre>
@@ -609,11 +609,11 @@ void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTim
  * \defgroup uxTaskPriorityGet uxTaskPriorityGet
  * \ingroup TaskCtrl
  */
-unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
+unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>eTaskState eTaskGetState( xTaskHandle pxTask );</pre>
+ * <pre>eTaskState eTaskGetState( xTaskHandle xTask );</pre>
  *
  * INCLUDE_eTaskGetState must be defined as 1 for this function to be available.
  * See the configuration section for more information.
@@ -621,17 +621,17 @@ unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle pxTask ) PRIVILEGED_FUNCTI
  * Obtain the state of any task.  States are encoded by the eTaskState 
  * enumerated type.
  *
- * @param pxTask Handle of the task to be queried.
+ * @param xTask Handle of the task to be queried.
  *
- * @return The state of pxTask at the time the function was called.  Note the
+ * @return The state of xTask at the time the function was called.  Note the
  * state of the task might change between the function being called, and the
  * functions return value being tested by the calling task.
  */
-eTaskState eTaskGetState( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
+eTaskState eTaskGetState( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority );</pre>
+ * <pre>void vTaskPrioritySet( xTaskHandle xTask, unsigned portBASE_TYPE uxNewPriority );</pre>
  *
  * INCLUDE_vTaskPrioritySet must be defined as 1 for this function to be available.
  * See the configuration section for more information.
@@ -641,7 +641,7 @@ eTaskState eTaskGetState( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
  * A context switch will occur before the function returns if the priority
  * being set is higher than the currently executing task.
  *
- * @param pxTask Handle to the task for which the priority is being set.
+ * @param xTask Handle to the task for which the priority is being set.
  * Passing a NULL handle results in the priority of the calling task being set.
  *
  * @param uxNewPriority The priority to which the task will be set.
@@ -669,11 +669,11 @@ eTaskState eTaskGetState( xTaskHandle pxTask ) PRIVILEGED_FUNCTION;
  * \defgroup vTaskPrioritySet vTaskPrioritySet
  * \ingroup TaskCtrl
  */
-void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority ) PRIVILEGED_FUNCTION;
+void vTaskPrioritySet( xTaskHandle xTask, unsigned portBASE_TYPE uxNewPriority ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void vTaskSuspend( xTaskHandle pxTaskToSuspend );</pre>
+ * <pre>void vTaskSuspend( xTaskHandle xTaskToSuspend );</pre>
  *
  * INCLUDE_vTaskSuspend must be defined as 1 for this function to be available.
  * See the configuration section for more information.
@@ -685,7 +685,7 @@ void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority 
  * i.e. calling vTaskSuspend () twice on the same task still only requires one
  * call to vTaskResume () to ready the suspended task.
  *
- * @param pxTaskToSuspend Handle to the task being suspended.  Passing a NULL
+ * @param xTaskToSuspend Handle to the task being suspended.  Passing a NULL
  * handle will cause the calling task to be suspended.
  *
  * Example usage:
@@ -720,11 +720,11 @@ void vTaskPrioritySet( xTaskHandle pxTask, unsigned portBASE_TYPE uxNewPriority 
  * \defgroup vTaskSuspend vTaskSuspend
  * \ingroup TaskCtrl
  */
-void vTaskSuspend( xTaskHandle pxTaskToSuspend ) PRIVILEGED_FUNCTION;
+void vTaskSuspend( xTaskHandle xTaskToSuspend ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void vTaskResume( xTaskHandle pxTaskToResume );</pre>
+ * <pre>void vTaskResume( xTaskHandle xTaskToResume );</pre>
  *
  * INCLUDE_vTaskSuspend must be defined as 1 for this function to be available.
  * See the configuration section for more information.
@@ -735,7 +735,7 @@ void vTaskSuspend( xTaskHandle pxTaskToSuspend ) PRIVILEGED_FUNCTION;
  * will be made available for running again by a single call to
  * vTaskResume ().
  *
- * @param pxTaskToResume Handle to the task being readied.
+ * @param xTaskToResume Handle to the task being readied.
  *
  * Example usage:
    <pre>
@@ -769,11 +769,11 @@ void vTaskSuspend( xTaskHandle pxTaskToSuspend ) PRIVILEGED_FUNCTION;
  * \defgroup vTaskResume vTaskResume
  * \ingroup TaskCtrl
  */
-void vTaskResume( xTaskHandle pxTaskToResume ) PRIVILEGED_FUNCTION;
+void vTaskResume( xTaskHandle xTaskToResume ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void xTaskResumeFromISR( xTaskHandle pxTaskToResume );</pre>
+ * <pre>void xTaskResumeFromISR( xTaskHandle xTaskToResume );</pre>
  *
  * INCLUDE_xTaskResumeFromISR must be defined as 1 for this function to be
  * available.  See the configuration section for more information.
@@ -784,12 +784,12 @@ void vTaskResume( xTaskHandle pxTaskToResume ) PRIVILEGED_FUNCTION;
  * will be made available for running again by a single call to
  * xTaskResumeFromISR ().
  *
- * @param pxTaskToResume Handle to the task being readied.
+ * @param xTaskToResume Handle to the task being readied.
  *
  * \defgroup vTaskResumeFromISR vTaskResumeFromISR
  * \ingroup TaskCtrl
  */
-portBASE_TYPE xTaskResumeFromISR( xTaskHandle pxTaskToResume ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xTaskResumeFromISR( xTaskHandle xTaskToResume ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------
  * SCHEDULER CONTROL

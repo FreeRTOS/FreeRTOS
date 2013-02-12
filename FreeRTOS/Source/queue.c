@@ -76,6 +76,7 @@ task.h is included from an application file. */
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
 
 #if ( configUSE_CO_ROUTINES == 1 )
 	#include "croutine.h"
@@ -89,10 +90,6 @@ task.h is included from an application file. */
 
 #define queueERRONEOUS_UNBLOCK			( -1 )
 
-/* For internal use only. */
-#define	queueSEND_TO_BACK				( 0 )
-#define	queueSEND_TO_FRONT				( 1 )
-
 /* Effectively make a union out of the xQUEUE structure. */
 #define pxMutexHolder					pcTail
 #define uxQueueType						pcHead
@@ -105,13 +102,6 @@ zero. */
 #define queueDONT_BLOCK					 ( ( portTickType ) 0U )
 #define queueMUTEX_GIVE_BLOCK_TIME		 ( ( portTickType ) 0U )
 
-/* These definitions *must* match those in queue.h. */
-#define queueQUEUE_TYPE_BASE				( 0U )
-#define queueQUEUE_TYPE_MUTEX 				( 1U )
-#define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
-#define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
-#define queueQUEUE_TYPE_RECURSIVE_MUTEX		( 4U )
-#define queueQUEUE_TYPE_SET					( 0U )
 
 /*
  * Definition of the queue used by the scheduler.
@@ -148,66 +138,6 @@ typedef struct QueueDefinition
 /*-----------------------------------------------------------*/
 
 /*
- * Inside this file xQueueHandle and xQueueSetHandle are both pointers to xQUEUE
- * structures.  To keep the definition private the API header file defines both
- * as pointers to void.
- */
-typedef xQUEUE * xQueueHandle;
-typedef xQUEUE * xQueueSetHandle;
-
-/**
- * Queue sets can contain both queues and semaphores, so the
- * xQueueSetMemberHandle is defined as a type to be used where a parameter or
- * return value can be either an xQueueHandle or an xSemaphoreHandle.
- */
-typedef xQUEUE * xQueueSetMemberHandle;
-
-/*
- * In order to implement strict data hiding, the queue.h header file defines
- * xQueueHandle and xQueueSetHandle as pointers to void.  In this file
- * xQueueHandle and xQueueSetHandle are defined as pointers to xQUEUE objects.
- * Therefore the queue.h header file cannot be included in this source file,
- * and the function prototypes are provided directly.
- */
-xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
-void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
-xQueueHandle xQueueCreateMutex( unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
-xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
-void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
-unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
-void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
-unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue ) PRIVILEGED_FUNCTION;
-xTaskHandle xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;
-xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength ) PRIVILEGED_FUNCTION;
-xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
-portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet ) PRIVILEGED_FUNCTION;
-
-/*
- * Co-routine queue functions differ from task queue functions.  Co-routines are
- * an optional component.
- */
-#if ( configUSE_CO_ROUTINES == 1 )
-	signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken ) PRIVILEGED_FUNCTION;
-	signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle pxQueue, void *pvBuffer, signed portBASE_TYPE *pxTaskWoken ) PRIVILEGED_FUNCTION;
-	signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
-	signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
-#endif
-
-/*
  * The queue registry is just a means for kernel aware debuggers to locate
  * queue structures.  It has no other purpose so is an optional component.
  */
@@ -229,9 +159,9 @@ portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
 
 	/* Removes a queue from the registry by simply setting the pcQueueName
 	member to NULL. */
-	static void vQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
-	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcQueueName ) PRIVILEGED_FUNCTION;
-#endif
+	static void prvQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
+
+#endif /* configQUEUE_REGISTRY_SIZE */
 
 /*
  * Unlocks a queue locked by a call to prvLockQueue.  Locking a queue does not
@@ -241,21 +171,21 @@ portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
  * to indicate that a task may require unblocking.  When the queue in unlocked
  * these lock counts are inspected, and the appropriate action taken.
  */
-static void prvUnlockQueue( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+static void prvUnlockQueue( xQUEUE *pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Uses a critical section to determine if there is any data in a queue.
  *
  * @return pdTRUE if the queue contains no items, otherwise pdFALSE.
  */
-static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+static signed portBASE_TYPE prvIsQueueEmpty( const xQUEUE *pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Uses a critical section to determine if there is any space in a queue.
  *
  * @return pdTRUE if there is no space, otherwise pdFALSE;
  */
-static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+static signed portBASE_TYPE prvIsQueueFull( const xQUEUE *pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Copies an item into the queue, either at the front of the queue or the
@@ -297,8 +227,11 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
 	taskEXIT_CRITICAL()
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue )
+portBASE_TYPE xQueueGenericReset( xQueueHandle xQueue, portBASE_TYPE xNewQueue )
 {
+xQUEUE *pxQueue;
+
+	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 
 	taskENTER_CRITICAL();
@@ -476,9 +409,9 @@ xQueueHandle xReturn = NULL;
 		following critical section exiting and the function returning. */
 		taskENTER_CRITICAL();
 		{
-			if( xSemaphore->uxQueueType == queueQUEUE_IS_MUTEX )
+			if( ( ( xQUEUE * ) xSemaphore )->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
-				pxReturn = ( void * ) xSemaphore->pxMutexHolder;
+				pxReturn = ( void * ) ( ( xQUEUE * ) xSemaphore )->pxMutexHolder;
 			}
 			else
 			{
@@ -495,10 +428,12 @@ xQueueHandle xReturn = NULL;
 
 #if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
-	portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex )
+	portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex )
 	{
 	portBASE_TYPE xReturn;
+	xQUEUE *pxMutex;
 
+		pxMutex = ( xQUEUE * ) xMutex;
 		configASSERT( pxMutex );
 
 		/* If this is the task that holds the mutex then pxMutexHolder will not
@@ -544,10 +479,12 @@ xQueueHandle xReturn = NULL;
 
 #if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
-	portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBlockTime )
+	portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime )
 	{
 	portBASE_TYPE xReturn;
+	xQUEUE *pxMutex;
 
+		pxMutex = ( xQUEUE * ) xMutex;
 		configASSERT( pxMutex );
 
 		/* Comments regarding mutual exclusion as per those within
@@ -586,13 +523,13 @@ xQueueHandle xReturn = NULL;
 
 	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount )
 	{
-	xQueueHandle pxHandle;
+	xQueueHandle xHandle;
 
-		pxHandle = xQueueGenericCreate( ( unsigned portBASE_TYPE ) uxCountValue, queueSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
+		xHandle = xQueueGenericCreate( ( unsigned portBASE_TYPE ) uxCountValue, queueSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
 
-		if( pxHandle != NULL )
+		if( xHandle != NULL )
 		{
-			pxHandle->uxMessagesWaiting = uxInitialCount;
+			( ( xQUEUE * ) xHandle )->uxMessagesWaiting = uxInitialCount;
 
 			traceCREATE_COUNTING_SEMAPHORE();
 		}
@@ -601,18 +538,20 @@ xQueueHandle xReturn = NULL;
 			traceCREATE_COUNTING_SEMAPHORE_FAILED();
 		}
 
-		configASSERT( pxHandle );
-		return pxHandle;
+		configASSERT( xHandle );
+		return xHandle;
 	}
 
 #endif /* configUSE_COUNTING_SEMAPHORES */
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )
+signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
+xQUEUE *pxQueue;
 
+	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
@@ -762,11 +701,13 @@ xTimeOutType xTimeOut;
 
 #if ( configUSE_ALTERNATIVE_API == 1 )
 
-	signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )
+	signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )
 	{
 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 	xTimeOutType xTimeOut;
+	xQUEUE *pxQueue;
 
+		pxQueue = ( xQUEUE * ) xQueue;
 		configASSERT( pxQueue );
 		configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
@@ -839,12 +780,14 @@ xTimeOutType xTimeOut;
 
 #if ( configUSE_ALTERNATIVE_API == 1 )
 
-	signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+	signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
 	{
 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 	xTimeOutType xTimeOut;
 	signed char *pcOriginalReadPosition;
+	xQUEUE *pxQueue;
 
+		pxQueue = ( xQUEUE * ) xQueue;
 		configASSERT( pxQueue );
 		configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
@@ -968,11 +911,13 @@ xTimeOutType xTimeOut;
 #endif /* configUSE_ALTERNATIVE_API */
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition )
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
+xQUEUE *pxQueue;
 
+	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
@@ -1062,12 +1007,14 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
 signed char *pcOriginalReadPosition;
+xQUEUE *pxQueue;
 
+	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
@@ -1211,11 +1158,13 @@ signed char *pcOriginalReadPosition;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken )
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
+xQUEUE *pxQueue;
 
+	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 
@@ -1268,38 +1217,41 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue )
+unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue )
 {
 unsigned portBASE_TYPE uxReturn;
 
-	configASSERT( pxQueue );
+	configASSERT( xQueue );
 
 	taskENTER_CRITICAL();
-		uxReturn = pxQueue->uxMessagesWaiting;
+		uxReturn = ( ( xQUEUE * ) xQueue )->uxMessagesWaiting;
 	taskEXIT_CRITICAL();
 
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue )
+unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle xQueue )
 {
 unsigned portBASE_TYPE uxReturn;
 
-	configASSERT( pxQueue );
+	configASSERT( xQueue );
 
-	uxReturn = pxQueue->uxMessagesWaiting;
+	uxReturn = ( ( xQUEUE * ) xQueue )->uxMessagesWaiting;
 
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vQueueDelete( xQueueHandle pxQueue )
+void vQueueDelete( xQueueHandle xQueue )
 {
+xQUEUE *pxQueue;
+
+	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 
 	traceQUEUE_DELETE( pxQueue );
-	vQueueUnregisterQueue( pxQueue );
+	prvQueueUnregisterQueue( pxQueue );
 	vPortFree( pxQueue->pcHead );
 	vPortFree( pxQueue );
 }
@@ -1307,9 +1259,9 @@ void vQueueDelete( xQueueHandle pxQueue )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue )
+	unsigned char ucQueueGetQueueNumber( xQueueHandle xQueue )
 	{
-		return pxQueue->ucQueueNumber;
+		return ( ( xQUEUE * ) xQueue )->ucQueueNumber;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
@@ -1317,9 +1269,9 @@ void vQueueDelete( xQueueHandle pxQueue )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber )
+	void vQueueSetQueueNumber( xQueueHandle xQueue, unsigned char ucQueueNumber )
 	{
-		pxQueue->ucQueueNumber = ucQueueNumber;
+		( ( xQUEUE * ) xQueue )->ucQueueNumber = ucQueueNumber;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
@@ -1327,9 +1279,9 @@ void vQueueDelete( xQueueHandle pxQueue )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	unsigned char ucQueueGetQueueType( xQueueHandle pxQueue )
+	unsigned char ucQueueGetQueueType( xQueueHandle xQueue )
 	{
-		return pxQueue->ucQueueType;
+		return ( ( xQUEUE * ) xQueue )->ucQueueType;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
@@ -1387,7 +1339,7 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvUnlockQueue( xQueueHandle pxQueue )
+static void prvUnlockQueue( xQUEUE *pxQueue )
 {
 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
 
@@ -1486,47 +1438,79 @@ static void prvUnlockQueue( xQueueHandle pxQueue )
 }
 /*-----------------------------------------------------------*/
 
-static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue )
+static signed portBASE_TYPE prvIsQueueEmpty( const xQUEUE *pxQueue )
 {
 signed portBASE_TYPE xReturn;
 
 	taskENTER_CRITICAL();
-		xReturn = ( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 );
+	{
+		if( pxQueue->uxMessagesWaiting == 0 )
+		{
+			xReturn = pdTRUE;
+		}
+		else
+		{
+			xReturn = pdFALSE;
+		}
+	}
 	taskEXIT_CRITICAL();
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue )
+signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle xQueue )
 {
 signed portBASE_TYPE xReturn;
 
-	configASSERT( pxQueue );
-	xReturn = ( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 );
+	configASSERT( xQueue );
+	if( ( ( xQUEUE * ) xQueue )->uxMessagesWaiting == 0 )
+	{
+		xReturn = pdTRUE;
+	}
+	else
+	{
+		xReturn = pdFALSE;
+	}
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue )
+static signed portBASE_TYPE prvIsQueueFull( const xQUEUE *pxQueue )
 {
 signed portBASE_TYPE xReturn;
 
 	taskENTER_CRITICAL();
-		xReturn = ( pxQueue->uxMessagesWaiting == pxQueue->uxLength );
+	{
+		if( pxQueue->uxMessagesWaiting == pxQueue->uxLength )
+		{
+			xReturn = pdTRUE;
+		}
+		else
+		{
+			xReturn = pdFALSE;
+		}
+	}
 	taskEXIT_CRITICAL();
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue )
+signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle xQueue )
 {
 signed portBASE_TYPE xReturn;
 
-	configASSERT( pxQueue );
-	xReturn = ( pxQueue->uxMessagesWaiting == pxQueue->uxLength );
+	configASSERT( xQueue );
+	if( ( ( xQUEUE * ) xQueue )->uxMessagesWaiting == ( ( xQUEUE * ) xQueue )->uxLength )
+	{
+		xReturn = pdTRUE;
+	}
+	else
+	{
+		xReturn = pdFALSE;
+	}
 
 	return xReturn;
 }
@@ -1534,9 +1518,12 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xTicksToWait )
+	signed portBASE_TYPE xQueueCRSend( xQueueHandle xQueue, const void *pvItemToQueue, portTickType xTicksToWait )
 	{
 	signed portBASE_TYPE xReturn;
+	xQUEUE *pxQueue;
+
+		pxQueue = ( xQUEUE * ) xQueue;
 
 		/* If the queue is already full we may have to block.  A critical section
 		is required to prevent an interrupt removing something from the queue
@@ -1563,8 +1550,6 @@ signed portBASE_TYPE xReturn;
 			}
 		}
 		portENABLE_INTERRUPTS();
-
-		portNOP();
 
 		portDISABLE_INTERRUPTS();
 		{
@@ -1604,9 +1589,12 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWait )
+	signed portBASE_TYPE xQueueCRReceive( xQueueHandle xQueue, void *pvBuffer, portTickType xTicksToWait )
 	{
 	signed portBASE_TYPE xReturn;
+	xQUEUE *pxQueue;
+
+		pxQueue = ( xQUEUE * ) xQueue;
 
 		/* If the queue is already empty we may have to block.  A critical section
 		is required to prevent an interrupt adding something to the queue
@@ -1633,8 +1621,6 @@ signed portBASE_TYPE xReturn;
 			}
 		}
 		portENABLE_INTERRUPTS();
-
-		portNOP();
 
 		portDISABLE_INTERRUPTS();
 		{
@@ -1679,8 +1665,12 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken )
+	signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle xQueue, const void *pvItemToQueue, signed portBASE_TYPE xCoRoutinePreviouslyWoken )
 	{
+	xQUEUE *pxQueue;
+
+		pxQueue = ( xQUEUE * ) xQueue;
+
 		/* Cannot block within an ISR so if there is no space on the queue then
 		exit without doing anything. */
 		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
@@ -1709,9 +1699,12 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_CO_ROUTINES == 1 )
 
-	signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle pxQueue, void *pvBuffer, signed portBASE_TYPE *pxCoRoutineWoken )
+	signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle xQueue, void *pvBuffer, signed portBASE_TYPE *pxCoRoutineWoken )
 	{
 	signed portBASE_TYPE xReturn;
+	xQUEUE * pxQueue;
+
+		pxQueue = ( xQUEUE * ) xQueue;
 
 		/* We cannot block from an ISR, so check there is data available. If
 		not then just leave without doing anything. */
@@ -1775,7 +1768,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	static void vQueueUnregisterQueue( xQueueHandle xQueue )
+	static void prvQueueUnregisterQueue( xQueueHandle xQueue )
 	{
 	unsigned portBASE_TYPE ux;
 
@@ -1798,8 +1791,12 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_TIMERS == 1 )
 
-	void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait )
+	void vQueueWaitForMessageRestricted( xQueueHandle xQueue, portTickType xTicksToWait )
 	{
+	xQUEUE *pxQueue;
+
+		pxQueue = ( xQUEUE * ) xQueue;
+
 		/* This function should not be called by application code hence the
 		'Restricted' in its name.  It is not part of the public API.  It is
 		designed for use by kernel code, and has special calling requirements.
@@ -1830,11 +1827,11 @@ signed portBASE_TYPE xReturn;
 
 	xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength )
 	{
-	xQUEUE *pxQueue;
+	xQueueSetHandle pxQueue;
 
 		pxQueue = xQueueGenericCreate( uxEventQueueLength, sizeof( xQUEUE * ), queueQUEUE_TYPE_SET );
 
-		return ( xQueueSetHandle ) pxQueue;
+		return pxQueue;
 	}
 
 #endif /* configUSE_QUEUE_SETS */
@@ -1846,7 +1843,7 @@ signed portBASE_TYPE xReturn;
 	{
 	portBASE_TYPE xReturn;
 
-		if( xQueueOrSemaphore->pxQueueSetContainer != NULL )
+		if( ( ( xQUEUE * ) xQueueOrSemaphore )->pxQueueSetContainer != NULL )
 		{
 			xReturn = pdFAIL;
 		}
@@ -1854,7 +1851,7 @@ signed portBASE_TYPE xReturn;
 		{
 			taskENTER_CRITICAL();
 			{
-				xQueueOrSemaphore->pxQueueSetContainer = xQueueSet;
+				( ( xQUEUE * ) xQueueOrSemaphore )->pxQueueSetContainer = xQueueSet;
 			}
 			taskEXIT_CRITICAL();
 			xReturn = pdPASS;
@@ -1871,13 +1868,16 @@ signed portBASE_TYPE xReturn;
 	portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet )
 	{
 	portBASE_TYPE xReturn;
+	xQUEUE *pxQueueOrSemaphore;
 
-		if( xQueueOrSemaphore->pxQueueSetContainer != xQueueSet )
+		pxQueueOrSemaphore = ( xQUEUE * ) xQueueOrSemaphore;
+
+		if( pxQueueOrSemaphore->pxQueueSetContainer != xQueueSet )
 		{
 			/* The queue was not a member of the set. */
 			xReturn = pdFAIL;
 		}
-		else if( xQueueOrSemaphore->uxMessagesWaiting != 0 )
+		else if( pxQueueOrSemaphore->uxMessagesWaiting != 0 )
 		{
 			/* It is dangerous to remove a queue from a set when the queue is
 			not empty because the queue set will still hold pending events for
@@ -1889,7 +1889,7 @@ signed portBASE_TYPE xReturn;
 			taskENTER_CRITICAL();
 			{
 				/* The queue is no longer contained in the set. */
-				xQueueOrSemaphore->pxQueueSetContainer = NULL;
+				pxQueueOrSemaphore->pxQueueSetContainer = NULL;
 			}
 			taskEXIT_CRITICAL();
 			xReturn = pdPASS;

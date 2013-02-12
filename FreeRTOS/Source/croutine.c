@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -85,7 +85,7 @@ static xList xDelayedCoRoutineList1;									/*< Delayed co-routines. */
 static xList xDelayedCoRoutineList2;									/*< Delayed co-routines (two lists are used - one for delays that have overflowed the current tick count. */
 static xList * pxDelayedCoRoutineList;									/*< Points to the delayed co-routine list currently being used. */
 static xList * pxOverflowDelayedCoRoutineList;							/*< Points to the delayed co-routine list currently being used to hold co-routines that have overflowed the current tick count. */
-static xList xPendingReadyCoRoutineList;											/*< Holds co-routines that have been readied by an external event.  They cannot be added directly to the ready lists as the ready lists cannot be accessed by interrupts. */
+static xList xPendingReadyCoRoutineList;								/*< Holds co-routines that have been readied by an external event.  They cannot be added directly to the ready lists as the ready lists cannot be accessed by interrupts. */
 
 /* Other file private variables. --------------------------------*/
 corCRCB * pxCurrentCoRoutine = NULL;
@@ -109,7 +109,7 @@ static portTickType xCoRoutineTickCount = 0, xLastTickCount = 0, xPassedTicks = 
 		uxTopCoRoutineReadyPriority = pxCRCB->uxPriority;															\
 	}																												\
 	vListInsertEnd( ( xList * ) &( pxReadyCoRoutineLists[ pxCRCB->uxPriority ] ), &( pxCRCB->xGenericListItem ) );	\
-}	
+}
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
@@ -175,10 +175,10 @@ corCRCB *pxCoRoutine;
 		in a list. */
 		listSET_LIST_ITEM_OWNER( &( pxCoRoutine->xGenericListItem ), pxCoRoutine );
 		listSET_LIST_ITEM_OWNER( &( pxCoRoutine->xEventListItem ), pxCoRoutine );
-	
+
 		/* Event lists are always in priority order. */
 		listSET_LIST_ITEM_VALUE( &( pxCoRoutine->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) uxPriority );
-		
+
 		/* Now the co-routine has been initialised it can be added to the ready
 		list at the correct priority. */
 		prvAddCoRoutineToReadyQueue( pxCoRoutine );
@@ -186,11 +186,11 @@ corCRCB *pxCoRoutine;
 		xReturn = pdPASS;
 	}
 	else
-	{		
+	{
 		xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
 	}
-	
-	return xReturn;	
+
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -243,14 +243,14 @@ static void prvCheckPendingReadyList( void )
 
 		/* The pending ready list can be accessed by an ISR. */
 		portDISABLE_INTERRUPTS();
-		{	
-			pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( (&xPendingReadyCoRoutineList) );			
+		{
+			pxUnblockedCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( (&xPendingReadyCoRoutineList) );
 			uxListRemove( &( pxUnblockedCRCB->xEventListItem ) );
 		}
 		portENABLE_INTERRUPTS();
 
 		uxListRemove( &( pxUnblockedCRCB->xGenericListItem ) );
-		prvAddCoRoutineToReadyQueue( pxUnblockedCRCB );	
+		prvAddCoRoutineToReadyQueue( pxUnblockedCRCB );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -282,11 +282,11 @@ corCRCB *pxCRCB;
 		{
 			pxCRCB = ( corCRCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedCoRoutineList );
 
-			if( xCoRoutineTickCount < listGET_LIST_ITEM_VALUE( &( pxCRCB->xGenericListItem ) ) )				
-			{			
-				/* Timeout not yet expired. */																			
-				break;																				
-			}																						
+			if( xCoRoutineTickCount < listGET_LIST_ITEM_VALUE( &( pxCRCB->xGenericListItem ) ) )
+			{
+				/* Timeout not yet expired. */
+				break;
+			}
 
 			portDISABLE_INTERRUPTS();
 			{
@@ -295,18 +295,18 @@ corCRCB *pxCRCB;
 				have been moved to the pending ready list and the following
 				line is still valid.  Also the pvContainer parameter will have
 				been set to NULL so the following lines are also valid. */
-				uxListRemove( &( pxCRCB->xGenericListItem ) );											
+				uxListRemove( &( pxCRCB->xGenericListItem ) );
 
-				/* Is the co-routine waiting on an event also? */												
-				if( pxCRCB->xEventListItem.pvContainer )													
-				{															
-					uxListRemove( &( pxCRCB->xEventListItem ) );											
+				/* Is the co-routine waiting on an event also? */
+				if( pxCRCB->xEventListItem.pvContainer )
+				{
+					uxListRemove( &( pxCRCB->xEventListItem ) );
 				}
 			}
 			portENABLE_INTERRUPTS();
 
-			prvAddCoRoutineToReadyQueue( pxCRCB );													
-		}																									
+			prvAddCoRoutineToReadyQueue( pxCRCB );
+		}
 	}
 
 	xLastTickCount = xCoRoutineTickCount;

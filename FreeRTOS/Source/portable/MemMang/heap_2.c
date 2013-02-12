@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,27 +52,27 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
 /*
  * A sample implementation of pvPortMalloc() and vPortFree() that permits
  * allocated blocks to be freed, but does not combine adjacent free blocks
- * into a single larger block (and so will fragment memory).  See heap_4.c for 
+ * into a single larger block (and so will fragment memory).  See heap_4.c for
  * an aquivalent that does combine adjacent blocks into single larger blocks.
  *
- * See heap_1.c, heap_3.c and heap_4.c for alternative implementations, and the 
+ * See heap_1.c, heap_3.c and heap_4.c for alternative implementations, and the
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
@@ -87,17 +87,16 @@ task.h is included from an application file. */
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
-/* Allocate the memory for the heap.  The struct is used to force byte
-alignment without using any non-portable code. */
-static union xRTOS_HEAP
-{
-	#if portBYTE_ALIGNMENT == 8
-		volatile portDOUBLE dDummy;
-	#else
-		volatile unsigned long ulDummy;
-	#endif
-	unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
-} xHeap;
+/* A few bytes might be lost to byte aligning the heap start address. */
+#define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
+
+/* 
+ * Initialises the heap structures into their start condition. 
+ */
+static void prvHeapInit( void );
+
+/* Allocate the memory for the heap. */
+static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
 
 /* Define the linked list structure.  This is used to link free blocks in order
 of their size. */
@@ -116,7 +115,7 @@ static xBlockLink xStart, xEnd;
 
 /* Keeps track of the number of free bytes remaining, but says nothing about
 fragmentation. */
-static size_t xFreeBytesRemaining = configTOTAL_HEAP_SIZE;
+static size_t xFreeBytesRemaining = configADJUSTED_HEAP_SIZE;
 
 /* STATIC FUNCTIONS ARE DEFINED AS MACROS TO MINIMIZE THE FUNCTION CALL DEPTH. */
 
@@ -143,27 +142,6 @@ size_t xBlockSize;																	\
 	/* position. */																	\
 	pxBlockToInsert->pxNextFreeBlock = pxIterator->pxNextFreeBlock;					\
 	pxIterator->pxNextFreeBlock = pxBlockToInsert;									\
-}
-/*-----------------------------------------------------------*/
-
-#define prvHeapInit()																\
-{																					\
-xBlockLink *pxFirstFreeBlock;														\
-																					\
-	/* xStart is used to hold a pointer to the first item in the list of free */	\
-	/* blocks.  The void cast is used to prevent compiler warnings. */				\
-	xStart.pxNextFreeBlock = ( void * ) xHeap.ucHeap;								\
-	xStart.xBlockSize = ( size_t ) 0;												\
-																					\
-	/* xEnd is used to mark the end of the list of free blocks. */					\
-	xEnd.xBlockSize = configTOTAL_HEAP_SIZE;										\
-	xEnd.pxNextFreeBlock = NULL;													\
-																					\
-	/* To start with there is a single free block that is sized to take up the		\
-	entire heap space. */															\
-	pxFirstFreeBlock = ( void * ) xHeap.ucHeap;										\
-	pxFirstFreeBlock->xBlockSize = configTOTAL_HEAP_SIZE;							\
-	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;										\
 }
 /*-----------------------------------------------------------*/
 
@@ -197,7 +175,7 @@ void *pvReturn = NULL;
 			}
 		}
 
-		if( ( xWantedSize > 0 ) && ( xWantedSize < configTOTAL_HEAP_SIZE ) )
+		if( ( xWantedSize > 0 ) && ( xWantedSize < configADJUSTED_HEAP_SIZE ) )
 		{
 			/* Blocks are stored in byte order - traverse the list from the start
 			(smallest) block until one of adequate size is found. */
@@ -236,7 +214,7 @@ void *pvReturn = NULL;
 					/* Insert the new block into the list of free blocks. */
 					prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
 				}
-				
+
 				xFreeBytesRemaining -= pxBlock->xBlockSize;
 			}
 		}
@@ -268,7 +246,8 @@ xBlockLink *pxLink;
 		before it. */
 		puc -= heapSTRUCT_SIZE;
 
-		/* This casting is to keep the compiler from issuing warnings. */
+		/* This unexpected casting is to keep some compilers from issuing 
+		byte alignment warnings. */
 		pxLink = ( void * ) puc;
 
 		vTaskSuspendAll();
@@ -292,3 +271,29 @@ void vPortInitialiseBlocks( void )
 {
 	/* This just exists to keep the linker quiet. */
 }
+/*-----------------------------------------------------------*/
+
+static void prvHeapInit( void )
+{
+xBlockLink *pxFirstFreeBlock;
+unsigned char *pucAlignedHeap;
+
+	/* Ensure the heap starts on a correctly aligned boundary. */
+	pucAlignedHeap = ( unsigned char * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
+
+	/* xStart is used to hold a pointer to the first item in the list of free
+	blocks.  The void cast is used to prevent compiler warnings. */
+	xStart.pxNextFreeBlock = ( void * ) pucAlignedHeap;
+	xStart.xBlockSize = ( size_t ) 0;
+
+	/* xEnd is used to mark the end of the list of free blocks. */
+	xEnd.xBlockSize = configADJUSTED_HEAP_SIZE;
+	xEnd.pxNextFreeBlock = NULL;
+
+	/* To start with there is a single free block that is sized to take up the
+	entire heap space. */
+	pxFirstFreeBlock = ( void * ) pucAlignedHeap;
+	pxFirstFreeBlock->xBlockSize = configADJUSTED_HEAP_SIZE;
+	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
+}
+/*-----------------------------------------------------------*/

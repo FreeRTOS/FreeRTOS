@@ -6,7 +6,7 @@
     <configuration Name="RAM" Placement="RAM" linker_section_placement_file="$(PackagesDir)/targets/Luminary_LM3S/ram_placement.xml" target_reset_script="RAMReset()"/>
     <folder Name="Source Files">
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc"/>
-      <folder Name="FreeRTOS">
+      <folder Name="FreeRTOS" file_name="">
         <folder Name="include">
           <file file_name="../../Source/portable/GCC/ARM_CM3/portmacro.h"/>
           <file file_name="../../Source/include/task.h"/>

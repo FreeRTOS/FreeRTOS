@@ -116,13 +116,18 @@ queuesetPRIORITY_CHANGE_LOOPS number of values are sent to a queue. */
 #define queuesetPRIORITY_CHANGE_LOOPS	100UL
 
 /* The ISR sends to the queue every queuesetISR_TX_PERIOD ticks. */
-#define queuesetISR_TX_PERIOD	2//( 100UL )
+#define queuesetISR_TX_PERIOD	( 100UL )
 
 /* The allowable maximum deviation between a received value and the expected
 received value.  A deviation will occur when data is received from a queue
 inside an ISR in between a task receiving from a queue and the task checking
 the received value. */
-#define queuesetALLOWABLE_RX_DEVIATION 5
+#define queuesetALLOWABLE_RX_DEVIATION 3
+
+/* Ignore values that are at the boundaries of allowable values to make the
+testing of limits easier (don't have to deal with wrapping values). */
+#define queuesetIGNORED_BOUNDARY	( queuesetALLOWABLE_RX_DEVIATION * 2 )
+
 /*
  * The task that periodically sends to the queue set.
  */
@@ -414,17 +419,21 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 	if( ulReceived >= queuesetINITIAL_ISR_TX_VALUE )
 	{
 		/* The value was sent from the ISR. */
-		if( ( ulReceived - queuesetINITIAL_ISR_TX_VALUE ) < queuesetALLOWABLE_RX_DEVIATION )
+		if( ( ulReceived - queuesetINITIAL_ISR_TX_VALUE ) < queuesetIGNORED_BOUNDARY )
 		{
 			/* The value received is at the lower limit of the expected range.
 			Don't test it and expect to receive one higher next time. */
 			ulExpectedReceivedFromISR++;
 		}
-		else if( ( ULONG_MAX - ulReceived ) <= queuesetALLOWABLE_RX_DEVIATION )
+		else if( ( ULONG_MAX - ulReceived ) <= queuesetIGNORED_BOUNDARY )
 		{
 			/* The value received is at the higher limit of the expected range.
 			Don't test it and expect to wrap soon. */
-			ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
+			ulExpectedReceivedFromISR++;
+			if( ulExpectedReceivedFromISR == 0 )
+			{
+				ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
+			}
 		}
 		else
 		{
@@ -443,17 +452,21 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 	else
 	{
 		/* The value was sent from the Tx task. */
-		if( ulReceived < queuesetALLOWABLE_RX_DEVIATION )
+		if( ulReceived < queuesetIGNORED_BOUNDARY )
 		{
 			/* The value received is at the lower limit of the expected range.
 			Don't test it, and expect to receive one higher next time. */
 			ulExpectedReceivedFromTask++;
 		}
-		else if( ( ( queuesetINITIAL_ISR_TX_VALUE - 1 ) - ulReceived ) <= queuesetALLOWABLE_RX_DEVIATION )
+		else if( ( ( queuesetINITIAL_ISR_TX_VALUE - 1 ) - ulReceived ) <= queuesetIGNORED_BOUNDARY )
 		{
 			/* The value received is at the higher limit of the expected range.
 			Don't test it and expect to wrap soon. */
-			ulExpectedReceivedFromTask = 0;
+			ulExpectedReceivedFromTask++;
+			if( ulExpectedReceivedFromTask >= queuesetINITIAL_ISR_TX_VALUE )
+			{
+				ulExpectedReceivedFromTask = 0;
+			}
 		}
 		else
 		{

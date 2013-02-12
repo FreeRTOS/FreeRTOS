@@ -129,7 +129,7 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcKernel.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcPort.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\FreeRTOS-Plus-Trace\trcUser.c" />
-    <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c" />
+    <ClCompile Include="..\..\Source\portable\MemMang\heap_4.c" />
     <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />
     <ClCompile Include="..\Common\Minimal\blocktim.c" />

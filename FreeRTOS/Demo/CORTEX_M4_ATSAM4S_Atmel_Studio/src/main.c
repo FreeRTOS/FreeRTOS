@@ -211,7 +211,7 @@ void vApplicationTickHook( void )
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
 	{
 		/* In this case the tick hook is used as part of the queue set test. */
-		vQueueSetWriteToQueueFromISR();
+		vQueueSetAccessQueueSetFromISR();
 	}
 	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }

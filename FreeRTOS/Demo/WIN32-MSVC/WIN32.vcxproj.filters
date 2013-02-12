@@ -49,9 +49,6 @@
     <ClCompile Include="..\..\Source\tasks.c">
       <Filter>FreeRTOS Source\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\portable\MemMang\heap_3.c">
-      <Filter>FreeRTOS Source\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\portable\MSVC-MingW\port.c">
       <Filter>FreeRTOS Source\Source\Portable</Filter>
     </ClCompile>
@@ -114,6 +111,9 @@
     </ClCompile>
     <ClCompile Include="Run-time-stats-utils.c">
       <Filter>Demo App Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\portable\MemMang\heap_4.c">
+      <Filter>FreeRTOS Source\Source\Portable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

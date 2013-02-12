@@ -96,6 +96,7 @@
 
 /* Standard includes. */
 #include <stdio.h>
+#include <stdlib.h>
 
 /* Kernel includes. */
 #include <FreeRTOS.h>
@@ -292,6 +293,7 @@ const unsigned long ulMSToSleep = 15;
 xTaskHandle xIdleTaskHandle, xTimerTaskHandle, xTestTask;
 signed char *pcTaskName;
 const unsigned char ucConstQueueNumber = 0xaaU, ucConstTaskNumber = 0x55U;
+void *pvAllocated;
 
 /* These three functions are only meant for use by trace code, and not for
 direct use from application code, hence their prototypes are not in queue.h. */
@@ -386,13 +388,17 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 			}
 		}
 	}
+
+	/* Exercise heap_4 a bit.  The malloc failed hook will trap failed 
+	allocations so there is no need to test here. */
+	pvAllocated = pvPortMalloc( ( rand() % 100 ) + 1 );
+	vPortFree( pvAllocated );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Can be implemented if required, but probably not required in this 
-	environment and running this demo. */
+	vAssertCalled();
 }
 /*-----------------------------------------------------------*/
 

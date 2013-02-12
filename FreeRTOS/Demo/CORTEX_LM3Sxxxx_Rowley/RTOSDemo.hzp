@@ -58,7 +58,9 @@
           <file file_name="../Common/include/death.h"/>
           <file file_name="../Common/include/GenQTest.h"/>
           <file file_name="../Common/include/integer.h"/>
+          <file file_name="../Common/include/QueueSet.h"/>
         </folder>
+        <file file_name="../Common/Minimal/QueueSet.c"/>
       </folder>
       <folder Name="WEB Server">
         <file file_name="webserver/uIP_Task.c"/>

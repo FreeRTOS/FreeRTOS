@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -146,6 +146,7 @@
 #include "QPeek.h"
 #include "recmutex.h"
 #include "IntQueue.h"
+#include "QueueSet.h"
 
 /*-----------------------------------------------------------*/
 
@@ -262,6 +263,7 @@ int main( void )
     vStartQueuePeekTasks();
     vStartRecursiveMutexTasks();
     vStartInterruptQueueTasks();
+    vStartQueueSetTasks();
 
 	/* Start the tasks defined within this file/specific to this demo. */
 	xTaskCreate( vOLEDTask, ( signed char * ) "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -366,12 +368,18 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			xMessage.pcMessage = "ERROR IN INT QUEUE";
 		}
-
+		else if( xAreQueueSetTasksStillRunning() != pdTRUE )
+		{
+        	xMessage.pcMessage = "ERROR IN QUEUE SET";
+		}
 
 		/* Send the message to the OLED gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
 		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
 	}
+
+	/* Exercise the queue sets from an ISR. */
+    vQueueSetAccessQueueSetFromISR();
 }
 /*-----------------------------------------------------------*/
 

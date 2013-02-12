@@ -24,9 +24,7 @@
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;include" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;WEB Server" name="unnamed" />
  </Project>
  <Register1>
   <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="CPU" decimalNodes="" octalNodes="" asciiNodes="" />
@@ -57,7 +55,7 @@
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_LM3Sxxxx_Rowley\main.c" y="238" path="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_LM3Sxxxx_Rowley\main.c" left="0" selected="1" name="unnamed" top="63" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_LM3Sxxxx_Rowley\main.c" y="241" path="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_LM3Sxxxx_Rowley\main.c" left="0" selected="1" name="unnamed" top="59" />
  </Files>
- <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Luminary USB Debug" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Source\portable\MemMang" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
+ <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Luminary USB Debug" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\Common\include" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

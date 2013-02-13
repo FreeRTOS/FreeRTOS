@@ -31,7 +31,7 @@ IF EXIST src\FreeRTOS Goto END
 	copy ..\..\Source\portable\GCC\ARM_CM3\*.* src\FreeRTOS\portable\GCC\ARM_CM3
 	
 	REM Copy the basic memory allocation files
-	copy ..\..\Source\portable\MemMang\*.* src\FreeRTOS\portable\MemMang
+	copy ..\..\Source\portable\MemMang\heap_4.c src\FreeRTOS\portable\MemMang
 
 	REM Copy the files that define the common demo tasks.
 	copy ..\Common\minimal\BlockQ.c "src\Common Demo Tasks"

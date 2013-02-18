@@ -1251,7 +1251,11 @@ xQUEUE *pxQueue;
 	configASSERT( pxQueue );
 
 	traceQUEUE_DELETE( pxQueue );
-	prvQueueUnregisterQueue( pxQueue );
+	#if ( configQUEUE_REGISTRY_SIZE > 0 )
+	{
+		prvQueueUnregisterQueue( pxQueue );
+	}
+	#endif
 	vPortFree( pxQueue->pcHead );
 	vPortFree( pxQueue );
 }

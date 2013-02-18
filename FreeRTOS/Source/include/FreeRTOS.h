@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -129,11 +129,11 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#error Missing definition:  INCLUDE_uxTaskPriorityGet should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef INCLUDE_vTaskDelete		
+#ifndef INCLUDE_vTaskDelete
 	#error Missing definition:  INCLUDE_vTaskDelete		 should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef INCLUDE_vTaskSuspend	
+#ifndef INCLUDE_vTaskSuspend
 	#error Missing definition:  INCLUDE_vTaskSuspend	 should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
@@ -320,7 +320,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef traceTASK_PRIORITY_DISINHERIT
 	/* Called when a task releases a mutex, the holding of which had resulted in
-	the task inheriting the priority of a higher priority task.  
+	the task inheriting the priority of a higher priority task.
 	pxTCBOfMutexHolder is a pointer to the TCB of the task that is releasing the
 	mutex.  uxOriginalPriority is the task's configured (base) priority. */
 	#define traceTASK_PRIORITY_DISINHERIT( pxTCBOfMutexHolder, uxOriginalPriority )
@@ -352,7 +352,7 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceMOVED_TASK_TO_READY_STATE( pxTCB )
 #endif
 
-#ifndef traceQUEUE_CREATE	
+#ifndef traceQUEUE_CREATE
 	#define traceQUEUE_CREATE( pxNewQueue )
 #endif
 
@@ -556,6 +556,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef configPOST_SLEEP_PROCESSING
 	#define configPOST_SLEEP_PROCESSING( x )
+#endif
+
+#ifndef configUSE_QUEUE_SETS
+	#define configUSE_QUEUE_SETS 0
 #endif
 
 /* For backward compatability. */

@@ -84,6 +84,13 @@ task.h is included from an application file. */
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
+/* Sanity check the configuration. */
+#if configUSE_TICKLESS_IDLE != 0
+	#if INCLUDE_vTaskSuspend != 1
+		#error INCLUDE_vTaskSuspend must be set to 1 if configUSE_TICKLESS_IDLE is not set to 0
+	#endif /* INCLUDE_vTaskSuspend */
+#endif /* configUSE_TICKLESS_IDLE */
+
 /*
  * Defines the size, in words, of the stack allocated to the idle task.
  */
@@ -602,13 +609,14 @@ tskTCB * pxNewTCB;
 				uxTopUsedPriority = pxNewTCB->uxPriority;
 			}
 
+			uxTaskNumber++;
+
 			#if ( configUSE_TRACE_FACILITY == 1 )
 			{
 				/* Add a counter into the TCB for tracing only. */
 				pxNewTCB->uxTCBNumber = uxTaskNumber;
 			}
 			#endif /* configUSE_TRACE_FACILITY */
-			uxTaskNumber++;
 			traceTASK_CREATE( pxNewTCB );
 
 			prvAddTaskToReadyQueue( pxNewTCB );
@@ -974,11 +982,7 @@ tskTCB * pxNewTCB;
 				/* Remember the ready list the task might be referenced from
 				before its uxPriority member is changed so the
 				taskRESET_READY_PRIORITY() macro can function correctly. */
-				#if ( configUSE_PORT_OPTIMISED_TASK_SELECTION != 0 )
-				{
-					uxPriorityUsedOnEntry = pxTCB->uxPriority;
-				}
-				#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+				uxPriorityUsedOnEntry = pxTCB->uxPriority;
 
 				#if ( configUSE_MUTEXES == 1 )
 				{
@@ -1280,7 +1284,7 @@ portBASE_TYPE xReturn;
 	}
 	else
 	{
-		/* This line will only be reached if the kernel could not be started, 
+		/* This line will only be reached if the kernel could not be started,
 		because there was not enough FreeRTOS heap to create the idle task
 		or the timer task. */
 		configASSERT( xReturn );
@@ -2171,6 +2175,46 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 } /*lint !e715 pvParameters is not accessed but all task functions require the same prototype. */
 /*-----------------------------------------------------------*/
 
+#if configUSE_TICKLESS_IDLE != 0
+
+	eSleepModeStatus eTaskConfirmSleepModeStatus( void )
+	{
+	eSleepModeStatus eReturn = eStandardSleep;
+
+		if( listCURRENT_LIST_LENGTH( &xPendingReadyList ) != 0 )
+		{
+			/* A task was made ready while the scheduler was suspended. */
+			eReturn = eAbortSleep;
+		}
+		else if( xMissedYield != pdFALSE )
+		{
+			/* A yield was pended while the scheduler was suspended. */
+			eReturn = eAbortSleep;
+		}
+		else
+		{
+			#if configUSE_TIMERS == 0
+			{
+				/* The idle task exists in addition to the application tasks. */
+				const unsigned portBASE_TYPE uxNonApplicationTasks = 1;
+
+				/* If timers are not being used and all the tasks are in the
+				suspended list (which might mean they have an infinite block
+				time rather than actually being suspended) then it is safe to
+				turn all clocks off and just wait for external initerrupts. */
+				if( listCURRENT_LIST_LENGTH( &xSuspendedTasksList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
+				{
+					eReturn = eNoTasksWaitingTimeout;
+				}
+			}
+			#endif /* configUSE_TIMERS */
+		}
+
+		return eReturn;
+	}
+#endif /* configUSE_TICKLESS_IDLE */
+/*-----------------------------------------------------------*/
+
 static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
 {
 	/* Store the function name in the TCB. */
@@ -2254,7 +2298,7 @@ static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const 
 
         vPortStoreTaskMPUSettings( &( pxTCB->xMPUSettings ), xRegions, NULL, 0 );
 	}
-	
+
 #endif /* portUSING_MPU_WRAPPERS */
 /*-----------------------------------------------------------*/
 
@@ -2700,7 +2744,7 @@ tskTCB *pxNewTCB;
 				}
 			}
 		}
-	} 
+	}
 
 #endif /* portCRITICAL_NESTING_IN_TCB */
 /*-----------------------------------------------------------*/

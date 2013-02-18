@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,17 +52,17 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
@@ -70,20 +70,29 @@
  * Implementation of functions defined in portable.h for the PIC32MX port.
   *----------------------------------------------------------*/
 
+#ifndef __XC__
+    #error This port is designed to work with XC32.  Please update your C compiler version.
+#endif
+
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
 
 /* Hardware specifics. */
-#define portTIMER_PRESCALE 8
+#define portTIMER_PRESCALE	8
+#define portPRESCALE_BITS	1
 
 /* Bits within various registers. */
-#define portIE_BIT					( 0x00000001 )
-#define portEXL_BIT					( 0x00000002 )
+#define portIE_BIT						( 0x00000001 )
+#define portEXL_BIT						( 0x00000002 )
+
+/* Bits within the CAUSE register. */
+#define portCORE_SW_0					( 0x00000100 )
+#define portCORE_SW_1					( 0x00000200 )
 
 /* The EXL bit is set to ensure interrupts do not occur while the context of
 the first task is being restored. */
-#define portINITIAL_SR				( portIE_BIT | portEXL_BIT )
+#define portINITIAL_SR					( portIE_BIT | portEXL_BIT )
 
 #ifndef configTICK_INTERRUPT_VECTOR
 	#define configTICK_INTERRUPT_VECTOR _TIMER_1_VECTOR
@@ -99,30 +108,30 @@ unsigned portBASE_TYPE uxSavedTaskStackPointer = 0;
 /* The stack used by interrupt service routines that cause a context switch. */
 portSTACK_TYPE xISRStack[ configISR_STACK_SIZE ] = { 0 };
 
-/* The top of stack value ensures there is enough space to store 6 registers on 
+/* The top of stack value ensures there is enough space to store 6 registers on
 the callers stack, as some functions seem to want to do this. */
 const portSTACK_TYPE * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 ] );
 
-/* 
- * Place the prototype here to ensure the interrupt vector is correctly installed. 
+/*
+ * Place the prototype here to ensure the interrupt vector is correctly installed.
  * Note that because the interrupt is written in assembly, the IPL setting in the
  * following line of code has no effect.  The interrupt priority is set by the
- * call to ConfigIntTimer1() in vApplicationSetupTickTimerInterrupt(). 
+ * call to ConfigIntTimer1() in vApplicationSetupTickTimerInterrupt().
  */
 extern void __attribute__( (interrupt(ipl1), vector( configTICK_INTERRUPT_VECTOR ))) vPortTickInterruptHandler( void );
 
 /*
  * The software interrupt handler that performs the yield.  Note that, because
  * the interrupt is written in assembly, the IPL setting in the following line of
- * code has no effect.  The interrupt priority is set by the call to 
- * mConfigIntCoreSW0() in xPortStartScheduler(). 
+ * code has no effect.  The interrupt priority is set by the call to
+ * mConfigIntCoreSW0() in xPortStartScheduler().
  */
 void __attribute__( (interrupt(ipl1), vector(_CORE_SOFTWARE_0_VECTOR))) vPortYieldISR( void );
 
 /*-----------------------------------------------------------*/
 
-/* 
- * See header file for description. 
+/*
+ * See header file for description.
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
@@ -152,7 +161,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 	*pxTopOfStack = (portSTACK_TYPE) 0x00000000; 	/* critical nesting level - no longer used. */
 	pxTopOfStack--;
-	
+
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -163,22 +172,33 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
  * timer by redefining this implementation.  If a different timer is used then
  * configTICK_INTERRUPT_VECTOR must also be defined in FreeRTOSConfig.h to
  * ensure the RTOS provided tick interrupt handler is installed on the correct
- * vector number.  When Timer 1 is used the vector number is defined as 
+ * vector number.  When Timer 1 is used the vector number is defined as
  * _TIMER_1_VECTOR.
  */
 __attribute__(( weak )) void vApplicationSetupTickTimerInterrupt( void )
 {
 const unsigned long ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ ) - 1;
 
-	OpenTimer1( ( T1_ON | T1_PS_1_8 | T1_SOURCE_INT ), ulCompareMatch );
-	ConfigIntTimer1( T1_INT_ON | configKERNEL_INTERRUPT_PRIORITY );
+	T1CON = 0x0000;
+	T1CONbits.TCKPS = portPRESCALE_BITS;
+	PR1 = ulCompareMatch;
+	IPC1bits.T1IP = configKERNEL_INTERRUPT_PRIORITY;
+
+	/* Clear the interrupt as a starting condition. */
+	IFS0bits.T1IF = 0;
+
+	/* Enable the interrupt. */
+	IEC0bits.T1IE = 1;
+
+	/* Start the timer. */
+	T1CONbits.TON = 1;
 }
 /*-----------------------------------------------------------*/
 
 void vPortEndScheduler(void)
 {
 	/* It is unlikely that the scheduler for the PIC port will get stopped
-	once running.  If required disable the tick interrupt here, then return 
+	once running.  If required disable the tick interrupt here, then return
 	to xPortStartScheduler(). */
 	for( ;; );
 }
@@ -189,14 +209,22 @@ portBASE_TYPE xPortStartScheduler( void )
 extern void vPortStartFirstTask( void );
 extern void *pxCurrentTCB;
 
-	/* Setup the software interrupt. */
-	mConfigIntCoreSW0( CSW_INT_ON | configKERNEL_INTERRUPT_PRIORITY | CSW_INT_SUB_PRIOR_0 );
+	/* Clear the software interrupt flag. */
+	IFS0CLR = _IFS0_CS0IF_MASK;
 
-	/* Setup the timer to generate the tick.  Interrupts will have been 
+	/* Set software timer priority. */
+	IPC0CLR = _IPC0_CS0IP_MASK;
+	IPC0SET = ( configKERNEL_INTERRUPT_PRIORITY << _IPC0_CS0IP_POSITION );
+
+	/* Enable software interrupt. */
+	IEC0CLR = _IEC0_CS0IE_MASK;
+	IEC0SET = 1 << _IEC0_CS0IE_POSITION;
+
+	/* Setup the timer to generate the tick.  Interrupts will have been
 	disabled by the time we get here. */
 	vApplicationSetupTickTimerInterrupt();
 
-	/* Kick off the highest priority task that has been created so far. 
+	/* Kick off the highest priority task that has been created so far.
 	Its stack location is loaded into uxSavedTaskStackPointer. */
 	uxSavedTaskStackPointer = *( unsigned portBASE_TYPE * ) pxCurrentTCB;
 	vPortStartFirstTask();
@@ -211,17 +239,17 @@ void vPortIncrementTick( void )
 unsigned portBASE_TYPE uxSavedStatus;
 
 	uxSavedStatus = uxPortSetInterruptMaskFromISR();
-		vTaskIncrementTick();
+	vTaskIncrementTick();
 	vPortClearInterruptMaskFromISR( uxSavedStatus );
-	
+
 	/* If we are using the preemptive scheduler then we might want to select
 	a different task to execute. */
 	#if configUSE_PREEMPTION == 1
-		SetCoreSW0();
+		_CP0_BIS_CAUSE( portCORE_SW_0 );
 	#endif /* configUSE_PREEMPTION */
 
-	/* Clear timer 0 interrupt. */
-	mT1ClearIntFlag();
+	/* Clear timer 1 interrupt. */
+	IFS0CLR = _IFS0_T1IF_MASK;
 }
 /*-----------------------------------------------------------*/
 
@@ -231,9 +259,9 @@ unsigned portBASE_TYPE uxSavedStatusRegister;
 
 	asm volatile ( "di" );
 	uxSavedStatusRegister = _CP0_GET_STATUS() | 0x01;
-	/* This clears the IPL bits, then sets them to 
+	/* This clears the IPL bits, then sets them to
 	configMAX_SYSCALL_INTERRUPT_PRIORITY.  This function should not be called
-	from an interrupt that has a priority above 
+	from an interrupt that has a priority above
 	configMAX_SYSCALL_INTERRUPT_PRIORITY so, when used correctly, the action
 	can only result in the IPL being unchanged or raised, and therefore never
 	lowered. */

@@ -70,7 +70,7 @@
 #define PORTMACRO_H
 
 /* System include files */
-#include <plib.h>
+#include <xc.h>
 
 #ifdef __cplusplus
 extern "C" {

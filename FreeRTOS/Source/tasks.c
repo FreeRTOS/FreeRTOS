@@ -2201,7 +2201,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 				/* If timers are not being used and all the tasks are in the
 				suspended list (which might mean they have an infinite block
 				time rather than actually being suspended) then it is safe to
-				turn all clocks off and just wait for external initerrupts. */
+				turn all clocks off and just wait for external interrupts. */
 				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
 				{
 					eReturn = eNoTasksWaitingTimeout;

@@ -314,19 +314,28 @@ void xPortSysTickHandler( void )
 		kernel with respect to calendar time. */
 		portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT;
 
-		/* If a context switch is pending then abandon the low power entry as
-		the context switch might have been pended by an external interrupt that
-		requires processing. */
-		if( ( portNVIC_INT_CTRL_REG & portNVIC_PENDSVSET_BIT ) != 0 )
+		/* Adjust the reload value to take into account that the current
+		time slice is already partially complete. */
+		ulReloadValue += ( portNVIC_SYSTICK_LOAD_REG - ( portNVIC_SYSTICK_LOAD_REG - portNVIC_SYSTICK_CURRENT_VALUE_REG ) );
+
+		/* Enter a critical section but don't use the taskENTER_CRITICAL()
+		method as that will mask interrupts that should exit sleep mode. */
+		__disable_interrupt();
+
+		/* If a context switch is pending or a task is waiting for the scheduler
+		to be unsuspended then abandon the low power entry. */
+		if( eTaskConfirmSleepModeStatus() == eAbortSleep )
 		{
 			/* Restart SysTick. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+
+			/* Re-enable interrupts - see comments above __disable_interrupt()
+			call above. */
+			__enable_interrupt();
 		}
 		else
 		{
-			/* Adjust the reload value to take into account that the current
-			time slice is already partially complete. */
-			ulReloadValue += ( portNVIC_SYSTICK_LOAD_REG - ( portNVIC_SYSTICK_LOAD_REG - portNVIC_SYSTICK_CURRENT_VALUE_REG ) );
+			/* Set the new reload value. */
 			portNVIC_SYSTICK_LOAD_REG = ulReloadValue;
 
 			/* Clear the SysTick count flag and set the count value back to
@@ -354,6 +363,10 @@ void xPortSysTickHandler( void )
 			inevitably result in some tiny drift of the time maintained by the
 			kernel with respect to calendar time. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT;
+
+			/* Re-enable interrupts - see comments above __disable_interrupt()
+			call above. */
+			__enable_interrupt();
 
 			if( ( portNVIC_SYSTICK_CTRL_REG & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
@@ -404,7 +417,7 @@ void xPortSysTickHandler( void )
  */
 __weak void vPortSetupTimerInterrupt( void )
 {
-	/* Calculate the constants required to configure the tick interrupt. */		
+	/* Calculate the constants required to configure the tick interrupt. */
 	#if configUSE_TICKLESS_IDLE == 1
 	{
 		ulTimerReloadValueForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;

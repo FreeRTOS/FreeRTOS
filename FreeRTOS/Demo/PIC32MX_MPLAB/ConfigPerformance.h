@@ -1,7 +1,7 @@
 /*
     FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
@@ -42,7 +42,7 @@
     FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
@@ -52,75 +52,33 @@
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license 
-    and contact details.  
-    
+
+    http://www.FreeRTOS.org - Documentation, training, latest versions, license
+    and contact details.
+
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
+    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
+    the code with commercial support, indemnification, and middleware, under
     the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
+    provide a safety engineered and independently SIL3 certified version under
     the SafeRTOS brand: http://www.SafeRTOS.com.
 */
 
-/* Scheduler includes. */
-#include "FreeRTOS.h"
+#ifndef CONFIG_PERFORMANCE_H
+#define CONFIG_PERFORMANCE_H
 
-/* Demo app includes. */
-#include "partest.h"
+/*
+ * Configures the hardware for maximum performance by setting the speed of the
+ * peripheral bus and enabling the cache.
+ */
+void vHardwareConfigurePerformance( void );
 
-#define ptOUTPUT 	0
-#define ptALL_OFF	0
+/* 
+ * Configure the interrupt controller to use a separate vector for each
+ * interrupt.
+ */
+void vHardwareUseMultiVectoredInterrupts( void );
 
-/*-----------------------------------------------------------
- * Simple parallel port IO routines.
- *-----------------------------------------------------------*/
-
-void vParTestInitialise( void )
-{
-	/* All LEDs output. */	
-	TRISA = ptOUTPUT;	
-	PORTA = ptALL_OFF;
-
-	/* Disable the JTAG. */
-	DDPCONbits.JTAGEN = 0;
-}
-/*-----------------------------------------------------------*/
-
-void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{
-unsigned portBASE_TYPE uxLEDBit;
-
-	/* Which port A bit is being modified? */
-	uxLEDBit = 1 << uxLED;
-
-	if( xValue )
-	{
-		/* Turn the LED on.   Use of the PORTASET register removes the need
-		to use a critical section. */
-		PORTASET = uxLEDBit;
-	}
-	else
-	{
-		/* Turn the LED off.  Use of the PORTACLR register removes the need
-		to use a critical section. */
-		PORTACLR = uxLEDBit;
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-unsigned portBASE_TYPE uxLEDBit;
-	
-	uxLEDBit = 1 << uxLED;
-
-	/* Use of the PORTAINV register removes the need to use a critical section. */
-	PORTAINV = uxLEDBit;
-}
-
-
-
+#endif /* CONFIG_PERFORMANCE_H */

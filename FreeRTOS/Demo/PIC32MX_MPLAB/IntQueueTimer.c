@@ -92,7 +92,7 @@ void vInitialiseTimerForIntQueueTest( void )
 	PR3 = ( unsigned short ) ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT3_FREQUENCY );
 
 	/* Setup timer 3 interrupt priority to be above the kernel priority. */
-	ConfigIntTimer3( T3_INT_ON | ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 ) );
+	IPC3bits.T3IP = ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 );
 
 	/* Clear the interrupt as a starting condition. */
 	IFS0bits.T3IF = 0;
@@ -110,7 +110,7 @@ void vInitialiseTimerForIntQueueTest( void )
 	PR4 = ( unsigned short ) ( configPERIPHERAL_CLOCK_HZ / timerINTERRUPT4_FREQUENCY );
 
 	/* Setup timer 4 interrupt priority to be above the kernel priority. */
-	ConfigIntTimer4( T4_INT_ON | ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) );
+	IPC4bits.T4IP = configMAX_SYSCALL_INTERRUPT_PRIORITY;
 
 	/* Clear the interrupt as a starting condition. */
 	IFS0bits.T4IF = 0;

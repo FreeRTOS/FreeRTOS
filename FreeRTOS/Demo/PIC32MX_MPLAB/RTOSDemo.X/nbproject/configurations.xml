@@ -59,6 +59,7 @@
       <itemPath>../printf-stdarg.c</itemPath>
       <itemPath>../main_blinky.c</itemPath>
       <itemPath>../main_full.c</itemPath>
+      <itemPath>../ConfigPerformance.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -161,7 +162,7 @@
         <targetDevice>PIC32MX460F512L</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>RealICEPlatformTool</platformTool>
+        <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>1.00</languageToolchainVersion>
         <platform>3</platform>
@@ -206,7 +207,7 @@
         <property key="support-ansi" value="false"/>
         <property key="use-cci" value="false"/>
         <property key="use-indirect-calls" value="false"/>
-        <appendMe value="-I ../../../Source/include -I ../../../Source/portable/MPLAB/PIC32MX -I ../../Common/include -I ../"/>
+        <appendMe value="-I ../../../Source/include -I ../../../Source/portable/MPLAB/PIC32MX -I ../../Common/include -I ../ -Wextra"/>
       </C32>
       <C32-AS>
         <property key="assembler-symbols" value=""/>

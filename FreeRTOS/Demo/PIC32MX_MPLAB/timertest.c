@@ -103,9 +103,9 @@ void vSetupTimerTest( unsigned short usFrequencyHz )
 	/* Timer 2 is going to interrupt at usFrequencyHz Hz. */
 	PR2 = ( unsigned short ) ( ( configPERIPHERAL_CLOCK_HZ / ( unsigned long ) usFrequencyHz ) - 1 );
 
-	/* Setup timer 2 interrupt priority to be above the kernel priority so 
+	/* Setup timer 2 interrupt priority to be above the kernel priority so
 	the timer jitter is not effected by the kernel activity. */
-	ConfigIntTimer2( T2_INT_ON | ( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 ) );
+	IPC2bits.T2IP = ( configMAX_SYSCALL_INTERRUPT_PRIORITY + 1 );
 
 	/* Clear the interrupt as a starting condition. */
 	IFS0bits.T2IF = 0;

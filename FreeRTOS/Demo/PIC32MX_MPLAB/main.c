@@ -85,6 +85,9 @@
 /* Standard demo includes. */
 #include "partest.h"
 
+/* Hardware specific includes. */
+#include "ConfigPerformance.h"
+
 /* Core configuratin fuse settings */
 #pragma config FPLLMUL = MUL_20, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
 #pragma config POSCMOD = HS, FNOSC = PRIPLL, FPBDIV = DIV_2
@@ -146,12 +149,11 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-	/* Set the system and peripheral bus speeds and enable the program cache*/
-	SYSTEMConfigPerformance( configCPU_CLOCK_HZ - 1 );
-	mOSCSetPBDIV( OSC_PB_DIV_2 );
+	/* Configure the hardware for maximum performance. */
+	vHardwareConfigurePerformance();
 
 	/* Setup to use the external interrupt controller. */
-    INTEnableSystemMultiVectoredInt();
+	vHardwareUseMultiVectoredInterrupts();
 
 	portDISABLE_INTERRUPTS();
 

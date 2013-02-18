@@ -118,6 +118,7 @@ and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
 
 /* Standard includes. */
 #include <stdio.h>
+#include <string.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
@@ -381,6 +382,8 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			xMessage.pcMessage = "ERROR IN Q SET";
 		}
 
+		configASSERT( strcmp( ( const char * ) xMessage.pcMessage, "PASS" ) == 0 );
+
 		/* Send the message to the OLED gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
 		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
@@ -474,4 +477,23 @@ void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTask
 	( void ) pcTaskName;
 
 	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( const char *pcFile, unsigned long ulLine )
+{
+volatile unsigned long ulSetTo1InDebuggerToExit = 0;
+
+	taskENTER_CRITICAL();
+	{
+		while( ulSetTo1InDebuggerToExit == 0 )
+		{
+			/* Nothing do do here.  Set the loop variable to a non zero value in
+			the debugger to step out of this function to the point that caused
+			the assertion. */
+			( void ) pcFile;
+			( void ) ulLine;
+		}
+	}
+	taskEXIT_CRITICAL();
 }

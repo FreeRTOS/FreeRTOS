@@ -92,7 +92,7 @@
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
-#define configUSE_CO_ROUTINES 			1
+#define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configCHECK_FOR_STACK_OVERFLOW	2
@@ -105,7 +105,7 @@
 #define configQUEUE_REGISTRY_SIZE		10
 
 /* Timer related defines. */
-#define configUSE_TIMERS				1
+#define configUSE_TIMERS				0
 #define configTIMER_TASK_PRIORITY		2
 #define configTIMER_QUEUE_LENGTH		20
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
@@ -137,5 +137,9 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 version. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
+#ifdef __ICCARM__
+	void vAssertCalled( const char *pcFile, unsigned long ulLine );
+	#define configASSERT( x ) if( x == 0 ) vAssertCalled( __FILE__, __LINE__ );
+#endif
 
 #endif /* FREERTOS_CONFIG_H */

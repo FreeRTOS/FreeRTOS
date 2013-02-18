@@ -24,6 +24,7 @@ File 1,1,<..\Common\Minimal\QPeek.c><QPeek.c>
 File 1,1,<.\IntQueueTimer.c><IntQueueTimer.c>
 File 1,1,<..\Common\Minimal\IntQueue.c><IntQueue.c>
 File 1,1,<..\Common\Minimal\recmutex.c><recmutex.c>
+File 1,1,<..\Common\Minimal\QueueSet.c><QueueSet.c>
 File 2,1,<.\rit128x96x4.c><rit128x96x4.c>
 File 2,1,<.\osram128x64x4.c><osram128x64x4.c>
 File 2,4,<..\Common\drivers\LuminaryMicro\Keil\driverlib.lib><driverlib.lib>

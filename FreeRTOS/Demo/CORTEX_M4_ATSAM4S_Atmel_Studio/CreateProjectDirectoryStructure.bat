@@ -51,7 +51,7 @@ IF EXIST src\asf\thirdparty\FreeRTOS Goto END
     copy %COMMON_SOURCE%\recmutex.c        src\Common-Demo-Source
     copy %COMMON_SOURCE%\countsem.c        src\Common-Demo-Source
     copy %COMMON_SOURCE%\integer.c         src\Common-Demo-Source
-	copy %COMMON_SOURCE%\QueueSet.c        src\Common-Demo-Source
+    copy %COMMON_SOURCE%\QueueSet.c        src\Common-Demo-Source
     
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              src\Common-Demo-Source\include

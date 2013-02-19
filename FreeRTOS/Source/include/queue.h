@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.3.0 - Copyright (C) 2012 Real Time Engineers Ltd.
+    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -29,17 +29,20 @@
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
+
+    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
     distribute a combined work that includes FreeRTOS without being obliged to
     provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    kernel.
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details. You should have received a copy of the GNU General Public License
+    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    viewed here: http://www.freertos.org/a00114.html and also obtained by
+    writing to Real Time Engineers Ltd., contact details for whom are available
+    on the FreeRTOS WEB site.
 
     1 tab == 4 spaces!
 
@@ -53,17 +56,20 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, training, latest versions, license
-    and contact details.
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
+    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+    fully thread aware and reentrant UDP/IP stack.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell
-    the code with commercial support, indemnification, and middleware, under
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under
-    the SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
+    Integrity Systems, who sell the code with commercial support, 
+    indemnification and middleware, under the OpenRTOS brand.
+    
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
+    engineered and independently SIL3 certified version for use in safety and 
+    mission critical applications that require provable dependability.
 */
 
 
@@ -1317,23 +1323,22 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * or semaphores contained in the set is in a state where a queue read or
  * semaphore take operation would be successful.
  *
- * Note 1:  See the documentation on http://wwwFreeRTOS.org for reasons why
- * queue sets are very rarely needed in practice as there are simpler
- * alternatives.  Queue sets are provided to allow FreeRTOS to be integrated
- * with legacy third party driver code.
+ * Note 1:  See the documentation on http://wwwFreeRTOS.org/RTOS-queue-sets.html
+ * for reasons why queue sets are very rarely needed in practice as there are 
+ * simpler methods of blocking on multiple objects.
  *
  * Note 2:  Blocking on a queue set that contains a mutex will not cause the
  * mutex holder to inherit the priority of the blocked task.
  *
  * Note 3:  An additional 4 bytes of RAM is required for each space in a every
- * queue added to a queue set.  Therefore counting semaphores with large maximum
- * counts should not be added to queue sets.
+ * queue added to a queue set.  Therefore counting semaphores that have a high
+ * maximum count value should not be added to a queue set.
  *
- * Note 4:  A received (in the case of a queue) or take (in the case of a
+ * Note 4:  A receive (in the case of a queue) or take (in the case of a
  * semaphore) operation must not be performed on a member of a queue set unless
- * a call to xQueueSelect() has first returned a handle to that set member.
+ * a call to xQueueSelectFromSet() has first returned a handle to that set member.
  *
- * @param uxEventQueueLength Queue sets themselves queue events that occur on
+ * @param uxEventQueueLength Queue sets store events that occur on
  * the queues and semaphores contained in the set.  uxEventQueueLength specifies
  * the maximum number of events that can be queued at once.  To be absolutely
  * certain that events are not lost uxEventQueueLength should be set to the
@@ -1361,9 +1366,9 @@ xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength );
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * Note 1:  A received (in the case of a queue) or take (in the case of a
+ * Note 1:  A receive (in the case of a queue) or take (in the case of a
  * semaphore) operation must not be performed on a member of a queue set unless
- * a call to xQueueSelect() has first returned a handle to that set member.
+ * a call to xQueueSelectFromSet() has first returned a handle to that set member.
  *
  * @param xQueueOrSemaphore The handle of the queue or semaphore being added to
  * the queue set (cast to an xQueueSetMemberHandle type).
@@ -1379,8 +1384,8 @@ xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength );
 portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
 /*
- * Removes a queue or semaphore from a queue set.  A queue can only be removed
- * from a set when it is empty.
+ * Removes a queue or semaphore from a queue set.  A queue or semaphore can only 
+ * be removed from a set if the queue or semaphore is empty.
  *
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
@@ -1392,8 +1397,8 @@ portBASE_TYPE xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSet
  * is included.
  *
  * @return If the queue or semaphore was successfully removed from the queue set
- * then pdPASS is returned.  If the queue was not in the queue set then pdFAIL
- * is returned.
+ * then pdPASS is returned.  If the queue was not in the queue set, or the
+ * queue (or semaphore) was not empty, then pdFAIL is returned.
  */
 portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 
@@ -1407,17 +1412,16 @@ portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
  * See FreeRTOS/Source/Demo/Common/Minimal/QueueSet.c for an example using this
  * function.
  *
- * Note 1:  See the documentation on http://wwwFreeRTOS.org for reasons why
- * queue sets are very rarely needed in practice as there are simpler
- * alternatives.  Queue sets are provided to allow FreeRTOS to be integrated
- * with legacy third party driver code.
+ * Note 1:  See the documentation on http://wwwFreeRTOS.org/RTOS-queue-sets.html
+ * for reasons why queue sets are very rarely needed in practice as there are 
+ * simpler methods of blocking on multiple objects.
  *
  * Note 2:  Blocking on a queue set that contains a mutex will not cause the
  * mutex holder to inherit the priority of the blocked task.
  *
- * Note 3:  A received (in the case of a queue) or take (in the case of a
+ * Note 3:  A receive (in the case of a queue) or take (in the case of a
  * semaphore) operation must not be performed on a member of a queue set unless
- * a call to xQueueSelect() has first returned a handle to that set member.
+ * a call to xQueueSelectFromSet() has first returned a handle to that set member.
  *
  * @param xQueueSet The queue set on which the task will (potentially) block.
  *

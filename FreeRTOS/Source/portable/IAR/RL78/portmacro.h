@@ -56,24 +56,27 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
 #ifndef PORTMACRO_H
 #define PORTMACRO_H
+
+#include "port_iodefine.h"
+#include "port_iodefine_ext.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -177,19 +180,6 @@ extern volatile unsigned short usCriticalNesting;								\
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
-
-/* --------------------------------------------------------------------------*/
-/* Option-bytes and security ID                                              */
-/* --------------------------------------------------------------------------*/
-#define OPT_BYTES_SIZE     4
-#define SECU_ID_SIZE       10
-#define WATCHDOG_DISABLED  0x00
-#define LVI_ENABLED        0xFE
-#define LVI_DISABLED       0xFF
-#define RESERVED_FF        0xFF
-#define OCD_DISABLED       0x04
-#define OCD_ENABLED        0x81
-#define OCD_ENABLED_ERASE  0x80
 
 #ifdef __cplusplus
 }

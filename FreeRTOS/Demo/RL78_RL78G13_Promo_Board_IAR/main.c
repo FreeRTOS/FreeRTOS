@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -152,7 +152,7 @@ its own executions. */
 #define mainDEMO_TIMER_PERIOD_MS			( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT )
 
 /* The LED toggled by the check timer. */
-#define mainLED_0   						P7_bit.no7
+#define mainLED_0   						P1_bit.no0
 
 /* A block time of zero simple means "don't block". */
 #define mainDONT_BLOCK						( 0U )
@@ -184,10 +184,9 @@ extern void vRegTest2( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/* If an error is discovered by one of the RegTest tasks then this flag is set
-to pdFAIL.  The 'check' timer then inspects this flag to detect errors within
-the RegTest tasks. */
-static short sRegTestStatus = pdPASS;
+/* Variables that are incremented on each cycle of the two reg tests to allow
+the check timer to know that they are still executing. */
+unsigned short usRegTest1LoopCounter = 0, usRegTest2LoopCounter;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
@@ -203,13 +202,13 @@ static volatile unsigned long ulDemoSoftwareTimerCounter = 0UL;
 enabled. */
 __root __far const unsigned char OptionByte[] @ 0x00C0 =
 {
-	WATCHDOG_DISABLED, LVI_ENABLED, RESERVED_FF, OCD_ENABLED
+	0x00U, 0xFFU, 0xF8U, 0x81U
 };
 
 /* Security byte definition */
-__root __far const unsigned char SecuIDCode[]  @ 0x00C4 =
+__root __far const unsigned char ucSecurityCode[]  @ 0x00C4 =
 {
-	0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x54
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 /*-----------------------------------------------------------*/
@@ -274,6 +273,7 @@ static void prvDemoTimerCallback( xTimerHandle xTimer )
 static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
 static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
+static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 
 	/* Inspect the status of the standard demo tasks. */
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
@@ -291,10 +291,24 @@ static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS
 		xErrorStatus = pdFAIL;
 	}
 
-	/* Inspect the status of the reg test tasks. */
-	if( sRegTestStatus != pdPASS )
+	/* Indicate an error if either of the reg test loop counters have not
+	incremented since the last time this function was called. */
+	if( usLastRegTest1Counter == usRegTest1LoopCounter )
 	{
 		xErrorStatus = pdFAIL;
+	}
+	else
+	{
+		usLastRegTest1Counter = usRegTest1LoopCounter;
+	}
+
+	if( usLastRegTest2Counter == usRegTest2LoopCounter )
+	{
+		xErrorStatus = pdFAIL;
+	}
+	else
+	{
+		usLastRegTest2Counter = usRegTest2LoopCounter;
 	}
 	
 	/* Ensure that the demo software timer has expired
@@ -340,69 +354,33 @@ unsigned portCHAR ucResetFlag = RESF;
 
 	portDISABLE_INTERRUPTS();
 
-	/* Clock Configuration:
-	In this port, to use the internal high speed clock source of the
-	microcontroller, define the configCLOCK_SOURCE as 1 in FreeRTOSConfig.h.  To
-	use an external	clock define configCLOCK_SOURCE as 0. */
-	#if configCLOCK_SOURCE == 1
-	{
-		/* Set fMX */
-		CMC = 0x00;
-		MSTOP = 1U;
-		
-		/* Set fMAIN */
-		MCM0 = 0U;
-		
-		/* Set fSUB */
-		XTSTOP = 1U;
-		OSMC = 0x10;
-		
-		/* Set fCLK */
-		CSS = 0U;
-		
-		/* Set fIH */
-		HIOSTOP = 0U;
-	}
-	#else
-	{
-		unsigned char ucTempStabset, ucTempStabWait;	
-
-		/* Set fMX */
-		CMC = 0x41;
-		OSTS = 0x07;
-		MSTOP = 0U;
-		ucTempStabset = 0xFF;
-		
-		do
-		{
-			ucTempStabWait = OSTC;
-			ucTempStabWait &= ucTempStabset;
-		}
-		while( ucTempStabWait != ucTempStabset );
-		
-		/* Set fMAIN */
-		MCM0 = 1U;
-		
-		/* Set fSUB */
-		XTSTOP = 1U;
-		OSMC = 0x10;
-		
-		/* Set fCLK */
-		CSS = 0U;
-		
-		/* Set fIH */
-		HIOSTOP = 0U;
-	}
-	#endif /* configCLOCK_SOURCE == 1 */
+	/* Set fMX */
+	CMC = 0x00;
+	MSTOP = 1U;
+	
+	/* Set fMAIN */
+	MCM0 = 0U;
+	
+	/* Set fSUB */
+	XTSTOP = 1U;
+	OSMC = 0x10;
+	
+	/* Set fCLK */
+	CSS = 0U;
+	
+	/* Set fIH */
+	HIOSTOP = 0U;
 	
 	/* LED port initialization - set port register. */
-	P7 &= 0x7F;
+//	P7 &= 0x7F;
+	P1 &= 0xFE;
 	
 	/* Set port mode register. */
-	PM7 &= 0x7F;
+//	PM7 &= 0x7F;
+	PM1 &= 0xFE;
 	
 	/* Switch pin initialization - enable pull-up resistor. */
-	PU12_bit.no0  = 1;
+//	PU12_bit.no0  = 1;
 
 	return pdTRUE;
 }
@@ -410,12 +388,9 @@ unsigned portCHAR ucResetFlag = RESF;
 
 void vRegTestError( void )
 {
-	/* Called by the RegTest tasks if an error is found.  lRegTestStatus is
-	inspected by the check task. */
-	sRegTestStatus = pdFAIL;
-
-	/* Do not return from here as the reg test tasks clobber all registers so
-	function calls may not function correctly. */
+	/* Called by both reg test tasks if an error is found.  There is no way out
+	of this function so the loop counter of the calling task will stop
+	incrementing, which will result in the check timer signialling an error. */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/

@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -233,32 +233,32 @@ const unsigned short usClockHz = 15000UL; /* Internal clock. */
 const unsigned short usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
 
 	/* Use the internal 15K clock. */
-	OSMC = 0x16U;
+	OSMC = ( unsigned char ) 0x16;
 
 	/* Supply the RTC clock. */
-	RTCEN = 1U;
+	RTCEN = ( unsigned char ) 1U;
 	
 	/* Disable ITMC operation. */
-	ITMC = 0x0000;
+	ITMC = ( unsigned char ) 0x0000;
 	
 	/* Disable INTIT interrupt. */
-	ITMK = 1U;
+	ITMK = ( unsigned char ) 1;
 	
 	/* Set INTIT high priority */
-	ITPR1 = 1U;
-	ITPR0 = 1U;
+	ITPR1 = ( unsigned char ) 1;
+	ITPR0 = ( unsigned char ) 1;
 	
-	/* Set interval. */
-	ITMC = usCompareMatch;
-
 	/* Clear INIT interrupt. */
-	ITIF = 0U;
+	ITIF = ( unsigned char ) 0;
+
+	/* Set interval and enable interrupt operation. */
+	ITMC = usCompareMatch | 0x8000U;
 	
 	/* Enable INTIT interrupt. */
-	ITMK = 0U;
+	ITMK = ( unsigned char ) 0;
 	
 	/* Enable IT operation. */
-	ITMC |= 0x8000;
+//	ITMC |= 0x8000;
 }
 /*-----------------------------------------------------------*/
 

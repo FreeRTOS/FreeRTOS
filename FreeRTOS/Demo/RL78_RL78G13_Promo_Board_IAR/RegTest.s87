@@ -58,9 +58,6 @@
 
 ;------------------------------------------------------------------------------
 
-#if __CORE__ != __RL78_1__
-	#error "This file is only for RL78 Devices"
-#endif
 
 ; Functions implemented in this file
 ;------------------------------------------------------------------------------
@@ -68,9 +65,11 @@
 	PUBLIC    vRegTest1
 	PUBLIC    vRegTest2
 
-; Functions used by this file
+; Functions and variables used by this file
 ;------------------------------------------------------------------------------
 	EXTERN    vRegTestError
+	EXTERN    usRegTest1LoopCounter
+	EXTERN    usRegTest2LoopCounter
 
 ;------------------------------------------------------------------------------
 ;   Fill all the registers with known values, then check that the registers
@@ -146,6 +145,9 @@ loop1:
 
 #endif
 
+	; Indicate that this task is still cycling.
+	INCW	usRegTest1LoopCounter
+
 	MOVW	AX, #0x1122
 	BR 		loop1
 
@@ -206,6 +208,9 @@ loop2:
 	BR		vRegTestError
 
 #endif
+
+	; Indicate that this task is still cycling.
+	INCW	usRegTest2LoopCounter
 
 	MOVW	AX, #0x99aa
 	BR 		loop2

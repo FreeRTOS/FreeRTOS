@@ -53,11 +53,6 @@
 
 #include "ISR_Support.h"
 
-
-#if __CORE__ != __RL78_1__
-	#error "This file is only for RL78 Devices"
-#endif
-
 #define CS                    0xFFFFC
 #define ES                    0xFFFFD
 

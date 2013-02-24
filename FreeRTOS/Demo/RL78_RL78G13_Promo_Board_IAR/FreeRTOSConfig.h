@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -91,14 +91,10 @@
 asm file.  It is valid in a C file, but not valid in an asm file. */
 #ifdef __IAR_SYSTEMS_ICC__
 
-	#pragma language=extended
+//	#pragma language=extended
 	#pragma system_include
 
 	#include <intrinsics.h>
-
-	/* Device specific includes. */
-	#include <ior5f100le.h>
-	#include <ior5f100le_ext.h>
 
 #endif /* __IAR_SYSTEMS_ICC__ */
 
@@ -142,26 +138,7 @@ to exclude the API function. */
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle 	0
 
 
-/******************************************************************************
- * PORT SPECIFIC CONFIGURATION OPTIONS
- ******************************************************************************/
-
-/*
- * RL78/G13 Clock Source Configuration
- * 1 = use internal High Speed Clock Source (typically 32Mhz on the RL78/G13)
- * 0 = use external Clock Source
- */
-#define configCLOCK_SOURCE			  1
-
-#if configCLOCK_SOURCE == 0
-	#define configCPU_CLOCK_HZ		( ( unsigned long ) 20000000 )  /* using the external clock source */
-#else
-	#define configCPU_CLOCK_HZ		( ( unsigned long ) 32000000 )   /* using the internal high speed clock */
-#endif /* configCLOCK_SOURCE */
-
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
-
-
 
 #endif /* FREERTOS_CONFIG_H */
 

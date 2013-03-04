@@ -135,6 +135,8 @@
 
 /* Hardware includes. */
 #include "port_iodefine.h"
+#include "port_iodefine_ext.h"
+#include "LED.h"
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
@@ -154,9 +156,6 @@ its own executions. */
 #define mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT	( 100UL )
 #define mainDEMO_TIMER_PERIOD_MS			( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT )
 
-/* The LED toggled by the check timer. */
-#define mainLED_0   						P1_bit.no0
-
 /* A block time of zero simple means "don't block". */
 #define mainDONT_BLOCK						( 0U )
 
@@ -171,12 +170,6 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
  * The 'demo' timer callback function, as described at the top of this file.
  */
 static void prvDemoTimerCallback( xTimerHandle xTimer );
-
-/*
- * This function is called from the C startup routine to setup the processor -
- * in particular the clock source.
- */
-int __low_level_init(void);
 
 /*
  * Functions that define the RegTest tasks, as described at the top of this file.
@@ -201,25 +194,14 @@ static xTimerHandle xDemoTimer = NULL;
 /* This variable is incremented each time the demo timer expires. */
 static volatile unsigned long ulDemoSoftwareTimerCounter = 0UL;
 
-/* RL78/G13 Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
-enabled. */
-#if 0
-__root __far const unsigned char OptionByte[] @ 0x00C0 =
-{
-	0x00U, 0xFFU, 0xF8U, 0x81U
-};
-
-/* Security byte definition */
-__root __far const unsigned char ucSecurityCode[]  @ 0x00C4 =
-{
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-};
-#endif
-
 /*-----------------------------------------------------------*/
-
+volatile unsigned char ucTemp;
 short main( void )
 {
+	ucTemp = RESF;
+	ucTemp = sizeof( char* );
+	ucTemp = sizeof( pdTASK_CODE );
+
 	/* Creates all the tasks and timers, then starts the scheduler. */
 
 	/* First create the 'standard demo' tasks.  These are used to demonstrate
@@ -349,45 +331,7 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 
 	/* Toggle the LED.  The toggle rate will depend on whether or not an error
 	has been found in any tasks. */
-	mainLED_0 = !mainLED_0;
-}
-/*-----------------------------------------------------------*/
-
-int __low_level_init(void)
-{
-unsigned portCHAR ucResetFlag = RESF;
-
-	portDISABLE_INTERRUPTS();
-
-	/* Set fMX */
-	CMC = 0x00;
-	MSTOP = 1U;
-
-	/* Set fMAIN */
-	MCM0 = 0U;
-
-	/* Set fSUB */
-	XTSTOP = 1U;
-	OSMC = 0x10;
-
-	/* Set fCLK */
-	CSS = 0U;
-
-	/* Set fIH */
-	HIOSTOP = 0U;
-
-	/* LED port initialization - set port register. */
-//	P7 &= 0x7F;
-	P1 &= 0xFE;
-
-	/* Set port mode register. */
-//	PM7 &= 0x7F;
-	PM1 &= 0xFE;
-
-	/* Switch pin initialization - enable pull-up resistor. */
-//	PU12_bit.no0  = 1;
-
-	return pdTRUE;
+	LED_BIT = !LED_BIT;
 }
 /*-----------------------------------------------------------*/
 
@@ -438,4 +382,5 @@ volatile size_t xFreeHeapSpace;
 	RAM. */
 	xFreeHeapSpace = xPortGetFreeHeapSize();
 }
+/*-----------------------------------------------------------*/
 

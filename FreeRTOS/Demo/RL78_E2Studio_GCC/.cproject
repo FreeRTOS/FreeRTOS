@@ -55,12 +55,17 @@
 								<option id="com.renesas.cdt.core.Compiler.option.warning11.1438339511" name="Issue Warning if an uninitialised automatic variable is used(-Wuninitialized)" superClass="com.renesas.cdt.core.Compiler.option.warning11" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.warning12.62902878" name="Issue Warning of member intialisation mismatch(-Wreorder)" superClass="com.renesas.cdt.core.Compiler.option.warning12" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.warning13.1346187712" name="Issue Warning of bad sign comparisions(-Wsign-compare)" superClass="com.renesas.cdt.core.Compiler.option.warning13" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat.2111907264" name="Debug format" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat.dwarf" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.474691448" name="Optimization level" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.none" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.macroDefines.1975812623" name="Macro Defines" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.macroDefines" valueType="stringList"/>
+								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.1341454572" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.304532987" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 							</tool>
 							<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.assembler.Id.1483562315" name="Assembler" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.assembler.Id">
 								<option id="com.renesas.cdt.core.Assembler.option.includeFileDirectories.1195749866" name="Include file directories" superClass="com.renesas.cdt.core.Assembler.option.includeFileDirectories" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}\src&quot;"/>
 								</option>
+								<option id="com.renesas.cdt.core.Assembler.option.includeSymbolTable.139641641" name="Include Symbol Table(-as)" superClass="com.renesas.cdt.core.Assembler.option.includeSymbolTable" value="true" valueType="boolean"/>
 								<inputType id="%Base.Assembler.inputType.Id.1124641218" name="Assembler InputType" superClass="%Base.Assembler.inputType.Id"/>
 							</tool>
 							<tool command="rl78-elf-ld" commandLinePattern="${COMMAND} ${OUTPUT_FLAG}${OUTPUT_PREFIX} ${OUTPUT}${INPUTS} ${FLAGS}" id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.linker.Id.148124689" name="Linker" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.linker.Id">
@@ -75,13 +80,11 @@
 								<option id="com.renesas.cdt.core.Linker.option.userDefinedOptions.1480388571" name="User defined options" superClass="com.renesas.cdt.core.Linker.option.userDefinedOptions" valueType="stringList">
 									<listOptionValue builtIn="false" value="-e_PowerON_Reset"/>
 								</option>
+								<option command="-stats" id="com.renesas.cdt.core.Linker.option.misc8.1524197031" name="Compute and display statistics about the operation of the linker(-stats)" superClass="com.renesas.cdt.core.Linker.option.misc8" value="true" valueType="boolean"/>
 							</tool>
 							<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id.1332327082" name="Objcopy" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.1069911675" name="RegTest.S" rcbsApplicability="disable" resourcePath="src/RegTest.S" toolsToInvoke="com.renesas.cdt.rl78.hardwaredebug.win32.tool.compiler.Id.323331132.901443813">
-						<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.compiler.Id.323331132.901443813" name="Compiler" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.compiler.Id.323331132"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="src/RegTest.S" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

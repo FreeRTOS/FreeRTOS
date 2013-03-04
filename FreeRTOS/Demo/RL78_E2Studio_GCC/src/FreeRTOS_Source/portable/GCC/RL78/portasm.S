@@ -72,6 +72,7 @@
     mission critical applications that require provable dependability.
 */
 
+#include "FreeRTOSConfig.h"
 #include "ISR_Support.h"
 
 #define CS                    0xFFFFC
@@ -93,40 +94,34 @@ _vPortYield:
 	portSAVE_CONTEXT
 	/* Call the scheduler to select the next task. */
 	call      !!_vTaskSwitchContext
-	/*portRESTORE_CONTEXT		        ; Restore the context of the next task to run.*/
+	/* Restore the context of the next task to run. */
+	portRESTORE_CONTEXT
 	retb
 
 
 /* Starts the scheduler by restoring the context of the task that will execute
 first. */
 _vPortStartFirstTask:
-	/* portRESTORE_CONTEXT	            ; Restore the context of whichever task the ... */
-	reti					        /*An interrupt stack frame is used so the task */
-                                    /* is started using a RETI instruction. */
+	/* Restore the context of whichever task will execute first. */
+	portRESTORE_CONTEXT
+	/* An interrupt stack frame is used so the task is started using RETI. */
+	reti
 
 /* FreeRTOS tick handler.  This is installed as the interval timer interrupt
 handler. */
 _vPortTickISR:
 
-	/* portSAVE_CONTEXT		        ; Save the context of the current task. */
-	call      !!_vTaskIncrementTick    /* Call the timer tick function. */
+	/* Save the context of the currently executing task. */
+	portSAVE_CONTEXT
+	/* Call the RTOS tick function. */
+	call      !!_vTaskIncrementTick
 #if configUSE_PREEMPTION == 1
-	call      !!_vTaskSwitchContext    /* Call the scheduler to select the next task. */
+	/* Select the next task to run. */
+	call      !!_vTaskSwitchContext
 #endif
-	/* portRESTORE_CONTEXT		        ; Restore the context of the next task to run. */
+	/* Retore the context of whichever task will run next. */
+	portRESTORE_CONTEXT
 	reti
-
-
-/* Install the interrupt handlers
-
-	COMMON INTVEC:CODE:ROOT(1)
-	ORG 56
-	DW vPortTickISR
-
-	COMMON INTVEC:CODE:ROOT(1)
-	ORG 126
-	DW vPortYield */
-
 
 	.end
 

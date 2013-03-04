@@ -76,9 +76,10 @@
  * This file defines the RegTest tasks as described at the top of main.c
  */
 
-
-	.global	vRegTest1
-	.global	vRegTest2
+	.global	_vRegTest1Task
+	.short  _vRegTest1Task
+	.global	_vRegTest2Task
+	.short  _vRegTest2Task
 
 	.extern	_vRegTestError
 	.extern	_usRegTest1LoopCounter
@@ -90,7 +91,7 @@
  * contain the expected value.  An incorrect value being indicative of an
  * error in the context switch mechanism.
  */
-vRegTest1:
+_vRegTest1Task:
 
 	/* First fill the registers. */
 	MOVW	AX, #0x1122
@@ -116,29 +117,29 @@ _loop1:
 
 	/* Compare with the expected value. */
 	CMPW	AX, #0x1122
-	BZ		$5
+	BZ		$.+5
 
 	/* Jump over the branch to vRegTestError() if the register contained the
 	expected value - otherwise flag an error by executing vRegTestError(). */
-	BR		!_vRegTestError
+	BR		!!_vRegTestError
 
 	/* Repeat for all the registers. */
 	MOVW	AX, BC
 	CMPW	AX, #0x3344
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOVW	AX, DE
 	CMPW	AX, #0x5566
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOVW	AX, HL
 	CMPW	AX, #0x7788
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOV		A, CS
 	CMP		A, #0x01
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 
 #if __DATA_MODEL__ == __DATA_MODEL_FAR__
 
@@ -146,8 +147,8 @@ _loop1:
 	test it when using the far model. */
 	MOV		A, ES
 	CMP		A, #0x02
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 
 #endif
 
@@ -155,7 +156,7 @@ _loop1:
 	INCW	!_usRegTest1LoopCounter
 
 	MOVW	AX, #0x1122
-	BR 		!_loop1
+	BR 		!!_loop1
 
 
 /*
@@ -163,7 +164,7 @@ _loop1:
  * contain the expected value.  An incorrect value being indicative of an
  * error in the context switch mechanism.
  */
-vRegTest2:
+_vRegTest2Task:
 
 	MOVW	AX, #0x99aa
 	MOVW	BC, #0xbbcc
@@ -179,31 +180,31 @@ vRegTest2:
 
 _loop2:
 	CMPW	AX, #0x99aa
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOVW	AX, BC
 	CMPW	AX, #0xbbcc
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOVW	AX, DE
 	CMPW	AX, #0xddee
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOVW	AX, HL
 	CMPW	AX, #0xff12
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 	MOV		A, CS
 	CMP		A, #0x03
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 
 #if __DATA_MODEL__ == __DATA_MODEL_FAR__
 
 	MOV		A, ES
 	CMP		A, #0x04
-	BZ		$5
-	BR		!_vRegTestError
+	BZ		$.+5
+	BR		!!_vRegTestError
 
 #endif
 
@@ -211,8 +212,7 @@ _loop2:
 	INCW	!_usRegTest2LoopCounter
 
 	MOVW	AX, #0x99aa
-	BR 		!_loop2
-
+	BR 		!!_loop2
 
 	.end
 

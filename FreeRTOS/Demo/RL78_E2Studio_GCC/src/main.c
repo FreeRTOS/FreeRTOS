@@ -159,6 +159,11 @@ its own executions. */
 /* A block time of zero simple means "don't block". */
 #define mainDONT_BLOCK						( 0U )
 
+/* Values that are passed as parameters into the reg test tasks (purely to
+ensure task parameters are passed correctly). */
+#define mainREG_TEST_1_PARAMETER			( ( void * ) 0x1234 )
+#define mainREG_TEST_2_PARAMETER			( ( void * ) 0x5678 )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -172,11 +177,22 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 static void prvDemoTimerCallback( xTimerHandle xTimer );
 
 /*
- * Functions that define the RegTest tasks, as described at the top of this file.
+ * Functions that define the RegTest tasks, as described at the top of this
+ * file.  The RegTest tasks are written (necessarily) in assembler.  Their
+ * entry points are written in C to allow for easy checking of the task
+ * parameter values.
  */
-extern void vRegTest1( void *pvParameters );
-extern void vRegTest2( void *pvParameters );
+extern void vRegTest1Task( void );
+extern void vRegTest2Task( void );
+static void prvRegTest1Entry( void *pvParameters );
+static void prvRegTest2Entry( void *pvParameters );
 
+/*
+ * Called if a RegTest task discovers an error as a mechanism to stop the
+ * tasks loop counter incrementing (so the check task can detect that an
+ * error exists).
+ */
+void vRegTestError( void );
 
 /*-----------------------------------------------------------*/
 
@@ -201,19 +217,23 @@ short main( void )
 	ucTemp = RESF;
 	ucTemp = sizeof( char* );
 	ucTemp = sizeof( pdTASK_CODE );
+	P1 &= 0xFE; PM1 &= 0xFE;
+	P1_bit.no0 = 1;
+
 
 	/* Creates all the tasks and timers, then starts the scheduler. */
 
 	/* First create the 'standard demo' tasks.  These are used to demonstrate
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
-	vStartDynamicPriorityTasks();
+//	vStartDynamicPriorityTasks();
+#warning Runs if the debugger is not connected and vStartDynamicPriorityTasks() is commented out.
 	vStartPolledQueueTasks( tskIDLE_PRIORITY );
 	vCreateBlockTimeTasks();
 
 	/* Create the RegTest tasks as described at the top of this file. */
-//	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
-//	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
+	xTaskCreate( prvRegTest1Entry, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_1_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest2Entry, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -332,6 +352,12 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 	/* Toggle the LED.  The toggle rate will depend on whether or not an error
 	has been found in any tasks. */
 	LED_BIT = !LED_BIT;
+
+	if( xTaskGetTickCount() > ( ( portTickType ) 10000 / portTICK_RATE_MS ) )
+	{
+		/* Turn off the LED used to visualise a reset. */
+		P1_bit.no0 = 0;
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -339,7 +365,7 @@ void vRegTestError( void )
 {
 	/* Called by both reg test tasks if an error is found.  There is no way out
 	of this function so the loop counter of the calling task will stop
-	incrementing, which will result in the check timer signialling an error. */
+	incrementing, which will result in the check timer signaling an error. */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -352,6 +378,7 @@ void vApplicationMallocFailedHook( void )
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	taskDISABLE_INTERRUPTS();
+	P1_bit.no0 = 0;
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -365,6 +392,7 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
+	P1_bit.no0 = 0;
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -384,3 +412,47 @@ volatile size_t xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
+static void prvRegTest1Entry( void *pvParameters )
+{
+	/* If the parameter has its expected value then start the first reg test
+	task (this is only done to test that the RTOS port is correctly handling
+	task parameters. */
+	if( pvParameters == mainREG_TEST_1_PARAMETER )
+	{
+		vRegTest1Task();
+	}
+	else
+	{
+		vRegTestError();
+	}
+
+	/* It is not possible to get here as neither of the two functions called
+	above will ever return. */
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTest2Entry( void *pvParameters )
+{
+	/* If the parameter has its expected value then start the first reg test
+	task (this is only done to test that the RTOS port is correctly handling
+	task parameters. */
+	if( pvParameters == mainREG_TEST_2_PARAMETER )
+	{
+		vRegTest2Task();
+	}
+	else
+	{
+		vRegTestError();
+	}
+
+	/* It is not possible to get here as neither of the two functions called
+	above will ever return. */
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( void )
+{
+	taskDISABLE_INTERRUPTS();
+	P1_bit.no0 = 0;
+	for( ;; );
+}

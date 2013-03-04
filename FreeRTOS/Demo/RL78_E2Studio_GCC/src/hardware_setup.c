@@ -15,8 +15,9 @@
 
 /* Hardware includes. */
 #include "port_iodefine.h"
+#include "LED.h"
 
-void HardwareSetup(void)
+void HardwareSetup( void )
 {
 unsigned char ucResetFlag = RESF;
 

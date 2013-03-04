@@ -99,11 +99,12 @@ extern "C" {
 #define portSTACK_TYPE  unsigned short
 #define portBASE_TYPE   short
 
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
-	#define portPOINTER_SIZE_TYPE unsigned long
-#else
-	#define portPOINTER_SIZE_TYPE unsigned short
-#endif
+//_RB_#if __DATA_MODEL__ == __DATA_MODEL_FAR__
+//	#define portPOINTER_SIZE_TYPE unsigned long
+//#else
+//	#define portPOINTER_SIZE_TYPE unsigned short
+//#endif
+#define portPOINTER_SIZE_TYPE unsigned short
 
 
 #if ( configUSE_16_BIT_TICKS == 1 )

@@ -91,12 +91,12 @@
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 32000000 )   /* Using the internal high speed clock */
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			1
 #define configIDLE_SHOULD_YIELD			1
-#define configTOTAL_HEAP_SIZE			( (size_t ) ( 3420 ) )
+#define configTOTAL_HEAP_SIZE			( (size_t ) ( 5000 ) )
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_MUTEXES				1
 
@@ -127,7 +127,7 @@ to exclude the API function. */
 #define INCLUDE_xTaskGetIdleTaskHandle 		0
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle 	0
 
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
 
 #define __DATA_MODEL_FAR__ 0
 #define __DATA_MODEL_NEAR__ 1

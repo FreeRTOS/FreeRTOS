@@ -10,11 +10,15 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
         <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>GenCodeFarFar</name>
+          <state>0</state>
+        </option>
         <option>
           <name>GenDeviceSelect</name>
           <state>R5F100LE	RL78 - R5F100LE</state>
@@ -86,8 +90,8 @@
         </option>
         <option>
           <name>GenLibInFormatter</name>
-          <version>1</version>
-          <state>3</state>
+          <version>2</version>
+          <state>5</state>
         </option>
         <option>
           <name>GenLibInFormatterDescription</name>
@@ -95,8 +99,8 @@
         </option>
         <option>
           <name>GenLibOutFormatter</name>
-          <version>1</version>
-          <state>4</state>
+          <version>2</version>
+          <state>7</state>
         </option>
         <option>
           <name>GenLibOutFormatterDescription</name>
@@ -149,9 +153,9 @@
     </settings>
     <settings>
       <name>ICCRL78</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -229,8 +233,8 @@
         </option>
         <option>
           <name>IccOptAllowList</name>
-          <version>1</version>
-          <state>0000011</state>
+          <version>2</version>
+          <state>00000110</state>
         </option>
         <option>
           <name>IccWrksegEnable</name>
@@ -278,7 +282,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>YRPBRL78G13</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -378,14 +382,6 @@
           <state></state>
         </option>
         <option>
-          <name>IccdAggressiveInlining</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>IccdAggressiveUnrolling</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>IccCppInlineSemantics</name>
           <state>0</state>
         </option>
@@ -397,13 +393,17 @@
           <name>IccFloatSemantics</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IccNoSizeConst</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ARL78</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -549,6 +549,10 @@
           <name>AsmDataModel</name>
           <state>0</state>
         </option>
+        <option>
+          <name>PreInclude</name>
+          <state></state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -574,7 +578,7 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
         <version>14</version>
         <wantNonLocal>1</wantNonLocal>
@@ -860,7 +864,7 @@
     </settings>
     <settings>
       <name>XAR</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
@@ -881,7 +885,7 @@
     </settings>
     <settings>
       <name>INTERNAL_HWSUPPORT</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data/>
     </settings>
     <settings>
@@ -898,11 +902,15 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
         <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>GenCodeFarFar</name>
+          <state>0</state>
+        </option>
         <option>
           <name>GenDeviceSelect</name>
           <state>R5F104PJ	RL78 - R5F104PJ</state>
@@ -966,7 +974,7 @@
         </option>
         <option>
           <name>GenRTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nn2n.r87</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78ff2n.r87</state>
         </option>
         <option>
           <name>GenHwSupport</name>
@@ -974,8 +982,8 @@
         </option>
         <option>
           <name>GenLibInFormatter</name>
-          <version>1</version>
-          <state>3</state>
+          <version>2</version>
+          <state>5</state>
         </option>
         <option>
           <name>GenLibInFormatterDescription</name>
@@ -983,8 +991,8 @@
         </option>
         <option>
           <name>GenLibOutFormatter</name>
-          <version>1</version>
-          <state>4</state>
+          <version>2</version>
+          <state>7</state>
         </option>
         <option>
           <name>GenLibOutFormatterDescription</name>
@@ -1037,9 +1045,9 @@
     </settings>
     <settings>
       <name>ICCRL78</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>6</version>
+        <version>7</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1117,8 +1125,8 @@
         </option>
         <option>
           <name>IccOptAllowList</name>
-          <version>1</version>
-          <state>0000000</state>
+          <version>2</version>
+          <state>00000000</state>
         </option>
         <option>
           <name>IccWrksegEnable</name>
@@ -1166,7 +1174,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>YRDKRL78G14</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1266,14 +1274,6 @@
           <state></state>
         </option>
         <option>
-          <name>IccdAggressiveInlining</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>IccdAggressiveUnrolling</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>IccCppInlineSemantics</name>
           <state>0</state>
         </option>
@@ -1285,13 +1285,17 @@
           <name>IccFloatSemantics</name>
           <state>0</state>
         </option>
+        <option>
+          <name>IccNoSizeConst</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ARL78</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1375,7 +1379,7 @@
         <option>
           <name>AsmDefines</name>
           <state></state>
-          <state>__NEAR_DATA_MODEL__</state>
+          <state>__FAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>AsmPreprocOutput</name>
@@ -1437,6 +1441,10 @@
           <name>AsmDataModel</name>
           <state>0</state>
         </option>
+        <option>
+          <name>PreInclude</name>
+          <state></state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -1462,7 +1470,7 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
         <version>14</version>
         <wantNonLocal>1</wantNonLocal>
@@ -1539,7 +1547,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\lnkr5f104pj.xcl</state>
+          <state>$TOOLKIT_DIR$\config\lnkr5f104pj.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -1748,7 +1756,7 @@
     </settings>
     <settings>
       <name>XAR</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
@@ -1769,7 +1777,899 @@
     </settings>
     <settings>
       <name>INTERNAL_HWSUPPORT</name>
+      <archiveVersion>5</archiveVersion>
+      <data/>
+    </settings>
+    <settings>
+      <name>BILINK</name>
+      <archiveVersion>0</archiveVersion>
+      <data/>
+    </settings>
+  </configuration>
+  <configuration>
+    <name>RSKRL78G1C</name>
+    <toolchain>
+      <name>RL78</name>
+    </toolchain>
+    <debug>1</debug>
+    <settings>
+      <name>General</name>
+      <archiveVersion>5</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>GenCodeFarFar</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GenDeviceSelect</name>
+          <state>R5F10JGC	RL78 - R5F10JGC</state>
+        </option>
+        <option>
+          <name>GenCodeModel</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GenDataModel</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GenNearConstLocation</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GenNearConstStart</name>
+          <state>0xf2000</state>
+        </option>
+        <option>
+          <name>GenNearConstSize</name>
+          <state>24.00</state>
+        </option>
+        <option>
+          <name>GOutputBinary</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ExePath</name>
+          <state>RSKRL78G1C\Exe</state>
+        </option>
+        <option>
+          <name>ObjPath</name>
+          <state>RSKRL78G1C\Obj</state>
+        </option>
+        <option>
+          <name>ListPath</name>
+          <state>RSKRL78G1C\List</state>
+        </option>
+        <option>
+          <name>GenRuntimeLibSelect</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GenRuntimeLibSelectSlave</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GenRTDescription</name>
+          <state>Use the normal configuration of the C/EC++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
+        </option>
+        <option>
+          <name>GenRTConfigPath</name>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78ff1n.h</state>
+        </option>
+        <option>
+          <name>GenRTLibraryPath</name>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78ff1n.r87</state>
+        </option>
+        <option>
+          <name>GenHwSupport</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GenLibInFormatter</name>
+          <version>2</version>
+          <state>5</state>
+        </option>
+        <option>
+          <name>GenLibInFormatterDescription</name>
+          <state>No specifier n, no float, no scan set, no assignment suppressing.</state>
+        </option>
+        <option>
+          <name>GenLibOutFormatter</name>
+          <version>2</version>
+          <state>7</state>
+        </option>
+        <option>
+          <name>GenLibOutFormatterDescription</name>
+          <state>No specifier a or A, no specifier n, no float, no flags.</state>
+        </option>
+        <option>
+          <name>GenStackSize</name>
+          <state>130</state>
+        </option>
+        <option>
+          <name>GenNearHeapSize</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GenFarHeapSize</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralEnableMisra</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraVerbose</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraVer</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
+        <option>
+          <name>GeneralMisraRules98</name>
+          <version>0</version>
+          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>GenMathFunctionVariant</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GenMathFunctionDescription</name>
+          <state>Default variants of cos, sin, tan, log, log10, pow, and exp.</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>ICCRL78</name>
+      <archiveVersion>5</archiveVersion>
+      <data>
+        <version>7</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>IccDivModInstr</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccCore</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccCodeModel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccDataModel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccNearConstLocation</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccObjPrefix</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccLibConfigHeader</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccLang</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccCDialect</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccAllowVLA</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccCppDialect</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccRequirePrototypes</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccLanguageConformance</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccCharIs</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccMultibyteSupport</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccOptLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccOptStrategy</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccOptLevelSlave</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccOptAllowList</name>
+          <version>2</version>
+          <state>00000000</state>
+        </option>
+        <option>
+          <name>IccWrksegEnable</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccWrksegSize</name>
+          <state>20</state>
+        </option>
+        <option>
+          <name>IccCalltFuncRt</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccModuleTypeOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccModuleType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccObjModuleNameOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccObjModuleName</name>
+          <state>$FILE_BNAME$</state>
+        </option>
+        <option>
+          <name>IccCodeSegmentNameOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccCodeSegmentName</name>
+          <state>CODE</state>
+        </option>
+        <option>
+          <name>IccGenerateDebugInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccOutputFile</name>
+          <state>$FILE_BNAME$.r87</state>
+        </option>
+        <option>
+          <name>CCDefines</name>
+          <state>RSKRL78G1C</state>
+        </option>
+        <option>
+          <name>CCPreprocFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPreprocComments</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCPreprocLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCListCFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCListCMnemonics</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCListCMessages</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCListAssFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCListAssSource</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CCEnableRemarks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCDiagSuppress</name>
+          <state>Pa082</state>
+        </option>
+        <option>
+          <name>CCDiagRemark</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCDiagWarning</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCDiagError</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCDiagWarnAreErr</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCCompilerRuntimeInfo</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>PreInclude</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCIncludePath2</name>
+          <state>$PROJ_DIR$\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..\Common\include</state>
+          <state>$PROJ_DIR$</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\RL78</state>
+        </option>
+        <option>
+          <name>CCStdIncCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CompilerMisraOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules04</name>
+          <version>0</version>
+          <state>111101110010111111111000110111111111111111111111111110010111101111010101111111111111111111111111101111111011111001111011111011111111111111111</state>
+        </option>
+        <option>
+          <name>CompilerMisraRules98</name>
+          <version>0</version>
+          <state>1000111110110101101110011100111111101110011011000101110111101101100111111111111100110011111001110111001111111111111111111111111</state>
+        </option>
+        <option>
+          <name>IccUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>IccCppInlineSemantics</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccStaticDestr</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IccFloatSemantics</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IccNoSizeConst</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>ARL78</name>
+      <archiveVersion>5</archiveVersion>
+      <data>
+        <version>2</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>AsmCore</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmHwSupport</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmObjPrefix</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AsmOutputFile</name>
+          <state>$FILE_BNAME$.r87</state>
+        </option>
+        <option>
+          <name>AsmCaseSensitivity</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AsmMultibyteSupport</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmAllowMnemonics</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmAllowDirectives</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmMacroChars</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmDebugInfo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AsmListFile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmListNoDiagnostics</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmListIncludeCrossRef</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmListMacroDefinitions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmListNoMacroExpansion</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmListAssembledOnly</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmListTruncateMultiline</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmStdIncludeIgnore</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmIncludePath</name>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\RL78</state>
+          <state>$PROJ_DIR$</state>
+        </option>
+        <option>
+          <name>AsmDefines</name>
+          <state></state>
+          <state>__FAR_DATA_MODEL__</state>
+        </option>
+        <option>
+          <name>AsmPreprocOutput</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmPreprocComment</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmPreprocLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmEnableRemarks</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmDiagnosticsSuppress</name>
+          <state></state>
+        </option>
+        <option>
+          <name>AsmDiagnosticsRemark</name>
+          <state></state>
+        </option>
+        <option>
+          <name>AsmDiagnosticsWarning</name>
+          <state></state>
+        </option>
+        <option>
+          <name>AsmDiagnosticsError</name>
+          <state></state>
+        </option>
+        <option>
+          <name>AsmDiagnosticsWarningsAreErrors</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmLimitNumberOfErrors</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmMaxNumberOfErrors</name>
+          <state>100</state>
+        </option>
+        <option>
+          <name>AsmUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>AsmCodeModel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>AsmDataModel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>PreInclude</name>
+          <state></state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>CUSTOM</name>
       <archiveVersion>3</archiveVersion>
+      <data>
+        <extensions></extensions>
+        <cmdline></cmdline>
+      </data>
+    </settings>
+    <settings>
+      <name>BICOMP</name>
+      <archiveVersion>0</archiveVersion>
+      <data/>
+    </settings>
+    <settings>
+      <name>BUILDACTION</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <prebuild></prebuild>
+        <postbuild></postbuild>
+      </data>
+    </settings>
+    <settings>
+      <name>XLINK</name>
+      <archiveVersion>5</archiveVersion>
+      <data>
+        <version>14</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>XOutOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OutputFile</name>
+          <state>RTOSDemo.d87</state>
+        </option>
+        <option>
+          <name>OutputFormat</name>
+          <version>11</version>
+          <state>23</state>
+        </option>
+        <option>
+          <name>FormatVariant</name>
+          <version>8</version>
+          <state>2</state>
+        </option>
+        <option>
+          <name>SecondaryOutputFile</name>
+          <state>(None for the selected format)</state>
+        </option>
+        <option>
+          <name>XDefines</name>
+          <state></state>
+        </option>
+        <option>
+          <name>AlwaysOutput</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OverlapWarnings</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NoGlobalCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>XList</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>SegmentMap</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>ListSymbols</name>
+          <state>2</state>
+        </option>
+        <option>
+          <name>PageLengthCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>PageLength</name>
+          <state>80</state>
+        </option>
+        <option>
+          <name>XIncludes</name>
+          <state>$TOOLKIT_DIR$\LIB\</state>
+        </option>
+        <option>
+          <name>ModuleStatus</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>XclOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>XclFile</name>
+          <state>$TOOLKIT_DIR$\config\lnkr5f10jgc.xcl</state>
+        </option>
+        <option>
+          <name>XclFileSlave</name>
+          <state></state>
+        </option>
+        <option>
+          <name>XLinkMisraHandler</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>XlinkExtraOptionsCheck</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>XlinkExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DoFill</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>FillerByte</name>
+          <state>0xFF</state>
+        </option>
+        <option>
+          <name>DoCrc</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CrcSize</name>
+          <version>0</version>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcAlgo</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcPoly</name>
+          <state>0x11021</state>
+        </option>
+        <option>
+          <name>CrcCompl</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RangeCheckAlternatives</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SuppressAllWarn</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SuppressDiags</name>
+          <state>w18, w6</state>
+        </option>
+        <option>
+          <name>TreatAsWarn</name>
+          <state></state>
+        </option>
+        <option>
+          <name>TreatAsErr</name>
+          <state></state>
+        </option>
+        <option>
+          <name>ModuleLocalSym</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CrcBitOrder</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IncludeSuppressed</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ModuleSummary</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>xcProgramEntryLabel</name>
+          <state>__program_start</state>
+        </option>
+        <option>
+          <name>DebugInformation</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RuntimeControl</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IoEmulation</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>AllowExtraOutput</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GenerateExtraOutput</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XExtraOutOverride</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>ExtraOutputFile</name>
+          <state>RTOSDemo.a87</state>
+        </option>
+        <option>
+          <name>ExtraOutputFormat</name>
+          <version>11</version>
+          <state>23</state>
+        </option>
+        <option>
+          <name>ExtraFormatVariant</name>
+          <version>8</version>
+          <state>2</state>
+        </option>
+        <option>
+          <name>xcOverrideProgramEntryLabel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>xcProgramEntryLabelSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ListOutputFormat</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>BufferedTermOutput</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OverlaySystemMap</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RawBinaryFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>RawBinarySymbol</name>
+          <state></state>
+        </option>
+        <option>
+          <name>RawBinarySegment</name>
+          <state></state>
+        </option>
+        <option>
+          <name>RawBinaryAlign</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CrcAlign</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcInitialValue</name>
+          <state>0x0</state>
+        </option>
+        <option>
+          <name>XlinkNearConstLocation</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XlinkRTLibraryFile</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XlinkHwSupport</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XlinkLibIOConfig</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XlinkStackSize</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XlinkNearHeap</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>XlinkFarHeap</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>CrcUnitSize</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>XAR</name>
+      <archiveVersion>5</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>XarOutOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>XarInputs</name>
+          <state></state>
+        </option>
+        <option>
+          <name>XarOutputFile</name>
+          <state></state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>INTERNAL_HWSUPPORT</name>
+      <archiveVersion>5</archiveVersion>
       <data/>
     </settings>
     <settings>

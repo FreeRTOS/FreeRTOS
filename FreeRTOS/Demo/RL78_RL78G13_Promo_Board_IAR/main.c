@@ -133,6 +133,11 @@
 #include "PollQ.h"
 #include "blocktim.h"
 
+/* Hardware includes. */
+#include "port_iodefine.h"
+#include "port_iodefine_ext.h"
+#include "LED.h"
+
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_RATE_MS constant. */
@@ -150,9 +155,6 @@ can determine if the demo timer has expired the expected number of times between
 its own executions. */
 #define mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT	( 100UL )
 #define mainDEMO_TIMER_PERIOD_MS			( mainCHECK_TIMER_PERIOD_MS / mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT )
-
-/* The LED toggled by the check timer. */
-#define mainLED_0   						P1_bit.no0
 
 /* A block time of zero simple means "don't block". */
 #define mainDONT_BLOCK						( 0U )
@@ -226,7 +228,7 @@ short main( void )
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( vRegTest1, "Reg1", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
-	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );	
+	xTaskCreate( vRegTest2, "Reg2", configMINIMAL_STACK_SIZE, NULL, 0, NULL );
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -236,7 +238,7 @@ short main( void )
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */
 								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 							  );
-							
+
 	/* Create the software timer that just increments a variable for demo
 	purposes. */
 	xDemoTimer = xTimerCreate( ( const signed char * ) "DemoTimer",/* A text name, purely to help debugging. */
@@ -245,12 +247,12 @@ short main( void )
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */
 								prvDemoTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 							  );
-	
+
 	/* Start both the check timer and the demo timer.  The timers won't actually
 	start until the scheduler is started. */
 	xTimerStart( xCheckTimer, mainDONT_BLOCK );
 	xTimerStart( xDemoTimer, mainDONT_BLOCK );
-	
+
 	/* Finally start the scheduler running. */
 	vTaskStartScheduler();
 
@@ -280,12 +282,12 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 	{
 		xErrorStatus = pdFAIL;
 	}
-	
+
 	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		xErrorStatus = pdFAIL;
 	}
-	
+
 	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		xErrorStatus = pdFAIL;
@@ -310,7 +312,7 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 	{
 		usLastRegTest2Counter = usRegTest2LoopCounter;
 	}
-	
+
 	/* Ensure that the demo software timer has expired
 	mainDEMO_TIMER_INCREMENTS_PER_CHECK_TIMER_TIMEOUT times in between
 	each call of this function.  A critical section is not required to access
@@ -327,7 +329,7 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 	{
 		ulDemoSoftwareTimerCounter = 0UL;
 	}
-	
+
 	if( ( xErrorStatus == pdFAIL ) && ( xChangedTimerPeriodAlready == pdFALSE ) )
 	{
 		/* An error has occurred, but the timer's period has not yet been changed,
@@ -335,52 +337,44 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 		timer's period means the LED will toggle at a faster rate, giving a
 		visible indication that something has gone wrong. */
 		xChangedTimerPeriodAlready = pdTRUE;
-			
+
 		/* This call to xTimerChangePeriod() uses a zero block time.  Functions
 		called from inside of a timer callback function must *never* attempt to
 		block. */
 		xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 	}
-	
+
 	/* Toggle the LED.  The toggle rate will depend on whether or not an error
 	has been found in any tasks. */
-	mainLED_0 = !mainLED_0;
+	LED_BIT = !LED_BIT;
 }
 /*-----------------------------------------------------------*/
 
 int __low_level_init(void)
 {
-unsigned portCHAR ucResetFlag = RESF;
+unsigned char ucResetFlag = RESF;
 
 	portDISABLE_INTERRUPTS();
 
 	/* Set fMX */
 	CMC = 0x00;
 	MSTOP = 1U;
-	
+
 	/* Set fMAIN */
 	MCM0 = 0U;
-	
+
 	/* Set fSUB */
 	XTSTOP = 1U;
 	OSMC = 0x10;
-	
+
 	/* Set fCLK */
 	CSS = 0U;
-	
+
 	/* Set fIH */
 	HIOSTOP = 0U;
-	
-	/* LED port initialization - set port register. */
-//	P7 &= 0x7F;
-	P1 &= 0xFE;
-	
-	/* Set port mode register. */
-//	PM7 &= 0x7F;
-	PM1 &= 0xFE;
-	
-	/* Switch pin initialization - enable pull-up resistor. */
-//	PU12_bit.no0  = 1;
+
+	/* LED port initialization. */
+	LED_INIT();
 
 	return pdTRUE;
 }
@@ -431,6 +425,6 @@ volatile size_t xFreeHeapSpace;
 	management options.  If there is a lot of heap memory free then the
 	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
 	RAM. */
-	xFreeHeapSpace = xPortGetFreeHeapSize();	
+	xFreeHeapSpace = xPortGetFreeHeapSize();
 }
 

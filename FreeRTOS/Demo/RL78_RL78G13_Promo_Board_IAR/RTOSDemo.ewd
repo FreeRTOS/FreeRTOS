@@ -121,7 +121,7 @@
       <name>E1RL78</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -144,13 +144,17 @@
           <name>E1DoLogfile</name>
           <state>0</state>
         </option>
+        <option>
+          <name>E1AttachProgram</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>E20RL78</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -171,6 +175,10 @@
         </option>
         <option>
           <name>E20DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E20AttachProgram</name>
           <state>0</state>
         </option>
       </data>
@@ -256,10 +264,6 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\FreeRTOS\OpenRTOSPlugin.ewplugin</file>
-        <loadFlag>0</loadFlag>
-      </plugin>
-      <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
@@ -276,6 +280,10 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-III\uCOS-III-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
@@ -284,12 +292,12 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
+        <file>$EW_DIR$\common\plugins\uCProbe\uCProbePlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
       </plugin>
     </debuggerPlugins>
   </configuration>
@@ -324,7 +332,7 @@
         </option>
         <option>
           <name>DebugRunToEnable</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>DebugRunToName</name>
@@ -348,7 +356,7 @@
         </option>
         <option>
           <name>DebugDDFFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\DDF\ior5f104pj.ddf</state>
+          <state>$TOOLKIT_DIR$\config\debugger\ior5f104pj.ddf</state>
         </option>
         <option>
           <name>DebugCUseExtraOptions</name>
@@ -412,7 +420,7 @@
       <name>E1RL78</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -435,13 +443,17 @@
           <name>E1DoLogfile</name>
           <state>0</state>
         </option>
+        <option>
+          <name>E1AttachProgram</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>E20RL78</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>0</version>
+        <version>1</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -462,6 +474,10 @@
         </option>
         <option>
           <name>E20DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E20AttachProgram</name>
           <state>0</state>
         </option>
       </data>
@@ -547,7 +563,302 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$TOOLKIT_DIR$\plugins\rtos\FreeRTOS\OpenRTOSPlugin.ewplugin</file>
+        <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-286-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-III\uCOS-III-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\Orti\Orti.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
+        <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\uCProbe\uCProbePlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+    </debuggerPlugins>
+  </configuration>
+  <configuration>
+    <name>RSKRL78G1C</name>
+    <toolchain>
+      <name>RL78</name>
+    </toolchain>
+    <debug>1</debug>
+    <settings>
+      <name>C-SPY</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>DebugMandatory</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>DebugInput</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>DebugProcessorVariant</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebuggerNearConstLocation</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugRunToEnable</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>DebugRunToName</name>
+          <state>main</state>
+        </option>
+        <option>
+          <name>DebugMacOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugMacFile</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DynDriver</name>
+          <state>E1RL78</state>
+        </option>
+        <option>
+          <name>DebugDDFOverride</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugDDFFile</name>
+          <state>$TOOLKIT_DIR$\config\debugger\ior5f10jgc.ddf</state>
+        </option>
+        <option>
+          <name>DebugCUseExtraOptions</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugExtraOptions</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesSuppressCheck1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugImagesPath1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesSuppressCheck2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugImagesPath2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesSuppressCheck3</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugImagesPath3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesOffset1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesOffset2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesOffset3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugImagesUse1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugImagesUse2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>DebugImagesUse3</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>E1RL78</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>E1Mandatory</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E1SuppressLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E1VerifyLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E1LogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>E1DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E1AttachProgram</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>E20RL78</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>1</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>E20Mandatory</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E20SuppressLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E20VerifyLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E20LogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>E20DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>E20AttachProgram</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>IECRL78</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>IecMandatory</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IecSuppressLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IecVerifyLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IecLogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>IecDoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IecSupExchAdapter</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>SIMRL78</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>SimMandatory</name>
+          <state>1</state>
+        </option>
+      </data>
+    </settings>
+    <settings>
+      <name>TKRL78</name>
+      <archiveVersion>1</archiveVersion>
+      <data>
+        <version>0</version>
+        <wantNonLocal>1</wantNonLocal>
+        <debug>1</debug>
+        <option>
+          <name>TKMandatory</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>TKSuppressLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>TKVerifyLoad</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>TKLogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>TKDoLogfile</name>
+          <state>0</state>
+        </option>
+      </data>
+    </settings>
+    <debuggerPlugins>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\embOS\embOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -567,6 +878,10 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-III\uCOS-III-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$EW_DIR$\common\plugins\CodeCoverage\CodeCoverage.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
@@ -575,12 +890,12 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
+        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
+        <file>$EW_DIR$\common\plugins\uCProbe\uCProbePlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
       </plugin>
     </debuggerPlugins>
   </configuration>

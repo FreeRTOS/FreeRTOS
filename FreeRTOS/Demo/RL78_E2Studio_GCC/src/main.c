@@ -217,6 +217,7 @@ short main( void )
 	ucTemp = RESF;
 	ucTemp = sizeof( char* );
 	ucTemp = sizeof( pdTASK_CODE );
+#warning Take out all references to the P1 LED.
 	P1 &= 0xFE; PM1 &= 0xFE;
 	P1_bit.no0 = 1;
 
@@ -226,7 +227,7 @@ short main( void )
 	/* First create the 'standard demo' tasks.  These are used to demonstrate
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
-//	vStartDynamicPriorityTasks();
+	vStartDynamicPriorityTasks();
 #warning Runs if the debugger is not connected and vStartDynamicPriorityTasks() is commented out.
 	vStartPolledQueueTasks( tskIDLE_PRIORITY );
 	vCreateBlockTimeTasks();

@@ -19,8 +19,6 @@
 
 void HardwareSetup( void )
 {
-unsigned char ucResetFlag = RESF;
-
 	portDISABLE_INTERRUPTS();
 
 	/* Set fMX */

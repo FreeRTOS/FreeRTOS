@@ -144,7 +144,7 @@ unsigned long *pulLocal;
 
 	/* Write in the parameter value. */
 	pulLocal =  ( unsigned long * ) pxTopOfStack;
-	*pulLocal = ( unsigned long ) pvParameters;
+	*pulLocal = ( portSTACK_TYPE ) pvParameters;
 	pxTopOfStack--;
 
 	/* These values are just spacers.  The return address of the function

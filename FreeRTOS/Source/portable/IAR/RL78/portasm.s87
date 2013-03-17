@@ -1,6 +1,6 @@
 ;/*
 ;    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
-;	
+;
 ;
 ;    ***************************************************************************
 ;     *                                                                       *
@@ -72,7 +72,7 @@ vPortYield:
 	portRESTORE_CONTEXT		        ; Restore the context of the next task to run.
 	retb
 
-	
+
 ; Starts the scheduler by restoring the context of the task that will execute
 ; first.
     RSEG CODE:CODE

@@ -76,6 +76,10 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Hardware includes. */
+#include "port_iodefine.h"
+#include "port_iodefine_ext.h"
+
 /* The critical nesting value is initialised to a non zero value to ensure
 interrupts don't accidentally become enabled before the scheduler is started. */
 #define portINITIAL_CRITICAL_NESTING  ( ( unsigned short ) 10 )
@@ -154,7 +158,7 @@ unsigned long *pulLocal;
 		/* The start address / PSW value is also written in as a 32bit value,
 		so leave a space for the second two bytes. */
 		pxTopOfStack--;
-	
+
 		/* Task function start address combined with the PSW. */
 		pulLocal = ( unsigned long * ) pxTopOfStack;
 		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
@@ -190,7 +194,7 @@ unsigned long *pulLocal;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x0F00;
 	pxTopOfStack--;
 
-	/* Finally the remaining general purpose registers DE and BC */
+	/* The remaining general purpose registers DE and BC */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xDEDE;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0xBCBC;
@@ -198,7 +202,7 @@ unsigned long *pulLocal;
 
 	/* Finally the critical section nesting count is set to zero when the task
 	first starts. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
+	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;
 
 	/* Return a pointer to the top of the stack that has beene generated so it
 	can	be stored in the task control block for the task. */
@@ -237,28 +241,25 @@ const unsigned short usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
 
 	/* Supply the RTC clock. */
 	RTCEN = ( unsigned char ) 1U;
-	
+
 	/* Disable ITMC operation. */
 	ITMC = ( unsigned char ) 0x0000;
-	
+
 	/* Disable INTIT interrupt. */
 	ITMK = ( unsigned char ) 1;
-	
+
 	/* Set INTIT high priority */
 	ITPR1 = ( unsigned char ) 1;
 	ITPR0 = ( unsigned char ) 1;
-	
+
 	/* Clear INIT interrupt. */
 	ITIF = ( unsigned char ) 0;
 
 	/* Set interval and enable interrupt operation. */
 	ITMC = usCompareMatch | 0x8000U;
-	
+
 	/* Enable INTIT interrupt. */
 	ITMK = ( unsigned char ) 0;
-	
-	/* Enable IT operation. */
-//	ITMC |= 0x8000;
 }
 /*-----------------------------------------------------------*/
 

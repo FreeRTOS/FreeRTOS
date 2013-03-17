@@ -81,7 +81,8 @@
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions
- * required to configure the hardware, are defined in main.c.
+ * required to configure the hardware, along with an example of how to write an
+ * interrupt service routine, are defined in main.c.
  ******************************************************************************
  *
  * main_full() creates all the demo application tasks and two software timers,

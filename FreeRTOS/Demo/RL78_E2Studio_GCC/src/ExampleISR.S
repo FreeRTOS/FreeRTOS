@@ -72,56 +72,50 @@
     mission critical applications that require provable dependability.
 */
 
-#include "FreeRTOSConfig.h"
+/*
+ * This file defines the RegTest tasks as described at the top of main.c
+ */
+
+/* ISR_Support.h contains the definitions of portSAVE_CONTEXT() and
+portRESTORE_CONTEXT(). */
 #include "ISR_Support.h"
 
-	.global    _vPortYield
-	.global    _vPortStartFirstTask
-	.global    _vPortTickISR
-
-	.extern    _vTaskSwitchContext
-	.extern    _vTaskIncrementTick
+	.global	_vANExampleISR_ASM_Wrapper
+	.extern _vAnExampleISR_C_Handler
 
 	.text
-	.align 2
 
-/* FreeRTOS yield handler.  This is installed as the BRK software interrupt
-handler. */
-_vPortYield:
-	/* Save the context of the current task. */
-	portSAVE_CONTEXT
-	/* Call the scheduler to select the next task. */
-	call      !!_vTaskSwitchContext
-	/* Restore the context of the next task to run. */
-	portRESTORE_CONTEXT
-	retb
+	/*
+	 * This demo does not include a functional interrupt service routine - so
+	 * this dummy handler (which is not actually installed) is provided as an
+	 * example of how an ISR that needs to cause a context switch needs to be
+	 * implemented.  ISRs that do not cause a context switch have no special
+	 * requirements and can be written as per the compiler documentation.
+	 *
+	 * This assembly wrapper function calls the main handler, which is called
+	 * vAnExampleISR_C_Handler(), and is implemented in main.c.  See the
+	 * documentation page for this demo on the FreeRTOS.org website for full
+	 * instructions.
+	 *
+	 * NOTE:  vANExampleISR_ASM_Wrapper needs to be installed into the relevant
+	 * vector within vector_table.c.
+	 */
 
+	 vANExampleISR_ASM_Wrapper:
 
-/* Starts the scheduler by restoring the context of the task that will execute
-first. */
-	.align 2
-_vPortStartFirstTask:
-	/* Restore the context of whichever task will execute first. */
-	portRESTORE_CONTEXT
-	/* An interrupt stack frame is used so the task is started using RETI. */
-	reti
+	 	/* portSAVE_CONTEXT() must be the first thing called in the ASM
+	 	wrapper. */
+	 	portSAVE_CONTEXT
 
-/* FreeRTOS tick handler.  This is installed as the interval timer interrupt
-handler. */
-	.align 2
-_vPortTickISR:
+	 	/* Once the context has been saved the C handler can be called. */
+	 	call !!_vAnExampleISR_C_Handler
 
-	/* Save the context of the currently executing task. */
-	portSAVE_CONTEXT
-	/* Call the RTOS tick function. */
-	call      !!_vTaskIncrementTick
-#if configUSE_PREEMPTION == 1
-	/* Select the next task to run. */
-	call      !!_vTaskSwitchContext
-#endif
-	/* Retore the context of whichever task will run next. */
-	portRESTORE_CONTEXT
-	reti
+	 	/* Finally the ISR must end with a call to portRESTORE_CONTEXT()
+	 	followed by a reti instruction to return from the interrupt to whichever
+	 	task is now the task selected to run (which may be different to the task
+	 	that was running before the interrupt started). */
+	    portRESTORE_CONTEXT
+	    reti
 
 	.end
 

@@ -81,7 +81,8 @@
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * basic demo.  Generic functions, such FreeRTOS hook functions, and functions
- * required to configure the hardware, are defined in main.c.
+ * required to configure the hardware, along with an example interrupt service
+ * routine, are defined in main.c.
  ******************************************************************************
  *
  * main_blinky() creates one queue, and two tasks.  It then starts the

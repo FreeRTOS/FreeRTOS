@@ -83,6 +83,12 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
+ * This project does not provide an example of how to write an RTOS compatible
+ * interrupt service routine (other than the tick interrupt itself), so this
+ * file contains the function vAnExampleISR_C_Handler() as a dummy example (that
+ * is not actually installed) that can be used as a reference.  Also see the
+ * file ExampleISR.S, and the documentation page for this demo on the
+ * FreeRTOS.org website for full instructions.
  *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
@@ -93,6 +99,7 @@
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
@@ -114,6 +121,9 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
+/* This variable is not actually used, but provided to allow an example of how
+to write an ISR to be included in this file. */
+static xSemaphoreHandle xSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -133,6 +143,38 @@ int main( void )
 	/* Should not get here.  See the definitions of main_blinky() and
 	main_full(). */
 	return 0;
+}
+/*-----------------------------------------------------------*/
+
+void vAnExampleISR_C_Handler( void )
+{
+	/*
+	 * This demo does not include a functional interrupt service routine - so
+	 * this dummy handler (which is not actually installed) is provided as an
+	 * example of how an ISR that needs to cause a context switch needs to be
+	 * implemented.  ISRs that do not cause a context switch have no special
+	 * requirements and can be written as per the compiler documentation.
+	 *
+	 * This C function is called from a wrapper function that is implemented
+	 * in assembly code.  See vANExampleISR_ASM_Wrapper() in ExampleISR.S.  Also
+	 * see the documentation page for this demo on the FreeRTOS.org website for
+	 * full instructions.
+	 */
+short sHigherPriorityTaskWoken = pdFALSE;
+
+	/* Handler code goes here...*/
+
+	/* For purposes of demonstration, assume at some point the hander calls
+	xSemaphoreGiveFromISR().*/
+	xSemaphoreGiveFromISR( xSemaphore, &sHigherPriorityTaskWoken );
+
+	/* If giving the semaphore unblocked a task, and the unblocked task has a
+	priority higher than or equal to the currently running task, then
+	sHigherPriorityTaskWoken will have been set to pdTRUE internally within the
+	xSemaphoreGiveFromISR() function.  Passing a pdTRUE	value to
+	portYIELD_FROM_ISR() will cause this interrupt to return directly to the
+	higher priority unblocked task. */
+	portYIELD_FROM_ISR( sHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 

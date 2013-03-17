@@ -71,7 +71,7 @@
     <contents xsi:type="com.renesas.linkersection.model:Keyword" text=". = ALIGN(2)"/>
     <contents xsi:type="com.renesas.linkersection.model:Label" rhs="= .;" lhs="_mdata"/>
   </sections>
-  <sections name=".data_original" isKeep="true">
+  <sections name=".data_original" isNoLoad="true" isKeep="true">
     <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="1023744"/>
     <contents xsi:type="com.renesas.linkersection.model:Keyword" text=". = ALIGN(2)"/>
     <contents xsi:type="com.renesas.linkersection.model:Label" rhs="= .;" lhs="_data_original"/>
@@ -79,7 +79,6 @@
     <contents xsi:type="com.renesas.linkersection.model:WildCardExpression" specificSection="true" name=".data_original.*"/>
     <contents xsi:type="com.renesas.linkersection.model:Keyword" text=". = ALIGN(2)"/>
     <contents xsi:type="com.renesas.linkersection.model:Label" rhs="= .;" lhs="_edata_original"/>
-    <reservedMemAddress xsi:type="com.renesas.linkersection.model:ReferencedLabelAddress" label="//@sections.12/@contents.12"/>
   </sections>
   <sections name="trace_buffer" isKeep="true">
     <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="1024768"/>
@@ -90,8 +89,9 @@
     <contents xsi:type="com.renesas.linkersection.model:Label" rhs="= .;" lhs="_data"/>
     <contents xsi:type="com.renesas.linkersection.model:WildCardExpression" specificSection="true" name=".data"/>
     <contents xsi:type="com.renesas.linkersection.model:WildCardExpression" specificSection="true" name=".data.*"/>
-    <contents xsi:type="com.renesas.linkersection.model:Label" rhs="= .;" lhs="_edata"/>
     <contents xsi:type="com.renesas.linkersection.model:Keyword" text=". = ALIGN(2)"/>
+    <contents xsi:type="com.renesas.linkersection.model:Label" rhs="= .;" lhs="_edata"/>
+    <reservedMemAddress xsi:type="com.renesas.linkersection.model:ReferencedLabelAddress" label="//@sections.12/@contents.12"/>
   </sections>
   <sections name=".bss">
     <sectionAddress xsi:type="com.renesas.linkersection.model:ReferencedSectionAddress" referencedSection="//@sections.15"/>

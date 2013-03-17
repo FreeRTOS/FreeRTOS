@@ -211,24 +211,15 @@ static xTimerHandle xDemoTimer = NULL;
 static volatile unsigned long ulDemoSoftwareTimerCounter = 0UL;
 
 /*-----------------------------------------------------------*/
-volatile unsigned char ucTemp;
+
 short main( void )
 {
-	ucTemp = RESF;
-	ucTemp = sizeof( char* );
-	ucTemp = sizeof( pdTASK_CODE );
-#warning Take out all references to the P1 LED.
-	P1 &= 0xFE; PM1 &= 0xFE;
-	P1_bit.no0 = 1;
-
-
 	/* Creates all the tasks and timers, then starts the scheduler. */
 
 	/* First create the 'standard demo' tasks.  These are used to demonstrate
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
 	vStartDynamicPriorityTasks();
-#warning Runs if the debugger is not connected and vStartDynamicPriorityTasks() is commented out.
 	vStartPolledQueueTasks( tskIDLE_PRIORITY );
 	vCreateBlockTimeTasks();
 
@@ -262,8 +253,10 @@ short main( void )
 	/* Finally start the scheduler running. */
 	vTaskStartScheduler();
 
-	/* If this line is reached then vTaskStartScheduler() returned because there
-	was insufficient heap memory remaining for the idle task to be created. */
+	/* If all is well execution will never reach here as the scheduler will be
+	running.  If this null loop is reached then it is likely there was
+	insufficient FreeRTOS heap available for the idle task and/or timer task to
+	be created.  See http://www.freertos.org/a00111.html. */
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -353,12 +346,6 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 	/* Toggle the LED.  The toggle rate will depend on whether or not an error
 	has been found in any tasks. */
 	LED_BIT = !LED_BIT;
-
-	if( xTaskGetTickCount() > ( ( portTickType ) 10000 / portTICK_RATE_MS ) )
-	{
-		/* Turn off the LED used to visualise a reset. */
-		P1_bit.no0 = 0;
-	}
 }
 /*-----------------------------------------------------------*/
 
@@ -379,7 +366,6 @@ void vApplicationMallocFailedHook( void )
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	taskDISABLE_INTERRUPTS();
-	P1_bit.no0 = 0;
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -393,7 +379,6 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
-	P1_bit.no0 = 0;
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -453,7 +438,15 @@ static void prvRegTest2Entry( void *pvParameters )
 
 void vAssertCalled( void )
 {
-	taskDISABLE_INTERRUPTS();
-	P1_bit.no0 = 0;
-	for( ;; );
+volatile unsigned long ul = 0;
+	taskENTER_CRITICAL();
+	{
+		/* Set ul to a non-zero value using the debugger to step out of this
+		function. */
+		while( ul == 0 )
+		{
+			__asm volatile( "NOP" );
+		}
+	}
+	taskEXIT_CRITICAL();
 }

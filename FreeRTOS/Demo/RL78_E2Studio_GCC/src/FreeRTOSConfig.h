@@ -91,7 +91,7 @@
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 32000000 )   /* Using the internal high speed clock */
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			1
@@ -101,7 +101,7 @@
 #define configUSE_MUTEXES				1
 
 /* Hook function definitions. */
-#define configUSE_IDLE_HOOK				1
+#define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configUSE_MALLOC_FAILED_HOOK	1
 
@@ -128,10 +128,6 @@ to exclude the API function. */
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle 	0
 
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
-
-#define __DATA_MODEL_FAR__ 0
-#define __DATA_MODEL_NEAR__ 1
-#define __DATA_MODEL__ __DATA_MODEL_FAR__
 
 
 #endif /* FREERTOS_CONFIG_H */

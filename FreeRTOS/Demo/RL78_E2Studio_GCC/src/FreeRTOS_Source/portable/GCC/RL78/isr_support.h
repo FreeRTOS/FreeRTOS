@@ -72,8 +72,6 @@
     mission critical applications that require provable dependability.
 */
 
-/*_RB_ #include "FreeRTOSConfig.h" */
-
 /* Variables used by scheduler */
 	.extern    _pxCurrentTCB
 	.extern    _usCriticalNesting
@@ -86,32 +84,47 @@
  */
 	.macro portSAVE_CONTEXT
 
+	SEL 	RB0
+
 	/* Save AX Register to stack. */
-	PUSH      AX
-	PUSH      HL
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
+	PUSH	AX
+	PUSH	HL
 	/* Save CS register. */
-	MOV       A, CS
-	XCH       A, X
+	MOV 	A, CS
+	XCH		A, X
 	/* Save ES register. */
-	MOV       A, ES
-	PUSH      AX
-#else
-	/* Save CS register. */
-	MOV       A, CS
-	PUSH      AX
-#endif
-	/* Save the remaining general purpose registers. */
-	PUSH      DE
-	PUSH      BC
+	MOV		A, ES
+	PUSH	AX
+	/* Save the remaining general purpose registers from bank 0. */
+	PUSH	DE
+	PUSH	BC
+	/* Save the other register banks - only necessary in the GCC port. */
+	SEL		RB1
+	PUSH	AX
+	PUSH	BC
+	PUSH	DE
+	PUSH	HL
+	SEL		RB2
+	PUSH	AX
+	PUSH	BC
+	PUSH	DE
+	PUSH	HL
+	SEL		RB3
+	PUSH	AX
+	PUSH	BC
+	PUSH	DE
+	PUSH	HL
+	SEL		RB0
 	/* Save the usCriticalNesting value. */
-	MOVW      AX, !_usCriticalNesting
-	PUSH      AX
+	MOVW	AX, !_usCriticalNesting
+	PUSH	AX
 	/* Save the Stack pointer. */
-	MOVW      AX, !_pxCurrentTCB
-	MOVW      HL, AX
-	MOVW      AX, SP
-	MOVW      [HL], AX
+	MOVW	AX, !_pxCurrentTCB
+	MOVW	HL, AX
+	MOVW	AX, SP
+	MOVW	[HL], AX
+	/* Switch stack pointers. */
+	movw sp,#_stack /* Set stack pointer */
 
 	.endm
 
@@ -123,33 +136,46 @@
  * of the selected task from the task stack
  */
 .macro portRESTORE_CONTEXT MACRO
+	SEL		RB0
 	/* Restore the Stack pointer. */
-	MOVW      AX, !_pxCurrentTCB
-	MOVW      HL, AX
-	MOVW      AX, [HL]
-	MOVW      SP, AX
+	MOVW	AX, !_pxCurrentTCB
+	MOVW	HL, AX
+	MOVW	AX, [HL]
+	MOVW	SP, AX
 	/* Restore usCriticalNesting value. */
-	POP	      AX
-	MOVW      !_usCriticalNesting, AX
+	POP		AX
+	MOVW	!_usCriticalNesting, AX
+	/* Restore the alternative register banks - only necessary in the GCC
+	port. */
+	SEL		RB3
+	POP		HL
+	POP		DE
+	POP		BC
+	POP		AX
+	SEL		RB2
+	POP		HL
+	POP		DE
+	POP		BC
+	POP		AX
+	SEL		RB1
+	POP		HL
+	POP		DE
+	POP		BC
+	POP		AX
+	SEL		RB0
 	/* Restore the necessary general purpose registers. */
-	POP	      BC
-	POP	      DE
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
+	POP		BC
+	POP		DE
 	/* Restore the ES register. */
-	POP       AX
-	MOV       ES, A
+	POP		AX
+	MOV		ES, A
 	/* Restore the CS register. */
-	XCH       A, X
-	MOV       CS, A
-#else
-	POP       AX
-	/* Restore the CS register. */
-	MOV       CS, A
-#endif
+	XCH		A, X
+	MOV		CS, A
 	/* Restore general purpose register HL. */
-	POP       HL
+	POP		HL
 	/* Restore AX. */
-	POP       AX
+	POP		AX
 
 	.endm
 

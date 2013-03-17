@@ -94,19 +94,27 @@
 _vRegTest1Task:
 
 	/* First fill the registers. */
+	SEL		RB0
 	MOVW	AX, #0x1122
 	MOVW	BC, #0x3344
 	MOVW	DE, #0x5566
 	MOVW	HL, #0x7788
-	MOV		CS, #0x01
-
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
-
-	; ES is not saved or restored when using the near memory model so only
-	; test it when using the far model.
-	MOV		ES, #0x02
-
-#endif
+	SEL		RB1
+	MOVW	AX, #0x1111
+	MOVW	BC, #0x2222
+	MOVW	DE, #0x3333
+	MOVW	HL, #0x4444
+	SEL		RB2
+	MOVW	AX, #0x5555
+	MOVW	BC, #0x6666
+	MOVW	DE, #0x7777
+	MOVW	HL, #0x8888
+	SEL		RB3
+	MOVW	AX, #0xAAAA
+	MOVW	BC, #0xBBBB
+	MOVW	DE, #0xCCCC
+	MOVW	HL, #0xDDDD
+	SEL		RB0
 
 _loop1:
 
@@ -136,26 +144,72 @@ _loop1:
 	CMPW	AX, #0x7788
 	BZ		$.+5
 	BR		!!_vRegTestError
-	MOV		A, CS
-	CMP		A, #0x01
+
+	/* Set AX back to its initial value. */
+	MOVW	AX, #0x1122
+
+	SEL		RB1
+	CMPW	AX, #0x1111
 	BZ		$.+5
 	BR		!!_vRegTestError
-
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
-
-	/* ES is not saved or restored when using the near memory model so only
-	test it when using the far model. */
-	MOV		A, ES
-	CMP		A, #0x02
+	MOVW	AX, BC
+	CMPW	AX, #0x2222
 	BZ		$.+5
 	BR		!!_vRegTestError
+	MOVW	AX, DE
+	CMPW	AX, #0x3333
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, HL
+	CMPW	AX, #0x4444
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, #0x1111
 
-#endif
+
+	SEL		RB2
+	CMPW	AX, #0x5555
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, BC
+	CMPW	AX, #0x6666
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, DE
+	CMPW	AX, #0x7777
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, HL
+	CMPW	AX, #0x8888
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, #0x5555
+
+
+	SEL		RB3
+	CMPW	AX, #0xAAAA
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, BC
+	CMPW	AX, #0xBBBB
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, DE
+	CMPW	AX, #0xCCCC
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, HL
+	CMPW	AX, #0xDDDD
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, #0xAAAA
+
+
+	SEL 	RB0
 
 	/* Indicate that this task is still cycling. */
 	INCW	!_usRegTest1LoopCounter
 
-	MOVW	AX, #0x1122
 	BR 		!!_loop1
 
 
@@ -166,17 +220,27 @@ _loop1:
  */
 _vRegTest2Task:
 
+	SEL		RB0
 	MOVW	AX, #0x99aa
 	MOVW	BC, #0xbbcc
 	MOVW	DE, #0xddee
 	MOVW	HL, #0xff12
-	MOV		CS, #0x03
-
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
-
-	MOV		ES, #0x04
-
-#endif
+	SEL		RB1
+	MOVW	AX, #0x0110
+	MOVW	BC, #0x0220
+	MOVW	DE, #0x0330
+	MOVW	HL, #0x0440
+	SEL		RB2
+	MOVW	AX, #0x0550
+	MOVW	BC, #0x0660
+	MOVW	DE, #0x0770
+	MOVW	HL, #0x0880
+	SEL		RB3
+	MOVW	AX, #0x0AA0
+	MOVW	BC, #0x0BB0
+	MOVW	DE, #0x0CC0
+	MOVW	HL, #0x0DD0
+	SEL		RB0
 
 _loop2:
 	CMPW	AX, #0x99aa
@@ -194,24 +258,67 @@ _loop2:
 	CMPW	AX, #0xff12
 	BZ		$.+5
 	BR		!!_vRegTestError
-	MOV		A, CS
-	CMP		A, #0x03
+	MOVW	AX, #0x99aa
+
+	SEL		RB1
+	CMPW	AX, #0x0110
 	BZ		$.+5
 	BR		!!_vRegTestError
-
-#if __DATA_MODEL__ == __DATA_MODEL_FAR__
-
-	MOV		A, ES
-	CMP		A, #0x04
+	MOVW	AX, BC
+	CMPW	AX, #0x0220
 	BZ		$.+5
 	BR		!!_vRegTestError
+	MOVW	AX, DE
+	CMPW	AX, #0x0330
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, HL
+	CMPW	AX, #0x0440
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, #0x0110
 
-#endif
+	SEL		RB2
+	CMPW	AX, #0x0550
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, BC
+	CMPW	AX, #0x0660
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, DE
+	CMPW	AX, #0x0770
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, HL
+	CMPW	AX, #0x0880
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, #0x0550
+
+	SEL		RB3
+	CMPW	AX, #0x0AA0
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, BC
+	CMPW	AX, #0x0BB0
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, DE
+	CMPW	AX, #0x0CC0
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, HL
+	CMPW	AX, #0x0DD0
+	BZ		$.+5
+	BR		!!_vRegTestError
+	MOVW	AX, #0x0AA0
+
+	SEL 	RB0
 
 	/* Indicate that this task is still cycling. */
 	INCW	!_usRegTest2LoopCounter
 
-	MOVW	AX, #0x99aa
 	BR 		!!_loop2
 
 	.end

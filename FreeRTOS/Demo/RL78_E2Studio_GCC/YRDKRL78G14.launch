@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.renesas.cdt.launch.dsf.gdbremote.launchConfigurationType">
+<intAttribute key="com.renesas.cdt.core.admPortNumber" value="61236"/>
+<stringAttribute key="com.renesas.cdt.core.initCommands" value=""/>
+<stringAttribute key="com.renesas.cdt.core.ipAddress" value="localhost"/>
+<stringAttribute key="com.renesas.cdt.core.jtagDevice" value="E1 (RL78)"/>
+<booleanAttribute key="com.renesas.cdt.core.loadImage" value="true"/>
+<stringAttribute key="com.renesas.cdt.core.optionInitCommands" value=""/>
+<intAttribute key="com.renesas.cdt.core.portNumber" value="61234"/>
+<stringAttribute key="com.renesas.cdt.core.runCommands" value=""/>
+<stringAttribute key="com.renesas.cdt.core.serverParam" value="-g E1  -l 0 -t R5F104PJ  -p 61234 -d 61236 -umFreq= 0 -usFreq= 0 -umClock= 1 -w 0 -usupplyVoltage= 1 -ucommMethod= 0 -usecurityID= 00000000000000000000 -upermitFlash= 1 -uuseWideVoltageMode= 1 -ueraseRom= 1 -uuseOnChipDebug= 0 -uuseUserOptionByte= 0 -ustopTimerEmu= 0 -ustopSerialEmu= 0 -umaskInternalResetSignal= 0 -umaskTargetResetSignal= 0 -n 0 -uverifyOnWritingMemory= 1"/>
+<booleanAttribute key="com.renesas.cdt.core.setResume" value="true"/>
+<booleanAttribute key="com.renesas.cdt.core.setStopAt" value="true"/>
+<booleanAttribute key="com.renesas.cdt.core.startServer" value="true"/>
+<stringAttribute key="com.renesas.cdt.core.stopAt" value="main"/>
+<stringAttribute key="com.renesas.cdt.core.targetDevice" value="R5F104PJ"/>
+<booleanAttribute key="com.renesas.cdt.core.useRemoteTarget" value="true"/>
+<booleanAttribute key="com.renesas.cdt.core.verboseMode" value="false"/>
+<stringAttribute key="com.renesas.cdt.launch.dsf.IO_MAP" value="${eclipse_home}..\internal\IoFiles\RL78\R5F104PJ.sfrx"/>
+<booleanAttribute key="com.renesas.cdt.launch.dsf.USE_DEFAULT_IO_MAP" value="true"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.allow.clock.source.internal" value="false"/>
+<intAttribute key="com.renesas.hardwaredebug.e1.clock_source" value="0"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.connection.mode" value="0"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.e1_pwr" value="true"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.execute.program" value="false"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.external_memory" value=""/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.fine.baud.rate" value="2.00"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.flash_overwrite_blocks" value=""/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.hw_break" value="false"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.id_code" value="FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.inputclock" value="12.0000"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.jtag.clock.freq" value="16.5"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.jtag.or.fine" value="1"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.le" value="true"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.mode" value="0"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.mode_pin" value="0"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.prog_rewrite_dflash" value="false"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.prog_rewrite_irom" value="false"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1.supply.voltage" value="3.3V"/>
+<intAttribute key="com.renesas.hardwaredebug.e1.work_ram_start" value="4096"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1rl78.communication.method" value="0"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.e1_pwr" value="false"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.eraseFlash" value="true"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.hw_break" value="false"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.le" value="true"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1rl78.main.clock.freq" value="0"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.mask.internal.reset.signal" value="false"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.mask.target.reset.signal" value="false"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1rl78.monitor.clock" value="1"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.permit.flash.programming" value="true"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1rl78.security.id" value="00000000000000000000"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.stopSerialEmu" value="false"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.stopTimerEmu" value="false"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1rl78.sub.clock.freq" value="0"/>
+<stringAttribute key="com.renesas.hardwaredebug.e1rl78.supply.voltage" value="1"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.use.wide.voltage.mode" value="true"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1rl78.verify.on.writing.to.memory" value="true"/>
+<intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="3"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value=""/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value=""/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForImage" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForSymbols" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForImage" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForSymbols" value="true"/>
+<stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="${eclipse_home}../DebugComp/rl78-elf-gdb"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
+<intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
+<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="YRDKRL78G14/RTOSDemo.x"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="RTOSDemo"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value=""/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/RTOSDemo"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.debug.core.capture_output" value="false"/>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_CONSOLE_OUTPUT_ON" value="false"/>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
+<stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
+</launchConfiguration>

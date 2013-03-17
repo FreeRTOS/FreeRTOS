@@ -56,48 +56,48 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
 /*
- * The first test creates three tasks - two counter tasks (one continuous count 
- * and one limited count) and one controller.  A "count" variable is shared 
- * between all three tasks.  The two counter tasks should never be in a "ready" 
- * state at the same time.  The controller task runs at the same priority as 
- * the continuous count task, and at a lower priority than the limited count 
+ * The first test creates three tasks - two counter tasks (one continuous count
+ * and one limited count) and one controller.  A "count" variable is shared
+ * between all three tasks.  The two counter tasks should never be in a "ready"
+ * state at the same time.  The controller task runs at the same priority as
+ * the continuous count task, and at a lower priority than the limited count
  * task.
  *
  * One counter task loops indefinitely, incrementing the shared count variable
  * on each iteration.  To ensure it has exclusive access to the variable it
- * raises it's priority above that of the controller task before each 
+ * raises it's priority above that of the controller task before each
  * increment, lowering it again to it's original priority before starting the
  * next iteration.
  *
  * The other counter task increments the shared count variable on each
  * iteration of it's loop until the count has reached a limit of 0xff - at
- * which point it suspends itself.  It will not start a new loop until the 
- * controller task has made it "ready" again by calling vTaskResume ().  
- * This second counter task operates at a higher priority than controller 
- * task so does not need to worry about mutual exclusion of the counter 
+ * which point it suspends itself.  It will not start a new loop until the
+ * controller task has made it "ready" again by calling vTaskResume ().
+ * This second counter task operates at a higher priority than controller
+ * task so does not need to worry about mutual exclusion of the counter
  * variable.
  *
  * The controller task is in two sections.  The first section controls and
- * monitors the continuous count task.  When this section is operational the 
- * limited count task is suspended.  Likewise, the second section controls 
- * and monitors the limited count task.  When this section is operational the 
+ * monitors the continuous count task.  When this section is operational the
+ * limited count task is suspended.  Likewise, the second section controls
+ * and monitors the limited count task.  When this section is operational the
  * continuous count task is suspended.
  *
  * In the first section the controller task first takes a copy of the shared
@@ -107,11 +107,11 @@
  * the continuous count task will execute and increment the shared variable.
  * When the controller task wakes it checks that the continuous count task
  * has executed by comparing the copy of the shared variable with its current
- * value.  This time, to ensure mutual exclusion, the scheduler itself is 
- * suspended with a call to vTaskSuspendAll ().  This is for demonstration 
+ * value.  This time, to ensure mutual exclusion, the scheduler itself is
+ * suspended with a call to vTaskSuspendAll ().  This is for demonstration
  * purposes only and is not a recommended technique due to its inefficiency.
  *
- * After a fixed number of iterations the controller task suspends the 
+ * After a fixed number of iterations the controller task suspends the
  * continuous count task, and moves on to its second section.
  *
  * At the start of the second section the shared variable is cleared to zero.
@@ -123,7 +123,7 @@
  * a check on the shared variable to ensure everything is as expected.
  *
  *
- * The second test consists of a couple of very simple tasks that post onto a 
+ * The second test consists of a couple of very simple tasks that post onto a
  * queue while the scheduler is suspended.  This test was added to test parts
  * of the scheduler not exercised by the first test.
  *
@@ -165,7 +165,7 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 to the controller task to prevent them having to be file scope. */
 static xTaskHandle xContinousIncrementHandle, xLimitedIncrementHandle;
 
-/* The shared counter variable.  This is passed in as a parameter to the two 
+/* The shared counter variable.  This is passed in as a parameter to the two
 counter variables for demonstration purposes. */
 static unsigned long ulCounter;
 
@@ -178,7 +178,7 @@ static volatile portBASE_TYPE xSuspendedQueueSendError = pdFALSE;
 static volatile portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
 
 /* Queue used by the second test. */
-xQueueHandle xSuspendedTestQueue;
+static xQueueHandle xSuspendedTestQueue;
 
 /*-----------------------------------------------------------*/
 /*
@@ -190,10 +190,10 @@ void vStartDynamicPriorityTasks( void )
 	xSuspendedTestQueue = xQueueCreate( priSUSPENDED_QUEUE_LENGTH, sizeof( unsigned long ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware 
+	in use.  The queue registry is provided as a means for kernel aware
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( xSuspendedTestQueue, ( signed char * ) "Suspended_Test_Queue" );
 
@@ -207,7 +207,7 @@ void vStartDynamicPriorityTasks( void )
 
 /*
  * Just loops around incrementing the shared variable until the limit has been
- * reached.  Once the limit has been reached it suspends itself. 
+ * reached.  Once the limit has been reached it suspends itself.
  */
 static portTASK_FUNCTION( vLimitedIncrementTask, pvParameters )
 {
@@ -224,12 +224,12 @@ unsigned long *pulCounter;
 	for( ;; )
 	{
 		/* Just count up to a value then suspend. */
-		( *pulCounter )++;	
-		
+		( *pulCounter )++;
+
 		if( *pulCounter >= priMAX_COUNT )
 		{
 			vTaskSuspend( NULL );
-		} 	
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -247,7 +247,7 @@ unsigned portBASE_TYPE uxOurPriority;
 	the task. */
 	pulCounter = ( unsigned long * ) pvParameters;
 
-	/* Query our priority so we can raise it when exclusive access to the 
+	/* Query our priority so we can raise it when exclusive access to the
 	shared variable is required. */
 	uxOurPriority = uxTaskPriorityGet( NULL );
 
@@ -256,7 +256,7 @@ unsigned portBASE_TYPE uxOurPriority;
 		/* Raise our priority above the controller task to ensure a context
 		switch does not occur while we are accessing this variable. */
 		vTaskPrioritySet( NULL, uxOurPriority + 1 );
-			( *pulCounter )++;		
+			( *pulCounter )++;
 		vTaskPrioritySet( NULL, uxOurPriority );
 	}
 }
@@ -289,11 +289,11 @@ short sError = pdFALSE;
 			vTaskSuspend( xContinousIncrementHandle );
 				ulLastCounter = ulCounter;
 			vTaskResume( xContinousIncrementHandle );
-			
+
 			/* Now delay to ensure the other task has processor time. */
 			vTaskDelay( priSLEEP_TIME );
 
-			/* Check the shared variable again.  This time to ensure mutual 
+			/* Check the shared variable again.  This time to ensure mutual
 			exclusion the whole scheduler will be locked.  This is just for
 			demo purposes! */
 			vTaskSuspendAll();
@@ -380,7 +380,7 @@ portBASE_TYPE xGotValue;
 	{
 		do
 		{
-			/* Suspending the scheduler here is fairly pointless and 
+			/* Suspending the scheduler here is fairly pointless and
 			undesirable for a normal application.  It is done here purely
 			to test the scheduler.  The inner xTaskResumeAll() should
 			never return pdTRUE as the scheduler is still locked by the
@@ -419,7 +419,7 @@ portBASE_TYPE xGotValue;
 /* Called to check that all the created tasks are still running without error. */
 portBASE_TYPE xAreDynamicPriorityTasksStillRunning( void )
 {
-/* Keep a history of the check variables so we know if it has been incremented 
+/* Keep a history of the check variables so we know if it has been incremented
 since the last call. */
 static unsigned short usLastTaskCheck = ( unsigned short ) 0;
 portBASE_TYPE xReturn = pdTRUE;

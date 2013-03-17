@@ -85,7 +85,7 @@ interrupts don't accidentally become enabled before the scheduler is started. */
 #define portINITIAL_CRITICAL_NESTING  ( ( unsigned short ) 10 )
 
 /* Initial PSW value allocated to a newly created task.
- *   1100011000000000
+ *   11000110
  *   ||||||||-------------- Fill byte
  *   |||||||--------------- Carry Flag cleared
  *   |||||----------------- In-service priority Flags set to low level
@@ -95,7 +95,8 @@ interrupts don't accidentally become enabled before the scheduler is started. */
  *   |--------------------- Zero Flag set
  *   ---------------------- Global Interrupt Flag set (enabled)
  */
-#define portPSW		  ( 0xc6UL )
+//#define portPSW		  ( 0xc6UL )
+#define portPSW		  ( 0x86UL )
 
 /* The address of the pxCurrentTCB variable, but don't know or need to know its
 type. */
@@ -137,67 +138,24 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 {
 unsigned long *pulLocal;
 
-	#if __DATA_MODEL__ == __DATA_MODEL_FAR__
-	{
-		/* Parameters are passed in on the stack, and written using a 32bit value
-		hence a space is left for the second two bytes. */
-		pxTopOfStack--;
-
-		/* Write in the parameter value. */
-		pulLocal =  ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( unsigned long ) pvParameters;
-		pxTopOfStack--;
-
-		/* These values are just spacers.  The return address of the function
-		would normally be written here. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x00;
-		pxTopOfStack--;
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x00;
-		pxTopOfStack--;
-
-		/* The start address / PSW value is also written in as a 32bit value,
-		so leave a space for the second two bytes. */
-		pxTopOfStack--;
-
-		/* Task function start address combined with the PSW. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
-		pxTopOfStack--;
-
-		/* An initial value for the AX register. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
-		pxTopOfStack--;
-	}
-	#else
-	{
-		/* Task function address is written to the stack first.  As it is
-		written as a 32bit value a space is left on the stack for the second
-		two bytes. */
-		pxTopOfStack--;
-
-		/* Task function start address combined with the PSW. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
-		pxTopOfStack--;
-
-		/* The parameter is passed in AX. */
-		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
-		pxTopOfStack--;
-	}
-	#endif
-
-#ifdef This_was_an_alternative_to_the_two_above
-	/* Parameters are passed in on the stack. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+	/* Parameters are passed in on the stack, and written using a 32bit value
+	hence a space is left for the second two bytes. */
 	pxTopOfStack--;
 
-#warning Why is the offset necessary?  Presumably because the parameter could be 20 bits.
-	pxTopOfStack--;
+	/* Write in the parameter value. */
+	pulLocal =  ( unsigned long * ) pxTopOfStack;
+	*pulLocal = ( unsigned long ) pvParameters;
 	pxTopOfStack--;
 
-	/* Task function address is written to the stack first.  As it is
-	written as a 32bit value a space is left on the stack for the second
-	two bytes. */
+	/* These values are just spacers.  The return address of the function
+	would normally be written here. */
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;
+	pxTopOfStack--;
+
+	/* The start address / PSW value is also written in as a 32bit value,
+	so leave a space for the second two bytes. */
 	pxTopOfStack--;
 
 	/* Task function start address combined with the PSW. */
@@ -206,9 +164,9 @@ unsigned long *pulLocal;
 	pxTopOfStack--;
 
 	/* An initial value for the AX register. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaa;
+	*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
 	pxTopOfStack--;
-#endif
+
 	/* An initial value for the HL register. */
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
 	pxTopOfStack--;
@@ -217,11 +175,9 @@ unsigned long *pulLocal;
 	*pxTopOfStack = ( portSTACK_TYPE ) 0x0F00;
 	pxTopOfStack--;
 
-	/* Finally the remaining general purpose registers DE and BC */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDEDE;
-	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBCBC;
-	pxTopOfStack--;
+	/* The remaining general purpose registers bank 0 (DE and BC) and the other
+	three register banks.. */
+	pxTopOfStack -= 14;
 
 	/* Finally the critical section nesting count is set to zero when the task
 	first starts. */

@@ -1,4 +1,4 @@
-#Mon Mar 04 17:13:11 GMT 2013
+#Wed Mar 06 15:45:34 GMT 2013
 Library\ Generator\ Command=rl78-elf-libgen
 com.renesas.cdt.core.Assembler.option.includeFileDirectories="${workspace_loc\:/${ProjName}}\\src";
 com.renesas.cdt.core.Compiler.option.includeFileDir.1067754383="${TCINSTALL}\\rl78-elf\\optlibinc";
@@ -14,6 +14,7 @@ com.renesas.cdt.rl78.HardwareDebug.Compiler.option.cpuType=RL78 - G1C
 com.renesas.cdt.rl78.HardwareDebug.Compiler.option.cpuType.1364542281=RL78 - G1C
 com.renesas.cdt.rl78.HardwareDebug.Compiler.option.mmul=None
 com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveLibraryFiles=${ProjName};gcc;
+com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveSearchDirectories.1960648199="${CONFIGDIR}";"${TCINSTALL}\\lib\\gcc\\rl78-elf\\\\${GCC_VERSION}";
 com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveSearchDirectories.970009502="${CONFIGDIR}";"${TCINSTALL}\\lib\\gcc\\rl78-elf\\\\${GCC_VERSION}";
 com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveSearchDirectories.984802356="${CONFIGDIR}";"${TCINSTALL}\\lib\\gcc\\rl78-elf\\\\${GCC_VERSION}";
 eclipse.preferences.version=1

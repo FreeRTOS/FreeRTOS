@@ -86,6 +86,7 @@
 	.extern    _vTaskIncrementTick
 
 	.text
+	.align 2
 
 /* FreeRTOS yield handler.  This is installed as the BRK software interrupt
 handler. */
@@ -101,6 +102,7 @@ _vPortYield:
 
 /* Starts the scheduler by restoring the context of the task that will execute
 first. */
+	.align 2
 _vPortStartFirstTask:
 	/* Restore the context of whichever task will execute first. */
 	portRESTORE_CONTEXT
@@ -109,6 +111,7 @@ _vPortStartFirstTask:
 
 /* FreeRTOS tick handler.  This is installed as the interval timer interrupt
 handler. */
+	.align 2
 _vPortTickISR:
 
 	/* Save the context of the currently executing task. */

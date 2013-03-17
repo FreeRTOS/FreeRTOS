@@ -219,20 +219,5 @@ volatile size_t xFreeHeapSpace;
 	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
 	( void ) xFreeHeapSpace;
 }
-/*-----------------------------------------------------------*/
 
-void vAssertCalled( void )
-{
-volatile unsigned long ul = 0;
 
-	taskENTER_CRITICAL();
-	{
-		/* Set ul to a non-zero value using the debugger to step out of this
-		function. */
-		while( ul == 0 )
-		{
-			__asm volatile( "NOP" );
-		}
-	}
-	taskEXIT_CRITICAL();
-}

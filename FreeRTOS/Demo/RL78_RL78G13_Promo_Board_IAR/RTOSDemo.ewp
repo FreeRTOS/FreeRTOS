@@ -918,12 +918,12 @@
         <option>
           <name>GenCodeModel</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenDataModel</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenNearConstLocation</name>
@@ -970,11 +970,11 @@
         </option>
         <option>
           <name>GenRTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nn2n.h</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78ff2n.h</state>
         </option>
         <option>
           <name>GenRTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78ff2n.r87</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78nn2n.r87</state>
         </option>
         <option>
           <name>GenHwSupport</name>
@@ -1379,7 +1379,7 @@
         <option>
           <name>AsmDefines</name>
           <state></state>
-          <state>__FAR_DATA_MODEL__</state>
+          <state>__NEAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>AsmPreprocOutput</name>
@@ -2689,11 +2689,20 @@
         <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\main_full.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
       </file>
     </group>
     <file>
+      <name>$PROJ_DIR$\ExampleISR.s87</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main_blinky.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\RegTest.s87</name>

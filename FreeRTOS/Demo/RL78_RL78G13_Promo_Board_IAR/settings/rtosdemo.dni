@@ -1,21 +1,5 @@
-[InterruptLog]
-LogEnabled=0
-SumEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-SumSortOrder=0
-[Interrupts]
-Enabled=1
-[MemoryMap]
-Enabled=0
-Base=0
-UseAuto=0
-TypeViolation=1
-UnspecRange=1
-ActionState=1
 [DebugChecksum]
-Checksum=1634009173
+Checksum=-776555801
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -163,13 +147,38 @@ ByteLimit=50
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[DataLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[Breakpoints2]
+Count=0
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[Trace1]
+Enabled=0
+ShowSource=1
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-[Breakpoints]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -177,10 +186,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Aliases]
-A0=_ "C:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87" "E:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87"
-Count=1
-SuppressDialog=1
 [TraceHelper]
 Enabled=0
 ShowSource=1
@@ -192,3 +197,9 @@ Mode=0
 Graph=0
 Symbiont=0
 Exclusions=
+[Breakpoints]
+Count=0
+[Aliases]
+A0=_ "C:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87" "E:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87"
+Count=1
+SuppressDialog=1

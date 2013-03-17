@@ -85,8 +85,8 @@
 	#endif /* YRPBRL78G13 */
 
 	#ifdef YRDKRL78G14
-		#define LED_BIT			( P1_bit.no0 )
-		#define LED_INIT()		P1 &= 0xFE; PM1 &= 0xFE
+		#define LED_BIT			( P4_bit.no1 )
+		#define LED_INIT() 		PM4_bit.no1 = 0
 	#endif /* YRDKRL78G14 */
 
 	#ifdef RSKRL78G1C

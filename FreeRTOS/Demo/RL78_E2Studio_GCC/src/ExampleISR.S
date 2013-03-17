@@ -73,7 +73,8 @@
 */
 
 /*
- * This file defines the RegTest tasks as described at the top of main.c
+ * This file defines the assembler wrapper for the example interrupt that is
+ * defined in main.c.  The wrapper is the interrupt entry point.
  */
 
 /* ISR_Support.h contains the definitions of portSAVE_CONTEXT() and

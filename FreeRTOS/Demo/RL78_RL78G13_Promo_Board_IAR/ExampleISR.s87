@@ -1,0 +1,134 @@
+;    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+;
+;    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
+;    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+;
+;    ***************************************************************************
+;     *                                                                       *
+;     *    FreeRTOS tutorial books are available in pdf and paperback.        *
+;     *    Complete, revised, and edited pdf reference manuals are also       *
+;     *    available.                                                         *
+;     *                                                                       *
+;     *    Purchasing FreeRTOS documentation will not only help you, by       *
+;     *    ensuring you get running as quickly as possible and with an        *
+;     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+;     *    the FreeRTOS project to continue with its mission of providing     *
+;     *    professional grade, cross platform, de facto standard solutions    *
+;     *    for microcontrollers - completely free of charge!                  *
+;     *                                                                       *
+;     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+;     *                                                                       *
+;     *    Thank you for using FreeRTOS, and thank you for your support!      *
+;     *                                                                       *
+;    ***************************************************************************
+;
+;
+;    This file is part of the FreeRTOS distribution.
+;
+;    FreeRTOS is free software; you can redistribute it and/or modify it under
+;    the terms of the GNU General Public License (version 2) as published by the
+;    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+;
+;    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
+;    distribute a combined work that includes FreeRTOS without being obliged to
+;    provide the source code for proprietary components outside of the FreeRTOS
+;    kernel.
+;
+;    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+;    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+;    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+;    details. You should have received a copy of the GNU General Public License
+;    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+;    viewed here: http://www.freertos.org/a00114.html and also obtained by
+;    writing to Real Time Engineers Ltd., contact details for whom are available
+;    on the FreeRTOS WEB site.
+;
+;    1 tab == 4 spaces!
+;
+;    ***************************************************************************
+;     *                                                                       *
+;     *    Having a problem?  Start by reading the FAQ "My application does   *
+;     *    not run, what could be wrong?"                                     *
+;     *                                                                       *
+;     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+;     *                                                                       *
+;    ***************************************************************************
+;
+;
+;    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+;    license and Real Time Engineers Ltd. contact details.
+;
+;    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+;    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+;    fully thread aware and reentrant UDP/IP stack.
+;
+;    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+;    Integrity Systems, who sell the code with commercial support,
+;    indemnification and middleware, under the OpenRTOS brand.
+;
+;    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+;    engineered and independently SIL3 certified version for use in safety and
+;    mission critical applications that require provable dependability.
+
+;*
+; * This file defines the assembler wrapper for the example interrupt that is
+; * defined in main.c.  The wrapper is the interrupt entry point.
+; *
+
+; ISR_Support.h contains the definitions of portSAVE_CONTEXT() and
+; portRESTORE_CONTEXT().
+#include "ISR_Support.h"
+
+	PUBLIC vANExampleISR_ASM_Wrapper
+	EXTERN vAnExampleISR_C_Handler
+
+	RSEG CODE:CODE
+
+;	 *
+;	 * This demo does not include a functional interrupt service routine - so
+;	 * this dummy handler (which is not actually installed) is provided as an
+;	 * example of how an ISR that needs to cause a context switch needs to be
+;	 * implemented.  ISRs that do not cause a context switch have no special
+;	 * requirements and can be written as per the compiler documentation.
+;	 *
+;	 * This assembly wrapper function calls the main handler, which is called
+;	 * vAnExampleISR_C_Handler(), and is implemented in main.c.  See the
+;	 * documentation page for this demo on the FreeRTOS.org website for full
+;	 * instructions.
+;	 *
+;	 * NOTE:  vANExampleISR_ASM_Wrapper needs to be installed into the relevant
+;	 * vector, an example of how to do this from an assembly file is locate at
+;	 * the bottom of this file.
+;	 *
+
+	vANExampleISR_ASM_Wrapper:
+
+;	 	portSAVE_CONTEXT() must be the first thing called in the ASM
+;	 	wrapper.
+	 	portSAVE_CONTEXT
+
+;	 	Once the context has been saved the C handler can be called.
+	 	call !!vAnExampleISR_C_Handler
+
+;	 	Finally the ISR must end with a call to portRESTORE_CONTEXT()
+;	 	followed by a reti instruction to return from the interrupt to whichever
+;	 	task is now the task selected to run (which may be different to the task
+;	 	that was running before the interrupt started).
+	    portRESTORE_CONTEXT
+	    reti
+
+
+;   The interrupt handler can be installed into the vector table in the same
+;    assembly file.
+
+;   Ensure the vector table segement is used.
+	COMMON INTVEC:CODE:ROOT(1)
+;
+;   Place a pointer to the asm wrapper at the correct index into the vector
+;   table.  Note 56 is used is purely as an example.  The correct vector
+;   number for the interrupt being installed must be used.
+	ORG 58
+	DW vANExampleISR_ASM_Wrapper
+
+	END
+

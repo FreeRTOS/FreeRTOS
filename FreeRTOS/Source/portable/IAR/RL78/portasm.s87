@@ -98,7 +98,7 @@ vPortTickISR:
 ; Install the interrupt handlers
 
 	COMMON INTVEC:CODE:ROOT(1)
-	ORG 56
+	ORG configTICK_VECTOR
 	DW vPortTickISR
 
 	COMMON INTVEC:CODE:ROOT(1)

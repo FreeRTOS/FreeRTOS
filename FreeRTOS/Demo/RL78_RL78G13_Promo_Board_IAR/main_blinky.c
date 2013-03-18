@@ -119,9 +119,7 @@
 #include "semphr.h"
 
 /* Eval board specific definitions. */
-#include "port_iodefine.h"
-#include "port_iodefine_ext.h"
-#include "LED.h"
+#include "demo_specific_io.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )

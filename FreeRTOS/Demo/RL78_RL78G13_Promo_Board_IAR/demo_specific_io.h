@@ -72,27 +72,49 @@
     mission critical applications that require provable dependability.
 */
 
-/*
- * Board specific macros to initialise and toggle an LED.
- */
-
 #ifndef LED_IO_H
 #define LED_IO_H
 
+/* Include the register definition file that is correct for the hardware being
+used.  The C and assembler pre-processor must have one of the following board
+definitions defined to have the correct register definition header file
+included.  Alternatively, just manually include the correct files here. */
+
+
 	#ifdef YRPBRL78G13
+		#include "ior5f100le.h"
+		#include "ior5f100le_ext.h"
 		#define LED_BIT			( P7_bit.no7 )
 		#define LED_INIT()		P7 &= 0x7F; PM7 &= 0x7F
 	#endif /* YRPBRL78G13 */
 
 	#ifdef YRDKRL78G14
+		#include "ior5f104pj.h"
+		#include "ior5f104pj_ext.h"
 		#define LED_BIT			( P4_bit.no1 )
-		#define LED_INIT() 		PM4_bit.no1 = 0
+		#define LED_INIT() 		LED_BIT = 0
 	#endif /* YRDKRL78G14 */
 
 	#ifdef RSKRL78G1C
+		#include "ior5f10jgc.h"
+		#include "ior5f10jgc_ext.h"
 		#define LED_BIT			( P0_bit.no1 )
 		#define LED_INIT()		P0 &= 0xFD; PM0 &= 0xFD
 	#endif /* RSKRL78G1C */
+
+	#ifdef RSKRL78L13
+		#include "ior5f10wmg.h"
+		#include "ior5f10wmg_ext.h"
+		#define LED_BIT			( P4_bit.no1 )
+		#define LED_INIT() 		P4 &= 0xFD; PM4 &= 0xFD
+	#endif /* RSKRL78L13 */
+
+	#ifdef RL78_G1A_TB
+		#include "ior5f10ele.h"
+		#include "ior5f10ele_ext.h"
+		#define LED_BIT			( P6_bit.no2 )
+		#define LED_INIT() 		P6 &= 0xFB; PM6 &= 0xFB
+	#endif /* RL78_G1A_TB */
 
 	#ifndef LED_BIT
 		#error The hardware platform is not defined

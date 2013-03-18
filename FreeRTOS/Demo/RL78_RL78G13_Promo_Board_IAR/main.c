@@ -102,9 +102,7 @@
 #include "semphr.h"
 
 /* Hardware includes. */
-#include "port_iodefine.h"
-#include "port_iodefine_ext.h"
-#include "LED.h"
+#include "demo_specific_io.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
@@ -181,7 +179,7 @@ void vAnExampleISR_C_Handler( void )
 	 * This C function is called from a wrapper function that is implemented
 	 * in assembly code.  See vANExampleISR_ASM_Wrapper() in ExampleISR.s87.
 	 * Also see the documentation page for this demo on the FreeRTOS.org website
-	  * for full instructions.
+	 * for full instructions.
 	 */
 short sHigherPriorityTaskWoken = pdFALSE;
 
@@ -203,8 +201,6 @@ short sHigherPriorityTaskWoken = pdFALSE;
 
 int __low_level_init(void)
 {
-unsigned char ucResetFlag = RESF;
-
 	portDISABLE_INTERRUPTS();
 
 	/* Set fMX */

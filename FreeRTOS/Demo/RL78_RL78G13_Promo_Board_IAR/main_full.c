@@ -137,9 +137,7 @@
 #include "blocktim.h"
 
 /* Hardware includes. */
-#include "port_iodefine.h"
-#include "port_iodefine_ext.h"
-#include "LED.h"
+#include "demo_specific_io.h"
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the

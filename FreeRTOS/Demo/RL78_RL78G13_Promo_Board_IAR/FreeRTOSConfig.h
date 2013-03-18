@@ -92,10 +92,13 @@ asm file.  It is valid in a C file, but not valid in an asm file. */
 #ifdef __IAR_SYSTEMS_ICC__
 
 	#pragma system_include
-
 	#include <intrinsics.h>
 
 #endif /* __IAR_SYSTEMS_ICC__ */
+
+/* Include hardware dependent header files to allow this demo to run on
+multiple evaluation boards. */
+#include "demo_specific_io.h"
 
 #define configUSE_PREEMPTION			1
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
@@ -136,6 +139,10 @@ to exclude the API function. */
 #define INCLUDE_xTaskGetIdleTaskHandle 		0
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle 	0
 
+/* Tick interrupt vector - this must match the INTIT_vect definition contained
+in the ior5fnnnn.h header file included at the top of this file (the value is
+dependent on the hardware being used. */
+#define configTICK_VECTOR	INTIT_vect
 
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 

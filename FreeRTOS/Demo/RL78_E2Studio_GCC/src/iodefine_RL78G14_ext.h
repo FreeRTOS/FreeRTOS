@@ -1,6 +1,6 @@
 /***********************************************************************/
 /*  													               */
-/*      PROJECT NAME :  RTOSDemo                                       */
+/*      PROJECT NAME :  RL78G14                                        */
 /*      FILE         :  iodefine_ext.h                                 */
 /*      DESCRIPTION  :  Definition of Extended SFRs                    */
 /*      CPU SERIES   :  RL78 - G14                                     */

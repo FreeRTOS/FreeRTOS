@@ -87,16 +87,19 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
+/* Include hardware dependent header files to allow this demo to run on
+multiple evaluation boards. */
+#include "demo_specific_io.h"
+
 #define configUSE_PREEMPTION			1
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
-#define configCPU_CLOCK_HZ				( ( unsigned long ) 32000000 )   /* Using the internal high speed clock */
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			1
 #define configIDLE_SHOULD_YIELD			1
-#define configTOTAL_HEAP_SIZE			( (size_t ) ( 5000 ) )
+#define configTOTAL_HEAP_SIZE			( (size_t ) ( 3420 ) )
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_MUTEXES				1
 

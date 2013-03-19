@@ -76,10 +76,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Hardware includes. */
-#include "port_iodefine.h"
-#include "port_iodefine_ext.h"
-
 /* The critical nesting value is initialised to a non zero value to ensure
 interrupts don't accidentally become enabled before the scheduler is started. */
 #define portINITIAL_CRITICAL_NESTING  ( ( unsigned short ) 10 )
@@ -95,8 +91,7 @@ interrupts don't accidentally become enabled before the scheduler is started. */
  *   |--------------------- Zero Flag set
  *   ---------------------- Global Interrupt Flag set (enabled)
  */
-//#define portPSW		  ( 0xc6UL )
-#define portPSW		  ( 0x86UL )
+#define portPSW		  ( 0xc6UL )
 
 /* The address of the pxCurrentTCB variable, but don't know or need to know its
 type. */
@@ -118,7 +113,7 @@ volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*
  * Sets up the periodic ISR used for the RTOS tick.
  */
-static void prvSetupTimerInterrupt( void );
+__attribute__((weak)) void vApplicationSetupTimerInterrupt( void );
 
 /*
  * Starts the scheduler by loading the context of the first task to run.
@@ -193,7 +188,7 @@ portBASE_TYPE xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
-	prvSetupTimerInterrupt();
+	vApplicationSetupTimerInterrupt();
 
 	/* Restore the context of the first task that is going to run. */
 	vPortStartFirstTask();
@@ -209,7 +204,7 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupTimerInterrupt( void )
+__attribute__((weak)) void vApplicationSetupTimerInterrupt( void )
 {
 const unsigned short usClockHz = 15000UL; /* Internal clock. */
 const unsigned short usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
@@ -217,28 +212,49 @@ const unsigned short usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
 	/* Use the internal 15K clock. */
 	OSMC = ( unsigned char ) 0x16;
 
-	/* Supply the RTC clock. */
-	RTCEN = ( unsigned char ) 1U;
+	#ifdef RTCEN
+	{
+		/* Supply the interval timer clock. */
+		RTCEN = ( unsigned char ) 1U;
 
-	/* Disable ITMC operation. */
-	ITMC = ( unsigned char ) 0x0000;
+		/* Disable INTIT interrupt. */
+		ITMK = ( unsigned char ) 1;
 
-	/* Disable INTIT interrupt. */
-	ITMK = ( unsigned char ) 1;
+		/* Disable ITMC operation. */
+		ITMC = ( unsigned char ) 0x0000;
 
-	/* Set INTIT high priority */
-	ITPR1 = ( unsigned char ) 1;
-	ITPR0 = ( unsigned char ) 1;
+		/* Clear INIT interrupt. */
+		ITIF = ( unsigned char ) 0;
 
-	/* Clear INIT interrupt. */
-	ITIF = ( unsigned char ) 0;
+		/* Set interval and enable interrupt operation. */
+		ITMC = usCompareMatch | 0x8000U;
 
-	/* Set interval and enable interrupt operation. */
-	ITMC = usCompareMatch | 0x8000U;
+		/* Enable INTIT interrupt. */
+		ITMK = ( unsigned char ) 0;
+	}
+	#endif
 
-	/* Enable INTIT interrupt. */
-	ITMK = ( unsigned char ) 0;
+	#ifdef TMKAEN
+	{
+		/* Supply the interval timer clock. */
+		TMKAEN = ( unsigned char ) 1U;
+
+		/* Disable INTIT interrupt. */
+		TMKAMK = ( unsigned char ) 1;
+
+		/* Disable ITMC operation. */
+		ITMC = ( unsigned char ) 0x0000;
+
+		/* Clear INIT interrupt. */
+		TMKAIF = ( unsigned char ) 0;
+
+		/* Set interval and enable interrupt operation. */
+		ITMC = usCompareMatch | 0x8000U;
+
+		/* Enable INTIT interrupt. */
+		TMKAMK = ( unsigned char ) 0;
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
-
 

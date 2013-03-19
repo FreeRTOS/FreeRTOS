@@ -13,10 +13,6 @@
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 
-/* Hardware includes. */
-#include "port_iodefine.h"
-#include "LED.h"
-
 void HardwareSetup( void )
 {
 	portDISABLE_INTERRUPTS();

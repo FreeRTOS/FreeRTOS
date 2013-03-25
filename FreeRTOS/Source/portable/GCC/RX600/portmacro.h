@@ -134,8 +134,8 @@ vector 27. */
 /* The critical nesting functions defined within tasks.c. */
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-#define portENTER_CRITICAL()	vTaskEnterCritical();
-#define portEXIT_CRITICAL()		vTaskExitCritical();
+#define portENTER_CRITICAL()	vTaskEnterCritical()
+#define portEXIT_CRITICAL()		vTaskExitCritical()
 
 /* As this port allows interrupt nesting... */
 unsigned long ulPortGetIPL( void ) __attribute__((naked));

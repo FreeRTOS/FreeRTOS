@@ -56,24 +56,24 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the SH2A port.
+ * Implementation of functions defined in portable.h for the RX600 port.
  *----------------------------------------------------------*/
 
 /* Scheduler includes. */
@@ -88,7 +88,7 @@
 
 /*-----------------------------------------------------------*/
 
-/* Tasks should start with interrupts enabled and in Supervisor mode, therefore 
+/* Tasks should start with interrupts enabled and in Supervisor mode, therefore
 PSW is set with U and I set, and PM and IPL clear. */
 #define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
 #define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
@@ -105,7 +105,7 @@ const portBASE_TYPE * p_vSoftwareInterruptEntry = &vSoftwareInterruptEntry;
 
 /*
  * Function to start the first task executing - written in asm code as direct
- * access to registers is required. 
+ * access to registers is required.
  */
 static void prvStartFirstTask( void );
 
@@ -118,7 +118,7 @@ static void prvYieldHandler( void );
 
 /*
  * The entry point for the software interrupt handler.  This is the function
- * that calls the inline asm function prvYieldHandler().  It is installed in 
+ * that calls the inline asm function prvYieldHandler().  It is installed in
  * the vector table, but the code that installs it is in prvYieldHandler rather
  * than using a #pragma.
  */
@@ -133,19 +133,19 @@ extern void vTaskSwitchContext( void );
 
 /*-----------------------------------------------------------*/
 
-/* 
- * See header file for description. 
+/*
+ * See header file for description.
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* R0 is not included as it is the stack pointer. */
-	
+
 	*pxTopOfStack = 0x00;
 	pxTopOfStack--;
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
-	
+
 	/* When debugging it can be useful if every register is set to a known
 	value.  Otherwise code space can be saved by just setting the registers
 	that need to be set. */
@@ -186,9 +186,9 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 		pxTopOfStack -= 15;
 	}
 	#endif
-	
+
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R1 */
-	pxTopOfStack--;				
+	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_FPSW;
 	pxTopOfStack--;
 	*pxTopOfStack = 0x12345678; /* Accumulator. */
@@ -207,19 +207,19 @@ extern void vApplicationSetupTimerInterrupt( void );
 	if( pxCurrentTCB != NULL )
 	{
 		/* Call an application function to set up the timer that will generate the
-		tick interrupt.  This way the application can decide which peripheral to 
+		tick interrupt.  This way the application can decide which peripheral to
 		use.  A demo application is provided to show a suitable example. */
 		vApplicationSetupTimerInterrupt();
 
-		/* Enable the software interrupt. */		
+		/* Enable the software interrupt. */
 		_IEN( _ICU_SWINT ) = 1;
-		
+
 		/* Ensure the software interrupt is clear. */
 		_IR( _ICU_SWINT ) = 0;
-		
+
 		/* Ensure the software interrupt is set to the kernel priority. */
 		_IPR( _ICU_SWINT ) = configKERNEL_INTERRUPT_PRIORITY;
-	
+
 		/* Start the first task. */
 		prvStartFirstTask();
 	}
@@ -240,13 +240,13 @@ static void prvStartFirstTask( void )
 	Just ensure the current stack is the user stack. */
 	SETPSW	U
 
-	/* Obtain the location of the stack associated with which ever task 
+	/* Obtain the location of the stack associated with which ever task
 	pxCurrentTCB is currently pointing to. */
 	MOV.L	#_pxCurrentTCB, R15
 	MOV.L	[R15], R15
 	MOV.L	[R15], R0
 
-	/* Restore the registers from the stack of the task pointed to by 
+	/* Restore the registers from the stack of the task pointed to by
 	pxCurrentTCB. */
     POP		R15
     MVTACLO	R15 		/* Accumulator low 32 bits. */
@@ -271,7 +271,7 @@ void vTickISR( void )
 		vTaskIncrementTick();
 	}
 	set_ipl( configKERNEL_INTERRUPT_PRIORITY );
-	
+
 	/* Only select a new task if the preemptive scheduler is being used. */
 	#if( configUSE_PREEMPTION == 1 )
 		taskYIELD();
@@ -292,18 +292,18 @@ static void prvYieldHandler( void )
 	SETPSW	I
 
 	/* Move the data that was automatically pushed onto the interrupt stack when
-	the interrupt occurred from the interrupt stack to the user stack.  
-	
+	the interrupt occurred from the interrupt stack to the user stack.
+
 	R15 is saved before it is clobbered. */
 	PUSH.L	R15
-	
+
 	/* Read the user stack pointer. */
 	MVFC	USP, R15
-	
+
 	/* Move the address down to the data being moved. */
 	SUB		#12, R15
 	MVTC	R15, USP
-	
+
 	/* Copy the data across. */
 	MOV.L	[ R0 ], [ R15 ] ; R15
 	MOV.L 	4[ R0 ], 4[ R15 ]  ; PC
@@ -311,13 +311,13 @@ static void prvYieldHandler( void )
 
 	/* Move the interrupt stack pointer to its new correct position. */
 	ADD	#12, R0
-	
+
 	/* All the rest of the registers are saved directly to the user stack. */
 	SETPSW	U
 
 	/* Save the rest of the general registers (R15 has been saved already). */
 	PUSHM	R1-R14
-	
+
 	/* Save the FPSW and accumulator. */
 	MVFC	FPSW, R15
 	PUSH.L	R15
@@ -331,7 +331,7 @@ static void prvYieldHandler( void )
 	MOV.L	#_pxCurrentTCB, R15
 	MOV.L	[ R15 ], R15
 	MOV.L	R0, [ R15 ]
-			
+
 	/* Ensure the interrupt mask is set to the syscall priority while the kernel
 	structures are being accessed. */
 	MVTIPL	#configMAX_SYSCALL_INTERRUPT_PRIORITY
@@ -366,7 +366,7 @@ static void prvYieldHandler( void )
 void vPortEndScheduler( void )
 {
 	/* Not implemented as there is nothing to return to. */
-	
+
 	/* The following line is just to prevent the symbol getting optimised away. */
 	( void ) vTaskSwitchContext();
 }

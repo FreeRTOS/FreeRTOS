@@ -113,7 +113,7 @@ multiple evaluation boards. */
 #define configUSE_MUTEXES				1
 
 /* Hook function definitions. */
-#define configUSE_IDLE_HOOK				1
+#define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
 #define configUSE_MALLOC_FAILED_HOOK	1
 

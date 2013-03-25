@@ -162,7 +162,7 @@ portTickType xTimeToBlock, xBlockedTime;
 		{
 			/* The queue is empty. Attempt to read from the queue using a block
 			time.  When we wake, ensure the delta in time is as expected. */
-			xTimeToBlock = bktPRIMARY_BLOCK_TIME << xItem;
+			xTimeToBlock = ( portTickType ) ( bktPRIMARY_BLOCK_TIME << xItem );
 
 			xTimeWhenBlocking = xTaskGetTickCount();
 
@@ -213,7 +213,7 @@ portTickType xTimeToBlock, xBlockedTime;
 		{
 			/* The queue is full. Attempt to write to the queue using a block
 			time.  When we wake, ensure the delta in time is as expected. */
-			xTimeToBlock = bktPRIMARY_BLOCK_TIME << xItem;
+			xTimeToBlock = ( portTickType ) bktPRIMARY_BLOCK_TIME << xItem;
 
 			xTimeWhenBlocking = xTaskGetTickCount();
 

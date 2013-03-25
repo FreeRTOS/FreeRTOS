@@ -82,7 +82,7 @@ included.  Alternatively, just manually include the correct files here. */
 
 	/* Prevent the files being included from the FreeRTOS port layer assembly
 	source files. */
-	#ifndef INCLUDED_FROM_FREERTOS_ASM_FILE
+	#ifndef __ASSEMBLER__
 
 		#ifdef YRDKRL78G14
 			#include "iodefine_RL78G14.h"

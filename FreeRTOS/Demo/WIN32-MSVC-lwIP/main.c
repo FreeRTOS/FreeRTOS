@@ -1,6 +1,8 @@
 /*
-    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -27,28 +29,47 @@
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
+
+    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
     distribute a combined work that includes FreeRTOS without being obliged to
     provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    kernel.
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details. You should have received a copy of the GNU General Public License
+    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    viewed here: http://www.freertos.org/a00114.html and also obtained by
+    writing to Real Time Engineers Ltd., contact details for whom are available
+    on the FreeRTOS WEB site.
 
     1 tab == 4 spaces!
 
-    http://www.FreeRTOS.org - Documentation, latest information, license and
-    contact details.
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?"                                     *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
 
-    http://www.SafeRTOS.com - A version that is certified for use in safety
-    critical systems.
 
-    http://www.OpenRTOS.com - Commercial support, development, porting,
-    licensing and training services.
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+    license and Real Time Engineers Ltd. contact details.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+    fully thread aware and reentrant UDP/IP stack.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
+    indemnification and middleware, under the OpenRTOS brand.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
 */
 
 /*
@@ -64,8 +85,8 @@
  * - is not the correct page to view for information on using this lwIP demo.
  *******************************************************************************
  *
- * This project demonstrates use of the lwIP stack.  The lwIP raw API is 
- * demonstrated by a simple http server that comes as part of the lwIP 
+ * This project demonstrates use of the lwIP stack.  The lwIP raw API is
+ * demonstrated by a simple http server that comes as part of the lwIP
  * distribution - and executes in the tcpip task.  The lwIP sockets API
  * is demonstrated by a simple command line interpreter interface, which
  * executes in its own task.
@@ -81,9 +102,9 @@
  * executing as expected.  It maintains a status string that can be viewed on
  * the "task stats" page served by the web server.
  *
- * More information about this demo, including details of how to set up the 
+ * More information about this demo, including details of how to set up the
  * network interface, and the command line commands that are available, is
- * available on the documentation page for this demo on the 
+ * available on the documentation page for this demo on the
  * http://www.FreeRTOS.org web site.
  *
  */
@@ -122,8 +143,8 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 extern void lwIPAppsInit( void *pvArguments );
 
 /* Callbacks to handle the command line commands defined by the xTaskStats and
-xRunTimeStats command definitions respectively.  These functions are not 
-necessarily reentrant!  They must be used from one task only - or at least by 
+xRunTimeStats command definitions respectively.  These functions are not
+necessarily reentrant!  They must be used from one task only - or at least by
 only one task at a time. */
 static portBASE_TYPE prvTaskStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char * pcCommandString );
 static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t xWriteBufferLen, const signed char * pcCommandString );
@@ -131,7 +152,7 @@ static portBASE_TYPE prvRunTimeStatsCommand( signed char *pcWriteBuffer, size_t 
 /* The string that latches the current demo status. */
 static char *pcStatusMessage = "All tasks running without error";
 
-/* Variables used in the creation of the run time stats time base.  Run time 
+/* Variables used in the creation of the run time stats time base.  Run time
 stats record how much time each task spends in the Running state. */
 long long llInitialRunTimeCounterValue = 0LL, llRunTimeStatsDivisor = 0LL;
 
@@ -234,7 +255,7 @@ void vApplicationMallocFailedHook( void )
 {
 const unsigned long ulLongSleep = 1000UL;
 
-	/* Can be implemented if required, but probably not required in this 
+	/* Can be implemented if required, but probably not required in this
 	environment and running this demo. */
 	taskDISABLE_INTERRUPTS();
 	for( ;; )
@@ -248,7 +269,7 @@ void vApplicationStackOverflowHook( void )
 {
 const unsigned long ulLongSleep = 1000UL;
 
-	/* Can be implemented if required, but probably not required in this 
+	/* Can be implemented if required, but probably not required in this
 	environment and running this demo. */
 	taskDISABLE_INTERRUPTS();
 	for( ;; )
@@ -281,7 +302,7 @@ void vMainConfigureTimerForRunTimeStats( void )
 LARGE_INTEGER liPerformanceCounterFrequency, liInitialRunTimeValue;
 
 	/* Initialise the variables used to create the run time stats time base.
-	Run time stats record how much time each task spends in the Running 
+	Run time stats record how much time each task spends in the Running
 	state. */
 
 	if( QueryPerformanceFrequency( &liPerformanceCounterFrequency ) == 0 )
@@ -309,7 +330,7 @@ unsigned long ulReturn;
 	/* What is the performance counter value now? */
 	QueryPerformanceCounter( &liCurrentCount );
 
-	/* Subtract the performance counter value reading taken when the 
+	/* Subtract the performance counter value reading taken when the
 	application started to get a count from that reference point, then
 	scale to a 32 bit number. */
 	ulReturn = ( unsigned long ) ( ( liCurrentCount.QuadPart - llInitialRunTimeCounterValue ) / llRunTimeStatsDivisor );
@@ -333,7 +354,7 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 	strcpy( pcWriteBuffer, pcHeader );
 	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
 
-	/* There is no more data to return after this single string, so return 
+	/* There is no more data to return after this single string, so return
 	pdFALSE. */
 	return pdFALSE;
 }
@@ -354,7 +375,7 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 	strcpy( pcWriteBuffer, pcHeader );
 	vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
 
-	/* There is no more data to return after this single string, so return 
+	/* There is no more data to return after this single string, so return
 	pdFALSE. */
 	return pdFALSE;
 }

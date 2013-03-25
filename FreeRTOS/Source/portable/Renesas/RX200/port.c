@@ -73,7 +73,7 @@
 */
 
 /*-----------------------------------------------------------
- * Implementation of functions defined in portable.h for the SH2A port.
+ * Implementation of functions defined in portable.h for the RX200 port.
  *----------------------------------------------------------*/
 
 /* Scheduler includes. */
@@ -137,8 +137,10 @@ extern void vTaskSwitchContext( void );
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
+	/* Offset to end up on 8 byte boundary. */
+	pxTopOfStack--;
+
 	/* R0 is not included as it is the stack pointer. */
-	
 	*pxTopOfStack = 0x00;
 	pxTopOfStack--;
     *pxTopOfStack = 0x00;
@@ -146,16 +148,16 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
-	
+
 	/* When debugging it can be useful if every register is set to a known
 	value.  Otherwise code space can be saved by just setting the registers
 	that need to be set. */
 	#ifdef USE_FULL_REGISTER_INITIALISATION
 	{
 		pxTopOfStack--;
-		*pxTopOfStack = 0xffffffff;	/* r15. */
+		*pxTopOfStack = 0x12345678;	/* r15. */
 		pxTopOfStack--;
-		*pxTopOfStack = 0xeeeeeeee;
+		*pxTopOfStack = 0xaaaabbbb;
 		pxTopOfStack--;
 		*pxTopOfStack = 0xdddddddd;
 		pxTopOfStack--;
@@ -271,7 +273,9 @@ void vTickISR( void )
 	
 	/* Only select a new task if the preemptive scheduler is being used. */
 	#if( configUSE_PREEMPTION == 1 )
+	{
 		taskYIELD();
+	}
 	#endif
 }
 /*-----------------------------------------------------------*/

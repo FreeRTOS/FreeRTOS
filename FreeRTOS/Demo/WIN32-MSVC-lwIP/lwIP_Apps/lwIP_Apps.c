@@ -1,6 +1,8 @@
 /*
-    FreeRTOS V7.0.2 - Copyright (C) 2011 Real Time Engineers Ltd.
-	
+    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -27,28 +29,47 @@
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
+
+    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
     distribute a combined work that includes FreeRTOS without being obliged to
     provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    kernel.
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details. You should have received a copy of the GNU General Public License
+    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    viewed here: http://www.freertos.org/a00114.html and also obtained by
+    writing to Real Time Engineers Ltd., contact details for whom are available
+    on the FreeRTOS WEB site.
 
     1 tab == 4 spaces!
 
-    http://www.FreeRTOS.org - Documentation, latest information, license and
-    contact details.
+    ***************************************************************************
+     *                                                                       *
+     *    Having a problem?  Start by reading the FAQ "My application does   *
+     *    not run, what could be wrong?"                                     *
+     *                                                                       *
+     *    http://www.FreeRTOS.org/FAQHelp.html                               *
+     *                                                                       *
+    ***************************************************************************
 
-    http://www.SafeRTOS.com - A version that is certified for use in safety
-    critical systems.
 
-    http://www.OpenRTOS.com - Commercial support, development, porting,
-    licensing and training services.
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+    license and Real Time Engineers Ltd. contact details.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+    fully thread aware and reentrant UDP/IP stack.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
+    indemnification and middleware, under the OpenRTOS brand.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
 */
 
 #include "FreeRTOS.h"
@@ -65,8 +86,8 @@
 /* include the port-dependent configuration */
 #include "lwipcfg_msvc.h"
 
-/* Dimensions the cTxBuffer array - which is itself used to hold replies from 
-command line commands.  cTxBuffer is a shared buffer, so protected by the 
+/* Dimensions the cTxBuffer array - which is itself used to hold replies from
+command line commands.  cTxBuffer is a shared buffer, so protected by the
 xTxBufferMutex mutex. */
 #define lwipappsTX_BUFFER_SIZE	1024
 
@@ -74,7 +95,7 @@ xTxBufferMutex mutex. */
 available. */
 #define lwipappsMAX_TIME_TO_WAIT_FOR_TX_BUFFER_MS	( 100 / portTICK_RATE_MS )
 
-/* Definitions of the various SSI callback functions within the pccSSITags 
+/* Definitions of the various SSI callback functions within the pccSSITags
 array.  If pccSSITags is updated, then these definitions must also be updated. */
 #define ssiTASK_STATS_INDEX			0
 #define ssiRUN_TIME_STATS_INDEX		1
@@ -95,9 +116,9 @@ static unsigned short uslwIPAppsSSIHandler( int iIndex, char *pcBuffer, int iBuf
 /*-----------------------------------------------------------*/
 
 /* The SSI strings that are embedded in the served html files.  If this array
-is changed, then the index position defined by the #defines such as 
+is changed, then the index position defined by the #defines such as
 ssiTASK_STATS_INDEX above must also be updated. */
-static const char *pccSSITags[] = 
+static const char *pccSSITags[] =
 {
 	"rtos_stats",
 	"run_stats"
@@ -106,11 +127,11 @@ static const char *pccSSITags[] =
 /* Semaphore used to guard the Tx buffer. */
 static xSemaphoreHandle xTxBufferMutex = NULL;
 
-/* The Tx buffer itself.  This is used to hold the text generated by the 
-execution of command line commands, and (hopefully) the execution of 
+/* The Tx buffer itself.  This is used to hold the text generated by the
+execution of command line commands, and (hopefully) the execution of
 server side include callbacks.  It is a shared buffer so protected by the
-xTxBufferMutex mutex.  pcLwipAppsBlockingGetTxBuffer() and 
-vLwipAppsReleaseTxBuffer() are provided to obtain and release the 
+xTxBufferMutex mutex.  pcLwipAppsBlockingGetTxBuffer() and
+vLwipAppsReleaseTxBuffer() are provided to obtain and release the
 xTxBufferMutex respectively.  pcLwipAppsBlockingGetTxBuffer() must be used with
 caution as it has the potential to block. */
 static signed char cTxBuffer[ lwipappsTX_BUFFER_SIZE ];
@@ -143,7 +164,7 @@ static struct netif xNetIf;
 	/* Install the server side include handler. */
 	http_set_ssi_handler( uslwIPAppsSSIHandler, pccSSITags, sizeof( pccSSITags ) / sizeof( char * ) );
 
-	/* Create the mutex used to ensure mutual exclusive access to the Tx 
+	/* Create the mutex used to ensure mutual exclusive access to the Tx
 	buffer. */
 	xTxBufferMutex = xSemaphoreCreateMutex();
 	configASSERT( xTxBufferMutex );
@@ -169,7 +190,7 @@ extern char *pcMainGetTaskStatusMessage( void );
 
 	/* The SSI handler function that generates text depending on the index of
 	the SSI tag encountered. */
-	
+
 	switch( iIndex )
 	{
 		case ssiTASK_STATS_INDEX :

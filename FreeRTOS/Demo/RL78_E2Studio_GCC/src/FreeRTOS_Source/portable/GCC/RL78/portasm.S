@@ -72,9 +72,6 @@
     mission critical applications that require provable dependability.
 */
 
-/* INCLUDED_FROM_FREERTOS_ASM_FILE is defined before FreeRTOSConfig.h so non
-assembly compatible definitions within the header file can be omitted. */
-#define INCLUDED_FROM_FREERTOS_ASM_FILE
 #include "FreeRTOSConfig.h"
 #include "ISR_Support.h"
 

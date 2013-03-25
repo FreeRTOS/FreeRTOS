@@ -111,9 +111,17 @@ volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
 
 /*
- * Sets up the periodic ISR used for the RTOS tick.
+ * Sets up the periodic ISR used for the RTOS tick using the interval timer.
+ * The application writer can define configSETUP_TIMER_INTERRUPT() (in
+ * FreeRTOSConfig.h) such that their own tick interrupt configuration is used
+ * in place of prvSetupTimerInterrupt().
  */
 static void prvSetupTimerInterrupt( void );
+#ifndef configSETUP_TIMER_INTERRUPT
+	/* The user has not provided their own tick interrupt configuration so use
+    the definition in this file (which uses the interval timer). */
+	#define configSETUP_TIMER_INTERRUPT() prvSetupTimerInterrupt()
+#endif /* configSETUP_TIMER_INTERRUPT */
 
 /*
  * Defined in portasm.s87, this function starts the scheduler by loading the
@@ -200,7 +208,7 @@ unsigned long *pulLocal;
 	first starts. */
 	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;
 
-	/* Return a pointer to the top of the stack that has beene generated so it
+	/* Return a pointer to the top of the stack that has been generated so it
 	can	be stored in the task control block for the task. */
 	return pxTopOfStack;
 }
@@ -210,20 +218,25 @@ portBASE_TYPE xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
-	prvSetupTimerInterrupt();
+	configSETUP_TIMER_INTERRUPT();
 
 	/* Restore the context of the first task that is going to run. */
 	vPortStartFirstTask();
 
-	/* Execution should not reach here as the tasks are now running! */
+	/* Execution should not reach here as the tasks are now running!
+	prvSetupTimerInterrupt() is called here to prevent the compiler outputting
+	a warning about a statically declared function not being referenced in the
+	case that the application writer has provided their own tick interrupt
+	configuration routine (and defined configSETUP_TIMER_INTERRUPT() such that
+	their own routine will be called in place of prvSetupTimerInterrupt()). */
+	prvSetupTimerInterrupt();
 	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the RL78/G13 port will get stopped.  If required simply
-	disable the tick interrupt here. */
+	/* It is unlikely that the RL78 port will get stopped. */
 }
 /*-----------------------------------------------------------*/
 

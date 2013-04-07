@@ -127,7 +127,9 @@ static inline void bpm_sleep(Bpm *bpm, uint32_t sleep_mode)
 	 * Please note that we should probably use something like
 	 * cpu_leave_critical(), using set_pri_mask(0)
 	 */
-	cpu_irq_enable();
+	/* In this demo interrupts are managed by the FreeRTOS kernel and must not
+	be altered here so the following line has been removed _RB_
+	cpu_irq_enable(); */
 }
 
 

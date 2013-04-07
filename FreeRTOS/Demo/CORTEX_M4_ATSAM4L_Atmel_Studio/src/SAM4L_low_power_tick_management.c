@@ -263,6 +263,7 @@ void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 uint32_t ulAlarmValue, ulCompleteTickPeriods;
 eSleepModeStatus eSleepAction;
 portTickType xModifiableIdleTime;
+enum sleepmgr_mode xSleepMode;
 
 	/* THIS FUNCTION IS CALLED WITH THE SCHEDULER SUSPENDED. */
 
@@ -332,8 +333,14 @@ portTickType xModifiableIdleTime;
 		instruction. */
 		if( xModifiableIdleTime > 0 )
 		{
-			/* Sleep until something happens. */
-			sleepmgr_enter_sleep();
+			/* Find the deepest allowable sleep mode. */
+			xSleepMode = sleepmgr_get_sleep_mode();
+
+			if( xSleepMode != SLEEPMGR_ACTIVE )
+			{
+				/* Sleep until something happens. */
+				bpm_sleep( BPM, xSleepMode );
+			}
 		}
 
 		/* Allow the application to define some post sleep processing. */
@@ -347,7 +354,6 @@ portTickType xModifiableIdleTime;
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
-#warning The sleep manager will have re-enabled interrupts already, does this matter?
 		__asm volatile( "cpsie i" );
 
 		if( ulTickFlag != pdFALSE )

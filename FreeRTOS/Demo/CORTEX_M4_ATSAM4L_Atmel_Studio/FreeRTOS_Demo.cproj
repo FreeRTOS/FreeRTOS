@@ -132,14 +132,14 @@
     <com_atmel_avrdbg_tool_samice>
       <ToolType>com.atmel.avrdbg.tool.samice</ToolType>
       <ToolName>J-Link-OB-SAM3U128</ToolName>
-      <ToolNumber>000480008423</ToolNumber>
+      <ToolNumber>000480008435</ToolNumber>
       <KeepTimersRunning>true</KeepTimersRunning>
       <OverrideVtor>false</OverrideVtor>
       <OverrideVtorValue>
       </OverrideVtorValue>
       <Channel>
         <host>127.0.0.1</host>
-        <port>4788</port>
+        <port>1882</port>
         <ssl>False</ssl>
       </Channel>
       <ToolOptions>
@@ -273,118 +273,118 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <ArmGcc>
-  <armgcc.common.general.symbols>__ATSAM4LC4C__</armgcc.common.general.symbols>
-  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
-  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
-  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
-  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
-  <armgcc.common.outputfiles.srec>True</armgcc.common.outputfiles.srec>
-  <armgcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>BOARD=SAM4L_EK</Value>
-      <Value>ARM_MATH_CM4=true</Value>
-      <Value>__SAM4LC4C__</Value>
-    </ListValues>
-  </armgcc.compiler.symbols.DefSymbols>
-  <armgcc.compiler.directories.DefaultIncludePath>False</armgcc.compiler.directories.DefaultIncludePath>
-  <armgcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../src/asf/sam/utils/preprocessor</Value>
-      <Value>../src/asf/sam/drivers/lcdca/example/sam4lc4c_sam4l_ek</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4l/include</Value>
-      <Value>../src/asf/common/services/sleepmgr</Value>
-      <Value>../src/asf/sam/utils</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/sam/drivers/flashcalw</Value>
-      <Value>../src/asf/sam/boards</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/sam/drivers/bpm</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
-      <Value>../src/asf/sam/boards/sam4l_ek</Value>
-      <Value>../src/asf/sam/utils/header_files</Value>
-      <Value>../src/asf/common/services/ioport</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4l/source/templates</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-      <Value>../src</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/sam/drivers/ast</Value>
-      <Value>../../../Source/include</Value>
-      <Value>../../../Source/portable/GCC/ARM_CM3</Value>
-      <Value>../../Common/include</Value>
-    </ListValues>
-  </armgcc.compiler.directories.IncludePaths>
-  <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
-  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
-  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
-  <armgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wmissing-field-initializers</armgcc.compiler.miscellaneous.OtherFlags>
-  <armgcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>arm_cortexM4l_math</Value>
-      <Value>m</Value>
-    </ListValues>
-  </armgcc.linker.libraries.Libraries>
-  <armgcc.linker.libraries.LibrarySearchPaths>
-    <ListValues>
-      <Value>../cmsis/linkerScripts</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-    </ListValues>
-  </armgcc.linker.libraries.LibrarySearchPaths>
-  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
-  <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
-  <armgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/asf/sam/utils/preprocessor</Value>
-      <Value>../src/asf/sam/drivers/lcdca/example/sam4lc4c_sam4l_ek</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4l/include</Value>
-      <Value>../src/asf/common/services/sleepmgr</Value>
-      <Value>../src/asf/sam/utils</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/sam/drivers/flashcalw</Value>
-      <Value>../src/asf/sam/boards</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/sam/drivers/bpm</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
-      <Value>../src/asf/sam/boards/sam4l_ek</Value>
-      <Value>../src/asf/sam/utils/header_files</Value>
-      <Value>../src/asf/common/services/ioport</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4l/source/templates</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-      <Value>../src</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/sam/drivers/ast</Value>
-    </ListValues>
-  </armgcc.assembler.general.IncludePaths>
-  <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
-  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4L_EK -D__ATSAM4LC4C__</armgcc.preprocessingassembler.general.AssemblerFlags>
-  <armgcc.preprocessingassembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/asf/sam/utils/preprocessor</Value>
-      <Value>../src/asf/sam/drivers/lcdca/example/sam4lc4c_sam4l_ek</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4l/include</Value>
-      <Value>../src/asf/common/services/sleepmgr</Value>
-      <Value>../src/asf/sam/utils</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/sam/drivers/flashcalw</Value>
-      <Value>../src/asf/sam/boards</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/sam/drivers/bpm</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Include</Value>
-      <Value>../src/asf/sam/boards/sam4l_ek</Value>
-      <Value>../src/asf/sam/utils/header_files</Value>
-      <Value>../src/asf/common/services/ioport</Value>
-      <Value>../src/asf/sam/utils/cmsis/sam4l/source/templates</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
-      <Value>../src</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/sam/drivers/ast</Value>
-    </ListValues>
-  </armgcc.preprocessingassembler.general.IncludePaths>
-  <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
-</ArmGcc>
+        <armgcc.common.general.symbols>__ATSAM4LC4C__</armgcc.common.general.symbols>
+        <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+        <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+        <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+        <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+        <armgcc.common.outputfiles.srec>True</armgcc.common.outputfiles.srec>
+        <armgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>BOARD=SAM4L_EK</Value>
+            <Value>ARM_MATH_CM4=true</Value>
+            <Value>__SAM4LC4C__</Value>
+          </ListValues>
+        </armgcc.compiler.symbols.DefSymbols>
+        <armgcc.compiler.directories.DefaultIncludePath>False</armgcc.compiler.directories.DefaultIncludePath>
+        <armgcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/sam/drivers/lcdca/example/sam4lc4c_sam4l_ek</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4l/include</Value>
+            <Value>../src/asf/common/services/sleepmgr</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/sam/drivers/flashcalw</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/sam/drivers/bpm</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/sam/boards/sam4l_ek</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/common/services/ioport</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4l/source/templates</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/sam/drivers/ast</Value>
+            <Value>../../../Source/include</Value>
+            <Value>../../../Source/portable/GCC/ARM_CM3</Value>
+            <Value>../../Common/include</Value>
+          </ListValues>
+        </armgcc.compiler.directories.IncludePaths>
+        <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
+        <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+        <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+        <armgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wmissing-field-initializers</armgcc.compiler.miscellaneous.OtherFlags>
+        <armgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>arm_cortexM4l_math</Value>
+            <Value>m</Value>
+          </ListValues>
+        </armgcc.linker.libraries.Libraries>
+        <armgcc.linker.libraries.LibrarySearchPaths>
+          <ListValues>
+            <Value>../cmsis/linkerScripts</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+          </ListValues>
+        </armgcc.linker.libraries.LibrarySearchPaths>
+        <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+        <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
+        <armgcc.assembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/sam/drivers/lcdca/example/sam4lc4c_sam4l_ek</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4l/include</Value>
+            <Value>../src/asf/common/services/sleepmgr</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/sam/drivers/flashcalw</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/sam/drivers/bpm</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/sam/boards/sam4l_ek</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/common/services/ioport</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4l/source/templates</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/sam/drivers/ast</Value>
+          </ListValues>
+        </armgcc.assembler.general.IncludePaths>
+        <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
+        <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4L_EK -D__ATSAM4LC4C__</armgcc.preprocessingassembler.general.AssemblerFlags>
+        <armgcc.preprocessingassembler.general.IncludePaths>
+          <ListValues>
+            <Value>../src/asf/sam/utils/preprocessor</Value>
+            <Value>../src/asf/sam/drivers/lcdca/example/sam4lc4c_sam4l_ek</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4l/include</Value>
+            <Value>../src/asf/common/services/sleepmgr</Value>
+            <Value>../src/asf/sam/utils</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/sam/drivers/flashcalw</Value>
+            <Value>../src/asf/sam/boards</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/sam/drivers/bpm</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Include</Value>
+            <Value>../src/asf/sam/boards/sam4l_ek</Value>
+            <Value>../src/asf/sam/utils/header_files</Value>
+            <Value>../src/asf/common/services/ioport</Value>
+            <Value>../src/asf/sam/utils/cmsis/sam4l/source/templates</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/asf/thirdparty/CMSIS/Lib/GCC</Value>
+            <Value>../src</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/sam/drivers/ast</Value>
+          </ListValues>
+        </armgcc.preprocessingassembler.general.IncludePaths>
+        <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
+      </ArmGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>

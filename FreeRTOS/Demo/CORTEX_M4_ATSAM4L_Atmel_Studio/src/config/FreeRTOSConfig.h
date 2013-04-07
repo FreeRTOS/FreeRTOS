@@ -87,12 +87,14 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
+#include "asf.h"
+
 /* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
 #define configCREATE_LOW_POWER_DEMO	1
 
 #if configCREATE_LOW_POWER_DEMO == 1
-	#define configCPU_CLOCK_HZ				16384 /*( sysclk_get_cpu_hz() )*/
+	#define configCPU_CLOCK_HZ				16384
 	#define configSYSTICK_CLOCK_HZ			16384
 	#define configUSE_TICKLESS_IDLE			1
 	#define configTICK_RATE_HZ				( ( portTickType ) 128 )

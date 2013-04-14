@@ -170,7 +170,6 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 header file. */
 void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled();
-#define INCLUDE_MODULE_TEST 0
 
 /* The configPRE_SLEEP_PROCESSING() and configPOST_SLEEP_PROCESSING() macros
 allow the application writer to add additional code before and after the MCU is

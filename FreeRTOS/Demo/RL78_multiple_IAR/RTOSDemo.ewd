@@ -348,7 +348,7 @@
         </option>
         <option>
           <name>DynDriver</name>
-          <state>TKRL78</state>
+          <state>SIMRL78</state>
         </option>
         <option>
           <name>DebugDDFOverride</name>

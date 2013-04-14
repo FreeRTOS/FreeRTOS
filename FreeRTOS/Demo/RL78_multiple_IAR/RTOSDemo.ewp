@@ -978,7 +978,7 @@
         </option>
         <option>
           <name>GenHwSupport</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenLibInFormatter</name>
@@ -4473,9 +4473,6 @@
         <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\main_full.c</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
       </file>
     </group>
@@ -4487,6 +4484,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\main_blinky.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main_full.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\RegTest.s87</name>

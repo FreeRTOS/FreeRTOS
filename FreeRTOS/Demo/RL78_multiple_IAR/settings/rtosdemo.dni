@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=573869402
+Checksum=-1618849359
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -147,6 +147,31 @@ ByteLimit=50
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[DataSample]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[TraceHelper]
+Enabled=0
+ShowSource=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
+[Breakpoints]
+Count=0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -171,35 +196,10 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Trace1]
-Enabled=0
-ShowSource=1
-[DataSample]
-LogEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[TraceHelper]
-Enabled=0
-ShowSource=1
-[CallStackLog]
-Enabled=0
-[DriverProfiling]
-Enabled=0
-Mode=0
-Graph=0
-Symbiont=0
-Exclusions=
-[Breakpoints]
-Count=0
 [Aliases]
 A0=_ "C:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87" "E:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87"
 Count=1
 SuppressDialog=1
+[Trace1]
+Enabled=0
+ShowSource=1

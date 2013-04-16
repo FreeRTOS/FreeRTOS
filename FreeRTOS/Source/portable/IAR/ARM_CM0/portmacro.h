@@ -116,11 +116,11 @@ extern "C" {
 
 
 /* Scheduler utilities. */
-extern void vPortYieldFromISR( void );
-
-#define portYIELD()					vPortYieldFromISR()
-
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYieldFromISR()
+extern void vPortYield( void );
+#define portNVIC_INT_CTRL			( ( volatile unsigned long *) 0xe000ed04 )
+#define portNVIC_PENDSVSET			0x10000000
+#define portYIELD()					vPortYield()
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) 	*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET
 /*-----------------------------------------------------------*/
 
 

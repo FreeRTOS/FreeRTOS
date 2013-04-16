@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -210,10 +210,15 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYieldFromISR( void )
+void vPortYield( void )
 {
 	/* Set a PendSV to request a context switch. */
 	*( portNVIC_INT_CTRL ) = portNVIC_PENDSVSET;
+
+	/* Barriers are normally not required but do ensure the code is completely
+	within the specified behaviour for the architecture. */
+	__asm volatile( "dsb" );
+	__asm volatile( "isb" );
 }
 /*-----------------------------------------------------------*/
 
@@ -221,6 +226,8 @@ void vPortEnterCritical( void )
 {
     portDISABLE_INTERRUPTS();
     uxCriticalNesting++;
+	__asm volatile( "dsb" );
+	__asm volatile( "isb" );
 }
 /*-----------------------------------------------------------*/
 

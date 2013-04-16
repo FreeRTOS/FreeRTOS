@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -83,12 +83,10 @@
 /* Constants required to manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL		( ( volatile unsigned long * ) 0xe000e010 )
 #define portNVIC_SYSTICK_LOAD		( ( volatile unsigned long * ) 0xe000e014 )
-#define portNVIC_INT_CTRL			( ( volatile unsigned long * ) 0xe000ed04 )
 #define portNVIC_SYSPRI2			( ( volatile unsigned long * ) 0xe000ed20 )
 #define portNVIC_SYSTICK_CLK		0x00000004
 #define portNVIC_SYSTICK_INT		0x00000002
 #define portNVIC_SYSTICK_ENABLE		0x00000001
-#define portNVIC_PENDSVSET			0x10000000
 #define portNVIC_PENDSV_PRI			( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 16 )
 #define portNVIC_SYSTICK_PRI		( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24 )
 
@@ -204,10 +202,15 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYieldFromISR( void )
+void vPortYield( void )
 {
 	/* Set a PendSV to request a context switch. */
 	*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
+
+	/* Barriers are normally not required but do ensure the code is completely
+	within the specified behaviour for the architecture. */
+	__DSB();
+	__ISB();
 }
 /*-----------------------------------------------------------*/
 
@@ -215,6 +218,8 @@ void vPortEnterCritical( void )
 {
 	portDISABLE_INTERRUPTS();
 	ulCriticalNesting++;
+	__DSB();
+	__ISB();
 }
 /*-----------------------------------------------------------*/
 

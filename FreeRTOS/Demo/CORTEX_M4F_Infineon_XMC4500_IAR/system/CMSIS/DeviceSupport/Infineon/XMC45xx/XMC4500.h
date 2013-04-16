@@ -6,7 +6,7 @@
 * @date     23 Feb 2012
 *
 Copyright (C) 2011-2012 Infineon Technologies AG. All rights reserved.
-* 
+*
 *
 * @par
 * Infineon Technologies AG (Infineon) is supplying this software for use with Infineon's
@@ -39,7 +39,7 @@ Copyright (C) 2011-2012 Infineon Technologies AG. All rights reserved.
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 
 
@@ -52,11 +52,11 @@ extern "C" {
 #elif defined(__ICCARM__)
   #pragma language=extended
 #elif defined(__GNUC__)
-  /* anonymous unions are enabled by default */ 
+  /* anonymous unions are enabled by default */
   #elif defined(__TMS470__)
-/* anonymous unions are enabled by default */ 
+/* anonymous unions are enabled by default */
 #elif defined(__TASKING__)
-  #pragma warning 586 
+  #pragma warning 586
 #else
   #warning Not supported compiler type
 #endif
@@ -187,7 +187,7 @@ USIC1_2_IRQn            =  92,      /*!< USIC1 SR2 Interrupt                    
 USIC1_3_IRQn            =  93,      /*!< USIC1 SR3 Interrupt                      */
 USIC1_4_IRQn            =  94,      /*!< USIC1 SR4 Interrupt                      */
 USIC1_5_IRQn            =  95,      /*!< USIC1 SR5 Interrupt                      */
-USIC2_0_IRQn            =  96,      /*!< USIC2 SR0 Interrupt                      */   
+USIC2_0_IRQn            =  96,      /*!< USIC2 SR0 Interrupt                      */
 USIC2_1_IRQn            =  97,      /*!< USIC2 SR1 Interrupt                      */
 USIC2_2_IRQn            =  98,      /*!< USIC2 SR2 Interrupt                      */
 USIC2_3_IRQn            =  99,      /*!< USIC2 SR3 Interrupt                      */
@@ -214,7 +214,7 @@ GPDMA1_0_IRQn           = 110       /*!< GPDMA1 SR0 Interrupt                   
                      reg &= ~(mask);\
                      reg |= (val << pos) & mask;\
                     }
-                  
+
 /** Macro to read the bits in register */
 #define RD_REG(reg, mask, pos)            (((reg)&mask) >> pos)
 /** Macro to set the particular bit in register */
@@ -233,7 +233,7 @@ GPDMA1_0_IRQn           = 110       /*!< GPDMA1 SR0 Interrupt                   
 /*                     CAN                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *CAN GLOBAL registers
   */
 typedef struct {
@@ -254,7 +254,7 @@ __IO uint32_t	MCR; /*!<Module Control Register Offset  0x01C8*/
 __O uint32_t	MITR; /*!<Module Interrupt Trigger Register Offset  0x01CC*/
 }CAN_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *CAN NODE registers
   */
 typedef struct {
@@ -267,7 +267,7 @@ __IO uint32_t	NECNT; /*!<Node 0 Error Counter Register Offset  0x0214*/
 __IO uint32_t	NFCR; /*!<Node 0 Frame Counter Register Offset  0x0218*/
 }CAN_NODE_TypeDef;
 
-  /* 
+  /*
   *CAN MO registers
   */
 typedef struct {
@@ -430,7 +430,7 @@ __I uint32_t	MOSTAT; /*!<Message Object 0 Status Register Offset  0x101C*/
 /*                     CCU4x                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *CAPCOM4 Global Registers
   */
 typedef struct {
@@ -447,7 +447,7 @@ __I  uint32_t	RESERVED2[11];
 __I uint32_t	MIDR; /*!<Module Identification Offset  0x0080*/
 }CCU4_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *CC40 Registers
   */
 typedef struct {
@@ -515,7 +515,7 @@ __O uint32_t	SWR; /*!<Interrupt Status Clear Offset  0x01B0*/
 /*                     CCU8x                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *CAPCOM8 Global Registers
   */
 typedef struct {
@@ -533,7 +533,7 @@ __I  uint32_t	RESERVED2[11];
 __I uint32_t	MIDR; /*!<Module Identification Offset  0x0080*/
 }CCU8_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *CC8x Registers
   */
 typedef struct {
@@ -595,7 +595,7 @@ __O uint32_t	SWR; /*!<Interrupt Status Clear Offset  0x01B0*/
 /*                     DAC                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *DAC Kernel Registers
   */
 typedef struct {
@@ -624,7 +624,7 @@ __IO uint32_t	DAC1PATH; /*!<DAC1 Higher Pattern Register Offset  0x002C*/
 /*                     DLR                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *DLR registers
   */
 typedef struct {
@@ -646,7 +646,7 @@ __IO uint32_t	LNEN; /*!<GPDMA Line Enable Offset  0x0010*/
 /*                     GPDMA1                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Channel Related registers
   */
 typedef struct {
@@ -661,7 +661,7 @@ __IO uint32_t	CFGL; /*!<Configuration Register for Channel 0 Low Word Offset  0x
 __IO uint32_t	CFGH; /*!<Configuration Register for Channel 0 High Word Offset  0x0044*/
 }GPDMA1_CH_TypeDef;
 
-  /* 
+  /*
   *GPDMA1 Global registers
   */
 typedef struct {
@@ -748,7 +748,7 @@ __I uint32_t	VERSION; /*!<DMA Component Version Offset  0x03FC*/
 /*                     GPDMA0                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Channel Related registers
   */
 typedef struct {
@@ -775,7 +775,7 @@ __I  uint32_t	RESERVED8;
 __IO uint32_t	DSR; /*!<Destination Scatter Register for Channel 0 Offset  0x0050*/
 }GPDMA0_CH_TypeDef;
 
-  /* 
+  /*
   *GPDMA0 Global registers
   */
 typedef struct {
@@ -870,7 +870,7 @@ __I uint32_t	VERSION; /*!<DMA Component Version Offset  0x03FC*/
 /*                     DSD                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *DSD Global Registers
   */
 typedef struct {
@@ -890,7 +890,7 @@ __IO uint32_t	EVFLAG; /*!<Event Flag Register Offset  0x00E0*/
 __O uint32_t	EVFLAGCLR; /*!<Event Flag Clear Register Offset  0x00E4*/
 }DSD_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *DSD CHANNEL Registers
   */
 typedef struct {
@@ -934,63 +934,10 @@ __IO uint32_t	RECTCFG; /*!<Rectification Configuration Register 0 Offset  0x01A8
 #define   DSD_CH3		 ((DSD_CH_TypeDef*)(DSD_BASE + DSD_CH3_BASE))
 
 /***************************************************************************/
-/*                     DWT                          */
-/***************************************************************************/
-
-  /* 
-  *Cortex M4 - Data Watchpoint and Trace
-  */
-typedef struct {                            /*!< DWT Structure                         */
-  __IO uint32_t  DWT_CTRL;                  /*!< Use the DWT Control Register to enable the DWT unit. */
-  __IO uint32_t  DWT_CYCCNT;                /*!< The DWT_CYCCNT register characteristics are:Purpose Shows or sets the value of the processor cycle counter, CYCCNT.Usage constraints The DWT unit suspends CYCCNT counting when the processor is in Debug state.Configurations Implemented only when DWT_CTRL.NOCYCCNT is RAZ, see Control register, DWT_CTRL on page C1-879.When DWT_CTRL.NOCYCCNT is RAO no cycle counter is implemented and this register is UNK/SBZP.For more information see CYCCNT cycle counter and related timers on page C1-871. */
-  __IO uint32_t  DWT_CPICNT;                /*!< The DWT_CPICNT register characteristics are:Purpose Counts additional cycles required to execute multi-cycle instructions and instruction fetch stalls.Usage constraints The counter initializes to 0 when software enables its counter overflow event by setting the DWT_CTRL.CPIEVTENA bit to 1.Configurations Implemented only when DWT_CTRL.NOPRFCNT is RAZ, see Control register, DWT_CTRL on page C1-879.If DWT_CTRL.NOPRFCNT is RAO, indicating that the implementation does not include the profiling counters, this re */
-  __IO uint32_t  DWT_EXCCNT;                /*!< The DWT_EXCCNT register characteristics are:Purpose Counts the total cycles spent in exception processingUsage constraints The counter initializes to 0 when software enables its counter overflow event by setting the DWT_CTRL.EXCEVTENA bit to 1.Configurations Implemented only when DWT_CTRL.NOPRFCNT is RAZ, see Control register, DWT_CTRL on page C1-879.If DWT_CTRL.NOPRFCNT is RAO, indicating that the implementation does not include the profiling counters, this register is UNK/SBZP.For more information see Pr */
-  __IO uint32_t  DWT_SLEEPCNT;              /*!< The DWT_SLEEPCNT register characteristics are:Purpose Counts the total number of cycles that the processor is sleeping.Usage constraints The counter initializes to 0 when software enables its counter overflow event by setting the DWT_CTRL.SLEEPEVTENA bit to 1.Configurations Implemented only when DWT_CTRL.NOPRFCNT is RAZ, see Control register, DWT_CTRL on page C1-879.If DWT_CTRL.NOPRFCNT is RAO, indicating that the implementation does not include the profiling counters, this register is UNK/SBZP.ARM recomme */
-  __IO uint32_t  DWT_LSUCNT;                /*!< The DWT_LSUCNT register characteristics are:Purpose Increments on the additional cycles required to execute all load or store instructionsUsage constraints The counter initializes to 0 when software enables its counter overflow event by setting the DWT_CTRL.LSUEVTENA bit to 1.Configurations Implemented only when DWT_CTRL.NOPRFCNT is RAZ, see Control register, DWT_CTRL on page C1-879.If DWT_CTRL.NOPRFCNT is RAO, indicating that the implementation does not include the profiling counters, this register is UNK */
-  __IO uint32_t  DWT_FOLDCNT;               /*!< The DWT_FOLDCNT register characteristics are:Purpose Increments on each instruction that takes 0 cycles.Usage constraints The counter initializes to 0 when software enables its counter overflow event by setting the DWT_CTRL.FOLDEVTENA bit to 1. If an implementation includes profiling counters but does not support instruction folding, this counter can be RAZ/WI.Configurations Implemented only when DWT_CTRL.NOPRFCNT is RAZ, see Control register, DWT_CTRL on page C1-879.If DWT_CTRL.NOPRFCNT is RAO, indicating */
-  __I  uint32_t  DWT_PCSR;                  /*!< The DWT_PCSR characteristics are:Purpose Samples the current value of the program counter.Usage constraints There are no usage constraints.NoteBit [0] of any sampled value is RAZ and does not reflect instruction set state as it does in a PC sample on the ARMv7-A and ARMv7-R architecture profiles.Configurations An optional feature. Register is RAZ/WI if not implemented.For more information see Program counter sampling support on page C1-877. */
-  __IO uint32_t  DWT_COMP0;                 /*!< The DWT_COMP0 register characteristics are:Purpose Provides a reference value for use by comparator 0.Usage constraints The operation of comparator 0 depends also on the registers DWT_MASK0 and DWT_FUNCTION0, see Comparator Mask registers, DWT_MASKn on page C1-892 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP defines the number of implemented DWT_COMPn registers */
-  __IO uint32_t  DWT_MASK0;                 /*!< The DWT_MASK0 register characteristics are:Purpose Provides the size of the ignore mask applied to the access address for address range matching by comparator 0.Usage constraints The operation of comparator 0 depends also on the registers DWT_COMP0 and DWT_FUNCTION0, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP */
-  __IO uint32_t  DWT_FUNCTION0;             /*!< The DWT_FUNCTION0 register characteristics are:Purpose Controls the operation of comparator 0.Usage constraints The operation of comparator 0 depends also on the registers DWT_COMP0 and DWT_MASK0, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Mask registers, DWT_MASKn on page C1-892.Reading this register clears some fields to zero. See the field descriptions in Table C1-39 on page C1-894 for more information, and for the usage constraints of individual fields.Configurations Implemented  */
-  __I  uint32_t  RESERVED0;
-  __IO uint32_t  DWT_COMP1;                 /*!< The DWT_COMP1 register characteristics are:Purpose Provides a reference value for use by comparator n.Usage constraints The operation of comparator 1 depends also on the registers DWT_MASK1 and DWT_FUNCTION1, see Comparator Mask registers, DWT_MASKn on page C1-892 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP defines the number of implemented DWT_COMPn registers */
-  __IO uint32_t  DWT_MASK1;                 /*!< The DWT_MASK1 register characteristics are:Purpose Provides the size of the ignore mask applied to the access address for address range matching by comparator 1.Usage constraints The operation of comparator 1 depends also on the registers DWT_COMP1 and DWT_FUNCTION1, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP */
-  __IO uint32_t  DWT_FUNCTION1;             /*!< The DWT_FUNCTION1 register characteristics are:Purpose Controls the operation of comparator 1.Usage constraints The operation of comparator 1 depends also on the registers DWT_COMP1 and DWT_MASK1, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Mask registers, DWT_MASKn on page C1-892.Reading this register clears some fields to zero. See the field descriptions in Table C1-39 on page C1-894 for more information, and for the usage constraints of individual fields.Configurations Implemented  */
-  __I  uint32_t  RESERVED1;
-  __IO uint32_t  DWT_COMP2;                 /*!< The DWT_COMP2 register characteristics are:Purpose Provides a reference value for use by comparator n.Usage constraints The operation of comparator n depends also on the registers DWT_MASK2 and DWT_FUNCTION2, see Comparator Mask registers, DWT_MASKn on page C1-892 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP defines the number of implemented DWT_COMPn registers */
-  __IO uint32_t  DWT_MASK2;                 /*!< The DWT_MASK2 register characteristics are:Purpose Provides the size of the ignore mask applied to the access address for address range matching by comparator 2.Usage constraints The operation of comparator 2 depends also on the registers DWT_COMP2 and DWT_FUNCTION2, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP */
-  __IO uint32_t  DWT_FUNCTION2;             /*!< The DWT_FUNCTION2 register characteristics are:Purpose Controls the operation of comparator 2.Usage constraints The operation of comparator 2 depends also on the registers DWT_COMP2 and DWT_MASK2, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Mask registers, DWT_MASKn on page C1-892.Reading this register clears some fields to zero. See the field descriptions in Table C1-39 on page C1-894 for more information, and for the usage constraints of individual fields.Configurations Implemented  */
-  __I  uint32_t  RESERVED2;
-  __IO uint32_t  DWT_COMP3;                 /*!< The DWT_COMP3 register characteristics are:Purpose Provides a reference value for use by comparator n.Usage constraints The operation of comparator 3 depends also on the registers DWT_MASK3 and DWT_FUNCTION3, see Comparator Mask registers, DWT_MASKn on page C1-892 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP defines the number of implemented DWT_COMPn registers */
-  __IO uint32_t  DWT_MASK3;                 /*!< The DWT_MASK3 register characteristics are:Purpose Provides the size of the ignore mask applied to the access address for address range matching by comparator 3.Usage constraints The operation of comparator 3 depends also on the registers DWT_COMP3 and DWT_FUNCTION3, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Function registers, DWT_FUNCTIONn on page C1-893.Configurations Implemented only when DWT_CTRL.NUMCOMP is nonzero, see Control register, DWT_CTRL on page C1-879.DWT_CTRL.NUMCOMP */
-  __IO uint32_t  DWT_FUNCTION3;             /*!< The DWT_FUNCTION3 register characteristics are:Purpose Controls the operation of comparator 3.Usage constraints The operation of comparator 3 depends also on the registers DWT_COMP3 and DWT_MASK3, see Comparator registers, DWT_COMPn on page C1-891 and Comparator Mask registers, DWT_MASKn on page C1-892.Reading this register clears some fields to zero. See the field descriptions in Table C1-39 on page C1-894 for more information, and for the usage constraints of individual fields.Configurations Implemented  */
-  __I  uint32_t  RESERVED3[989];
-  __I  uint32_t  DWTPID4;                   /*!< Peripheral identification register4   */
-  __I  uint32_t  DWTPID5;                   /*!< Peripheral identification register5   */
-  __I  uint32_t  DWTPID6;                   /*!< Peripheral identification register6   */
-  __I  uint32_t  DWTPID7;                   /*!< Peripheral identification register7   */
-  __I  uint32_t  DWTPID0;                   /*!< Peripheral identification register0   */
-  __I  uint32_t  DWTPID1;                   /*!< Peripheral identification register1   */
-  __I  uint32_t  DWTPID2;                   /*!< Peripheral identification register2   */
-  __I  uint32_t  DWTPID3;                   /*!< Peripheral identification register3   */
-  __I  uint32_t  DWTCID0;                   /*!< Component identification register0    */
-  __I  uint32_t  DWTCID1;                   /*!< Component identification register1    */
-  __I  uint32_t  DWTCID2;                   /*!< Component identification register2    */
-  __I  uint32_t  DWTCID3;                   /*!< Component identification register3    */
-} DWT_Type;
-
-#define   DWT_BASE			 ((uint32_t)0xE0001000U)
-#define   DWT_GLOBAL_BASE		 (0x0000U)
-/***************************************************************************/
-/* Peripheral Declaration                                                  */
-/***************************************************************************/
-#define   DWT		 ((DWT_Type *)(DWT_BASE + DWT_GLOBAL_BASE))
-
-/***************************************************************************/
 /*                     EBU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *EBU GLOBAL registers
   */
 typedef struct {
@@ -1000,7 +947,7 @@ __I uint32_t	ID; /*!<EBU Module Identification Register Offset  0x0008*/
 __IO uint32_t	USERCON; /*!<EBU Test/Control Configuration Register Offset  0x000C*/
 }EBU_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *EBU chipselect registers
   */
 typedef struct {
@@ -1017,29 +964,29 @@ __IO uint32_t	ADDRSEL; /*!<EBU Address Select Register 0 Offset  0x001C*/
 __I  uint32_t	RESERVED1[6];
 __IO uint32_t	BUSRCON; /*!<EBU Bus Configuration Register Offset  0x0038*/
 __IO uint32_t	BUSRAP; /*!<EBU Bus Read Access Parameter Register Offset*/
-__IO uint32_t	BUSWCON; /*!<EBU Bus Write Configuration Register Offset*/  
-__IO uint32_t	BUSWAP; /*!<EBU Bus Write Access Parameter Register Offset*/  
+__IO uint32_t	BUSWCON; /*!<EBU Bus Write Configuration Register Offset*/
+__IO uint32_t	BUSWAP; /*!<EBU Bus Write Access Parameter Register Offset*/
 }EBU_CS1_TypeDef;
 
 typedef struct {
 __IO uint32_t	ADDRSEL; /*!<EBU Address Select Register 0 Offset  0x0020*/
 __I  uint32_t	RESERVED1[9];
 __IO uint32_t	BUSRCON; /*!<EBU Bus Configuration Register Offset  0x0048*/
-__IO uint32_t	BUSRAP; /*!<EBU Bus Read Access Parameter Register Offset*/  
-__IO uint32_t	BUSWCON; /*!<EBU Bus Write Configuration Register Offset*/  
-__IO uint32_t	BUSWAP; /*!<EBU Bus Write Access Parameter Register Offset*/ 
+__IO uint32_t	BUSRAP; /*!<EBU Bus Read Access Parameter Register Offset*/
+__IO uint32_t	BUSWCON; /*!<EBU Bus Write Configuration Register Offset*/
+__IO uint32_t	BUSWAP; /*!<EBU Bus Write Access Parameter Register Offset*/
 }EBU_CS2_TypeDef;
 
 typedef struct {
 __IO uint32_t	ADDRSEL; /*!<EBU Address Select Register 0 Offset  0x0024*/
 __I  uint32_t	RESERVED1[12];
 __IO uint32_t	BUSRCON; /*!<EBU Bus Configuration Register Offset  0x0058*/
-__IO uint32_t	BUSRAP; /*!<EBU Bus Read Access Parameter Register Offset*/ 
-__IO uint32_t	BUSWCON; /*!<EBU Bus Write Configuration Register Offset*/  
-__IO uint32_t	BUSWAP; /*!<EBU Bus Write Access Parameter Register Offset*/  
+__IO uint32_t	BUSRAP; /*!<EBU Bus Read Access Parameter Register Offset*/
+__IO uint32_t	BUSWCON; /*!<EBU Bus Write Configuration Register Offset*/
+__IO uint32_t	BUSWAP; /*!<EBU Bus Write Access Parameter Register Offset*/
 }EBU_CS3_TypeDef;
 
-  /* 
+  /*
   *EBU SDRAM registers
   */
 typedef struct {
@@ -1071,7 +1018,7 @@ __I uint32_t	SDRSTAT; /*!<EBU SDRAM Status Register Offset  0x0074*/
 /*                     ERUx                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *ERU Registers
   */
 typedef struct {
@@ -1094,7 +1041,7 @@ __IO uint32_t	EXOCON[4]; /*!<Event Output Trigger Control 0 Register Offset  0x0
 /*                     ETHx                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Ethernet Unit
   */
 typedef struct {
@@ -1255,7 +1202,7 @@ __IO uint32_t	HW_FEATURE; /*!<Register 22 [HW Feature Register] Offset  0x1058*/
 /*                     ETH0_CON                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Ethernet I/O Control Register
   */
 typedef struct {
@@ -1274,7 +1221,7 @@ __IO uint32_t	CON; /*!<Ethernet 0 Port Control Register Offset  0x0000*/
 /*                     ETM                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Cortex M4 - Embedded Trace Macrocell
   */
 typedef struct {                            /*!< ETM Structure                         */
@@ -1348,7 +1295,7 @@ typedef struct {                            /*!< ETM Structure                  
 /*                     FCE                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Global registers
   */
 typedef struct {
@@ -1357,7 +1304,7 @@ __I  uint32_t	RESERVED1;
 __I uint32_t	ID; /*!<Module Identification Register Offset  0x0008*/
 }FCE_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *Generic CRC Engine registers
   */
 typedef struct {
@@ -1390,7 +1337,7 @@ __IO uint32_t	CTR; /*!<CRC Test Register 0 Offset  0x003C*/
 /*                     FLASH0                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *FLASH0 GLOBAL registers
   */
 typedef struct {
@@ -1416,7 +1363,7 @@ __I uint32_t	PROCON2; /*!<Flash Protection Configuration Register User 2 Offset 
 /*                     FPB                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Cortex M4 - Flash Patch and Breakpoint
   */
 typedef struct {                            /*!< FPB Structure                         */
@@ -1456,7 +1403,7 @@ typedef struct {                            /*!< FPB Structure                  
 /*                     LEDTS0                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *LEDTS0 KERNEL registers
   */
 typedef struct {
@@ -1484,7 +1431,7 @@ __IO uint32_t	TSCMP1; /*!<Touch-sense Compare Register 1 Offset  0x0028*/
 /*                     PBAx                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Peripheral Bridge Status and Write Error Address registers
   */
 typedef struct {
@@ -1505,7 +1452,7 @@ __I uint32_t	WADDR; /*!<PBA Write Error Address Register Offset  0x0004*/
 /*                     PMU0                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *PMU0 ID register
   */
 typedef struct {
@@ -1800,7 +1747,7 @@ typedef struct {                            /*!< PORT15 Structure               
 /*                     POSIFx                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Position Interface
   */
 typedef struct {
@@ -1956,7 +1903,7 @@ typedef struct {                            /*!< (@ 0xE000E000) PPB Structure   
 /*                     PREF                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Prefetch
   */
 typedef struct {
@@ -1974,7 +1921,7 @@ __IO uint32_t	PCON; /*!<Prefetch Configuration Register Offset  0x0000*/
 /*                     RTC                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *RTC Kernel registers
   */
 typedef struct {
@@ -2001,7 +1948,7 @@ __IO uint32_t	TIM1; /*!<RTC Time Register 1 Offset  0x0024*/
 /*                     SCU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *SCU CCU PLL registers
   */
 typedef struct {
@@ -2015,7 +1962,7 @@ __I  uint32_t	RESERVED1[4];
 __I uint32_t	CLKMXSTAT; /*!<Clock Multiplexing Status Register Offset  0x0738*/
 }SCU_PLL_TypeDef;
 
-  /* 
+  /*
   *SCU CCU OSC registers
   */
 typedef struct {
@@ -2023,7 +1970,7 @@ __I uint32_t	OSCHPSTAT; /*!<OSC_HP Status Register Offset  0x0700*/
 __IO uint32_t	OSCHPCTRL; /*!<OSC_HP Control Register Offset  0x0704*/
 }SCU_OSC_TypeDef;
 
-  /* 
+  /*
   *SCU CCU Clock Control registers
   */
 typedef struct {
@@ -2058,7 +2005,7 @@ __IO uint32_t	DSLEEPCR; /*!<Deep Sleep Control Register Offset  0x0634*/
 /*                     SCU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *SCU GCU CONTROL registers
   */
 typedef struct {
@@ -2083,7 +2030,7 @@ __IO uint32_t	RMACR; /*!<Retention Memory Access Control Register Offset  0x00C8
 __IO uint32_t	RMDATA; /*!<Retention Memory Access Data Register Offset  0x00CC*/
 }SCU_GENERAL_TypeDef;
 
-  /* 
+  /*
   *SCU GCU PARITY registers
   */
 typedef struct {
@@ -2097,7 +2044,7 @@ __IO uint32_t	PMTPR; /*!<Parity Memory Test Pattern Register Offset  0x0154*/
 __IO uint32_t	PMTSR; /*!<Parity Memory Test Select Register Offset  0x0158*/
 }SCU_PARITY_TypeDef;
 
-  /* 
+  /*
   *SCU GCU INTERRUPT registers
   */
 typedef struct {
@@ -2109,7 +2056,7 @@ __O uint32_t	SRSET; /*!<SCU Service Request Set Offset  0x0084*/
 __IO uint32_t	NMIREQEN; /*!<SCU Service Request Mask Offset  0x0088*/
 }SCU_INTERRUPT_TypeDef;
 
-  /* 
+  /*
   *SCU TRAP registers
   */
 typedef struct {
@@ -2137,7 +2084,7 @@ __O uint32_t	TRAPSET; /*!<Trap Set Register Offset  0x0170*/
 /*                     SCU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *SCU HIBERNATE registers
   */
 typedef struct {
@@ -2162,7 +2109,7 @@ __IO uint32_t	OSCULCTRL; /*!<OSC_ULP Control Register Offset  0x031C*/
 /*                     SCU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *SCU PWRCTRL registers
   */
 typedef struct {
@@ -2187,7 +2134,7 @@ __IO uint32_t PWRMON; /*!< Power Monitor Control  Offset  0x022C*/
 /*                     SCU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *SCU RESET CONTROL registers
   */
 typedef struct {
@@ -2219,7 +2166,7 @@ __O uint32_t	PRCLR3; /*!<RCU Peripheral 3 Reset Clear Offset  0x0438*/
 /*                     SDMMC                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *SDMMC registers
   */
 typedef struct {
@@ -2272,7 +2219,7 @@ __I uint16_t	SLOT_INT_STATUS; /*!<Slot Interrupt Status Register Offset  0x00FC*
 /*                     TPIU                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Cortex M4 - Trace Port Interface Unit
   */
 typedef struct {                            /*!< TPIU Structure                        */
@@ -2325,7 +2272,7 @@ typedef struct {                            /*!< TPIU Structure                 
 /*                     USB0                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *CONTROL registers
   */
 typedef struct {
@@ -2402,7 +2349,7 @@ __I  uint32_t	RESERVED11[370];
 __IO uint32_t	PCGCCTL; /*!<Power and Clock Gating Control Register Offset  0x0E00*/
 }USB0_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *ENDPOINT-0 registers
   */
 typedef struct {
@@ -2425,7 +2372,7 @@ __I  uint32_t	RESERVED6;
 __I uint32_t	DOEPDMAB0; /*!<Device Endpoint-0 DMA Buffer Address Register Offset  0x0B1C*/
 }USB0_EP0_TypeDef;
 
-  /* 
+  /*
   *ENDPOINTx registers
   */
 typedef struct {
@@ -2460,7 +2407,7 @@ __I  uint32_t	RESERVED6;
 __I uint32_t	DOEPDMAB; /*!<Device Endpoint-1 DMA Buffer Address Register Offset  0x0B3C*/
 }USB0_EP_TypeDef;
 
-  /* 
+  /*
   *CHANNEL registers
   */
 typedef struct {
@@ -2535,7 +2482,7 @@ __I uint32_t	HCDMAB; /*!<Host Channel-0 DMA Buffer Address Register Offset  0x05
 /*                     USICx                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *Module wide registers
   */
 typedef struct {
@@ -2543,7 +2490,7 @@ __I  uint32_t	RESERVED1[2];
 __I uint32_t	ID; /*!<Module Identification Register Offset  0x0008*/
 }USIC_GLOBAL_TypeDef;
 
-  /* 
+  /*
   *Channel Related registers
   */
 typedef struct {
@@ -2624,7 +2571,7 @@ __O uint32_t	IN[32]; /*!<Transmit FIFO Buffer Input Location 00 Offset  0x0180*/
 /*                     VADC                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *ADC Group registers
   */
 typedef struct {
@@ -2687,7 +2634,7 @@ __I  uint32_t	RESERVED19[16];
 __I uint32_t	RESD[16]; /*!<Group 0 Result Reg. 0, Debug Offset  0x0780*/
 }VADC_G_TypeDef;
 
-  /* 
+  /*
   *ADC global registers
   */
 typedef struct {
@@ -2744,7 +2691,7 @@ __IO uint32_t	EMUXSEL; /*!<External Multiplexer Select Register Offset  0x03F0*/
 /*                     WDT                          */
 /***************************************************************************/
 
-  /* 
+  /*
   *WDT Kernel registers
   */
 typedef struct {
@@ -20691,17 +20638,17 @@ __O uint32_t	WDTCLR; /*!<WDT Clear Register Offset  0x001C*/
 #elif defined(__ICCARM__)
   /* leave anonymous unions enabled */
 #elif defined(__GNUC__)
-  /* anonymous unions are enabled by default */ 
+  /* anonymous unions are enabled by default */
 #elif defined(__TMS470__)
-  /* anonymous unions are enabled by default */ 
+  /* anonymous unions are enabled by default */
 #elif defined(__TASKING__)
-  #pragma warning restore 
+  #pragma warning restore
 #else
    #warning Not supported compiler type
 #endif
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 
 #endif  // ifndef __XMC4500_H__

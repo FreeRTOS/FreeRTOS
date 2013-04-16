@@ -29,8 +29,8 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>19</version>
-          <state>39</state>
+          <version>20</version>
+          <state>40</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -87,7 +87,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.30.7.53437</state>
+          <state>6.50.1.4445</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -137,13 +137,13 @@
         </option>
         <option>
           <name>GFPUCoreSlave</name>
-          <version>19</version>
-          <state>39</state>
+          <version>20</version>
+          <state>40</state>
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>19</version>
-          <state>39</state>
+          <version>20</version>
+          <state>40</state>
         </option>
         <option>
           <name>OGUseCmsis</name>
@@ -162,6 +162,10 @@
         <version>28</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>CCOptimizationNoSizeConstraints</name>
+          <state>0</state>
+        </option>
         <option>
           <name>CCDefines</name>
           <state></state>
@@ -945,7 +949,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>19</version>
+          <version>20</version>
           <state>0</state>
         </option>
         <option>
@@ -1053,12 +1057,12 @@
         </option>
         <option>
           <name>GFPUCoreSlave</name>
-          <version>19</version>
+          <version>20</version>
           <state>0</state>
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>19</version>
+          <version>20</version>
           <state>0</state>
         </option>
         <option>
@@ -1078,6 +1082,10 @@
         <version>28</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
+        <option>
+          <name>CCOptimizationNoSizeConstraints</name>
+          <state>0</state>
+        </option>
         <option>
           <name>CCDefines</name>
           <state>NDEBUG</state>

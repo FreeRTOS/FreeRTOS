@@ -88,8 +88,6 @@
  *
  *****************************************************************************/
 
-#error The batch file Demo\CORTEX_M0_LPC1114_LPCXpresso\RTOSDemo\CreateProjectDirectoryStructure.bat must be executed before the first build.  After executing the batch file hit F5 to refrech the Eclipse project, then delete this line.
-
 /* Standard includes. */
 #include "string.h"
 

@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -105,14 +105,12 @@ is defined. */
 #define portNVIC_SYSTICK_CTRL_REG			( * ( ( volatile unsigned long * ) 0xe000e010 ) )
 #define portNVIC_SYSTICK_LOAD_REG			( * ( ( volatile unsigned long * ) 0xe000e014 ) )
 #define portNVIC_SYSTICK_CURRENT_VALUE_REG	( * ( ( volatile unsigned long * ) 0xe000e018 ) )
-#define portNVIC_INT_CTRL_REG				( * ( ( volatile unsigned long * ) 0xe000ed04 ) )
 #define portNVIC_SYSPRI2_REG				( * ( ( volatile unsigned long * ) 0xe000ed20 ) )
 /* ...then bits in the registers. */
 #define portNVIC_SYSTICK_CLK_BIT			( 1UL << 2UL )
 #define portNVIC_SYSTICK_INT_BIT			( 1UL << 1UL )
 #define portNVIC_SYSTICK_ENABLE_BIT			( 1UL << 0UL )
 #define portNVIC_SYSTICK_COUNT_FLAG_BIT		( 1UL << 16UL )
-#define portNVIC_PENDSVSET_BIT				( 1UL << 28UL )
 #define portNVIC_PENDSVCLEAR_BIT 			( 1UL << 27UL )
 #define portNVIC_PEND_SYSTICK_CLEAR_BIT		( 1UL << 25UL )
 
@@ -121,6 +119,9 @@ is defined. */
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
+
+/* Constants used with memory barrier intrinsics. */
+#define portSY_FULL_READ_WRITE		( 15 )
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
@@ -258,10 +259,15 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYieldFromISR( void )
+void vPortYield( void )
 {
 	/* Set a PendSV to request a context switch. */
 	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+
+	/* Barriers are normally not required but do ensure the code is completely
+	within the specified behaviour for the architecture. */
+	__dsb( portSY_FULL_READ_WRITE );
+	__isb( portSY_FULL_READ_WRITE );
 }
 /*-----------------------------------------------------------*/
 
@@ -269,6 +275,8 @@ void vPortEnterCritical( void )
 {
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
+	__dsb( portSY_FULL_READ_WRITE );
+	__isb( portSY_FULL_READ_WRITE );
 }
 /*-----------------------------------------------------------*/
 
@@ -376,7 +384,7 @@ void xPortSysTickHandler( void )
 		/* Enter a critical section but don't use the taskENTER_CRITICAL()
 		method as that will mask interrupts that should exit sleep mode. */
 		__disable_irq();
-		
+
 		/* If a context switch is pending or a task is waiting for the scheduler
 		to be unsuspended then abandon the low power entry. */
 		if( eTaskConfirmSleepModeStatus() == eAbortSleep )
@@ -384,7 +392,7 @@ void xPortSysTickHandler( void )
 			/* Restart SysTick. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
 
-			/* Re-enable interrupts - see comments above __disable_irq() call 
+			/* Re-enable interrupts - see comments above __disable_irq() call
 			above. */
 			__enable_irq();
 		}
@@ -410,6 +418,8 @@ void xPortSysTickHandler( void )
 			if( xModifiableIdleTime > 0 )
 			{
 				__wfi();
+				__dsb( portSY_FULL_READ_WRITE );
+				__isb( portSY_FULL_READ_WRITE );
 			}
 			configPOST_SLEEP_PROCESSING( xExpectedIdleTime );
 
@@ -419,7 +429,7 @@ void xPortSysTickHandler( void )
 			kernel with respect to calendar time. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT;
 
-			/* Re-enable interrupts - see comments above __disable_irq() call 
+			/* Re-enable interrupts - see comments above __disable_irq() call
 			above. */
 			__enable_irq();
 

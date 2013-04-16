@@ -709,14 +709,6 @@ tskTCB * pxNewTCB;
 			if( ( void * ) xTaskToDelete == NULL )
 			{
 				portYIELD_WITHIN_API();
-
-				/* Ensure the task goes no further if it takes a few
-				instructions for the yield to occur. */
-				for( ;; )
-				{
-					/* Nothing to do here, just ensuring the task does not
-					execute further before the yield has taken effect. */
-				}
 			}
 		}
 	}

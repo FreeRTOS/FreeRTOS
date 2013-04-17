@@ -118,10 +118,22 @@ portSTACK_TYPE and portBASE_TYPE. */
 #define portTICK_RATE_MS				( ( portTickType ) 1000 / configTICK_RATE_HZ )		
 #define portNOP()						nop()
 
-/* The location of the software interrupt register.  Software interrupts use
-vector 27. */
-#define portITU_SWINTR			( ( unsigned char * ) 0x000872E0 )
-#define portYIELD()				*portITU_SWINTR = 0x01; nop(); nop(); nop(); nop(); nop()
+#pragma inline_asm vPortYield
+static void vPortYield( void )
+{
+	/* Save clobbered register - may not actually be necessary if inline asm
+	functions are considered to use the same rules as function calls by the
+	compiler. */
+	PUSH.L R5
+	/* Set ITU SWINTR. */
+	MOV.L #553696, R5
+	MOV.B #1, [R5]
+	/* Read back to ensure the value is taken before proceeding. */
+	MOV.L [R5], R5
+	/* Restore clobbered register to its previous value. */
+	POP R5
+}
+#define portYIELD()	vPortYield()
 #define portYIELD_FROM_ISR( x )	if( x != pdFALSE ) portYIELD()
 
 /*
@@ -137,12 +149,12 @@ vector 27. */
 /* The critical nesting functions defined within tasks.c. */
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
-#define portENTER_CRITICAL()	vTaskEnterCritical();
-#define portEXIT_CRITICAL()		vTaskExitCritical();
+#define portENTER_CRITICAL()	vTaskEnterCritical()
+#define portEXIT_CRITICAL()		vTaskExitCritical()
 
 /* As this port allows interrupt nesting... */
-#define portSET_INTERRUPT_MASK_FROM_ISR() get_ipl(); set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY )
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) set_ipl( uxSavedInterruptStatus )
+#define portSET_INTERRUPT_MASK_FROM_ISR() get_ipl(); set_ipl( ( long ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ) set_ipl( ( long ) uxSavedInterruptStatus )
 
 /*-----------------------------------------------------------*/
 

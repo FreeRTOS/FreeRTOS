@@ -115,10 +115,20 @@ portSTACK_TYPE and portBASE_TYPE. */
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
 #define portNOP()					__asm volatile( "NOP" )
 
-/* The location of the software interrupt register.  Software interrupts use
-vector 27. */
-#define portITU_SWINTR			( ( unsigned char * ) 0x000872E0 )
-#define portYIELD()				*portITU_SWINTR = 0x01; portNOP(); portNOP(); portNOP(); portNOP(); portNOP()
+/* Yield equivalent to "*portITU_SWINTR = 0x01; ( void ) *portITU_SWINTR;"
+where portITU_SWINTR is the location of the software interrupt register
+(0x000872E0).  Don't rely on the assembler to select a register, so instead 
+save and restore clobbered registers manually. */
+#define portYIELD()							\
+	__asm volatile 							\
+	(										\
+		"PUSH.L	R10					\n"		\
+		"MOV.L	#0x872E0, R10		\n"		\
+		"MOV.B	#0x1, [R10]			\n"		\
+		"MOV.L	[R10], R10			\n"		\
+		"POP	R10					\n"		\
+	)
+
 #define portYIELD_FROM_ISR( x )	if( x != pdFALSE ) portYIELD()
 
 /*

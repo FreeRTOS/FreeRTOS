@@ -1,0 +1,104 @@
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[DebugChecksum]
+Checksum=222757635
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[DataLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[Breakpoints2]
+Count=0
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[E1/E20 Emulator]
+BlockBits=15
+B0=1,0
+B1=1,1024
+B2=1,2048
+B3=1,3072
+StartEnabled=0
+StartSymbol=
+StopEnabled=0
+StopSymbol=
+TraceMode=0
+TraceOutput=2
+TraceCapacity=0
+TraceRestart=0
+OperatingFrequency=22.000000
+PerfEnabled=0
+PerfCondition=0,0
+PerfDisplayTime=0,0
+PerfOnlyOnce=0,0
+PerfUse64Bit=0
+ChipName=R5F51115
+PinMode=0
+RegMode=0
+Endian=0
+ExtMemBlockNum=0
+InputClock=22.000000
+AllowClkSrcChange=0
+WorkRamStart=4096
+ComunicationSelect=1
+JtagClock=0
+FINE=2000000
+FlashOvrNum=0
+DebugFlags=0,0
+EmulatorMode=0
+PowerTargetFromEmulator=0
+Voltage=0
+NeedInit=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\Renesas_Files\r_bsp\board\user\hardware_setup.c}.60.2" 0 0 0 0 "" 0 ""
+Count=1
+[Monitor Execution]
+Leave target running=0
+Release target=0
+[Aliases]
+Count=0
+SuppressDialog=0
+[Trace1]
+Enabled=0
+ShowSource=1

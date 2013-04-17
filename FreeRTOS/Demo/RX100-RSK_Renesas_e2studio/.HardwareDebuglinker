@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ASCII"?>
+<com.renesas.linkersection.model:SectionContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.renesas.linkersection.model="http:///LinkerSection.ecore">
+  <sections name="SU">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress"/>
+  </sections>
+  <sections name="SI"/>
+  <sections name="B_1"/>
+  <sections name="R_1"/>
+  <sections name="B_2"/>
+  <sections name="R_2"/>
+  <sections name="B"/>
+  <sections name="R"/>
+  <sections name="PResetPRG">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294836224"/>
+  </sections>
+  <sections name="C_1">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294840320"/>
+  </sections>
+  <sections name="C_2"/>
+  <sections name="C"/>
+  <sections name="C$*"/>
+  <sections name="D*"/>
+  <sections name="W*"/>
+  <sections name="L"/>
+  <sections name="PIntPRG">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294860800"/>
+  </sections>
+  <sections name="P">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294868992"/>
+  </sections>
+  <sections name="FIXEDVECT">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294967248"/>
+  </sections>
+</com.renesas.linkersection.model:SectionContainer>

@@ -1,1 +1,0 @@
-/* dummy ecc.c for dist */

@@ -1,2 +1,0 @@
-/* ec.h for openssl */
-

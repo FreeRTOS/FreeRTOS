@@ -1,2 +1,0 @@
-/* err.h for openssl */
-

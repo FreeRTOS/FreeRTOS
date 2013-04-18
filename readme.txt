@@ -5,18 +5,18 @@ Directories:
 + FreeRTOS/demo contains a pre-configured demo project for every official 
   FreeRTOS port.
   
-+ FreeRTOS-Plus contains additional FreeRTOS components and third party 
++ See http://www.freertos.org/a00017.html for full details of the FreeRTOS
+  directory structure and information on locating the files you require.
+
+  + FreeRTOS-Plus contains additional FreeRTOS components and third party 
   complementary products.  THESE ARE LICENSED SEPARATELY FROM FreeRTOS although
   all contain open source options.  See the license files in each respective
   directory for information.
   
-+ FreeRTOS-Plus/Demo_Projects_Using_FreeRTOS_Simulator contains pre-configured
-  demo projects for the FreeRTOS-Plus components.  The demo projects run in
-  a Windows environment using the FreeRTOS windows simulator.  These are 
-  documented on the FreeRTOS web site http://www.FreeRTOS.org/plus
-
-+ See http://www.freertos.org/a00017.html for full details of the directory 
-  structure and information on locating the files you require.
++ FreeRTOS-Plus/Demo contains pre-configured demo projects for the FreeRTOS-Plus 
+  components.  Most demo projects run in a Windows environment using the 
+  FreeRTOS windows simulator.  These are documented on the FreeRTOS web site 
+  http://www.FreeRTOS.org/plus
 
 Further readme files are contains in sub-directories as appropriate.
   

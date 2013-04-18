@@ -1,7 +1,7 @@
 #error This project has been reworked for use with a later version of the Xilinx tools and IP.  Please find more up to date projects in other FreeRTOS/Demo/MicroBlaze_nnn directories.
 
 /*
-    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.4.1 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -41,7 +41,7 @@
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
     FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
     details. You should have received a copy of the GNU General Public License
-    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    and the FreeRTOS license exception along with FreeRTOS; if not it can be
     viewed here: http://www.freertos.org/a00114.html and also obtained by
     writing to Real Time Engineers Ltd., contact details for whom are available
     on the FreeRTOS WEB site.

@@ -206,8 +206,10 @@ uint32_t ulInterruptCause;
 		}
 	}
 
-	/* Shortcut calling portEND_SWITCHING_ISR(). */
-	vPortYieldFromISR();
+	/* ulInterruptCause is used for convenience here.  A context switch is
+	wanted, but coding portEND_SWITCHING_ISR( 1 ) would likely result in a
+	compiler warning. */
+	portEND_SWITCHING_ISR( ulInterruptCause );
 }
 /*-----------------------------------------------------------*/
 

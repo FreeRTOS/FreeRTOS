@@ -1,6 +1,8 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
+    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -27,41 +29,47 @@
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
+
+    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
     distribute a combined work that includes FreeRTOS without being obliged to
     provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    kernel.
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details. You should have received a copy of the GNU General Public License
+    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    viewed here: http://www.freertos.org/a00114.html and also obtained by
+    writing to Real Time Engineers Ltd., contact details for whom are available
+    on the FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    not run, what could be wrong?"                                     *
      *                                                                       *
      *    http://www.FreeRTOS.org/FAQHelp.html                               *
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
-    license and contact details.
-    
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
-    the SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+    license and Real Time Engineers Ltd. contact details.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+    fully thread aware and reentrant UDP/IP stack.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
+    indemnification and middleware, under the OpenRTOS brand.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
 */
 
 /*
@@ -78,16 +86,16 @@
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  ******************************************************************************
  *
- * This is a simple FreeRTOS Windows simulator project that makes it easy to 
+ * This is a simple FreeRTOS Windows simulator project that makes it easy to
  * evaluate FreeRTOS+CLI and FreeRTOS+Trace on a standard desktop PC, without
  * any external hardware or interfaces being required.
  *
- * To keep everything as simple as possible, the command line interface is 
+ * To keep everything as simple as possible, the command line interface is
  * accessed through a UDP socket on the default Windows loopback IP address of
  * 127.0.0.1.  Full instructions are provided on the documentation page
  * referenced above.
  *
- * Commands are provided to both start and stop a FreeRTOS+Trace recording.  
+ * Commands are provided to both start and stop a FreeRTOS+Trace recording.
  * Stopping a recording will result in the recorded data being saved to the
  * hard disk, ready for viewing in the FreeRTOS+Trace graphical user interface.
  * Again, full instructions are provided on the documentation page referenced
@@ -100,7 +108,7 @@
  * priority of the queue receive task is above that of the queue send task, so
  * it pre-empts the queue send task as soon as it leaves the Blocked state.  It
  * then consumes the message from the queue and prints "message received" to
- * the screen before returning to block on the queue once again.  This 
+ * the screen before returning to block on the queue once again.  This
  * sequencing is clearly visible in the recorded FreeRTOS+Trace data.
  *
  * Finally, a trace monitoring task is also created that prints out a message
@@ -127,7 +135,7 @@
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define mainUDP_CLI_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
-/* The rate at which data is sent to the queue.  The (simulated) 50ms value is 
+/* The rate at which data is sent to the queue.  The (simulated) 50ms value is
 converted to ticks using the portTICK_RATE_MS constant. */
 #define mainQUEUE_SEND_FREQUENCY_MS			( 50 / portTICK_RATE_MS )
 
@@ -140,7 +148,7 @@ the queue empty. */
 
 /*
  * The queue send and receive tasks as described in the comments at the top of
- * this file. 
+ * this file.
  */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
@@ -168,7 +176,7 @@ const uint32_t ulLongTime_ms = 250UL;
 	/* Create the queue used to pass messages from the queue send task to the
 	queue receive task. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
-	
+
 	/* Give the queue a name for the FreeRTOS+Trace log. */
 	vTraceSetQueueName( xQueue, "DemoQ" );
 
@@ -201,7 +209,7 @@ const uint32_t ulLongTime_ms = 250UL;
 	line will never be reached.  If the following line does execute, then
 	there was insufficient FreeRTOS heap memory available for the idle and/or
 	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not not 
+	FreeRTOS web site for more details (this is standard text that is not not
 	really applicable to the Win32 simulator port). */
 	for( ;; )
 	{
@@ -228,8 +236,8 @@ const unsigned long ulValueToSend = 100UL;
 		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
 
 		/* Send to the queue - causing the queue receive task to unblock and
-		write a message to the display.  0 is used as the block time so the 
-		sending operation will not block - it shouldn't need to block as the 
+		write a message to the display.  0 is used as the block time so the
+		sending operation will not block - it shouldn't need to block as the
 		queue should always	be empty at this point in the code, and it is an
 		error if it is not. */
 		xQueueSend( xQueue, &ulValueToSend, 0U );
@@ -252,7 +260,7 @@ unsigned long ulReceivedValue;
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
 		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, write the message to the 
+		is it the expected value?  If it is, write the message to the
 		display before looping back to block on the queue again. */
 		if( ulReceivedValue == 100UL )
 		{
@@ -268,7 +276,7 @@ void vApplicationIdleHook( void )
 const unsigned long ulMSToSleep = 5;
 
 	/* This function is called on each cycle of the idle task if
-	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU 
+	configUSE_IDLE_HOOK is set to 1 in FreeRTOSConfig.h.  Sleep to reduce CPU
 	load. */
 	Sleep( ulMSToSleep );
 }

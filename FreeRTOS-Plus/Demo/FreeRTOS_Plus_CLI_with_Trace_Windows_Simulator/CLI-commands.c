@@ -1,6 +1,8 @@
 /*
-    FreeRTOS V7.1.1 - Copyright (C) 2012 Real Time Engineers Ltd.
+    FreeRTOS V7.4.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
+    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
+    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
@@ -27,41 +29,47 @@
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-    >>>NOTE<<< The modification to the GPL is included to allow you to
+
+    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
     distribute a combined work that includes FreeRTOS without being obliged to
     provide the source code for proprietary components outside of the FreeRTOS
-    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-    more details. You should have received a copy of the GNU General Public
-    License and the FreeRTOS license exception along with FreeRTOS; if not it
-    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-    by writing to Richard Barry, contact details for whom are available on the
-    FreeRTOS WEB site.
+    kernel.
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+    details. You should have received a copy of the GNU General Public License
+    and the FreeRTOS license exception along with FreeRTOS; if not itcan be
+    viewed here: http://www.freertos.org/a00114.html and also obtained by
+    writing to Real Time Engineers Ltd., contact details for whom are available
+    on the FreeRTOS WEB site.
 
     1 tab == 4 spaces!
-    
+
     ***************************************************************************
      *                                                                       *
      *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
+     *    not run, what could be wrong?"                                     *
      *                                                                       *
      *    http://www.FreeRTOS.org/FAQHelp.html                               *
      *                                                                       *
     ***************************************************************************
 
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
-    license and contact details.
-    
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
 
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
-    the SafeRTOS brand: http://www.SafeRTOS.com.
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
+    license and Real Time Engineers Ltd. contact details.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool, and our new
+    fully thread aware and reentrant UDP/IP stack.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
+    indemnification and middleware, under the OpenRTOS brand.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
 */
 
 /* FreeRTOS includes. */
@@ -93,13 +101,13 @@ static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWrit
 static portBASE_TYPE prvThreeParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 
 /*
- * Defines a command that can take a variable number of parameters.  Each 
+ * Defines a command that can take a variable number of parameters.  Each
  * parameter is echoes back one at a time.
  */
 static portBASE_TYPE prvParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 
 /*
- * Defines a command that starts/stops events being recorded for offline viewing 
+ * Defines a command that starts/stops events being recorded for offline viewing
  * in FreeRTOS+Trace.
  */
 static portBASE_TYPE prvStartStopTraceCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
@@ -122,8 +130,8 @@ static const CLI_Command_Definition_t xTaskStats =
 	0 /* No parameters are expected. */
 };
 
-/* Structure that defines the "echo_3_parameters" command line command.  This 
-takes exactly three parameters that the command simply echos back one at a 
+/* Structure that defines the "echo_3_parameters" command line command.  This
+takes exactly three parameters that the command simply echos back one at a
 time. */
 static const CLI_Command_Definition_t xThreeParameterEcho =
 {
@@ -133,8 +141,8 @@ static const CLI_Command_Definition_t xThreeParameterEcho =
 	3 /* Three parameters are expected, which can take any value. */
 };
 
-/* Structure that defines the "echo_parameters" command line command.  This 
-takes a variable number of parameters that the command simply echos back one at 
+/* Structure that defines the "echo_parameters" command line command.  This
+takes a variable number of parameters that the command simply echos back one at
 a time. */
 static const CLI_Command_Definition_t xParameterEcho =
 {
@@ -172,7 +180,7 @@ static portBASE_TYPE prvTaskStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBu
 const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
 	/* Remove compile time warnings about unused parameters, and check the
-	write buffer is not NULL.  NOTE - for simplicity, this example assumes the 
+	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
 	write buffer length is adequate, so does not check for buffer overflows. */
 	( void ) pcCommandString;
 	( void ) xWriteBufferLen;
@@ -193,7 +201,7 @@ static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWrit
 const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Time\r\n****************************************\r\n";
 
 	/* Remove compile time warnings about unused parameters, and check the
-	write buffer is not NULL.  NOTE - for simplicity, this example assumes the 
+	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
 	write buffer length is adequate, so does not check for buffer overflows. */
 	( void ) pcCommandString;
 	( void ) xWriteBufferLen;
@@ -216,7 +224,7 @@ portBASE_TYPE lParameterStringLength, xReturn;
 static portBASE_TYPE lParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
-	write buffer is not NULL.  NOTE - for simplicity, this example assumes the 
+	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
 	write buffer length is adequate, so does not check for buffer overflows. */
 	( void ) pcCommandString;
 	( void ) xWriteBufferLen;
@@ -240,7 +248,7 @@ static portBASE_TYPE lParameterNumber = 0;
 	{
 		/* Obtain the parameter string. */
 		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									( 
+									(
 										pcCommandString,		/* The command string itself. */
 										lParameterNumber,		/* Return the next parameter. */
 										&lParameterStringLength	/* Store the parameter string length. */
@@ -283,7 +291,7 @@ portBASE_TYPE lParameterStringLength, xReturn;
 static portBASE_TYPE lParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
-	write buffer is not NULL.  NOTE - for simplicity, this example assumes the 
+	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
 	write buffer length is adequate, so does not check for buffer overflows. */
 	( void ) pcCommandString;
 	( void ) xWriteBufferLen;
@@ -307,7 +315,7 @@ static portBASE_TYPE lParameterNumber = 0;
 	{
 		/* Obtain the parameter string. */
 		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									( 
+									(
 										pcCommandString,		/* The command string itself. */
 										lParameterNumber,		/* Return the next parameter. */
 										&lParameterStringLength	/* Store the parameter string length. */
@@ -349,7 +357,7 @@ int8_t *pcParameter;
 portBASE_TYPE lParameterStringLength;
 
 	/* Remove compile time warnings about unused parameters, and check the
-	write buffer is not NULL.  NOTE - for simplicity, this example assumes the 
+	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
 	write buffer length is adequate, so does not check for buffer overflows. */
 	( void ) pcCommandString;
 	( void ) xWriteBufferLen;
@@ -357,7 +365,7 @@ portBASE_TYPE lParameterStringLength;
 
 	/* Obtain the parameter string. */
 	pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-								( 
+								(
 									pcCommandString,		/* The command string itself. */
 									1,						/* Return the first parameter. */
 									&lParameterStringLength	/* Store the parameter string length. */

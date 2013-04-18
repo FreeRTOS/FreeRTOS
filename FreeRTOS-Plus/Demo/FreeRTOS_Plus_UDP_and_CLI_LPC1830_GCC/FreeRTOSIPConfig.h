@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+UDP Preview 002 (C) 2012 Real Time Engineers ltd.
+ * FreeRTOS+UDP V1.0.0 (C) 2013 Real Time Engineers ltd.
  *
  * FreeRTOS+UDP is an add-on component to FreeRTOS.  It is not, in itself, part
  * of the FreeRTOS kernel.  FreeRTOS+UDP is licensed separately from FreeRTOS,

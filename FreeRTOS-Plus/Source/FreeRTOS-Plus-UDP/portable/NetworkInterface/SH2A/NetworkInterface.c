@@ -127,35 +127,4 @@ extern void vEMACCopyWrite( uint8_t * pucBuffer, uint16_t usLength );
 }
 /*-----------------------------------------------------------*/
 
-#if 0
-void ENET_IRQHandler( void )
-{
-uint32_t ulInterruptCause;
-
-	while( ( ulInterruptCause = LPC_EMAC->IntStatus ) != 0 )
-	{
-		/* Clear the interrupt. */
-		LPC_EMAC->IntClear = ulInterruptCause;
-
-		/* Clear fatal error conditions.  NOTE:  The driver does not clear all
-		errors, only those actually experienced.  For future reference, range
-		errors are not actually errors so can be ignored. */
-		if( ( ulInterruptCause & EMAC_INT_TX_UNDERRUN ) != 0U )
-		{
-			LPC_EMAC->Command |= EMAC_CR_TX_RES;
-		}
-
-		/* Unblock the deferred interrupt handler task if the event was an
-		Rx. */
-		if( ( ulInterruptCause & EMAC_INT_RX_DONE ) != 0UL )
-		{
-			xSemaphoreGiveFromISR( xEMACRxEventSemaphore, NULL );
-		}
-	}
-
-	/* Shortcut calling portEND_SWITCHING_ISR(). */
-	vPortYieldFromISR();
-}
-/*-----------------------------------------------------------*/
-#endif
 

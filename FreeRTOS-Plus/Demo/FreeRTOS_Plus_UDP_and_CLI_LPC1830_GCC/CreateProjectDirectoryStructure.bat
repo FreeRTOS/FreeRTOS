@@ -50,13 +50,12 @@ IF EXIST FreeRTOS_Source Goto END
 
 	REM Copy the FreeRTOS+UDP core files
 	copy %FREERTOS_UDP_SOURCE%\*.c FreeRTOS_Plus_UDP
-	copy %FREERTOS_UDP_SOURCE%\*.h FreeRTOS_Plus_UDP
+	copy %FREERTOS_UDP_SOURCE%\include\*.h FreeRTOS_Plus_UDP
 	copy %FREERTOS_UDP_SOURCE%\readme.txt FreeRTOS_Plus_UDP
 	copy %FREERTOS_UDP_SOURCE%\include\*.* FreeRTOS_Plus_UDP\include
 
 	REM Copy the FreeRTOS+UDP portable layer files
 	copy %FREERTOS_UDP_SOURCE%\portable\NetworkInterface\LPC18xx\*.* FreeRTOS_Plus_UDP\portable\NetworkInterface\LPC18xx
-	copy %FREERTOS_UDP_SOURCE%\portable\NetworkInterface\*.* FreeRTOS_Plus_UDP\portable\NetworkInterface
 	copy %FREERTOS_UDP_SOURCE%\portable\BufferManagement\BufferAllocation_2.c FreeRTOS_Plus_UDP\portable\BufferManagement
 	copy %FREERTOS_UDP_SOURCE%\portable\Compiler\GCC\*.* FreeRTOS_Plus_UDP\portable\Compiler\GCC
 

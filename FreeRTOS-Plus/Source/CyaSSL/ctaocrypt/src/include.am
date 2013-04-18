@@ -1,0 +1,39 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+EXTRA_DIST += ctaocrypt/src/misc.c
+EXTRA_DIST += ctaocrypt/src/asm.c 
+
+EXTRA_DIST += \
+              ctaocrypt/src/ecc_fp.c \
+              ctaocrypt/src/fp_mont_small.i \
+              ctaocrypt/src/fp_mul_comba_12.i \
+              ctaocrypt/src/fp_mul_comba_17.i \
+              ctaocrypt/src/fp_mul_comba_20.i \
+              ctaocrypt/src/fp_mul_comba_24.i \
+              ctaocrypt/src/fp_mul_comba_28.i \
+              ctaocrypt/src/fp_mul_comba_32.i \
+              ctaocrypt/src/fp_mul_comba_3.i \
+              ctaocrypt/src/fp_mul_comba_48.i \
+              ctaocrypt/src/fp_mul_comba_4.i \
+              ctaocrypt/src/fp_mul_comba_64.i \
+              ctaocrypt/src/fp_mul_comba_6.i \
+              ctaocrypt/src/fp_mul_comba_7.i \
+              ctaocrypt/src/fp_mul_comba_8.i \
+              ctaocrypt/src/fp_mul_comba_9.i \
+              ctaocrypt/src/fp_mul_comba_small_set.i \
+              ctaocrypt/src/fp_sqr_comba_12.i \
+              ctaocrypt/src/fp_sqr_comba_17.i \
+              ctaocrypt/src/fp_sqr_comba_20.i \
+              ctaocrypt/src/fp_sqr_comba_24.i \
+              ctaocrypt/src/fp_sqr_comba_28.i \
+              ctaocrypt/src/fp_sqr_comba_32.i \
+              ctaocrypt/src/fp_sqr_comba_3.i \
+              ctaocrypt/src/fp_sqr_comba_48.i \
+              ctaocrypt/src/fp_sqr_comba_4.i \
+              ctaocrypt/src/fp_sqr_comba_64.i \
+              ctaocrypt/src/fp_sqr_comba_6.i \
+              ctaocrypt/src/fp_sqr_comba_7.i \
+              ctaocrypt/src/fp_sqr_comba_8.i \
+              ctaocrypt/src/fp_sqr_comba_9.i \
+              ctaocrypt/src/fp_sqr_comba_small_set.i

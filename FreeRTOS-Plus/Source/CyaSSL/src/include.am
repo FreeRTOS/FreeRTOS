@@ -1,0 +1,85 @@
+# vim:ft=automake
+# included from Top Level Makefile.am
+# All paths should be given relative to the root
+
+lib_LTLIBRARIES+= src/libcyassl.la
+src_libcyassl_la_SOURCES = \
+			   src/internal.c \
+			   src/io.c \
+			   src/keys.c \
+			   src/ssl.c \
+			   src/tls.c  \
+			   ctaocrypt/src/asn.c \
+			   ctaocrypt/src/coding.c \
+			   ctaocrypt/src/des3.c \
+			   ctaocrypt/src/hmac.c \
+			   ctaocrypt/src/md5.c \
+			   ctaocrypt/src/md4.c \
+			   ctaocrypt/src/random.c \
+			   ctaocrypt/src/rsa.c \
+			   ctaocrypt/src/sha.c \
+			   ctaocrypt/src/aes.c \
+			   ctaocrypt/src/sha256.c \
+			   ctaocrypt/src/dh.c \
+			   ctaocrypt/src/dsa.c \
+			   ctaocrypt/src/arc4.c \
+			   ctaocrypt/src/rabbit.c \
+			   ctaocrypt/src/pwdbased.c \
+			   ctaocrypt/src/logging.c \
+			   ctaocrypt/src/memory.c
+src_libcyassl_la_LDFLAGS = ${AM_LDFLAGS} -no-undefined -version-info ${CYASSL_LIBRARY_VERSION}
+src_libcyassl_la_LIBADD = $(LIBM)
+src_libcyassl_la_CFLAGS = -DBUILDING_CYASSL $(AM_CFLAGS)
+src_libcyassl_la_CPPFLAGS = -DBUILDING_CYASSL $(AM_CPPFLAGS)
+
+if BUILD_AESNI
+src_libcyassl_la_SOURCES += ctaocrypt/src/aes_asm.s
+endif
+
+if BUILD_MD2
+src_libcyassl_la_SOURCES += ctaocrypt/src/md2.c
+endif
+
+if BUILD_RIPEMD
+src_libcyassl_la_SOURCES += ctaocrypt/src/ripemd.c
+endif
+
+if BUILD_SHA512
+src_libcyassl_la_SOURCES += ctaocrypt/src/sha512.c
+endif
+
+if BUILD_SNIFFER
+src_libcyassl_la_SOURCES += src/sniffer.c
+endif
+
+if BUILD_HC128
+src_libcyassl_la_SOURCES += ctaocrypt/src/hc128.c
+endif
+
+if BUILD_NOINLINE
+src_libcyassl_la_SOURCES += ctaocrypt/src/misc.c
+endif
+
+if BUILD_FASTMATH
+src_libcyassl_la_SOURCES += ctaocrypt/src/tfm.c
+else
+src_libcyassl_la_SOURCES += ctaocrypt/src/integer.c
+endif
+
+if BUILD_ECC
+src_libcyassl_la_SOURCES += ctaocrypt/src/ecc.c
+endif
+
+if BUILD_OCSP
+src_libcyassl_la_SOURCES += src/ocsp.c
+endif
+
+if BUILD_CRL
+src_libcyassl_la_SOURCES += src/crl.c
+endif
+
+if BUILD_CRL_MONITOR
+src_libcyassl_la_CFLAGS += $(PTHREAD_CFLAGS)
+src_libcyassl_la_LIBADD += $(PTHREAD_LIBS)
+endif
+

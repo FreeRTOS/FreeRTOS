@@ -1,0 +1,9 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+noinst_PROGRAMS += ctaocrypt/benchmark/benchmark
+ctaocrypt_benchmark_benchmark_SOURCES      = ctaocrypt/benchmark/benchmark.c
+ctaocrypt_benchmark_benchmark_LDADD        = src/libcyassl.la
+ctaocrypt_benchmark_benchmark_DEPENDENCIES = src/libcyassl.la
+EXTRA_DIST += ctaocrypt/benchmark/benchmark.sln 
+EXTRA_DIST += ctaocrypt/benchmark/benchmark.vcproj

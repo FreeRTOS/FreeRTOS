@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.4.1 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -91,7 +91,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V7.4.1"
+#define tskKERNEL_VERSION_NUMBER "V7.4.2"
 
 /**
  * task. h

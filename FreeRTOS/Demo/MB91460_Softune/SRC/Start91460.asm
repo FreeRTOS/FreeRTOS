@@ -45,7 +45,7 @@
 ; 7.2     Check for CSV reset and set CSV
 ; 7.3     Check clock condition
 ; 7.4     Restore default settings after reset
-; 7.4.1   Disable clock modulator
+; 7.4.2   Disable clock modulator
 ; 7.4.2   Check if running on sub clock, change to main clock
 ; 7.4.3   Disable sub clock
 ; 7.4.4   Check if running on PLL, gear down PLL
@@ -1654,7 +1654,7 @@ NoSUBCSVreset:
 ; 7.4  Restore Default Settings after Reset
 ;=========================================================================================
 ;=========================================================================================
-; 7.4.1  Disable Clock Modulator
+; 7.4.2  Disable Clock Modulator
 ;=========================================================================================
         LDI             #0x04BB, R0             ; Clock Modulator Control Reg
         BANDL           #0xD, @R0               ; Disable Frequency modulation

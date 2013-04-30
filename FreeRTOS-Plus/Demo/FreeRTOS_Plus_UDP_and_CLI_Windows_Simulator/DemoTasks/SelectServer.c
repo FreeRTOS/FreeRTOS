@@ -72,7 +72,11 @@
     mission critical applications that require provable dependability.
 */
 
-/*_RB_ See http://TBD for a description of these tasks. */
+/*
+ * A number of sockets are created and added to a set. One task then blocks on
+ * the set while the other task sends data to a (pseudo) random member of the
+ * set.
+ */
 
 /* Standard includes. */
 #include <stdint.h>

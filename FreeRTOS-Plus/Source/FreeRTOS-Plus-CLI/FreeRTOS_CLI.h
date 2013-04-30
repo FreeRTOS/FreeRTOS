@@ -1,25 +1,28 @@
 /*
  * FreeRTOS+CLI V1.0.1 (C) 2012 Real Time Engineers ltd.
  *
- * FreeRTOS+CLI is an add-on component to FreeRTOS.  It is not, in itself, part 
- * of the FreeRTOS kernel.  FreeRTOS+CLI is licensed separately from FreeRTOS, 
- * and uses a different license to FreeRTOS.  FreeRTOS+CLI uses a dual license 
- * model, information on which is provided below:
+ * This file is part of the FreeRTOS+CLI distribution.  The FreeRTOS+CLI license 
+ * terms are different to the FreeRTOS license terms.
+ *
+ * FreeRTOS+CLI uses a dual license model that allows the software to be used
+ * under a pure GPL open source license (as opposed to the modified GPL license
+ * under which FreeRTOS is distributed) or a commercial license.  Details of
+ * both license options follow:
  *
  * - Open source licensing -
- * FreeRTOS+CLI is a free download and may be used, modified and distributed
- * without charge provided the user adheres to version two of the GNU General
- * Public license (GPL) and does not remove the copyright notice or this text.
- * The GPL V2 text is available on the gnu.org web site, and on the following
- * URL: http://www.FreeRTOS.org/gpl-2.0.txt
+ * FreeRTOS+CLI is a free download and may be used, modified, evaluated and
+ * distributed without charge provided the user adheres to version two of the
+ * GNU General Public License (GPL) and does not remove the copyright notice or
+ * this text.  The GPL V2 text is available on the gnu.org web site, and on the
+ * following URL: http://www.FreeRTOS.org/gpl-2.0.txt.
  *
  * - Commercial licensing -
- * Businesses and individuals who wish to incorporate FreeRTOS+CLI into
- * proprietary software for redistribution in any form must first obtain a 
- * (very) low cost commercial license - and in-so-doing support the maintenance, 
- * support and further development of the FreeRTOS+CLI product.  Commercial 
- * licenses can be obtained from http://shop.freertos.org and do not require any 
- * source files to be changed.
+ * Businesses and individuals that for commercial or other reasons cannot comply
+ * with the terms of the GPL V2 license must obtain a low cost commercial
+ * license before incorporating FreeRTOS+CLI into proprietary software for
+ * distribution in any form.  Commercial licenses can be purchased from
+ * http://shop.freertos.org/cli and do not require any source files to be
+ * changed.
  *
  * FreeRTOS+CLI is distributed in the hope that it will be useful.  You cannot
  * use FreeRTOS+CLI unless you agree that you use the software 'as is'.

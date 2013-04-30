@@ -568,10 +568,6 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configUSE_QUEUE_SETS 0
 #endif
 
-#ifndef portTASK_USES_FLOATING_POINT
-	#defeine portTASK_USES_FLOATING_POINT()
-#endif
-
 /* For backward compatability. */
 #define eTaskStateGet eTaskGetState
 

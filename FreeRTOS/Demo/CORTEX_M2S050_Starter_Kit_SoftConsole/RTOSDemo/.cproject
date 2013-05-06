@@ -25,6 +25,10 @@
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.749310406" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.c.compiler.option.include.paths.237389139" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/}"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Common-Demo-Source/include}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/include}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/portable/GCC/ARM_CM3}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/CMSIS}"/>
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/CMSIS/startup_gcc}"/>
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/drivers}"/>

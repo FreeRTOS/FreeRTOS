@@ -1,6 +1,6 @@
 /*******************************************************************************
  * (c) Copyright 2012-2013 Microsemi SoC Products Group.  All rights reserved.
- * 
+ *
  * SmartFusion2 Cortex-M3 linker script for creating a SoftConsole downloadable
  * debug image executing in SmartFusion2 internal eSRAM.
  *
@@ -27,13 +27,13 @@ MEMORY
 
 RAM_START_ADDRESS = 0x20000000;	/* Must be the same value MEMORY region ram ORIGIN above. */
 RAM_SIZE = 64k;					/* Must be the same value MEMORY region ram LENGTH above. */
-MAIN_STACK_SIZE = 8k;			/* Cortex main stack size. */
-PROCESS_STACK_SIZE	= 4k;		/* Cortex process stack size (only available with OS extensions).*/
+MAIN_STACK_SIZE = 1k;			/* Cortex main stack size. */
+PROCESS_STACK_SIZE	= 0k;		/* Cortex process stack size (only available with OS extensions).*/
 
 /*******************************************************************************
  * End of board customization.
  *******************************************************************************/
- 
+
 PROVIDE (__main_stack_start = RAM_START_ADDRESS + RAM_SIZE);
 PROVIDE (__process_stack_start = __main_stack_start - MAIN_STACK_SIZE);
 PROVIDE (_estack = __main_stack_start);
@@ -46,7 +46,7 @@ SECTIONS
     CREATE_OBJECT_SYMBOLS
     __text_load = LOADADDR(.text);
     __text_start = .;
-    __vector_table_vma_base_address = .;    
+    __vector_table_vma_base_address = .;
     *(.isr_vector)
     *(.text .text.* .gnu.linkonce.t.*)
     *(.plt)
@@ -67,7 +67,7 @@ SECTIONS
     *(.rodata .rodata.* .gnu.linkonce.r.*)
 
     *(.ARM.extab* .gnu.linkonce.armextab.*)
-    *(.gcc_except_table) 
+    *(.gcc_except_table)
     *(.eh_frame_hdr)
     *(.eh_frame)
 
@@ -108,7 +108,7 @@ SECTIONS
     *(.data .data.* .gnu.linkonce.d.*)
     . = ALIGN (4);
     _edata = .;
-  } >ram 
+  } >ram
 
   .bss :
   {
@@ -123,9 +123,9 @@ SECTIONS
     __end = _end;
     _ebss = .;
     PROVIDE(end = .);
-  } >ram 
+  } >ram
 
-  /* 
+  /*
    * The .stack section is only specified here in order for the linker to generate
    * an error if the ram is full.
    */
@@ -137,7 +137,7 @@ SECTIONS
     . += MAIN_STACK_SIZE;
     . = ALIGN(4);
   } >ram
-  
+
   .stab 0 (NOLOAD) :
   {
     *(.stab)

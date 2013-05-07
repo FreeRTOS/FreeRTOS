@@ -181,6 +181,31 @@ void vApplicationIdleHook( void )
 	important that vApplicationIdleHook() is permitted to return to its calling
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
+
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1
+	{
+		/* If the file system is only going to be accessed from one task then
+		F_FS_THREAD_AWARE can be set to 0 and the set of example files is created
+		before the RTOS scheduler is started.  If the file system is going to be
+		access from more than one task then F_FS_THREAD_AWARE must be set to 1 and
+		the	set of sample files are created from the idle task hook function. */
+		#if F_FS_THREAD_AWARE == 1
+		{
+			static portBASE_TYPE xCreatedSampleFiles = pdFALSE;
+
+			/* Initialise the drive and file system, then create a few example
+			files.  The output from this function just goes to the stdout window,
+			allowing the output to be viewed when the UDP command console is not
+			connected. */
+			if( xCreatedSampleFiles == pdFALSE )
+			{
+				vCreateAndVerifySampleFiles();
+				xCreatedSampleFiles = pdTRUE;
+			}
+		}
+		#endif
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 

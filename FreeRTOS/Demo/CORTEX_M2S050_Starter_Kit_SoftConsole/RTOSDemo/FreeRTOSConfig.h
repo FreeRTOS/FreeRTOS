@@ -105,9 +105,9 @@ extern uint32_t SystemCoreClock;
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 130 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 32768 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 27648 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
@@ -117,7 +117,6 @@ extern uint32_t SystemCoreClock;
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
-#define configGENERATE_RUN_TIME_STATS	0
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -129,6 +128,13 @@ extern uint32_t SystemCoreClock;
 #define configTIMER_QUEUE_LENGTH		5
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
 
+/* Run time stats gathering definitions. */
+void vConfigureTimerForRunTimeStats( void );
+uint32_t ulGetRunTimeCounterValue( void );
+#define configGENERATE_RUN_TIME_STATS	1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
+
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet		1
@@ -138,6 +144,13 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+
+/* The size of the global output buffer that is available for use when there
+are multiple command interpreters running at once (for example, one on a UART
+and one on TCP/IP).  This is done to prevent an output buffer being defined by
+each implementation - which would waste RAM.  In this case, there is only one
+command interpreter running. */
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 128
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

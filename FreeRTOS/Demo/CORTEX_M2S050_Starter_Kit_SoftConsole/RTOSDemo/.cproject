@@ -21,13 +21,16 @@
 <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.cross.cortexm3.exe.debug.775451197" name="Debug Platform" osList="all" superClass="cdt.managedbuild.target.gnu.platform.cross.cortexm3.exe.debug"/>
 <builder buildPath="${workspace_loc:/RTOSDemo/Debug}" id="cdt.managedbuild.target.gnu.builder.cross.cortexm3.exe.debug.1204461106" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cross.cortexm3.exe.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug.503663152" name="GNU C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug">
-<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level.1584838985" name="Optimization Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level" valueType="enumerated"/>
+<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level.1584838985" name="Optimization Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.749310406" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.c.compiler.option.include.paths.237389139" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/}"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Common-Demo-Source/include}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/include}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS_Source/portable/GCC/ARM_CM3}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Full-Demo}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Full-Demo/FreeRTOS-Plus-CLI-Source}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Full-Demo/FreeRTOS-Plus-FAT-SL-Source/api}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Full-Demo/Common-Demo-Source/include}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS-Source/include}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/FreeRTOS-Source/portable/GCC/ARM_CM3}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/CMSIS}"/>
 <listOptionValue builtIn="false" value="${workspace_loc:/RTOSDemo_Hardware_Platform/CMSIS/startup_gcc}"/>
@@ -60,7 +63,7 @@
 <option id="gnu.c.link.option.paths.71294329" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo_Hardware_Platform/Debug}&quot;"/>
 </option>
-<option id="gnu.c.link.option.ldflags.988543446" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-T../../RTOSDemo_Hardware_Platform/CMSIS/startup_gcc/debug-in-microsemi-smartfusion2-esram.ld" valueType="string"/>
+<option id="gnu.c.link.option.ldflags.988543446" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="-T../../RTOSDemo_Hardware_Platform/CMSIS/startup_gcc/debug-in-microsemi-smartfusion2-envm.ld" valueType="string"/>
 <option id="gnu.c.link.option.userobjs.1227465178" name="Other objects" superClass="gnu.c.link.option.userobjs" valueType="userObjs">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo_Hardware_Platform/Debug/CMSIS/startup_gcc/startup_m2sxxx.o}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo_Hardware_Platform/Debug/CMSIS/startup_gcc/newlib_stubs.o}&quot;"/>
@@ -83,6 +86,32 @@
 <tool id="cdt.managedbuild.tool.gnu.objdump.cross.cortexm3.lst.debug.541279749" name="GNU Listing Generator" superClass="cdt.managedbuild.tool.gnu.objdump.cross.cortexm3.lst.debug"/>
 </toolChain>
 </folderInfo>
+<folderInfo id="cdt.managedbuild.config.gnu.cross.cortexm3.exe.debug.437611960.881138084" name="/" resourcePath="Full-Demo/FreeRTOS-Plus-FAT-SL-Source">
+<toolChain id="cdt.managedbuild.toolchain.gnu.cross.cortexm3.exe.debug.621569067" name="Microsemi Cortex-M3 Tools" superClass="cdt.managedbuild.toolchain.gnu.cross.cortexm3.exe.debug" unusedChildren="">
+<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.cross.cortexm3.exe.debug" name="Debug Platform" osList="all" superClass="cdt.managedbuild.target.gnu.platform.cross.cortexm3.exe.debug"/>
+<tool id="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug.1300646516" name="GNU C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cross.cortexm3.exe.debug.503663152">
+<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level.697583336" name="Optimization Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.optimization.level" value="gnu.c.optimization.level.none" valueType="enumerated"/>
+<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level.809337669" name="Debug Level" superClass="gnu.c.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1570680673" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+</tool>
+<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug.830546045" name="GNU C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug.612642130">
+<option id="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.optimization.level.763731208" name="Optimization Level" superClass="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.debugging.level.1058648779" name="Debug Level" superClass="gnu.cpp.compiler.cross.cortexm3.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+</tool>
+<tool id="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug.1409149503" name="GNU C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cross.cortexm3.exe.debug.2105782767"/>
+<tool id="cdt.managedbuild.tool.gnu.cpp.linker.cross.cortexm3.exe.debug.1598397587" name="GNU C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.cross.cortexm3.exe.debug.1302116748"/>
+<tool id="cdt.managedbuild.tool.gnu.assembler.cross.cortexm3.exe.debug.1350081351" name="GNU Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cross.cortexm3.exe.debug.1231704524">
+<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1510186826" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+</tool>
+<tool id="com.actel.softconsole.memory-map.gen.cross.cortexm3.xml.debug.562461768" name="Memory map generator" superClass="com.actel.softconsole.memory-map.gen.cross.cortexm3.xml.debug.1514572064"/>
+<tool id="cdt.managedbuild.tool.gnu.objcopy.cross.cortexm3.ihex.debug.911422166" name="GNU Intel Hex File Generator" superClass="cdt.managedbuild.tool.gnu.objcopy.cross.cortexm3.ihex.debug.1835740717"/>
+<tool id="cdt.managedbuild.tool.gnu.objcopy.cross.cortexm3.srec.debug.380212035" name="GNU S-Record Generator" superClass="cdt.managedbuild.tool.gnu.objcopy.cross.cortexm3.srec.debug.460443486"/>
+<tool id="cdt.managedbuild.tool.gnu.objdump.cross.cortexm3.lst.debug.732460855" name="GNU Listing Generator" superClass="cdt.managedbuild.tool.gnu.objdump.cross.cortexm3.lst.debug.541279749"/>
+</toolChain>
+</folderInfo>
+<sourceEntries>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+</sourceEntries>
 </configuration>
 </storageModule>
 <storageModule moduleId="scannerConfiguration">

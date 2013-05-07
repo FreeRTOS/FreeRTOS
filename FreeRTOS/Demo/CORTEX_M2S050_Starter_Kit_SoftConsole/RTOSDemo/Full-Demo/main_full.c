@@ -130,6 +130,7 @@
 #include "death.h"
 #include "flash_timer.h"
 #include "partest.h"
+#include "UARTCommandConsole.h"
 
 /* Priorities for the demo application tasks. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -160,6 +161,11 @@ check timer, only two are used by the flash timers. */
 standard demo flash timers. */
 #define mainCHECK_LED						( 1 )
 
+/* The size of the stack and the priority used by the UART CDC command console
+task. */
+#define mainUART_COMMAND_CONSOLE_STACK_SIZE		( configMINIMAL_STACK_SIZE * 3 )
+#define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -167,11 +173,38 @@ standard demo flash timers. */
  */
 static void prvCheckTimerCallback( xTimerHandle xTimer );
 
+/*
+ * Register commands that can be used with FreeRTOS+CLI.  The commands are
+ * defined in CLI-Commands.c and File-Related-CLI-Command.c respectively.
+ */
+extern void vRegisterSampleCLICommands( void );
+extern vRegisterFileSystemCLICommands( void );
+
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
 xTimerHandle xCheckTimer = NULL;
+
+	/* If the file system is only going to be accessed from one task then
+	F_FS_THREAD_AWARE can be set to 0 and the set of example files are created
+	before the RTOS scheduler is started.  If the file system is going to be
+	access from more than one task then F_FS_THREAD_AWARE must be set to 1 and
+	the	set of sample files are created from the idle task hook function
+	vApplicationIdleHook() - which is defined in this file. */
+	#if F_FS_THREAD_AWARE == 0
+	{
+		/* Initialise the drive and file system, then create a few example
+		files.  The output from this function just goes to the stdout window,
+		allowing the output to be viewed when the UDP command console is not
+		connected. */
+		vCreateAndVerifySampleFiles();
+	}
+	#endif
+
+	/* Register both the standard and file system related CLI commands. */
+	vRegisterSampleCLICommands();
+	vRegisterFileSystemCLICommands();
 
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
@@ -186,6 +219,10 @@ xTimerHandle xCheckTimer = NULL;
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartLEDFlashTimers( mainNUMBER_OF_FLASH_TIMERS_LEDS );
+
+	/* Start the tasks that implements the command console on the UART, as
+	described above. */
+	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -225,7 +262,6 @@ unsigned long ulErrorFound = pdFALSE;
 
 	/* Check all the demo tasks (other than the flash tasks) to ensure
 	they are all still running, and that none have detected an error. */
-
 	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	{
 		ulErrorFound = pdTRUE;

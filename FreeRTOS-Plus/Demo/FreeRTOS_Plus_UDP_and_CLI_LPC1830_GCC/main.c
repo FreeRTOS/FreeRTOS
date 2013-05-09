@@ -102,9 +102,9 @@ task. */
 #define mainCDC_COMMAND_CONSOLE_TASK_PRIORITY	( 4U )
 
 /*
-* Register commands that can be used with FreeRTOS+CLI.  The commands are
-* defined in CLI-commands.c.
-*/
+ * Register commands that can be used with FreeRTOS+CLI.  The commands are
+ * defined in CLI-commands.c.
+ */
 extern void vRegisterCLICommands( void );
 
 /*

@@ -134,7 +134,7 @@ static volatile uint32_t ulTickFlag = pdFALSE;
 following variable offsets the AST counter alarm value by the number of AST
 counts that would typically be missed while the counter was stopped to compensate
 for the lost time.  _RB_ Value needs calculating correctly. */
-static uint32_t ulStoppedTimerCompensation = 10 / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
+static uint32_t ulStoppedTimerCompensation = 2 / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
 
 /*-----------------------------------------------------------*/
 
@@ -274,10 +274,8 @@ enum sleepmgr_mode xSleepMode;
 	}
 
 	/* Calculate the reload value required to wait xExpectedIdleTime tick
-	periods.  -1 is used because this code will execute part way through one of
-	the tick periods, and the fraction of a tick period is accounted for
-	later. */
-	ulAlarmValue = ( ulAlarmValueForOneTick * ( xExpectedIdleTime - 1UL ) );
+	periods. */
+	ulAlarmValue = ulAlarmValueForOneTick * xExpectedIdleTime;
 	if( ulAlarmValue > ulStoppedTimerCompensation )
 	{
 		/* Compensate for the fact that the AST is going to be stopped

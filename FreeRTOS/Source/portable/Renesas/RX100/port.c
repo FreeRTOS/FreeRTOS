@@ -554,10 +554,8 @@ static void prvSetupTimerInterrupt( void )
 		}
 
 		/* Calculate the reload value required to wait xExpectedIdleTime tick
-		periods.  -1 is used because this code will execute part way through
-		one of the tick periods, and the fraction of a tick period is accounted
-		for later. */
-		ulMatchValue = ( ulMatchValueForOneTick * ( xExpectedIdleTime - 1UL ) );
+		periods. */
+		ulMatchValue = ulMatchValueForOneTick * xExpectedIdleTime;
 		if( ulMatchValue > ulStoppedTimerCompensation )
 		{
 			/* Compensate for the fact that the CMT is going to be stopped

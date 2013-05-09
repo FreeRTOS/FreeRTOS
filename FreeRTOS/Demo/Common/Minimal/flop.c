@@ -132,6 +132,11 @@ volatile unsigned short *pusTaskCheckVariable;
 volatile portDOUBLE dAnswer;
 short sError = pdFALSE;
 
+	/* Some ports require that tasks that use a hardware floating point unit
+	tell the kernel that they require a floating point context before any
+	floating point instructions are executed. */
+	portTASK_USES_FLOATING_POINT();
+
 	d1 = 123.4567;
 	d2 = 2345.6789;
 	d3 = -918.222;
@@ -183,6 +188,11 @@ volatile portDOUBLE d1, d2, d3, d4;
 volatile unsigned short *pusTaskCheckVariable;
 volatile portDOUBLE dAnswer;
 short sError = pdFALSE;
+
+	/* Some ports require that tasks that use a hardware floating point unit
+	tell the kernel that they require a floating point context before any
+	floating point instructions are executed. */
+	portTASK_USES_FLOATING_POINT();
 
 	d1 = -389.38;
 	d2 = 32498.2;
@@ -237,6 +247,11 @@ volatile unsigned short *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
+
+	/* Some ports require that tasks that use a hardware floating point unit
+	tell the kernel that they require a floating point context before any
+	floating point instructions are executed. */
+	portTASK_USES_FLOATING_POINT();
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
@@ -294,6 +309,11 @@ volatile unsigned short *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
+
+	/* Some ports require that tasks that use a hardware floating point unit
+	tell the kernel that they require a floating point context before any
+	floating point instructions are executed. */
+	portTASK_USES_FLOATING_POINT();
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */

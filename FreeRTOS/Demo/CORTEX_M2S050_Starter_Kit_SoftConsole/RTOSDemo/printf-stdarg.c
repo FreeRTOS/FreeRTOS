@@ -24,22 +24,19 @@
 	replace outbyte(c) by your own function call.
 
 */
-
-#define putchar(c) c
-
+#include "FreeRTOS.h"
 #include <stdarg.h>
+#include <stdint.h>
 
 static void printchar(char **str, int c)
 {
-	//extern int putchar(int c);
-	
 	if (str) {
 		**str = (char)c;
 		++(*str);
 	}
 	else
-	{ 
-		(void)putchar(c);
+	{
+		MSS_UART_polled_tx( pxUART, ( uint8_t * ) &c, sizeof( uint8_t ) );
 	}
 }
 

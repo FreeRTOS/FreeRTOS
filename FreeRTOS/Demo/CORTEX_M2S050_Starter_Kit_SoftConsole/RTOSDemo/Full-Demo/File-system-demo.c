@@ -79,6 +79,7 @@
 
 /* Standard includes. */
 #include <stdio.h>
+#include <string.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -187,7 +188,7 @@ F_FILE *pxFile;
 	for( xFileNumber = 1; xFileNumber <= fsROOT_FILES; xFileNumber++ )
 	{
 		/* Generate a file name. */
-		sprintf( cFileName, "root%03d.txt", xFileNumber );
+		sprintf( cFileName, "root%03d.txt", ( int ) xFileNumber );
 
 		/* Obtain the current working directory and print out the file name and
 		the	directory into which the file is being written. */
@@ -229,7 +230,7 @@ F_FILE *pxFile;
 	for( xFileNumber = 1; xFileNumber <= fsROOT_FILES; xFileNumber++ )
 	{
 		/* Generate the file name. */
-		sprintf( cFileName, "root%03d.txt", xFileNumber );
+		sprintf( cFileName, "root%03d.txt", ( int ) xFileNumber );
 
 		/* Obtain the current working directory and print out the file name and
 		the	directory from which the file is being read. */

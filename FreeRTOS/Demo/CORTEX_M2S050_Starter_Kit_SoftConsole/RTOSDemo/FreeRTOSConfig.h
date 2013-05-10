@@ -98,8 +98,12 @@
 #include <stdint.h>
 extern uint32_t SystemCoreClock;
 
+/* Driver includes required for UART IO. */
+#include "drivers/mss_uart/mss_uart.h"
+extern const mss_uart_instance_t * const pxUART;
+
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
@@ -150,7 +154,7 @@ are multiple command interpreters running at once (for example, one on a UART
 and one on TCP/IP).  This is done to prevent an output buffer being defined by
 each implementation - which would waste RAM.  In this case, there is only one
 command interpreter running. */
-#define configCOMMAND_INT_MAX_OUTPUT_SIZE 128
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 2048
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

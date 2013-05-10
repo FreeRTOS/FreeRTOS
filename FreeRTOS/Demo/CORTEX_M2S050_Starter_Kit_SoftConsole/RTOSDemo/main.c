@@ -119,6 +119,8 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
+/* The UART used for printf() and CLI IO. */
+const mss_uart_instance_t * const pxUART = &g_mss_uart0;
 /*-----------------------------------------------------------*/
 /* See the documentation page for this demo on the FreeRTOS.org web site for
 full information - including hardware setup requirements. */
@@ -150,6 +152,9 @@ static void prvSetupHardware( void )
 	functions.  The name ParTest is now somewhat obsolete - originally it
 	stood for PARallel port Test. */
 	vParTestInitialise();
+
+	/* Initialise the UART which is used for printf() and CLI IO. */
+    MSS_UART_init( pxUART, MSS_UART_115200_BAUD, MSS_UART_DATA_8_BITS | MSS_UART_NO_PARITY | MSS_UART_ONE_STOP_BIT );
 }
 /*-----------------------------------------------------------*/
 

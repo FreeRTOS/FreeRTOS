@@ -80,6 +80,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
@@ -570,5 +571,5 @@ const char * pcAttrib;
 
 	/* Create a string that includes the file name, the file size and the
 	attributes string. */
-	sprintf( ( char * ) pcBuffer, "%s [%s] [size=%d]", pxFindStruct->filename, pcAttrib, pxFindStruct->filesize );
+	sprintf( ( char * ) pcBuffer, "%s [%s] [size=%d]", pxFindStruct->filename, pcAttrib, ( int ) pxFindStruct->filesize );
 }

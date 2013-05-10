@@ -161,7 +161,7 @@ check timer, only two are used by the flash timers. */
 standard demo flash timers. */
 #define mainCHECK_LED						( 1 )
 
-/* The size of the stack and the priority used by the UART CDC command console
+/* The size of the stack and the priority used by the UART command console
 task. */
 #define mainUART_COMMAND_CONSOLE_STACK_SIZE		( configMINIMAL_STACK_SIZE * 3 )
 #define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( tskIDLE_PRIORITY )
@@ -178,7 +178,7 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
  * defined in CLI-Commands.c and File-Related-CLI-Command.c respectively.
  */
 extern void vRegisterSampleCLICommands( void );
-extern vRegisterFileSystemCLICommands( void );
+extern void vRegisterFileSystemCLICommands( void );
 
 /*-----------------------------------------------------------*/
 

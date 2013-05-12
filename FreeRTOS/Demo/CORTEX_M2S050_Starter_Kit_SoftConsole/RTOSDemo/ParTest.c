@@ -94,6 +94,8 @@
 /* Remember the state of the outputs for easy toggling. */
 static unsigned char ucPortState = 0;
 
+static const mss_gpio_id_t ucLEDs[ partstNUM_LEDS ] = { MSS_GPIO_0, MSS_GPIO_1 };
+
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
@@ -103,15 +105,10 @@ long x;
 	/* Initialise MSS GPIOs. */
     MSS_GPIO_init();
 
-    /* Configure MSS GPIOs. */
-    MSS_GPIO_config( MSS_GPIO_0 , MSS_GPIO_OUTPUT_MODE );
-    MSS_GPIO_config( MSS_GPIO_1 , MSS_GPIO_OUTPUT_MODE );
-    MSS_GPIO_config( MSS_GPIO_2 , MSS_GPIO_OUTPUT_MODE );
-    MSS_GPIO_config( MSS_GPIO_3 , MSS_GPIO_OUTPUT_MODE );
-
-    /* Ensure the LEDs are off to start. */
+    /* Ensure the LEDs are outputs and off to start. */
     for( x = 0; x < partstNUM_LEDS; x++ )
     {
+    	MSS_GPIO_config( ucLEDs[ x ], MSS_GPIO_OUTPUT_MODE );
     	vParTestSetLED( x, pdFALSE );
     }
 }
@@ -123,7 +120,7 @@ void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 	{
 		taskENTER_CRITICAL();
 		{
-			MSS_GPIO_set_output( ( mss_gpio_id_t ) uxLED, xValue );
+			MSS_GPIO_set_output( ucLEDs[ uxLED ], xValue );
 
 			/* Remember the new output state. */
 			if( xValue == 0 )

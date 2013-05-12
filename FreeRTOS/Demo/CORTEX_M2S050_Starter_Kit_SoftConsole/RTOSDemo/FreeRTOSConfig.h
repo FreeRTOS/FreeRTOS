@@ -98,18 +98,14 @@
 #include <stdint.h>
 extern uint32_t SystemCoreClock;
 
-/* Driver includes required for UART IO. */
-#include "drivers/mss_uart/mss_uart.h"
-extern const mss_uart_instance_t * const pxUART;
-
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 130 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 27648 ) )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 25000 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0

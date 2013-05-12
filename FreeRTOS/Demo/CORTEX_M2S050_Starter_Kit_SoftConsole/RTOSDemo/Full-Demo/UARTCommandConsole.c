@@ -58,7 +58,7 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
+#include "queue.h"
 
 /* Driver includes. */
 #include "drivers/mss_uart/mss_uart.h"
@@ -73,12 +73,30 @@
 /* The maximum time in ticks to wait for the UART access mutex. */
 #define cmdMAX_MUTEX_WAIT		( 200 / portTICK_RATE_MS )
 
+/* Characters are only ever received slowly on the CLI so it is ok to pass
+received characters from the UART interrupt to the task on a queue.  This sets
+the length of the queue used for that purpose. */
+#define cmdRXED_CHARS_QUEUE_LENGTH			( 10 )
+
 /*-----------------------------------------------------------*/
 
 /*
  * The task that implements the command console processing.
  */
 static void prvUARTCommandConsoleTask( void *pvParameters );
+
+/*
+ * Ensure a previous interrupt driven Tx has completed before sending the next
+ * data block to the UART.
+ */
+static void prvSendBuffer( const uint8_t * pcBuffer, size_t xBufferLength );
+
+/*
+ * A UART is used for printf() output and CLI input and output.  Configure the
+ * UART and register prvUARTRxNotificationHandler() to handle UART Rx events.
+ */
+static void prvConfigureUART( void );
+static void prvUARTRxNotificationHandler( mss_uart_instance_t * this_uart );
 
 /*-----------------------------------------------------------*/
 
@@ -87,10 +105,24 @@ static const uint8_t * const pcWelcomeMessage = ( uint8_t * ) "\r\n\r\nFreeRTOS 
 static const uint8_t * const pcEndOfOutputMessage = ( uint8_t * ) "\r\n[Press ENTER to execute the previous command again]\r\n>";
 static const uint8_t * const pcNewLine = ( uint8_t * ) "\r\n";
 
+/* The UART used by the CLI. */
+static const mss_uart_instance_t * const pxUART = &g_mss_uart0;
+static const IRQn_Type xUART_IRQ = UART0_IRQn;
+
+/* Because characters are received slowly (at the speed somebody can type) then
+it is ok to pass received characters from the Rx interrupt to the task on a
+queue.  This is the queue used for that purpose. */
+static xQueueHandle xRxedChars = NULL;
+
 /*-----------------------------------------------------------*/
 
 void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPriority )
 {
+	/* A UART is used for printf() output and CLI input and output.  Note there
+	is no mutual exclusion on the UART, but the demo as it stands does not
+	require mutual exclusion. */
+	prvConfigureUART();
+
 	/* Create that task that handles the console itself. */
 	xTaskCreate( 	prvUARTCommandConsoleTask,			/* The task that implements the command console. */
 					( const int8_t * const ) "CLI",		/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
@@ -106,7 +138,6 @@ static void prvUARTCommandConsoleTask( void *pvParameters )
 int8_t cRxedChar, cInputIndex = 0, *pcOutputString;
 static int8_t cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
 portBASE_TYPE xReturned;
-mss_uart_instance_t * const pxUART = &g_mss_uart0;
 
 	( void ) pvParameters;
 
@@ -116,24 +147,21 @@ mss_uart_instance_t * const pxUART = &g_mss_uart0;
 	pcOutputString = FreeRTOS_CLIGetOutputBuffer();
 
 	/* Send the welcome message. */
-    MSS_UART_polled_tx_string( pxUART, ( uint8_t * ) pcWelcomeMessage );
+	prvSendBuffer( pcWelcomeMessage, strlen( ( char * ) pcWelcomeMessage ) );
 
 	for( ;; )
 	{
-		/* No characters received yet for the current input string. */
-		cRxedChar = 0;
-
-		/* Only interested in reading one character at a time. */
-		if( MSS_UART_get_rx( pxUART, ( uint8_t * ) &cRxedChar, sizeof( cRxedChar ) ) > 0 )
+		/* Wait for the next character to arrive. */
+		if( xQueueReceive( xRxedChars, &cRxedChar, portMAX_DELAY ) == pdPASS )
 		{
 			/* Echo the character back. */
-			MSS_UART_polled_tx( pxUART, ( uint8_t * ) &cRxedChar, sizeof( cRxedChar ) );
+			prvSendBuffer( ( uint8_t * ) &cRxedChar, sizeof( cRxedChar ) );
 
 			/* Was it the end of the line? */
 			if( cRxedChar == '\n' || cRxedChar == '\r' )
 			{
 				/* Just to space the output from the input. */
-				MSS_UART_polled_tx_string( pxUART, ( uint8_t * ) pcNewLine );
+				prvSendBuffer( ( uint8_t * ) pcNewLine, strlen( ( char * ) pcNewLine ) );
 
 				/* See if the command is empty, indicating that the last command is
 				to be executed again. */
@@ -153,8 +181,7 @@ mss_uart_instance_t * const pxUART = &g_mss_uart0;
 					xReturned = FreeRTOS_CLIProcessCommand( cInputString, pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
 
 					/* Write the generated string to the UART. */
-					MSS_UART_polled_tx_string( pxUART, ( uint8_t * ) pcOutputString );
-					vTaskDelay( 1 );
+					prvSendBuffer( ( uint8_t * ) pcOutputString, strlen( ( char * ) pcOutputString ) );
 
 				} while( xReturned != pdFALSE );
 
@@ -166,7 +193,7 @@ mss_uart_instance_t * const pxUART = &g_mss_uart0;
 				cInputIndex = 0;
 				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
-				MSS_UART_polled_tx_string( pxUART, ( uint8_t * ) pcEndOfOutputMessage );
+				prvSendBuffer( ( uint8_t * ) pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
 			}
 			else
 			{
@@ -203,4 +230,61 @@ mss_uart_instance_t * const pxUART = &g_mss_uart0;
 	}
 }
 /*-----------------------------------------------------------*/
+
+static void prvSendBuffer( const uint8_t * pcBuffer, size_t xBufferLength )
+{
+const portTickType xVeryShortDelay = 2UL;
+
+	MSS_UART_irq_tx( ( mss_uart_instance_t * ) pxUART, pcBuffer, xBufferLength );
+
+	/* Ensure any previous transmissions have completed.  The default UART
+	interrupt does not provide an event based method of	signally the end of a Tx
+	- this is therefore a crude poll of the Tx end status.  Replacing the
+	default UART handler with one that 'gives' a semaphore when the Tx is
+	complete would allow this poll loop to be replaced by a simple semaphore
+	block. */
+	while( MSS_UART_tx_complete( ( mss_uart_instance_t * ) pxUART ) == pdFALSE )
+	{
+		vTaskDelay( xVeryShortDelay );
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvConfigureUART( void )
+{
+	/* Initialise the UART which is used for printf() and CLI IO. */
+	MSS_UART_init( ( mss_uart_instance_t * ) pxUART, MSS_UART_115200_BAUD, MSS_UART_DATA_8_BITS | MSS_UART_NO_PARITY | MSS_UART_ONE_STOP_BIT );
+
+	/* Characters are only ever received slowly on the CLI so it is ok to pass
+	received characters from the UART interrupt to the task on a queue.  Create
+	the queue used for that purpose. */
+	xRxedChars = xQueueCreate( cmdRXED_CHARS_QUEUE_LENGTH, sizeof( char ) );
+
+	/* The interrupt handler makes use of FreeRTOS API functions, so its
+	priority must be at or below the configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY
+	setting (the higher the numeric priority, the lower the logical priority). */
+	NVIC_SetPriority( xUART_IRQ, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+
+	/* Set the UART Rx notification function. */
+	MSS_UART_set_rx_handler( ( mss_uart_instance_t * ) pxUART, prvUARTRxNotificationHandler, MSS_UART_FIFO_SINGLE_BYTE );
+}
+/*-----------------------------------------------------------*/
+
+static void prvUARTRxNotificationHandler( mss_uart_instance_t * pxUART )
+{
+uint8_t cRxed;
+portBASE_TYPE xHigherPriorityTaskWoken;
+
+	/* The command console receives data very slowly (at the speed of somebody
+	typing), therefore it is ok to just handle one character at a time and use
+	a queue to send the characters to the task. */
+	if( MSS_UART_get_rx( pxUART, &cRxed, sizeof( cRxed ) ) == sizeof( cRxed ) )
+	{
+		xHigherPriorityTaskWoken = pdFALSE;
+		xQueueSendFromISR( xRxedChars, &cRxed, &xHigherPriorityTaskWoken );
+
+		/* portEND_SWITCHING_ISR() or portYIELD_FROM_ISR() can be used here. */
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
+}
 

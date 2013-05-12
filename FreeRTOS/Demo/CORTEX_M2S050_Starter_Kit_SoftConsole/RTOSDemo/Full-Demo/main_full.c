@@ -104,6 +104,21 @@
  * been discovered.  If the green LED toggles every 200ms, then an issue has
  * been discovered with at least one task.
  *
+ * FreeRTOS+CLI command console.  The command console is access through UART0
+ * using 115200 baud and the Microsemi MSS UART drivers.  Type "help" to see a
+ * list of registered commands, which include some basic file system commands
+ * (see FreeRTOS+FAT SL comments below). The FreeRTOS+CLI license is different
+ * to the FreeRTOS license, see http://www.FreeRTOS.org/cli for license and
+ * usage details.
+ *
+ * FreeRTOS+FAT SL.  FreeRTOS+FAT SL is demonstrated using a RAM disk.  [At the
+ * time of writing] The functionality of the file system demo is identical to
+ * the functionality of the FreeRTOS Win32 simulator file system demo with the
+ * command console being accessed via the UART (as described above) instead of
+ * a network terminal.  The FreeRTOS+FAT SL license is different to the FreeRTOS
+ * license, see http://www.FreeRTOS.org/fat_sl for license and usage details,
+ * and a description of the file system demo functionality.
+ *
  * See the documentation page for this demo on the FreeRTOS.org web site for
  * full information, including hardware setup requirements.
  */
@@ -115,7 +130,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
-#include "semphr.h"
+#include "queue.h"
 
 /* Standard demo application includes. */
 #include "integer.h"
@@ -163,7 +178,7 @@ standard demo flash timers. */
 
 /* The size of the stack and the priority used by the UART command console
 task. */
-#define mainUART_COMMAND_CONSOLE_STACK_SIZE		( configMINIMAL_STACK_SIZE * 3 )
+#define mainUART_COMMAND_CONSOLE_STACK_SIZE		( configMINIMAL_STACK_SIZE * 2 )
 #define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
 /*-----------------------------------------------------------*/
@@ -180,31 +195,28 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 extern void vRegisterSampleCLICommands( void );
 extern void vRegisterFileSystemCLICommands( void );
 
+/* Prepare to run the full demo: Configure the IO, register the CLI
+ * commands, and depending on configuration, generate a set of sample files on
+ * a RAM disk.
+ */
+static void prvPrepareForFullDemo( void );
+
+/*
+ * Creates and verifies different files on the volume, demonstrating the use of
+ * various different API functions.
+ */
+extern void vCreateAndVerifySampleFiles( void );
+
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
 xTimerHandle xCheckTimer = NULL;
 
-	/* If the file system is only going to be accessed from one task then
-	F_FS_THREAD_AWARE can be set to 0 and the set of example files are created
-	before the RTOS scheduler is started.  If the file system is going to be
-	access from more than one task then F_FS_THREAD_AWARE must be set to 1 and
-	the	set of sample files are created from the idle task hook function
-	vApplicationIdleHook() - which is defined in this file. */
-	#if F_FS_THREAD_AWARE == 0
-	{
-		/* Initialise the drive and file system, then create a few example
-		files.  The output from this function just goes to the stdout window,
-		allowing the output to be viewed when the UDP command console is not
-		connected. */
-		vCreateAndVerifySampleFiles();
-	}
-	#endif
-
-	/* Register both the standard and file system related CLI commands. */
-	vRegisterSampleCLICommands();
-	vRegisterFileSystemCLICommands();
+	/* Prepare to run the full demo: Configure the IO, register the CLI
+	commands, and depending on configuration, generate a set of sample files on
+	a RAM disk. */
+	prvPrepareForFullDemo();
 
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
@@ -331,3 +343,25 @@ unsigned long ulErrorFound = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
+static void prvPrepareForFullDemo( void )
+{
+	/* If the file system is only going to be accessed from one task then
+	F_FS_THREAD_AWARE can be set to 0 and the set of example files are created
+	before the RTOS scheduler is started.  If the file system is going to be
+	access from more than one task then F_FS_THREAD_AWARE must be set to 1 and
+	the	set of sample files are created from the idle task hook function
+	vApplicationIdleHook() - which is defined in this file. */
+	#if F_FS_THREAD_AWARE == 0
+	{
+		/* Initialise the drive and file system, then create a few example
+		files.  The output from this function just goes to the stdout window,
+		allowing the output to be viewed when the UDP command console is not
+		connected. */
+		vCreateAndVerifySampleFiles();
+	}
+	#endif
+
+	/* Register both the standard and file system related CLI commands. */
+	vRegisterSampleCLICommands();
+	vRegisterFileSystemCLICommands();
+}

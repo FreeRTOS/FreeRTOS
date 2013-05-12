@@ -36,7 +36,7 @@ static void printchar(char **str, int c)
 	}
 	else
 	{
-		MSS_UART_polled_tx( pxUART, ( uint8_t * ) &c, sizeof( uint8_t ) );
+		/* Output char here. */
 	}
 }
 

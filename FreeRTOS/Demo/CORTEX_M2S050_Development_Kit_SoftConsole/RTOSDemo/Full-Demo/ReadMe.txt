@@ -1,1 +1,0 @@
-Run the CreateProjectDirectoryStructure.bat batch file to populate this directory before building the demo.

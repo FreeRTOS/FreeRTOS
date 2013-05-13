@@ -75,9 +75,10 @@
 /******************************************************************************
  * NOTE 1:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
- * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
- * in main.c.  This file implements the comprehensive test and demo version.
+ * configCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in FreeRTOSConifg.h is used to
+ * select between the two.  See the notes on using
+ * configCREATE_SIMPLE_BLINKY_DEMO_ONLY in mainc.  This file implements the
+ * comprehensive test and demo version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions

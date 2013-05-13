@@ -83,6 +83,20 @@
  */
 //#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
+/*
+ * Set configCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+ * or 0 to run the more comprehensive test and demo application.
+ */
+#define configCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+
+/*
+ * Set configBUILD_FOR_DEVELOPMENT_KIT to 1 to run the demo on the SmartFusion2
+ * development kit, or 0 to run the demo on the SmartFusion2 starter kit.  Refer
+ * to the documentation page for this demo on the FreeRTOS.org website for
+ * instruction on switching between the two hardware platforms.
+ */
+#define configBUILD_FOR_DEVELOPMENT_KIT 0
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *

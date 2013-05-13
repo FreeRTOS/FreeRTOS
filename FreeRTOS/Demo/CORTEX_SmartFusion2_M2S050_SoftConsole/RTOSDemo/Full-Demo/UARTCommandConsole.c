@@ -106,8 +106,13 @@ static const uint8_t * const pcEndOfOutputMessage = ( uint8_t * ) "\r\n[Press EN
 static const uint8_t * const pcNewLine = ( uint8_t * ) "\r\n";
 
 /* The UART used by the CLI. */
-static const mss_uart_instance_t * const pxUART = &g_mss_uart0;
-static const IRQn_Type xUART_IRQ = UART0_IRQn;
+#if configBUILD_FOR_DEVELOPMENT_KIT == 1
+	static const mss_uart_instance_t * const pxUART = &g_mss_uart1;
+	static const IRQn_Type xUART_IRQ = UART1_IRQn;
+#else
+	static const mss_uart_instance_t * const pxUART = &g_mss_uart0;
+	static const IRQn_Type xUART_IRQ = UART0_IRQn;
+#endif
 
 /* Because characters are received slowly (at the speed somebody can type) then
 it is ok to pass received characters from the Rx interrupt to the task on a

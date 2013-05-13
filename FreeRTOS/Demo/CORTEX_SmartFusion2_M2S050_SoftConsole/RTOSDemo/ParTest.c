@@ -94,7 +94,11 @@
 /* Remember the state of the outputs for easy toggling. */
 static unsigned char ucPortState = 0;
 
-static const mss_gpio_id_t ucLEDs[ partstNUM_LEDS ] = { MSS_GPIO_0, MSS_GPIO_1 };
+#if configBUILD_FOR_DEVELOPMENT_KIT == 1
+	static const mss_gpio_id_t ucLEDs[ partstNUM_LEDS ] = { MSS_GPIO_14, MSS_GPIO_15 };
+#else
+	static const mss_gpio_id_t ucLEDs[ partstNUM_LEDS ] = { MSS_GPIO_0, MSS_GPIO_1 };
+#endif
 
 /*-----------------------------------------------------------*/
 

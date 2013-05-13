@@ -75,10 +75,10 @@
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
  * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
- * select between the two.  The simply blinky demo is implemented and described
- * in main_blinky.c.  The more comprehensive test and demo application is
- * implemented and described in main_full.c.
+ * configCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in FreeRTOSConfig.h) is
+ * used to select between the two.  The simply blinky demo is implemented and
+ * described in main_blinky.c.  The more comprehensive test and demo application
+ * is implemented and described in main_full.c.
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -96,18 +96,14 @@
 function. */
 #include "partest.h"
 
-/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
-
 /*
  * Set up the hardware ready to run this demo.
  */
 static void prvSetupHardware( void );
 
 /*
- * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ * main_blinky() is used when configCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when configCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 extern void main_blinky( void );
 extern void main_full( void );
@@ -128,9 +124,9 @@ int main( void )
 	/* Prepare the hardware to run this demo. */
 	prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	/* The configCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	#if configCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
 	{
 		main_blinky();
 	}
@@ -182,7 +178,7 @@ void vApplicationIdleHook( void )
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1
+	#if configCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1
 	{
 		/* If the file system is only going to be accessed from one task then
 		F_FS_THREAD_AWARE can be set to 0 and the set of example files is created

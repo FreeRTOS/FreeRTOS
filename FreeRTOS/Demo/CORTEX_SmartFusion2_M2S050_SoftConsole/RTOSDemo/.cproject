@@ -50,7 +50,7 @@
 </option>
 <option id="gnu.c.compiler.option.misc.verbose.1351799799" name="Verbose (-v)" superClass="gnu.c.compiler.option.misc.verbose" value="true" valueType="boolean"/>
 <option id="gnu.c.compiler.option.optimization.flags.435998408" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" value="-ffunction-sections -fdata-sections" valueType="string"/>
-<option id="gnu.c.compiler.option.misc.other.1001754914" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -Wextra" valueType="string"/>
+<option id="gnu.c.compiler.option.misc.other.1001754914" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -Wextra" valueType="string"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2036217646" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug.612642130" name="GNU C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cross.cortexm3.exe.debug">

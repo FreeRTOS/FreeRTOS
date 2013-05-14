@@ -240,17 +240,20 @@ static void prvSendBuffer( const uint8_t * pcBuffer, size_t xBufferLength )
 {
 const portTickType xVeryShortDelay = 2UL;
 
-	MSS_UART_irq_tx( ( mss_uart_instance_t * ) pxUART, pcBuffer, xBufferLength );
-
-	/* Ensure any previous transmissions have completed.  The default UART
-	interrupt does not provide an event based method of	signally the end of a Tx
-	- this is therefore a crude poll of the Tx end status.  Replacing the
-	default UART handler with one that 'gives' a semaphore when the Tx is
-	complete would allow this poll loop to be replaced by a simple semaphore
-	block. */
-	while( MSS_UART_tx_complete( ( mss_uart_instance_t * ) pxUART ) == pdFALSE )
+	if( xBufferLength > 0 )
 	{
-		vTaskDelay( xVeryShortDelay );
+		MSS_UART_irq_tx( ( mss_uart_instance_t * ) pxUART, pcBuffer, xBufferLength );
+
+		/* Ensure any previous transmissions have completed.  The default UART
+		interrupt does not provide an event based method of	signally the end of a Tx
+		- this is therefore a crude poll of the Tx end status.  Replacing the
+		default UART handler with one that 'gives' a semaphore when the Tx is
+		complete would allow this poll loop to be replaced by a simple semaphore
+		block. */
+		while( MSS_UART_tx_complete( ( mss_uart_instance_t * ) pxUART ) == pdFALSE )
+		{
+			vTaskDelay( xVeryShortDelay );
+		}
 	}
 }
 /*-----------------------------------------------------------*/

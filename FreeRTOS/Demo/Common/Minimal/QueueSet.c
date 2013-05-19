@@ -568,6 +568,7 @@ static portBASE_TYPE xQueueToWriteTo = 0;
 static void prvSetupTest( xTaskHandle xQueueSetSendingTask )
 {
 portBASE_TYPE x;
+unsigned long ulValueToSend = 0;
 
 	/* Ensure the queues are created and the queue set configured before the
 	sending task is unsuspended.
@@ -614,7 +615,18 @@ portBASE_TYPE x;
 		xQueueSetTasksStatus = pdFAIL;
 	}
 
-	/* Add the queue back again before starting the dynamic tests. */
+	/* Add an item to the queue before attempting to add it back into the
+	set. */
+	xQueueSend( xQueues[ 0 ], ( void * ) &ulValueToSend, 0 );
+	if( xQueueAddToSet( xQueues[ 0 ], xQueueSet ) != pdFAIL )
+	{
+		/* Should not be able to add a non-empty queue to a set. */
+		xQueueSetTasksStatus = pdFAIL;
+	}
+
+	/* Remove the item from the queue before adding the queue back into the
+	set so the dynamic tests can begin. */
+	xQueueReceive( xQueues[ 0 ], &ulValueToSend, 0 );
 	if( xQueueAddToSet( xQueues[ 0 ], xQueueSet ) != pdPASS )
 	{
 		/* If the queue was successfully removed from the queue set then it

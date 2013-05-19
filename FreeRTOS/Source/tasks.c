@@ -2489,7 +2489,7 @@ tskTCB *pxNewTCB;
 				if( pxNextTCB->ulRunTimeCounter == 0UL )
 				{
 					/* The task has used no CPU time at all. */
-					sprintf( &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t0\t\t0%%\r\n", pxNextTCB->pcTaskName );
+					sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t0\t\t0%%\r\n", pxNextTCB->pcTaskName );
 				}
 				else
 				{
@@ -2508,7 +2508,7 @@ tskTCB *pxNewTCB;
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+							sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
 						}
 						#endif
 					}
@@ -2524,7 +2524,7 @@ tskTCB *pxNewTCB;
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter );
+							sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter );
 						}
 						#endif
 					}

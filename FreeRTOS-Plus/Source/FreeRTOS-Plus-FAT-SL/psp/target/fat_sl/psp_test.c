@@ -70,7 +70,7 @@ uint8_t _f_result ( uint8_t testnum, uint32_t result )
   }
   else
   {
-    printf( "FAILED! Error code: %u\r\n", result );
+    printf( "FAILED! Error code: %u\r\n", ( unsigned int ) result );
     all_tests_passed = 0u;
   }
 

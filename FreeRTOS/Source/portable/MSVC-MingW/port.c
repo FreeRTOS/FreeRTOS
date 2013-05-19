@@ -196,6 +196,7 @@ portTickType xMinimumWindowsBlockTime = ( portTickType ) 20;
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 xThreadState *pxThreadState = NULL;
+char *pcTopOfStack = ( char * ) pxTopOfStack;
 
 	/* In this simulated case a stack is not initialised, but instead a thread
 	is created that will execute the task being created.  The thread handles
@@ -203,7 +204,7 @@ xThreadState *pxThreadState = NULL;
 	the stack that was created for the task - so the stack buffer is still
 	used, just not in the conventional way.  It will not be used for anything
 	other than holding this structure. */
-	pxThreadState = ( xThreadState * ) ( pxTopOfStack - sizeof( xThreadState ) );
+	pxThreadState = ( xThreadState * ) ( pcTopOfStack - sizeof( xThreadState ) );
 
 	/* Create the thread itself. */
 	pxThreadState->pvThread = CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
@@ -411,8 +412,6 @@ void vPortEndScheduler( void )
 
 void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber )
 {
-xThreadState *pxThreadState;
-
 	if( ( ulInterruptNumber < portMAX_INTERRUPTS ) && ( pvInterruptEventMutex != NULL ) )
 	{
 		/* Yield interrupts are processed even when critical nesting is non-zero. */
@@ -424,9 +423,6 @@ xThreadState *pxThreadState;
 		be in a critical section as calls to wait for mutexes are accumulative. */
 		if( ulCriticalNesting == 0 )
 		{
-			/* The event handler needs to know to signal the interrupt acknowledge event
-			the next time this task runs. */
-			pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 			SetEvent( pvInterruptEvent );			
 		}
 
@@ -471,7 +467,6 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
-xThreadState *pxThreadState;
 long lMutexNeedsReleasing;
 
 	/* The interrupt event mutex should already be held by this thread as it was
@@ -490,10 +485,6 @@ long lMutexNeedsReleasing;
 			if( ulPendingInterrupts != 0UL )
 			{
 				SetEvent( pvInterruptEvent );
-
-				/* The event handler needs to know to signal the interrupt 
-				acknowledge event the next time this task runs. */
-				pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 
 				/* Mutex will be released now, so does not require releasing
 				on function exit. */

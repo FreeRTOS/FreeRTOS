@@ -121,6 +121,7 @@ extern void vPortYield( void );
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
 #define portYIELD()					vPortYield()
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT
+#define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */

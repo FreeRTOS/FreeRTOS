@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -162,6 +162,7 @@ typedef struct MPU_SETTINGS
 #define portNVIC_INT_CTRL			( ( volatile unsigned portLONG *) 0xe000ed04 )
 #define portNVIC_PENDSVSET			0x10000000
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET
+#define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
 
@@ -181,7 +182,7 @@ typedef struct MPU_SETTINGS
 
 /*
  * Set basepri back to 0 without effective other registers.
- * r0 is clobbered.  FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+ * r0 is clobbered.  FAQ:  Setting BASEPRI to 0 is not a bug.  Please see
  * http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing.
  */
 #define portCLEAR_INTERRUPT_MASK()			\
@@ -192,7 +193,7 @@ typedef struct MPU_SETTINGS
 		:::"r0"								\
 	)
 
-/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see 
+/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see
 http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
 #define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
@@ -213,7 +214,7 @@ extern void vPortExitCritical( void );
 
 #define portNOP()
 
-/* There are an uneven number of items on the initial stack, so 
+/* There are an uneven number of items on the initial stack, so
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
 

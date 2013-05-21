@@ -4,10 +4,12 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used
- * under a pure GPL open source license (as opposed to the modified GPL license
- * under which FreeRTOS is distributed) or a commercial license.  Details of
- * both license options follow:
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used 
+ * under a standard GPL open source license, or a commercial license.  The 
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS 
+ * itself is distributed) requires that all software statically linked with 
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * Details of both license options follow:
  *
  * - Open source licensing -
  * FreeRTOS+UDP is a free download and may be used, modified, evaluated and
@@ -318,10 +320,6 @@ static void prvOutputARPRequest( uint32_t ulIPAddress );
  */
 static void prvProcessNetworkDownEvent( void );
 
-#if( ipconfigFREERTOS_PLUS_NABTO == 1 )
-	static void prvStartNabtoTask( void );
-	extern void FreeRTOS_NabtoInit();
-#endif /* ipconfigFRERTOS_PLUS_NABTO */
 /*-----------------------------------------------------------*/
 
 /* The queue used to pass events into the UDP task for processing. */
@@ -1391,18 +1389,18 @@ static void prvProcessNetworkDownEvent( void )
 		}
 		#else
 		{
-			/* Static configuration is being used, so the network is now up. */
-			#if ipconfigFREERTOS_PLUS_NABTO == 1
-			{
-				prvStartNabtoTask();
-			}
-			#endif /* ipconfigFREERTOS_PLUS_NABTO */
-
 			#if ipconfigUSE_NETWORK_EVENT_HOOK == 1
 			{
 				vApplicationIPNetworkEventHook( eNetworkUp );
 			}
 			#endif /* ipconfigUSE_NETWORK_EVENT_HOOK */
+
+			/* Static configuration is being used, so the network is now up. */
+			#if ipconfigFREERTOS_PLUS_NABTO == 1
+			{
+				vStartNabtoTask();
+			}
+			#endif /* ipconfigFREERTOS_PLUS_NABTO */
 		}
 		#endif
 	}
@@ -1839,18 +1837,4 @@ xARPHeader_t *pxARPHeader;
 #endif /* ipconfigBYTE_ORDER == FREERTOS_LITTLE_ENDIAN */
 
 /*-----------------------------------------------------------*/
-
-#if( ipconfigFREERTOS_PLUS_NABTO == 1 )
-	static void prvStartNabtoTask( void )
-	{
-	static portBASE_TYPE xNabtoTaskStarted = pdFALSE;
-
-		if( xNabtoTaskStarted == pdFALSE )
-		{
-			FreeRTOS_NabtoInit();
-			xNabtoTaskStarted = pdTRUE;
-		}
-	}
-#endif /* ipconfigFREERTOS_PLUS_NABTO */
-
 

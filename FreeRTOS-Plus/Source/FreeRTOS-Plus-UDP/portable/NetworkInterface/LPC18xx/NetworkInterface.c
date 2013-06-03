@@ -53,12 +53,13 @@
 #include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_Sockets.h"
 #include "NetworkBufferManagement.h"
-
-/* Driver includes. */
-#include "lpc18xx_emac.h"
+#include "lpc18xx_43xx_EMAC_LPCOpen.h"
 
 /* Demo includes. */
 #include "NetworkInterface.h"
+
+/* Library includes. */
+#include "board.h"
 
 #if configMAC_INTERRUPT_PRIORITY > configMAC_INTERRUPT_PRIORITY
 	#error configMAC_INTERRUPT_PRIORITY must be greater than or equal to configMAC_INTERRUPT_PRIORITY (higher numbers mean lower logical priority)
@@ -93,23 +94,19 @@ extern xQueueHandle xNetworkEventQueue;
 
 /* The semaphore used to wake the deferred interrupt handler task when an Rx
 interrupt is received. */
-static xSemaphoreHandle xEMACRxEventSemaphore = NULL;
+xSemaphoreHandle xEMACRxEventSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
 portBASE_TYPE xNetworkInterfaceInitialise( void )
 {
-EMAC_CFG_Type Emac_Config;
 portBASE_TYPE xReturn;
 extern uint8_t ucMACAddress[ 6 ];
 
-	Emac_Config.pbEMAC_Addr = ucMACAddress;
-	xReturn = EMAC_Init( &Emac_Config );
+	xReturn = xEMACInit( ucMACAddress );
 
 	if( xReturn == pdPASS )
 	{
-		LPC_ETHERNET->DMA_INT_EN =  DMA_INT_NOR_SUM | DMA_INT_RECEIVE;
-
 		/* Create the event semaphore if it has not already been created. */
 		if( xEMACRxEventSemaphore == NULL )
 		{
@@ -121,25 +118,19 @@ extern uint8_t ucMACAddress[ 6 ];
 				vTraceSetQueueName( xEMACRxEventSemaphore, "MAC_RX" );
 			}
 			#endif /*  ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 */
+
+			configASSERT( xEMACRxEventSemaphore );
+
+			/* The Rx deferred interrupt handler task is created at the highest
+			possible priority to ensure the interrupt handler can return directly to
+			it no matter which task was running when the interrupt occurred. */
+			xTaskCreate( 	prvEMACDeferredInterruptHandlerTask,/* The function that implements the task. */
+							( const signed char * const ) "MACTsk",
+							configMINIMAL_STACK_SIZE,	/* Stack allocated to the task (defined in words, not bytes). */
+							NULL, 						/* The task parameter is not used. */
+							configMAX_PRIORITIES - 1, 	/* The priority assigned to the task. */
+							NULL );						/* The handle is not required, so NULL is passed. */
 		}
-
-		configASSERT( xEMACRxEventSemaphore );
-
-		/* The Rx deferred interrupt handler task is created at the highest
-		possible priority to ensure the interrupt handler can return directly to
-		it no matter which task was running when the interrupt occurred. */
-		xTaskCreate( 	prvEMACDeferredInterruptHandlerTask,		/* The function that implements the task. */
-						( const signed char * const ) "MACTsk",
-						configMINIMAL_STACK_SIZE,	/* Stack allocated to the task (defined in words, not bytes). */
-						NULL, 						/* The task parameter is not used. */
-						configMAX_PRIORITIES - 1, 	/* The priority assigned to the task. */
-						NULL );						/* The handle is not required, so NULL is passed. */
-
-		/* Enable the interrupt and set its priority as configured.  THIS
-		DRIVER REQUIRES configMAC_INTERRUPT_PRIORITY TO BE DEFINED, PREFERABLY
-		IN FreeRTOSConfig.h. */
-		NVIC_SetPriority( ETHERNET_IRQn, configMAC_INTERRUPT_PRIORITY );
-		NVIC_EnableIRQ( ETHERNET_IRQn );
 	}
 
 	return xReturn;
@@ -154,10 +145,10 @@ int32_t x;
 	/* Attempt to obtain access to a Tx descriptor. */
 	for( x = 0; x < niMAX_TX_ATTEMPTS; x++ )
 	{
-		if( EMAC_CheckTransmitIndex() == TRUE )
+		if( xEMACIsTxDescriptorAvailable() == TRUE )
 		{
 			/* Assign the buffer being transmitted to the Tx descriptor. */
-			EMAC_SetNextPacketToSend( pxNetworkBuffer->pucEthernetBuffer );
+			vEMACAssignBufferToDescriptor( pxNetworkBuffer->pucEthernetBuffer );
 
 			/* The EMAC now owns the buffer and will free it when it has been
 			transmitted.  Set pucBuffer to NULL to ensure the buffer is not
@@ -166,7 +157,7 @@ int32_t x;
 			pxNetworkBuffer->pucEthernetBuffer = NULL;
 
 			/* Initiate the Tx. */
-			EMAC_StartTransmitNextBuffer( pxNetworkBuffer->xDataLength );
+			vEMACStartNextTransmission( pxNetworkBuffer->xDataLength );
 			iptraceNETWORK_INTERFACE_TRANSMIT();
 
 			/* The Tx has been initiated. */
@@ -185,36 +176,6 @@ int32_t x;
 	vNetworkBufferRelease( pxNetworkBuffer );
 
 	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-void ETH_IRQHandler( void )
-{
-uint32_t ulInterruptCause;
-
-	ulInterruptCause = LPC_ETHERNET->DMA_STAT ;
-
-	/* Clear the interrupt. */
-	LPC_ETHERNET->DMA_STAT |= ( DMA_INT_NOR_SUM | DMA_INT_RECEIVE );
-
-	/* Clear fatal error conditions.  NOTE:  The driver does not clear all
-	errors, only those actually experienced.  For future reference, range
-	errors are not actually errors so can be ignored. */
-	if( ( ulInterruptCause & ( 1 << 13 ) ) != 0U )
-	{
-		LPC_ETHERNET->DMA_STAT |= ( 1 << 13 );
-	}
-
-	/* Unblock the deferred interrupt handler task if the event was an Rx. */
-	if( ( ulInterruptCause & DMA_INT_RECEIVE ) != 0UL )
-	{
-		xSemaphoreGiveFromISR( xEMACRxEventSemaphore, NULL );
-	}
-
-	/* ulInterruptCause is used for convenience here.  A context switch is
-	wanted, but coding portEND_SWITCHING_ISR( 1 ) would likely result in a
-	compiler warning. */
-	portEND_SWITCHING_ISR( ulInterruptCause );
 }
 /*-----------------------------------------------------------*/
 
@@ -237,7 +198,7 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 		while( xSemaphoreTake( xEMACRxEventSemaphore, portMAX_DELAY ) == pdFALSE );
 
 		/* At least one packet has been received. */
-		while( EMAC_CheckReceiveIndex() != FALSE )
+		while( xEMACRxDataAvailable() != FALSE )
 		{
 			/* The buffer filled by the DMA is going to be passed into the IP
 			stack.  Allocate another buffer for the DMA descriptor. */
@@ -250,7 +211,7 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 				the DMA.  pxNetworkBuffer will then hold a reference to the
 				buffer that already contains the data without any data having
 				been copied between buffers. */
-				EMAC_NextPacketToRead( pxNetworkBuffer );
+				vEMACSwapEmptyBufferForRxedData( pxNetworkBuffer );
 
 				#if ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 1
 				{
@@ -304,7 +265,7 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 			}
 
 			/* Release the descriptor. */
-			EMAC_UpdateRxConsumeIndex();
+			vEMACReturnRxDescriptor();
 		}
 	}
 }

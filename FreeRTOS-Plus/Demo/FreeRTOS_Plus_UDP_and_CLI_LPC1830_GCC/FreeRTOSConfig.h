@@ -177,7 +177,7 @@ function can have.  Note that lower priority have numerically higher values.  */
 
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
-#define vPortSVCHandler SVCall_Handler
+#define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
 
@@ -233,11 +233,11 @@ the iptraceWAITING_FOR_TX_DMA_DESCRIPTOR() IP trace macro. */
 
 /* The address of an echo server that will be used by the two demo echo client
 tasks.
-http://localhost/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml */
+http://FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml */
 #define configECHO_SERVER_ADDR0	172
 #define configECHO_SERVER_ADDR1 25
 #define configECHO_SERVER_ADDR2 218
-#define configECHO_SERVER_ADDR3 103
+#define configECHO_SERVER_ADDR3 100
 
 /* MAC address configuration.  In a deployed production system this would
 probably be read from an EEPROM.  In the demo it is just hard coded.  Make sure
@@ -251,10 +251,10 @@ each node on the network has a unique MAC address. */
 
 /* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
-#define configIP_ADDR0		192
-#define configIP_ADDR1		168
-#define configIP_ADDR2		1
-#define configIP_ADDR3		125
+#define configIP_ADDR0		172
+#define configIP_ADDR1		25
+#define configIP_ADDR2		218
+#define configIP_ADDR3		200
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */

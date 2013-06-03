@@ -1,0 +1,31 @@
+/** \file
+*
+*  This file contains special DoxyGen information for the generation of the main page and other special
+*  documentation pages. It is not a project source file.
+*/
+
+/**
+*  \mainpage
+*
+*
+<b>
+<p>LPCUSBlib is a full featured, open-source USB library designed
+to run on all USB capable LPC microcontrollers from NXP.</p>
+</b>
+<p>The library includes support for</p>
+<ul>
+<li>USB 2.0</li>
+<li>Host and device modes</li>
+<li>Low, full and high speed transfer rates</li>
+<li>Control, bulk, interrupt, and isochronous transfer types</li>
+</ul>
+<p>&nbsp;</p>
+<div style="text-align: center;"><a
+href="http://www.lpcware.com/content/project/LPCUSBlib/get-it">Visit
+http://www.lpcware.com/content/project/LPCUSBlib to get the
+latest version of LPCUSBlib</a></div>
+<p>&nbsp;</p>
+ *
+ */
+
+

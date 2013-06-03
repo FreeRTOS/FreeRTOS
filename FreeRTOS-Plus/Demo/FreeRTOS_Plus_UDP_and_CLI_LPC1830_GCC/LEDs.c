@@ -79,9 +79,7 @@
 #include "timers.h"
 
 /* Library includes. */
-#include "lpc18xx_gpio.h"
-#include "lpc18xx_scu.h"
-#include "lpc18xx_cgu.h"
+#include "board.h"
 
 #define ledTOGGLE_RATE	( 500 / portTICK_RATE_MS )
 
@@ -101,12 +99,6 @@ static void prvLEDToggleTimerCallback( xTimerHandle xTimer );
 void vLEDsInitialise( void )
 {
 static xTimerHandle xLEDToggleTimer = NULL;
-
-	/* Set the LED pin-muxing and configure as output. */
-	scu_pinmux( 0x2 , 11, MD_PUP, FUNC0 );
-	scu_pinmux( 0x2 , 12, MD_PUP, FUNC0 );
-	GPIO_SetDir( ledLED0_PORT, ledLED0_BIT, 1 );
-	GPIO_SetDir( ledLED1_PORT, ledLED1_BIT, 1 );
 
     /* Create the timer used to toggle LED0. */
 	xLEDToggleTimer = xTimerCreate(	( const int8_t * ) "LEDTmr", 	/* Just a text name to associate with the timer, useful for debugging, but not used by the kernel. */
@@ -132,15 +124,7 @@ static uint8_t ucState = 0;
 	( void ) xTimer;
 
 	/* Just toggle an LED to show the program is running. */
-	if( ucState == 0 )
-	{
-		GPIO_SetValue( ledLED0_PORT, ledLED0_BIT );
-	}
-	else
-	{
-		GPIO_ClearValue( ledLED0_PORT, ledLED0_BIT );
-	}
-
+	Board_LED_Set( ledLED0_PORT, ucState );
 	ucState = !ucState;
 }
 

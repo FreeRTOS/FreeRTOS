@@ -1,4 +1,4 @@
-//*****************************************************************************
+// *****************************************************************************
 //   +--+
 //   | ++----+
 //   +-++    |
@@ -7,9 +7,9 @@
 //   | +--+--+
 //   +----+    Copyright (c) 2011-12 Code Red Technologies Ltd.
 //
-// Microcontroller Startup code for use with Red Suite
+// LPC43xx Microcontroller Startup code for use with Red Suite
 //
-// Version : 120126
+// Version : 120430
 //
 // Software License Agreement
 //
@@ -26,52 +26,52 @@
 // TO A CURRENT END USER LICENSE AGREEMENT (COMMERCIAL OR EDUCATIONAL) WITH
 // CODE RED TECHNOLOGIES LTD.
 //
-//*****************************************************************************
-#if defined (__cplusplus)
+// *****************************************************************************
+
+#include "stdint.h"
+
+#if defined(__cplusplus)
 #ifdef __REDLIB__
 #error Redlib does not support C++
 #else
-//*****************************************************************************
+// *****************************************************************************
 //
 // The entry point for the C++ library startup
 //
-//*****************************************************************************
+// *****************************************************************************
 extern "C" {
-	extern void __libc_init_array(void);
+extern void __libc_init_array(void);
+
 }
 #endif
 #endif
 
 #define WEAK __attribute__ ((weak))
-#define ALIAS(f) __attribute__ ((weak, alias (#f)))
+#define ALIAS(f) __attribute__ ((weak, alias(# f)))
 
 // Code Red - if CMSIS is being used, then SystemInit() routine
 // will be called by startup code rather than in application's main()
-#if defined (__USE_CMSIS)
-#include "LPC18xx.h"
-#endif
+extern void SystemInit(void);
 
-//*****************************************************************************
-#if defined (__cplusplus)
+// *****************************************************************************
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
-#include <stdint.h>
-
-//*****************************************************************************
+// *****************************************************************************
 //
 // Forward declaration of the default handlers. These are aliased.
 // When the application defines a handler (with the same name), this will
 // automatically take precedence over these weak definitions
 //
-//*****************************************************************************
-     void ResetISR(void);
+// *****************************************************************************
+void ResetISR(void);
 WEAK void NMI_Handler(void);
-WEAK void HardFault_Handler(void);// __attribute__((naked));
+WEAK void HardFault_Handler(void);
 WEAK void MemManage_Handler(void);
 WEAK void BusFault_Handler(void);
 WEAK void UsageFault_Handler(void);
-WEAK void SVCall_Handler(void);
+WEAK void SVC_Handler(void);
 WEAK void DebugMon_Handler(void);
 WEAK void PendSV_Handler(void);
 WEAK void SysTick_Handler(void);
@@ -86,7 +86,9 @@ WEAK void IntDefaultHandler(void);
 //
 //*****************************************************************************
 void DAC_IRQHandler(void) ALIAS(IntDefaultHandler);
+void MX_CORE_IRQHandler(void) ALIAS(IntDefaultHandler);
 void DMA_IRQHandler(void) ALIAS(IntDefaultHandler);
+void FLASHEEPROM_IRQHandler(void) ALIAS(IntDefaultHandler);
 void ETH_IRQHandler(void) ALIAS(IntDefaultHandler);
 void SDIO_IRQHandler(void) ALIAS(IntDefaultHandler);
 void LCD_IRQHandler(void) ALIAS(IntDefaultHandler);
@@ -102,6 +104,7 @@ void MCPWM_IRQHandler(void) ALIAS(IntDefaultHandler);
 void ADC0_IRQHandler(void) ALIAS(IntDefaultHandler);
 void I2C0_IRQHandler(void) ALIAS(IntDefaultHandler);
 void I2C1_IRQHandler(void) ALIAS(IntDefaultHandler);
+void SPI_IRQHandler (void) ALIAS(IntDefaultHandler);
 void ADC1_IRQHandler(void) ALIAS(IntDefaultHandler);
 void SSP0_IRQHandler(void) ALIAS(IntDefaultHandler);
 void SSP1_IRQHandler(void) ALIAS(IntDefaultHandler);
@@ -158,82 +161,82 @@ extern void _vStackTop(void);
 // The vector table.
 // This relies on the linker script to place at correct location in memory.
 //
-//*****************************************************************************
-extern void (* const g_pfnVectors[])(void);
+// *****************************************************************************
+extern void(*const g_pfnVectors[]) (void);
 __attribute__ ((section(".isr_vector")))
-void (* const g_pfnVectors[])(void) = {
-	// Core Level - CM3
-	&_vStackTop, // The initial stack pointer
-	ResetISR,								// The reset handler
-	NMI_Handler,							// The NMI handler
-	HardFault_Handler,						// The hard fault handler
-	MemManage_Handler,						// The MPU fault handler
-	BusFault_Handler,						// The bus fault handler
-	UsageFault_Handler,						// The usage fault handler
-	0,										// Reserved
-	0,										// Reserved
-	0,										// Reserved
-	0,										// Reserved
-	SVCall_Handler,							// SVCall handler
-	DebugMon_Handler,						// Debug monitor handler
-	0,										// Reserved
-	PendSV_Handler,							// The PendSV handler
-	SysTick_Handler,						// The SysTick handler
+void(*const g_pfnVectors[]) (void) = {
+	// Core Level - CM4/CM3
+	&_vStackTop,	                // The initial stack pointer
+	ResetISR,						// The reset handler
+	NMI_Handler,					// The NMI handler
+	HardFault_Handler,				// The hard fault handler
+	MemManage_Handler,				// The MPU fault handler
+	BusFault_Handler,				// The bus fault handler
+	UsageFault_Handler,				// The usage fault handler
+	0,								// Reserved
+	0,								// Reserved
+	0,								// Reserved
+	0,								// Reserved
+	SVC_Handler,					// SVCall handler
+	DebugMon_Handler,				// Debug monitor handler
+	0,								// Reserved
+	PendSV_Handler,					// The PendSV handler
+	SysTick_Handler,				// The SysTick handler
 
-	// Chip Level - LPC18
-	DAC_IRQHandler,	 			// 16
-	0,							// 17
-	DMA_IRQHandler,				// 18
-	0,							// 19
-	0,							// 20
-	ETH_IRQHandler,				// 21
-	SDIO_IRQHandler,			// 22
-	LCD_IRQHandler,				// 23
-	USB0_IRQHandler,			// 24
-	USB1_IRQHandler,			// 25
-	SCT_IRQHandler,				// 26
-	RIT_IRQHandler,				// 27
-	TIMER0_IRQHandler,			// 28
-	TIMER1_IRQHandler,			// 29
-	TIMER2_IRQHandler,			// 30
-	TIMER3_IRQHandler,			// 31
-	MCPWM_IRQHandler,			// 32
-	ADC0_IRQHandler,			// 33
-	I2C0_IRQHandler,			// 34
-	I2C1_IRQHandler,			// 35
-	0,							// 36
-	ADC1_IRQHandler,			// 37
-	SSP0_IRQHandler,			// 38
-	SSP1_IRQHandler,			// 39
-	UART0_IRQHandler,			// 40
-	UART1_IRQHandler,			// 41
-	UART2_IRQHandler,			// 42
-	UART3_IRQHandler,			// 43
-	I2S0_IRQHandler,			// 44
-	I2S1_IRQHandler,			// 45
-	SPIFI_IRQHandler,			// 46
-	SGPIO_IRQHandler,			// 47
-	GPIO0_IRQHandler,			// 48
-	GPIO1_IRQHandler,			// 49
-	GPIO2_IRQHandler,			// 50
-	GPIO3_IRQHandler,			// 51
-	GPIO4_IRQHandler,			// 52
-	GPIO5_IRQHandler,			// 53
-	GPIO6_IRQHandler,			// 54
-	GPIO7_IRQHandler,			// 55
-	GINT0_IRQHandler,			// 56
-	GINT1_IRQHandler,			// 57
-	EVRT_IRQHandler,			// 58
-	CAN1_IRQHandler,			// 59
-	0,							// 60
-	0,							// 61
-	ATIMER_IRQHandler,			// 62
-	RTC_IRQHandler,				// 63
-	0,							// 64
-	WDT_IRQHandler,			// 65
-	0,							// 66
-	CAN0_IRQHandler,			// 67
-	QEI_IRQHandler,				// 68
+	// Chip Level - LPC18xx/43xx
+	DAC_IRQHandler,					// 16 D/A Converter
+	MX_CORE_IRQHandler,				// 17 CortexM4/M0 (LPC43XX ONLY)
+	DMA_IRQHandler,					// 18 General Purpose DMA
+	0,								// 19 Reserved
+	FLASHEEPROM_IRQHandler,			// 20 ORed flash Bank A, flash Bank B, EEPROM interrupts
+	ETH_IRQHandler,					// 21 Ethernet
+	SDIO_IRQHandler,				// 22 SD/MMC
+	LCD_IRQHandler,					// 23 LCD
+	USB0_IRQHandler,				// 24 USB0
+	USB1_IRQHandler,				// 25 USB1
+	SCT_IRQHandler,					// 26 State Configurable Timer
+	RIT_IRQHandler,					// 27 Repetitive Interrupt Timer
+	TIMER0_IRQHandler,				// 28 Timer0
+	TIMER1_IRQHandler,				// 29 Timer 1
+	TIMER2_IRQHandler,				// 30 Timer 2
+	TIMER3_IRQHandler,				// 31 Timer 3
+	MCPWM_IRQHandler,				// 32 Motor Control PWM
+	ADC0_IRQHandler,				// 33 A/D Converter 0
+	I2C0_IRQHandler,				// 34 I2C0
+	I2C1_IRQHandler,				// 35 I2C1
+	SPI_IRQHandler,					// 36 SPI (LPC43XX ONLY)
+	ADC1_IRQHandler,				// 37 A/D Converter 1
+	SSP0_IRQHandler,				// 38 SSP0 
+	SSP1_IRQHandler,				// 39 SSP1
+	UART0_IRQHandler,				// 40 UART0
+	UART1_IRQHandler,				// 41 UART1
+	UART2_IRQHandler,				// 42 UART2
+	UART3_IRQHandler,				// 43 USRT3
+	I2S0_IRQHandler,				// 44 I2S0
+	I2S1_IRQHandler,				// 45 I2S1
+	SPIFI_IRQHandler,				// 46 SPI Flash Interface
+	SGPIO_IRQHandler,				// 47 SGPIO (LPC43XX ONLY)
+	GPIO0_IRQHandler,				// 48 GPIO0
+	GPIO1_IRQHandler,				// 49 GPIO1
+	GPIO2_IRQHandler,				// 50 GPIO2
+	GPIO3_IRQHandler,				// 51 GPIO3 
+	GPIO4_IRQHandler,				// 52 GPIO4
+	GPIO5_IRQHandler,				// 53 GPIO5
+	GPIO6_IRQHandler,				// 54 GPIO6
+	GPIO7_IRQHandler,				// 55 GPIO7
+	GINT0_IRQHandler,				// 56 GINT0
+	GINT1_IRQHandler,				// 57 GINT1
+	EVRT_IRQHandler,				// 58 Event Router
+	CAN1_IRQHandler,				// 59 C_CAN1
+	0,								// 60 Reserved
+	0,				                // 61 Reserved 
+	ATIMER_IRQHandler,				// 62 ATIMER
+	RTC_IRQHandler,					// 63 RTC
+	0,								// 64 Reserved
+	WDT_IRQHandler,					// 65 WDT
+	0,								// 66 Reserved
+	CAN0_IRQHandler,				// 67 C_CAN0
+	QEI_IRQHandler,					// 68 QEI
 };
 
 //*****************************************************************************

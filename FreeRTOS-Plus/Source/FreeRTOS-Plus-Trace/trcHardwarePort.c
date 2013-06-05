@@ -1,11 +1,11 @@
-/*******************************************************************************
- * FreeRTOS+Trace v2.3.0 Recorder Library
+/******************************************************************************* 
+ * Tracealyzer v2.4.1 Recorder Library
  * Percepio AB, www.percepio.com
  *
- * trcPort.c
+ * trcHardwarePort.c
  *
- * Contains all portability issues of the trace recorder library. 
- * See also trcPort.h, where port-specific macros are defined.
+ * Contains together with trcHardwarePort.h all hardware portability issues of 
+ * the trace recorder library.
  *
  * Terms of Use
  * This software is copyright Percepio AB. The recorder library is free for
@@ -32,60 +32,41 @@
  * damages, or the exclusion of implied warranties or limitations on how long an 
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * OFFER FROM PERCEPIO:
- * For silicon companies and non-corporate FreeRTOS users (researchers, students
- * , hobbyists or early-phase startups) we have an attractive offer: 
- * Provide a hardware timer port and get a FREE single-user licence for
- * FreeRTOS+Trace Professional Edition. Read more about this offer at 
- * www.percepio.com or contact us directly at support@percepio.com.
- *
- * FreeRTOS+Trace is available as Free Edition and in two premium editions.
- * You may use the premium features during 30 days for evaluation.
- * Download FreeRTOS+Trace at http://www.percepio.com/products/downloads/
- *
- * Copyright Percepio AB, 2012.
+ * Copyright Percepio AB, 2013.
  * www.percepio.com
  ******************************************************************************/
 
-#include "trcUser.h"
+#include "trcHardwarePort.h"
 
-#if (configUSE_TRACE_FACILITY == 1)
+#if (USE_TRACEALYZER_RECORDER == 1)
 
-#if (INCLUDE_SAVE_TO_FILE == 1)
-static char* prvFileName = NULL;
-#endif
+#include <stdint.h>
 
 
 /*******************************************************************************
  * uiTraceTickCount
  *
- * This variable is updated by the traceTASK_INCREMENT_TICK macro in the 
- * FreeRTOS tick handler. This does not need to be modified when developing a 
- * new timer port. It is prefered to keep any timer port changes in the HWTC 
- * macro definitions, which typically give sufficient flexibility.
+ * This variable is should be updated by the Kernel tick interrupt. This does 
+ * not need to be modified when developing a new timer port. It is preferred to 
+ * keep any timer port changes in the HWTC macro definitions, which typically 
+ * give sufficient flexibility.
  ******************************************************************************/
 uint32_t uiTraceTickCount = 0;
 
 /******************************************************************************
- * uiTracePortGetTimeStamp
+ * vTracePortGetTimeStamp
  *
  * Returns the current time based on the HWTC macros which provide a hardware
  * isolation layer towards the hardware timer/counter.
  *
- * The HWTC macros and uiTracePortGetTimeStamp is the main porting issue
+ * The HWTC macros and vTracePortGetTimeStamp is the main porting issue
  * or the trace recorder library. Typically you should not need to change
- * the code of uiTracePortGetTimeStamp if using the HWTC macros.
+ * the code of vTracePortGetTimeStamp if using the HWTC macros.
  *
- * OFFER FROM PERCEPIO:
- * For silicon companies and non-corporate FreeRTOS users (researchers, students
- * , hobbyists or early-phase startups) we have an attractive offer: 
- * Provide a hardware timer port and get a FREE single-user license for
- * FreeRTOS+Trace Professional Edition. Read more about this offer at 
- * www.percepio.com or contact us directly at support@percepio.com.
  ******************************************************************************/
-void uiTracePortGetTimeStamp(uint32_t *pTimestamp)
+void vTracePortGetTimeStamp(uint32_t *pTimestamp)
 {
-    static uint32_t last_traceTickCount = 0;
+	static uint32_t last_traceTickCount = 0;
     static uint32_t last_hwtc_count = 0;
     uint32_t traceTickCount = 0;
     uint32_t hwtc_count = 0;
@@ -135,74 +116,4 @@ void uiTracePortGetTimeStamp(uint32_t *pTimestamp)
     last_hwtc_count = hwtc_count;
 }
 
-/*******************************************************************************
- * vTracePortEnd
- * 
- * This function is called by the monitor when a recorder stop is detected.
- * This is used by the Win32 port to store the trace to a file. The file path is
- * set using vTracePortSetOutFile.
- ******************************************************************************/
-void vTracePortEnd()
-{
-    vTraceConsoleMessage("\n\r[FreeRTOS+Trace] Running vTracePortEnd.\n\r");
-
-    #if (WIN32_PORT_SAVE_WHEN_STOPPED == 1)
-    vTracePortSave();
-    #endif
-
-    #if (WIN32_PORT_EXIT_WHEN_STOPPED == 1)
-    /* In the FreeRTOS/Win32 demo, this allows for killing the application 
-    when the recorder is stopped (e.g., when the buffer is full) */
-    system("pause");
-    exit(0);
-    #endif
-}
-
-#if (INCLUDE_SAVE_TO_FILE == 1)
-/*******************************************************************************
- * vTracePortSetOutFile
- *
- * Sets the filename/path used in vTracePortSave.
- * This is set in a separate function, since the Win32 port calls vTracePortSave
- * in vTracePortEnd if WIN32_PORT_SAVE_WHEN_STOPPED is set.
- ******************************************************************************/
-void vTracePortSetOutFile(char* path)
-{
-    prvFileName = path;
-}
-
-/*******************************************************************************
- * vTracePortSave
- *
- * Saves the trace to a file on a local file system. The path is set in a 
- * separate function, vTracePortSetOutFile, since the Win32 port calls 
- * vTracePortSave in vTracePortEnd if WIN32_PORT_SAVE_WHEN_STOPPED is set.
- ******************************************************************************/
-void vTracePortSave()
-{
-    char buf[180];
-    FILE* f;
-
-    if (prvFileName == NULL)
-    {
-        prvFileName = "FreeRTOSPlusTrace.dump";
-        sprintf(buf, "No filename specified, using default \"%s\".", prvFileName);
-        vTraceConsoleMessage(buf);
-    }
-
-    fopen_s(&f, prvFileName, "wb");
-    if (f)
-    {
-        fwrite(RecorderDataPtr, sizeof(RecorderDataType), 1, f);
-        fclose(f);
-        sprintf(buf, "\n\r[FreeRTOS+Trace] Saved in: %s\n\r", prvFileName);
-        vTraceConsoleMessage(buf);
-    }
-    else
-    {
-        sprintf(buf, "\n\r[FreeRTOS+Trace] Failed to write to output file!\n\r");
-        vTraceConsoleMessage(buf);
-    }
-}
-#endif
 #endif

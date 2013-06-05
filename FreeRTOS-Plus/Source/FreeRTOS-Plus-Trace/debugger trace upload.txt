@@ -1,24 +1,28 @@
 
-FreeRTOS+Trace - Uploading the trace data
+Tracealyzer - Uploading the trace data
 -----------------------------------------
 Percepio AB, Nov. 8, 2012
 
 This document decribes how to upload the trace data from the target system to
-FreeRTOS+Trace. For information on how to integrate and enable the recorder 
-library in your FreeRTOS project, see the FreeRTOS+Trace User Manual.
+Tracealyzer. 
 
-FreeRTOS+Trace uses your existing debugger to upload the trace data from the 
+Tracealyzer uses your existing debugger to upload the trace data from the 
 chip RAM. This is a plain RAM dump, that is done whenever you want to look at 
 the trace buffer contents. This means it works with essentially with any debug 
 probe on the market.
 
-Note that hardware-generated trace is not required (or used by) FreeRTOS+Trace. 
-We however plan to add support for that in future versions of FreeRTOS+Trace 
+If the device has a file system and some possibility of accessing this file 
+system from the development PC, it is also possible to write the recorder data
+to a file, using vTraceGetTraceBuffer() and uiTraceGetTraceBufferSize() 
+found in trcUser.h/.c.
+
+Note that hardware-generated trace is not required (or used by) Tracealyzer. 
+We however plan to add support for that in future versions of Tracealyzer 
 and other Tracealyzer products.
 
 Built-in support for Segger J-Link/J-Trace and Atmel SAM-ICE
 ------------------------------------------------------------
-FreeRTOS+Trace v2.3 supports Segger J-Link and J-Link compatible debuggers 
+Tracealyzer v2.3 supports Segger J-Link and J-Link compatible debuggers 
 directly, without any debugger IDE involved. Using other debug probes is 
 also possible, but requires some extra steps, described below.
 
@@ -36,7 +40,7 @@ can be found can by inspecting the "RecorderData" struct or the
 Typical values are 0x0, 0x10000000 or 0x20000000 as start address
 and 0x10000 or 0x20000 as size (64 KB or 128 KB).
 
-This makes FreeRTOS+Trace reads the chip RAM and locate the trace data. 
+This makes Tracealyzer reads the chip RAM and locate the trace data. 
 Note that this option is only available if a compatible debug probe is found.
 
 J-Link compatible debug probes also include Atmel SAM-ICE and many built-in 
@@ -46,17 +50,17 @@ connection directly to the board). Look for a Segger J-Link label on the board.
 MemoryLogger extension in Atmel Studio 6
 ----------------------------------------
 Atmel's new MemoryLogger extension provides a superb integration with
-FreeRTOS+Trace. Look for "MemoryLogger" in Atmel Gallery, available in 
+Tracealyzer. Look for "MemoryLogger" in Atmel Gallery, available in 
 Atmel Studio and at the Atmel website.
 
-This extension automatically detects the path to FreeRTOS+Trace, if 
+This extension automatically detects the path to Tracealyzer, if 
 installed, and gives you a single-click upload/refresh. You can use it 
 while debugging and optionally get an automatic refresh eash time the 
 MCU is halted, e.g., on each breakpoint.
 
 Using other development environments and debug probes
 -----------------------------------------------------
-Most debuggers are able to save the RAM contents to a file. FreeRTOS+Trace 
+Most debuggers are able to save the RAM contents to a file. Tracealyzer 
 supports the following common formats:
 - Binary (.bin), supporting gdb, J-Link and Renesas HEW.
 - Intel Hex (.hex), supporting IAR Embedded Workbench and Atmel Studio (atprogram.exe)
@@ -66,7 +70,7 @@ When you store the RAM dump, you must also make sure to select the right region,
 i.e., start address and size. The recorder data is stored in a single data 
 block, identified by the pointer RecorderDataPtr. 
 It is not necessary to match the begin and end of the recorder data, as long as 
-it is fully included by the dumped memory region. FreeRTOS+Trace automatically 
+it is fully included by the dumped memory region. Tracealyzer automatically 
 finds the trace data in the RAM dump, thanks to special signatures. For chips 
 with on-chip RAM only, we therefore recommend to dump the entire RAM. This is 
 usually very fast.
@@ -84,7 +88,7 @@ In the debugger view, when stopped on a breakpoint:
 	- File format: Intel Extended
 	- Filename: <name>.hex
 	- Press "Save" button
-You can now open <name>.hex in FreeRTOS+Trace.
+You can now open <name>.hex in Tracealyzer.
 
 To find the right Start and End addresses, check the address of the symbol 
 "RecorderData". The addresses does not need to match this symbol exactly, as 
@@ -100,7 +104,7 @@ In the debugger view, when stopped on a breakpoint:
 	- Start Address: 00000000 (For RX62N in the demo project)
 	- End Address: 0000FFFF (For RX62N in the demo project)
 	- Access size: 1
-	- Press "Save" button and open <name>.bin in FreeRTOS+Trace.
+	- Press "Save" button and open <name>.bin in Tracealyzer.
 	
 Using Microchip MPLAB v8.86
 ------------------------------------------------------
@@ -110,7 +114,7 @@ Using Microchip MPLAB v8.86
 - In the dialog ("Export As"), make sure "Single Column Output" is selected (seems to be default).
 - Select start address 0x0000 and make sure the end address is beyond the RecorderData structure. 
   The default values seems to be the whole RAM, so you probably don't need to change this.
-- Save as a .mch file and open this file in FreeRTOS+Trace v2.2.4 or later (support for the .mch format was added in v2.2.4).
+- Save as a .mch file and open this file in Tracealyzer v2.2.4 or later (support for the .mch format was added in v2.2.4).
 
 Using STM32 ST-Link
 ------------------------------------------------------
@@ -118,7 +122,7 @@ Using STM32 ST-Link
 - Connect to the device and view the device memory.
 - Set the view to display the entire RAM, or at least the section containing the RecorderData structure.
 - Select "Save as" and choose binary (.bin) or Intel Hex (.hex) format.
-- Open the resulting file in FreeRTOS+Trace.
+- Open the resulting file in Tracealyzer.
 
 In case you have any question, contact support@percepio.com
 

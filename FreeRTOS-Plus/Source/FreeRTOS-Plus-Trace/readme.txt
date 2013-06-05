@@ -1,20 +1,13 @@
 
-FreeRTOS+Trace Trace Recorder Library
+Tracealyzer Trace Recorder Library
 -------------------------------------
 Percepio AB
 www.percepio.com
 
-This directory contains the core trace recorder library used by FreeRTOS+Trace v2.3. 
-
-Ready-to-run demonstrations projects are found at www.percepio.com.
-
-For information on how to integrate the recorder library in your FreeRTOS build, see
-the FreeRTOS+Trace User Manual, section 2.
+This directory contains the a generic trace recorder library for Tracealyzer v2.4. 
 
 For information on how to upload the trace data from your target system RAM to 
-FreeRTOS+Trace, see "debugger trace upload.txt"
-
-NOTE: This trace recorder library requires FreeRTOS v7.3.0 or later.
+Tracealyzer, see "debugger trace upload.txt"
 
 Files included
 --------------
@@ -22,8 +15,9 @@ Files included
 - trcUser.c / trcUser.h     - The main API towards the application (trcUser.h in the only include necessary).
 - trcKernel.c / trcKernel.h - Internal routines for storing kernel events.
 - trcBase.c / trcBase.h     - Internal routines for manipulating the data structures and calculating timestamps.
-- trcPort.c / trcPort.h     - The port layer, abstracting the hardware (mainly the timer used for timestamping).
-- trcHooks.h				- The interface between FreeRTOS and the recorder, containing trace macro defintions.
+- trcHardwarePort.c / trcHardwarePort.h     - The port layer, abstracting the hardware (mainly the timer used for timestamping).
+- trcKernelHooks.h				- The interface between the Kernel and the recorder, containing trace macro defintions.
+- trcKernelPort.h				- Kernel specific implementations of macros and data.
 - trcTypes.h				- Type definitions used.
 
 Hardware Timer Ports

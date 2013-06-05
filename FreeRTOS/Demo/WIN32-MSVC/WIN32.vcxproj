@@ -126,8 +126,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcBase.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcHardwarePort.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernel.c" />
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcPort.c" />
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernelPort.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcUser.c" />
     <ClCompile Include="..\..\Source\croutine.c" />
     <ClCompile Include="..\..\Source\portable\MemMang\heap_4.c" />
@@ -187,7 +188,7 @@
     <ClInclude Include="..\..\Source\include\semphr.h" />
     <ClInclude Include="..\..\Source\include\task.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
-    <ClInclude Include="Trace_Recorder_Configuration\trcPort.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcHardwarePort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -152,7 +152,7 @@ version of the Win32 simulator projects.  It will be ignored in the GCC
 version. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
-/* Include the FreeRTOS+Trace recorder hooks. */
-#include "trcHooks.h"
+/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
+#include "trcKernelPort.h"
 
 #endif /* FREERTOS_CONFIG_H */

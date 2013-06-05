@@ -79,6 +79,12 @@
  * application.  It is provided as a convenient development and demonstration
  * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
+ * In this example, one simulated millisecond will take approximately 40ms to
+ * execute, and Windows will not be running the FreeRTOS simulator threads
+ * continuously, so the timing information in the FreeRTOS+Trace logs have no
+ * meaningful units.  See the documentation page for the Windows simulator for
+ * an explanation of the slow timing:
+ * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *******************************************************************************
  *
@@ -103,6 +109,7 @@
 /* Standard includes. */
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 
 /* Kernel includes. */
 #include <FreeRTOS.h>
@@ -147,6 +154,14 @@ static void prvCheckTask( void *pvParameters );
 eTaskStateGet(). */
 static void prvTestTask( void *pvParameters );
 
+/*
+ * Writes trace data to a disk file when the trace recording is stopped.
+ * This function will simply overwrite any trace files that already exist.
+ */
+static void prvSaveTraceFile( void );
+
+/*-----------------------------------------------------------*/
+
 /* The variable into which error messages are latched. */
 static char *pcStatusMessage = "OK";
 
@@ -154,10 +169,21 @@ static char *pcStatusMessage = "OK";
 semaphore tracing API functions.  It has no other purpose. */
 static xSemaphoreHandle xMutexToDelete = NULL;
 
+/* The user trace event posted to the trace recording on each tick interrupt.
+Note tick events will not appear in the trace recording with regular period
+because this project runs in a Windows simulator, and does not therefore
+exhibit deterministic behaviour. */
+traceLabel xTickTraceUserEvent;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
+	/* Initialise the trace recorder and create the label used to post user
+	events to the trace recording on each tick interrupt. */
+	vTraceInitTraceData();
+	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
+
 	/* Start the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
@@ -187,7 +213,8 @@ int main( void )
 
 	/* Start the trace recording - the recording is written to a file if
 	configASSERT() is called. */
-	vTraceStart();
+	printf( "\r\nTrace started.  Hit a key to dump trace file to disk.\r\n" );
+	uiTraceStart();
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -300,6 +327,7 @@ xTaskHandle xIdleTaskHandle, xTimerTaskHandle, xTestTask;
 signed char *pcTaskName;
 const unsigned char ucConstQueueNumber = 0xaaU, ucConstTaskNumber = 0x55U;
 void *pvAllocated;
+static portBASE_TYPE xTraceRunning = pdTRUE;
 
 /* These three functions are only meant for use by trace code, and not for
 direct use from application code, hence their prototypes are not in queue.h. */
@@ -399,6 +427,15 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 	allocations so there is no need to test here. */
 	pvAllocated = pvPortMalloc( ( rand() % 100 ) + 1 );
 	vPortFree( pvAllocated );
+
+	if( _kbhit() != pdFALSE )
+	{
+		if( xTraceRunning == pdTRUE )
+		{
+			prvSaveTraceFile();
+			xTraceRunning = pdFALSE;
+		}
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -424,6 +461,12 @@ void vApplicationTickHook( void )
 	/* Write to a queue that is in use as part of the queue set demo to 
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();
+
+	/* Write a user event to the trace log.  
+	Note tick events will not appear in the trace recording with regular period
+	because this project runs in a Windows simulator, and does not therefore
+	exhibit deterministic behaviour. */
+	vTraceUserEvent( xTickTraceUserEvent );
 }
 /*-----------------------------------------------------------*/
 
@@ -433,9 +476,26 @@ void vAssertCalled( void )
 
 	/* Stop the trace recording. */
 	vTraceStop();
-	vTracePortSave();
+	prvSaveTraceFile();
 		
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
+static void prvSaveTraceFile( void )
+{
+FILE* pxOutputFile;
+
+	fopen_s( &pxOutputFile, "Trace.dump", "wb");
+
+	if( pxOutputFile != NULL )
+	{
+		fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+		fclose( pxOutputFile );
+		printf( "\r\nTrace output saved to Trace.dump\r\n" );
+	}
+	else
+	{
+		printf( "\r\nFailed to create trace dump file\r\n" );
+	}
+}

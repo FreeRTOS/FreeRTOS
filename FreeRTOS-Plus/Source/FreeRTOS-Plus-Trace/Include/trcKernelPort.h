@@ -99,7 +99,7 @@
 /* Includes */
 #include "trcTypes.h"
 #include "trcConfig.h"
-#include "trcKernelHooks.h"
+#include "trcHooks.h"
 #include "trcHardwarePort.h"
 #include "trcBase.h"
 #include "trcKernel.h"
@@ -374,7 +374,7 @@ void* prvTraceGetCurrentTaskHandle(void);
 /* Called on each OS tick. Will call uiPortGetTimestamp to make sure it is called at least once every OS tick. */
 #undef traceTASK_INCREMENT_TICK
 #define traceTASK_INCREMENT_TICK( xTickCount ) \
-    if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxMissedTicks == 0) { trcKERNEL_HOOKS_INCREMENT_TICK(); } \
+    if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdTRUE || uxPendedTicks == 0) { trcKERNEL_HOOKS_INCREMENT_TICK(); } \
 	if (uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE) { trcKERNEL_HOOKS_NEW_TIME(DIV_NEW_TIME, xTickCount + 1); }
 
 /* Called on each task-switch */

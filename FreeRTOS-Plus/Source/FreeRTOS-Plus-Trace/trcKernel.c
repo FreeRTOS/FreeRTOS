@@ -136,7 +136,7 @@ void vTraceStoreKernelCall(uint32_t ecode, traceObjectClass objectClass, uint32_
         if (nISRactive || !inExcludedTask)
         {
             /* Check if the referenced object or the event code is excluded */
-            if (!uiTraceIsObjectExcluded(objectClass, objectNumber) && !TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(ecode))
+            if (!uiTraceIsObjectExcluded(objectClass, (objectHandleType)objectNumber) && !TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(ecode))
             {
                 trcCRITICAL_SECTION_BEGIN();
                 dts1 = (uint16_t)prvTraceGetDTS(0xFFFF);
@@ -193,7 +193,7 @@ void vTraceStoreKernelCallWithParam(uint32_t evtcode,
         }
 
         /* Check if the referenced object or the event code is excluded */
-        if (!uiTraceIsObjectExcluded(objectClass, objectNumber) && !TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(evtcode))
+        if (!uiTraceIsObjectExcluded(objectClass, (objectHandleType)objectNumber) && !TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(evtcode))
         {
             trcCRITICAL_SECTION_BEGIN();
             dts2 = (uint8_t)prvTraceGetDTS(0xFF);

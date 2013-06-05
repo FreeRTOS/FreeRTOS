@@ -1101,7 +1101,7 @@ void vTracePrintF_Helper(traceLabel eventLabel, const char* formatStr, va_list v
         events that would be partially overwritten. If so, they must be "killed"
         by replacing the user event and following data with NULL events (i.e.,
         using a memset to zero).*/
-        prvCheckDataToBeOverwrittenForMultiEntryEvents(noOfSlots);
+        prvCheckDataToBeOverwrittenForMultiEntryEvents((uint8_t)noOfSlots);
 #endif
         /* Copy the local buffer to the main buffer */
         (void)memcpy(& RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4],
@@ -1112,7 +1112,7 @@ void vTracePrintF_Helper(traceLabel eventLabel, const char* formatStr, va_list v
         main USER_EVENT entry (Note: important that this is after the memcpy,
         but within the critical section!)*/
         RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4] =
-          (uint8_t) USER_EVENT + noOfSlots - 1;
+          (uint8_t) ( USER_EVENT + noOfSlots - 1 );
 
         /* Update the main buffer event index (already checked that it fits in
         the buffer, so no need to check for wrapping)*/

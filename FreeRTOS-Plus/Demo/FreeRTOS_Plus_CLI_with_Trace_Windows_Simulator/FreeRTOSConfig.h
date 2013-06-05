@@ -76,6 +76,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include <stdint.h>
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -89,7 +91,7 @@
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				0
+#define configUSE_TICK_HOOK				1
 #define configTICK_RATE_HZ				( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 0 ) /* This parameter has no effect when heap_3.c is included in the project. */
@@ -158,7 +160,6 @@ take up unnecessary RAM. */
 
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-#include "trcHooks.h"
-
+#include "trcKernelPort.h"
 
 #endif /* FREERTOS_CONFIG_H */

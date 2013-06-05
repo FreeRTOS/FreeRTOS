@@ -84,6 +84,9 @@
  * meaningful units.  See the documentation page for the Windows simulator for
  * an explanation of the slow timing:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ *
+ * Documentation for this demo can be found on:
+ * http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_Trace/Free_RTOS_Plus_Trace_CLI_Example.shtml
  ******************************************************************************
  *
  * This is a simple FreeRTOS Windows simulator project that makes it easy to
@@ -110,11 +113,6 @@
  * then consumes the message from the queue and prints "message received" to
  * the screen before returning to block on the queue once again.  This
  * sequencing is clearly visible in the recorded FreeRTOS+Trace data.
- *
- * Finally, a trace monitoring task is also created that prints out a message
- * when it determines that the status of the trace has changed since it last
- * executed.  It prints out a message when the trace has started, when the
- * trace has stopped, and periodically when the trace is executing.
  *
  */
 
@@ -167,11 +165,22 @@ extern void vRegisterCLICommands( void );
 /* The queue used by both tasks. */
 static xQueueHandle xQueue = NULL;
 
+/* The user trace event posted to the trace recording on each tick interrupt.
+Note tick events will not appear in the trace recording with regular period
+because this project runs in a Windows simulator, and does not therefore
+exhibit deterministic behaviour. */
+traceLabel xTickTraceUserEvent;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
 const uint32_t ulLongTime_ms = 250UL;
+
+	/* Initialise the trace recorder and create the label used to post user
+	events to the trace recording on each tick interrupt. */
+	vTraceInitTraceData();
+	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
 
 	/* Create the queue used to pass messages from the queue send task to the
 	queue receive task. */
@@ -194,10 +203,6 @@ const uint32_t ulLongTime_ms = 250UL;
 	/* Create the task that handles the CLI on a UDP port.  The port number
 	is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
 	xTaskCreate( vUDPCommandInterpreterTask, ( signed char * ) "CLI", configMINIMAL_STACK_SIZE, NULL, mainUDP_CLI_TASK_PRIORITY, NULL );
-
-	/* Create the task that monitors the trace recording status, printing
-	periodic information to the display. */
-	vTraceStartStatusMonitor();
 
 	/* Register commands with the FreeRTOS+CLI command interpreter. */
 	vRegisterCLICommands();
@@ -293,4 +298,13 @@ const unsigned long ulLongSleep = 1000UL;
 	}
 }
 /*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* Write a user event to the trace log.  
+	Note tick events will not appear in the trace recording with regular period
+	because this project runs in a Windows simulator, and does not therefore
+	exhibit deterministic behaviour. */
+	vTraceUserEvent( xTickTraceUserEvent );					
+}
 

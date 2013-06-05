@@ -83,6 +83,12 @@
 #include "trcUser.h"
 
 /*
+ * Writes trace data to a disk file when the trace recording is stopped.
+ * This function will simply overwrite any trace files that already exist.
+ */
+static void prvSaveTraceFile( void );
+
+/*
  * Defines a command that returns a table showing the state of each task at the
  * time the command is called.
  */
@@ -380,7 +386,7 @@ portBASE_TYPE lParameterStringLength;
 		/* Start or restart the trace. */
 		vTraceStop();
 		vTraceClear();
-		vTraceStart();
+		uiTraceStart();
 
 		sprintf( ( char * ) pcWriteBuffer, "Trace recording (re)started.\r\n" );
 	}
@@ -388,7 +394,8 @@ portBASE_TYPE lParameterStringLength;
 	{
 		/* End the trace, if one is running. */
 		vTraceStop();
-		sprintf( ( char * ) pcWriteBuffer, "Stopping trace recording.\r\n" );
+		sprintf( ( char * ) pcWriteBuffer, "Stopping trace recording and dumping log to disk.\r\n" );
+		prvSaveTraceFile();
 	}
 	else
 	{
@@ -401,4 +408,21 @@ portBASE_TYPE lParameterStringLength;
 }
 /*-----------------------------------------------------------*/
 
+static void prvSaveTraceFile( void )
+{
+FILE* pxOutputFile;
+
+	fopen_s( &pxOutputFile, "Trace.dump", "wb");
+
+	if( pxOutputFile != NULL )
+	{
+		fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+		fclose( pxOutputFile );
+		printf( "\r\nTrace output saved to Trace.dump\r\n" );
+	}
+	else
+	{
+		printf( "\r\nFailed to create trace dump file\r\n" );
+	}
+}
 

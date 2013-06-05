@@ -76,6 +76,7 @@
 
 /* Win32 includes. */
 #include <WinSock2.h>
+#include <stdio.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"

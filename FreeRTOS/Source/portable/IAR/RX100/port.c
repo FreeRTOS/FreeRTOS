@@ -304,16 +304,12 @@ __interrupt static void prvTickISR( void )
 	necessitates. */
 	__set_interrupt_level( configMAX_SYSCALL_INTERRUPT_PRIORITY );
 	{
-		vTaskIncrementTick();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			taskYIELD();
+		}
 	}
 	__set_interrupt_level( configKERNEL_INTERRUPT_PRIORITY );
-
-	/* Only select a new task if the preemptive scheduler is being used. */
-	#if( configUSE_PREEMPTION == 1 )
-	{
-		taskYIELD();
-	}
-	#endif
 
 	#if configUSE_TICKLESS_IDLE == 1
 	{

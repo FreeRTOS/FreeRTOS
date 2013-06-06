@@ -324,16 +324,11 @@ keyword. */
 	{
 		{
 			/* Increment the tick counter. */
-			vTaskIncrementTick();
-		
-			#if configUSE_PREEMPTION == 1
-			{
-				/* The new tick value might unblock a task.  Ensure the highest task that
-				is ready to execute is the task that will execute when the tick ISR
-				exits. */
+			if( xTaskIncrementTick() != pdFALSE )
+			{		
+				/* Select a new task to execute. */
 				vTaskSwitchContext();
 			}
-			#endif /* configUSE_PREEMPTION. */
 		
 			/* Clear the interrupt in the watchdog. */
 			WDG->SR &= ~0x0001;

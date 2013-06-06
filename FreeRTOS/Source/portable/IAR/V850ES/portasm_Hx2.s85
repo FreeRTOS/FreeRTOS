@@ -57,7 +57,7 @@
 ; Functions used by scheduler
 ;------------------------------------------------------------------------------
     EXTERN    vTaskSwitchContext
-    EXTERN    vTaskIncrementTick
+    EXTERN    xTaskIncrementTick
 
 ; Variables used by scheduler
 ;------------------------------------------------------------------------------
@@ -278,7 +278,7 @@ MD_INTTM0EQ0:
     stsr    1,lp
     st.w    lp,0[sp]                        ; store EIPSW to stack
     portSAVE_CONTEXT		            ; Save the context of the current task.
-    jarl    vTaskIncrementTick,lp           ; Call the timer tick function.
+    jarl    xTaskIncrementTick,lp           ; Call the timer tick function.
     jarl    vTaskSwitchContext,lp           ; Call the scheduler.
     portRESTORE_CONTEXT		            ; Restore the context of whichever task the ...
                 		            ; ... scheduler decided should run.
@@ -297,7 +297,7 @@ MD_INTTM0EQ0:
     prepare {lp,ep},8,sp
     sst.w   r1,4[ep]
     sst.w   r5,0[ep]
-    jarl    vTaskIncrementTick,lp           ; Call the timer tick function.
+    jarl    xTaskIncrementTick,lp           ; Call the timer tick function.
     sld.w   0[ep],r5
     sld.w   4[ep],r1
     dispose 8,{lp,ep}

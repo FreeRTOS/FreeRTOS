@@ -61,7 +61,7 @@
 	PUBLIC    vPortTickISR
 
 	EXTERN    vTaskSwitchContext
-	EXTERN    vTaskIncrementTick
+	EXTERN    xTaskIncrementTick
 
 ; FreeRTOS yield handler.  This is installed as the BRK software interrupt
 ; handler.
@@ -87,7 +87,7 @@ vPortStartFirstTask:
 vPortTickISR:
 
 	portSAVE_CONTEXT		        ; Save the context of the current task.
-	call      vTaskIncrementTick    ; Call the timer tick function.
+	call      xTaskIncrementTick    ; Call the timer tick function.
 #if configUSE_PREEMPTION == 1
 	call      vTaskSwitchContext    ; Call the scheduler to select the next task.
 #endif

@@ -54,7 +54,6 @@
 		CODE32
 
 	EXTERN vTaskSwitchContext
-	EXTERN vTaskIncrementTick
 	EXTERN vPortPreemptiveTick
 	
 	PUBLIC vPortPreemptiveTickEntry

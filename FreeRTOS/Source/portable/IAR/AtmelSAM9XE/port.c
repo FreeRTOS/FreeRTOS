@@ -237,11 +237,10 @@ volatile unsigned long ulDummy;
 	/* Increment the tick count - which may wake some tasks but as the
 	preemptive scheduler is not being used any woken task is not given
 	processor time no matter what its priority. */
-	vTaskIncrementTick();
-
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
+	{
 		vTaskSwitchContext();
-	#endif	
+	}
 		
 	/* Clear the PIT interrupt. */
 	ulDummy = AT91C_BASE_PITC->PITC_PIVR;

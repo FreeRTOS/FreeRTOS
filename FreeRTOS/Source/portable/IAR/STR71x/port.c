@@ -225,7 +225,7 @@ __arm __irq void vPortNonPreemptiveTick( void )
 	/* Increment the tick count - which may wake some tasks but as the
 	preemptive scheduler is not being used any woken task is not given
 	processor time no matter what its priority. */
-	vTaskIncrementTick();
+	xTaskIncrementTick();
 
 	/* Clear the interrupt in the watchdog and EIC. */
 	WDG->SR = 0x0000;
@@ -238,12 +238,11 @@ keyword. */
 void vPortPreemptiveTick( void )
 {
 	/* Increment the tick counter. */
-	vTaskIncrementTick();
-
-	/* The new tick value might unblock a task.  Ensure the highest task that
-	is ready to execute is the task that will execute when the tick ISR
-	exits. */
-	vTaskSwitchContext();
+	if( xTaskIncrementTick() != pdFALSE )
+	{
+		/* Select a new task to execute. */
+		vTaskSwitchContext();
+	}
 
 	/* Clear the interrupt in the watchdog and EIC. */
 	WDG->SR = 0x0000;

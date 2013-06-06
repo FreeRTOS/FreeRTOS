@@ -209,15 +209,12 @@ void vPortEndScheduler( void )
 __arm void vPortPreemptiveTick( void )
 {
 	/* Increment the tick counter. */
-	vTaskIncrementTick();
-
-	/* The new tick value might unblock a task.  Ensure the highest task that
-	is ready to execute is the task that will execute when the tick ISR
-	exits. */
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
+	{
+		/* Select a new task to execute. */
 		vTaskSwitchContext();
-	#endif
-
+	}
+		
 	TB_ClearITPendingBit( TB_IT_Update );
 }
 /*-----------------------------------------------------------*/

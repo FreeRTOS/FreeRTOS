@@ -67,7 +67,7 @@ EXTERN SIG_UART_DATA
 ; ---------------------------
 EXTERN vTaskSwitchContext
 EXTERN pxCurrentTCB
-EXTERN vTaskIncrementTick
+EXTERN xTaskIncrementTick
 EXTERN uxCriticalNesting
 
 ; Functions implemented in this file
@@ -243,7 +243,7 @@ vPortYield:
 
 vPortYieldFromTick:
 	portSAVE_CONTEXT			; Save the context of the current task.
-	call vTaskIncrementTick		; Call the timer tick function.
+	call xTaskIncrementTick		; Call the timer tick function.
 	call vTaskSwitchContext		; Call the scheduler.
 	portRESTORE_CONTEXT			; Restore the context of whichever task the ...
 	ret							; ... scheduler decided should run.

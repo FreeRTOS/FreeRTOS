@@ -54,7 +54,7 @@
 		CODE32
 
 	EXTERN vTaskSwitchContext
-	EXTERN vTaskIncrementTick
+	EXTERN xTaskIncrementTick
 
 	PUBLIC vPortYieldProcessor
 	PUBLIC vPortPreemptiveTick
@@ -91,7 +91,7 @@ vPortYieldProcessor:
 vPortPreemptiveTick:
 	portSAVE_CONTEXT			; Save the context of the current task.
 
-	LDR R0, =vTaskIncrementTick ; Increment the tick count - this may wake a task.
+	LDR R0, =xTaskIncrementTick ; Increment the tick count - this may wake a task.
 	mov lr, pc
 	BX R0
 	LDR R0, =vTaskSwitchContext ; Select the next task to execute.

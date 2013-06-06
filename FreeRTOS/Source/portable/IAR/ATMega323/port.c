@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -147,7 +147,7 @@ portSTACK_TYPE *pxTopOfHardwareStack;
 	hardware call stack which uses the AVR stack pointer.  Second there is the
 	software stack (local variables, parameter passing, etc.) which uses the
 	AVR Y register.
-	
+
 	This function places both stacks within the memory block passed in as the
 	first parameter.  The hardware stack is placed at the bottom of the memory
 	block.  A gap is then left for the hardware stack to grow.  Next the software
@@ -349,7 +349,7 @@ unsigned char ucHighByte, ucLowByte;
 		vPortYieldFromTick();
 		asm( "reti" );
 	}
-	
+
 #else
 
 	/*
@@ -359,10 +359,10 @@ unsigned char ucHighByte, ucLowByte;
 	 *
 	 * THE INTERRUPT VECTOR IS POPULATED IN portmacro.s90.  DO NOT INSTALL
 	 * IT HERE USING THE USUAL PRAGMA.
-	 */		
+	 */
 	__interrupt void SIG_OUTPUT_COMPARE1A( void )
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 #endif
 /*-----------------------------------------------------------*/
@@ -383,4 +383,4 @@ void vPortExitCritical( void )
 	}
 }
 
-	
+

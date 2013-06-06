@@ -75,7 +75,7 @@
 #include "FreeRTOSConfig.h"
 #include "data_model.h"
 
-	IMPORT vTaskIncrementTick
+	IMPORT xTaskIncrementTick
 	IMPORT vTaskSwitchContext
 	IMPORT vPortSetupTimerInterrupt
 	IMPORT pxCurrentTCB
@@ -130,7 +130,7 @@ vPortTickISR:
 	push.w sr
 	portSAVE_CONTEXT
 
-	calla	#vTaskIncrementTick
+	calla	#xTaskIncrementTick
 
 	#if configUSE_PREEMPTION == 1
 		calla	#vTaskSwitchContext

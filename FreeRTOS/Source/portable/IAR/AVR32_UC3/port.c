@@ -220,7 +220,7 @@ static void vTick( void )
 	/* Because FreeRTOS is not supposed to run with nested interrupts, put all OS
 	calls in a critical section . */
 	portENTER_CRITICAL();
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	portEXIT_CRITICAL();
 
 	/* Restore the context of the "elected task". */

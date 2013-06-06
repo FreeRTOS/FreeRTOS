@@ -286,6 +286,7 @@ static void prvLowPowerMode1( void )
 	SCB->SCR &= ~( 1 << SCB_SCR_SLEEPDEEP_Pos );
 	
 	/* Power down. */
+	__DSB();
 	__WFI();
 }
 

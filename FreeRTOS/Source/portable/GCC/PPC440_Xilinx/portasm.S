@@ -76,7 +76,7 @@
 
 	.extern pxCurrentTCB
 	.extern vTaskSwitchContext
-	.extern vTaskIncrementTick
+	.extern xTaskIncrementTick
 	.extern vPortISRHandler
 
 	.global vPortStartFirstTask
@@ -203,7 +203,7 @@ vPortYield:
 vPortTickISR:
 
 	portSAVE_STACK_POINTER_AND_LR
-	bl vTaskIncrementTick
+	bl xTaskIncrementTick
 	
 	#if configUSE_PREEMPTION == 1
 		bl vTaskSwitchContext

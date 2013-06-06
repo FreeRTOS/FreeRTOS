@@ -204,14 +204,12 @@ void prvSetupTimerInterrupt( void )
 
 void vPortSysTickHandler( void * context, alt_u32 id )
 {
-	/* Increment the Kernel Tick. */
-	vTaskIncrementTick();
-
-	/* If using preemption, also force a context switch. */
-	#if configUSE_PREEMPTION == 1
+	/* Increment the kernel tick. */
+	if( xTaskIncrementTick() != pdFALSE )
+	{
         vTaskSwitchContext();
-	#endif
-
+	}
+		
 	/* Clear the interrupt. */
 	IOWR_ALTERA_AVALON_TIMER_STATUS( SYS_CLK_BASE, ~ALTERA_AVALON_TIMER_STATUS_TO_MSK );
 }

@@ -335,6 +335,7 @@ unsigned long ulSavedInterruptMask;
 unsigned long *pxUpperCSA = NULL;
 unsigned long xUpperCSA = 0UL;
 extern volatile unsigned long *pxCurrentTCB;
+long lYieldRequired;
 
 	/* Just to avoid compiler warnings about unused parameters. */
 	( void ) iArg;
@@ -365,11 +366,11 @@ extern volatile unsigned long *pxCurrentTCB;
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* Increment the Tick. */
-		vTaskIncrementTick();
+		lYieldRequired = xTaskIncrementTick();
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
 
-	#if configUSE_PREEMPTION == 1
+	if( lYieldRequired != pdFALSE )
 	{
 		/* Save the context of a task.
 		The upper context is automatically saved when entering a trap or interrupt.
@@ -400,7 +401,6 @@ extern volatile unsigned long *pxCurrentTCB;
 		CPU_SRC0.bits.SETR = 0;
 		_isync();
 	}
-	#endif
 }
 /*-----------------------------------------------------------*/
 

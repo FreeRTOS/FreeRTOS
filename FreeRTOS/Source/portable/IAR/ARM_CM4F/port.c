@@ -275,11 +275,6 @@ void vPortExitCritical( void )
 
 void xPortSysTickHandler( void )
 {
-	/* If using preemption, also force a context switch. */
-	#if configUSE_PREEMPTION == 1
-		portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-	#endif
-
 	/* Only reset the systick load register if configUSE_TICKLESS_IDLE is set to
 	1.  If it is set to 0 tickless idle is not being used.  If it is set to a
 	value other than 0 or 1 then a timer other than the SysTick is being used
@@ -290,7 +285,12 @@ void xPortSysTickHandler( void )
 
 	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		vTaskIncrementTick();
+		/* Increment the RTOS tick. */
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* Pend a context switch. */
+			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+		}
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
 }

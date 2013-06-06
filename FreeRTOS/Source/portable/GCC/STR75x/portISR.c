@@ -137,11 +137,10 @@ void vPortTickISR( void )
 {
 	/* Increment the RTOS tick count, then look for the highest priority 
 	task that is ready to run. */
-	vTaskIncrementTick();
-	
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
+	{	
 		vTaskSwitchContext();
-	#endif
+	}
 			
 	/* Ready for the next interrupt. */
 	TB_ClearITPendingBit( TB_IT_Update );	

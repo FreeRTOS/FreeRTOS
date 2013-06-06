@@ -94,7 +94,7 @@ PSW is set with U and I set, and PM and IPL clear. */
 #define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
 
 /* These macros allow a critical section to be added around the call to
-vTaskIncrementTick(), which is only ever called from interrupts at the kernel 
+xTaskIncrementTick(), which is only ever called from interrupts at the kernel 
 priority - ie a known priority.  Therefore these local macros are a slight 
 optimisation compared to calling the global SET/CLEAR_INTERRUPT_MASK macros, 
 which would require the old IPL to be read first and stored in a local variable. */
@@ -364,14 +364,12 @@ void vTickISR( void )
 	necessitates.  Ensure IPL is at the max syscall value first. */
 	portDISABLE_INTERRUPTS_FROM_KERNEL_ISR();
 	{
-		vTaskIncrementTick(); 
+		if( TaskIncrementTick() != pdFALSE )
+		{
+			taskYIELD();
+		}
 	}
 	portENABLE_INTERRUPTS_FROM_KERNEL_ISR();
-	
-	/* Only select a new task if the preemptive scheduler is being used. */
-	#if( configUSE_PREEMPTION == 1 )
-		taskYIELD();
-	#endif
 }
 /*-----------------------------------------------------------*/
 

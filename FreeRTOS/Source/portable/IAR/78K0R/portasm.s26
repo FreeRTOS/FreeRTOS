@@ -68,7 +68,7 @@
 ; Functions used by scheduler
 ;------------------------------------------------------------------------------
 	EXTERN    vTaskSwitchContext
-	EXTERN    vTaskIncrementTick
+	EXTERN    xTaskIncrementTick
 
 ; Tick ISR Prototype
 ;------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ vPortStart:
 MD_INTTM05:
 
 	portSAVE_CONTEXT		        ; Save the context of the current task.
-	call      vTaskIncrementTick    ; Call the timer tick function.
+	call      xTaskIncrementTick    ; Call the timer tick function.
 #if configUSE_PREEMPTION == 1
 	call      vTaskSwitchContext    ; Call the scheduler to select the next task.
 #endif

@@ -348,8 +348,10 @@ static void prvSetupTimerInterrupt( void )
 
 		/* Increment the tick count then switch to the highest priority task
 		that is ready to run. */
-		vTaskIncrementTick();
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 
 		/* Restore the context of the new task. */
 		portRESTORE_CONTEXT();
@@ -365,7 +367,7 @@ static void prvSetupTimerInterrupt( void )
 	interrupt (TIMERA0_VECTOR) prvTickISR( void );
 	interrupt (TIMERA0_VECTOR) prvTickISR( void )
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 #endif
 

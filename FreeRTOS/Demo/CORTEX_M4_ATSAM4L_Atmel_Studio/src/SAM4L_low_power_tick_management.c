@@ -116,6 +116,13 @@ within the Cortex-M core itself. */
  */
 void AST_ALARM_Handler(void);
 
+/* 
+ * Functions that disable and enable the AST respectively, not returning until
+ * the operation is known to have taken effect.
+ */
+static void prvDisableAST( void );
+static void prvEnableAST( void );
+
 /*-----------------------------------------------------------*/
 
 /* Calculate how many clock increments make up a single tick period. */
@@ -175,8 +182,8 @@ void AST_ALARM_Handler(void)
 /*-----------------------------------------------------------*/
 
 /* Override the default definition of vPortSetupTimerInterrupt() that is weakly
-defined in the FreeRTOS Cortex-M3 port layer layer with a version that
-configures the asynchronous timer (AST) to generate the tick interrupt. */
+defined in the FreeRTOS Cortex-M3 port layer with a version that configures the
+asynchronous timer (AST) to generate the tick interrupt. */
 void vPortSetupTimerInterrupt( void )
 {
 struct ast_config ast_conf;
@@ -226,7 +233,7 @@ struct ast_config ast_conf;
 }
 /*-----------------------------------------------------------*/
 
-void prvDisableAST( void )
+static void prvDisableAST( void )
 {
 	while( ast_is_busy( AST ) )
 	{
@@ -240,7 +247,7 @@ void prvDisableAST( void )
 }
 /*-----------------------------------------------------------*/
 
-void prvEnableAST( void )
+static void prvEnableAST( void )
 {
 	while( ast_is_busy( AST ) )
 	{
@@ -255,9 +262,9 @@ void prvEnableAST( void )
 /*-----------------------------------------------------------*/
 
 /* Override the default definition of vPortSuppressTicksAndSleep() that is weakly
-defined in the FreeRTOS Cortex-M3 port layer layer with a version that manages
-the asynchronous timer (AST), as the tick is generated from the low power AST
-and not the SysTick as would normally be the case on a Cortex-M. */
+defined in the FreeRTOS Cortex-M3 port layet with a version that manages the 
+asynchronous timer (AST), as the tick is generated from the low power AST and 
+not the SysTick as would normally be the case on a Cortex-M. */
 void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 {
 uint32_t ulAlarmValue, ulCompleteTickPeriods;

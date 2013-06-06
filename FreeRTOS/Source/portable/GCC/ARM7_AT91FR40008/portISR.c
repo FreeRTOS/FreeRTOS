@@ -161,7 +161,7 @@ void vPortYieldProcessor( void )
 		/* Clear tick timer interrupt indication. */
 		ulDummy = portTIMER_REG_BASE_PTR->TC_SR;  
 
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 
 		/* Acknowledge the interrupt at AIC level... */
 		AT91C_BASE_AIC->AIC_EOICR = portCLEAR_AIC_INTERRUPT;
@@ -186,8 +186,10 @@ void vPortYieldProcessor( void )
 
 		/* Increment the RTOS tick count, then look for the highest priority 
 		task that is ready to run. */
-		vTaskIncrementTick();
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 
 		/* Acknowledge the interrupt at AIC level... */
 		AT91C_BASE_AIC->AIC_EOICR = portCLEAR_AIC_INTERRUPT;

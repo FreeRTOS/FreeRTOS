@@ -293,8 +293,10 @@ void vPortYield( void )
 	{
 		portSAVE_STACK_POINTER();
 		
-		vTaskIncrementTick();
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 
 		/* Clear the interrupt. */
 		TSR1 &= ~0x01;
@@ -312,7 +314,7 @@ void vPortYield( void )
 	void vTickISR( void ) __attribute__ ( ( interrupt_handler ) );
 	void vTickISR( void )
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 
 		/* Clear the interrupt. */
 		TSR1 &= ~0x01;

@@ -359,17 +359,14 @@ void vTickISR( void *pvBaseAddress )
 unsigned long ulCSR;
 
 	/* Increment the RTOS tick - this might cause a task to unblock. */
-	vTaskIncrementTick();
+	if( xTaskIncrementTick() != pdFALSE )
+	{
+		vTaskSwitchContext();
+	}
 
 	/* Clear the timer interrupt */
 	ulCSR = XTmrCtr_mGetControlStatusReg(XPAR_OPB_TIMER_1_BASEADDR, 0);	
 	XTmrCtr_mSetControlStatusReg( XPAR_OPB_TIMER_1_BASEADDR, portCOUNTER_0, ulCSR );
-
-	/* If we are using the preemptive scheduler then we also need to determine
-	if this tick should cause a context switch. */
-	#if configUSE_PREEMPTION == 1
-		vTaskSwitchContext();
-	#endif
 }
 /*-----------------------------------------------------------*/
 

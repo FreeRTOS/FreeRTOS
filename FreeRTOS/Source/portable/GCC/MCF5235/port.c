@@ -194,7 +194,7 @@ prvPortPreemptiveTick ( void )
      * simply increment the system tick.
      */
 
-    vTaskIncrementTick(  );
+    xTaskIncrementTick();
     MCF_PIT_PCSR0 |= MCF_PIT_PCSR_PIF;
 }
 
@@ -209,8 +209,10 @@ prvPortPreemptiveTick( void )
 #endif
     portSAVE_CONTEXT(  );
     MCF_PIT_PCSR0 |= MCF_PIT_PCSR_PIF;
-    vTaskIncrementTick(  );
-    vTaskSwitchContext(  );
+    if( xTaskIncrementTick() != pdFALSE )
+	{
+		vTaskSwitchContext(  );
+	}
     portRESTORE_CONTEXT(  );
 }
 #endif

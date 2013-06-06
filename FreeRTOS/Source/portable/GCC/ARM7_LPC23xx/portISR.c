@@ -150,7 +150,7 @@ void vPortYieldProcessor( void )
 	void vNonPreemptiveTick( void ) __attribute__ ((interrupt ("IRQ")));
 	void vNonPreemptiveTick( void )
 	{	
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 		T0IR = 2;
 		VICVectAddr = portCLEAR_VIC_INTERRUPT;
 	}
@@ -167,7 +167,7 @@ void vPortYieldProcessor( void )
 
 		/* Increment the RTOS tick count, then look for the highest priority 
 		task that is ready to run. */
-		__asm volatile( "bl vTaskIncrementTick" );
+		__asm volatile( "bl xTaskIncrementTick" );
 		__asm volatile( "bl vTaskSwitchContext" );
 
 		/* Ready for the next interrupt. */

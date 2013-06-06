@@ -365,8 +365,8 @@ void xPortSysTickHandler( void )
 			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
 			if( xModifiableIdleTime > 0 )
 			{
-				__WFI();
 				__DSB();
+				__WFI();
 				__ISB();
 			}
 			configPOST_SLEEP_PROCESSING( xExpectedIdleTime );

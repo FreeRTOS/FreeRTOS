@@ -354,11 +354,6 @@ void xPortPendSVHandler( void )
 
 void xPortSysTickHandler( void )
 {
-	/* If using preemption, also force a context switch. */
-	#if configUSE_PREEMPTION == 1
-		portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-	#endif
-
 	/* Only reset the systick load register if configUSE_TICKLESS_IDLE is set to
 	1.  If it is set to 0 tickless idle is not being used.  If it is set to a
 	value other than 0 or 1 then a timer other than the SysTick is being used
@@ -367,9 +362,18 @@ void xPortSysTickHandler( void )
 		portNVIC_SYSTICK_LOAD_REG = ulTimerReloadValueForOneTick;
 	#endif
 
+	/* The SysTick runs at the lowest interrupt priority, so when this interrupt
+	executes all interrupts must be unmasked.  There is therefore no need to
+	save and then restore the interrupt mask value as its value is already
+	known. */
 	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		vTaskIncrementTick();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* A context switch is required.  Context switching is performed in
+			the PendSV interrupt.  Pend the PendSV interrupt. */
+			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+		}
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
 }
@@ -444,8 +448,8 @@ void xPortSysTickHandler( void )
 			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
 			if( xModifiableIdleTime > 0 )
 			{
-				__asm volatile( "wfi" );
 				__asm volatile( "dsb" );
+				__asm volatile( "wfi" );
 				__asm volatile( "isb" );
 			}
 			configPOST_SLEEP_PROCESSING( xExpectedIdleTime );

@@ -417,8 +417,8 @@ void xPortSysTickHandler( void )
 			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
 			if( xModifiableIdleTime > 0 )
 			{
-				__wfi();
 				__dsb( portSY_FULL_READ_WRITE );
+				__wfi();
 				__isb( portSY_FULL_READ_WRITE );
 			}
 			configPOST_SLEEP_PROCESSING( xExpectedIdleTime );

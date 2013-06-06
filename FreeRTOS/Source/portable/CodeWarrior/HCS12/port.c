@@ -260,11 +260,10 @@ void interrupt vPortTickInterrupt( void )
 		portSAVE_CONTEXT();
 
 		/* Increment the tick ... */
-		vTaskIncrementTick();
-
-		/* ... then see if the new tick value has necessitated a
-		context switch. */
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 
 		TFLG1 = 1;								   
 
@@ -274,7 +273,7 @@ void interrupt vPortTickInterrupt( void )
 	}
 	#else
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 		TFLG1 = 1;
 	}
 	#endif

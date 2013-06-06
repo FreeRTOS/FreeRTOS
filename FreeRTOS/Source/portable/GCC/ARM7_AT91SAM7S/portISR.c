@@ -163,7 +163,7 @@ void vPortYieldProcessor( void )
 		/* Increment the tick count - which may wake some tasks but as the
 		preemptive scheduler is not being used any woken task is not given
 		processor time no matter what its priority. */
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 		
 		/* Clear the PIT interrupt. */
 		ulDummy = AT91C_BASE_PITC->PITC_PIVR;
@@ -183,10 +183,11 @@ void vPortYieldProcessor( void )
 		portSAVE_CONTEXT();			
 
 		/* Increment the tick count - this may wake a task. */
-		vTaskIncrementTick();
-
-		/* Find the highest priority task that is ready to run. */
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* Find the highest priority task that is ready to run. */
+			vTaskSwitchContext();
+		}
 		
 		/* End the interrupt in the AIC. */
 		AT91C_BASE_AIC->AIC_EOICR = AT91C_BASE_PITC->PITC_PIVR;;

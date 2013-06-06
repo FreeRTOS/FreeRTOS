@@ -166,7 +166,7 @@ void vTickISR( void )
 
 	/* Increment the RTOS tick count, then look for the highest priority 
 	task that is ready to run. */
-	__asm volatile( "bl vTaskIncrementTick" );
+	__asm volatile( "bl xTaskIncrementTick" );
 
 	#if configUSE_PREEMPTION == 1
 		__asm volatile( "bl vTaskSwitchContext" );

@@ -393,8 +393,10 @@ void vPortYieldFromTick( void ) __attribute__ ( ( naked ) );
 void vPortYieldFromTick( void )
 {
 	portSAVE_CONTEXT();
-	vTaskIncrementTick();
-	vTaskSwitchContext();
+	if( xTaskIncrementTick() != pdFALSE )
+	{
+		vTaskSwitchContext();
+	}
 	portRESTORE_CONTEXT();
 
 	asm volatile ( "ret" );
@@ -463,7 +465,7 @@ unsigned char ucHighByte, ucLowByte;
 	void SIG_OUTPUT_COMPARE1A( void ) __attribute__ ( ( signal ) );
 	void SIG_OUTPUT_COMPARE1A( void )
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 #endif
 

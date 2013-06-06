@@ -301,18 +301,7 @@ static unsigned long prvProcessTickInterrupt( void )
 unsigned long ulSwitchRequired;
 
 	/* Process the tick itself. */
-	vTaskIncrementTick();
-	#if( configUSE_PREEMPTION != 0 )
-	{
-		/* A context switch is only automatically performed from the tick
-		interrupt if the pre-emptive scheduler is being used. */
-		ulSwitchRequired = pdTRUE;
-	}
-	#else
-	{
-		ulSwitchRequired = pdFALSE;
-	}
-	#endif
+	ulSwitchRequired = ( unsigned long ) xTaskIncrementTick();
 
 	return ulSwitchRequired;
 }

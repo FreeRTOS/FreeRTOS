@@ -170,12 +170,11 @@ void interrupt31_handler( void )
 static void prvProcessTick( void ) __attribute__((noinline));
 static void prvProcessTick( void )
 {
-	vTaskIncrementTick();
-
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
+	{
 		vTaskSwitchContext();
-	#endif
-
+	}
+		
 	/* Clear the Tick Interrupt. */
 	counter1->expired = 0;
 }

@@ -433,15 +433,11 @@ extern void vApplicationClearTimerInterrupt( void );
 	vApplicationClearTimerInterrupt();
 
 	/* Increment the RTOS tick - this might cause a task to unblock. */
-	vTaskIncrementTick();
-
-	/* If the preemptive scheduler is being used then a context switch should be
-	requested in case incrementing the tick unblocked a task, or a time slice
-	should cause another task to enter the Running state. */
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
+	{
 		/* Force vTaskSwitchContext() to be called as the interrupt exits. */
 		ulTaskSwitchRequested = 1;
-	#endif
+	}
 }
 /*-----------------------------------------------------------*/
 

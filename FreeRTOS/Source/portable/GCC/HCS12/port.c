@@ -263,11 +263,11 @@ void vPortTickInterrupt( void )
 		portSAVE_CONTEXT();
 
 		/* Increment the tick ... */
-		vTaskIncrementTick();
-
-		/* ... then see if the new tick value has necessitated a
-		context switch. */
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* A context switch is necessary. */
+			vTaskSwitchContext();
+		}
 
 		/* Restore the context of a task - which may be a different task
 		to that interrupted. */
@@ -275,7 +275,7 @@ void vPortTickInterrupt( void )
 	}
 	#else
 	{
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 	#endif
 

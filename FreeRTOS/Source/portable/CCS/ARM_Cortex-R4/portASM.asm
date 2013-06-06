@@ -54,7 +54,7 @@
         .text
         .arm
         .ref vTaskSwitchContext
-        .ref vTaskIncrementTick
+        .ref xTaskIncrementTick
         .ref ulTaskHasFPUContext
 		.ref pxCurrentTCB
 
@@ -225,10 +225,11 @@ vPortPreemptiveTick:
 
         ; Increment the tick count, making any adjustments to the blocked lists
         ; that may be necessary.
-        BL      vTaskIncrementTick
+        BL      xTaskIncrementTick
 
         ; Select the next task to execute.
-        BL      vTaskSwitchContext
+        CMP	R0, #0
+        BLNE    vTaskSwitchContext
 
         ; Restore the context of the task selected to execute.
         portRESTORE_CONTEXT

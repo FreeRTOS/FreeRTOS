@@ -1,4 +1,4 @@
-/** @file sys_startup.c 
+/** @file sys_startup.c
 *   @brief Startup Source File
 *   @date 05.November.2010
 *   @version 1.01.001
@@ -23,6 +23,7 @@
 #include "sys_vim.h"
 #include "sys_core.h"
 #include "sys_memory.h"
+#include "FreeRTOS.h"
 
 
 /* External Functions */
@@ -43,7 +44,11 @@ static const t_isrFuncPTR s_vim_init[] =
     phantomInterrupt,
     esmHighLevelInterrupt,
     phantomInterrupt,
-    vPortPreemptiveTick,		/* RTI */
+	#if configUSE_PREEMPTION == 0
+		vPortNonPreemptiveTick, /* RTI */
+	#else
+		vPortPreemptiveTick,	/* RTI */
+	#endif
     phantomInterrupt,
     phantomInterrupt,
     phantomInterrupt,

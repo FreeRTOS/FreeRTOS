@@ -116,7 +116,7 @@ within the Cortex-M core itself. */
  */
 void AST_ALARM_Handler(void);
 
-/* 
+/*
  * Functions that disable and enable the AST respectively, not returning until
  * the operation is known to have taken effect.
  */
@@ -150,18 +150,13 @@ clears the interrupt, which is specific to the clock being used to generate the
 tick. */
 void AST_ALARM_Handler(void)
 {
-	/* If using preemption, also force a context switch by pending the PendSV
-	interrupt. */
-	#if configUSE_PREEMPTION == 1
-	{
-		portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-	}
-	#endif
-
 	/* Protect incrementing the tick with an interrupt safe critical section. */
 	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		vTaskIncrementTick();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+		}
 
 		/* Just completely clear the interrupt mask on exit by passing 0 because
 		it is known that this interrupt will only ever execute with the lowest
@@ -262,8 +257,8 @@ static void prvEnableAST( void )
 /*-----------------------------------------------------------*/
 
 /* Override the default definition of vPortSuppressTicksAndSleep() that is weakly
-defined in the FreeRTOS Cortex-M3 port layet with a version that manages the 
-asynchronous timer (AST), as the tick is generated from the low power AST and 
+defined in the FreeRTOS Cortex-M3 port layet with a version that manages the
+asynchronous timer (AST), as the tick is generated from the low power AST and
 not the SysTick as would normally be the case on a Cortex-M. */
 void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 {

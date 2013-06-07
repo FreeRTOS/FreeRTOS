@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -267,23 +267,6 @@ static const xTaskParameters xCheckTaskParameters =
 	}
 };
 
-/* Three MPU regions are defined for use by the 'check' task when the task is
-created.  These are only used to demonstrate the MPU features and are not
-actually necessary for the check task to fulfill its primary purpose.  Instead
-the MPU regions are replaced with those defined by xAltRegions prior to the
-check task receiving any data on the queue or printing any messages to the
-debug console.  The region configured by xAltRegions just gives the check task
-access to the debug variables that form part of the Rowley library, and are
-accessed within the debug_printf() function. */
-extern unsigned long dbgCntrlWord_mempoll;
-static const xMemoryRegion xAltRegions[ portNUM_CONFIGURABLE_REGIONS ] =
-{
-	/* Base address						Length		Parameters */
-	{ ( void * ) &dbgCntrlWord_mempoll,	32,			portMPU_REGION_READ_WRITE },
-	{ 0,								0,			0 },
-	{ 0,								0,			0 }
-};
-
 
 
 /*-----------------------------------------------------------*/
@@ -396,22 +379,20 @@ long lMessage;
 unsigned long ulStillAliveCounts[ 2 ] = { 0 };
 const char *pcStatusMessage = "PASS\r\n";
 
+/* The debug_printf() function uses RAM that is outside of the control of the
+application writer.  Therefore the application_defined_privileged_functions.h
+header file is used to provide a version that executes with privileges. */
+extern int MPU_debug_printf( const char *pcMessage );
+
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
-
-	/* Print out the amount of free heap space so configTOTAL_HEAP_SIZE can be
-	tuned.  The heap size is set to be very small in this example and will need
-	to be increased before many more tasks, queues or semaphores can be
-	created. */
-	debug_printf( "There are %d bytes of unused heap space.\r\n", xPortGetFreeHeapSize() );
 
 	/* Demonstrate how the various memory regions can and can't be accessed.
 	The task privilege level is set down to user mode within this function. */
 	prvTestMemoryRegions();
 
-	/* Change the memory regions allocated to this task to those initially
-	set up for demonstration purposes to those actually required by the task. */
-	vTaskAllocateMPURegions( NULL, xAltRegions );
+	/* Tests are done so lower the privilege status. */
+	portSWITCH_TO_USER_MODE();
 
 	/* This loop performs the main function of the task, which is blocking
 	on a message queue then processing each message as it arrives. */
@@ -445,7 +426,7 @@ const char *pcStatusMessage = "PASS\r\n";
 
 					/* Print a pass/fail message to the terminal.  This will be
 					visible in the CrossWorks IDE. */
-					debug_printf( pcStatusMessage );
+					MPU_debug_printf( pcStatusMessage );
 
 					/* Reset the count of 'still alive' messages. */
 					memset( ulStillAliveCounts, 0x00, sizeof( ulStillAliveCounts ) );

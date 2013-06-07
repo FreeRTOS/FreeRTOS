@@ -8,7 +8,6 @@
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc"/>
       <folder Name="FreeRTOS MPU">
         <folder Name="include" file_name="">
-          <file file_name="../../Source/portable/GCC/ARM_CM3/portmacro.h"/>
           <file file_name="../../Source/include/task.h"/>
           <file file_name="../../Source/include/FreeRTOS.h"/>
           <file file_name="../../Source/include/list.h"/>
@@ -18,6 +17,7 @@
           <file file_name="../../Source/include/semphr.h"/>
           <file file_name="../../Source/include/StackMacros.h"/>
           <file file_name="../../Source/include/mpu_wrappers.h"/>
+          <file file_name="../../Source/portable/GCC/ARM_CM3_MPU/portmacro.h"/>
         </folder>
         <file file_name="../../Source/tasks.c"/>
         <file file_name="../../Source/list.c"/>

@@ -2,63 +2,56 @@
 <session>
  <Bookmarks/>
  <Breakpoints/>
- <ETMWindow>
-  <ETMRegister number="0" value="800" />
-  <ETMRegister number="8" value="6f" />
-  <ETMRegister number="9" value="1000000" />
- </ETMWindow>
- <ExecutionCountWindow/>
+ <ExecutionProfileWindow/>
  <Memory1>
-  <MemoryWindow autoEvaluate="0" addressText="0x200002d0" numColumns="8" sizeText="120" dataSize="1" radix="16" addressSpace="" />
+  <MemoryWindow autoEvaluate="0" addressText="0x200002d0" numColumns="8" sizeText="120" dataSize="1" radix="16" name="RTOSDemo" addressSpace="" />
  </Memory1>
  <Memory2>
-  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" name="RTOSDemo" addressSpace="" />
  </Memory2>
  <Memory3>
-  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" name="RTOSDemo" addressSpace="" />
  </Memory3>
  <Memory4>
-  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" addressSpace="" />
+  <MemoryWindow autoEvaluate="0" addressText="" numColumns="8" sizeText="" dataSize="1" radix="16" name="RTOSDemo" addressSpace="" />
  </Memory4>
  <Project>
   <ProjectSessionItem path="RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo" name="unnamed" />
   <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;FreeRTOS MPU" name="unnamed" />
-  <ProjectSessionItem path="RTOSDemo;RTOSDemo;Source Files;include" name="unnamed" />
  </Project>
  <Register1>
-  <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1];Interrupt_Type" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="CPU;Interrupt_Type" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="CPU;CPU/xPSR;CPU/CFBP;CPU/CFBP/CONTROL[0];CPU/CFBP/CONTROL[1];Interrupt_Type" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="CPU;Interrupt_Type" decimalNodes="" octalNodes="" asciiNodes="" name="RTOSDemo" />
  </Register1>
  <Register2>
-  <RegisterWindow openNodes="MPU;MPU/MPU_Control;MPU/MPU_Region_Number;MPU/MPU_Region_Base_Address;MPU/MPU_Attribute_and_Size" binaryNodes="MPU/MPU_Attribute_and_Size/SIZE" hiddenNodes="" unsignedNodes="" visibleGroups="MPU" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="MPU;MPU/MPU_Control;MPU/MPU_Region_Number;MPU/MPU_Region_Base_Address;MPU/MPU_Attribute_and_Size" binaryNodes="MPU/MPU_Attribute_and_Size/SIZE" hiddenNodes="" unsignedNodes="" visibleGroups="MPU" decimalNodes="" octalNodes="" asciiNodes="" name="RTOSDemo" />
  </Register2>
  <Register3>
-  <RegisterWindow openNodes="System_Control_Block;System_Control_Block/System_Handlers_8_11_Priority;System_Control_Block/System_Handler_Control_and_State" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="System_Control_Block" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="System_Control_Block;System_Control_Block/System_Handlers_8_11_Priority;System_Control_Block/System_Handler_Control_and_State" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="System_Control_Block" decimalNodes="" octalNodes="" asciiNodes="" name="RTOSDemo" />
  </Register3>
  <Register4>
-  <RegisterWindow openNodes="" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" />
+  <RegisterWindow openNodes="" binaryNodes="" hiddenNodes="" unsignedNodes="" visibleGroups="" decimalNodes="" octalNodes="" asciiNodes="" name="RTOSDemo" />
  </Register4>
  <TargetWindow programAction="" uploadFileType="" programLoadAddress="" programSize="" uploadFileName="" uploadMemoryInterface="" programFileName="" uploadStartAddress="" programFileType="" uploadSize="" programMemoryInterface="" />
  <TraceWindow>
   <Trace enabled="Yes" />
  </TraceWindow>
  <Watch1>
-  <Watches active="1" update="Never" />
+  <Watches active="0" update="Never" />
  </Watch1>
  <Watch2>
   <Watches active="0" update="Never" />
  </Watch2>
  <Watch3>
-  <Watches active="0" update="Never" />
+  <Watches active="1" update="Never" >
+   <Watchpoint linenumber="0" radix="-1" name="xTickCount" expression="xTickCount" filename="" />
+  </Watches>
  </Watch3>
  <Watch4>
   <Watches active="0" update="Never" />
  </Watch4>
  <Files>
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" y="320" path="C:\E\Dev\FreeRTOS\WorkingCopy\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" left="0" selected="0" name="unnamed" top="302" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" y="1090" path="C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" left="0" selected="0" name="unnamed" top="1054" />
-  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\GCC\ARM_CM3_MPU\port.c" y="288" path="C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\GCC\ARM_CM3_MPU\port.c" left="0" selected="1" name="unnamed" top="252" />
+  <SessionOpenFile useTextEdit="1" useBinaryEdit="0" codecName="Latin1" x="0" debugPath="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" y="100" path="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_MPU_LM3Sxxxx_Rowley\main.c" left="17" selected="1" name="unnamed" top="60" />
  </Files>
- <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Luminary USB Debug" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\GCC\ARM_CM3_MPU" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
+ <ARMCrossStudioWindow activeProject="RTOSDemo" autoConnectTarget="Luminary USB Debug" debugSearchFileMap="" fileDialogInitialDirectory="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Source\portable\GCC\ARM_CM3_MPU" fileDialogDefaultFilter="*.*" autoConnectCapabilities="388991" debugSearchPath="" buildConfiguration="THUMB Flash Debug" />
 </session>

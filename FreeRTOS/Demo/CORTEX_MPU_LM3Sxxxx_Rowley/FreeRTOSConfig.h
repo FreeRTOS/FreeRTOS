@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -133,5 +133,10 @@ to exclude the API function. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned char ) 5 << configUNUSED_PRIO_BITS )  /* Priority 5, or 160 as only the top three bits are implemented. */
+
+/* The debug_printf() function uses RAM that is outside of the control of the
+application writer.  Therefore the application_defined_privileged_functions.h
+header file is used to provide a version that executes with privileges. */
+#define configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS	1
 
 #endif /* FREERTOS_CONFIG_H */

@@ -163,10 +163,6 @@ typedef struct QueueDefinition
 	array position being vacant. */
 	xQueueRegistryItem xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
 
-	/* Removes a queue from the registry by simply setting the pcQueueName
-	member to NULL. */
-	static void prvQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
-
 #endif /* configQUEUE_REGISTRY_SIZE */
 
 /*
@@ -209,7 +205,7 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
 	 * the queue set that the queue contains data.
 	 */
-	static portBASE_TYPE prvNotifyQueueSetContainer( xQUEUE *pxQueue, portBASE_TYPE xCopyPosition );
+	static portBASE_TYPE prvNotifyQueueSetContainer( xQUEUE *pxQueue, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
 #endif
 
 /*-----------------------------------------------------------*/
@@ -1259,7 +1255,7 @@ xQUEUE *pxQueue;
 	traceQUEUE_DELETE( pxQueue );
 	#if ( configQUEUE_REGISTRY_SIZE > 0 )
 	{
-		prvQueueUnregisterQueue( pxQueue );
+		vQueueUnregisterQueue( pxQueue );
 	}
 	#endif
 	vPortFree( pxQueue->pcHead );
@@ -1778,7 +1774,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	static void prvQueueUnregisterQueue( xQueueHandle xQueue )
+	void vQueueUnregisterQueue( xQueueHandle xQueue )
 	{
 	unsigned portBASE_TYPE ux;
 

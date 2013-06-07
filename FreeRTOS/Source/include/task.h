@@ -67,8 +67,8 @@
     Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
 
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -1210,9 +1210,14 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
  * Called from the real time kernel tick (either preemptive or cooperative),
  * this increments the tick count and checks if any tasks that are blocked
  * for a finite period required removing from a blocked list and placing on
- * a ready list.
+ * a ready list.  If a non-zero value is returned then a context switch is
+ * required because either:
+ *   + A task was removed from a blocked list because its timeout had expired,
+ *     or
+ *   + Time slicing is in use and there is a task of equal priority to the
+ *     currently running task.
  */
-void vTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
+portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN

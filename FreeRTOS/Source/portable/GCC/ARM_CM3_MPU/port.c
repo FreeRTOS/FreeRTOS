@@ -1208,3 +1208,21 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 	return xReturn;
 }
 
+/* Functions that the application writer wants to execute in privileged mode
+can be defined in application_defined_privileged_functions.h.  The functions
+must take the same format as those above whereby the privilege state on exit
+equals the privilege state on entry.  For example:
+
+void MPU_FunctionName( [parameters ] )
+{
+portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+	FunctionName( [parameters ] );
+
+	portRESET_PRIVILEGE( xRunningPrivileged );
+}
+*/
+
+#if configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS == 1
+	#include "application_defined_privileged_functions.h"
+#endif

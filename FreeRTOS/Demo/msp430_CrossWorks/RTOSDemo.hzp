@@ -1,35 +1,34 @@
 <!DOCTYPE CrossStudio_Project_File>
-<solution version="1" Name="RTOSDemo" >
-  <project Name="RTOSDemo" >
-    <configuration Target="MSP430F449" linker_memory_map_file="$(StudioDir)/targets/MSP430F449.xml" project_directory="" link_include_startup_code="No" project_type="Executable" Name="Common" build_use_hardware_multiplier="Yes" />
-    <folder Name="Scheduler Source" >
-      <configuration filter="c;h;s;asm;inc;s43" Name="Common" />
-      <file file_name="../../Source/tasks.c" Name="tasks.c" >
-        <configuration c_preprocessor_definitions="" c_user_include_directories="" Name="Common" c_system_include_directories="" />
+<solution Name="RTOSDemo" version="2">
+  <project Name="RTOSDemo">
+    <configuration Name="Common" Target="MSP430F449" build_use_hardware_multiplier="16-Bit Multiplier" link_include_startup_code="No" linker_memory_map_file="$(PackagesDir)/targets/msp430/MSP430F449.xml" linker_section_placement_file="$(StudioDir)/targets/section_placement_info_ab_iv16.xml" msp430_debug_interface="JTAG" msp430_identify_string="MSP430F44x" msp430_insn_set="MSP430" project_directory="" project_type="Executable"/>
+    <folder Name="Scheduler Source">
+      <configuration Name="Common" filter="c;h;s;asm;inc;s43"/>
+      <file Name="tasks.c" file_name="../../Source/tasks.c">
+        <configuration Name="Common" c_preprocessor_definitions="" c_system_include_directories="" c_user_include_directories=""/>
       </file>
-      <file file_name="../../Source/queue.c" Name="queue.c" />
-      <file file_name="../../Source/list.c" Name="list.c" />
-      <file file_name="../../Source/portable/Rowley/MSP430F449/portext.asm" Name="portext.asm" />
-      <file file_name="../../Source/portable/Rowley/MSP430F449/port.c" Name="port.c" />
-      <file file_name="../../Source/portable/MemMang/heap_1.c" Name="heap_1.c" />
+      <file Name="queue.c" file_name="../../Source/queue.c"/>
+      <file Name="list.c" file_name="../../Source/list.c"/>
+      <file Name="portext.asm" file_name="../../Source/portable/Rowley/MSP430F449/portext.asm"/>
+      <file Name="port.c" file_name="../../Source/portable/Rowley/MSP430F449/port.c"/>
+      <file Name="heap_1.c" file_name="../../Source/portable/MemMang/heap_1.c"/>
     </folder>
-    <folder Name="Startup Code" >
-      <configuration filter="" Name="Common" />
-      <file file_name="$(StudioDir)/targets/section_placement.xml" Name="section_placement.xml" />
-      <file file_name="$(StudioDir)/src/crt0.asm" Name="crt0.asm" />
+    <folder Name="Startup Code">
+      <configuration Name="Common" filter=""/>
+      <file Name="crt0.asm" file_name="$(StudioDir)/src/crt0.asm"/>
     </folder>
-    <folder Name="Demo Source" >
-      <file file_name="main.c" Name="main.c" />
-      <file file_name="../Common/Minimal/flash.c" Name="flash.c" />
-      <file file_name="../Common/Minimal/comtest.c" Name="comtest.c" />
-      <file file_name="../Common/Minimal/PollQ.c" Name="PollQ.c" />
-      <file file_name="ParTest/ParTest.c" Name="ParTest.c" />
-      <file file_name="serial/serial.c" Name="serial.c" />
-      <file file_name="../Common/Minimal/integer.c" Name="integer.c" />
-      <file file_name="serial/serialASM.asm" Name="serialASM.asm" />
+    <folder Name="Demo Source">
+      <file Name="main.c" file_name="main.c"/>
+      <file Name="flash.c" file_name="../Common/Minimal/flash.c"/>
+      <file Name="comtest.c" file_name="../Common/Minimal/comtest.c"/>
+      <file Name="PollQ.c" file_name="../Common/Minimal/PollQ.c"/>
+      <file Name="ParTest.c" file_name="ParTest/ParTest.c"/>
+      <file Name="serial.c" file_name="serial/serial.c"/>
+      <file Name="integer.c" file_name="../Common/Minimal/integer.c"/>
+      <file Name="serialASM.asm" file_name="serial/serialASM.asm"/>
     </folder>
   </project>
-  <configuration compiler_optimization_strategy="Minimize size" optimize_code_motion="No" optimize_block_locality="No" optimize_register_allocation="Locals Only" Name="Debug" />
-  <configuration c_preprocessor_definitions="NDEBUG" build_debug_information="No" Name="Release" build_optimize_output="Yes" />
-  <configuration compiler_optimization_strategy="Maximize speed" c_preprocessor_definitions="ROWLEY_MSP430" c_user_include_directories="$(ProjectDir);$(ProjectDir)/../common/include" linker_printf_width_precision_supported="No" Name="Common" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/Rowley/msp430F449" />
+  <configuration Name="Debug" c_user_include_directories=".;$(PackagesDir)/include" compiler_optimization_strategy="Minimize size" optimize_block_locality="No" optimize_code_motion="No" optimize_register_allocation="Locals Only"/>
+  <configuration Name="Release" build_debug_information="No" build_optimize_output="Yes" c_preprocessor_definitions="NDEBUG"/>
+  <configuration Name="Common" c_preprocessor_definitions="ROWLEY_MSP430" c_system_include_directories="$(StudioDir)/include;$(ProjectDir)/../../source/include;$(ProjectDir)/../../source/portable/Rowley/msp430F449" c_user_include_directories="$(ProjectDir);$(ProjectDir)/../common/include" compiler_optimization_strategy="Maximize speed" linker_printf_width_precision_supported="No"/>
 </solution>

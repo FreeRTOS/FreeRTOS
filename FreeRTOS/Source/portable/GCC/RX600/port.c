@@ -364,7 +364,7 @@ void vTickISR( void )
 	necessitates.  Ensure IPL is at the max syscall value first. */
 	portDISABLE_INTERRUPTS_FROM_KERNEL_ISR();
 	{
-		if( TaskIncrementTick() != pdFALSE )
+		if( xTaskIncrementTick() != pdFALSE )
 		{
 			taskYIELD();
 		}

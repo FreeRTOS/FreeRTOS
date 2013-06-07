@@ -147,14 +147,9 @@ unsigned portLONG ulSavedInterruptMask;
 
 	/* Increment the RTOS tick. */
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
-		vTaskIncrementTick();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			taskYIELD();
+		}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulSavedInterruptMask );
-
-	/* If we are using the pre-emptive scheduler then also request a
-	context switch as incrementing the tick could have unblocked a task. */
-	#if configUSE_PREEMPTION == 1
-	{
-		taskYIELD();
-	}
-	#endif
 }

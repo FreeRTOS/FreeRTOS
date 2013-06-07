@@ -53,7 +53,7 @@
 
 	.import _pxCurrentTCB
 	.import _vTaskSwitchContext
-	.import _vTaskIncrementTick
+	.import _xTaskIncrementTick
 
 	.export _vPortStartFirstTask
 	.export _ulPortGetGBR
@@ -89,7 +89,7 @@ _vPortPreemptiveTick
 
 	portSAVE_CONTEXT
 	
-	mov.l	#_vTaskIncrementTick, r0
+	mov.l	#_xTaskIncrementTick, r0
 	jsr		@r0
 	nop
 
@@ -105,7 +105,7 @@ _vPortCooperativeTick
 
 	portSAVE_CONTEXT
 	
-	mov.l	#_vTaskIncrementTick, r0
+	mov.l	#_xTaskIncrementTick, r0
 	jsr		@r0
 	nop
 

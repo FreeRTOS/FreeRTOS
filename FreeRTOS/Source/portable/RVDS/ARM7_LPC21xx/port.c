@@ -236,7 +236,7 @@ void vPortEndScheduler( void )
 	{
 		/* Increment the tick count - this may make a delaying task ready
 		to run - but a context switch is not performed. */		
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 
 		T0IR = portTIMER_MATCH_ISR_BIT;				/* Clear the timer event */
 		VICVectAddr = portCLEAR_VIC_INTERRUPT;		/* Acknowledge the Interrupt */

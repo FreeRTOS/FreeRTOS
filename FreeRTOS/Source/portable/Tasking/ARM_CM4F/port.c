@@ -237,14 +237,13 @@ void SysTick_Handler( void )
 {
 unsigned long ulDummy;
 
-	/* If using preemption, also force a context switch. */
-	#if configUSE_PREEMPTION == 1
-		*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
-	#endif
-
 	ulDummy = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		vTaskIncrementTick();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* Pend a context switch. */
+			*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
+		}
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
 }

@@ -358,9 +358,9 @@ void __attribute__((__interrupt__, auto_psv)) _T1Interrupt( void )
 	/* Clear the timer interrupt. */
 	IFS0bits.T1IF = 0;
 
-	vTaskIncrementTick();
-
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
+	{
 		portYIELD();
-	#endif
+	}
 }
+

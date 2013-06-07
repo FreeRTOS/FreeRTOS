@@ -54,7 +54,7 @@
 	INCLUDE portmacro.inc
 
 	IMPORT	vTaskSwitchContext
-	IMPORT	vTaskIncrementTick
+	IMPORT	xTaskIncrementTick
 
 	EXPORT	vPortYieldProcessor
 	EXPORT	vPortStartFirstTask
@@ -127,7 +127,7 @@ vPreemptiveTick
 
 	portSAVE_CONTEXT					; Save the context of the current task.	
 
-	LDR R0, =vTaskIncrementTick			; Increment the tick count.  
+	LDR R0, =xTaskIncrementTick			; Increment the tick count.  
 	MOV LR, PC							; This may make a delayed task ready
 	BX R0								; to run.
 	

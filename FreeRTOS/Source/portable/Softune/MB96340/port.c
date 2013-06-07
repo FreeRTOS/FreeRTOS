@@ -474,8 +474,10 @@ void vPortEndScheduler( void )
 		
 		/* Increment the tick count then switch to the highest priority task
 		that is ready to run. */
-		vTaskIncrementTick();
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 
 		/* Disable interrupts so that portRESTORE_CONTEXT() is not interrupted */
 		__DI();
@@ -499,7 +501,7 @@ void vPortEndScheduler( void )
 		/* Clear RLT0 interrupt flag */
 		TMCSR0_UF = 0;  
 		
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 
 #endif

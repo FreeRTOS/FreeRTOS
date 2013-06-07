@@ -405,8 +405,10 @@ void vPortYield( void ) _naked
 		portSAVE_CONTEXT();
 		portCOPY_STACK_TO_XRAM();
 
-		vTaskIncrementTick();
-		vTaskSwitchContext();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			vTaskSwitchContext();
+		}
 		
 		portCLEAR_INTERRUPT_FLAG();
 		portCOPY_XRAM_TO_STACK();
@@ -418,7 +420,7 @@ void vPortYield( void ) _naked
 		/* When using the cooperative scheduler the timer 2 ISR is only 
 		required to increment the RTOS tick count. */
 
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 		portCLEAR_INTERRUPT_FLAG();
 	}
 #endif

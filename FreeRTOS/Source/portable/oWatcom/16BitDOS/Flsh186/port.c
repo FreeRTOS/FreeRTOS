@@ -197,10 +197,11 @@ kernel is being used. */
 	static void __interrupt __far prvPreemptiveTick( void )
 	{
 		/* Get the scheduler to update the task states following the tick. */
-		vTaskIncrementTick();
-
-		/* Switch in the context of the next task to be run. */
-		portSWITCH_CONTEXT();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* Switch in the context of the next task to be run. */
+			portSWITCH_CONTEXT();
+		}
 
 		/* Reset the PIC ready for the next time. */
 		portRESET_PIC();
@@ -210,7 +211,7 @@ kernel is being used. */
 	{
 		/* Same as preemptive tick, but the cooperative scheduler is being used
 		so we don't have to switch in the context of the next task. */
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 		portRESET_PIC();
 	}
 #endif

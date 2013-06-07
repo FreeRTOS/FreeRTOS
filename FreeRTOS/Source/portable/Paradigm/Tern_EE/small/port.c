@@ -204,10 +204,11 @@ is being used. */
 	static void __interrupt __far prvPreemptiveTick( void )
 	{
 		/* Get the scheduler to update the task states following the tick. */
-		vTaskIncrementTick();
-
-		/* Switch in the context of the next task to be run. */
-		portEND_SWITCHING_ISR();
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* Switch in the context of the next task to be run. */
+			portEND_SWITCHING_ISR();
+		}
 
 		/* Reset interrupt. */
 		outport( portEIO_REGISTER, portCLEAR_INTERRUPT );
@@ -217,7 +218,8 @@ is being used. */
 	{
 		/* Same as preemptive tick, but the cooperative scheduler is being used
 		so we don't have to switch in the context of the next task. */
-		vTaskIncrementTick();
+		xTaskIncrementTick();
+		
 		/* Reset interrupt. */
 		outport( portEIO_REGISTER, portCLEAR_INTERRUPT );
 	}

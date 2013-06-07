@@ -109,9 +109,7 @@ Changes from V3.0.1
 		/*
 	 	 * Maintain the tick count.
 	 	 */
-		vTaskIncrementTick();
-		
-		#if configUSE_PREEMPTION == 1
+		if( xTaskIncrementTick() != pdFALSE )
 		{
 			/*
 		 	 * Ask for a switch to the highest priority task
@@ -119,7 +117,6 @@ Changes from V3.0.1
 		 	 */
 			uxSwitchRequested = pdTRUE;
 		}
-		#endif
 	}
 }
 

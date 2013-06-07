@@ -292,7 +292,7 @@ const unsigned short usReloadValue = ( unsigned short ) ( ( ( configPER_CLOCK_HZ
 	LDI #_tmcsr0, R0
 	AND R1,@R0								;Clear RLT0 interrupt flag
 
-	CALL32	 _vTaskIncrementTick,R12		;Increment Tick
+	CALL32	 _xTaskIncrementTick,R12		;Increment Tick
 	CALL32	 _vTaskSwitchContext,R12		;Switch context if required
 
 	ANDCCR #0xEF							;Disable Interrupts
@@ -314,7 +314,7 @@ const unsigned short usReloadValue = ( unsigned short ) ( ( ( configPER_CLOCK_HZ
 	{
 		/* Clear RLT0 interrupt flag */
 		TMCSR0_UF = 0; 
-		vTaskIncrementTick();
+		xTaskIncrementTick();
 	}
 
 #endif

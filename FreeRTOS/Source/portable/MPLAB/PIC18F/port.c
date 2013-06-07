@@ -611,14 +611,11 @@ static void prvTickISR( void )
 	PIR1bits.CCP1IF = 0;
 
 	/* Maintain the tick count. */
-	vTaskIncrementTick();
-
-	#if configUSE_PREEMPTION == 1
+	if( xTaskIncrementTick() != pdFALSE )
 	{
 		/* Switch to the highest priority task that is ready to run. */
 		vTaskSwitchContext();
 	}
-	#endif
 
 	portRESTORE_CONTEXT();
 }

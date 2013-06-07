@@ -89,7 +89,7 @@
 _vTickISR:
 		portSAVE_CONTEXT
 				
-		call	#_vTaskIncrementTick
+		call	#_xTaskIncrementTick
 
 		#if configUSE_PREEMPTION == 1
 			call	#_vTaskSwitchContext

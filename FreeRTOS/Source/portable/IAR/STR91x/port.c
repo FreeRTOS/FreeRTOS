@@ -415,16 +415,11 @@ keyword. */
 		TIM2->OC1R += s_nPulseLength;
 		
 		/* Increment the tick counter. */
-		vTaskIncrementTick();
-		
-		#if configUSE_PREEMPTION == 1
+		if( xTaskIncrementTick() != pdFALSE )
 		{
-			/* The new tick value might unblock a task.  Ensure the highest task that
-			is ready to execute is the task that will execute when the tick ISR
-			exits. */
+			/* Select a new task to run. */
 			vTaskSwitchContext();
 		}
-		#endif
 		
 		/* Clear the interrupt in the watchdog. */
 		TIM2->SR &= ~TIM_FLAG_OC1;

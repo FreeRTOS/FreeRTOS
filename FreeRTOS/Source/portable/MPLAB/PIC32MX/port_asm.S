@@ -131,9 +131,9 @@ vPortStartFirstTask:
 
 vPortYieldISR:
 
-	/* Make room for the context. First save the current status so we can
-	manipulate it, and the cause and EPC registers so we capture their
-	original values in case of interrupt nesting. */
+	/* Make room for the context. First save the current status so it can be
+	manipulated, and the cause and EPC registers so thier original values are
+	captured. */
 	mfc0		k0, _CP0_CAUSE
 	addiu		sp,	sp, -portCONTEXT_SIZE
 	mfc0		k1, _CP0_STATUS
@@ -145,7 +145,7 @@ vPortYieldISR:
 	sw			s5, 40(sp)
 	sw			k1, portSTATUS_STACK_LOCATION(sp)
 
-	/* Enable interrupts above the current priority. */
+	/* Interrupts above the kernel priority are going to be re-enabled. */
 	srl			k0, k0, 0xa
 	ins 		k1, k0, 10, 6
 	ins			k1, zero, 1, 4

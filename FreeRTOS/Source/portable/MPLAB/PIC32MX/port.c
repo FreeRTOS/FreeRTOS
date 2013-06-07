@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -76,7 +76,7 @@
  * Implementation of functions defined in portable.h for the PIC32MX port.
   *----------------------------------------------------------*/
 
-#ifndef __XC__
+#ifndef __XC
     #error This port is designed to work with XC32.  Please update your C compiler version.
 #endif
 
@@ -245,14 +245,14 @@ void vPortIncrementTick( void )
 unsigned portBASE_TYPE uxSavedStatus;
 
 	uxSavedStatus = uxPortSetInterruptMaskFromISR();
-	vTaskIncrementTick();
+	{
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* Pend a context switch. */
+			_CP0_BIS_CAUSE( portCORE_SW_0 );
+		}
+	}
 	vPortClearInterruptMaskFromISR( uxSavedStatus );
-
-	/* If we are using the preemptive scheduler then we might want to select
-	a different task to execute. */
-	#if configUSE_PREEMPTION == 1
-		_CP0_BIS_CAUSE( portCORE_SW_0 );
-	#endif /* configUSE_PREEMPTION */
 
 	/* Clear timer 1 interrupt. */
 	IFS0CLR = _IFS0_T1IF_MASK;

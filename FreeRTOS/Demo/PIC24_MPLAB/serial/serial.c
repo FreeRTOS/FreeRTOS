@@ -216,6 +216,8 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 
 void vSerialClose( xComPortHandle xPort )
 {
+	/* Note implemented. */
+	( void ) xPort;
 }
 /*-----------------------------------------------------------*/
 

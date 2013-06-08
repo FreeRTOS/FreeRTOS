@@ -217,6 +217,9 @@ static void vLCDTask( void *pvParameters )
 xLCDMessage xMessage;
 unsigned portSHORT usRow = 0;
 
+	/* Remove compiler warnigns. */
+	( void ) pvParameters;
+
 	/* Initialise the hardware.  This uses delays so must not be called prior
 	to the scheduler being started. */
 	prvSetupLCD();

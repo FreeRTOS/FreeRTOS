@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="62">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="FreeRTOS_Source" projectFiles="true">
+        <logicalFolder name="f1" displayName="Portable" projectFiles="true">
+          <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
+            <itemPath>../../Source/portable/MemMang/heap_1.c</itemPath>
+          </logicalFolder>
+          <itemPath>../../Source/portable/MPLAB/PIC24_dsPIC/port.c</itemPath>
+          <itemPath>../../Source/portable/MPLAB/PIC24_dsPIC/portasm_PIC24.S</itemPath>
+          <itemPath>../../Source/portable/MPLAB/PIC24_dsPIC/portmacro.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../Source/list.c</itemPath>
+        <itemPath>../../Source/queue.c</itemPath>
+        <itemPath>../../Source/tasks.c</itemPath>
+        <itemPath>../../Source/timers.c</itemPath>
+        <itemPath>../../Source/croutine.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Standard Demo Tasks" projectFiles="true">
+        <itemPath>../Common/Minimal/BlockQ.c</itemPath>
+        <itemPath>../Common/Minimal/blocktim.c</itemPath>
+        <itemPath>../Common/Minimal/comtest.c</itemPath>
+        <itemPath>../Common/Minimal/crflash.c</itemPath>
+        <itemPath>../Common/Minimal/integer.c</itemPath>
+        <itemPath>timertest.c</itemPath>
+      </logicalFolder>
+      <itemPath>FreeRTOSConfig.h</itemPath>
+      <itemPath>lcd.c</itemPath>
+      <itemPath>lcd.h</itemPath>
+      <itemPath>main.c</itemPath>
+      <itemPath>timertest.h</itemPath>
+      <itemPath>serial/serial.c</itemPath>
+      <itemPath>ParTest/ParTest.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../../Source</Elem>
+    <Elem>../Common/Minimal</Elem>
+    <Elem>serial</Elem>
+    <Elem>ParTest</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="default" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <targetDevice>PIC24FJ128GA010</targetDevice>
+        <targetHeader></targetHeader>
+        <targetPluginBoard></targetPluginBoard>
+        <platformTool>ICD3PlatformTool</platformTool>
+        <languageToolchain>XC16</languageToolchain>
+        <languageToolchainVersion>1.11</languageToolchainVersion>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+        <loading>
+          <useAlternateLoadableFile>false</useAlternateLoadableFile>
+          <alternateLoadableFile></alternateLoadableFile>
+        </loading>
+      </compileType>
+      <makeCustomizationType>
+        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
+        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
+        <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
+        <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
+      </makeCustomizationType>
+      <C30>
+        <property key="code-model" value="default"/>
+        <property key="const-model" value="default"/>
+        <property key="data-model" value="default"/>
+        <property key="enable-all-warnings" value="true"/>
+        <property key="enable-ansi-std" value="false"/>
+        <property key="enable-ansi-warnings" value="false"/>
+        <property key="enable-fatal-warnings" value="false"/>
+        <property key="enable-large-arrays" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-procedural-abstraction" value="false"/>
+        <property key="enable-short-double" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="extra-include-directories" value=""/>
+        <property key="isolate-each-function" value="true"/>
+        <property key="keep-inline" value="false"/>
+        <property key="oXC16gcc-align-arr" value="false"/>
+        <property key="oXC16gcc-cnsts-mauxflash" value="false"/>
+        <property key="oXC16gcc-data-sects" value="true"/>
+        <property key="oXC16gcc-errata" value=""/>
+        <property key="oXC16gcc-fillupper" value=""/>
+        <property key="oXC16gcc-large-aggregate" value="false"/>
+        <property key="oXC16gcc-mauxflash" value="false"/>
+        <property key="oXC16gcc-mpa-lvl" value=""/>
+        <property key="oXC16gcc-name-text-sec" value=""/>
+        <property key="oXC16gcc-near-chars" value="false"/>
+        <property key="oXC16gcc-no-isr-warn" value="false"/>
+        <property key="oXC16gcc-sfr-warn" value="false"/>
+        <property key="oXC16gcc-smar-io-lvl" value="1"/>
+        <property key="oXC16gcc-smart-io-fmt" value=""/>
+        <property key="optimization-level" value="0"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="scalar-model" value="default"/>
+        <property key="use-cci" value="false"/>
+        <appendMe value="-I ../../Source/include -I ../../Source/portable/MPLAB/PIC24_dsPIC -I ../Common/include -I . -Wextra"/>
+      </C30>
+      <C30-AS>
+      </C30-AS>
+      <C30-LD>
+      </C30-LD>
+      <C30Global>
+      </C30Global>
+      <ICD3PlatformTool>
+      </ICD3PlatformTool>
+    </conf>
+  </confs>
+</configurationDescriptor>

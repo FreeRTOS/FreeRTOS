@@ -237,6 +237,9 @@ xLCDMessage xMessage = { 0, cStringBuffer };
 /* Set to pdTRUE should an error be detected in any of the standard demo tasks. */
 unsigned short usErrorDetected = pdFALSE;
 
+	/* Remove compiler warnings. */
+	( void ) pvParameters;
+
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
 	xLastExecutionTime = xTaskGetTickCount();

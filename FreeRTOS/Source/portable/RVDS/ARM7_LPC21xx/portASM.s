@@ -130,11 +130,13 @@ vPreemptiveTick
 	LDR R0, =xTaskIncrementTick			; Increment the tick count.  
 	MOV LR, PC							; This may make a delayed task ready
 	BX R0								; to run.
-	
+
+	CMP R0, #0
+	BEQ SkipContextSwitch
 	LDR R0, =vTaskSwitchContext			; Find the highest priority task that 
 	MOV LR, PC							; is ready to run.
 	BX R0
-	
+SkipContextSwitch
 	MOV R0, #T0MATCHBIT					; Clear the timer event
 	LDR R1, =T0IR
 	STR R0, [R1] 

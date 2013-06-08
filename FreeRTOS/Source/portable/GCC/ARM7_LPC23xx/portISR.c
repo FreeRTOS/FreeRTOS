@@ -167,8 +167,14 @@ void vPortYieldProcessor( void )
 
 		/* Increment the RTOS tick count, then look for the highest priority 
 		task that is ready to run. */
-		__asm volatile( "bl xTaskIncrementTick" );
-		__asm volatile( "bl vTaskSwitchContext" );
+		__asm volatile
+		(
+			"	bl xTaskIncrementTick	\t\n" \
+			"	cmp r0, #0				\t\n" \
+			"	beq SkipContextSwitch	\t\n" \
+			"	bl vTaskSwitchContext	\t\n" \
+			"SkipContextSwitch:			\t\n"
+		);
 
 		/* Ready for the next interrupt. */
 		T0IR = 2;

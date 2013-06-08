@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -81,14 +81,14 @@
 
 /*
 	Changes from V2.5.2
-		
+
 	+ The critical section management functions have been changed.  These no
 	  longer modify the stack and are safe to use at all optimisation levels.
 	  The functions are now also the same for both ARM and THUMB modes.
 
 	Changes from V2.6.0
 
-	+ Removed the 'static' from the definition of vNonPreemptiveTick() to 
+	+ Removed the 'static' from the definition of vNonPreemptiveTick() to
 	  allow the demo to link when using the cooperative scheduler.
 
 	Changes from V3.2.4
@@ -114,7 +114,7 @@ volatile unsigned long ulCriticalNesting = 9999UL;
 /* ISR to handle manual context switches (from a call to taskYIELD()). */
 void vPortYieldProcessor( void ) __attribute__((interrupt("SWI"), naked));
 
-/* 
+/*
  * The scheduler can only be started from ARM mode, hence the inclusion of this
  * function here.
  */
@@ -132,15 +132,15 @@ void vPortISRStartFirstTask( void )
 /*
  * Called by portYIELD() or taskYIELD() to manually force a context switch.
  *
- * When a context switch is performed from the task level the saved task 
+ * When a context switch is performed from the task level the saved task
  * context is made to look as if it occurred from within the tick ISR.  This
  * way the same restore context function can be used when restoring the context
  * saved from the ISR or that saved from a call to vPortYieldProcessor.
  */
 void vPortYieldProcessor( void )
 {
-	/* Within an IRQ ISR the link register has an offset from the true return 
-	address, but an SWI ISR does not.  Add the offset manually so the same 
+	/* Within an IRQ ISR the link register has an offset from the true return
+	address, but an SWI ISR does not.  Add the offset manually so the same
 	ISR return code can be used in both cases. */
 	__asm volatile ( "ADD		LR, LR, #4" );
 
@@ -151,31 +151,34 @@ void vPortYieldProcessor( void )
 	__asm volatile ( "bl vTaskSwitchContext" );
 
 	/* Restore the context of the new task. */
-	portRESTORE_CONTEXT();	
+	portRESTORE_CONTEXT();
 }
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * The ISR used for the scheduler tick.
  */
 void vTickISR( void ) __attribute__((naked));
 void vTickISR( void )
 {
 	/* Save the context of the interrupted task. */
-	portSAVE_CONTEXT();	
+	portSAVE_CONTEXT();
 
-	/* Increment the RTOS tick count, then look for the highest priority 
+	/* Increment the RTOS tick count, then look for the highest priority
 	task that is ready to run. */
-	__asm volatile( "bl xTaskIncrementTick" );
-
-	#if configUSE_PREEMPTION == 1
-		__asm volatile( "bl vTaskSwitchContext" );
-	#endif
+	__asm volatile
+	(
+		"	bl xTaskIncrementTick	\t\n" \
+		"	cmp r0, #0				\t\n" \
+		"	beq SkipContextSwitch	\t\n" \
+		"	bl vTaskSwitchContext	\t\n" \
+		"SkipContextSwitch:			\t\n"
+	);
 
 	/* Ready for the next interrupt. */
 	T0_IR = portTIMER_MATCH_ISR_BIT;
 	VICVectAddr = portCLEAR_VIC_INTERRUPT;
-	
+
 	/* Restore the context of the new task. */
 	portRESTORE_CONTEXT();
 }
@@ -194,7 +197,7 @@ void vTickISR( void )
 
 	void vPortDisableInterruptsFromThumb( void )
 	{
-		__asm volatile ( 
+		__asm volatile (
 			"STMDB	SP!, {R0}		\n\t"	/* Push R0.									*/
 			"MRS	R0, CPSR		\n\t"	/* Get CPSR.								*/
 			"ORR	R0, R0, #0xC0	\n\t"	/* Disable IRQ, FIQ.						*/
@@ -202,14 +205,14 @@ void vTickISR( void )
 			"LDMIA	SP!, {R0}		\n\t"	/* Pop R0.									*/
 			"BX		R14" );					/* Return back to thumb.					*/
 	}
-			
+
 	void vPortEnableInterruptsFromThumb( void )
 	{
-		__asm volatile ( 
-			"STMDB	SP!, {R0}		\n\t"	/* Push R0.									*/	
-			"MRS	R0, CPSR		\n\t"	/* Get CPSR.								*/	
-			"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.							*/	
-			"MSR	CPSR, R0		\n\t"	/* Write back modified value.				*/	
+		__asm volatile (
+			"STMDB	SP!, {R0}		\n\t"	/* Push R0.									*/
+			"MRS	R0, CPSR		\n\t"	/* Get CPSR.								*/
+			"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.							*/
+			"MSR	CPSR, R0		\n\t"	/* Write back modified value.				*/
 			"LDMIA	SP!, {R0}		\n\t"	/* Pop R0.									*/
 			"BX		R14" );					/* Return back to thumb.					*/
 	}
@@ -223,14 +226,14 @@ in a variable, which is then saved as part of the stack context. */
 void vPortEnterCritical( void )
 {
 	/* Disable interrupts as per portDISABLE_INTERRUPTS(); 							*/
-	__asm volatile ( 
+	__asm volatile (
 		"STMDB	SP!, {R0}			\n\t"	/* Push R0.								*/
 		"MRS	R0, CPSR			\n\t"	/* Get CPSR.							*/
 		"ORR	R0, R0, #0xC0		\n\t"	/* Disable IRQ, FIQ.					*/
 		"MSR	CPSR, R0			\n\t"	/* Write back modified value.			*/
 		"LDMIA	SP!, {R0}" );				/* Pop R0.								*/
 
-	/* Now interrupts are disabled ulCriticalNesting can be accessed 
+	/* Now interrupts are disabled ulCriticalNesting can be accessed
 	directly.  Increment ulCriticalNesting to keep a count of how many times
 	portENTER_CRITICAL() has been called. */
 	ulCriticalNesting++;
@@ -248,11 +251,11 @@ void vPortExitCritical( void )
 		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
 			/* Enable interrupts as per portEXIT_CRITICAL().					*/
-			__asm volatile ( 
-				"STMDB	SP!, {R0}		\n\t"	/* Push R0.						*/	
-				"MRS	R0, CPSR		\n\t"	/* Get CPSR.					*/	
-				"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.				*/	
-				"MSR	CPSR, R0		\n\t"	/* Write back modified value.	*/	
+			__asm volatile (
+				"STMDB	SP!, {R0}		\n\t"	/* Push R0.						*/
+				"MRS	R0, CPSR		\n\t"	/* Get CPSR.					*/
+				"BIC	R0, R0, #0xC0	\n\t"	/* Enable IRQ, FIQ.				*/
+				"MSR	CPSR, R0		\n\t"	/* Write back modified value.	*/
 				"LDMIA	SP!, {R0}" );			/* Pop R0.						*/
 		}
 	}

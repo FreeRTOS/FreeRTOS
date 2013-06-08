@@ -90,11 +90,10 @@ _vTickISR:
 		portSAVE_CONTEXT
 				
 		call	#_xTaskIncrementTick
-
-		#if configUSE_PREEMPTION == 1
-			call	#_vTaskSwitchContext
-		#endif
-		
+		cmp.w   #0x00, r15
+                jeq     _SkipContextSwitch
+		call	#_vTaskSwitchContext
+_SkipContextSwitch:		
 		portRESTORE_CONTEXT
 /*-----------------------------------------------------------*/
 

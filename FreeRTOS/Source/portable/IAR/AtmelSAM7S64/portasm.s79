@@ -74,10 +74,10 @@ vPortStartFirstTask:
 ; Manual context switch function.  This is the SWI hander.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 vPortYieldProcessor:
-	ADD		LR, LR, #4			; Add 4 to the LR to make the LR appear exactly 
-								; as if the context was saved during and IRQ 
+	ADD		LR, LR, #4			; Add 4 to the LR to make the LR appear exactly
+								; as if the context was saved during and IRQ
 								; handler.
-								
+
 	portSAVE_CONTEXT			; Save the context of the current task...
 	LDR R0, =vTaskSwitchContext	; before selecting the next task to execute.
 	mov     lr, pc
@@ -94,10 +94,13 @@ vPortPreemptiveTick:
 	LDR R0, =xTaskIncrementTick ; Increment the tick count - this may wake a task.
 	mov lr, pc
 	BX R0
+
+	CMP R0, #0
+	BEQ SkipContextSwitch
 	LDR R0, =vTaskSwitchContext ; Select the next task to execute.
 	mov lr, pc
 	BX R0
-
+SkipContextSwitch
 	LDR	R14, =AT91C_BASE_PITC	; Clear the PIT interrupt
 	LDR	R0, [R14, #PITC_PIVR ]
 

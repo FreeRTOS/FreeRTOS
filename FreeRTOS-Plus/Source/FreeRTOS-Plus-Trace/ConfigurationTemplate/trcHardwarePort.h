@@ -103,6 +103,7 @@
  *****************************************************************************/
 
 #define PORT_NOT_SET                          -1
+#define PORT_APPLICATION_DEFINED			  -2
 
 /*** Officially supported hardware timer ports *******************************/
 #define PORT_HWIndependent                     0
@@ -369,6 +370,13 @@
     #define HWTC_DIVISOR 16
 
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
+
+#elif (SELECTED_PORT == PORT_APPLICATION_DEFINED)
+
+	#if !( defined (HWTC_COUNT_DIRECTION) && defined (HWTC_COUNT) && defined (HWTC_PERIOD) && defined (HWTC_DIVISOR) && defined (IRQ_PRIORITY_ORDER) )
+		#error SELECTED_PORT is PORT_APPLICATION_DEFINED but not all of the necessary constants have been defined.
+	#endif
+
 
 #elif (SELECTED_PORT != PORT_NOT_SET)
 

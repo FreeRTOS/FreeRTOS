@@ -72,6 +72,8 @@
     mission critical applications that require provable dependability.
 */
 
+#if defined( __PIC24E__ ) || defined ( __PIC24F__ ) || defined( __PIC24FK__ ) || defined( __PIC24H__ )
+
         .global _vPortYield
 		.extern _vTaskSwitchContext
 		.extern uxCriticalNesting
@@ -133,3 +135,5 @@ _vPortYield:
         return
 
         .end
+		
+#endif /* defined( __PIC24E__ ) || defined ( __PIC24F__ ) || defined( __PIC24FK__ ) || defined( __PIC24H__ ) */

@@ -157,7 +157,7 @@ unsigned portBASE_TYPE uxCriticalNesting = 0xef;
 		#endif /* __HAS_EDS__ */
 #endif /* MPLAB_PIC24_PORT */
 
-#if defined( __dsPIC30F__ ) || defined ( __dsPIC33E__ ) || defined( __dsPIC33F__ )
+#if defined( __dsPIC30F__ ) || defined( __dsPIC33F__ )
 
 	#define portRESTORE_CONTEXT()																						\
 		asm volatile(	"MOV	_pxCurrentTCB, W0		\n"	/* Restore the stack pointer for the task. */				\

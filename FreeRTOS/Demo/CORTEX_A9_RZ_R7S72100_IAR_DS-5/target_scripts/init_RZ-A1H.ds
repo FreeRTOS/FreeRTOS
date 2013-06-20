@@ -52,3 +52,4 @@ mem set 0xfcfe360c 16 0x0080        # PFCE3
 mem set 0xfcfe350c 16 0x0000        # PFC3
 mem set 0xfcfe720c 16 0x0080        # PIPC3
 
+

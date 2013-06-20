@@ -22,94 +22,128 @@
 * Copyright (C) 2012 Renesas Electronics Corporation. All rights reserved.
 *******************************************************************************/
 /*******************************************************************************
-* File Name    : resetprg.c
-* $Rev: 17531 $
-* $Date:: 2013-04-10 12:58:44 +0100#$
+* File Name    : retarget.c
+* $Rev: $
+* $Date::                           $
 * Device(s)    : Aragon
-* Tool-Chain   : DS-5 Ver 5.8
+* Tool-Chain   : DS-5 Ver 5.13
 *              : ARM Complier
 * OS           : 
 * H/W Platform : Aragon CPU Board
-* Description  : Aragon Sample Program - Sub Main
+* Description  : Aragon Sample Program - Retarget standard I/O
 * Operation    : 
 * Limitations  : 
 *******************************************************************************/
 
+        #ifdef        __STANDALONE__
 
 /******************************************************************************
 Includes   <System Includes> , "Project Includes"
 ******************************************************************************/
+#include <stdio.h>
 #include "r_typedefs.h"
-#include "devdrv_common.h"      /* Common Driver Header */
-#include "devdrv_intc.h"        /* INTC Driver Header   */
-#include "resetprg.h"
 #include "sio_char.h"
-#include "stb_init.h"
-#include "port_init.h"
 
-#pragma arm section code   = "CODE_RESET"
-#pragma arm section rodata = "CONST_RESET"
-#pragma arm section rwdata = "DATA_RESET"
-#pragma arm section zidata = "BSS_RESET"
+#pragma import(__use_no_semihosting)
 
 /******************************************************************************
 Typedef definitions
 ******************************************************************************/
+struct __FILE
+{
+  int_t handle;
 
+  /* Whatever you require here. If the only file you are using is   */
+  /* standard output using printf() for debugging, no file handling */
+  /* is required.                                                   */
+};
 
 /******************************************************************************
 Macro definitions
 ******************************************************************************/
+/* File descriptor */
+#define STDIN       (0)
+#define STDOUT      (1)
+#define STDERR      (2)
 
+#define IOSTREAM    (1)
+#define BUFF_SIZE   (256)
+
+#if 0
+#define DEFAULT_HANDLE  (0x100)
+#endif
 
 /******************************************************************************
 Imported global variables and functions (from other files)
 ******************************************************************************/
-extern void    VbarInit(void);
-extern void    L1CacheInit(void);
-extern int32_t $Super$$main(void);
 
 /******************************************************************************
 Exported global variables and functions (to be accessed by other files)
 ******************************************************************************/
-
+FILE __stdout;
+FILE __stdin;
+#if 0
+FILE __stderr;
+#endif
 
 /******************************************************************************
 Private global variables and functions
 ******************************************************************************/
 
-
-/*******************************************************************************
-* Function Name: $Sub$$main
-* Description  : 
-* Arguments    : none
-* Return Value : none
-*******************************************************************************/
-void $Sub$$main(void)
+/******************************************************************************
+* Function Name: fgetc
+* Description  :
+* Arguments    :
+* Return Value :
+******************************************************************************/
+int_t fgetc(FILE * file_p)
 {
-    STB_Init();
+    /* no character to read */
+    return EOF;
+}
 
-    /* ==== PORT setting ==== */
-    PORT_Init();
+/******************************************************************************
+* Function Name: fputc
+* Description  :
+* Arguments    :
+* Return Value :
+******************************************************************************/
+int_t fputc(int_t channel, FILE * file_p)
+{
+     return channel;
+}
 
-    /* ==== BSC setting ==== */
-    R_BSC_Init((uint8_t)(BSC_AREA_CS2 | BSC_AREA_CS3));
+/******************************************************************************
+* Function Name: ferror
+* Description  : 
+* Arguments    : 
+* Return Value : 
+******************************************************************************/
+int_t ferror(FILE * file_p)
+{
+    return 0;
+}
 
-    /* ==== INTC setting ==== */
-    R_INTC_Init();
-
-    L1CacheInit();
-
-    /* ==== Vector base address setting ==== */
-    VbarInit();
-
-    __enable_irq();
-    __enable_fiq();
-
-    /* ==== Function call of main function ==== */
-    $Super$$main();
+int_t __backspace(FILE * file_p)
+{
+    return 0;
 }
 
 
-/* END of File */
+void _sys_exit(int_t returncode)
+{
+    while (1)
+    {
+        /* Do Nothing */
+    }
+}
+
+char_t * _sys_command_string(char_t * cmd, int_t len)
+{
+    return cmd;
+}
+
+    #endif        /* __STANDALONE__    セミホスティング無効    */
+
+/* End of File */
 

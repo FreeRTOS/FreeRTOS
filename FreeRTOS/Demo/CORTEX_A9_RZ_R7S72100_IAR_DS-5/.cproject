@@ -27,7 +27,7 @@
 									<listOptionValue builtIn="false" value="ARM_SIM"/>
 								</option>
 								<option id="com.arm.tool.c.compiler.baremetal.exe.debug.option.opt.799477241" name="Optimization level" superClass="com.arm.tool.c.compiler.baremetal.exe.debug.option.opt" value="com.arm.tool.c.compiler.option.optlevel.min" valueType="enumerated"/>
-								<option id="com.arm.tool.c.compiler.option.optfor.2031421359" name="Optimize for" superClass="com.arm.tool.c.compiler.option.optfor" value="com.arm.tool.c.compiler.option.optfor.size" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.optfor.2031421359" name="Optimize for" superClass="com.arm.tool.c.compiler.option.optfor" value="com.arm.tool.c.compiler.option.optfor.time" valueType="enumerated"/>
 								<option id="com.arm.tool.c.compiler.option.targetcpu.1542570835" name="Target CPU (--cpu)" superClass="com.arm.tool.c.compiler.option.targetcpu" value="Cortex-A9" valueType="string"/>
 								<option id="com.arm.tool.c.compiler.option.endian.1071397580" name="Byte order" superClass="com.arm.tool.c.compiler.option.endian" value="com.arm.tool.c.compiler.option.endian.little" valueType="enumerated"/>
 								<option id="com.arm.tool.c.compiler.option.inst.1331808544" name="Instruction set" superClass="com.arm.tool.c.compiler.option.inst" value="com.arm.tool.c.compiler.option.inst.arm" valueType="enumerated"/>

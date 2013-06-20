@@ -169,7 +169,7 @@ configINCLUDE_FAT_SL_DEMO to 1 to include the FreeRTOS+FAT SL (and therefore
 also FreeRTOS+CLI) demo in the build.  Set configINCLUDE_FAT_SL_DEMO to 0 to
 include the COM test tasks.  The COM test tasks require a loop back connector
 to be fitted to the UART port. */
-#define mainINCLUDE_FAT_SL_DEMO				0
+#define mainINCLUDE_FAT_SL_DEMO				1
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )

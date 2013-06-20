@@ -129,6 +129,8 @@ FreeRTOS_IRQ_Handler
 	POP		{r0-r3, lr}
 	ADD		sp, sp, r2
 
+	CPSID 	i
+	
 	; Write the value read from ICCIAR to ICCEOIR
 	LDR 	r4, =ulICCEOIR
 	STR		r0, [r4]

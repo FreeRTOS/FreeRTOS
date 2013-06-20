@@ -1,0 +1,54 @@
+stop
+pause 500
+reset
+stop
+#reset
+
+info memory
+memory S:0x00000000 S:0x07ffffff ro
+memory S:0x3fffff80 S:0x3fffffff nocache noverify
+memory S:0xfcfe0000 S:0xfcfeffff nocache noverify
+
+# USB Register accessed by only 16bit
+memory S:0xe8010000 S:0xe801010f 16
+memory S:0xe8207000 S:0xe820710f 16
+info memory
+
+######################################
+# Release L2 cache standby			##
+######################################
+mem set 0x3fffff80 32 0x00000001
+
+# ;*Writing to On-Chip Data-Retention RAM is enabled.
+# ;SYSCR3.RRAMWE3=RRAMWE2=RRAMWE1=RRAMWE0=1
+mem set 0xfcfe0408 32 0xf
+
+######################################
+# CS0 Port Setting					##
+# CS1 Port Setting					##
+######################################
+# P9_1(A25), P9_0(A24),
+mem set 0xfcfe3424 16 0x0003        # PMC9
+mem set 0xfcfe3A24 16 0x0000        # PFCAE9
+mem set 0xfcfe3624 16 0x0000        # PFCE9
+mem set 0xfcfe3524 16 0x0000        # PFC9
+mem set 0xfcfe7224 16 0x0003        # PIPC9
+# P8_15(A23), P8_14(A22), P8_13(A21),
+mem set 0xfcfe3420 16 0xffff        # PMC8
+mem set 0xfcfe3A20 16 0x0000        # PFCAE8
+mem set 0xfcfe3620 16 0x0000        # PFCE8
+mem set 0xfcfe3520 16 0x0000        # PFC8
+mem set 0xfcfe7220 16 0xffff        # PIPC8
+# P7_6(WE0#), P7_8(RD#), P7_0(CS0#),
+mem set 0xfcfe341c 16 0xff41        # PMC7
+mem set 0xfcfe3A1c 16 0x0000        # PFCAE7
+mem set 0xfcfe361c 16 0x0000        # PFCE7
+mem set 0xfcfe351c 16 0x0000        # PFC7
+mem set 0xfcfe721c 16 0xff41        # PIPC7
+# P3_7(CS1#),
+mem set 0xfcfe340c 16 0x0080        # PMC3
+mem set 0xfcfe3A0c 16 0x0080        # PFCAE3
+mem set 0xfcfe360c 16 0x0080        # PFCE3
+mem set 0xfcfe350c 16 0x0000        # PFC3
+mem set 0xfcfe720c 16 0x0080        # PIPC3
+

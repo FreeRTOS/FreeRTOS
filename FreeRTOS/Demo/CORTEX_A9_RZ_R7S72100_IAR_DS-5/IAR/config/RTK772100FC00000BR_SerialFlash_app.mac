@@ -1,0 +1,57 @@
+setup()
+{
+__var Reg;
+
+  // Enable I Cache
+  // Disable MMU and enable ICache
+  Reg = __jtagCP15ReadReg(1, 0, 0, 0);
+  Reg &= 0xFFFFFFFA;
+  Reg |= 1<<12;
+  __jtagCP15WriteReg(1, 0, 0, 0, Reg);
+
+  //__writeMemory16(0x0035, 0xFCFE0010, "Memory");     // FRQCR
+  //__writeMemory16(0x0001, 0xFCFE0014, "Memory");     // FRQCR2
+
+  // Turn on clock for SPI
+  __writeMemory8(0x00, 0xFCFE0438, "Memory");        // PDM_STBCR9
+
+  // Configure PORTS for SPI (serial flash 1)
+  __writeMemory16(0x00FC, 0xFCFE7224, "Memory");     // PIPC9 2-7 -> alt IO mode
+  __writeMemory16(0x00FC, 0xFCFE3424, "Memory");     // PMC9 2-7 -> alt mode
+  __writeMemory16(0x00FC, 0xFCFE3524, "Memory");     // PFC9 2-7 -> alt mode
+
+  // Configure PORTS for SPI (serial flash 2)
+  __writeMemory16(0xF000, 0xFCFE7208, "Memory");     // PIPC2 12-15 -> alt IO mode
+  __writeMemory16(0xF000, 0xFCFE3408, "Memory");     // PMC2 12-15 -> alt mode
+  __writeMemory16(0xF000, 0xFCFE3508, "Memory");     // PFC2 12-15 -> alt mode
+  __writeMemory16(0xF000, 0xFCFE3608, "Memory");     // PFCE2 12-15 -> alt mode
+
+  // Configure SPI for EXTREAD mode
+  __writeMemory32(0x01AA4021, 0x3FEFA000, "Memory"); // SPIBSC_CMNCR 2-memory, CPHAT=0, CPHAR=1, CPOL=0, SFDE=1
+
+  // Configure SPIBSC 32-bit addressing
+  __writeMemory32(0x00130000, 0x3FEFA010, "Memory"); // SPIBSC_DRCMR CMD = 0x13
+  __writeMemory32(0x00004F00, 0x3FEFA01C, "Memory"); // SPIBSC_DRENR ADE = 0xF, CDE=1
+  __writeMemory32(0x00010101, 0x3FEFA00C, "Memory"); // SPIBSC_DRCR enable burst
+  __writeMemory32(0x00000001, 0x3FEFA014, "Memory"); // SPIBSC_DREAR enable extended address range
+
+  // Set Bit Rate
+  __writeMemory32(0x00000003, 0x3FEFA008, "Memory"); // SPIBSC_SPBCR SPBR=0, BRDV=3
+
+  // Flush Read Cache
+  Reg = __readMemory32(0x3FEFA00C, "Memory");        // Read SPIBSC_DRCR
+  Reg |= 0x00000200;                                 // Set RCF bit
+  __writeMemory32(Reg, 0x3FEFA00C, "Memory");        // Set SPIBSC_DRCR
+}
+
+execUserPreload()
+{
+  __message "----- Prepare hardware for debug -----\n";
+  __hwReset(0);
+  setup();
+}
+
+execUserReset()
+{
+  setup();
+}

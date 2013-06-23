@@ -161,7 +161,8 @@ portTickType xValueOfInsertion;
 			   interrupt priories, which can seem counter intuitive.  See
 			   configMAX_SYSCALL_INTERRUPT_PRIORITY on http://www.freertos.org/a00110.html
 			3) Calling an API function from within a critical section or when
-			   the scheduler is suspended.
+			   the scheduler is suspended, or calling an API function that does
+			   not end in "FromISR" from an interrupt.
 			4) Using a queue or semaphore before it has been initialised or
 			   before the scheduler has been started (are interrupts firing
 			   before vTaskStartScheduler() has been called?).

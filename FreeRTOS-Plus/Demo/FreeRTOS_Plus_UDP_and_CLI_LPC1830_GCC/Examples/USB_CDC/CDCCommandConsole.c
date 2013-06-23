@@ -58,16 +58,17 @@
 /* Standard includes. */
 #include "string.h"
 #include "stdio.h"
-#include "limits.h"
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 
-/* LPCUSB includes. */
-#include "USB.h"
-#include "Descriptors.h"
+/* Driver includes. */
+#include "usbhw.h"
+#include "cdcuser.h"
+#include "usbcfg.h"
+#include "usbuser.h"
 
 /* Example includes. */
 #include "FreeRTOS_CLI.h"
@@ -87,48 +88,30 @@
 static void prvCDCCommandConsoleTask( void *pvParameters );
 
 /*
- * Some USB processing is deferred from LPCUSB interrupt service routines to
- * LPCUSB functions that are called from a FreeRTOS task.
- * prvNotifyTaskofUSBEvent() is used from interrupt event callback functions.
- * It uses a semaphore to unblock the handling task whenever task level
- * processing might be required.
+ * Obtain a character from the CDC input.  The calling task will be held in the
+ * Blocked state (so other tasks can execute) until a character is avilable.
  */
-static void prvNotifyTaskOfUSBEvent( void );
+int8_t cGetCDCChar( void );
+
+/*
+ * Initialise the third party virtual comport files driver
+ */
+static void prvSetupUSBDrivers( void );
 
 /*-----------------------------------------------------------*/
 
-/* 'Given' by the CDC interrupt to unblock the command console task when CDC
-events are potentially waiting to be processed. */
-static xSemaphoreHandle xCDCEventSemaphore = NULL;
+/* 'Given' by the CDC interrupt to unblock the receiving task when new data
+is available. */
+static xSemaphoreHandle xNewDataSemaphore = NULL;
 
 /* Used to guard access to the CDC output, which is used by more than one
 task. */
 static xSemaphoreHandle xCDCMutex = NULL;
 
 /* Const messages output by the command console. */
-static const char * const pcWelcomeMessage = "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
-static const char * const pcEndOfOutputMessage = "\r\n[Press ENTER to execute the previous command again]\r\n>";
-static const char * const pcNewLine = "\r\n";
-
-/* LPCUSBlib CDC Class driver interface configuration and state information. */
-static USB_ClassInfo_CDC_Device_t xVirtualCOMPort = {
-	.Config = {
-		.ControlInterfaceNumber         = 0,
-
-		.DataINEndpointNumber           = CDC_TX_EPNUM,
-		.DataINEndpointSize             = CDC_TXRX_EPSIZE,
-		.DataINEndpointDoubleBank       = false,
-
-		.DataOUTEndpointNumber          = CDC_RX_EPNUM,
-		.DataOUTEndpointSize            = CDC_TXRX_EPSIZE,
-		.DataOUTEndpointDoubleBank      = false,
-
-		.NotificationEndpointNumber     = CDC_NOTIFICATION_EPNUM,
-		.NotificationEndpointSize       = CDC_NOTIFICATION_EPSIZE,
-		.NotificationEndpointDoubleBank = false,
-		.PortNumber             		= 0,
-	},
-};
+static const uint8_t * const pcWelcomeMessage = ( uint8_t * ) "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
+static const uint8_t * const pcEndOfOutputMessage = ( uint8_t * ) "\r\n[Press ENTER to execute the previous command again]\r\n>";
+static const uint8_t * const pcNewLine = ( uint8_t * ) "\r\n";
 
 /*-----------------------------------------------------------*/
 
@@ -136,14 +119,14 @@ void vCDCCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPri
 {
 	/* Create the semaphores and mutexes used by the CDC to task interface. */
 	xCDCMutex = xSemaphoreCreateMutex();
-	xCDCEventSemaphore = xSemaphoreCreateCounting( UINT_MAX, 0 );
+	vSemaphoreCreateBinary( xNewDataSemaphore );
 	configASSERT( xCDCMutex );
-	configASSERT( xCDCEventSemaphore );
+	configASSERT( xNewDataSemaphore );
 
 	/* Add the semaphore and mutex to the queue registry for viewing in the
 	kernel aware state viewer. */
 	vQueueAddToRegistry( xCDCMutex, ( signed char * ) "CDCMu" );
-	vQueueAddToRegistry( xCDCEventSemaphore, ( signed char * ) "CDCDat" );
+	vQueueAddToRegistry( xNewDataSemaphore, ( signed char * ) "CDCDat" );
 
 	/* Create that task that handles the console itself. */
 	xTaskCreate( 	prvCDCCommandConsoleTask,			/* The task that implements the command console. */
@@ -157,114 +140,103 @@ void vCDCCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPri
 
 static void prvCDCCommandConsoleTask( void *pvParameters )
 {
-char cRxedChar, *pcOutputString;
-static char cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
-portBASE_TYPE xReturned, xInputIndex = 0;
+int8_t cRxedChar, cInputIndex = 0, *pcOutputString;
+static int8_t cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
+portBASE_TYPE xReturned;
 
-	/* Just to avoid warnings about unused parameters. */
 	( void ) pvParameters;
-
-	/* Initialise LPCUSB CDC driver. */
-	USB_Init( xVirtualCOMPort.Config.PortNumber, USB_MODE_Device );
 
 	/* Obtain the address of the output buffer.  Note there is no mutual
 	exclusion on this buffer as it is assumed only one command console
 	interface will be used at any one time. */
-	pcOutputString = ( char * ) FreeRTOS_CLIGetOutputBuffer();
+	pcOutputString = FreeRTOS_CLIGetOutputBuffer();
+
+	/* Initialise the virtual com port (CDC) interface. */
+	prvSetupUSBDrivers();
 
 	/* Send the welcome message.  This probably won't be seen as the console
-	will not have been connected yet (the console cannot be connected until the
-	virtual COM port has enumerated). */
-	CDC_Device_SendData( &xVirtualCOMPort, pcWelcomeMessage, strlen( ( const char * ) pcWelcomeMessage ) );
+	will not have been connected yet. */
+	USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcWelcomeMessage, strlen( ( const char * ) pcWelcomeMessage ) );
 
 	for( ;; )
 	{
-		/* Wait for new events to originate from the LPCUSB interrupts. */
-//		xSemaphoreTake( xCDCEventSemaphore, 100 );
+		/* No characters received yet for the current input string. */
+		cRxedChar = 0;
 
-		/* LPCUSB function to process events latched by the USB interrupts. */
-		CDC_Device_USBTask( &xVirtualCOMPort );
-		USB_USBTask( xVirtualCOMPort.Config.PortNumber, USB_MODE_Device );
+		/* Only interested in reading one character at a time. */
+		cRxedChar = cGetCDCChar();
 
-		/* Ensure no other tasks are using the COM port. */
 		if( xSemaphoreTake( xCDCMutex, cmdMAX_MUTEX_WAIT ) == pdPASS )
 		{
-			/* Have any characters been received? */
-			if( CDC_Device_BytesReceived( &xVirtualCOMPort ) != 0 )
+			/* Echo the character back. */
+			USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) &cRxedChar, sizeof( uint8_t ) );
+
+			/* Was it the end of the line? */
+			if( cRxedChar == '\n' || cRxedChar == '\r' )
 			{
-				/* Only interested in reading one character at a time. */
-				cRxedChar = CDC_Device_ReceiveByte( &xVirtualCOMPort );
+				/* Just to space the output from the input. */
+				USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcNewLine, strlen( ( const char * ) pcNewLine ) );
 
-				/* Echo the character back. */
-				CDC_Device_SendData( &xVirtualCOMPort, &cRxedChar, sizeof( uint8_t ) );
-
-				/* Was it an end of line character? */
-				if( cRxedChar == '\n' || cRxedChar == '\r' )
+				/* See if the command is empty, indicating that the last command is
+				to be executed again. */
+				if( cInputIndex == 0 )
 				{
-					/* Just to space the output from the input. */
-					CDC_Device_SendData( &xVirtualCOMPort, pcNewLine, strlen( ( const char * ) pcNewLine ) );
+					/* Copy the last command back into the input string. */
+					strcpy( ( char * ) cInputString, ( char * ) cLastInputString );
+				}
 
-					/* See if the command is empty, indicating that the last
-					command is to be executed again. */
-					if( xInputIndex == 0 )
+				/* Pass the received command to the command interpreter.  The
+				command interpreter is called repeatedly until it returns pdFALSE
+				(indicating there is no more output) as it might generate more than
+				one string. */
+				do
+				{
+					/* Get the next output string from the command interpreter. */
+					xReturned = FreeRTOS_CLIProcessCommand( cInputString, pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
+
+					/* Write the generated string to the CDC. */
+					USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcOutputString, strlen( ( const char * ) pcOutputString ) );
+					vTaskDelay( 1 );
+
+				} while( xReturned != pdFALSE );
+
+				/* All the strings generated by the input command have been sent.
+				Clear the input	string ready to receive the next command.  Remember
+				the command that was just processed first in case it is to be
+				processed again. */
+				strcpy( ( char * ) cLastInputString, ( char * ) cInputString );
+				cInputIndex = 0;
+				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
+
+				USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcEndOfOutputMessage, strlen( ( const char * ) pcEndOfOutputMessage ) );
+			}
+			else
+			{
+				if( cRxedChar == '\r' )
+				{
+					/* Ignore the character. */
+				}
+				else if( cRxedChar == '\b' )
+				{
+					/* Backspace was pressed.  Erase the last character in the
+					string - if any. */
+					if( cInputIndex > 0 )
 					{
-						/* Copy the last command back into the input string. */
-						strcpy( ( char * ) cInputString, ( char * ) cLastInputString );
+						cInputIndex--;
+						cInputString[ cInputIndex ] = '\0';
 					}
-
-					/* Pass the received command to the command interpreter.
-					The	command interpreter is called repeatedly until it
-					returns pdFALSE	(indicating there is no more output) as it
-					might generate more than one string. */
-					do
-					{
-						/* Get the next output string from the command
-						interpreter. */
-						xReturned = FreeRTOS_CLIProcessCommand( ( const int8_t * const ) cInputString, ( int8_t * ) pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
-
-						/* Write the generated string to the CDC. */
-						CDC_Device_SendData( &xVirtualCOMPort, pcOutputString, strlen( ( const char * ) pcOutputString ) );
-
-					} while( xReturned != pdFALSE );
-
-					/* All the strings generated by the input command have been
-					sent.  Clear the input string ready to receive the next
-					command.  Remember the command that was just processed first
-					in case it is to be	processed again. */
-					strcpy( ( char * ) cLastInputString, ( char * ) cInputString );
-					xInputIndex = 0;
-					memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
-
-					CDC_Device_SendData( &xVirtualCOMPort, pcEndOfOutputMessage, strlen( ( const char * ) pcEndOfOutputMessage ) );
 				}
 				else
 				{
-					if( cRxedChar == '\r' )
+					/* A character was entered.  Add it to the string
+					entered so far.  When a \n is entered the complete
+					string will be passed to the command interpreter. */
+					if( ( cRxedChar >= ' ' ) && ( cRxedChar <= '~' ) )
 					{
-						/* Ignore the character. */
-					}
-					else if( cRxedChar == '\b' )
-					{
-						/* Backspace was pressed.  Erase the last character in
-						thestring - if any. */
-						if( xInputIndex > 0 )
+						if( cInputIndex < cmdMAX_INPUT_SIZE )
 						{
-							xInputIndex--;
-							cInputString[ xInputIndex ] = '\0';
-						}
-					}
-					else
-					{
-						/* A character was entered.  Add it to the string
-						entered so far.  When a \n is entered the complete
-						string will be passed to the command interpreter. */
-						if( ( cRxedChar >= ' ' ) && ( cRxedChar <= '~' ) )
-						{
-							if( xInputIndex < cmdMAX_INPUT_SIZE )
-							{
-								cInputString[ xInputIndex ] = cRxedChar;
-								xInputIndex++;
-							}
+							cInputString[ cInputIndex ] = cRxedChar;
+							cInputIndex++;
 						}
 					}
 				}
@@ -281,64 +253,73 @@ void vOutputString( const uint8_t * const pucMessage )
 {
 	if( xSemaphoreTake( xCDCMutex, cmdMAX_MUTEX_WAIT ) == pdPASS )
 	{
-		CDC_Device_SendData( &xVirtualCOMPort, ( const char * const ) pucMessage, strlen( ( const char * ) pucMessage ) );
+		USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pucMessage, strlen( ( const char * ) pucMessage ) );
 		xSemaphoreGive( xCDCMutex );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvNotifyTaskOfUSBEvent( void )
+int8_t cGetCDCChar( void )
+{
+int32_t lAvailableBytes, xBytes = 0;
+int8_t cInputChar;
+
+	do
+	{
+		/* Are there any characters already available? */
+		CDC_OutBufAvailChar( &lAvailableBytes );
+		if( lAvailableBytes > 0 )
+		{
+			if( xSemaphoreTake( xCDCMutex, cmdMAX_MUTEX_WAIT ) == pdPASS )
+			{
+				/* Attempt to read one character. */
+				xBytes = 1;
+				xBytes = CDC_RdOutBuf( ( char * ) &cInputChar, &xBytes );
+
+				xSemaphoreGive( xCDCMutex );
+			}
+		}
+
+		if( xBytes == 0 )
+		{
+			/* A character was not available.  Wait until signalled by the
+			CDC Rx callback function that new data has arrived. */
+			xSemaphoreTake( xNewDataSemaphore, portMAX_DELAY );
+		}
+
+	} while( xBytes == 0 );
+
+	return cInputChar;
+}
+/*-----------------------------------------------------------*/
+
+/* Callback function executed by the USB interrupt when new data arrives. */
+void vCDCNewDataNotify( void )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
+	configASSERT( xNewDataSemaphore );
+
 	/* 'Give' the semaphore that signals the arrival of new data to the command
 	console task. */
-	configASSERT( xCDCEventSemaphore );
-	xSemaphoreGiveFromISR( xCDCEventSemaphore, &xHigherPriorityTaskWoken );
+	xSemaphoreGiveFromISR( xNewDataSemaphore, &xHigherPriorityTaskWoken );
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/
 
-/* Standard LPCUSB event handler. */
-void EVENT_USB_Device_ConfigurationChanged( void )
+static void prvSetupUSBDrivers( void )
 {
-	CDC_Device_ConfigureEndpoints( &xVirtualCOMPort );
-	prvNotifyTaskOfUSBEvent();
-}
-/*-----------------------------------------------------------*/
+LPC_USBDRV_INIT_T xUSBCallback;
 
-/* Standard LPCUSB event handler. */
-void EVENT_USB_Device_ControlRequest( void )
-{
-	CDC_Device_ProcessControlRequest( &xVirtualCOMPort );
-	prvNotifyTaskOfUSBEvent();
-}
-/*-----------------------------------------------------------*/
+	/* Initialise the callback structure. */
+	memset( ( void * ) &xUSBCallback, 0, sizeof( LPC_USBDRV_INIT_T ) );
+	xUSBCallback.USB_Reset_Event = USB_Reset_Event;
+	xUSBCallback.USB_P_EP[ 0 ] = USB_EndPoint0;
+	xUSBCallback.USB_P_EP[ 1 ] = USB_EndPoint1;
+	xUSBCallback.USB_P_EP[ 2 ] = USB_EndPoint2;
+	xUSBCallback.ep0_maxp = USB_MAX_PACKET0;
 
-/* Standard LPCUSB event handler. */
-void EVENT_USB_Device_Connect(void)
-{
-	prvNotifyTaskOfUSBEvent();
+	/* Initialise then connect the USB. */
+	USB_Init( &xUSBCallback );
+	USB_Connect( pdTRUE );
 }
-/*-----------------------------------------------------------*/
-
-/* Standard LPCUSB event handler. */
-void EVENT_USB_Device_Disconnect(void)
-{
-	prvNotifyTaskOfUSBEvent();
-}
-/*-----------------------------------------------------------*/
-
-/* Standard LPCUSB event handler. */
-void EVENT_CDC_Device_LineEncodingChanged(USB_ClassInfo_CDC_Device_t *const CDCInterfaceInfo)
-{
-	prvNotifyTaskOfUSBEvent();
-}
-/*-----------------------------------------------------------*/
-
-/* Standard LPCUSB event handler. */
-void EVENT_CDC_Device_ControLineStateChanged(USB_ClassInfo_CDC_Device_t *const CDCInterfaceInfo)
-{
-	prvNotifyTaskOfUSBEvent();
-}
-

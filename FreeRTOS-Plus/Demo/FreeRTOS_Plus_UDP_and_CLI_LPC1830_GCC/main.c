@@ -90,8 +90,7 @@
 #include "CDCCommandConsole.h"
 
 /* Library includes. */
-#include "cmsis.h"
-#include "Board_API.h"
+#include "LPC18xx.h"
 
 /* The size of the stack and the priority used by the two echo client tasks. */
 #define mainECHO_CLIENT_TASK_STACK_SIZE 	( configMINIMAL_STACK_SIZE * 2 )
@@ -100,12 +99,12 @@
 /* The size of the stack and the priority used by the USB CDC command console
 task. */
 #define mainCDC_COMMAND_CONSOLE_STACK_SIZE		( configMINIMAL_STACK_SIZE * 2 )
-#define mainCDC_COMMAND_CONSOLE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+#define mainCDC_COMMAND_CONSOLE_TASK_PRIORITY	( 4U )
 
 /*
- * Register commands that can be used with FreeRTOS+CLI.  The commands are
- * defined in CLI-commands.c.
- */
+* Register commands that can be used with FreeRTOS+CLI.  The commands are
+* defined in CLI-commands.c.
+*/
 extern void vRegisterCLICommands( void );
 
 /*
@@ -142,9 +141,6 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 int main( void )
 {
-	/* Hardware setup. */
-	Board_Init();
-
 	/* The examples assume that all priority bits are assigned as preemption
 	priority bits. */
 	NVIC_SetPriorityGrouping( 0UL );

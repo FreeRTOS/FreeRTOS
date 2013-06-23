@@ -44,7 +44,8 @@
 								<option id="com.crt.advproject.gcc.hdrlib.1620518189" name="Use headers for C library" superClass="com.crt.advproject.gcc.hdrlib" value="com.crt.advproject.gcc.hdrlib.codered" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1643954527" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ThirdParty/TraceRecorderSrc/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ThirdParty/FreeRTOS_Plus_Trace_Recorder/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ThirdParty/FreeRTOS_Plus_Trace_Recorder/Trace_Recorder_Configuration}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Plus_CLI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Examples/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/ThirdParty/USB_CDC/include}&quot;"/>
@@ -78,42 +79,12 @@
 								</option>
 								<option id="com.crt.advproject.link.gcc.hdrlib.2006557555" name="Use C library" superClass="com.crt.advproject.link.gcc.hdrlib" value="com.crt.advproject.gcc.link.hdrlib.codered.nohost" valueType="enumerated"/>
 								<option id="gnu.c.link.option.nodeflibs.2072403274" name="Do not use default libraries (-nodefaultlibs)" superClass="gnu.c.link.option.nodeflibs" value="false" valueType="boolean"/>
+								<option id="com.crt.advproject.link.gcc.multicore.slave.1911982348" name="Multicore slave" superClass="com.crt.advproject.link.gcc.multicore.slave"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1085761099" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.980802473" name="/" resourcePath="ThirdParty/TraceRecorderSrc">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.709674187" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
-							<tool id="com.crt.advproject.cpp.exe.debug.1303446668" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1458430819" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1862136849" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
-								<inputType id="com.crt.advproject.compiler.input.1947025281" superClass="com.crt.advproject.compiler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.gas.exe.debug.1770773733" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1311215667" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-								<inputType id="com.crt.advproject.assembler.input.1953406684" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.997074386" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
-							<tool id="com.crt.advproject.link.exe.debug.953255510" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.1781697322" name="/" resourcePath="ThirdParty/CMSISv2p10_LPC18xx_DriverLib">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.222538953" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.906161578" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1015468334" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.2021633161" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
-								<inputType id="com.crt.advproject.compiler.input.1878730423" superClass="com.crt.advproject.compiler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.gas.exe.debug.253843695" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1935362347" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-								<inputType id="com.crt.advproject.assembler.input.190369423" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1715304950" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
-							<tool id="com.crt.advproject.link.exe.debug.536813209" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.2106668528" name="/" resourcePath="ThirdParty/USB_CDC">
@@ -130,6 +101,22 @@
 							</tool>
 							<tool id="com.crt.advproject.link.cpp.exe.debug.2009352548" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
 							<tool id="com.crt.advproject.link.exe.debug.1734116997" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.1781697322" name="/" resourcePath="ThirdParty/CMSISv2p10_LPC18xx_DriverLib">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.222538953" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
+							<tool id="com.crt.advproject.cpp.exe.debug.906161578" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1015468334" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
+								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.2021633161" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
+								<inputType id="com.crt.advproject.compiler.input.1878730423" superClass="com.crt.advproject.compiler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.gas.exe.debug.253843695" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1935362347" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="com.crt.advproject.assembler.input.190369423" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1715304950" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
+							<tool id="com.crt.advproject.link.exe.debug.536813209" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
 						</toolChain>
 					</folderInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.56486929.src/cr_startup_lpc18xx.cpp" name="cr_startup_lpc18xx.cpp" rcbsApplicability="disable" resourcePath="src/cr_startup_lpc18xx.cpp" toolsToInvoke=""/>

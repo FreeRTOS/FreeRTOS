@@ -141,6 +141,11 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 int main( void )
 {
+	/* Prepare the trace recorder library. */
+	#if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
+		vTraceInitTraceData();
+	#endif
+
 	/* The examples assume that all priority bits are assigned as preemption
 	priority bits. */
 	NVIC_SetPriorityGrouping( 0UL );

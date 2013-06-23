@@ -11,6 +11,7 @@ REM Standard paths
 SET FREERTOS_SOURCE=..\..\..\FreeRTOS\Source
 SET FREERTOS_UDP_SOURCE=..\..\Source\FreeRTOS-Plus-UDP
 SET FREERTOS_CLI_SOURCE=..\..\Source\FreeRTOS-Plus-CLI
+set FREERTOS_TRACE_RECORDER_SOURCE=..\..\Source\FreeRTOS-Plus-Trace
 
 REM Have the files already been copied?
 IF EXIST FreeRTOS_Source Goto END
@@ -55,12 +56,16 @@ IF EXIST FreeRTOS_Source Goto END
 	copy %FREERTOS_UDP_SOURCE%\include\*.* FreeRTOS_Plus_UDP\include
 
 	REM Copy the FreeRTOS+UDP portable layer files
-	copy %FREERTOS_UDP_SOURCE%\portable\NetworkInterface\LPC18xx\*.* FreeRTOS_Plus_UDP\portable\NetworkInterface\LPC18xx
+	copy %FREERTOS_UDP_SOURCE%\portable\NetworkInterface\LPC18xx\Using_CMSISv2p10_LPC18xx_DriverLib\*.* FreeRTOS_Plus_UDP\portable\NetworkInterface\LPC18xx
 	copy %FREERTOS_UDP_SOURCE%\portable\BufferManagement\BufferAllocation_2.c FreeRTOS_Plus_UDP\portable\BufferManagement
 	copy %FREERTOS_UDP_SOURCE%\portable\Compiler\GCC\*.* FreeRTOS_Plus_UDP\portable\Compiler\GCC
 
 	REM Copy the FreeRTOS+CLI files
 	copy %FREERTOS_CLI_SOURCE%\*.* FreeRTOS_Plus_CLI
+	
+	REM Copy the FreeRTOS+Trace recorder files
+	copy %FREERTOS_TRACE_RECORDER_SOURCE%\*.* ThirdParty\FreeRTOS_Plus_Trace_Recorder
+	copy %FREERTOS_TRACE_RECORDER_SOURCE%\include\*.* ThirdParty\FreeRTOS_Plus_Trace_Recorder\include
 
 	REM Copy the echo client example implementation
 	copy ..\Common\FreeRTOS_Plus_UDP_Demos\EchoClients\TwoEchoClients.c Examples\Ethernet

@@ -237,7 +237,7 @@ http://FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/C
 #define configECHO_SERVER_ADDR0	172
 #define configECHO_SERVER_ADDR1 25
 #define configECHO_SERVER_ADDR2 218
-#define configECHO_SERVER_ADDR3 100
+#define configECHO_SERVER_ADDR3 103
 
 /* MAC address configuration.  In a deployed production system this would
 probably be read from an EEPROM.  In the demo it is just hard coded.  Make sure
@@ -279,9 +279,9 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configNET_MASK3		0
 
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
-	/* Only include the trace macro definitions required by FreeRTOS+Trace is
+	/* Only include the trace macro definitions required by FreeRTOS+Trace if
 	the trace start and trace stop CLI commands are included. */
-	#include "trcHooks.h"
+	#include "trcKernelPort.h"
 #endif
 
 #endif /* FREERTOS_CONFIG_H */

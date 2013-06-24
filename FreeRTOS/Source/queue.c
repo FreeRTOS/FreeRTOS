@@ -96,13 +96,22 @@ task.h is included from an application file. */
 
 #define queueERRONEOUS_UNBLOCK			( -1 )
 
-/* Effectively make a union out of the xQUEUE structure. */
+/* When the xQUEUE structure is used to represent a base queue its pcHead and
+pcTail members are used as pointers into the queue storage area.  When the
+xQUEUE structure is used to represent a mutex pcHead and pcTail pointers are
+not necessary, and the pcHead pointer is set to NULL to indicate that the
+pcTail pointer actually points to the mutex holder (if any).  Map alternative
+names to the pcHead and pcTail structure members to ensure the readability of
+the code is maintained despite this dual use of two structure members.  An
+alternative implementation would be to use a union, but use of a union is
+against the coding standard (although an exception to the standard has been
+permitted where the dual use also significantly changes the type of the
+structure member). */
 #define pxMutexHolder					pcTail
 #define uxQueueType						pcHead
-#define uxRecursiveCallCount			pcReadFrom
 #define queueQUEUE_IS_MUTEX				NULL
 
-/* Semaphores do not actually store or copy data, so have an items size of
+/* Semaphores do not actually store or copy data, so have an item size of
 zero. */
 #define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( ( unsigned portBASE_TYPE ) 0 )
 #define queueDONT_BLOCK					 ( ( portTickType ) 0U )
@@ -119,7 +128,12 @@ typedef struct QueueDefinition
 	signed char *pcTail;					/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
 
 	signed char *pcWriteTo;					/*< Points to the free next place in the storage area. */
-	signed char *pcReadFrom;				/*< Points to the last place that a queued item was read from. */
+
+	union									/* Use of a union is an exception to the coding standard to ensure two mutually exclusive structure members don't appear simultaneously (wasting RAM). */
+	{
+		signed char *pcReadFrom;			/*< Points to the last place that a queued item was read from when the structure is used as a queue. */
+		unsigned portBASE_TYPE uxRecursiveCallCount;/*< Maintains a count of the numebr of times a recursive mutex has been recursively 'taken' when the structure is used as a mutex. */
+	} u;
 
 	xList xTasksWaitingToSend;				/*< List of tasks that are blocked waiting to post onto this queue.  Stored in priority order. */
 	xList xTasksWaitingToReceive;			/*< List of tasks that are blocked waiting to read from this queue.  Stored in priority order. */
@@ -241,7 +255,7 @@ xQUEUE *pxQueue;
 		pxQueue->pcTail = pxQueue->pcHead + ( pxQueue->uxLength * pxQueue->uxItemSize );
 		pxQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
 		pxQueue->pcWriteTo = pxQueue->pcHead;
-		pxQueue->pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - ( unsigned portBASE_TYPE ) 1U ) * pxQueue->uxItemSize );
+		pxQueue->u.pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - ( unsigned portBASE_TYPE ) 1U ) * pxQueue->uxItemSize );
 		pxQueue->xRxLock = queueUNLOCKED;
 		pxQueue->xTxLock = queueUNLOCKED;
 
@@ -354,7 +368,7 @@ xQueueHandle xReturn = NULL;
 			/* Queues used as a mutex no data is actually copied into or out
 			of the queue. */
 			pxNewQueue->pcWriteTo = NULL;
-			pxNewQueue->pcReadFrom = NULL;
+			pxNewQueue->u.pcReadFrom = NULL;
 
 			/* Each mutex has a length of 1 (like a binary semaphore) and
 			an item size of 0 as nothing is actually copied into or out
@@ -444,7 +458,7 @@ xQueueHandle xReturn = NULL;
 		this is the only condition we are interested in it does not matter if
 		pxMutexHolder is accessed simultaneously by another task.  Therefore no
 		mutual exclusion is required to test the pxMutexHolder variable. */
-		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
+		if( pxMutex->pxMutexHolder == ( void * ) xTaskGetCurrentTaskHandle() )
 		{
 			traceGIVE_MUTEX_RECURSIVE( pxMutex );
 
@@ -453,10 +467,10 @@ xQueueHandle xReturn = NULL;
 			uxRecursiveCallCount is only modified by the mutex holder, and as
 			there can only be one, no mutual exclusion is required to modify the
 			uxRecursiveCallCount member. */
-			( pxMutex->uxRecursiveCallCount )--;
+			( pxMutex->u.uxRecursiveCallCount )--;
 
 			/* Have we unwound the call count? */
-			if( pxMutex->uxRecursiveCallCount == 0 )
+			if( pxMutex->u.uxRecursiveCallCount == 0 )
 			{
 				/* Return the mutex.  This will automatically unblock any other
 				task that might be waiting to access the mutex. */
@@ -494,9 +508,9 @@ xQueueHandle xReturn = NULL;
 
 		traceTAKE_MUTEX_RECURSIVE( pxMutex );
 
-		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
+		if( pxMutex->pxMutexHolder == ( void * )  xTaskGetCurrentTaskHandle() )
 		{
-			( pxMutex->uxRecursiveCallCount )++;
+			( pxMutex->u.uxRecursiveCallCount )++;
 			xReturn = pdPASS;
 		}
 		else
@@ -507,7 +521,7 @@ xQueueHandle xReturn = NULL;
 			we may have blocked to reach here. */
 			if( xReturn == pdPASS )
 			{
-				( pxMutex->uxRecursiveCallCount )++;
+				( pxMutex->u.uxRecursiveCallCount )++;
 			}
 			else
 			{
@@ -800,7 +814,7 @@ xQUEUE *pxQueue;
 				if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 				{
 					/* Remember our read position in case we are just peeking. */
-					pcOriginalReadPosition = pxQueue->pcReadFrom;
+					pcOriginalReadPosition = pxQueue->u.pcReadFrom;
 
 					prvCopyDataFromQueue( pxQueue, pvBuffer );
 
@@ -817,7 +831,7 @@ xQUEUE *pxQueue;
 							{
 								/* Record the information required to implement
 								priority inheritance should it become necessary. */
-								pxQueue->pxMutexHolder = xTaskGetCurrentTaskHandle();
+								pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle();
 							}
 						}
 						#endif
@@ -836,7 +850,7 @@ xQUEUE *pxQueue;
 
 						/* We are not removing the data, so reset our read
 						pointer. */
-						pxQueue->pcReadFrom = pcOriginalReadPosition;
+						pxQueue->u.pcReadFrom = pcOriginalReadPosition;
 
 						/* The data is being left in the queue, so see if there are
 						any other tasks waiting for the data. */
@@ -1033,7 +1047,7 @@ xQUEUE *pxQueue;
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
 				/* Remember our read position in case we are just peeking. */
-				pcOriginalReadPosition = pxQueue->pcReadFrom;
+				pcOriginalReadPosition = pxQueue->u.pcReadFrom;
 
 				prvCopyDataFromQueue( pxQueue, pvBuffer );
 
@@ -1050,7 +1064,7 @@ xQUEUE *pxQueue;
 						{
 							/* Record the information required to implement
 							priority inheritance should it become necessary. */
-							pxQueue->pxMutexHolder = xTaskGetCurrentTaskHandle();
+							pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle();
 						}
 					}
 					#endif
@@ -1069,7 +1083,7 @@ xQUEUE *pxQueue;
 
 					/* The data is not being removed, so reset the read
 					pointer. */
-					pxQueue->pcReadFrom = pcOriginalReadPosition;
+					pxQueue->u.pcReadFrom = pcOriginalReadPosition;
 
 					/* The data is being left in the queue, so see if there are
 					any other tasks waiting for the data. */
@@ -1319,11 +1333,11 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 	}
 	else
 	{
-		memcpy( ( void * ) pxQueue->pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize );
-		pxQueue->pcReadFrom -= pxQueue->uxItemSize;
-		if( pxQueue->pcReadFrom < pxQueue->pcHead )
+		memcpy( ( void * ) pxQueue->u.pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize );
+		pxQueue->u.pcReadFrom -= pxQueue->uxItemSize;
+		if( pxQueue->u.pcReadFrom < pxQueue->pcHead )
 		{
-			pxQueue->pcReadFrom = ( pxQueue->pcTail - pxQueue->uxItemSize );
+			pxQueue->u.pcReadFrom = ( pxQueue->pcTail - pxQueue->uxItemSize );
 		}
 	}
 
@@ -1335,12 +1349,12 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
 {
 	if( pxQueue->uxQueueType != queueQUEUE_IS_MUTEX )
 	{
-		pxQueue->pcReadFrom += pxQueue->uxItemSize;
-		if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+		pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
+		if( pxQueue->u.pcReadFrom >= pxQueue->pcTail )
 		{
-			pxQueue->pcReadFrom = pxQueue->pcHead;
+			pxQueue->u.pcReadFrom = pxQueue->pcHead;
 		}
-		memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( size_t ) pxQueue->uxItemSize );
+		memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( size_t ) pxQueue->uxItemSize );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -1633,13 +1647,13 @@ signed portBASE_TYPE xReturn;
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
 				/* Data is available from the queue. */
-				pxQueue->pcReadFrom += pxQueue->uxItemSize;
-				if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+				pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
+				if( pxQueue->u.pcReadFrom >= pxQueue->pcTail )
 				{
-					pxQueue->pcReadFrom = pxQueue->pcHead;
+					pxQueue->u.pcReadFrom = pxQueue->pcHead;
 				}
 				--( pxQueue->uxMessagesWaiting );
-				memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+				memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
 
 				xReturn = pdPASS;
 
@@ -1717,13 +1731,13 @@ signed portBASE_TYPE xReturn;
 		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 		{
 			/* Copy the data from the queue. */
-			pxQueue->pcReadFrom += pxQueue->uxItemSize;
-			if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+			pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
+			if( pxQueue->u.pcReadFrom >= pxQueue->pcTail )
 			{
-				pxQueue->pcReadFrom = pxQueue->pcHead;
+				pxQueue->u.pcReadFrom = pxQueue->pcHead;
 			}
 			--( pxQueue->uxMessagesWaiting );
-			memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+			memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
 
 			if( ( *pxCoRoutineWoken ) == pdFALSE )
 			{

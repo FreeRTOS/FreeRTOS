@@ -174,7 +174,7 @@ void *pvReturn = NULL;
 			xWantedSize += heapSTRUCT_SIZE;
 
 			/* Ensure that blocks are always aligned to the required number of bytes. */
-			if( xWantedSize & portBYTE_ALIGNMENT_MASK )
+			if( ( xWantedSize & portBYTE_ALIGNMENT_MASK ) != 0 )
 			{
 				/* Byte alignment required. */
 				xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );

@@ -231,10 +231,6 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configASSERT( x )
 #endif
 
-#ifndef portALIGNMENT_ASSERT_pxCurrentTCB
-	#define portALIGNMENT_ASSERT_pxCurrentTCB configASSERT
-#endif
-
 /* The timers module relies on xTaskGetSchedulerState(). */
 #if configUSE_TIMERS == 1
 

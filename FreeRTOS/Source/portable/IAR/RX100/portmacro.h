@@ -167,9 +167,6 @@ void vPortSetIPL( unsigned long ulNewIPL );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
-/* This macro is not appropriate for this port so is defined away. */
-#define portALIGNMENT_ASSERT_pxCurrentTCB( x )
-
 #ifdef __cplusplus
 }
 #endif

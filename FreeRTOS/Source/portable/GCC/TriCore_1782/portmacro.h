@@ -188,10 +188,6 @@ extern void vTaskExitCritical( void );
 extern unsigned long uxPortSetInterruptMaskFromISR( void );
 #define portSET_INTERRUPT_MASK_FROM_ISR() 	uxPortSetInterruptMaskFromISR()
 
-/* As this port holds a CSA address in pxTopOfStack, the assert that checks the
-pxTopOfStack alignment is removed. */
-#define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
-
 /* Pend a priority 1 interrupt, which will take care of the context switch. */
 #define portYIELD_FROM_ISR( xHigherPriorityTaskWoken ) 		if( xHigherPriorityTaskWoken != pdFALSE ) {	CPU_SRC0.bits.SETR = 1; _isync(); }
 

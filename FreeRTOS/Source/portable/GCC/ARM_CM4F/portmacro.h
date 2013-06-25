@@ -136,10 +136,6 @@ extern void vPortClearInterruptMask( unsigned long ulNewMaskValue );
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
 
-/* There are an uneven number of items on the initial stack, so
-portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
-#define portALIGNMENT_ASSERT_pxCurrentTCB ( void )
-
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site.  These are

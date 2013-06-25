@@ -159,9 +159,6 @@ void vPortSetIPL( unsigned long ulNewIPL ) __attribute__((naked));
 	#endif
 #endif
 
-/* This macro is not appropriate for this port so is defined away. */
-#define portALIGNMENT_ASSERT_pxCurrentTCB( x )
-
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

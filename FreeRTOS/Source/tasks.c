@@ -540,9 +540,6 @@ tskTCB * pxNewTCB;
 		}
 		#endif /* portUSING_MPU_WRAPPERS */
 
-		/* Check the alignment of the initialised stack. */
-		portALIGNMENT_ASSERT_pxCurrentTCB( ( ( ( unsigned long ) pxNewTCB->pxTopOfStack & ( unsigned long ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
-
 		if( ( void * ) pxCreatedTask != NULL )
 		{
 			/* Pass the TCB out - in an anonymous way.  The calling function/
@@ -1843,10 +1840,10 @@ void vTaskSwitchContext( void )
 					ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
 				#endif
 
-				/* Add the amount of time the task has been running to the 
-				accumulated	time so far.  The time the task started running was 
-				stored in ulTaskSwitchedInTime.  Note that there is no overflow 
-				protection here	so count values are only valid until the timer 
+				/* Add the amount of time the task has been running to the
+				accumulated	time so far.  The time the task started running was
+				stored in ulTaskSwitchedInTime.  Note that there is no overflow
+				protection here	so count values are only valid until the timer
 				overflows.  The guard against negative values is to protect
 				against suspect run time stat counter implementations - which
 				are provided by the application, not the kernel. */

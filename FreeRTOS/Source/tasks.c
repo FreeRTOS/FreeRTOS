@@ -2249,14 +2249,25 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
 {
-	/* Store the function name in the TCB. */
-	#if configMAX_TASK_NAME_LEN > 1
+portBASE_TYPE x;
+
+	/* Store the task name in the TCB. */
+	for( x = 0; x < configMAX_TASK_NAME_LEN; x++ )
 	{
-		/* Don't bring strncpy into the build unnecessarily. */
-		strncpy( ( char * ) pxTCB->pcTaskName, ( const char * ) pcName, ( unsigned short ) configMAX_TASK_NAME_LEN );
+		pxTCB->pcTaskName[ x ] = pcName[ x ];
+
+		/* Don't copy all configMAX_TASK_NAME_LEN if the string is shorter than
+		configMAX_TASK_NAME_LEN characters just in case the memory after the
+		string is not accessible (extremely unlikely). */
+		if( pcName[ x ] == 0x00 )
+		{
+			break;
+		}
 	}
-	#endif /* configMAX_TASK_NAME_LEN */
-	pxTCB->pcTaskName[ ( unsigned short ) configMAX_TASK_NAME_LEN - ( unsigned short ) 1 ] = ( signed char ) '\0';
+
+	/* Ensure the name string is terminated in the case that the string length
+	was greater or equal to configMAX_TASK_NAME_LEN. */
+	pxTCB->pcTaskName[ configMAX_TASK_NAME_LEN - 1 ] = ( signed char ) '\0';
 
 	/* This is used as an array index so must ensure it's not too large.  First
 	remove the privilege bit if one is present. */

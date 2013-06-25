@@ -74,65 +74,72 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "task.h"
 
 /* Utility functions to implement run time stats on Cortex-M CPUs.  The collected
 run time data can be viewed through the CLI interface.  See the following URL for
 more information on run time stats:
 http://www.freertos.org/rtos-run-time-stats.html */
 
-/* Used in the run time stats calculations. */
-static uint32_t ulClocksPer10thOfAMilliSecond = 0UL;
+/* Addresses of registers in the Cortex-M debug hardware. */
+#define rtsDWT_CYCCNT 			( *( ( unsigned long * ) 0xE0001004 ) )
+#define rtsDWT_CONTROL 			( *( ( unsigned long * ) 0xE0001000 ) )
+#define rtsSCB_DEMCR 			( *( ( unsigned long * ) 0xE000EDFC ) )
+#define rtsTRCENA_BIT			( 0x01000000UL )
+#define rtsCOUNTER_ENABLE_BIT	( 0x01UL )
 
+/* Simple shift divide for scaling to avoid an overflow occurring too soon.  The
+number of bits to shift depends on the clock speed. */
+#define runtimeSLOWER_CLOCK_SPEEDS	( 70000000UL )
+#define runtimeSHIFT_13				13
+#define runtimeOVERFLOW_BIT_13		( 1UL << ( 32UL - runtimeSHIFT_13 ) )
+#define runtimeSHIFT_14				14
+#define runtimeOVERFLOW_BIT_14		( 1UL << ( 32UL - runtimeSHIFT_14 ) )
+
+/*-----------------------------------------------------------*/
 
 void vMainConfigureTimerForRunTimeStats( void )
 {
-	/* How many clocks are there per tenth of a millisecond? */
-	ulClocksPer10thOfAMilliSecond = configCPU_CLOCK_HZ / 10000UL;
+	/* Enable TRCENA. */
+	rtsSCB_DEMCR = rtsSCB_DEMCR | rtsTRCENA_BIT;
+
+	/* Reset counter. */
+	rtsDWT_CYCCNT = 0;
+
+	/* Enable counter. */
+	rtsDWT_CONTROL = rtsDWT_CONTROL | rtsCOUNTER_ENABLE_BIT;
 }
 /*-----------------------------------------------------------*/
 
 uint32_t ulMainGetRunTimeCounterValue( void )
 {
-uint32_t ulSysTickCounts, ulTickCount, ulReturn;
-const uint32_t ulSysTickReloadValue = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
-volatile uint32_t * const pulCurrentSysTickCount = ( ( volatile uint32_t *) 0xe000e018 );
-volatile uint32_t * const pulInterruptCTRLState = ( ( volatile uint32_t *) 0xe000ed04 );
-const uint32_t ulSysTickPendingBit = 0x04000000UL;
+static unsigned long ulLastCounterValue = 0UL, ulOverflows = 0;
+unsigned long ulValueNow;
 
-	/* NOTE: There are potentially race conditions here.  However, it is used
-	anyway to keep the examples simple, and to avoid reliance on a separate
-	timer peripheral. */
+	ulValueNow = rtsDWT_CYCCNT;
 
-
-	/* The SysTick is a down counter.  How many clocks have passed since it was
-	last reloaded? */
-	ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
-
-	/* How many times has it overflowed? */
-	ulTickCount = xTaskGetTickCountFromISR();
-
-	/* Is there a SysTick interrupt pending? */
-	if( ( *pulInterruptCTRLState & ulSysTickPendingBit ) != 0UL )
+	/* Has the value overflowed since it was last read. */
+	if( ulValueNow < ulLastCounterValue )
 	{
-		/* There is a SysTick interrupt pending, so the SysTick has overflowed
-		but the tick count not yet incremented. */
-		ulTickCount++;
+		ulOverflows++;
+	}
+	ulLastCounterValue = ulValueNow;
 
-		/* Read the SysTick again, as the overflow might have occurred since
-		it was read last. */
-		ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
+	/* Cannot use configCPU_CLOCK_HZ directly as it may itself not be a constant
+	but instead map to a variable that holds the clock speed. */
+
+	/* There is no prescale on the counter, so simulate in software. */
+	if( configCPU_CLOCK_HZ < runtimeSLOWER_CLOCK_SPEEDS )
+	{
+		ulValueNow >>= runtimeSHIFT_13;
+		ulValueNow += ( runtimeOVERFLOW_BIT_13 * ulOverflows );
+	}
+	else
+	{
+		ulValueNow >>= runtimeSHIFT_14;
+		ulValueNow += ( runtimeOVERFLOW_BIT_14 * ulOverflows );
 	}
 
-	/* Convert the tick count into tenths of a millisecond.  THIS ASSUMES
-	configTICK_RATE_HZ is 1000! */
-	ulReturn = ( ulTickCount * 10UL ) ;
-
-	/* Add on the number of tenths of a millisecond that have passed since the
-	tick count last got updated. */
-	ulReturn += ( ulSysTickCounts / ulClocksPer10thOfAMilliSecond );
-
-	return ulReturn;
+	return ulValueNow;
 }
 /*-----------------------------------------------------------*/
 

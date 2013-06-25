@@ -1843,12 +1843,17 @@ void vTaskSwitchContext( void )
 					ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
 				#endif
 
-				/* Add the amount of time the task has been running to the accumulated
-				time so far.  The time the task started running was stored in
-				ulTaskSwitchedInTime.  Note that there is no overflow protection here
-				so count values are only valid until the timer overflows.  Generally
-				this will be about 1 hour assuming a 1uS timer increment. */
-				pxCurrentTCB->ulRunTimeCounter += ( ulTotalRunTime - ulTaskSwitchedInTime );
+				/* Add the amount of time the task has been running to the 
+				accumulated	time so far.  The time the task started running was 
+				stored in ulTaskSwitchedInTime.  Note that there is no overflow 
+				protection here	so count values are only valid until the timer 
+				overflows.  The guard against negative values is to protect
+				against suspect run time stat counter implementations - which
+				are provided by the application, not the kernel. */
+				if( ulTotalRunTime > ulTaskSwitchedInTime )
+				{
+					pxCurrentTCB->ulRunTimeCounter += ( ulTotalRunTime - ulTaskSwitchedInTime );
+				}
 				ulTaskSwitchedInTime = ulTotalRunTime;
 		}
 		#endif /* configGENERATE_RUN_TIME_STATS */

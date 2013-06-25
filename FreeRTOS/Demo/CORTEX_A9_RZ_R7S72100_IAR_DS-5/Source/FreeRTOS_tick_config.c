@@ -141,7 +141,8 @@ unsigned long ulValueNow;
 	ulLastCounterValue = ulValueNow;
 
 	/* There is no prescale on the counter, so simulate in software. */
-	ulValueNow >>= runtimeCLOCK_SCALE_SHIFT + ( runtimeOVERFLOW_BIT * ulOverflows );
+	ulValueNow >>= runtimeCLOCK_SCALE_SHIFT;
+	ulValueNow += ( runtimeOVERFLOW_BIT * ulOverflows );
 
 	return ulValueNow;
 }

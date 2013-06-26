@@ -114,15 +114,13 @@ volatile xListItem * pxIndex;
 
 	/* Insert a new list item into pxList, but rather than sort the list,
 	makes the new list item the last item to be removed by a call to
-	pvListGetOwnerOfNextEntry.  This means it has to be the item pointed to by
-	the pxIndex member. */
+	pvListGetOwnerOfNextEntry. */
 	pxIndex = pxList->pxIndex;
 
-	pxNewListItem->pxNext = pxIndex->pxNext;
-	pxNewListItem->pxPrevious = pxList->pxIndex;
-	pxIndex->pxNext->pxPrevious = ( volatile xListItem * ) pxNewListItem;
-	pxIndex->pxNext = ( volatile xListItem * ) pxNewListItem;
-	pxList->pxIndex = ( volatile xListItem * ) pxNewListItem;
+	pxNewListItem->pxNext = pxIndex;
+	pxNewListItem->pxPrevious = pxIndex->pxPrevious;
+	pxIndex->pxPrevious->pxNext = ( volatile xListItem * ) pxNewListItem;
+	pxIndex->pxPrevious = ( volatile xListItem * ) pxNewListItem;	
 
 	/* Remember which list the item is in. */
 	pxNewListItem->pvContainer = ( void * ) pxList;

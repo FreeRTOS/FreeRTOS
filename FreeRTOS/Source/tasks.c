@@ -166,7 +166,7 @@ PRIVILEGED_DATA static xList xDelayedTaskList1;							/*< Delayed tasks. */
 PRIVILEGED_DATA static xList xDelayedTaskList2;							/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
 PRIVILEGED_DATA static xList * volatile pxDelayedTaskList ;				/*< Points to the delayed task list currently being used. */
 PRIVILEGED_DATA static xList * volatile pxOverflowDelayedTaskList;		/*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
-PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready queue when the scheduler is resumed. */
+PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
@@ -341,13 +341,10 @@ count overflows. */
 /*-----------------------------------------------------------*/
 
 /*
- * Place the task represented by pxTCB into the appropriate ready queue for
- * the task.  It is inserted at the end of the list.  One quirk of this is
- * that if the task being inserted is at the same priority as the currently
- * executing task, then it will only be rescheduled after the currently
- * executing task has been rescheduled.
+ * Place the task represented by pxTCB into the appropriate ready list for
+ * the task.  It is inserted at the end of the list.
  */
-#define prvAddTaskToReadyQueue( pxTCB )																				\
+#define prvAddTaskToReadyList( pxTCB )																				\
 	traceMOVED_TASK_TO_READY_STATE( pxTCB )																			\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );																\
 	vListInsertEnd( ( xList * ) &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) )
@@ -548,8 +545,8 @@ tskTCB * pxNewTCB;
 			*pxCreatedTask = ( xTaskHandle ) pxNewTCB;
 		}
 
-		/* We are going to manipulate the task queues to add this task to a
-		ready list, so must make sure no interrupts occur. */
+		/* Ensure interrupts don't access the task lists while they are being
+		updated. */
 		taskENTER_CRITICAL();
 		{
 			uxCurrentNumberOfTasks++;
@@ -598,7 +595,7 @@ tskTCB * pxNewTCB;
 			#endif /* configUSE_TRACE_FACILITY */
 			traceTASK_CREATE( pxNewTCB );
 
-			prvAddTaskToReadyQueue( pxNewTCB );
+			prvAddTaskToReadyList( pxNewTCB );
 
 			xReturn = pdPASS;
 			portSETUP_TCB( pxNewTCB );
@@ -996,7 +993,7 @@ tskTCB * pxNewTCB;
 					{
 						taskRESET_READY_PRIORITY( uxPriorityUsedOnEntry );
 					}
-					prvAddTaskToReadyQueue( pxTCB );
+					prvAddTaskToReadyList( pxTCB );
 				}
 
 				if( xYieldRequired == pdTRUE )
@@ -1142,7 +1139,7 @@ tskTCB * pxNewTCB;
 					/* As we are in a critical section we can access the ready
 					lists even if the scheduler is suspended. */
 					uxListRemove(  &( pxTCB->xGenericListItem ) );
-					prvAddTaskToReadyQueue( pxTCB );
+					prvAddTaskToReadyList( pxTCB );
 
 					/* We may have just resumed a higher priority task. */
 					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
@@ -1183,7 +1180,7 @@ tskTCB * pxNewTCB;
 				{
 					xYieldRequired = ( pxTCB->uxPriority >= pxCurrentTCB->uxPriority );
 					uxListRemove(  &( pxTCB->xGenericListItem ) );
-					prvAddTaskToReadyQueue( pxTCB );
+					prvAddTaskToReadyList( pxTCB );
 				}
 				else
 				{
@@ -1348,7 +1345,7 @@ portBASE_TYPE xYieldRequired = pdFALSE;
 					pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY(  ( ( xList * ) &xPendingReadyList ) );
 					uxListRemove( &( pxTCB->xEventListItem ) );
 					uxListRemove( &( pxTCB->xGenericListItem ) );
-					prvAddTaskToReadyQueue( pxTCB );
+					prvAddTaskToReadyList( pxTCB );
 
 					/* If we have moved a task that has a priority higher than
 					the current task then we should yield. */
@@ -1673,7 +1670,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 
 					/* Place the unblocked task into the appropriate ready
 					list. */
-					prvAddTaskToReadyQueue( pxTCB );
+					prvAddTaskToReadyList( pxTCB );
 
 					/* A task being unblocked cannot cause an immediate context
 					switch if preemption is turned off. */
@@ -1983,7 +1980,7 @@ portBASE_TYPE xReturn;
 	if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
 	{
 		uxListRemove( &( pxUnblockedTCB->xGenericListItem ) );
-		prvAddTaskToReadyQueue( pxUnblockedTCB );
+		prvAddTaskToReadyList( pxUnblockedTCB );
 	}
 	else
 	{
@@ -2711,7 +2708,7 @@ tskTCB *pxNewTCB;
 
 					/* Inherit the priority before being moved into the new list. */
 					pxTCB->uxPriority = pxCurrentTCB->uxPriority;
-					prvAddTaskToReadyQueue( pxTCB );
+					prvAddTaskToReadyList( pxTCB );
 				}
 				else
 				{
@@ -2749,7 +2746,7 @@ tskTCB *pxNewTCB;
 				traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
 				pxTCB->uxPriority = pxTCB->uxBasePriority;
 				listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) pxTCB->uxPriority );
-				prvAddTaskToReadyQueue( pxTCB );
+				prvAddTaskToReadyList( pxTCB );
 			}
 		}
 	}

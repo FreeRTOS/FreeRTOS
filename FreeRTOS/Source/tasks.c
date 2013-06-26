@@ -146,6 +146,14 @@ typedef struct tskTaskControlBlock
 		unsigned long ulRunTimeCounter;			/*< Stores the amount of time the task has spent in the Running state. */
 	#endif
 
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		/* Allocate a Newlib reent structure that is specific to this task.
+		Note Newlib support has been included by popular demand, but is not
+		used by the FreeRTOS maintainers themselves, and therefore receives
+		less rigorous testing than the rest of the FreeRTOS code. */
+		struct _reent xNewLib_reent;
+	#endif
+
 } tskTCB;
 
 
@@ -1858,6 +1866,14 @@ void vTaskSwitchContext( void )
 		taskSELECT_HIGHEST_PRIORITY_TASK();
 
 		traceTASK_SWITCHED_IN();
+
+		#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		{
+			/* Switch Newlib's _impure_ptr variable to point to the _reent
+			structure specific to this task. */
+			_impure_ptr = &( pxCurrentTCB->xNewLib_reent );
+		}
+		#endif /* configUSE_NEWLIB_REENTRANT */
 	}
 }
 /*-----------------------------------------------------------*/
@@ -2319,6 +2335,13 @@ portBASE_TYPE x;
 		( void ) usStackDepth;
 	}
 	#endif /* portUSING_MPU_WRAPPERS */
+
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+	{
+		/* Initialise this task's Newlib reent structure. */
+		_REENT_INIT_PTR( ( &( pxTCB->xNewLib_reent ) ) );
+	}
+	#endif /* configUSE_NEWLIB_REENTRANT */
 }
 /*-----------------------------------------------------------*/
 

@@ -576,6 +576,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS 0
 #endif
 
+#ifndef configUSE_NEWLIB_REENTRANT
+	#define configUSE_NEWLIB_REENTRANT 0
+#endif
+
 /* For backward compatability. */
 #define eTaskStateGet eTaskGetState
 

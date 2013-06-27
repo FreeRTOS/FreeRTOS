@@ -570,6 +570,7 @@ xQUEUE *pxQueue;
 	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+	configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
 
 	/* This function relaxes the coding standard somewhat to allow return
 	statements within the function itself.  This is done in the interest
@@ -578,9 +579,11 @@ xQUEUE *pxQueue;
 	{
 		taskENTER_CRITICAL();
 		{
-			/* Is there room on the queue now?  To be running we must be
-			the highest priority task wanting to access the queue. */
-			if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+			/* Is there room on the queue now?  The running task must be
+			the highest priority task wanting to access the queue.  If
+			the head item in the queue is to be overwritten then it does
+			not matter if the queue is full. */
+			if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 			{
 				traceQUEUE_SEND( pxQueue );
 				prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
@@ -1046,7 +1049,8 @@ xQUEUE *pxQueue;
 			the highest priority task wanting to access the queue. */
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
-				/* Remember our read position in case we are just peeking. */
+				/* Remember the read position in case the queue is only being 
+				peeked. */
 				pcOriginalReadPosition = pxQueue->u.pcReadFrom;
 
 				prvCopyDataFromQueue( pxQueue, pvBuffer );
@@ -1320,7 +1324,7 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 				pxQueue->pxMutexHolder = NULL;
 			}
 		}
-		#endif
+		#endif /* configUSE_MUTEXES */
 	}
 	else if( xPosition == queueSEND_TO_BACK )
 	{
@@ -1338,6 +1342,18 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 		if( pxQueue->u.pcReadFrom < pxQueue->pcHead )
 		{
 			pxQueue->u.pcReadFrom = ( pxQueue->pcTail - pxQueue->uxItemSize );
+		}
+
+		if( xPosition == queueOVERWRITE )
+		{
+			if( pxQueue->uxMessagesWaiting > 0 )
+			{
+				/* An item is not being added but overwritten, so subtract 
+				one from the recorded number of items in the queue so when 
+				one is added again below the number of recorded items remains 
+				correct. */
+				--( pxQueue->uxMessagesWaiting );
+			}
 		}
 	}
 

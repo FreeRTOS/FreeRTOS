@@ -132,6 +132,7 @@
 #include "death.h"
 #include "dynamic.h"
 #include "QueueSet.h"
+#include "QueueOverwrite.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 1 )
@@ -144,6 +145,7 @@
 #define mainINTEGER_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainQUEUE_OVERWRITE_PRIORITY	( tskIDLE_PRIORITY )
 
 #define mainTIMER_TEST_PERIOD			( 50 )
 
@@ -159,6 +161,12 @@ static void prvTestTask( void *pvParameters );
  * This function will simply overwrite any trace files that already exist.
  */
 static void prvSaveTraceFile( void );
+
+/*
+ * Called from the idle task hook function to demonstrate a few utility
+ * functions that are not demonstrated by any of the standard demo tasks.
+ */
+static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 
 /*-----------------------------------------------------------*/
 
@@ -200,6 +208,7 @@ int main( void )
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
+	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation.  This then allows them to 
@@ -294,6 +303,10 @@ const portTickType xCycleFrequency = 1000 / portTICK_RATE_MS;
 		{
 			pcStatusMessage = "Error: Queue set\r\n";
 		}
+		else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Queue overwrite\r\n";
+		}
 
 		/* This is the only task that uses stdout so its ok to call printf() 
 		directly. */
@@ -323,9 +336,7 @@ const unsigned long ulMSToSleep = 5;
 void vApplicationIdleHook( void )
 {
 const unsigned long ulMSToSleep = 15;
-xTaskHandle xIdleTaskHandle, xTimerTaskHandle, xTestTask;
-signed char *pcTaskName;
-const unsigned char ucConstQueueNumber = 0xaaU, ucConstTaskNumber = 0x55U;
+const unsigned char ucConstQueueNumber = 0xaaU;
 void *pvAllocated;
 static portBASE_TYPE xTraceRunning = pdTRUE;
 
@@ -341,39 +352,9 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 	tasks waiting to be terminated by the idle task. */
 	Sleep( ulMSToSleep );
 
-	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and 
-	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
-	the task number. */
-	xIdleTaskHandle = xTaskGetIdleTaskHandle();
-	xTimerTaskHandle = xTimerGetTimerDaemonTaskHandle();
-	vTaskSetTaskNumber( xIdleTaskHandle, ( unsigned long ) ucConstTaskNumber );
-	configASSERT( uxTaskGetTaskNumber( xIdleTaskHandle ) == ucConstTaskNumber );
-
-	/* This is the idle hook, so the current task handle should equal the 
-	returned idle task handle. */
-	if( xTaskGetCurrentTaskHandle() != xIdleTaskHandle )
-	{
-		pcStatusMessage = "Error:  Returned idle task handle was incorrect";
-	}
-
-	/* Check the timer task handle was returned correctly. */
-	pcTaskName = pcTaskGetTaskName( xTimerTaskHandle );
-	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
-	{
-		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
-	}
-
-	/* This task is running, make sure its state is returned as running. */
-	if( eTaskStateGet( xIdleTaskHandle ) != eRunning )
-	{
-		pcStatusMessage = "Error:  Returned idle task state was incorrect";
-	}
-
-	/* If this task is running, then the timer task must be blocked. */
-	if( eTaskStateGet( xTimerTaskHandle ) != eBlocked )
-	{
-		pcStatusMessage = "Error:  Returned timer task state was incorrect";
-	}
+	/* Demonstrate a few utility functions that are not demonstrated by any of
+	the standard demo tasks. */
+	prvDemonstrateTaskStateAndHandleGetFunctions();
 
 	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the 
@@ -393,34 +374,6 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 		configASSERT( ucQueueGetQueueType( xMutexToDelete ) == queueQUEUE_TYPE_MUTEX );
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;
-
-		/* Other tests that should only be performed once follow.  The test task
-		is not created on each iteration because to do so would cause the death
-		task to report an error (too many tasks running). */
-
-		/* Create a test task to use to test other eTaskStateGet() return values. */
-		if( xTaskCreate( prvTestTask, "Test", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTestTask ) == pdPASS )
-		{
-			/* If this task is running, the test task must be in the ready state. */
-			if( eTaskStateGet( xTestTask ) != eReady )
-			{
-				pcStatusMessage = "Error: Returned test task state was incorrect 1";
-			}
-
-			/* Now suspend the test task and check its state is reported correctly. */
-			vTaskSuspend( xTestTask );
-			if( eTaskStateGet( xTestTask ) != eSuspended )
-			{
-				pcStatusMessage = "Error: Returned test task state was incorrect 2";
-			}
-
-			/* Now delete the task and check its state is reported correctly. */
-			vTaskDelete( xTestTask );
-			if( eTaskStateGet( xTestTask ) != eDeleted )
-			{
-				pcStatusMessage = "Error: Returned test task state was incorrect 3";
-			}
-		}
 	}
 
 	/* Exercise heap_4 a bit.  The malloc failed hook will trap failed 
@@ -499,3 +452,81 @@ FILE* pxOutputFile;
 		printf( "\r\nFailed to create trace dump file\r\n" );
 	}
 }
+/*-----------------------------------------------------------*/
+
+static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
+{
+xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
+const unsigned char ucConstTaskNumber = 0x55U;
+signed char *pcTaskName;
+static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
+xTaskHandle xTestTask;
+
+	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and 
+	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
+	the task number. */
+	xIdleTaskHandle = xTaskGetIdleTaskHandle();
+	xTimerTaskHandle = xTimerGetTimerDaemonTaskHandle();
+	vTaskSetTaskNumber( xIdleTaskHandle, ( unsigned long ) ucConstTaskNumber );
+	configASSERT( uxTaskGetTaskNumber( xIdleTaskHandle ) == ucConstTaskNumber );
+
+	/* This is the idle hook, so the current task handle should equal the 
+	returned idle task handle. */
+	if( xTaskGetCurrentTaskHandle() != xIdleTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned idle task handle was incorrect";
+	}
+
+	/* Check the timer task handle was returned correctly. */
+	pcTaskName = pcTaskGetTaskName( xTimerTaskHandle );
+	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
+	{
+		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
+	}
+
+	/* This task is running, make sure it's state is returned as running. */
+	if( eTaskStateGet( xIdleTaskHandle ) != eRunning )
+	{
+		pcStatusMessage = "Error:  Returned idle task state was incorrect";
+	}
+
+	/* If this task is running, then the timer task must be blocked. */
+	if( eTaskStateGet( xTimerTaskHandle ) != eBlocked )
+	{
+		pcStatusMessage = "Error:  Returned timer task state was incorrect";
+	}
+
+	/* Other tests that should only be performed once follow.  The test task
+	is not created on each iteration because to do so would cause the death
+	task to report an error (too many tasks running). */
+	if( xPerformedOneShotTests == pdFALSE )
+	{
+		/* Don't run this part of the test again. */
+		xPerformedOneShotTests = pdTRUE;
+
+		/* Create a test task to use to test other eTaskStateGet() return values. */
+		if( xTaskCreate( prvTestTask, "Test", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTestTask ) == pdPASS )
+		{
+			/* If this task is running, the test task must be in the ready state. */
+			if( eTaskStateGet( xTestTask ) != eReady )
+			{
+				pcStatusMessage = "Error: Returned test task state was incorrect 1";
+			}
+
+			/* Now suspend the test task and check its state is reported correctly. */
+			vTaskSuspend( xTestTask );
+			if( eTaskStateGet( xTestTask ) != eSuspended )
+			{
+				pcStatusMessage = "Error: Returned test task state was incorrect 2";
+			}
+
+			/* Now delete the task and check its state is reported correctly. */
+			vTaskDelete( xTestTask );
+			if( eTaskStateGet( xTestTask ) != eDeleted )
+			{
+				pcStatusMessage = "Error: Returned test task state was incorrect 3";
+			}
+		}
+	}
+}
+

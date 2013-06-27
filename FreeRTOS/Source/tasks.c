@@ -115,7 +115,7 @@ typedef struct tskTaskControlBlock
 		xMPU_SETTINGS xMPUSettings;				/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
 	#endif
 
-	xListItem				xGenericListItem;		/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
+	xListItem				xGenericListItem;	/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
 	xListItem				xEventListItem;		/*< Used to reference a task from an event list. */
 	unsigned portBASE_TYPE	uxPriority;			/*< The priority of the task.  0 is the lowest priority. */
 	portSTACK_TYPE			*pxStack;			/*< Points to the start of the stack. */
@@ -149,8 +149,11 @@ typedef struct tskTaskControlBlock
 	#if ( configUSE_NEWLIB_REENTRANT == 1 )
 		/* Allocate a Newlib reent structure that is specific to this task.
 		Note Newlib support has been included by popular demand, but is not
-		used by the FreeRTOS maintainers themselves, and therefore receives
-		less rigorous testing than the rest of the FreeRTOS code. */
+		used by the FreeRTOS maintainers themselves.  FreeRTOS is not
+		responsible for resulting newlib operation.  User must be familiar with
+		newlib and must provide system-wide implementations of the necessary
+		stubs. Be warned that (at the time of writing) the current newlib design
+		implements a system-wide malloc() that must be provided with locks. */
 		struct _reent xNewLib_reent;
 	#endif
 

@@ -109,8 +109,9 @@ typedef void * xQueueSetHandle;
 typedef void * xQueueSetMemberHandle;
 
 /* For internal use only. */
-#define	queueSEND_TO_BACK	( 0 )
-#define	queueSEND_TO_FRONT	( 1 )
+#define	queueSEND_TO_BACK		( 0 )
+#define	queueSEND_TO_FRONT		( 1 )
+#define queueOVERWRITE			( 2 )
 
 /* For internal use only.  These definitions *must* match those in queue.c. */
 #define queueQUEUE_TYPE_BASE				( 0U )
@@ -425,6 +426,88 @@ typedef void * xQueueSetMemberHandle;
  * \ingroup QueueManagement
  */
 #define xQueueSend( xQueue, pvItemToQueue, xTicksToWait ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), ( xTicksToWait ), queueSEND_TO_BACK )
+
+/**
+ * queue. h
+ * <pre>
+ portBASE_TYPE xQueueOverwrite(
+							  xQueueHandle xQueue,
+							  const void * pvItemToQueue,
+						 );
+ * </pre>
+ *
+ * Only for use with queues that can hold a single item - so the queue is either
+ * empty or full.
+ *
+ * Post an item on a queue.  If the queue is already full then overwrite the
+ * value held in the queue.  The item is queued by copy, not by reference.
+ * This function must not be called from an interrupt service routine.
+ * See xQueueOverwriteFromISR () for an alternative which may be used in an ISR.
+ *
+ * @param xQueue The handle to the queue on which the item is to be posted.
+ *
+ * @param pvItemToQueue A pointer to the item that is to be placed on the
+ * queue.  The size of the items the queue will hold was defined when the
+ * queue was created, so this many bytes will be copied from pvItemToQueue
+ * into the queue storage area.
+ *
+ * @return xQueueOverwrite() is a macro that calls xQueueGenericSend(), and
+ * therefore has the same return values as xQueueSendToFront().  However, as
+ * xQueueOverwrite() will write to the queue even when the queue is full pdPASS
+ * will be returned in all cases (errQUEUE_FULL will never be returned).
+ *
+ * Example usage:
+   <pre>
+
+ void vFunction( void *pvParameters )
+ {
+ xQueueHandle xQueue;
+ unsigned long ulVarToSend, ulValReceived;
+
+	// Create a queue to hold one unsigned long value.  It is strongly
+	// recommended *not* to use xQueueOverwrite() on queues that can
+	// contain more than one value, and doing so will trigger an assertion
+	// if configASSERT() is defined.
+	xQueue = xQueueCreate( 1, sizeof( unsigned long ) );
+
+	// Write the value 10 to the queue using xQueueOverwrite().
+	ulVarToSend = 10;
+	xQueueOverwrite( xQueue, &ulVarToSend );
+
+	// Peeking the queue should now return 10, but leave the value 10 in
+	// the queue.  A block time of zero is used as it is known that the
+	// queue holds a value.
+	ulValReceived = 0;
+	xQueuePeek( xQueue, &ulValReceived, 0 );
+
+	if( ulValReceived != 10 )
+	{
+		// Error!
+	}
+
+	// The queue is still full.  Use xQueueOverwrite() to overwrite the
+	// value held in the queue with 100.
+	ulVarToSend = 100;
+	xQueueOverwrite( xQueue, &ulVarToSend );
+
+	// This time read from the queue, leaving the queue empty once more.
+	// A block time of 0 is used again.
+	xQueueReceive( xQueue, &ulValReceived, 0 );
+
+	// The value read should be the last value written, even though the
+	// queue was already full when the value was written.
+	if( ulValReceived != 100 )
+	{
+		// Error!
+	}
+
+	// ...
+}
+ </pre>
+ * \defgroup xQueueOverwrite xQueueOverwrite
+ * \ingroup QueueManagement
+ */
+#define xQueueOverwrite( xQueue, pvItemToQueue ) xQueueGenericSend( ( xQueue ), ( pvItemToQueue ), 0, queueOVERWRITE )
 
 
 /**

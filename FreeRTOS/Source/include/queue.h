@@ -1056,6 +1056,84 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 /**
  * queue. h
  * <pre>
+ portBASE_TYPE xQueueOverwriteFromISR(
+							  xQueueHandle xQueue,
+							  const void * pvItemToQueue,
+							  portBASE_TYPE *pxHigherPriorityTaskWoken
+						 );
+ * </pre>
+ *
+ * A version of xQueueOverwrite() that can be used from an interrupt service
+ * routine (ISR).
+ *
+ * Only for use with queues that can hold a single item - so the queue is either
+ * empty or full.
+ *
+ * Post an item on a queue.  If the queue is already full then overwrite the
+ * value held in the queue.  The item is queued by copy, not by reference.
+ *
+ * @param xQueue The handle to the queue on which the item is to be posted.
+ *
+ * @param pvItemToQueue A pointer to the item that is to be placed on the
+ * queue.  The size of the items the queue will hold was defined when the
+ * queue was created, so this many bytes will be copied from pvItemToQueue
+ * into the queue storage area.
+ *
+ * @param pxHigherPriorityTaskWoken xQueueOverwriteFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
+ * to unblock, and the unblocked task has a priority higher than the currently
+ * running task.  If xQueueSendFromISR() sets this value to pdTRUE then
+ * a context switch should be requested before the interrupt is exited.
+ *
+ * @return xQueueOverwriteFromISR() is a macro that calls 
+ * xQueueGenericSendFromISR(), and therefore has the same return values as 
+ * xQueueSendToFrontFromISR().  However, as xQueueOverwriteFromISR() will write 
+ * to the queue even when the queue is full pdPASS will be returned in all cases 
+ * (errQUEUE_FULL will never be returned).
+ *
+ * Example usage:
+   <pre>
+
+ xQueueHandle xQueue;
+ 
+ void vFunction( void *pvParameters )
+ {
+ 	// Create a queue to hold one unsigned long value.  It is strongly
+	// recommended *not* to use xQueueOverwrite() on queues that can
+	// contain more than one value, and doing so will trigger an assertion
+	// if configASSERT() is defined.
+	xQueue = xQueueCreate( 1, sizeof( unsigned long ) );
+}
+
+void vAnInterruptHandler( void )
+{
+// xHigherPriorityTaskWoken must be set to pdFALSE before it is used.
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+unsigned long ulVarToSend, ulValReceived;
+
+	// Write the value 10 to the queue using xQueueOverwriteFromISR().
+	ulVarToSend = 10;
+	xQueueOverwriteFromISR( xQueue, &ulVarToSend, &xHigherPriorityTaskWoken );
+
+	// The queue is full, but calling xQueueOverwriteFromISR() again will still
+	// pass because the value held in the queue will be overwritten with the
+	// new value.
+	ulVarToSend = 100;
+	xQueueOverwrite( xQueue, &ulVarToSend, &xHigherPriorityTaskWoken );
+
+	// Reading from the queue will now return 100.
+
+	// ...
+}
+ </pre>
+ * \defgroup xQueueOverwriteFromISR xQueueOverwriteFromISR
+ * \ingroup QueueManagement
+ */
+#define xQueueOverwriteFromISR( xQueue, pvItemToQueue, pxHigherPriorityTaskWoken ) xQueueGenericSendFromISR( ( xQueue ), ( pvItemToQueue ), ( pxHigherPriorityTaskWoken ), queueOVERWRITE )
+
+/**
+ * queue. h
+ * <pre>
  portBASE_TYPE xQueueSendFromISR(
 									 xQueueHandle xQueue,
 									 const void *pvItemToQueue,

@@ -939,6 +939,7 @@ xQUEUE *pxQueue;
 	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+	configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
 
 	/* Similar to xQueueGenericSend, except we don't block if there is no room
 	in the queue.  Also we don't directly wake a task that was blocked on a
@@ -947,7 +948,7 @@ xQUEUE *pxQueue;
 	by this	post). */
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+		if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 		{
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
 

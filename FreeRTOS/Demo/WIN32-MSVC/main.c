@@ -411,6 +411,9 @@ void vApplicationTickHook( void )
 	can be called from an ISR. */
 	vTimerPeriodicISRTests();
 
+	/* Call the periodic queue overwrite from ISR demo. */
+	vQueueOverwritePeriodicISRDemo();
+
 	/* Write to a queue that is in use as part of the queue set demo to 
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();

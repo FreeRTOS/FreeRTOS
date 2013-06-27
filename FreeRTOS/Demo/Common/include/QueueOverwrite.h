@@ -77,6 +77,7 @@
 
 void vStartQueueOverwriteTask( unsigned portBASE_TYPE uxPriority );
 portBASE_TYPE xIsQueueOverwriteTaskStillRunning( void );
+void vQueueOverwritePeriodicISRDemo( void );
 
 #endif /* QUEUE_OVERWRITE_H */
 

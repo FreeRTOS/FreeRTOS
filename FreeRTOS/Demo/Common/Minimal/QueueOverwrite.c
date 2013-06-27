@@ -98,18 +98,33 @@ static void prvQueueOverwriteTask( void *pvParameters );
 prvQueueOverwriteTask() has not found any errors. */
 static unsigned long ulLoopCounter = 0;
 
+/* Set to pdFALSE if an error is discovered by the
+vQueueOverwritePeriodicISRDemo() function. */
+static portBASE_TYPE xISRTestStatus = pdPASS;
+
+/* The queue that is accessed from the ISR.  The queue accessed by the task is
+created inside the task itself. */
+static xQueueHandle xISRQueue = NULL;
+
 /*-----------------------------------------------------------*/
 
 void vStartQueueOverwriteTask( unsigned portBASE_TYPE uxPriority )
 {
-	/* Create the test task. */
+const unsigned portBASE_TYPE uxQueueLength = 1;
+
+	/* Create the queue used by the ISR.  xQueueOverwriteFromISR() should only
+	be used on queues that have a length of 1. */
+	xISRQueue = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( unsigned long ) );
+
+	/* Create the test task.  The queue used by the test task is created inside
+	the task itself. */
 	xTaskCreate( prvQueueOverwriteTask, ( signed char * ) "QOver", configMINIMAL_STACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 static void prvQueueOverwriteTask( void *pvParameters )
 {
-xQueueHandle xQueue;
+xQueueHandle xTaskQueue;
 const unsigned portBASE_TYPE uxQueueLength = 1;
 unsigned long ulValue, ulStatus = pdPASS, x;
 
@@ -118,18 +133,18 @@ unsigned long ulValue, ulStatus = pdPASS, x;
 
 	/* Create the queue.  xQueueOverwrite() should only be used on queues that
 	have a length of 1. */
-	xQueue = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( unsigned long ) );
-	configASSERT( xQueue );
+	xTaskQueue = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( unsigned long ) );
+	configASSERT( xTaskQueue );
 
 	for( ;; )
 	{
 		/* The queue is empty.  Writing to the queue then reading from the queue
 		should return the item written. */
 		ulValue = 10;
-		xQueueOverwrite( xQueue, &ulValue );
+		xQueueOverwrite( xTaskQueue, &ulValue );
 
 		ulValue = 0;
-		xQueueReceive( xQueue, &ulValue, qoDONT_BLOCK );
+		xQueueReceive( xTaskQueue, &ulValue, qoDONT_BLOCK );
 
 		if( ulValue != 10 )
 		{
@@ -141,27 +156,27 @@ unsigned long ulValue, ulStatus = pdPASS, x;
 		for( x = 0; x < qoLOOPS; x++ )
 		{
 			/* Write to the queue. */
-			xQueueOverwrite( xQueue, &x );
+			xQueueOverwrite( xTaskQueue, &x );
 
 			/* Check the value in the queue is that written, even though the
 			queue was not necessarily empty. */
-			xQueuePeek( xQueue, &ulValue, qoDONT_BLOCK );
+			xQueuePeek( xTaskQueue, &ulValue, qoDONT_BLOCK );
 			if( ulValue != x )
 			{
 				ulStatus = pdFAIL;
 			}
 
 			/* There should always be one item in the queue. */
-			if( uxQueueMessagesWaiting( xQueue ) != uxQueueLength )
+			if( uxQueueMessagesWaiting( xTaskQueue ) != uxQueueLength )
 			{
 				ulStatus = pdFAIL;
 			}
 		}
 
 		/* Empty the queue again. */
-		xQueueReceive( xQueue, &ulValue, qoDONT_BLOCK );
+		xQueueReceive( xTaskQueue, &ulValue, qoDONT_BLOCK );
 
-		if( uxQueueMessagesWaiting( xQueue ) != 0 )
+		if( uxQueueMessagesWaiting( xTaskQueue ) != 0 )
 		{
 			ulStatus = pdFAIL;
 		}
@@ -180,7 +195,11 @@ portBASE_TYPE xIsQueueOverwriteTaskStillRunning( void )
 {
 portBASE_TYPE xReturn;
 
-	if( ulLoopCounter > 0 )
+	if( xISRTestStatus != pdPASS )
+	{
+		xReturn = pdFAIL;
+	}
+	else if( ulLoopCounter > 0 )
 	{
 		xReturn = pdPASS;
 	}
@@ -193,5 +212,55 @@ portBASE_TYPE xReturn;
 	ulLoopCounter = 0;
 
 	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+void vQueueOverwritePeriodicISRDemo( void )
+{
+static unsigned long ulCallCount = 0;
+const unsigned long ulTx1 = 10UL, ulTx2 = 20UL, ulNumberOfSwitchCases = 3UL;
+unsigned long ulRx;
+
+	/* This function should be called from an interrupt, such as the tick hook
+	function vApplicationTickHook(). */
+
+	configASSERT( xISRQueue );
+
+	switch( ulCallCount )
+	{
+		case 0:
+			/* The queue is empty.  Write ulTx1 to the queue.  In this demo the
+			last parameter is not used because there are no tasks blocked on
+			this queue. */
+			xQueueOverwriteFromISR( xISRQueue, &ulTx1, NULL );
+			break;
+
+		case 1:
+			/* The queue already holds ulTx1.  Overwrite the value in the queue
+			with ulTx2. */
+			xQueueOverwriteFromISR( xISRQueue, &ulTx2, NULL );
+			break;
+
+		case 2:
+			/* Read from the queue to empty the queue again.  The value read
+			should be ulTx2. */
+			xQueueReceiveFromISR( xISRQueue, &ulRx, NULL );
+
+			if( ulRx != ulTx2 )
+			{
+				xISRTestStatus = pdFAIL;
+			}
+			break;
+	}
+
+	/* Run the next case in the switch statement above next time this function
+	is called. */
+	ulCallCount++;
+
+	if( ulCallCount >= ulNumberOfSwitchCases )
+	{
+		/* Go back to the start. */
+		ulCallCount = 0;
+	}
 }
 

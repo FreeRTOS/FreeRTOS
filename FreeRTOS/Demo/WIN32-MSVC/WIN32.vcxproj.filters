@@ -124,6 +124,12 @@
     <ClCompile Include="..\Common\Minimal\QueueOverwrite.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="main_full.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
+    <ClCompile Include="main_blinky.c">
+      <Filter>Demo App Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

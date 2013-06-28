@@ -173,6 +173,8 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="main_blinky.c" />
+    <ClCompile Include="main_full.c" />
     <ClCompile Include="Run-time-stats-utils.c" />
   </ItemGroup>
   <ItemGroup>

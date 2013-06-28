@@ -144,8 +144,9 @@ to exclude the API function. */
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
 
-extern void vAssertCalled( void );
-#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
+/* Standard assert semantics. */
+extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
 /* configUSE_PORT_OPTIMISED_TASK_SELECTION is only available in the MSVC 
 version of the Win32 simulator projects.  It will be ignored in the GCC

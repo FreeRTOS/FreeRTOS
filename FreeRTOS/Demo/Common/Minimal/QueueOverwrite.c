@@ -233,12 +233,19 @@ unsigned long ulRx;
 			last parameter is not used because there are no tasks blocked on
 			this queue. */
 			xQueueOverwriteFromISR( xISRQueue, &ulTx1, NULL );
+
+			/* Peek the queue to check it holds the expected value. */
+			xQueuePeekFromISR( xISRQueue, &ulRx );
+			if( ulRx != ulTx1 )
+			{
+				xISRTestStatus = pdFAIL;
+			}
 			break;
 
 		case 1:
 			/* The queue already holds ulTx1.  Overwrite the value in the queue
 			with ulTx2. */
-			xQueueOverwriteFromISR( xISRQueue, &ulTx2, NULL );
+			xQueueOverwriteFromISR( xISRQueue, &ulTx2, NULL );			
 			break;
 
 		case 2:

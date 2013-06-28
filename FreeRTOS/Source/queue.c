@@ -1060,7 +1060,7 @@ xQUEUE *pxQueue;
 				{
 					traceQUEUE_RECEIVE( pxQueue );
 
-					/* We are actually removing data. */
+					/* Actually removing data, not just peeking. */
 					--( pxQueue->uxMessagesWaiting );
 
 					#if ( configUSE_MUTEXES == 1 )
@@ -1191,7 +1191,7 @@ xQUEUE *pxQueue;
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		/* We cannot block from an ISR, so check there is data available. */
+		/* Cannot block in an ISR, so check there is data available. */
 		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 		{
 			traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
@@ -1199,9 +1199,10 @@ xQUEUE *pxQueue;
 			prvCopyDataFromQueue( pxQueue, pvBuffer );
 			--( pxQueue->uxMessagesWaiting );
 
-			/* If the queue is locked we will not modify the event list.  Instead
-			we update the lock count so the task that unlocks the queue will know
-			that an ISR has removed data while the queue was locked. */
+			/* If the queue is locked the event list will not be modified.  
+			Instead update the lock count so the task that unlocks the queue 
+			will know that an ISR has removed data while the queue was 
+			locked. */
 			if( pxQueue->xRxLock == queueUNLOCKED )
 			{
 				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
@@ -1230,6 +1231,44 @@ xQUEUE *pxQueue;
 		{
 			xReturn = pdFAIL;
 			traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
+		}
+	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuffer )
+{
+signed portBASE_TYPE xReturn;
+unsigned portBASE_TYPE uxSavedInterruptStatus;
+signed char *pcOriginalReadPosition;
+xQUEUE *pxQueue;
+
+	pxQueue = ( xQUEUE * ) xQueue;
+	configASSERT( pxQueue );
+	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+
+	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+	{
+		/* Cannot block in an ISR, so check there is data available. */
+		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+		{
+			traceQUEUE_PEEK_FROM_ISR( pxQueue );
+
+			/* Remember the read position so it can be reset as nothing is
+			actually being removed from the queue. */
+			pcOriginalReadPosition = pxQueue->u.pcReadFrom;
+			prvCopyDataFromQueue( pxQueue, pvBuffer );
+			pxQueue->u.pcReadFrom = pcOriginalReadPosition;
+
+			xReturn = pdPASS;
+		}
+		else
+		{
+			xReturn = pdFAIL;
+			traceQUEUE_PEEK_FROM_ISR_FAILED( pxQueue );
 		}
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );

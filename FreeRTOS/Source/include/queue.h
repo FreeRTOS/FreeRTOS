@@ -616,7 +616,9 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * Successfully received items remain on the queue so will be returned again
  * by the next call, or a call to xQueueReceive().
  *
- * This macro must not be used in an interrupt service routine.
+ * This macro must not be used in an interrupt service routine.  See
+ * xQueuePeekFromISR() for an alternative that can be called from an interrupt
+ * service routine.
  *
  * @param xQueue The handle to the queue from which the item is to be
  * received.
@@ -690,6 +692,39 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * \ingroup QueueManagement
  */
 #define xQueuePeek( xQueue, pvBuffer, xTicksToWait ) xQueueGenericReceive( ( xQueue ), ( pvBuffer ), ( xTicksToWait ), pdTRUE )
+
+/**
+ * queue. h
+ * <pre>
+ portBASE_TYPE xQueuePeekFromISR(
+									xQueueHandle xQueue,
+									void *pvBuffer,
+								);</pre>
+ *
+ * A version of xQueuePeek() that can be called from an interrupt service
+ * routine (ISR).
+ *
+ * Receive an item from a queue without removing the item from the queue.
+ * The item is received by copy so a buffer of adequate size must be
+ * provided.  The number of bytes copied into the buffer was defined when
+ * the queue was created.
+ *
+ * Successfully received items remain on the queue so will be returned again
+ * by the next call, or a call to xQueueReceive().
+ *
+ * @param xQueue The handle to the queue from which the item is to be
+ * received.
+ *
+ * @param pvBuffer Pointer to the buffer into which the received item will
+ * be copied.
+ *
+ * @return pdTRUE if an item was successfully received from the queue,
+ * otherwise pdFALSE.
+ *
+ * \defgroup xQueuePeekFromISR xQueuePeekFromISR
+ * \ingroup QueueManagement
+ */
+signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuffer );
 
 /**
  * queue. h

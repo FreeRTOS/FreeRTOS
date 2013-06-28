@@ -410,6 +410,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceQUEUE_PEEK( pxQueue )
 #endif
 
+#ifndef traceQUEUE_PEEK_FROM_ISR
+	#define traceQUEUE_PEEK_FROM_ISR( pxQueue )
+#endif
+
 #ifndef traceQUEUE_RECEIVE_FAILED
 	#define traceQUEUE_RECEIVE_FAILED( pxQueue )
 #endif
@@ -428,6 +432,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef traceQUEUE_RECEIVE_FROM_ISR_FAILED
 	#define traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue )
+#endif
+
+#ifndef traceQUEUE_PEEK_FROM_ISR_FAILED
+	#define traceQUEUE_PEEK_FROM_ISR_FAILED( pxQueue )
 #endif
 
 #ifndef traceQUEUE_DELETE

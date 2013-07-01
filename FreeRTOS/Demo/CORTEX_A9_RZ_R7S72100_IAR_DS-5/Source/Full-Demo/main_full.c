@@ -159,6 +159,7 @@
 #include "comtest2.h"
 #include "serial.h"
 #include "TimerDemo.h"
+#include "QueueOverwrite.h"
 
 /* FreeRTOS+CLI and FreeRTOS+FAT SL includes. */
 #include "UARTCommandConsole.h"
@@ -179,6 +180,7 @@ to be fitted to the UART port. */
 #define mainUART_COMMAND_CONSOLE_STACK_SIZE	( configMINIMAL_STACK_SIZE * 3UL )
 #define mainCOM_TEST_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
+#define mainQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The priority used by the UART command console task. */
 #define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
@@ -300,6 +302,7 @@ void main_full( void )
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 
 	#if mainINCLUDE_FAT_SL_DEMO == 1
 	{
@@ -423,6 +426,11 @@ unsigned long ulErrorFound = pdFALSE;
 		}
 
 		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			ulErrorFound = pdTRUE;
+		}
+
+		if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 		{
 			ulErrorFound = pdTRUE;
 		}

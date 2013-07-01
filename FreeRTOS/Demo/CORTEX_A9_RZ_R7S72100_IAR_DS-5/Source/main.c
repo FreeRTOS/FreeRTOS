@@ -97,6 +97,7 @@
 /* Standard demo includes. */
 #include "partest.h"
 #include "TimerDemo.h"
+#include "QueueOverwrite.h"
 
 /* Renesas includes. */
 #include "r_typedefs.h"
@@ -267,6 +268,9 @@ void vApplicationTickHook( void )
 		/* The full demo includes a software timer demo/test that requires
 		prodding periodically from the tick interrupt. */
 		vTimerPeriodicISRTests();
+
+		/* Call the periodic queue overwrite from ISR demo. */
+		vQueueOverwritePeriodicISRDemo();
 	}
 	#endif
 }

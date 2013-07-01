@@ -332,7 +332,7 @@
         <option>
           <name>CCOptStrategy</name>
           <version>0</version>
-          <state>2</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptLevelSlave</name>
@@ -1043,6 +1043,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\Minimal\GenQTest.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Common\Minimal\QueueOverwrite.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\Minimal\recmutex.c</name>

@@ -77,7 +77,7 @@
  * project, and a more comprehensive test and demo application.  The
  * configCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in FreeRTOSConifg.h is used to
  * select between the two.  See the notes on using
- * configCREATE_SIMPLE_BLINKY_DEMO_ONLY in mainc.  This file implements the
+ * configCREATE_SIMPLE_BLINKY_DEMO_ONLY in main.c.  This file implements the
  * comprehensive test and demo version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the

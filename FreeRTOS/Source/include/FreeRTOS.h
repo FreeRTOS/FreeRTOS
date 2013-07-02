@@ -588,6 +588,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configUSE_NEWLIB_REENTRANT 0
 #endif
 
+#ifndef configINCLUDE_STATS_FORMATTING_FUNCTIONS
+	#define configINCLUDE_STATS_FORMATTING_FUNCTIONS 0
+#endif
+
 /* For backward compatability. */
 #define eTaskStateGet eTaskGetState
 

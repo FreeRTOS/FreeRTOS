@@ -215,7 +215,6 @@ PRIVILEGED_DATA static volatile portTickType xNextTaskUnblockTime				= ( portTic
 
 	PRIVILEGED_DATA static unsigned long ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
 	PRIVILEGED_DATA static unsigned long ulTotalRunTime = 0UL;				/*< Holds the total amount of execution time as defined by the run time counter clock. */
-	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTimeDiv100 ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -433,17 +432,16 @@ static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake ) PRIVILEGE
 static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer ) PRIVILEGED_FUNCTION;
 
 /*
- * Called from vTaskList.  vListTasks details all the tasks currently under
- * control of the scheduler.  The tasks may be in one of a number of lists.
- * prvListTaskWithinSingleList accepts a list and details the tasks from
- * within just that list.
+ * Fills an xTaskStatusType structure with information on each task that is
+ * referenced from the pxList list (which may be a ready list, a delayed list,
+ * a suspended list, etc.).
  *
  * THIS FUNCTION IS INTENDED FOR DEBUGGING ONLY, AND SHOULD NOT BE CALLED FROM
  * NORMAL APPLICATION CODE.
  */
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	static void prvListTaskWithinSingleList( const signed char *pcWriteBuffer, xList *pxList, signed char cStatus ) PRIVILEGED_FUNCTION;
+	static unsigned portBASE_TYPE prvListTaskWithinSingleList( xTaskStatusType *pxTaskStatusArray, xList *pxList, eTaskState eState ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -454,7 +452,7 @@ static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TY
  */
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
-	static unsigned short usTaskCheckFreeStackSpace( const unsigned char * pucStackByte ) PRIVILEGED_FUNCTION;
+	static unsigned short prvTaskCheckFreeStackSpace( const unsigned char * pucStackByte ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -1449,140 +1447,62 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	void vTaskList( signed char *pcWriteBuffer )
+	unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
 	{
-	unsigned portBASE_TYPE uxQueue;
-
-		/* This is a VERY costly function that should be used for debug only.
-		It leaves interrupts disabled for a LONG time. */
+	unsigned portBASE_TYPE uxTask = 0, uxQueue = configMAX_PRIORITIES;
 
 		vTaskSuspendAll();
 		{
-			/* Run through all the lists that could potentially contain a TCB and
-			report the task name, state and stack high water mark. */
-
-			*pcWriteBuffer = ( signed char ) 0x00;
-			strcat( ( char * ) pcWriteBuffer, ( const char * ) "\r\n" );
-
-			uxQueue = uxTopUsedPriority + ( unsigned portBASE_TYPE ) 1U;
-
-			do
+			/* Is there a space in the array for each task in the system? */
+			if( uxArraySize >= uxCurrentNumberOfTasks )
 			{
-				uxQueue--;
-
-				if( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) == pdFALSE )
+				/* Fill in an xTaskStatusType structure with information on each
+				task in the Ready state. */
+				do
 				{
-					prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), tskREADY_CHAR );
-				}
-			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
+					uxQueue--;
+					uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), eReady );
 
-			if( listLIST_IS_EMPTY( pxDelayedTaskList ) == pdFALSE )
-			{
-				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, tskBLOCKED_CHAR );
-			}
+				}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
 
-			if( listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) == pdFALSE )
-			{
-				prvListTaskWithinSingleList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, tskBLOCKED_CHAR );
-			}
+				/* Fill in an xTaskStatusType structure with information on each
+				task in the Blocked state. */
+				uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( xList * ) pxDelayedTaskList, eBlocked );
+				uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( xList * ) pxOverflowDelayedTaskList, eBlocked );
 
-			#if( INCLUDE_vTaskDelete == 1 )
-			{
-				if( listLIST_IS_EMPTY( &xTasksWaitingTermination ) == pdFALSE )
+				#if( INCLUDE_vTaskDelete == 1 )
 				{
-					prvListTaskWithinSingleList( pcWriteBuffer, &xTasksWaitingTermination, tskDELETED_CHAR );
+					/* Fill in an xTaskStatusType structure with information on 
+					each task that has been deleted but not yet cleaned up. */
+					uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &xTasksWaitingTermination, eDeleted );
 				}
-			}
-			#endif
+				#endif
 
-			#if ( INCLUDE_vTaskSuspend == 1 )
-			{
-				if( listLIST_IS_EMPTY( &xSuspendedTaskList ) == pdFALSE )
+				#if ( INCLUDE_vTaskSuspend == 1 )
 				{
-					prvListTaskWithinSingleList( pcWriteBuffer, &xSuspendedTaskList, tskSUSPENDED_CHAR );
+					/* Fill in an xTaskStatusType structure with information on 
+					each task in the Suspended state. */
+					uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &xSuspendedTaskList, eSuspended );
 				}
+				#endif
+
+				#if ( configGENERATE_RUN_TIME_STATS == 1)
+				{
+					*pulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+				}
+				#else
+				{
+					*pulTotalRunTime = 0;
+				}
+				#endif
 			}
-			#endif
 		}
 		xTaskResumeAll();
+
+		return uxTask;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
-/*----------------------------------------------------------*/
-
-#if ( configGENERATE_RUN_TIME_STATS == 1 )
-
-	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
-	{
-	unsigned portBASE_TYPE uxQueue;
-	unsigned long ulTotalRunTimeDiv100;
-
-		/* This is a VERY costly function that should be used for debug only.
-		It leaves interrupts disabled for a LONG time. */
-
-		vTaskSuspendAll();
-		{
-			#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
-				portALT_GET_RUN_TIME_COUNTER_VALUE( ulTotalRunTime );
-			#else
-				ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
-			#endif
-
-			/* Divide ulTotalRunTime by 100 to make the percentage caluclations
-			simpler in the prvGenerateRunTimeStatsForTasksInList() function. */
-			ulTotalRunTimeDiv100 = ulTotalRunTime / 100UL;
-
-			/* Run through all the lists that could potentially contain a TCB,
-			generating a table of run timer percentages in the provided
-			buffer. */
-
-			*pcWriteBuffer = ( signed char ) 0x00;
-			strcat( ( char * ) pcWriteBuffer, ( const char * ) "\r\n" );
-
-			uxQueue = uxTopUsedPriority + ( unsigned portBASE_TYPE ) 1U;
-
-			do
-			{
-				uxQueue--;
-
-				if( listLIST_IS_EMPTY( &( pxReadyTasksLists[ uxQueue ] ) ) == pdFALSE )
-				{
-					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) &( pxReadyTasksLists[ uxQueue ] ), ulTotalRunTimeDiv100 );
-				}
-			}while( uxQueue > ( unsigned short ) tskIDLE_PRIORITY );
-
-			if( listLIST_IS_EMPTY( pxDelayedTaskList ) == pdFALSE )
-			{
-				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxDelayedTaskList, ulTotalRunTimeDiv100 );
-			}
-
-			if( listLIST_IS_EMPTY( pxOverflowDelayedTaskList ) == pdFALSE )
-			{
-				prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, ( xList * ) pxOverflowDelayedTaskList, ulTotalRunTimeDiv100 );
-			}
-
-			#if ( INCLUDE_vTaskDelete == 1 )
-			{
-				if( listLIST_IS_EMPTY( &xTasksWaitingTermination ) == pdFALSE )
-				{
-					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, &xTasksWaitingTermination, ulTotalRunTimeDiv100 );
-				}
-			}
-			#endif
-
-			#if ( INCLUDE_vTaskSuspend == 1 )
-			{
-				if( listLIST_IS_EMPTY( &xSuspendedTaskList ) == pdFALSE )
-				{
-					prvGenerateRunTimeStatsForTasksInList( pcWriteBuffer, &xSuspendedTaskList, ulTotalRunTimeDiv100 );
-				}
-			}
-			#endif
-		}
-		xTaskResumeAll();
-	}
-
-#endif /* configGENERATE_RUN_TIME_STATS */
 /*----------------------------------------------------------*/
 
 #if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
@@ -2498,111 +2418,73 @@ tskTCB *pxNewTCB;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	static void prvListTaskWithinSingleList( const signed char *pcWriteBuffer, xList *pxList, signed char cStatus )
+	static unsigned portBASE_TYPE prvListTaskWithinSingleList( xTaskStatusType *pxTaskStatusArray, xList *pxList, eTaskState eState )
 	{
 	volatile tskTCB *pxNextTCB, *pxFirstTCB;
-	unsigned short usStackRemaining;
-	PRIVILEGED_DATA static char pcStatusString[ configMAX_TASK_NAME_LEN + 30 ];
+	unsigned portBASE_TYPE uxTask = 0;
 
-		/* Write the details of all the TCB's in pxList into the buffer. */
-		listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
-		do
-		{
-			listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
-			#if ( portSTACK_GROWTH > 0 )
+		if( listCURRENT_LIST_LENGTH( pxList ) > 0 )
+		{			
+			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
+			
+			/* Populate an xTaskStatusType structure within the 
+			pxTaskStatusArray array for each task that is referenced from
+			pxList.  See the definition of xTaskStatusType in task.h for the
+			meaning of each xTaskStatusType structure member. */
+			do
 			{
-				usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxEndOfStack );
-			}
-			#else
-			{
-				usStackRemaining = usTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxStack );
-			}
-			#endif
+				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
 
-			sprintf( pcStatusString, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxNextTCB->pcTaskName, cStatus, ( unsigned int ) pxNextTCB->uxPriority, ( unsigned int ) usStackRemaining, ( unsigned int ) pxNextTCB->uxTCBNumber );
-			strcat( ( char * ) pcWriteBuffer, ( char * ) pcStatusString );
+				pxTaskStatusArray[ uxTask ].xHandle = ( xTaskHandle ) pxNextTCB;
+				pxTaskStatusArray[ uxTask ].pcTaskName = ( const signed char * ) &( pxNextTCB->pcTaskName [ 0 ] );
+				pxTaskStatusArray[ uxTask ].xTaskNumber = pxNextTCB->uxTCBNumber;
+				pxTaskStatusArray[ uxTask ].eCurrentState = eState;
+				pxTaskStatusArray[ uxTask ].uxCurrentPriority = pxNextTCB->uxPriority;
 
-		} while( pxNextTCB != pxFirstTCB );
+				#if ( configUSE_MUTEXES == 1 )
+				{
+					pxTaskStatusArray[ uxTask ].uxBasePriority = pxNextTCB->uxBasePriority;
+				}
+				#else
+				{
+					pxTaskStatusArray[ uxTask ].uxBasePriority = 0;
+				}
+				#endif
+
+				#if ( configGENERATE_RUN_TIME_STATS == 1 )
+				{
+					pxTaskStatusArray[ uxTask ].ulRunTimeCounter = pxNextTCB->ulRunTimeCounter;
+				}
+				#else
+				{
+					pxTaskStatusArray[ uxTask ].ulRunTimeCounter = 0;
+				}
+				#endif
+
+				#if ( portSTACK_GROWTH > 0 )
+				{
+					ppxTaskStatusArray[ uxTask ].usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxEndOfStack );
+				}
+				#else
+				{
+					pxTaskStatusArray[ uxTask ].usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxStack );
+				}
+				#endif
+
+				uxTask++;
+
+			} while( pxNextTCB != pxFirstTCB );
+		}
+
+		return uxTask;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
 /*-----------------------------------------------------------*/
 
-#if ( configGENERATE_RUN_TIME_STATS == 1 )
-
-	static void prvGenerateRunTimeStatsForTasksInList( const signed char *pcWriteBuffer, xList *pxList, unsigned long ulTotalRunTimeDiv100 )
-	{
-	volatile tskTCB *pxNextTCB, *pxFirstTCB;
-	unsigned long ulStatsAsPercentage;
-	size_t xExistingStringLength;
-
-		/* Write the run time stats of all the TCB's in pxList into the buffer. */
-		listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
-		do
-		{
-			/* Get next TCB from the list. */
-			listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
-
-			/* Divide by zero check. */
-			if( ulTotalRunTimeDiv100 > 0UL )
-			{
-				xExistingStringLength = strlen( ( char * ) pcWriteBuffer );
-
-				/* Has the task run at all? */
-				if( pxNextTCB->ulRunTimeCounter == 0UL )
-				{
-					/* The task has used no CPU time at all. */
-					sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t0\t\t0%%\r\n", pxNextTCB->pcTaskName );
-				}
-				else
-				{
-					/* What percentage of the total run time has the task used?
-					This will always be rounded down to the nearest integer.
-					ulTotalRunTimeDiv100 has already been divided by 100. */
-					ulStatsAsPercentage = pxNextTCB->ulRunTimeCounter / ulTotalRunTimeDiv100;
-
-					if( ulStatsAsPercentage > 0UL )
-					{
-						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
-						{
-							sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter, ulStatsAsPercentage );
-						}
-						#else
-						{
-							/* sizeof( int ) == sizeof( long ) so a smaller
-							printf() library can be used. */
-							sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
-						}
-						#endif
-					}
-					else
-					{
-						/* If the percentage is zero here then the task has
-						consumed less than 1% of the total run time. */
-						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
-						{
-							sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxNextTCB->pcTaskName, pxNextTCB->ulRunTimeCounter );
-						}
-						#else
-						{
-							/* sizeof( int ) == sizeof( long ) so a smaller
-							printf() library can be used. */
-							sprintf( ( char * ) &( pcWriteBuffer[ xExistingStringLength ] ), ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxNextTCB->pcTaskName, ( unsigned int ) pxNextTCB->ulRunTimeCounter );
-						}
-						#endif
-					}
-				}
-			}
-
-		} while( pxNextTCB != pxFirstTCB );
-	}
-
-#endif /* configGENERATE_RUN_TIME_STATS */
-/*-----------------------------------------------------------*/
-
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
-	static unsigned short usTaskCheckFreeStackSpace( const unsigned char * pucStackByte )
+	static unsigned short prvTaskCheckFreeStackSpace( const unsigned char * pucStackByte )
 	{
 	register unsigned short usCount = 0U;
 
@@ -2640,7 +2522,7 @@ tskTCB *pxNewTCB;
 		}
 		#endif
 
-		uxReturn = ( unsigned portBASE_TYPE ) usTaskCheckFreeStackSpace( pcEndOfStack );
+		uxReturn = ( unsigned portBASE_TYPE ) prvTaskCheckFreeStackSpace( pcEndOfStack );
 
 		return uxReturn;
 	}
@@ -2819,6 +2701,193 @@ tskTCB *pxNewTCB;
 #endif /* portCRITICAL_NESTING_IN_TCB */
 /*-----------------------------------------------------------*/
 
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configINCLUDE_STATS_FORMATTING_FUNCTIONS == 1 ) )
+
+	void vTaskList( signed char *pcWriteBuffer )
+	{
+	xTaskStatusType *pxTaskStatusArray;
+	volatile unsigned portBASE_TYPE uxArraySize, x;
+	unsigned long ulTotalRunTime;
+	char cStatus;
+
+		/*
+		 * PLEASE NOTE:
+		 *
+		 * This function is provided for convenience only, and is used by many
+		 * of the demo applications.  Do not consider it to be part of the
+		 * scheduler.
+		 *
+		 * vTaskList() calls xTaskGetSystemState(), then formats part of the
+		 * xTaskGetSystemState() output into a human readable table that
+		 * displays task names, states and stack usage.
+		 *
+		 * vTaskList() has a dependency on the sprintf() C library function that
+		 * might bloat the code size, use a lot of stack, and provide different
+		 * results on different platforms.  An alternative, tiny, third party,
+		 * and limited functionality implementation of sprintf() is provided in
+		 * many of the FreeRTOS/Demo sub-directories in a file called
+		 * printf-stdarg.c (note printf-stdarg.c does not provide a full
+		 * snprintf() implementation!).
+		 *
+		 * It is recommended that production systems call xTaskGetSystemState()
+		 * directly to get access to raw stats data, rather than indirectly
+		 * through a call to vTaskList().
+		 */
+
+
+		/* Make sure the write buffer does not contain a string. */
+		*pcWriteBuffer = 0x00;
+
+		/* Take a snapshot of the number of tasks in case it changes while this
+		function is executing. */
+		uxArraySize = uxCurrentNumberOfTasks;
+
+		/* Allocate an array index for each task. */
+		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
+
+		if( pxTaskStatusArray != NULL )
+		{
+			/* Generate the (binary) data. */
+			uxArraySize = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
+
+			/* Create a human readable table from the binary data. */
+			for( x = 0; x < uxArraySize; x++ )
+			{
+				switch( pxTaskStatusArray[ x ].eCurrentState )
+				{
+				case eReady:		cStatus = tskREADY_CHAR;
+									break;
+
+				case eBlocked:		cStatus = tskBLOCKED_CHAR;
+									break;
+
+				case eSuspended:	cStatus = tskSUSPENDED_CHAR;
+									break;
+
+				case eDeleted:		cStatus = tskDELETED_CHAR;
+									break;
+
+				default:			/* Should not get here, but it is included
+									to prevent static checking errors. */
+									cStatus = 0x00;
+									break;
+				}
+
+				sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxTaskStatusArray[ x ].pcTaskName, cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
+				pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
+			}
+
+			/* Free the array again. */
+			vPortFree( pxTaskStatusArray );
+		}
+	}
+
+#endif /* configUSE_TRACE_FACILITY */
+/*----------------------------------------------------------*/
+
+#if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configINCLUDE_STATS_FORMATTING_FUNCTIONS == 1 ) )
+
+	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
+	{
+	xTaskStatusType *pxTaskStatusArray;
+	volatile unsigned portBASE_TYPE uxArraySize, x;
+	unsigned long ulTotalRunTime, ulStatsAsPercentage;
+
+		/*
+		 * PLEASE NOTE:
+		 *
+		 * This function is provided for convenience only, and is used by many
+		 * of the demo applications.  Do not consider it to be part of the
+		 * scheduler.
+		 *
+		 * vTaskGetRunTimeStats() calls xTaskGetSystemState(), then formats part
+		 * of the xTaskGetSystemState() output into a human readable table that
+		 * displays the amount of time each task has spent in the Running state
+		 * in both absolute and percentage terms.
+		 *
+		 * vTaskGetRunTimeStats() has a dependency on the sprintf() C library
+		 * function that might bloat the code size, use a lot of stack, and
+		 * provide different results on different platforms.  An alternative,
+		 * tiny, third party, and limited functionality implementation of
+		 * sprintf() is provided in many of the FreeRTOS/Demo sub-directories in
+		 * a file called printf-stdarg.c (note printf-stdarg.c does not provide
+		 * a full snprintf() implementation!).
+		 *
+		 * It is recommended that production systems call xTaskGetSystemState()
+		 * directly to get access to raw stats data, rather than indirectly
+		 * through a call to vTaskGetRunTimeStats().
+		 */
+
+		/* Make sure the write buffer does not contain a string. */
+		*pcWriteBuffer = 0x00;
+
+		/* Take a snapshot of the number of tasks in case it changes while this
+		function is executing. */
+		uxArraySize = uxCurrentNumberOfTasks;
+
+		/* Allocate an array index for each task. */
+		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
+
+		if( pxTaskStatusArray != NULL )
+		{
+			/* Generate the (binary) data. */
+			uxArraySize = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
+
+			/* For percentage calculations. */
+			ulTotalRunTime /= 100UL;
+
+			/* Avoid divide by zero errors. */
+			if( ulTotalRunTime > 0 )
+			{
+				/* Create a human readable table from the binary data. */
+				for( x = 0; x < uxArraySize; x++ )
+				{
+					/* What percentage of the total run time has the task used?
+					This will always be rounded down to the nearest integer.
+					ulTotalRunTimeDiv100 has already been divided by 100. */
+					ulStatsAsPercentage = pxTaskStatusArray[ x ].ulRunTimeCounter / ulTotalRunTime;
+
+					if( ulStatsAsPercentage > 0UL )
+					{
+						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
+						{
+							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
+						}
+						#else
+						{
+							/* sizeof( int ) == sizeof( long ) so a smaller
+							printf() library can be used. */
+							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+						}
+						#endif
+					}
+					else
+					{
+						/* If the percentage is zero here then the task has
+						consumed less than 1% of the total run time. */
+						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
+						{
+							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
+						}
+						#else
+						{
+							/* sizeof( int ) == sizeof( long ) so a smaller
+							printf() library can be used. */
+							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+						}
+						#endif
+					}
+
+					pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
+				}
+			}
+
+			/* Free the array again. */
+			vPortFree( pxTaskStatusArray );
+		}
+	}
+
+#endif /* configGENERATE_RUN_TIME_STATS */
 
 
 

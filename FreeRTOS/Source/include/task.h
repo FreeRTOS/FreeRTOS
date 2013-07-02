@@ -105,6 +105,16 @@ extern "C" {
  */
 typedef void * xTaskHandle;
 
+/* Task states returned by eTaskGetState. */
+typedef enum
+{
+	eRunning = 0,	/* A task is querying the state of itself, so must be running. */
+	eReady,			/* The task being queried is in a read or pending ready list. */
+	eBlocked,		/* The task being queried is in the Blocked state. */
+	eSuspended,		/* The task being queried is in the Suspended state, or is in the Blocked state with an infinite time out. */
+	eDeleted		/* The task being queried has been deleted, but its TCB has not yet been freed. */
+} eTaskState;
+
 /*
  * Used internally only.
  */
@@ -138,15 +148,19 @@ typedef struct xTASK_PARAMTERS
 	xMemoryRegion xRegions[ portNUM_CONFIGURABLE_REGIONS ];
 } xTaskParameters;
 
-/* Task states returned by eTaskGetState. */
-typedef enum
+/* Used with the xTaskGetSystemState() function to return the state of each task 
+in the system. */
+typedef struct xTASK_STATUS
 {
-	eRunning = 0,	/* A task is querying the state of itself, so must be running. */
-	eReady,			/* The task being queried is in a read or pending ready list. */
-	eBlocked,		/* The task being queried is in the Blocked state. */
-	eSuspended,		/* The task being queried is in the Suspended state, or is in the Blocked state with an infinite time out. */
-	eDeleted		/* The task being queried has been deleted, but its TCB has not yet been freed. */
-} eTaskState;
+	xTaskHandle xHandle;						/* The handle of the task to which the rest of the information in the structure relates. */
+	const signed char *pcTaskName;				/* A pointer to the task's name.  This valid will be invalid if the task was deleted since the structure was populated! */
+	unsigned portBASE_TYPE xTaskNumber;			/* A number unique to the task. */
+	eTaskState eCurrentState;					/* The state in which the task existed when the structure was populated. */
+	unsigned portBASE_TYPE uxCurrentPriority;	/* The priority at which the task was running (may be inherited) when the structure was populated. */
+	unsigned portBASE_TYPE uxBasePriority;		/* The priority to which the task will return if the task's current priority has been inherited to avoid unbounded priority inversion when obtaining a mutex.  Only valid is configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
+	unsigned long ulRunTimeCounter;				/* The total run time allocated to the task so far, as defined by the run time stats clock.  See http://www.freertos.org/rtos-run-time-stats.html.  Only valid when configGENERATE_RUN_TIME_STATS is defined as 1 in FreeRTOSConfig.h. */
+	unsigned short usStackHighWaterMark;		/* The minimum amount of stack space that has remained for the task since the task was created.  The closer this value is to zero the closer the task has come to overflowing its stack. */
+} xTaskStatusType;
 
 /* Possible return values for eTaskConfirmSleepModeStatus(). */
 typedef enum
@@ -1072,64 +1086,6 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
 signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );
 
 /**
- * task. h
- * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
- *
- * configUSE_TRACE_FACILITY must be defined as 1 for this function to be
- * available.  See the configuration section for more information.
- *
- * NOTE: This function will disable interrupts for its duration.  It is
- * not intended for normal application runtime use but as a debug aid.
- *
- * Lists all the current tasks, along with their current state and stack
- * usage high water mark.
- *
- * Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or
- * suspended ('S').
- *
- * @param pcWriteBuffer A buffer into which the above mentioned details
- * will be written, in ascii form.  This buffer is assumed to be large
- * enough to contain the generated report.  Approximately 40 bytes per
- * task should be sufficient.
- *
- * \page vTaskList vTaskList
- * \ingroup TaskUtils
- */
-void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
-
-/**
- * task. h
- * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer );</PRE>
- *
- * configGENERATE_RUN_TIME_STATS must be defined as 1 for this function
- * to be available.  The application must also then provide definitions
- * for portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and
- * portGET_RUN_TIME_COUNTER_VALUE to configure a peripheral timer/counter
- * and return the timers current count value respectively.  The counter
- * should be at least 10 times the frequency of the tick count.
- *
- * NOTE: This function will disable interrupts for its duration.  It is
- * not intended for normal application runtime use but as a debug aid.
- *
- * Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total
- * accumulated execution time being stored for each task.  The resolution
- * of the accumulated time value depends on the frequency of the timer
- * configured by the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro.
- * Calling vTaskGetRunTimeStats() writes the total execution time of each
- * task into a buffer, both as an absolute count value and as a percentage
- * of the total system execution time.
- *
- * @param pcWriteBuffer A buffer into which the execution times will be
- * written, in ascii form.  This buffer is assumed to be large enough to
- * contain the generated report.  Approximately 40 bytes per task should
- * be sufficient.
- *
- * \page vTaskGetRunTimeStats vTaskGetRunTimeStats
- * \ingroup TaskUtils
- */
-void vTaskGetRunTimeStats( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
-
-/**
  * task.h
  * <PRE>unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask );</PRE>
  *
@@ -1197,6 +1153,205 @@ portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter
  * xTaskGetIdleTaskHandle() before the scheduler has been started.
  */
 xTaskHandle xTaskGetIdleTaskHandle( void );
+
+/**
+ * configUSE_TRACE_FACILITY must bet defined as 1 in FreeRTOSConfig.h for
+ * xTaskGetSystemState() to be available.
+ *
+ * xTaskGetSystemState() populates an xTaskStatusType structure for each task in
+ * the system.  xTaskStatusType structures contain, among other things, members 
+ * for the task handle, task name, task priority, task state, and total amount
+ * of run time consumed by the task.  See the xTaskStatusType structure 
+ * definition in this file for the full member list.
+ *
+ * NOTE:  This function is intended for debugging use only as its use results in
+ * the scheduler remaining suspended for an extended period.
+ *
+ * @param pxTaskStatusArray A pointer to an array of xTaskStatusType structures.  
+ * The array contain at least one xTaskStatusType structure for each task that 
+ * is under the control of the RTOS.  The number of tasks under the control of 
+ * the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
+ *
+ * @param uxArraySize The size of the array pointed to by the pxTaskStatusArray
+ * parameter.  The size is specified as the number of indexes in the array, or
+ * the number of xTaskStatusType structures contained in the array, not by the 
+ * number of bytes in the array.
+ *
+ * @param pultotalRunTime If configGENERATE_RUN_TIME_STATS is set to 1 in
+ * FreeRTOSConfig.h then *pulTotalRunTime is set by xTaskGetSystemState() to the
+ * total run time (as defined by the run time stats clock, see 
+ * http://www.freertos.org/rtos-run-time-stats.html) since the target booted.
+ *
+ * @return The number of xTaskStatusType structures that were populated by 
+ * xTaskGetSystemState().  This should equal the number returned by the
+ * uxTaskGetNumberOfTasks() API function, but will be zero if the value passed
+ * in the uxArraySize parameter was too small.
+ *
+ * Example usage:
+   <pre>
+    // This example demonstrates how a human readable table of run time stats
+	// information is generated from raw data provided by xTaskGetSystemState().
+	// The human readable table is written to pcWriteBuffer
+	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
+	{
+	xTaskStatusType *pxTaskStatusArray;
+	volatile unsigned portBASE_TYPE uxArraySize, x;
+	unsigned long ulTotalRunTime, ulStatsAsPercentage;
+
+		// Make sure the write buffer does not contain a string.
+		*pcWriteBuffer = 0x00;
+
+		// Take a snapshot of the number of tasks in case it changes while this
+		// function is executing.
+		uxArraySize = uxCurrentNumberOfTasks;
+
+		// Allocate a xTaskStatusType structure for each task.  An array could be
+		// allocated statically at compile time.
+		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
+
+		if( pxTaskStatusArray != NULL )
+		{
+			// Generate raw status information about each task.
+			uxArraySize = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
+
+			// For percentage calculations.
+			ulTotalRunTime /= 100UL;
+
+			// Avoid divide by zero errors.
+			if( ulTotalRunTime > 0 )
+			{
+				// For each populated position in the pxTaskStatusArray array, 
+				// format the raw data as human readable ASCII data
+				for( x = 0; x < uxArraySize; x++ )
+				{
+					/* What percentage of the total run time has the task used?
+					This will always be rounded down to the nearest integer.
+					ulTotalRunTimeDiv100 has already been divided by 100.
+					ulStatsAsPercentage = pxTaskStatusArray[ x ].ulRunTimeCounter / ulTotalRunTime;
+
+					if( ulStatsAsPercentage > 0UL )
+					{
+						sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
+					}
+					else
+					{
+						// If the percentage is zero here then the task has
+						// consumed less than 1% of the total run time. 
+						sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
+					}
+
+					pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
+				}
+			}
+
+			// The array is no longer needed, free the memory it consumes.
+			vPortFree( pxTaskStatusArray );
+		}
+	}
+	</pre>
+ */
+unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
+
+/**
+ * task. h
+ * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
+ *
+ * configUSE_TRACE_FACILITY and configINCLUDE_STATS_FORMATTING_FUNCTIONS must
+ * both be defined as 1 for this function to be available.  See the
+ * configuration section of the FreeRTOS.org website for more information.
+ *
+ * NOTE 1: This function will disable interrupts for its duration.  It is
+ * not intended for normal application runtime use but as a debug aid.
+ *
+ * Lists all the current tasks, along with their current state and stack
+ * usage high water mark.
+ *
+ * Tasks are reported as blocked ('B'), ready ('R'), deleted ('D') or
+ * suspended ('S').
+ *
+ * PLEASE NOTE:
+ *
+ * This function is provided for convenience only, and is used by many of the
+ * demo applications.  Do not consider it to be part of the scheduler.
+ *
+ * vTaskList() calls xTaskGetSystemState(), then formats part of the
+ * xTaskGetSystemState() output into a human readable table that displays task
+ * names, states and stack usage.
+ *
+ * vTaskList() has a dependency on the sprintf() C library function that might
+ * bloat the code size, use a lot of stack, and provide different results on
+ * different platforms.  An alternative, tiny, third party, and limited
+ * functionality implementation of sprintf() is provided in many of the
+ * FreeRTOS/Demo sub-directories in a file called printf-stdarg.c (note
+ * printf-stdarg.c does not provide a full snprintf() implementation!).
+ *
+ * It is recommended that production systems call xTaskGetSystemState()
+ * directly to get access to raw stats data, rather than indirectly through a
+ * call to vTaskList().
+ *
+ * @param pcWriteBuffer A buffer into which the above mentioned details
+ * will be written, in ascii form.  This buffer is assumed to be large
+ * enough to contain the generated report.  Approximately 40 bytes per
+ * task should be sufficient.
+ *
+ * \page vTaskList vTaskList
+ * \ingroup TaskUtils
+ */
+void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
+
+/**
+ * task. h
+ * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer );</PRE>
+ *
+ * configGENERATE_RUN_TIME_STATS and configINCLUDE_STATS_FORMATTING_FUNCTIONS
+ * must both be defined as 1 for this function to be available.  The application
+ * must also then provide definitions for
+ * portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and portGET_RUN_TIME_COUNTER_VALUE
+ * to configure a peripheral timer/counter and return the timers current count
+ * value respectively.  The counter should be at least 10 times the frequency of
+ * the tick count.
+ *
+ * NOTE 1: This function will disable interrupts for its duration.  It is
+ * not intended for normal application runtime use but as a debug aid.
+ *
+ * Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total
+ * accumulated execution time being stored for each task.  The resolution
+ * of the accumulated time value depends on the frequency of the timer
+ * configured by the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro.
+ * Calling vTaskGetRunTimeStats() writes the total execution time of each
+ * task into a buffer, both as an absolute count value and as a percentage
+ * of the total system execution time.
+ *
+ * NOTE 2:
+ *
+ * This function is provided for convenience only, and is used by many of the
+ * demo applications.  Do not consider it to be part of the scheduler.
+ *
+ * vTaskGetRunTimeStats() calls xTaskGetSystemState(), then formats part of the
+ * xTaskGetSystemState() output into a human readable table that displays the
+ * amount of time each task has spent in the Running state in both absolute and
+ * percentage terms.
+ *
+ * vTaskGetRunTimeStats() has a dependency on the sprintf() C library function
+ * that might bloat the code size, use a lot of stack, and provide different
+ * results on different platforms.  An alternative, tiny, third party, and
+ * limited functionality implementation of sprintf() is provided in many of the
+ * FreeRTOS/Demo sub-directories in a file called printf-stdarg.c (note
+ * printf-stdarg.c does not provide a full snprintf() implementation!).
+ *
+ * It is recommended that production systems call xTaskGetSystemState() directly
+ * to get access to raw stats data, rather than indirectly through a call to
+ * vTaskGetRunTimeStats().
+ *
+ * @param pcWriteBuffer A buffer into which the execution times will be
+ * written, in ascii form.  This buffer is assumed to be large enough to
+ * contain the generated report.  Approximately 40 bytes per task should
+ * be sufficient.
+ *
+ * \page vTaskGetRunTimeStats vTaskGetRunTimeStats
+ * \ingroup TaskUtils
+ */
+void vTaskGetRunTimeStats( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

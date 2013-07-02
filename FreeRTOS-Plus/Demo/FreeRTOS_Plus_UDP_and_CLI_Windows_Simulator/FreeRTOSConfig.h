@@ -145,6 +145,12 @@ to exclude the API function. */
 #define INCLUDE_xTaskGetIdleTaskHandle		0
 #define INCLUDE_xQueueGetMutexHolder		1
 
+/* This demo makes use of one or more example stats formatting functions.  These
+format the raw data provided by the xTaskGetSystemState() function in to human
+readable ASCII form.  See the notes in the implementation of vTaskList() within 
+FreeRTOS/Source/tasks.c for limitations. */
+#define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
+
 /* Assert call defined for debug builds. */
 #ifdef _DEBUG
 	extern void vAssertCalled( void );

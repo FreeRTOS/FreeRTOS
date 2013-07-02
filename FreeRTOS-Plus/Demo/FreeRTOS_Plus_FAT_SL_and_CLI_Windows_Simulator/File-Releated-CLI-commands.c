@@ -196,8 +196,8 @@ static const CLI_Command_Definition_t xCOPY =
 file system driver tests. */
 static const CLI_Command_Definition_t xTEST_FS =
 {
-	( const int8_t * const ) "testfs", /* The command string to type. */
-	( const int8_t * const ) "\r\ntest_fs:\r\n Executes some file system test.  ALL FILES WILL BE DELETED!!!\r\n",
+	( const int8_t * const ) "test-fs", /* The command string to type. */
+	( const int8_t * const ) "\r\ntest-fs:\r\n Executes file system tests.  ALL FILES WILL BE DELETED!!!\r\n",
 	prvTESTFSCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };

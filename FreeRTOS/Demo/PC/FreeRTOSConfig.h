@@ -124,6 +124,11 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark 0 /* Do not use this option on the PC port. */
 
+/* This demo makes use of one or more example stats formatting functions.  These
+format the raw data provided by the xTaskGetSystemState() function in to human
+readable ASCII form.  See the notes in the implementation of vTaskList() within 
+FreeRTOS/Source/tasks.c for limitations. */
+#define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
 
 /* An example "task switched in" hook macro definition. */
 #define traceTASK_SWITCHED_IN() xTaskCallApplicationTaskHook( NULL, ( void * ) 0xabcd )

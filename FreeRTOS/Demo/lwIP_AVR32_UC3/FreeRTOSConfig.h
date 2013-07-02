@@ -101,5 +101,11 @@ to exclude the API function. */
    0xA5 in order to be able to determine the maximal heap consumption. */
 #define configHEAP_INIT               0
 
+/* This demo makes use of one or more example stats formatting functions.  These
+format the raw data provided by the xTaskGetSystemState() function in to human
+readable ASCII form.  See the notes in the implementation of vTaskList() within 
+FreeRTOS/Source/tasks.c for limitations. */
+#define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
+
 
 #endif /* FREERTOS_CONFIG_H */

@@ -151,6 +151,11 @@
 			<locationURI>FreeRTOS_ROOT/FreeRTOS/Demo/Common/Minimal/GenQTest.c</locationURI>
 		</link>
 		<link>
+			<name>Source/Full-Demo/Common-Demo-Source/QueueOverwrite.c</name>
+			<type>1</type>
+			<locationURI>FreeRTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QueueOverwrite.c</locationURI>
+		</link>
+		<link>
 			<name>Source/Full-Demo/Common-Demo-Source/TimerDemo.c</name>
 			<type>1</type>
 			<locationURI>FreeRTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TimerDemo.c</locationURI>

@@ -148,7 +148,7 @@ typedef struct xTASK_PARAMTERS
 	xMemoryRegion xRegions[ portNUM_CONFIGURABLE_REGIONS ];
 } xTaskParameters;
 
-/* Used with the xTaskGetSystemState() function to return the state of each task 
+/* Used with the xTaskGetSystemState() function to return the state of each task
 in the system. */
 typedef struct xTASK_STATUS
 {
@@ -1159,30 +1159,30 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
  * xTaskGetSystemState() to be available.
  *
  * xTaskGetSystemState() populates an xTaskStatusType structure for each task in
- * the system.  xTaskStatusType structures contain, among other things, members 
+ * the system.  xTaskStatusType structures contain, among other things, members
  * for the task handle, task name, task priority, task state, and total amount
- * of run time consumed by the task.  See the xTaskStatusType structure 
+ * of run time consumed by the task.  See the xTaskStatusType structure
  * definition in this file for the full member list.
  *
  * NOTE:  This function is intended for debugging use only as its use results in
  * the scheduler remaining suspended for an extended period.
  *
- * @param pxTaskStatusArray A pointer to an array of xTaskStatusType structures.  
- * The array contain at least one xTaskStatusType structure for each task that 
- * is under the control of the RTOS.  The number of tasks under the control of 
+ * @param pxTaskStatusArray A pointer to an array of xTaskStatusType structures.
+ * The array contain at least one xTaskStatusType structure for each task that
+ * is under the control of the RTOS.  The number of tasks under the control of
  * the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
  *
  * @param uxArraySize The size of the array pointed to by the pxTaskStatusArray
  * parameter.  The size is specified as the number of indexes in the array, or
- * the number of xTaskStatusType structures contained in the array, not by the 
+ * the number of xTaskStatusType structures contained in the array, not by the
  * number of bytes in the array.
  *
  * @param pultotalRunTime If configGENERATE_RUN_TIME_STATS is set to 1 in
  * FreeRTOSConfig.h then *pulTotalRunTime is set by xTaskGetSystemState() to the
- * total run time (as defined by the run time stats clock, see 
+ * total run time (as defined by the run time stats clock, see
  * http://www.freertos.org/rtos-run-time-stats.html) since the target booted.
  *
- * @return The number of xTaskStatusType structures that were populated by 
+ * @return The number of xTaskStatusType structures that were populated by
  * xTaskGetSystemState().  This should equal the number returned by the
  * uxTaskGetNumberOfTasks() API function, but will be zero if the value passed
  * in the uxArraySize parameter was too small.
@@ -1220,13 +1220,13 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 			// Avoid divide by zero errors.
 			if( ulTotalRunTime > 0 )
 			{
-				// For each populated position in the pxTaskStatusArray array, 
+				// For each populated position in the pxTaskStatusArray array,
 				// format the raw data as human readable ASCII data
 				for( x = 0; x < uxArraySize; x++ )
 				{
-					/* What percentage of the total run time has the task used?
-					This will always be rounded down to the nearest integer.
-					ulTotalRunTimeDiv100 has already been divided by 100.
+					// What percentage of the total run time has the task used?
+					// This will always be rounded down to the nearest integer.
+					// ulTotalRunTimeDiv100 has already been divided by 100.
 					ulStatsAsPercentage = pxTaskStatusArray[ x ].ulRunTimeCounter / ulTotalRunTime;
 
 					if( ulStatsAsPercentage > 0UL )
@@ -1236,7 +1236,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 					else
 					{
 						// If the percentage is zero here then the task has
-						// consumed less than 1% of the total run time. 
+						// consumed less than 1% of the total run time.
 						sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
 					}
 

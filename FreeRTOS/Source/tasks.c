@@ -1176,6 +1176,7 @@ tskTCB * pxNewTCB;
 	unsigned portBASE_TYPE uxSavedInterruptStatus;
 
 		configASSERT( xTaskToResume );
+		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 		pxTCB = ( tskTCB * ) xTaskToResume;
 
@@ -1414,6 +1415,8 @@ portTickType xTaskGetTickCountFromISR( void )
 portTickType xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
 
+	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
+	
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	xReturn = xTickCount;
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );

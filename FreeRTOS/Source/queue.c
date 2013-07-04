@@ -940,6 +940,7 @@ xQUEUE *pxQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
 	configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
+	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 	/* Similar to xQueueGenericSend, except we don't block if there is no room
 	in the queue.  Also we don't directly wake a task that was blocked on a
@@ -1050,7 +1051,7 @@ xQUEUE *pxQueue;
 			the highest priority task wanting to access the queue. */
 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
 			{
-				/* Remember the read position in case the queue is only being 
+				/* Remember the read position in case the queue is only being
 				peeked. */
 				pcOriginalReadPosition = pxQueue->u.pcReadFrom;
 
@@ -1188,6 +1189,7 @@ xQUEUE *pxQueue;
 	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
@@ -1199,9 +1201,9 @@ xQUEUE *pxQueue;
 			prvCopyDataFromQueue( pxQueue, pvBuffer );
 			--( pxQueue->uxMessagesWaiting );
 
-			/* If the queue is locked the event list will not be modified.  
-			Instead update the lock count so the task that unlocks the queue 
-			will know that an ISR has removed data while the queue was 
+			/* If the queue is locked the event list will not be modified.
+			Instead update the lock count so the task that unlocks the queue
+			will know that an ISR has removed data while the queue was
 			locked. */
 			if( pxQueue->xRxLock == queueUNLOCKED )
 			{
@@ -1249,6 +1251,7 @@ xQUEUE *pxQueue;
 	pxQueue = ( xQUEUE * ) xQueue;
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) ) );
+	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
@@ -1388,9 +1391,9 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 		{
 			if( pxQueue->uxMessagesWaiting > 0 )
 			{
-				/* An item is not being added but overwritten, so subtract 
-				one from the recorded number of items in the queue so when 
-				one is added again below the number of recorded items remains 
+				/* An item is not being added but overwritten, so subtract
+				one from the recorded number of items in the queue so when
+				one is added again below the number of recorded items remains
 				correct. */
 				--( pxQueue->uxMessagesWaiting );
 			}

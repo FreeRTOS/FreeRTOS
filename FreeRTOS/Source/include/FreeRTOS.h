@@ -229,6 +229,9 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef configASSERT
 	#define configASSERT( x )
+	#define configASSERT_DEFINED 0
+#else
+	#define configASSERT_DEFINED 1
 #endif
 
 /* The timers module relies on xTaskGetSchedulerState(). */
@@ -590,6 +593,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef configINCLUDE_STATS_FORMATTING_FUNCTIONS
 	#define configINCLUDE_STATS_FORMATTING_FUNCTIONS 0
+#endif
+
+#ifndef portASSERT_IF_INTERRUPT_PRIORITY_INVALID
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
 #endif
 
 /* For backward compatability. */

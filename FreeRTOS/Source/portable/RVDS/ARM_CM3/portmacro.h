@@ -170,6 +170,13 @@ not necessary for to use this port.  They are defined so the common demo files
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 /*-----------------------------------------------------------*/
 
+#ifdef configASSERT
+	void vPortValidateInterruptPriority( void );
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() 	vPortValidateInterruptPriority()
+#else
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
+#endif
+
 /* portNOP() is not required by this port. */
 #define portNOP()
 

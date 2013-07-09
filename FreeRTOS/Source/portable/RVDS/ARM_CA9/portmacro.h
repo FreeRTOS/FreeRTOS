@@ -185,8 +185,6 @@ void vPortTaskUsesFPU( void );
 #ifdef configASSERT
 	void vPortValidateInterruptPriority( void );
 	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() 	vPortValidateInterruptPriority()
-#else
-	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
 #endif
 
 #define portNOP() __nop()

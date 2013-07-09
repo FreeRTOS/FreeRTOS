@@ -185,9 +185,7 @@
 	#ifdef configASSERT
 		void vPortValidateInterruptPriority( void );
 		#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() 	vPortValidateInterruptPriority()
-	#else
-		#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
-	#endif
+#endif
 
 	#define portNOP() __asm volatile( "NOP" )
 

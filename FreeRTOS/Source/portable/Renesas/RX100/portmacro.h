@@ -118,6 +118,10 @@ than portSTACK_TYPE and portBASE_TYPE. */
 #define portTICK_RATE_MS				( ( portTickType ) 1000 / configTICK_RATE_HZ )
 #define portNOP()						nop()
 
+#ifdef configASSERT
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( ( get_ipl() <= configMAX_SYSCALL_INTERRUPT_PRIORITY ) )
+#endif
+
 #pragma inline_asm vPortYield
 static void vPortYield( void )
 {

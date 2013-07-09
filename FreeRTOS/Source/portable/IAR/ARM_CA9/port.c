@@ -143,6 +143,10 @@ context. */
 #define portINTERRUPT_ENABLE_BIT		( 0x80UL )
 #define portTHUMB_MODE_ADDRESS			( 0x01UL )
 
+/* Used by portASSERT_IF_INTERRUPT_PRIORITY_INVALID() when ensuring the binary
+point is zero. */
+#define portBINARY_POINT_BITS			( ( unsigned char ) 0x03 )
+
 /* Masks all bits in the APSR other than the mode bits. */
 #define portAPSR_MODE_BITS_MASK			( 0x1F )
 
@@ -177,11 +181,6 @@ the scheduler starts.  As it is stored as part of the task context it will
 automatically be set to 0 when the first task is started. */
 volatile unsigned long ulCriticalNesting = 9999UL;
 
-/* The value to be written to the interrupt controllers priority mask register
-to mask interrupts that can use the FreeRTOS API without masking higher priority
-interrupts. */
-const unsigned long ulPortAPIPriorityMask = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
-
 /* Saved as part of the task context.  If ulPortTaskHasFPUContext is non-zero then
 a floating point context must be saved and restored for the task. */
 unsigned long ulPortTaskHasFPUContext = pdFALSE;
@@ -192,6 +191,7 @@ unsigned long ulPortYieldRequired = pdFALSE;
 /* Counts the interrupt nesting depth.  A context switch is only performed if
 if the nesting depth is 0. */
 unsigned long ulPortInterruptNesting = 0UL;
+
 
 /*-----------------------------------------------------------*/
 
@@ -282,15 +282,24 @@ unsigned long ulAPSR;
 
 	if( ulAPSR != portAPSR_USER_MODE )
 	{
-		/* Start the timer that generates the tick ISR. */
-		configSETUP_TICK_INTERRUPT();
+		/* Only continue if the binary point value is set to its lowest possible
+		setting.  See the comments in vPortValidateInterruptPriority() below for
+		more information. */
+		configASSERT( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE );
 
-		__enable_irq();
-		vPortRestoreTaskContext();
+		if( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE )
+		{
+			/* Start the timer that generates the tick ISR. */
+			configSETUP_TICK_INTERRUPT();
+
+			__enable_irq();
+			vPortRestoreTaskContext();
+		}
 	}
 
 	/* Will only get here if xTaskStartScheduler() was called with the CPU in
-	a non-privileged mode. */
+	a non-privileged mode or the binary point register was not set to its lowest
+	possible value. */
 	return 0;
 }
 /*-----------------------------------------------------------*/
@@ -340,7 +349,7 @@ void FreeRTOS_Tick_Handler( void )
 	handler runs at the lowest priority, so interrupts cannot already be masked,
 	so there is no need to save and restore the current mask value. */
 	__disable_irq();
-	portICCPMR_PRIORITY_MASK_REGISTER = ulPortAPIPriorityMask;
+	portICCPMR_PRIORITY_MASK_REGISTER = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 	__asm(	"DSB		\n"
 			"ISB		\n" );
 	__enable_irq();
@@ -383,7 +392,7 @@ unsigned long ulPortSetInterruptMask( void )
 unsigned long ulReturn;
 
 	__disable_irq();
-	if( portICCPMR_PRIORITY_MASK_REGISTER == ulPortAPIPriorityMask )
+	if( portICCPMR_PRIORITY_MASK_REGISTER == ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) )
 	{
 		/* Interrupts were already masked. */
 		ulReturn = pdTRUE;
@@ -391,7 +400,7 @@ unsigned long ulReturn;
 	else
 	{
 		ulReturn = pdFALSE;
-		portICCPMR_PRIORITY_MASK_REGISTER = ulPortAPIPriorityMask;
+		portICCPMR_PRIORITY_MASK_REGISTER = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 		__asm(	"DSB		\n"
 				"ISB		\n" );
 	}
@@ -399,5 +408,45 @@ unsigned long ulReturn;
 
 	return ulReturn;
 }
+/*-----------------------------------------------------------*/
+
+#if( configASSERT_DEFINED == 1 )
+
+	void vPortValidateInterruptPriority( void )
+	{
+		/* The following assertion will fail if a service routine (ISR) for
+		an interrupt that has been assigned a priority above
+		configMAX_SYSCALL_INTERRUPT_PRIORITY calls an ISR safe FreeRTOS API
+		function.  ISR safe FreeRTOS API functions must *only* be called
+		from interrupts that have been assigned a priority at or below
+		configMAX_SYSCALL_INTERRUPT_PRIORITY.
+
+		Numerically low interrupt priority numbers represent logically high
+		interrupt priorities, therefore the priority of the interrupt must
+		be set to a value equal to or numerically *higher* than
+		configMAX_SYSCALL_INTERRUPT_PRIORITY.
+
+		FreeRTOS maintains separate thread and ISR API functions to ensure
+		interrupt entry is as fast and simple as possible.
+
+		The following links provide detailed information:
+		http://www.freertos.org/RTOS-Cortex-M3-M4.html
+		http://www.freertos.org/FAQHelp.html */
+		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER >= ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
+
+		/* Priority grouping:  The interrupt controller (GIC) allows the bits
+		that define each interrupt's priority to be split between bits that
+		define the interrupt's pre-emption priority bits and bits that define
+		the interrupt's sub-priority.  For simplicity all bits must be defined
+		to be pre-emption priority bits.  The following assertion will fail if
+		this is not the case (if some bits represent a sub-priority).
+
+		The priority grouping is configured by the GIC's binary point register
+		(ICCBPR).  Writting 0 to ICCBPR will ensure it is set to its lowest
+		possible value (which may be above 0). */
+		configASSERT( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE );
+	}
+
+#endif /* configASSERT_DEFINED */
 
 

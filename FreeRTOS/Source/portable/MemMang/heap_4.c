@@ -95,8 +95,11 @@ task.h is included from an application file. */
 /* Block sizes must not get too small. */
 #define heapMINIMUM_BLOCK_SIZE	( ( size_t ) ( heapSTRUCT_SIZE * 2 ) )
 
+/* Assumes 8bit bytes! */
+#define heapBITS_PER_BYTE		( ( size_t ) 8 )
+
 /* A few bytes might be lost to byte aligning the heap start address. */
-#define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
+#define heapADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
 /* Allocate the memory for the heap. */
 static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
@@ -132,16 +135,20 @@ block must by correctly byte aligned. */
 static const unsigned short heapSTRUCT_SIZE	= ( ( sizeof ( xBlockLink ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~portBYTE_ALIGNMENT_MASK );
 
 /* Ensure the pxEnd pointer will end up on the correct byte alignment. */
-static const size_t xTotalHeapSize = ( ( size_t ) configADJUSTED_HEAP_SIZE ) & ( ( size_t ) ~portBYTE_ALIGNMENT_MASK );
+static const size_t xTotalHeapSize = ( ( size_t ) heapADJUSTED_HEAP_SIZE ) & ( ( size_t ) ~portBYTE_ALIGNMENT_MASK );
 
 /* Create a couple of list links to mark the start and end of the list. */
 static xBlockLink xStart, *pxEnd = NULL;
 
 /* Keeps track of the number of free bytes remaining, but says nothing about
 fragmentation. */
-static size_t xFreeBytesRemaining = ( ( size_t ) configADJUSTED_HEAP_SIZE ) & ( ( size_t ) ~portBYTE_ALIGNMENT_MASK );
+static size_t xFreeBytesRemaining = ( ( size_t ) heapADJUSTED_HEAP_SIZE ) & ( ( size_t ) ~portBYTE_ALIGNMENT_MASK );
 
-/* STATIC FUNCTIONS ARE DEFINED AS MACROS TO MINIMIZE THE FUNCTION CALL DEPTH. */
+/* Gets set to the top bit of an size_t type.  When this bit in the xBlockSize 
+member of an xBlockLink structure is set then the block belongs to the 
+application.  When the bit is free the block is still part of the free heap
+space. */
+static size_t xBlockAllocatedBit = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -159,63 +166,77 @@ void *pvReturn = NULL;
 			prvHeapInit();
 		}
 
-		/* The wanted size is increased so it can contain a xBlockLink
-		structure in addition to the requested amount of bytes. */
-		if( xWantedSize > 0 )
+		/* Check the requested block size is not so large that the top bit is
+		set.  The top bit of the block size member of the xBlockLink structure 
+		is used to determine who owns the block - the application or the
+		kernel, so it must be free. */
+		if( ( xWantedSize & xBlockAllocatedBit ) == 0 )
 		{
-			xWantedSize += heapSTRUCT_SIZE;
-
-			/* Ensure that blocks are always aligned to the required number of 
-			bytes. */
-			if( ( xWantedSize & portBYTE_ALIGNMENT_MASK ) != 0x00 )
+			/* The wanted size is increased so it can contain a xBlockLink
+			structure in addition to the requested amount of bytes. */
+			if( xWantedSize > 0 )
 			{
-				/* Byte alignment required. */
-				xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
-			}
-		}
+				xWantedSize += heapSTRUCT_SIZE;
 
-		if( ( xWantedSize > 0 ) && ( xWantedSize < xTotalHeapSize ) )
-		{
-			/* Traverse the list from the start	(lowest address) block until one
-			of adequate size is found. */
-			pxPreviousBlock = &xStart;
-			pxBlock = xStart.pxNextFreeBlock;
-			while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != NULL ) )
-			{
-				pxPreviousBlock = pxBlock;
-				pxBlock = pxBlock->pxNextFreeBlock;
-			}
-
-			/* If the end marker was reached then a block of adequate size was
-			not found. */
-			if( pxBlock != pxEnd )
-			{
-				/* Return the memory space - jumping over the xBlockLink structure
-				at its start. */
-				pvReturn = ( void * ) ( ( ( unsigned char * ) pxPreviousBlock->pxNextFreeBlock ) + heapSTRUCT_SIZE );
-
-				/* This block is being returned for use so must be taken out of
-				the	list of free blocks. */
-				pxPreviousBlock->pxNextFreeBlock = pxBlock->pxNextFreeBlock;
-
-				/* If the block is larger than required it can be split into two. */
-				if( ( pxBlock->xBlockSize - xWantedSize ) > heapMINIMUM_BLOCK_SIZE )
+				/* Ensure that blocks are always aligned to the required number 
+				of bytes. */
+				if( ( xWantedSize & portBYTE_ALIGNMENT_MASK ) != 0x00 )
 				{
-					/* This block is to be split into two.  Create a new block
-					following the number of bytes requested. The void cast is
-					used to prevent byte alignment warnings from the compiler. */
-					pxNewBlockLink = ( void * ) ( ( ( unsigned char * ) pxBlock ) + xWantedSize );
+					/* Byte alignment required. */
+					xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
+				}
+			}
 
-					/* Calculate the sizes of two blocks split from the single
-					block. */
-					pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
-					pxBlock->xBlockSize = xWantedSize;
-
-					/* Insert the new block into the list of free blocks. */
-					prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
+			if( ( xWantedSize > 0 ) && ( xWantedSize <= xFreeBytesRemaining ) )
+			{
+				/* Traverse the list from the start	(lowest address) block until 
+				one	of adequate size is found. */
+				pxPreviousBlock = &xStart;
+				pxBlock = xStart.pxNextFreeBlock;
+				while( ( pxBlock->xBlockSize < xWantedSize ) && ( pxBlock->pxNextFreeBlock != NULL ) )
+				{
+					pxPreviousBlock = pxBlock;
+					pxBlock = pxBlock->pxNextFreeBlock;
 				}
 
-				xFreeBytesRemaining -= pxBlock->xBlockSize;
+				/* If the end marker was reached then a block of adequate size 
+				was	not found. */
+				if( pxBlock != pxEnd )
+				{
+					/* Return the memory space pointed to - jumping over the 
+					xBlockLink structure at its start. */
+					pvReturn = ( void * ) ( ( ( unsigned char * ) pxPreviousBlock->pxNextFreeBlock ) + heapSTRUCT_SIZE );
+
+					/* This block is being returned for use so must be taken out 
+					of the list of free blocks. */
+					pxPreviousBlock->pxNextFreeBlock = pxBlock->pxNextFreeBlock;
+
+					/* If the block is larger than required it can be split into 
+					two. */
+					if( ( pxBlock->xBlockSize - xWantedSize ) > heapMINIMUM_BLOCK_SIZE )
+					{
+						/* This block is to be split into two.  Create a new 
+						block following the number of bytes requested. The void 
+						cast is used to prevent byte alignment warnings from the 
+						compiler. */
+						pxNewBlockLink = ( void * ) ( ( ( unsigned char * ) pxBlock ) + xWantedSize );
+
+						/* Calculate the sizes of two blocks split from the 
+						single block. */
+						pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+						pxBlock->xBlockSize = xWantedSize;
+
+						/* Insert the new block into the list of free blocks. */
+						prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
+					}
+
+					xFreeBytesRemaining -= pxBlock->xBlockSize;
+
+					/* The block is being returned - it is allocated and owned
+					by the application and has no "next" block. */
+					pxBlock->xBlockSize |= xBlockAllocatedBit;
+					pxBlock->pxNextFreeBlock = NULL;
+				}
 			}
 		}
 	}
@@ -249,13 +270,27 @@ xBlockLink *pxLink;
 		/* This casting is to keep the compiler from issuing warnings. */
 		pxLink = ( void * ) puc;
 
-		vTaskSuspendAll();
+		/* Check the block is actually allocated. */
+		configASSERT( ( pxLink->xBlockSize & xBlockAllocatedBit ) != 0 );
+		configASSERT( pxLink->pxNextFreeBlock == NULL );
+		
+		if( ( pxLink->xBlockSize & xBlockAllocatedBit ) != 0 )
 		{
-			/* Add this block to the list of free blocks. */
-			xFreeBytesRemaining += pxLink->xBlockSize;
-			prvInsertBlockIntoFreeList( ( ( xBlockLink * ) pxLink ) );			
+			if( pxLink->pxNextFreeBlock == NULL )
+			{
+				/* The block is being returned to the heap - it is no longer
+				allocated. */
+				pxLink->xBlockSize &= ~xBlockAllocatedBit;
+
+				vTaskSuspendAll();
+				{
+					/* Add this block to the list of free blocks. */
+					xFreeBytesRemaining += pxLink->xBlockSize;
+					prvInsertBlockIntoFreeList( ( ( xBlockLink * ) pxLink ) );
+				}
+				xTaskResumeAll();
+			}
 		}
-		xTaskResumeAll();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -302,6 +337,9 @@ unsigned char *pucHeapEnd, *pucAlignedHeap;
 
 	/* The heap now contains pxEnd. */
 	xFreeBytesRemaining -= heapSTRUCT_SIZE;
+
+	/* Work out the position of the top bit in a size_t variable. */
+	xBlockAllocatedBit = ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * heapBITS_PER_BYTE ) - 1 );
 }
 /*-----------------------------------------------------------*/
 

@@ -182,6 +182,13 @@ void vPortTaskUsesFPU( void );
 
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 
+#ifdef configASSERT
+	void vPortValidateInterruptPriority( void );
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() 	vPortValidateInterruptPriority()
+#else
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
+#endif
+
 #define portNOP() __nop()
 
 #ifdef __cplusplus

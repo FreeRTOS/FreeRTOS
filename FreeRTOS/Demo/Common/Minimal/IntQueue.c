@@ -245,8 +245,6 @@ void vStartInterruptQueueTasks( void )
 	interrupts. */
 	xNormallyFullQueue = xQueueCreate( intqQUEUE_LENGTH, ( unsigned portBASE_TYPE ) sizeof( unsigned portBASE_TYPE ) );
 	xNormallyEmptyQueue = xQueueCreate( intqQUEUE_LENGTH, ( unsigned portBASE_TYPE ) sizeof( unsigned portBASE_TYPE ) );
-//	vTraceSetQueueName( xNormallyFullQueue, "NF" );
-//	vTraceSetQueueName( xNormallyEmptyQueue, "NE" );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware

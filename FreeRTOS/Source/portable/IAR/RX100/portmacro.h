@@ -120,6 +120,10 @@ portSTACK_TYPE and portBASE_TYPE. */
 #define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
 #define portNOP()					__no_operation()
 
+#ifdef configASSERT
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( ( __get_interrupt_level() <= configMAX_SYSCALL_INTERRUPT_PRIORITY ) )
+#endif
+
 #define portYIELD()							\
 	__asm volatile							\
 	(										\
@@ -133,10 +137,15 @@ portSTACK_TYPE and portBASE_TYPE. */
 
 /*
  * These macros should be called directly, but through the taskENTER_CRITICAL()
- * and taskEXIT_CRITICAL() macros.
+ * and taskEXIT_CRITICAL() macros.  If the RTOS is being used correctly then
+ * the check to ensure the IPL is not being lowered will not be needed.  It is
+ * included to ensure assert()s triggered by using an incorrect interrupt
+ * priority do not result in the assert() handler inadvertently lowering the
+ * priority mask, and in so doing allowing the offending interrupt to continue
+ * triggering until stack space is exhausted.
  */
 #define portENABLE_INTERRUPTS() 	__set_interrupt_level( ( unsigned char ) 0 )
-#define portDISABLE_INTERRUPTS() 	__set_interrupt_level( ( unsigned char ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portDISABLE_INTERRUPTS() 	if( __get_interrupt_level() < configMAX_SYSCALL_INTERRUPT_PRIORITY ) __set_interrupt_level( ( unsigned char ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )

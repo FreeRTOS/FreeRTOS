@@ -142,10 +142,15 @@ static void vPortYield( void )
 
 /*
  * These macros should be called directly, but through the taskENTER_CRITICAL()
- * and taskEXIT_CRITICAL() macros.
+ * and taskEXIT_CRITICAL() macros.  If the RTOS is being used correctly then
+ * the check to ensure the IPL is not being lowered will not be needed.  It is
+ * included to ensure assert()s triggered by using an incorrect interrupt
+ * priority do not result in the assert() handler inadvertently lowering the
+ * priority mask, and in so doing allowing the offending interrupt to continue
+ * triggering until stack space is exhausted.
  */
 #define portENABLE_INTERRUPTS() 	set_ipl( 0 )
-#define portDISABLE_INTERRUPTS() 	set_ipl( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#define portDISABLE_INTERRUPTS() 	if( get_ipl() < configMAX_SYSCALL_INTERRUPT_PRIORITY ) set_ipl( ( unsigned char ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )

@@ -122,20 +122,40 @@ extern "C" {
 #define portSW0_BIT					( 0x01 << 8 )
 
 /* This clears the IPL bits, then sets them to 
-configMAX_SYSCALL_INTERRUPT_PRIORITY.  This function should not be called
-from an interrupt, so therefore will not be called with an IPL setting
-above configMAX_SYSCALL_INTERRUPT_PRIORITY.  Therefore, when used correctly, the 
-instructions in this macro can only result in the IPL being raised, and 
-therefore never lowered. */
-#define portDISABLE_INTERRUPTS()										\
-{																		\
-unsigned long ulStatus;													\
-																		\
-	/* Mask interrupts at and below the kernel interrupt priority. */	\
-	ulStatus = _CP0_GET_STATUS();										\
-	ulStatus &= ~portALL_IPL_BITS;										\
-	_CP0_SET_STATUS( ( ulStatus | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) ); \
-}
+configMAX_SYSCALL_INTERRUPT_PRIORITY.  	An extra check is performed if 
+configASSERT() is defined to ensure an assertion handler does not inadvertently 
+attempt to lower the IPL when the call to assert was triggered because the IPL 
+value was found to be above	configMAX_SYSCALL_INTERRUPT_PRIORITY when an ISR
+safe FreeRTOS API function was executed.  ISR safe FreeRTOS API functions are
+those that end in FromISR.  FreeRTOS maintains a separate interrupt API to
+ensure API function and interrupt entry is as fast and as simple as possible. */
+
+#ifdef configASSERT
+	#define portDISABLE_INTERRUPTS()											\
+	{																			\
+	unsigned long ulStatus;														\
+																				\
+		/* Mask interrupts at and below the kernel interrupt priority. */		\
+		ulStatus = _CP0_GET_STATUS();											\
+																				\
+		/* Is the current IPL below configMAX_SYSCALL_INTERRUPT_PRIORITY? */	\
+		if( ( ( ulStatus & portALL_IPL_BITS ) >> portIPL_SHIFT ) < configMAX_SYSCALL_INTERRUPT_PRIORITY )	\
+		{																		\
+			ulStatus &= ~portALL_IPL_BITS;										\
+			_CP0_SET_STATUS( ( ulStatus | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) ); \
+		}																		\
+	}
+#else
+	#define portDISABLE_INTERRUPTS()										\
+	{																		\
+	unsigned long ulStatus;													\
+																			\
+		/* Mask interrupts at and below the kernel interrupt priority. */	\
+		ulStatus = _CP0_GET_STATUS();										\
+		ulStatus &= ~portALL_IPL_BITS;										\
+		_CP0_SET_STATUS( ( ulStatus | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) ); \
+	}
+#endif /* configASSERT */
 
 #define portENABLE_INTERRUPTS()											\
 {																		\
@@ -189,6 +209,11 @@ unsigned long ulStatus;							\
 	ulStatus |= portSW0_BIT;					\
 	_CP0_SET_CAUSE( ulStatus );					\
 }
+
+#ifdef configASSERT
+	#define portCURRENT_INTERRUPT_PRIORITY ( ( _CP0_GET_STATUS() & portALL_IPL_BITS ) >> portIPL_SHIFT )
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( portCURRENT_INTERRUPT_PRIORITY <= configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#endif /* configASSERT */
 
 
 #define portNOP()	asm volatile ( 	"nop" )

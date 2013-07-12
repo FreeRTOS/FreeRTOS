@@ -135,6 +135,12 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 
+/* Prevent C specific syntax being included in assembly files. */
+#ifndef __LANGUAGE_ASSEMBLY
+	void vAssertCalled( const char *pcFileName, unsigned long ulLine );
+	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
+#endif
+
 /* The priority at which the tick interrupt runs.  This should probably be
 kept at 1. */
 #define configKERNEL_INTERRUPT_PRIORITY			0x01

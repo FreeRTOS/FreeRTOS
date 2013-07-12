@@ -4,8 +4,8 @@
   <defaultConf>1</defaultConf>
   <confs>
     <conf name="EXPLORER_16_PIC32MX360" type="2">
-      <platformToolSN>:=MPLABCommUSB:=04D8:=9004:=0100:=Microchip Technology, Inc. (www.microchip.com):=MPLAB REAL ICE tm (www.microchip.com):=JIT092790085:=x:=en</platformToolSN>
-      <languageToolchainDir>C:\Program Files (x86)\Microchip\xc32\v1.00\bin</languageToolchainDir>
+      <platformToolSN></platformToolSN>
+      <languageToolchainDir>C:\devtools\Microchip\xc32\v1.21\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
@@ -23,7 +23,7 @@
     </conf>
     <conf name="EXPLORER_16_PIC32MX460" type="2">
       <platformToolSN>:=MPLABCommUSB:=04D8:=9009:=0100:=Microchip Technology, Inc. (www.microchip.com):=MPLAB ICD3 tm (www.microchip.com):=JIT112942201:=x:=en</platformToolSN>
-      <languageToolchainDir>C:\devtools\Microchip\xc32\v1.00\bin</languageToolchainDir>
+      <languageToolchainDir>C:\devtools\Microchip\xc32\v1.21\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
@@ -40,8 +40,8 @@
       </runprofile>
     </conf>
     <conf name="EXPLORER_16_PIC32MX795" type="2">
-      <platformToolSN>:=MPLABCommUSB:=04D8:=9004:=0100:=Microchip Technology, Inc. (www.microchip.com):=MPLAB REAL ICE tm (www.microchip.com):=JIT092790085:=x:=en</platformToolSN>
-      <languageToolchainDir>C:\Program Files (x86)\Microchip\xc32\v1.00\bin</languageToolchainDir>
+      <platformToolSN></platformToolSN>
+      <languageToolchainDir>C:\devtools\Microchip\xc32\v1.21\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>

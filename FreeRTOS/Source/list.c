@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -81,7 +81,7 @@
  * PUBLIC LIST API documented in list.h
  *----------------------------------------------------------*/
 
-void vListInitialise( xList *pxList )
+void vListInitialise( xList * const pxList )
 {
 	/* The list structure contains a list item which is used to mark the
 	end of the list.  To initialise the list the list end is inserted
@@ -101,16 +101,16 @@ void vListInitialise( xList *pxList )
 }
 /*-----------------------------------------------------------*/
 
-void vListInitialiseItem( xListItem *pxItem )
+void vListInitialiseItem( xListItem * const pxItem )
 {
 	/* Make sure the list item is not recorded as being on a list. */
 	pxItem->pvContainer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vListInsertEnd( xList *pxList, xListItem *pxNewListItem )
+void vListInsertEnd( xList * const pxList, xListItem * const pxNewListItem )
 {
-volatile xListItem * pxIndex;
+xListItem * pxIndex;
 
 	/* Insert a new list item into pxList, but rather than sort the list,
 	makes the new list item the last item to be removed by a call to
@@ -119,8 +119,8 @@ volatile xListItem * pxIndex;
 
 	pxNewListItem->pxNext = pxIndex;
 	pxNewListItem->pxPrevious = pxIndex->pxPrevious;
-	pxIndex->pxPrevious->pxNext = ( volatile xListItem * ) pxNewListItem;
-	pxIndex->pxPrevious = ( volatile xListItem * ) pxNewListItem;	
+	pxIndex->pxPrevious->pxNext = pxNewListItem;
+	pxIndex->pxPrevious = pxNewListItem;
 
 	/* Remember which list the item is in. */
 	pxNewListItem->pvContainer = ( void * ) pxList;
@@ -129,9 +129,9 @@ volatile xListItem * pxIndex;
 }
 /*-----------------------------------------------------------*/
 
-void vListInsert( xList *pxList, xListItem *pxNewListItem )
+void vListInsert( xList * const pxList, xListItem * const pxNewListItem )
 {
-volatile xListItem *pxIterator;
+xListItem *pxIterator;
 portTickType xValueOfInsertion;
 
 	/* Insert the new list item into the list, sorted in ulListItem order. */
@@ -175,9 +175,9 @@ portTickType xValueOfInsertion;
 	}
 
 	pxNewListItem->pxNext = pxIterator->pxNext;
-	pxNewListItem->pxNext->pxPrevious = ( volatile xListItem * ) pxNewListItem;
+	pxNewListItem->pxNext->pxPrevious = pxNewListItem;
 	pxNewListItem->pxPrevious = pxIterator;
-	pxIterator->pxNext = ( volatile xListItem * ) pxNewListItem;
+	pxIterator->pxNext = pxNewListItem;
 
 	/* Remember which list the item is in.  This allows fast removal of the
 	item later. */
@@ -187,7 +187,7 @@ portTickType xValueOfInsertion;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxListRemove( xListItem *pxItemToRemove )
+unsigned portBASE_TYPE uxListRemove( xListItem * const pxItemToRemove )
 {
 xList * pxList;
 

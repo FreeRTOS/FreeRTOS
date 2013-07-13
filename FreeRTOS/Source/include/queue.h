@@ -928,7 +928,7 @@ signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvB
  *
  * @return The number of messages available in the queue.
  *
- * \page uxQueueMessagesWaiting uxQueueMessagesWaiting
+ * \defgroup uxQueueMessagesWaiting uxQueueMessagesWaiting
  * \ingroup QueueManagement
  */
 unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
@@ -942,7 +942,7 @@ unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue ) PRIVI
  *
  * @param xQueue A handle to the queue to be deleted.
  *
- * \page vQueueDelete vQueueDelete
+ * \defgroup vQueueDelete vQueueDelete
  * \ingroup QueueManagement
  */
 void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;

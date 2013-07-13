@@ -770,7 +770,7 @@ typedef xQueueHandle xSemaphoreHandle;
  *
  * @param xSemaphore A handle to the semaphore to be deleted.
  *
- * \page vSemaphoreDelete vSemaphoreDelete
+ * \defgroup vSemaphoreDelete vSemaphoreDelete
  * \ingroup Semaphores
  */
 #define vSemaphoreDelete( xSemaphore ) vQueueDelete( ( xQueueHandle ) ( xSemaphore ) )

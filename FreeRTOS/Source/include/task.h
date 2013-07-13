@@ -100,7 +100,7 @@ extern "C" {
  * returns (via a pointer parameter) an xTaskHandle variable that can then
  * be used as a parameter to vTaskDelete to delete the task.
  *
- * \page xTaskHandle xTaskHandle
+ * \defgroup xTaskHandle xTaskHandle
  * \ingroup Tasks
  */
 typedef void * xTaskHandle;
@@ -183,7 +183,7 @@ typedef enum
  *
  * Macro for forcing a context switch.
  *
- * \page taskYIELD taskYIELD
+ * \defgroup taskYIELD taskYIELD
  * \ingroup SchedulerControl
  */
 #define taskYIELD()					portYIELD()
@@ -197,7 +197,7 @@ typedef enum
  * NOTE: This may alter the stack (depending on the portable implementation)
  * so must be used with care!
  *
- * \page taskENTER_CRITICAL taskENTER_CRITICAL
+ * \defgroup taskENTER_CRITICAL taskENTER_CRITICAL
  * \ingroup SchedulerControl
  */
 #define taskENTER_CRITICAL()		portENTER_CRITICAL()
@@ -211,7 +211,7 @@ typedef enum
  * NOTE: This may alter the stack (depending on the portable implementation)
  * so must be used with care!
  *
- * \page taskEXIT_CRITICAL taskEXIT_CRITICAL
+ * \defgroup taskEXIT_CRITICAL taskEXIT_CRITICAL
  * \ingroup SchedulerControl
  */
 #define taskEXIT_CRITICAL()			portEXIT_CRITICAL()
@@ -221,7 +221,7 @@ typedef enum
  *
  * Macro to disable all maskable interrupts.
  *
- * \page taskDISABLE_INTERRUPTS taskDISABLE_INTERRUPTS
+ * \defgroup taskDISABLE_INTERRUPTS taskDISABLE_INTERRUPTS
  * \ingroup SchedulerControl
  */
 #define taskDISABLE_INTERRUPTS()	portDISABLE_INTERRUPTS()
@@ -231,7 +231,7 @@ typedef enum
  *
  * Macro to enable microcontroller interrupts.
  *
- * \page taskENABLE_INTERRUPTS taskENABLE_INTERRUPTS
+ * \defgroup taskENABLE_INTERRUPTS taskENABLE_INTERRUPTS
  * \ingroup SchedulerControl
  */
 #define taskENABLE_INTERRUPTS()		portENABLE_INTERRUPTS()
@@ -1036,7 +1036,7 @@ signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask ) PRIVILEGED_FUNCTI
  *
  * @return The count of ticks since vTaskStartScheduler was called.
  *
- * \page xTaskGetTickCount xTaskGetTickCount
+ * \defgroup xTaskGetTickCount xTaskGetTickCount
  * \ingroup TaskUtils
  */
 portTickType xTaskGetTickCount( void ) PRIVILEGED_FUNCTION;
@@ -1052,7 +1052,7 @@ portTickType xTaskGetTickCount( void ) PRIVILEGED_FUNCTION;
  * microcontroller being used or interrupt nesting is either not supported or
  * not being used.
  *
- * \page xTaskGetTickCount xTaskGetTickCount
+ * \defgroup xTaskGetTickCount xTaskGetTickCount
  * \ingroup TaskUtils
  */
 portTickType xTaskGetTickCountFromISR( void ) PRIVILEGED_FUNCTION;
@@ -1066,7 +1066,7 @@ portTickType xTaskGetTickCountFromISR( void ) PRIVILEGED_FUNCTION;
  * has been deleted but not yet freed by the idle task will also be
  * included in the count.
  *
- * \page uxTaskGetNumberOfTasks uxTaskGetNumberOfTasks
+ * \defgroup uxTaskGetNumberOfTasks uxTaskGetNumberOfTasks
  * \ingroup TaskUtils
  */
 unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
@@ -1080,7 +1080,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
  * handle, or by setting xTaskToQuery to NULL.  INCLUDE_pcTaskGetTaskName must be
  * set to 1 in FreeRTOSConfig.h for pcTaskGetTaskName() to be available.
  *
- * \page pcTaskGetTaskName pcTaskGetTaskName
+ * \defgroup pcTaskGetTaskName pcTaskGetTaskName
  * \ingroup TaskUtils
  */
 signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );
@@ -1294,7 +1294,7 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * enough to contain the generated report.  Approximately 40 bytes per
  * task should be sufficient.
  *
- * \page vTaskList vTaskList
+ * \defgroup vTaskList vTaskList
  * \ingroup TaskUtils
  */
 void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
@@ -1348,7 +1348,7 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * contain the generated report.  Approximately 40 bytes per task should
  * be sufficient.
  *
- * \page vTaskGetRunTimeStats vTaskGetRunTimeStats
+ * \defgroup vTaskGetRunTimeStats vTaskGetRunTimeStats
  * \ingroup TaskUtils
  */
 void vTaskGetRunTimeStats( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;

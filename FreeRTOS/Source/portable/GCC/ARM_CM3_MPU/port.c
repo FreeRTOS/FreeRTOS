@@ -203,6 +203,7 @@ unsigned portBASE_TYPE MPU_uxTaskGetStackHighWaterMark( xTaskHandle xTask );
 xTaskHandle MPU_xTaskGetCurrentTaskHandle( void );
 portBASE_TYPE MPU_xTaskGetSchedulerState( void );
 xTaskHandle MPU_xTaskGetIdleTaskHandle( void );
+unsigned portBASE_TYPE MPU_xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
 xQueueHandle MPU_xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType );
 signed portBASE_TYPE MPU_xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 portBASE_TYPE MPU_xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue );
@@ -224,6 +225,7 @@ xQueueSetHandle MPU_xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength )
 xQueueSetMemberHandle MPU_xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks );
 portBASE_TYPE MPU_xQueueAddToSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
 portBASE_TYPE MPU_xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQueueSetHandle xQueueSet );
+signed portBASE_TYPE MPU_xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuffer );
 
 /*-----------------------------------------------------------*/
 
@@ -917,6 +919,19 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( configUSE_TRACE_FACILITY == 1 )
+	unsigned portBASE_TYPE MPU_xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
+	{
+	unsigned portBASE_TYPE uxReturn;
+	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+
+		uxReturn = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, pulTotalRunTime );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( INCLUDE_uxTaskGetStackHighWaterMark == 1 )
 	unsigned portBASE_TYPE MPU_uxTaskGetStackHighWaterMark( xTaskHandle xTask )
 	{
@@ -1006,6 +1021,17 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 signed portBASE_TYPE xReturn;
 
 	xReturn = xQueueGenericReceive( pxQueue, pvBuffer, xTicksToWait, xJustPeeking );
+	portRESET_PRIVILEGE( xRunningPrivileged );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+signed portBASE_TYPE MPU_xQueuePeekFromISR( xQueueHandle pxQueue, void * const pvBuffer )
+{
+portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
+signed portBASE_TYPE xReturn;
+
+	xReturn = xQueuePeekFromISR( pxQueue, pvBuffer );
 	portRESET_PRIVILEGE( xRunningPrivileged );
 	return xReturn;
 }
@@ -1226,3 +1252,4 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 #if configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS == 1
 	#include "application_defined_privileged_functions.h"
 #endif
+

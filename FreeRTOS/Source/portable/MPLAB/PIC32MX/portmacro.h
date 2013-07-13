@@ -129,7 +129,6 @@ value was found to be above	configMAX_SYSCALL_INTERRUPT_PRIORITY when an ISR
 safe FreeRTOS API function was executed.  ISR safe FreeRTOS API functions are
 those that end in FromISR.  FreeRTOS maintains a separate interrupt API to
 ensure API function and interrupt entry is as fast and as simple as possible. */
-
 #ifdef configASSERT
 	#define portDISABLE_INTERRUPTS()											\
 	{																			\
@@ -145,7 +144,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 			_CP0_SET_STATUS( ( ulStatus | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) ); \
 		}																		\
 	}
-#else
+#else /* configASSERT */
 	#define portDISABLE_INTERRUPTS()										\
 	{																		\
 	unsigned long ulStatus;													\

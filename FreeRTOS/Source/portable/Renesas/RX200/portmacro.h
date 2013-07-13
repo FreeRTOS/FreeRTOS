@@ -118,10 +118,6 @@ portSTACK_TYPE and portBASE_TYPE. */
 #define portTICK_RATE_MS				( ( portTickType ) 1000 / configTICK_RATE_HZ )		
 #define portNOP()						nop()
 
-#ifdef configASSERT
-	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( ( get_ipl() <= configMAX_SYSCALL_INTERRUPT_PRIORITY ) )
-#endif
-
 #pragma inline_asm vPortYield
 static void vPortYield( void )
 {
@@ -140,17 +136,22 @@ static void vPortYield( void )
 #define portYIELD()	vPortYield()
 #define portYIELD_FROM_ISR( x )	if( x != pdFALSE ) portYIELD()
 
-/*
- * These macros should be called directly, but through the taskENTER_CRITICAL()
- * and taskEXIT_CRITICAL() macros.  If the RTOS is being used correctly then
- * the check to ensure the IPL is not being lowered will not be needed.  It is
- * included to ensure assert()s triggered by using an incorrect interrupt
- * priority do not result in the assert() handler inadvertently lowering the
- * priority mask, and in so doing allowing the offending interrupt to continue
- * triggering until stack space is exhausted.
- */
-#define portENABLE_INTERRUPTS() 	set_ipl( 0 )
-#define portDISABLE_INTERRUPTS() 	if( get_ipl() < configMAX_SYSCALL_INTERRUPT_PRIORITY ) set_ipl( ( unsigned char ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
+/* These macros should not be called directly, but through the 
+taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros.  An extra check is 
+performed if configASSERT() is defined to ensure an assertion handler does not 
+inadvertently attempt to lower the IPL when the call to assert was triggered 
+because the IPL value was found to be above	configMAX_SYSCALL_INTERRUPT_PRIORITY 
+when an ISR safe FreeRTOS API function was executed.  ISR safe FreeRTOS API 
+functions are those that end in FromISR.  FreeRTOS maintains a separate 
+interrupt API to ensure API function and interrupt entry is as fast and as 
+simple as possible. */
+#define portENABLE_INTERRUPTS() 	set_ipl( ( long ) 0 )
+#ifdef configASSERT
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( ( get_ipl() <= configMAX_SYSCALL_INTERRUPT_PRIORITY ) )
+	#define portDISABLE_INTERRUPTS() 	if( get_ipl() < configMAX_SYSCALL_INTERRUPT_PRIORITY ) set_ipl( ( long ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#else
+	#define portDISABLE_INTERRUPTS() 	set_ipl( ( long ) configMAX_SYSCALL_INTERRUPT_PRIORITY )
+#endif
 
 /* Critical nesting counts are stored in the TCB. */
 #define portCRITICAL_NESTING_IN_TCB ( 1 )

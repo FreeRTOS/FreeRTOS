@@ -99,7 +99,7 @@ static xQueueHandle xRxedChars;
 static xQueueHandle xCharsForTx; 
 
 /* Flag used to indicate the tx status. */
-static portBASE_TYPE xTxHasEnded;
+static volatile portBASE_TYPE xTxHasEnded;
 
 /*-----------------------------------------------------------*/
 
@@ -151,21 +151,30 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
+signed portBASE_TYPE xReturn;
+
 	/* Only one port is supported. */
 	( void ) pxPort;
 
 	/* Return false if after the block time there is no room on the Tx queue. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 	{
-		return pdFAIL;
+		xReturn = pdFAIL;
+	}
+	else
+	{
+		xReturn = pdPASS;
 	}
 
-	/* A critical section should not be required as xTxHasEnded will not be
-	written to by the ISR if it is already 0 (is this correct?). */
-	if( xTxHasEnded )
+	if( xReturn != pdFAIL )
 	{
-		xTxHasEnded = pdFALSE;
-		IFS1SET = _IFS1_U2TXIF_MASK;
+		/* A critical section should not be required as xTxHasEnded will not be
+		written to by the ISR if it is already 0. */
+		if(  xTxHasEnded == pdTRUE )
+		{
+			xTxHasEnded = pdFALSE;
+			IFS1SET = _IFS1_U2TXIF_MASK;
+		}
 	}
 
 	return pdPASS;
@@ -201,7 +210,7 @@ static portBASE_TYPE xHigherPriorityTaskWoken;
 	/* Are any Tx interrupts pending? */
 	if( IFS1bits.U2TXIF == 1 )
 	{
-		while( !( U2STAbits.UTXBF ) )
+		while( ( U2STAbits.UTXBF ) == 0 )
 		{
 			if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
 			{

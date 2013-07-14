@@ -201,12 +201,12 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 
 #define portYIELD()								\
 {												\
-unsigned long ulStatus;							\
+unsigned long ulCause;							\
 												\
 	/* Trigger software interrupt. */			\
-	ulStatus = _CP0_GET_CAUSE();				\
-	ulStatus |= portSW0_BIT;					\
-	_CP0_SET_CAUSE( ulStatus );					\
+	ulCause = _CP0_GET_CAUSE();					\
+	ulCause |= portSW0_BIT;						\
+	_CP0_SET_CAUSE( ulCause );					\
 }
 
 #ifdef configASSERT

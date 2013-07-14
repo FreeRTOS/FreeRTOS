@@ -168,7 +168,6 @@ typedef struct tskTaskControlBlock
 	#define static
 #endif
 
-/*lint -e956 */
 PRIVILEGED_DATA tskTCB * volatile pxCurrentTCB = NULL;
 
 /* Lists for ready and blocked tasks. --------------------*/
@@ -469,8 +468,6 @@ static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TY
 	static portTickType prvGetExpectedIdleTime( void ) PRIVILEGED_FUNCTION;
 
 #endif
-
-/*lint +e956 */
 
 signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
 {
@@ -2181,7 +2178,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		}
 		#endif /* configUSE_TICKLESS_IDLE */
 	}
-} /*lint !e715 pvParameters is not accessed but all task functions require the same prototype. */
+}
 /*-----------------------------------------------------------*/
 
 #if configUSE_TICKLESS_IDLE != 0

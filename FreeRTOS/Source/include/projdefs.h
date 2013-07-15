@@ -78,13 +78,13 @@
 /* Defines the prototype to which task functions must conform. */
 typedef void (*pdTASK_CODE)( void * );
 
-#define pdTRUE		( 1 )
-#define pdFALSE		( 0 )
+#define pdFALSE		( ( portBASE_TYPE ) 0 )
+#define pdTRUE		( ( portBASE_TYPE ) 1 )
 
-#define pdPASS									( 1 )
-#define pdFAIL									( 0 )
-#define errQUEUE_EMPTY							( 0 )
-#define errQUEUE_FULL							( 0 )
+#define pdPASS									( pdTRUE )
+#define pdFAIL									( pdFALSE )
+#define errQUEUE_EMPTY							( ( portBASE_TYPE ) 0 )
+#define errQUEUE_FULL							( ( portBASE_TYPE ) 0 )
 
 /* Error definitions. */
 #define errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY	( -1 )

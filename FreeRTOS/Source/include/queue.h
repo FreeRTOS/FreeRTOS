@@ -85,8 +85,6 @@ extern "C" {
 #endif
 
 
-#include "mpu_wrappers.h"
-
 /**
  * Type by which queues are referenced.  For example, a call to xQueueCreate()
  * returns an xQueueHandle variable that can then be used as a parameter to
@@ -109,17 +107,17 @@ typedef void * xQueueSetHandle;
 typedef void * xQueueSetMemberHandle;
 
 /* For internal use only. */
-#define	queueSEND_TO_BACK		( 0 )
-#define	queueSEND_TO_FRONT		( 1 )
-#define queueOVERWRITE			( 2 )
+#define	queueSEND_TO_BACK		( ( portBASE_TYPE ) 0 )
+#define	queueSEND_TO_FRONT		( ( portBASE_TYPE ) 1 )
+#define queueOVERWRITE			( ( portBASE_TYPE ) 2 )
 
 /* For internal use only.  These definitions *must* match those in queue.c. */
-#define queueQUEUE_TYPE_BASE				( 0U )
-#define queueQUEUE_TYPE_SET					( 0U )
-#define queueQUEUE_TYPE_MUTEX 				( 1U )
-#define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
-#define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
-#define queueQUEUE_TYPE_RECURSIVE_MUTEX		( 4U )
+#define queueQUEUE_TYPE_BASE				( ( unsigned char ) 0U )
+#define queueQUEUE_TYPE_SET					( ( unsigned char ) 0U )
+#define queueQUEUE_TYPE_MUTEX 				( ( unsigned char ) 1U )
+#define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( ( unsigned char ) 2U )
+#define queueQUEUE_TYPE_BINARY_SEMAPHORE	( ( unsigned char ) 3U )
+#define queueQUEUE_TYPE_RECURSIVE_MUTEX		( ( unsigned char ) 4U )
 
 /**
  * queue. h
@@ -724,7 +722,7 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * \defgroup xQueuePeekFromISR xQueuePeekFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, const void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -916,7 +914,7 @@ signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuff
  * \defgroup xQueueReceive xQueueReceive
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -1405,7 +1403,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void *
  * \defgroup xQueueReceiveFromISR xQueueReceiveFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, const void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
 /*
  * Utilities to query queues that are safe to use from an ISR.  These utilities
@@ -1495,7 +1493,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  * @param pcName The name to be associated with the handle.  This is the
  * name that the kernel aware debugger will display.
  */
-#if configQUEUE_REGISTRY_SIZE > 0U
+#if configQUEUE_REGISTRY_SIZE > 0
 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName ) PRIVILEGED_FUNCTION;
 #endif
 
@@ -1509,7 +1507,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  *
  * @param xQueue The handle of the queue being removed from the registry.
  */
-#if configQUEUE_REGISTRY_SIZE > 0U
+#if configQUEUE_REGISTRY_SIZE > 0
 	void vQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 #endif
 

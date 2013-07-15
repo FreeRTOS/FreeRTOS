@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -136,9 +136,9 @@
 #endif
 
 #ifdef IAR_MSP430
-	#include "..\..\Source\portable\IAR\MSP430\portmacro.h"	
+	#include "..\..\Source\portable\IAR\MSP430\portmacro.h"
 #endif
-	
+
 #ifdef GCC_MSP430
 	#include "../../Source/portable/GCC/MSP430F449/portmacro.h"
 #endif
@@ -174,7 +174,7 @@
 #ifdef STR75X_IAR
 	#include "..\..\Source\portable\IAR\STR75x\portmacro.h"
 #endif
-	
+
 #ifdef STR75X_GCC
 	#include "..\..\Source\portable\GCC\STR75x\portmacro.h"
 #endif
@@ -182,7 +182,7 @@
 #ifdef STR91X_IAR
 	#include "..\..\Source\portable\IAR\STR91x\portmacro.h"
 #endif
-	
+
 #ifdef GCC_H8S
 	#include "../../Source/portable/GCC/H8S2329/portmacro.h"
 #endif
@@ -210,10 +210,10 @@
 #ifdef IAR_ARMCM3_LM
 	#include "../../Source/portable/IAR/ARM_CM3/portmacro.h"
 #endif
-	
+
 #ifdef HCS12_CODE_WARRIOR
 	#include "../../Source/portable/CodeWarrior/HCS12/portmacro.h"
-#endif	
+#endif
 
 #ifdef MICROBLAZE_GCC
 	#include "../../Source/portable/GCC/MicroBlaze/portmacro.h"
@@ -313,11 +313,11 @@
 #ifdef __IAR_78K0R_Kx3__
 	#include "../../Source/portable/IAR/78K0R/portmacro.h"
 #endif
-	
+
 #ifdef __IAR_78K0R_Kx3L__
 	#include "../../Source/portable/IAR/78K0R/portmacro.h"
 #endif
-	
+
 /* Catch all to ensure portmacro.h is included in the build.  Newer demos
 have the path as part of the project options, rather than as relative from
 the project location.  If portENTER_CRITICAL() has not been defined then
@@ -325,9 +325,9 @@ portmacro.h has not yet been included - as every portmacro.h provides a
 portENTER_CRITICAL() definition.  Check the demo application for your demo
 to find the path to the correct portmacro.h file. */
 #ifndef portENTER_CRITICAL
-	#include "portmacro.h"	
+	#include "portmacro.h"
 #endif
-	
+
 #if portBYTE_ALIGNMENT == 8
 	#define portBYTE_ALIGNMENT_MASK ( 0x0007 )
 #endif
@@ -367,7 +367,7 @@ extern "C" {
 #if( portUSING_MPU_WRAPPERS == 1 )
 	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters, portBASE_TYPE xRunPrivileged ) PRIVILEGED_FUNCTION;
 #else
-	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters );
+	portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters ) PRIVILEGED_FUNCTION;
 #endif
 
 /*
@@ -398,7 +398,7 @@ void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
  * Fills the xMPUSettings structure with the memory region information
  * contained in xRegions.
  */
-#if( portUSING_MPU_WRAPPERS == 1 ) 
+#if( portUSING_MPU_WRAPPERS == 1 )
 	struct xMEMORY_REGION;
 	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, portSTACK_TYPE *pxBottomOfStack, unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
 #endif

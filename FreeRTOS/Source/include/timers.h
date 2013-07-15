@@ -80,9 +80,10 @@
 	#error "include FreeRTOS.h must appear in source files before include timers.h"
 #endif
 
-#include "portable.h"
-#include "list.h"
+/*lint -e537 This headers are only multiply included if the application code
+happens to also be including task.h. */
 #include "task.h"
+/*lint +e956 */
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,10 +92,10 @@ extern "C" {
 /* IDs for commands that can be sent/received on the timer queue.  These are to
 be used solely through the macros that make up the public software timer API,
 as defined below. */
-#define tmrCOMMAND_START					0
-#define tmrCOMMAND_STOP						1
-#define tmrCOMMAND_CHANGE_PERIOD			2
-#define tmrCOMMAND_DELETE					3
+#define tmrCOMMAND_START					( ( portBASE_TYPE ) 0 )
+#define tmrCOMMAND_STOP						( ( portBASE_TYPE ) 1 )
+#define tmrCOMMAND_CHANGE_PERIOD			( ( portBASE_TYPE ) 2 )
+#define tmrCOMMAND_DELETE					( ( portBASE_TYPE ) 3 )
 
 /*-----------------------------------------------------------
  * MACROS AND DEFINITIONS

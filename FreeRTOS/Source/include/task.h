@@ -73,8 +73,8 @@
 */
 
 
-#ifndef TASK_H
-#define TASK_H
+#ifndef INC_TASK_H
+#define INC_TASK_H
 
 #ifndef INC_FREERTOS_H
 	#error "include FreeRTOS.h must appear in source files before include task.h"
@@ -236,9 +236,9 @@ typedef enum
 #define taskENABLE_INTERRUPTS()		portENABLE_INTERRUPTS()
 
 /* Definitions returned by xTaskGetSchedulerState(). */
-#define taskSCHEDULER_NOT_STARTED	0
-#define taskSCHEDULER_RUNNING		1
-#define taskSCHEDULER_SUSPENDED		2
+#define taskSCHEDULER_NOT_STARTED	( ( portBASE_TYPE ) 0 )
+#define taskSCHEDULER_RUNNING		( ( portBASE_TYPE ) 1 )
+#define taskSCHEDULER_SUSPENDED		( ( portBASE_TYPE ) 2 )
 
 /*-----------------------------------------------------------
  * TASK CREATION API
@@ -1016,7 +1016,7 @@ signed portBASE_TYPE xTaskResumeAll( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask );</pre>
+ * <pre>signed portBASE_TYPE xTaskIsTaskSuspended( const xTaskHandle xTask );</pre>
  *
  * Utility task that simply returns pdTRUE if the task referenced by xTask is
  * currently in the Suspended state, or pdFALSE if the task referenced by xTask
@@ -1394,7 +1394,7 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * portTICK_RATE_MS can be used to convert kernel ticks into a real time
  * period.
  */
-void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnEventList( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1409,7 +1409,7 @@ void vTaskPlaceOnEventList( const xList * const pxEventList, portTickType xTicks
  * @return pdTRUE if the task being removed has a higher priority than the task
  * making the call, otherwise pdFALSE.
  */
-void vTaskPlaceOnEventListRestricted( const xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1470,13 +1470,13 @@ portBASE_TYPE xTaskGetSchedulerState( void ) PRIVILEGED_FUNCTION;
  * Raises the priority of the mutex holder to that of the calling task should
  * the mutex holder have a priority less than the calling task.
  */
-void vTaskPriorityInherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUNCTION;
+void vTaskPriorityInherit( xTaskHandle const pxMutexHolder ) PRIVILEGED_FUNCTION;
 
 /*
  * Set the priority of a task back to its proper priority in the case that it
  * inherited a higher priority while it was holding a semaphore.
  */
-void vTaskPriorityDisinherit( xTaskHandle * const pxMutexHolder ) PRIVILEGED_FUNCTION;
+void vTaskPriorityDisinherit( xTaskHandle const pxMutexHolder ) PRIVILEGED_FUNCTION;
 
 /*
  * Generic version of the task creation function which is in turn called by the
@@ -1522,7 +1522,7 @@ eSleepModeStatus eTaskConfirmSleepModeStatus( void );
 #ifdef __cplusplus
 }
 #endif
-#endif /* TASK_H */
+#endif /* INC_TASK_H */
 
 
 

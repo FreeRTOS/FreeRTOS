@@ -177,7 +177,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
  * \ingroup LinkedList
  */
-#define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )		( pxListItem )->pvOwner = ( void * ) ( pxOwner )
+#define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )		( ( pxListItem )->pvOwner = ( void * ) ( pxOwner ) )
 
 /*
  * Access macro to get the owner of a list item.  The owner of a list item
@@ -195,7 +195,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_VALUE listSET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )		( pxListItem )->xItemValue = ( xValue )
+#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )		( ( pxListItem )->xItemValue = ( xValue ) )
 
 /*
  * Access macro to retrieve the value of the list item.  The value can
@@ -223,7 +223,7 @@ typedef struct xLIST
  * \page listLIST_IS_EMPTY listLIST_IS_EMPTY
  * \ingroup LinkedList
  */
-#define listLIST_IS_EMPTY( pxList )				( ( pxList )->uxNumberOfItems == ( unsigned portBASE_TYPE ) 0 )
+#define listLIST_IS_EMPTY( pxList )				( ( portBASE_TYPE ) ( ( pxList )->uxNumberOfItems == ( unsigned portBASE_TYPE ) 0 ) )
 
 /*
  * Access macro to return the number of items in the list.
@@ -249,17 +249,17 @@ typedef struct xLIST
  * \page listGET_OWNER_OF_NEXT_ENTRY listGET_OWNER_OF_NEXT_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )									\
-{																						\
-xList * const pxConstList = ( pxList );													\
-	/* Increment the index to the next item and return the item, ensuring */			\
-	/* we don't return the marker used at the end of the list.  */						\
-	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;						\
-	if( ( pxConstList )->pxIndex == ( xListItem * ) &( ( pxConstList )->xListEnd ) )	\
-	{																					\
-		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;					\
-	}																					\
-	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;										\
+#define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )										\
+{																							\
+xList * const pxConstList = ( pxList );														\
+	/* Increment the index to the next item and return the item, ensuring */				\
+	/* we don't return the marker used at the end of the list.  */							\
+	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;							\
+	if( ( void * ) ( pxConstList )->pxIndex == ( void * ) &( ( pxConstList )->xListEnd ) )	\
+	{																						\
+		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;						\
+	}																						\
+	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;											\
 }
 
 
@@ -291,7 +291,7 @@ xList * const pxConstList = ( pxList );													\
  * @return pdTRUE is the list item is in the list, otherwise pdFALSE.
  * pointer against
  */
-#define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) )
+#define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( portBASE_TYPE ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) ) )
 
 /*
  * Return the list a list item is contained within (referenced from).

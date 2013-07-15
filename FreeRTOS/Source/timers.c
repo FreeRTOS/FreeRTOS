@@ -72,6 +72,9 @@
     mission critical applications that require provable dependability.
 */
 
+/* Standard includes. */
+#include <stdlib.h>
+
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
 task.h is included from an application file. */
@@ -82,7 +85,12 @@ task.h is included from an application file. */
 #include "queue.h"
 #include "timers.h"
 
-#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+/* Lint e961 and e750 are suppressed as a MISRA exception justified because the
+MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
+header files above, but not in this file, in order to generate the correct
+privileged Vs unprivileged linkage and placement. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
+
 
 /* This entire source file will be skipped if the application is not configured
 to include software timer functionality.  This #if is closed at the very bottom
@@ -113,6 +121,8 @@ typedef struct tmrTimerQueueMessage
 	xTIMER *				pxTimer;			/*<< The timer to which the command will be applied. */
 } xTIMER_MESSAGE;
 
+/*lint -e956 A manual analysis and inspection has been used to determine which
+static variables must be declared volatile. */
 
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
@@ -130,6 +140,8 @@ PRIVILEGED_DATA static xQueueHandle xTimerQueue = NULL;
 	PRIVILEGED_DATA static xTaskHandle xTimerTaskHandle = NULL;
 
 #endif
+
+/*lint +e956 */
 
 /*-----------------------------------------------------------*/
 
@@ -320,7 +332,7 @@ portBASE_TYPE xResult;
 	/* Remove the timer from the list of active timers.  A check has already
 	been performed to ensure the list is not empty. */
 	pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
-	uxListRemove( &( pxTimer->xTimerListItem ) );
+	( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 	traceTIMER_EXPIRED( pxTimer );
 
 	/* If the timer is an auto reload timer then calculate the next
@@ -390,7 +402,7 @@ portBASE_TYPE xTimerListsWereSwitched;
 			/* The tick count has not overflowed, has the timer expired? */
 			if( ( xListWasEmpty == pdFALSE ) && ( xNextExpireTime <= xTimeNow ) )
 			{
-				xTaskResumeAll();
+				( void ) xTaskResumeAll();
 				prvProcessExpiredTimer( xNextExpireTime, xTimeNow );
 			}
 			else
@@ -415,7 +427,7 @@ portBASE_TYPE xTimerListsWereSwitched;
 		}
 		else
 		{
-			xTaskResumeAll();
+			( void ) xTaskResumeAll();
 		}
 	}
 }
@@ -450,7 +462,7 @@ portTickType xNextExpireTime;
 static portTickType prvSampleTimeNow( portBASE_TYPE *pxTimerListsWereSwitched )
 {
 portTickType xTimeNow;
-PRIVILEGED_DATA static portTickType xLastTime = ( portTickType ) 0U;
+PRIVILEGED_DATA static portTickType xLastTime = ( portTickType ) 0U; /*lint !e956 Variable is only accessible to one task. */
 
 	xTimeNow = xTaskGetTickCount();
 
@@ -481,7 +493,7 @@ portBASE_TYPE xProcessTimerNow = pdFALSE;
 	{
 		/* Has the expiry time elapsed between the command to start/reset a
 		timer was issued, and the time the command was processed? */
-		if( ( ( portTickType ) ( xTimeNow - xCommandTime ) ) >= pxTimer->xTimerPeriodInTicks )
+		if( ( xTimeNow - xCommandTime ) >= pxTimer->xTimerPeriodInTicks )
 		{
 			/* The time between a command being issued and the command being
 			processed actually exceeds the timers period.  */
@@ -518,14 +530,14 @@ xTIMER *pxTimer;
 portBASE_TYPE xTimerListsWereSwitched, xResult;
 portTickType xTimeNow;
 
-	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL )
+	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL ) /*lint !e603 xMessage does not have to be initialised as it is passed out, not in, and it is not used unless xQueueReceive() returns pdTRUE. */
 	{
 		pxTimer = xMessage.pxTimer;
 
 		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
 		{
 			/* The timer is in a list, remove it. */
-			uxListRemove( &( pxTimer->xTimerListItem ) );
+			( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 		}
 
 		traceTIMER_COMMAND_RECEIVED( pxTimer, xMessage.xMessageID, xMessage.xMessageValue );
@@ -565,7 +577,7 @@ portTickType xTimeNow;
 			case tmrCOMMAND_CHANGE_PERIOD :
 				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
 				configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
-				prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
+				( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
 				break;
 
 			case tmrCOMMAND_DELETE :
@@ -602,7 +614,7 @@ portBASE_TYPE xResult;
 
 		/* Remove the timer from the list. */
 		pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
-		uxListRemove( &( pxTimer->xTimerListItem ) );
+		( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 
 		/* Execute its callback, then send a command to restart the timer if
 		it is an auto-reload timer.  It cannot be restarted here as the lists

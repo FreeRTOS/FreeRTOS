@@ -101,10 +101,10 @@ extern "C" {
 
 #if( configUSE_16_BIT_TICKS == 1 )
 	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	#define portMAX_DELAY 0xffff
 #else
 	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffff
+	#define portMAX_DELAY 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 
@@ -116,7 +116,7 @@ extern "C" {
 
 /* Scheduler utilities. */
 extern void vPortYield( void );
-#define portNVIC_INT_CTRL_REG		( * ( ( volatile unsigned long * ) 0xe000ed04 ) )
+#define portNVIC_INT_CTRL_REG		( * ( ( volatile unsigned long * ) 0xe000ed04UL ) )
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
 #define portYIELD()					vPortYield()
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT
@@ -132,8 +132,8 @@ extern void vPortYield( void );
 	#endif
 
 	/* Store/clear the ready priorities in a bit map. */
-	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
-	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) ) )
+	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) ) )
 
 	/*-----------------------------------------------------------*/
 

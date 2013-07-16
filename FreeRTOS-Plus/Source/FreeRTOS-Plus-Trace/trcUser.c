@@ -208,6 +208,7 @@ char* xTraceGetLastError(void)
 ******************************************************************************/
 void vTraceClearError(int resetErrorMessage)
 {
+	( void ) resetErrorMessage;
 	traceErrorMessage = NULL;	
 	RecorderDataPtr->internalErrorOccured = 0;
 }

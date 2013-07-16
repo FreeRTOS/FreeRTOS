@@ -52,8 +52,10 @@
 	#error FreeRTOS.h must be included before FreeRTOS_Sockets.h.
 #endif
 
-#ifndef TASK_H
-	#error The FreeRTOS header file task.h must be included before FreeRTOS_Sockets.h.
+#ifndef INC_TASK_H
+	#ifndef TASK_H /* For compatibility with older FreeRTOS versions. */
+		#error The FreeRTOS header file task.h must be included before FreeRTOS_Sockets.h.
+	#endif
 #endif
 
 /* Assigned to an xSocket_t variable when the socket is not valid, probably

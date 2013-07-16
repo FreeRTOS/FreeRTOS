@@ -128,7 +128,7 @@ void vTraceStoreLowPower(uint32_t flag)
 			lp = (LPEvent*)xTraceNextFreeEventBufferSlot();
 			if (lp != NULL)
 			{
-				lp->type = LOW_POWER_BEGIN + flag; /* BEGIN or END depending on flag */
+				lp->type = LOW_POWER_BEGIN + ( uint8_t ) flag; /* BEGIN or END depending on flag */
 				lp->dts = dts;
 
 				prvTraceUpdateCounters();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcTypes.h

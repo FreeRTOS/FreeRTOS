@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.c
@@ -42,6 +42,8 @@
 
 #include <stdint.h>
 
+uint32_t trace_disable_timestamp = 0;
+uint32_t last_timestamp = 0;
 
 /*******************************************************************************
  * uiTraceTickCount
@@ -71,6 +73,13 @@ void vTracePortGetTimeStamp(uint32_t *pTimestamp)
     uint32_t traceTickCount = 0;
     uint32_t hwtc_count = 0;
     
+	if (trace_disable_timestamp == 1)
+	{
+		if (pTimestamp)
+			*pTimestamp = last_timestamp;
+		return;
+	}
+			
     /* Retrieve HWTC_COUNT only once since the same value should be used all throughout this function. */
 #if (HWTC_COUNT_DIRECTION == DIRECTION_INCREMENTING)
     hwtc_count = HWTC_COUNT;
@@ -109,6 +118,8 @@ void vTracePortGetTimeStamp(uint32_t *pTimestamp)
         *pTimestamp = traceTickCount * (HWTC_PERIOD / HWTC_DIVISOR);
         /* Increase timestamp by (hwtc_count + "lost hardware ticks from scaling down period") / HWTC_DIVISOR. */
         *pTimestamp += (hwtc_count + traceTickCount * (HWTC_PERIOD % HWTC_DIVISOR)) / HWTC_DIVISOR;
+		
+		last_timestamp = *pTimestamp;
     }
     
     /* Store the previous values. */

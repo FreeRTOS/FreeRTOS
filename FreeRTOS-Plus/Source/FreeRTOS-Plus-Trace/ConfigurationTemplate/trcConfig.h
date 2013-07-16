@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -156,10 +156,9 @@
  * check the actual usage in Tracealyzer. This is shown by selecting
  * View -> Trace Details -> Resource Usage -> Object Table
  * 
- * NOTE 2: Remember to account for all tasks created by the kernel, such as the 
- * IDLE task, timer task, and any tasks created by other 3rd party 
- * software components, such as communication stacks. The recorder also has an 
- * optional monitor task to account for, if this is used.
+ * NOTE 2: Remember to account for all tasks and other objects created by 
+ * the kernel, such as the IDLE task, any timer tasks, and any tasks created 
+ * by other 3rd party software components, such as communication stacks.
  * Moreover, one task slot is used to indicate "(startup)", i.e., a fictive 
  * task that represent the time before the scheduler starts. 
  * NTask should thus be at least 2-3 slots larger than your application task count.
@@ -167,9 +166,9 @@
  ******************************************************************************/
 #define NTask             15
 #define NISR              5
-#define NQueue            5
-#define NSemaphore        5
-#define NMutex            5
+#define NQueue            10
+#define NSemaphore        10
+#define NMutex            10
 
 /* Maximum object name length for each class (includes zero termination) */
 #define NameLenTask       15
@@ -265,8 +264,8 @@
  * much faster than a printf and can therefore be used in timing critical code.
  * See vTraceUserEvent() and vTracePrintF() in trcUser.h
  * 
- * Note that Tracealyzer Standard Edition or Professional Edition is required
- * for User Events, they are not displayed in Tracealyzer Free Edition.
+ * Note that Tracealyzer Professional Edition is required for User Events, 
+ * they are not displayed in Tracealyzer Free Edition.
  *****************************************************************************/
 #define INCLUDE_USER_EVENTS 1
 
@@ -439,60 +438,6 @@
     #define INCLUDE_SAVE_TO_FILE 1
 #else
     #define INCLUDE_SAVE_TO_FILE 0
-#endif
-
-/******************************************************************************
- * TRACE_PROGRESS_MONITOR_TASK_PRIORITY
- *
- * Macro which sets the priority of the "recorder status monitor" task.
- *
- * This task, vTraceMonitorTask in trcUser.c, periodically writes
- * the recorder status using the vTraceConsoleMessage macro, which is to
- * be mapped to your console "printf" routine. The task is named TraceMon but 
- * is intentionally excluded from the demo trace.
- *
- * Default is tskIDLE_PRIORITY + 1
- * Note that if your system constantly has a high CPU load from high-priority 
- * tasks, this might not be get a chance to execute.
- * 
- * See vTraceMonitorTask in trcUser.c
- *****************************************************************************/
-#define TRACE_PROGRESS_MONITOR_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
-
-/******************************************************************************
- * TRACE_PROGRESS_MONITOR_TASK_STACKSIZE
- *
- * Macro which sets the stack size of the "recorder status monitor" task.
- *
- * This task, vTraceMonitorTask in trcUser.c, periodically writes
- * the recorder status using the vTraceConsoleMessage macro, which is to
- * be mapped to your console "printf" routine. The task is intentionally 
- * excluded from the demo trace.
- *
- * See vTraceMonitorTask in trcUser.c
- *****************************************************************************/
-#define TRACE_PROGRESS_MONITOR_TASK_STACKSIZE 500
-
-/******************************************************************************
- * TRACE_PROGRESS_MONITOR_TASK_PERIOD
- *
- * Macro which sets the period of the "recorder status monitor" task.
- *
- * This task, vTraceMonitorTask in trcUser.c, periodically writes
- * the recorder status using the vTraceConsoleMessage macro, which is to
- * be mapped to your console "printf" routine. The task is named TraceMon but 
- * is intentionally excluded from the demo trace.
- *
- * Default is 1000 ticks (typically 1 second). On the Windows port, a lower 
- * value is suggested since the Windows port runs very slowly, often 20-40
- * times slower than the simulated time.
- *
- * See vTraceMonitorTask in trcUser.c
- *****************************************************************************/
-#ifdef WIN32
-    #define TRACE_PROGRESS_MONITOR_TASK_PERIOD 100
-#else
-    #define TRACE_PROGRESS_MONITOR_TASK_PERIOD 1000
 #endif
 
 /******************************************************************************

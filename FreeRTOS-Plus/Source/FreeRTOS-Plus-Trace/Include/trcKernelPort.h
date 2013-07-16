@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernelPort.h
@@ -47,10 +47,7 @@
 
 /* Defines that must be set for the recorder to work properly */
 #define TRACE_KERNEL_VERSION 0x1AA1
-#define TRACE_CPU_CLOCK_HZ configCPU_CLOCK_HZ /* Defined in "FreeRTOS.h" */
-#define TRACE_PERIPHERAL_CLOCK_HZ configPERIPHERAL_CLOCK_HZ /* Defined in "FreeRTOS.h" */
 #define TRACE_TICK_RATE_HZ configTICK_RATE_HZ /* Defined in "FreeRTOS.h" */
-#define TRACE_CPU_CLOCKS_PER_TICK configCPU_CLOCKS_PER_TICK /* Defined in "FreeRTOS.h" */
 
 /************************************************************************/
 /* KERNEL SPECIFIC OBJECT CONFIGURATION                                 */
@@ -99,11 +96,15 @@
 /* Includes */
 #include "trcTypes.h"
 #include "trcConfig.h"
-#include "trcHooks.h"
+#include "trcKernelHooks.h"
 #include "trcHardwarePort.h"
 #include "trcBase.h"
 #include "trcKernel.h"
 #include "trcUser.h"
+
+#if (INCLUDE_NEW_TIME_EVENTS == 1 && configUSE_TICKLESS_IDLE != 0)
+#error "NewTime events can not be used in combination with tickless idle!"
+#endif
 
 /* Initialization of the object property table */
 void vTraceInitObjectPropertyTable(void);
@@ -296,6 +297,9 @@ const char* pszTraceGetErrorNotEnoughHandles(traceObjectClass objectclass);
 
 #define RESERVED_DUMMY_CODE (EVENTGROUP_SYS + 3)                        /*0xAB*/
 
+#define LOW_POWER_BEGIN (EVENTGROUP_SYS + 4)							/*0xAC*/
+#define LOW_POWER_END (EVENTGROUP_SYS + 5)								/*0xAD*/
+
 
 
 /************************************************************************/
@@ -360,11 +364,33 @@ void* prvTraceGetCurrentTaskHandle(void);
 #define TRACE_GET_OBJECT_EVENT_CODE(SERVICE, RESULT, CLASS, pxObject) (uint8_t)(EVENTGROUP_##SERVICE##_##RESULT + TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject))
 #define TRACE_GET_TASK_EVENT_CODE(SERVICE, RESULT, CLASS, pxTCB) (EVENTGROUP_##SERVICE##_##RESULT + TRACE_CLASS_TASK)
 
-
-
 /************************************************************************/
 /* KERNEL SPECIFIC WRAPPERS THAT SHOULD BE CALLED BY THE KERNEL         */
 /************************************************************************/
+
+#if (configUSE_TICKLESS_IDLE != 0)
+
+#undef traceLOW_POWER_IDLE_BEGIN
+#define traceLOW_POWER_IDLE_BEGIN() \
+	{ \
+		extern uint32_t trace_disable_timestamp; \
+		vTraceStoreLowPower(0); \
+		trace_disable_timestamp = 1; \
+	}	
+
+#undef traceLOW_POWER_IDLE_END
+#define traceLOW_POWER_IDLE_END() \
+	{ \
+		extern uint32_t trace_disable_timestamp; \
+		trace_disable_timestamp = 0; \
+		vTraceStoreLowPower(1); \
+	}
+
+/* A macro that will update the tick count when returning from tickless idle */
+#undef traceINCREASE_TICK_COUNT( xCount )
+#define traceINCREASE_TICK_COUNT( xCount ) { extern uint32_t uiTraceTickCount; uiTraceTickCount += xTickCount; }
+
+#endif
 
 /* Called for each task that becomes ready */
 #undef traceMOVED_TASK_TO_READY_STATE

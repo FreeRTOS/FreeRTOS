@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.c
@@ -95,6 +95,47 @@ void vTraceStoreTaskReady(objectHandleType handle)
 	}
 }
 #endif
+
+/*******************************************************************************
+ * vTraceStoreLowPower
+ *
+ * This function stores a low power state.
+ ******************************************************************************/
+void vTraceStoreLowPower(uint32_t flag)
+{
+    uint16_t dts;
+    LPEvent* lp;
+	
+	TRACE_ASSERT(flag <= 1, "vTraceStoreLowPower: Invalid flag value", );
+
+    if (recorder_busy)
+    {
+		/***********************************************************************
+		* This should never occur, as the tick- and kernel call ISR is on lowest
+		* interrupt priority and always are disabled during the critical sections
+		* of the recorder.
+		***********************************************************************/
+	  
+		vTraceError("Recorder busy - high priority ISR using syscall? (1)");
+		return;
+    }
+
+    if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+	{
+		dts = (uint16_t)prvTraceGetDTS(0xFFFF);
+		if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+		{
+			lp = (LPEvent*)xTraceNextFreeEventBufferSlot();
+			if (lp != NULL)
+			{
+				lp->type = LOW_POWER_BEGIN + flag; /* BEGIN or END depending on flag */
+				lp->dts = dts;
+
+				prvTraceUpdateCounters();
+			}
+		}
+	}
+}
 
 /*******************************************************************************
  * vTraceStoreKernelCall

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcBase.c
@@ -54,6 +54,8 @@ uint8_t excludedEventCodes[NEventCodes / 8 + 1] = { 0 };
 /* Keeps track of available handles */
 objectHandleStackType objectHandleStacks = { { 0 }, { 0 }, { 0 }, { 0 }, { 0 } };
 
+uint32_t init_hwtc_count;
+
 /*******************************************************************************
  * RecorderData
  *
@@ -101,6 +103,8 @@ RecorderDataType* RecorderDataPtr = NULL;
 /* This version of the function dynamically allocates the trace data */
 void prvTraceInitTraceData()
 {
+	init_hwtc_count = HWTC_COUNT;
+	
 #if TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_STATIC
 	RecorderDataPtr = &RecorderData;
 #elif TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_DYNAMIC
@@ -217,11 +221,9 @@ uint16_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "uiIndexOfObject: Invalid value for objectclass", 0);
 	TRACE_ASSERT(objecthandle > 0 && objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "uiIndexOfObject: Invalid value for objecthandle", 0);
 
-    if ((objectclass < TRACE_NCLASSES) && (objecthandle > 0) && (objecthandle <=
-    RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass]))
+    if ((objectclass < TRACE_NCLASSES) && (objecthandle > 0) && (objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass]))
     {
-        return (uint16_t)(RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[objectclass] +
-			(RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[objectclass] * (objecthandle-1)));
+        return (uint16_t)(RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[objectclass] + (RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[objectclass] * (objecthandle-1)));
     }
 
     vTraceError("Object table lookup with invalid object handle or object class!");
@@ -554,23 +556,20 @@ uint16_t prvTraceGetDTS(uint16_t param_maxDTS)
 
     TRACE_ASSERT(param_maxDTS == 0xFF || param_maxDTS == 0xFFFF, "prvTraceGetDTS: Invalid value for param_maxDTS", 0);
 
-    if (RecorderDataPtr->frequency == 0)
+    if (RecorderDataPtr->frequency == 0 && init_hwtc_count != HWTC_COUNT)
     {
         /* If HWTC_PERIOD is mapped to the timer reload register,
         such as in the Cortex M port, it might not be initialized
 		before the Kernel scheduler has been started has been
-		started. We therefore store the frequency of the timer at
-		the first timestamped event after the scheduler has started.
-		(Note that this function is called also by vTraceStart and
-		uiTraceStart, which might be called before the scheduler
-		has been started.) */
+		started. We therefore store the frequency of the timer
+		once the counter register has changed. */
 
 #if (SELECTED_PORT == PORT_Win32)
         RecorderDataPtr->frequency = 100000;
 #elif (SELECTED_PORT == PORT_HWIndependent)
         RecorderDataPtr->frequency = TRACE_TICK_RATE_HZ;
 #else
-		RecorderDataPtr->frequency = TRACE_CPU_CLOCK_HZ / (uint32_t)HWTC_DIVISOR;
+		RecorderDataPtr->frequency = (HWTC_PERIOD * TRACE_TICK_RATE_HZ) / (uint32_t)HWTC_DIVISOR;
 #endif
     }
 

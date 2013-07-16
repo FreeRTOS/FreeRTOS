@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -77,8 +77,8 @@
  * 1 ms get an execution time of zero.
  *
  * PORT_Win32
- * "Accurate" timestamping based on the Windows performance counter. Note that
- * this gives the host machine time.
+ * "Accurate" timestamping based on the Windows performance counter for Win32 builds.
+ * Note that this gives the host machine time, not the kernel time.
  *
  * Officially supported hardware timer ports:
  * - PORT_Atmel_AT91SAM7
@@ -227,24 +227,25 @@
     #define IRQ_PRIORITY_ORDER 1  // Please update according to your hardware...
 
 #elif (SELECTED_PORT == PORT_Atmel_AT91SAM7)
+#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
 
     /* HWTC_PERIOD is hardcoded for AT91SAM7X256-EK Board (48 MHz)
     A more generic solution is to get the period from pxPIT->PITC_PIMR */
     
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT (AT91C_BASE_PITC->PITC_PIIR & 0xFFFFF)
-    #define HWTC_PERIOD 2995 
+    #define HWTC_PERIOD (AT91C_BASE_PITC->PITC_PIMR + 1)
     #define HWTC_DIVISOR 1
 
     #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
 
-#elif (SELECTED_PORT == PORT_Atmel_UC3A0) 
+#elif (SELECTED_PORT == PORT_Atmel_UC3A0)
+#error HWTC_PERIOD must point to the reload register! Not yet updated for this hardware port!
   
     /* For Atmel AVR32 (AT32UC3A) */
-  
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT sysreg_read(AVR32_COUNT)
-    #define HWTC_PERIOD ( TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ )
+    #define HWTC_PERIOD 
     #define HWTC_DIVISOR 1    
 
     #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
@@ -266,12 +267,12 @@
 
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT (CMT0.CMCNT)
-    #define HWTC_PERIOD ((((TRACE_PERIPHERAL_CLOCK_HZ/TRACE_TICK_RATE_HZ)-1)/8))
+    #define HWTC_PERIOD (CMT0.CMCOR + 1)
     #define HWTC_DIVISOR 1
 
     #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
 
-#elif (SELECTED_PORT == PORT_Microchip_dsPIC_AND_PIC24) 
+#elif (SELECTED_PORT == PORT_Microchip_dsPIC_AND_PIC24)
 
     /* For Microchip PIC24 and dsPIC (16 bit) */
 
@@ -289,18 +290,20 @@
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_NXP_LPC210X)
+#error HWTC_PERIOD must point to the reload register! Not yet updated for this hardware port!
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
     
     /* Tested with LPC2106, but should work with most LPC21XX chips. */
       
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT  *((uint32_t *)0xE0004008 )
-    #define HWTC_PERIOD ( TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ ) 
+    #define HWTC_PERIOD 
     #define HWTC_DIVISOR 1    
 
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_TEXAS_INSTRUMENTS_TMS570)
+#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define RTIFRC0 *((uint32_t *)0xFFFFFC10)
@@ -314,6 +317,7 @@
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_TEXAS_INSTRUMENTS_MSP430)
+#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
@@ -333,29 +337,32 @@
 
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
-#elif (SELECTED_PORT == PORT_XILINX_PPC405) 
+#elif (SELECTED_PORT == PORT_XILINX_PPC405)
+#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
     #define HWTC_COUNT  mfspr( 0x3db)
-    #define HWTC_PERIOD ( TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ )
+    #define HWTC_PERIOD 
     #define HWTC_DIVISOR 1
 
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
-#elif (SELECTED_PORT == PORT_XILINX_PPC440) 
+#elif (SELECTED_PORT == PORT_XILINX_PPC440)
+#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     /* This should work with most PowerPC chips */
     
     #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
     #define HWTC_COUNT  mfspr( 0x016 )
-    #define HWTC_PERIOD ( TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ )
+    #define HWTC_PERIOD 
     #define HWTC_DIVISOR 1    
 
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
     
 #elif (SELECTED_PORT == PORT_XILINX_MICROBLAZE)
+#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     /* This should work with most Microblaze configurations.
@@ -366,7 +373,7 @@
 
     #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
     #define HWTC_COUNT XTmrCtr_GetTimerCounterReg( XPAR_TMRCTR_0_BASEADDR, 0 )
-    #define HWTC_PERIOD ( TRACE_CPU_CLOCK_HZ / TRACE_TICK_RATE_HZ )
+    #define HWTC_PERIOD 
     #define HWTC_DIVISOR 16
 
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
@@ -450,33 +457,5 @@ void vTracePortGetTimeStamp(uint32_t *puiTimestamp);
  * set using vTracePortSetFileName.
  ******************************************************************************/
 void vTracePortEnd(void);
-
-#if (INCLUDE_SAVE_TO_FILE == 1)
-
-/*******************************************************************************
- * vTracePortSetOutFile
- *
- * Sets the filename/path used in vTracePortSave.
- * This is set in a separate function, since the Win32 port calls vTracePortSave
- * in vTracePortEnd if WIN32_PORT_SAVE_WHEN_STOPPED is set.
- ******************************************************************************/
-void vTracePortSetOutFile(char* path);
-
-/******************************************************************************
- * vTracePortSave
- *
- * Saves the trace to a file on a target-side file system. The path is set in a 
- * separate function, vTracePortSetOutFile, since the Win32 port may call
- * vTracePortSave in vTracePortEnd, if using WIN32_PORT_SAVE_WHEN_STOPPED.
- ******************************************************************************/
-void vTracePortSave(void);
-
-#else
-
-#define vTraceConsoleMessage(x)
-#define vTracePortSetOutFile(path)
-#define vTracePortSave(void)
-
-#endif
 
 #endif

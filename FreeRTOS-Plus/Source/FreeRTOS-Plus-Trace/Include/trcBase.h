@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.5.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcBase.h
@@ -185,9 +185,16 @@ typedef struct
 
 typedef struct
 {
+	uint8_t type;
+	uint8_t dummy;
+	uint16_t dts;    /* differential timestamp - time since last event */
+} LPEvent;
+
+typedef struct
+{
     uint8_t type;
     uint8_t objHandle;
-    uint16_t dts;
+    uint16_t dts;    /* differential timestamp - time since last event */
 } KernelCall;
 
 typedef struct
@@ -195,13 +202,13 @@ typedef struct
     uint8_t type;
     objectHandleType objHandle;
     uint8_t param;
-    uint8_t dts;
+    uint8_t dts;    /* differential timestamp - time since last event */
 } KernelCallWithParamAndHandle;
 
 typedef struct
 {
     uint8_t type;
-    uint8_t dts;
+    uint8_t dts;    /* differential timestamp - time since last event */
     uint16_t param;
 } KernelCallWithParam16;
 
@@ -448,14 +455,6 @@ uint16_t uiIndexOfObject(objectHandleType objecthandle,
  * pointer to an error message, which is printed by the monitor task.
  ******************************************************************************/
 void vTraceError(const char* msg);
-
-/*******************************************************************************
- * xTraceGetLastError
- *
- * Gives the last error message, if any. NULL if no error message is stored.
- * The message is cleared on read.
- ******************************************************************************/
-char* xTraceGetLastError(void);
 
 /*******************************************************************************
  * prvTraceInitTraceData

@@ -4,7 +4,7 @@ Tracealyzer Trace Recorder Library
 Percepio AB
 www.percepio.com
 
-This directory contains the a generic trace recorder library for Tracealyzer v2.4. 
+This directory contains the a generic trace recorder library for Tracealyzer v2.5. 
 
 For information on how to upload the trace data from your target system RAM to 
 Tracealyzer, see "debugger trace upload.txt"

@@ -1,48 +1,37 @@
 /*
-    FreeRTOS V7.4.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.0 - Copyright (C) 2013 Real Time Engineers Ltd.
 
-    FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
-    http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
     ***************************************************************************
      *                                                                       *
-     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-     *    Complete, revised, and edited pdf reference manuals are also       *
-     *    available.                                                         *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that has become a de facto standard.             *
      *                                                                       *
-     *    Purchasing FreeRTOS documentation will not only help you, by       *
-     *    ensuring you get running as quickly as possible and with an        *
-     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-     *    the FreeRTOS project to continue with its mission of providing     *
-     *    professional grade, cross platform, de facto standard solutions    *
-     *    for microcontrollers - completely free of charge!                  *
+     *    Help yourself get started quickly and support the FreeRTOS         *
+     *    project by purchasing a FreeRTOS tutorial book, reference          *
+     *    manual, or both from: http://www.FreeRTOS.org/Documentation        *
      *                                                                       *
-     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-     *                                                                       *
-     *    Thank you for using FreeRTOS, and thank you for your support!      *
+     *    Thank you!                                                         *
      *                                                                       *
     ***************************************************************************
-
 
     This file is part of the FreeRTOS distribution.
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
 
-    >>>>>>NOTE<<<<<< The modification to the GPL is included to allow you to
-    distribute a combined work that includes FreeRTOS without being obliged to
-    provide the source code for proprietary components outside of the FreeRTOS
-    kernel.
+    >>! NOTE: The modification to the GPL is included to allow you to distribute
+    >>! a combined work that includes FreeRTOS without being obliged to provide
+    >>! the source code for proprietary components outside of the FreeRTOS
+    >>! kernel.
 
     FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
     WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-    details. You should have received a copy of the GNU General Public License
-    and the FreeRTOS license exception along with FreeRTOS; if not it can be
-    viewed here: http://www.freertos.org/a00114.html and also obtained by
-    writing to Real Time Engineers Ltd., contact details for whom are available
-    on the FreeRTOS WEB site.
+    FOR A PARTICULAR PURPOSE.  Full license text is available from the following
+    link: http://www.freertos.org/a00114.html
 
     1 tab == 4 spaces!
 
@@ -55,21 +44,22 @@
      *                                                                       *
     ***************************************************************************
 
-
     http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, and our new
-    fully thread aware and reentrant UDP/IP stack.
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
 
     http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
-    Integrity Systems, who sell the code with commercial support,
-    indemnification and middleware, under the OpenRTOS brand.
+    Integrity Systems to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and middleware.
 
     http://www.SafeRTOS.com - High Integrity Systems also provide a safety
     engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
 */
 
 /* Standard includes. */
@@ -647,13 +637,6 @@ tskTCB * pxNewTCB;
 
 		taskENTER_CRITICAL();
 		{
-			/* Ensure a yield is performed if the current task is being
-			deleted. */
-			if( xTaskToDelete == pxCurrentTCB )
-			{
-				xTaskToDelete = NULL;
-			}
-
 			/* If null is passed in here then we are deleting ourselves. */
 			pxTCB = prvGetTCBFromHandle( xTaskToDelete );
 
@@ -690,7 +673,7 @@ tskTCB * pxNewTCB;
 		/* Force a reschedule if we have just deleted the current task. */
 		if( xSchedulerRunning != pdFALSE )
 		{
-			if( ( void * ) xTaskToDelete ==  NULL ) /*lint !e961 MISRA exception as this is not a redundant cast when used with some supported compilers. */
+			if( pxTCB == pxCurrentTCB )
 			{
 				portYIELD_WITHIN_API();
 			}
@@ -915,7 +898,7 @@ tskTCB * pxNewTCB;
 	void vTaskPrioritySet( xTaskHandle xTask, unsigned portBASE_TYPE uxNewPriority )
 	{
 	tskTCB *pxTCB;
-	unsigned portBASE_TYPE uxCurrentPriority, uxPriorityUsedOnEntry;
+	unsigned portBASE_TYPE uxCurrentBasePriority, uxPriorityUsedOnEntry;
 	portBASE_TYPE xYieldRequired = pdFALSE;
 
 		configASSERT( ( uxNewPriority < configMAX_PRIORITIES ) );
@@ -928,51 +911,57 @@ tskTCB * pxNewTCB;
 
 		taskENTER_CRITICAL();
 		{
-			if( xTask == ( xTaskHandle ) pxCurrentTCB )
-			{
-				xTask = NULL;
-			}
-
-			/* If null is passed in here then we are changing the
-			priority of the calling function. */
+			/* If null is passed in here then it is the priority of the calling
+			task that is being changed. */
 			pxTCB = prvGetTCBFromHandle( xTask );
 
 			traceTASK_PRIORITY_SET( pxTCB, uxNewPriority );
 
 			#if ( configUSE_MUTEXES == 1 )
 			{
-				uxCurrentPriority = pxTCB->uxBasePriority;
+				uxCurrentBasePriority = pxTCB->uxBasePriority;
 			}
 			#else
 			{
-				uxCurrentPriority = pxTCB->uxPriority;
+				uxCurrentBasePriority = pxTCB->uxPriority;
 			}
 			#endif
 
-			if( uxCurrentPriority != uxNewPriority )
+			if( uxCurrentBasePriority != uxNewPriority )
 			{
 				/* The priority change may have readied a task of higher
 				priority than the calling task. */
-				if( uxNewPriority > uxCurrentPriority )
+				if( uxNewPriority > uxCurrentBasePriority )
 				{
-					if( xTask != NULL )
+					if( pxTCB != pxCurrentTCB )
 					{
-						/* The priority of another task is being raised.  If we
-						were raising the priority of the currently running task
-						there would be no need to switch as it must have already
-						been the highest priority task. */
-						xYieldRequired = pdTRUE;
+						/* The priority of a task other than the currently
+						running task is being raised.  Is the priority being
+						raised above that of the running task? */
+						if( uxNewPriority >= pxCurrentTCB->uxPriority )
+						{							
+							xYieldRequired = pdTRUE;
+						}
+					}
+					else
+					{
+						/* The priority of the running task is being raised,
+						but the running task must already be the highest
+						priority task able to run so no yield is required. */
 					}
 				}
-				else if( xTask == NULL )
+				else if( pxTCB == pxCurrentTCB )
 				{
-					/* Setting our own priority down means there may now be another
-					task of higher priority that is ready to execute. */
+					/* Setting the priority of the running task down means 
+					there may now be another task of higher priority that 
+					is ready to execute. */
 					xYieldRequired = pdTRUE;
 				}
 				else
 				{
-					/* Yield not required. */
+					/* Setting the priority of any other task down does not
+					require a yield as the running task must be above the
+					new priority of the task being modified. */
 				}
 
 				/* Remember the ready list the task might be referenced from
@@ -1003,15 +992,18 @@ tskTCB * pxNewTCB;
 				/* If the task is in the blocked or suspended list we need do
 				nothing more than change it's priority variable. However, if
 				the task is in a ready list it needs to be removed and placed
-				in the queue appropriate to its new priority. */
-				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxCurrentPriority ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
+				in the list appropriate to its new priority. */
+				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
 				{
 					/* The task is currently in its ready list - remove before adding
 					it to it's new ready list.  As we are in a critical section we
 					can do this even if the scheduler is suspended. */
 					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( unsigned portBASE_TYPE ) 0 )
 					{
-						taskRESET_READY_PRIORITY( uxPriorityUsedOnEntry );
+						/* It is known that the task is in its ready list so
+						there is no need to check again and the port level
+						reset macro can be called directly. */
+						portRESET_READY_PRIORITY( uxPriorityUsedOnEntry, uxTopReadyPriority );
 					}
 					prvAddTaskToReadyList( pxTCB );
 				}
@@ -1040,14 +1032,8 @@ tskTCB * pxNewTCB;
 
 		taskENTER_CRITICAL();
 		{
-			/* Ensure a yield is performed if the current task is being
-			suspended. */
-			if( xTaskToSuspend == ( xTaskHandle ) pxCurrentTCB )
-			{
-				xTaskToSuspend = NULL;
-			}
-
-			/* If null is passed in here then we are suspending ourselves. */
+			/* If null is passed in here then it is the running task that is
+			being suspended. */
 			pxTCB = prvGetTCBFromHandle( xTaskToSuspend );
 
 			traceTASK_SUSPEND( pxTCB );
@@ -1068,11 +1054,11 @@ tskTCB * pxNewTCB;
 		}
 		taskEXIT_CRITICAL();
 
-		if( ( void * ) xTaskToSuspend == NULL ) /*lint !e961 MISRA exception justified because it is not a redundant cast for some supported compilers. */
+		if( pxTCB == pxCurrentTCB )
 		{
 			if( xSchedulerRunning != pdFALSE )
 			{
-				/* We have just suspended the current task. */
+				/* The current task has just been suspended. */
 				portYIELD_WITHIN_API();
 			}
 			else
@@ -1576,6 +1562,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 		each stepped tick. */
 		configASSERT( ( xTickCount + xTicksToJump ) <= xNextTaskUnblockTime );
 		xTickCount += xTicksToJump;
+		traceINCREASE_TICK_COUNT( xTicksToJump );
 	}
 
 #endif /* configUSE_TICKLESS_IDLE */
@@ -2190,7 +2177,9 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 					if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
 					{
+						traceLOW_POWER_IDLE_BEGIN();
 						portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime );
+						traceLOW_POWER_IDLE_END();
 					}
 				}
 				xTaskResumeAll();
@@ -2331,11 +2320,6 @@ unsigned portBASE_TYPE x;
 	void vTaskAllocateMPURegions( xTaskHandle xTaskToModify, const xMemoryRegion * const xRegions )
 	{
 	tskTCB *pxTCB;
-
-		if( xTaskToModify == pxCurrentTCB )
-		{
-			xTaskToModify = NULL;
-		}
 
 		/* If null is passed in here then we are deleting ourselves. */
 		pxTCB = prvGetTCBFromHandle( xTaskToModify );

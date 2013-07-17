@@ -60,6 +60,11 @@
 #include <stdint.h>                           /* Include standard types */
 
 
+#if   defined ( __CC_ARM )
+  #define __ASM            __asm                                      /*!< asm keyword for ARM Compiler          */
+  #define __INLINE         __inline                                   /*!< inline keyword for ARM Compiler       */
+  #define __STATIC_INLINE  static __inline
+#endif
 
 /**
  * IO definitions

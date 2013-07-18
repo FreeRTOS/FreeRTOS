@@ -98,7 +98,7 @@ only for ports that are using the MPU. */
 		#define xTaskGetCurrentTaskHandle		MPU_xTaskGetCurrentTaskHandle
 		#define xTaskGetSchedulerState			MPU_xTaskGetSchedulerState
 		#define xTaskGetIdleTaskHandle			MPU_xTaskGetIdleTaskHandle
-		#define xTaskGetSystemState				MPU_xTaskGetSystemState
+		#define uxTaskGetSystemState			MPU_uxTaskGetSystemState
 
 		#define xQueueGenericCreate				MPU_xQueueGenericCreate
 		#define xQueueCreateMutex				MPU_xQueueCreateMutex

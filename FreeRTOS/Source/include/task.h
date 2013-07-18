@@ -137,16 +137,16 @@ typedef struct xTASK_PARAMTERS
 	xMemoryRegion xRegions[ portNUM_CONFIGURABLE_REGIONS ];
 } xTaskParameters;
 
-/* Used with the xTaskGetSystemState() function to return the state of each task
+/* Used with the uxTaskGetSystemState() function to return the state of each task
 in the system. */
 typedef struct xTASK_STATUS
 {
 	xTaskHandle xHandle;						/* The handle of the task to which the rest of the information in the structure relates. */
-	const signed char *pcTaskName;				/* A pointer to the task's name.  This valid will be invalid if the task was deleted since the structure was populated! */
+	const signed char *pcTaskName;				/* A pointer to the task's name.  This value will be invalid if the task was deleted since the structure was populated! */
 	unsigned portBASE_TYPE xTaskNumber;			/* A number unique to the task. */
 	eTaskState eCurrentState;					/* The state in which the task existed when the structure was populated. */
 	unsigned portBASE_TYPE uxCurrentPriority;	/* The priority at which the task was running (may be inherited) when the structure was populated. */
-	unsigned portBASE_TYPE uxBasePriority;		/* The priority to which the task will return if the task's current priority has been inherited to avoid unbounded priority inversion when obtaining a mutex.  Only valid is configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
+	unsigned portBASE_TYPE uxBasePriority;		/* The priority to which the task will return if the task's current priority has been inherited to avoid unbounded priority inversion when obtaining a mutex.  Only valid if configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
 	unsigned long ulRunTimeCounter;				/* The total run time allocated to the task so far, as defined by the run time stats clock.  See http://www.freertos.org/rtos-run-time-stats.html.  Only valid when configGENERATE_RUN_TIME_STATS is defined as 1 in FreeRTOSConfig.h. */
 	unsigned short usStackHighWaterMark;		/* The minimum amount of stack space that has remained for the task since the task was created.  The closer this value is to zero the closer the task has come to overflowing its stack. */
 } xTaskStatusType;
@@ -1145,9 +1145,9 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 
 /**
  * configUSE_TRACE_FACILITY must bet defined as 1 in FreeRTOSConfig.h for
- * xTaskGetSystemState() to be available.
+ * uxTaskGetSystemState() to be available.
  *
- * xTaskGetSystemState() populates an xTaskStatusType structure for each task in
+ * uxTaskGetSystemState() populates an xTaskStatusType structure for each task in
  * the system.  xTaskStatusType structures contain, among other things, members
  * for the task handle, task name, task priority, task state, and total amount
  * of run time consumed by the task.  See the xTaskStatusType structure
@@ -1157,29 +1157,30 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
  * the scheduler remaining suspended for an extended period.
  *
  * @param pxTaskStatusArray A pointer to an array of xTaskStatusType structures.
- * The array contain at least one xTaskStatusType structure for each task that
- * is under the control of the RTOS.  The number of tasks under the control of
- * the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
+ * The array must contain at least one xTaskStatusType structure for each task 
+ * that is under the control of the RTOS.  The number of tasks under the control 
+ * of the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
  *
  * @param uxArraySize The size of the array pointed to by the pxTaskStatusArray
  * parameter.  The size is specified as the number of indexes in the array, or
  * the number of xTaskStatusType structures contained in the array, not by the
  * number of bytes in the array.
  *
- * @param pultotalRunTime If configGENERATE_RUN_TIME_STATS is set to 1 in
- * FreeRTOSConfig.h then *pulTotalRunTime is set by xTaskGetSystemState() to the
+ * @param pulTotalRunTime If configGENERATE_RUN_TIME_STATS is set to 1 in
+ * FreeRTOSConfig.h then *pulTotalRunTime is set by uxTaskGetSystemState() to the
  * total run time (as defined by the run time stats clock, see
  * http://www.freertos.org/rtos-run-time-stats.html) since the target booted.
+ * pulTotalRunTime can be set to NULL to omit the total run time information.
  *
  * @return The number of xTaskStatusType structures that were populated by
- * xTaskGetSystemState().  This should equal the number returned by the
+ * uxTaskGetSystemState().  This should equal the number returned by the
  * uxTaskGetNumberOfTasks() API function, but will be zero if the value passed
  * in the uxArraySize parameter was too small.
  *
  * Example usage:
    <pre>
     // This example demonstrates how a human readable table of run time stats
-	// information is generated from raw data provided by xTaskGetSystemState().
+	// information is generated from raw data provided by uxTaskGetSystemState().
 	// The human readable table is written to pcWriteBuffer
 	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
 	{
@@ -1192,7 +1193,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 
 		// Take a snapshot of the number of tasks in case it changes while this
 		// function is executing.
-		uxArraySize = uxCurrentNumberOfTasks;
+		uxArraySize = uxCurrentNumberOfTasks();
 
 		// Allocate a xTaskStatusType structure for each task.  An array could be
 		// allocated statically at compile time.
@@ -1201,7 +1202,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 		if( pxTaskStatusArray != NULL )
 		{
 			// Generate raw status information about each task.
-			uxArraySize = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
+			uxArraySize = uxTaskGetSystemState( pxTaskStatusArray, uxArraySize, &ulTotalRunTime );
 
 			// For percentage calculations.
 			ulTotalRunTime /= 100UL;
@@ -1239,7 +1240,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 	}
 	</pre>
  */
-unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
+unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
 
 /**
  * task. h
@@ -1263,8 +1264,8 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * This function is provided for convenience only, and is used by many of the
  * demo applications.  Do not consider it to be part of the scheduler.
  *
- * vTaskList() calls xTaskGetSystemState(), then formats part of the
- * xTaskGetSystemState() output into a human readable table that displays task
+ * vTaskList() calls uxTaskGetSystemState(), then formats part of the
+ * uxTaskGetSystemState() output into a human readable table that displays task
  * names, states and stack usage.
  *
  * vTaskList() has a dependency on the sprintf() C library function that might
@@ -1274,7 +1275,7 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * FreeRTOS/Demo sub-directories in a file called printf-stdarg.c (note
  * printf-stdarg.c does not provide a full snprintf() implementation!).
  *
- * It is recommended that production systems call xTaskGetSystemState()
+ * It is recommended that production systems call uxTaskGetSystemState()
  * directly to get access to raw stats data, rather than indirectly through a
  * call to vTaskList().
  *
@@ -1316,8 +1317,8 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * This function is provided for convenience only, and is used by many of the
  * demo applications.  Do not consider it to be part of the scheduler.
  *
- * vTaskGetRunTimeStats() calls xTaskGetSystemState(), then formats part of the
- * xTaskGetSystemState() output into a human readable table that displays the
+ * vTaskGetRunTimeStats() calls uxTaskGetSystemState(), then formats part of the
+ * uxTaskGetSystemState() output into a human readable table that displays the
  * amount of time each task has spent in the Running state in both absolute and
  * percentage terms.
  *
@@ -1328,7 +1329,7 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * FreeRTOS/Demo sub-directories in a file called printf-stdarg.c (note
  * printf-stdarg.c does not provide a full snprintf() implementation!).
  *
- * It is recommended that production systems call xTaskGetSystemState() directly
+ * It is recommended that production systems call uxTaskGetSystemState() directly
  * to get access to raw stats data, rather than indirectly through a call to
  * vTaskGetRunTimeStats().
  *

@@ -109,7 +109,7 @@ to exclude the API function. */
 
 
 /* This demo makes use of one or more example stats formatting functions.  These
-format the raw data provided by the xTaskGetSystemState() function in to human
+format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within 
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1

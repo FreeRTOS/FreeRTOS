@@ -193,7 +193,7 @@ unsigned portBASE_TYPE MPU_uxTaskGetStackHighWaterMark( xTaskHandle xTask );
 xTaskHandle MPU_xTaskGetCurrentTaskHandle( void );
 portBASE_TYPE MPU_xTaskGetSchedulerState( void );
 xTaskHandle MPU_xTaskGetIdleTaskHandle( void );
-unsigned portBASE_TYPE MPU_xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
+unsigned portBASE_TYPE MPU_uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
 xQueueHandle MPU_xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType );
 signed portBASE_TYPE MPU_xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 portBASE_TYPE MPU_xQueueGenericReset( xQueueHandle pxQueue, portBASE_TYPE xNewQueue );
@@ -910,12 +910,12 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
-	unsigned portBASE_TYPE MPU_xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
+	unsigned portBASE_TYPE MPU_uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
 	{
 	unsigned portBASE_TYPE uxReturn;
 	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
-		uxReturn = xTaskGetSystemState( pxTaskStatusArray, uxArraySize, pulTotalRunTime );
+		uxReturn = uxTaskGetSystemState( pxTaskStatusArray, uxArraySize, pulTotalRunTime );
 		portRESET_PRIVILEGE( xRunningPrivileged );
 		return xReturn;
 	}

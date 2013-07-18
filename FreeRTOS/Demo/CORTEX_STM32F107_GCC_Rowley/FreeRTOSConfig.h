@@ -117,7 +117,7 @@ to exclude the API function. */
 format the raw data provided by the xTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within 
 FreeRTOS/Source/tasks.c for limitations. */
-#define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
 /* This is the raw value as per the Cortex-M3 NVIC.  Values can be 255
 (lowest) to 0 (1?) (highest). */

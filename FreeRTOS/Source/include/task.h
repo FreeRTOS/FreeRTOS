@@ -1245,7 +1245,7 @@ unsigned portBASE_TYPE xTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, 
  * task. h
  * <PRE>void vTaskList( char *pcWriteBuffer );</PRE>
  *
- * configUSE_TRACE_FACILITY and configINCLUDE_STATS_FORMATTING_FUNCTIONS must
+ * configUSE_TRACE_FACILITY and configUSE_STATS_FORMATTING_FUNCTIONS must
  * both be defined as 1 for this function to be available.  See the
  * configuration section of the FreeRTOS.org website for more information.
  *
@@ -1292,7 +1292,7 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * task. h
  * <PRE>void vTaskGetRunTimeStats( char *pcWriteBuffer );</PRE>
  *
- * configGENERATE_RUN_TIME_STATS and configINCLUDE_STATS_FORMATTING_FUNCTIONS
+ * configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
  * must both be defined as 1 for this function to be available.  The application
  * must also then provide definitions for
  * portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and portGET_RUN_TIME_COUNTER_VALUE

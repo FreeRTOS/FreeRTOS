@@ -114,7 +114,7 @@ to exclude the API function. */
 format the raw data provided by the xTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within 
 FreeRTOS/Source/tasks.c for limitations. */
-#define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
 #define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned char ) 7 << ( unsigned char ) 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!

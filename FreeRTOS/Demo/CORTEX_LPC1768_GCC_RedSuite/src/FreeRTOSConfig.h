@@ -125,7 +125,7 @@ to exclude the API function. */
 format the raw data provided by the xTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within 
 FreeRTOS/Source/tasks.c for limitations. */
-#define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
 /*-----------------------------------------------------------
  * Ethernet configuration.

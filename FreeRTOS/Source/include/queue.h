@@ -420,19 +420,20 @@ typedef void * xQueueSetMemberHandle;
  * <pre>
  portBASE_TYPE xQueueOverwrite(
 							  xQueueHandle xQueue,
-							  const void * pvItemToQueue,
+							  const void * pvItemToQueue
 						 );
  * </pre>
  *
- * Only for use with queues that can hold a single item - so the queue is either
+ * Only for use with queues that have a length of one - so the queue is either
  * empty or full.
  *
  * Post an item on a queue.  If the queue is already full then overwrite the
  * value held in the queue.  The item is queued by copy, not by reference.
+ *
  * This function must not be called from an interrupt service routine.
  * See xQueueOverwriteFromISR () for an alternative which may be used in an ISR.
  *
- * @param xQueue The handle to the queue on which the item is to be posted.
+ * @param xQueue The handle of the queue to which the data is being sent.
  *
  * @param pvItemToQueue A pointer to the item that is to be placed on the
  * queue.  The size of the items the queue will hold was defined when the
@@ -440,9 +441,9 @@ typedef void * xQueueSetMemberHandle;
  * into the queue storage area.
  *
  * @return xQueueOverwrite() is a macro that calls xQueueGenericSend(), and
- * therefore has the same return values as xQueueSendToFront().  However, as
- * xQueueOverwrite() will write to the queue even when the queue is full pdPASS
- * will be returned in all cases (errQUEUE_FULL will never be returned).
+ * therefore has the same return values as xQueueSendToFront().  However, pdPASS
+ * is the only value that can be returned because xQueueOverwrite() will write
+ * to the queue even when the queue is already full.
  *
  * Example usage:
    <pre>
@@ -470,7 +471,7 @@ typedef void * xQueueSetMemberHandle;
 
 	if( ulValReceived != 10 )
 	{
-		// Error!
+		// Error unless the item was removed by a different task.
 	}
 
 	// The queue is still full.  Use xQueueOverwrite() to overwrite the
@@ -1086,7 +1087,7 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 						 );
  * </pre>
  *
- * A version of xQueueOverwrite() that can be used from an interrupt service
+ * A version of xQueueOverwrite() that can be used in an interrupt service
  * routine (ISR).
  *
  * Only for use with queues that can hold a single item - so the queue is either
@@ -1105,14 +1106,14 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
  * @param pxHigherPriorityTaskWoken xQueueOverwriteFromISR() will set
  * *pxHigherPriorityTaskWoken to pdTRUE if sending to the queue caused a task
  * to unblock, and the unblocked task has a priority higher than the currently
- * running task.  If xQueueSendFromISR() sets this value to pdTRUE then
+ * running task.  If xQueueOverwriteFromISR() sets this value to pdTRUE then
  * a context switch should be requested before the interrupt is exited.
  *
- * @return xQueueOverwriteFromISR() is a macro that calls 
- * xQueueGenericSendFromISR(), and therefore has the same return values as 
- * xQueueSendToFrontFromISR().  However, as xQueueOverwriteFromISR() will write 
- * to the queue even when the queue is full pdPASS will be returned in all cases 
- * (errQUEUE_FULL will never be returned).
+ * @return xQueueOverwriteFromISR() is a macro that calls
+ * xQueueGenericSendFromISR(), and therefore has the same return values as
+ * xQueueSendToFrontFromISR().  However, pdPASS is the only value that can be
+ * returned because xQueueOverwriteFromISR() will write to the queue even when
+ * the queue is already full.
  *
  * Example usage:
    <pre>
@@ -1122,7 +1123,7 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
  void vFunction( void *pvParameters )
  {
  	// Create a queue to hold one unsigned long value.  It is strongly
-	// recommended *not* to use xQueueOverwrite() on queues that can
+	// recommended *not* to use xQueueOverwriteFromISR() on queues that can
 	// contain more than one value, and doing so will trigger an assertion
 	// if configASSERT() is defined.
 	xQueue = xQueueCreate( 1, sizeof( unsigned long ) );
@@ -1142,11 +1143,20 @@ unsigned long ulVarToSend, ulValReceived;
 	// pass because the value held in the queue will be overwritten with the
 	// new value.
 	ulVarToSend = 100;
-	xQueueOverwrite( xQueue, &ulVarToSend, &xHigherPriorityTaskWoken );
+	xQueueOverwriteFromISR( xQueue, &ulVarToSend, &xHigherPriorityTaskWoken );
 
 	// Reading from the queue will now return 100.
 
 	// ...
+	
+	if( xHigherPrioritytaskWoken == pdTRUE )
+	{
+		// Writing to the queue caused a task to unblock and the unblocked task
+		// has a priority higher than or equal to the priority of the currently
+		// executing task (the task this interrupt interrupted).  Perform a context
+		// switch so this interrupt returns directly to the unblocked task.
+		portYIELD_FROM_ISR(); // or portEND_SWITCHING_ISR() depending on the port.
+	}
 }
  </pre>
  * \defgroup xQueueOverwriteFromISR xQueueOverwriteFromISR

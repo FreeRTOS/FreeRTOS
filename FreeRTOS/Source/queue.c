@@ -824,7 +824,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 							{
 								/* Record the information required to implement
 								priority inheritance should it become necessary. */
-								pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle();
+								pxQueue->pxMutexHolder = ( signed char * ) xTaskGetCurrentTaskHandle();
 							}
 						}
 						#endif
@@ -1073,7 +1073,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 						{
 							/* Record the information required to implement
 							priority inheritance should it become necessary. */
-							pxQueue->pxMutexHolder = ( void * ) xTaskGetCurrentTaskHandle(); /*lint !e961 Cast is not redundant as xTaskHandle is a typedef. */
+							pxQueue->pxMutexHolder = ( signed char * ) xTaskGetCurrentTaskHandle(); /*lint !e961 Cast is not redundant as xTaskHandle is a typedef. */
 						}
 					}
 					#endif
@@ -1742,7 +1742,7 @@ signed portBASE_TYPE xReturn;
 					pxQueue->u.pcReadFrom = pxQueue->pcHead;
 				}
 				--( pxQueue->uxMessagesWaiting );
-				memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+				( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
 
 				xReturn = pdPASS;
 
@@ -1822,7 +1822,7 @@ signed portBASE_TYPE xReturn;
 				pxQueue->u.pcReadFrom = pxQueue->pcHead;
 			}
 			--( pxQueue->uxMessagesWaiting );
-			memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+			( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
 
 			if( ( *pxCoRoutineWoken ) == pdFALSE )
 			{

@@ -121,7 +121,7 @@ typedef xQueueHandle xSemaphoreHandle;
 		( xSemaphore ) = xQueueGenericCreate( ( unsigned portBASE_TYPE ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_BINARY_SEMAPHORE );	\
 		if( ( xSemaphore ) != NULL )																											\
 		{																																		\
-			xSemaphoreGive( ( xSemaphore ) );																									\
+			( void ) xSemaphoreGive( ( xSemaphore ) );																									\
 		}																																		\
 	}
 

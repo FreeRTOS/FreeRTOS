@@ -2182,7 +2182,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 						traceLOW_POWER_IDLE_END();
 					}
 				}
-				xTaskResumeAll();
+				( void ) xTaskResumeAll();
 			}
 		}
 		#endif /* configUSE_TICKLESS_IDLE */

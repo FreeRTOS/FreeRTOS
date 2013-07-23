@@ -111,7 +111,11 @@ is defined. */
 #define portFIRST_USER_INTERRUPT_NUMBER		( 16 )
 #define portNVIC_IP_REGISTERS_OFFSET_16 	( 0xE000E3F0 )
 #define portAIRCR_REG						( * ( ( volatile unsigned long * ) 0xE000ED0C ) )
+#define portMAX_8_BIT_VALUE					( ( unsigned char ) 0xff )
+#define portTOP_BIT_OF_BYTE					( ( unsigned char ) 0x80 )
+#define portMAX_PRIGROUP_BITS				( ( unsigned char ) 7 )
 #define portPRIORITY_GROUP_MASK				( 0x07UL << 8UL )
+#define portPRIGROUP_SHIFT					( 8UL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
@@ -182,6 +186,7 @@ static void prvStartFirstTask( void );
  */
 #if ( configASSERT_DEFINED == 1 )
 	 static unsigned char ucMaxSysCallPriority = 0;
+	 static unsigned long ulMaxPRIGROUPValue = 0;
 	 static const volatile unsigned char * const pcInterruptPriorityRegisters = ( unsigned char * ) portNVIC_IP_REGISTERS_OFFSET_16;
 #endif /* configASSERT_DEFINED */
 
@@ -251,6 +256,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	{
 		volatile unsigned long ulOriginalPriority;
 		volatile char * const pcFirstUserPriorityRegister = ( char * ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
+		volatile unsigned char ucMaxPriorityValue;
 
 		/* Determine the maximum priority from which ISR safe FreeRTOS API
 		functions can be called.  ISR safe functions are those that end in
@@ -260,13 +266,29 @@ portBASE_TYPE xPortStartScheduler( void )
 		Save the interrupt priority value that is about to be clobbered. */
 		ulOriginalPriority = *pcFirstUserPriorityRegister;
 
-		/* Write the configMAX_SYSCALL_INTERRUPT_PRIORITY value to an interrupt
-		priority register. */
-		*pcFirstUserPriorityRegister = configMAX_SYSCALL_INTERRUPT_PRIORITY;
+		/* Determine the number of priority bits available.  First write to all
+		possible bits. */
+		*pcFirstUserPriorityRegister = portMAX_8_BIT_VALUE;
 
-		/* Read back the written priority to obtain its value as seen by the
-		hardware, which will only implement a subset of the priority bits. */
-		ucMaxSysCallPriority = *pcFirstUserPriorityRegister;
+		/* Read the value back to see how many bits stuck. */
+		ucMaxPriorityValue = *pcFirstUserPriorityRegister;
+
+		/* Use the same mask on the maximum system call priority. */
+		ucMaxSysCallPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY & ucMaxPriorityValue;
+
+		/* Calculate the maximum acceptable priority group value for the number
+		of bits read back. */
+		ulMaxPRIGROUPValue = portMAX_PRIGROUP_BITS;
+		while( ( ucMaxPriorityValue & portTOP_BIT_OF_BYTE ) == portTOP_BIT_OF_BYTE )
+		{
+			ulMaxPRIGROUPValue--;
+			ucMaxPriorityValue <<= ( unsigned char ) 0x01;
+		}
+
+		/* Shift the priority group value back to its position within the AIRCR
+		register. */
+		ulMaxPRIGROUPValue <<= portPRIGROUP_SHIFT;
+		ulMaxPRIGROUPValue &= portPRIORITY_GROUP_MASK;
 
 		/* Restore the clobbered interrupt priority register to its original
 		value. */
@@ -584,43 +606,46 @@ __asm unsigned long vPortGetIPSR( void )
 			/* Look up the interrupt's priority. */
 			ucCurrentPriority = pcInterruptPriorityRegisters[ ulCurrentInterrupt ];
 
-			/* The following assertion will fail if a service routine (ISR) for 
+			/* The following assertion will fail if a service routine (ISR) for
 			an interrupt that has been assigned a priority above
 			configMAX_SYSCALL_INTERRUPT_PRIORITY calls an ISR safe FreeRTOS API
-			function.  ISR safe FreeRTOS API functions must *only* be called 
+			function.  ISR safe FreeRTOS API functions must *only* be called
 			from interrupts that have been assigned a priority at or below
 			configMAX_SYSCALL_INTERRUPT_PRIORITY.
-			
+
 			Numerically low interrupt priority numbers represent logically high
-			interrupt priorities, therefore the priority of the interrupt must 
-			be set to a value equal to or numerically *higher* than 
+			interrupt priorities, therefore the priority of the interrupt must
+			be set to a value equal to or numerically *higher* than
 			configMAX_SYSCALL_INTERRUPT_PRIORITY.
-			
+
 			Interrupts that	use the FreeRTOS API must not be left at their
 			default priority of	zero as that is the highest possible priority,
-			which is guaranteed to be above configMAX_SYSCALL_INTERRUPT_PRIORITY, 
-			and	therefore also guaranteed to be invalid.  
-			
-			FreeRTOS maintains separate thread and ISR API functions to ensure 
+			which is guaranteed to be above configMAX_SYSCALL_INTERRUPT_PRIORITY,
+			and	therefore also guaranteed to be invalid.
+
+			FreeRTOS maintains separate thread and ISR API functions to ensure
 			interrupt entry is as fast and simple as possible.
-			
+
 			The following links provide detailed information:
 			http://www.freertos.org/RTOS-Cortex-M3-M4.html
 			http://www.freertos.org/FAQHelp.html */
 			configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
 		}
 
-		/* Priority grouping:  The interrupt controller (NVIC) allows the bits 
-		that define each interrupt's priority to be split between bits that 
+		/* Priority grouping:  The interrupt controller (NVIC) allows the bits
+		that define each interrupt's priority to be split between bits that
 		define the interrupt's pre-emption priority bits and bits that define
-		the interrupt's sub-priority.  For simplicity all bits must be defined 
+		the interrupt's sub-priority.  For simplicity all bits must be defined
 		to be pre-emption priority bits.  The following assertion will fail if
-		this is not the case (if some bits represent a sub-priority).  
-		
-		If CMSIS libraries are being used then the correct setting can be 
-		achieved by calling	NVIC_SetPriorityGrouping( 0 ); before starting the 
-		scheduler. */
-		configASSERT( ( portAIRCR_REG & portPRIORITY_GROUP_MASK ) == 0 );
+		this is not the case (if some bits represent a sub-priority).
+
+		If the application only uses CMSIS libraries for interrupt
+		configuration then the correct setting can be achieved on all Cortex-M
+		devices by calling NVIC_SetPriorityGrouping( 0 ); before starting the
+		scheduler.  Note however that some vendor specific peripheral libraries
+		assume a non-zero priority group setting, in which cases using a value
+		of zero will result in unpredicable behaviour. */
+		configASSERT( ( portAIRCR_REG & portPRIORITY_GROUP_MASK ) <= ulMaxPRIGROUPValue );
 	}
 
 #endif /* configASSERT_DEFINED */

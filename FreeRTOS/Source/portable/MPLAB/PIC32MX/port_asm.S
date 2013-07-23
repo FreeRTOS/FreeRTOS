@@ -62,7 +62,7 @@
     1 tab == 4 spaces!
 */
 
-#include <p32xxxx.h>
+#include <xc.h>
 #include <sys/asm.h>
 #include "ISR_Support.h"
 
@@ -101,7 +101,7 @@ vPortTickInterruptHandler:
 
  	.set		noreorder
 	.set 		noat
- 	.ent		xPortStartScheduler
+ 	.ent		vPortStartFirstTask
 
 vPortStartFirstTask:
 
@@ -109,7 +109,7 @@ vPortStartFirstTask:
 	created so far. */
 	portRESTORE_CONTEXT
 
-	.end xPortStartScheduler
+	.end vPortStartFirstTask
 
 
 

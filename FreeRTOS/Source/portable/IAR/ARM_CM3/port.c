@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.1 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.2 - Copyright (C) 2013 Real Time Engineers Ltd.
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 
@@ -172,7 +172,7 @@ extern void vPortStartFirstTask( void );
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*
- * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure 
+ * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
  * FreeRTOS API functions are not called from interrupts that have been assigned
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  */
@@ -445,15 +445,17 @@ void xPortSysTickHandler( void )
 
 			/* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG
 			again, then set portNVIC_SYSTICK_LOAD_REG back to its standard
-			value. */
+			value.  The critical section is used to ensure the tick interrupt
+			can only execute once in the case that the reload register is near
+			zero. */
 			portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
-			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
-
-			vTaskStepTick( ulCompleteTickPeriods );
-
-			/* The counter must start by the time the reload value is reset. */
-			configASSERT( portNVIC_SYSTICK_CURRENT_VALUE_REG );
-			portNVIC_SYSTICK_LOAD_REG = ulTimerCountsForOneTick - 1UL;
+			portENTER_CRITICAL();
+			{
+				portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+				vTaskStepTick( ulCompleteTickPeriods );
+				portNVIC_SYSTICK_LOAD_REG = ulTimerCountsForOneTick - 1UL;
+			}
+			portEXIT_CRITICAL();
 		}
 	}
 

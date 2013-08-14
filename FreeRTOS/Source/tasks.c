@@ -939,7 +939,7 @@ tskTCB * pxNewTCB;
 						running task is being raised.  Is the priority being
 						raised above that of the running task? */
 						if( uxNewPriority >= pxCurrentTCB->uxPriority )
-						{							
+						{
 							xYieldRequired = pdTRUE;
 						}
 					}
@@ -952,8 +952,8 @@ tskTCB * pxNewTCB;
 				}
 				else if( pxTCB == pxCurrentTCB )
 				{
-					/* Setting the priority of the running task down means 
-					there may now be another task of higher priority that 
+					/* Setting the priority of the running task down means
+					there may now be another task of higher priority that
 					is ready to execute. */
 					xYieldRequired = pdTRUE;
 				}
@@ -1515,7 +1515,11 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 				{
 					if( pulTotalRunTime != NULL )
 					{
-						*pulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+						#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
+							portALT_GET_RUN_TIME_COUNTER_VALUE( ( *pulTotalRunTime ) );
+						#else
+							*pulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+						#endif					
 					}
 				}
 				#else

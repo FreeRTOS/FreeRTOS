@@ -71,9 +71,9 @@ more information on run time stats:
 http://www.freertos.org/rtos-run-time-stats.html */
 
 /* Addresses of registers in the Cortex-M debug hardware. */
-#define rtsDWT_CYCCNT 			( *( ( unsigned long * ) 0xE0001004 ) )
-#define rtsDWT_CONTROL 			( *( ( unsigned long * ) 0xE0001000 ) )
-#define rtsSCB_DEMCR 			( *( ( unsigned long * ) 0xE000EDFC ) )
+#define rtsDWT_CYCCNT 			( *( ( volatile unsigned long * ) 0xE0001004 ) )
+#define rtsDWT_CONTROL 			( *( ( volatile unsigned long * ) 0xE0001000 ) )
+#define rtsSCB_DEMCR 			( *( ( volatile unsigned long * ) 0xE000EDFC ) )
 #define rtsTRCENA_BIT			( 0x01000000UL )
 #define rtsCOUNTER_ENABLE_BIT	( 0x01UL )
 

@@ -101,7 +101,7 @@
 #define portNVIC_PENDSV_PRI					( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
 #define portNVIC_SYSTICK_PRI				( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 
-/* Constants required to check the validity of an interrupt prority. */
+/* Constants required to check the validity of an interrupt priority. */
 #define portFIRST_USER_INTERRUPT_NUMBER		( 16 )
 #define portNVIC_IP_REGISTERS_OFFSET_16 	( 0xE000E3F0 )
 #define portAIRCR_REG						( * ( ( volatile unsigned long * ) 0xE000ED0C ) )

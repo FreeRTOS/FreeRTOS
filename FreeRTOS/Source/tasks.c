@@ -2529,7 +2529,7 @@ tskTCB *pxNewTCB;
 
 	static unsigned short prvTaskCheckFreeStackSpace( const unsigned char * pucStackByte )
 	{
-	register unsigned short usCount = 0U;
+	unsigned short usCount = 0U;
 
 		while( *pucStackByte == tskSTACK_FILL_BYTE )
 		{

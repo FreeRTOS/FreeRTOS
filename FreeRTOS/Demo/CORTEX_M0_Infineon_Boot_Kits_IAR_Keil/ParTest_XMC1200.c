@@ -71,7 +71,7 @@
 #include "task.h"
 
 /* Hardware includes. */
-#include <XMC1300.h>
+#include <XMC1200.h>
 
 /* Standard demo include. */
 #include "partest.h"

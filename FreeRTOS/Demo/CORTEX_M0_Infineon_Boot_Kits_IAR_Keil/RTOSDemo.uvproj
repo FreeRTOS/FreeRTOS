@@ -393,24 +393,14 @@
           <GroupName>System</GroupName>
           <Files>
             <File>
-              <FileName>system_XMC1300.c</FileName>
+              <FileName>system_XMC1200.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\System_Keil\system_XMC1300.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_XMC1100.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\System_Keil\system_XMC1100.c</FilePath>
+              <FilePath>.\system_XMC1200.c</FilePath>
             </File>
             <File>
               <FileName>startup_XMC1300.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\System_Keil\startup_XMC1300.s</FilePath>
-            </File>
-            <File>
-              <FileName>system_XMC1200.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system_XMC1200.c</FilePath>
+              <FilePath>.\Keil_Specific\startup_XMC1300.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -520,7 +510,7 @@
             <File>
               <FileName>RegTest_Keil.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\RegTest_Keil.s</FilePath>
+              <FilePath>.\Keil_Specific\RegTest_Keil.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -896,7 +886,7 @@
               <MiscControls>--c99</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\CORTEX_M0_Infineon_Boot_Kits_IAR_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM0;..\Common\include</IncludePath>
+              <IncludePath>.;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM0;.\CMSIS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -938,104 +928,14 @@
           <GroupName>System</GroupName>
           <Files>
             <File>
-              <FileName>system_XMC1300.c</FileName>
+              <FileName>system_XMC1200.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\System_Keil\system_XMC1300.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>system_XMC1100.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\System_Keil\system_XMC1100.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
+              <FilePath>.\system_XMC1200.c</FilePath>
             </File>
             <File>
               <FileName>startup_XMC1300.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\System_Keil\startup_XMC1300.s</FilePath>
-            </File>
-            <File>
-              <FileName>system_XMC1200.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system_XMC1200.c</FilePath>
+              <FilePath>.\Keil_Specific\startup_XMC1300.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -1145,7 +1045,7 @@
             <File>
               <FileName>RegTest_Keil.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\RegTest_Keil.s</FilePath>
+              <FilePath>.\Keil_Specific\RegTest_Keil.s</FilePath>
             </File>
           </Files>
         </Group>

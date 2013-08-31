@@ -297,12 +297,11 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$\Dave\Generated\inc\DAVESupport</state>
+          <state>$PROJ_DIR$\.</state>
+          <state>$PROJ_DIR$\CMSIS</state>
+          <state>$PROJ_DIR$\..\common\include</state>
           <state>$PROJ_DIR$\..\..\source\include</state>
           <state>$PROJ_DIR$\..\..\source\portable\IAR\ARM_CM0</state>
-          <state>$PROJ_DIR$\.</state>
-          <state>$PROJ_DIR$\System_IAR</state>
-          <state>$PROJ_DIR$\..\common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -940,15 +939,6 @@
     </settings>
   </configuration>
   <group>
-    <name>System</name>
-    <file>
-      <name>$PROJ_DIR$\System_IAR\startup_XMC1200.s</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\system_XMC1200.c</name>
-    </file>
-  </group>
-  <group>
     <name>Common Demo Source</name>
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
@@ -990,6 +980,15 @@
       <name>$PROJ_DIR$\..\..\Source\timers.c</name>
     </file>
   </group>
+  <group>
+    <name>System</name>
+    <file>
+      <name>$PROJ_DIR$\IAR_Specific\startup_XMC1200.s</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\system_XMC1200.c</name>
+    </file>
+  </group>
   <file>
     <name>$PROJ_DIR$\main-blinky.c</name>
   </file>
@@ -1003,7 +1002,7 @@
     <name>$PROJ_DIR$\ParTest_XMC1200.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\RegTest_IAR.s</name>
+    <name>$PROJ_DIR$\IAR_Specific\RegTest_IAR.s</name>
   </file>
 </project>
 

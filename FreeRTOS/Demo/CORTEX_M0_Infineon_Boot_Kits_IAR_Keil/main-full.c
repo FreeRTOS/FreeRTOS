@@ -139,7 +139,7 @@ multiple of this. */
 #define mainFLASH_TIMER_BASE_RATE			( 200UL / portTICK_RATE_MS )
 
 /* The LED toggle by the check timer. */
-#define mainCHECK_LED						( 1 )
+#define mainCHECK_LED						( 4 )
 
 /*-----------------------------------------------------------*/
 

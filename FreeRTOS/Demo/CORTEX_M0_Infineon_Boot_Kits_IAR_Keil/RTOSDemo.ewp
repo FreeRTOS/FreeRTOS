@@ -940,12 +940,12 @@
     </settings>
   </configuration>
   <group>
-    <name>CMSIS</name>
+    <name>System</name>
     <file>
       <name>$PROJ_DIR$\System_IAR\startup_XMC1200.s</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\System_IAR\system_XMC1200.c</name>
+      <name>$PROJ_DIR$\system_XMC1200.c</name>
     </file>
   </group>
   <group>
@@ -962,78 +962,6 @@
     <file>
       <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
     </file>
-  </group>
-  <group>
-    <name>Dave</name>
-    <excluded>
-      <configuration>Debug</configuration>
-    </excluded>
-    <group>
-      <name>Generated</name>
-      <group>
-        <name>src</name>
-        <group>
-          <name>BCCUCH01</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\BCCUCH01\BCCUCH01.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\BCCUCH01\BCCUCH01_Conf.c</name>
-          </file>
-        </group>
-        <group>
-          <name>BCCUDIM01</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\BCCUDIM01\BCCUDIM01.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\BCCUDIM01\BCCUDIM01_Conf.c</name>
-          </file>
-        </group>
-        <group>
-          <name>BCCUGLOBAL</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\BCCUGLOBAL\BCCUGLOBAL.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\BCCUGLOBAL\BCCUGLOBAL_Conf.c</name>
-          </file>
-        </group>
-        <group>
-          <name>CLK002</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\CLK002\CLK002.c</name>
-          </file>
-        </group>
-        <group>
-          <name>COLORLAMP01</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\COLORLAMP01\COLORLAMP01.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\COLORLAMP01\COLORLAMP01_Conf.c</name>
-          </file>
-        </group>
-        <group>
-          <name>DAVESupport</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\DAVESupport\DAVE3.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\DAVESupport\MULTIPLEXER.c</name>
-          </file>
-        </group>
-        <group>
-          <name>IO003</name>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\IO003\IO003.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\Dave\Generated\src\IO003\IO003_Conf.c</name>
-          </file>
-        </group>
-      </group>
-    </group>
   </group>
   <group>
     <name>FreeRTOS Source</name>

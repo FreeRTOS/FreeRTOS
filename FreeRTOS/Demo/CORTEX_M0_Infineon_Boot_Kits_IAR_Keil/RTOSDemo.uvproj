@@ -403,14 +403,14 @@
               <FilePath>.\System_Keil\system_XMC1100.c</FilePath>
             </File>
             <File>
-              <FileName>system_XMC1200.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\System_Keil\system_XMC1200.c</FilePath>
-            </File>
-            <File>
               <FileName>startup_XMC1300.s</FileName>
               <FileType>2</FileType>
               <FilePath>.\System_Keil\startup_XMC1300.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_XMC1200.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\system_XMC1200.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -675,7 +675,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
+            <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -896,7 +896,7 @@
               <MiscControls>--c99</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_M0_Infineon_Boot_Kits_IAR_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM0;..\Common\include</IncludePath>
+              <IncludePath>.;..\CORTEX_M0_Infineon_Boot_Kits_IAR_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM0;..\Common\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1028,14 +1028,14 @@
               </FileOption>
             </File>
             <File>
-              <FileName>system_XMC1200.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\System_Keil\system_XMC1200.c</FilePath>
-            </File>
-            <File>
               <FileName>startup_XMC1300.s</FileName>
               <FileType>2</FileType>
               <FilePath>.\System_Keil\startup_XMC1300.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_XMC1200.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\system_XMC1200.c</FilePath>
             </File>
           </Files>
         </Group>

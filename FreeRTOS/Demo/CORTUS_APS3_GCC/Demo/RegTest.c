@@ -77,33 +77,15 @@
 static void vRegTest1( void *pvParameters );
 static void vRegTest2( void *pvParameters );
 
-/*
- * A task that tests the management of the Interrupt Controller (IC) during a
- * context switch.  The state of the IC current mask level must be maintained
- * across context switches.  Also, yields must be able to be performed when the
- * interrupt controller mask is not zero.  This task tests both these
- * requirements.
- */
-static void prvICCheck1Task( void *pvParameters );
-
 /* Counters used to ensure the tasks are still running. */
-static volatile unsigned long ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL, ulICTestCounter = 0UL;
+static volatile unsigned long ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
 
-/* Handle to the task that checks the interrupt controller behaviour.  This is
-used by the traceTASK_SWITCHED_OUT() macro, which is defined in
-FreeRTOSConfig.h and can be removed - it is just for the purpose of this test. */
-xTaskHandle xICTestTask = NULL;
-
-/* Variable that gets set to pdTRUE by traceTASK_SWITCHED_OUT each time
-is switched out. */
-volatile unsigned long ulTaskSwitchedOut;
 /*-----------------------------------------------------------*/
 
 void vStartRegTestTasks( void )
 {
 	xTaskCreate( vRegTest1, ( signed char * ) "RTest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vRegTest2, ( signed char * ) "RTest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvICCheck1Task, ( signed char * ) "ICCheck", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xICTestTask );
 }
 /*-----------------------------------------------------------*/
 
@@ -232,61 +214,9 @@ static void vRegTest2( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static void prvICCheck1Task( void *pvParameters )
-{
-long lICCheckStatus = pdPASS;
-
-	for( ;; )
-	{
-		/* At this point the interrupt mask should be zero. */
-		if( ic->cpl != 0 )
-		{
-			lICCheckStatus = pdFAIL;
-		}
-
-		/* If we yield here, it should still be 0 when the task next runs.
-		ulTaskSwitchedOut is just used to check that a switch does actually
-		happen. */
-		ulTaskSwitchedOut = pdFALSE;
-		taskYIELD();
-		if( ( ulTaskSwitchedOut != pdTRUE ) || ( ic->cpl != 0 ) )
-		{
-			lICCheckStatus = pdFAIL;
-		}
-
-		/* Set the interrupt mask to portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1,
-		before checking it is as expected. */
-		taskENTER_CRITICAL();
-		if( ic->cpl != ( portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1 ) )
-		{
-			lICCheckStatus = pdFAIL;
-		}
-
-		/* If we yield here, it should still be
-		portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 10 when the task next runs.  */
-		ulTaskSwitchedOut = pdFALSE;
-		taskYIELD();
-		if( ( ulTaskSwitchedOut != pdTRUE ) || ( ic->cpl != ( portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1 ) ) )
-		{
-			lICCheckStatus = pdFAIL;
-		}
-
-		/* Return the interrupt mask to its default state. */
-		taskEXIT_CRITICAL();
-
-		/* Just increment a loop counter so the check task knows if this task
-		is still running or not. */
-		if( lICCheckStatus == pdPASS )
-		{
-			ulICTestCounter++;
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
 portBASE_TYPE xAreRegTestTasksStillRunning( void )
 {
-static unsigned long ulLastCounter1 = 0UL, ulLastCounter2 = 0UL, ulLastICTestCounter = 0UL;
+static unsigned long ulLastCounter1 = 0UL, ulLastCounter2 = 0UL;
 long lReturn;
 
 	/* Check that both loop counters are still incrementing, indicating that
@@ -299,10 +229,6 @@ long lReturn;
 	{
 		lReturn = pdFAIL;
 	}
-	else if( ulLastICTestCounter == ulICTestCounter )
-	{
-		lReturn = pdFAIL;
-	}
 	else
 	{
 		lReturn = pdPASS;
@@ -310,21 +236,6 @@ long lReturn;
 
 	ulLastCounter1 = ulRegTest1Counter;
 	ulLastCounter2 = ulRegTest2Counter;
-	ulLastICTestCounter = ulICTestCounter;
 
 	return lReturn;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

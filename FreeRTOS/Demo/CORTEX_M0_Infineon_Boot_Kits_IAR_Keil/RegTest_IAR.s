@@ -62,96 +62,167 @@
     1 tab == 4 spaces!
 */
 
-/*-----------------------------------------------------------
- * Simple GPIO (parallel port) IO routines.
- *-----------------------------------------------------------*/
+	RSEG    CODE:CODE(2)
+	thumb
 
-/* Kernel includes. */
-#include "FreeRTOS.h"
-#include "task.h"
 
-/* Hardware includes. */
-#include <XMC1200.h>
+	EXTERN ulRegTest1LoopCounter
+	EXTERN ulRegTest2LoopCounter
 
-/* Standard demo include. */
-#include "partest.h"
-
-/* The port bits on which LEDs are connected. */
-static const unsigned long ulLEDBits[] = 
-{ 
-	1UL << 0, /* P0.0 */
-	1UL << 2, /* P0.2 */
-	1UL << 5, /* P0.5 */
-	1UL << 6, /* P0.6 */
-	1UL << 7  /* P0.7 */
-};
-
-#define partstNUM_LEDS	( sizeof( ulLEDBits ) / sizeof( unsigned long ) )
-
-/* Shift the LED bit into the correct position within the POW register to
-perform the desired operation. */
-#define partstON_SHIFT	( 16UL )
-#define partstOFF_SHIFT	( 0UL )
+	PUBLIC vRegTest1Task
+	PUBLIC vRegTest2Task
 
 /*-----------------------------------------------------------*/
+vRegTest1Task
 
-void vParTestInitialise( void )
-{
-	/* Configure relevant port P0 to push pull output to drive LEDs. */
-	
-	/* P0.0 */
-	PORT0->IOCR0 &= ~( ( 0xFFUL <<  0 ) );
-	PORT0->IOCR0 |= ( 0x80UL <<  0 );
-	vParTestSetLED( 0, pdFALSE );
+	/* Fill the core registers with known values.  This is only done once. */
+	movs r1, #101
+	movs r2, #102
+	movs r3, #103
+	movs r4, #104
+	movs r5, #105
+	movs r6, #106
+	movs r7, #107
+	movs r0, #108
+	mov	 r8, r0
+	movs r0, #109
+	mov  r9, r0
+	movs r0, #110
+	mov	 r10, r0
+	movs r0, #111
+	mov	 r11, r0
+	movs r0, #112
+	mov  r12, r0
+	movs r0, #100
 
-	/* P0.2 */
-	PORT0->IOCR0 &= ~( ( 0xFFUL << 16 ) );
-	PORT0->IOCR0 |= ( 0x80UL << 16 );
-	vParTestSetLED( 1, pdFALSE );
+reg1_loop
+	/* Repeatedly check that each register still contains the value written to
+	it when the task started. */
+	cmp	r0, #100
+	bne	reg1_error_loop
+	cmp	r1, #101
+	bne	reg1_error_loop
+	cmp	r2, #102
+	bne	reg1_error_loop
+	cmp r3, #103
+	bne	reg1_error_loop
+	cmp	r4, #104
+	bne	reg1_error_loop
+	cmp	r5, #105
+	bne	reg1_error_loop
+	cmp	r6, #106
+	bne	reg1_error_loop
+	cmp	r7, #107
+	bne	reg1_error_loop
+	movs r0, #108
+	cmp	r8, r0
+	bne	reg1_error_loop
+	movs r0, #109
+	cmp	r9, r0
+	bne	reg1_error_loop
+	movs r0, #110
+	cmp	r10, r0
+	bne	reg1_error_loop
+	movs r0, #111
+	cmp	r11, r0
+	bne	reg1_error_loop
+	movs r0, #112
+	cmp	r12, r0
+	bne	reg1_error_loop
 
-	/* P0.5 */
-	PORT0->IOCR4 &= ~( ( 0xFFUL << 8 ) );
-	PORT0->IOCR4 |= ( 0x80UL << 8 );
-	vParTestSetLED( 2, pdFALSE );
+	/* Everything passed, increment the loop counter. */
+	push { r1 }
+	ldr	r0, =ulRegTest1LoopCounter
+	ldr r1, [r0]
+	adds r1, r1, #1
+	str r1, [r0]
+	pop { r1 }
 
-	/* P0.6 */
-	PORT0->IOCR4 &= ~( ( 0xFFUL << 16 ) );
-	PORT0->IOCR4 |= ( 0x80UL << 16 );
-	vParTestSetLED( 3, pdFALSE );
+	/* Start again. */
+	movs r0, #100
+	b reg1_loop
 
-	/* P0.7 */
-	PORT0->IOCR4 &= ~( ( 0xFFUL << 24 ) );
-	PORT0->IOCR4 |= ( 0x80UL << 24 );
-	vParTestSetLED( 4, pdFALSE );
-}
-/*-----------------------------------------------------------*/
+reg1_error_loop
+	/* If this line is hit then there was an error in a core register value.
+	The loop ensures the loop counter stops incrementing. */
+	b reg1_error_loop
+	nop
 
-void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
-{
-	if( ulLED < partstNUM_LEDS )
-	{
-		if( xValue == pdTRUE )
-		{
-			/* Turn the LED on. */			
-			PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT );
-		}
-		else
-		{
-			/* Turn the LED off. */			
-			PORT0->OMR = ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
-		}
-	}
-}
-/*-----------------------------------------------------------*/
 
-void vParTestToggleLED( unsigned long ulLED )
-{
-	if( ulLED < partstNUM_LEDS )
-	{
-		/* Setting both the ON and OFF bits simultaneously results in the bit
-		being toggled. */
-		PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT ) | ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
-	}
-}
-/*-----------------------------------------------------------*/
 
+vRegTest2Task
+
+	/* Fill the core registers with known values.  This is only done once. */
+	movs r1, #1
+	movs r2, #2
+	movs r3, #3
+	movs r4, #4
+	movs r5, #5
+	movs r6, #6
+	movs r7, #7
+	movs r0, #8
+	mov	r8, r0
+	movs r0, #9
+	mov r9, r0
+	movs r0, #10
+	mov	r10, r0
+	movs r0, #11
+	mov	r11, r0
+	movs r0, #12
+	mov r12, r0
+	movs r0, #10
+
+reg2_loop
+	/* Repeatedly check that each register still contains the value written to
+	it when the task started. */
+	cmp	r0, #10
+	bne	reg2_error_loop
+	cmp	r1, #1
+	bne	reg2_error_loop
+	cmp	r2, #2
+	bne	reg2_error_loop
+	cmp r3, #3
+	bne	reg2_error_loop
+	cmp	r4, #4
+	bne	reg2_error_loop
+	cmp	r5, #5
+	bne	reg2_error_loop
+	cmp	r6, #6
+	bne	reg2_error_loop
+	cmp	r7, #7
+	bne	reg2_error_loop
+	movs r0, #8
+	cmp	r8, r0
+	bne	reg2_error_loop
+	movs r0, #9
+	cmp	r9, r0
+	bne	reg2_error_loop
+	movs r0, #10
+	cmp	r10, r0
+	bne	reg2_error_loop
+	movs r0, #11
+	cmp	r11, r0
+	bne	reg2_error_loop
+	movs r0, #12
+	cmp	r12, r0
+	bne	reg2_error_loop
+
+	/* Everything passed, increment the loop counter. */
+	push { r1 }
+	ldr	r0, =ulRegTest2LoopCounter
+	ldr r1, [r0]
+	adds r1, r1, #1
+	str r1, [r0]
+	pop { r1 }
+
+	/* Start again. */
+	movs r0, #10
+	b reg2_loop
+
+reg2_error_loop
+	;/* If this line is hit then there was an error in a core register value.
+	;The loop ensures the loop counter stops incrementing. */
+	b reg2_error_loop
+	nop
+
+	END

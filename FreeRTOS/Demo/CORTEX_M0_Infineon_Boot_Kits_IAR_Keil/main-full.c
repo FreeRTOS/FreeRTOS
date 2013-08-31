@@ -194,10 +194,10 @@ configured). */
 const size_t xRegTestStackSize = 25U;
 
 	/* Create the standard demo tasks */
-//	vCreateBlockTimeTasks();
-//	vStartCountingSemaphoreTasks();
-//	vStartRecursiveMutexTasks();
-//	vStartDynamicPriorityTasks();
+	vCreateBlockTimeTasks();
+	vStartCountingSemaphoreTasks();
+	vStartRecursiveMutexTasks();
+	vStartDynamicPriorityTasks();
 
 	/* Create the register test tasks as described at the top of this file.
 	These are naked functions that don't use any stack.  A stack still has
@@ -225,21 +225,21 @@ const size_t xRegTestStackSize = 25U;
 								( void * ) ulTimer,						/* The ID is used to hold the number of the LED that will be flashed. */
 								prvFlashTimerCallback					/* The callback function that inspects the status of all the other tasks. */
 							);
-		
+
 		if( xTimer != NULL )
 		{
-//			xTimerStart( xTimer, mainDONT_BLOCK );
+			xTimerStart( xTimer, mainDONT_BLOCK );
 		}
 	}
-	
+
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-//	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-//							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-//							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-//							( void * ) 0,						/* The ID is not used, so can be set to anything. */
-//							prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
-//					  	);
+	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
+							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+							( void * ) 0,						/* The ID is not used, so can be set to anything. */
+							prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+					  	);
 
 	/* If the software timer was created successfully, start it.  It won't
 	actually start running until the scheduler starts.  A block time of
@@ -247,7 +247,7 @@ const size_t xRegTestStackSize = 25U;
 	time will be ignored because the scheduler has not started yet. */
 	if( xTimer != NULL )
 	{
-//		xTimerStart( xTimer, mainDONT_BLOCK );
+		xTimerStart( xTimer, mainDONT_BLOCK );
 	}
 
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
@@ -339,6 +339,6 @@ unsigned long ulLED;
 	ulLED = ( unsigned long ) pvTimerGetTimerID( xTimer );
 
 	/* Toggle the LED. */
-	vParTestToggleLED( ulLED );	
+	vParTestToggleLED( ulLED );
 }
 

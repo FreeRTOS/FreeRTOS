@@ -407,6 +407,11 @@
               <FileType>1</FileType>
               <FilePath>.\System_Keil\system_XMC1200.c</FilePath>
             </File>
+            <File>
+              <FileName>startup_XMC1300.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\System_Keil\startup_XMC1300.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -468,11 +473,6 @@
               <FilePath>.\main-full.c</FilePath>
             </File>
             <File>
-              <FileName>RegTest.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\RegTest.s</FilePath>
-            </File>
-            <File>
               <FileName>ParTest_XMC1200.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ParTest_XMC1200.c</FilePath>
@@ -516,6 +516,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>RegTest_Keil.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\RegTest_Keil.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -670,7 +675,7 @@
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
@@ -888,7 +893,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--c99</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\CORTEX_M0_Infineon_Boot_Kits_IAR_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM0;..\Common\include</IncludePath>
@@ -1027,6 +1032,11 @@
               <FileType>1</FileType>
               <FilePath>.\System_Keil\system_XMC1200.c</FilePath>
             </File>
+            <File>
+              <FileName>startup_XMC1300.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\System_Keil\startup_XMC1300.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1088,11 +1098,6 @@
               <FilePath>.\main-full.c</FilePath>
             </File>
             <File>
-              <FileName>RegTest.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\RegTest.s</FilePath>
-            </File>
-            <File>
               <FileName>ParTest_XMC1200.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ParTest_XMC1200.c</FilePath>
@@ -1136,6 +1141,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>RegTest_Keil.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\RegTest_Keil.s</FilePath>
             </File>
           </Files>
         </Group>

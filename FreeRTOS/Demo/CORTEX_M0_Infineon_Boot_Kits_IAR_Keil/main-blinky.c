@@ -113,7 +113,7 @@
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
 to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			( 1000 / portTICK_RATE_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -162,12 +162,12 @@ void main_blinky( void )
 	{
 		/* Start the two tasks as described in the comments at the top of this
 		file. */
-//		xTaskCreate( prvQueueReceiveTask,					/* The function that implements the task. */
-//					( signed char * ) "Rx", 				/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-//					configMINIMAL_STACK_SIZE, 				/* The size of the stack to allocate to the task. */
-//					( void * ) mainQUEUE_RECEIVE_PARAMETER, /* The parameter passed to the task - just to check the functionality. */
-//					mainQUEUE_RECEIVE_TASK_PRIORITY, 		/* The priority assigned to the task. */
-//					NULL );									/* The task handle is not required, so NULL is passed. */
+		xTaskCreate( prvQueueReceiveTask,					/* The function that implements the task. */
+					( signed char * ) "Rx", 				/* The text name assigned to the task - for debug only as it is not used by the kernel. */
+					configMINIMAL_STACK_SIZE, 				/* The size of the stack to allocate to the task. */
+					( void * ) mainQUEUE_RECEIVE_PARAMETER, /* The parameter passed to the task - just to check the functionality. */
+					mainQUEUE_RECEIVE_TASK_PRIORITY, 		/* The priority assigned to the task. */
+					NULL );									/* The task handle is not required, so NULL is passed. */
 
 		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, ( void * ) mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
@@ -189,12 +189,6 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-for( ;; )
-{
-	vTaskDelay( 100 );
-	vParTestToggleLED( 0 );
-}
-	
 	/* Check the task parameter is as expected. */
 	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_SEND_PARAMETER );
 

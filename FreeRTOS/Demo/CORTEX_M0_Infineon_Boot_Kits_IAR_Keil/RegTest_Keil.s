@@ -69,6 +69,8 @@
 	IMPORT ulRegTest1LoopCounter
 	IMPORT ulRegTest2LoopCounter
 
+	EXTERN vPortYield ;////////////////////////////////////////////////////////////////////////////////////////
+
 	EXPORT vRegTest1Task
 	EXPORT vRegTest2Task
 	
@@ -142,6 +144,11 @@ reg1_loop
 
 	;/* Start again. */
 	movs r0, #100
+	
+	push {r0-r1}
+	bl vPortYield	;;///////////////////////////////////////////////////////////////////////////////////////////////////
+	pop {r0-r1}
+	
 	b reg1_loop
 
 reg1_error_loop

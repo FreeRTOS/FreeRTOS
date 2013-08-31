@@ -42,7 +42,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000200
+Heap_Size       EQU     0x00000000
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
@@ -74,7 +74,7 @@ __heap_limit
 ;                     <7=> Reserved
 ;     <o0.31>      do not move CLK_VAL1 to SCU_CLKCR[0..19]
 ;   </h>
-CLK_VAL1_Val    EQU     0x80000000      ; 0xF0000000
+CLK_VAL1_Val    EQU     0x00000100      ; 0xF0000000
 
 ;   <h> CLK_VAL2 Configuration
 ;     <o0.0>    disable VADC and SHS Gating
@@ -90,7 +90,7 @@ CLK_VAL1_Val    EQU     0x80000000      ; 0xF0000000
 ;     <o0.10>   disable RTC Gating
 ;     <o0.31>   do not move CLK_VAL2 to SCU_CGATCLR0[0..10]
 ;   </h>
-CLK_VAL2_Val    EQU     0x80000000      ; 0xF0000000
+CLK_VAL2_Val    EQU     0x00000000      ; 0xF0000000
 ; </h>
 
                 PRESERVE8

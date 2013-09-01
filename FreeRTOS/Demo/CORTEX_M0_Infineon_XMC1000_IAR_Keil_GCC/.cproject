@@ -57,6 +57,7 @@
 								<option id="com.atollic.truestudio.common_options.target.endianess.1238437628" name="Endianess" superClass="com.atollic.truestudio.common_options.target.endianess"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_garbage.1914199267" name="Prepare dead code removal" superClass="com.atollic.truestudio.gcc.optimization.prep_garbage" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_data.989109200" name="Prepare dead data removal" superClass="com.atollic.truestudio.gcc.optimization.prep_data" value="true" valueType="boolean"/>
+								<option id="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level.47441462" name="Optimization Level" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level" value="com.atollic.truestudio.gcc.optimization.level.00" valueType="enumerated"/>
 								<inputType id="com.atollic.truestudio.gcc.input.1008000819" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.298485676" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld">
@@ -105,9 +106,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.31389710" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.atollic.truestudio.exe.debug.2093031755.1258798340" name="main-full.c" rcbsApplicability="disable" resourcePath="main-full.c" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.gcc.37591077.227330701">
-						<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.37591077.227330701" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.37591077"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Keil_Specific|IAR_Specific" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

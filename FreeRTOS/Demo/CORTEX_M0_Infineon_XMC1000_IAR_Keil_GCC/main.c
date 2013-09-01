@@ -85,9 +85,11 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
 /* Demo application include. */
 #include "ParTest.h"
+#include "QueueSet.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
@@ -194,7 +196,39 @@ void vApplicationTickHook( void )
 	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
+	functions can be used (those that end in FromISR()).  The code in this
+	tick hook implementation is for demonstration only - it has no real
+	purpose.  It just gives a semaphore every 50ms.  The semaphore unblocks a
+	task that then toggles an LED.  Additionally, the call to
+	vQueueSetAccessQueueSetFromISR() is part of the "standard demo tasks"
+	functionality. */
+
+	/* The semaphore and associated task are not created when the simple blinky
+	demo is used. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
+	{
+	static unsigned long ulLastGiveTime = 0UL;
+	const unsigned long ulRate = 50UL / portTICK_RATE_MS;
+	extern xSemaphoreHandle xLEDSemaphore;
+
+		configASSERT( xLEDSemaphore );
+
+		if( ( xTaskGetTickCountFromISR() - ulLastGiveTime ) > ulRate )
+		{
+			/* The second parameter is normally used to determine if a context
+			switch should be performed or not.  In this case the function is
+			being performed from the tick hook, so the scheduler will make that
+			assessment before returning to a task anyway - so the parameter is
+			not needed and is just set to NULL. */
+			xSemaphoreGiveFromISR( xLEDSemaphore, NULL );
+			ulLastGiveTime += ulRate;
+		}
+
+		/* Write to a queue that is in use as part of the queue set demo to
+		demonstrate using queue sets from an ISR. */
+		vQueueSetAccessQueueSetFromISR();
+	}
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 

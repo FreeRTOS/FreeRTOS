@@ -90,11 +90,15 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  *
+ * "Semaphore take task" - This task does nothing but block on a semaphore that
+ * is 'given' from the tick hook function (which is defined in main.c).  It
+ * toggles the fourth LED each time it receives the semaphore.  The Semahore is
+ * given every 50ms, so LED 4 toggles every 50ms.
+ *
  * "Flash timers" - A software timer callback function is defined that does
  * nothing but toggle an LED.  Three software timers are created that each
  * use the same callback function, but each toggles a different LED at a
- * different frequency.  One software timer uses LED1, another LED2 and the
- * third LED3.
+ * different frequency.  The timers control the first three LEDs.
  *
  * "Check" software timer - The check timer period is initially set to three
  * seconds.  Its callback function checks that all the standard demo tasks, and
@@ -102,16 +106,17 @@
  * without reporting any errors.  If the check timer callback discovers that a
  * task has either stalled, or reported an error, then it changes the period of
  * the check timer from the initial three seconds, to just 200ms.  The callback
- * function also toggles LED 4 each time it is called.  This provides a visual
- * indication of the system status:  If the LED toggles every three seconds,
- * then no issues have been discovered.  If the LED toggles every 200ms, then
- * an issue has been discovered with at least one task.
+ * function also toggles the fifth LED each time it is called.  This provides a
+ * visual indication of the system status:  If the LED toggles every three
+ * seconds then no issues have been discovered.  If the LED toggles every 200ms,
+ * then an issue has been discovered with at least one task.
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "semphr.h"
 #include "timers.h"
 
 /* Common demo includes. */
@@ -120,6 +125,8 @@
 #include "recmutex.h"
 #include "ParTest.h"
 #include "dynamic.h"
+#include "QueueOverwrite.h"
+#include "QueueSet.h"
 
 /* The period after which the check timer will expire provided no errors have
 been reported by any of the standard demo tasks.  ms are converted to the
@@ -140,6 +147,10 @@ multiple of this. */
 
 /* The LED toggle by the check timer. */
 #define mainCHECK_LED						( 4 )
+
+/* The LED toggled each time the task implemented by the prvSemaphoreTakeTask()
+function takes the semaphore that is given by the tick hook function. */
+#define mainSEMAPHORE_LED					( 3 )
 
 /*-----------------------------------------------------------*/
 
@@ -167,6 +178,12 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 static void prvFlashTimerCallback( xTimerHandle xTimer );
 
 /*
+ * The task that toggles an LED each time the semaphore 'given' by the tick
+ * hook function (which is defined in main.c) is 'taken' in the task.
+ */
+static void prvSemaphoreTakeTask( void *pvParameters );
+
+/*
  * Called by main() to create the comprehensive test/demo application if
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not set to 1.
  */
@@ -180,6 +197,10 @@ incrementing, then the register check tasks has not discovered any errors.  If
 a variable stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
+/* The semaphore that is given by the tick hook function (defined in main.c)
+and taken by the task implemented by the prvSemaphoreTakeTask() function.  The
+task toggles LED mainSEMAPHORE_LED each time the semaphore is taken. */
+xSemaphoreHandle xLEDSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
 void main_full( void )
@@ -198,6 +219,18 @@ const size_t xRegTestStackSize = 25U;
 	vStartCountingSemaphoreTasks();
 	vStartRecursiveMutexTasks();
 	vStartDynamicPriorityTasks();
+	vStartQueueSetTasks();
+	vStartQueueOverwriteTask( tskIDLE_PRIORITY );
+
+	/* Create that is given from the tick hook function, and the task that
+	toggles an LED each time the semaphore is given. */
+	vSemaphoreCreateBinary( xLEDSemaphore );
+	xTaskCreate( 	prvSemaphoreTakeTask, 		/* Function that implements the task. */
+					( signed char * ) "Sem", 	/* Text name of the task. */
+					configMINIMAL_STACK_SIZE, 	/* Stack allocated to the task (in words). */
+					NULL, 						/* The task parameter is not used. */
+					configMAX_PRIORITIES - 1, 	/* The priority of the task. */
+					NULL );						/* Don't receive a handle back, it is not needed. */
 
 	/* Create the register test tasks as described at the top of this file.
 	These are naked functions that don't use any stack.  A stack still has
@@ -305,6 +338,16 @@ unsigned long ulErrorFound = pdFALSE;
 	}
 	ulLastRegTest2Value = ulRegTest2LoopCounter;
 
+	if( xAreQueueSetTasksStillRunning() != pdPASS )
+	{
+		ulErrorFound |= ( 0x01UL << 6UL );
+	}
+
+	if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
+	{
+		ulErrorFound |= ( 0x01UL << 7UL );
+	}
+
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
@@ -325,6 +368,20 @@ unsigned long ulErrorFound = pdFALSE;
 			*never* attempt	to block. */
 			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvSemaphoreTakeTask( void *pvParameters )
+{
+	configASSERT( xLEDSemaphore );
+
+	for( ;; )
+	{
+		/* Wait to obtain the semaphore - which is given by the tick hook
+		function every 50ms. */
+		xSemaphoreTake( xLEDSemaphore, portMAX_DELAY );
+		vParTestToggleLED( mainSEMAPHORE_LED );
 	}
 }
 /*-----------------------------------------------------------*/

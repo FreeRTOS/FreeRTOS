@@ -537,6 +537,16 @@
               <FileType>1</FileType>
               <FilePath>..\Common\Minimal\countsem.c</FilePath>
             </File>
+            <File>
+              <FileName>QueueSet.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\QueueSet.c</FilePath>
+            </File>
+            <File>
+              <FileName>QueueOverwrite.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\QueueOverwrite.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -883,7 +893,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <VariousControls>
-              <MiscControls>--c99</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>.;..\Common\include;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM0;.\CMSIS</IncludePath>
@@ -1071,6 +1081,16 @@
               <FileName>countsem.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Common\Minimal\countsem.c</FilePath>
+            </File>
+            <File>
+              <FileName>QueueSet.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\QueueSet.c</FilePath>
+            </File>
+            <File>
+              <FileName>QueueOverwrite.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\QueueOverwrite.c</FilePath>
             </File>
           </Files>
         </Group>

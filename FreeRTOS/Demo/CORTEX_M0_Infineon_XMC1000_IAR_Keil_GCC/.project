@@ -35,6 +35,16 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Common_Demo_Source/QueueOverwrite.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_BASE/Demo/Common/Minimal/QueueOverwrite.c</locationURI>
+		</link>
+		<link>
+			<name>Common_Demo_Source/QueueSet.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_BASE/Demo/Common/Minimal/QueueSet.c</locationURI>
+		</link>
+		<link>
 			<name>Common_Demo_Source/blocktim.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_BASE/Demo/Common/Minimal/blocktim.c</locationURI>
@@ -95,6 +105,17 @@
 			<locationURI>FREERTOS_BASE/Source/timers.c</locationURI>
 		</link>
 	</linkedResources>
+	<filteredResources>
+		<filter>
+			<id>1378064141906</id>
+			<name></name>
+			<type>26</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-projectRelativePath-matches-true-false-.csdata/ci</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 	<variableList>
 		<variable>
 			<name>FREERTOS_BASE</name>

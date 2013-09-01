@@ -64,16 +64,14 @@
 
 	PRESERVE8
 	THUMB
-	
+
 
 	IMPORT ulRegTest1LoopCounter
 	IMPORT ulRegTest2LoopCounter
 
-	EXTERN vPortYield ;////////////////////////////////////////////////////////////////////////////////////////
-
 	EXPORT vRegTest1Task
 	EXPORT vRegTest2Task
-	
+
 	AREA    |.text|, CODE, READONLY
 
 ;/*-----------------------------------------------------------*/
@@ -140,15 +138,18 @@ reg1_loop
 	ldr r1, [r0]
 	adds r1, r1, #1
 	str r1, [r0]
+
+	;/* Yield to increase test coverage. */
+	movs r0, #0x01
+	ldr r1, =0xe000ed04 ; NVIC_INT_CTRL
+	lsls r0 ,r0, #28 ; Shift to PendSV bit
+	str r0, [r1]
+	dsb
 	pop { r1 }
 
 	;/* Start again. */
 	movs r0, #100
-	
-	push {r0-r1}
-	bl vPortYield	;;///////////////////////////////////////////////////////////////////////////////////////////////////
-	pop {r0-r1}
-	
+
 	b reg1_loop
 
 reg1_error_loop

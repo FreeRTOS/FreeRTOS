@@ -198,9 +198,9 @@ void vPortExitCritical( void )
 
 void xPortSysTickHandler( void )
 {
-unsigned long ulDummy;
+unsigned long ulPreviousMask;
 
-	ulDummy = portSET_INTERRUPT_MASK_FROM_ISR();
+	ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
@@ -209,7 +209,7 @@ unsigned long ulDummy;
 			*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulPreviousMask );
 }
 /*-----------------------------------------------------------*/
 

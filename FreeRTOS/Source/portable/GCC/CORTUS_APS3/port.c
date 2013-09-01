@@ -92,7 +92,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 	pxTopOfStack -= 20;
 
 	/* Fill the registers with known values to assist debugging. */
-	pxTopOfStack[ 16 ] = portKERNEL_INTERRUPT_PRIORITY_LEVEL;
+	pxTopOfStack[ 16 ] = 0;
 	pxTopOfStack[ 15 ] = portINITIAL_PSR;
 	pxTopOfStack[ 14 ] = ( unsigned long ) pxCode;
 	pxTopOfStack[ 13 ] = 0x00000000UL; /* R15. */
@@ -119,10 +119,6 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Set-up the timer interrupt. */
 	prvSetupTimerInterrupt();
 
-	/* Enable the TRAP yield. */
-	irq[ portIRQ_TRAP_YIELD ].ien = 1;
-	irq[ portIRQ_TRAP_YIELD ].ipl = portKERNEL_INTERRUPT_PRIORITY_LEVEL;
-
 	/* Integrated Interrupt Controller: Enable all interrupts. */
 	ic->ien = 1;
 
@@ -143,7 +139,6 @@ static void prvSetupTimerInterrupt( void )
 
 	/* Set the IRQ Handler priority and enable it. */
 	irq[ IRQ_COUNTER1 ].ien = 1;
-	irq[ IRQ_COUNTER1 ].ipl = portKERNEL_INTERRUPT_PRIORITY_LEVEL;
 }
 /*-----------------------------------------------------------*/
 

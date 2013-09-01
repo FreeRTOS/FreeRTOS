@@ -158,14 +158,14 @@ void vPortSVCHandler( void )
 
 void vPortStartFirstTask( void )
 {
+	/* The MSP stack is not reset as, unlike on M3/4 parts, there is no vector
+	table offset register that can be used to locate the initial stack value.
+	Not all M0 parts have the application vector table at address 0. */
 	__asm volatile(
-					" movs r0, #0x00 	\n" /* Locate the top of stack. */
-					" ldr r0, [r0] 		\n"
-					" msr msp, r0		\n" /* Set the msp back to the start of the stack. */
 					" cpsie i			\n" /* Globally enable interrupts. */
 					" svc 0				\n" /* System call to start first task. */
 					" nop				\n"
-				);
+				  );
 }
 /*-----------------------------------------------------------*/
 
@@ -231,6 +231,28 @@ void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
+unsigned long ulSetInterruptMaskFromISR( void )
+{
+	__asm volatile(
+					" mrs r0, PRIMASK	\n"
+					" cpsid i			\n"
+					" bx lr				  "
+				  );
+
+	/* To avoid compiler warnings.  This line will never be reached. */
+	return 0;
+}
+/*-----------------------------------------------------------*/
+
+void vClearInterruptMaskFromISR( unsigned long ulMask )
+{
+	__asm volatile(
+					" msr PRIMASK, r0	\n"
+					" bx lr				  "
+				  );
+}
+/*-----------------------------------------------------------*/
+
 void xPortPendSVHandler( void )
 {
 	/* This is a naked function. */
@@ -281,9 +303,9 @@ void xPortPendSVHandler( void )
 
 void xPortSysTickHandler( void )
 {
-unsigned long ulDummy;
+unsigned long ulPreviousMask;
 
-	ulDummy = portSET_INTERRUPT_MASK_FROM_ISR();
+	ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
@@ -292,7 +314,7 @@ unsigned long ulDummy;
 			*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulPreviousMask );
 }
 /*-----------------------------------------------------------*/
 

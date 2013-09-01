@@ -118,12 +118,13 @@ extern void vPortYield( void );
 /* Critical section management. */
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
-#define portSET_INTERRUPT_MASK()				__asm volatile 	( " cpsid i " )
-#define portCLEAR_INTERRUPT_MASK()				__asm volatile 	( " cpsie i " )
-#define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
-#define portDISABLE_INTERRUPTS()				portSET_INTERRUPT_MASK()
-#define portENABLE_INTERRUPTS()					portCLEAR_INTERRUPT_MASK()
+extern unsigned long ulSetInterruptMaskFromISR( void ) __attribute__((naked));
+extern void vClearInterruptMaskFromISR( unsigned long ulMask )  __attribute__((naked));
+
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulSetInterruptMaskFromISR()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vClearInterruptMaskFromISR( x )
+#define portDISABLE_INTERRUPTS()				__asm volatile 	( " cpsid i " )
+#define portENABLE_INTERRUPTS()					__asm volatile 	( " cpsie i " )
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
 

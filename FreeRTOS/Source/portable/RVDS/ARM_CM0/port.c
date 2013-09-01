@@ -108,7 +108,7 @@ void vPortSVCHandler( void );
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-static void vPortStartFirstTask( void );
+static void prvPortStartFirstTask( void );
 
 /*-----------------------------------------------------------*/
 
@@ -137,11 +137,11 @@ __asm void vPortSVCHandler( void )
 
 	PRESERVE8
 
-	ldr	r3, =pxCurrentTCB	/* Restore the context. */
-	ldr r1, [r3]			/* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
+	ldr	r3, =pxCurrentTCB	/* Obtain location of pxCurrentTCB. */
+	ldr r1, [r3]			
 	ldr r0, [r1]			/* The first item in pxCurrentTCB is the task top of stack. */
-	adds r0, #16			/* Move to the high registers. */
-	ldmia r0!, {r4-r7}		/* Pop the high registers. */
+	adds r0, #16			/* Pop the high registers. */
+	ldmia r0!, {r4-r7}		
 	mov r8, r4
 	mov r9, r5
 	mov r10, r6
@@ -155,20 +155,20 @@ __asm void vPortSVCHandler( void )
 	movs r0, #0x0d
 	orrs r1, r0
 	bx r1
-	nop
+	ALIGN
 }
 /*-----------------------------------------------------------*/
 
-__asm void vPortStartFirstTask( void )
+__asm void prvPortStartFirstTask( void )
 {
 	PRESERVE8
-
-	movs r0, #0x00 	/* Locate the top of stack. */
-	ldr r0, [r0]
-	msr msp, r0		/* Set the msp back to the start of the stack. */
-	cpsie i			/* Globally enable interrupts. */
-	svc 0			/* System call to start first task. */
-	nop
+	
+	/* The MSP stack is not reset as, unlike on M3/4 parts, there is no vector
+	table offset register that can be used to locate the initial stack value.
+	Not all M0 parts have the application vector table at address 0. */
+	cpsie i				/* Globally enable interrupts. */
+	svc 0				/* System call to start first task. */
+	ALIGN
 }
 /*-----------------------------------------------------------*/
 
@@ -189,7 +189,7 @@ portBASE_TYPE xPortStartScheduler( void )
 	uxCriticalNesting = 0;
 
 	/* Start the first task. */
-	vPortStartFirstTask();
+	prvPortStartFirstTask();
 
 	/* Should not get here! */
 	return 0;
@@ -231,6 +231,21 @@ void vPortExitCritical( void )
     {
         portENABLE_INTERRUPTS();
     }
+}
+/*-----------------------------------------------------------*/
+
+__asm unsigned long ulSetInterruptMaskFromISR( void )
+{
+	mrs r0, PRIMASK
+	cpsid i
+	bx lr
+}
+/*-----------------------------------------------------------*/
+
+__asm void vClearInterruptMaskFromISR( unsigned long ulMask )
+{
+	msr PRIMASK, r0
+	bx lr
 }
 /*-----------------------------------------------------------*/
 
@@ -276,14 +291,15 @@ __asm void xPortPendSVHandler( void )
 	ldmia r0!, {r4-r7}      /* Pop low registers.  */
 
 	bx r3
+	ALIGN
 }
 /*-----------------------------------------------------------*/
 
 void xPortSysTickHandler( void )
 {
-unsigned long ulDummy;
+unsigned long ulPreviousMask;
 
-	ulDummy = portSET_INTERRUPT_MASK_FROM_ISR();
+	ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
@@ -292,7 +308,7 @@ unsigned long ulDummy;
 			*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulPreviousMask );
 }
 /*-----------------------------------------------------------*/
 

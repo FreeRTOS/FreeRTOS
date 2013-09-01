@@ -114,16 +114,16 @@ extern void vPortYield( void );
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
-
 /* Critical section management. */
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
-#define portSET_INTERRUPT_MASK()				__disable_irq()
-#define portCLEAR_INTERRUPT_MASK()				__enable_irq()
-#define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
-#define portDISABLE_INTERRUPTS()				portSET_INTERRUPT_MASK()
-#define portENABLE_INTERRUPTS()					portCLEAR_INTERRUPT_MASK()
+extern unsigned long ulSetInterruptMaskFromISR( void );
+extern void vClearInterruptMaskFromISR( unsigned long ulMask );
+
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulSetInterruptMaskFromISR()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vClearInterruptMaskFromISR( x )
+#define portDISABLE_INTERRUPTS()				__disable_irq()
+#define portENABLE_INTERRUPTS()					__enable_irq()
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
 

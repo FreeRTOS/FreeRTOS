@@ -69,7 +69,7 @@
 extern "C" {
 #endif
 
-#include <machine/ic.h>
+#include <machine/cpu.h>
 
 /*-----------------------------------------------------------
  * Port specific definitions.
@@ -106,8 +106,6 @@ extern "C" {
 #define portNOP()									__asm__ volatile ( "mov r0, r0" )
 #define portCRITICAL_NESTING_IN_TCB					1
 #define portIRQ_TRAP_YIELD							31
-#define portKERNEL_INTERRUPT_PRIORITY_LEVEL			0
-#define portSYSTEM_INTERRUPT_PRIORITY_LEVEL			0
 /*-----------------------------------------------------------*/
 
 /* Task utilities. */
@@ -126,8 +124,8 @@ extern void vTaskExitCritical( void );
 /*---------------------------------------------------------------------------*/
 
 /* Critical section management. */
-#define portDISABLE_INTERRUPTS() ic->cpl = ( portSYSTEM_INTERRUPT_PRIORITY_LEVEL + 1 )
-#define portENABLE_INTERRUPTS() ic->cpl = portKERNEL_INTERRUPT_PRIORITY_LEVEL
+#define portDISABLE_INTERRUPTS() 	cpu_int_disable()
+#define portENABLE_INTERRUPTS() 	cpu_int_enable()
 
 /*---------------------------------------------------------------------------*/
 

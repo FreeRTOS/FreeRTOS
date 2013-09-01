@@ -109,7 +109,7 @@ in the range of 0xffff to ULONG_MAX. */
 
 /* For test purposes the priority of the sending task is changed after every
 queuesetPRIORITY_CHANGE_LOOPS number of values are sent to a queue. */
-#define queuesetPRIORITY_CHANGE_LOOPS	100UL
+#define queuesetPRIORITY_CHANGE_LOOPS	( ( queuesetNUM_QUEUES_IN_SET * queuesetQUEUE_LENGTH ) * 3 )
 
 /* The ISR sends to the queue every queuesetISR_TX_PERIOD ticks. */
 #define queuesetISR_TX_PERIOD	( 100UL )
@@ -161,6 +161,13 @@ static void prvSetupTest( xTaskHandle xQueueSetSendingTask );
  */
 static portBASE_TYPE prvCheckReceivedValueWithinExpectedRange( unsigned long ulReceived, unsigned long ulExpectedReceived );
 
+/*
+ * Local pseudo random number seed and return functions.  Used to avoid calls
+ * to the standard library.
+ */
+static unsigned long prvRand( void );
+static void prvSRand( unsigned long ulSeed );
+
 /*-----------------------------------------------------------*/
 
 /* The queues that are added to the set. */
@@ -192,6 +199,9 @@ static volatile portBASE_TYPE xSetupComplete = pdFALSE;
 xAreQueeuSetTasksStillRunning() function can check it is incrementing as
 expected. */
 static volatile unsigned long ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
+
+/* Used by the pseudo random number generator. */
+static unsigned long ulNextRand = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -264,25 +274,25 @@ portBASE_TYPE xReturn = pdPASS, x;
 
 static void prvQueueSetSendingTask( void *pvParameters )
 {
-unsigned long ulTaskTxValue = 0;
-portBASE_TYPE xQueueToWriteTo;
+unsigned long ulTaskTxValue = 0, ulQueueToWriteTo;
 xQueueHandle xQueueInUse;
 unsigned portBASE_TYPE uxPriority = queuesetMEDIUM_PRIORITY, ulLoops = 0;
 
 	/* Remove compiler warning about the unused parameter. */
 	( void ) pvParameters;
 
-	srand( ( unsigned int ) &ulTaskTxValue );
+	/* Seed mini pseudo random number generator. */
+	prvSRand( ( unsigned long ) &ulTaskTxValue );
 
 	for( ;; )
 	{
 		/* Generate the index for the queue to which a value is to be sent. */
-		xQueueToWriteTo = rand() % queuesetNUM_QUEUES_IN_SET;
-		xQueueInUse = xQueues[ xQueueToWriteTo ];
+		ulQueueToWriteTo = prvRand() % queuesetNUM_QUEUES_IN_SET;
+		xQueueInUse = xQueues[ ulQueueToWriteTo ];
 
 		/* Note which index is being written to to ensure all the queues are
 		used. */
-		( ulQueueUsedCounter[ xQueueToWriteTo ] )++;
+		( ulQueueUsedCounter[ ulQueueToWriteTo ] )++;
 
 		/* Send to the queue to unblock the task that is waiting for data to
 		arrive on a queue within the queue set to which this queue belongs. */
@@ -637,3 +647,17 @@ unsigned long ulValueToSend = 0;
 	/* Let the ISR access the queues also. */
 	xSetupComplete = pdTRUE;
 }
+/*-----------------------------------------------------------*/
+
+static unsigned long prvRand( void )
+{
+	ulNextRand = ( ulNextRand * 1103515245UL ) + 12345UL;
+    return (ulNextRand / 65536UL ) % 32768UL;
+}
+/*-----------------------------------------------------------*/
+
+static void prvSRand( unsigned long ulSeed )
+{
+    ulNextRand = ulSeed;
+}
+

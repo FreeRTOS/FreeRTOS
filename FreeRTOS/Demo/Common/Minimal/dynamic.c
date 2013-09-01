@@ -72,14 +72,14 @@
  *
  * One counter task loops indefinitely, incrementing the shared count variable
  * on each iteration.  To ensure it has exclusive access to the variable it
- * raises it's priority above that of the controller task before each
- * increment, lowering it again to it's original priority before starting the
+ * raises its priority above that of the controller task before each
+ * increment, lowering it again to its original priority before starting the
  * next iteration.
  *
  * The other counter task increments the shared count variable on each
- * iteration of it's loop until the count has reached a limit of 0xff - at
+ * iteration of its loop until the count has reached a limit of 0xff - at
  * which point it suspends itself.  It will not start a new loop until the
- * controller task has made it "ready" again by calling vTaskResume ().
+ * controller task has made it "ready" again by calling vTaskResume().
  * This second counter task operates at a higher priority than controller
  * task so does not need to worry about mutual exclusion of the counter
  * variable.
@@ -105,7 +105,7 @@
  * continuous count task, and moves on to its second section.
  *
  * At the start of the second section the shared variable is cleared to zero.
- * The limited count task is then woken from it's suspension by a call to
+ * The limited count task is then woken from its suspension by a call to
  * vTaskResume ().  As this counter task operates at a higher priority than
  * the controller task the controller task should not run again until the
  * shared variable has been counted up to the limited value causing the counter
@@ -153,11 +153,11 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Handles to the two counter tasks.  These could be passed in as parameters
 to the controller task to prevent them having to be file scope. */
-static xTaskHandle xContinousIncrementHandle, xLimitedIncrementHandle;
+static xTaskHandle xContinuousIncrementHandle, xLimitedIncrementHandle;
 
 /* The shared counter variable.  This is passed in as a parameter to the two
 counter variables for demonstration purposes. */
-static unsigned long ulCounter;
+static volatile unsigned long ulCounter;
 
 /* Variables used to check that the tasks are still operating without error.
 Each complete iteration of the controller task increments this variable
@@ -192,7 +192,7 @@ void vStartDynamicPriorityTasks( void )
 	defined to be less than 1. */
 	vQueueAddToRegistry( xSuspendedTestQueue, ( signed char * ) "Suspended_Test_Queue" );
 
-	xTaskCreate( vContinuousIncrementTask, ( signed char * ) "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinousIncrementHandle );
+	xTaskCreate( vContinuousIncrementTask, ( signed char * ) "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinuousIncrementHandle );
 	xTaskCreate( vLimitedIncrementTask, ( signed char * ) "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
 	xTaskCreate( vCounterControlTask, ( signed char * ) "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vQueueSendWhenSuspendedTask, ( signed char * ) "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
@@ -235,7 +235,7 @@ unsigned long *pulCounter;
  */
 static portTASK_FUNCTION( vContinuousIncrementTask, pvParameters )
 {
-unsigned long *pulCounter;
+volatile unsigned long *pulCounter;
 unsigned portBASE_TYPE uxOurPriority;
 
 	/* Take a pointer to the shared variable from the parameters passed into
@@ -248,11 +248,15 @@ unsigned portBASE_TYPE uxOurPriority;
 
 	for( ;; )
 	{
-		/* Raise our priority above the controller task to ensure a context
-		switch does not occur while we are accessing this variable. */
+		/* Raise the priority above the controller task to ensure a context
+		switch does not occur while the variable is being accessed. */
 		vTaskPrioritySet( NULL, uxOurPriority + 1 );
+		{
+			configASSERT( ( uxTaskPriorityGet( NULL ) == ( uxOurPriority + 1 ) ) );
 			( *pulCounter )++;
+		}
 		vTaskPrioritySet( NULL, uxOurPriority );
+		configASSERT( ( uxTaskPriorityGet( NULL ) == uxOurPriority ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -280,10 +284,26 @@ short sError = pdFALSE;
 		for( sLoops = 0; sLoops < priLOOPS; sLoops++ )
 		{
 			/* Suspend the continuous count task so we can take a mirror of the
-			shared variable without risk of corruption. */
-			vTaskSuspend( xContinousIncrementHandle );
+			shared variable without risk of corruption.  This is not really
+			needed as the other task raises its priority above this task's
+			priority. */
+			vTaskSuspend( xContinuousIncrementHandle );
+			{
+				#if( INCLUDE_eTaskGetState == 1 )
+				{
+					configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eSuspended );
+				}
+				#endif /* INCLUDE_eTaskGetState */
+
 				ulLastCounter = ulCounter;
-			vTaskResume( xContinousIncrementHandle );
+			}
+			vTaskResume( xContinuousIncrementHandle );
+
+			#if( INCLUDE_eTaskGetState == 1 )
+			{
+				configASSERT( eTaskGetState( xContinuousIncrementHandle ) == eReady );
+			}
+			#endif /* INCLUDE_eTaskGetState */
 
 			/* Now delay to ensure the other task has processor time. */
 			vTaskDelay( priSLEEP_TIME );
@@ -303,19 +323,33 @@ short sError = pdFALSE;
 			xTaskResumeAll();
 		}
 
-
 		/* Second section: */
 
-		/* Suspend the continuous counter task so it stops accessing the shared variable. */
-		vTaskSuspend( xContinousIncrementHandle );
+		/* Suspend the continuous counter task so it stops accessing the shared
+		variable. */
+		vTaskSuspend( xContinuousIncrementHandle );
 
 		/* Reset the variable. */
 		ulCounter = ( unsigned long ) 0;
+
+		#if( INCLUDE_eTaskGetState == 1 )
+		{
+			configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+		}
+		#endif /* INCLUDE_eTaskGetState */
 
 		/* Resume the limited count task which has a higher priority than us.
 		We should therefore not return from this call until the limited count
 		task has suspended itself with a known value in the counter variable. */
 		vTaskResume( xLimitedIncrementHandle );
+
+		/* This task should not run again until xLimitedIncrementHandle has
+		suspended itself. */
+		#if( INCLUDE_eTaskGetState == 1 )
+		{
+			configASSERT( eTaskGetState( xLimitedIncrementHandle ) == eSuspended );
+		}
+		#endif /* INCLUDE_eTaskGetState */
 
 		/* Does the counter variable have the expected value? */
 		if( ulCounter != priMAX_COUNT )
@@ -332,7 +366,7 @@ short sError = pdFALSE;
 		}
 
 		/* Resume the continuous count task and do it all again. */
-		vTaskResume( xContinousIncrementHandle );
+		vTaskResume( xContinuousIncrementHandle );
 	}
 }
 /*-----------------------------------------------------------*/

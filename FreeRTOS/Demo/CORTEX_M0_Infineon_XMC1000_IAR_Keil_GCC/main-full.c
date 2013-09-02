@@ -90,10 +90,10 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  *
- * "Semaphore take task" - This task does nothing but block on a semaphore that
- * is 'given' from the tick hook function (which is defined in main.c).  It
- * toggles the fourth LED each time it receives the semaphore.  The Semahore is
- * given every 50ms, so LED 4 toggles every 50ms.
+ * "Interrupt semaphore take" task - This task does nothing but block on a 
+ * semaphore that is 'given' from the tick hook function (which is defined in 
+ * main.c).  It toggles the fourth LED each time it receives the semaphore.  The 
+ * Semahore is given every 50ms, so LED 4 toggles every 50ms.
  *
  * "Flash timers" - A software timer callback function is defined that does
  * nothing but toggle an LED.  Three software timers are created that each
@@ -216,11 +216,11 @@ const size_t xRegTestStackSize = 25U;
 
 	/* Create the standard demo tasks */
 	vCreateBlockTimeTasks();
+	vStartDynamicPriorityTasks();
 	vStartCountingSemaphoreTasks();
 	vStartRecursiveMutexTasks();
-	vStartDynamicPriorityTasks();
-	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( tskIDLE_PRIORITY );
+	vStartQueueSetTasks();
 
 	/* Create that is given from the tick hook function, and the task that
 	toggles an LED each time the semaphore is given. */
@@ -229,7 +229,7 @@ const size_t xRegTestStackSize = 25U;
 					( signed char * ) "Sem", 	/* Text name of the task. */
 					configMINIMAL_STACK_SIZE, 	/* Stack allocated to the task (in words). */
 					NULL, 						/* The task parameter is not used. */
-					configMAX_PRIORITIES - 1, 	/* The priority of the task. */
+					configMAX_PRIORITIES - 2, 	/* The priority of the task. */
 					NULL );						/* Don't receive a handle back, it is not needed. */
 
 	/* Create the register test tasks as described at the top of this file.

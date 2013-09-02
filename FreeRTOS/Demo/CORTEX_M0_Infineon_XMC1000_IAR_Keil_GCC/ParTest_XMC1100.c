@@ -62,85 +62,134 @@
     1 tab == 4 spaces!
 */
 
-
-#ifndef FREERTOS_CONFIG_H
-#define FREERTOS_CONFIG_H
-
 /*-----------------------------------------------------------
- * Application specific definitions.
- *
- * These definitions should be adjusted for your particular hardware and
- * application requirements.
- *
- * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
- *
- * See http://www.freertos.org/a00110.html.
- *----------------------------------------------------------*/
+ * Simple GPIO (parallel port) IO routines.
+ *-----------------------------------------------------------*/
 
-/* Prevent C code being included by the IAR assembler. */
-#ifndef __IASMARM__
-	#include <stdint.h>
-	extern uint32_t SystemCoreClock;
-#endif
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
 
-#define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				0
-#define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( SystemCoreClock )
-#define configTICK_RATE_HZ				( ( portTickType ) 500 )
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 11000 ) )
-#define configMAX_TASK_NAME_LEN			( 5 )
-#define configUSE_TRACE_FACILITY		1
-#define configUSE_16_BIT_TICKS			0
-#define configIDLE_SHOULD_YIELD			1
-#define configUSE_MUTEXES				1
-#define configQUEUE_REGISTRY_SIZE		8
-#define configCHECK_FOR_STACK_OVERFLOW	2
-#define configUSE_RECURSIVE_MUTEXES		1
-#define configUSE_MALLOC_FAILED_HOOK	1
-#define configUSE_APPLICATION_TASK_TAG	0
-#define configUSE_COUNTING_SEMAPHORES	1
-#define configGENERATE_RUN_TIME_STATS	0
-#define configUSE_QUEUE_SETS			1
+/* Hardware includes. */
+#include <XMC1200.h>
 
-/* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 			0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+/* Standard demo include. */
+#include "partest.h"
 
-/* Software timer definitions. */
-#define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 2 )
-#define configTIMER_QUEUE_LENGTH		5
-#define configTIMER_TASK_STACK_DEPTH	( 80 )
+/* The port bits on which LEDs are connected. */
+static const unsigned long ulLEDPorts[] =
+{
+	0, /* P0.5 */
+	0, /* P0.6 */
+	1, /* P1.2 */
+	1, /* P1.3 */
+	1, /* P1.4 */
+	1  /* P1.5 */
+};
 
-/* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet		1
-#define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete				1
-#define INCLUDE_vTaskCleanUpResources	1
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
-#define INCLUDE_eTaskGetState			1
+/* The port bits on which LEDs are connected. */
+static const unsigned long ulLEDBits[] =
+{
+	1 << 5, /* P0.5 */
+	1 << 6, /* P0.6 */
+	1 << 2, /* P1.2 */
+	1 << 3, /* P1.3 */
+	1 << 4, /* P1.4 */
+	1 << 5  /* P1.5 */
+};
 
-/* Normal assert() semantics without relying on the provision of an assert.h
-header file. */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+#define partstNUM_LEDS	( sizeof( ulLEDBits ) / sizeof( unsigned long ) )
 
-/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
-standard names - or at least those used in the unmodified vector table. */
-#define vPortSVCHandler SVC_Handler
-#define xPortPendSVHandler PendSV_Handler
-#define xPortSysTickHandler SysTick_Handler
+/* Shift the LED bit into the correct position within the POW register to
+perform the desired operation. */
+#define partstON_SHIFT	( 16UL )
+#define partstOFF_SHIFT	( 0UL )
 
-/* Bump up the priority of recmuCONTROLLING_TASK_PRIORITY to prevent false
-positive errors being reported considering the priority of other tasks in the
-system. */
-#define recmuCONTROLLING_TASK_PRIORITY ( configMAX_PRIORITIES - 1 )
+/*-----------------------------------------------------------*/
 
-#endif /* FREERTOS_CONFIG_H */
+void vParTestInitialise( void )
+{
+	/* Configure relevant port P0 to push pull output to drive LEDs. */
+
+	/* P0.5 */
+	PORT0->IOCR4 &= ~( ( 0xFFUL <<  8 ) );
+	PORT0->IOCR4 |= ( 0x80UL <<  8 );
+	vParTestSetLED( 0, pdFALSE );
+
+	/* P0.6 */
+	PORT0->IOCR4 &= ~( ( 0xFFUL << 16 ) );
+	PORT0->IOCR4 |= ( 0x80UL << 16 );
+	vParTestSetLED( 1, pdFALSE );
+
+	/* P1.2 */
+	PORT1->IOCR0 &= ~( ( 0xFFUL << 16 ) );
+	PORT1->IOCR0 |= ( 0x80UL << 16 );
+	vParTestSetLED( 2, pdFALSE );
+
+	/* P1.3 */
+	PORT1->IOCR0 &= ~( ( 0xFFUL << 24 ) );
+	PORT1->IOCR0 |= ( 0x80UL << 24 );
+	vParTestSetLED( 3, pdFALSE );
+
+	/* P1.4 */
+	PORT1->IOCR4 &= ~( ( 0xFFUL << 0 ) );
+	PORT1->IOCR4 |= ( 0x80UL << 0 );
+	vParTestSetLED( 4, pdFALSE );
+
+	/* P1.5 */
+	PORT1->IOCR4 &= ~( ( 0xFFUL << 8 ) );
+	PORT1->IOCR4 |= ( 0x80UL << 8 );
+	vParTestSetLED( 5, pdFALSE );
+}
+/*-----------------------------------------------------------*/
+
+void vParTestSetLED( unsigned long ulLED, signed portBASE_TYPE xValue )
+{
+	if( ulLED < partstNUM_LEDS )
+	{
+		if( xValue == pdTRUE )
+		{
+			/* Turn the LED on. */
+			if( ulLEDPorts[ ulLED ] == 0x00 )
+			{
+				PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT );
+			}
+			else
+			{
+				PORT1->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT );
+			}
+		}
+		else
+		{
+			/* Turn the LED off. */
+			if( ulLEDPorts[ ulLED ] == 0x00 )
+			{
+				PORT0->OMR = ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
+			}
+			else
+			{
+				PORT1->OMR = ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
+			}
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vParTestToggleLED( unsigned long ulLED )
+{
+	if( ulLED < partstNUM_LEDS )
+	{
+		/* Setting both the ON and OFF bits simultaneously results in the bit
+		being toggled. */
+		if( ulLEDPorts[ ulLED ] == 0x00 )
+		{
+			PORT0->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT ) | ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
+		}
+		else
+		{
+			PORT1->OMR = ( ulLEDBits[ ulLED ] << partstON_SHIFT ) | ( ulLEDBits[ ulLED ] << partstOFF_SHIFT );
+		}
+	}
+}
+/*-----------------------------------------------------------*/
 

@@ -80,7 +80,7 @@
  * The Queue Send Task:
  * The queue send task is implemented by the prvQueueSendTask() function in
  * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
- * block for 200 milliseconds, before sending the value 100 to the queue that
+ * block for 200 milliseconds before sending the value 100 to the queue that
  * was created within main_blinky().  Once the value is sent, the task loops
  * back around to block for another 200 milliseconds.
  *

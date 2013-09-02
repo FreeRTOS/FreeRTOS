@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-850785765
+Checksum=1016000444
 [Stack]
 FillEnabled=0
 OverflowWarningsEnabled=1
@@ -107,7 +107,7 @@ Exclusions=
 [Disassemble mode]
 mode=0
 [Breakpoints2]
-Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\main-full.c}.362.3" 0 0 1 "" 0 "" 0
+Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Common\Minimal\dynamic.c}.320.6" 0 0 1 "" 0 "" 0
 Count=1
 [Aliases]
 Count=0

@@ -106,8 +106,11 @@
 /* Demo app include files. */
 #include "recmutex.h"
 
-/* Priorities assigned to the three tasks. */
-#define recmuCONTROLLING_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
+/* Priorities assigned to the three tasks.  recmuCONTROLLING_TASK_PRIORITY can
+be overridden by a definition in FreeRTOSConfig.h. */
+#ifndef recmuCONTROLLING_TASK_PRIORITY
+	#define recmuCONTROLLING_TASK_PRIORITY	( tskIDLE_PRIORITY + 2 )
+#endif
 #define recmuBLOCKING_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define recmuPOLLING_TASK_PRIORITY		( tskIDLE_PRIORITY + 0 )
 
@@ -117,7 +120,7 @@
 /* Misc. */
 #define recmuSHORT_DELAY				( 20 / portTICK_RATE_MS )
 #define recmuNO_DELAY					( ( portTickType ) 0 )
-#define recmuTHREE_TICK_DELAY			( ( portTickType ) 3 )
+#define recmuFIVE_TICK_DELAY			( ( portTickType ) 5 )
 
 /* The three tasks as described at the top of this file. */
 static void prvRecursiveMutexControllingTask( void *pvParameters );
@@ -191,7 +194,7 @@ unsigned portBASE_TYPE ux;
 			long enough to ensure the polling task will execute again before the
 			block time expires.  If the block time does expire then the error
 			flag will be set here. */
-			if( xSemaphoreTakeRecursive( xMutex, recmuTHREE_TICK_DELAY ) != pdPASS )
+			if( xSemaphoreTakeRecursive( xMutex, recmuFIVE_TICK_DELAY ) != pdPASS )
 			{
 				xErrorOccurred = pdTRUE;
 			}
@@ -222,7 +225,7 @@ unsigned portBASE_TYPE ux;
 		}
 
 		/* Having given it back the same number of times as it was taken, we
-		should no longer be the mutex owner, so the next give sh ould fail. */
+		should no longer be the mutex owner, so the next give should fail. */
 		if( xSemaphoreGiveRecursive( xMutex ) == pdPASS )
 		{
 			xErrorOccurred = pdTRUE;
@@ -232,7 +235,7 @@ unsigned portBASE_TYPE ux;
 		stall can be detected. */
 		uxControllingCycles++;
 
-		/* Suspend ourselves to the blocking task can execute. */
+		/* Suspend ourselves so the blocking task can execute. */
 		xControllingIsSuspended = pdTRUE;
 		vTaskSuspend( NULL );
 		xControllingIsSuspended = pdFALSE;
@@ -347,6 +350,7 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 
 				#if( INCLUDE_uxTaskPriorityGet == 1 )
 				{
+					/* Check priority inherited. */
 					configASSERT( uxTaskPriorityGet( NULL ) == recmuCONTROLLING_TASK_PRIORITY );
 				}
 				#endif /* INCLUDE_uxTaskPriorityGet */
@@ -363,6 +367,13 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 				{
 					xErrorOccurred = pdTRUE;
 				}
+
+				#if( INCLUDE_uxTaskPriorityGet == 1 )
+				{
+					/* Check priority disinherited. */
+					configASSERT( uxTaskPriorityGet( NULL ) == recmuPOLLING_TASK_PRIORITY );
+				}
+				#endif /* INCLUDE_uxTaskPriorityGet */
 			}
 		}
 

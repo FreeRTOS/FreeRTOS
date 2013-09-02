@@ -109,10 +109,15 @@ in the range of 0xffff to ULONG_MAX. */
 
 /* For test purposes the priority of the sending task is changed after every
 queuesetPRIORITY_CHANGE_LOOPS number of values are sent to a queue. */
-#define queuesetPRIORITY_CHANGE_LOOPS	( ( queuesetNUM_QUEUES_IN_SET * queuesetQUEUE_LENGTH ) * 3 )
+#define queuesetPRIORITY_CHANGE_LOOPS	( ( queuesetNUM_QUEUES_IN_SET * queuesetQUEUE_LENGTH ) * 2 )
 
 /* The ISR sends to the queue every queuesetISR_TX_PERIOD ticks. */
 #define queuesetISR_TX_PERIOD	( 100UL )
+
+/* A delay inserted when the Tx task changes its priority to be above the idle
+task priority to ensure the idle priority tasks get some CPU time before the
+next iteration of the queue set Tx task. */
+#define queuesetTX_LOOP_DELAY	( 200 / portTICK_RATE_MS )
 
 /* The allowable maximum deviation between a received value and the expected
 received value.  A deviation will occur when data is received from a queue
@@ -123,6 +128,13 @@ the received value. */
 /* Ignore values that are at the boundaries of allowable values to make the
 testing of limits easier (don't have to deal with wrapping values). */
 #define queuesetIGNORED_BOUNDARY	( queuesetALLOWABLE_RX_DEVIATION * 2 )
+
+typedef enum
+{
+	eEqualPriority = 0,	/* Tx and Rx tasks have the same priority. */
+	eTxHigherPriority,	/* The priority of the Tx task is above that of the Rx task. */
+	eTxLowerPriority	/* The priority of the Tx task is below that of the Rx task. */
+} eRelativePriorities;
 
 /*
  * The task that periodically sends to the queue set.
@@ -160,6 +172,11 @@ static void prvSetupTest( xTaskHandle xQueueSetSendingTask );
  * values.
  */
 static portBASE_TYPE prvCheckReceivedValueWithinExpectedRange( unsigned long ulReceived, unsigned long ulExpectedReceived );
+
+/*
+ * Increase test coverage by occasionally change the priorities of the two tasks
+ * relative to each other. */
+static void prvChangeRelativePriorities( void );
 
 /*
  * Local pseudo random number seed and return functions.  Used to avoid calls
@@ -203,17 +220,18 @@ static volatile unsigned long ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
 /* Used by the pseudo random number generator. */
 static unsigned long ulNextRand = 0;
 
+/* The task handles are stored so their priorities can be changed. */
+xTaskHandle xQueueSetSendingTask, xQueueSetReceivingTask;
+
 /*-----------------------------------------------------------*/
 
 void vStartQueueSetTasks( void )
 {
-xTaskHandle xQueueSetSendingTask;
-
 	/* Create the two queues.  The handle of the sending task is passed into
 	the receiving task using the task parameter.  The receiving task uses the
 	handle to resume the sending task after it has created the queues. */
 	xTaskCreate( prvQueueSetSendingTask, ( signed char * ) "SetTx", configMINIMAL_STACK_SIZE, NULL, queuesetMEDIUM_PRIORITY, &xQueueSetSendingTask );
-	xTaskCreate( prvQueueSetReceivingTask, ( signed char * ) "SetRx", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, NULL );
+	xTaskCreate( prvQueueSetReceivingTask, ( signed char * ) "SetRx", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, &xQueueSetReceivingTask );
 
 	/* It is important that the sending task does not attempt to write to a
 	queue before the queue has been created.  It is therefore placed into the
@@ -276,7 +294,6 @@ static void prvQueueSetSendingTask( void *pvParameters )
 {
 unsigned long ulTaskTxValue = 0, ulQueueToWriteTo;
 xQueueHandle xQueueInUse;
-unsigned portBASE_TYPE uxPriority = queuesetMEDIUM_PRIORITY, ulLoops = 0;
 
 	/* Remove compiler warning about the unused parameter. */
 	( void ) pvParameters;
@@ -312,19 +329,56 @@ unsigned portBASE_TYPE uxPriority = queuesetMEDIUM_PRIORITY, ulLoops = 0;
 			ulTaskTxValue = 0;
 		}
 
-		/* Occasionally change the task priority relative to the priority of
-		the receiving task. */
-		ulLoops++;
-		if( ulLoops >= queuesetPRIORITY_CHANGE_LOOPS )
-		{
-			ulLoops = 0;
-			uxPriority++;
-			if( uxPriority > queuesetHIGH_PRIORITY )
-			{
-				uxPriority = queuesetLOW_PRIORITY;
-			}
+		/* Increase test coverage by occasionally change the priorities of the
+		two tasks relative to each other. */
+		prvChangeRelativePriorities();
+	}
+}
+/*-----------------------------------------------------------*/
 
-			vTaskPrioritySet( NULL, uxPriority );
+static void prvChangeRelativePriorities( void )
+{
+static unsigned portBASE_TYPE ulLoops = 0;
+static eRelativePriorities ePriorities = eEqualPriority;
+
+	/* Occasionally change the task priority relative to the priority of
+	the receiving task. */
+	ulLoops++;
+	if( ulLoops >= queuesetPRIORITY_CHANGE_LOOPS )
+	{
+		ulLoops = 0;
+
+		switch( ePriorities )
+		{
+			case eEqualPriority:
+				/* Both tasks are running with medium priority.  Now lower the
+				priority of the receiving task so the Tx task has the higher
+				relative priority. */
+				vTaskPrioritySet( xQueueSetReceivingTask, queuesetLOW_PRIORITY );
+				ePriorities = eTxHigherPriority;
+				break;
+
+			case eTxHigherPriority:
+				/* The Tx task is running with a higher priority than the Rx
+				task.  Switch the priorities around so the Rx task has the
+				higher relative priority. */
+				vTaskPrioritySet( xQueueSetReceivingTask, queuesetMEDIUM_PRIORITY );
+				vTaskPrioritySet( xQueueSetSendingTask, queuesetLOW_PRIORITY );
+				ePriorities = eTxLowerPriority;
+				break;
+
+			case eTxLowerPriority:
+				/* The Tx task is running with a lower priority than the Rx
+				task.  Make the priorities equal again. */
+				vTaskPrioritySet( xQueueSetSendingTask, queuesetMEDIUM_PRIORITY );
+				ePriorities = eEqualPriority;
+
+				/* When both tasks are using a non-idle priority the queue set
+				tasks will starve idle priority tasks of execution time - so
+				relax a bit before the next iteration to minimise the impact. */
+				vTaskDelay( queuesetTX_LOOP_DELAY );
+
+				break;
 		}
 	}
 }

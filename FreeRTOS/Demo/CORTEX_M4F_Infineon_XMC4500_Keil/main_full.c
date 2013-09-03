@@ -124,19 +124,12 @@
 #include "recmutex.h"
 #include "death.h"
 
-/* Hardware includes. */
-#include "XMC4500.h"
-#include "System_XMC4500.h"
-
 /* Priorities for the demo application tasks. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
 #define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
-
-/* To toggle the single LED */
-#define mainTOGGLE_LED()					( PORT3->OMR =	0x02000200 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -183,14 +176,11 @@ xTimerHandle xCheckTimer = NULL;
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
 	vStartCountingSemaphoreTasks();
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartRecursiveMutexTasks();
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	
@@ -212,11 +202,6 @@ xTimerHandle xCheckTimer = NULL;
 	{
 		xTimerStart( xCheckTimer, mainDONT_BLOCK );
 	}
-
-	/* The set of tasks created by the following function call have to be 
-	created last as they keep account of the number of tasks they expect to see 
-	running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -244,17 +229,7 @@ unsigned long ulErrorFound = pdFALSE;
 		ulErrorFound = pdTRUE;
 	}
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		ulErrorFound = pdTRUE;
 	}
@@ -270,16 +245,6 @@ unsigned long ulErrorFound = pdFALSE;
 	}
 
 	if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-
-	if( xIsCreateTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-
-	if( xArePollingQueuesStillRunning() != pdTRUE )
 	{
 		ulErrorFound = pdTRUE;
 	}
@@ -306,7 +271,7 @@ unsigned long ulErrorFound = pdFALSE;
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
-	mainTOGGLE_LED();	
+	configTOGGLE_LED();	
 	
 	/* Have any errors been latch in ulErrorFound?  If so, shorten the
 	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.

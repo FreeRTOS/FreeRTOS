@@ -1,9 +1,9 @@
 /**************************************************************************//**
- * @file     system_XMC4500.c
+ * @file     system_XMC4200.c
  * @brief    CMSIS Cortex-M4 Device Peripheral Access Layer Header File
- *           for the Infineon XMC4500 Device Series
+ *           for the Infineon XMC4000 Device Series
  * @version  V3.0.1 Alpha
- * @date     17. September 2012
+ * @date     26. September 2012
  *
  * @note
  * Copyright (C) 2011 ARM Limited. All rights reserved.
@@ -22,8 +22,8 @@
  *
  ******************************************************************************/
 
-#include "system_XMC4500.h"
-#include <XMC4500.h>
+#include <system_XMC4200.h>
+#include <XMC4200.h>
 
 /*----------------------------------------------------------------------------
   Clock Variable definitions
@@ -103,7 +103,7 @@ uint32_t SystemCoreClock;
 /*************************************************************************************/
 // Global clock parameters
 /*************************************************************************************/
-#define CLOCK_FSYS							120000000
+#define CLOCK_FSYS							80000000
 #define	CLOCK_CRYSTAL_FREQUENCY	12000000
 #define	CLOCK_BACK_UP						24000000
 
@@ -119,7 +119,8 @@ uint32_t SystemCoreClock;
 //Divider settings for external crystal @ 12 MHz
 /*************************************************************************************/
 #define 	SCU_PLL_K1DIV	1
-#define 	SCU_PLL_K2DIV	3
+#define 	SCU_PLL_K1DIV	1
+#define 	SCU_PLL_K2DIV	5
 #define 	SCU_PLL_PDIV	1
 #define 	SCU_PLL_NDIV	79
 
@@ -127,10 +128,11 @@ uint32_t SystemCoreClock;
 //Divider settings for use of backup clock source trimmed
 /*************************************************************************************/
 //#define 	SCU_PLL_K1DIV	1
-//#define 	SCU_PLL_K2DIV	3
+//#define 	SCU_PLL_K2DIV	5
 //#define 	SCU_PLL_PDIV	3
 //#define 	SCU_PLL_NDIV	79
 /*************************************************************************************/
+
 
 /*--------------------- USB CLOCK Configuration ---------------------------
 //
@@ -180,7 +182,7 @@ uint32_t SystemCoreClock;
 */
 
 #define SCU_CLOCKOUT_SETUP               0
-#define	SCU_CLOCKOUT_SOURCE		0x00000003
+#define	SCU_CLOCKOUT_SOURCE		0x00000000
 #define	SCU_CLOCKOUT_DIV		0x00000009
 #define	SCU_CLOCKOUT_PIN		0x00000001
 
@@ -232,6 +234,7 @@ WDT->CTR &= ~WDTENB_nVal;
 
 #endif
 
+
 /* Setup the Flash Wait State */
 #if PMU_FLASH
 temp = FLASH0->FCON;
@@ -251,11 +254,11 @@ SCU_CLK->EXTCLKCR	|= SCU_CLOCKOUT_DIV<<16;
 if (SCU_CLOCKOUT_PIN) {
 						PORT0->IOCR8 = 0x00000088;   /*P0.8 --> ALT1 select +  HWSEL */
 					    PORT0->HWSEL &= (~PORT0_HWSEL_HW8_Msk);
-					    //PORT0->PDR1 &= (~PORT0_PDR1_PD8_Msk);  /*set to strong driver */
+					    PORT0->PDR1 &= (~PORT0_PDR1_PD8_Msk);  /*set to strong driver */
 						}
 else {
 		PORT1->IOCR12 = 0x88000000;                    /*P1.15--> ALT1 select */
-	    //PORT1->PDR1 &= (~PORT1_PDR1_PD15_Msk);  /*set to strong driver */
+	    PORT1->PDR1 &= (~PORT1_PDR1_PD15_Msk);  /*set to strong driver */
 		}
 
 #endif
@@ -532,7 +535,7 @@ if (!(SCU_PLL->PLLSTAT & SCU_PLL_PLLSTAT_VCOLOCK_Msk)){
 		SCU_CLK->CCUCLKCR = SCU_CCUCLKCR_DIV;
 
 
-		 /* Switch system clock to PLL */
+  		/* Switch system clock to PLL */
 	   SCU_CLK->SYSCLKCR |=  0x00010000;
 
 	   /* we may have to reset OSCDISCDIS */
@@ -642,7 +645,7 @@ static int USBClockSetup(void)
 /* this weak function enables DAVE3 clock App usage */
 if(AllowPLLInitByStartup()){
 
-	/* check if PLL is switched on */
+/* check if PLL is switched on */
 if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPWD_Msk)) != 0){
 	/* enable PLL first */
   SCU_PLL->USBPLLCON &= ~(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPWD_Msk);
@@ -697,7 +700,7 @@ if ((SCU_PLL->USBPLLCON &(SCU_PLL_USBPLLCON_VCOPWD_Msk | SCU_PLL_USBPLLCON_PLLPW
    /* wait for PLL Lock */
    while (!(SCU_PLL->USBPLLSTAT & SCU_PLL_USBPLLSTAT_VCOLOCK_Msk));
 
-  }/* end this weak function enables DAVE3 clock App usage */
+ }/* end this weak function enables DAVE3 clock App usage */
    return(1);
 
 }

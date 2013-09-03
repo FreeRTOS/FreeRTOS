@@ -1,8 +1,8 @@
 ;*****************************************************************************/
-; * @file     startup_XMC4500.s
+; * @file     startup_XMC4200.s
 ; * @brief    CMSIS Cortex-M4 Core Device Startup File for
-; *           Infineon XMC4500 Device Series
-; * @version  V1.20
+; *           Infineon XMC4200 Device Series
+; * @version  V1.00
 ; * @date     05. February 2013
 ; *
 ; * @note
@@ -24,9 +24,8 @@
 
 ;/* ********************* Version History *********************************** */
 ;/* ***************************************************************************
-; V1.00 , February 2012, First version
-; V1.10 , August 2012, Adding Dave3 init function call
-; V1.20 , February 2013, FIX for CPU prefetch bug implemented
+; V0.1 , September 2012, First version
+; V1.0 , February 2013, FIX for CPU prefetch bug implemented
 ;**************************************************************************** */
 
 
@@ -49,7 +48,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000200
+Heap_Size       EQU     0x00000000
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
@@ -150,13 +149,13 @@ __Vectors
     DCD          0                          ; Reserved
     DCD          0                          ; Reserved
     DCD          0                          ; Reserved
-    DCD   		 SVC_Handler                ; SVCall Handler
+    DCD          SVC_Handler                ; SVCall Handler
     ExcpVector   DebugMon_Handler           ; Debug Monitor Handler
     DCD          0                          ; Reserved
-    DCD   		 PendSV_Handler             ; PendSV Handler
-    DCD   		 SysTick_Handler            ; SysTick Handler
+    DCD          PendSV_Handler             ; PendSV Handler
+    DCD          SysTick_Handler            ; SysTick Handler
 
-    ; Interrupt Handlers for Service Requests (SR) from XMC4500 Peripherals
+    ; Interrupt Handlers for Service Requests (SR) from XMC4200 Peripherals
     ExcpVector   SCU_0_IRQHandler           ; Handler name for SR SCU_0
     ExcpVector   ERU0_0_IRQHandler          ; Handler name for SR ERU0_0
     ExcpVector   ERU0_1_IRQHandler          ; Handler name for SR ERU0_1
@@ -183,22 +182,22 @@ __Vectors
     ExcpVector   VADC0_G1_1_IRQHandler      ; Handler name for SR VADC0_G1_1
     ExcpVector   VADC0_G1_2_IRQHandler      ; Handler name for SR VADC0_G1_2
     ExcpVector   VADC0_G1_3_IRQHandler      ; Handler name for SR VADC0_G1_3
-    ExcpVector   VADC0_G2_0_IRQHandler      ; Handler name for SR VADC0_G2_0
-    ExcpVector   VADC0_G2_1_IRQHandler      ; Handler name for SR VADC0_G2_1
-    ExcpVector   VADC0_G2_2_IRQHandler      ; Handler name for SR VADC0_G2_2
-    ExcpVector   VADC0_G2_3_IRQHandler      ; Handler name for SR VADC0_G2_3
-    ExcpVector   VADC0_G3_0_IRQHandler      ; Handler name for SR VADC0_G3_0
-    ExcpVector   VADC0_G3_1_IRQHandler      ; Handler name for SR VADC0_G3_1
-    ExcpVector   VADC0_G3_2_IRQHandler      ; Handler name for SR VADC0_G3_2
-    ExcpVector   VADC0_G3_3_IRQHandler      ; Handler name for SR VADC0_G3_3
-    ExcpVector   DSD0_0_IRQHandler          ; Handler name for SR DSD0_0
-    ExcpVector   DSD0_1_IRQHandler          ; Handler name for SR DSD0_1
-    ExcpVector   DSD0_2_IRQHandler          ; Handler name for SR DSD0_2
-    ExcpVector   DSD0_3_IRQHandler          ; Handler name for SR DSD0_3
-    ExcpVector   DSD0_4_IRQHandler          ; Handler name for SR DSD0_4
-    ExcpVector   DSD0_5_IRQHandler          ; Handler name for SR DSD0_5
-    ExcpVector   DSD0_6_IRQHandler          ; Handler name for SR DSD0_6
-    ExcpVector   DSD0_7_IRQHandler          ; Handler name for SR DSD0_7
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
     ExcpVector   DAC0_0_IRQHandler          ; Handler name for SR DAC0_0
     ExcpVector   DAC0_1_IRQHandler          ; Handler name for SR DAC0_1
     ExcpVector   CCU40_0_IRQHandler         ; Handler name for SR CCU40_0
@@ -209,30 +208,30 @@ __Vectors
     ExcpVector   CCU41_1_IRQHandler         ; Handler name for SR CCU41_1
     ExcpVector   CCU41_2_IRQHandler         ; Handler name for SR CCU41_2
     ExcpVector   CCU41_3_IRQHandler         ; Handler name for SR CCU41_3
-    ExcpVector   CCU42_0_IRQHandler         ; Handler name for SR CCU42_0
-    ExcpVector   CCU42_1_IRQHandler         ; Handler name for SR CCU42_1
-    ExcpVector   CCU42_2_IRQHandler         ; Handler name for SR CCU42_2
-    ExcpVector   CCU42_3_IRQHandler         ; Handler name for SR CCU42_3
-    ExcpVector   CCU43_0_IRQHandler         ; Handler name for SR CCU43_0
-    ExcpVector   CCU43_1_IRQHandler         ; Handler name for SR CCU43_1
-    ExcpVector   CCU43_2_IRQHandler         ; Handler name for SR CCU43_2
-    ExcpVector   CCU43_3_IRQHandler         ; Handler name for SR CCU43_3
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
     ExcpVector   CCU80_0_IRQHandler         ; Handler name for SR CCU80_0
     ExcpVector   CCU80_1_IRQHandler         ; Handler name for SR CCU80_1
     ExcpVector   CCU80_2_IRQHandler         ; Handler name for SR CCU80_2
     ExcpVector   CCU80_3_IRQHandler         ; Handler name for SR CCU80_3
-    ExcpVector   CCU81_0_IRQHandler         ; Handler name for SR CCU81_0
-    ExcpVector   CCU81_1_IRQHandler         ; Handler name for SR CCU81_1
-    ExcpVector   CCU81_2_IRQHandler         ; Handler name for SR CCU81_2
-    ExcpVector   CCU81_3_IRQHandler         ; Handler name for SR CCU81_3
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
     ExcpVector   POSIF0_0_IRQHandler        ; Handler name for SR POSIF0_0
     ExcpVector   POSIF0_1_IRQHandler        ; Handler name for SR POSIF0_1
-    ExcpVector   POSIF1_0_IRQHandler        ; Handler name for SR POSIF1_0
-    ExcpVector   POSIF1_1_IRQHandler        ; Handler name for SR POSIF1_1
     DCD          0                          ; Reserved
     DCD          0                          ; Reserved
-    DCD          0                          ; Reserved
-    DCD          0                          ; Reserved
+    ExcpVector   HRPWM_0_IRQHandler         ; Handler name for SR HRPWM_0
+    ExcpVector   HRPWM_1_IRQHandler         ; Handler name for SR HRPWM_1
+    ExcpVector   HRPWM_2_IRQHandler         ; Handler name for SR HRPWM_2
+    ExcpVector   HRPWM_3_IRQHandler         ; Handler name for SR HRPWM_3
     ExcpVector   CAN0_0_IRQHandler          ; Handler name for SR CAN0_0
     ExcpVector   CAN0_1_IRQHandler          ; Handler name for SR CAN0_1
     ExcpVector   CAN0_2_IRQHandler          ; Handler name for SR CAN0_2
@@ -253,21 +252,21 @@ __Vectors
     ExcpVector   USIC1_3_IRQHandler         ; Handler name for SR USIC1_3
     ExcpVector   USIC1_4_IRQHandler         ; Handler name for SR USIC1_4
     ExcpVector   USIC1_5_IRQHandler         ; Handler name for SR USIC1_5
-    ExcpVector   USIC2_0_IRQHandler         ; Handler name for SR USIC2_0
-    ExcpVector   USIC2_1_IRQHandler         ; Handler name for SR USIC2_1
-    ExcpVector   USIC2_2_IRQHandler         ; Handler name for SR USIC2_2
-    ExcpVector   USIC2_3_IRQHandler         ; Handler name for SR USIC2_3
-    ExcpVector   USIC2_4_IRQHandler         ; Handler name for SR USIC2_4
-    ExcpVector   USIC2_5_IRQHandler         ; Handler name for SR USIC2_5
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
     ExcpVector   LEDTS0_0_IRQHandler        ; Handler name for SR LEDTS0_0
     DCD          0                          ; Reserved
     ExcpVector   FCE0_0_IRQHandler          ; Handler name for SR FCE0_0
     ExcpVector   GPDMA0_0_IRQHandler        ; Handler name for SR GPDMA0_0
-    ExcpVector   SDMMC0_0_IRQHandler        ; Handler name for SR SDMMC0_0
-    ExcpVector   USB0_0_IRQHandler          ; Handler name for SR USB0_0
-    ExcpVector   ETH0_0_IRQHandler          ; Handler name for SR ETH0_0
     DCD          0                          ; Reserved
-    ExcpVector   GPDMA1_0_IRQHandler        ; Handler name for SR GPDMA1_0
+    ExcpVector   USB0_0_IRQHandler          ; Handler name for SR USB0_0
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
+    DCD          0                          ; Reserved
     DCD          0                          ; Reserved
 __Vectors_End
 
@@ -358,22 +357,6 @@ Reset_Handler    PROC
     ExcpHandler   VADC0_G1_1_IRQHandler
     ExcpHandler   VADC0_G1_2_IRQHandler
     ExcpHandler   VADC0_G1_3_IRQHandler
-    ExcpHandler   VADC0_G2_0_IRQHandler
-    ExcpHandler   VADC0_G2_1_IRQHandler
-    ExcpHandler   VADC0_G2_2_IRQHandler
-    ExcpHandler   VADC0_G2_3_IRQHandler
-    ExcpHandler   VADC0_G3_0_IRQHandler
-    ExcpHandler   VADC0_G3_1_IRQHandler
-    ExcpHandler   VADC0_G3_2_IRQHandler
-    ExcpHandler   VADC0_G3_3_IRQHandler
-    ExcpHandler   DSD0_0_IRQHandler
-    ExcpHandler   DSD0_1_IRQHandler
-    ExcpHandler   DSD0_2_IRQHandler
-    ExcpHandler   DSD0_3_IRQHandler
-    ExcpHandler   DSD0_4_IRQHandler
-    ExcpHandler   DSD0_5_IRQHandler
-    ExcpHandler   DSD0_6_IRQHandler
-    ExcpHandler   DSD0_7_IRQHandler
     ExcpHandler   DAC0_0_IRQHandler
     ExcpHandler   DAC0_1_IRQHandler
     ExcpHandler   CCU40_0_IRQHandler
@@ -384,26 +367,16 @@ Reset_Handler    PROC
     ExcpHandler   CCU41_1_IRQHandler
     ExcpHandler   CCU41_2_IRQHandler
     ExcpHandler   CCU41_3_IRQHandler
-    ExcpHandler   CCU42_0_IRQHandler
-    ExcpHandler   CCU42_1_IRQHandler
-    ExcpHandler   CCU42_2_IRQHandler
-    ExcpHandler   CCU42_3_IRQHandler
-    ExcpHandler   CCU43_0_IRQHandler
-    ExcpHandler   CCU43_1_IRQHandler
-    ExcpHandler   CCU43_2_IRQHandler
-    ExcpHandler   CCU43_3_IRQHandler
     ExcpHandler   CCU80_0_IRQHandler
     ExcpHandler   CCU80_1_IRQHandler
     ExcpHandler   CCU80_2_IRQHandler
     ExcpHandler   CCU80_3_IRQHandler
-    ExcpHandler   CCU81_0_IRQHandler
-    ExcpHandler   CCU81_1_IRQHandler
-    ExcpHandler   CCU81_2_IRQHandler
-    ExcpHandler   CCU81_3_IRQHandler
     ExcpHandler   POSIF0_0_IRQHandler
     ExcpHandler   POSIF0_1_IRQHandler
-    ExcpHandler   POSIF1_0_IRQHandler
-    ExcpHandler   POSIF1_1_IRQHandler
+    ExcpHandler   HRPWM_0_IRQHandler
+    ExcpHandler   HRPWM_1_IRQHandler
+    ExcpHandler   HRPWM_2_IRQHandler
+    ExcpHandler   HRPWM_3_IRQHandler
     ExcpHandler   CAN0_0_IRQHandler
     ExcpHandler   CAN0_1_IRQHandler
     ExcpHandler   CAN0_2_IRQHandler
@@ -424,19 +397,10 @@ Reset_Handler    PROC
     ExcpHandler   USIC1_3_IRQHandler
     ExcpHandler   USIC1_4_IRQHandler
     ExcpHandler   USIC1_5_IRQHandler
-    ExcpHandler   USIC2_0_IRQHandler
-    ExcpHandler   USIC2_1_IRQHandler
-    ExcpHandler   USIC2_2_IRQHandler
-    ExcpHandler   USIC2_3_IRQHandler
-    ExcpHandler   USIC2_4_IRQHandler
-    ExcpHandler   USIC2_5_IRQHandler
     ExcpHandler   LEDTS0_0_IRQHandler
     ExcpHandler   FCE0_0_IRQHandler
     ExcpHandler   GPDMA0_0_IRQHandler
-    ExcpHandler   SDMMC0_0_IRQHandler
     ExcpHandler   USB0_0_IRQHandler
-    ExcpHandler   ETH0_0_IRQHandler
-    ExcpHandler   GPDMA1_0_IRQHandler
 
 ;* ============= END OF INTERRUPT HANDLER DEFINITION ======================== */
 

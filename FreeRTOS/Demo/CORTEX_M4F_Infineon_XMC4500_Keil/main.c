@@ -92,13 +92,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Hardware includes. */
-#include "XMC4500.h"
-#include "System_XMC4500.h"
-
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
@@ -140,12 +136,6 @@ int main( void )
 static void prvSetupHardware( void )
 {
 extern void SystemCoreClockUpdate( void );
-
-	/* Ensure SystemCoreClock variable is set. */
-	SystemCoreClockUpdate();
-
-	/* Configure pin P3.9 for the LED. */
-	PORT3->IOCR8 = 0x00008000;
 
 	/* Ensure all priority bits are assigned as preemption priority bits. */
 	NVIC_SetPriorityGrouping( 0 );

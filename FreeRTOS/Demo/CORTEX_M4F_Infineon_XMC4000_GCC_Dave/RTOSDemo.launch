@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.tasking.cdt.launch.localCLaunch">
+<booleanAttribute key="com.tasking.debug.cdt.core.ATTR_RUN_IN_SEPARATE_PROCESS" value="true"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.BREAK_ON_EXIT" value="true"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.CACHE_TARGET_ACCESS" value="false"/>
+<stringAttribute key="com.tasking.debug.cdt.core.COMMUNICATION" value="J-Link over USB (SWD)"/>
+<stringAttribute key="com.tasking.debug.cdt.core.CONFIGURATION" value="Default"/>
+<stringAttribute key="com.tasking.debug.cdt.core.DILOGCALLBACK_LOG_FILE_NAME" value=""/>
+<booleanAttribute key="com.tasking.debug.cdt.core.DOWNLOAD" value="true"/>
+<stringAttribute key="com.tasking.debug.cdt.core.FSS_ROOT" value="${project_loc}\${build_config}"/>
+<stringAttribute key="com.tasking.debug.cdt.core.GDILOG_FILE_NAME" value=""/>
+<booleanAttribute key="com.tasking.debug.cdt.core.GOTO_MAIN" value="true"/>
+<stringAttribute key="com.tasking.debug.cdt.core.MSGLOG_FILE_NAME" value=""/>
+<booleanAttribute key="com.tasking.debug.cdt.core.PROGRAM_FLASH" value="true"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.RESET_TARGET" value="true"/>
+<stringAttribute key="com.tasking.debug.cdt.core.TARGET" value="Infineon Hexagon Application Kit XMC4500 Series"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.TARGET_POLLING" value="false"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.USE_MDF_FILE" value="false"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.VERIFY" value="true"/>
+<booleanAttribute key="com.tasking.debug.cdt.core.linkToProject" value="true"/>
+<stringAttribute key="debugger_configuration.debug_instrument_module" value="dijlinkarm"/>
+<stringAttribute key="debugger_configuration.gdi.flash.flash_monitor" value="fARMv7M.sre"/>
+<stringAttribute key="debugger_configuration.gdi.flash.flash_workspace" value="0x20000000"/>
+<stringAttribute key="debugger_configuration.gdi.resource.hwdiarm.protocol" value="SWD"/>
+<stringAttribute key="debugger_configuration.general.kdi_orti_file" value=""/>
+<stringAttribute key="debugger_configuration.general.ksm_sharedlib" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.tasking.debug.cdt.core.CDebugger"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="run"/>
+<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_REGISTER_BOOKKEEPING" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.launch.ENABLE_VARIABLE_BOOKKEEPING" value="false"/>
+<stringAttribute key="org.eclipse.cdt.launch.FORMAT" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;contentList/&gt;"/>
+<stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;globalVariableList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="${project_loc}\${build_config}\RTOSDemo.elf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="RTOSDemo"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/RTOSDemo"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
+</launchConfiguration>

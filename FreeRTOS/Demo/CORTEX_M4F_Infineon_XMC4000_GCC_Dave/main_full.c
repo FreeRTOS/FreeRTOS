@@ -648,6 +648,13 @@ static void prvRegTest2Task( void *pvParameters )
 		"	ldr r1, [r0]											\n"
 		"	adds r1, r1, #1											\n"
 		"	str r1, [r0]											\n"
+		"															\n"
+		"	/* Yield to increase test coverage. */ 					\n"
+		"	movs r0, #0x01											\n"
+		"	ldr r1, =0xe000ed04 									\n" /*NVIC_INT_CTRL */
+		"	lsl r0, #28 											\n" /* Shift to PendSV bit */
+		"	str r0, [r1]											\n"
+		"	dsb														\n"
 		"	pop { r0-r1 }											\n"
 		"															\n"
 		"	/* Start again. */										\n"

@@ -15,8 +15,8 @@ SkipProgOnCRCMatch = 1
 VerifyDownload = 1
 AllowCaching = 1
 EnableFlashDL = 2
-Override = 1
-Device="XMC4500-1024"
+Override = 0
+Device="UNSPECIFIED"
 [GENERAL]
 WorkRAMSize = 0x00
 WorkRAMAddr = 0x00

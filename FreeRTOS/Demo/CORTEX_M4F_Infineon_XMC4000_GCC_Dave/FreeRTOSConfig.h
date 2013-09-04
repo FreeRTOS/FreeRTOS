@@ -169,7 +169,7 @@ standard names. */
 	#define configCONFIGURE_LED() ( PORT3->IOCR8 = 0x00008000 )
 	/* To toggle the single LED */
 	#define configTOGGLE_LED()	( PORT3->OMR =	0x02000200 )
-#elif defined( PART_XMC4400 )
+#elif UC_ID == 4400
 	/* Hardware includes. */
 	#include "XMC4400.h"
 	#include "System_XMC4200.h"
@@ -178,7 +178,7 @@ standard names. */
 	#define configCONFIGURE_LED() ( PORT5->IOCR0 = 0x00800000 )
 	/* To toggle the single LED */
 	#define configTOGGLE_LED()	( PORT5->OMR =	0x00040004 )
-#elif defined( PART_XMC4200 )
+#elif UC_ID == 4206
 	/* Hardware includes. */
 	#include "XMC4200.h"
 	#include "System_XMC4200.h"

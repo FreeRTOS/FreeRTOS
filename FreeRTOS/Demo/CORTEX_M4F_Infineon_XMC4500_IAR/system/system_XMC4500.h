@@ -2,8 +2,8 @@
  * @file     system_XMC4500.h
  * @brief    Header file for the XMC4500-Series systeminit
  *           
- * @version  V1.4
- * @date     31. Januar 2012
+ * @version  V1.6
+ * @date     23. October 2012
  *
  * @note
  * Copyright (C) 2011 Infineon Technologies AG. All rights reserved.
@@ -59,6 +59,9 @@ extern void SystemInit (void);
  */
 extern void SystemCoreClockUpdate (void);
 
+/* this weak function enables DAVE3 clock App usage */		
+extern uint32_t AllowPLLInitByStartup(void);				
+
 
 /* clock definitions, do not modify! */
 #define SCU_CLOCK_CRYSTAL              1
@@ -70,11 +73,12 @@ extern void SystemCoreClockUpdate (void);
  */				
 /* source for clock generation				
  * range: SCU_CLOCK_CRYSTAL (crystal or external clock at crystal input)				
- *        				
+ * mandatory for old system_xmc4500.c files - please do not remove!!!       				
  **************************************************************************************/				
 				
 #define	SCU_PLL_CLOCK_INPUT	SCU_CLOCK_CRYSTAL
-#define CLOCK_OSC_HP	24000000			 
+#define CLOCK_OSC_HP	24000000
+#define CLOCK_BACK_UP	24000000		 
 #define	CLOCK_CRYSTAL_FREQUENCY	12000000		
 #define	SYSTEM_FREQUENCY	120000000		
 				

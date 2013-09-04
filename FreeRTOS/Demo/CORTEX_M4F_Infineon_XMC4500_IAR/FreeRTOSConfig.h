@@ -87,12 +87,12 @@
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
-#define configUSE_TICK_HOOK				0
+#define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 130 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 40960 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 22800 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
@@ -105,6 +105,7 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configGENERATE_RUN_TIME_STATS	0
+#define configUSE_QUEUE_SETS			1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0
@@ -150,16 +151,50 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-	
+
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
-	
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
+
+/* Demo application specific settings. */
+#ifdef __ICCARM__
+	#if defined( PART_XMC4500 )
+		/* Hardware includes. */
+		#include "XMC4500.h"
+		#include "System_XMC4500.h"
+
+		/* Configure pin P3.9 for the LED. */
+		#define configCONFIGURE_LED() ( PORT3->IOCR8 = 0x00008000 )
+		/* To toggle the single LED */
+		#define configTOGGLE_LED()	( PORT3->OMR =	0x02000200 )
+	#elif defined( PART_XMC4400 )
+		/* Hardware includes. */
+		#include "XMC4400.h"
+		#include "System_XMC4200.h"
+
+		/* Configure pin P5.2 for the LED. */
+		#define configCONFIGURE_LED() ( PORT5->IOCR0 = 0x00800000 )
+		/* To toggle the single LED */
+		#define configTOGGLE_LED()	( PORT5->OMR =	0x00040004 )
+	#elif defined( PART_XMC4200 )
+		/* Hardware includes. */
+		#include "XMC4200.h"
+		#include "System_XMC4200.h"
+
+		/* Configure pin P2.1 for the LED. */
+		#define configCONFIGURE_LED() PORT2->IOCR0 = 0x00008000; PORT2->HWSEL &= ~0x0000000cUL
+		/* To toggle the single LED */
+		#define configTOGGLE_LED()	( PORT2->OMR =	0x00020002 )
+	#else
+		#error Part number not specified in project options
+	#endif
+#endif
 
 #endif /* FREERTOS_CONFIG_H */
 

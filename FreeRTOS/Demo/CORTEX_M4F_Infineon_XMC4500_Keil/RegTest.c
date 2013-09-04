@@ -418,6 +418,14 @@ reg2_loopf_pass
 	ldr r1, [r0]
 	adds r1, r1, #1
 	str r1, [r0]
+	
+	/* Yield to increase test coverage. */
+	movs r0, #0x01
+	ldr r1, =0xe000ed04 /*NVIC_INT_CTRL */
+	lsl r0, r0, #28 /* Shift to PendSV bit */
+	str r0, [r1]
+	dsb
+	
 	pop { r0-r1 }
 	
 	/* Start again. */

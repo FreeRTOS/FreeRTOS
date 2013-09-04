@@ -113,16 +113,12 @@
 
 /* Standard demo application includes. */
 #include "flop.h"
-#include "integer.h"
-#include "PollQ.h"
 #include "semtest.h"
 #include "dynamic.h"
-#include "BlockQ.h"
 #include "blocktim.h"
 #include "countsem.h"
 #include "GenQTest.h"
 #include "recmutex.h"
-#include "death.h"
 
 /* Priorities for the demo application tasks. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )

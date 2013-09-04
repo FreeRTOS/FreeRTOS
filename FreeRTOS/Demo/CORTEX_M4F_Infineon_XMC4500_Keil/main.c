@@ -135,8 +135,8 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-extern void SystemCoreClockUpdate( void );
-
+	configCONFIGURE_LED();
+	
 	/* Ensure all priority bits are assigned as preemption priority bits. */
 	NVIC_SetPriorityGrouping( 0 );
 }

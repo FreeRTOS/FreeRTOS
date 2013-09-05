@@ -75,8 +75,8 @@
  ******************************************************************************
  *
  * main_full() creates all the demo application tasks and a software timer, then
- * starts the scheduler.  The web documentation provides more details of the 
- * standard demo application tasks, which provide no particular functionality, 
+ * starts the scheduler.  The web documentation provides more details of the
+ * standard demo application tasks, which provide no particular functionality,
  * but do provide a good example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
@@ -113,16 +113,14 @@
 
 /* Standard demo application includes. */
 #include "flop.h"
-#include "integer.h"
-#include "PollQ.h"
 #include "semtest.h"
 #include "dynamic.h"
-#include "BlockQ.h"
 #include "blocktim.h"
 #include "countsem.h"
 #include "GenQTest.h"
 #include "recmutex.h"
-#include "death.h"
+#include "QueueSet.h"
+#include "QueueOverwrite.h"
 
 /* Hardware includes. */
 #include "XMC4500.h"
@@ -134,9 +132,6 @@
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
 #define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
-
-/* To toggle the single LED */
-#define mainTOGGLE_LED()					( PORT3->OMR =	0x02000200 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -183,17 +178,14 @@ xTimerHandle xCheckTimer = NULL;
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );
+	vStartQueueSetTasks();
+	vStartQueueOverwriteTask( tskIDLE_PRIORITY );
 	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartRecursiveMutexTasks();
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	
+
 	/* Create the register check tasks, as described at the top of this
 	file */
 	xTaskCreate( vRegTest1Task, ( signed char * ) "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
@@ -212,11 +204,6 @@ xTimerHandle xCheckTimer = NULL;
 	{
 		xTimerStart( xCheckTimer, mainDONT_BLOCK );
 	}
-
-	/* The set of tasks created by the following function call have to be 
-	created last as they keep account of the number of tasks they expect to see 
-	running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -247,17 +234,7 @@ unsigned long ulErrorFound = pdFALSE;
 		ulErrorFound = pdTRUE;
 	}
 
-	if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-
-	if( xAreBlockingQueuesStillRunning() != pdTRUE )
 	{
 		ulErrorFound = pdTRUE;
 	}
@@ -277,21 +254,16 @@ unsigned long ulErrorFound = pdFALSE;
 		ulErrorFound = pdTRUE;
 	}
 
-	if( xIsCreateTaskStillRunning() != pdTRUE )
+	if( xAreQueueSetTasksStillRunning() != pdTRUE )
 	{
 		ulErrorFound = pdTRUE;
 	}
 
-	if( xArePollingQueuesStillRunning() != pdTRUE )
+	if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
 	{
 		ulErrorFound = pdTRUE;
 	}
 
-	if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	{
-		ulErrorFound = pdTRUE;
-	}
-	
 	/* Check that the register test 1 task is still running. */
 	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 	{
@@ -309,8 +281,8 @@ unsigned long ulErrorFound = pdFALSE;
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
-	mainTOGGLE_LED();	
-	
+	configTOGGLE_LED();
+
 	/* Have any errors been latch in ulErrorFound?  If so, shorten the
 	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
 	This will result in an increase in the rate at which mainCHECK_LED
@@ -320,7 +292,7 @@ unsigned long ulErrorFound = pdFALSE;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-			
+
 			/* This call to xTimerChangePeriod() uses a zero block time.
 			Functions called from inside of a timer callback function must
 			*never* attempt	to block. */
@@ -664,6 +636,12 @@ static void vRegTest2Task( void *pvParameters )
 		"	ldr r1, [r0]											\n"
 		"	adds r1, r1, #1											\n"
 		"	str r1, [r0]											\n"
+		"															\n"
+		"	movs r0, #0x01											\n" /* Yield to increase test coverage. */
+		"	ldr r1, =0xe000ed04 									\n" /*NVIC_INT_CTRL */
+		"	lsl r0, r0, #28											\n" /* Shift to PendSV bit */
+		"	str r0, [r1]											\n"
+		"	dsb														\n"
 		"	pop { r0-r1 }											\n"
 		"															\n"
 		"	b reg2_loop												\n" /* Start again. */

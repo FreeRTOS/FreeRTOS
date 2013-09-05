@@ -129,9 +129,6 @@ functionality. */
 #define mainQUEUE_SEND_PARAMETER			( 0x1111UL )
 #define mainQUEUE_RECEIVE_PARAMETER			( 0x22UL )
 
-/* To toggle the single LED */
-#define mainTOGGLE_LED()					( PORT3->OMR =	0x02000200 )
-
 /*-----------------------------------------------------------*/
 
 /*
@@ -145,11 +142,6 @@ static void prvQueueSendTask( void *pvParameters );
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  */
 void main_blinky( void );
-
-/*
- * The hardware only has a single LED.  Simply toggle it.
- */
-extern void vMainToggleLED( void );
 
 /*-----------------------------------------------------------*/
 
@@ -238,7 +230,7 @@ unsigned long ulReceivedValue;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
-			mainTOGGLE_LED();
+			configTOGGLE_LED();
 			ulReceivedValue = 0U;
 		}
 	}

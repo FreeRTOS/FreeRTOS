@@ -22,6 +22,10 @@
 #include <dbg.h>
 
 #define VTOR            (*(volatile unsigned int *)0xE000ED08)
+#define PREF_FCON       (*(volatile unsigned int *)0x58002014)
+#define SCU_GCU_PEEN    (*(volatile unsigned int *)0x5000413C)
+#define SCU_GCU_PEFLAG  (*(volatile unsigned int *)0x50004150)
+
 /* In the absence of DAVE code engine, CMSIS SystemInit() must perform clock 
    tree setup. 
    
@@ -65,6 +69,10 @@ static  char    argcv[__ARGCV_BUFSIZE];
 
 void    __interrupt() __frame() Reset_Handler( void )
 {
+                                                /* Set flash wait states to 3 */
+        PREF_FCON = (PREF_FCON & 0xFFFFFFF0) | 0x00000003;
+        SCU_GCU_PEFLAG =0xFFFFFFFF;             /* Clear existing parity errors if any */
+        SCU_GCU_PEEN = 0;                       /* Disable parity */
 
         /*
          *      Anticipate possible ROM/RAM remapping

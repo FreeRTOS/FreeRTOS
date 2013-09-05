@@ -42,16 +42,12 @@ IF EXIST FreeRTOS_Source Goto END
 
     REM Copy the files that define the common demo tasks.
     copy %COMMON_SOURCE%\dynamic.c         Common_Demo_Source
-    copy %COMMON_SOURCE%\BlockQ.c          Common_Demo_Source
-    copy %COMMON_SOURCE%\death.c           Common_Demo_Source
     copy %COMMON_SOURCE%\blocktim.c        Common_Demo_Source
-    copy %COMMON_SOURCE%\semtest.c         Common_Demo_Source
-    copy %COMMON_SOURCE%\PollQ.c           Common_Demo_Source
-    copy %COMMON_SOURCE%\GenQTest.c        Common_Demo_Source
     copy %COMMON_SOURCE%\recmutex.c        Common_Demo_Source
     copy %COMMON_SOURCE%\sp_flop.c         Common_Demo_Source
-    copy %COMMON_SOURCE%\countsem.c        Common_Demo_Source
-    copy %COMMON_SOURCE%\integer.c         Common_Demo_Source
+    copy %COMMON_SOURCE%\QueueSet.c        Common_Demo_Source
+	copy %COMMON_SOURCE%\QueueOverwrite.c  Common_Demo_Source
+	copy %COMMON_SOURCE%\GenQTest.c        Common_Demo_Source
     
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              Common_Demo_Source\include

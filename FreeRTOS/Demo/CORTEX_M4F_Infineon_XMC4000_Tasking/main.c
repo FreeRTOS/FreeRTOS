@@ -73,9 +73,9 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
- * 
+ *
  * Additional code:
- * 
+ *
  * This demo does not contain a non-kernel interrupt service routine that
  * can be used as an example for application writers to use as a reference.
  * Therefore, the framework of a dummy (not installed) handler is provided
@@ -96,6 +96,10 @@
 #include "XMC4500.h"
 #include "System_XMC4500.h"
 
+/* Standard demo includes. */
+#include "QueueSet.h"
+#include "QueueOverwrite.h"
+
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
@@ -107,9 +111,9 @@ or 0 to run the more comprehensive test and demo application. */
  */
 static void prvSetupHardware( void );
 
-/* 
+/*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0. 
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
 extern void main_blinky( void );
 extern void main_full( void );
@@ -139,13 +143,7 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-extern void SystemCoreClockUpdate( void );
-
-	/* Ensure SystemCoreClock variable is set. */
-	SystemCoreClockUpdate();
-
-	/* Configure pin P3.9 for the LED. */
-	PORT3->IOCR8 = 0x00008000;
+	configCONFIGURE_LED();
 
 	/* Ensure all priority bits are assigned as preemption priority bits. */
 	NVIC_SetPriorityGrouping( 0 );
@@ -204,11 +202,22 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 
 void vApplicationTickHook( void )
 {
-	/* This function will be called by each tick interrupt if 
+	/* This function will be called by each tick interrupt if
 	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
 	functions can be used (those that end in FromISR()). */
+
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
+	{
+		/* Write to a queue that is in use as part of the queue set demo to
+		demonstrate using queue sets from an ISR. */
+		vQueueSetAccessQueueSetFromISR();
+
+		/* Test the ISR safe queue overwrite functions. */
+		vQueueOverwritePeriodicISRDemo();
+	}
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 
@@ -220,19 +229,19 @@ long lHigherPriorityTaskWoken = pdFALSE;
 
 	/* Clear the interrupt if necessary. */
 	Dummy_ClearITPendingBit();
-	
+
 	/* This interrupt does nothing more than demonstrate how to synchronise a
 	task with an interrupt.  A semaphore is used for this purpose.  Note
 	lHigherPriorityTaskWoken is initialised to zero. */
 	xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
-	
+
 	/* If there was a task that was blocked on the semaphore, and giving the
 	semaphore caused the task to unblock, and the unblocked task has a priority
 	higher than the current Running state task (the task that this interrupt
 	interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE
-	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the 
+	internally within xSemaphoreGiveFromISR().  Passing pdTRUE into the
 	portEND_SWITCHING_ISR() macro will result in a context switch being pended to
-	ensure this interrupt returns directly to the unblocked, higher priority, 
+	ensure this interrupt returns directly to the unblocked, higher priority,
 	task.  Passing pdFALSE into portEND_SWITCHING_ISR() has no effect. */
 	portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }

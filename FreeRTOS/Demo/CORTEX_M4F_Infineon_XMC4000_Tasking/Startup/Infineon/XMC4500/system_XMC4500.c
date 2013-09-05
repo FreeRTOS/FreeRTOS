@@ -347,7 +347,7 @@ SystemCoreClock = CLOCK_BACK_UP;
 static int SystemClockSetup(void)
 {
 int temp;
-unsigned int long VCO;
+unsigned int long VCO=0;
 int stepping_K2DIV;	
 
 /* this weak function enables DAVE3 clock App usage */	

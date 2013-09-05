@@ -3,6 +3,10 @@
 // 
 #if defined(__PROC_XMC4500X1024__)
 #include "xmc45xx.lsl"
+#elif defined(__PROC_XMC4400X512__)
+#include "xmc44xx.lsl"
+#elif defined(__PROC_XMC4200X256__)
+#include "xmc42xx.lsl"
 #else
 #include <device.lsl>
 #endif

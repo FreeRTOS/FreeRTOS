@@ -107,10 +107,6 @@
 #include "task.h"
 #include "semphr.h"
 
-/* Hardware includes. */
-#include "XMC4500.h"
-#include "System_XMC4500.h"
-
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )

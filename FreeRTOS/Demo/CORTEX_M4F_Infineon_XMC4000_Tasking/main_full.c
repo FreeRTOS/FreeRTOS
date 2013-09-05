@@ -122,10 +122,6 @@
 #include "QueueSet.h"
 #include "QueueOverwrite.h"
 
-/* Hardware includes. */
-#include "XMC4500.h"
-#include "System_XMC4500.h"
-
 /* Priorities for the demo application tasks. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2UL )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )

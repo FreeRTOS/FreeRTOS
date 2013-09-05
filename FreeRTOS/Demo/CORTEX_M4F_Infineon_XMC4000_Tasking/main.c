@@ -92,10 +92,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* Hardware includes. */
-#include "XMC4500.h"
-#include "System_XMC4500.h"
-
 /* Standard demo includes. */
 #include "QueueSet.h"
 #include "QueueOverwrite.h"

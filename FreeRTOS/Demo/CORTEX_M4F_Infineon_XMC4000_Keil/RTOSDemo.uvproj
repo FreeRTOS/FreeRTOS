@@ -139,7 +139,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -153,7 +153,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>BIN\UL2CM3.DLL</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -167,7 +167,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
         </Utilities>
         <TargetArmAds>
@@ -351,7 +351,7 @@
               <MiscControls>--cpu Cortex-M4.fp --no_allow_fpreg_for_nonfpdata</MiscControls>
               <Define>rvkdm PART_XMC4500</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_M4F_Infineon_XMC4500_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;..\Common\include</IncludePath>
+              <IncludePath>..\CORTEX_M4F_Infineon_XMC4000_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;..\Common\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1026,7 +1026,7 @@
               <MiscControls>--cpu Cortex-M4.fp --no_allow_fpreg_for_nonfpdata</MiscControls>
               <Define>rvkdm PART_XMC4400</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_M4F_Infineon_XMC4500_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;..\Common\include</IncludePath>
+              <IncludePath>..\CORTEX_M4F_Infineon_XMC4000_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;..\Common\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1685,7 +1685,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -1701,7 +1701,7 @@
               <MiscControls>--cpu Cortex-M4.fp --no_allow_fpreg_for_nonfpdata</MiscControls>
               <Define>rvkdm PART_XMC4200</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORTEX_M4F_Infineon_XMC4500_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;..\Common\include</IncludePath>
+              <IncludePath>..\CORTEX_M4F_Infineon_XMC4500_Keil;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;..\Common\include;.</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

@@ -120,11 +120,11 @@ __vector_table
         DCD     0
         DCD     0
         DCD     0
-        DCD            SVC_Handler
+        ExcpVector   SVC_Handler                 ; SVCall Handler
         ExcpVector     DebugMon_Handler
         DCD     0
-        DCD            PendSV_Handler
-        DCD            SysTick_Handler
+        ExcpVector   PendSV_Handler              ; PendSV Handler
+        ExcpVector   SysTick_Handler             ; SysTick Handler
 
     ; Interrupt Handlers for Service Requests (SR) from XMC4500 Peripherals
 	ExcpVector   SCU_0_IRQHandler            ; Handler name for SR SCU_0

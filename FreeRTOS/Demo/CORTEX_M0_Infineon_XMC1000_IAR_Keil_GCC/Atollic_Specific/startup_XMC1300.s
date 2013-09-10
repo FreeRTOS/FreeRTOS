@@ -1,7 +1,7 @@
 /**
 *****************************************************************************
 **
-**  File        : startup_XMC1200.s
+**  File        : startup_XMC1300.s
 **
 **  Abstract    : This assembler file contains interrupt vector and
 **                startup code for ARM.

@@ -89,11 +89,12 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/Common_Demo_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo}&quot;"/>
 								</option>
-								<option id="com.tasking.arm.cc.optimize.77246374" name="Optimization level:" superClass="com.tasking.arm.cc.optimize" value="com.tasking.arm.cc.optimize.0" valueType="enumerated"/>
+								<option id="com.tasking.arm.cc.optimize.77246374" name="Optimization level:" superClass="com.tasking.arm.cc.optimize" value="com.tasking.arm.cc.optimize.3" valueType="enumerated"/>
 								<option id="com.tasking.arm.cc.globalTypeChecking.398868236" name="Perform global type checking on C code" superClass="com.tasking.arm.cc.globalTypeChecking" value="false" valueType="boolean"/>
 								<option id="com.tasking.arm.cc.definedSymbols.1743352277" name="Defined symbols" superClass="com.tasking.arm.cc.definedSymbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="PART_XMC4400"/>
 								</option>
+								<option id="com.tasking.arm.cc.tradeoff.1789020205" name="Trade-off between speed and size:" superClass="com.tasking.arm.cc.tradeoff" value="com.tasking.arm.cc.tradeoff.2" valueType="enumerated"/>
 								<inputType id="com.tasking.arm.cppInputType.2081187907" name="C++" superClass="com.tasking.arm.cppInputType"/>
 								<inputType id="com.tasking.arm.cpp.cInputType.644784868" name="C" superClass="com.tasking.arm.cpp.cInputType"/>
 								<inputType id="com.tasking.arm.cc.msInputType.1449709495" name="MS" superClass="com.tasking.arm.cc.msInputType"/>

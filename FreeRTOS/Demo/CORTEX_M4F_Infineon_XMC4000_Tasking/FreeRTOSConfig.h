@@ -85,7 +85,7 @@
  * executed from within the IDE!  Once it has been executed, re-open or refresh 
  * the Eclipse project and remove the #error line below.
  */
-//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
 #include <stdint.h>
 extern uint32_t SystemCoreClock;
@@ -131,6 +131,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+#define INCLUDE_eTaskGetState 			1
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

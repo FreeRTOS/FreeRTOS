@@ -75,6 +75,7 @@
  * queuesetINITIAL_ISR_TX_VALUE to ULONG_MAX.
  */
 
+
 /* Standard includes. */
 #include <stdlib.h>
 #include <limits.h>
@@ -105,7 +106,6 @@ in the range of 0xffff to ULONG_MAX. */
 /* The priorities used in this demo. */
 #define queuesetLOW_PRIORITY	( tskIDLE_PRIORITY )
 #define queuesetMEDIUM_PRIORITY ( queuesetLOW_PRIORITY + 1 )
-#define queuesetHIGH_PRIORITY	( queuesetMEDIUM_PRIORITY + 1 )
 
 /* For test purposes the priority of the sending task is changed after every
 queuesetPRIORITY_CHANGE_LOOPS number of values are sent to a queue. */
@@ -165,7 +165,7 @@ static void prvSendToQueueInSetFromISR( void );
  * Create the queues and add them to a queue set before resuming the Tx
  * task.
  */
-static void prvSetupTest( xTaskHandle xQueueSetSendingTask );
+static void prvSetupTest( void );
 
 /*
  * Checks a value received from a queue falls within the range of expected
@@ -227,9 +227,7 @@ xTaskHandle xQueueSetSendingTask, xQueueSetReceivingTask;
 
 void vStartQueueSetTasks( void )
 {
-	/* Create the two queues.  The handle of the sending task is passed into
-	the receiving task using the task parameter.  The receiving task uses the
-	handle to resume the sending task after it has created the queues. */
+	/* Create the tasks. */
 	xTaskCreate( prvQueueSetSendingTask, ( signed char * ) "SetTx", configMINIMAL_STACK_SIZE, NULL, queuesetMEDIUM_PRIORITY, &xQueueSetSendingTask );
 	xTaskCreate( prvQueueSetReceivingTask, ( signed char * ) "SetRx", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, &xQueueSetReceivingTask );
 
@@ -388,14 +386,10 @@ static void prvQueueSetReceivingTask( void *pvParameters )
 {
 unsigned long ulReceived;
 xQueueHandle xActivatedQueue;
-xTaskHandle xQueueSetSendingTask;
-
-	/* The handle to the sending task is passed in using the task parameter. */
-	xQueueSetSendingTask = ( xTaskHandle ) pvParameters;
 
 	/* Create the queues and add them to the queue set before resuming the Tx
 	task. */
-	prvSetupTest( xQueueSetSendingTask );
+	prvSetupTest();
 
 	for( ;; )
 	{
@@ -483,17 +477,11 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 		{
 			/* The value received is at the lower limit of the expected range.
 			Don't test it and expect to receive one higher next time. */
-			ulExpectedReceivedFromISR++;
 		}
 		else if( ( ULONG_MAX - ulReceived ) <= queuesetIGNORED_BOUNDARY )
 		{
 			/* The value received is at the higher limit of the expected range.
 			Don't test it and expect to wrap soon. */
-			ulExpectedReceivedFromISR++;
-			if( ulExpectedReceivedFromISR == 0 )
-			{
-				ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
-			}
 		}
 		else
 		{
@@ -502,11 +490,15 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 			{
 				xQueueSetTasksStatus = pdFAIL;
 			}
-			else
-			{
-				/* It is expected to receive an incrementing value. */
-				ulExpectedReceivedFromISR++;
-			}
+		}
+
+		configASSERT( xQueueSetTasksStatus );
+
+		/* It is expected to receive an incrementing number. */
+		ulExpectedReceivedFromISR++;
+		if( ulExpectedReceivedFromISR == 0 )
+		{
+			ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
 		}
 	}
 	else
@@ -516,17 +508,11 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 		{
 			/* The value received is at the lower limit of the expected range.
 			Don't test it, and expect to receive one higher next time. */
-			ulExpectedReceivedFromTask++;
 		}
 		else if( ( ( queuesetINITIAL_ISR_TX_VALUE - 1 ) - ulReceived ) <= queuesetIGNORED_BOUNDARY )
 		{
 			/* The value received is at the higher limit of the expected range.
 			Don't test it and expect to wrap soon. */
-			ulExpectedReceivedFromTask++;
-			if( ulExpectedReceivedFromTask >= queuesetINITIAL_ISR_TX_VALUE )
-			{
-				ulExpectedReceivedFromTask = 0;
-			}
 		}
 		else
 		{
@@ -535,11 +521,15 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 			{
 				xQueueSetTasksStatus = pdFAIL;
 			}
-			else
-			{
-				/* It is expected to receive an incrementing value. */
-				ulExpectedReceivedFromTask++;
-			}
+		}
+
+		configASSERT( xQueueSetTasksStatus );
+
+		/* It is expected to receive an incrementing number. */
+		ulExpectedReceivedFromTask++;
+		if( ulExpectedReceivedFromTask >= queuesetINITIAL_ISR_TX_VALUE )
+		{
+			ulExpectedReceivedFromTask = 0;
 		}
 	}
 }
@@ -619,7 +609,7 @@ static portBASE_TYPE xQueueToWriteTo = 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupTest( xTaskHandle xQueueSetSendingTask )
+static void prvSetupTest( void )
 {
 portBASE_TYPE x;
 unsigned long ulValueToSend = 0;
@@ -706,7 +696,7 @@ unsigned long ulValueToSend = 0;
 static unsigned long prvRand( void )
 {
 	ulNextRand = ( ulNextRand * 1103515245UL ) + 12345UL;
-    return (ulNextRand / 65536UL ) % 32768UL;
+    return ( ulNextRand / 65536UL ) % 32768UL;
 }
 /*-----------------------------------------------------------*/
 

@@ -93,7 +93,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 
 /*-----------------------------------------------------------*/
@@ -122,7 +122,7 @@ int main( void )
 {
 	/* Prepare the hardware to run this demo. */
 	prvSetupHardware();
-
+	
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1

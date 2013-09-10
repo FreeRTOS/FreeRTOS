@@ -171,7 +171,7 @@
 								<option id="com.atollic.truestudio.common_options.target.endianess.1137142343" name="Endianess" superClass="com.atollic.truestudio.common_options.target.endianess"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_garbage.1541746694" name="Prepare dead code removal" superClass="com.atollic.truestudio.gcc.optimization.prep_garbage" value="true" valueType="boolean"/>
 								<option id="com.atollic.truestudio.gcc.optimization.prep_data.1032989664" name="Prepare dead data removal" superClass="com.atollic.truestudio.gcc.optimization.prep_data" value="true" valueType="boolean"/>
-								<option id="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level.341250683" name="Optimization Level" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level" value="com.atollic.truestudio.gcc.optimization.level.00" valueType="enumerated"/>
+								<option id="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level.341250683" name="Optimization Level" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.optimization.level" value="com.atollic.truestudio.gcc.optimization.level.01" valueType="enumerated"/>
 								<inputType id="com.atollic.truestudio.gcc.input.746240147" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1725786981" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld">
@@ -220,9 +220,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1576230805" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.atollic.truestudio.exe.debug.2093031755.115953030.2145201398" name="ParTest_XMC1100.c" rcbsApplicability="disable" resourcePath="ParTest_XMC1100.c" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.gcc.353903544.1240397176">
-						<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.353903544.1240397176" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.353903544"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="ParTest_XMC1200.c|Keil_Specific|IAR_Specific" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

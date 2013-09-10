@@ -9,7 +9,7 @@
 ;*
 ;******************* Version History **********************************************   
 ;
-;  V6, May, 16,2013 TYS:a) Add XMC1200_SCU.inc 
+;  V6, May, 16,2013 TYS:a) Add XMC1300_SCU.inc 
 ;     
 ;**********************************************************************************
 ;
@@ -23,13 +23,14 @@
 ;
 
         MODULE  ?cstartup
+
 #ifdef DAVE_CE
-#include "XMC1200_SCU.inc"
+#include "XMC1300_SCU.inc"
 #include "Device_Data.h"
 #else
 #define CLKVAL1_SSW 0x00000100
 #define CLKVAL2_SSW 0x00000000
-#endif 
+#endif         
 
         ;; Forward declaration of sections.
         SECTION CSTACK:DATA:NOROOT(3)
@@ -91,7 +92,7 @@ __vector_table
         BX      R0
         LDR     R0,=ERU0_3_IRQHandler     ; Handler name for SR ERU0_3
         BX      R0
-        LDR     R0,=Undef_Handler         ; Not Available
+        LDR     R0,=MATH0_0_IRQHandler    ; Handler name for SR MATH0_0
         BX      R0
         LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
@@ -127,17 +128,17 @@ __vector_table
         BX      R0
         LDR     R0,=CCU40_3_IRQHandler    ; Handler name for SR CCU40_3
         BX      R0
-        LDR     R0,=Undef_Handler         ; Not Available
+        LDR     R0,=CCU80_0_IRQHandler    ; Handler name for SR CCU80_0
+        BX      R0
+        LDR     R0,=CCU80_1_IRQHandler    ; Handler name for SR CCU80_1
+        BX      R0
+        LDR     R0,=POSIF0_0_IRQHandler   ; Handler name for SR POSIF0_0
+        BX      R0
+        LDR     R0,=POSIF0_1_IRQHandler   ; Handler name for SR POSIF0_1
         BX      R0
         LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
         LDR     R0,=Undef_Handler         ; Not Available
-        BX      R0
-        LDR     R0,=Undef_Handler         ; Not Available
-        BX      R0
-        LDR     R0,=LEDTS0_0_IRQHandler   ; Handler name for SR LEDTS0_0
-        BX      R0
-        LDR     R0,=LEDTS1_0_IRQHandler   ; Handler name for SR LEDTS1_0
         BX      R0
         LDR     R0,=BCCU0_0_IRQHandler    ; Handler name for SR BCCU0_0
         BX      R0
@@ -230,6 +231,12 @@ ERU0_2_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
 ERU0_3_IRQHandler
         B ERU0_3_IRQHandler
+
+
+        PUBWEAK MATH0_0_IRQHandler
+        SECTION .text:CODE:REORDER:NOROOT(1)
+MATH0_0_IRQHandler
+        B MATH0_0_IRQHandler
 
 
         PUBWEAK USIC0_0_IRQHandler
@@ -328,16 +335,28 @@ CCU40_3_IRQHandler
         B CCU40_3_IRQHandler
 
 
-        PUBWEAK LEDTS0_0_IRQHandler
+        PUBWEAK CCU80_0_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-LEDTS0_0_IRQHandler
-        B LEDTS0_0_IRQHandler
+CCU80_0_IRQHandler
+        B CCU80_0_IRQHandler
 
 
-        PUBWEAK LEDTS1_0_IRQHandler
+        PUBWEAK CCU80_1_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-LEDTS1_0_IRQHandler
-        B LEDTS1_0_IRQHandler
+CCU80_1_IRQHandler
+        B CCU80_1_IRQHandler
+
+
+        PUBWEAK POSIF0_0_IRQHandler
+        SECTION .text:CODE:REORDER:NOROOT(1)
+POSIF0_0_IRQHandler
+        B POSIF0_0_IRQHandler
+
+
+        PUBWEAK POSIF0_1_IRQHandler
+        SECTION .text:CODE:REORDER:NOROOT(1)
+POSIF0_1_IRQHandler
+        B POSIF0_1_IRQHandler
 
 
         PUBWEAK BCCU0_0_IRQHandler

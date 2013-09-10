@@ -1,4 +1,4 @@
-;************************************************
+;**********************************************************************************
 ;*
 ;* Part one of the system initialization code, contains low-level
 ;* initialization, plain thumb variant.
@@ -8,8 +8,10 @@
 ;* $Revision: 64600 $
 ;*
 ;******************* Version History **********************************************   
-;
-;  V6, May, 16,2013 TYS:a) Add XMC1200_SCU.inc 
+;  V5, Feb, 6, 2013 TYS:a) Add DAVE3_CE defination, 
+;                       b) Remove Math,ADC,CCU8,POSIF,LEDTS,BCCU0 interrupt
+;                       c) Change AllowPLLInitByStartup to AllowClkInitByStartup 
+;  V6, May, 16,2013 TYS:a) Add XMC1100_SCU.inc 
 ;     
 ;**********************************************************************************
 ;
@@ -23,8 +25,9 @@
 ;
 
         MODULE  ?cstartup
+
 #ifdef DAVE_CE
-#include "XMC1200_SCU.inc"
+#include "XMC1100_SCU.inc"
 #include "Device_Data.h"
 #else
 #define CLKVAL1_SSW 0x00000100
@@ -111,13 +114,13 @@ __vector_table
         BX      R0
         LDR     R0,=VADC0_C0_1_IRQHandler ; Handler name for SR VADC0_C0_1
         BX      R0
-        LDR     R0,=VADC0_G0_0_IRQHandler ; Handler name for SR VADC0_G0_0
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
-        LDR     R0,=VADC0_G0_1_IRQHandler ; Handler name for SR VADC0_G0_1
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
-        LDR     R0,=VADC0_G1_0_IRQHandler ; Handler name for SR VADC0_G1_0
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
-        LDR     R0,=VADC0_G1_1_IRQHandler ; Handler name for SR VADC0_G1_1
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
         LDR     R0,=CCU40_0_IRQHandler    ; Handler name for SR CCU40_0
         BX      R0
@@ -135,11 +138,11 @@ __vector_table
         BX      R0
         LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
-        LDR     R0,=LEDTS0_0_IRQHandler   ; Handler name for SR LEDTS0_0
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
-        LDR     R0,=LEDTS1_0_IRQHandler   ; Handler name for SR LEDTS1_0
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
-        LDR     R0,=BCCU0_0_IRQHandler    ; Handler name for SR BCCU0_0
+        LDR     R0,=Undef_Handler         ; Not Available
         BX      R0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -280,30 +283,6 @@ VADC0_C0_1_IRQHandler
         B VADC0_C0_1_IRQHandler
 
 
-        PUBWEAK VADC0_G0_0_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-VADC0_G0_0_IRQHandler
-        B VADC0_G0_0_IRQHandler
-
-
-        PUBWEAK VADC0_G0_1_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-VADC0_G0_1_IRQHandler
-        B VADC0_G0_1_IRQHandler
-
-
-        PUBWEAK VADC0_G1_0_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-VADC0_G1_0_IRQHandler
-        B VADC0_G1_0_IRQHandler
-
-
-        PUBWEAK VADC0_G1_1_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-VADC0_G1_1_IRQHandler
-        B VADC0_G1_1_IRQHandler
-
-
         PUBWEAK CCU40_0_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
 CCU40_0_IRQHandler
@@ -327,23 +306,6 @@ CCU40_2_IRQHandler
 CCU40_3_IRQHandler
         B CCU40_3_IRQHandler
 
-
-        PUBWEAK LEDTS0_0_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-LEDTS0_0_IRQHandler
-        B LEDTS0_0_IRQHandler
-
-
-        PUBWEAK LEDTS1_0_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-LEDTS1_0_IRQHandler
-        B LEDTS1_0_IRQHandler
-
-
-        PUBWEAK BCCU0_0_IRQHandler
-        SECTION .text:CODE:REORDER:NOROOT(1)
-BCCU0_0_IRQHandler
-        B BCCU0_0_IRQHandler
 
 ; Definition of the default weak SystemInit_DAVE3 function
 ;If DAVE3 requires an extended SystemInit it will create its own version of

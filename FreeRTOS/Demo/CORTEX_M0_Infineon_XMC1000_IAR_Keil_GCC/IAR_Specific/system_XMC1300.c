@@ -1,6 +1,6 @@
 /******************************************************************************
- * @file     system_XMC1200.c
- * @brief    Device specific initialization for the XMC1200-Series according
+ * @file     system_XMC1300.c
+ * @brief    Device specific initialization for the XMC1300-Series according 
  * to CMSIS
  * @version  V1.4
  * @date     01 Feb 2013
@@ -10,12 +10,12 @@
 
  *
  * @par
- * Infineon Technologies AG (Infineon) is supplying this software for use with
+ * Infineon Technologies AG (Infineon) is supplying this software for use with 
  * Infineon’s microcontrollers.
- *
- * This file can be freely distributed within development tools that are
+ *   
+ * This file can be freely distributed within development tools that are 
  * supporting such microcontrollers.
- *
+ *  
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -29,14 +29,14 @@
  * *************************** Change history ********************************
  * V1.2, 13 Dec 2012, PKB : Created change history table
  * V1.3, 20 Dec 2012, PKB : Fixed SystemCoreClock computation
- * V1.4, 01 Feb 2013, PKB : SCU_CLOCK -> SCU_CLK
+ * V1.4, 02 Feb 2013, PKB : SCU_CLOCK -> SCU_CLK
  */
 
-#include "system_XMC1200.h"
-#include <XMC1200.h>
+#include "system_XMC1300.h"
+#include <XMC1300.h>
 
 /*---------------------------------------------------------------------------
- Extern definitions
+ Extern definitions 
  *--------------------------------------------------------------------------*/
 extern uint32_t AllowClkInitByStartup(void);
 
@@ -67,13 +67,13 @@ typedef int32_t Q_15_0;
   * @retval None
   */
 void SystemInit(void)
-{
+{    
 
   /*
    * Clock tree setup by CMSIS routines is allowed only in the absence of DAVE
    * Clock app.
-   */
-  if(AllowClkInitByStartup()){
+   */ 
+  if(AllowClkInitByStartup()){ 
   /* Do not change default values of IDIV,FDIV and RTCCLKSEL */
   /* ====== Default configuration ======= */
   /*
@@ -86,7 +86,7 @@ void SystemInit(void)
 
 /**
   * @brief  Update SystemCoreClock according to Clock Register Values
-  * @note   -
+  * @note   -  
   * @param  None
   * @retval None
   */
@@ -97,7 +97,7 @@ void SystemCoreClockUpdate(void)
   CLKCR = SCU_CLK -> CLKCR;
   IDIV = (CLKCR & SCU_CLK_CLKCR_IDIV_Msk) >> SCU_CLK_CLKCR_IDIV_Pos;
   FDIV = (CLKCR & SCU_CLK_CLKCR_FDIV_Msk) >> SCU_CLK_CLKCR_FDIV_Pos;
-
+  
   if(IDIV)
   {
     /* Divider is enabled and used */
@@ -110,7 +110,7 @@ void SystemCoreClockUpdate(void)
      {
        /* Both integer and fractional divider must be considered */
        /* 1. IDIV + FDIV/256 */
-       Q_24_8 FDiv_IDiv_Sum = (IDIV << FRACBITS) + FDIV;
+       Q_24_8 FDiv_IDiv_Sum = (IDIV << FRACBITS) + FDIV;  
 
        /* 2. Fixed point division Q24.8 / Q9.8 = Q15.0 */
        Q_15_0 ClockVal = (DCO_DCLK_MULTIPLIER << FRACBITS)/ FDiv_IDiv_Sum;
@@ -125,6 +125,6 @@ void SystemCoreClockUpdate(void)
   }
 
   /* Finally with the math class over, update SystemCoreClock */
-  SystemCoreClock = Clock;
+  SystemCoreClock = Clock;  
 }
 

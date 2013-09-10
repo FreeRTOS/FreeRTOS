@@ -122,7 +122,7 @@ int main( void )
 {
 	/* Prepare the hardware to run this demo. */
 	prvSetupHardware();
-	
+
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1

@@ -85,6 +85,13 @@
  * that is found on the FreeRTOS.org web site.
  */
 
+/*
+ * The following #error directive is to remind users that a batch file must be
+ * executed prior to this project being built.  Once it has been executed
+ * remove the #error line below.
+ */
+#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+
 /* Standard includes. */
 #include <stdio.h>
 

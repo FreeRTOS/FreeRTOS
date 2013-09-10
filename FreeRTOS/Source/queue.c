@@ -497,7 +497,7 @@ xQueueHandle xReturn = NULL;
 
 		traceTAKE_MUTEX_RECURSIVE( pxMutex );
 
-		if( pxMutex->pxMutexHolder == ( void * )  xTaskGetCurrentTaskHandle() ) /*lint !e961 Cast is not redundant as xTaskHandle is a typedef. */
+		if( pxMutex->pxMutexHolder == ( void * ) xTaskGetCurrentTaskHandle() ) /*lint !e961 Cast is not redundant as xTaskHandle is a typedef. */
 		{
 			( pxMutex->u.uxRecursiveCallCount )++;
 			xReturn = pdPASS;
@@ -651,7 +651,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 				}
 				else
 				{
-					/* Entry time was already set. */					
+					/* Entry time was already set. */
 				}
 			}
 		}
@@ -1198,17 +1198,17 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
-	above the maximum system call priority are keep permanently enabled, even 
+	above the maximum system call priority are keep permanently enabled, even
 	when the RTOS kernel is in a critical section, but cannot make any calls to
-	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h 
+	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
 	then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
 	failure if a FreeRTOS API function is called from an interrupt that has been
 	assigned a priority above the configured maximum system call priority.
 	Only FreeRTOS functions that end in FromISR can be called from interrupts
-	that have been assigned a priority at or (logically) below the maximum 
-	system call	interrupt priority.  FreeRTOS maintains a separate interrupt 
-	safe API to ensure interrupt entry is as fast and as simple as possible.  
-	More information (albeit Cortex-M specific) is provided on the following 
+	that have been assigned a priority at or (logically) below the maximum
+	system call	interrupt priority.  FreeRTOS maintains a separate interrupt
+	safe API to ensure interrupt entry is as fast and as simple as possible.
+	More information (albeit Cortex-M specific) is provided on the following
 	link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
@@ -1274,17 +1274,17 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
-	above the maximum system call priority are keep permanently enabled, even 
+	above the maximum system call priority are keep permanently enabled, even
 	when the RTOS kernel is in a critical section, but cannot make any calls to
-	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h 
+	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
 	then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
 	failure if a FreeRTOS API function is called from an interrupt that has been
 	assigned a priority above the configured maximum system call priority.
 	Only FreeRTOS functions that end in FromISR can be called from interrupts
-	that have been assigned a priority at or (logically) below the maximum 
-	system call	interrupt priority.  FreeRTOS maintains a separate interrupt 
-	safe API to ensure interrupt entry is as fast and as simple as possible.  
-	More information (albeit Cortex-M specific) is provided on the following 
+	that have been assigned a priority at or (logically) below the maximum
+	system call	interrupt priority.  FreeRTOS maintains a separate interrupt
+	safe API to ensure interrupt entry is as fast and as simple as possible.
+	More information (albeit Cortex-M specific) is provided on the following
 	link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
@@ -1323,6 +1323,22 @@ unsigned portBASE_TYPE uxReturn;
 
 	taskENTER_CRITICAL();
 		uxReturn = ( ( xQUEUE * ) xQueue )->uxMessagesWaiting;
+	taskEXIT_CRITICAL();
+
+	return uxReturn;
+} /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
+/*-----------------------------------------------------------*/
+
+unsigned portBASE_TYPE uxQueueSpacesAvailable( const xQueueHandle xQueue )
+{
+unsigned portBASE_TYPE uxReturn;
+xQUEUE *pxQueue;
+
+	pxQueue = ( xQUEUE * ) xQueue;
+	configASSERT( pxQueue );
+
+	taskENTER_CRITICAL();
+		uxReturn = pxQueue->uxLength - pxQueue->uxMessagesWaiting;
 	taskEXIT_CRITICAL();
 
 	return uxReturn;

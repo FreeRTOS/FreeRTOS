@@ -233,7 +233,6 @@ xTIMER *pxNewTimer;
 	if( xTimerPeriodInTicks == ( portTickType ) 0U )
 	{
 		pxNewTimer = NULL;
-		configASSERT( ( xTimerPeriodInTicks > 0 ) );
 	}
 	else
 	{
@@ -259,6 +258,9 @@ xTIMER *pxNewTimer;
 			traceTIMER_CREATE_FAILED();
 		}
 	}
+
+	/* 0 is not a valid value for xTimerPeriodInTicks. */
+	configASSERT( ( xTimerPeriodInTicks > 0 ) );
 
 	return ( xTimerHandle ) pxNewTimer;
 }

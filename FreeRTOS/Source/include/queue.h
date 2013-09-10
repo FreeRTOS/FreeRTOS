@@ -924,6 +924,23 @@ unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle xQueue ) PRIVI
 
 /**
  * queue. h
+ * <pre>unsigned portBASE_TYPE uxQueueSpacesAvailable( const xQueueHandle xQueue );</pre>
+ *
+ * Return the number of free spaces available in a queue.  This is equal to the
+ * number of items that can be sent to the queue before the queue becomes full
+ * if no items are removed.
+ *
+ * @param xQueue A handle to the queue being queried.
+ *
+ * @return The number of spaces available in the queue.
+ *
+ * \defgroup uxQueueMessagesWaiting uxQueueMessagesWaiting
+ * \ingroup QueueManagement
+ */
+unsigned portBASE_TYPE uxQueueSpacesAvailable( const xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
+
+/**
+ * queue. h
  * <pre>void vQueueDelete( xQueueHandle xQueue );</pre>
  *
  * Delete a queue - freeing all the memory allocated for storing of items

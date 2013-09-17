@@ -80,18 +80,17 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 32000000UL )	
+#define configCPU_CLOCK_HZ				( 32000000UL )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 16 )
-#define configUSE_TRACE_FACILITY		0
+#define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		5
-#define configGENERATE_RUN_TIME_STATS	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		0
 #define configUSE_MALLOC_FAILED_HOOK	1
@@ -137,6 +136,9 @@ is included from an asm file. */
 	extern unsigned long ulTIM6_OverflowCount;
 #endif /* __ICCARM__ */
 
+/* Run time stats related macros. */
+#define configGENERATE_RUN_TIME_STATS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS 1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
 #define portALT_GET_RUN_TIME_COUNTER_VALUE( ulCountValue )									\
 	{																						\

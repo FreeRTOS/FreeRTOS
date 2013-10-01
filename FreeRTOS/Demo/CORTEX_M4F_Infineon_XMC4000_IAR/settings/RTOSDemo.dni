@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1591096957
+Checksum=92877996
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -23,9 +23,9 @@ CStepIntDis=_ 0
 OverrideDefaultClocks=0
 CpuClock=72000000
 ClockAutoDetect=0
-ClockWanted=1000000
-JtagSpeed=1000000
-Prescaler=72
+ClockWanted=2000000
+JtagSpeed=2000000
+Prescaler=36
 TimeStampPrescIndex=0
 TimeStampPrescData=0
 PcSampCYCTAP=1

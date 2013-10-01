@@ -4,15 +4,15 @@
 /**
 * @file     Startup_XMC4500.s
 *           XMC4000 Device Series
-* @version  V1.0
-* @date     Jan 2013
+* @version  V1.1
+* @date     Augus 2013
 *
 * Copyright (C) 2012 IAR Systems. All rights reserved.
 * Copyright (C) 2012 Infineon Technologies AG. All rights reserved.
 *
 *
 * @par
-* Infineon Technologies AG (Infineon) is supplying this software for use with
+* Infineon Technologies AG (Infineon) is supplying this software for use with 
 * Infineon's microcontrollers.  This file can be freely distributed
 * within development tools that are supporting such microcontrollers.
 *
@@ -28,6 +28,8 @@
 /* ***************************************************************************
 V1.0 January, 30 2013:  In ths version a workoraound for the erratum PMU_CM.001
 is implmented (patch for the Exception and interrupt handlers)
+V1.1 Augsut, 17 2013:  Fix the bug of preprocessor due to workoraound for 
+the erratum PMU_CM.001, and the bug of stack pointer alignment to a 8 byte boundary 
 
 **************************************************************************** */
 
@@ -43,7 +45,7 @@ is implmented (patch for the Exception and interrupt handlers)
         SECTION .intvec:CODE:NOROOT(2)
 
         EXTERN  __iar_program_start
-        EXTERN  SystemInit
+        EXTERN  SystemInit  
         PUBLIC  __vector_table
 
         DATA
@@ -54,7 +56,7 @@ __iar_init$$done:               ; The vector table is not needed
 ;/* ===========START : MACRO DEFINITION MACRO DEFINITION ================== */
 ;/*
 ; * STEP_AB and below have the prefetch functional deviation (Errata id: PMU_CM.001).
-; * A veneer defined below will first be executed which in turn branches to the final
+; * A veneer defined below will first be executed which in turn branches to the final 
 ; * exception handler.
 ; *
 ; * In addition to defining the veneers, the vector table must for these buggy
@@ -62,8 +64,8 @@ __iar_init$$done:               ; The vector table is not needed
 ; */
 
 ;set WORKAROUND_PMU_CM001 under Options for target
-;Initialize varaible WORKAROUND_PMU_CM001 as TRUE
-WORKAROUND_PMU_CM001 SET 1
+;define WORKAROUND_PMU_CM001 as TRUE
+#define WORKAROUND_PMU_CM001 1
 
 ;/* A macro to setup a vector table entry based on STEP ID */
 #ifdef WORKAROUND_PMU_CM001
@@ -73,7 +75,7 @@ ExcpVector  macro
 #else
 ExcpVector  macro
             DCD \1
-            endm
+            endm           
 #endif
 
 ;/* A macro to ease definition of the various handlers based on STEP ID */
@@ -84,18 +86,18 @@ ProxyHandler  macro
               SECTION .text:CODE:REORDER:NOROOT(1)
 \1
               B \1
-              endm
-;/* And then define a veneer that will branch to the final excp handler */
-ProxyHandler_Veneer  macro
-              PUBWEAK \1
+;/* And then define a veneer that will branch to the final excp handler */              
+              PUBWEAK \1_Veneer
               SECTION .text:CODE:REORDER:NOROOT(2)
-\1
-              LDR   R0, =ProxyHandler
-              PUSH	{LR}
+\1_Veneer:
+              LDR   R0, =\1
+              PUSH	{LR}  /* Breaks AAPCS */
+              SUB SP,#4    /* Restores AAPCS */
               BLX   R0
+              ADD SP,#4
               POP   {PC}
               endm
- ;/* No prefetch bug, hence define only the final exception handler */
+ ;/* No prefetch bug, hence define only the final exception handler */              
 #else
 ProxyHandler  macro
               PUBWEAK \1
@@ -120,11 +122,11 @@ __vector_table
         DCD     0
         DCD     0
         DCD     0
-        ExcpVector   SVC_Handler                 ; SVCall Handler
+        ExcpVector     SVC_Handler
         ExcpVector     DebugMon_Handler
         DCD     0
-        ExcpVector   PendSV_Handler              ; PendSV Handler
-        ExcpVector   SysTick_Handler             ; SysTick Handler
+        ExcpVector     PendSV_Handler
+        ExcpVector     SysTick_Handler
 
     ; Interrupt Handlers for Service Requests (SR) from XMC4500 Peripherals
 	ExcpVector   SCU_0_IRQHandler            ; Handler name for SR SCU_0
@@ -246,19 +248,19 @@ __vector_table
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Default interrupt handlers.
-;;
+;;      
         THUMB
         PUBWEAK Reset_Handler
         SECTION .text:CODE:REORDER(2)
 Reset_Handler
 
         LDR     R0, =SystemInit
-        BLX     R0
+        BLX     R0 
         LDR     R0, =SystemInit_DAVE3
-        BLX     R0
+        BLX     R0  
         LDR     R0, =__iar_program_start
-        BX      R0
-
+        BX      R0 
+ 
 
         ProxyHandler NMI_Handler
         ProxyHandler HardFault_Handler
@@ -269,7 +271,7 @@ Reset_Handler
         ProxyHandler DebugMon_Handler
         ProxyHandler PendSV_Handler
         ProxyHandler SysTick_Handler
-
+          
         ProxyHandler SCU_0_IRQHandler
         ProxyHandler ERU0_0_IRQHandler
         ProxyHandler ERU0_1_IRQHandler
@@ -372,26 +374,26 @@ Reset_Handler
         ProxyHandler USB0_0_IRQHandler
         ProxyHandler ETH0_0_IRQHandler
         ProxyHandler GPDMA1_0_IRQHandler
-
-
+          
+           
 ; Definition of the default weak SystemInit_DAVE3 function for DAVE3 system init.
         PUBWEAK SystemInit_DAVE3
         SECTION .text:CODE:REORDER:NOROOT(2)
 SystemInit_DAVE3
-        NOP
+        NOP 
         BX LR
-
+ 
 ; Definition of the default weak DAVE3 function for clock App usage.
 ; AllowPLLInitByStartup Handler
         PUBWEAK AllowPLLInitByStartup
         SECTION .text:CODE:REORDER:NOROOT(2)
-AllowPLLInitByStartup
+AllowPLLInitByStartup       
         MOV R0,#1
-        BX LR
+        BX LR                	    
 
 PREF_PCON       EQU 0x58004000
 SCU_GCU_PEEN    EQU 0x5000413C
 SCU_GCU_PEFLAG  EQU 0x50004150
 
-
+      
         END

@@ -82,6 +82,11 @@
 #include <stdint.h>
 extern uint32_t SystemCoreClock;
 
+/* The following definition allows the startup files that ship with the IDE
+to be used without modification when the chip used includes the PMU CM001
+errata. */
+#define WORKAROUND_PMU_CM001					1
+
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_IDLE_HOOK						0
@@ -154,9 +159,13 @@ header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
 	
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
-standard names. */
+standard names.  WORKAROUND_PMU_CM001 is defined at the top of this file. */
+#if WORKAROUND_PMU_CM001 == 1
+	#define xPortPendSVHandler PendSV_Handler_Veneer
+#else
+	#define xPortPendSVHandler PendSV_Handler
+#endif
 #define vPortSVCHandler SVC_Handler
-#define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
 
 

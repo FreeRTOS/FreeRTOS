@@ -152,7 +152,7 @@ __Vectors
     ExcpVector   SVC_Handler                ; SVCall Handler
     ExcpVector   DebugMon_Handler           ; Debug Monitor Handler
     DCD          0                          ; Reserved
-    DCD          PendSV_Handler             ; PendSV Handler
+    ExcpVector   PendSV_Handler             ; PendSV Handler
     ExcpVector   SysTick_Handler            ; SysTick Handler
 
     ; Interrupt Handlers for Service Requests (SR) from XMC4200 Peripherals

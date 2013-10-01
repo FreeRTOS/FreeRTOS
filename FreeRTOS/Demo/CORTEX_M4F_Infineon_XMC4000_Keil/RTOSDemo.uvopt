@@ -165,7 +165,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>/</Name>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -372,7 +372,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>/</Name>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -389,8 +389,8 @@
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
-          <SubType>5</SubType>
-          <ItemText>0x0C000000</ItemText>
+          <SubType>2</SubType>
+          <ItemText>0x20005f90</ItemText>
         </Mm>
       </MemoryWindow1>
       <Tracepoint>
@@ -424,12 +424,6 @@
       </DebugFlag>
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
-      <SystemViewers>
-        <Entry>
-          <Name>System Viewer\PORT2</Name>
-          <WinId>35905</WinId>
-        </Entry>
-      </SystemViewers>
     </TargetOption>
   </Target>
 
@@ -578,7 +572,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -751,7 +745,7 @@
       <Focus>0</Focus>
       <ColumnNumber>45</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>64</TopLine>
+      <TopLine>63</TopLine>
       <CurrentLine>97</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
@@ -767,8 +761,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>64</TopLine>
-      <CurrentLine>87</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\FreeRTOSConfig.h</PathWithFileName>
       <FilenameWithoutPath>FreeRTOSConfig.h</FilenameWithoutPath>
@@ -783,8 +777,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>165</TopLine>
-      <CurrentLine>173</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\RegTest.c</PathWithFileName>
       <FilenameWithoutPath>RegTest.c</FilenameWithoutPath>
@@ -799,8 +793,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>67</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main_full.c</PathWithFileName>
       <FilenameWithoutPath>main_full.c</FilenameWithoutPath>
@@ -813,10 +807,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>16</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>64</TopLine>
-      <CurrentLine>10</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main_blinky.c</PathWithFileName>
       <FilenameWithoutPath>main_blinky.c</FilenameWithoutPath>
@@ -827,7 +821,7 @@
 
   <Group>
     <GroupName>FreeRTOS_Source</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -871,8 +865,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>552</TopLine>
+      <CurrentLine>560</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\queue.c</PathWithFileName>
       <FilenameWithoutPath>queue.c</FilenameWithoutPath>
@@ -903,8 +897,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>383</TopLine>
-      <CurrentLine>384</CurrentLine>
+      <TopLine>420</TopLine>
+      <CurrentLine>428</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\portable\RVDS\ARM_CM4F\port.c</PathWithFileName>
       <FilenameWithoutPath>port.c</FilenameWithoutPath>
@@ -959,8 +953,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>241</TopLine>
-      <CurrentLine>258</CurrentLine>
+      <TopLine>254</TopLine>
+      <CurrentLine>262</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\sp_flop.c</PathWithFileName>
       <FilenameWithoutPath>sp_flop.c</FilenameWithoutPath>

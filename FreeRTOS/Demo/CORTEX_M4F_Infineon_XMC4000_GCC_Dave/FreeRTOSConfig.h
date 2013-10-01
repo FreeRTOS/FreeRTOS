@@ -82,6 +82,11 @@
 #include <stdint.h>
 extern uint32_t SystemCoreClock;
 
+/* The following definition allows the startup files that ship with the IDE
+to be used without modification when the chip used includes the PMU CM001
+errata. */
+#define WORKAROUND_PMU_CM001					1
+
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_IDLE_HOOK						0
@@ -148,17 +153,20 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-	
+
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
-	
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
 standard names. */
+#if WORKAROUND_PMU_CM001 == 1
+	#define xPortPendSVHandler PendSV_Handler_Veneer
+#else
+	#define xPortPendSVHandler PendSV_Handler
+#endif
 #define vPortSVCHandler SVC_Handler
-#define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
-
 
 /* Demo application specific settings. */
 #if UC_ID == 4502

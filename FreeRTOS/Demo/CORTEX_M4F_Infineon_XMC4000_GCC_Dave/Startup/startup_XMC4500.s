@@ -118,7 +118,7 @@ __Xmc4500_interrupt_vector_cortex_m:
     Entry   SVC_Handler                 /* SVCall Handler               */
     Entry   DebugMon_Handler            /* Debug Monitor Handler        */
     .long   0                           /* Reserved                     */
-    .long   PendSV_Handler              /* PendSV Handler               */
+    Entry   PendSV_Handler              /* PendSV Handler               */
     Entry   SysTick_Handler             /* SysTick Handler              */
 
     /* Interrupt Handlers for Service Requests (SR) from XMC4500 Peripherals */

@@ -66,89 +66,32 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Demo app includes. */
+#include "UARTCommandConsole.h"
+
 /* Library includes. */
 #include <asf.h>
 
-void usart_read_callback(const struct usart_module *const usart_module);
-void usart_write_callback(const struct usart_module *const usart_module);
 static void prvSetupHardware( void );
-void configure_usart(void);
-void configure_usart_callbacks(void);
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
-struct usart_module usart_instance;
-#define MAX_RX_BUFFER_LENGTH   5
-volatile uint8_t rx_buffer[MAX_RX_BUFFER_LENGTH];
-#define NUM 1024
-char cChars[ NUM ] = { 0 };
-
-void usart_read_callback(const struct usart_module *const usart_module)
-{
-	usart_write_buffer_job(&usart_instance, (uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
-}
-
-void usart_write_callback(const struct usart_module *const usart_module)
-{
-	port_pin_toggle_output_level(LED_0_PIN);
-}
-
-void configure_usart(void)
-{
-	struct usart_config config_usart;
-	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate    = 115200;
-	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	while (usart_init(&usart_instance,
-	EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
-	}
-	usart_enable(&usart_instance);
-}
-
-void configure_usart_callbacks(void)
-{
-	usart_register_callback(&usart_instance,
-	usart_write_callback, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_register_callback(&usart_instance,
-	usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
-	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_RECEIVED);
-}
-
-
-
-
 int main (void)
 {
 	prvSetupHardware();
+	vUARTCommandConsoleStart( ( configMINIMAL_STACK_SIZE * 3 ), tskIDLE_PRIORITY );	
+	
+	/* Start the scheduler. */
+	vTaskStartScheduler();
 
-	configure_usart();
-	configure_usart_callbacks();
-	system_interrupt_enable_global();
-
-	uint8_t string[] = "Hello World!\r\n";
-	usart_write_buffer_job(&usart_instance, string, sizeof(string));
-
-
-
-	while (true) {
-		usart_read_buffer_job(&usart_instance,
-		(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
-	}
-
-	while (1) {
-		if (port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE) {
-			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-		} else {
-			port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
-		}
-	}
+	/* If all is well, the scheduler will now be running, and the following line
+	will never be reached.  If the following line does execute, then there was
+	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
+	to be created.  See the memory management section on the FreeRTOS web site
+	for more details. */
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 

@@ -107,10 +107,21 @@ static void prvUARTCommandConsoleTask( void *pvParameters );
 static void prvSendBuffer( struct usart_module *pxCDCUsart, uint8_t * pcBuffer, size_t xBufferLength );
 
 /*
- * A UART is used for printf() output and CLI input and output.  Configure the
- * UART and register prvUARTRxNotificationHandler() to handle UART Rx events.
+ * Register the 'standard' sample CLI commands with FreeRTOS+CLI.
+ */
+extern void vRegisterSampleCLICommands( void );
+
+/*
+ * Configure the UART used for IO.and register prvUARTRxNotificationHandler() 
+ * to handle UART Rx events.
  */
 static void prvConfigureUART( struct usart_module *pxCDCUsart );
+
+/*
+ * Callback functions registered with the Atmel UART driver.  Both functions 
+ * just 'give' a semaphore to unblock a task that may be waiting for a 
+ * character to be received, or a transmission to complete.
+ */
 static void prvUARTTxNotificationHandler( const struct usart_module *const pxUSART );
 static void prvUARTRxNotificationHandler( const struct usart_module *const pxUSART );
 
@@ -133,6 +144,8 @@ static xSemaphoreHandle xRxCompleteSemaphore = NULL;
 
 void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPriority )
 {
+	vRegisterSampleCLICommands();
+	
 	/* Create that task that handles the console itself. */
 	xTaskCreate( 	prvUARTCommandConsoleTask,			/* The task that implements the command console. */
 					( const int8_t * const ) "CLI",		/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
@@ -251,7 +264,7 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 
 static void prvSendBuffer( struct usart_module *pxCDCUsart, uint8_t * pcBuffer, size_t xBufferLength )
 {
-const portTickType xBlockMax50ms = 50 / portTICK_RATE_MS;
+const portTickType xBlockMax100ms = 100UL / portTICK_RATE_MS;
 
 	if( xBufferLength > 0 )
 	{		
@@ -259,7 +272,7 @@ const portTickType xBlockMax50ms = 50 / portTICK_RATE_MS;
 		
 		/* Wait for the Tx to complete so the buffer can be reused without
 		corrupting the data that is being sent. */
-		xSemaphoreTake( xTxCompleteSemaphore, xBlockMax50ms );
+		xSemaphoreTake( xTxCompleteSemaphore, xBlockMax100ms );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -279,7 +292,7 @@ struct usart_config xUARTConfig;
 	configASSERT( xRxCompleteSemaphore );
 
 	/* Take the semaphores so they start in the wanted state.  A block time is
-	not necessary, and is therefore set to 0, as it is known that the semaphore s
+	not necessary, and is therefore set to 0, as it is known that the semaphores
 	exists - they have just been created. */
 	xSemaphoreTake( xTxCompleteSemaphore, 0 );
 	xSemaphoreTake( xRxCompleteSemaphore, 0 );

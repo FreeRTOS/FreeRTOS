@@ -100,8 +100,14 @@ extern uint32_t SystemCoreClock;
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
-#define configGENERATE_RUN_TIME_STATS	0
 #define configUSE_QUEUE_SETS			1
+
+/* Run time stats related definitions. */
+void vMainConfigureTimerForRunTimeStats( void );
+unsigned long ulMainGetRunTimeCounterValue( void );
+#define configGENERATE_RUN_TIME_STATS	1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vMainConfigureTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue()
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -123,6 +129,12 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 #define INCLUDE_eTaskGetState			1
+
+/* This demo makes use of one or more example stats formatting functions.  These
+format the raw data provided by the uxTaskGetSystemState() function in to human
+readable ASCII form.  See the notes in the implementation of vTaskList() within
+FreeRTOS/Source/tasks.c for limitations. */
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */

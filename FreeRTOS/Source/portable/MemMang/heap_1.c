@@ -122,7 +122,9 @@ static unsigned char *pucAlignedHeap = NULL;
 			pvReturn = pucAlignedHeap + xNextFreeByte;
 			xNextFreeByte += xWantedSize;
 		}
-	}
+
+		traceMALLOC( pvReturn, xWantedSize );
+	}	
 	xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )

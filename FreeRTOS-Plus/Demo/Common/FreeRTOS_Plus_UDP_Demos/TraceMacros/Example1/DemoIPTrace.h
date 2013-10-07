@@ -85,18 +85,21 @@ typedef struct ExampleDebugStatEntry
 
 /* Unique identifiers used to locate the entry for each trace macro in the
 xIPTraceValues[] table defined in DemoIPTrace.c. */
-#define iptraceID_NETWORK_BUFFER_OBTAINED					1
-#define iptraceID_NETWORK_BUFFER_OBTAINED_FROM_ISR			2
-#define iptraceID_NETWORK_EVENT_RECEIVED					3
-#define iptraceID_FAILED_TO_OBTAIN_NETWORK_BUFFER			4
-#define iptraceID_ARP_TABLE_ENTRY_EXPIRED					5
-#define iptraceID_PACKET_DROPPED_TO_GENERATE_ARP			6
-#define iptraceID_FAILED_TO_CREATE_SOCKET					7
-#define iptraceID_RECVFROM_DISCARDING_BYTES					8
-#define iptraceID_ETHERNET_RX_EVENT_LOST					9
-#define iptraceID_STACK_TX_EVENT_LOST						10
-#define ipconfigID_BIND_FAILED								11
-#define iptraceID_NETWORK_INTERFACE_TRANSMIT				12
+#define iptraceID_NETWORK_INTERFACE_RECEIVE					0
+#define iptraceID_NETWORK_INTERFACE_TRANSMIT				1
+#define iptraceID_PACKET_DROPPED_TO_GENERATE_ARP			2
+/* Do not change IDs above this line as the ID is shared with a FreeRTOS+Nabto
+demo. */
+#define iptraceID_NETWORK_BUFFER_OBTAINED					3
+#define iptraceID_NETWORK_BUFFER_OBTAINED_FROM_ISR			4
+#define iptraceID_NETWORK_EVENT_RECEIVED					5
+#define iptraceID_FAILED_TO_OBTAIN_NETWORK_BUFFER			6
+#define iptraceID_ARP_TABLE_ENTRY_EXPIRED					7
+#define iptraceID_FAILED_TO_CREATE_SOCKET					8
+#define iptraceID_RECVFROM_DISCARDING_BYTES					9
+#define iptraceID_ETHERNET_RX_EVENT_LOST					10
+#define iptraceID_STACK_TX_EVENT_LOST						11
+#define ipconfigID_BIND_FAILED								12
 #define iptraceID_RECVFROM_TIMEOUT							13
 #define iptraceID_SENDTO_DATA_TOO_LONG						14
 #define iptraceID_SENDTO_SOCKET_NOT_BOUND					15
@@ -136,6 +139,7 @@ configINCLUDE_DEMO_DEBUG_STATS setting in FreeRTOSIPConfig.h. */
 	#define iptraceNO_BUFFER_FOR_SENDTO()								vExampleDebugStatUpdate( iptraceID_NO_BUFFER_FOR_SENDTO, 0 )
 	#define iptraceWAITING_FOR_TX_DMA_DESCRIPTOR()						vExampleDebugStatUpdate( iptraceID_WAIT_FOR_TX_DMA_DESCRIPTOR, 0 )
 	#define iptraceFAILED_TO_NOTIFY_SELECT_GROUP( xSocket )				vExampleDebugStatUpdate( iptraceID_FAILED_TO_NOTIFY_SELECT_GROUP, 0 )
+	#define iptraceNETWORK_INTERFACE_RECEIVE()							vExampleDebugStatUpdate( iptraceID_NETWORK_INTERFACE_RECEIVE, 0 )
 
 	/*
 	 * The function that updates a line in the xIPTraceValues table.

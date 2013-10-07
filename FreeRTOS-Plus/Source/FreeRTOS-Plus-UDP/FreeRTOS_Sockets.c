@@ -186,21 +186,39 @@ xFreeRTOS_Socket_t *pxSocket;
 	portBASE_TYPE FreeRTOS_FD_SET( xSocket_t xSocket, xSocketSet_t xSocketSet )
 	{
 	xFreeRTOS_Socket_t *pxSocket = ( xFreeRTOS_Socket_t * ) xSocket;
-	portBASE_TYPE xReturn;
-	
+	portBASE_TYPE xReturn = pdFALSE;
+	unsigned portBASE_TYPE uxMessagesWaiting;
+
+		configASSERT( xSocket );
+
 		/* Is the socket already a member of a select group? */
 		if( pxSocket->xSelectQueue == NULL )
 		{
-			/* Store a pointer to the select group in the socket for future 
-			reference. */
-			pxSocket->xSelectQueue = ( xQueueHandle ) xSocketSet;
-			xReturn = pdPASS;
-		}
-		else
-		{
-			/* The socket is already a member of a select group so cannot be added
-			to another. */
-			xReturn = pdFAIL;
+			taskENTER_CRITICAL();
+			{
+				/* Are there packets queued on the socket already? */
+				uxMessagesWaiting = uxQueueMessagesWaiting( pxSocket->xWaitingPacketSemaphore );
+
+				/* Are there enough notification spaces in the select queue for the
+				number of packets already queued on the socket? */
+				if( uxQueueSpacesAvailable( ( xQueueHandle ) xSocketSet ) >= uxMessagesWaiting )
+				{
+					/* Store a pointer to the select group in the socket for
+					future reference. */
+					pxSocket->xSelectQueue = ( xQueueHandle ) xSocketSet;
+
+					while( uxMessagesWaiting > 0 )
+					{
+						/* Add notifications of the number of packets that are
+						already queued on the socket to the select queue. */
+						xQueueSendFromISR( pxSocket->xSelectQueue, &pxSocket, NULL );
+						uxMessagesWaiting--;
+					}
+
+					xReturn = pdPASS;
+				}
+			}
+			taskEXIT_CRITICAL();
 		}
 
 		return xReturn;

@@ -147,4 +147,8 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigNABTO_TASK_PRIORITY	 ( ipconfigUDP_TASK_PRIORITY + 1 )
 #endif
 
+#ifndef ipconfigSUPPORT_SELECT_FUNCTION
+	#define ipconfigSUPPORT_SELECT_FUNCTION 0
+#endif
+
 #endif /* FREERTOS_DEFAULT_IP_CONFIG_H */

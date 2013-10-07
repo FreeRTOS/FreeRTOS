@@ -105,17 +105,18 @@ xExampleDebugStatEntry_t xIPTraceValues[] =
 {
 	/* Comment out array entries to remove individual trace items. */
 
+	{ iptraceID_NETWORK_INTERFACE_RECEIVE,			( const uint8_t * const ) "Packets received by the network interface",			prvIncrementEventCount, 0 },
+	{ iptraceID_NETWORK_INTERFACE_TRANSMIT,			( const uint8_t * const ) "Count of transmitted packets",						prvIncrementEventCount, 0 },
+	{ iptraceID_PACKET_DROPPED_TO_GENERATE_ARP,		( const uint8_t * const ) "Count of packets dropped to generate ARP",			prvIncrementEventCount, 0 },
 	{ iptraceID_NETWORK_BUFFER_OBTAINED,			( const uint8_t * const ) "Lowest ever available network buffers",				prvStoreLowest, 0xffffUL },
 	{ iptraceID_NETWORK_EVENT_RECEIVED,				( const uint8_t * const ) "Lowest ever free space in network event queue",		prvStoreLowest, 0xffffUL },
 	{ iptraceID_FAILED_TO_OBTAIN_NETWORK_BUFFER,	( const uint8_t * const ) "Count of failed attempts to obtain a network buffer",prvIncrementEventCount, 0 },
 	{ iptraceID_ARP_TABLE_ENTRY_EXPIRED,			( const uint8_t * const ) "Count of expired ARP entries",						prvIncrementEventCount, 0 },
-	{ iptraceID_PACKET_DROPPED_TO_GENERATE_ARP,		( const uint8_t * const ) "Count of packets dropped to generate ARP",			prvIncrementEventCount, 0 },
 	{ iptraceID_FAILED_TO_CREATE_SOCKET,			( const uint8_t * const ) "Count of failures to create a socket",				prvIncrementEventCount, 0 },
 	{ iptraceID_RECVFROM_DISCARDING_BYTES,			( const uint8_t * const ) "Count of times recvfrom() has discarding bytes",		prvIncrementEventCount, 0 },
 	{ iptraceID_ETHERNET_RX_EVENT_LOST,				( const uint8_t * const ) "Count of lost Ethenret Rx events (event queue full?)",prvIncrementEventCount, 0 },
 	{ iptraceID_STACK_TX_EVENT_LOST,				( const uint8_t * const ) "Count of lost IP stack events (event queue full?)",	prvIncrementEventCount, 0 },
 	{ ipconfigID_BIND_FAILED,						( const uint8_t * const ) "Count of failed calls to bind()",					prvIncrementEventCount, 0 },
-	{ iptraceID_NETWORK_INTERFACE_TRANSMIT,			( const uint8_t * const ) "Count of transmitted packets",						prvIncrementEventCount, 0 },
 	{ iptraceID_RECVFROM_TIMEOUT,					( const uint8_t * const ) "Count of receive timeouts",							prvIncrementEventCount, 0 },
 	{ iptraceID_SENDTO_DATA_TOO_LONG,				( const uint8_t * const ) "Count of failed sends due to oversized payload",		prvIncrementEventCount, 0 },
 	{ iptraceID_SENDTO_SOCKET_NOT_BOUND,			( const uint8_t * const ) "Count of failed sends due to unbound socket",		prvIncrementEventCount, 0 },

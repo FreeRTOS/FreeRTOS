@@ -132,10 +132,10 @@ void USB_Init (LPC_USBDRV_INIT_T* cbs)
 
 #ifdef USE_USB0
 	NVIC_EnableIRQ(USB0_IRQn); //  enable USB0 interrrupts
-	NVIC_SetPriority(USB0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
+	NVIC_SetPriority(USB0_IRQn, configMIN_LIBRARY_INTERRUPT_PRIORITY );
 #else
   	NVIC_EnableIRQ(USB1_IRQn); //  enable USB1 interrrupts
-  	NVIC_SetPriority(USB0_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY );
+  	NVIC_SetPriority(USB0_IRQn, configMIN_LIBRARY_INTERRUPT_PRIORITY );
 #endif
 
 	USB_Reset();

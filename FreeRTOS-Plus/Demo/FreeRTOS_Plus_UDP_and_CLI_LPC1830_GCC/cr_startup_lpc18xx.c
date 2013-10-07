@@ -413,7 +413,6 @@ void NMI_Handler(void)
 __attribute__ ((section(".after_vectors")))
 void HardFault_Handler(void)
 {
-return;
     __asm volatile
     (
         " tst lr, #4                                                \n"

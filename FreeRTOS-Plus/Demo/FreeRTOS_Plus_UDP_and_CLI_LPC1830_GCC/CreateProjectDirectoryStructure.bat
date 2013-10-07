@@ -51,7 +51,6 @@ IF EXIST FreeRTOS_Source Goto END
 
 	REM Copy the FreeRTOS+UDP core files
 	copy %FREERTOS_UDP_SOURCE%\*.c FreeRTOS_Plus_UDP
-	copy %FREERTOS_UDP_SOURCE%\include\*.h FreeRTOS_Plus_UDP
 	copy %FREERTOS_UDP_SOURCE%\readme.txt FreeRTOS_Plus_UDP
 	copy %FREERTOS_UDP_SOURCE%\include\*.* FreeRTOS_Plus_UDP\include
 

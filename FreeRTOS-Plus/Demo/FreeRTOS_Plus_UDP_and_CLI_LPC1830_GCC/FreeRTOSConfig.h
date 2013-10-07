@@ -155,7 +155,7 @@ is one */
 #ifdef __NVIC_PRIO_BITS
 	#define configPRIO_BITS       __NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS       5        /* 32 priority levels */
+	#define configPRIO_BITS       3        /* 8 priority levels */
 #endif
 
 /* The maximum priority an interrupt that uses an interrupt safe FreeRTOS API
@@ -163,7 +163,7 @@ function can have.  Note that lower priority have numerically higher values.  */
 #define configMAX_LIBRARY_INTERRUPT_PRIORITY	( 5 )
 
 /* The minimum possible interrupt priority. */
-#define configMIN_LIBRARY_INTERRUPT_PRIORITY	( 31 )
+#define configMIN_LIBRARY_INTERRUPT_PRIORITY	( 7 )
 
 /* The lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY 		( configMIN_LIBRARY_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
@@ -176,8 +176,6 @@ standard names. */
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
-
-
 
 
 /*

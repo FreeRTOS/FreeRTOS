@@ -106,6 +106,10 @@ void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifie
 void FreeRTOS_ReleaseUDPPayloadBuffer( void *pvBuffer );
 uint8_t * FreeRTOS_GetMACAddress( void );
 
+#if ( ipconfigFREERTOS_PLUS_NABTO == 1 )
+	portBASE_TYPE xStartNabtoTask( void );
+#endif
+
 #endif /* FREERTOS_IP_H */
 
 

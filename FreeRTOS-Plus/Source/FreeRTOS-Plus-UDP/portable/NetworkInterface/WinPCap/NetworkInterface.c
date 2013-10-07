@@ -203,6 +203,10 @@ pcap_if_t *pxAllNetworkInterfaces;
 				vNetworkBufferRelease( pxNetworkBuffer );
 				iptraceETHERNET_RX_EVENT_LOST();
 			}
+			else
+			{
+				iptraceNETWORK_INTERFACE_RECEIVE();
+			}
 		}
 		else
 		{
@@ -435,6 +439,10 @@ eFrameProcessingResult_t eResult;
 							the task level function here. */
 							vNetworkBufferRelease( pxNetworkBuffer );
 							iptraceETHERNET_RX_EVENT_LOST();
+						}
+						else
+						{
+							iptraceNETWORK_INTERFACE_RECEIVE();
 						}
 					}
 					else

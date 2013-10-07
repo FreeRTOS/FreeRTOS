@@ -135,10 +135,12 @@ made up of the length byte, and minimum one byte value. */
 	#define dhcpCLIENT_PORT 0x4400
 	#define dhcpSERVER_PORT 0x4300
 	#define dhcpCOOKIE		0x63538263
+	#define dhcpBROADCAST	0x0080
 #else
 	#define dhcpCLIENT_PORT 0x0044
 	#define dhcpSERVER_PORT 0x0043
 	#define dhcpCOOKIE		0x63825363
+	#define dhcpBROADCAST	0x8000
 #endif /* ipconfigBYTE_ORDER */
 
 #include "pack_struct_start.h"
@@ -296,7 +298,9 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 						/* Static configuration is being used, so the network is now up. */
 						#if ipconfigFREERTOS_PLUS_NABTO == 1
 						{
-							vStartNabtoTask();
+							/* Return value is used in configASSERT() inside the 
+							function. */
+							( void ) xStartNabtoTask();
 						}
 						#endif /* ipconfigFREERTOS_PLUS_NABTO */
 
@@ -324,10 +328,13 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 				}
 				#endif
 
-				/* Static configuration is being used, so the network is now up. */
+				/* Static configuration is being used, so the network is now 
+				up. */
 				#if ipconfigFREERTOS_PLUS_NABTO == 1
 				{
-					vStartNabtoTask();
+					/* Return value is used in configASSERT() inside the 
+					function. */
+					( void ) xStartNabtoTask();
 				}
 				#endif /* ipconfigFREERTOS_PLUS_NABTO */
 
@@ -640,8 +647,8 @@ uint8_t *pucUDPPayloadBuffer;
 	pxDHCPMessage->ucAddressType = dhcpADDRESS_TYPE_ETHERNET;
 	pxDHCPMessage->ucAddressLength = dhcpETHERNET_ADDRESS_LENGTH;
 	pxDHCPMessage->ulTransactionID = ulTransactionId;
-	pxDHCPMessage->ulYourIPAddress_yiaddr = ulOfferedIPAddress;
 	pxDHCPMessage->ulDHCPCookie = dhcpCOOKIE;
+	pxDHCPMessage->usFlags = dhcpBROADCAST;
 	memcpy( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ), ( void * ) pxMACAddress, sizeof( xMACAddress_t ) );
 
 	/* Copy in the const part of the options options. */

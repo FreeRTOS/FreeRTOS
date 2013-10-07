@@ -139,4 +139,12 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigFREERTOS_PLUS_NABTO 0
 #endif
 
+#ifndef ipconfigNABTO_TASK_STACK_SIZE
+	#define ipconfigNABTO_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE * 2 )
+#endif
+
+#ifndef ipconfigNABTO_TASK_PRIORITY
+	#define ipconfigNABTO_TASK_PRIORITY	 ( ipconfigUDP_TASK_PRIORITY + 1 )
+#endif
+
 #endif /* FREERTOS_DEFAULT_IP_CONFIG_H */

@@ -387,6 +387,9 @@ static void prvQueueSetReceivingTask( void *pvParameters )
 unsigned long ulReceived;
 xQueueHandle xActivatedQueue;
 
+	/* Remove compiler warnings. */
+	( void ) pvParameters;
+
 	/* Create the queues and add them to the queue set before resuming the Tx
 	task. */
 	prvSetupTest();

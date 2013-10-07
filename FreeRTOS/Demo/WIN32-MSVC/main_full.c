@@ -161,6 +161,11 @@ static void prvTestTask( void *pvParameters );
  */
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 
+/*
+ * A task to demonstrate the use of the xQueueSpacesAvailable() function.
+ */
+static void prvDemoQueueSpaceFunctions( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
@@ -190,7 +195,8 @@ int main_full( void )
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
-	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
+	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );	
+	xTaskCreate( prvDemoQueueSpaceFunctions, ( signed char * ) "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation.  This then allows them to 
@@ -452,5 +458,70 @@ xTaskHandle xTestTask;
 	}
 }
 /*-----------------------------------------------------------*/
+
+static void prvDemoQueueSpaceFunctions( void *pvParameters )
+{
+xQueueHandle xQueue = NULL;
+const unsigned portBASE_TYPE uxQueueLength = 10;
+unsigned portBASE_TYPE uxReturn, x;
+
+	/* Remove compiler warnings. */
+	( void ) pvParameters;
+
+	/* Create the queue that will be used.  Nothing is actually going to be
+	sent or received so the queue item size is set to 0. */
+	xQueue = xQueueCreate( uxQueueLength, 0 );
+	configASSERT( xQueue );
+
+	for( ;; )
+	{
+		for( x = 0; x < uxQueueLength; x++ )
+		{
+			/* Ask how many messages are available... */
+			uxReturn = uxQueueMessagesWaiting( xQueue );
+			
+			/* Check the number of messages being reported as being available
+			is as expected, and force an assert if not. */
+			if( uxReturn != x )
+			{
+				/* xQueue cannot be NULL so this is deliberately causing an
+				assert to be triggered as there is an error. */
+				configASSERT( xQueue == NULL );
+			}
+
+			/* Ask how many spaces remain in the queue... */
+			uxReturn = uxQueueSpacesAvailable( xQueue );
+			
+			/* Check the number of spaces being reported as being available
+			is as expected, and force an assert if not. */
+			if( uxReturn != ( uxQueueLength - x ) )
+			{
+				/* xQueue cannot be NULL so this is deliberately causing an
+				assert to be triggered as there is an error. */
+				configASSERT( xQueue == NULL );
+			}
+
+			/* Fill one more space in the queue. */
+			xQueueSendToBack( xQueue, NULL, 0 );
+		}
+
+		/* Perform the same check while the queue is full. */
+		uxReturn = uxQueueMessagesWaiting( xQueue );
+		if( uxReturn != uxQueueLength )
+		{
+			configASSERT( xQueue == NULL );
+		}
+
+		uxReturn = uxQueueSpacesAvailable( xQueue );
+			
+		if( uxReturn != 0 )
+		{
+			configASSERT( xQueue == NULL );
+		}
+
+		/* The queue is full, start again. */
+		xQueueReset( xQueue );
+	}
+}
 
 

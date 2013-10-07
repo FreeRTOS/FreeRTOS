@@ -511,6 +511,14 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define traceTIMER_COMMAND_RECEIVED( pxTimer, xMessageID, xMessageValue )
 #endif
 
+#ifndef traceMALLOC
+    #define traceMALLOC( pvAddress, uiSize )
+#endif
+
+#ifndef traceFREE
+    #define traceFREE( pvAddress, uiSize )
+#endif
+
 #ifndef configGENERATE_RUN_TIME_STATS
 	#define configGENERATE_RUN_TIME_STATS 0
 #endif

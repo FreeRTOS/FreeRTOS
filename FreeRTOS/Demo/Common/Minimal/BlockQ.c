@@ -86,15 +86,6 @@
  *
  */
 
-/*
-
-Changes from V4.1.1
-
-	+ The second set of tasks were created the wrong way around.  This has been
-	  corrected.
-*/
-
-
 #include <stdlib.h>
 
 /* Scheduler include files. */

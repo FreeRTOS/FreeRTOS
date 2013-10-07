@@ -569,6 +569,13 @@ portTickType xTimeNow;
 			case tmrCOMMAND_CHANGE_PERIOD :
 				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
 				configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
+
+				/* The new period does not really have a reference, and can be
+				longer or shorter than the old one.  The command time is 
+				therefore set to the current time, and as the period cannot be
+				zero the next expiry time can only be in the future, meaning
+				(unlike for the xTimerStart() case above) there is no fail case
+				that needs to be handled here. */
 				( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
 				break;
 

@@ -89,7 +89,7 @@ privileged Vs unprivileged linkage and placement. */
 	uxTaskGetSystemState() function.  Note the formatting functions are provided
 	for convenience only, and are NOT considered part of the kernel. */
 	#include <stdio.h>
-#endif /* ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) ) */
+#endif /* configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) */
 
 /* Sanity check the configuration. */
 #if configUSE_TICKLESS_IDLE != 0
@@ -1196,7 +1196,11 @@ tskTCB * pxNewTCB;
 
 				if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
 				{
-					xYieldRequired = ( pxTCB->uxPriority >= pxCurrentTCB->uxPriority );
+					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
+					{
+						xYieldRequired = pdTRUE;
+					}
+
 					( void ) uxListRemove(  &( pxTCB->xGenericListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 				}
@@ -1250,11 +1254,16 @@ portBASE_TYPE xReturn;
 		before or during the call to xPortStartScheduler().  The stacks of
 		the created tasks contain a status word with interrupts switched on
 		so interrupts will automatically get re-enabled when the first task
-		starts to run.
-
-		STEPPING THROUGH HERE USING A DEBUGGER CAN CAUSE BIG PROBLEMS IF THE
-		DEBUGGER ALLOWS INTERRUPTS TO BE PROCESSED. */
+		starts to run. */
 		portDISABLE_INTERRUPTS();
+
+		#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		{
+			/* Switch Newlib's _impure_ptr variable to point to the _reent
+			structure specific to the task that will run first. */
+			_impure_ptr = &( pxCurrentTCB->xNewLib_reent );
+		}
+		#endif /* configUSE_NEWLIB_REENTRANT */
 
 		xSchedulerRunning = pdTRUE;
 		xTickCount = ( portTickType ) 0U;
@@ -1337,7 +1346,6 @@ signed portBASE_TYPE xTaskResumeAll( void )
 {
 tskTCB *pxTCB;
 portBASE_TYPE xAlreadyYielded = pdFALSE;
-portBASE_TYPE xYieldRequired = pdFALSE;
 
 	/* If uxSchedulerSuspended is zero then this function does not match a
 	previous call to vTaskSuspendAll(). */
@@ -1369,7 +1377,7 @@ portBASE_TYPE xYieldRequired = pdFALSE;
 					the current task then we should yield. */
 					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
 					{
-						xYieldRequired = pdTRUE;
+						xYieldPending = pdTRUE;
 					}
 				}
 
@@ -1382,16 +1390,15 @@ portBASE_TYPE xYieldRequired = pdFALSE;
 					{
 						if( xTaskIncrementTick() != pdFALSE )
 						{
-							xYieldRequired = pdTRUE;
+							xYieldPending = pdTRUE;
 						}
 						--uxPendedTicks;
 					}
 				}
 
-				if( ( xYieldRequired == pdTRUE ) || ( xYieldPending == pdTRUE ) )
+				if( xYieldPending == pdTRUE )
 				{
 					xAlreadyYielded = pdTRUE;
-					xYieldPending = pdFALSE;
 					portYIELD_WITHIN_API();
 				}
 			}
@@ -1519,7 +1526,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 							portALT_GET_RUN_TIME_COUNTER_VALUE( ( *pulTotalRunTime ) );
 						#else
 							*pulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
-						#endif					
+						#endif
 					}
 				}
 				#else
@@ -1678,6 +1685,17 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 			}
 		}
 		#endif /* ( ( configUSE_PREEMPTION == 1 ) && ( configUSE_TIME_SLICING == 1 ) ) */
+		
+		#if ( configUSE_TICK_HOOK == 1 )
+		{
+			/* Guard against the tick hook being called when the pended tick
+			count is being unwound (when the scheduler is being unlocked). */
+			if( uxPendedTicks == ( unsigned portBASE_TYPE ) 0U )
+			{
+				vApplicationTickHook();
+			}
+		}
+		#endif /* configUSE_TICK_HOOK */		
 	}
 	else
 	{
@@ -1692,16 +1710,14 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 		#endif
 	}
 
-	#if ( configUSE_TICK_HOOK == 1 )
+	#if ( configUSE_PREEMPTION == 1 )
 	{
-		/* Guard against the tick hook being called when the missed tick
-		count is being unwound (when the scheduler is being unlocked). */
-		if( uxPendedTicks == ( unsigned portBASE_TYPE ) 0U )
+		if( xYieldPending != pdFALSE )
 		{
-			vApplicationTickHook();
+			xSwitchRequired = pdTRUE;
 		}
 	}
-	#endif /* configUSE_TICK_HOOK */
+	#endif /* configUSE_PREEMPTION */
 
 	return xSwitchRequired;
 }
@@ -1804,6 +1820,7 @@ void vTaskSwitchContext( void )
 	}
 	else
 	{
+		xYieldPending = pdFALSE;
 		traceTASK_SWITCHED_OUT();
 
 		#if ( configGENERATE_RUN_TIME_STATS == 1 )
@@ -1981,6 +1998,10 @@ portBASE_TYPE xReturn;
 		the calling task to know if it should force a context
 		switch now. */
 		xReturn = pdTRUE;
+
+		/* Mark that a yield is pending in case the user is not using the
+		"xHigherPriorityTaskWoken" parameter to an ISR safe FreeRTOS function. */
+		xYieldPending = pdTRUE;
 	}
 	else
 	{

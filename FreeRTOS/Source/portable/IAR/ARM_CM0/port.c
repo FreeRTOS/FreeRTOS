@@ -113,6 +113,11 @@ void xPortSysTickHandler( void );
  */
 extern void vPortStartFirstTask( void );
 
+/*
+ * Used to catch tasks that attempt to return from their implementing function.
+ */
+static void prvTaskExitError( void );
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -126,11 +131,27 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
-	pxTopOfStack -= 6;	/* LR, R12, R3..R1 */
+	pxTopOfStack--;
+	*pxTopOfStack = ( portSTACK_TYPE ) prvTaskExitError;	/* LR */
+	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
 	pxTopOfStack -= 8; /* R11..R4. */
 
 	return pxTopOfStack;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTaskExitError( void )
+{
+	/* A function that implements a task must not exit or attempt to return to
+	its caller as there is nothing to return to.  If a task wants to exit it 
+	should instead call vTaskDelete( NULL ).
+	
+	Artificially force an assert() to be triggered if configASSERT() is 
+	defined, then stop here so application writers can catch the error. */
+	configASSERT( uxCriticalNesting == ~0UL );
+	portDISABLE_INTERRUPTS();	
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 

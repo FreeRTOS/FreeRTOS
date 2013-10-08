@@ -59,6 +59,7 @@ static void (*_sercom_interrupt_handlers[SERCOM_INST_NUM])(const uint8_t instanc
 static void _sercom_default_handler(
 		const uint8_t instance)
 {
+	( void ) instance;
 	Assert(false);
 }
 

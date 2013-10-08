@@ -78,17 +78,16 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#include <stdint.h>
-extern uint32_t SystemCoreClock;
+#include <asf.h>
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( SystemCoreClock )
+#define configCPU_CLOCK_HZ				( system_clock_source_get_hz( SYSTEM_CLOCK_SOURCE_DFLL ) )
 #define configTICK_RATE_HZ				( ( portTickType ) 500 )
 #define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 11000 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 16000 ) )
 #define configMAX_TASK_NAME_LEN			( 5 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0

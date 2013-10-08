@@ -62,6 +62,22 @@
     1 tab == 4 spaces!
 */
 
+/******************************************************************************
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
+ * select between the two.  The simply blinky demo is implemented and described
+ * in main_blinky.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
+ *
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and FreeRTOS hook functions.  It also contains a dummy
+ * interrupt service routine called Dummy_IRQHandler() that is provided as an
+ * example of how to use interrupt safe FreeRTOS API functions (those that end
+ * in "FromISR").
+ *
+ *****************************************************************************/
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -69,13 +85,21 @@
 /* Demo app includes. */
 #include "UARTCommandConsole.h"
 
+/* Demo application include. */
+#include "QueueSet.h"
+
 /* Library includes. */
 #include <asf.h>
+
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
 /*
- * Hardware and driver initialisation can be done in this function.
+ * Perform any application specific hardware configuration.  The clocks,
+ * memory, etc. are configured before main() is called.
  */
 static void prvSetupHardware( void );
 
@@ -88,6 +112,13 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
+/*
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ */
+extern void main_blinky( void );
+extern void main_full( void );
+
 /*-----------------------------------------------------------*/
 
 /* Used in the run time stats calculations. */
@@ -97,23 +128,26 @@ static unsigned long ulClocksPer10thOfAMilliSecond = 0UL;
 
 int main (void)
 {
+	/* Prepare the hardware for the demo. */
 	prvSetupHardware();
-	vUARTCommandConsoleStart( ( configMINIMAL_STACK_SIZE * 3 ), tskIDLE_PRIORITY );	
-	
-	/* Start the scheduler. */
-	vTaskStartScheduler();
 
-	/* If all is well, the scheduler will now be running, and the following line
-	will never be reached.  If the following line does execute, then there was
-	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
-	to be created.  See the memory management section on the FreeRTOS web site
-	for more details. */
-	for( ;; );
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	{
+		main_blinky();
+	}
+	#else
+	{
+		main_full();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
+	/* Initialisation is performed by the Atmel board support package. */
 	system_init();
 }
 /*-----------------------------------------------------------*/
@@ -168,7 +202,22 @@ void vApplicationTickHook( void )
 	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
+	functions can be used (those that end in FromISR()).  The code in this
+	tick hook implementation is for demonstration only - it has no real
+	purpose.  It just gives a semaphore every 50ms.  The semaphore unblocks a
+	task that then toggles an LED.  Additionally, the call to
+	vQueueSetAccessQueueSetFromISR() is part of the "standard demo tasks"
+	functionality. */
+
+	/* The semaphore and associated task are not created when the simple blinky
+	demo is used. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
+	{
+		/* Write to a queue that is in use as part of the queue set demo to
+		demonstrate using queue sets from an ISR. */
+		vQueueSetAccessQueueSetFromISR();
+	}
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 }
 /*-----------------------------------------------------------*/
 

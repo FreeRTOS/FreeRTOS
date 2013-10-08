@@ -70,7 +70,7 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  */
- 
+
 void vRegTest1Task( void ) __attribute__((naked));
 void vRegTest2Task( void ) __attribute__((naked));
 

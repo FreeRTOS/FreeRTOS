@@ -403,6 +403,7 @@
       <Value>../../../../Source/include</Value>
       <Value>../../../../Source/portable/GCC/ARM_CM0</Value>
       <Value>../../../../../FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI</Value>
+      <Value>../../../Common/include</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
@@ -498,6 +499,49 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\Common\Minimal\blocktim.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\blocktim.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\countsem.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\countsem.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\dynamic.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\dynamic.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\GenQTest.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\GenQTest.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\QueueOverwrite.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\QueueOverwrite.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\QueueSet.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\QueueSet.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\recmutex.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\recmutex.c</Link>
+    </Compile>
+    <Compile Include="src\Common-Demo-Tasks\QPeek.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\main-blinky.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\main-full.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\printf-stdarg.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\RegTest.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\Sample-CLI-commands.c">
       <SubType>compile</SubType>
     </Compile>
@@ -651,9 +695,9 @@
     <Compile Include="src\ASF\sam0\utils\cmsis\samd20\source\system_samd20.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\ASF\sam0\utils\syscalls\gcc\syscalls.c">
+    <None Include="src\ASF\sam0\utils\syscalls\gcc\syscalls.c">
       <SubType>compile</SubType>
-    </Compile>
+    </None>
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
@@ -1055,6 +1099,7 @@
     <Folder Include="src\FreeRTOS-Source\include" />
     <Folder Include="src\FreeRTOS-Source\portable" />
     <Folder Include="src\FreeRTOS-CLI" />
+    <Folder Include="src\Common-Demo-Tasks" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

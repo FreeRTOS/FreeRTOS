@@ -482,8 +482,11 @@ void _usart_interrupt_handler(
 		module->tx_status = STATUS_OK;
 
 		/* Run callback if registered and enabled */
-		if (callback_status & (1 << USART_CALLBACK_BUFFER_TRANSMITTED)) {
-			(*(module->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(module);
+		if( module->remaining_tx_buffer_length == 0 ) /* Added by _RB_ */
+		{
+			if (callback_status & (1 << USART_CALLBACK_BUFFER_TRANSMITTED)) {
+				(*(module->callback[USART_CALLBACK_BUFFER_TRANSMITTED]))(module);
+			}
 		}
 
 	/* Check if the Receive Complete interrupt has occurred, and that

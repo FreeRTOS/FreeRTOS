@@ -547,12 +547,24 @@ void xPortSysTickHandler( void )
 
 			if( ( portNVIC_SYSTICK_CTRL_REG & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
+				unsigned long ulCalculatedLoadValue;
+				
 				/* The tick interrupt has already executed, and the SysTick
 				count reloaded with ulReloadValue.  Reset the
 				portNVIC_SYSTICK_LOAD_REG with whatever remains of this tick
 				period. */
-				portNVIC_SYSTICK_LOAD_REG = ( ulTimerCountsForOneTick - 1UL ) - ( ulReloadValue - portNVIC_SYSTICK_CURRENT_VALUE_REG );
+				ulCalculatedLoadValue = ( ulTimerCountsForOneTick - 1UL ) - ( ulReloadValue - portNVIC_SYSTICK_CURRENT_VALUE_REG );
 
+				/* Don't allow a tiny value, or values that have somehow 
+				underflowed because the post sleep hook did something 
+				that took too long. */
+				if( ( ulCalculatedLoadValue < ulStoppedTimerCompensation ) || ( ulCalculatedLoadValue > ulTimerCountsForOneTick ) )
+				{
+					ulCalculatedLoadValue = ( ulTimerCountsForOneTick - 1UL );
+				}
+				
+				portNVIC_SYSTICK_LOAD_REG = ulCalculatedLoadValue;
+				
 				/* The tick interrupt handler will already have pended the tick
 				processing in the kernel.  As the pending tick will be
 				processed as soon as this function exits, the tick value

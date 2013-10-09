@@ -83,6 +83,18 @@
  * In addition to the standard demo tasks, the following tasks and timer are
  * defined and/or created within this file:
  *
+ * "Command console task" - This uses the Atmel USART driver to provide the
+ * input and output to FreeRTOS+CLI - the FreeRTOS Command Line Interface.  To
+ * use the CLI:
+ *  - Power the SAMD20 XPlained board through the USB debugger connector.  This
+ *    will create a virtual COM port through the USB.
+ *  - Build and run the demo application.  
+ *  - Start a dumb terminal program such as TerraTerm or Hyper Terminal.
+ *  - In the dumb terminal select the UART port associated with the XPlained
+ *    debugger connection, using 19200 baud.
+ *  - Type 'help' in the terminal window to see a lit of command registered by
+ *    the demo.
+ *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register maintains its expected value for the lifetime of the
  * task.  Each task uses a different set of values.  The reg test tasks execute
@@ -144,7 +156,7 @@ extern void vRegTest1Task( void *pvParameters );
 extern void vRegTest2Task( void *pvParameters );
 
 /*
- * Function that starts the command console.
+ * Function that starts the command console task.
  */
 extern void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPriority );
 
@@ -222,6 +234,7 @@ const size_t xRegTestStackSize = 25U;
 	actually start running until the scheduler starts.  A block time of
 	zero is used in this call, although any value could be used as the block
 	time will be ignored because the scheduler has not started yet. */
+	configASSERT( xTimer );
 	if( xTimer != NULL )
 	{
 		xTimerStart( xTimer, mainDONT_BLOCK );
@@ -250,58 +263,59 @@ unsigned long ulErrorFound = pdFALSE;
 	running, and that none have detected an error. */
 	if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 0UL );
+		ulErrorFound = pdTRUE;
 	}
 
 	if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 1UL );
+		ulErrorFound = pdTRUE;
 	}
 
 	if( xAreCountingSemaphoreTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 2UL );
+		ulErrorFound = pdTRUE;
 	}
 
 	if( xAreRecursiveMutexTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 3UL );
+		ulErrorFound = pdTRUE;
 	}
 
 	/* Check that the register test 1 task is still running. */
 	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 	{
-		ulErrorFound |= ( 0x01UL << 4UL );
+		ulErrorFound = pdTRUE;
 	}
 	ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 	/* Check that the register test 2 task is still running. */
 	if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 	{
-		ulErrorFound |= ( 0x01UL << 5UL );
+		ulErrorFound = pdTRUE;
 	}
 	ulLastRegTest2Value = ulRegTest2LoopCounter;
 
+	
 	if( xAreQueueSetTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 6UL );
+		ulErrorFound = pdTRUE;
 	}
 
 	if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 7UL );
+		ulErrorFound = pdTRUE;
 	}
 	
 	if( xAreGenericQueueTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 8UL );
+		ulErrorFound = pdTRUE;
 	}
 	
 	if( xAreQueuePeekTasksStillRunning() != pdPASS )
 	{
-		ulErrorFound |= ( 0x01UL << 9UL );
+		ulErrorFound = pdTRUE;
 	}
-	
+
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */

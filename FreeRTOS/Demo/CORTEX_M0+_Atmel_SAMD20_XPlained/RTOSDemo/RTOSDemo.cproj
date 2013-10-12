@@ -515,6 +515,10 @@
       <SubType>compile</SubType>
       <Link>src\Common-Demo-Tasks\GenQTest.c</Link>
     </Compile>
+    <Compile Include="..\..\Common\Minimal\QPeek.c">
+      <SubType>compile</SubType>
+      <Link>src\Common-Demo-Tasks\QPeek.c</Link>
+    </Compile>
     <Compile Include="..\..\Common\Minimal\QueueOverwrite.c">
       <SubType>compile</SubType>
       <Link>src\Common-Demo-Tasks\QueueOverwrite.c</Link>
@@ -526,9 +530,6 @@
     <Compile Include="..\..\Common\Minimal\recmutex.c">
       <SubType>compile</SubType>
       <Link>src\Common-Demo-Tasks\recmutex.c</Link>
-    </Compile>
-    <Compile Include="src\Common-Demo-Tasks\QPeek.c">
-      <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main-blinky.c">
       <SubType>compile</SubType>

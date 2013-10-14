@@ -581,6 +581,10 @@ static portBASE_TYPE xReturn = pdFALSE;
 				#else
 				{
 					*ipLOCAL_IP_ADDRESS_POINTER = xNetworkAddressing.ulDefaultIPAddress;
+					
+					/* Ensure the gateway is on the same subnet as the IP 
+					address. */
+					configASSERT( ( ( *ipLOCAL_IP_ADDRESS_POINTER ) & xNetworkAddressing.ulNetMask ) == ( xNetworkAddressing.ulGatewayAddress & xNetworkAddressing.ulNetMask ) );
 				}
 				#endif /* ipconfigUSE_DHCP == 1 */
 

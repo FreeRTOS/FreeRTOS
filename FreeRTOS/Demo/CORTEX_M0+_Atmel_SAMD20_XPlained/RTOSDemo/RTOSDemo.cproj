@@ -412,11 +412,6 @@
   <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
   <armgcc.compiler.warnings.ExtraWarnings>True</armgcc.compiler.warnings.ExtraWarnings>
   <armgcc.compiler.miscellaneous.OtherFlags>-pipe -fno-strict-aliasing -std=gnu99 -ffunction-sections -fdata-sections -Wformat=2 --param max-inline-insns-single=500</armgcc.compiler.miscellaneous.OtherFlags>
-  <armgcc.linker.libraries.Libraries>
-    <ListValues>
-      <Value>arm_cortexM0l_math</Value>
-    </ListValues>
-  </armgcc.linker.libraries.Libraries>
   <armgcc.linker.libraries.LibrarySearchPaths>
     <ListValues>
       <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>

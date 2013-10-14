@@ -1,7 +1,8 @@
 #error This project has been reworked for use with a later version of the Xilinx tools and IP.  Please find more up to date projects in other FreeRTOS/Demo/MicroBlaze_nnn directories.
 
 /*
-    FreeRTOS V7.5.2 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
 

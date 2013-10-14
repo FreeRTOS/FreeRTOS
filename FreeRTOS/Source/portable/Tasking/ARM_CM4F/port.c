@@ -88,6 +88,15 @@
 #define portINITIAL_XPSR			( 0x01000000 )
 #define portINITIAL_EXEC_RETURN		( 0xfffffffd )
 
+/* Let the user override the pre-loading of the initial LR with the address of
+prvTaskExitError() in case is messes up unwinding of the stack in the
+debugger. */
+#ifdef configTASK_RETURN_ADDRESS
+	#define portTASK_RETURN_ADDRESS	configTASK_RETURN_ADDRESS
+#else
+	#define portTASK_RETURN_ADDRESS	prvTaskExitError
+#endif
+
 /* The priority used by the kernel is assigned to a variable to make access
 from inline assembler easier. */
 const unsigned long ulKernelPriority = configKERNEL_INTERRUPT_PRIORITY;
@@ -112,6 +121,11 @@ void SysTick_Handler( void );
 extern void vPortEnableVFP( void );
 extern void vPortStartFirstTask( void );
 
+/*
+ * Used to catch tasks that attempt to return from their implementing function.
+ */
+static void prvTaskExitError( void );
+
 /* This exists purely to allow the const to be used from within the
 port_asm.asm assembly file. */
 const unsigned long ulMaxSyscallInterruptPriorityConst = configMAX_SYSCALL_INTERRUPT_PRIORITY;
@@ -134,7 +148,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
 	pxTopOfStack--;
-	*pxTopOfStack = 0;	/* LR */
+	*pxTopOfStack = ( portSTACK_TYPE ) portTASK_RETURN_ADDRESS;	/* LR */
 
 	/* Save code space by skipping register initialisation. */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
@@ -148,6 +162,20 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	return pxTopOfStack;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTaskExitError( void )
+{
+	/* A function that implements a task must not exit or attempt to return to
+	its caller as there is nothing to return to.  If a task wants to exit it 
+	should instead call vTaskDelete( NULL ).
+	
+	Artificially force an assert() to be triggered if configASSERT() is 
+	defined, then stop here so application writers can catch the error. */
+	configASSERT( ulCriticalNesting == ~0UL );
+	portDISABLE_INTERRUPTS();	
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 

@@ -48,6 +48,9 @@
 								</option>
 								<option id="com.tasking.arm.lk.optimize.deleteUnreferencedSections.135265458" name="Delete unreferenced sections" superClass="com.tasking.arm.lk.optimize.deleteUnreferencedSections" value="true" valueType="boolean"/>
 								<option id="com.tasking.arm.lk.misc.longBranchVeneers.1174777913" name="Generate long-branch veneers" superClass="com.tasking.arm.lk.misc.longBranchVeneers" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.lk.definedSymbols.1884824072" name="Defined symbols" superClass="com.tasking.arm.lk.definedSymbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="SILICON_BUG_PMC_CM_001"/>
+								</option>
 								<inputType id="com.tasking.arm.lkObjInputType.747815267" name="OBJ" superClass="com.tasking.arm.lkObjInputType"/>
 								<inputType id="com.tasking.arm.lkLibInputType.124974190" name="LIB" superClass="com.tasking.arm.lkLibInputType"/>
 							</tool>
@@ -111,6 +114,9 @@
 								</option>
 								<option id="com.tasking.arm.lk.optimize.deleteUnreferencedSections.1511447759" name="Delete unreferenced sections" superClass="com.tasking.arm.lk.optimize.deleteUnreferencedSections" value="true" valueType="boolean"/>
 								<option id="com.tasking.arm.lk.misc.longBranchVeneers.1678737666" name="Generate long-branch veneers" superClass="com.tasking.arm.lk.misc.longBranchVeneers" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.lk.definedSymbols.647743584" name="Defined symbols" superClass="com.tasking.arm.lk.definedSymbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="SILICON_BUG_PMC_CM_001"/>
+								</option>
 								<inputType id="com.tasking.arm.lkObjInputType.1478437845" name="OBJ" superClass="com.tasking.arm.lkObjInputType"/>
 								<inputType id="com.tasking.arm.lkLibInputType.1976268894" name="LIB" superClass="com.tasking.arm.lkLibInputType"/>
 							</tool>
@@ -124,7 +130,6 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule moduleId="com.tasking.toolInfo">
 				<toolInfo>TASKING program builder v4.4r1 Build 077</toolInfo>
-				<toolInfo>TASKING rm v0.0r0 Build 022</toolInfo>
 			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="com.tasking.config.arm.abs.debug.1826238485.75989148">
@@ -166,6 +171,7 @@
 								<option id="com.tasking.arm.as.nowarning.1157179067" name="Suppress warnings" superClass="com.tasking.arm.as.nowarning"/>
 								<option id="com.tasking.arm.as.symbolScopeGlobal.706539120" name="Set default symbol scope to global" superClass="com.tasking.arm.as.symbolScopeGlobal" value="false" valueType="boolean"/>
 								<option id="com.tasking.arm.as.emitLocals.equ.205877193" name="Emit local EQU symbols" superClass="com.tasking.arm.as.emitLocals.equ" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.as.definedSymbols.168571993" name="Defined symbols" superClass="com.tasking.arm.as.definedSymbols" valueType="stringList"/>
 								<inputType id="com.tasking.arm.asmInputType.337272698" name="ASM" superClass="com.tasking.arm.asmInputType"/>
 							</tool>
 							<tool id="com.tasking.arm.lk.abs.debug.396322583" name="Linker" superClass="com.tasking.arm.lk.abs.debug">
@@ -174,6 +180,10 @@
 								</option>
 								<option id="com.tasking.arm.lk.optimize.deleteUnreferencedSections.793536869" name="Delete unreferenced sections" superClass="com.tasking.arm.lk.optimize.deleteUnreferencedSections" value="true" valueType="boolean"/>
 								<option id="com.tasking.arm.lk.misc.longBranchVeneers.460680999" name="Generate long-branch veneers" superClass="com.tasking.arm.lk.misc.longBranchVeneers" value="false" valueType="boolean"/>
+								<option id="com.tasking.arm.lk.definedSymbols.1521384002" name="Defined symbols" superClass="com.tasking.arm.lk.definedSymbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="SILICON_BUG_PMC_CM_001"/>
+								</option>
+								<option id="com.tasking.arm.lk.mapFile.mapFile.1619349956" name="Generate map file (.map)" superClass="com.tasking.arm.lk.mapFile.mapFile" value="true" valueType="boolean"/>
 								<inputType id="com.tasking.arm.lkObjInputType.754661707" name="OBJ" superClass="com.tasking.arm.lkObjInputType"/>
 								<inputType id="com.tasking.arm.lkLibInputType.704602371" name="LIB" superClass="com.tasking.arm.lkLibInputType"/>
 							</tool>

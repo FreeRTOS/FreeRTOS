@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -110,7 +110,7 @@ static void prvSetupTimerInterrupt( void );
  */
 void xPortPendSVHandler( void ) __attribute__ (( naked ));
 void xPortSysTickHandler( void );
-void vPortSVCHandler( void ) __attribute__ (( naked ));
+void vPortSVCHandler( void );
 
 /*
  * Start first task is a separate function so it can be tested in isolation.
@@ -148,42 +148,21 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 static void prvTaskExitError( void )
 {
 	/* A function that implements a task must not exit or attempt to return to
-	its caller as there is nothing to return to.  If a task wants to exit it 
+	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
-	
-	Artificially force an assert() to be triggered if configASSERT() is 
+
+	Artificially force an assert() to be triggered if configASSERT() is
 	defined, then stop here so application writers can catch the error. */
 	configASSERT( uxCriticalNesting == ~0UL );
-	portDISABLE_INTERRUPTS();	
+	portDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vPortSVCHandler( void )
 {
-	__asm volatile (
-					"	ldr	r3, pxCurrentTCBConst2		\n" /* Restore the context. */
-					"	ldr r1, [r3]					\n" /* Use pxCurrentTCBConst to get the pxCurrentTCB address. */
-					"	ldr r0, [r1]					\n" /* The first item in pxCurrentTCB is the task top of stack. */
-					"	add r0, r0, #16					\n" /* Move to the high registers. */
-					"	ldmia r0!, {r4-r7}				\n" /* Pop the high registers. */
-					" 	mov r8, r4						\n"
-					" 	mov r9, r5						\n"
-					" 	mov r10, r6						\n"
-					" 	mov r11, r7						\n"
-					"									\n"
-					"	msr psp, r0						\n" /* Remember the new top of stack for the task. */
-					"									\n"
-					"	sub r0, r0, #32					\n" /* Go back for the low registers that are not automatically restored. */
-					" 	ldmia r0!, {r4-r7}              \n" /* Pop low registers.  */
-					"	mov r1, r14						\n" /* OR R14 with 0x0d. */
-					"	movs r0, #0x0d					\n"
-					"	orr r1, r0						\n"
-					"	bx r1							\n"
-					"									\n"
-					"	.align 2						\n"
-					"pxCurrentTCBConst2: .word pxCurrentTCB	\n"
-				);
+	/* This function is no longer used, but returned for backward
+	compatibility. */
 }
 /*-----------------------------------------------------------*/
 
@@ -193,9 +172,20 @@ void vPortStartFirstTask( void )
 	table offset register that can be used to locate the initial stack value.
 	Not all M0 parts have the application vector table at address 0. */
 	__asm volatile(
-					" cpsie i			\n" /* Globally enable interrupts. */
-					" svc 0				\n" /* System call to start first task. */
-					" nop				\n"
+	"	ldr	r2, pxCurrentTCBConst2	\n" /* Obtain location of pxCurrentTCB. */
+	"	ldr r3, [r2]				\n"
+	"	ldr r0, [r3]				\n" /* The first item in pxCurrentTCB is the task top of stack. */
+	"	add r0, #32					\n" /* Discard everything up to r0. */
+	"	msr psp, r0					\n" /* This is now the new top of stack to use in the task. */
+	"	movs r0, #2					\n" /* Switch to the psp stack. */
+	"	msr CONTROL, r0				\n"
+	"	pop {r0-r5}					\n" /* Pop the registers that are saved automatically. */
+	"	mov lr, r5					\n" /* lr is now in r5. */
+	"	cpsie i						\n" /* The first task has its context and interrupts can be enabled. */
+	"	pop {pc}					\n" /* Finally, pop the PC to jump to the user defined task code. */
+	"								\n"
+	"	.align 2					\n"
+	"pxCurrentTCBConst2: .word pxCurrentTCB	  "					
 				  );
 }
 /*-----------------------------------------------------------*/
@@ -281,7 +271,7 @@ void vClearInterruptMaskFromISR( unsigned long ulMask )
 					" msr PRIMASK, r0	\n"
 					" bx lr				  "
 				  );
-				  
+
 	/* Just to avoid compiler warning. */
 	( void ) ulMask;
 }

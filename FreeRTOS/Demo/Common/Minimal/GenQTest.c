@@ -446,6 +446,14 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 		mutex, and block when it finds it cannot obtain it. */
 		vTaskResume( xHighPriorityMutexTask );
 
+		/* Ensure the task is reporting it priority as blocked and not
+		suspended (as it would have done in versions up to V7.5.3). */
+		#if( INCLUDE_eTaskGetState == 1 )
+		{
+			configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
+		}
+		#endif /* INCLUDE_eTaskGetState */
+
 		/* We should now have inherited the prioritoy of the high priority task,
 		as by now it will have attempted to get the mutex. */
 		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )

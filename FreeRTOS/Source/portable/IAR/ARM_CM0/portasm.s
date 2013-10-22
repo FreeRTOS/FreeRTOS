@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -127,24 +127,9 @@ xPortPendSVHandler:
 /*-----------------------------------------------------------*/
 
 vPortSVCHandler;
-	ldr	r3, =pxCurrentTCB	/* Restore the context. */
-	ldr r1, [r3]			/* Get the pxCurrentTCB address. */
-	ldr r0, [r1]			/* The first item in pxCurrentTCB is the task top of stack. */
-	adds r0, r0, #16		/* Move to the high registers. */
-	ldmia r0!, {r4-r7}		/* Pop the high registers. */
-	mov r8, r4
-	mov r9, r5
-	mov r10, r6
-	mov r11, r7
-
-	msr psp, r0				/* Remember the new top of stack for the task. */
-
-	subs r0, r0, #32		/* Go back for the low registers that are not automatically restored. */
-	ldmia r0!, {r4-r7}		/* Pop low registers.  */
-	mov r1, r14				/* OR R14 with 0x0d. */
-	movs r0, #0x0d
-	orrs r1, r0
-	bx r1
+	/* This function is no longer used, but retained for backward
+	compatibility. */
+	bx lr
 
 /*-----------------------------------------------------------*/
 
@@ -152,9 +137,18 @@ vPortStartFirstTask
 	/* The MSP stack is not reset as, unlike on M3/4 parts, there is no vector
 	table offset register that can be used to locate the initial stack value.
 	Not all M0 parts have the application vector table at address 0. */
-	cpsie i			 		/* Globally enable interrupts. */
-	svc 0			 		/* System call to start first task. */
-	nop
+
+	ldr	r3, =pxCurrentTCB	/* Obtain location of pxCurrentTCB. */
+	ldr r1, [r3]
+	ldr r0, [r1]			/* The first item in pxCurrentTCB is the task top of stack. */
+	adds r0, #32			/* Discard everything up to r0. */
+	msr psp, r0				/* This is now the new top of stack to use in the task. */
+	movs r0, #2				/* Switch to the psp stack. */
+	msr CONTROL, r0
+	pop {r0-r5}				/* Pop the registers that are saved automatically. */
+	mov lr, r5				/* lr is now in r5. */
+	cpsie i					/* The first task has its context and interrupts can be enabled. */
+	pop {pc}				/* Finally, pop the PC to jump to the user defined task code. */
 
 /*-----------------------------------------------------------*/
 

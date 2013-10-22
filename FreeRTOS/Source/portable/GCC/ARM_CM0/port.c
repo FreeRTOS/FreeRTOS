@@ -161,7 +161,7 @@ static void prvTaskExitError( void )
 
 void vPortSVCHandler( void )
 {
-	/* This function is no longer used, but returned for backward
+	/* This function is no longer used, but retained for backward
 	compatibility. */
 }
 /*-----------------------------------------------------------*/

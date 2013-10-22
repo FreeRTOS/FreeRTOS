@@ -844,8 +844,16 @@ tskTCB * pxNewTCB;
 				else if( pxStateList == &xSuspendedTaskList )
 				{
 					/* The task being queried is referenced from the suspended
-					list. */
-					eReturn = eSuspended;
+					list.  Is it genuinely suspended or is it block 
+					indefinitely? */
+					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL )
+					{
+						eReturn = eSuspended;
+					}
+					else
+					{
+						eReturn = eBlocked;
+					}
 				}
 			#endif
 

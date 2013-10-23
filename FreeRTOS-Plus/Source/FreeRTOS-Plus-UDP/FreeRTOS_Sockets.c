@@ -943,10 +943,10 @@ uint16_t usReturn;
 			create first so the early port numbers may still be in use. */
 			usNextPortToUse = socketAUTO_PORT_ALLOCATION_RESET_NUMBER;
 		}
+
+		usReturn = FreeRTOS_htons( usNextPortToUse );
 	}
 	taskEXIT_CRITICAL();
-
-	usReturn = FreeRTOS_htons( usNextPortToUse );
 
 	return usReturn;
 } /* Tested */

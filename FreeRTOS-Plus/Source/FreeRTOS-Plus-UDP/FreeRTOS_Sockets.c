@@ -932,17 +932,19 @@ uint16_t usReturn;
 
 	/* Assign the next port in the range. */
 	taskENTER_CRITICAL();
-		usNextPortToUse++;
-	taskEXIT_CRITICAL();
-
-	/* Has it overflowed? */
-	if( usNextPortToUse == 0U )
 	{
-		/* Don't go right back to the start of the dynamic/private port
-		range numbers as any persistent sockets are likely to have been
-		create first so the early port numbers may still be in use. */
-		usNextPortToUse = socketAUTO_PORT_ALLOCATION_RESET_NUMBER;
+		usNextPortToUse++;
+
+		/* Has it overflowed? */
+		if( usNextPortToUse == 0U )
+		{
+			/* Don't go right back to the start of the dynamic/private port
+			range numbers as any persistent sockets are likely to have been
+			create first so the early port numbers may still be in use. */
+			usNextPortToUse = socketAUTO_PORT_ALLOCATION_RESET_NUMBER;
+		}
 	}
+	taskEXIT_CRITICAL();
 
 	usReturn = FreeRTOS_htons( usNextPortToUse );
 

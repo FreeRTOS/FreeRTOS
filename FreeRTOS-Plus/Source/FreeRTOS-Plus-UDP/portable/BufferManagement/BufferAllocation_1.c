@@ -60,6 +60,7 @@
 
 /* FreeRTOS+UDP includes. */
 #include "FreeRTOS_UDP_IP.h"
+#include "FreeRTOS_IP_Private.h"
 #include "NetworkInterface.h"
 
 /* For an Ethernet interrupt to be able to obtain a network buffer there must

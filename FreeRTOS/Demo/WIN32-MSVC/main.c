@@ -105,7 +105,7 @@ mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
 The simply blinky demo is implemented and described in main_blinky.c.  The more 
 comprehensive test and demo application is implemented and described in 
 main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.

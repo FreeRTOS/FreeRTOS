@@ -153,7 +153,7 @@ int main( void )
 static void prvCheckTask( void *pvParameters )
 {
 portTickType xNextWakeTime;
-const portTickType xCycleFrequency = 5000 / portTICK_RATE_MS;
+const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
 char *pcStatusMessage = "OK";
 
 	/* Just to remove compiler warning. */

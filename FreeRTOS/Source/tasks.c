@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -103,6 +103,14 @@ privileged Vs unprivileged linkage and placement. */
  * Defines the size, in words, of the stack allocated to the idle task.
  */
 #define tskIDLE_STACK_SIZE	configMINIMAL_STACK_SIZE
+
+#if( configUSE_PREEMPTION == 0 )
+	/* If the cooperative scheduler is being used then a yield should not be
+	performed just because a higher priority task has been woken. */
+	#define taskYIELD_IF_USING_PREEMPTION()
+#else
+	#define taskYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
+#endif
 
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
@@ -621,7 +629,7 @@ tskTCB * pxNewTCB;
 			then it should run now. */
 			if( pxCurrentTCB->uxPriority < uxPriority )
 			{
-				portYIELD_WITHIN_API();
+				taskYIELD_IF_USING_PREEMPTION();
 			}
 		}
 	}
@@ -844,7 +852,7 @@ tskTCB * pxNewTCB;
 				else if( pxStateList == &xSuspendedTaskList )
 				{
 					/* The task being queried is referenced from the suspended
-					list.  Is it genuinely suspended or is it block 
+					list.  Is it genuinely suspended or is it block
 					indefinitely? */
 					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL )
 					{
@@ -1019,7 +1027,7 @@ tskTCB * pxNewTCB;
 
 				if( xYieldRequired == pdTRUE )
 				{
-					portYIELD_WITHIN_API();
+					taskYIELD_IF_USING_PREEMPTION();
 				}
 
 				/* Remove compiler warning about unused variables when the port
@@ -1155,9 +1163,10 @@ tskTCB * pxNewTCB;
 					/* We may have just resumed a higher priority task. */
 					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
 					{
-						/* This yield may not cause the task just resumed to run, but
-						will leave the lists in the correct state for the next yield. */
-						portYIELD_WITHIN_API();
+						/* This yield may not cause the task just resumed to run,
+						but will leave the lists in the correct state for the
+						next yield. */
+						taskYIELD_IF_USING_PREEMPTION();
 					}
 				}
 			}
@@ -1407,8 +1416,12 @@ portBASE_TYPE xAlreadyYielded = pdFALSE;
 
 				if( xYieldPending == pdTRUE )
 				{
-					xAlreadyYielded = pdTRUE;
-					portYIELD_WITHIN_API();
+					#if( configUSE_PREEMPTION != 0 )
+					{
+						xAlreadyYielded = pdTRUE;
+					}
+					#endif
+					taskYIELD_IF_USING_PREEMPTION();
 				}
 			}
 		}
@@ -1694,7 +1707,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 			}
 		}
 		#endif /* ( ( configUSE_PREEMPTION == 1 ) && ( configUSE_TIME_SLICING == 1 ) ) */
-		
+
 		#if ( configUSE_TICK_HOOK == 1 )
 		{
 			/* Guard against the tick hook being called when the pended tick
@@ -1704,7 +1717,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 				vApplicationTickHook();
 			}
 		}
-		#endif /* configUSE_TICK_HOOK */		
+		#endif /* configUSE_TICK_HOOK */
 	}
 	else
 	{

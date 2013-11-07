@@ -714,7 +714,7 @@ signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const 
  * \defgroup xQueuePeekFromISR xQueuePeekFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, const void * const pvBuffer ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -906,7 +906,7 @@ signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, const void * const 
  * \defgroup xQueueReceive xQueueReceive
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -1421,7 +1421,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void *
  * \defgroup xQueueReceiveFromISR xQueueReceiveFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, const void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
 /*
  * Utilities to query queues that are safe to use from an ISR.  These utilities

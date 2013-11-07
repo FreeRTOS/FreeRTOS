@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -110,6 +110,13 @@ zero. */
 #define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( ( unsigned portBASE_TYPE ) 0 )
 #define queueMUTEX_GIVE_BLOCK_TIME		 ( ( portTickType ) 0U )
 
+#if( configUSE_PREEMPTION == 0 )
+	/* If the cooperative scheduler is being used then a yield should not be
+	performed just because a higher priority task has been woken. */
+	#define queueYIELD_IF_USING_PREEMPTION()
+#else
+	#define queueYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
+#endif
 
 /*
  * Definition of the queue used by the scheduler.
@@ -205,7 +212,7 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 /*
  * Copies an item out of a queue.
  */
-static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void * const pvBuffer ) PRIVILEGED_FUNCTION;
+static void prvCopyDataFromQueue( xQUEUE * const pxQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 	/*
@@ -255,14 +262,14 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 		{
 			/* If there are tasks blocked waiting to read from the queue, then
 			the tasks will remain blocked as after this function exits the queue
-			will still be empty.  If there are tasks blocked waiting to	write to
+			will still be empty.  If there are tasks blocked waiting to write to
 			the queue, then one should be unblocked as after this function exits
 			it will be possible to write to it. */
 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 			{
 				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) == pdTRUE )
 				{
-					portYIELD_WITHIN_API();
+					queueYIELD_IF_USING_PREEMPTION();
 				}
 			}
 		}
@@ -586,7 +593,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 							/* The queue is a member of a queue set, and posting
 							to the queue set caused a higher priority task to
 							unblock. A context switch is required. */
-							portYIELD_WITHIN_API();
+							queueYIELD_IF_USING_PREEMPTION();
 						}
 					}
 					else
@@ -601,7 +608,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 								our own so yield immediately.  Yes it is ok to
 								do this from within the critical section - the
 								kernel takes care of that. */
-								portYIELD_WITHIN_API();
+								queueYIELD_IF_USING_PREEMPTION();
 							}
 						}
 					}
@@ -618,7 +625,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 							our own so yield immediately.  Yes it is ok to do
 							this from within the critical section - the kernel
 							takes care of that. */
-							portYIELD_WITHIN_API();
+							queueYIELD_IF_USING_PREEMPTION();
 						}
 					}
 				}
@@ -1033,7 +1040,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, const void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
@@ -1083,7 +1090,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 					{
 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) == pdTRUE )
 						{
-							portYIELD_WITHIN_API();
+							queueYIELD_IF_USING_PREEMPTION();
 						}
 					}
 				}
@@ -1104,7 +1111,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 						{
 							/* The task waiting has a higher priority than this task. */
-							portYIELD_WITHIN_API();
+							queueYIELD_IF_USING_PREEMPTION();
 						}
 					}
 				}
@@ -1188,7 +1195,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, const void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken )
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
@@ -1263,7 +1270,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, const void * const pvBuffer )
+signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue,  void * const pvBuffer )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
@@ -1455,7 +1462,7 @@ static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, port
 }
 /*-----------------------------------------------------------*/
 
-static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void * const pvBuffer )
+static void prvCopyDataFromQueue( xQUEUE * const pxQueue, void * const pvBuffer )
 {
 	if( pxQueue->uxQueueType != queueQUEUE_IS_MUTEX )
 	{
@@ -2081,4 +2088,15 @@ signed portBASE_TYPE xReturn;
 	}
 
 #endif /* configUSE_QUEUE_SETS */
+
+
+
+
+
+
+
+
+
+
+
 

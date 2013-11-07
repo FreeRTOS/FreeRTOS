@@ -319,6 +319,10 @@ xQueueHandle xQueueInUse;
 			xQueueSetTasksStatus = pdFAIL;
 		}
 
+		#if( configUSE_PREEMPTION == 0 )
+			taskYIELD();
+		#endif
+
 		ulTaskTxValue++;
 
 		/* If the Tx value has reached the range used by the ISR then set it

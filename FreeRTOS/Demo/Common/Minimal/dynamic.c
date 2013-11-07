@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -257,6 +257,11 @@ unsigned portBASE_TYPE uxOurPriority;
 			( *pulCounter )++;
 		}
 		vTaskPrioritySet( NULL, uxOurPriority );
+
+		#if( configUSE_PREEMPTION == 0 )
+			taskYIELD();
+		#endif
+
 		configASSERT( ( uxTaskPriorityGet( NULL ) == uxOurPriority ) );
 	}
 }
@@ -299,6 +304,10 @@ short sError = pdFALSE;
 				ulLastCounter = ulCounter;
 			}
 			vTaskResume( xContinuousIncrementHandle );
+
+			#if( configUSE_PREEMPTION == 0 )
+				taskYIELD();
+			#endif
 
 			#if( INCLUDE_eTaskGetState == 1 )
 			{
@@ -344,6 +353,10 @@ short sError = pdFALSE;
 		task has suspended itself with a known value in the counter variable. */
 		vTaskResume( xLimitedIncrementHandle );
 
+		#if( configUSE_PREEMPTION == 0 )
+			taskYIELD();
+		#endif
+
 		/* This task should not run again until xLimitedIncrementHandle has
 		suspended itself. */
 		#if( INCLUDE_eTaskGetState == 1 )
@@ -368,6 +381,10 @@ short sError = pdFALSE;
 
 		/* Resume the continuous count task and do it all again. */
 		vTaskResume( xContinuousIncrementHandle );
+
+		#if( configUSE_PREEMPTION == 0 )
+			taskYIELD();
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/

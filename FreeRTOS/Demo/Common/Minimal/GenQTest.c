@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -64,12 +64,12 @@
 */
 
 
-/* 
- * Tests the extra queue functionality introduced in FreeRTOS.org V4.5.0 - 
- * including xQueueSendToFront(), xQueueSendToBack(), xQueuePeek() and 
- * mutex behaviour. 
+/*
+ * Tests the extra queue functionality introduced in FreeRTOS.org V4.5.0 -
+ * including xQueueSendToFront(), xQueueSendToBack(), xQueuePeek() and
+ * mutex behaviour.
  *
- * See the comments above the prvSendFrontAndBackTest() and 
+ * See the comments above the prvSendFrontAndBackTest() and
  * prvLowPriorityMutexTask() prototypes below for more information.
  */
 
@@ -151,10 +151,10 @@ xSemaphoreHandle xMutex;
 	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( unsigned portLONG ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware 
+	in use.  The queue registry is provided as a means for kernel aware
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( xQueue, ( signed portCHAR * ) "Gen_Queue_Test" );
 
@@ -167,10 +167,10 @@ xSemaphoreHandle xMutex;
 	xMutex = xSemaphoreCreateMutex();
 
 	/* vQueueAddToRegistry() adds the mutex to the registry, if one is
-	in use.  The registry is provided as a means for kernel aware 
+	in use.  The registry is provided as a means for kernel aware
 	debuggers to locate mutexes and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( ( xQueueHandle ) xMutex, ( signed portCHAR * ) "Gen_Queue_Mutex" );
 
@@ -190,7 +190,7 @@ xQueueHandle xQueue;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
-	
+
 		const portCHAR * const pcTaskStartMsg = "Queue SendToFront/SendToBack/Peek test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
@@ -312,7 +312,7 @@ xQueueHandle xQueue;
 			{
 				xErrorDetected = pdTRUE;
 			}
-			
+
 
 			/* Now try receiving the data for real.  The value should be the
 			same.  Clobber the value first so we know we really received it. */
@@ -417,7 +417,7 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
-	
+
 		const portCHAR * const pcTaskStartMsg = "Mutex with priority inheritance test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
@@ -445,6 +445,10 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 		/* Now unsuspend the high priority task.  This will attempt to take the
 		mutex, and block when it finds it cannot obtain it. */
 		vTaskResume( xHighPriorityMutexTask );
+
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
 
 		/* Ensure the task is reporting it priority as blocked and not
 		suspended (as it would have done in versions up to V7.5.3). */
@@ -490,6 +494,10 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 			xErrorDetected = pdTRUE;
 		}
 
+		#if configUSE_PREEMPTION == 0
+			taskYIELD();
+		#endif
+
 		/* Check that the guarded variable did indeed increment... */
 		if( ulGuardedVariable != 1 )
 		{
@@ -512,7 +520,7 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
-		#endif		
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/
@@ -558,7 +566,7 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 		if( xSemaphoreGive( xMutex ) != pdPASS )
 		{
 			xErrorDetected = pdTRUE;
-		}		
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -581,7 +589,7 @@ static unsigned portLONG ulLastLoopCounter = 0, ulLastLoopCounter2 = 0;
 	}
 
 	ulLastLoopCounter = ulLoopCounter;
-	ulLastLoopCounter2 = ulLoopCounter2;	
+	ulLastLoopCounter2 = ulLoopCounter2;
 
 	/* Errors detected in the task itself will have latched xErrorDetected
 	to true. */

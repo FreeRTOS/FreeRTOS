@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -136,7 +136,7 @@ const portTickType xBlockTime = ( portTickType ) 1000 / portTICK_RATE_MS;
 const portTickType xDontBlock = ( portTickType ) 0;
 
 	/* Create the first two tasks as described at the top of the file. */
-	
+
 	/* First create the structure used to pass parameters to the consumer tasks. */
 	pxQueueParameters1 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
 
@@ -150,7 +150,7 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	/* Pass in the variable that this task is going to increment so we can check it
 	is still running. */
 	pxQueueParameters1->psCheckVariable = &( sBlockingConsumerCount[ 0 ] );
-		
+
 	/* Create the structure used to pass parameters to the producer task. */
 	pxQueueParameters2 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
 
@@ -171,7 +171,7 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
 	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
 
-	
+
 
 	/* Create the second two tasks as described at the top of the file.   This uses
 	the same mechanism but reverses the task priorities. */
@@ -201,7 +201,7 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters6 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
 	pxQueueParameters6->xQueue = pxQueueParameters5->xQueue;
 	pxQueueParameters6->xBlockTime = xBlockTime;
-	pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );	
+	pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );
 
 	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
@@ -217,7 +217,7 @@ short sErrorEverOccurred = pdFALSE;
 	pxQueueParameters = ( xBlockingQueueParameters * ) pvParameters;
 
 	for( ;; )
-	{		
+	{
 		if( xQueueSend( pxQueueParameters->xQueue, ( void * ) &usValue, pxQueueParameters->xBlockTime ) != pdPASS )
 		{
 			sErrorEverOccurred = pdTRUE;
@@ -234,6 +234,10 @@ short sErrorEverOccurred = pdFALSE;
 			/* Increment the variable we are going to post next time round.  The
 			consumer will expect the numbers to	follow in numerical order. */
 			++usValue;
+
+			#if configUSE_PREEMPTION == 0
+				taskYIELD();
+			#endif
 		}
 	}
 }
@@ -248,7 +252,7 @@ short sErrorEverOccurred = pdFALSE;
 	pxQueueParameters = ( xBlockingQueueParameters * ) pvParameters;
 
 	for( ;; )
-	{	
+	{
 		if( xQueueReceive( pxQueueParameters->xQueue, &usData, pxQueueParameters->xBlockTime ) == pdPASS )
 		{
 			if( usData != usExpectedValue )
@@ -261,17 +265,26 @@ short sErrorEverOccurred = pdFALSE;
 			else
 			{
 				/* We have successfully received a message, so increment the
-				variable used to check we are still running. */	
+				variable used to check we are still running. */
 				if( sErrorEverOccurred == pdFALSE )
 				{
 					( *pxQueueParameters->psCheckVariable )++;
 				}
-							
+
 				/* Increment the value we expect to remove from the queue next time
 				round. */
 				++usExpectedValue;
-			}			
-		}		
+			}
+
+			#if configUSE_PREEMPTION == 0
+			{
+				if( pxQueueParameters->xBlockTime == 0 )
+				{
+					taskYIELD();
+				}
+			}
+			#endif
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -286,7 +299,7 @@ portBASE_TYPE xReturn = pdPASS, xTasks;
 	/* Not too worried about mutual exclusion on these variables as they are 16
 	bits and we are only reading them. We also only care to see if they have
 	changed or not.
-	
+
 	Loop through each check variable to and return pdFALSE if any are found not
 	to have changed since the last call. */
 

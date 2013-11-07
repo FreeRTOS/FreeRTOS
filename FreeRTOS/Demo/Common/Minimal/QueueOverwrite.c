@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -178,6 +178,10 @@ unsigned long ulValue, ulStatus = pdPASS, x;
 			error. */
 			ulLoopCounter++;
 		}
+
+		#if( configUSE_PREEMPTION == 0 )
+			taskYIELD();
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/
@@ -236,7 +240,7 @@ unsigned long ulRx;
 		case 1:
 			/* The queue already holds ulTx1.  Overwrite the value in the queue
 			with ulTx2. */
-			xQueueOverwriteFromISR( xISRQueue, &ulTx2, NULL );			
+			xQueueOverwriteFromISR( xISRQueue, &ulTx2, NULL );
 			break;
 
 		case 2:

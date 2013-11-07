@@ -166,9 +166,6 @@ in ticks using the portTICK_RATE_MS constant. */
 #define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
-/* The LED controlled by the 'check' software timer. */
-#define mainCHECK_LED						( 7 )
-
 /* The LED used by the comtest tasks.  mainCOM_TEST_LED + 1 is also used.
 See the comtest.c file for more information. */
 #define mainCOM_TEST_LED					( 4 )
@@ -194,8 +191,16 @@ test" interrupt. */
 #define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) ( configCPU_CLOCK_HZ >> 1 ) ) * 1000000000.0 ) )
 
 /* The number of LEDs that should be controlled by the flash software timer
-standard demo. */
-#define mainNUM_FLASH_TIMER_LEDS			( 3 )
+standard demo and the LED to be toggle by the check task.  The starter kit only
+has three LEDs so when the demo is configured to run on the starter kit there
+is one less flash timer so the check task can use the third LED. */
+#ifdef PIC32_STARTER_KIT
+	#define mainNUM_FLASH_TIMER_LEDS			( 2 )
+	#define mainCHECK_LED						( 2 )
+#else
+	#define mainNUM_FLASH_TIMER_LEDS			( 3 )
+	#define mainCHECK_LED						( 7 )
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -227,10 +232,6 @@ static void prvRegTestTask2( void *pvParameters );
 
 /* The queue used to send messages to the LCD task. */
 static xQueueHandle xLCDQueue;
-
-/* Flag used by prvRegTestTask1() and prvRegTestTask2() to indicate their status
-(pass/fail). */
-volatile unsigned long ulStatus1 = pdPASS;
 
 /* Variables incremented by prvRegTestTask1() and prvRegTestTask2() respectively on 
 each iteration of their function.  This is used to detect either task stopping
@@ -308,15 +309,15 @@ static void prvRegTestTask1( void *pvParameters )
 {
 extern void vRegTest1( volatile unsigned long * );
 
-	for( ;; )
-	{
-		/* Perform the register test function. */
-		vRegTest1( &ulStatus1 );
+	/* Avoid compiler warnings. */
+	( void ) pvParameters;
 
-		/* Increment the counter so the check task knows we are still 
-		running. */
-		ulRegTest1Cycles++;
-	}
+	/* Pass the address of the RegTest1 loop counter into the test function,
+	which is necessarily implemented in assembler. */
+	vRegTest1( &ulRegTest1Cycles );
+
+	/* vRegTest1 should never exit! */
+	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -324,15 +325,15 @@ static void prvRegTestTask2( void *pvParameters )
 {
 extern void vRegTest2( volatile unsigned long * );
 
-	for( ;; )
-	{
-		/* Perform the register test function. */
-		vRegTest2( &ulStatus1 );
+	/* Avoid compiler warnings. */
+	( void ) pvParameters;
 
-		/* Increment the counter so the check task knows we are still
-		running. */
-		ulRegTest2Cycles++;
-	}
+	/* Pass the address of the RegTest2 loop counter into the test function,
+	which is necessarily implemented in assembler. */
+	vRegTest2( &ulRegTest2Cycles );
+
+	/* vRegTest1 should never exit! */
+	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -347,12 +348,6 @@ static char cStringBuffer[ mainMAX_STRING_LENGTH ];
 /* The count of the high frequency timer interrupts. */
 extern unsigned long ulHighFrequencyTimerInterrupts;
 static xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
-
-	/* Has either register check 1 or 2 task discovered an error? */
-	if( ulStatus1 != pdPASS )
-	{
-		xMessage.pcMessage = "Error: Reg test1";
-	}
 
 	/* Check that the register test 1 task is still running. */
 	if( ulLastRegTest1Value == ulRegTest1Cycles )
@@ -380,10 +375,6 @@ static xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 	{
 		xMessage.pcMessage = "Error: Q Peek";
 	}
-	else if( xAreComTestTasksStillRunning() != pdTRUE )
-	{
-		xMessage.pcMessage = "Error: COM test";
-	}
 	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
 		xMessage.pcMessage = "Error: Blck time";
@@ -396,6 +387,12 @@ static xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 	{
 		xMessage.pcMessage = "Error: Int queue";
 	}
+	#if !defined(__32MX795F512L__)
+		else if( xAreComTestTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "Error: COM test";
+		}
+	#endif
 
 	if( xMessage.pcMessage != cStringBuffer )
 	{

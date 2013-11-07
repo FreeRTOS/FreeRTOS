@@ -229,7 +229,7 @@ volatile unsigned long ul = 0;
 	( void ) pcFile;
 	( void ) ulLine;
 
-	taskENTER_CRITICAL();
+	__asm volatile( "di" );
 	{
 		/* Set ul to a non-zero value using the debugger to step out of this
 		function. */
@@ -238,5 +238,5 @@ volatile unsigned long ul = 0;
 			portNOP();
 		}
 	}
-	taskEXIT_CRITICAL();
+	__asm volatile( "ei" );
 }

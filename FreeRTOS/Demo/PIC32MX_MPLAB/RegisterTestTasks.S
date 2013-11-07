@@ -1,5 +1,5 @@
-/*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+	/*
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -64,7 +64,7 @@
 */
 
 
-#include <p32xxxx.h>
+#include <xc.h>
 #include <sys/asm.h>
 
 	.set	nomips16
@@ -74,17 +74,30 @@
  	.global	vRegTest1
  	.global vRegTest2
 
+	.set	noreorder
+	.set 	noat
+	.ent	error_loop
+
+/* Reg test tasks call the error loop when they find an error.  Sitting in the
+tight error loop prevents them incrementing their ulRegTestnCycles counter, and
+so allows the check softwate timer to know an error has been found. */
+error_loop:
+	b		.
+	nop
+
+	.end error_loop
+
 
 	.set	noreorder
 	.set 	noat
 	.ent	vRegTest1
 
-/* Address of $4 ulStatus1 is held in A0, so don't mess with the value of $4 */
-
 vRegTest1:
+	/* Fill the registers with known values. */
 	addiu	$1, $0, 0x11
 	addiu	$2, $0, 0x12
 	addiu	$3, $0, 0x13
+	/* $4 contains the address of the loop counter - don't mess with $4. */
 	addiu	$5, $0, 0x15
 	addiu	$6, $0, 0x16
 	addiu	$7, $0, 0x17
@@ -102,113 +115,209 @@ vRegTest1:
 	addiu	$19, $0, 0x119
 	addiu	$20, $0, 0x120
 	addiu	$21, $0, 0x121
-	addiu	$22, $0, 0x122
 	addiu	$23, $0, 0x123
 	addiu	$24, $0, 0x124
 	addiu	$25, $0, 0x125
 	addiu	$30, $0, 0x130
+	addiu	$22, $0, 0x131
+	mthi	$22
+	addiu	$22, $0, 0x132
+	mtlo	$22
 
-	addiu	$1, $1, -0x11
-	beq		$1, $0, .+12
+vRegTest1Loop:
+	/* Check each register maintains the value assigned to it for the lifetime
+	of the task. */
+	addiu	$22, $0, 0x00
+	addiu	$22, $1, -0x11
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$2, $2, -0x12
-	beq		$2, $0, .+12
+	/* The register value was not that expected.  Jump to the error loop so the
+	cycle counter stops incrementing. */
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$3, $3, -0x13
-	beq		$3, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $2, -0x12
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$5, $5, -0x15
-	beq		$5, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$6, $6, -0x16
-	beq		$6, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $3, -0x13
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$7, $7, -0x17
-	beq		$7, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$8, $8, -0x18
-	beq		$8, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $5, -0x15
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$9, $9, -0x19
-	beq		$9, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$10, $10, -0x110
-	beq		$10, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $6, -0x16
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$11, $11, -0x111
-	beq		$11, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$12, $12, -0x112
-	beq		$12, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $7, -0x17
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$13, $13, -0x113
-	beq		$13, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$14, $14, -0x114
-	beq		$14, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $8, -0x18
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$15, $15, -0x115
-	beq		$15, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$16, $16, -0x116
-	beq		$16, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $9, -0x19
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$17, $17, -0x117
-	beq		$17, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$18, $18, -0x118
-	beq		$18, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $10, -0x110
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$19, $19, -0x119
-	beq		$19, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$20, $20, -0x120
-	beq		$20, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $11, -0x111
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$21, $21, -0x121
-	beq		$21, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$22, $22, -0x122
-	beq		$22, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $12, -0x112
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$23, $23, -0x123
-	beq		$23, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$24, $24, -0x124
-	beq		$24, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $13, -0x113
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$25, $25, -0x125
-	beq		$25, $0, .+12
+	b		error_loop
 	nop
-	sw		$0,	0($4)
-	addiu	$30, $30, -0x130
-	beq		$30, $0, .+12
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $14, -0x114
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	jr		$31
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $15, -0x115
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $16, -0x116
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $17, -0x117
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $18, -0x118
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $19, -0x119
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $20, -0x120
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $21, -0x121
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $23, -0x123
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $24, -0x124
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $25, -0x125
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $30, -0x130
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	mfhi	$22
+	addiu	$22, $22, -0x131
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	mflo	$22, $ac1
+	addiu	$22, $22, -0x132
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	/* No errors detected.  Increment the loop count so the check timer knows
+	this task is still running without error, then loop back to do it all
+	again.  The address of the loop counter is in $4. */
+	lw		$22, 0( $4 )
+	addiu	$22, $22, 0x01
+	sw		$22, 0( $4 )
+	b		vRegTest1Loop
 	nop
 
 	.end	vRegTest1
@@ -219,135 +328,229 @@ vRegTest1:
 	.ent	vRegTest2
 
 vRegTest2:
+	addiu	$1, $0, 0x21
+	addiu	$2, $0, 0x22
+	addiu	$3, $0, 0x23
+	/* $4 contains the address of the loop counter - don't mess with $4. */
+	addiu	$5, $0, 0x25
+	addiu	$6, $0, 0x26
+	addiu	$7, $0, 0x27
+	addiu	$8, $0, 0x28
+	addiu	$9, $0, 0x29
+	addiu	$10, $0, 0x210
+	addiu	$11, $0, 0x211
+	addiu	$12, $0, 0x212
+	addiu	$13, $0, 0x213
+	addiu	$14, $0, 0x214
+	addiu	$15, $0, 0x215
+	addiu	$16, $0, 0x216
+	addiu	$17, $0, 0x217
+	addiu	$18, $0, 0x218
+	addiu	$19, $0, 0x219
+	addiu	$20, $0, 0x220
+	addiu	$21, $0, 0x221
+	addiu	$23, $0, 0x223
+	addiu	$24, $0, 0x224
+	addiu	$25, $0, 0x225
+	addiu	$30, $0, 0x230
+	addiu	$22, $0, 0x231
+	mthi	$22
+	addiu	$22, $0, 0x232
+	mtlo	$22
 
-	addiu	$1, $0, 0x10
-	addiu	$2, $0, 0x20
-	addiu	$3, $0, 0x30
-	addiu	$5, $0, 0x50
-	addiu	$6, $0, 0x60
-	addiu	$7, $0, 0x70
-	addiu	$8, $0, 0x80
-	addiu	$9, $0, 0x90
-	addiu	$10, $0, 0x100
-	addiu	$11, $0, 0x110
-	addiu	$12, $0, 0x120
-	addiu	$13, $0, 0x130
-	addiu	$14, $0, 0x140
-	addiu	$15, $0, 0x150
-	addiu	$16, $0, 0x160
-	addiu	$17, $0, 0x170
-	addiu	$18, $0, 0x180
-	addiu	$19, $0, 0x190
-	addiu	$20, $0, 0x200
-	addiu	$21, $0, 0x210
-	addiu	$22, $0, 0x220
-	addiu	$23, $0, 0x230
-	addiu	$24, $0, 0x240
-	addiu	$25, $0, 0x250
-	addiu	$30, $0, 0x300
-
-	addiu	$1, $1, -0x10
-	beq		$1, $0, .+12
+vRegTest2Loop:
+	addiu	$22, $0, 0x00
+	addiu	$22, $1, -0x21
+	beq		$22, $0, .+16
 	nop
-	sw		$0,	0($4)
-	addiu	$2, $2, -0x20
-	beq		$2, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$3, $3, -0x30
-	beq		$3, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$5, $5, -0x50
-	beq		$5, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$6, $6, -0x60
-	beq		$6, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$7, $7, -0x70
-	beq		$7, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$8, $8, -0x80
-	beq		$8, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$9, $9, -0x90
-	beq		$9, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$10, $10, -0x100
-	beq		$10, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$11, $11, -0x110
-	beq		$11, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$12, $12, -0x120
-	beq		$12, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$13, $13, -0x130
-	beq		$13, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$14, $14, -0x140
-	beq		$14, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$15, $15, -0x150
-	beq		$15, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$16, $16, -0x160
-	beq		$16, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$17, $17, -0x170
-	beq		$17, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$18, $18, -0x180
-	beq		$18, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$19, $19, -0x190
-	beq		$19, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$20, $20, -0x200
-	beq		$20, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$21, $21, -0x210
-	beq		$21, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$22, $22, -0x220
-	beq		$22, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$23, $23, -0x230
-	beq		$23, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$24, $24, -0x240
-	beq		$24, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$25, $25, -0x250
-	beq		$25, $0, .+12
-	nop
-	sw		$0,	0($4)
-	addiu	$30, $30, -0x300
-	beq		$30, $0, .+12
-	nop
-	sw		$0,	0($4)
-	jr		$31
+	b		error_loop
 	nop
 
-	.end vRegTest2
+	addiu	$22, $0, 0x00
+	addiu	$22, $2, -0x22
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $3, -0x23
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $5, -0x25
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $6, -0x26
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $7, -0x27
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $8, -0x28
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $9, -0x29
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $10, -0x210
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $11, -0x211
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $12, -0x212
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $13, -0x213
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $14, -0x214
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $15, -0x215
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $16, -0x216
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $17, -0x217
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $18, -0x218
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $19, -0x219
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $20, -0x220
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $21, -0x221
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $23, -0x223
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $24, -0x224
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $25, -0x225
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	addiu	$22, $0, 0x00
+	addiu	$22, $30, -0x230
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	mfhi	$22
+	addiu	$22, $22, -0x231
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	mflo	$22, $ac1
+	addiu	$22, $22, -0x232
+	beq		$22, $0, .+16
+	nop
+	b		error_loop
+	nop
+
+	/* No errors detected.  Increment the loop count so the check timer knows
+	this task is still running without error, then loop back to do it all
+	again.  The address of the loop counter is in $4. */
+	lw		$22, 0( $4 )
+	addiu	$22, $22, 0x01
+	sw		$22, 0( $4 )
+	b		vRegTest2Loop
+	nop
+
+	.end	vRegTest2
+
+
 

@@ -106,7 +106,7 @@ static void prvLCDClear( void );
 
 /* Brief delay to permit the LCD to catch up with commands. */
 #define lcdVERY_SHORT_DELAY	( 1 )
-#define lcdSHORT_DELAY		( 4 / portTICK_RATE_MS )
+#define lcdSHORT_DELAY		( 8 / portTICK_RATE_MS )
 #define lcdLONG_DELAY		( 15 / portTICK_RATE_MS )
 
 /* LCD specific definitions. */

@@ -112,7 +112,7 @@ unsigned long ulStatus;
 	unsigned long ulCacheStatus;
 #endif
 
-	/* Disable interrupts - not taskDISABLE_INTERRUPTS() cannot be used here as
+	/* Disable interrupts - note taskDISABLE_INTERRUPTS() cannot be used here as
 	FreeRTOS does not globally disable interrupt. */
 	ulStatus = _CP0_GET_STATUS();
 	_CP0_SET_STATUS( ulStatus & ~hwGLOBAL_INTERRUPT_BIT );
@@ -227,7 +227,7 @@ __OSCCONbits_t xOSCCONBits;
 
 static void prvConfigureWaitStates( void )
 {
-unsigned long ulInterruptStatus, ulSystemClock = configCPU_CLOCK_HZ - 1;
+unsigned long ulSystemClock = configCPU_CLOCK_HZ - 1;
 unsigned long ulWaitStates, ulCHECONVal;
 
 	/* 1 wait state for every hwMAX_FLASH_SPEED MHz. */

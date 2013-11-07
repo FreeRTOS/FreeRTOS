@@ -145,7 +145,7 @@ file_037=no
 file_038=yes
 [FILE_INFO]
 file_000=main.c
-file_001=ParTest\ParTest.c
+file_001=ParTest\ParTest_Explorer16.c
 file_002=RegisterTestTasks.s
 file_003=lcd.c
 file_004=serial\serial.c

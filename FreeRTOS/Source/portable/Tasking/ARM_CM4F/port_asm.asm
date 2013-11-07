@@ -64,7 +64,7 @@
 	.global vPortEnableVFP
 	.global ulPortSetInterruptMask
 	.global vPortClearInterruptMask
-	
+
 ;-----------------------------------------------------------
 
 	.section .text
@@ -89,13 +89,13 @@ _vector_14: .type func
 	;Save the new top of stack into the first member of the TCB.
 	str r0, [r2]
 
-	stmdb sp!, {r3, r14}
+	stmdb sp!, {r3}
 	ldr.w r0, =ulMaxSyscallInterruptPriorityConst
 	msr basepri, r0
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
-	ldmia sp!, {r3, r14}
+	ldmia sp!, {r3}
 
 	;The first item in pxCurrentTCB is the task top of stack.
 	ldr r1, [r3]
@@ -141,13 +141,13 @@ _lc_ref__vector_pp_14: .type func
 	;Save the new top of stack into the first member of the TCB.
 	str r0, [r2]
 
-	stmdb sp!, {r3, r14}
+	stmdb sp!, {r3}
 	ldr.w r0, =ulMaxSyscallInterruptPriorityConst
 	msr basepri, r0
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
-	ldmia sp!, {r3, r14}
+	ldmia sp!, {r3}
 
 	;The first item in pxCurrentTCB is the task top of stack.
 	ldr r1, [r3]
@@ -249,4 +249,4 @@ vPortClearInterruptMask:
 ;-----------------------------------------------------------
 
 	.end
-	
+

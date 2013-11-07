@@ -208,6 +208,12 @@ portBASE_TYPE xPortStartScheduler( void )
 
 	/* Start the first task. */
 	vPortStartFirstTask();
+	
+	/* Should never get here as the tasks will now be executing!  Call the task
+	exit error function to prevent compiler warnings about a static function
+	not being called in the case that the application writer overrides this
+	functionality by defining configTASK_RETURN_ADDRESS. */
+	prvTaskExitError();
 
 	/* Should not get here! */
 	return 0;

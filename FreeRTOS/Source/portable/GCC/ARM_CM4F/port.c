@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -353,6 +353,12 @@ portBASE_TYPE xPortStartScheduler( void )
 	/* Start the first task. */
 	prvPortStartFirstTask();
 
+	/* Should never get here as the tasks will now be executing!  Call the task
+	exit error function to prevent compiler warnings about a static function
+	not being called in the case that the application writer overrides this
+	functionality by defining configTASK_RETURN_ADDRESS. */
+	prvTaskExitError();
+
 	/* Should not get here! */
 	return 0;
 }
@@ -446,13 +452,13 @@ void xPortPendSVHandler( void )
 	"										\n"
 	"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
 	"										\n"
-	"	stmdb sp!, {r3, r14}				\n"
+	"	stmdb sp!, {r3}						\n"
 	"	mov r0, %0 							\n"
 	"	msr basepri, r0						\n"
 	"	bl vTaskSwitchContext				\n"
 	"	mov r0, #0							\n"
 	"	msr basepri, r0						\n"
-	"	ldmia sp!, {r3, r14}				\n"
+	"	ldmia sp!, {r3}						\n"
 	"										\n"
 	"	ldr r1, [r3]						\n" /* The first item in pxCurrentTCB is the task top of stack. */
 	"	ldr r0, [r1]						\n"
@@ -592,23 +598,23 @@ void xPortSysTickHandler( void )
 			if( ( portNVIC_SYSTICK_CTRL_REG & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
 				unsigned long ulCalculatedLoadValue;
-				
+
 				/* The tick interrupt has already executed, and the SysTick
 				count reloaded with ulReloadValue.  Reset the
 				portNVIC_SYSTICK_LOAD_REG with whatever remains of this tick
 				period. */
 				ulCalculatedLoadValue = ( ulTimerCountsForOneTick - 1UL ) - ( ulReloadValue - portNVIC_SYSTICK_CURRENT_VALUE_REG );
 
-				/* Don't allow a tiny value, or values that have somehow 
-				underflowed because the post sleep hook did something 
+				/* Don't allow a tiny value, or values that have somehow
+				underflowed because the post sleep hook did something
 				that took too long. */
 				if( ( ulCalculatedLoadValue < ulStoppedTimerCompensation ) || ( ulCalculatedLoadValue > ulTimerCountsForOneTick ) )
 				{
 					ulCalculatedLoadValue = ( ulTimerCountsForOneTick - 1UL );
 				}
-				
+
 				portNVIC_SYSTICK_LOAD_REG = ulCalculatedLoadValue;
-				
+
 				/* The tick interrupt handler will already have pended the tick
 				processing in the kernel.  As the pending tick will be
 				processed as soon as this function exits, the tick value

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -99,13 +99,13 @@ xPortPendSVHandler:
 	/* Save the new top of stack into the first member of the TCB. */
 	str r0, [r2]
 
-	stmdb sp!, {r3, r14}
+	stmdb sp!, {r3}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
-	ldmia sp!, {r3, r14}
+	ldmia sp!, {r3}
 
 	/* The first item in pxCurrentTCB is the task top of stack. */
 	ldr r1, [r3]

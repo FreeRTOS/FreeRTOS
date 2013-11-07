@@ -74,7 +74,7 @@ extern "C" {
 #endif
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -104,7 +104,7 @@ extern "C" {
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			8
 #define portSTACK_GROWTH			-1
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
@@ -112,11 +112,11 @@ extern "C" {
 #define portALL_IPL_BITS			( 0x3fUL << portIPL_SHIFT )
 #define portSW0_BIT					( 0x01 << 8 )
 
-/* This clears the IPL bits, then sets them to 
-configMAX_SYSCALL_INTERRUPT_PRIORITY.  	An extra check is performed if 
-configASSERT() is defined to ensure an assertion handler does not inadvertently 
-attempt to lower the IPL when the call to assert was triggered because the IPL 
-value was found to be above	configMAX_SYSCALL_INTERRUPT_PRIORITY when an ISR
+/* This clears the IPL bits, then sets them to
+configMAX_SYSCALL_INTERRUPT_PRIORITY.  An extra check is performed if
+configASSERT() is defined to ensure an assertion handler does not inadvertently
+attempt to lower the IPL when the call to assert was triggered because the IPL
+value was found to be above configMAX_SYSCALL_INTERRUPT_PRIORITY when an ISR
 safe FreeRTOS API function was executed.  ISR safe FreeRTOS API functions are
 those that end in FromISR.  FreeRTOS maintains a separate interrupt API to
 ensure API function and interrupt entry is as fast and as simple as possible. */
@@ -129,7 +129,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 		ulStatus = _CP0_GET_STATUS();											\
 																				\
 		/* Is the current IPL below configMAX_SYSCALL_INTERRUPT_PRIORITY? */	\
-		if( ( ( ulStatus & portALL_IPL_BITS ) >> portIPL_SHIFT ) < configMAX_SYSCALL_INTERRUPT_PRIORITY )	\
+		if( ( ( ulStatus & portALL_IPL_BITS ) >> portIPL_SHIFT ) < configMAX_SYSCALL_INTERRUPT_PRIORITY ) \
 		{																		\
 			ulStatus &= ~portALL_IPL_BITS;										\
 			_CP0_SET_STATUS( ( ulStatus | ( configMAX_SYSCALL_INTERRUPT_PRIORITY << portIPL_SHIFT ) ) ); \
@@ -200,13 +200,10 @@ unsigned long ulCause;							\
 	_CP0_SET_CAUSE( ulCause );					\
 }
 
-#ifdef configASSERT
-	#define portCURRENT_INTERRUPT_PRIORITY ( ( _CP0_GET_STATUS() & portALL_IPL_BITS ) >> portIPL_SHIFT )
-	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( portCURRENT_INTERRUPT_PRIORITY <= configMAX_SYSCALL_INTERRUPT_PRIORITY )
-#endif /* configASSERT */
+#define portCURRENT_INTERRUPT_PRIORITY ( ( _CP0_GET_STATUS() & portALL_IPL_BITS ) >> portIPL_SHIFT )
+#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( portCURRENT_INTERRUPT_PRIORITY <= configMAX_SYSCALL_INTERRUPT_PRIORITY )
 
-
-#define portNOP()	asm volatile ( 	"nop" )
+#define portNOP()	__asm volatile ( "nop" )
 
 /*-----------------------------------------------------------*/
 

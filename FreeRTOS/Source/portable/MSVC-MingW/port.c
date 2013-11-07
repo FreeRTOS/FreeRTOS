@@ -68,6 +68,12 @@
 #include "task.h"
 #include <stdio.h>
 
+#ifdef __GNUC__
+	#include "mmsystem.h"
+#else
+	#pragma comment(lib, "winmm.lib")
+#endif
+
 #define portMAX_INTERRUPTS				( ( unsigned long ) sizeof( unsigned long ) * 8UL ) /* The number of bits in an unsigned long. */
 #define portNO_CRITICAL_NESTING 		( ( unsigned long ) 0 )
 
@@ -91,6 +97,12 @@ static void prvProcessSimulatedInterrupts( void );
  */
 static unsigned long prvProcessYieldInterrupt( void );
 static unsigned long prvProcessTickInterrupt( void );
+
+/*
+ * Called when the process exits to let Windows know the high timer resolution
+ * is no longer required.
+ */
+static BOOL WINAPI prvEndProcess( DWORD dwCtrlType );
 
 /*-----------------------------------------------------------*/
 
@@ -140,7 +152,23 @@ extern void *pxCurrentTCB;
 
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 {
-portTickType xMinimumWindowsBlockTime = ( portTickType ) 20;
+portTickType xMinimumWindowsBlockTime;
+TIMECAPS xTimeCaps;
+
+	/* Set the timer resolution to the maximum possible. */
+	if( timeGetDevCaps( &xTimeCaps, sizeof( xTimeCaps ) ) == MMSYSERR_NOERROR )
+	{
+		xMinimumWindowsBlockTime = ( portTickType ) xTimeCaps.wPeriodMin;
+		timeBeginPeriod( xTimeCaps.wPeriodMin );
+
+		/* Register an exit handler so the timeBeginPeriod() function can be
+		matched with a timeEndPeriod() when the application exits. */
+		SetConsoleCtrlHandler( prvEndProcess, TRUE );
+	}
+	else
+	{
+		xMinimumWindowsBlockTime = ( portTickType ) 20;
+	}
 
 	/* Just to prevent compiler warnings. */
 	( void ) lpParameter;
@@ -181,6 +209,23 @@ portTickType xMinimumWindowsBlockTime = ( portTickType ) 20;
 		MSVC complains if you put it in. */
 		return 0;
 	#endif
+}
+/*-----------------------------------------------------------*/
+
+static BOOL WINAPI prvEndProcess( DWORD dwCtrlType )
+{
+TIMECAPS xTimeCaps;
+
+	( void ) dwCtrlType;
+
+	if( timeGetDevCaps( &xTimeCaps, sizeof( xTimeCaps ) ) == MMSYSERR_NOERROR )
+	{
+		/* Match the call to timeBeginPeriod( xTimeCaps.wPeriodMin ) made when
+		the process started with a timeEndPeriod() as the process exits. */
+		timeEndPeriod( xTimeCaps.wPeriodMin );
+	}
+
+	return pdPASS;
 }
 /*-----------------------------------------------------------*/
 

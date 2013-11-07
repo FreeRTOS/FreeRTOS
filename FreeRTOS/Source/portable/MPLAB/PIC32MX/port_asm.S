@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -116,29 +116,27 @@ vPortStartFirstTask:
 
 /*******************************************************************/
 
- 	.set		noreorder
+	.set		noreorder
 	.set 		noat
- 	.ent		vPortYieldISR
+	.ent		vPortYieldISR
 
 vPortYieldISR:
 
 	/* Make room for the context. First save the current status so it can be
 	manipulated, and the cause and EPC registers so thier original values are
 	captured. */
-	mfc0		k0, _CP0_CAUSE
-	addiu		sp,	sp, -portCONTEXT_SIZE
+	addiu		sp, sp, -portCONTEXT_SIZE
 	mfc0		k1, _CP0_STATUS
 
-	/* Also save s6 and s5 so we can use them during this interrupt.  Any
-	nesting interrupts should maintain the values of these registers
-	across the ISR. */
+	/* Also save s6 and s5 so they can be used.  Any nesting interrupts should
+	maintain the values of these registers across the ISR. */
 	sw			s6, 44(sp)
 	sw			s5, 40(sp)
 	sw			k1, portSTATUS_STACK_LOCATION(sp)
 
-	/* Interrupts above the kernel priority are going to be re-enabled. */
-	srl			k0, k0, 0xa
-	ins 		k1, k0, 10, 6
+	/* Prepare to re-enabled interrupt above the kernel priority. */
+	ins 		k1, zero, 10, 6
+	ori			k1, k1, ( configMAX_SYSCALL_INTERRUPT_PRIORITY << 10 )
 	ins			k1, zero, 1, 4
 
 	/* s5 is used as the frame pointer. */
@@ -159,16 +157,16 @@ vPortYieldISR:
 	after interrupts are enabled. */
 	mfc0 		s6, _CP0_EPC
 
-	/* Re-enable interrupts. */
+	/* Re-enable interrupts above configMAX_SYSCALL_INTERRUPT_PRIORITY. */
 	mtc0		k1, _CP0_STATUS
 
 	/* Save the context into the space just created.  s6 is saved again
 	here as it now contains the EPC value. */
-	sw			ra,	120(s5)
+	sw			ra, 120(s5)
 	sw			s8, 116(s5)
 	sw			t9, 112(s5)
-	sw			t8,	108(s5)
-	sw			t7,	104(s5)
+	sw			t8, 108(s5)
+	sw			t7, 104(s5)
 	sw			t6, 100(s5)
 	sw			t5, 96(s5)
 	sw			t4, 92(s5)
@@ -185,7 +183,7 @@ vPortYieldISR:
 	sw			s7, 48(s5)
 	sw			s6, portEPC_STACK_LOCATION(s5)
 	/* s5 and s6 has already been saved. */
-	sw			s4,	36(s5)
+	sw			s4, 36(s5)
 	sw			s3, 32(s5)
 	sw			s2, 28(s5)
 	sw			s1, 24(s5)
@@ -209,18 +207,21 @@ vPortYieldISR:
 	is below configMAX_SYSCALL_INTERRUPT_PRIORITY - so this can only ever
 	raise the IPL value and never lower it. */
 	di
+	ehb
 	mfc0		s7, _CP0_STATUS
-	ins 		s7, $0, 10, 6
+	ins 		s7, zero, 10, 6
 	ori			s6, s7, ( configMAX_SYSCALL_INTERRUPT_PRIORITY << 10 ) | 1
 
 	/* This mtc0 re-enables interrupts, but only above
 	configMAX_SYSCALL_INTERRUPT_PRIORITY. */
 	mtc0		s6, _CP0_STATUS
+	ehb
 
 	/* Clear the software interrupt in the core. */
 	mfc0		s6, _CP0_CAUSE
 	ins			s6, zero, 8, 1
 	mtc0		s6, _CP0_CAUSE
+	ehb
 
 	/* Clear the interrupt in the interrupt controller. */
 	la			s6, IFS0CLR
@@ -232,6 +233,7 @@ vPortYieldISR:
 
 	/* Clear the interrupt mask again.  The saved status value is still in s7. */
 	mtc0		s7, _CP0_STATUS
+	ehb
 
 	/* Restore the stack pointer from the TCB. */
 	la			s0, pxCurrentTCB
@@ -273,6 +275,7 @@ vPortYieldISR:
 
 	/* Protect access to the k registers, and others. */
 	di
+	ehb
 
 	/* Set nesting back to zero.  As the lowest priority interrupt this
 	interrupt cannot have nested. */
@@ -290,10 +293,11 @@ vPortYieldISR:
 	lw			k0, portEPC_STACK_LOCATION(sp)
 
 	/* Remove stack frame. */
-	addiu		sp,	sp,	portCONTEXT_SIZE
+	addiu		sp, sp, portCONTEXT_SIZE
 
 	mtc0		k1, _CP0_STATUS
 	mtc0 		k0, _CP0_EPC
+	ehb
 	eret
 	nop
 

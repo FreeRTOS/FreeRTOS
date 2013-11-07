@@ -1473,7 +1473,7 @@ signed portBASE_TYPE xQueueCRReceive( xQueueHandle xQueue, void *pvBuffer, portT
  * these functions directly.
  */
 xQueueHandle xQueueCreateMutex( unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
-xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount ) PRIVILEGED_FUNCTION;
+xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxMaxCount, unsigned portBASE_TYPE uxInitialCount ) PRIVILEGED_FUNCTION;
 void* xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;
 
 /*

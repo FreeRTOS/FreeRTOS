@@ -534,11 +534,14 @@ xQueueHandle xReturn = NULL;
 
 #if ( configUSE_COUNTING_SEMAPHORES == 1 )
 
-	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_TYPE uxInitialCount )
+	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxMaxCount, unsigned portBASE_TYPE uxInitialCount )
 	{
 	xQueueHandle xHandle;
 
-		xHandle = xQueueGenericCreate( uxCountValue, queueSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
+		configASSERT( uxMaxCount != 0 );
+		configASSERT( uxInitialCount <= uxMaxCount );
+
+		xHandle = xQueueGenericCreate( uxMaxCount, queueSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
 
 		if( xHandle != NULL )
 		{

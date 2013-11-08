@@ -191,6 +191,10 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
+	/* Remove compiler warning in the case that configASSERT() is not 
+	defined. */
+	( void ) pvParameters;
+
 	/* Check the task parameter is as expected. */
 	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_SEND_PARAMETER );
 
@@ -217,6 +221,10 @@ const unsigned long ulValueToSend = 100UL;
 static void prvQueueReceiveTask( void *pvParameters )
 {
 unsigned long ulReceivedValue;
+
+	/* Remove compiler warning in the case that configASSERT() is not 
+	defined. */
+	( void ) pvParameters;
 
 	/* Check the task parameter is as expected. */
 	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_RECEIVE_PARAMETER );

@@ -190,13 +190,19 @@ int main_full( void )
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	vStartRecursiveMutexTasks();
-	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartRecursiveMutexTasks();	
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );	
 	xTaskCreate( prvDemoQueueSpaceFunctions, ( signed char * ) "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+
+	#if( configUSE_PREEMPTION != 0  )
+	{
+		/* Don't expect these tasks to pass when preemption is not used. */
+		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	}
+	#endif
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation.  This then allows them to 
@@ -234,11 +240,17 @@ const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
 		/* Check the standard demo tasks are running without error. */
-		if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
+		#if( configUSE_PREEMPTION != 0 )
 		{
-			pcStatusMessage = "Error: TimerDemo";
+			/* These tasks are only created when preemption is used. */
+			if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
+			{
+				pcStatusMessage = "Error: TimerDemo";
+			}
 		}
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		#endif
+
+	    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 			pcStatusMessage = "Error: IntMath";
 	    }	
@@ -280,15 +292,15 @@ const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
 		}
 		else if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
 		{
-			pcStatusMessage = "Error: Dynamic\r\n";
+			pcStatusMessage = "Error: Dynamic";
 		}
 		else if( xAreQueueSetTasksStillRunning() != pdPASS )
 		{
-			pcStatusMessage = "Error: Queue set\r\n";
+			pcStatusMessage = "Error: Queue set";
 		}
 		else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 		{
-			pcStatusMessage = "Error: Queue overwrite\r\n";
+			pcStatusMessage = "Error: Queue overwrite";
 		}
 
 		/* This is the only task that uses stdout so its ok to call printf() 
@@ -371,7 +383,12 @@ void vFullDemoTickHookFunction( void )
 {
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
-	vTimerPeriodicISRTests();
+	#if( configUSE_PREEMPTION != 0 )
+	{
+		/* Only created when preemption is used. */
+		vTimerPeriodicISRTests();
+	}
+	#endif
 
 	/* Call the periodic queue overwrite from ISR demo. */
 	vQueueOverwritePeriodicISRDemo();
@@ -521,6 +538,10 @@ unsigned portBASE_TYPE uxReturn, x;
 
 		/* The queue is full, start again. */
 		xQueueReset( xQueue );
+
+		#if( configUSE_PREEMPTION == 0 )
+			taskYIELD();
+		#endif
 	}
 }
 

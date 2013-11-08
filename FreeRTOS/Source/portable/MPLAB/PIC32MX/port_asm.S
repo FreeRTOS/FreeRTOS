@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -123,8 +123,7 @@ vPortStartFirstTask:
 vPortYieldISR:
 
 	/* Make room for the context. First save the current status so it can be
-	manipulated, and the cause and EPC registers so thier original values are
-	captured. */
+	manipulated. */
 	addiu		sp, sp, -portCONTEXT_SIZE
 	mfc0		k1, _CP0_STATUS
 

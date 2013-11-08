@@ -1,3 +1,9 @@
+Changes between V1.0.1 and V1.0.2
+
+	+ Increase the size of the critical section in the function that obtains a
+	  private port number.
+	+ Add defaults for more trace macros.
+
 Changes between V1.0.0 and V1.0.1
 
 	+ Set the broadcast flag in DHCP messages.

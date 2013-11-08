@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+UDP V1.0.1 (C) 2013 Real Time Engineers ltd.
+ * FreeRTOS+UDP V1.0.2 (C) 2013 Real Time Engineers ltd.
  * All rights reserved
  *
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
@@ -54,6 +54,7 @@
 
 /* FreeRTOS+UDP includes. */
 #include "FreeRTOS_UDP_IP.h"
+#include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_Sockets.h"
 #include "NetworkBufferManagement.h"
 
@@ -159,10 +160,10 @@ extern void EMAC_SetNextPacketToSend( uint8_t * pucBuffer );
 			{
 				/* Assign the buffer to the Tx descriptor that is now known to
 				be free. */
-				EMAC_SetNextPacketToSend( pxNetworkBuffer->pucBuffer );
+				EMAC_SetNextPacketToSend( pxNetworkBuffer->pucEthernetBuffer );
 
 				/* The EMAC now owns the buffer. */
-				pxNetworkBuffer->pucBuffer = NULL;
+				pxNetworkBuffer->pucEthernetBuffer = NULL;
 
 				/* Initiate the Tx. */
 				EMAC_StartTransmitNextBuffer( pxNetworkBuffer->xDataLength );
@@ -255,7 +256,7 @@ extern uint8_t *EMAC_NextPacketToRead( void );
 
 				if( pxNetworkBuffer != NULL )
 				{
-					pxNetworkBuffer->pucBuffer = EMAC_NextPacketToRead();
+					pxNetworkBuffer->pucEthernetBuffer = EMAC_NextPacketToRead();
 					pxNetworkBuffer->xDataLength = xDataLength;
 					xRxEvent.pvData = ( void * ) pxNetworkBuffer;
 

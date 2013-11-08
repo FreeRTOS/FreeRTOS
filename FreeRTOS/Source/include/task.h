@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -81,7 +81,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V7.5.3"
+#define tskKERNEL_VERSION_NUMBER "V7.6.0"
 
 /**
  * task. h
@@ -1158,8 +1158,8 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
  * the scheduler remaining suspended for an extended period.
  *
  * @param pxTaskStatusArray A pointer to an array of xTaskStatusType structures.
- * The array must contain at least one xTaskStatusType structure for each task 
- * that is under the control of the RTOS.  The number of tasks under the control 
+ * The array must contain at least one xTaskStatusType structure for each task
+ * that is under the control of the RTOS.  The number of tasks under the control
  * of the RTOS can be determined using the uxTaskGetNumberOfTasks() API function.
  *
  * @param uxArraySize The size of the array pointed to by the pxTaskStatusArray

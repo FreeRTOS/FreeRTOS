@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+UDP V1.0.1 (C) 2013 Real Time Engineers ltd.
+ * FreeRTOS+UDP V1.0.2 (C) 2013 Real Time Engineers ltd.
  * All rights reserved
  *
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
@@ -51,6 +51,7 @@
 
 /* FreeRTOS+UDP includes. */
 #include "FreeRTOS_UDP_IP.h"
+#include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_Sockets.h"
 #include "NetworkBufferManagement.h"
 
@@ -123,7 +124,7 @@ portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetw
 {
 extern void vEMACCopyWrite( uint8_t * pucBuffer, uint16_t usLength );
 
-	vEMACCopyWrite( pxNetworkBuffer->pucBuffer, pxNetworkBuffer->xDataLength );
+	vEMACCopyWrite( pxNetworkBuffer->pucEthernetBuffer, pxNetworkBuffer->xDataLength );
 
 	/* Finished with the network buffer. */
 	vNetworkBufferRelease( pxNetworkBuffer );

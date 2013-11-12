@@ -2549,7 +2549,7 @@ tskTCB *pxNewTCB;
 
 				#if ( portSTACK_GROWTH > 0 )
 				{
-					ppxTaskStatusArray[ uxTask ].usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxEndOfStack );
+					pxTaskStatusArray[ uxTask ].usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( unsigned char * ) pxNextTCB->pxEndOfStack );
 				}
 				#else
 				{

@@ -12,8 +12,11 @@
         <options>
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.components.display.aat31xx" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.components.display.ili93xx" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.components.ethernet_phy.ksz8051mnl" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.drivers.gmac" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.smc" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.utils.cmsis.sam4e.source.template" value="Add" config="" content-id="Atmel.ASF" />
         </options>
@@ -160,6 +163,16 @@
           <file path="src/ASF/sam/drivers/gmac/gmac.h" framework="" version="3.11.0" source="sam\drivers\gmac\gmac.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/Config/conf_eth.h" framework="" version="3.11.0" source="sam\drivers\gmac\module_config\conf_eth.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/components/ethernet_phy/documentation.h" framework="" version="3.11.0" source="sam\components\ethernet_phy\documentation.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/components/display/aat31xx/aat31xx.c" framework="" version="3.11.0" source="sam\components\display\aat31xx\aat31xx.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/components/display/aat31xx/aat31xx.h" framework="" version="3.11.0" source="sam\components\display\aat31xx\aat31xx.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/Config/conf_aat31xx.h" framework="" version="3.11.0" source="sam\components\display\aat31xx\module_config\conf_aat31xx.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/components/display/ili93xx/ili93xx.c" framework="" version="3.11.0" source="sam\components\display\ili93xx\ili93xx.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/components/display/ili93xx/ili93xx.h" framework="" version="3.11.0" source="sam\components\display\ili93xx\ili93xx.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/components/display/ili93xx/ili9325_regs.h" framework="" version="3.11.0" source="sam\components\display\ili93xx\ili9325_regs.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/components/display/ili93xx/ili9341_regs.h" framework="" version="3.11.0" source="sam\components\display\ili93xx\ili9341_regs.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/Config/conf_ili93xx.h" framework="" version="3.11.0" source="sam\components\display\ili93xx\module_config\conf_ili93xx.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/ebi/smc/smc.c" framework="" version="3.11.0" source="sam\drivers\ebi\smc\smc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/ebi/smc/smc.h" framework="" version="3.11.0" source="sam\drivers\ebi\smc\smc.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.11.0/common.applications.user_application.sam4e_ek/html/index.html" />
         <offline-documentation help="" />
@@ -245,6 +258,9 @@
       <Value>%24(ToolchainDir)\..\..\CMSIS_Atmel\Device\ATMEL\sam4e\include</Value>
       <Value>../src/ASF/sam/components/ethernet_phy/ksz8051mnl</Value>
       <Value>../src/ASF/sam/drivers/gmac</Value>
+      <Value>../src/ASF/sam/components/display/aat31xx</Value>
+      <Value>../src/ASF/sam/components/display/ili93xx</Value>
+      <Value>../src/ASF/sam/drivers/ebi/smc</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
@@ -290,6 +306,9 @@
       <Value>%24(ToolchainDir)\..\..\CMSIS_Atmel\Device\ATMEL\sam4e\include</Value>
       <Value>../src/ASF/sam/components/ethernet_phy/ksz8051mnl</Value>
       <Value>../src/ASF/sam/drivers/gmac</Value>
+      <Value>../src/ASF/sam/components/display/aat31xx</Value>
+      <Value>../src/ASF/sam/components/display/ili93xx</Value>
+      <Value>../src/ASF/sam/drivers/ebi/smc</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4E_EK -D__SAM4E16E__ -Dprintf=iprintf</armgcc.preprocessingassembler.general.AssemblerFlags>
@@ -318,6 +337,9 @@
       <Value>%24(ToolchainDir)\..\..\CMSIS_Atmel\Device\ATMEL\sam4e\include</Value>
       <Value>../src/ASF/sam/components/ethernet_phy/ksz8051mnl</Value>
       <Value>../src/ASF/sam/drivers/gmac</Value>
+      <Value>../src/ASF/sam/components/display/aat31xx</Value>
+      <Value>../src/ASF/sam/components/display/ili93xx</Value>
+      <Value>../src/ASF/sam/drivers/ebi/smc</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
 </ArmGcc>
@@ -376,6 +398,10 @@
       <Value>../../../../FreeRTOS-Plus/Source/FreeRTOS-Plus-FAT-SL/api</Value>
       <Value>../../../../FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_UDP_Demos/CLICommands</Value>
       <Value>../../Common/include</Value>
+      <Value>../src/ASF/sam/components/display/aat31xx</Value>
+      <Value>../src/ASF/sam/components/display/ili93xx</Value>
+      <Value>../src/ASF/sam/drivers/ebi/smc</Value>
+      <Value>../../../../FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_UDP_Demos/EchoClients</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
@@ -421,6 +447,9 @@
       <Value>%24(ToolchainDir)\..\..\CMSIS_Atmel\Device\ATMEL\sam4e\include</Value>
       <Value>../src/ASF/sam/components/ethernet_phy/ksz8051mnl</Value>
       <Value>../src/ASF/sam/drivers/gmac</Value>
+      <Value>../src/ASF/sam/components/display/aat31xx</Value>
+      <Value>../src/ASF/sam/components/display/ili93xx</Value>
+      <Value>../src/ASF/sam/drivers/ebi/smc</Value>
     </ListValues>
   </armgcc.assembler.general.IncludePaths>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
@@ -450,6 +479,9 @@
       <Value>%24(ToolchainDir)\..\..\CMSIS_Atmel\Device\ATMEL\sam4e\include</Value>
       <Value>../src/ASF/sam/components/ethernet_phy/ksz8051mnl</Value>
       <Value>../src/ASF/sam/drivers/gmac</Value>
+      <Value>../src/ASF/sam/components/display/aat31xx</Value>
+      <Value>../src/ASF/sam/components/display/ili93xx</Value>
+      <Value>../src/ASF/sam/drivers/ebi/smc</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
   <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
@@ -480,6 +512,10 @@
     <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_UDP_Demos\CLICommands\UDPCommandServer.c">
       <SubType>compile</SubType>
       <Link>src\UDPCommandServer.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_UDP_Demos\EchoClients\TwoEchoClients.c">
+      <SubType>compile</SubType>
+      <Link>src\TwoEchoClients.c</Link>
     </Compile>
     <Compile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\dir.c">
       <SubType>compile</SubType>
@@ -561,6 +597,30 @@
       <SubType>compile</SubType>
       <Link>src\Common Demo Tasks\semtest.c</Link>
     </Compile>
+    <Compile Include="src\ASF\sam\components\display\aat31xx\aat31xx.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\components\display\aat31xx\aat31xx.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\components\display\ili93xx\ili9325_regs.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\components\display\ili93xx\ili9341_regs.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\sam\components\display\ili93xx\ili93xx.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\components\display\ili93xx\ili93xx.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\sam\drivers\ebi\smc\smc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\drivers\ebi\smc\smc.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam\utils\syscalls\gcc\syscalls.c">
       <SubType>compile</SubType>
     </Compile>
@@ -570,7 +630,16 @@
     <Compile Include="src\config\config_mdriver_ram.h">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="src\config\conf_aat31xx.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_ili93xx.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\FreeRTOS+\FreeRTOS+FAT SL\API\fat_sl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\LCDUtils.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main_blinky.c">
@@ -1037,9 +1106,6 @@
     <None Include="src\ASF\sam\utils\status_codes.h">
       <SubType>compile</SubType>
     </None>
-    <None Include="src\ASF\thirdparty\CMSIS\CMSIS END USER LICENCE AGREEMENT.pdf">
-      <SubType>compile</SubType>
-    </None>
     <None Include="src\ASF\thirdparty\CMSIS\Include\arm_math.h">
       <SubType>compile</SubType>
     </None>
@@ -1081,9 +1147,14 @@
     <Folder Include="src\ASF\sam\boards\" />
     <Folder Include="src\ASF\sam\boards\sam4e_ek\" />
     <Folder Include="src\ASF\sam\components\" />
+    <Folder Include="src\ASF\sam\components\display\" />
+    <Folder Include="src\ASF\sam\components\display\aat31xx\" />
+    <Folder Include="src\ASF\sam\components\display\ili93xx\" />
     <Folder Include="src\ASF\sam\components\ethernet_phy\" />
     <Folder Include="src\ASF\sam\components\ethernet_phy\ksz8051mnl\" />
     <Folder Include="src\ASF\sam\drivers\" />
+    <Folder Include="src\ASF\sam\drivers\ebi\" />
+    <Folder Include="src\ASF\sam\drivers\ebi\smc\" />
     <Folder Include="src\ASF\sam\drivers\gmac\" />
     <Folder Include="src\ASF\sam\drivers\pmc\" />
     <Folder Include="src\ASF\sam\utils\" />

@@ -111,7 +111,7 @@ stack will revert to using the static IP address even when ipconfigUSE_DHCP is
 set to 1 if a valid configuration cannot be obtained from a DHCP server for any
 reason.  The static configuration used is that passed into the stack by the
 FreeRTOS_IPInit() function call. */
-#define ipconfigUSE_DHCP	0
+#define ipconfigUSE_DHCP	1
 
 /* When ipconfigUSE_DHCP is set to 1, DHCP requests will be sent out at
 increasing time intervals until either a reply is received from a DHCP server
@@ -205,7 +205,7 @@ contain.  For normal Ethernet V2 frames the maximum MTU is 1500.  Setting a
 lower value can save RAM, depending on the buffer management scheme used.  If
 ipconfigCAN_FRAGMENT_OUTGOING_PACKETS is 1 then (ipconfigNETWORK_MTU - 28) must
 be divisible by 8. */
-#define ipconfigNETWORK_MTU 1200
+#define ipconfigNETWORK_MTU 1000
 
 /* Set ipconfigUSE_DNS to 1 to include a basic DNS client/resolver.  DNS is used
 through the FreeRTOS_gethostbyname() API function. */

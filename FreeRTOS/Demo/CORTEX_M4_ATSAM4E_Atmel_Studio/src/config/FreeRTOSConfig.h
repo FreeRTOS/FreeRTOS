@@ -91,7 +91,7 @@
 #define configTICK_RATE_HZ						( 1000 )
 #define configMAX_PRIORITIES					( 5 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 130 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 34 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 46 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -211,6 +211,16 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configNET_MASK1		255
 #define configNET_MASK2		255
 #define configNET_MASK3		0
+
+/* The address of the echo server.  Used when the demo is build to include the
+UDP echo tasks (when mainINCLUDE_ECHO_CLIENT_TASKS is set to 1 in 
+FreeRTOSConfig.h.
+http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml */
+#define configECHO_SERVER_ADDR0	192
+#define configECHO_SERVER_ADDR1 168
+#define configECHO_SERVER_ADDR2 0
+#define configECHO_SERVER_ADDR3 2
+
 
 /* The priority used by the Ethernet MAC driver interrupt. */
 #define configMAC_INTERRUPT_PRIORITY	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY )

@@ -70,9 +70,13 @@
 
 /* FreeRTOS+UDP includes. */
 #include "FreeRTOS_UDP_IP.h"
+#include "FreeRTOS_Sockets.h"
 
-/* Demo application includes. */
+/* UDP demo includes. */
 #include "UDPCommandInterpreter.h"
+#include "TwoEchoClients.h"
+
+/* Standard demo includes. */
 #include "partest.h"
 #include "blocktim.h"
 #include "flash_timer.h"
@@ -128,9 +132,12 @@ passed into the network event hook is eNetworkUp). */
 #define mainDISCONNECTED_IP_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
 /* UDP command server task parameters. */
-#define mainUDP_CLI_TASK_PRIORITY					( tskIDLE_PRIORITY )
-#define mainUDP_CLI_PORT_NUMBER						( 5001UL )
-#define mainUDP_CLI_TASK_STACK_SIZE					( configMINIMAL_STACK_SIZE * 2U )
+#define mainUDP_CLI_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainUDP_CLI_PORT_NUMBER				( 5001UL )
+#define mainUDP_CLI_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2U )
+
+/* Set to 1 to include the UDP echo client tasks. */
+#define mainINCLUDE_ECHO_CLIENT_TASKS		1
 
 /*-----------------------------------------------------------*/
 
@@ -159,6 +166,11 @@ extern void vRegisterFileSystemCLICommands( void );
  */
 extern void vRegisterUDPCLICommands( void );
 
+/*
+ * Initialise the LCD and output a bitmap.
+ */
+extern void vInitialiseLCD( void );
+
 /*-----------------------------------------------------------*/
 
 /* The default IP and MAC address used by the demo.  The address configuration
@@ -179,6 +191,9 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 int main_full( void )
 {
 xTimerHandle xTimer = NULL;
+
+	/* Initialise the LCD and output the bitmap. */
+	vInitialiseLCD();
 
 	/* If the file system is only going to be accessed from one task then
 	F_FS_THREAD_AWARE can be set to 0 and the set of example files are created
@@ -319,6 +334,9 @@ unsigned long ulErrorOccurred = pdFALSE;
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
 static long lTasksAlreadyCreated = pdFALSE;
+const unsigned long ulXCoord = 3, ulYCoord = 3, ulIPAddressOffset = 45;
+unsigned long ulIPAddress;
+char cIPAddress[ 20 ];
 
 	/* Note:  If the application is started without the network cable plugged in
 	then ipconfigUDP_TASK_PRIORITY should be set to 0 in FreeRTOSIPConfig.h to
@@ -330,14 +348,27 @@ static long lTasksAlreadyCreated = pdFALSE;
 	passed into the network event hook is eNetworkUp). */
 	if( eNetworkEvent == eNetworkUp )
 	{
-		vTaskPrioritySet( NULL, mainCONNECTED_IP_TASK_PRIORITY );
-
 		if( lTasksAlreadyCreated == pdFALSE )
 		{		
 			/* Create the task that handles the CLI on a UDP port.  The port number
 			is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
 			vStartUDPCommandInterpreterTask( mainUDP_CLI_TASK_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY );
+			
+			#if( mainINCLUDE_ECHO_CLIENT_TASKS == 1 )
+			{
+				vStartEchoClientTasks( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY );
+			}
+			#endif
 		}
+		
+		/* Obtain the IP address, convert it to a string, then display. */
+		FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
+		FreeRTOS_inet_ntoa( ulIPAddress, cIPAddress );
+		ili93xx_draw_string( ulXCoord, ulYCoord, ( uint8_t * ) "IP: " );
+		ili93xx_draw_string( ulXCoord + ulIPAddressOffset, ulYCoord, ( uint8_t * ) cIPAddress );
+		
+		/* Set the IP task up to the desired priority now it has connected. */
+		vTaskPrioritySet( NULL, mainCONNECTED_IP_TASK_PRIORITY );
 	}
 
 	if( eNetworkEvent == eNetworkDown )
@@ -387,25 +418,7 @@ void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifie
 {
 	/* This demo has nowhere to output any information so does nothing. */
 	( void ) usIdentifier;
-	
-	switch( eStatus )
-	{
-		case eSuccess	:
-			break;
-
-		case eInvalidChecksum :
-			break;
-
-		case eInvalidData :
-			break;
-
-		default :
-			/* It is not possible to get here as all enums have their own
-			case. */
-			break;
-	}
+	( void ) eStatus;
 }
-
-
-
+/*-----------------------------------------------------------*/
 

@@ -131,6 +131,7 @@ static void prvSetupHardware( void )
 	board_init();
 	sysclk_init();
 	pmc_enable_periph_clk( ID_GMAC );
+	pmc_enable_periph_clk( ID_SMC );
 	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
@@ -233,14 +234,22 @@ void _exit_( int status )
 	vAssertCalled( __LINE__, __FILE__ );
 	for( ;; );
 }
+/*-----------------------------------------------------------*/
 
+/* Provided to keep the linker happy. */
 int _read( void )
 {
 	return 0;
 }
+/*-----------------------------------------------------------*/
 
+/* Provided to keep the linker happy. */
 int _write( int x )
 {
 	( void ) x;
 	return 0;
 }
+/*-----------------------------------------------------------*/
+
+
+

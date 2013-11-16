@@ -49,6 +49,13 @@
 
 /* Enable ETH PHY: KSZ8051MNL feature */
 #define CONF_BOARD_KSZ8051MNL
+
+/** Configure LCD EBI pins */
+#define CONF_BOARD_ILI93XX
+
+/** Configure Backlight control pin */
+#define CONF_BOARD_AAT3155
+
 /*
  * LED pins are not configured for PWM function here.
  * Because those LED pins are enabled for PIO function by default.

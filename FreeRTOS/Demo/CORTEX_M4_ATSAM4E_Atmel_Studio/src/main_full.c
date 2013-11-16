@@ -154,6 +154,11 @@ extern void vRegisterSampleCLICommands( void );
  */
 extern void vRegisterFileSystemCLICommands( void );
 
+/*
+ * Register the UDP related commands that can be used with FreeRTOS+CLI.
+ */
+extern void vRegisterUDPCLICommands( void );
+
 /*-----------------------------------------------------------*/
 
 /* The default IP and MAC address used by the demo.  The address configuration
@@ -191,12 +196,11 @@ xTimerHandle xTimer = NULL;
 	}
 	#endif
 
-	/* Register generic commands with the FreeRTOS+CLI command interpreter. */
+	/* Register example generic, file system related and UDP related CLI 
+	commands respectively. */
 	vRegisterSampleCLICommands();
-
-	/* Register file system related commands with the FreeRTOS+CLI command
-	interpreter. */
 	vRegisterFileSystemCLICommands();
+	vRegisterUDPCLICommands();
 
 	/* Initialise the network interface.  Tasks that use the network are
 	created in the network event hook when the network is connected and ready
@@ -375,6 +379,31 @@ void vFullDemoTickHook( void )
 
 	/* Call the queue set ISR test function. */
 	vQueueSetAccessQueueSetFromISR();
+}
+/*-----------------------------------------------------------*/
+
+/* Called automatically when a reply to an outgoing ping is received. */
+void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier )
+{
+	/* This demo has nowhere to output any information so does nothing. */
+	( void ) usIdentifier;
+	
+	switch( eStatus )
+	{
+		case eSuccess	:
+			break;
+
+		case eInvalidChecksum :
+			break;
+
+		case eInvalidData :
+			break;
+
+		default :
+			/* It is not possible to get here as all enums have their own
+			case. */
+			break;
+	}
 }
 
 

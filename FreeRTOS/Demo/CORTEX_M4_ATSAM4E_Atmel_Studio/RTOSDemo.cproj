@@ -461,13 +461,17 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\File-Releated-CLI-commands.c">
+    <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\File-Related-CLI-commands.c">
       <SubType>compile</SubType>
-      <Link>src\File-Releated-CLI-commands.c</Link>
+      <Link>src\File-Related-CLI-commands.c</Link>
     </Compile>
     <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c">
       <SubType>compile</SubType>
       <Link>src\Sample-CLI-commands.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\UDP-Related-CLI-commands.c">
+      <SubType>compile</SubType>
+      <Link>src\UDP-Related-CLI-commands.c</Link>
     </Compile>
     <Compile Include="..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_FAT_SL_Demos\CreateExampleFiles\File-system-demo.c">
       <SubType>compile</SubType>

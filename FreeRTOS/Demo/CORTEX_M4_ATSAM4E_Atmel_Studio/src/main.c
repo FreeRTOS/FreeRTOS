@@ -80,6 +80,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Demo application includes. */
+#include "partest.h"
+
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive demo application that includes add-on 
 components. */
@@ -128,6 +131,7 @@ static void prvSetupHardware( void )
 	board_init();
 	sysclk_init();
 	pmc_enable_periph_clk( ID_GMAC );
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
@@ -143,8 +147,7 @@ void vApplicationMallocFailedHook( void )
 	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
 	to query the size of free heap space that remains (although it does not
 	provide information on how the remaining heap might be fragmented). */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
 
@@ -179,8 +182,7 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
 
@@ -191,6 +193,15 @@ void vApplicationTickHook( void )
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
 	functions can be used (those that end in FromISR()). */
+	
+	/* The simple blinky demo does not use the tick hook - the full demo does. */
+	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+	{
+		extern void vFullDemoTickHook( void );
+		
+		vFullDemoTickHook();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 

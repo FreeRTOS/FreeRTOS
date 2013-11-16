@@ -62,10 +62,11 @@ extern "C" {
 /* @endcond */
 
 #ifdef __GNUC__
+void Dummy_Hardfault_Handler( void );
 /* Cortex-M4 core handlers */
 void Reset_Handler      (void  ) __attribute__ ((weak, alias("Dummy_Handler")));
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void HardFault_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Hardfault_Handler")));
 void MemManage_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void BusFault_Handler   ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UsageFault_Handler ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -181,6 +182,12 @@ void UART1_Handler  ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
  * \brief Default interrupt handler for unused IRQs.
  */
 void Dummy_Handler(void)
+{
+	while (1) {
+	}
+}
+
+void Dummy_Hardfault_Handler(void)
 {
 	while (1) {
 	}

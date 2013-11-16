@@ -100,6 +100,9 @@
 #include "queue.h"
 #include "timers.h"
 
+/* Demo application includes. */
+#include "partest.h"
+
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -126,8 +129,8 @@ converted to ticks using the portTICK_RATE_MS constant. */
 #define mainDONT_BLOCK						( 0 )
 
 /* The LEDs toggled by the timer and queue receive task respectively. */
-#define mainTIMER_LED						LED0_GPIO
-#define mainTASK_LED						LED1_GPIO
+#define mainTIMER_LED						0
+#define mainTASK_LED						1
 
 /*-----------------------------------------------------------*/
 
@@ -250,7 +253,7 @@ unsigned long ulReceivedValue;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == 100UL )
 		{
-			ioport_toggle_pin_level( mainTASK_LED );
+			vParTestToggleLED( mainTASK_LED );
 			ulReceivedValue = 0U;
 		}
 	}
@@ -265,7 +268,7 @@ static void prvBlinkyTimerCallback( xTimerHandle xTimer )
 	/* This function is called when the blinky software time expires.  All the
 	function does is toggle the LED.  LED mainTIMER_LED should therefore toggle
 	with the period set by mainBLINKY_TIMER_PERIOD. */
-	ioport_toggle_pin_level( mainTIMER_LED );
+	vParTestToggleLED( mainTIMER_LED );
 }
 /*-----------------------------------------------------------*/
 

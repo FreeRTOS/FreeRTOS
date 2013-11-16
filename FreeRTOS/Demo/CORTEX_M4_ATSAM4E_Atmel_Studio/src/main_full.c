@@ -73,6 +73,48 @@
 
 /* Demo application includes. */
 #include "UDPCommandInterpreter.h"
+#include "partest.h"
+#include "blocktim.h"
+#include "flash_timer.h"
+#include "semtest.h"
+#include "GenQTest.h"
+#include "QPeek.h"
+#include "IntQueue.h"
+#include "countsem.h"
+#include "dynamic.h"
+#include "QueueOverwrite.h"
+#include "QueueSet.h"
+#include "recmutex.h"
+
+/* The period after which the check timer will expire, in ms, provided no errors
+have been reported by any of the standard demo tasks.  ms are converted to the
+equivalent in ticks using the portTICK_RATE_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+
+/* The period at which the check timer will expire, in ms, if an error has been
+reported in one of the standard demo tasks.  ms are converted to the equivalent
+in ticks using the portTICK_RATE_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+
+/* The priorities of the various demo application tasks. */
+#define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
+#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
+#define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
+#define mainQUEUE_OVERWRITE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+
+/* The LED controlled by the 'check' software timer. */
+#define mainCHECK_LED						( 2 )
+
+/* The number of LEDs that should be controlled by the flash software timer
+standard demo.  In this case it is only 1 as the starter kit has three LEDs, one
+of which is controlled by the check timer and one of which is controlled by the
+ISR triggered task. */
+#define mainNUM_FLASH_TIMER_LEDS			( 1 )
+
+/* Misc. */
+#define mainDONT_BLOCK						( 0 )
 
 /* Note:  If the application is started without the network cable plugged in 
 then ipconfigUDP_TASK_PRIORITY should be set to 0 in FreeRTOSIPConfig.h to
@@ -90,10 +132,16 @@ passed into the network event hook is eNetworkUp). */
 #define mainUDP_CLI_PORT_NUMBER						( 5001UL )
 #define mainUDP_CLI_TASK_STACK_SIZE					( configMINIMAL_STACK_SIZE * 2U )
 
-/* Simple toggles an LED to show the program is running. */
-static void prvFlashTimerCallback( xTimerHandle xTimer );
+/*-----------------------------------------------------------*/
 
-/* Creates a set of sample files on a RAM disk. */
+/*
+ * The check timer callback function, as described at the top of this file.
+ */
+static void prvCheckTimerCallback( xTimerHandle xTimer );
+
+/* 
+ * Creates a set of sample files on a RAM disk. 
+ */
 extern void vCreateAndVerifySampleFiles( void );
 
 /*
@@ -125,7 +173,7 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 /*-----------------------------------------------------------*/
 int main_full( void )
 {
-xTimerHandle xFlashTimer;
+xTimerHandle xTimer = NULL;
 
 	/* If the file system is only going to be accessed from one task then
 	F_FS_THREAD_AWARE can be set to 0 and the set of example files are created
@@ -150,15 +198,6 @@ xTimerHandle xFlashTimer;
 	interpreter. */
 	vRegisterFileSystemCLICommands();
 
-	/* Create the timer that just toggles an LED to indicate that the 
-	application is running. */
-	xFlashTimer = xTimerCreate( ( const signed char * const ) "Flash", 200 / portTICK_RATE_MS, pdTRUE, NULL, prvFlashTimerCallback );
-	configASSERT( xFlashTimer );
-	
-	/* Start the timer.  As the scheduler is not running a block time cannot be
-	used and is set to 0. */
-	xTimerStart( xFlashTimer, 0 );
-
 	/* Initialise the network interface.  Tasks that use the network are
 	created in the network event hook when the network is connected and ready
 	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
@@ -166,6 +205,31 @@ xTimerHandle xFlashTimer;
 	contacted.  The Nabto service task is created automatically if
 	ipconfigFREERTOS_PLUS_NABTO is set to 1 in FreeRTOSIPConfig.h. */
 	FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
+
+	/* Create all the other standard demo tasks. */
+	vStartLEDFlashTimers( mainNUM_FLASH_TIMER_LEDS );
+	vCreateBlockTimeTasks();
+	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
+	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
+	vStartQueuePeekTasks();
+	vStartCountingSemaphoreTasks();
+	vStartDynamicPriorityTasks();
+	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_TASK_PRIORITY );
+	vStartQueueSetTasks();
+	vStartRecursiveMutexTasks();
+
+	/* Create the software timer that performs the 'check' functionality, as
+	described at the top of this file. */
+	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
+							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+							( void * ) 0,						/* The ID is not used, so can be set to anything. */
+							prvCheckTimerCallback );			/* The callback function that inspects the status of all the other tasks. */
+
+	if( xTimer != NULL )
+	{
+		xTimerStart( xTimer, mainDONT_BLOCK );
+	}
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -179,14 +243,71 @@ xTimerHandle xFlashTimer;
 }
 /*-----------------------------------------------------------*/
 
-static void prvFlashTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( xTimerHandle xTimer )
 {
-	/* The parameter is not used. */
+static long lChangedTimerPeriodAlready = pdFALSE;
+unsigned long ulErrorOccurred = pdFALSE;
+
+	/* Avoid compiler warnings. */
 	( void ) xTimer;
-	
-	/* Timer callback function that does nothing other than toggle an LED to
-	indicate that the application is still running. */
-	ioport_toggle_pin_level( LED0_GPIO );
+
+	/* Have any of the standard demo tasks detected an error in their
+	operation? */
+	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 3UL );
+	}
+	else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 4UL );
+	}
+	else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 5UL );
+	}
+	else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 6UL );
+	}
+	else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 8UL );
+	}
+	else if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 9UL );
+	}
+	else if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 10UL );
+	}
+	else if( xAreQueueSetTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 11UL );
+	}
+	else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 12UL );
+	}
+
+	if( ulErrorOccurred != pdFALSE )
+	{
+		/* An error occurred.  Increase the frequency at which the check timer
+		toggles its LED to give visual feedback of the potential error
+		condition. */
+		if( lChangedTimerPeriodAlready == pdFALSE )
+		{
+			lChangedTimerPeriodAlready = pdTRUE;
+
+			/* This call to xTimerChangePeriod() uses a zero block time.
+			Functions called from inside of a timer callback function must
+			*never* attempt	to block as to do so could impact other software
+			timers. */
+			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
+		}
+	}
+
+	vParTestToggleLED( mainCHECK_LED );
 }
 /*-----------------------------------------------------------*/
 
@@ -244,6 +365,16 @@ void vFullDemoIdleHook( void )
 		}
 	}
 	#endif
+}
+/*-----------------------------------------------------------*/
+
+void vFullDemoTickHook( void )
+{
+	/* Call the periodic queue overwrite from ISR demo. */
+	vQueueOverwritePeriodicISRDemo();
+
+	/* Call the queue set ISR test function. */
+	vQueueSetAccessQueueSetFromISR();
 }
 
 

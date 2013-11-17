@@ -40,6 +40,7 @@
 
 /* Standard includes. */
 #include <stdint.h>
+#include <limits.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -126,7 +127,7 @@ portBASE_TYPE xReturn = pdFALSE;
 				created. */
 				if( xGMACRxEventSemaphore == NULL )
 				{
-					vSemaphoreCreateBinary( xGMACRxEventSemaphore );
+					xGMACRxEventSemaphore = xSemaphoreCreateCounting( ULONG_MAX, 0 );
 					#if ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1
 					{
 						/* If the trace recorder code is included name the semaphore for
@@ -169,7 +170,7 @@ static void prvGMACRxCallback( uint32_t ulStatus )
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Unblock the deferred interrupt handler task if the event was an Rx. */
-	if( ulStatus != 0 )
+	if( ulStatus == GMAC_RSR_REC )
 	{
 		xSemaphoreGiveFromISR( xGMACRxEventSemaphore, &xHigherPriorityTaskWoken );
 	}
@@ -216,7 +217,8 @@ static void prvGMACDeferredInterruptHandlerTask( void *pvParameters )
 {
 xNetworkBufferDescriptor_t *pxNetworkBuffer;
 xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
-static const portTickType xBufferWaitDelay = 500UL / portTICK_RATE_MS;
+static const portTickType xBufferWaitDelay = 1500UL / portTICK_RATE_MS;
+uint32_t ulReturned;
 
 	( void ) pvParameters;
 	configASSERT( xGMACRxEventSemaphore );
@@ -231,14 +233,14 @@ static const portTickType xBufferWaitDelay = 500UL / portTICK_RATE_MS;
 		obtained. */
 		while( xSemaphoreTake( xGMACRxEventSemaphore, portMAX_DELAY ) == pdFALSE );
 
-		/* The buffer filled by the DMA is going to be passed into the IP
-		stack.  Allocate another buffer for the DMA descriptor. */
+		/* Allocate a buffer to hold the data. */
 		pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, xBufferWaitDelay );
 		
 		if( pxNetworkBuffer != NULL )
 		{
 			/* At least one packet has been received. */
-			if( gmac_dev_read( &xGMACStruct, pxNetworkBuffer->pucEthernetBuffer, ipTOTAL_ETHERNET_FRAME_SIZE, ( uint32_t * ) &( pxNetworkBuffer->xDataLength ) ) == GMAC_OK )
+			ulReturned = gmac_dev_read( &xGMACStruct, pxNetworkBuffer->pucEthernetBuffer, ipTOTAL_ETHERNET_FRAME_SIZE, ( uint32_t * ) &( pxNetworkBuffer->xDataLength ) );
+			if( ulReturned == GMAC_OK )
 			{
 				#if ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 1
 				{

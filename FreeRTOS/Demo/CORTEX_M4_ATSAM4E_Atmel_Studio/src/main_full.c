@@ -245,6 +245,8 @@ int main_full( void )
 {
 xTimerHandle xTimer = NULL;
 
+	/* Usage instructions on http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html */
+
 	/* Initialise the LCD and output a bitmap.  The IP address will also be
 	displayed on the LCD when it has been obtained. */
 	vInitialiseLCD();

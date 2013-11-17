@@ -175,7 +175,7 @@ started at the idle priority, then set to configMAX_PRIORITIES - 2 in the
 network event hook only after a connection has been established (when the event
 passed into the network event hook is eNetworkUp).
 http://www.FreeRTOS.org/udp */
-#define mainCONNECTED_IP_TASK_PRIORITY		( configMAX_PRIORITIES - 2 )
+#define mainCONNECTED_IP_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define mainDISCONNECTED_IP_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
 /* UDP command server task parameters. */

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -92,13 +92,8 @@
 /* The echo tasks create a socket, send out a number of echo requests
 (listening for each echo reply), then close the socket again before
 starting over.  This delay is used between each iteration to ensure the
-network does not get too congested.  The delay is shorter when the Windows
-simulator is used because simulated time is slower than real time. */
-#ifdef _WINDOWS_
-	#define echoLOOP_DELAY	( ( portTickType ) 10 / portTICK_RATE_MS )
-#else
-	#define echoLOOP_DELAY	( ( portTickType ) 150 / portTICK_RATE_MS )
-#endif /* _WINDOWS_ */
+network does not get too congested. */
+#define echoLOOP_DELAY	( ( portTickType ) 250 / portTICK_RATE_MS )
 
 #if ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1
 	/* When the trace recorder code is included user events are generated to
@@ -193,7 +188,7 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 		for( lLoopCount = 0; lLoopCount < lMaxLoopCount; lLoopCount++ )
 		{
 			/* Create the string that is sent to the echo server. */
-			sprintf( ( char * ) cTxString, "Message number %u\r\n", ulTxCount );
+			sprintf( ( char * ) cTxString, "Message number %u\r\n", ( unsigned int ) ulTxCount );
 
 			/* Send the string to the socket.  ulFlags is set to 0, so the zero
 			copy interface is not used.  That means the data from cTxString is
@@ -314,7 +309,7 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 				/* A buffer was successfully obtained.  Create the string that is
 				sent to the echo server.  Note the string is written directly
 				into the buffer obtained from the IP stack. */
-				sprintf( ( char * ) pucUDPPayloadBuffer, "%s %u\r\n", ( const char * ) "Zero copy message number", ulTxCount );
+				sprintf( ( char * ) pucUDPPayloadBuffer, "%s %u\r\n", ( const char * ) "Zero copy message number", ( unsigned int ) ulTxCount );
 
 				/* Also copy the string into a local buffer so it can be compared
 				with the string that is later received back from the echo server. */

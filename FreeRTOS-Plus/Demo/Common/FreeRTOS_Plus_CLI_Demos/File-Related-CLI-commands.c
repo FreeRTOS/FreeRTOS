@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,6 +63,7 @@
     1 tab == 4 spaces!
 */
 
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -71,6 +72,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
@@ -78,7 +80,6 @@
 /* File system includes. */
 #include "fat_sl.h"
 #include "api_mdriver_ram.h"
-#include "test.h"
 
 #ifdef _WINDOWS_
 	#define snprintf _snprintf
@@ -130,11 +131,6 @@ static portBASE_TYPE prvTYPECommand( int8_t *pcWriteBuffer, size_t xWriteBufferL
  */
 static portBASE_TYPE prvCOPYCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
 
-/*
- * Implements the TEST command.
- */
-static portBASE_TYPE prvTESTFSCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
-
 /* Structure that defines the DIR command line command, which lists all the
 files in the current directory. */
 static const CLI_Command_Definition_t xDIR =
@@ -183,15 +179,6 @@ static const CLI_Command_Definition_t xCOPY =
 	2 /* Two parameters are expected. */
 };
 
-/* Structure that defines the TEST command line command, which executes some
-file system driver tests. */
-static const CLI_Command_Definition_t xTEST_FS =
-{
-	( const int8_t * const ) "test-fs", /* The command string to type. */
-	( const int8_t * const ) "\r\ntest-fs:\r\n Executes file system tests.  ALL FILES WILL BE DELETED!!!\r\n",
-	prvTESTFSCommand, /* The function to run. */
-	0 /* No parameters are expected. */
-};
 
 /*-----------------------------------------------------------*/
 
@@ -203,7 +190,6 @@ void vRegisterFileSystemCLICommands( void )
 	FreeRTOS_CLIRegisterCommand( &xTYPE );
 	FreeRTOS_CLIRegisterCommand( &xDEL );
 	FreeRTOS_CLIRegisterCommand( &xCOPY );
-	FreeRTOS_CLIRegisterCommand( &xTEST_FS );
 }
 /*-----------------------------------------------------------*/
 
@@ -423,33 +409,6 @@ unsigned char ucReturned;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTESTFSCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
-{
-unsigned portBASE_TYPE uxOriginalPriority;
-
-	/* Avoid compiler warnings. */
-	( void ) xWriteBufferLen;
-	( void ) pcCommandString;
-
-	/* Limitations in the interaction with the Windows TCP/IP stack require
-	the command console to run at the idle priority.  Raise the priority for
-	the duration of the tests to ensure there are not multiple switches to the
-	idle task as in the simulated environment the idle task hook function may
-	include a (relatively) long delay. */
-	uxOriginalPriority = uxTaskPriorityGet( NULL );
-	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
-
-	f_dotest( 0 );
-
-	/* Reset back to the original priority. */
-	vTaskPrioritySet( NULL, uxOriginalPriority );
-
-	sprintf( ( char * ) pcWriteBuffer, "%s", "Test results were sent to Windows console" );
-
-	return pdFALSE;
-}
-/*-----------------------------------------------------------*/
-
 static portBASE_TYPE prvCOPYCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
 int8_t *pcSourceFile, *pcDestinationFile;
@@ -605,5 +564,5 @@ const char * pcAttrib;
 
 	/* Create a string that includes the file name, the file size and the
 	attributes string. */
-	sprintf( ( char * ) pcBuffer, "%s [%s] [size=%d]", pxFindStruct->filename, pcAttrib, pxFindStruct->filesize );
+	sprintf( ( char * ) pcBuffer, "%s [%s] [size=%d]", pxFindStruct->filename, pcAttrib, ( int ) pxFindStruct->filesize );
 }

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -70,6 +70,7 @@
 
 /* Standard includes. */
 #include <stdio.h>
+#include <string.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -175,12 +176,11 @@ F_FILE *pxFile;
 	for( xFileNumber = 1; xFileNumber <= xMaxFiles; xFileNumber++ )
 	{
 		/* Generate a file name. */
-		sprintf( cFileName, "root%03d.txt", xFileNumber );
+		sprintf( cFileName, "root%03d.txt", ( int ) xFileNumber );
 
 		/* Obtain the current working directory and print out the file name and
 		the	directory into which the file is being written. */
 		f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-		printf( "Creating file %s in %s\r\n", cFileName, cRAMBuffer );
 
 		/* Open the file, creating the file if it does not already exist. */
 		pxFile = f_open( cFileName, "w" );
@@ -218,12 +218,11 @@ F_FILE *pxFile;
 	for( xFileNumber = 1; xFileNumber <= xMaxFiles; xFileNumber++ )
 	{
 		/* Generate the file name. */
-		sprintf( cFileName, "root%03d.txt", xFileNumber );
+		sprintf( cFileName, "root%03d.txt", ( int ) xFileNumber );
 
 		/* Obtain the current working directory and print out the file name and
 		the	directory from which the file is being read. */
 		f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-		printf( "Reading file %s from %s\r\n", cFileName, cRAMBuffer );
 
 		/* Open the file for reading. */
 		pxFile = f_open( cFileName, "r" );
@@ -263,7 +262,6 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-	printf( "In directory %s\r\n", cRAMBuffer );
 
 	/* Create a sub directory. */
 	ucReturn = f_mkdir( pcDirectory1 );
@@ -275,7 +273,6 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-	printf( "In directory %s\r\n", cRAMBuffer );
 
 	/* Create a subdirectory in the new directory. */
 	ucReturn = f_mkdir( pcDirectory2 );
@@ -288,7 +285,6 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-	printf( "In directory %s\r\n", cRAMBuffer );
 	configASSERT( strcmp( ( const char * ) cRAMBuffer, pcFullPath ) == 0 );
 
 	/* Generate the file name. */
@@ -296,8 +292,6 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Print out the file name and the directory into which the file is being
 	written. */
-	printf( "Writing file %s in %s\r\n", cFileName, cRAMBuffer );
-
 	pxFile = f_open( cFileName, "w" );
 
 	/* Create a file 1 byte at a time.  The file is filled with incrementing
@@ -317,7 +311,6 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-	printf( "Back in root directory %s\r\n", cRAMBuffer );
 	configASSERT( strcmp( ( const char * ) cRAMBuffer, pcRoot ) == 0 );
 }
 /*-----------------------------------------------------------*/
@@ -335,15 +328,10 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-	printf( "Back in directory %s\r\n", cRAMBuffer );
 	configASSERT( strcmp( ( const char * ) cRAMBuffer, pcFullPath ) == 0 );
 
 	/* Generate the file name. */
 	sprintf( cFileName, "%s.txt", pcDirectory2 );
-
-	/* Print out the file name and the directory from which the file is being
-	read. */
-	printf( "Reading file %s in %s\r\n", cFileName, cRAMBuffer );
 
 	/* This time the file is opened for reading. */
 	pxFile = f_open( cFileName, "r" );
@@ -364,7 +352,6 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
-	printf( "Back in root directory %s\r\n", cRAMBuffer );
 }
 
 

@@ -216,6 +216,7 @@ static void prvGMACDeferredInterruptHandlerTask( void *pvParameters )
 {
 xNetworkBufferDescriptor_t *pxNetworkBuffer;
 xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
+static const portTickType xBufferWaitDelay = 500UL / portTICK_RATE_MS;
 
 	( void ) pvParameters;
 	configASSERT( xGMACRxEventSemaphore );
@@ -232,7 +233,7 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 
 		/* The buffer filled by the DMA is going to be passed into the IP
 		stack.  Allocate another buffer for the DMA descriptor. */
-		pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, portMAX_DELAY );
+		pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, xBufferWaitDelay );
 		
 		if( pxNetworkBuffer != NULL )
 		{
@@ -287,8 +288,14 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 			}
 			else
 			{
+				vNetworkBufferRelease( pxNetworkBuffer );
 				iptraceETHERNET_RX_EVENT_LOST();
 			}
+		}
+		else
+		{
+			/* Left a frame in the driver as a buffer was not available. */
+			gmac_dev_reset( &xGMACStruct );
 		}
 	}
 }

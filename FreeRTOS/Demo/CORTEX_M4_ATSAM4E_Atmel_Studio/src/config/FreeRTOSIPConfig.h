@@ -5,11 +5,11 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -58,7 +58,7 @@ priority) to (configMAX_PRIORITIES - 1) (the highest priority).
 configMAX_PRIORITIES is a standard FreeRTOS configuration parameter defined in
 FreeRTOSConfig.h, not FreeRTOSIPConfig.h. Consideration needs to be given as to
 the priority assigned to the task executing the IP stack relative to the
-priority assigned to tasks that use the IP stack. 
+priority assigned to tasks that use the IP stack.
 
 Note:  If the application is started without the network cable plugged in then
 this should be set to the lowest priority - otherwise the Atmel ASF GMAC driver
@@ -120,13 +120,7 @@ ipconfigMAXIMUM_DISCOVER_TX_PERIOD.  The IP stack will revert to using the
 static IP address passed as a parameter to FreeRTOS_IPInit() if the
 re-transmission time interval reaches ipconfigMAXIMUM_DISCOVER_TX_PERIOD without
 a DHCP reply being received. */
-#ifdef _WINDOWS_
-	/* The windows simulated time is not real time so the max delay is much
-	shorter. */
-	#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( 999 / portTICK_RATE_MS )
-#else
-	#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( 120000 / portTICK_RATE_MS )
-#endif /* _WINDOWS_ */
+#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( 999 / portTICK_RATE_MS )
 
 /* The ARP cache is a table that maps IP addresses to MAC addresses.  The IP
 stack can only send a UDP message to a remove IP address if it knowns the MAC
@@ -166,7 +160,8 @@ not set to 1 then only FreeRTOS_indet_addr_quick() is available. */
 /* ipconfigNUM_NETWORK_BUFFERS defines the total number of network buffer that
 are available to the IP stack.  The total number of network buffers is limited
 to ensure the total amount of RAM that can be consumed by the IP stack is capped
-to a pre-determinable value. */
+to a pre-determinable value.  NOTE:  This constant is not used when all buffers
+are dynamically allocated and freed. */
 #define ipconfigNUM_NETWORK_BUFFERS		10
 
 /* A FreeRTOS queue is used to send events from application tasks to the IP
@@ -242,17 +237,37 @@ Ethernet driver does all the necessary filtering in hardware then software
 filtering can be removed by using a value other than 1 or 0. */
 #define ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES	0
 
+/* If ipconfigETHERNET_DRIVER_ADDS_UDP_CHECKSUM is set to 1 then a UDP checksum
+will not be calculated and added to a packet before the packet is sent to the
+hardware for transmission. */
+#define ipconfigETHERNET_DRIVER_ADDS_UDP_CHECKSUM	0
+
+/* If ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM is set to 1 then an IP checksum
+will not be calculated and added to a packet before the packet is sent to the
+hardware for transmission. */
+#define ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM	0
+
+/* If ipconfigETHERNET_DRIVER_CHECKS_IP_CHECKSUM is set to 1 then the IP 
+checksum will be ignored on incoming packets on the assumption IP packets with 
+an invalid checksum are not passed to the stack. */
+#define ipconfigETHERNET_DRIVER_CHECKS_IP_CHECKSUM	0
+
+/* If ipconfigETHERNET_DRIVER_CHECKS_UDP_CHECKSUM is set to 1 then the UDP
+checksum will be ignored on incoming packets on the assumption the UDP packets
+with an invalid checksum are not passed to the stack. */
+#define ipconfigETHERNET_DRIVER_CHECKS_UDP_CHECKSUM 0
+
 /* Set ipconfigFREERTOS_PLUS_NABTO to 1 to support the Nabto protocol, or 0 to
 exclude support for the Nabto protocol.  If ipconfigFREERTOS_PLUS_NABTO is set
 to one then the project must build the Nabto source code (or reference a
 pre-build Nabto library. */
-#define ipconfigFREERTOS_PLUS_NABTO		0
+#define ipconfigFREERTOS_PLUS_NABTO					0
 
 /* Sets the size of the stack used by the Nabto service task.  The Nabto event
 handler executes in the context of the Nabto service task.  If the event handler
 uses a lot of stack then it is possible the value set here will need to be
 increased.  It is recommended to have FreeRTOS stack overflow checking turned
-on during development (see the configCHECK_FOR_STACK_OVERFLOW in 
+on during development (see the configCHECK_FOR_STACK_OVERFLOW in
 FreeRTOSConfig.h and in the documentation. */
 #define ipconfigNABTO_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE * 2 )
 

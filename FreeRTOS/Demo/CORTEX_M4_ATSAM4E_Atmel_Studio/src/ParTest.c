@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -78,7 +78,7 @@
 #define partestNUM_LEDS			( 3UL )
 
 /* The index of the pins to which the LEDs are connected.  The ordering of the
-LEDs in this array is intentional and matches the order they appear on the 
+LEDs in this array is intentional and matches the order they appear on the
 hardware. */
 static const uint32_t ulLED[] = { LED0_GPIO, LED1_GPIO, LED2_GPIO };
 
@@ -86,13 +86,13 @@ static const uint32_t ulLED[] = { LED0_GPIO, LED1_GPIO, LED2_GPIO };
 
 void vParTestInitialise( void )
 {
-	/* LEDs are initialised in the Atmel provided board initialisation 
+	/* LEDs are initialised in the Atmel provided board initialisation
 	function. */
 }
 /*-----------------------------------------------------------*/
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
-{	
+{
 	if( uxLED < partestNUM_LEDS )
 	{
 		/* Turn the LED off. */
@@ -110,12 +110,12 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 	if( uxLED < partestNUM_LEDS )
 	{
 		taskENTER_CRITICAL();
-		{			
+		{
 			ioport_toggle_pin_level( ulLED[ uxLED ] );
 		}
-		taskEXIT_CRITICAL();		
+		taskEXIT_CRITICAL();
 	}
 }
-							
+
 
 

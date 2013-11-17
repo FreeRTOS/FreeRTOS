@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,6 +63,52 @@
     1 tab == 4 spaces!
 */
 
+/******************************************************************************
+ * NOTE 1:  This project provides two demo applications.  A simple blinky style
+ * project, and a more comprehensive test and demo application that makes use of
+ * the FreeRTOS+CLI, FreeRTOS+UDP and FreeRTOS+FAT SL components.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
+ * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
+ * in main.c.  This file implements the comprehensive test and demo version,
+ * which is fully documented on the following URL:
+ * http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html
+ *
+ * NOTE 2:  This file only contains the source code that is specific to the
+ * full demo.  Generic functions, such FreeRTOS hook functions, and functions
+ * required to configure the hardware, are defined in main.c.
+ ******************************************************************************
+ *
+ * Full user instructions are provided on the following URL:
+ * http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html
+ *
+ * main_full():
+ * 	+ Uses FreeRTOS+FAT SL to create a set of example files on a RAM disk.
+ *  + Displays some bitmaps on the LCD.
+ *  + Registers sample generic, file system related and UDP related commands
+ *	  with FreeRTOS+CLI.
+ *	+ Creates all the standard demo application tasks and software timers.
+ *	+ Starts the scheduler.
+ *
+ * A UDP command server and optionally two UDP echo client tasks are created
+ * from the network event hook after an IP address has been obtained.  The IP
+ * address is displayed on the LCD.
+ *
+ * A "check software timer" is created to provide visual feedback of the system
+ * status.  The timer's period is initially set to three seconds.  The callback
+ * function associated with the timer checks all the standard demo tasks are not
+ * only still executed, but are executing without reporting any errors.  If the
+ * timer discovers a task has either stalled, or reported an error, then it
+ * changes its own period from the initial three seconds, to just 200ms.  The
+ * check software timer also toggles the LED marked D4 - so if the LED toggles
+ * every three seconds then no potential errors have been found, and if the LED
+ * toggles every 200ms then a potential error has been found in at least one
+ * task.
+ *
+ * Information on accessing the CLI and file system, and using the UDP echo
+ * tasks is provided on http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html
+ *
+ */
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -120,14 +166,15 @@ ISR triggered task. */
 /* Misc. */
 #define mainDONT_BLOCK						( 0 )
 
-/* Note:  If the application is started without the network cable plugged in 
+/* Note:  If the application is started without the network cable plugged in
 then ipconfigUDP_TASK_PRIORITY should be set to 0 in FreeRTOSIPConfig.h to
-ensure the IP task is created at the idle priority.  This is because the Atmel 
-ASF GMAC driver polls the GMAC looking for a connection, and doing so will 
-prevent any lower priority tasks from executing.  In this demo the IP task is 
-started at the idle priority, then set to configMAX_PRIORITIES - 2 in the 
+ensure the IP task is created at the idle priority.  This is because the Atmel
+ASF GMAC driver polls the GMAC looking for a connection, and doing so will
+prevent any lower priority tasks from executing.  In this demo the IP task is
+started at the idle priority, then set to configMAX_PRIORITIES - 2 in the
 network event hook only after a connection has been established (when the event
-passed into the network event hook is eNetworkUp). */
+passed into the network event hook is eNetworkUp).
+http://www.FreeRTOS.org/udp */
 #define mainCONNECTED_IP_TASK_PRIORITY		( configMAX_PRIORITIES - 2 )
 #define mainDISCONNECTED_IP_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
@@ -136,7 +183,10 @@ passed into the network event hook is eNetworkUp). */
 #define mainUDP_CLI_PORT_NUMBER				( 5001UL )
 #define mainUDP_CLI_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2U )
 
-/* Set to 1 to include the UDP echo client tasks. */
+/* Set to 1 to include the UDP echo client tasks in the build.  The echo clients
+require the IP address of the echo server to be defined using the
+configECHO_SERVER_ADDR0 to configECHO_SERVER_ADDR3 constants in
+FreeRTOSConfig.h. */
 #define mainINCLUDE_ECHO_CLIENT_TASKS		1
 
 /*-----------------------------------------------------------*/
@@ -146,23 +196,25 @@ passed into the network event hook is eNetworkUp). */
  */
 static void prvCheckTimerCallback( xTimerHandle xTimer );
 
-/* 
- * Creates a set of sample files on a RAM disk. 
+/*
+ * Creates a set of sample files on a RAM disk.  http://www.FreeRTOS.org/fat_sl
  */
 extern void vCreateAndVerifySampleFiles( void );
 
 /*
- * Register the generic commands that can be used with FreeRTOS+CLI.
+ * Register sample generic commands that can be used with FreeRTOS+CLI.  Type
+ * 'help' in the command line to see a list of registered commands.
+ * http://www.FreeRTOS.org/cli
  */
 extern void vRegisterSampleCLICommands( void );
 
 /*
- * Register the file system commands that can be used with FreeRTOS+CLI.
+ * Register sample file system commands that can be used with FreeRTOS+CLI.
  */
 extern void vRegisterFileSystemCLICommands( void );
 
 /*
- * Register the UDP related commands that can be used with FreeRTOS+CLI.
+ * Register sample UDP related commands that can be used with FreeRTOS+CLI.
  */
 extern void vRegisterUDPCLICommands( void );
 
@@ -188,11 +240,13 @@ Note each node on a network must have a unique MAC address. */
 const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
 /*-----------------------------------------------------------*/
+
 int main_full( void )
 {
 xTimerHandle xTimer = NULL;
 
-	/* Initialise the LCD and output the bitmap. */
+	/* Initialise the LCD and output a bitmap.  The IP address will also be
+	displayed on the LCD when it has been obtained. */
 	vInitialiseLCD();
 
 	/* If the file system is only going to be accessed from one task then
@@ -200,19 +254,20 @@ xTimerHandle xTimer = NULL;
 	before the RTOS scheduler is started.  If the file system is going to be
 	access from more than one task then F_FS_THREAD_AWARE must be set to 1 and
 	the	set of sample files are created from the idle task hook function
-	vApplicationIdleHook() - which is defined in this file. */
+	vApplicationIdleHook(). */
 	#if( F_FS_THREAD_AWARE == 0 )
 	{
 		/* Initialise the drive and file system, then create a few example
-		files.  The output from this function just goes to the stdout window,
-		allowing the output to be viewed when the UDP command console is not
-		connected. */
+		files.  The files can be viewed and accessed via the CLI.  View the
+		documentation page for this demo (link at the top of this file) for more
+		information. */
 		vCreateAndVerifySampleFiles();
 	}
 	#endif
 
-	/* Register example generic, file system related and UDP related CLI 
-	commands respectively. */
+	/* Register example generic, file system related and UDP related CLI
+	commands respectively.  Type 'help' into the command console to view a list
+	of registered commands. */
 	vRegisterSampleCLICommands();
 	vRegisterFileSystemCLICommands();
 	vRegisterUDPCLICommands();
@@ -221,8 +276,8 @@ xTimerHandle xTimer = NULL;
 	created in the network event hook when the network is connected and ready
 	for use.  The address values passed in here are used if ipconfigUSE_DHCP is
 	set to 0, or if ipconfigUSE_DHCP is set to 1 but a DHCP server cannot be
-	contacted.  The Nabto service task is created automatically if
-	ipconfigFREERTOS_PLUS_NABTO is set to 1 in FreeRTOSIPConfig.h. */
+	contacted.  The IP address actually used is displayed on the LCD (after DHCP
+	has completed if DHCP is used). */
 	FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 
 	/* Create all the other standard demo tasks. */
@@ -326,6 +381,9 @@ unsigned long ulErrorOccurred = pdFALSE;
 		}
 	}
 
+	/* Toggle the LED to give visual feedback of the system status.  The rate at
+	which the LED toggles will increase to mainERROR_CHECK_TIMER_PERIOD_MS if a
+	suspected error has been found in any of the standard demo tasks. */
 	vParTestToggleLED( mainCHECK_LED );
 }
 /*-----------------------------------------------------------*/
@@ -348,38 +406,55 @@ char cIPAddress[ 20 ];
 	passed into the network event hook is eNetworkUp). */
 	if( eNetworkEvent == eNetworkUp )
 	{
+		/* Ensure tasks are only created once. */
 		if( lTasksAlreadyCreated == pdFALSE )
-		{		
-			/* Create the task that handles the CLI on a UDP port.  The port number
-			is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
+		{
+			/* Create the task that handles the CLI on a UDP port.  The port
+			number is set using the configUDP_CLI_PORT_NUMBER setting in
+			FreeRTOSConfig.h. */
 			vStartUDPCommandInterpreterTask( mainUDP_CLI_TASK_STACK_SIZE, mainUDP_CLI_PORT_NUMBER, mainUDP_CLI_TASK_PRIORITY );
-			
+
 			#if( mainINCLUDE_ECHO_CLIENT_TASKS == 1 )
 			{
+				/* Create the UDP echo tasks.  The UDP echo tasks require the IP
+				address of the echo server to be defined using the
+				configECHO_SERVER_ADDR0 to configECHO_SERVER_ADDR3 constants in
+				FreeRTOSConfig.h. */
 				vStartEchoClientTasks( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY );
 			}
 			#endif
 		}
-		
-		/* Obtain the IP address, convert it to a string, then display. */
+
+		/* Obtain the IP address, convert it to a string, then display it on the
+		LCD. */
 		FreeRTOS_GetAddressConfiguration( &ulIPAddress, NULL, NULL, NULL );
 		FreeRTOS_inet_ntoa( ulIPAddress, cIPAddress );
 		ili93xx_draw_string( ulXCoord, ulYCoord, ( uint8_t * ) "IP: " );
 		ili93xx_draw_string( ulXCoord + ulIPAddressOffset, ulYCoord, ( uint8_t * ) cIPAddress );
-		
-		/* Set the IP task up to the desired priority now it has connected. */
+
+		/* Set the priority of the IP task up to the desired priority now it has
+		connected. */
 		vTaskPrioritySet( NULL, mainCONNECTED_IP_TASK_PRIORITY );
 	}
 
+	/* NOTE:  At the time of writing the Ethernet driver does not report the
+	cable being unplugged - so the following if() condition will never be met.
+	It is included for possible future updates to the driver. */
 	if( eNetworkEvent == eNetworkDown )
 	{
+		/* Ensure the Atmel GMAC drivers don't hog all the CPU time as they look
+		for a new connection by lowering the priority of the IP task to that of
+		the Idle task. */
 		vTaskPrioritySet( NULL, tskIDLE_PRIORITY );
+		
+		/* Disconnected - so no IP address. */
+		ili93xx_draw_string( ulXCoord, ulYCoord, ( uint8_t * ) "IP:                  " );
 	}
 }
 /*-----------------------------------------------------------*/
 
 void vFullDemoIdleHook( void )
-{	
+{
 	/* If the file system is only going to be accessed from one task then
 	F_FS_THREAD_AWARE can be set to 0 and the set of example files is created
 	before the RTOS scheduler is started.  If the file system is going to be
@@ -405,10 +480,10 @@ void vFullDemoIdleHook( void )
 
 void vFullDemoTickHook( void )
 {
-	/* Call the periodic queue overwrite from ISR demo. */
+	/* Call the periodic queue overwrite from ISR test function. */
 	vQueueOverwritePeriodicISRDemo();
 
-	/* Call the queue set ISR test function. */
+	/* Call the periodic queue set ISR test function. */
 	vQueueSetAccessQueueSetFromISR();
 }
 /*-----------------------------------------------------------*/
@@ -416,7 +491,8 @@ void vFullDemoTickHook( void )
 /* Called automatically when a reply to an outgoing ping is received. */
 void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier )
 {
-	/* This demo has nowhere to output any information so does nothing. */
+	/* This demo has nowhere to output any information so does nothing, but the
+	IP address resolved for the pined URL is displayed in the CLI. */
 	( void ) usIdentifier;
 	( void ) eStatus;
 }

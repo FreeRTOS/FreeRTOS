@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -65,11 +65,13 @@
 
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive application that makes use of FreeRTOS+ add-on
- * components.  The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this 
- * file) is used to select between the two.  The simply blinky demo is 
- * implemented and described in main_blinky.c.  The more comprehensive demo 
- * application is implemented and described in main_full.c.
+ * and a more comprehensive application that includes FreeRTOS+CLI, FreeRTOS+UDP
+ * and FreeRTOS+FAT SL.  The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined
+ * in this file) is used to select between the two.  The simply blinky demo is
+ * implemented and described in main_blinky.c.  The more comprehensive demo
+ * application is implemented and described in main_full.c and full user
+ * instructions are provided on the following URL:
+ * http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -84,7 +86,7 @@
 #include "partest.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive demo application that includes add-on 
+or 0 to run the more comprehensive demo application that includes add-on
 components. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
@@ -111,15 +113,17 @@ int main( void )
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
 	{
 		main_blinky();
 	}
 	#else
 	{
+		/* Full user instructions are provided on the following URL:
+		http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html */
 		main_full();
 	}
-	#endif
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 
 	return 0;
 }
@@ -132,7 +136,6 @@ static void prvSetupHardware( void )
 	sysclk_init();
 	pmc_enable_periph_clk( ID_GMAC );
 	pmc_enable_periph_clk( ID_SMC );
-	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 
@@ -163,12 +166,13 @@ void vApplicationIdleHook( void )
 	important that vApplicationIdleHook() is permitted to return to its calling
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
-	
+
 	/* The simple blinky demo does not use the idle hook - the full demo does. */
 	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
 	{
 		extern void vFullDemoIdleHook( void );
-		
+
+		/* Implemented in main_full.c. */
 		vFullDemoIdleHook();
 	}
 	#endif
@@ -181,8 +185,8 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 	( void ) pxTask;
 
 	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook	function is
+	called if a stack overflow is detected. */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -194,12 +198,13 @@ void vApplicationTickHook( void )
 	added here, but the tick hook is called from an interrupt context, so
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
 	functions can be used (those that end in FromISR()). */
-	
+
 	/* The simple blinky demo does not use the tick hook - the full demo does. */
 	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
 	{
 		extern void vFullDemoTickHook( void );
-		
+
+		/* Implemented in main_full.c. */
 		vFullDemoTickHook();
 	}
 	#endif
@@ -210,18 +215,18 @@ void vAssertCalled( uint32_t ulLine, const char *pcFile )
 {
 /* The following two variables are just to ensure the parameters are not
 optimised away and therefore unavailable when viewed in the debugger. */
-volatile uint32_t ulLineNumber = ulLine, ulSetNoneZeroInDebuggerToReturn = 0;
+volatile uint32_t ulLineNumber = ulLine, ulSetNonZeroInDebuggerToReturn = 0;
 volatile const char * const pcFileName = pcFile;
 
 	taskENTER_CRITICAL();
-	while( ulSetNoneZeroInDebuggerToReturn == 0 )
+	while( ulSetNonZeroInDebuggerToReturn == 0 )
 	{
 		/* If you want to set out of this function in the debugger to see the
-		assert() location then set ulSetNoneZeroInDebuggerToReturn to a non-zero
+		assert() location then set ulSetNonZeroInDebuggerToReturn to a non-zero
 		value. */
 	}
 	taskEXIT_CRITICAL();
-	
+
 	( void ) pcFileName;
 	( void ) ulLineNumber;
 }

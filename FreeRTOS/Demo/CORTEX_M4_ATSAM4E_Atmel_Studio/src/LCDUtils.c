@@ -103,7 +103,7 @@ struct ili93xx_opt_t g_ili93xx_display_opt;
 	smc_set_pulse_timing( SMC, ILI93XX_LCD_CS, SMC_PULSE_NWE_PULSE( 4 )	| SMC_PULSE_NCS_WR_PULSE( 4 ) | SMC_PULSE_NRD_PULSE( 10 )| SMC_PULSE_NCS_RD_PULSE( 10 ) );
 	smc_set_cycle_timing( SMC, ILI93XX_LCD_CS, SMC_CYCLE_NWE_CYCLE( 10 )| SMC_CYCLE_NRD_CYCLE( 22 ) );
 	smc_set_mode( SMC, ILI93XX_LCD_CS, SMC_MODE_READ_MODE | SMC_MODE_WRITE_MODE );
-	
+
 	/* Initialise the LCD. */
 	g_ili93xx_display_opt.ul_width = ILI93XX_LCD_WIDTH;
 	g_ili93xx_display_opt.ul_height = ILI93XX_LCD_HEIGHT;
@@ -116,15 +116,15 @@ struct ili93xx_opt_t g_ili93xx_display_opt;
 
 	/* Turn on LCD */
 	ili93xx_display_on();
-	
+
 	/* Clear. */
 	ili93xx_set_foreground_color( COLOR_WHITE );
 	ili93xx_draw_filled_rectangle( 0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT );
-	
+
 	/* Draw logos. */
 	ili93xx_set_cursor_position( 0,0 );
 	gfx_draw_bmpfile( logo_atmel_bmp );
-	
+
 	/* Set foreground colour ready to write text. */
 	ili93xx_set_foreground_color( COLOR_BLACK );
 }

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -65,19 +65,19 @@
 
 /******************************************************************************
  * NOTE 1:  This project provides two demo applications.  A simple blinky style
- * project, and a more comprehensive demo application that makes use of some
- * add-on components.  The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c 
- * is used to select between the two.  See the notes on using 
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY in main.c.  This file implements the 
- * simply blinky style version.
+ * project, and a more comprehensive demo application that makes use of
+ * FreeRTOS_CLI, FreeRTOS+UDP and FreeRTOS+FAT SL.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
+ * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
+ * in main.c.  This file implements the simply blinky style version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * basic demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware, are defined in main.c.
  ******************************************************************************
  *
- * main_blinky() creates one queue, and two tasks and one software timer.  It 
- * then starts the scheduler.
+ * main_blinky() creates one queue, two tasks and one software timer.  It then
+ * starts the scheduler.
  *
  * The Queue Send Task:
  * The queue send task is implemented by the prvQueueSendTask() function in
@@ -116,11 +116,6 @@ will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
-/* Values passed to the two tasks just to check the task parameter
-functionality. */
-#define mainQUEUE_SEND_PARAMETER			( 0x1111UL )
-#define mainQUEUE_RECEIVE_PARAMETER			( 0x22UL )
-
 /* The period of the blinky software timer.  The period is specified in ms and
 converted to ticks using the portTICK_RATE_MS constant. */
 #define mainBLINKY_TIMER_PERIOD				( 50 / portTICK_RATE_MS )
@@ -128,7 +123,7 @@ converted to ticks using the portTICK_RATE_MS constant. */
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0 )
 
-/* The LEDs toggled by the timer and queue receive task respectively. */
+/* The LEDs toggled by the timer callback and queue receive task respectively. */
 #define mainTIMER_LED						0
 #define mainTASK_LED						1
 
@@ -154,14 +149,10 @@ void main_blinky( void );
 
 /*-----------------------------------------------------------*/
 
-/* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
-
-/*-----------------------------------------------------------*/
-
 void main_blinky( void )
 {
 xTimerHandle xTimer;
+xQueueHandle xQueue;
 
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
@@ -173,13 +164,13 @@ xTimerHandle xTimer;
 		xTaskCreate( prvQueueReceiveTask,					/* The function that implements the task. */
 					( signed char * ) "Rx", 				/* The text name assigned to the task - for debug only as it is not used by the kernel. */
 					configMINIMAL_STACK_SIZE, 				/* The size of the stack to allocate to the task. */
-					( void * ) mainQUEUE_RECEIVE_PARAMETER, /* The parameter passed to the task - just to check the functionality. */
+					( void * ) xQueue, 						/* Pass the queue into the task using the task parameter. */
 					mainQUEUE_RECEIVE_TASK_PRIORITY, 		/* The priority assigned to the task. */
 					NULL );									/* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, ( void * ) mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, ( void * ) xQueue, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Create the blinky software timer as described at the top of this 
+		/* Create the blinky software timer as described at the top of this
 		file. */
 		xTimer = xTimerCreate(	( const signed char * ) "Blinky",/* A text name, purely to help debugging. */
 								( mainBLINKY_TIMER_PERIOD ),	/* The timer period. */
@@ -211,9 +202,10 @@ static void prvQueueSendTask( void *pvParameters )
 {
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
+xQueueHandle xQueue;
 
-	/* Check the task parameter is as expected. */
-	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_SEND_PARAMETER );
+	/* The handle of the queue is passed in using the task's parameter. */
+	xQueue = ( xQueueHandle ) pvParameters;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -230,7 +222,7 @@ const unsigned long ulValueToSend = 100UL;
 		toggle the LED.  0 is used as the block time so the sending operation
 		will not block - it shouldn't need to block as the queue should always
 		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0U );
+		xQueueSend( xQueue, &ulValueToSend, mainDONT_BLOCK );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -238,9 +230,10 @@ const unsigned long ulValueToSend = 100UL;
 static void prvQueueReceiveTask( void *pvParameters )
 {
 unsigned long ulReceivedValue;
+xQueueHandle xQueue;
 
-	/* Check the task parameter is as expected. */
-	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_RECEIVE_PARAMETER );
+	/* The queue is passed in as the task's parameter. */
+	xQueue = ( xQueueHandle ) pvParameters;
 
 	for( ;; )
 	{

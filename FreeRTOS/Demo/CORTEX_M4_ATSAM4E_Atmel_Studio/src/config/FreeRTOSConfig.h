@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.5.3 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -185,16 +185,16 @@ each node on the network has a unique MAC address. */
 
 /* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
-#define configIP_ADDR0		172
-#define configIP_ADDR1		25
-#define configIP_ADDR2		218
+#define configIP_ADDR0		192
+#define configIP_ADDR1		168
+#define configIP_ADDR2		0
 #define configIP_ADDR3		200
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
-#define configGATEWAY_ADDR0	172
-#define configGATEWAY_ADDR1	25
-#define configGATEWAY_ADDR2	218
+#define configGATEWAY_ADDR0	192
+#define configGATEWAY_ADDR1	168
+#define configGATEWAY_ADDR2	0
 #define configGATEWAY_ADDR3	1
 
 /* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and
@@ -213,7 +213,7 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configNET_MASK3		0
 
 /* The address of the echo server.  Used when the demo is build to include the
-UDP echo tasks (when mainINCLUDE_ECHO_CLIENT_TASKS is set to 1 in 
+UDP echo tasks (when mainINCLUDE_ECHO_CLIENT_TASKS is set to 1 in
 FreeRTOSConfig.h.
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml */
 #define configECHO_SERVER_ADDR0	192

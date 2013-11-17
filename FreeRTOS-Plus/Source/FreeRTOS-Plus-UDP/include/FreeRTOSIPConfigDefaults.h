@@ -5,11 +5,11 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -21,9 +21,9 @@
  *
  * - Commercial licensing -
  * Businesses and individuals that for commercial or other reasons cannot comply
- * with the terms of the GPL V2 license must obtain a commercial license before 
- * incorporating FreeRTOS+UDP into proprietary software for distribution in any 
- * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp 
+ * with the terms of the GPL V2 license must obtain a commercial license before
+ * incorporating FreeRTOS+UDP into proprietary software for distribution in any
+ * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp
  * and do not require any source files to be changed.
  *
  * FreeRTOS+UDP is distributed in the hope that it will be useful.  You cannot
@@ -150,6 +150,22 @@ from the FreeRTOSIPConfig.h configuration header file. */
 
 #ifndef ipconfigSUPPORT_SELECT_FUNCTION
 	#define ipconfigSUPPORT_SELECT_FUNCTION 0
+#endif
+		
+#ifndef ipconfigETHERNET_DRIVER_ADDS_UDP_CHECKSUM
+	#define ipconfigETHERNET_DRIVER_ADDS_UDP_CHECKSUM 0
+#endif
+
+#ifndef ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM
+	#define ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM 0
+#endif
+
+#ifndef ipconfigETHERNET_DRIVER_CHECKS_IP_CHECKSUM
+	#define ipconfigETHERNET_DRIVER_CHECKS_IP_CHECKSUM 0
+#endif
+
+#ifndef ipconfigETHERNET_DRIVER_CHECKS_UDP_CHECKSUM
+	#define ipconfigETHERNET_DRIVER_CHECKS_UDP_CHECKSUM 0
 #endif
 
 #endif /* FREERTOS_DEFAULT_IP_CONFIG_H */

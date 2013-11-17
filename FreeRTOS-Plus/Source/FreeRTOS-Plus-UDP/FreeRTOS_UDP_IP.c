@@ -220,7 +220,7 @@ static void prvReturnEthernetFrame( xNetworkBufferDescriptor_t * const pxNetwork
 /*
  * Return the checksum generated over usDataLengthBytes from pucNextData.
  */
-static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes );
+static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes, portBASE_TYPE xChecksumIsOffloaded );
 
 /*
  * The callback function that is assigned to all periodic processing timers -
@@ -246,7 +246,7 @@ static void prvRefreshARPCacheEntry( const xMACAddress_t * const pxMACAddress, c
  * Creates the pseudo header necessary then generate the checksum over the UDP
  * packet.  Returns the calculated checksum.
  */
-static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket );
+static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket, portBASE_TYPE xChecksumIsOffloaded );
 
 /*
  * Look for ulIPAddress in the ARP cache.  If the IP address exists, copy the
@@ -665,7 +665,7 @@ void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress, uint32_t *pulNetM
 				memset( ( void * ) pucChar, ( int ) ipECHO_DATA_FILL_BYTE, xNumberOfBytesToSend );
 
 				/* The message is complete, calculate the checksum. */
-				pxICMPHeader->usChecksum = prvGenerateChecksum( ( uint8_t * ) pxICMPHeader, ( uint16_t ) ( xNumberOfBytesToSend + sizeof( xICMPHeader_t ) ) );
+				pxICMPHeader->usChecksum = prvGenerateChecksum( ( uint8_t * ) pxICMPHeader, ( uint16_t ) ( xNumberOfBytesToSend + sizeof( xICMPHeader_t ) ), pdFALSE );
 
 				/* Complete the network buffer information. */
 				pxNetworkBuffer->ulIPAddress = ulIPAddress;
@@ -985,7 +985,7 @@ xUDPHeader_t *pxUDPHeader;
 
 	if( ( ucSocketOptions & FREERTOS_SO_UDPCKSUM_OUT ) != 0U )
 	{
-		pxUDPHeader->usChecksum = prvGenerateUDPChecksum( pxUDPPacket );
+		pxUDPHeader->usChecksum = prvGenerateUDPChecksum( pxUDPPacket, ipconfigETHERNET_DRIVER_ADDS_UDP_CHECKSUM );
 		if( pxUDPHeader->usChecksum == 0x00 )
 		{
 			/* A calculated checksum of 0 must be inverted as 0 means the
@@ -1117,7 +1117,7 @@ xUDPHeader_t *pxUDPHeader;
 				pxIPHeader->usLength = FreeRTOS_htons( pxIPHeader->usLength );
 				pxIPHeader->ulDestinationIPAddress = pxNetworkBuffer->ulIPAddress;
 				pxIPHeader->usIdentification = usPacketIdentifier;
-				pxIPHeader->usHeaderChecksum = prvGenerateChecksum( ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipIP_HEADER_LENGTH );
+				pxIPHeader->usHeaderChecksum = prvGenerateChecksum( ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipIP_HEADER_LENGTH, ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM );
 			}
 			else if ( eReturned == eARPCacheMiss )
 			{
@@ -1234,7 +1234,7 @@ xUDPHeader_t *pxUDPHeader;
 				pxNetworkBuffer->xDataLength = pxIPHeader->usLength + sizeof( xEthernetHeader_t );
 				pxIPHeader->usLength = FreeRTOS_htons( pxIPHeader->usLength );
 				pxIPHeader->ulDestinationIPAddress = pxNetworkBuffer->ulIPAddress;
-				pxIPHeader->usHeaderChecksum = prvGenerateChecksum( ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipIP_HEADER_LENGTH );
+				pxIPHeader->usHeaderChecksum = prvGenerateChecksum( ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipIP_HEADER_LENGTH, ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM );
 			}
 			else if ( eReturned == eARPCacheMiss )
 			{
@@ -1493,7 +1493,7 @@ portBASE_TYPE xChecksumIsCorrect;
 		if( ( pxIPHeader->ucVersionHeaderLength == ipIP_VERSION_AND_HEADER_LENGTH_BYTE ) && ( ( pxIPHeader->usFragmentOffset & ipFRAGMENT_OFFSET_BIT_MASK ) == 0U ) )
 		{
 			/* Is the IP header checksum correct? */
-			if( prvGenerateChecksum( ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipIP_HEADER_LENGTH ) == 0 )
+			if( prvGenerateChecksum( ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipIP_HEADER_LENGTH, ipconfigETHERNET_DRIVER_CHECKS_IP_CHECKSUM ) == 0 )
 			{
 				/* Add the IP and MAC addresses to the ARP table if they are not
 				already there - otherwise refresh the age of the existing
@@ -1535,7 +1535,7 @@ portBASE_TYPE xChecksumIsCorrect;
 						{
 							xChecksumIsCorrect = pdTRUE;
 						}
-						else if( prvGenerateUDPChecksum( pxUDPPacket ) == 0 )
+						else if( prvGenerateUDPChecksum( pxUDPPacket, ipconfigETHERNET_DRIVER_CHECKS_UDP_CHECKSUM ) == 0 )
 						{
 							xChecksumIsCorrect = pdTRUE;
 						}
@@ -1569,26 +1569,36 @@ portBASE_TYPE xChecksumIsCorrect;
 }
 /*-----------------------------------------------------------*/
 
-static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket )
+static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket, portBASE_TYPE xChecksumIsOffloaded )
 {
 xPseudoHeader_t *pxPseudoHeader;
 uint16_t usLength, usReturn;
 
-	/* Map the pseudo header into the correct place within the real IP
-	header. */
-	pxPseudoHeader = ( xPseudoHeader_t * ) &( pxUDPPacket->xIPHeader.ucTimeToLive );
+	if( xChecksumIsOffloaded == pdFALSE )
+	{
+		/* Map the pseudo header into the correct place within the real IP
+		header. */
+		pxPseudoHeader = ( xPseudoHeader_t * ) &( pxUDPPacket->xIPHeader.ucTimeToLive );
 
-	/* Ordering here is important so as not to overwrite data that is required
-	but has not yet been used as the pseudo header overlaps the information
-	that is being copied into it. */
-	pxPseudoHeader->ulSourceAddress = pxUDPPacket->xIPHeader.ulSourceIPAddress;
-	pxPseudoHeader->ulDestinationAddress = pxUDPPacket->xIPHeader.ulDestinationIPAddress;
-	pxPseudoHeader->ucZeros = 0x00;
-	pxPseudoHeader->ucProtocol = ipPROTOCOL_UDP;
-	pxPseudoHeader->usUDPLength = pxUDPPacket->xUDPHeader.usLength;
+		/* Ordering here is important so as not to overwrite data that is required
+		but has not yet been used as the pseudo header overlaps the information
+		that is being copied into it. */
+		pxPseudoHeader->ulSourceAddress = pxUDPPacket->xIPHeader.ulSourceIPAddress;
+		pxPseudoHeader->ulDestinationAddress = pxUDPPacket->xIPHeader.ulDestinationIPAddress;
+		pxPseudoHeader->ucZeros = 0x00;
+		pxPseudoHeader->ucProtocol = ipPROTOCOL_UDP;
+		pxPseudoHeader->usUDPLength = pxUDPPacket->xUDPHeader.usLength;
 
-	usLength = FreeRTOS_ntohs( pxPseudoHeader->usUDPLength );
-	usReturn = prvGenerateChecksum( ( uint8_t * ) pxPseudoHeader, usLength + sizeof( xPseudoHeader_t ) );
+		usLength = FreeRTOS_ntohs( pxPseudoHeader->usUDPLength );
+		usReturn = prvGenerateChecksum( ( uint8_t * ) pxPseudoHeader, usLength + sizeof( xPseudoHeader_t ), pdFALSE );
+	}
+	else
+	{
+		/* The hardware will check the checksum.  Returning 0 allows this 
+		function to be used to both check an incoming checksum and set an
+		outgoing checksum in this case. */
+		usReturn = 0;
+	}
 
 	return usReturn;
 }
@@ -1610,7 +1620,7 @@ uint16_t usLength, usReturn;
 		message itself. */
 		usDataLength -= sizeof( xIPHeader_t );
 
-		if( prvGenerateChecksum( ( uint8_t * ) &( pxICMPPacket->xICMPHeader ), usDataLength ) != 0 )
+		if( prvGenerateChecksum( ( uint8_t * ) &( pxICMPPacket->xICMPHeader ), usDataLength, pdFALSE ) != 0 )
 		{
 			eStatus = eInvalidChecksum;
 		}
@@ -1717,42 +1727,53 @@ uint16_t usLength, usReturn;
 #endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 /*-----------------------------------------------------------*/
 
-static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes )
+static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes, portBASE_TYPE xChecksumIsOffloaded )
 {
 uint32_t ulChecksum = 0;
-uint16_t us, usDataLength16BitWords, *pusNextData;
+uint16_t us, usDataLength16BitWords, *pusNextData, usReturn;
 
-	/* There are half as many 16 bit words than bytes. */
-	usDataLength16BitWords = ( usDataLengthBytes >> 1U );
-
-	pusNextData = ( uint16_t * ) pucNextData;
-
-	for( us = 0U; us < usDataLength16BitWords; us++ )
+	if( xChecksumIsOffloaded == pdFALSE )
 	{
-		ulChecksum += ( uint32_t ) pusNextData[ us ];
-	}
+		/* There are half as many 16 bit words than bytes. */
+		usDataLength16BitWords = ( usDataLengthBytes >> 1U );
 
-	if( ( usDataLengthBytes & 0x01U ) != 0x00 )
-	{
-		/* There is one byte left over. */
-		#if ipconfigBYTE_ORDER == FREERTOS_LITTLE_ENDIAN
+		pusNextData = ( uint16_t * ) pucNextData;
+
+		for( us = 0U; us < usDataLength16BitWords; us++ )
 		{
-			ulChecksum += ( uint32_t ) pucNextData[ usDataLengthBytes - 1 ];
+			ulChecksum += ( uint32_t ) pusNextData[ us ];
 		}
-		#else
+
+		if( ( usDataLengthBytes & 0x01U ) != 0x00 )
 		{
-			us = ( uint16_t ) pucNextData[ usDataLengthBytes - 1 ];
-			ulChecksum += ( uint32_t ) ( us << 8 );
+			/* There is one byte left over. */
+			#if ipconfigBYTE_ORDER == FREERTOS_LITTLE_ENDIAN
+			{
+				ulChecksum += ( uint32_t ) pucNextData[ usDataLengthBytes - 1 ];
+			}
+			#else
+			{
+				us = ( uint16_t ) pucNextData[ usDataLengthBytes - 1 ];
+				ulChecksum += ( uint32_t ) ( us << 8 );
+			}
+			#endif
 		}
-		#endif
-	}
 
-	while( ( ulChecksum >> 16UL ) != 0x00UL )
+		while( ( ulChecksum >> 16UL ) != 0x00UL )
+		{
+			ulChecksum = ( ulChecksum & 0xffffUL ) + ( ulChecksum >> 16UL );
+		}
+		
+		usReturn = ~( ( uint16_t ) ulChecksum );
+	}
+	else
 	{
-		ulChecksum = ( ulChecksum & 0xffffUL ) + ( ulChecksum >> 16UL );
+		/* The checksum is calculated by the hardware.  Return 0 here to ensure
+		this works for both incoming and outgoing checksums. */
+		usReturn = 0;
 	}
 
-	return ~( ( uint16_t ) ulChecksum );
+	return usReturn;
 }
 /*-----------------------------------------------------------*/
 

@@ -3,6 +3,13 @@ Changes between V1.0.1 and V1.0.2
 	+ Increase the size of the critical section in the function that obtains a
 	  private port number.
 	+ Add defaults for more trace macros.
+	+ Update network interfaces so all compile with latest code revision.
+	+ Added the following definitions for improved performance on hardware that
+	  has the ability to offload checksum generation and/or checking:
+		ipconfigETHERNET_DRIVER_ADDS_UDP_CHECKSUM
+		ipconfigETHERNET_DRIVER_ADDS_IP_CHECKSUM
+		ipconfigETHERNET_DRIVER_CHECKS_IP_CHECKSUM
+		ipconfigETHERNET_DRIVER_CHECKS_UDP_CHECKSUM
 
 Changes between V1.0.0 and V1.0.1
 

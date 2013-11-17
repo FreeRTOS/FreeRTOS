@@ -114,10 +114,10 @@ struct freertos_sockaddr
 
 	#define FreeRTOS_inet_ntoa( ulIPAddress, pucBuffer )									\
 										sprintf( ( char * ) ( pucBuffer ), "%d.%d.%d.%d",	\
-											( ( ulIPAddress ) & 0xffUL ),					\
-											( ( ( ulIPAddress ) >> 8UL ) & 0xffUL ),		\
-											( ( ( ulIPAddress ) >> 16UL ) & 0xffUL ),		\
-											( ( ( ulIPAddress ) >> 24UL ) & 0xffUL ) )
+											( int ) ( ( ulIPAddress ) & 0xffUL ),			\
+											( int ) ( ( ( ulIPAddress ) >> 8UL ) & 0xffUL ),\
+											( int ) ( ( ( ulIPAddress ) >> 16UL ) & 0xffUL ),\
+											( int ) ( ( ( ulIPAddress ) >> 24UL ) & 0xffUL ) )
 
 #else /* ipconfigBYTE_ORDER */
 

@@ -103,7 +103,7 @@
 #endif
 
 #ifdef MPLAB_PIC32MX_PORT
-	#include "..\..\Source\portable\MPLAB\PIC32MX\portmacro.h"
+	#include "../../Source/portable/MPLAB/PIC32MX/portmacro.h"
 #endif
 
 #ifdef _FEDPICC

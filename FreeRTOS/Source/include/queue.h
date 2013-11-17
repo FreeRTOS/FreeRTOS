@@ -1246,7 +1246,7 @@ unsigned long ulVarToSend, ulValReceived;
 	if( xHigherPriorityTaskWoken )
 	{
 		// Actual macro used here is port specific.
-		taskYIELD_FROM_ISR ();
+		portYIELD_FROM_ISR ();
 	}
  }
  </pre>

@@ -1,0 +1,159 @@
+#define mainISR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
+#define mainISRTASK_LED					( 2 )
+#define mainT5PRESCALAR					( 6 )
+#define mainT5_SEMAPHORE_RATE			( 31250 )
+
+static void prvISRBlockTask( void* pvParameters )
+{
+    /* local variables marked as volatile so the compiler does not optimize them away */
+    volatile uint64_t resAcc;
+    volatile uint32_t arg1, arg2;
+
+        /* Create the semaphore used to signal this task */
+        vSemaphoreCreateBinary( xBlockSemaphore );
+
+        /* Set up timer 5 to generate an interrupt every 50 ms */
+	T5CON = 0;
+	TMR5 = 0;
+
+	/* Timer 5 is going to interrupt at 20Hz Hz. (40,000,000 / (64 * 20) */
+        T5CONbits.TCKPS = mainT5PRESCALAR;
+	PR5 = mainT5_SEMAPHORE_RATE;
+
+	/* Setup timer 5 interrupt priority to be the maximum allowed */
+	IPC6bits.T5IP = ( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+
+	/* Clear the interrupt as a starting condition. */
+	IFS0bits.T5IF = 0;
+
+	/* Enable the interrupt. */
+	IEC0bits.T5IE = 1;
+
+	/* Start the timer. */
+	T5CONbits.TON = 1;
+
+        arg1 = 10;
+        arg2 = 2;
+
+        for( ;; )
+        {
+            /* block on the binary semaphore given by an ISR */
+            xSemaphoreTake( xBlockSemaphore, portMAX_DELAY );
+
+            vParTestToggleLED( mainISRTASK_LED );
+            /* perform some maths operations to exercise the accumulators */
+            resAcc = resAcc * arg2 + arg1;
+        }
+}
+/*-----------------------------------------------------------*/
+
+void vT5InterruptHandler( void )
+{
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+        /* This function is the handler for the peripheral timer interrupt.
+         The interrupt is initially signalled in a separate assembly file
+         which switches to the system stack and then calls this function.
+         It gives a semaphore which signals the prvISRBlockTask */
+        xSemaphoreGiveFromISR( xBlockSemaphore, &xHigherPriorityTaskWoken );
+
+        /* Clear the interrupt */
+        IFS0CLR = _IFS0_T5IF_MASK;
+
+        portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+}
+
+/*-----------------------------------------------------------*/
+
+#define DMA_BUFF_SIZE   400
+uint32_t dmaBuff[2][DMA_BUFF_SIZE];
+static void dmaTask(void* pvParameters)
+{
+    uint32_t i;
+    /* this tasks hammers the dma copying data from one buffer to another */
+    DMACONbits.SUSPEND = 1; //Suspend ALL DMA transfers
+
+    /* currently the data will be placed in the cache and nothing will be copied
+     * by the dma as it only accesses physical memory, this test is designed to stress the system
+     * and confirm correct operation in a heavy interrupt environment */
+    for(i = 0; i < DMA_BUFF_SIZE; i++) {
+        dmaBuff[0][i] = i;
+    }
+
+    /* set the transfer event control: what event is to start the DMA transfer */
+    DCH1ECONbits.CHSIRQ = _TIMER_6_VECTOR;
+    DCH1ECONbits.SIRQEN = 1;
+
+    /* set up transfer */
+    DCH1SSA = KVA_TO_PA((void*) &dmaBuff[0][0]);
+    DCH1DSA = KVA_TO_PA((void*) &dmaBuff[1][0]);
+    DCH1SSIZ = DMA_BUFF_SIZE;
+    DCH1DSIZ = DMA_BUFF_SIZE;
+    DCH1CSIZ = 4;
+
+    /* setup interrupt response */
+    IPC33bits.DMA1IP = 3;
+    DCH1INTbits.CHBCIE = 1;
+    IEC4bits.DMA1IE = 1;
+    DCH1CONbits.CHPRI = 0b10;
+
+    /* once we configured the DMA channel we can enable it */
+    DCH1CONbits.CHEN = 1;
+    DMACONbits.ON = 1;
+    DMACONbits.SUSPEND = 0;
+
+    /* setup T6 to trigger the transfers */
+    T6CON = 0x0000;
+    IEC0CLR = _IEC0_T6IE_MASK;
+    IFS0CLR = _IFS0_T6IF_MASK;
+    TMR6 = 0;
+    PR6 = 1;
+    T6CONSET = _T6CON_ON_MASK;
+
+    /* once the dma is setup we delete this task */
+    vTaskDelete(NULL);
+}
+
+void __attribute__((vector(_DMA1_VECTOR), interrupt(ipl3))) DMAInterruptHandler(void)
+{
+    portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+    uint32_t i;
+
+    /* clear the destination buffer */
+    for(i = 0; i < DMA_BUFF_SIZE; i++) {
+        dmaBuff[1][i] = 0;
+    }
+
+    xSemaphoreGiveFromISR( xBlockSemaphore, &xHigherPriorityTaskWoken );
+
+    /* we have just finished copying from buffer0 to buffer 1 so restart the copy operation */
+    DCH1INTCLR = _DCH1INT_CHBCIF_MASK;
+    IFS4CLR = _IFS4_DMA1IF_MASK;
+    DCH1CONSET = _DCH1CON_CHEN_MASK;
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+}
+
+/*-----------------------------------------------------------*/
+
+ * The Blinky ISR Test:
+ * This demonstrates triggering an ISR from a peripheral timer. A task is created
+ * which blocks on a semaphore. Separately a peripheral timer is set to cause an
+ * interrupt every 50ms. The ISR handler (in a separate assembly file) then
+ * releases the semaphore which causes the task to unblock and toggle an LED. This
+ * sequence tests operation of the ISR and system stack handling.
+ *
+static void prvISRBlockTask( void *pvParameters );
+static void dmaTask(void *pvParameters);
+
+/* The timer 5 interrupt handler.  As this interrupt uses the FreeRTOS assembly
+entry point the IPL setting in the following function prototype has no effect. */
+void __attribute__( (interrupt(ipl3), vector(_TIMER_5_VECTOR))) vT5InterruptWrapper( void );
+
+/*-----------------------------------------------------------*/
+
+/* The semaphore used to signal the ISRBlockTask */
+static xSemaphoreHandle xBlockSemaphore;
+
+
+//                xTaskCreate( prvISRBlockTask, ( signed char * ) "ISR", configMINIMAL_STACK_SIZE, ( void * ) NULL, mainISR_TASK_PRIORITY, NULL );
+//                xTaskCreate( dmaTask, (signed char *) "DMA", configMINIMAL_STACK_SIZE, (void*) NULL, 2, NULL);

@@ -307,6 +307,8 @@
           <state>$PROJ_DIR$\ST_Code\libraries\STM32L1xx_StdPeriph_Driver\inc</state>
           <state>$PROJ_DIR$\ST_Code\libraries\STMTouch_Driver\inc</state>
           <state>$PROJ_DIR$\ST_Code\libraries\CMSIS\Device\ST\STM32L1xx\Include</state>
+          <state>$PROJ_DIR$\..\..\Source\include</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -555,7 +557,7 @@
         </option>
         <option>
           <name>AUserIncludes</name>
-          <state></state>
+          <state>$PROJ_DIR$\include</state>
         </option>
         <option>
           <name>AExtraOptionsCheckV2</name>
@@ -940,6 +942,42 @@
     </settings>
   </configuration>
   <group>
+    <name>FreeRTOS Source</name>
+    <group>
+      <name>Portable</name>
+      <group>
+        <name>IAR</name>
+        <group>
+          <name>ARM_CM3</name>
+          <file>
+            <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\port.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3\portasm.s</name>
+          </file>
+        </group>
+      </group>
+      <file>
+        <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
+      </file>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\list.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+    </file>
+  </group>
+  <group>
     <name>ST_Code</name>
     <group>
       <name>STM32L-Discovery</name>
@@ -982,6 +1020,9 @@
     </group>
     <group>
       <name>TouchSensingDriver</name>
+      <excluded>
+        <configuration>Debug</configuration>
+      </excluded>
       <file>
         <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl.c</name>
       </file>
@@ -1031,6 +1072,9 @@
   </group>
   <file>
     <name>$PROJ_DIR$\discover_functions.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\include\FreeRTOSConfig.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\icc_measure.c</name>

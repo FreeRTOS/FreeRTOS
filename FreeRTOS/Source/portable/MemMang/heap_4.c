@@ -134,6 +134,7 @@ static xBlockLink xStart, *pxEnd = NULL;
 /* Keeps track of the number of free bytes remaining, but says nothing about
 fragmentation. */
 static size_t xFreeBytesRemaining = ( ( size_t ) heapADJUSTED_HEAP_SIZE ) & ( ( size_t ) ~portBYTE_ALIGNMENT_MASK );
+static size_t xMinimumEverFreeBytesRemaining = ( ( size_t ) heapADJUSTED_HEAP_SIZE ) & ( ( size_t ) ~portBYTE_ALIGNMENT_MASK );
 
 /* Gets set to the top bit of an size_t type.  When this bit in the xBlockSize 
 member of an xBlockLink structure is set then the block belongs to the 
@@ -223,6 +224,11 @@ void *pvReturn = NULL;
 
 					xFreeBytesRemaining -= pxBlock->xBlockSize;
 
+					if( xFreeBytesRemaining < xMinimumEverFreeBytesRemaining )
+					{
+						xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+					}
+
 					/* The block is being returned - it is allocated and owned
 					by the application and has no "next" block. */
 					pxBlock->xBlockSize |= xBlockAllocatedBit;
@@ -292,6 +298,12 @@ xBlockLink *pxLink;
 size_t xPortGetFreeHeapSize( void )
 {
 	return xFreeBytesRemaining;
+}
+/*-----------------------------------------------------------*/
+
+size_t xPortGetMinimumEverFreeHeapSize( void )
+{
+	return xMinimumEverFreeBytesRemaining;
 }
 /*-----------------------------------------------------------*/
 

@@ -1378,8 +1378,18 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * there be no higher priority tasks waiting on the same event) or
  * the delay period expires.
  *
+ * The 'unordered' version replaces the event list item value with the 
+ * xItemValue value, and inserts the list item at the end of the list.
+ *
+ * The 'ordered' version uses the existing event list item value (which is the
+ * owning tasks priority) to insert the list item into the event list is task
+ * priority order.
+ *
  * @param pxEventList The list containing tasks that are blocked waiting
  * for the event to occur.
+ *
+ * @param xItemValue The item value to use for the event list item when the
+ * event list is not ordered by task priority.
  *
  * @param xTicksToWait The maximum amount of time that the task should wait
  * for the event to occur.  This is specified in kernel ticks,the constant
@@ -1387,6 +1397,7 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * period.
  */
 void vTaskPlaceOnEventList( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1412,13 +1423,23 @@ void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xT
  * Removes a task from both the specified event list and the list of blocked
  * tasks, and places it on a ready queue.
  *
- * xTaskRemoveFromEventList () will be called if either an event occurs to
- * unblock a task, or the block timeout period expires.
+ * xTaskRemoveFromEventList()/xTaskRemoveFromUnorderedEventList() will be called 
+ * if either an event occurs to unblock a task, or the block timeout period 
+ * expires.
+ *
+ * xTaskRemoveFromEventList() is used when the event list is in task priority
+ * order.  It removes the list item from the head of the event list as that will
+ * have the highest priority owning task of all the tasks on the event list.
+ * xTaskRemoveFromUnorderedEventList() is used when the event list is not
+ * ordered and the event list items hold something other than the owning tasks
+ * priority.  In this case the event list item value is updated to the value
+ * passed in the xItemValue parameter.
  *
  * @return pdTRUE if the task being removed has a higher priority than the task
  * making the call, otherwise pdFALSE.
  */
 signed portBASE_TYPE xTaskRemoveFromEventList( const xList * const pxEventList ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskRemoveFromUnorderedEventList( xListItem * pxEventListItem, portTickType xItemValue ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS ONLY
@@ -1429,6 +1450,12 @@ signed portBASE_TYPE xTaskRemoveFromEventList( const xList * const pxEventList )
  * that is ready to run.
  */
 void vTaskSwitchContext( void ) PRIVILEGED_FUNCTION;
+
+/*
+ * THESE FUNCTIONS MUST NOT BE USED FROM APPLICATION CODE.  THEY ARE USED BY
+ * THE EVENT BITS MODULE.
+ */
+portTickType uxTaskResetEventItemValue( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Return the handle of the calling task.
@@ -1479,13 +1506,13 @@ signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed ch
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.
  */
-unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
+unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
 /*
  * Set the uxTCBNumber of the task referenced by the xTask parameter to
  * ucHandle.
  */
-void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
+void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle ) PRIVILEGED_FUNCTION;
 
 /*
  * If tickless mode is being used, or a low power mode is implemented, then
@@ -1494,7 +1521,7 @@ void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
  * to date with the actual execution time by being skipped forward by the by
  * a time equal to the idle period.
  */
-void vTaskStepTick( portTickType xTicksToJump );
+void vTaskStepTick( portTickType xTicksToJump ) PRIVILEGED_FUNCTION;
 
 /*
  * Provided for use within portSUPPRESS_TICKS_AND_SLEEP() to allow the port
@@ -1509,7 +1536,7 @@ void vTaskStepTick( portTickType xTicksToJump );
  * critical section between the timer being stopped and the sleep mode being
  * entered to ensure it is ok to proceed into the sleep mode.
  */
-eSleepModeStatus eTaskConfirmSleepModeStatus( void );
+eSleepModeStatus eTaskConfirmSleepModeStatus( void ) PRIVILEGED_FUNCTION;
 
 #ifdef __cplusplus
 }

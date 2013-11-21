@@ -92,9 +92,10 @@ is included as it is used by the port layer. */
 conform. */
 typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
-
-
-
+/* The type that holds event bits always matches portTickType - therefore the
+number of bits it holds is set by configUSE_16_BIT_TICKS (16 bits if set to 1,
+32 bits if set to 0. */
+typedef portTickType xEventBitsType;
 
 /*
  * Check all the required application specific macros have been defined.
@@ -190,6 +191,10 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 	#define configUSE_TIMERS 0
 #endif
 
+#ifndef configUSE_EVENT_GROUPS
+	#define configUSE_EVENT_GROUPS 0
+#endif
+
 #ifndef configUSE_COUNTING_SEMAPHORES
 	#define configUSE_COUNTING_SEMAPHORES 0
 #endif
@@ -216,6 +221,14 @@ typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
 
 #ifndef INCLUDE_xTaskResumeFromISR
 	#define INCLUDE_xTaskResumeFromISR 1
+#endif
+
+#ifndef INCLUDE_xEventGroupSetBitFromISR
+	#define INCLUDE_xEventGroupSetBitFromISR 0
+#endif
+
+#ifndef INCLUDE_xTimerPendCallbackFromISR
+	#define INCLUDE_xTimerPendCallbackFromISR 0
 #endif
 
 #ifndef configASSERT

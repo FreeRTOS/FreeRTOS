@@ -205,7 +205,31 @@ typedef struct xLIST
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )			( (&( ( pxList )->xListEnd ))->pxNext->xItemValue )
+#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )			( ( ( pxList )->xListEnd ).pxNext->xItemValue )
+
+/*
+ * Return the list item at the head of the list.
+ *
+ * \page listGET_HEAD_ENTRY listGET_HEAD_ENTRY
+ * \ingroup LinkedList
+ */
+#define listGET_HEAD_ENTRY( pxList )						( ( ( pxList )->xListEnd ).pxNext )
+
+/*
+ * Return the list item at the head of the list.
+ *
+ * \page listGET_HEAD_ENTRY listGET_HEAD_ENTRY
+ * \ingroup LinkedList
+ */
+#define listGET_NEXT( pxListItem )							( ( pxListItem )->pxNext )
+
+/*
+ * Return the list item that marks the end of the list
+ *
+ * \page listGET_END_MARKER listGET_END_MARKER
+ * \ingroup LinkedList
+ */
+#define listGET_END_MARKER( pxList )						( ( xListItem const * ) ( &( ( pxList )->xListEnd ) ) )
 
 /*
  * Access macro to determine if a list contains any items.  The macro will

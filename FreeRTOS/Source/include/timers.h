@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -83,6 +83,7 @@ extern "C" {
 /* IDs for commands that can be sent/received on the timer queue.  These are to
 be used solely through the macros that make up the public software timer API,
 as defined below. */
+#define tmrCOMMAND_EXECUTE_CALLBACK			( ( portBASE_TYPE ) -1 )
 #define tmrCOMMAND_START					( ( portBASE_TYPE ) 0 )
 #define tmrCOMMAND_STOP						( ( portBASE_TYPE ) 1 )
 #define tmrCOMMAND_CHANGE_PERIOD			( ( portBASE_TYPE ) 2 )
@@ -170,7 +171,7 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  *
  * 	   // Optionally do something if the pxTimer parameter is NULL.
  * 	   configASSERT( pxTimer );
- * 	
+ *
  *     // Which timer expired?
  *     lArrayIndex = ( long ) pvTimerGetTimerID( pxTimer );
  *
@@ -293,7 +294,7 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
 /**
- * xTimerGetTimerDaemonTaskHandle() is only available if 
+ * xTimerGetTimerDaemonTaskHandle() is only available if
  * INCLUDE_xTimerGetTimerDaemonTaskHandle is set to 1 in FreeRTOSConfig.h.
  *
  * Simply returns the handle of the timer service/daemon task.  It it not valid
@@ -943,6 +944,95 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * @endverbatim
  */
 #define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
+
+
+/**
+ * portBASE_TYPE xTimerPendCallbackFromISR( pdAPPLICATION_CALLBACK_CODE pvCallbackFunction,
+ *                                          void *pvParameter1,
+ *                                          unsigned long ulParameter2,
+ *                                          portBASE_TYPE *pxHigherPriorityTaskWoken );
+ *
+ *
+ * Can be used by interrupt service routines to request that a function (the
+ * callback function) is executed from a task context.
+ *
+ * Ideally an interrupt service routine (ISR) is kept as short as possible, but
+ * sometimes an ISR either has a lot of processing to do, or needs to perform
+ * processing that is not deterministic.  In these cases the processing can be
+ * deferred to be performed in a task - allowing the ISR to exit.  The timer
+ * daemon service/daemon task is already responsible for executing software
+ * timer callback functions, so is also used to executed callback functions that
+ * are pended from interrupts.
+ *
+ * A mechanism is provided that allows the interrupt to return directly to the
+ * task that will subsequently execute the pended callback function.  This
+ * allows the callback function to execute contiguously in time with the
+ * interrupt - just as if the callback had executed in the interrupt itself.
+ *
+ * @param pvCallbackFunction The function to execute from the timer service/
+ * daemon task.  The function must conform to the pdAPPLICATION_CALLBACK_CODE
+ * prototype.
+ *
+ * @param pvParameter1 The value of the callback function's first parameter.
+ * The parameter has a void * type to allow it to be used to pass any type.
+ * For example, unsigned longs can be cast to a void *, or the void * can be
+ * used to point to a structure.
+ *
+ * @param ulParameter2 The value of the callback function's second parameter.
+ *
+ * @param pxHigherPriorityTaskWoken As mentioned above, calling this function
+ * will result in a message being sent to the timer daemon task.  If the
+ * priority of the timer daemon task (which is set using
+ * configTIMER_TASK_PRIORITY in FreeRTOSConfig.h) is higher than the priority of
+ * the currently running task (the task the interrupt interrupted) then
+ * *pxHigherPriorityTaskWoken will be set to pdTRUE within
+ * xTimerPendCallbackFromISR(), indicating that a context switch should be
+ * requested before the interrupt exits.  For that reason
+ * *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
+ * example code below.
+ *
+ * Example usage:
+ * @verbatim
+ *
+ *	// The callback function that will execute in the context of the daemon task.
+ *  // Note callback functions must all use this same prototype.
+ *  void vProcessInterface( void *pvParameter1, unsigned long ulParameter2 )
+ *	{
+ *		portBASE_TYPE xInterfaceToService;
+ *
+ *		// The interface that requires servicing is passed in the second
+ *      // parameter.  The first parameter is not used in this case.
+ *		xInterfaceToService = ( portBASE_TYPE ) ulParameter2;
+ *
+ *		// ...Perform the processing here...
+ *	}
+ *
+ *	// An ISR that receives data packets from multiple interfaces
+ *  void vAnISR( void )
+ *	{
+ *		portBASE_TYPE xInterfaceToService, xHigherPriorityTaskWoken;
+ *
+ *		// Query the hardware to determine which interface needs processing.
+ *		xInterfaceToService = prvCheckInterfaces();
+ *
+ *      // The actual processing is to be deferred to a task.  Request the
+ *      // vProcessInterface() callback function is executed, passing in the
+ *		// number of the interface that needs processing.  The interface to
+ *		// service is passed in the second parameter.  The first parameter is
+ *		// not used in this case.
+ *		xHigherPriorityTaskWoken = pdFALSE;
+ *		xTimerPendCallbackFromISR( vProcessInterface, NULL, ( unsigned long ) xInterfaceToService, &xHigherPriorityTaskWoken );
+ *
+ *		// If xHigherPriorityTaskWoken is now set to pdTRUE then a context
+ *		// switch should be requested.  The macro used is port specific and will
+ *		// be either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - refer to
+ *		// the documentation page for the port being used.
+ *		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+ *
+ *	}
+ * @endverbatim
+ */
+portBASE_TYPE xTimerPendCallbackFromISR( pdAPPLICATION_CALLBACK_CODE pvCallbackFunction, void *pvParameter1, unsigned long ulParameter2, portBASE_TYPE *pxHigherPriorityTaskWoken );
 
 /*
  * Functions beyond this part are not part of the public API and are intended

@@ -169,7 +169,6 @@ typedef struct tskTaskControlBlock
 
 } tskTCB;
 
-
 /*
  * Some kernel aware debuggers require the data the debugger needs access to to
  * be global, rather than file scope.
@@ -1327,7 +1326,9 @@ void vTaskEndScheduler( void )
 void vTaskSuspendAll( void )
 {
 	/* A critical section is not required as the variable is of type
-	portBASE_TYPE. */
+	portBASE_TYPE.  Please read Richard Barry's reply in the following link to a
+	post in the FreeRTOS support forum before reporting this as a bug! -
+	http://goo.gl/wu4acr */
 	++uxSchedulerSuspended;
 }
 /*----------------------------------------------------------*/
@@ -1938,6 +1939,60 @@ portTickType xTimeToWake;
 }
 /*-----------------------------------------------------------*/
 
+void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, portTickType xTicksToWait )
+{
+portTickType xTimeToWake;
+
+	configASSERT( pxEventList );
+
+	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
+	SCHEDULER SUSPENDED. */
+
+	/* Store the item value in the event list item. */
+	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ), xItemValue );
+
+	/* Place the event list item of the TCB at the end of the appropriate event 
+	list. */
+	vListInsertEnd( pxEventList, &( pxCurrentTCB->xEventListItem ) );
+
+	/* The task must be removed from the ready list before it is added to the
+	blocked list.  Exclusive access can be assured to the ready list as the
+	scheduler is locked. */
+	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( unsigned portBASE_TYPE ) 0 )
+	{
+		/* The current task must be in a ready list, so there is no need to
+		check, and the port reset macro can be called directly. */
+		portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
+	}
+
+	#if ( INCLUDE_vTaskSuspend == 1 )
+	{
+		if( xTicksToWait == portMAX_DELAY )
+		{
+			/* Add the task to the suspended task list instead of a delayed task
+			list to ensure it is not woken by a timing event.  It will block
+			indefinitely. */
+			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+		}
+		else
+		{
+			/* Calculate the time at which the task should be woken if the event does
+			not occur.  This may overflow but this doesn't matter. */
+			xTimeToWake = xTickCount + xTicksToWait;
+			prvAddCurrentTaskToDelayedList( xTimeToWake );
+		}
+	}
+	#else /* INCLUDE_vTaskSuspend */
+	{
+			/* Calculate the time at which the task should be woken if the event does
+			not occur.  This may overflow but this doesn't matter. */
+			xTimeToWake = xTickCount + xTicksToWait;
+			prvAddCurrentTaskToDelayedList( xTimeToWake );
+	}
+	#endif /* INCLUDE_vTaskSuspend */
+}
+/*-----------------------------------------------------------*/
+
 #if configUSE_TIMERS == 1
 
 	void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xTicksToWait )
@@ -2011,6 +2066,56 @@ portBASE_TYPE xReturn;
 		/* We cannot access the delayed or ready lists, so will hold this
 		task pending until the scheduler is resumed. */
 		vListInsertEnd( &( xPendingReadyList ), &( pxUnblockedTCB->xEventListItem ) );
+	}
+
+	if( pxUnblockedTCB->uxPriority >= pxCurrentTCB->uxPriority )
+	{
+		/* Return true if the task removed from the event list has
+		a higher priority than the calling task.  This allows
+		the calling task to know if it should force a context
+		switch now. */
+		xReturn = pdTRUE;
+
+		/* Mark that a yield is pending in case the user is not using the
+		"xHigherPriorityTaskWoken" parameter to an ISR safe FreeRTOS function. */
+		xYieldPending = pdTRUE;
+	}
+	else
+	{
+		xReturn = pdFALSE;
+	}
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+signed portBASE_TYPE xTaskRemoveFromUnorderedEventList( xListItem * pxEventListItem, portTickType xItemValue )
+{
+tskTCB *pxUnblockedTCB;
+portBASE_TYPE xReturn;
+
+	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
+	SCHEDULER SUSPENDED.  It can also be called from within an ISR. */
+
+	/* Store the new item value in the event list. */
+	listSET_LIST_ITEM_VALUE( pxEventListItem, xItemValue );
+
+	/* Remove the TCB from the delayed list, and add it to the ready list. */
+
+	pxUnblockedTCB = ( tskTCB * ) listGET_LIST_ITEM_OWNER( pxEventListItem );
+	configASSERT( pxUnblockedTCB );
+	( void ) uxListRemove( pxEventListItem );
+
+	if( uxSchedulerSuspended == ( unsigned portBASE_TYPE ) pdFALSE )
+	{
+		( void ) uxListRemove( &( pxUnblockedTCB->xGenericListItem ) );
+		prvAddTaskToReadyList( pxUnblockedTCB );
+	}
+	else
+	{
+		/* Cannot access the delayed or ready lists, so will hold this task 
+		pending until the scheduler is resumed. */
+		vListInsertEnd( &( xPendingReadyList ), pxEventListItem );
 	}
 
 	if( pxUnblockedTCB->uxPriority >= pxCurrentTCB->uxPriority )
@@ -2973,6 +3078,20 @@ tskTCB *pxNewTCB;
 	}
 
 #endif /* configGENERATE_RUN_TIME_STATS */
+/*-----------------------------------------------------------*/
 
+portTickType uxTaskResetEventItemValue( void )
+{
+portTickType uxReturn;
+
+	uxReturn = listGET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ) );
+
+	/* Reset the event list item to its normal value - so it can be used with
+	queues and semaphores. */
+	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ), ( ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+	return uxReturn;
+}
+/*-----------------------------------------------------------*/
 
 

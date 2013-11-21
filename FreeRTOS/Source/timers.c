@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -76,6 +76,10 @@ task.h is included from an application file. */
 #include "queue.h"
 #include "timers.h"
 
+#if ( INCLUDE_xTimerPendCallbackFromISR == 1 ) && ( configUSE_TIMERS == 0 )
+	#error configUSE_TIMERS must be set to 1 to make the INCLUDE_xTimerPendCallbackFromISR() function available.
+#endif
+
 /* Lint e961 and e750 are suppressed as a MISRA exception justified because the
 MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
 header files above, but not in this file, in order to generate the correct
@@ -103,14 +107,41 @@ typedef struct tmrTimerControl
 	tmrTIMER_CALLBACK		pxCallbackFunction;	/*<< The function that will be called when the timer expires. */
 } xTIMER;
 
-/* The definition of messages that can be sent and received on the timer
-queue. */
+/* The definition of messages that can be sent and received on the timer queue.
+Two types of message can be queued - messages that manipulate a software timer,
+and messages that request the execution of a non-timer related callback.  The
+two message types are defined in two separate structures, xTimerParametersType
+and xCallbackParametersType respectively. */
+typedef struct tmrTimerParameters
+{
+	portTickType			xMessageValue;		/*<< An optional value used by a subset of commands, for example, when changing the period of a timer. */
+	xTIMER *				pxTimer;			/*<< The timer to which the command will be applied. */
+} xTimerParametersType;
+
+
+typedef struct tmrCallbackParameters
+{
+	pdAPPLICATION_CALLBACK_CODE	pxCallbackFunction; /* << The callback function to execute. */
+	void *pvParameter1;								/* << The value that will be used as the callback functions first parameter. */
+	unsigned long ulParameter2;						/* << The value that will be used as the callback functions second parameter. */
+} xCallbackParametersType;
+
+/* The structure that contains the two message types, along with an identifier
+that is used to determine which message type is valid. */
 typedef struct tmrTimerQueueMessage
 {
 	portBASE_TYPE			xMessageID;			/*<< The command being sent to the timer service task. */
-	portTickType			xMessageValue;		/*<< An optional value used by a subset of commands, for example, when changing the period of a timer. */
-	xTIMER *				pxTimer;			/*<< The timer to which the command will be applied. */
-} xTIMER_MESSAGE;
+	union
+	{
+		xTimerParametersType xTimerParameters;
+
+		/* Don't include xCallbackParameters if it is not going to be used as
+		it makes the structure (and therefore the timer queue) larger. */
+		#if ( INCLUDE_xTimerPendCallbackFromISR == 1 )
+			xCallbackParametersType xCallbackParameters;
+		#endif /* INCLUDE_xTimerPendCallbackFromISR */
+	} u;
+} xDAEMON_TASK_MESSAGE;
 
 /*lint -e956 A manual analysis and inspection has been used to determine which
 static variables must be declared volatile. */
@@ -270,7 +301,7 @@ xTIMER *pxNewTimer;
 portBASE_TYPE xTimerGenericCommand( xTimerHandle xTimer, portBASE_TYPE xCommandID, portTickType xOptionalValue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portTickType xBlockTime )
 {
 portBASE_TYPE xReturn = pdFAIL;
-xTIMER_MESSAGE xMessage;
+xDAEMON_TASK_MESSAGE xMessage;
 
 	/* Send a message to the timer service task to perform a particular action
 	on a particular timer definition. */
@@ -278,8 +309,8 @@ xTIMER_MESSAGE xMessage;
 	{
 		/* Send a command to the timer service task to start the xTimer timer. */
 		xMessage.xMessageID = xCommandID;
-		xMessage.xMessageValue = xOptionalValue;
-		xMessage.pxTimer = ( xTIMER * ) xTimer;
+		xMessage.u.xTimerParameters.xMessageValue = xOptionalValue;
+		xMessage.u.xTimerParameters.pxTimer = ( xTIMER * ) xTimer;
 
 		if( pxHigherPriorityTaskWoken == NULL )
 		{
@@ -518,77 +549,98 @@ portBASE_TYPE xProcessTimerNow = pdFALSE;
 
 static void	prvProcessReceivedCommands( void )
 {
-xTIMER_MESSAGE xMessage;
+xDAEMON_TASK_MESSAGE xMessage;
 xTIMER *pxTimer;
 portBASE_TYPE xTimerListsWereSwitched, xResult;
 portTickType xTimeNow;
 
 	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL ) /*lint !e603 xMessage does not have to be initialised as it is passed out, not in, and it is not used unless xQueueReceive() returns pdTRUE. */
 	{
-		pxTimer = xMessage.pxTimer;
-
-		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
+		#if ( INCLUDE_xTimerPendCallbackFromISR == 1 )
 		{
-			/* The timer is in a list, remove it. */
-			( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
+			if( xMessage.xMessageID == tmrCOMMAND_EXECUTE_CALLBACK )
+			{
+				const xCallbackParametersType * const pxCallback = &( xMessage.u.xCallbackParameters );
+
+				/* The timer uses the xCallbackParameters member to request a
+				callback be executed.  Check the callback is not NULL. */
+				configASSERT( pxCallback );
+
+				/* Call the function. */
+				pxCallback->pxCallbackFunction( pxCallback->pvParameter1, pxCallback->ulParameter2 );
+			}
 		}
+		#endif /* INCLUDE_xTimerPendCallbackFromISR */
 
-		traceTIMER_COMMAND_RECEIVED( pxTimer, xMessage.xMessageID, xMessage.xMessageValue );
-
-		/* In this case the xTimerListsWereSwitched parameter is not used, but 
-		it must be present in the function call.  prvSampleTimeNow() must be 
-		called after the message is received from xTimerQueue so there is no 
-		possibility of a higher priority task adding a message to the message
-		queue with a time that is ahead of the timer daemon task (because it
-		pre-empted the timer daemon task after the xTimeNow value was set). */
-		xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
-
-		switch( xMessage.xMessageID )
+		if( xMessage.xMessageID != tmrCOMMAND_EXECUTE_CALLBACK )
 		{
-			case tmrCOMMAND_START :
-				/* Start or restart a timer. */
-				if( prvInsertTimerInActiveList( pxTimer,  xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.xMessageValue ) == pdTRUE )
-				{
-					/* The timer expired before it was added to the active timer
-					list.  Process it now. */
-					pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+			/* The messages uses the xTimerParameters member to work on a
+			software timer. */
+			pxTimer = xMessage.u.xTimerParameters.pxTimer;
 
-					if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
+			if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE )
+			{
+				/* The timer is in a list, remove it. */
+				( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
+			}
+
+			traceTIMER_COMMAND_RECEIVED( pxTimer, xMessage.xMessageID, xMessage.u.xTimerParameters.xMessageValue );
+
+			/* In this case the xTimerListsWereSwitched parameter is not used, but
+			it must be present in the function call.  prvSampleTimeNow() must be
+			called after the message is received from xTimerQueue so there is no
+			possibility of a higher priority task adding a message to the message
+			queue with a time that is ahead of the timer daemon task (because it
+			pre-empted the timer daemon task after the xTimeNow value was set). */
+			xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
+
+			switch( xMessage.xMessageID )
+			{
+				case tmrCOMMAND_START :
+					/* Start or restart a timer. */
+					if( prvInsertTimerInActiveList( pxTimer,  xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.u.xTimerParameters.xMessageValue ) == pdTRUE )
 					{
-						xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
-						configASSERT( xResult );
-						( void ) xResult;
+						/* The timer expired before it was added to the active timer
+						list.  Process it now. */
+						pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+
+						if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
+						{
+							xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
+							configASSERT( xResult );
+							( void ) xResult;
+						}
 					}
-				}
-				break;
+					break;
 
-			case tmrCOMMAND_STOP :
-				/* The timer has already been removed from the active list.
-				There is nothing to do here. */
-				break;
+				case tmrCOMMAND_STOP :
+					/* The timer has already been removed from the active list.
+					There is nothing to do here. */
+					break;
 
-			case tmrCOMMAND_CHANGE_PERIOD :
-				pxTimer->xTimerPeriodInTicks = xMessage.xMessageValue;
-				configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
+				case tmrCOMMAND_CHANGE_PERIOD :
+					pxTimer->xTimerPeriodInTicks = xMessage.u.xTimerParameters.xMessageValue;
+					configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
 
-				/* The new period does not really have a reference, and can be
-				longer or shorter than the old one.  The command time is 
-				therefore set to the current time, and as the period cannot be
-				zero the next expiry time can only be in the future, meaning
-				(unlike for the xTimerStart() case above) there is no fail case
-				that needs to be handled here. */
-				( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
-				break;
+					/* The new period does not really have a reference, and can be
+					longer or shorter than the old one.  The command time is
+					therefore set to the current time, and as the period cannot be
+					zero the next expiry time can only be in the future, meaning
+					(unlike for the xTimerStart() case above) there is no fail case
+					that needs to be handled here. */
+					( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
+					break;
 
-			case tmrCOMMAND_DELETE :
-				/* The timer has already been removed from the active list,
-				just free up the memory. */
-				vPortFree( pxTimer );
-				break;
+				case tmrCOMMAND_DELETE :
+					/* The timer has already been removed from the active list,
+					just free up the memory. */
+					vPortFree( pxTimer );
+					break;
 
-			default	:
-				/* Don't expect to get here. */
-				break;
+				default	:
+					/* Don't expect to get here. */
+					break;
+			}
 		}
 	}
 }
@@ -664,7 +716,7 @@ static void prvCheckForValidListAndQueue( void )
 			vListInitialise( &xActiveTimerList2 );
 			pxCurrentTimerList = &xActiveTimerList1;
 			pxOverflowTimerList = &xActiveTimerList2;
-			xTimerQueue = xQueueCreate( ( unsigned portBASE_TYPE ) configTIMER_QUEUE_LENGTH, sizeof( xTIMER_MESSAGE ) );
+			xTimerQueue = xQueueCreate( ( unsigned portBASE_TYPE ) configTIMER_QUEUE_LENGTH, sizeof( xDAEMON_TASK_MESSAGE ) );
 		}
 	}
 	taskEXIT_CRITICAL();
@@ -696,6 +748,28 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 
 	return pxTimer->pvTimerID;
 }
+/*-----------------------------------------------------------*/
+
+#if( INCLUDE_xTimerPendCallbackFromISR == 1 )
+
+	portBASE_TYPE xTimerPendCallbackFromISR( pdAPPLICATION_CALLBACK_CODE pvCallbackFunction, void *pvParameter1, unsigned long ulParameter2, portBASE_TYPE *pxHigherPriorityTaskWoken )
+	{
+	xDAEMON_TASK_MESSAGE xMessage;
+	portBASE_TYPE xReturn;
+
+		/* Complete the message with the function parameters and post it to the
+		daemon task. */
+		xMessage.xMessageID = tmrCOMMAND_EXECUTE_CALLBACK;
+		xMessage.u.xCallbackParameters.pxCallbackFunction = pvCallbackFunction;
+		xMessage.u.xCallbackParameters.pvParameter1 = pvParameter1;
+		xMessage.u.xCallbackParameters.ulParameter2 = ulParameter2;
+
+		xReturn = xQueueSendFromISR( xTimerQueue, &xMessage, pxHigherPriorityTaskWoken );
+
+		return xReturn;
+	}
+
+#endif /* INCLUDE_xTimerPendCallbackFromISR */
 /*-----------------------------------------------------------*/
 
 /* This entire source file will be skipped if the application is not configured

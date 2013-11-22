@@ -74,8 +74,8 @@
 #ifndef EVENT_GROUPS_DEMO_H
 #define EVENT_GROUPS_DEMO_H
 
-void vStartEventBitTasks( void );
-portBASE_TYPE xAreEventBitTasksStillRunning( void );
+void vStartEventGroupTasks( void );
+portBASE_TYPE xAreEventGroupTasksStillRunning( void );
 
 #endif /* EVENT_GROUPS_DEMO_H */
 

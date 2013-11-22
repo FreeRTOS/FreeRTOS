@@ -93,15 +93,15 @@ privileged Vs unprivileged linkage and placement. */
 
 
 #if configUSE_16_BIT_TICKS == 1
-	#define taskCLEAR_EVENTS_ON_EXIT_BIT		0x0100U
-	#define taskUNBLOCKED_DUE_TO_BIT_SET_BIT	0x0200U
-	#define taskWAIT_FOR_ALL_BITS				0x0400U
-	#define taskEVENT_BITS_CONTROL_BYTES		0xff00U
+	#define taskCLEAR_EVENTS_ON_EXIT_BIT	0x0100U
+	#define taskUNBLOCKED_DUE_TO_BIT_SET	0x0200U
+	#define taskWAIT_FOR_ALL_BITS			0x0400U
+	#define taskEVENT_BITS_CONTROL_BYTES	0xff00U
 #else
-	#define taskCLEAR_EVENTS_ON_EXIT_BIT		0x01000000UL
-	#define taskUNBLOCKED_DUE_TO_BIT_SET_BIT	0x02000000UL
-	#define taskWAIT_FOR_ALL_BITS				0x04000000UL
-	#define taskEVENT_BITS_CONTROL_BYTES		0xff000000UL
+	#define taskCLEAR_EVENTS_ON_EXIT_BIT	0x01000000UL
+	#define taskUNBLOCKED_DUE_TO_BIT_SET	0x02000000UL
+	#define taskWAIT_FOR_ALL_BITS			0x04000000UL
+	#define taskEVENT_BITS_CONTROL_BYTES	0xff000000UL
 #endif
 
 typedef struct EventBitsDefinition
@@ -190,7 +190,7 @@ portBASE_TYPE xYieldedAlready;
 		event list item, and they should now be retrieved then cleared. */
 		uxReturn = uxTaskResetEventItemValue();
 
-		if( ( uxReturn & taskUNBLOCKED_DUE_TO_BIT_SET_BIT ) == ( xEventBitsType ) 0 )
+		if( ( uxReturn & taskUNBLOCKED_DUE_TO_BIT_SET ) == ( xEventBitsType ) 0 )
 		{
 			/* The task timed out, just return the current event bit value. */
 			uxReturn = pxEventBits->uxEventBits;
@@ -288,7 +288,7 @@ xEventBitsType uxReturn, uxControlBits = 0;
 		event list item, and they should now be retrieved then cleared. */
 		uxReturn = uxTaskResetEventItemValue();
 
-		if( ( uxReturn & taskUNBLOCKED_DUE_TO_BIT_SET_BIT ) == ( xEventBitsType ) 0 )
+		if( ( uxReturn & taskUNBLOCKED_DUE_TO_BIT_SET ) == ( xEventBitsType ) 0 )
 		{
 			/* The task timed out, just return the current event bit value. */
 			uxReturn = pxEventBits->uxEventBits;
@@ -356,6 +356,7 @@ portBASE_TYPE xMatchFound = pdFALSE;
 		{
 			pxNext = listGET_NEXT( pxListItem );
 			uxBitsWaitedFor = listGET_LIST_ITEM_VALUE( pxListItem );
+			xMatchFound = pdFALSE;
 
 			/* Split the bits waited for from the control bits. */
 			uxControlBits = uxBitsWaitedFor & taskEVENT_BITS_CONTROL_BYTES;
@@ -389,10 +390,10 @@ portBASE_TYPE xMatchFound = pdFALSE;
 
 				/* Store the actual event flag value in the task's event list
 				item before removing the task from the event list.  The
-				taskUNBLOCKED_DUE_TO_BIT_SET_BIT bit is set so the task knows
+				taskUNBLOCKED_DUE_TO_BIT_SET bit is set so the task knows
 				that is was unblocked due to its required bits matching, rather
 				than because it timed out. */
-				( void ) xTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | taskUNBLOCKED_DUE_TO_BIT_SET_BIT );
+				( void ) xTaskRemoveFromUnorderedEventList( pxListItem, pxEventBits->uxEventBits | taskUNBLOCKED_DUE_TO_BIT_SET );
 			}
 
 			/* Move onto the next list item.  Note pxListItem->pxNext is not
@@ -423,7 +424,7 @@ const xList *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 			/* Unblock the task, returning 0 as the event list is being deleted
 			and	cannot therefore have any bits set. */
 			configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( xListItem * ) &( pxTasksWaitingForBits->xListEnd ) );
-			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, ( portTickType ) 0 );
+			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, ( portTickType ) taskUNBLOCKED_DUE_TO_BIT_SET );
 		}
 
 		vPortFree( pxEventBits );

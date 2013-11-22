@@ -132,6 +132,7 @@ to exclude the API function. */
 #define INCLUDE_pcTaskGetTaskName				1
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
+#define INCLUDE_xTimerPendCallbackFromISR		1
 
 /* Standard assert semantics. */
 extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );

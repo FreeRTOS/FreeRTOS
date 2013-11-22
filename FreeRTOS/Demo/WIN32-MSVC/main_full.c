@@ -132,6 +132,7 @@
 #include "dynamic.h"
 #include "QueueSet.h"
 #include "QueueOverwrite.h"
+#include "EventGroupsDemo.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 1 )
@@ -196,6 +197,7 @@ int main_full( void )
 	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );	
 	xTaskCreate( prvDemoQueueSpaceFunctions, ( signed char * ) "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	vStartEventGroupTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -250,7 +252,11 @@ const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
 		}
 		#endif
 
-	    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		if( xAreEventGroupTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: EventGroup";
+		}
+	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 			pcStatusMessage = "Error: IntMath";
 	    }	

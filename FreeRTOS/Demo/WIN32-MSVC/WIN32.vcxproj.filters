@@ -130,6 +130,12 @@
     <ClCompile Include="main_blinky.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Minimal\EventGroupsDemo.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\event_groups.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

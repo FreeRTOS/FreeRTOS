@@ -131,6 +131,7 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernelPort.c" />
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcUser.c" />
     <ClCompile Include="..\..\Source\croutine.c" />
+    <ClCompile Include="..\..\Source\event_groups.c" />
     <ClCompile Include="..\..\Source\portable\MemMang\heap_4.c" />
     <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />
@@ -138,6 +139,7 @@
     <ClCompile Include="..\Common\Minimal\countsem.c" />
     <ClCompile Include="..\Common\Minimal\death.c" />
     <ClCompile Include="..\Common\Minimal\dynamic.c" />
+    <ClCompile Include="..\Common\Minimal\EventGroupsDemo.c" />
     <ClCompile Include="..\Common\Minimal\flop.c" />
     <ClCompile Include="..\Common\Minimal\GenQTest.c" />
     <ClCompile Include="..\Common\Minimal\integer.c" />

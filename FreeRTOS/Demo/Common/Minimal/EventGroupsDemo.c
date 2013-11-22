@@ -110,6 +110,11 @@ that synchronise with the xEventGroupSync() function. */
 /* A 5ms delay. */
 #define ebSHORT_DELAY	( 5 / portTICK_RATE_MS )
 
+/* Used in the selective bits test which checks no, one or both tasks blocked on
+event bits in a group are unblocked as appropriate as different bits get set. */
+#define ebSELECTIVE_BITS_1		0x03
+#define ebSELECTIVE_BITS_2		0x05
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -137,6 +142,14 @@ static void prvSyncTask( void *pvParameters );
  */
 static portBASE_TYPE prvSingleTaskTests( void );
 
+/*
+ * Functions used in a test that blocks two tasks on various different bits
+ * within an event group - then sets each bit in turn and checks that the 
+ * correct tasks unblock at the correct times.
+ */
+static portBASE_TYPE prvTestSelectiveBits( void );
+static void prvPreSyncSelectiveWakeTest( void );
+
 /*-----------------------------------------------------------*/
 
 /* Variables that are incremented by the tasks on each cycle provided no errors
@@ -151,7 +164,7 @@ static xTaskHandle xSyncTask1 = NULL, xSyncTask2 = NULL;
 
 /*-----------------------------------------------------------*/
 
-void vStartEventBitTasks( void )
+void vStartEventGroupTasks( void )
 {
 xTaskHandle xWaitBitsTaskHandle;
 
@@ -160,10 +173,6 @@ xTaskHandle xWaitBitsTaskHandle;
 	 * groups.  It is not intended to be a user friendly demonstration of the
 	 * event groups API.
 	 */
-
-	/* Create the event bits that will be used by the tasks. */
-	xEventBits = xEventGroupCreate();
-	configASSERT( xEventBits );
 
 	xTaskCreate( prvWaitBitsTask, ( signed char * ) "WaitO", configMINIMAL_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xWaitBitsTaskHandle );
 	xTaskCreate( prvSetBitsTask, ( signed char * ) "SetB", configMINIMAL_STACK_SIZE, ( void * ) xWaitBitsTaskHandle, ebSET_BIT_TASK_PRIORITY, NULL );
@@ -373,6 +382,9 @@ xEventBitsType uxSynchronisationBit, uxReturned;
 	passed in as the task parameter. */
 	uxSynchronisationBit = ( xEventBitsType ) pvParameters;
 
+	/* A few tests are performed before entering the main demo loop. */
+	prvPreSyncSelectiveWakeTest();
+
 	for( ;; )
 	{
 		/* Wait until the 'set bit' task unsuspends this task. */
@@ -540,10 +552,27 @@ xTaskHandle xWaitBitsTaskHandle = ( xTaskHandle ) pvParameters;
 	/* Avoid compiler warnings. */
 	( void ) pvParameters;
 
+	/* Create the event group ready for the initial tests. */
+	xEventBits = xEventGroupCreate();
+	configASSERT( xEventBits );
+
+	/* Perform the tests that only require a single task. */
 	xError = prvSingleTaskTests();
+
+	if( xError == pdFALSE )
+	{
+		/* Perform the tests that block two tasks on different combinations of
+		bits, then set each bit in turn and check the correct tasks unblock at
+		the correct times. */
+		xError = prvTestSelectiveBits();
+	}
 
 	for( ;; )
 	{
+		/* Recreate the event group ready for the next cycle. */
+		xEventBits = xEventGroupCreate();
+		configASSERT( xEventBits );
+
 		/* Resume the other task.  It will block, pending a single bit from
 		within ebCOMBINED_BITS. */
 		vTaskResume( xWaitBitsTaskHandle );
@@ -831,10 +860,6 @@ xTaskHandle xWaitBitsTaskHandle = ( xTaskHandle ) pvParameters;
 		}
 
 
-		/* Recreate the event group ready for the next cycle. */
-		xEventBits = xEventGroupCreate();
-		configASSERT( xEventBits );
-
 		if( xError == pdFALSE )
 		{
 			ulSetBitCycles++;
@@ -845,8 +870,120 @@ xTaskHandle xWaitBitsTaskHandle = ( xTaskHandle ) pvParameters;
 }
 /*-----------------------------------------------------------*/
 
+static void prvPreSyncSelectiveWakeTest( void )
+{
+xEventBitsType uxPendBits, uxReturned;
+
+	if( xTaskGetCurrentTaskHandle() == xSyncTask1 )
+	{
+		uxPendBits = ebSELECTIVE_BITS_1;
+	}
+	else
+	{
+		uxPendBits = ebSELECTIVE_BITS_2;
+	}
+
+	for( ;; )
+	{
+		vTaskSuspend( NULL );
+		uxReturned = xEventGroupWaitBits( xEventBits, uxPendBits, pdTRUE, pdFALSE, portMAX_DELAY );
+
+		if( uxReturned == ( xEventBitsType ) 0 )
+		{
+			break;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static portBASE_TYPE prvTestSelectiveBits( void )
+{
+portBASE_TYPE xError = pdFALSE;
+xEventBitsType uxBit;
+
+	/* Both tasks should start in the suspended state. */
+	if( eTaskGetState( xSyncTask1 ) != eSuspended )
+	{
+		xError = pdTRUE;
+	}
+
+	if( eTaskGetState( xSyncTask2 ) != eSuspended )
+	{
+		xError = pdTRUE;
+	}
+
+	/* Test each bit in the byte individually. */
+	for( uxBit = 0x01; uxBit < 0x100; uxBit <<= 1 )
+	{
+		/* Resume both tasks. */
+		vTaskResume( xSyncTask1 );
+		vTaskResume( xSyncTask2 );
+
+		/* Now both tasks should be blocked on the event group. */
+		if( eTaskGetState( xSyncTask1 ) != eBlocked )
+		{
+			xError = pdTRUE;
+		}
+
+		if( eTaskGetState( xSyncTask2 ) != eBlocked )
+		{
+			xError = pdTRUE;
+		}
+
+		/* Set one bit. */
+		xEventGroupSetBits( xEventBits, uxBit );
+
+		/* Is the bit set in the first set of selective bits?  If so the first
+		sync task should have unblocked and returned to the suspended state. */
+		if( ( uxBit & ebSELECTIVE_BITS_1 ) == 0 )
+		{
+			/* Task should not have unblocked. */
+			if( eTaskGetState( xSyncTask1 ) != eBlocked )
+			{
+				xError = pdTRUE;
+			}
+		}
+		else
+		{
+			/* Task should have unblocked and returned to the suspended state. */
+			if( eTaskGetState( xSyncTask1 ) != eSuspended )
+			{
+				xError = pdTRUE;
+			}
+		}
+
+		/* Same checks for the second sync task. */
+		if( ( uxBit & ebSELECTIVE_BITS_2 ) == 0 )
+		{
+			/* Task should not have unblocked. */
+			if( eTaskGetState( xSyncTask2 ) != eBlocked )
+			{
+				xError = pdTRUE;
+			}
+		}
+		else
+		{
+			/* Task should have unblocked and returned to the suspended state. */
+			if( eTaskGetState( xSyncTask2 ) != eSuspended )
+			{
+				xError = pdTRUE;
+			}
+		}
+	}
+
+	/* Ensure both tasks are blocked on the event group again, then delete the
+	event group so the other tasks leave this portion of the test. */
+	vTaskResume( xSyncTask1 );
+	vTaskResume( xSyncTask2 );
+
+	vEventGroupDelete( xEventBits );
+
+	return xError;
+}
+/*-----------------------------------------------------------*/
+
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreEventBitTasksStillRunning( void )
+portBASE_TYPE xAreEventGroupTasksStillRunning( void )
 {
 static unsigned long ulPreviousWaitBitCycles = 0, ulPreviousSetBitCycles = 0;
 portBASE_TYPE xStatus = pdPASS;

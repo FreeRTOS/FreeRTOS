@@ -683,6 +683,7 @@ tskTCB * pxNewTCB;
 		{
 			if( pxTCB == pxCurrentTCB )
 			{
+				configASSERT( uxSchedulerSuspended == 0 );
 				portYIELD_WITHIN_API();
 			}
 		}
@@ -700,6 +701,7 @@ tskTCB * pxNewTCB;
 
 		configASSERT( pxPreviousWakeTime );
 		configASSERT( ( xTimeIncrement > 0U ) );
+		configASSERT( uxSchedulerSuspended == 0 );
 
 		vTaskSuspendAll();
 		{
@@ -774,9 +776,11 @@ tskTCB * pxNewTCB;
 	portTickType xTimeToWake;
 	signed portBASE_TYPE xAlreadyYielded = pdFALSE;
 
+
 		/* A delay time of zero just forces a reschedule. */
 		if( xTicksToDelay > ( portTickType ) 0U )
 		{
+			configASSERT( uxSchedulerSuspended == 0 );
 			vTaskSuspendAll();
 			{
 				traceTASK_DELAY();
@@ -1075,6 +1079,7 @@ tskTCB * pxNewTCB;
 			if( xSchedulerRunning != pdFALSE )
 			{
 				/* The current task has just been suspended. */
+				configASSERT( uxSchedulerSuspended == 0 );
 				portYIELD_WITHIN_API();
 			}
 			else

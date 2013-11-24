@@ -134,11 +134,17 @@ xEVENT_BITS *pxEventBits;
 }
 /*-----------------------------------------------------------*/
 
-xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet, xEventBitsType uxBitsToWaitFor, portTickType xBlockTime )
+xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet, xEventBitsType uxBitsToWaitFor, portTickType xTicksToWait )
 {
 xEventBitsType uxOriginalBitValue, uxReturn;
 xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
 portBASE_TYPE xYieldedAlready;
+
+	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+	{
+		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+	}
+	#endif
 
 	vTaskSuspendAll();
 	{
@@ -156,16 +162,16 @@ portBASE_TYPE xYieldedAlready;
 			already unless this is the only task in the rendezvous. */
 			pxEventBits->uxEventBits &= uxBitsToWaitFor;
 
-			xBlockTime = 0;
+			xTicksToWait = 0;
 		}
 		else
 		{
-			if( xBlockTime != ( portTickType ) 0 )
+			if( xTicksToWait != ( portTickType ) 0 )
 			{
 				/* Store the bits that the calling task is waiting for in the
 				task's event list item so the kernel knows when a match is
 				found.  Then enter the blocked state. */
-				vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | taskCLEAR_EVENTS_ON_EXIT_BIT | taskWAIT_FOR_ALL_BITS ), xBlockTime );
+				vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | taskCLEAR_EVENTS_ON_EXIT_BIT | taskWAIT_FOR_ALL_BITS ), xTicksToWait );
 			}
 			else
 			{
@@ -177,7 +183,7 @@ portBASE_TYPE xYieldedAlready;
 	}
 	xYieldedAlready = xTaskResumeAll();
 
-	if( xBlockTime != ( portTickType ) 0 )
+	if( xTicksToWait != ( portTickType ) 0 )
 	{
 		if( xYieldedAlready == pdFALSE )
 		{
@@ -207,7 +213,7 @@ portBASE_TYPE xYieldedAlready;
 }
 /*-----------------------------------------------------------*/
 
-xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToWaitFor, portBASE_TYPE xClearOnExit, portBASE_TYPE xWaitForAllBits, portTickType xBlockTime )
+xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToWaitFor, portBASE_TYPE xClearOnExit, portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait )
 {
 xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
 const xEventBitsType uxCurrentEventBits = pxEventBits->uxEventBits;
@@ -217,6 +223,11 @@ xEventBitsType uxReturn, uxControlBits = 0;
 	itself, and that at least one bit is being requested. */
 	configASSERT( ( uxBitsToWaitFor & taskEVENT_BITS_CONTROL_BYTES ) == 0 );
 	configASSERT( uxBitsToWaitFor != 0 );
+	#if ( ( INCLUDE_xTaskGetSchedulerState == 1 ) || ( configUSE_TIMERS == 1 ) )
+	{
+		configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
+	}
+	#endif
 
 	taskENTER_CRITICAL();
 	{
@@ -227,7 +238,7 @@ xEventBitsType uxReturn, uxControlBits = 0;
 			if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( xEventBitsType ) 0 )
 			{
 				/* At least one of the bits was set.  No need to block. */
-				xBlockTime = 0;
+				xTicksToWait = 0;
 			}
 		}
 		else
@@ -237,13 +248,13 @@ xEventBitsType uxReturn, uxControlBits = 0;
 			if( ( uxCurrentEventBits & uxBitsToWaitFor ) == uxBitsToWaitFor )
 			{
 				/* All the bits were set, no need to block. */
-				xBlockTime = 0;
+				xTicksToWait = 0;
 			}
 		}
 
 		/* The task can return now if either its wait condition is already met
 		or the requested block time is 0. */
-		if( xBlockTime == ( portTickType ) 0 )
+		if( xTicksToWait == ( portTickType ) 0 )
 		{
 			/* No need to block, just set the return value. */
 			uxReturn = uxCurrentEventBits;
@@ -274,13 +285,13 @@ xEventBitsType uxReturn, uxControlBits = 0;
 			/* Store the bits that the calling task is waiting for in the
 			task's event list item so the kernel knows when a match is
 			found.  Then enter the blocked state. */
-			vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xBlockTime );
+			vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xTicksToWait );
 			portYIELD_WITHIN_API();
 		}
 	}
 	taskEXIT_CRITICAL();
 
-	if( xBlockTime != ( portTickType ) 0 )
+	if( xTicksToWait != ( portTickType ) 0 )
 	{
 		/* The task blocked to wait for its required bits to be set - at this
 		point either the required bits were set or the block time expired.  If
@@ -345,9 +356,10 @@ portBASE_TYPE xMatchFound = pdFALSE;
 
 	pxList = &( pxEventBits->xTasksWaitingForBits );
 	pxListEnd = listGET_END_MARKER( pxList ); /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
-	pxListItem = listGET_HEAD_ENTRY( pxList );
 	vTaskSuspendAll();
 	{
+		pxListItem = listGET_HEAD_ENTRY( pxList );
+
 		/* Set the bits. */
 		pxEventBits->uxEventBits |= uxBitsToSet;
 

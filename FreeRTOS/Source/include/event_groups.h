@@ -168,7 +168,7 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
 										xEventBitsType uxBitsToWaitFor,
 										portBASE_TYPE xClearOnExit,
 										portBASE_TYPE xWaitForAllBits,
-										portTickType xBlockTime );
+										portTickType xTicksToWait );
  </pre>
  *
  * [Potentially] block to wait for one or more bits to be set within a
@@ -197,7 +197,7 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * pdFALSE then xEventGroupWaitBits() will return when any one of the bits set
  * in uxBitsToWaitFor is set or the specified block time expires.
  *
- * @param xBlockTime The maximum amount of time (specified in 'ticks') to wait
+ * @param xTicksToWait The maximum amount of time (specified in 'ticks') to wait
  * for one/all (depending on the xWaitForAllBits value) of the bits specified by
  * uxBitsToWaitFor to become set.
  *
@@ -217,7 +217,7 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
    void aFunction( xEventGroupHandle xEventGroup )
    {
    xEventBitsType uxBits;
-   const portTickType xBlockTime = 100 / portTICK_RATE_MS;
+   const portTickType xTicksToWait = 100 / portTICK_RATE_MS;
 
 		// Wait a maximum of 100ms for either bit 0 or bit 4 to be set within
 		// the event group.  Clear the bits before exiting.
@@ -226,7 +226,7 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
 					BIT_0 | BIT_4,	// The bits within the event group to wait for.
 					pdTRUE,			// BIT_0 and BIT_4 should be cleared before returning.
 					pdFALSE,		// Don't wait for both bits, either bit will do.
-					xBlockTime );	// Wait a maximum of 100ms for either bit to be set.
+					xTicksToWait );	// Wait a maximum of 100ms for either bit to be set.
 
 		if( ( uxBits & ( BIT_0 | BIT_4 ) ) == ( BIT_0 | BIT_4 ) )
 		{
@@ -242,7 +242,7 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
 		}
 		else
 		{
-			// xEventGroupWaitBits() returned because xBlockTime ticks passed
+			// xEventGroupWaitBits() returned because xTicksToWait ticks passed
 			// without either BIT_0 or BIT_4 becoming set.
 		}
    }
@@ -250,7 +250,7 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * \defgroup xEventGroupWaitBits xEventGroupWaitBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToWaitFor, portBASE_TYPE xClearOnExit, portBASE_TYPE xWaitForAllBits, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
+xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToWaitFor, portBASE_TYPE xClearOnExit, portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
@@ -459,7 +459,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
 	xEventBitsType xEventGroupSync(	xEventGroupHandle xEventGroup,
 									xEventBitsType uxBitsToSet,
 									xEventBitsType uxBitsToWaitFor,
-									portTickType xBlockTime );
+									portTickType xTicksToWait );
  </pre>
  *
  * Atomically set bits within an event group, then wait for a combination of
@@ -487,7 +487,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
  * uxBitsToWaitFor to 0x05.  To wait for bits 0 and bit 1 and bit 2 set
  * uxBitsToWaitFor to 0x07.  Etc.
  *
- * @param xBlockTime The maximum amount of time (specified in 'ticks') to wait
+ * @param xTicksToWait The maximum amount of time (specified in 'ticks') to wait
  * for all of the bits specified by uxBitsToWaitFor to become set.
  *
  * @return The value of the event group at the time either the bits being waited
@@ -514,7 +514,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
  void vTask0( void *pvParameters )
  {
  xEventBitsType uxReturn;
- portTickType xBlockTime = 100 / portTICK_RATE_MS;
+ portTickType xTicksToWait = 100 / portTICK_RATE_MS;
 
 	 for( ;; )
 	 {
@@ -525,7 +525,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
 		// by ALL_SYNC_BITS.  All three tasks have reached the synchronisation
 		// point when all the ALL_SYNC_BITS are set.  Wait a maximum of 100ms
 		// for this to happen.
-		uxReturn = xEventGroupSync( xEventBits, TASK_0_BIT, ALL_SYNC_BITS, xBlockTime );
+		uxReturn = xEventGroupSync( xEventBits, TASK_0_BIT, ALL_SYNC_BITS, xTicksToWait );
 
 		if( ( uxReturn & ALL_SYNC_BITS ) == ALL_SYNC_BITS )
 		{
@@ -577,7 +577,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
  * \defgroup xEventGroupSync xEventGroupSync
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet, xEventBitsType uxBitsToWaitFor, portTickType xBlockTime ) PRIVILEGED_FUNCTION;
+xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet, xEventBitsType uxBitsToWaitFor, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 
 /**

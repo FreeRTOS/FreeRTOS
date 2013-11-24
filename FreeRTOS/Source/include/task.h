@@ -226,10 +226,13 @@ typedef enum
  */
 #define taskENABLE_INTERRUPTS()		portENABLE_INTERRUPTS()
 
-/* Definitions returned by xTaskGetSchedulerState(). */
-#define taskSCHEDULER_NOT_STARTED	( ( portBASE_TYPE ) 0 )
-#define taskSCHEDULER_RUNNING		( ( portBASE_TYPE ) 1 )
-#define taskSCHEDULER_SUSPENDED		( ( portBASE_TYPE ) 2 )
+/* Definitions returned by xTaskGetSchedulerState().  taskSCHEDULER_SUSPENDED is
+0 to generate more optimal code when configASSERT() is defined as the constant
+is used in assert() statements. */
+#define taskSCHEDULER_SUSPENDED		( ( portBASE_TYPE ) 0 )
+#define taskSCHEDULER_NOT_STARTED	( ( portBASE_TYPE ) 1 )
+#define taskSCHEDULER_RUNNING		( ( portBASE_TYPE ) 2 )
+
 
 /*-----------------------------------------------------------
  * TASK CREATION API
@@ -1378,7 +1381,7 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * there be no higher priority tasks waiting on the same event) or
  * the delay period expires.
  *
- * The 'unordered' version replaces the event list item value with the 
+ * The 'unordered' version replaces the event list item value with the
  * xItemValue value, and inserts the list item at the end of the list.
  *
  * The 'ordered' version uses the existing event list item value (which is the
@@ -1423,8 +1426,8 @@ void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xT
  * Removes a task from both the specified event list and the list of blocked
  * tasks, and places it on a ready queue.
  *
- * xTaskRemoveFromEventList()/xTaskRemoveFromUnorderedEventList() will be called 
- * if either an event occurs to unblock a task, or the block timeout period 
+ * xTaskRemoveFromEventList()/xTaskRemoveFromUnorderedEventList() will be called
+ * if either an event occurs to unblock a task, or the block timeout period
  * expires.
  *
  * xTaskRemoveFromEventList() is used when the event list is in task priority

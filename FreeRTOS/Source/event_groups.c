@@ -216,7 +216,6 @@ portBASE_TYPE xYieldedAlready;
 xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToWaitFor, portBASE_TYPE xClearOnExit, portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait )
 {
 xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
-const xEventBitsType uxCurrentEventBits = pxEventBits->uxEventBits;
 xEventBitsType uxReturn, uxControlBits = 0;
 
 	/* Check the user is not attempting to wait on the bits used by the kernel
@@ -231,6 +230,8 @@ xEventBitsType uxReturn, uxControlBits = 0;
 
 	taskENTER_CRITICAL();
 	{
+		const xEventBitsType uxCurrentEventBits = pxEventBits->uxEventBits;
+
 		if( xWaitForAllBits == pdFALSE )
 		{
 			/* Task only has to wait for one bit within uxBitsToWaitFor to be set.  Is

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -101,13 +101,11 @@ void vListInitialiseItem( xListItem * const pxItem )
 
 void vListInsertEnd( xList * const pxList, xListItem * const pxNewListItem )
 {
-xListItem * pxIndex;
+xListItem * const pxIndex = pxList->pxIndex;
 
 	/* Insert a new list item into pxList, but rather than sort the list,
 	makes the new list item the last item to be removed by a call to
-	pvListGetOwnerOfNextEntry. */
-	pxIndex = pxList->pxIndex;
-
+	listGET_OWNER_OF_NEXT_ENTRY(). */
 	pxNewListItem->pxNext = pxIndex;
 	pxNewListItem->pxPrevious = pxIndex->pxPrevious;
 	pxIndex->pxPrevious->pxNext = pxNewListItem;
@@ -123,14 +121,13 @@ xListItem * pxIndex;
 void vListInsert( xList * const pxList, xListItem * const pxNewListItem )
 {
 xListItem *pxIterator;
-portTickType xValueOfInsertion;
+const portTickType xValueOfInsertion = pxNewListItem->xItemValue;
 
-	/* Insert the new list item into the list, sorted in ulListItem order. */
-	xValueOfInsertion = pxNewListItem->xItemValue;
+	/* Insert the new list item into the list, sorted in xItemValue order.
 
-	/* If the list already contains a list item with the same item value then
+	If the list already contains a list item with the same item value then
 	the new list item should be placed after it.  This ensures that TCB's which
-	are stored in ready lists (all of which have the same ulListItem value)
+	are stored in ready lists (all of which have the same xItemValue value)
 	get an equal share of the CPU.  However, if the xItemValue is the same as
 	the back marker the iteration loop below will not end.  This means we need
 	to guard against this by checking the value first and modifying the
@@ -180,14 +177,12 @@ portTickType xValueOfInsertion;
 
 unsigned portBASE_TYPE uxListRemove( xListItem * const pxItemToRemove )
 {
-xList * pxList;
+/* The list item knows which list it is in.  Obtain the list from the list
+item. */
+xList * const pxList = ( xList * ) pxItemToRemove->pvContainer;
 
 	pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
 	pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;
-
-	/* The list item knows which list it is in.  Obtain the list from the list
-	item. */
-	pxList = ( xList * ) pxItemToRemove->pvContainer;
 
 	/* Make sure the index is left pointing to a valid item. */
 	if( pxList->pxIndex == pxItemToRemove )

@@ -127,7 +127,7 @@ typedef struct xMEMORY_REGION
 /*
  * Parameters required to create an MPU protected task.
  */
-typedef struct xTASK_PARAMTERS
+typedef struct xTASK_PARAMETERS
 {
 	pdTASK_CODE pvTaskCode;
 	const signed char * const pcName;
@@ -161,7 +161,7 @@ typedef enum
 } eSleepModeStatus;
 
 
-/*
+/**
  * Defines the priority used by the idle task.  This must not be modified.
  *
  * \ingroup TaskUtils
@@ -243,7 +243,7 @@ is used in assert() statements. */
  *<pre>
  portBASE_TYPE xTaskCreate(
 							  pdTASK_CODE pvTaskCode,
-							  const char * const pcName,
+							  const signed char * const pcName,
 							  unsigned short usStackDepth,
 							  void *pvParameters,
 							  unsigned portBASE_TYPE uxPriority,
@@ -261,7 +261,7 @@ is used in assert() statements. */
  * must be implemented to never return (i.e. continuous loop).
  *
  * @param pcName A descriptive name for the task.  This is mainly used to
- * facilitate debugging.  Max length defined by tskMAX_TASK_NAME_LEN - default
+ * facilitate debugging.  Max length defined by configMAX_TASK_NAME_LEN - default
  * is 16.
  *
  * @param usStackDepth The size of the task stack specified as the number of
@@ -282,7 +282,7 @@ is used in assert() statements. */
  * can be referenced.
  *
  * @return pdPASS if the task was successfully created and added to a ready
- * list, otherwise an error code defined in the file errors. h
+ * list, otherwise an error code defined in the file projdefs.h
  *
  * Example usage:
    <pre>
@@ -299,16 +299,20 @@ is used in assert() statements. */
  void vOtherFunction( void )
  {
  static unsigned char ucParameterToPass;
- xTaskHandle xHandle;
+ xTaskHandle xHandle = NULL;
 
 	 // Create the task, storing the handle.  Note that the passed parameter ucParameterToPass
 	 // must exist for the lifetime of the task, so in this case is declared static.  If it was just an
 	 // an automatic stack variable it might no longer exist, or at least have been corrupted, by the time
 	 // the new task attempts to access it.
 	 xTaskCreate( vTaskCode, "NAME", STACK_SIZE, &ucParameterToPass, tskIDLE_PRIORITY, &xHandle );
+     configASSERT( xHandle );
 
 	 // Use the handle to delete the task.
-	 vTaskDelete( xHandle );
+     if( xHandle != NULL )
+     {
+	     vTaskDelete( xHandle );
+     }
  }
    </pre>
  * \defgroup xTaskCreate xTaskCreate
@@ -337,7 +341,7 @@ is used in assert() statements. */
  * can be referenced.
  *
  * @return pdPASS if the task was successfully created and added to a ready
- * list, otherwise an error code defined in the file errors. h
+ * list, otherwise an error code defined in the file projdefs.h
  *
  * Example usage:
    <pre>
@@ -376,7 +380,7 @@ xTaskHandle xHandle;
 	vTaskStartScheduler();
 
 	// Will only get here if there was insufficient memory to create the idle
-	// task.
+	// and/or timer task.
 	for( ;; );
 }
    </pre>
@@ -440,7 +444,7 @@ void vTaskAllocateMPURegions( xTaskHandle xTask, const xMemoryRegion * const pxR
  * INCLUDE_vTaskDelete must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
- * Remove a task from the RTOS real time kernels management.  The task being
+ * Remove a task from the RTOS real time kernel's management.  The task being
  * deleted will be removed from all ready, blocked, suspended and event lists.
  *
  * NOTE:  The idle task is responsible for freeing the kernel allocated
@@ -480,7 +484,7 @@ void vTaskDelete( xTaskHandle xTaskToDelete ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void vTaskDelay( portTickType xTicksToDelay );</pre>
+ * <pre>void vTaskDelay( const portTickType xTicksToDelay );</pre>
  *
  * Delay a task for a given number of ticks.  The actual time that the
  * task remains blocked depends on the tick rate.  The constant
@@ -495,7 +499,7 @@ void vTaskDelete( xTaskHandle xTaskToDelete ) PRIVILEGED_FUNCTION;
  * the time at which vTaskDelay() is called.  For example, specifying a block
  * period of 100 ticks will cause the task to unblock 100 ticks after
  * vTaskDelay() is called.  vTaskDelay() does not therefore provide a good method
- * of controlling the frequency of a cyclical task as the path taken through the
+ * of controlling the frequency of a periodic task as the path taken through the
  * code, as well as other task and interrupt activity, will effect the frequency
  * at which vTaskDelay() gets called and therefore the time at which the task
  * next executes.  See vTaskDelayUntil() for an alternative API function designed
@@ -508,8 +512,6 @@ void vTaskDelete( xTaskHandle xTaskToDelete ) PRIVILEGED_FUNCTION;
  *
  * Example usage:
 
- void vTaskFunction( void * pvParameters )
- {
  void vTaskFunction( void * pvParameters )
  {
  // Block for 500ms.
@@ -526,16 +528,16 @@ void vTaskDelete( xTaskHandle xTaskToDelete ) PRIVILEGED_FUNCTION;
  * \defgroup vTaskDelay vTaskDelay
  * \ingroup TaskCtrl
  */
-void vTaskDelay( portTickType xTicksToDelay ) PRIVILEGED_FUNCTION;
+void vTaskDelay( const portTickType xTicksToDelay ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void vTaskDelayUntil( portTickType *pxPreviousWakeTime, portTickType xTimeIncrement );</pre>
+ * <pre>void vTaskDelayUntil( portTickType *pxPreviousWakeTime, const portTickType xTimeIncrement );</pre>
  *
  * INCLUDE_vTaskDelayUntil must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
- * Delay a task until a specified time.  This function can be used by cyclical
+ * Delay a task until a specified time.  This function can be used by periodic
  * tasks to ensure a constant execution frequency.
  *
  * This function differs from vTaskDelay () in one important aspect:  vTaskDelay () will
@@ -585,13 +587,13 @@ void vTaskDelay( portTickType xTicksToDelay ) PRIVILEGED_FUNCTION;
  * \defgroup vTaskDelayUntil vTaskDelayUntil
  * \ingroup TaskCtrl
  */
-void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTimeIncrement ) PRIVILEGED_FUNCTION;
+void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, const portTickType xTimeIncrement ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
  * <pre>unsigned portBASE_TYPE uxTaskPriorityGet( xTaskHandle xTask );</pre>
  *
- * INCLUDE_xTaskPriorityGet must be defined as 1 for this function to be available.
+ * INCLUDE_uxTaskPriorityGet must be defined as 1 for this function to be available.
  * See the configuration section for more information.
  *
  * Obtain the priority of any task.
@@ -754,7 +756,7 @@ void vTaskSuspend( xTaskHandle xTaskToSuspend ) PRIVILEGED_FUNCTION;
  *
  * Resumes a suspended task.
  *
- * A task that has been suspended by one of more calls to vTaskSuspend ()
+ * A task that has been suspended by one or more calls to vTaskSuspend ()
  * will be made available for running again by a single call to
  * vTaskResume ().
  *
@@ -786,7 +788,7 @@ void vTaskSuspend( xTaskHandle xTaskToSuspend ) PRIVILEGED_FUNCTION;
 	 vTaskResume( xHandle );
 
 	 // The created task will once again get microcontroller processing
-	 // time in accordance with it priority within the system.
+	 // time in accordance with its priority within the system.
  }
    </pre>
  * \defgroup vTaskResume vTaskResume
@@ -803,11 +805,20 @@ void vTaskResume( xTaskHandle xTaskToResume ) PRIVILEGED_FUNCTION;
  *
  * An implementation of vTaskResume() that can be called from within an ISR.
  *
- * A task that has been suspended by one of more calls to vTaskSuspend ()
+ * A task that has been suspended by one or more calls to vTaskSuspend ()
  * will be made available for running again by a single call to
  * xTaskResumeFromISR ().
  *
+ * xTaskResumeFromISR() should not be used to synchronise a task with an
+ * interrupt if there is a chance that the interrupt could arrive prior to the
+ * task being suspended - as this can lead to interrupts being missed. Use of a
+ * semaphore as a synchronisation mechanism would avoid this eventuality.
+ *
  * @param xTaskToResume Handle to the task being readied.
+ *
+ * @return pdTRUE if resuming the task should result in a context switch,
+ * otherwise pdFALSE. This is used by the ISR to determine if a context switch
+ * may be required following the ISR.
  *
  * \defgroup vTaskResumeFromISR vTaskResumeFromISR
  * \ingroup TaskCtrl
@@ -823,12 +834,7 @@ portBASE_TYPE xTaskResumeFromISR( xTaskHandle xTaskToResume ) PRIVILEGED_FUNCTIO
  * <pre>void vTaskStartScheduler( void );</pre>
  *
  * Starts the real time kernel tick processing.  After calling the kernel
- * has control over which tasks are executed and when.  This function
- * does not return until an executing task calls vTaskEndScheduler ().
- *
- * At least one task should be created via a call to xTaskCreate ()
- * before calling vTaskStartScheduler ().  The idle task is created
- * automatically when the first application task is created.
+ * has control over which tasks are executed and when.
  *
  * See the demo application file main.c for an example of creating
  * tasks and starting the kernel.
@@ -855,6 +861,9 @@ void vTaskStartScheduler( void ) PRIVILEGED_FUNCTION;
 /**
  * task. h
  * <pre>void vTaskEndScheduler( void );</pre>
+ *
+ * NOTE:  At the time of writing only the x86 real mode port, which runs on a PC
+ * in place of DOS, implements this function.
  *
  * Stops the real time kernel tick.  All created tasks will be automatically
  * deleted and multitasking (either preemptive or cooperative) will
@@ -909,8 +918,8 @@ void vTaskEndScheduler( void ) PRIVILEGED_FUNCTION;
  * task. h
  * <pre>void vTaskSuspendAll( void );</pre>
  *
- * Suspends all real time kernel activity while keeping interrupts (including the
- * kernel tick) enabled.
+ * Suspends the scheduler without disabling interrupts.  Context switches will
+ * not occur while the scheduler is suspended.
  *
  * After calling vTaskSuspendAll () the calling task will continue to execute
  * without risk of being swapped out until a call to xTaskResumeAll () has been
@@ -960,9 +969,11 @@ void vTaskSuspendAll( void ) PRIVILEGED_FUNCTION;
  * task. h
  * <pre>char xTaskResumeAll( void );</pre>
  *
- * Resumes real time kernel activity following a call to vTaskSuspendAll ().
- * After a call to vTaskSuspendAll () the kernel will take control of which
- * task is executing at any time.
+ * Resumes scheduler activity after it was suspended by a call to
+ * vTaskSuspendAll().
+ *
+ * xTaskResumeAll() only resumes the scheduler.  It does not unsuspend tasks
+ * that were previously suspended by a call to vTaskSuspend().
  *
  * @return If resuming the scheduler caused a context switch then pdTRUE is
  *		  returned, otherwise pdFALSE is returned.
@@ -1017,7 +1028,7 @@ signed portBASE_TYPE xTaskResumeAll( void ) PRIVILEGED_FUNCTION;
  * is in any other state.
  *
  */
-signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskIsTaskSuspended( const xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------
  * TASK UTILITIES
@@ -1045,7 +1056,7 @@ portTickType xTaskGetTickCount( void ) PRIVILEGED_FUNCTION;
  * microcontroller being used or interrupt nesting is either not supported or
  * not being used.
  *
- * \defgroup xTaskGetTickCount xTaskGetTickCount
+ * \defgroup xTaskGetTickCountFromISR xTaskGetTickCountFromISR
  * \ingroup TaskUtils
  */
 portTickType xTaskGetTickCountFromISR( void ) PRIVILEGED_FUNCTION;
@@ -1069,7 +1080,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
  * <PRE>signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );</PRE>
  *
  * @return The text (human readable) name of the task referenced by the handle
- * xTaskToQueury.  A task can query its own name by either passing in its own
+ * xTaskToQuery.  A task can query its own name by either passing in its own
  * handle, or by setting xTaskToQuery to NULL.  INCLUDE_pcTaskGetTaskName must be
  * set to 1 in FreeRTOSConfig.h for pcTaskGetTaskName() to be available.
  *
@@ -1093,12 +1104,13 @@ signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );
  * @param xTask Handle of the task associated with the stack to be checked.
  * Set xTask to NULL to check the stack of the calling task.
  *
- * @return The smallest amount of free stack space there has been (in bytes)
- * since the task referenced by xTask was created.
+ * @return The smallest amount of free stack space there has been (in words, so
+ * actual spaces on the stack rather than bytes) since the task referenced by
+ * xTask was created.
  */
 unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
-/* When using trace macros it is sometimes necessary to include tasks.h before
+/* When using trace macros it is sometimes necessary to include task.h before
 FreeRTOS.h.  When this is done pdTASK_HOOK_CODE will not yet have been defined,
 so the following two prototypes will cause a compilation error.  This can be
 fixed by simply guarding against the inclusion of these two prototypes unless
@@ -1128,13 +1140,14 @@ constant. */
 
 /**
  * task.h
- * <pre>portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
+ * <pre>portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter );</pre>
  *
  * Calls the hook function associated with xTask.  Passing xTask as NULL has
  * the effect of calling the Running tasks (the calling task) hook function.
  *
  * pvParameter is passed to the hook function for the task to interpret as it
- * wants.
+ * wants.  The return value is the value returned by the task hook function
+ * registered by the user.
  */
 portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter ) PRIVILEGED_FUNCTION;
 
@@ -1148,7 +1161,7 @@ portBASE_TYPE xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter
 xTaskHandle xTaskGetIdleTaskHandle( void );
 
 /**
- * configUSE_TRACE_FACILITY must bet defined as 1 in FreeRTOSConfig.h for
+ * configUSE_TRACE_FACILITY must be defined as 1 in FreeRTOSConfig.h for
  * uxTaskGetSystemState() to be available.
  *
  * uxTaskGetSystemState() populates an xTaskStatusType structure for each task in
@@ -1197,11 +1210,11 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 
 		// Take a snapshot of the number of tasks in case it changes while this
 		// function is executing.
-		uxArraySize = uxCurrentNumberOfTasks();
+		uxArraySize = uxTaskGetNumberOfTasks();
 
 		// Allocate a xTaskStatusType structure for each task.  An array could be
 		// allocated statically at compile time.
-		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( xTaskStatusType ) );
+		pxTaskStatusArray = pvPortMalloc( uxArraySize * sizeof( xTaskStatusType ) );
 
 		if( pxTaskStatusArray != NULL )
 		{
@@ -1284,7 +1297,7 @@ unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray,
  * call to vTaskList().
  *
  * @param pcWriteBuffer A buffer into which the above mentioned details
- * will be written, in ascii form.  This buffer is assumed to be large
+ * will be written, in ASCII form.  This buffer is assumed to be large
  * enough to contain the generated report.  Approximately 40 bytes per
  * task should be sufficient.
  *
@@ -1300,7 +1313,7 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
  * must both be defined as 1 for this function to be available.  The application
  * must also then provide definitions for
- * portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and portGET_RUN_TIME_COUNTER_VALUE
+ * portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and portGET_RUN_TIME_COUNTER_VALUE()
  * to configure a peripheral timer/counter and return the timers current count
  * value respectively.  The counter should be at least 10 times the frequency of
  * the tick count.
@@ -1338,7 +1351,7 @@ void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * vTaskGetRunTimeStats().
  *
  * @param pcWriteBuffer A buffer into which the execution times will be
- * written, in ascii form.  This buffer is assumed to be large enough to
+ * written, in ASCII form.  This buffer is assumed to be large enough to
  * contain the generated report.  Approximately 40 bytes per task should
  * be sufficient.
  *
@@ -1412,8 +1425,6 @@ void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValu
  * The difference being that this function does not permit tasks to block
  * indefinitely, whereas vTaskPlaceOnEventList() does.
  *
- * @return pdTRUE if the task being removed has a higher priority than the task
- * making the call, otherwise pdFALSE.
  */
 void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
@@ -1512,21 +1523,23 @@ signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed ch
 unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask ) PRIVILEGED_FUNCTION;
 
 /*
- * Set the uxTCBNumber of the task referenced by the xTask parameter to
- * ucHandle.
+ * Set the uxTaskNumber of the task referenced by the xTask parameter to
+ * uxHandle.
  */
 void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle ) PRIVILEGED_FUNCTION;
 
 /*
+ * Only available when configUSE_TICKLESS_IDLE is set to 1.
  * If tickless mode is being used, or a low power mode is implemented, then
  * the tick interrupt will not execute during idle periods.  When this is the
  * case, the tick count value maintained by the scheduler needs to be kept up
- * to date with the actual execution time by being skipped forward by the by
- * a time equal to the idle period.
+ * to date with the actual execution time by being skipped forward by a time
+ * equal to the idle period.
  */
 void vTaskStepTick( portTickType xTicksToJump ) PRIVILEGED_FUNCTION;
 
 /*
+ * Only avilable when configUSE_TICKLESS_IDLE is set to 1.
  * Provided for use within portSUPPRESS_TICKS_AND_SLEEP() to allow the port
  * specific sleep function to determine if it is ok to proceed with the sleep,
  * and if it is ok to proceed, if it is ok to sleep indefinitely.

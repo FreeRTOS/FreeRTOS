@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -300,9 +300,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the scheduler for the PIC port will get stopped
-	once running.  If required disable the tick interrupt here, then return
-	to xPortStartScheduler(). */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 
@@ -346,6 +346,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	configASSERT( uxCriticalNesting );
 	uxCriticalNesting--;
 	if( uxCriticalNesting == 0 )
 	{

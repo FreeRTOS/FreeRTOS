@@ -94,7 +94,7 @@
 	#define portSTACK_TYPE	unsigned long
 	#define portBASE_TYPE	portLONG
 	typedef unsigned long portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffff
+	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
 
 	/*-----------------------------------------------------------*/
 

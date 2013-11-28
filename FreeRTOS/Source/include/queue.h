@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -1137,7 +1137,7 @@ void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
    <pre>
 
  xQueueHandle xQueue;
- 
+
  void vFunction( void *pvParameters )
  {
  	// Create a queue to hold one unsigned long value.  It is strongly
@@ -1166,7 +1166,7 @@ unsigned long ulVarToSend, ulValReceived;
 	// Reading from the queue will now return 100.
 
 	// ...
-	
+
 	if( xHigherPrioritytaskWoken == pdTRUE )
 	{
 		// Writing to the queue caused a task to unblock and the unblocked task
@@ -1509,7 +1509,9 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  * handles can also be passed in here.
  *
  * @param pcName The name to be associated with the handle.  This is the
- * name that the kernel aware debugger will display.
+ * name that the kernel aware debugger will display.  The queue registry only
+ * stores a pointer to the string - so the string must be persistent (global or
+ * preferably in ROM/Flash), not on the stack.
  */
 #if configQUEUE_REGISTRY_SIZE > 0
 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName ) PRIVILEGED_FUNCTION;

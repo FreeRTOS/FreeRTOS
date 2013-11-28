@@ -418,7 +418,7 @@ xQueueHandle xReturn = NULL;
 	void *pxReturn;
 
 		/* This function is called by xSemaphoreGetMutexHolder(), and should not
-		be called directly.  Note:  This is is a good way of determining if the
+		be called directly.  Note:  This is a good way of determining if the
 		calling task is the mutex holder, but not a good way of determining the
 		identity of the mutex holder, as the holder may change between the
 		following critical section exiting and the function returning. */
@@ -909,11 +909,11 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 						{
 							if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 							{
-								portENTER_CRITICAL();
+								taskENTER_CRITICAL();
 								{
 									vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
 								}
-								portEXIT_CRITICAL();
+								taskEXIT_CRITICAL();
 							}
 						}
 						#endif
@@ -949,7 +949,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
-	above the maximum system call priority are keep permanently enabled, even
+	above the maximum system call priority are kept permanently enabled, even
 	when the RTOS kernel is in a critical section, but cannot make any calls to
 	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
 	then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
@@ -1175,11 +1175,11 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 				{
 					if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 					{
-						portENTER_CRITICAL();
+						taskENTER_CRITICAL();
 						{
 							vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
 						}
-						portEXIT_CRITICAL();
+						taskEXIT_CRITICAL();
 					}
 				}
 				#endif
@@ -1220,7 +1220,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
-	above the maximum system call priority are keep permanently enabled, even
+	above the maximum system call priority are kept permanently enabled, even
 	when the RTOS kernel is in a critical section, but cannot make any calls to
 	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
 	then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
@@ -1296,7 +1296,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
-	above the maximum system call priority are keep permanently enabled, even
+	above the maximum system call priority are kept permanently enabled, even
 	when the RTOS kernel is in a critical section, but cannot make any calls to
 	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
 	then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion

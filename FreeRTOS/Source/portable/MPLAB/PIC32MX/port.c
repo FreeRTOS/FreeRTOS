@@ -270,10 +270,9 @@ const unsigned long ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PR
 
 void vPortEndScheduler(void)
 {
-	/* It is unlikely that the scheduler for the PIC port will get stopped
-	once running.  If required disable the tick interrupt here, then return
-	to xPortStartScheduler(). */
-	for( ;; );
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxInterruptNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 

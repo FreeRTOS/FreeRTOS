@@ -90,7 +90,7 @@
 	#define portMAX_DELAY ( portTickType ) 0xffff
 #else
 	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffff
+	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 

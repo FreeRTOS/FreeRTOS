@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -145,13 +145,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 static void prvTaskExitError( void )
 {
 	/* A function that implements a task must not exit or attempt to return to
-	its caller as there is nothing to return to.  If a task wants to exit it 
+	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
-	
-	Artificially force an assert() to be triggered if configASSERT() is 
+
+	Artificially force an assert() to be triggered if configASSERT() is
 	defined, then stop here so application writers can catch the error. */
 	configASSERT( uxCriticalNesting == ~0UL );
-	portDISABLE_INTERRUPTS();	
+	portDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -182,8 +182,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the CM0 port will require this function as there
-	is nothing to return to.  */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 
@@ -210,6 +211,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	configASSERT( uxCriticalNesting );
 	uxCriticalNesting--;
 	if( uxCriticalNesting == 0 )
 	{

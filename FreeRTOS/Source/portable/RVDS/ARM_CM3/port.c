@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -186,7 +186,7 @@ static void prvTaskExitError( void );
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*
- * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure 
+ * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
  * FreeRTOS API functions are not called from interrupts that have been assigned
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  */
@@ -223,13 +223,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 static void prvTaskExitError( void )
 {
 	/* A function that implements a task must not exit or attempt to return to
-	its caller as there is nothing to return to.  If a task wants to exit it 
+	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
-	
-	Artificially force an assert() to be triggered if configASSERT() is 
+
+	Artificially force an assert() to be triggered if configASSERT() is
 	defined, then stop here so application writers can catch the error. */
 	configASSERT( uxCriticalNesting == ~0UL );
-	portDISABLE_INTERRUPTS();	
+	portDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -338,8 +338,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the CM3 port will require this function as there
-	is nothing to return to.  */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 
@@ -366,6 +367,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	configASSERT( uxCriticalNesting );
 	uxCriticalNesting--;
 	if( uxCriticalNesting == 0 )
 	{
@@ -466,10 +468,10 @@ void xPortSysTickHandler( void )
 			/* Restart from whatever is left in the count register to complete
 			this tick period. */
 			portNVIC_SYSTICK_LOAD_REG = portNVIC_SYSTICK_CURRENT_VALUE_REG;
-			
+
 			/* Restart SysTick. */
 			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
-			
+
 			/* Reset the reload register to the value required for normal tick
 			periods. */
 			portNVIC_SYSTICK_LOAD_REG = ulTimerCountsForOneTick - 1UL;
@@ -518,23 +520,23 @@ void xPortSysTickHandler( void )
 			if( ( portNVIC_SYSTICK_CTRL_REG & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
 				unsigned long ulCalculatedLoadValue;
-				
+
 				/* The tick interrupt has already executed, and the SysTick
 				count reloaded with ulReloadValue.  Reset the
 				portNVIC_SYSTICK_LOAD_REG with whatever remains of this tick
 				period. */
 				ulCalculatedLoadValue = ( ulTimerCountsForOneTick - 1UL ) - ( ulReloadValue - portNVIC_SYSTICK_CURRENT_VALUE_REG );
 
-				/* Don't allow a tiny value, or values that have somehow 
-				underflowed because the post sleep hook did something 
+				/* Don't allow a tiny value, or values that have somehow
+				underflowed because the post sleep hook did something
 				that took too long. */
 				if( ( ulCalculatedLoadValue < ulStoppedTimerCompensation ) || ( ulCalculatedLoadValue > ulTimerCountsForOneTick ) )
 				{
 					ulCalculatedLoadValue = ( ulTimerCountsForOneTick - 1UL );
 				}
-				
+
 				portNVIC_SYSTICK_LOAD_REG = ulCalculatedLoadValue;
-				
+
 				/* The tick interrupt handler will already have pended the tick
 				processing in the kernel.  As the pending tick will be
 				processed as soon as this function exits, the tick value
@@ -627,7 +629,7 @@ __asm void vPortClearInterruptMask( unsigned long ulNewMask )
 __asm unsigned long vPortGetIPSR( void )
 {
 	PRESERVE8
-	
+
 	mrs r0, ipsr
 	bx r14
 }

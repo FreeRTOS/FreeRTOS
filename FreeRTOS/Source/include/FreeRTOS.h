@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -103,48 +103,66 @@ typedef portTickType xEventBitsType;
  * within FreeRTOSConfig.h.
  */
 
+#ifndef configMINIMAL_STACK_SIZE
+	#error Missing definition:  configMINIMAL_STACK_SIZE must be defined in FreeRTOSConfig.h.  configMINIMAL_STACK_SIZE defines the size (in words) of the stack allocated to the idle task.  Refer to the demo project provided for your port for a suitable value.
+#endif
+
+#ifndef configMAX_PRIORITIES
+	#error Missing definition:  configMAX_PRIORITIES must be defined in FreeRTOSConfig.h.  See the Configuration section of the FreeRTOS API documentation for details.
+#endif
+
 #ifndef configUSE_PREEMPTION
-	#error Missing definition:  configUSE_PREEMPTION should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  configUSE_PREEMPTION must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef configUSE_IDLE_HOOK
-	#error Missing definition:  configUSE_IDLE_HOOK should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  configUSE_IDLE_HOOK must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef configUSE_TICK_HOOK
-	#error Missing definition:  configUSE_TICK_HOOK should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  configUSE_TICK_HOOK must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef configUSE_CO_ROUTINES
-	#error  Missing definition:  configUSE_CO_ROUTINES should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error  Missing definition:  configUSE_CO_ROUTINES must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskPrioritySet
-	#error Missing definition:  INCLUDE_vTaskPrioritySet should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskPrioritySet must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_uxTaskPriorityGet
-	#error Missing definition:  INCLUDE_uxTaskPriorityGet should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_uxTaskPriorityGet must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskDelete
-	#error Missing definition:  INCLUDE_vTaskDelete		 should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskDelete		 must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskSuspend
-	#error Missing definition:  INCLUDE_vTaskSuspend	 should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskSuspend	 must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskDelayUntil
-	#error Missing definition:  INCLUDE_vTaskDelayUntil should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskDelayUntil must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskDelay
-	#error Missing definition:  INCLUDE_vTaskDelay should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskDelay must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef configUSE_16_BIT_TICKS
-	#error Missing definition:  configUSE_16_BIT_TICKS should be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  configUSE_16_BIT_TICKS must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+#endif
+
+#if configUSE_CO_ROUTINES != 0
+	#if configMAX_CO_ROUTINE_PRIORITIES < 1
+		#error configMAX_CO_ROUTINE_PRIORITIES must be greater than or equal to 1.
+	#endif
+#endif
+
+#if configMAX_PRIORITIES  < 1
+	#error configMAX_PRIORITIES  must be greater than or equal to 1.
 #endif
 
 #ifndef INCLUDE_xTaskGetIdleTaskHandle
@@ -625,6 +643,10 @@ typedef portTickType xEventBitsType;
 
 #ifndef portASSERT_IF_INTERRUPT_PRIORITY_INVALID
 	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID()
+#endif
+
+#ifndef configUSE_TRACE_FACILITY
+	#define configUSE_TRACE_FACILITY 0
 #endif
 
 /* For backward compatability. */

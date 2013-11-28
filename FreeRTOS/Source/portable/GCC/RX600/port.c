@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -79,15 +79,15 @@
 
 /*-----------------------------------------------------------*/
 
-/* Tasks should start with interrupts enabled and in Supervisor mode, therefore 
+/* Tasks should start with interrupts enabled and in Supervisor mode, therefore
 PSW is set with U and I set, and PM and IPL clear. */
 #define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
 #define portINITIAL_FPSW    ( ( portSTACK_TYPE ) 0x00000100 )
 
 /* These macros allow a critical section to be added around the call to
-xTaskIncrementTick(), which is only ever called from interrupts at the kernel 
-priority - ie a known priority.  Therefore these local macros are a slight 
-optimisation compared to calling the global SET/CLEAR_INTERRUPT_MASK macros, 
+xTaskIncrementTick(), which is only ever called from interrupts at the kernel
+priority - ie a known priority.  Therefore these local macros are a slight
+optimisation compared to calling the global SET/CLEAR_INTERRUPT_MASK macros,
 which would require the old IPL to be read first and stored in a local variable. */
 #define portDISABLE_INTERRUPTS_FROM_KERNEL_ISR() 	__asm volatile ( "MVTIPL	%0" ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) )
 #define portENABLE_INTERRUPTS_FROM_KERNEL_ISR() 	__asm volatile ( "MVTIPL	%0" ::"i"(configKERNEL_INTERRUPT_PRIORITY) )
@@ -96,7 +96,7 @@ which would require the old IPL to be read first and stored in a local variable.
 
 /*
  * Function to start the first task executing - written in asm code as direct
- * access to registers is required. 
+ * access to registers is required.
  */
 static void prvStartFirstTask( void ) __attribute__((naked));
 
@@ -118,19 +118,19 @@ extern void *pxCurrentTCB;
 
 /*-----------------------------------------------------------*/
 
-/* 
- * See header file for description. 
+/*
+ * See header file for description.
  */
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* R0 is not included as it is the stack pointer. */
-	
+
 	*pxTopOfStack = 0x00;
 	pxTopOfStack--;
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
 	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
-	
+
 	/* When debugging it can be useful if every register is set to a known
 	value.  Otherwise code space can be saved by just setting the registers
 	that need to be set. */
@@ -171,9 +171,9 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 		pxTopOfStack -= 15;
 	}
 	#endif
-	
+
 	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R1 */
-	pxTopOfStack--;				
+	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_FPSW;
 	pxTopOfStack--;
 	*pxTopOfStack = 0x12345678; /* Accumulator. */
@@ -192,16 +192,16 @@ extern void vApplicationSetupTimerInterrupt( void );
 	if( pxCurrentTCB != NULL )
 	{
 		/* Call an application function to set up the timer that will generate the
-		tick interrupt.  This way the application can decide which peripheral to 
+		tick interrupt.  This way the application can decide which peripheral to
 		use.  A demo application is provided to show a suitable example. */
 		vApplicationSetupTimerInterrupt();
 
-		/* Enable the software interrupt. */		
+		/* Enable the software interrupt. */
 		_IEN( _ICU_SWINT ) = 1;
-		
+
 		/* Ensure the software interrupt is clear. */
 		_IR( _ICU_SWINT ) = 0;
-		
+
 		/* Ensure the software interrupt is set to the kernel priority. */
 		_IPR( _ICU_SWINT ) = configKERNEL_INTERRUPT_PRIORITY;
 
@@ -216,43 +216,45 @@ extern void vApplicationSetupTimerInterrupt( void );
 
 void vPortEndScheduler( void )
 {
-	/* Not implemented as there is nothing to return to. */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( pxCurrentTCB == NULL );
 }
 /*-----------------------------------------------------------*/
 
 static void prvStartFirstTask( void )
 {
 	__asm volatile
-	(	
+	(
 		/* When starting the scheduler there is nothing that needs moving to the
 		interrupt stack because the function is not called from an interrupt.
 		Just ensure the current stack is the user stack. */
 		"SETPSW		U						\n" \
 
-		/* Obtain the location of the stack associated with which ever task 
+		/* Obtain the location of the stack associated with which ever task
 		pxCurrentTCB is currently pointing to. */
 		"MOV.L		#_pxCurrentTCB, R15		\n" \
 		"MOV.L		[R15], R15				\n" \
 		"MOV.L		[R15], R0				\n" \
 
-		/* Restore the registers from the stack of the task pointed to by 
+		/* Restore the registers from the stack of the task pointed to by
 		pxCurrentTCB. */
 	    "POP		R15						\n" \
-		
+
 		/* Accumulator low 32 bits. */
 	    "MVTACLO	R15 					\n" \
 	    "POP		R15						\n" \
-		
+
 		/* Accumulator high 32 bits. */
 	    "MVTACHI	R15 					\n" \
 	    "POP		R15						\n" \
-		
+
 		/* Floating point status word. */
 	    "MVTC		R15, FPSW 				\n" \
-		
+
 		/* R1 to R15 - R0 is not included as it is the SP. */
 	    "POPM		R1-R15 					\n" \
-		
+
 		/* This pops the remaining registers. */
 	    "RTE								\n" \
 	    "NOP								\n" \
@@ -269,18 +271,18 @@ void vSoftwareInterruptISR( void )
 		"SETPSW		I							\n" \
 
 		/* Move the data that was automatically pushed onto the interrupt stack when
-		the interrupt occurred from the interrupt stack to the user stack.  
-	
+		the interrupt occurred from the interrupt stack to the user stack.
+
 		R15 is saved before it is clobbered. */
 		"PUSH.L		R15							\n" \
-	
+
 		/* Read the user stack pointer. */
 		"MVFC		USP, R15					\n" \
-	
+
 		/* Move the address down to the data being moved. */
 		"SUB		#12, R15					\n" \
 		"MVTC		R15, USP					\n" \
-	
+
 		/* Copy the data across, R15, then PC, then PSW. */
 		"MOV.L		[ R0 ], [ R15 ]				\n" \
 		"MOV.L 		4[ R0 ], 4[ R15 ]			\n" \
@@ -288,22 +290,22 @@ void vSoftwareInterruptISR( void )
 
 		/* Move the interrupt stack pointer to its new correct position. */
 		"ADD		#12, R0						\n" \
-	
+
 		/* All the rest of the registers are saved directly to the user stack. */
 		"SETPSW		U							\n" \
 
 		/* Save the rest of the general registers (R15 has been saved already). */
 		"PUSHM		R1-R14						\n" \
-	
+
 		/* Save the FPSW and accumulator. */
 		"MVFC		FPSW, R15					\n" \
 		"PUSH.L		R15							\n" \
 		"MVFACHI 	R15							\n" \
 		"PUSH.L		R15							\n" \
-		
+
 		/* Middle word. */
 		"MVFACMI	R15							\n" \
-		
+
 		/* Shifted left as it is restored to the low order word. */
 		"SHLL		#16, R15					\n" \
 		"PUSH.L		R15							\n" \
@@ -312,7 +314,7 @@ void vSoftwareInterruptISR( void )
 		"MOV.L		#_pxCurrentTCB, R15			\n" \
 		"MOV.L		[ R15 ], R15				\n" \
 		"MOV.L		R0, [ R15 ]					\n" \
-			
+
 		/* Ensure the interrupt mask is set to the syscall priority while the kernel
 		structures are being accessed. */
 		"MVTIPL		%0 							\n" \
@@ -350,7 +352,7 @@ void vTickISR( void )
 {
 	/* Re-enabled interrupts. */
 	__asm volatile( "SETPSW	I" );
-	
+
 	/* Increment the tick, and perform any processing the new tick value
 	necessitates.  Ensure IPL is at the max syscall value first. */
 	portDISABLE_INTERRUPTS_FROM_KERNEL_ISR();
@@ -367,12 +369,12 @@ void vTickISR( void )
 unsigned long ulPortGetIPL( void )
 {
 	__asm volatile
-	( 
+	(
 		"MVFC	PSW, R1			\n"	\
 		"SHLR	#24, R1			\n"	\
 		"RTS					  "
 	);
-	
+
 	/* This will never get executed, but keeps the compiler from complaining. */
 	return 0;
 }
@@ -381,7 +383,7 @@ unsigned long ulPortGetIPL( void )
 void vPortSetIPL( unsigned long ulNewIPL )
 {
 	__asm volatile
-	( 
+	(
 		"PUSH	R5				\n" \
 		"MVFC	PSW, R5			\n"	\
 		"SHLL	#24, R1			\n" \

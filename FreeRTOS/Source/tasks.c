@@ -192,7 +192,7 @@ PRIVILEGED_DATA static xList xPendingReadyList;							/*< Tasks that have been r
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
-	PRIVILEGED_DATA static xList xTasksWaitingTermination;				/*< Tasks that have been deleted - but the their memory not yet freed. */
+	PRIVILEGED_DATA static xList xTasksWaitingTermination;				/*< Tasks that have been deleted - but their memory not yet freed. */
 	PRIVILEGED_DATA static volatile unsigned portBASE_TYPE uxTasksDeleted = ( unsigned portBASE_TYPE ) 0U;
 
 #endif
@@ -514,7 +514,7 @@ tskTCB * pxNewTCB;
 		#endif /* portUSING_MPU_WRAPPERS == 1 */
 
 		/* Calculate the top of stack address.  This depends on whether the
-		stack grows from high memory to low (as per the 80x86) or visa versa.
+		stack grows from high memory to low (as per the 80x86) or vice versa.
 		portSTACK_GROWTH is used to make the result positive or negative as
 		required by the port. */
 		#if( portSTACK_GROWTH < 0 )
@@ -645,7 +645,8 @@ tskTCB * pxNewTCB;
 
 		taskENTER_CRITICAL();
 		{
-			/* If null is passed in here then we are deleting ourselves. */
+			/* If null is passed in here then it is the calling task that is
+			being deleted. */
 			pxTCB = prvGetTCBFromHandle( xTaskToDelete );
 
 			/* Remove task from the ready list and place in the	termination list.
@@ -694,7 +695,7 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskDelayUntil == 1 )
 
-	void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTimeIncrement )
+	void vTaskDelayUntil( portTickType * const pxPreviousWakeTime, const portTickType xTimeIncrement )
 	{
 	portTickType xTimeToWake;
 	portBASE_TYPE xAlreadyYielded, xShouldDelay = pdFALSE;
@@ -771,7 +772,7 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskDelay == 1 )
 
-	void vTaskDelay( portTickType xTicksToDelay )
+	void vTaskDelay( const portTickType xTicksToDelay )
 	{
 	portTickType xTimeToWake;
 	signed portBASE_TYPE xAlreadyYielded = pdFALSE;
@@ -830,6 +831,8 @@ tskTCB * pxNewTCB;
 	eTaskState eReturn;
 	xList *pxStateList;
 	const tskTCB * const pxTCB = ( tskTCB * ) xTask;
+
+		configASSERT( pxTCB );
 
 		if( pxTCB == pxCurrentTCB )
 		{
@@ -1108,9 +1111,9 @@ tskTCB * pxNewTCB;
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	signed portBASE_TYPE xTaskIsTaskSuspended( xTaskHandle xTask )
+	signed portBASE_TYPE xTaskIsTaskSuspended( const xTaskHandle xTask )
 	{
-	portBASE_TYPE xReturn = pdFALSE;
+	signed portBASE_TYPE xReturn = pdFALSE;
 	const tskTCB * const pxTCB = ( tskTCB * ) xTask;
 
 		/* It does not make sense to check if the calling task is suspended. */
@@ -1460,7 +1463,7 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
-	above the maximum system call priority are keep permanently enabled, even
+	above the maximum system call priority are kept permanently enabled, even
 	when the RTOS kernel is in a critical section, but cannot make any calls to
 	FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
 	then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
@@ -1634,8 +1637,8 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 			}
 
 			/* See if this tick has made a timeout expire.  Tasks are stored in the
-			queue in the order of their wake time - meaning once one tasks has been
-			found whose block time has not expired there is no need not look any
+			queue in the order of their wake time - meaning once one task has been
+			found whose block time has not expired there is no need to look any
 			further	down the list. */
 			if( xConstTickCount >= xNextTaskUnblockTime )
 			{
@@ -1757,7 +1760,8 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 	{
 	tskTCB *xTCB;
 
-		/* If xTask is NULL then we are setting our own task hook. */
+		/* If xTask is NULL then it is the task hook of the calling task that is
+		getting set. */
 		if( xTask == NULL )
 		{
 			xTCB = ( tskTCB * ) pxCurrentTCB;
@@ -1956,7 +1960,7 @@ portTickType xTimeToWake;
 	/* Store the item value in the event list item. */
 	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ), xItemValue );
 
-	/* Place the event list item of the TCB at the end of the appropriate event 
+	/* Place the event list item of the TCB at the end of the appropriate event
 	list. */
 	vListInsertEnd( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 
@@ -2118,7 +2122,7 @@ portBASE_TYPE xReturn;
 	}
 	else
 	{
-		/* Cannot access the delayed or ready lists, so will hold this task 
+		/* Cannot access the delayed or ready lists, so will hold this task
 		pending until the scheduler is resumed. */
 		vListInsertEnd( &( xPendingReadyList ), pxEventListItem );
 	}
@@ -2603,8 +2607,13 @@ tskTCB *pxNewTCB;
 		}
 		else
 		{
-			/* Just to help debugging. */
-			( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( portSTACK_TYPE ) );
+			/* Avoid dependency on memset() if it is not required. */
+			#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
+			{
+				/* Just to help debugging. */
+				( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( portSTACK_TYPE ) );
+			}
+			#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
 		}
 	}
 
@@ -2682,17 +2691,17 @@ tskTCB *pxNewTCB;
 
 	static unsigned short prvTaskCheckFreeStackSpace( const unsigned char * pucStackByte )
 	{
-	unsigned short usCount = 0U;
+	unsigned long ulCount = 0U;
 
 		while( *pucStackByte == tskSTACK_FILL_BYTE )
 		{
 			pucStackByte -= portSTACK_GROWTH;
-			usCount++;
+			ulCount++;
 		}
 
-		usCount /= sizeof( portSTACK_TYPE );
+		ulCount /= ( unsigned long ) sizeof( portSTACK_TYPE );
 
-		return usCount;
+		return ( unsigned short ) ulCount;
 	}
 
 #endif /* ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) */
@@ -2903,7 +2912,7 @@ tskTCB *pxNewTCB;
 	{
 	xTaskStatusType *pxTaskStatusArray;
 	volatile unsigned portBASE_TYPE uxArraySize, x;
-	char cStatus;
+	signed char cStatus;
 
 		/*
 		 * PLEASE NOTE:
@@ -2968,7 +2977,7 @@ tskTCB *pxNewTCB;
 									break;
 				}
 
-				sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxTaskStatusArray[ x ].pcTaskName, cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
+				sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxTaskStatusArray[ x ].pcTaskName, ( char ) cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
 				pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
 			}
 
@@ -2977,7 +2986,7 @@ tskTCB *pxNewTCB;
 		}
 	}
 
-#endif /* configUSE_TRACE_FACILITY */
+#endif /* ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) ) */
 /*----------------------------------------------------------*/
 
 #if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
@@ -3082,7 +3091,7 @@ tskTCB *pxNewTCB;
 		}
 	}
 
-#endif /* configGENERATE_RUN_TIME_STATS */
+#endif /* ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) ) */
 /*-----------------------------------------------------------*/
 
 portTickType uxTaskResetEventItemValue( void )

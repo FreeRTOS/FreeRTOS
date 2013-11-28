@@ -185,7 +185,7 @@ void vPortStartFirstTask( void )
 	"	pop {pc}					\n" /* Finally, pop the PC to jump to the user defined task code. */
 	"								\n"
 	"	.align 2					\n"
-	"pxCurrentTCBConst2: .word pxCurrentTCB	  "					
+	"pxCurrentTCBConst2: .word pxCurrentTCB	  "
 				  );
 }
 /*-----------------------------------------------------------*/
@@ -208,7 +208,7 @@ portBASE_TYPE xPortStartScheduler( void )
 
 	/* Start the first task. */
 	vPortStartFirstTask();
-	
+
 	/* Should never get here as the tasks will now be executing!  Call the task
 	exit error function to prevent compiler warnings about a static function
 	not being called in the case that the application writer overrides this
@@ -222,8 +222,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-  /* It is unlikely that the CM0 port will require this function as there
-    is nothing to return to.  */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 
@@ -250,6 +251,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	configASSERT( uxCriticalNesting );
     uxCriticalNesting--;
     if( uxCriticalNesting == 0 )
     {

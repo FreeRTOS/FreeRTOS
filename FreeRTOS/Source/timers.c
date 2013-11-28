@@ -102,7 +102,7 @@ typedef struct tmrTimerControl
 	const signed char		*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */
 	xListItem				xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
 	portTickType			xTimerPeriodInTicks;/*<< How quickly and often the timer expires. */
-	unsigned portBASE_TYPE	uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one shot timer. */
+	unsigned portBASE_TYPE	uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one-shot timer. */
 	void 					*pvTimerID;			/*<< An ID to identify the timer.  This allows the timer to be identified when the same callback is used for multiple timers. */
 	tmrTIMER_CALLBACK		pxCallbackFunction;	/*<< The function that will be called when the timer expires. */
 } xTIMER;
@@ -148,7 +148,7 @@ static variables must be declared volatile. */
 
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
-timer service task is allowed to access xActiveTimerList. */
+timer service task is allowed to access these lists. */
 PRIVILEGED_DATA static xList xActiveTimerList1;
 PRIVILEGED_DATA static xList xActiveTimerList2;
 PRIVILEGED_DATA static xList *pxCurrentTimerList;
@@ -242,12 +242,12 @@ portBASE_TYPE xReturn = pdFAIL;
 		{
 			/* Create the timer task, storing its handle in xTimerTaskHandle so
 			it can be returned by the xTimerGetTimerDaemonTaskHandle() function. */
-			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );
+			xReturn = xTaskCreate( prvTimerTask, ( const signed char * const ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );
 		}
 		#else
 		{
 			/* Create the timer task without storing its handle. */
-			xReturn = xTaskCreate( prvTimerTask, ( const signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL);
+			xReturn = xTaskCreate( prvTimerTask, ( const signed char * const ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL);
 		}
 		#endif
 	}
@@ -419,7 +419,7 @@ portBASE_TYPE xTimerListsWereSwitched;
 		has expired or not.  If obtaining the time causes the lists to switch
 		then don't process this timer as any timers that remained in the list
 		when the lists were switched will have been processed within the
-		prvSampelTimeNow() function. */
+		prvSampleTimeNow() function. */
 		xTimeNow = prvSampleTimeNow( &xTimerListsWereSwitched );
 		if( xTimerListsWereSwitched == pdFALSE )
 		{
@@ -717,6 +717,16 @@ static void prvCheckForValidListAndQueue( void )
 			pxCurrentTimerList = &xActiveTimerList1;
 			pxOverflowTimerList = &xActiveTimerList2;
 			xTimerQueue = xQueueCreate( ( unsigned portBASE_TYPE ) configTIMER_QUEUE_LENGTH, sizeof( xDAEMON_TASK_MESSAGE ) );
+			configASSERT( xTimerQueue );
+
+			#if ( configQUEUE_REGISTRY_SIZE > 0 )
+			{
+				if( xTimerQueue != NULL )
+				{
+					vQueueAddToRegistry( xTimerQueue, ( signed char * ) "TmrQ" );
+				}
+			}
+			#endif /* configQUEUE_REGISTRY_SIZE */
 		}
 	}
 	taskEXIT_CRITICAL();

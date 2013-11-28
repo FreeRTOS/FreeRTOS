@@ -80,6 +80,10 @@ happens to also be including task.h. */
 extern "C" {
 #endif
 
+/*-----------------------------------------------------------
+ * MACROS AND DEFINITIONS
+ *----------------------------------------------------------*/
+
 /* IDs for commands that can be sent/received on the timer queue.  These are to
 be used solely through the macros that make up the public software timer API,
 as defined below. */
@@ -89,11 +93,7 @@ as defined below. */
 #define tmrCOMMAND_CHANGE_PERIOD			( ( portBASE_TYPE ) 2 )
 #define tmrCOMMAND_DELETE					( ( portBASE_TYPE ) 3 )
 
-/*-----------------------------------------------------------
- * MACROS AND DEFINITIONS
- *----------------------------------------------------------*/
-
- /**
+/**
  * Type by which software timers are referenced.  For example, a call to
  * xTimerCreate() returns an xTimerHandle variable that can then be used to
  * reference the subject timer in calls to other software timer API functions
@@ -105,7 +105,7 @@ typedef void * xTimerHandle;
 typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
 
 /**
- * xTimerHandle xTimerCreate( 	const signed char *pcTimerName,
+ * xTimerHandle xTimerCreate( 	const signed char * const pcTimerName,
  * 								portTickType xTimerPeriodInTicks,
  * 								unsigned portBASE_TYPE uxAutoReload,
  * 								void * pvTimerID,
@@ -145,10 +145,10 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  * Callback functions must have the prototype defined by tmrTIMER_CALLBACK,
  * which is	"void vCallbackFunction( xTimerHandle xTimer );".
  *
- * @return If the timer is successfully create then a handle to the newly
+ * @return If the timer is successfully created then a handle to the newly
  * created timer is returned.  If the timer cannot be created (because either
  * there is insufficient FreeRTOS heap remaining to allocate the timer
- * structures, or the timer period was set to 0) then 0 is returned.
+ * structures, or the timer period was set to 0) then NULL is returned.
  *
  * Example usage:
  * @verbatim
@@ -263,7 +263,7 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
  *
  * A timer will be dormant if:
  *     1) It has been created but not started, or
- *     2) It is an expired on-shot timer that has not been restarted.
+ *     2) It is an expired one-shot timer that has not been restarted.
  *
  * Timers are created in the dormant state.  The xTimerStart(), xTimerReset(),
  * xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and
@@ -294,6 +294,8 @@ void *pvTimerGetTimerID( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xTimerIsTimerActive( xTimerHandle xTimer ) PRIVILEGED_FUNCTION;
 
 /**
+ * xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
+ *
  * xTimerGetTimerDaemonTaskHandle() is only available if
  * INCLUDE_xTimerGetTimerDaemonTaskHandle is set to 1 in FreeRTOSConfig.h.
  *
@@ -307,7 +309,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
- * though a queue called the timer command queue.  The timer command queue is
+ * through a queue called the timer command queue.  The timer command queue is
  * private to the kernel itself and is not directly accessible to application
  * code.  The length of the timer command queue is set by the
  * configTIMER_QUEUE_LENGTH configuration constant.
@@ -359,7 +361,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
- * though a queue called the timer command queue.  The timer command queue is
+ * through a queue called the timer command queue.  The timer command queue is
  * private to the kernel itself and is not directly accessible to application
  * code.  The length of the timer command queue is set by the
  * configTIMER_QUEUE_LENGTH configuration constant.
@@ -403,7 +405,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
- * though a queue called the timer command queue.  The timer command queue is
+ * through a queue called the timer command queue.  The timer command queue is
  * private to the kernel itself and is not directly accessible to application
  * code.  The length of the timer command queue is set by the
  * configTIMER_QUEUE_LENGTH configuration constant.
@@ -481,7 +483,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
- * though a queue called the timer command queue.  The timer command queue is
+ * through a queue called the timer command queue.  The timer command queue is
  * private to the kernel itself and is not directly accessible to application
  * code.  The length of the timer command queue is set by the
  * configTIMER_QUEUE_LENGTH configuration constant.
@@ -519,7 +521,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
- * though a queue called the timer command queue.  The timer command queue is
+ * through a queue called the timer command queue.  The timer command queue is
  * private to the kernel itself and is not directly accessible to application
  * code.  The length of the timer command queue is set by the
  * configTIMER_QUEUE_LENGTH configuration constant.
@@ -716,7 +718,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *     if( xHigherPriorityTaskWoken != pdFALSE )
  *     {
  *         // Call the interrupt safe yield function here (actual function
- *         // depends on the FreeRTOS port being used.
+ *         // depends on the FreeRTOS port being used).
  *     }
  * }
  * @endverbatim
@@ -779,7 +781,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *     if( xHigherPriorityTaskWoken != pdFALSE )
  *     {
  *         // Call the interrupt safe yield function here (actual function
- *         // depends on the FreeRTOS port being used.
+ *         // depends on the FreeRTOS port being used).
  *     }
  * }
  * @endverbatim
@@ -852,7 +854,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *     if( xHigherPriorityTaskWoken != pdFALSE )
  *     {
  *         // Call the interrupt safe yield function here (actual function
- *         // depends on the FreeRTOS port being used.
+ *         // depends on the FreeRTOS port being used).
  *     }
  * }
  * @endverbatim
@@ -938,7 +940,7 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  *     if( xHigherPriorityTaskWoken != pdFALSE )
  *     {
  *         // Call the interrupt safe yield function here (actual function
- *         // depends on the FreeRTOS port being used.
+ *         // depends on the FreeRTOS port being used).
  *     }
  * }
  * @endverbatim

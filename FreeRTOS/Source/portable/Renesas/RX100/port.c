@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -444,7 +444,9 @@ static void prvYieldHandler( void )
 
 void vPortEndScheduler( void )
 {
-	/* Not implemented as there is nothing to return to. */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( pxCurrentTCB == NULL );
 
 	/* The following line is just to prevent the symbol getting optimised away. */
 	( void ) vTaskSwitchContext();

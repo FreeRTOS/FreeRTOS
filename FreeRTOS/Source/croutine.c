@@ -174,7 +174,7 @@ corCRCB *pxCoRoutine;
 		listSET_LIST_ITEM_OWNER( &( pxCoRoutine->xEventListItem ), pxCoRoutine );
 
 		/* Event lists are always in priority order. */
-		listSET_LIST_ITEM_VALUE( &( pxCoRoutine->xEventListItem ), configMAX_PRIORITIES - ( portTickType ) uxPriority );
+		listSET_LIST_ITEM_VALUE( &( pxCoRoutine->xEventListItem ), ( ( portTickType ) configMAX_CO_ROUTINE_PRIORITIES - ( portTickType ) uxPriority ) );
 
 		/* Now the co-routine has been initialised it can be added to the ready
 		list at the correct priority. */

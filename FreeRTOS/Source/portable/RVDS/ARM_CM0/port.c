@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -142,20 +142,20 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 static void prvTaskExitError( void )
 {
 	/* A function that implements a task must not exit or attempt to return to
-	its caller as there is nothing to return to.  If a task wants to exit it 
+	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
-	
-	Artificially force an assert() to be triggered if configASSERT() is 
+
+	Artificially force an assert() to be triggered if configASSERT() is
 	defined, then stop here so application writers can catch the error. */
 	configASSERT( uxCriticalNesting == ~0UL );
-	portDISABLE_INTERRUPTS();	
+	portDISABLE_INTERRUPTS();
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
 void vPortSVCHandler( void )
 {
-	/* This function is no longer used, but retained for backward 
+	/* This function is no longer used, but retained for backward
 	compatibility. */
 }
 /*-----------------------------------------------------------*/
@@ -163,15 +163,15 @@ void vPortSVCHandler( void )
 __asm void prvPortStartFirstTask( void )
 {
 	extern pxCurrentTCB;
-	
+
 	PRESERVE8
-	
+
 	/* The MSP stack is not reset as, unlike on M3/4 parts, there is no vector
 	table offset register that can be used to locate the initial stack value.
 	Not all M0 parts have the application vector table at address 0. */
-	
+
 	ldr	r3, =pxCurrentTCB	/* Obtain location of pxCurrentTCB. */
-	ldr r1, [r3]			
+	ldr r1, [r3]
 	ldr r0, [r1]			/* The first item in pxCurrentTCB is the task top of stack. */
 	adds r0, #32			/* Discard everything up to r0. */
 	msr psp, r0				/* This is now the new top of stack to use in the task. */
@@ -212,8 +212,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-  /* It is unlikely that the CM0 port will require this function as there
-    is nothing to return to.  */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 
@@ -240,6 +241,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	configASSERT( uxCriticalNesting );
     uxCriticalNesting--;
     if( uxCriticalNesting == 0 )
     {

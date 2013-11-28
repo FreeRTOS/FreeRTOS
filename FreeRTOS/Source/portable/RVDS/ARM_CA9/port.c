@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -316,9 +316,9 @@ unsigned long ulAPSR;
 		setting.  See the comments in vPortValidateInterruptPriority() below for
 		more information. */
 		configASSERT( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE );
-		
+
 		if( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE )
-		{	
+		{
 			/* Start the timer that generates the tick ISR. */
 			configSETUP_TICK_INTERRUPT();
 
@@ -336,8 +336,9 @@ unsigned long ulAPSR;
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the ARM port will require this function as there
-	is nothing to return to. */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( ulCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 

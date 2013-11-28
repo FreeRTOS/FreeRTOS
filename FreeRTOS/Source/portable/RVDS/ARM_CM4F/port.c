@@ -382,8 +382,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 void vPortEndScheduler( void )
 {
-	/* It is unlikely that the CM4F port will require this function as there
-	is nothing to return to.  */
+	/* Not implemented in ports where there is nothing to return to.
+	Artificially force an assert. */
+	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
 
@@ -410,6 +411,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	configASSERT( uxCriticalNesting );
 	uxCriticalNesting--;
 	if( uxCriticalNesting == 0 )
 	{

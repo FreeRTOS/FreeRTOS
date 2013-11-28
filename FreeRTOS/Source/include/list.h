@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -115,8 +115,8 @@
  * complete and obvious failure of the scheduler.  If this is ever experienced
  * then the volatile qualifier can be inserted in the relevant places within the
  * list structures by simply defining configLIST_VOLATILE to volatile in
- * FreeRTOSConfig.h (as per the example at the bottom of this comment block).  
- * If configLIST_VOLATILE is not defined then the preprocessor directives below 
+ * FreeRTOSConfig.h (as per the example at the bottom of this comment block).
+ * If configLIST_VOLATILE is not defined then the preprocessor directives below
  * will simply #define configLIST_VOLATILE away completely.
  *
  * To use volatile list structure members then add the following line to
@@ -157,7 +157,7 @@ typedef struct xMINI_LIST_ITEM xMiniListItem;
 typedef struct xLIST
 {
 	configLIST_VOLATILE unsigned portBASE_TYPE uxNumberOfItems;
-	xListItem * configLIST_VOLATILE pxIndex;		/*< Used to walk through the list.  Points to the last item returned by a call to pvListGetOwnerOfNextEntry (). */
+	xListItem * configLIST_VOLATILE pxIndex;		/*< Used to walk through the list.  Points to the last item returned by a call to listGET_OWNER_OF_NEXT_ENTRY (). */
 	xMiniListItem xListEnd;							/*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
 } xList;
 
@@ -177,7 +177,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
  * \ingroup LinkedList
  */
-#define listGET_LIST_ITEM_OWNER( pxListItem )		( pxListItem )->pvOwner
+#define listGET_LIST_ITEM_OWNER( pxListItem )		( ( pxListItem )->pvOwner )
 
 /*
  * Access macro to set the value of the list item.  In most cases the value is
@@ -190,7 +190,7 @@ typedef struct xLIST
 
 /*
  * Access macro to retrieve the value of the list item.  The value can
- * represent anything - for example a the priority of a task, or the time at
+ * represent anything - for example the priority of a task, or the time at
  * which a task should be unblocked.
  *
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
@@ -199,7 +199,7 @@ typedef struct xLIST
 #define listGET_LIST_ITEM_VALUE( pxListItem )				( ( pxListItem )->xItemValue )
 
 /*
- * Access macro the retrieve the value of the list item at the head of a given
+ * Access macro to retrieve the value of the list item at the head of a given
  * list.
  *
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
@@ -250,7 +250,7 @@ typedef struct xLIST
  *
  * The list member pxIndex is used to walk through a list.  Calling
  * listGET_OWNER_OF_NEXT_ENTRY increments pxIndex to the next item in the list
- * and returns that entries pxOwner parameter.  Using multiple calls to this
+ * and returns that entry's pxOwner parameter.  Using multiple calls to this
  * function it is therefore possible to move through every item contained in
  * a list.
  *
@@ -259,6 +259,7 @@ typedef struct xLIST
  * The pxOwner parameter effectively creates a two way link between the list
  * item and its owner.
  *
+ * @param pxTCB pxTCB is set to the address of the owner of the next list item.
  * @param pxList The list from which the next item owner is to be returned.
  *
  * \page listGET_OWNER_OF_NEXT_ENTRY listGET_OWNER_OF_NEXT_ENTRY
@@ -303,8 +304,7 @@ xList * const pxConstList = ( pxList );														\
  *
  * @param pxList The list we want to know if the list item is within.
  * @param pxListItem The list item we want to know if is in the list.
- * @return pdTRUE is the list item is in the list, otherwise pdFALSE.
- * pointer against
+ * @return pdTRUE if the list item is in the list, otherwise pdFALSE.
  */
 #define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( portBASE_TYPE ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) ) )
 
@@ -352,7 +352,7 @@ void vListInitialiseItem( xListItem * const pxItem );
  *
  * @param pxList The list into which the item is to be inserted.
  *
- * @param pxNewListItem The item to that is to be placed in the list.
+ * @param pxNewListItem The item that is to be placed in the list.
  *
  * \page vListInsert vListInsert
  * \ingroup LinkedList

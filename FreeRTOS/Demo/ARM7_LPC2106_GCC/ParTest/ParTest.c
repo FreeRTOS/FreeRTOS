@@ -124,7 +124,7 @@ unsigned long ulLED = partstFIRST_IO, ulCurrentState;
 		attached. */
 		ulLED <<= ( unsigned long ) uxLED;
 
-		/* If this bit is already set, clear it, and visa versa. */
+		/* If this bit is already set, clear it, and vice versa. */
 		ulCurrentState = GPIO0_IOPIN;
 		if( ulCurrentState & ulLED )
 		{

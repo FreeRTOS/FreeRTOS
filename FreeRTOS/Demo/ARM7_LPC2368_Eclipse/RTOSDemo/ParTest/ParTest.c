@@ -121,7 +121,7 @@ unsigned portLONG ulLED = partstFIRST_IO, ulCurrentState;
 		attached. */
 		ulLED <<= ( unsigned portLONG ) uxLED;
 
-		/* If this bit is already set, clear it, and visa versa. */
+		/* If this bit is already set, clear it, and vice versa. */
 		ulCurrentState = FIO2PIN;
 		if( ulCurrentState & ulLED )
 		{

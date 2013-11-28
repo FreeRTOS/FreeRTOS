@@ -127,7 +127,7 @@ unsigned long ulCurrentState;
 
 	if( ulLEDIn == 0 )
 	{
-		/* If this bit is already set, clear it, and visa versa. */
+		/* If this bit is already set, clear it, and vice versa. */
 		ulCurrentState = GPIO1->FIOPIN;
 		if( ulCurrentState & partstLED1_OUTPUT )
 		{
@@ -140,7 +140,7 @@ unsigned long ulCurrentState;
 	}
 	else if( ulLEDIn == 1 )
 	{
-		/* If this bit is already set, clear it, and visa versa. */
+		/* If this bit is already set, clear it, and vice versa. */
 		ulCurrentState = GPIO0->FIOPIN;
 		if( ulCurrentState & partstLED2_OUTPUT )
 		{

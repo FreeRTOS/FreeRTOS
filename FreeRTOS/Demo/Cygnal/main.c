@@ -357,7 +357,7 @@ unsigned char ucOriginalSFRPage;
 
 static void prvToggleOnBoardLED( void )
 {
-	/* If the on board LED is on, turn it off and visa versa. */
+	/* If the on board LED is on, turn it off and vice versa. */
 	if( P1 & ucLED_BIT )
 	{
 		P1 &= ~ucLED_BIT;

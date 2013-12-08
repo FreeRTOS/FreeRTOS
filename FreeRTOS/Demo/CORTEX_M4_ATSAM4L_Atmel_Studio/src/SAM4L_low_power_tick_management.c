@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -248,7 +248,7 @@ static void prvEnableAST( void )
 /*-----------------------------------------------------------*/
 
 /* Override the default definition of vPortSuppressTicksAndSleep() that is weakly
-defined in the FreeRTOS Cortex-M3 port layet with a version that manages the
+defined in the FreeRTOS Cortex-M3 port layer with a version that manages the
 asynchronous timer (AST), as the tick is generated from the low power AST and
 not the SysTick as would normally be the case on a Cortex-M. */
 void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
@@ -372,6 +372,12 @@ enum sleepmgr_mode xSleepMode;
 			/* The alarm value is set to whatever fraction of a single tick
 			period remains. */
 			ulAlarmValue = ast_read_counter_value( AST ) - ( ulCompleteTickPeriods * ulAlarmValueForOneTick );
+			if( ulAlarmValue == 0 )
+			{
+				/* There is no fraction remaining. */
+				ulAlarmValue = ulAlarmValueForOneTick;
+				ulCompleteTickPeriods++;
+			}
 			ast_write_alarm0_value( AST, ulAlarmValue );
 		}
 

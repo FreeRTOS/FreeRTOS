@@ -132,11 +132,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
+#include "semphr.h"
 
 /* ST library functions. */
 #include "stm32l1xx.h"
 #include "discover_board.h"
 #include "discover_functions.h"
+#include "stm32l_discovery_lcd.h"
 
 /* Priorities at which the Rx and Tx tasks are created. */
 #define configQUEUE_RECEIVE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
@@ -150,9 +152,6 @@ empty. */
 /* The LED used to indicate that a value has been received on the queue. */
 #define mainQUEUE_LED						( 0 )
 
-/* The rate at which the Tx task sends to the queue. */
-#define mainTX_DELAY						( 500UL / portTICK_RATE_MS )
-
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0 )
 
@@ -162,7 +161,7 @@ empty. */
 /* The length of time the LED will remain on for.  It is on just long enough
 to be able to see with the human eye so as not to distort the power readings too
 much. */
-#define mainLED_TOGGLE_DELAY				( 20 / portTICK_RATE_MS )
+#define mainLED_TOGGLE_DELAY				( 10 / portTICK_RATE_MS )
 
 /*-----------------------------------------------------------*/
 
@@ -184,9 +183,15 @@ static void prvSetupHardware( void );
 
 /*-----------------------------------------------------------*/
 
+static const portTickType xMaxBlockTime = ( 500L / portTICK_RATE_MS ), xMinBlockTime = ( 100L / portTICK_RATE_MS );
+portTickType xSendBlockTime = ( 100UL / portTICK_RATE_MS );
+static xSemaphoreHandle xTxSemaphore = NULL;
+
 int main( void )
 {
 	prvSetupHardware();
+
+	xTxSemaphore = xSemaphoreCreateBinary();
 
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
@@ -216,10 +221,9 @@ const unsigned long ulValueToSend = mainQUEUED_VALUE;
 
 	for( ;; )
 	{
-		/* Place this task into the blocked state until it is time to run again.
-		The kernel will place the MCU into the Retention low power sleep state
-		when the idle task next runs. */
-		vTaskDelay( mainTX_DELAY );
+		/* Place this task into the blocked state until it is time to run
+		again. */
+		xSemaphoreTake( xTxSemaphore, xSendBlockTime );
 
 		/* Send to the queue - causing the queue receive task to flash its LED.
 		It should not be necessary to block on the queue send because the Rx
@@ -253,6 +257,39 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
+void EXTI0_IRQHandler(void)
+{
+static const portTickType xIncrement = 200UL / portTICK_RATE_MS;
+
+	if( xSendBlockTime == portMAX_DELAY )
+	{
+		portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+		/* Unblock the Tx task again. */
+		xSemaphoreGiveFromISR( xTxSemaphore, &xHigherPriorityTaskWoken );
+
+		/* Start over with the short block time that will not result in the
+		tick being turned off or a low power mode being entered. */
+		xSendBlockTime = xMinBlockTime;
+
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
+	else
+	{
+		xSendBlockTime += xIncrement;
+
+		if( xSendBlockTime > xMaxBlockTime )
+		{
+			/* Set the send block time to be infinite to force entry into the STOP
+			sleep mode. */
+			xSendBlockTime = portMAX_DELAY;
+		}
+	}
+
+	EXTI_ClearITPendingBit( EXTI_Line0 );
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupHardware( void )
 {
 /* GPIO, EXTI and NVIC Init structure declaration */
@@ -266,59 +303,57 @@ void SystemCoreClockUpdate( void );
 	/* Essential on STM32 Cortex-M devices. */
 	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
 
-	/* Enable HSI Clock */
-	RCC_HSICmd(ENABLE);
+	/* Systick is fed from HCLK/8. */
+	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK_Div8 );
 
-	/*!< Wait till HSI is ready */
-	while( RCC_GetFlagStatus( RCC_FLAG_HSIRDY ) == RESET );
+	/* Enable HSI Clock. */
+//	RCC_HSICmd( ENABLE );
+
+	/*!< Wait till HSI is ready. */
+//	while( RCC_GetFlagStatus( RCC_FLAG_HSIRDY ) == RESET );
 
 	/* Set HSI as sys clock*/
-	RCC_SYSCLKConfig( RCC_SYSCLKSource_HSI );
+//	RCC_SYSCLKConfig( RCC_SYSCLKSource_HSI );
 
-	/* Set MSI clock range to ~4.194MHz*/
+	/* Set MSI clock range to ~4.194MHz. */
 	RCC_MSIRangeConfig( RCC_MSIRange_6 );
 
-	/* Enable the GPIOs clocks */
+	/* Enable the GPIOs clocks. */
 	RCC_AHBPeriphClockCmd( RCC_AHBPeriph_GPIOA | RCC_AHBPeriph_GPIOB | RCC_AHBPeriph_GPIOC| RCC_AHBPeriph_GPIOD| RCC_AHBPeriph_GPIOE| RCC_AHBPeriph_GPIOH, ENABLE );
 
-	/* Enable comparator, PWR mngt clocks */
-	RCC_APB1PeriphClockCmd( RCC_APB1Periph_COMP | RCC_APB1Periph_PWR,ENABLE );
+	/* Enable comparator clocks. */
+	RCC_APB1PeriphClockCmd( RCC_APB1Periph_COMP, ENABLE );
 
-	/* Enable ADC & SYSCFG clocks */
+	/* Enable SYSCFG clocks. */
 	RCC_APB2PeriphClockCmd( RCC_APB2Periph_SYSCFG , ENABLE );
 
 	/* Allow access to the RTC */
-	PWR_RTCAccessCmd( ENABLE );
+//	PWR_RTCAccessCmd( ENABLE );
 
 	/* Reset RTC Backup Domain */
-	RCC_RTCResetCmd( ENABLE );
-	RCC_RTCResetCmd( DISABLE );
+//	RCC_RTCResetCmd( ENABLE );
+//	RCC_RTCResetCmd( DISABLE );
 
 	/* LSE Enable */
-	RCC_LSEConfig( RCC_LSE_ON );
+//	RCC_LSEConfig( RCC_LSE_ON );
+	//RCC_LSICmd( ENABLE ); //_RB_
 
 	/* Wait until LSE is ready */
-	while( RCC_GetFlagStatus( RCC_FLAG_LSERDY ) == RESET );
-
-	/* RTC Clock Source Selection */
-	RCC_RTCCLKConfig( RCC_RTCCLKSource_LSE );
-
-	/* Enable the RTC */
-	RCC_RTCCLKCmd( ENABLE );
+//	while( RCC_GetFlagStatus( RCC_FLAG_LSERDY ) == RESET );
 
 	/* Disable HSE */
-	RCC_HSEConfig( RCC_HSE_OFF );
+//	RCC_HSEConfig( RCC_HSE_OFF );
 
-	if( RCC_GetFlagStatus( RCC_FLAG_HSERDY ) != RESET )
-	{
-		/* Stay in infinite loop if HSE is not disabled*/
-		while( 1 );
-	}
+//	if( RCC_GetFlagStatus( RCC_FLAG_HSERDY ) != RESET )
+//	{
+		/* Stay in infinite loop if HSE is not disabled. */
+//		while( 1 );
+//	}
 
-	/* Set internal voltage regulator to 1.8V */
-	PWR_VoltageScalingConfig( PWR_VoltageScaling_Range1 );
+	/* Set internal voltage regulator to 1.5V. */
+	PWR_VoltageScalingConfig( PWR_VoltageScaling_Range2 );
 
-	/* Wait Until the Voltage Regulator is ready */
+	/* Wait Until the Voltage Regulator is ready. */
 	while( PWR_GetFlagStatus( PWR_FLAG_VOS ) != RESET );
 
 	/* Configure User Button pin as input */
@@ -329,7 +364,7 @@ void SystemCoreClockUpdate( void );
 	GPIO_Init( USERBUTTON_GPIO_PORT, &GPIO_InitStructure );
 
 	/* Select User Button pin as input source for EXTI Line */
-	SYSCFG_EXTILineConfig( EXTI_PortSourceGPIOA,EXTI_PinSource0 );
+	SYSCFG_EXTILineConfig( EXTI_PortSourceGPIOA, EXTI_PinSource0 );
 
 	/* Configure EXT1 Line 0 in interrupt mode trigged on Rising edge */
 	EXTI_InitStructure.EXTI_Line = EXTI_Line0 ;  /* PA0 for User button AND IDD_WakeUP */
@@ -413,21 +448,70 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( void )
+void vMainPostStopProcessing( void )
 {
-volatile unsigned long ul = 0;
+extern void SetSysClock( void );
+
+	SetSysClock();
+	/* Unblock the Tx task again. */
+//	xSemaphoreGiveFromISR( xTxSemaphore, NULL );
+
+	/* Start over with the short block time that will not result in the
+	tick being turned off or a low power mode being entered. */
+//	xSendBlockTime = xMinBlockTime;
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
+{
+volatile unsigned long ulSetToNonZeroInDebuggerToContinue = 0;
+
+	/* Parameters are not used. */
+	( void ) ulLine;
+	( void ) pcFileName;
 
 	taskENTER_CRITICAL();
 	{
-		/* Set ul to a non-zero value using the debugger to step out of this
-		function. */
-		while( ul == 0 )
+		while( ulSetToNonZeroInDebuggerToContinue == 0 )
 		{
+			/* Use the debugger to set ulSetToNonZeroInDebuggerToContinue to a
+			non zero value to step out of this function to the point that raised
+			this assert(). */
+			__asm volatile( "NOP" );
 			__asm volatile( "NOP" );
 		}
 	}
 	taskEXIT_CRITICAL();
 }
+
+
+
+
+#ifdef  USE_FULL_ASSERT
+
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t* file, uint32_t line)
+{
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* Infinite loop */
+  while (1);
+}
+
+#endif
+
+
+
+
+
+
+
 
 
 #if 0
@@ -962,6 +1046,273 @@ void vApplicationStackOverflowHook( void )
 }
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+	/* Ensure the interrupt is clear before exiting.  The RTC uses EXTI line 20
+	to bring the CPU out of sleep. */
+
+
+
+
+
+
+
+
+
+void _vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
+{
+uint32_t ulWakeupValue, ulCompleteTickPeriods;
+eSleepModeStatus eSleepAction;
+portTickType xModifiableIdleTime;
+
+	/* THIS FUNCTION IS CALLED WITH THE SCHEDULER SUSPENDED. */
+
+	/* Make sure the wakeup timer reload value does not overflow the counter. */
+	if( xExpectedIdleTime > xMaximumPossibleSuppressedTicks )
+	{
+		xExpectedIdleTime = xMaximumPossibleSuppressedTicks;
+	}
+
+	/* Calculate the reload value required to wait xExpectedIdleTime tick
+	periods. */
+	ulWakeupValue = ( ( ulWakeupValueForOneTick + 1UL ) * xExpectedIdleTime ) - 1UL;
+	if( ulWakeupValue > ulStoppedTimerCompensation )
+	{
+		/* Compensate for the fact that the RTC is going to be stopped
+		momentarily. */
+		ulWakeupValue -= ulStoppedTimerCompensation;
+	}
+
+	/* Stop the RTC momentarily.  The time the RTC is stopped for is accounted
+	for as best it can be, but using the tickless mode will inevitably result in
+	some tiny drift of the time maintained by the kernel with respect to
+	calendar time. */
+	prvDisableWakeupTimer();
+
+	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as
+	that will mask interrupts that should exit sleep mode. */
+	__asm volatile ( "cpsid i" );
+
+	/* The tick flag is set to false before sleeping.  If it is true when sleep
+	mode is exited then sleep mode was probably exited because the tick was
+	suppressed for the entire xExpectedIdleTime period. */
+	ulTickFlag = pdFALSE;
+
+	/* If a context switch is pending then abandon the low power entry as
+	the context switch might have been pended by an external interrupt that
+	requires processing. */
+	eSleepAction = eTaskConfirmSleepModeStatus();
+	if( eSleepAction == eAbortSleep )
+	{
+		/* Restart tick. */
+		prvEnableWakeupTimer();
+
+		/* Re-enable interrupts - see comments above the cpsid instruction()
+		above. */
+		__asm volatile ( "cpsie i" );
+	}
+	else
+	{
+		/* Adjust the alarm value to take into account that the current time
+		slice is already partially complete. */
+//		ulWakeupValue -= ( RTC->WUTR & RTC_WUTR_WUT ); /* Current value. */
+
+		/* Disable the write protection for RTC registers */
+		RTC->WPR = 0xCA;
+		RTC->WPR = 0x53;
+
+		/* Set the Wakeup Timer value */
+		RTC->WUTR = ulWakeupValue;
+
+		/* Enable the Wakeup Timer */
+		RTC->CR |= (uint32_t)RTC_CR_WUTE;
+
+		/* Enable the write protection for RTC registers. */
+		RTC->WPR = 0xFF;
+
+		/* Allow the application to define some pre-sleep processing. */
+		xModifiableIdleTime = xExpectedIdleTime;
+		configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
+
+		/* xExpectedIdleTime being set to 0 by configPRE_SLEEP_PROCESSING()
+		means the application defined code has already executed the WAIT
+		instruction. */
+		if( xModifiableIdleTime > 0 )
+		{
+			/* Sleep until something happens. */
+			__asm volatile ( "wfi" );
+			__asm volatile ( "dsb" );
+		}
+
+		/* Allow the application to define some post sleep processing. */
+		configPOST_SLEEP_PROCESSING( xModifiableIdleTime );
+
+		/* Stop RTC.  Again, the time the clock is stopped for is accounted
+		for as best it can be, but using the tickless mode will	inevitably
+		result in some tiny drift of the time maintained by the	kernel with
+		respect to calendar time. */
+		prvDisableWakeupTimer();
+
+		/* Re-enable interrupts - see comments above the cpsid instruction()
+		above. */
+		__asm volatile ( "cpsie i" );
+
+		if( ulTickFlag != pdFALSE )
+		{
+			/* The tick interrupt has already executed, although because this
+			function is called with the scheduler suspended the actual tick
+			processing will not occur until after this function has exited.
+			Reset the alarm value with whatever remains of this tick period. */
+			ulWakeupValue = ulWakeupValueForOneTick;//_RB_ - ( RTC->WUTR & RTC_WUTR_WUT ); /* Current value. */
+
+			/* Disable the write protection for RTC registers */
+			RTC->WPR = 0xCA;
+			RTC->WPR = 0x53;
+
+			/* Set the Wakeup Timer value */
+			RTC->WUTR = ulWakeupValue;
+
+			/* Enable the write protection for RTC registers. */
+			RTC->WPR = 0xFF;
+
+			/* The tick interrupt handler will already have pended the tick
+			processing in the kernel.  As the pending tick will be processed as
+			soon as this function exits, the tick value	maintained by the tick
+			is stepped forward by one less than the	time spent sleeping.  The
+			actual stepping of the tick appears later in this function. */
+			ulCompleteTickPeriods = xExpectedIdleTime - 1UL;
+		}
+		else
+		{
+			/* Something other than the tick interrupt ended the sleep.  How
+			many complete tick periods passed while the processor was
+			sleeping? */
+			ulCompleteTickPeriods = ( RTC->WUTR & RTC_WUTR_WUT ) / ulWakeupValueForOneTick;
+
+			/* The alarm value is set to whatever fraction of a single tick
+			period remains. */
+			ulWakeupValue = ( RTC->WUTR & RTC_WUTR_WUT ) - ( ulCompleteTickPeriods * ulWakeupValueForOneTick );
+
+			/* Disable the write protection for RTC registers */
+			RTC->WPR = 0xCA;
+			RTC->WPR = 0x53;
+
+			/* Set the Wakeup Timer value */
+			RTC->WUTR = ulWakeupValue;
+
+			/* Enable the write protection for RTC registers. */
+			RTC->WPR = 0xFF;
+		}
+
+		/* Restart the RTC so it runs down from the wakeup value.  The wakeup
+		value will get set to the value required to generate exactly one tick
+		period the next time the wakeup interrupt executes. */
+		prvEnableWakeupTimer();
+
+		/* Wind the tick forward by the number of tick periods that the CPU
+		remained in a low power state. */
+		vTaskStepTick( ulCompleteTickPeriods );
+	}
+}
+
+
+
+
+
+
+
+
+
+
+//	RTC_ClearITPendingBit( RTC_IT_WUT );
+//	EXTI_ClearITPendingBit( EXTI_Line20 );
+
+
+
+#ifdef USE_RTC
+NVIC_InitTypeDef NVIC_InitStructure;
+EXTI_InitTypeDef EXTI_InitStructure;
+
+	/* Enable access to the RTC registers. */
+	PWR_RTCAccessCmd( ENABLE );
+	RCC_RTCResetCmd( ENABLE );
+	RCC_RTCResetCmd( DISABLE );
+
+	/* LSE Enable */
+	RCC_LSEConfig( RCC_LSE_ON );
+
+	/* Wait until LSE is ready. */
+	while( RCC_GetFlagStatus( RCC_FLAG_LSERDY ) == RESET );
+
+	/* Enable the PWR clock. */
+	RCC_APB1PeriphClockCmd( RCC_APB1Periph_PWR, ENABLE );
+
+	/* LSE used as RTC clock source. */
+	RCC_RTCCLKConfig( RCC_RTCCLKSource_LSE ); /* 32.768KHz external */
+
+	/* Enable the RTC clock and wait for sync. */
+	RCC_RTCCLKCmd( ENABLE );
+	RTC_WaitForSynchro();
+
+	/* Watchdog timer user EXTI line 20 to wake from sleep. */
+	EXTI_ClearITPendingBit( EXTI_Line20 );
+	EXTI_InitStructure.EXTI_Line = EXTI_Line20;
+	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+	EXTI_Init( &EXTI_InitStructure );
+
+	/* Enable the RTC Wakeup Interrupt. */
+	NVIC_InitStructure.NVIC_IRQChannel = RTC_WKUP_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_LOWEST_INTERRUPT_PRIORITY;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init( &NVIC_InitStructure );
+
+	/* Drive the wakeup clock from LSE/2 (32768/2) */
+	RTC_WakeUpClockConfig( RTC_WakeUpClock_RTCCLK_Div2 );
+
+	/* Set count and reload values. */
+	RTC_SetWakeUpCounter( ulReloadValueForOneTick );
+
+	/* Enable the RTC Wakeup Interrupt. */
+	RTC_ITConfig( RTC_IT_WUT, ENABLE );
+
+	/* Enable Wakeup Counter. */
+	RTC_WakeUpCmd( ENABLE );
+#endif
+
+
+static void prvDisableWakeupTimer( void )
+{
+	RTC->WPR = 0xCA;
+	RTC->WPR = 0x53;
+
+	/* Disable the Wakeup Timer */
+	RTC->CR &= (uint32_t)~RTC_CR_WUTE;
+
+	/* Wait till RTC WUTWF flag is set. */
+	/* _RB_ Timeout needed. */
+	do
+	{
+	} while( ( RTC->ISR & RTC_ISR_WUTWF ) == 0x00 );
+
+	/* Enable the write protection for RTC registers */
+	RTC->WPR = 0xFF;
+}
+/*-----------------------------------------------------------*/
+
+static void prvEnableWakeupTimer( void )
+{
+	RTC->WPR = 0xCA;
+	RTC->WPR = 0x53;
+
+	/* Enable the Wakeup Timer */
+	RTC->CR |= (uint32_t)RTC_CR_WUTE;
+
+	/* Enable the write protection for RTC registers */
+	RTC->WPR = 0xFF;
+}
+/*-----------------------------------------------------------*/
+
 
 #endif
 

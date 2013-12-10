@@ -82,14 +82,33 @@
 #ifdef __ICCARM__
 	#include <stdint.h>
 	extern uint32_t SystemCoreClock;
+	void vMainPostStopProcessing( void );
+	void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
 #endif
+
+/* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky low power
+demo, or 0 to run the more comprehensive test and demo application. */
+#define configCREATE_LOW_POWER_DEMO			1
+
+#if configCREATE_LOW_POWER_DEMO == 1
+	#define configCPU_CLOCK_HZ						SystemCoreClock
+	#define configUSE_TICKLESS_IDLE					1
+	#define configTICK_RATE_HZ						( 100 )
+	#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 	( 20 + 1 ) /* ( ( 200 / portTICK_RATE_MS ) + 1 ) written out pre-processed to enable #error statements to check its value. */
+#else
+	#define configCPU_CLOCK_HZ						SystemCoreClock
+	#define configSYSTICK_CLOCK_HZ					( SystemCoreClock >> 3UL )
+	#define configUSE_TICKLESS_IDLE					0
+	#define configTICK_RATE_HZ						( ( portTickType ) 1000 )
+#endif /* configCREATE_LOW_POWER_DEMO */
+
+#define configPRE_STOP_PROCESSING()
+#define configPOST_STOP_PROCESSING()				vMainPostStopProcessing()
 
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
-#define configCPU_CLOCK_HZ						( SystemCoreClock )
-#define configTICK_RATE_HZ						( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES					( 5 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 70 )
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 10 * 1024 ) )
@@ -118,6 +137,9 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+
+/* Standard assert semantics. */
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
 /* Use the system definition, if there is one */
 #ifdef __NVIC_PRIO_BITS

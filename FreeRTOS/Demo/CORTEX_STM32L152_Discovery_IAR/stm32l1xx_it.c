@@ -116,10 +116,6 @@ void DebugMon_Handler(void)
   while (1);
 }
 
-void EXTI0_IRQHandler(void)
-{
-  EXTI_ClearITPendingBit(EXTI_Line0);
-}
 
 
 void RTC_WKUP_IRQHandler (void)

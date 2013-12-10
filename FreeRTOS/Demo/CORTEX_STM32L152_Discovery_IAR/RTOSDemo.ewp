@@ -234,7 +234,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>1111111</state>
+          <state>0000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -328,7 +328,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -337,7 +337,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -1017,6 +1017,9 @@
       <file>
         <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_syscfg.c</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_tim.c</name>
+      </file>
     </group>
     <group>
       <name>TouchSensingDriver</name>
@@ -1087,6 +1090,9 @@
   </file>
   <file>
     <name>$PROJ_DIR$\stm32l1xx_it.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\STM32L_low_power_tick_management.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\tsl_user.c</name>

@@ -156,7 +156,6 @@
 /* ST library functions. */
 #include "stm32l1xx.h"
 #include "discover_board.h"
-#include "discover_functions.h"
 #include "stm32l_discovery_lcd.h"
 
 /* Priorities at which the Rx and Tx tasks are created. */

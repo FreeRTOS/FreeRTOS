@@ -24,7 +24,6 @@
 #include "stm32l1xx_it.h"
 #include "stm32l1xx_exti.h"
 #include "stm32l1xx_rtc.h"
-#include "discover_functions.h"
 #include "discover_board.h"
 #include "stm32l_discovery_lcd.h"
 #include "tsl.h"

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32L1xx_StdPeriph_Template/main.h 
+  * @file    Project/STM32L1xx_StdPeriph_Template/main.h
   * @author  MCD Application Team
   * @version V1.0.3
   * @date    May-2013
@@ -17,8 +17,8 @@
   *
   * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
   ******************************************************************************
-  */ 
-  
+  */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
@@ -36,7 +36,6 @@
 /* discovery board and specific drivers headers*/
 #include "discover_board.h"
 #include "icc_measure.h"
-#include "discover_functions.h"
 #include "stm32l_discovery_lcd.h"
 
 

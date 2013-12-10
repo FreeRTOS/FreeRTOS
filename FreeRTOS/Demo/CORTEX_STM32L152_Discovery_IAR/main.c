@@ -83,7 +83,6 @@
 /* ST library functions. */
 #include "stm32l1xx.h"
 #include "discover_board.h"
-#include "discover_functions.h"
 
 /*-----------------------------------------------------------*/
 

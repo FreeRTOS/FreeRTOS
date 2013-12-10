@@ -992,13 +992,7 @@
         <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\misc.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_adc.c</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_exti.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_flash.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_gpio.c</name>
@@ -1020,48 +1014,6 @@
       </file>
       <file>
         <name>$PROJ_DIR$\ST_Code\Libraries\STM32L1xx_StdPeriph_Driver\src\stm32l1xx_tim.c</name>
-      </file>
-    </group>
-    <group>
-      <name>TouchSensingDriver</name>
-      <excluded>
-        <configuration>Debug</configuration>
-      </excluded>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_acq.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_acq_stm32l1xx_sw.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_dxs.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_ecs.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_filter.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_globals.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_linrot.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_object.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_time.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_time_stm32l1xx.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ST_Code\Libraries\STMTouch_Driver\src\tsl_touchkey.c</name>
       </file>
     </group>
   </group>
@@ -1102,16 +1054,7 @@
     </file>
   </group>
   <file>
-    <name>$PROJ_DIR$\discover_functions.c</name>
-  </file>
-  <file>
     <name>$PROJ_DIR$\include\FreeRTOSConfig.h</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\icc_measure.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\icc_measure_Ram.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>
@@ -1127,9 +1070,6 @@
   </file>
   <file>
     <name>$PROJ_DIR$\STM32L_low_power_tick_management.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\tsl_user.c</name>
   </file>
 </project>
 

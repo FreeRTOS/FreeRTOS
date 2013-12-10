@@ -78,7 +78,8 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-/* Ensure stdint is only used by the compiler, and not the assembler. */
+/* Ensure stdint and C code is only used by the compiler, and not the
+assembler. */
 #ifdef __ICCARM__
 	#include <stdint.h>
 	extern uint32_t SystemCoreClock;
@@ -88,30 +89,42 @@
 
 /* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky low power
 demo, or 0 to run the more comprehensive test and demo application. */
-#define configCREATE_LOW_POWER_DEMO			1
+#define configCREATE_LOW_POWER_DEMO			0
 
+/* A few settings are dependent on the configCREATE_LOW_POWER_DEMO setting. */
 #if configCREATE_LOW_POWER_DEMO == 1
-	#define configCPU_CLOCK_HZ						SystemCoreClock
-	#define configUSE_TICKLESS_IDLE					1
 	#define configTICK_RATE_HZ						( 100 )
 	#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 	( 20 + 1 ) /* ( ( 200 / portTICK_RATE_MS ) + 1 ) written out pre-processed to enable #error statements to check its value. */
+	#define configUSE_TIMERS						0
 #else
-	#define configCPU_CLOCK_HZ						SystemCoreClock
-	#define configSYSTICK_CLOCK_HZ					( SystemCoreClock >> 3UL )
-	#define configUSE_TICKLESS_IDLE					0
+	#define configSYSTICK_CLOCK_HZ					( SystemCoreClock >> 3UL ) /* Systick clock is one eighth the system clock. */
 	#define configTICK_RATE_HZ						( ( portTickType ) 1000 )
+	#define configUSE_TIMERS						1
 #endif /* configCREATE_LOW_POWER_DEMO */
 
+/* Demo specific macros that allow the application writer to insert code to be
+executed immediately before the MCU's STOP low power mode is entered and exited
+respectively.  These macros are in addition to the standard
+configPRE_SLEEP_PROCESSING() and configPOST_SLEEP_PROCESSING() macros, which are
+called pre and post the low power SLEEP mode being entered and exited.  These
+macros can be used to turn turn off and on IO, clocks, the Flash etc. to obtain
+the lowest power possible while the tick is off.  See the comments at the top of
+main_low_power.c and in STM32L_low_power_tick_management.c. */
 #define configPRE_STOP_PROCESSING()
 #define configPOST_STOP_PROCESSING()				vMainPostStopProcessing()
 
+/* The configUSE_TICKLESS_IDLE setting is dependent on the users setting of
+configCREATE_LOW_POWER_DEMO at the top of this file. */
+#define configUSE_TICKLESS_IDLE					configCREATE_LOW_POWER_DEMO
+
+#define configCPU_CLOCK_HZ						SystemCoreClock
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 5 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 70 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 10 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 14 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 16 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -119,9 +132,15 @@ demo, or 0 to run the more comprehensive test and demo application. */
 #define configUSE_MUTEXES						1
 #define configQUEUE_REGISTRY_SIZE				5
 #define configCHECK_FOR_STACK_OVERFLOW			2
-#define configUSE_RECURSIVE_MUTEXES				0
+#define configUSE_RECURSIVE_MUTEXES				1
 #define configUSE_MALLOC_FAILED_HOOK			1
 #define configUSE_APPLICATION_TASK_TAG			0
+#define configUSE_COUNTING_SEMAPHORES			1
+
+/* Software timer related definitions. */
+#define configTIMER_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH				10
+#define configTIMER_TASK_STACK_DEPTH			configMINIMAL_STACK_SIZE
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0

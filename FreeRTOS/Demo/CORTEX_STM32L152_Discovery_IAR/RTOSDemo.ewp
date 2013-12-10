@@ -39,20 +39,20 @@
         <option>
           <name>Input variant</name>
           <version>3</version>
-          <state>1</state>
+          <state>7</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>Full formatting.</state>
+          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing, without multibyte support.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>2</version>
-          <state>1</state>
+          <state>7</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>Full formatting.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -70,16 +70,16 @@
         <option>
           <name>GRuntimeLibSelect</name>
           <version>0</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>RTDescription</name>
-          <state>Use the full configuration of the C/C++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
+          <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -103,7 +103,7 @@
         </option>
         <option>
           <name>GenLowLevelInterface</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GEndianModeBE</name>
@@ -133,7 +133,7 @@
         </option>
         <option>
           <name>RTConfigPath2</name>
-          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Full.h</state>
+          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>GFPUCoreSlave</name>
@@ -309,6 +309,7 @@
           <state>$PROJ_DIR$\ST_Code\libraries\CMSIS\Device\ST\STM32L1xx\Include</state>
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM3</state>
+          <state>$PROJ_DIR$\..\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -645,7 +646,7 @@
         </option>
         <option>
           <name>IlinkOutputFile</name>
-          <state>STM32L-Discovery.out</state>
+          <state>RTOSDemo.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -1065,6 +1066,33 @@
     </group>
   </group>
   <group>
+    <name>Standard Demo Tasks</name>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+    </file>
+  </group>
+  <group>
     <name>System</name>
     <file>
       <name>$PROJ_DIR$\System\startup_stm32l1xx_md.s</name>
@@ -1087,6 +1115,12 @@
   </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\main_full.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\main_low_power.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\stm32l1xx_it.c</name>

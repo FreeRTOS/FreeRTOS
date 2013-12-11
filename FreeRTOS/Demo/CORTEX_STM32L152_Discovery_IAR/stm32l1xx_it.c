@@ -26,7 +26,6 @@
 #include "stm32l1xx_rtc.h"
 #include "discover_board.h"
 #include "stm32l_discovery_lcd.h"
-#include "tsl.h"
 
 
 extern volatile bool KeyPressed;

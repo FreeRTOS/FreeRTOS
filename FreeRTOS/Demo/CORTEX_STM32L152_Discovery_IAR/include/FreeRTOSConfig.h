@@ -89,7 +89,7 @@ assembler. */
 
 /* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky low power
 demo, or 0 to run the more comprehensive test and demo application. */
-#define configCREATE_LOW_POWER_DEMO			0
+#define configCREATE_LOW_POWER_DEMO			1
 
 /* A few settings are dependent on the configCREATE_LOW_POWER_DEMO setting. */
 #if configCREATE_LOW_POWER_DEMO == 1

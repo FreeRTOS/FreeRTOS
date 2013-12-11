@@ -137,7 +137,7 @@
  * 4) The next time the button is pressed the block time used by the Tx task is
  * set to infinite, so the Tx task does not time out when it attempts to obtain
  * the semaphore, and therefore the LED stops blipping completely.  Both tasks
- * are not blocked indefinitely and the MCU is placed into its 'Stop' low power
+ * are now blocked indefinitely and the MCU is placed into its 'Stop' low power
  * state.
  *
  * 5) Pressing the button one final time results in the semaphore being 'given'

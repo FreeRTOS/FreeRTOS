@@ -136,11 +136,11 @@ typedef portTickType xEventBitsType;
 #endif
 
 #ifndef INCLUDE_vTaskDelete
-	#error Missing definition:  INCLUDE_vTaskDelete		 must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskDelete must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskSuspend
-	#error Missing definition:  INCLUDE_vTaskSuspend	 must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
+	#error Missing definition:  INCLUDE_vTaskSuspend must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
 #ifndef INCLUDE_vTaskDelayUntil
@@ -156,13 +156,13 @@ typedef portTickType xEventBitsType;
 #endif
 
 #if configUSE_CO_ROUTINES != 0
-	#if configMAX_CO_ROUTINE_PRIORITIES < 1
+	#ifndef configMAX_CO_ROUTINE_PRIORITIES
 		#error configMAX_CO_ROUTINE_PRIORITIES must be greater than or equal to 1.
 	#endif
 #endif
 
-#if configMAX_PRIORITIES  < 1
-	#error configMAX_PRIORITIES  must be greater than or equal to 1.
+#ifndef configMAX_PRIORITIES
+	#error configMAX_PRIORITIES must be defined to be greater than or equal to 1.
 #endif
 
 #ifndef INCLUDE_xTaskGetIdleTaskHandle
@@ -292,6 +292,10 @@ typedef portTickType xEventBitsType;
 
 #ifndef portCLEAN_UP_TCB
 	#define portCLEAN_UP_TCB( pxTCB ) ( void ) pxTCB
+#endif
+
+#ifndef portPRE_DELETE_HOOK
+	#define portPRE_DELETE_HOOK( pvTaskToDelete, pxYieldPending )
 #endif
 
 #ifndef portSETUP_TCB
@@ -549,6 +553,42 @@ typedef portTickType xEventBitsType;
 
 #ifndef traceFREE
     #define traceFREE( pvAddress, uiSize )
+#endif
+
+#ifndef traceEVENT_GROUP_CREATE
+	#define traceEVENT_GROUP_CREATE( xEventGroup )
+#endif
+
+#ifndef traceEVENT_GROUP_CREATE_FAILED
+	#define traceEVENT_GROUP_CREATE_FAILED()
+#endif
+
+#ifndef traceEVENT_GROUP_SYNC_START
+	#define traceEVENT_GROUP_SYNC_START( xEventGroup, uxBitsToSet )
+#endif
+
+#ifndef traceEVENT_GROUP_SYNC_END
+	#define traceEVENT_GROUP_SYNC_END( xEventGroup, uxReturn )
+#endif
+
+#ifndef traceEVENT_GROUP_WAIT_BITS_START
+	#define traceEVENT_GROUP_WAIT_BITS_START( xEventGroup, uxBitsToWaitFor )
+#endif
+
+#ifndef traceEVENT_GROUP_WAIT_BITS_END
+	#define traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxReturn )
+#endif
+
+#ifndef traceEVENT_GROUP_CLEAR_BITS
+	#define traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear )
+#endif
+
+#ifndef traceEVENT_GROUP_SET_BITS
+	#define traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet )
+#endif
+
+#ifndef traceEVENT_GROUP_DELETE
+	#define traceEVENT_GROUP_DELETE( xEventGroup )
 #endif
 
 #ifndef configGENERATE_RUN_TIME_STATS

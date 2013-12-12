@@ -685,6 +685,13 @@ tskTCB * pxNewTCB;
 			if( pxTCB == pxCurrentTCB )
 			{
 				configASSERT( uxSchedulerSuspended == 0 );
+
+				/* The pre-delete hook is primarily for the Windows simulator,
+				in which Windows specific clean up operations are performed,
+				after which it is not possible to yield away from this task - 
+				hence xYieldPending is used to latch that a context switch is
+				required. */
+				portPRE_DELETE_HOOK( pxTCB, &xYieldPending );
 				portYIELD_WITHIN_API();
 			}
 		}
@@ -1896,7 +1903,7 @@ void vTaskSwitchContext( void )
 }
 /*-----------------------------------------------------------*/
 
-void vTaskPlaceOnEventList( xList * const pxEventList, portTickType xTicksToWait )
+void vTaskPlaceOnEventList( xList * const pxEventList, const portTickType xTicksToWait )
 {
 portTickType xTimeToWake;
 
@@ -1948,7 +1955,7 @@ portTickType xTimeToWake;
 }
 /*-----------------------------------------------------------*/
 
-void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, portTickType xTicksToWait )
+void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, const portTickType xTicksToWait )
 {
 portTickType xTimeToWake;
 

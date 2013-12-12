@@ -244,6 +244,7 @@ char *pcTopOfStack = ( char * ) pxTopOfStack;
 
 	/* Create the thread itself. */
 	pxThreadState->pvThread = CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
+	configASSERT( pxThreadState->pvThread );
 	SetThreadAffinityMask( pxThreadState->pvThread, 0x01 );
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
@@ -418,13 +419,51 @@ void vPortDeleteThread( void *pvTaskToDelete )
 {
 xThreadState *pxThreadState;
 
-	WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+	/* Find the handle of the thread being deleted. */
+	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
+
+	/* Check that the thread is still valid, it might have been closed by
+	vPortCloseRunningThread() - which will be the case if the task associated
+	with the thread originally deleted itself rather than being deleted by a
+	different task. */
+	if( pxThreadState->pvThread != NULL )
+	{
+		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
+
+		CloseHandle( pxThreadState->pvThread );
+		TerminateThread( pxThreadState->pvThread, 0 );
+
+		ReleaseMutex( pvInterruptEventMutex );
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vPortCloseRunningThread( void *pvTaskToDelete, volatile portBASE_TYPE *pxPendYield )
+{
+xThreadState *pxThreadState;
+void *pvThread;
 
 	/* Find the handle of the thread being deleted. */
 	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
-	TerminateThread( pxThreadState->pvThread, 0 );
+	pvThread = pxThreadState->pvThread;
 
-	ReleaseMutex( pvInterruptEventMutex );
+	/* Raise the Windows priority of the thread to ensure the FreeRTOS scheduler
+	does not run and swap it out before it is closed.  If that were to happen
+	the thread would never run again and effectively be a thread handle and
+	memory leak. */
+	SetThreadPriority( pvThread, THREAD_PRIORITY_ABOVE_NORMAL );
+
+	/* This function will not return, therefore a yield is set as pending to
+	ensure a context switch occurs away from this thread on the next tick. */
+	*pxPendYield = pdTRUE;
+
+	/* Mark the thread associated with this task as invalid so 
+	vPortDeleteThread() does not try to terminate it. */
+	pxThreadState->pvThread = NULL;
+
+	/* Close the thread. */
+	CloseHandle( pvThread );
+	ExitThread( 0 );
 }
 /*-----------------------------------------------------------*/
 

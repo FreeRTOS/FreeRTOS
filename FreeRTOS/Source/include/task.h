@@ -1412,8 +1412,8 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * portTICK_RATE_MS can be used to convert kernel ticks into a real time
  * period.
  */
-void vTaskPlaceOnEventList( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
-void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnEventList( xList * const pxEventList, const portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, const portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN

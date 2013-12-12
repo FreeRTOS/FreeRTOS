@@ -128,6 +128,11 @@ xEVENT_BITS *pxEventBits;
 	{
 		pxEventBits->uxEventBits = 0;
 		vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
+		traceEVENT_GROUP_CREATE( pxEventBits );		
+	}
+	else
+	{
+		traceEVENT_GROUP_CREATE_FAILED();
 	}
 
 	return ( xEventGroupHandle ) pxEventBits;
@@ -148,6 +153,8 @@ portBASE_TYPE xYieldedAlready;
 
 	vTaskSuspendAll();
 	{
+		traceEVENT_GROUP_SYNC_START( xEventGroup, uxBitsToSet );
+
 		uxOriginalBitValue = pxEventBits->uxEventBits;
 
 		( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
@@ -172,6 +179,11 @@ portBASE_TYPE xYieldedAlready;
 				task's event list item so the kernel knows when a match is
 				found.  Then enter the blocked state. */
 				vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | taskCLEAR_EVENTS_ON_EXIT_BIT | taskWAIT_FOR_ALL_BITS ), xTicksToWait );
+
+				/* This is obsolete as it will get set after the task unblocks,
+				but some compilers mistakenly generate a warning about the
+				variable being returned without being set if it is not done. */
+				uxReturn = 0;
 			}
 			else
 			{
@@ -209,6 +221,7 @@ portBASE_TYPE xYieldedAlready;
 		}
 	}
 
+	traceEVENT_GROUP_SYNC_END( xEventGroup, uxReturn );
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
@@ -231,6 +244,8 @@ xEventBitsType uxReturn, uxControlBits = 0;
 	taskENTER_CRITICAL();
 	{
 		const xEventBitsType uxCurrentEventBits = pxEventBits->uxEventBits;
+
+		traceEVENT_GROUP_WAIT_BITS_START( xEventGroup, uxBitsToWaitFor );
 
 		if( xWaitForAllBits == pdFALSE )
 		{
@@ -288,6 +303,11 @@ xEventBitsType uxReturn, uxControlBits = 0;
 			found.  Then enter the blocked state. */
 			vTaskPlaceOnUnorderedEventList( &( pxEventBits->xTasksWaitingForBits ), ( uxBitsToWaitFor | uxControlBits ), xTicksToWait );
 			portYIELD_WITHIN_API();
+
+			/* This is obsolete as it will get set after the task unblocks, but
+			some compilers mistakenly generate a warning about the variable
+			being returned without being set if it is not done. */
+			uxReturn = 0;
 		}
 	}
 	taskEXIT_CRITICAL();
@@ -313,6 +333,7 @@ xEventBitsType uxReturn, uxControlBits = 0;
 		}
 	}
 
+	traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxReturn );
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
@@ -329,6 +350,8 @@ xEventBitsType uxReturn;
 	uxBitsToClear = ~uxBitsToClear;
 	taskENTER_CRITICAL();
 	{
+		traceEVENT_GROUP_CLEAR_BITS( xEventGroup, ~uxBitsToClear );
+
 		/* The value returned is the event group value prior to the bits being
 		cleared. */
 		uxReturn = pxEventBits->uxEventBits;
@@ -359,6 +382,8 @@ portBASE_TYPE xMatchFound = pdFALSE;
 	pxListEnd = listGET_END_MARKER( pxList ); /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 	vTaskSuspendAll();
 	{
+		traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet );
+
 		pxListItem = listGET_HEAD_ENTRY( pxList );
 
 		/* Set the bits. */
@@ -432,6 +457,8 @@ const xList *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
 	vTaskSuspendAll();
 	{
+		traceEVENT_GROUP_DELETE( xEventGroup );
+
 		while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( unsigned portBASE_TYPE ) 0 )
 		{
 			/* Unblock the task, returning 0 as the event list is being deleted

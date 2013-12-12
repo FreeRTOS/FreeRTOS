@@ -294,8 +294,8 @@ typedef portTickType xEventBitsType;
 	#define portCLEAN_UP_TCB( pxTCB ) ( void ) pxTCB
 #endif
 
-#ifndef portPRE_DELETE_HOOK
-	#define portPRE_DELETE_HOOK( pvTaskToDelete, pxYieldPending )
+#ifndef portPRE_TASK_DELETE_HOOK
+	#define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxYieldPending )
 #endif
 
 #ifndef portSETUP_TCB

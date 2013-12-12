@@ -418,6 +418,10 @@ void *pvObjectList[ 2 ];
 void vPortDeleteThread( void *pvTaskToDelete )
 {
 xThreadState *pxThreadState;
+unsigned long ulErrorCode;
+
+	/* Remove compiler warnings if configASSERT() is not defined. */
+	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
 	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
@@ -430,8 +434,11 @@ xThreadState *pxThreadState;
 	{
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
-		CloseHandle( pxThreadState->pvThread );
-		TerminateThread( pxThreadState->pvThread, 0 );
+		ulErrorCode = TerminateThread( pxThreadState->pvThread, 0 );
+		configASSERT( ulErrorCode );
+
+		ulErrorCode = CloseHandle( pxThreadState->pvThread );
+		configASSERT( ulErrorCode );
 
 		ReleaseMutex( pvInterruptEventMutex );
 	}
@@ -442,6 +449,10 @@ void vPortCloseRunningThread( void *pvTaskToDelete, volatile portBASE_TYPE *pxPe
 {
 xThreadState *pxThreadState;
 void *pvThread;
+unsigned long ulErrorCode;
+
+	/* Remove compiler warnings if configASSERT() is not defined. */
+	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
 	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
@@ -462,7 +473,9 @@ void *pvThread;
 	pxThreadState->pvThread = NULL;
 
 	/* Close the thread. */
-	CloseHandle( pvThread );
+	ulErrorCode = CloseHandle( pvThread );
+	configASSERT( ulErrorCode );
+
 	ExitThread( 0 );
 }
 /*-----------------------------------------------------------*/

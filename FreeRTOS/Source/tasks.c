@@ -679,7 +679,8 @@ tskTCB * pxNewTCB;
 		}
 		taskEXIT_CRITICAL();
 
-		/* Force a reschedule if we have just deleted the current task. */
+		/* Force a reschedule if it is the currently running task that has just
+		been deleted. */
 		if( xSchedulerRunning != pdFALSE )
 		{
 			if( pxTCB == pxCurrentTCB )
@@ -691,8 +692,15 @@ tskTCB * pxNewTCB;
 				after which it is not possible to yield away from this task - 
 				hence xYieldPending is used to latch that a context switch is
 				required. */
-				portPRE_DELETE_HOOK( pxTCB, &xYieldPending );
+				portPRE_TASK_DELETE_HOOK( pxTCB, &xYieldPending );
 				portYIELD_WITHIN_API();
+			}
+			else
+			{
+				/* Reset the next expected unblock time in case it referred to the task 
+				that has just been deleted. */
+				pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+				xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
 			}
 		}
 	}
@@ -1068,7 +1076,8 @@ tskTCB * pxNewTCB;
 
 			traceTASK_SUSPEND( pxTCB );
 
-			/* Remove task from the ready/delayed list and place in the	suspended list. */
+			/* Remove task from the ready/delayed list and place in the	
+			suspended list. */
 			if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( unsigned portBASE_TYPE ) 0 )
 			{
 				taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -1109,6 +1118,17 @@ tskTCB * pxNewTCB;
 				{
 					vTaskSwitchContext();
 				}
+			}
+		}
+		else
+		{
+			if( xSchedulerRunning != pdFALSE )
+			{
+				/* A task other than the currently running task was suspended, reset
+				the next expected unblock time in case it referred to the task that
+				is now in the Suspended state. */
+				pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+				xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
 			}
 		}
 	}
@@ -1643,38 +1663,40 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 				taskSWITCH_DELAYED_LISTS();
 			}
 
-			/* See if this tick has made a timeout expire.  Tasks are stored in the
-			queue in the order of their wake time - meaning once one task has been
-			found whose block time has not expired there is no need to look any
-			further	down the list. */
+			/* See if this tick has made a timeout expire.  Tasks are stored in 
+			the	queue in the order of their wake time - meaning once one task 
+			has been found whose block time has not expired there is no need to 
+			look any further	down the list. */
 			if( xConstTickCount >= xNextTaskUnblockTime )
 			{
 				for( ;; )
 				{
 					if( listLIST_IS_EMPTY( pxDelayedTaskList ) != pdFALSE )
 					{
-						/* The delayed list is empty.  Set xNextTaskUnblockTime to
-						the	maximum possible value so it is extremely unlikely that
-						the if( xTickCount >= xNextTaskUnblockTime ) test will pass
+						/* The delayed list is empty.  Set xNextTaskUnblockTime 
+						to the maximum possible value so it is extremely 
+						unlikely that the 
+						if( xTickCount >= xNextTaskUnblockTime ) test will pass
 						next time through. */
 						xNextTaskUnblockTime = portMAX_DELAY;
 						break;
 					}
 					else
 					{
-						/* The delayed list is not empty, get the value of the item
-						at the head of the delayed list.  This is the time at which
-						the task at the head of the delayed list must be removed
-						from the Blocked state. */
+						/* The delayed list is not empty, get the value of the 
+						item at the head of the delayed list.  This is the time 
+						at which the task at the head of the delayed list must 
+						be removed from the Blocked state. */
 						pxTCB = ( tskTCB * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
 						xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
 
 						if( xConstTickCount < xItemValue )
 						{
-							/* It is not time to unblock this item yet, but the item
-							value is the time at which the task at the head of the
-							blocked list must be removed from the Blocked state -
-							so record the item value in xNextTaskUnblockTime. */
+							/* It is not time to unblock this item yet, but the 
+							item value is the time at which the task at the head 
+							of the blocked list must be removed from the Blocked 
+							state -	so record the item value in 
+							xNextTaskUnblockTime. */
 							xNextTaskUnblockTime = xItemValue;
 							break;
 						}
@@ -1682,8 +1704,8 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 						/* It is time to remove the item from the Blocked state. */
 						( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
 
-						/* Is the task waiting on an event also?  If so remove it
-						from the event list. */
+						/* Is the task waiting on an event also?  If so remove 
+						it from the event list. */
 						if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
 						{
 							( void ) uxListRemove( &( pxTCB->xEventListItem ) );
@@ -1693,14 +1715,14 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 						list. */
 						prvAddTaskToReadyList( pxTCB );
 
-						/* A task being unblocked cannot cause an immediate context
-						switch if preemption is turned off. */
+						/* A task being unblocked cannot cause an immediate 
+						context switch if preemption is turned off. */
 						#if (  configUSE_PREEMPTION == 1 )
 						{
-							/* Preemption is on, but a context switch should only
-							be performed if the unblocked task has a priority that
-							is equal to or higher than the currently executing
-							task. */
+							/* Preemption is on, but a context switch should 
+							only be performed if the unblocked task has a 
+							priority that is equal to or higher than the 
+							currently executing task. */
 							if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
 							{
 								xSwitchRequired = pdTRUE;
@@ -2577,7 +2599,7 @@ static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
 	}
 	else
 	{
-		/* The wake time has not overflowed, so we can use the current block list. */
+		/* The wake time has not overflowed, so the current block list is used. */
 		vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 
 		/* If the task entering the blocked state was placed at the head of the

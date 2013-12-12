@@ -190,19 +190,19 @@ static void	prvProcessReceivedCommands( void ) PRIVILEGED_FUNCTION;
  * Insert the timer into either xActiveTimerList1, or xActiveTimerList2,
  * depending on if the expire time causes a timer counter overflow.
  */
-static portBASE_TYPE prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow, portTickType xCommandTime ) PRIVILEGED_FUNCTION;
+static portBASE_TYPE prvInsertTimerInActiveList( xTIMER * const pxTimer, const portTickType xNextExpiryTime, const portTickType xTimeNow, const portTickType xCommandTime ) PRIVILEGED_FUNCTION;
 
 /*
  * An active timer has reached its expire time.  Reload the timer if it is an
  * auto reload timer, then call its callback.
  */
-static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xTimeNow ) PRIVILEGED_FUNCTION;
+static void prvProcessExpiredTimer( const portTickType xNextExpireTime, const portTickType xTimeNow ) PRIVILEGED_FUNCTION;
 
 /*
  * The tick count has overflowed.  Switch the timer lists after ensuring the
  * current timer list does not still reference some timers.
  */
-static void prvSwitchTimerLists( portTickType xLastTime ) PRIVILEGED_FUNCTION;
+static void prvSwitchTimerLists( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Obtain the current tick count, setting *pxTimerListsWereSwitched to pdTRUE
@@ -222,7 +222,7 @@ static portTickType prvGetNextExpireTime( portBASE_TYPE *pxListWasEmpty ) PRIVIL
  * If a timer has expired, process it.  Otherwise, block the timer service task
  * until either a timer does expire or a command is received.
  */
-static void prvProcessTimerOrBlockTask( portTickType xNextExpireTime, portBASE_TYPE xListWasEmpty ) PRIVILEGED_FUNCTION;
+static void prvProcessTimerOrBlockTask( const portTickType xNextExpireTime, const portBASE_TYPE xListWasEmpty ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -348,14 +348,13 @@ xDAEMON_TASK_MESSAGE xMessage;
 #endif
 /*-----------------------------------------------------------*/
 
-static void prvProcessExpiredTimer( portTickType xNextExpireTime, portTickType xTimeNow )
+static void prvProcessExpiredTimer( const portTickType xNextExpireTime, const portTickType xTimeNow )
 {
-xTIMER *pxTimer;
 portBASE_TYPE xResult;
+xTIMER * const pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
 
 	/* Remove the timer from the list of active timers.  A check has already
 	been performed to ensure the list is not empty. */
-	pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
 	( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 	traceTIMER_EXPIRED( pxTimer );
 
@@ -363,12 +362,9 @@ portBASE_TYPE xResult;
 	expiry time and re-insert the timer in the list of active timers. */
 	if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
 	{
-		/* This is the only time a timer is inserted into a list using
-		a time relative to anything other than the current time.  It
-		will therefore be inserted into the correct list relative to
-		the time this task thinks it is now, even if a command to
-		switch lists due to a tick count overflow is already waiting in
-		the timer queue. */
+		/* The timer is inserted into a list using a time relative to anything
+		other than the current time.  It will therefore be inserted into the
+		correct list relative to the time this task thinks it is now. */
 		if( prvInsertTimerInActiveList( pxTimer, ( xNextExpireTime + pxTimer->xTimerPeriodInTicks ), xTimeNow, xNextExpireTime ) == pdTRUE )
 		{
 			/* The timer expired before it was added to the active timer
@@ -408,7 +404,7 @@ portBASE_TYPE xListWasEmpty;
 }
 /*-----------------------------------------------------------*/
 
-static void prvProcessTimerOrBlockTask( portTickType xNextExpireTime, portBASE_TYPE xListWasEmpty )
+static void prvProcessTimerOrBlockTask( const portTickType xNextExpireTime, const portBASE_TYPE xListWasEmpty )
 {
 portTickType xTimeNow;
 portBASE_TYPE xTimerListsWereSwitched;
@@ -492,7 +488,7 @@ PRIVILEGED_DATA static portTickType xLastTime = ( portTickType ) 0U; /*lint !e95
 
 	if( xTimeNow < xLastTime )
 	{
-		prvSwitchTimerLists( xLastTime );
+		prvSwitchTimerLists();
 		*pxTimerListsWereSwitched = pdTRUE;
 	}
 	else
@@ -506,7 +502,7 @@ PRIVILEGED_DATA static portTickType xLastTime = ( portTickType ) 0U; /*lint !e95
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvInsertTimerInActiveList( xTIMER *pxTimer, portTickType xNextExpiryTime, portTickType xTimeNow, portTickType xCommandTime )
+static portBASE_TYPE prvInsertTimerInActiveList( xTIMER * const pxTimer, const portTickType xNextExpiryTime, const portTickType xTimeNow, const portTickType xCommandTime )
 {
 portBASE_TYPE xProcessTimerNow = pdFALSE;
 
@@ -600,9 +596,10 @@ portTickType xTimeNow;
 					/* Start or restart a timer. */
 					if( prvInsertTimerInActiveList( pxTimer,  xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.u.xTimerParameters.xMessageValue ) == pdTRUE )
 					{
-						/* The timer expired before it was added to the active timer
-						list.  Process it now. */
+						/* The timer expired before it was added to the active
+						timer list.  Process it now. */
 						pxTimer->pxCallbackFunction( ( xTimerHandle ) pxTimer );
+						traceTIMER_EXPIRED( pxTimer );
 
 						if( pxTimer->uxAutoReload == ( unsigned portBASE_TYPE ) pdTRUE )
 						{
@@ -646,15 +643,12 @@ portTickType xTimeNow;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSwitchTimerLists( portTickType xLastTime )
+static void prvSwitchTimerLists( void )
 {
 portTickType xNextExpireTime, xReloadTime;
 xList *pxTemp;
 xTIMER *pxTimer;
 portBASE_TYPE xResult;
-
-	/* Remove compiler warnings if configASSERT() is not defined. */
-	( void ) xLastTime;
 
 	/* The tick count has overflowed.  The timer lists must be switched.
 	If there are any timers still referenced from the current timer list
@@ -667,6 +661,7 @@ portBASE_TYPE xResult;
 		/* Remove the timer from the list. */
 		pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
 		( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
+		traceTIMER_EXPIRED( pxTimer );
 
 		/* Execute its callback, then send a command to restart the timer if
 		it is an auto-reload timer.  It cannot be restarted here as the lists
@@ -752,9 +747,9 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 }
 /*-----------------------------------------------------------*/
 
-void *pvTimerGetTimerID( xTimerHandle xTimer )
+void *pvTimerGetTimerID( const xTimerHandle xTimer )
 {
-xTIMER *pxTimer = ( xTIMER * ) xTimer;
+xTIMER * const pxTimer = ( xTIMER * const ) xTimer;
 
 	return pxTimer->pvTimerID;
 }

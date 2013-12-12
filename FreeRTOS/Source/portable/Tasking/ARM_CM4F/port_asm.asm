@@ -73,6 +73,7 @@
 _vector_14: .type func
 
 	mrs r0, psp
+	isb
 
 	;Get the location of the current TCB.
 	ldr.w	r3, =pxCurrentTCB
@@ -110,6 +111,7 @@ _vector_14: .type func
 	vldmiaeq r0!, {s16-s31}
 
 	msr psp, r0
+	isb
 	bx r14
 
 	.size	_vector_14, $-_vector_14
@@ -125,6 +127,7 @@ _vector_14: .type func
 _lc_ref__vector_pp_14: .type func
 
 	mrs r0, psp
+	isb
 
 	;Get the location of the current TCB.
 	ldr.w	r3, =pxCurrentTCB
@@ -162,6 +165,7 @@ _lc_ref__vector_pp_14: .type func
 	vldmiaeq r0!, {s16-s31}
 
 	msr psp, r0
+	isb
 	push { lr }
 	pop { pc } ; XMC4000 specific errata workaround.  Do not used "bx lr" here.
 
@@ -181,6 +185,7 @@ SVC_Handler: .type func
 	;Pop the core registers.
 	ldmia r0!, {r4-r11, r14}
 	msr psp, r0
+	isb
 	mov r0, #0
 	msr	basepri, r0
 	bx r14
@@ -201,6 +206,8 @@ vPortStartFirstTask .type func
 	msr msp, r0
 	;Call SVC to start the first task.
 	cpsie i
+	dsb
+	isb
 	svc 0
 	.size	vPortStartFirstTask, $-vPortStartFirstTask
 	.endsec

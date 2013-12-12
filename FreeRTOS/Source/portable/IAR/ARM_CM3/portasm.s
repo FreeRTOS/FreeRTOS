@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -82,9 +82,10 @@
 /*-----------------------------------------------------------*/
 
 xPortPendSVHandler:
-	mrs r0, psp						
+	mrs r0, psp
+	isb
 	ldr	r3, =pxCurrentTCB			/* Get the location of the current TCB. */
-	ldr	r2, [r3]						
+	ldr	r2, [r3]
 
 	stmdb r0!, {r4-r11}				/* Save the remaining registers. */
 	str r0, [r2]					/* Save the new top of stack into the first member of the TCB. */
@@ -92,16 +93,17 @@ xPortPendSVHandler:
 	stmdb sp!, {r3, r14}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
-	bl vTaskSwitchContext			
+	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
 	ldmia sp!, {r3, r14}
 
-	ldr r1, [r3]					
+	ldr r1, [r3]
 	ldr r0, [r1]					/* The first item in pxCurrentTCB is the task top of stack. */
 	ldmia r0!, {r4-r11}				/* Pop the registers. */
-	msr psp, r0						
-	bx r14							
+	msr psp, r0
+	isb
+	bx r14
 
 
 /*-----------------------------------------------------------*/
@@ -111,7 +113,7 @@ ulPortSetInterruptMask:
 	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r1
 	bx r14
-	
+
 /*-----------------------------------------------------------*/
 
 vPortClearInterruptMask:
@@ -128,6 +130,7 @@ vPortSVCHandler:
 	/* Pop the core registers. */
 	ldmia r0!, {r4-r11}
 	msr psp, r0
+	isb
 	mov r0, #0
 	msr	basepri, r0
 	orr r14, r14, #13
@@ -144,7 +147,8 @@ vPortStartFirstTask
 	msr msp, r0
 	/* Call SVC to start the first task. */
 	cpsie i
+	dsb
+	isb
 	svc 0
 
 	END
-	

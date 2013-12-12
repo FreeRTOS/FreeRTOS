@@ -266,6 +266,7 @@ __asm void vPortSVCHandler( void )
 	/* Pop the core registers. */
 	ldmia r0!, {r4-r11, r14}
 	msr psp, r0
+	isb
 	mov r0, #0
 	msr	basepri, r0
 	bx r14
@@ -284,6 +285,8 @@ __asm void prvStartFirstTask( void )
 	msr msp, r0
 	/* Globally enable interrupts. */
 	cpsie i
+	dsb
+	isb
 	/* Call SVC to start the first task. */
 	svc 0
 	nop
@@ -429,7 +432,7 @@ __asm void xPortPendSVHandler( void )
 	PRESERVE8
 
 	mrs r0, psp
-
+	isb
 	/* Get the location of the current TCB. */
 	ldr	r3, =pxCurrentTCB
 	ldr	r2, [r3]
@@ -467,11 +470,12 @@ __asm void xPortPendSVHandler( void )
 	vldmiaeq r0!, {s16-s31}
 
 	msr psp, r0
-
+	isb
 	#ifdef WORKAROUND_PMU_CM001 /* XMC4000 specific errata */
 		#if WORKAROUND_PMU_CM001 == 1
 			push { r14 }
 			pop { pc }
+			nop
 		#endif
 	#endif
 
@@ -504,7 +508,7 @@ void xPortSysTickHandler( void )
 
 	__weak void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
 	{
-	unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements;
+	unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements, ulSysTickCTRL;
 	portTickType xModifiableIdleTime;
 
 		/* Make sure the SysTick reload value does not overflow the counter. */
@@ -517,7 +521,7 @@ void xPortSysTickHandler( void )
 		is accounted for as best it can be, but using the tickless mode will
 		inevitably result in some tiny drift of the time maintained by the
 		kernel with respect to calendar time. */
-		portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT;
+		portNVIC_SYSTICK_CTRL_REG &= ~portNVIC_SYSTICK_ENABLE_BIT;
 
 		/* Calculate the reload value required to wait xExpectedIdleTime
 		tick periods.  -1 is used because this code will execute part way
@@ -541,7 +545,7 @@ void xPortSysTickHandler( void )
 			portNVIC_SYSTICK_LOAD_REG = portNVIC_SYSTICK_CURRENT_VALUE_REG;
 
 			/* Restart SysTick. */
-			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+			portNVIC_SYSTICK_CTRL_REG |= portNVIC_SYSTICK_ENABLE_BIT;
 
 			/* Reset the reload register to the value required for normal tick
 			periods. */
@@ -561,7 +565,7 @@ void xPortSysTickHandler( void )
 			portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
 
 			/* Restart SysTick. */
-			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+			portNVIC_SYSTICK_CTRL_REG |= portNVIC_SYSTICK_ENABLE_BIT;
 
 			/* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
 			set its parameter to 0 to indicate that its implementation contains
@@ -582,13 +586,14 @@ void xPortSysTickHandler( void )
 			accounted for as best it can be, but using the tickless mode will
 			inevitably result in some tiny drift of the time maintained by the
 			kernel with respect to calendar time. */
-			portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT;
+			ulSysTickCTRL = portNVIC_SYSTICK_CTRL_REG;
+			portNVIC_SYSTICK_CTRL_REG = ( ulSysTickCTRL & ~portNVIC_SYSTICK_ENABLE_BIT );
 
 			/* Re-enable interrupts - see comments above __disable_irq() call
 			above. */
 			__enable_irq();
 
-			if( ( portNVIC_SYSTICK_CTRL_REG & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
+			if( ( ulSysTickCTRL & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
 				unsigned long ulCalculatedLoadValue;
 
@@ -640,7 +645,7 @@ void xPortSysTickHandler( void )
 			portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
 			portENTER_CRITICAL();
 			{
-				portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+				portNVIC_SYSTICK_CTRL_REG |= portNVIC_SYSTICK_ENABLE_BIT;
 				vTaskStepTick( ulCompleteTickPeriods );
 				portNVIC_SYSTICK_LOAD_REG = ulTimerCountsForOneTick - 1UL;
 			}
@@ -671,7 +676,7 @@ void xPortSysTickHandler( void )
 
 		/* Configure SysTick to interrupt at the requested rate. */
 		portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;;
-		portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
+		portNVIC_SYSTICK_CTRL_REG |= ( portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT );
 	}
 
 #endif /* configOVERRIDE_DEFAULT_TICK_CONFIGURATION */

@@ -1674,8 +1674,8 @@ xQueueSetMemberHandle xQueueSelectFromSetFromISR( xQueueSetHandle xQueueSet ) PR
 /* Not public API functions. */
 void vQueueWaitForMessageRestricted( xQueueHandle xQueue, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 portBASE_TYPE xQueueGenericReset( xQueueHandle xQueue, portBASE_TYPE xNewQueue ) PRIVILEGED_FUNCTION;
-void vQueueSetQueueNumber( xQueueHandle xQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
-unsigned char ucQueueGetQueueNumber( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
+void vQueueSetQueueNumber( xQueueHandle xQueue, unsigned portBASE_TYPE uxQueueNumber ) PRIVILEGED_FUNCTION;
+unsigned portBASE_TYPE uxQueueGetQueueNumber( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 unsigned char ucQueueGetQueueType( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
 
 

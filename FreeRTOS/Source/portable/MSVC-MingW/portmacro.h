@@ -95,8 +95,10 @@
 
 #define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
+void vPortCloseRunningThread( void *pvTaskToDelete, volatile portBASE_TYPE *pxPendYield );
 void vPortDeleteThread( void *pvThreadToDelete );
 #define portCLEAN_UP_TCB( pxTCB )	vPortDeleteThread( pxTCB )
+#define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) vPortCloseRunningThread( ( pvTaskToDelete ), ( pxPendYield ) )
 #define portDISABLE_INTERRUPTS()
 #define portENABLE_INTERRUPTS()
 

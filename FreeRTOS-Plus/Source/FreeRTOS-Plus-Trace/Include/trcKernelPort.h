@@ -358,7 +358,7 @@ void* prvTraceGetCurrentTaskHandle(void);
 #define TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject) TRACE_GET_CLASS_TRACE_CLASS(CLASS, prvTraceGetObjectType(pxObject))
 
 #define TRACE_GET_OBJECT_NUMBER(CLASS, pxObject) (prvTraceGetObjectNumber(pxObject))
-#define TRACE_SET_OBJECT_NUMBER(CLASS, pxObject) pxObject->ucQueueNumber = xTraceGetObjectHandle(TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject));
+#define TRACE_SET_OBJECT_NUMBER(CLASS, pxObject) pxObject->uxQueueNumber = xTraceGetObjectHandle(TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject));
 
 #define TRACE_GET_CLASS_EVENT_CODE(SERVICE, RESULT, CLASS, kernelClass) (uint8_t)(EVENTGROUP_##SERVICE##_##RESULT + TRACE_GET_CLASS_TRACE_CLASS(CLASS, kernelClass))
 #define TRACE_GET_OBJECT_EVENT_CODE(SERVICE, RESULT, CLASS, pxObject) (uint8_t)(EVENTGROUP_##SERVICE##_##RESULT + TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject))

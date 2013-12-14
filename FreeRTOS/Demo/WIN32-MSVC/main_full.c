@@ -338,13 +338,13 @@ const unsigned long ulMSToSleep = 5;
 void vFullDemoIdleFunction( void )
 {
 const unsigned long ulMSToSleep = 15;
-const unsigned char ucConstQueueNumber = 0xaaU;
+const unsigned portBASE_TYPE uxConstQueueNumber = 0xaaU;
 void *pvAllocated;
 
 /* These three functions are only meant for use by trace code, and not for
 direct use from application code, hence their prototypes are not in queue.h. */
-extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber );
-extern unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue );
+extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned portBASE_TYPE uxQueueNumber );
+extern unsigned portBASE_TYPE uxQueueGetQueueNumber( xQueueHandle pxQueue );
 extern unsigned char ucQueueGetQueueType( xQueueHandle pxQueue );
 extern void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
 extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
@@ -366,12 +366,12 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 		/* Before deleting the semaphore, test the function used to set its
 		number.  This would normally only be done from trace software, rather
 		than application code. */
-		vQueueSetQueueNumber( xMutexToDelete, ucConstQueueNumber );
+		vQueueSetQueueNumber( xMutexToDelete, uxConstQueueNumber );
 
 		/* Before deleting the semaphore, test the functions used to get its
 		type and number.  Again, these would normally only be done from trace
 		software, rather than application code. */
-		configASSERT( ucQueueGetQueueNumber( xMutexToDelete ) == ucConstQueueNumber );
+		configASSERT( uxQueueGetQueueNumber( xMutexToDelete ) == uxConstQueueNumber );
 		configASSERT( ucQueueGetQueueType( xMutexToDelete ) == queueQUEUE_TYPE_MUTEX );
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;

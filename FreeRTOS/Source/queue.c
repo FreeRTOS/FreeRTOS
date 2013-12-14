@@ -146,7 +146,7 @@ typedef struct QueueDefinition
 	volatile signed portBASE_TYPE xTxLock;	/*< Stores the number of items transmitted to the queue (added to the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
 
 	#if ( configUSE_TRACE_FACILITY == 1 )
-		unsigned char ucQueueNumber;
+		unsigned portBASE_TYPE uxQueueNumber;
 		unsigned char ucQueueType;
 	#endif
 
@@ -1398,9 +1398,9 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	unsigned char ucQueueGetQueueNumber( xQueueHandle xQueue )
+	unsigned portBASE_TYPE uxQueueGetQueueNumber( xQueueHandle xQueue )
 	{
-		return ( ( xQUEUE * ) xQueue )->ucQueueNumber;
+		return ( ( xQUEUE * ) xQueue )->uxQueueNumber;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
@@ -1408,9 +1408,9 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	void vQueueSetQueueNumber( xQueueHandle xQueue, unsigned char ucQueueNumber )
+	void vQueueSetQueueNumber( xQueueHandle xQueue, unsigned portBASE_TYPE uxQueueNumber )
 	{
-		( ( xQUEUE * ) xQueue )->ucQueueNumber = ucQueueNumber;
+		( ( xQUEUE * ) xQueue )->uxQueueNumber = uxQueueNumber;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */

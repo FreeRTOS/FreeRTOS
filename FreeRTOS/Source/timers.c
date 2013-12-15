@@ -749,7 +749,7 @@ xTIMER *pxTimer = ( xTIMER * ) xTimer;
 
 void *pvTimerGetTimerID( const xTimerHandle xTimer )
 {
-xTIMER * const pxTimer = ( xTIMER * const ) xTimer;
+xTIMER * const pxTimer = ( xTIMER * ) xTimer;
 
 	return pxTimer->pvTimerID;
 }

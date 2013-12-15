@@ -636,6 +636,9 @@
     <None Include="src\config\conf_ili93xx.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\config\FreeRTOSIPConfig.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\FreeRTOS+\FreeRTOS+FAT SL\API\fat_sl.h">
       <SubType>compile</SubType>
     </Compile>
@@ -732,9 +735,6 @@
       <SubType>compile</SubType>
     </None>
     <Compile Include="src\config\FreeRTOSConfig.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\FreeRTOSIPConfig.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">
@@ -1119,9 +1119,6 @@
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\thirdparty\CMSIS\Include\core_cmInstr.h">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\ASF\thirdparty\CMSIS\Lib\GCC\libarm_cortexM4lf_math.a">
       <SubType>compile</SubType>
     </None>
     <None Include="src\ASF\thirdparty\CMSIS\README.txt">

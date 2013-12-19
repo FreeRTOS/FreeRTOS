@@ -137,7 +137,7 @@ static volatile unsigned portBASE_TYPE uxControllingCycles = 0, uxBlockingCycles
 
 /* Handles of the two higher priority tasks, required so they can be resumed 
 (unsuspended). */
-static xTaskHandle xControllingTaskHandle, xBlockingTaskHandle;
+static xTaskHandle xControllingTaskHandle, xBlockingTaskHandle, xPollingTaskHandle;
 
 /*-----------------------------------------------------------*/
 
@@ -160,7 +160,7 @@ void vStartRecursiveMutexTasks( void )
 	{
 		xTaskCreate( prvRecursiveMutexControllingTask, ( signed portCHAR * ) "Rec1Ctrl", configMINIMAL_STACK_SIZE, NULL, recmuCONTROLLING_TASK_PRIORITY, &xControllingTaskHandle );
         xTaskCreate( prvRecursiveMutexBlockingTask, ( signed portCHAR * ) "Rec2Blck", configMINIMAL_STACK_SIZE, NULL, recmuBLOCKING_TASK_PRIORITY, &xBlockingTaskHandle );
-        xTaskCreate( prvRecursiveMutexPollingTask, ( signed portCHAR * ) "Rec3Poll", configMINIMAL_STACK_SIZE, NULL, recmuPOLLING_TASK_PRIORITY, NULL );
+        xTaskCreate( prvRecursiveMutexPollingTask, ( signed portCHAR * ) "Rec3Poll", configMINIMAL_STACK_SIZE, NULL, recmuPOLLING_TASK_PRIORITY, &xPollingTaskHandle );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -223,6 +223,10 @@ unsigned portBASE_TYPE ux;
 			{
 				xErrorOccurred = pdTRUE;
 			}
+
+			#if configUSE_PREEMPTION == 0
+				taskYIELD();
+			#endif
 		}
 
 		/* Having given it back the same number of times as it was taken, we
@@ -329,10 +333,17 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 				block indefinitely when it attempts to obtain the mutex, the
 				Controlling task will only block for a fixed period and an
 				error will be latched if the polling task has not returned the
-				mutex by the time this fixed period has expired. */
+				mutex by the time this fixed period has expired. */				
 				vTaskResume( xBlockingTaskHandle );
-                vTaskResume( xControllingTaskHandle );
-			
+				#if configUSE_PREEMPTION == 0
+					taskYIELD();
+				#endif
+
+				vTaskResume( xControllingTaskHandle );
+				#if configUSE_PREEMPTION == 0
+					taskYIELD();
+				#endif
+
 				/* The other two tasks should now have executed and no longer
 				be suspended. */
 				if( ( xBlockingIsSuspended == pdTRUE ) || ( xControllingIsSuspended == pdTRUE ) )
@@ -345,6 +356,10 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 				{
 					xErrorOccurred = pdTRUE;
 				}
+
+				#if configUSE_PREEMPTION == 0
+					taskYIELD();
+				#endif
 			}
 		}
 

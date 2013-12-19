@@ -63,172 +63,237 @@
     1 tab == 4 spaces!
 */
 
-/*
+/******************************************************************************
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.  
+ * The simply blinky demo is implemented and described in main_blinky.c.  The 
+ * more comprehensive test and demo application is implemented and described in 
+ * main_full.c.
+ *
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and FreeRTOS hook functions.
+ *
  *******************************************************************************
  * -NOTE- The Win32 port is a simulation (or is that emulation?) only!  Do not
  * expect to get real time behaviour from the Win32 port or this demo
  * application.  It is provided as a convenient development and demonstration
  * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
+ * Windows will not be running the FreeRTOS simulator threads continuously, so 
+ * the timing information in the FreeRTOS+Trace logs have no meaningful units.  
+ * See the documentation page for the Windows simulator for an explanation of 
+ * the slow timing:
+ * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *******************************************************************************
  *
- * main() creates all the demo application tasks, then starts the scheduler.  
- * The web documentation provides more details of the standard demo application 
- * tasks, which provide no particular functionality but do provide a good 
- * example of how to use the FreeRTOS API.
- *
- * In addition to the standard demo tasks, the following tasks and tests are
- * defined and/or created within this file:
- *
- * "Check" task - This only executes every five seconds but has a high priority
- * to ensure it gets processor time.  Its main function is to check that all the
- * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will print out "OK" and the current simulated tick
- * time.  If an error is discovered in the execution of a task then the check
- * task will print out an appropriate error message.
- *
  */
-
 
 /* Standard includes. */
 #include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
 
-/* Kernel includes. */
-#include <FreeRTOS.h>
+/* FreeRTOS kernel includes. */
+#include "FreeRTOS.h"
 #include "task.h"
-#include "queue.h"
 
-/* Standard demo includes. */
-#include "BlockQ.h"
-#include "integer.h"
-#include "semtest.h"
-#include "PollQ.h"
-#include "GenQTest.h"
-#include "QPeek.h"
-#include "recmutex.h"
-#include "flop.h"
+/* This project provides two demo applications.  A simple blinky style project,
+and a more comprehensive test and demo application.  The
+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.  
+The simply blinky demo is implemented and described in main_blinky.c.  The more 
+comprehensive test and demo application is implemented and described in 
+main_full.c. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
-/* Priorities at which the tasks are created. */
-#define mainCHECK_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainCREATOR_TASK_PRIORITY   ( tskIDLE_PRIORITY + 3 )
-#define mainFLASH_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define mainINTEGER_TASK_PRIORITY   ( tskIDLE_PRIORITY )
-#define mainGEN_QUEUE_TASK_PRIORITY	( tskIDLE_PRIORITY )
-#define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
+/*
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ */
+extern void main_blinky( void );
+extern void main_full( void );
 
-/* Task function prototypes. */
-static void prvCheckTask( void *pvParameters );
+/* Some of the RTOS hook (callback) functions only need special processing when
+the full demo is being used.  The simply blinky demo has no special requirements,
+so these functions are called from the hook functions defined in this file, but
+are defined in main_full.c. */
+void vFullDemoTickHookFunction( void );
+void vFullDemoIdleFunction( void );
+
+/* Prototypes for the standard FreeRTOS callback/hook functions implemented
+within this file. */
+void vApplicationMallocFailedHook( void );
+void vApplicationIdleHook( void );
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
+void vApplicationTickHook( void );
+
+/*
+ * Writes trace data to a disk file when the trace recording is stopped.
+ * This function will simply overwrite any trace files that already exist.
+ */
+static void prvSaveTraceFile( void );
+
+/* The user trace event posted to the trace recording on each tick interrupt.
+Note tick events will not appear in the trace recording with regular period
+because this project runs in a Windows simulator, and does not therefore
+exhibit deterministic behaviour. */
+traceLabel xTickTraceUserEvent;
+static portBASE_TYPE xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
+
 
 int main( void )
 {
-	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	/* Initialise the trace recorder and create the label used to post user
+	events to the trace recording on each tick interrupt. */
+	vTraceInitTraceData();
+	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
 
-	/* Create the standard demo tasks. */
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
-	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-	vStartQueuePeekTasks();
-	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	vStartRecursiveMutexTasks();
+	/* Start the trace recording - the recording is written to a file if
+	configASSERT() is called. */
+	printf( "\r\nTrace started.  Hit a key to dump trace file to disk.\r\n" );
+	printf( "Note stdin does not work when using the Eclipse console with MingW.\r\n" );
+	fflush( stdout );
+	uiTraceStart();
 
-	/* Start the scheduler itself. */
-	vTaskStartScheduler();
-
-    /* Should never get here unless there was not enough heap space to create 
-	the idle and other system tasks. */
-    return 0;
-}
-/*-----------------------------------------------------------*/
-
-static void prvCheckTask( void *pvParameters )
-{
-portTickType xNextWakeTime;
-const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
-char *pcStatusMessage = "OK";
-
-	/* Just to remove compiler warning. */
-	( void ) pvParameters;
-
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
-	for( ;; )
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
 	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
-
-		/* Check the standard demo tasks are running without error. */
-	    if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: IntMath";
-	    }	
-		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{			
-			pcStatusMessage = "Error: GenQueue";
-		}
-		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: QueuePeek";
-		}
-		else if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "Error: BlockQueue";
-		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: SemTest";
-	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: PollQueue";
-	    }
-		else if( xAreMathsTaskStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Flop";
-		}
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
-			pcStatusMessage = "Error: RecMutex";
-		}
-
-		/* This is the only task that uses stdout so its ok to call printf() 
-		directly. */
-		printf( "%s - %d\r\n", pcStatusMessage, ( int ) xTaskGetTickCount() );
-		fflush( stdout ); /* Required by Eclipse console. */
+		main_blinky();
 	}
-}
-/*-----------------------------------------------------------*/
+	#else
+	{
+		main_full();
+	}
+	#endif
 
-void vApplicationIdleHook( void )
-{
-const unsigned long ulMSToSleep = 5;
-
-	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
-	tasks waiting to be terminated by the idle task. */
-	Sleep( ulMSToSleep );
+	return 0;
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
-	/* Can be implemented if required, but probably not required in this 
-	environment and running this demo. */
+	/* vApplicationMallocFailedHook() will only be called if
+	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
+	function that will get called if a call to pvPortMalloc() fails.
+	pvPortMalloc() is called internally by the kernel whenever a task, queue,
+	timer or semaphore is created.  It is also called by various parts of the
+	demo application.  If heap_1.c or heap_2.c are used, then the size of the
+	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
+	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
+	to query the size of free heap space that remains (although it does not
+	provide information on how the remaining heap might be fragmented). */
+	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( void )
+void vApplicationIdleHook( void )
 {
-	/* Can be implemented if required, but not required in this 
-	environment and running this demo. */
-}
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+	task.  It is essential that code added to this hook function never attempts
+	to block in any way (for example, call xQueueReceive() with a block time
+	specified, or call vTaskDelay()).  If the application makes use of the
+	vTaskDelete() API function (as this demo application does) then it is also
+	important that vApplicationIdleHook() is permitted to return to its calling
+	function, because it is the responsibility of the idle task to clean up
+	memory allocated by the kernel to any task that has since been deleted. */
 
+	/* The trace can be stopped with any key press. */
+	if( kbhit() != pdFALSE )
+	{
+		if( xTraceRunning == pdTRUE )
+		{
+			vTraceStop();
+			prvSaveTraceFile();
+			xTraceRunning = pdFALSE;
+		}
+	}
+
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+	{
+		/* Call the idle task processing used by the full demo.  The simple
+		blinky demo does not use the idle task hook. */
+		vFullDemoIdleFunction();
+	}
+	#endif
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
+
+	/* Run time stack overflow checking is performed if
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	function is called if a stack overflow is detected. */
+	vAssertCalled( __LINE__, __FILE__ );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationTickHook( void )
+{
+	/* This function will be called by each tick interrupt if
+	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	added here, but the tick hook is called from an interrupt context, so
+	code must not attempt to block, and only the interrupt safe FreeRTOS API
+	functions can be used (those that end in FromISR()). */
+
+	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+	{
+		vFullDemoTickHookFunction();
+	}
+	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
+
+	/* Write a user event to the trace log.  
+	Note tick events will not appear in the trace recording with regular period
+	because this project runs in a Windows simulator, and does not therefore
+	exhibit deterministic behaviour.  Windows will run the simulator in 
+	bursts. */
+	vTraceUserEvent( xTickTraceUserEvent );
+}
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
+{
+	/* Parameters are not used. */
+	( void ) ulLine;
+	( void ) pcFileName;
+
+	taskDISABLE_INTERRUPTS();
+	__asm volatile( "int $3" );
+
+	/* Stop the trace recording. */
+	if( xTraceRunning == pdTRUE )
+	{
+		vTraceStop();
+		prvSaveTraceFile();
+	}
+
+	taskENABLE_INTERRUPTS();
+}
+/*-----------------------------------------------------------*/
+
+static void prvSaveTraceFile( void )
+{
+FILE* pxOutputFile;
+
+	pxOutputFile = fopen( "Trace.dump", "wb");
+
+	if( pxOutputFile != NULL )
+	{
+		fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+		fclose( pxOutputFile );
+		printf( "\r\nTrace output saved to Trace.dump\r\n" );
+		fflush( stdout );
+	}
+	else
+	{
+		printf( "\r\nFailed to create trace dump file\r\n" );
+		fflush( stdout );
+	}
+}

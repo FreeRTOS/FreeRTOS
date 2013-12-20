@@ -149,13 +149,13 @@ int main( void )
 	/* Initialise the trace recorder and create the label used to post user
 	events to the trace recording on each tick interrupt. */
 	vTraceInitTraceData();
+	printf( "Trace started.  Hit a key to dump trace file to disk.  Note stdin does not work when using the Eclipse console with MingW.\r\n" );
+	fflush( stdout );
+
 	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
 
 	/* Start the trace recording - the recording is written to a file if
 	configASSERT() is called. */
-	printf( "\r\nTrace started.  Hit a key to dump trace file to disk.\r\n" );
-	printf( "Note stdin does not work when using the Eclipse console with MingW.\r\n" );
-	fflush( stdout );
 	uiTraceStart();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top

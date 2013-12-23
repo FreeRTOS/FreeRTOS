@@ -148,6 +148,9 @@ static unsigned long (*ulIsrHandler[ portMAX_INTERRUPTS ])( void ) = { 0 };
 /* Pointer to the TCB of the currently executing task. */
 extern void *pxCurrentTCB;
 
+/* Used to ensure nothing is processed during the startup sequence. */
+static portBASE_TYPE xPortRunning = pdFALSE;
+
 /*-----------------------------------------------------------*/
 
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
@@ -190,6 +193,8 @@ TIMECAPS xTimeCaps;
 			Sleep( portTICK_RATE_MS );
 		}
 
+		configASSERT( xPortRunning );
+
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
 		/* The timer has expired, generate the simulated tick event. */
@@ -197,7 +202,10 @@ TIMECAPS xTimeCaps;
 
 		/* The interrupt is now pending - notify the simulated interrupt 
 		handler thread. */
-		SetEvent( pvInterruptEvent );
+		if( ulCriticalNesting == 0 )
+		{
+			SetEvent( pvInterruptEvent );
+		}
 
 		/* Give back the mutex so the simulated interrupt handler unblocks 
 		and can	access the interrupt handler variables. */
@@ -312,7 +320,7 @@ xThreadState *pxThreadState;
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
 		/* Bump up the priority of the thread that is going to run, in the
-		hope that this will asist in getting the Windows thread scheduler to
+		hope that this will assist in getting the Windows thread scheduler to
 		behave as an embedded engineer might expect. */
 		ResumeThread( pxThreadState->pvThread );
 
@@ -338,6 +346,7 @@ static unsigned long prvProcessTickInterrupt( void )
 unsigned long ulSwitchRequired;
 
 	/* Process the tick itself. */
+	configASSERT( xPortRunning );
 	ulSwitchRequired = ( unsigned long ) xTaskIncrementTick();
 
 	return ulSwitchRequired;
@@ -355,6 +364,13 @@ void *pvObjectList[ 2 ];
 	should be processed. */
 	pvObjectList[ 0 ] = pvInterruptEventMutex;
 	pvObjectList[ 1 ] = pvInterruptEvent;
+
+	/* Create a pending tick to ensure the first task is started as soon as
+	this thread pends. */
+	ulPendingInterrupts |= ( 1 << portINTERRUPT_TICK );
+	SetEvent( pvInterruptEvent );
+
+	xPortRunning = pdTRUE;
 
 	for(;;)
 	{
@@ -489,6 +505,8 @@ void vPortEndScheduler( void )
 
 void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber )
 {
+	configASSERT( xPortRunning );
+
 	if( ( ulInterruptNumber < portMAX_INTERRUPTS ) && ( pvInterruptEventMutex != NULL ) )
 	{
 		/* Yield interrupts are processed even when critical nesting is non-zero. */
@@ -528,7 +546,7 @@ void vPortSetInterruptHandler( unsigned long ulInterruptNumber, unsigned long (*
 
 void vPortEnterCritical( void )
 {
-	if( xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED )
+	if( xPortRunning == pdTRUE )
 	{
 		/* The interrupt event mutex is held for the entire critical section,
 		effectively disabling (simulated) interrupts. */
@@ -561,6 +579,7 @@ long lMutexNeedsReleasing;
 			(simulated) disabled? */
 			if( ulPendingInterrupts != 0UL )
 			{
+				configASSERT( xPortRunning );
 				SetEvent( pvInterruptEvent );
 
 				/* Mutex will be released now, so does not require releasing
@@ -577,9 +596,13 @@ long lMutexNeedsReleasing;
 		}
 	}
 
-	if( lMutexNeedsReleasing == pdTRUE )
+	if( pvInterruptEventMutex != NULL )
 	{
-		ReleaseMutex( pvInterruptEventMutex );
+		if( lMutexNeedsReleasing == pdTRUE )
+		{
+			configASSERT( xPortRunning );
+			ReleaseMutex( pvInterruptEventMutex );
+		}
 	}
 }
 /*-----------------------------------------------------------*/

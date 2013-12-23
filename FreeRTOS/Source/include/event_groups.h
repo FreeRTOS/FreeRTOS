@@ -82,7 +82,7 @@ extern "C" {
  * the status of various CAN bus related events in which bit 0 might mean "A CAN
  * message has been received and is ready for processing", bit 1 might mean "The
  * application has queued a message that is ready for sending onto the CAN
- * network", and bit 2 might mean "it is time to send a SYNC message onto the
+ * network", and bit 2 might mean "It is time to send a SYNC message onto the
  * CAN network" etc.  A task can then test the bit values to see which events
  * are active, and optionally enter the Blocked state to wait for a specified
  * bit or a group of specified bits to be active.  To continue the CAN bus
@@ -165,10 +165,10 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * event_groups.h
  *<pre>
 	xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup,
-										xEventBitsType uxBitsToWaitFor,
-										portBASE_TYPE xClearOnExit,
-										portBASE_TYPE xWaitForAllBits,
-										portTickType xTicksToWait );
+										const xEventBitsType uxBitsToWaitFor,
+										const portBASE_TYPE xClearOnExit,
+										const portBASE_TYPE xWaitForAllBits,
+										const portTickType xTicksToWait );
  </pre>
  *
  * [Potentially] block to wait for one or more bits to be set within a
@@ -187,15 +187,17 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  *
  * @param xClearOnExit If xClearOnExit is set to pdTRUE then any bits within
  * uxBitsToWaitFor that are set within the event group will be cleared before
- * xEventGroupWaitBits() returns.  If xClearOnExit is set to pdFALSE then the
- * bits set in the event group are not altered when the call to
+ * xEventGroupWaitBits() returns if the wait condition was met (if the function
+ * returns for a reason other than a timeout).  If xClearOnExit is set to
+ * pdFALSE then the bits set in the event group are not altered when the call to
  * xEventGroupWaitBits() returns.
  *
  * @param xWaitForAllBits If xWaitForAllBits is set to pdTRUE then
  * xEventGroupWaitBits() will return when either all the bits in uxBitsToWaitFor
  * are set or the specified block time expires.  If xWaitForAllBits is set to
  * pdFALSE then xEventGroupWaitBits() will return when any one of the bits set
- * in uxBitsToWaitFor is set or the specified block time expires.
+ * in uxBitsToWaitFor is set or the specified block time expires.  The block
+ * time is specified by the xTicksToWait parameter.
  *
  * @param xTicksToWait The maximum amount of time (specified in 'ticks') to wait
  * for one/all (depending on the xWaitForAllBits value) of the bits specified by
@@ -207,7 +209,8 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * expired then not all the bits being waited for will be set.  If
  * xEventGroupWaitBits() returned because the bits it was waiting for were set
  * then the returned value is the event group value before any bits were
- * automatically cleared because the xClearOnExit parameter was set to pdTRUE.
+ * automatically cleared in the case that xClearOnExit parameter was set to
+ * pdTRUE.
  *
  * Example usage:
    <pre>
@@ -250,12 +253,12 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * \defgroup xEventGroupWaitBits xEventGroupWaitBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToWaitFor, portBASE_TYPE xClearOnExit, portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToWaitFor, const portBASE_TYPE xClearOnExit, const portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToClear );
+	xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToClear );
  </pre>
  *
  * Clear bits within an event group.  This function cannot be called from an
@@ -285,9 +288,8 @@ xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsTyp
 
 		if( ( uxBits & ( BIT_0 | BIT_4 ) ) == ( BIT_0 | BIT_4 ) )
 		{
-			// Both bit 0 and bit 4 were set before the call to
-			// xEventGroupClearBits() was called.  Both will now be clear (not
-			// set).
+			// Both bit 0 and bit 4 were set before xEventGroupClearBits() was
+			// called.  Both will now be clear (not set).
 		}
 		else if( ( uxBits & BIT_0 ) != 0 )
 		{
@@ -308,12 +310,12 @@ xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, xEventBitsTyp
  * \defgroup xEventGroupClearBits xEventGroupClearBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToClear ) PRIVILEGED_FUNCTION;
+xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToClear ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet );
+	xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet );
  </pre>
  *
  * Set bits within an event group.
@@ -374,20 +376,20 @@ xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, xEventBitsTy
 		else
 		{
 			// Neither bit 0 nor bit 4 remained set.  It might be that a task
-			// was waiting for either or both of the bits to be set, and the
-			// bits were cleared as the task left the Blocked state.
+			// was waiting for both of the bits to be set, and the bits were
+			// cleared as the task left the Blocked state.
 		}
    }
    </pre>
  * \defgroup xEventGroupSetBits xEventGroupSetBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet ) PRIVILEGED_FUNCTION;
+xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupSetBitsFromISR( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet, portBASE_TYPE *pxHigherPriorityTaskWoken );
+	xEventBitsType xEventGroupSetBitsFromISR( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet, portBASE_TYPE *pxHigherPriorityTaskWoken );
  </pre>
  *
  * A version of xEventGroupSetBits() that can be called from an interrupt.
@@ -406,13 +408,14 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
  * For example, to set bit 3 only, set uxBitsToSet to 0x08.  To set bit 3
  * and bit 0 set uxBitsToSet to 0x09.
  *
- * @ pxHigherPriorityTaskWoken As mentioned above, calling this function will
- * result in a message being sent to the timer daemon task.  If the priority of
- * the timer daemon task is higher than the priority of the currently running
- * task (the task the interrupt interrupted) then *pxHigherPriorityTaskWoken
- * will be set to pdTRUE by xEventGroupSetBitsFromISR(), indicating that a
- * context switch should be requested before the interrupt exits.  For that
- * reason *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
+ * @param pxHigherPriorityTaskWoken As mentioned above, calling this function
+ * will result in a message being sent to the timer daemon task.  If the
+ * priority of the timer daemon task is higher than the priority of the
+ * currently running task (the task the interrupt interrupted) then
+ * *pxHigherPriorityTaskWoken will be set to pdTRUE by
+ * xEventGroupSetBitsFromISR(), indicating that a context switch should be
+ * requested before the interrupt exits.  For that reason
+ * *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
  * example code below.
  *
  * @return If the callback request was registered successfully then pdPASS is
@@ -424,7 +427,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
    #define BIT_0	( 1 << 0 )
    #define BIT_4	( 1 << 4 )
 
-   // An event group which it is assume has already been created by a call to
+   // An event group which it is assumed has already been created by a call to
    // xEventGroupCreate().
    xEventGroupHandle xEventGroup;
 
@@ -432,7 +435,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
    {
    portBASE_TYPE xHigherPriorityTaskWoken;
 
-		// xHigherPriorityTaskWoken must be initialised to pdFALSE;
+		// xHigherPriorityTaskWoken must be initialised to pdFALSE.
 		xHigherPriorityTaskWoken = pdFALSE;
 
 		// Set bit 0 and bit 4 in xEventGroup.
@@ -457,8 +460,8 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
  * event_groups.h
  *<pre>
 	xEventBitsType xEventGroupSync(	xEventGroupHandle xEventGroup,
-									xEventBitsType uxBitsToSet,
-									xEventBitsType uxBitsToWaitFor,
+									const xEventBitsType uxBitsToSet,
+									const xEventBitsType uxBitsToWaitFor,
 									portTickType xTicksToWait );
  </pre>
  *
@@ -577,7 +580,7 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, xEventBitsType
  * \defgroup xEventGroupSync xEventGroupSync
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, xEventBitsType uxBitsToSet, xEventBitsType uxBitsToWaitFor, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet, const xEventBitsType uxBitsToWaitFor, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 
 /**
@@ -613,7 +616,7 @@ xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, xEventBitsType ux
 void vEventGroupDelete( xEventGroupHandle xEventGroup );
 
 /* For internal use only. */
-void vEventGroupSetBitsCallback( void *pvEventGroup, unsigned long ulBitsToSet );
+void vEventGroupSetBitsCallback( void *pvEventGroup, const unsigned long ulBitsToSet );
 
 
 #ifdef __cplusplus

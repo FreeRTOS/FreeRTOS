@@ -99,8 +99,8 @@ void vPortCloseRunningThread( void *pvTaskToDelete, volatile portBASE_TYPE *pxPe
 void vPortDeleteThread( void *pvThreadToDelete );
 #define portCLEAN_UP_TCB( pxTCB )	vPortDeleteThread( pxTCB )
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) vPortCloseRunningThread( ( pvTaskToDelete ), ( pxPendYield ) )
-#define portDISABLE_INTERRUPTS()
-#define portENABLE_INTERRUPTS()
+#define portDISABLE_INTERRUPTS() vPortEnterCritical()
+#define portENABLE_INTERRUPTS() vPortExitCritical()
 
 /* Critical section handling. */
 void vPortEnterCritical( void );
@@ -109,27 +109,34 @@ void vPortExitCritical( void );
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 
-#ifndef __GNUC__
-	#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
 	/* Check the configuration. */
 	#if( configMAX_PRIORITIES > 32 )
 		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
 	#endif
 
-		/* Store/clear the ready priorities in a bit map. */
-		#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
-		#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+	/* Store/clear the ready priorities in a bit map. */
+	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
 
 
-		/*-----------------------------------------------------------*/
+	/*-----------------------------------------------------------*/
 
+	#ifdef __GNUC__
+		#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities )	  \
+			__asm volatile(	"mov %0, %%eax									\n\t" \
+							"bsr %%eax, %%eax								\n\t" \
+							"mov %%eax, %1									\n\t" \
+							:"=r"(uxTopPriority) : "r"(uxReadyPriorities) : "eax" )
+	#else
 		/* BitScanReverse returns the bit position of the most significant '1'
 		in the word. */
 		#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) _BitScanReverse( ( DWORD * ) &( uxTopPriority ), ( uxReadyPriorities ) )
+	#endif /* __GNUC__ */
 
-	#endif /* taskRECORD_READY_PRIORITY */
-#endif /* __GNUC__ */
+#endif /* taskRECORD_READY_PRIORITY */
+
 
 
 

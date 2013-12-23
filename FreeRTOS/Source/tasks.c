@@ -362,9 +362,28 @@ count overflows. */
  */
 #define prvGetTCBFromHandle( pxHandle ) ( ( ( pxHandle ) == NULL ) ? ( tskTCB * ) pxCurrentTCB : ( tskTCB * ) ( pxHandle ) )
 
+/* The item value of the event list item is normally used to hold the priority
+of the task to which it belongs (coded to allow it to be held in reverse
+priority order).  However, it is occasionally borrowed for other purposes.  It
+is important its value is not updated due to a task priority change while it is
+being used for another purpose.  The following bit definition is used to inform
+the scheduler that the value should not be changed - in which case it is the
+responsibility of whichever module is using the value to ensure it gets set back
+to its original value when it is released. */
+#if configUSE_16_BIT_TICKS == 1
+	#define taskEVENT_LIST_ITEM_VALUE_IN_USE	0x8000U
+#else
+	#define taskEVENT_LIST_ITEM_VALUE_IN_USE	0x80000000UL
+#endif
+
 /* Callback function prototypes. --------------------------*/
-extern void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName );
-extern void vApplicationTickHook( void );
+#if configCHECK_FOR_STACK_OVERFLOW > 0
+	extern void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName );
+#endif
+
+#if configUSE_TICK_HOOK > 0
+	extern void vApplicationTickHook( void );
+#endif
 
 /* File private functions. --------------------------------*/
 
@@ -1014,7 +1033,12 @@ tskTCB * pxNewTCB;
 				}
 				#endif
 
-				listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( ( portTickType ) configMAX_PRIORITIES - ( portTickType ) uxNewPriority ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+				/* Only reset the event list item value if the value is not
+				being used for anything else. */
+				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0 )
+				{
+					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( ( portTickType ) configMAX_PRIORITIES - ( portTickType ) uxNewPriority ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+				}
 
 				/* If the task is in the blocked or suspended list we need do
 				nothing more than change it's priority variable. However, if
@@ -1424,8 +1448,9 @@ portBASE_TYPE xAlreadyYielded = pdFALSE;
 				}
 
 				/* If any ticks occurred while the scheduler was suspended then
-				they should be processed now.  This ensures the tick count does not
-				slip, and that any delayed tasks are resumed at the correct time. */
+				they should be processed now.  This ensures the tick count does 
+				not	slip, and that any delayed tasks are resumed at the correct 
+				time. */
 				if( uxPendedTicks > ( unsigned portBASE_TYPE ) 0U )
 				{
 					while( uxPendedTicks > ( unsigned portBASE_TYPE ) 0U )
@@ -1975,7 +2000,7 @@ portTickType xTimeToWake;
 	SCHEDULER SUSPENDED. */
 
 	/* Store the item value in the event list item. */
-	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ), xItemValue );
+	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ), xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
 
 	/* Place the event list item of the TCB at the end of the appropriate event
 	list. */
@@ -2124,7 +2149,7 @@ portBASE_TYPE xReturn;
 	SCHEDULER SUSPENDED.  It can also be called from within an ISR. */
 
 	/* Store the new item value in the event list. */
-	listSET_LIST_ITEM_VALUE( pxEventListItem, xItemValue );
+	listSET_LIST_ITEM_VALUE( pxEventListItem, xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
 
 	/* Remove the TCB from the delayed list, and add it to the ready list. */
 
@@ -2852,8 +2877,13 @@ tskTCB *pxTCB;
 		{
 			if( pxTCB->uxPriority < pxCurrentTCB->uxPriority )
 			{
-				/* Adjust the mutex holder state to account for its new priority. */
-				listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+				/* Adjust the mutex holder state to account for its new
+				priority.  Only reset the event list item value if the value is
+				not	being used for anything else. */
+				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0 )
+				{
+					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+				}
 
 				/* If the task being modified is in the ready state it will need to
 				be moved into a new list. */
@@ -2903,7 +2933,13 @@ tskTCB *pxTCB;
 				ready list. */
 				traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
 				pxTCB->uxPriority = pxTCB->uxBasePriority;
-				listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+				/* Only reset the event list item value if the value is not
+				being used for anything else. */
+				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0 )
+				{
+					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+				}
 				prvAddTaskToReadyList( pxTCB );
 			}
 		}
@@ -3150,4 +3186,7 @@ portTickType uxReturn;
 }
 /*-----------------------------------------------------------*/
 
+#ifdef FREERTOS_MODULE_TEST
+	#include "tasks_test_access_functions.h"
+#endif
 

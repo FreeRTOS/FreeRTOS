@@ -689,6 +689,10 @@ typedef portTickType xEventBitsType;
 	#define configUSE_TRACE_FACILITY 0
 #endif
 
+#ifndef configBRANCH_TEST_INSTRUCTION
+	#define configBRANCH_TEST_INSTRUCTION()
+#endif
+
 /* For backward compatability. */
 #define eTaskStateGet eTaskGetState
 

@@ -993,6 +993,9 @@ xTaskHandle xTimerGetTimerDaemonTaskHandle( void );
  * *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
  * example code below.
  *
+ * @return pdPASS is returned if the message was successfully sent to the
+ * timer daemon task, otherwise pdFALSE is returned.
+ *
  * Example usage:
  * @verbatim
  *

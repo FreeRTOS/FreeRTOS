@@ -189,6 +189,10 @@ xList * const pxList = ( xList * ) pxItemToRemove->pvContainer;
 	{
 		pxList->pxIndex = pxItemToRemove->pxPrevious;
 	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
 
 	pxItemToRemove->pvContainer = NULL;
 	( pxList->uxNumberOfItems )--;

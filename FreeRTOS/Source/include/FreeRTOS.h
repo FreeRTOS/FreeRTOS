@@ -689,8 +689,8 @@ typedef portTickType xEventBitsType;
 	#define configUSE_TRACE_FACILITY 0
 #endif
 
-#ifndef configBRANCH_TEST_INSTRUCTION
-	#define configBRANCH_TEST_INSTRUCTION()
+#ifndef mtCOVERAGE_TEST_MARKER
+	#define mtCOVERAGE_TEST_MARKER()
 #endif
 
 /* For backward compatability. */

@@ -219,7 +219,7 @@ portBASE_TYPE xAlreadyYielded;
 		}
 		else
 		{
-			mtBRANCH_TEST_INSTRUCTION();
+			mtCOVERAGE_TEST_MARKER();
 		}
 
 		/* The task blocked to wait for its required bits to be set - at this
@@ -245,7 +245,7 @@ portBASE_TYPE xAlreadyYielded;
 				}
 				else
 				{
-					mtBRANCH_TEST_INSTRUCTION();
+					mtCOVERAGE_TEST_MARKER();
 				}
 			}
 			taskEXIT_CRITICAL();
@@ -302,7 +302,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 			}
 			else
 			{
-				mtBRANCH_TEST_INSTRUCTION();
+				mtCOVERAGE_TEST_MARKER();
 			}
 		}
 		else if( xTicksToWait == ( portTickType ) 0 )
@@ -323,7 +323,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 			}
 			else
 			{
-				mtBRANCH_TEST_INSTRUCTION();
+				mtCOVERAGE_TEST_MARKER();
 			}
 
 			if( xWaitForAllBits != pdFALSE )
@@ -332,7 +332,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 			}
 			else
 			{
-				mtBRANCH_TEST_INSTRUCTION();
+				mtCOVERAGE_TEST_MARKER();
 			}
 
 			/* Store the bits that the calling task is waiting for in the
@@ -356,7 +356,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 		}
 		else
 		{
-			mtBRANCH_TEST_INSTRUCTION();
+			mtCOVERAGE_TEST_MARKER();
 		}
 
 		/* The task blocked to wait for its required bits to be set - at this
@@ -382,12 +382,12 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 					}
 					else
 					{
-						mtBRANCH_TEST_INSTRUCTION();
+						mtCOVERAGE_TEST_MARKER();
 					}
 				}
 				else
 				{
-					mtBRANCH_TEST_INSTRUCTION();
+					mtCOVERAGE_TEST_MARKER();
 				}
 			}
 			taskEXIT_CRITICAL();
@@ -475,7 +475,7 @@ portBASE_TYPE xMatchFound = pdFALSE;
 				}
 				else
 				{
-					mtBRANCH_TEST_INSTRUCTION();
+					mtCOVERAGE_TEST_MARKER();
 				}
 			}
 			else if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) == uxBitsWaitedFor )
@@ -497,7 +497,7 @@ portBASE_TYPE xMatchFound = pdFALSE;
 				}
 				else
 				{
-					mtBRANCH_TEST_INSTRUCTION();
+					mtCOVERAGE_TEST_MARKER();
 				}
 
 				/* Store the actual event flag value in the task's event list
@@ -569,7 +569,7 @@ portBASE_TYPE xWaitConditionMet = pdFALSE;
 		}
 		else
 		{
-			mtBRANCH_TEST_INSTRUCTION();
+			mtCOVERAGE_TEST_MARKER();
 		}
 	}
 	else
@@ -582,7 +582,7 @@ portBASE_TYPE xWaitConditionMet = pdFALSE;
 		}
 		else
 		{
-			mtBRANCH_TEST_INSTRUCTION();
+			mtCOVERAGE_TEST_MARKER();
 		}
 	}
 

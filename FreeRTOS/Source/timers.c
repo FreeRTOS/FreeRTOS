@@ -251,6 +251,10 @@ portBASE_TYPE xReturn = pdFAIL;
 		}
 		#endif
 	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
 
 	configASSERT( xReturn );
 	return xReturn;
@@ -330,6 +334,10 @@ xDAEMON_TASK_MESSAGE xMessage;
 
 		traceTIMER_COMMAND_SEND( xTimer, xCommandID, xOptionalValue, xReturn );
 	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
 
 	return xReturn;
 }
@@ -373,6 +381,14 @@ xTIMER * const pxTimer = ( xTIMER * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTime
 			configASSERT( xResult );
 			( void ) xResult;
 		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
 	}
 
 	/* Call the timer callback. */
@@ -442,6 +458,10 @@ portBASE_TYPE xTimerListsWereSwitched;
 					exited and this yield then the yield will not cause the task
 					to block. */
 					portYIELD_WITHIN_API();
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
 				}
 			}
 		}
@@ -565,6 +585,10 @@ portTickType xTimeNow;
 				/* Call the function. */
 				pxCallback->pxCallbackFunction( pxCallback->pvParameter1, pxCallback->ulParameter2 );
 			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
 		}
 		#endif /* INCLUDE_xTimerPendCallbackFromISR */
 
@@ -578,6 +602,10 @@ portTickType xTimeNow;
 			{
 				/* The timer is in a list, remove it. */
 				( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
 			}
 
 			traceTIMER_COMMAND_RECEIVED( pxTimer, xMessage.xMessageID, xMessage.u.xTimerParameters.xMessageValue );
@@ -607,6 +635,14 @@ portTickType xTimeNow;
 							configASSERT( xResult );
 							( void ) xResult;
 						}
+						else
+						{
+							mtCOVERAGE_TEST_MARKER();
+						}
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
 					}
 					break;
 
@@ -690,6 +726,10 @@ portBASE_TYPE xResult;
 				( void ) xResult;
 			}
 		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
 	}
 
 	pxTemp = pxCurrentTimerList;
@@ -720,8 +760,16 @@ static void prvCheckForValidListAndQueue( void )
 				{
 					vQueueAddToRegistry( xTimerQueue, ( signed char * ) "TmrQ" );
 				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
 			}
 			#endif /* configQUEUE_REGISTRY_SIZE */
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
 		}
 	}
 	taskEXIT_CRITICAL();

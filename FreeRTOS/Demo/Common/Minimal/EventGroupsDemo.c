@@ -136,13 +136,6 @@ static void prvWaitBitsTask( void *pvParameters );
 static void prvSyncTask( void *pvParameters );
 
 /*
- * Contains a set of behavioural tests that can be performed from a single task.
- * This function is called by prvSetBitsTask() before prvSetBitsTasks() starts
- * the tests that make use of the prvWaitBitsTask().
- */
-static portBASE_TYPE prvSingleTaskTests( void );
-
-/*
  * Functions used in a test that blocks two tasks on various different bits
  * within an event group - then sets each bit in turn and checks that the 
  * correct tasks unblock at the correct times.
@@ -181,196 +174,6 @@ xTaskHandle xWaitBitsTaskHandle;
 
 	/* If the last task was created then the others will have been too. */
 	configASSERT( xSyncTask2 );
-}
-/*-----------------------------------------------------------*/
-
-static portBASE_TYPE prvSingleTaskTests( void )
-{
-xEventBitsType uxReturned;
-portBASE_TYPE xError = pdFALSE, xHigherPriorityTaskWoken;
-portTickType xTimeOnEntering, xTimeOnExiting;
-
-	/* Check no bits are currently set. */
-	uxReturned = xEventGroupWaitBits(	xEventBits,		/* The event flags being tested. */
-									ebBIT_1,		/* The bit being tested. */
-									pdFALSE,		/* Don't clear the bit on exit. */
-									pdFALSE,		/* Wait for a single bit, not all the bits. */
-									ebDONT_BLOCK ); /* Block time. */
-
-	if( uxReturned != 0x00 )
-	{
-		xError = pdTRUE;
-	}
-
-	/* Set selected bits. */
-	xEventGroupSetBits( xEventBits, ebCOMBINED_BITS );
-
-	/* Wait on all the selected bits.  This should return immediately even
-	though a block time is specified. */
-	uxReturned = xEventGroupWaitBits( xEventBits, ebCOMBINED_BITS, pdFALSE, pdTRUE, portMAX_DELAY );
-
-	if( uxReturned != ebCOMBINED_BITS )
-	{
-		xError = pdTRUE;
-	}
-
-	/* Now try waiting on all the selected bits plus a bit that is not set.
-	This should time out. */
-	xTimeOnEntering = xTaskGetTickCount();
-	uxReturned = xEventGroupWaitBits(	xEventBits,					/* The event flags being tested. */
-									ebCOMBINED_BITS | ebBIT_0,	/* The bits being tested. */
-									pdFALSE,					/* Don't clear the bits on exit. */
-									pdTRUE,						/* Wait for all the bits to be set, not just a single bit. */
-									ebSHORT_DELAY );			/* Block time. */
-	xTimeOnExiting = xTaskGetTickCount();
-
-	if( ( xTimeOnExiting - xTimeOnEntering ) < ebSHORT_DELAY )
-	{
-		/* Did not block as expected. */
-		xError = pdTRUE;
-	}
-
-	if( uxReturned != ebCOMBINED_BITS )
-	{
-		xError = pdTRUE;
-	}
-
-
-	/* This time pass in the same bit combination, but wait for only a single
-	bit.  This time it should not block even though one of the bits in the
-	combination is not set. */
-	xTimeOnEntering = xTaskGetTickCount();
-	uxReturned = xEventGroupWaitBits(	xEventBits,					/* The event flags being tested. */
-									ebCOMBINED_BITS | ebBIT_0,	/* The bits being tested. */
-									pdFALSE,					/* Don't clear the bits on exit. */
-									pdFALSE,					/* Don't wait for all the bits to be set, a single bit is all that is required. */
-									ebSHORT_DELAY );			/* Block time. */
-	xTimeOnExiting = xTaskGetTickCount();
-
-	if( ( xTimeOnExiting - xTimeOnEntering ) >= ebSHORT_DELAY )
-	{
-		/* Blocked, but didn't expect to. */
-		xError = pdTRUE;
-	}
-
-	if( uxReturned != ebCOMBINED_BITS )
-	{
-		xError = pdTRUE;
-	}
-
-
-	/* Now set all the bits. */
-	xEventGroupSetBits( xEventBits, ebALL_BITS );
-
-	/* Read the bits back to ensure they are all set.  Read back with a timeout
-	to ensure the task does not block (all the bits are already set), and leave
-	the bits set on exit. */
-	xTimeOnEntering = xTaskGetTickCount();
-	uxReturned = xEventGroupWaitBits(	xEventBits,		/* The event flags being tested. */
-									ebALL_BITS,		/* The bits being tested. */
-									pdFALSE,		/* Don't clear the bits on exit. */
-									pdTRUE,			/* Wait for all the bits to be set. */
-									ebSHORT_DELAY );/* Block time. */
-	xTimeOnExiting = xTaskGetTickCount();
-
-	if( ( xTimeOnExiting - xTimeOnEntering ) >= ebSHORT_DELAY )
-	{
-		/* Blocked, but didn't expect to. */
-		xError = pdTRUE;
-	}
-
-	if( uxReturned != ebALL_BITS )
-	{
-		xError = pdTRUE;
-	}
-
-
-	/* Now wait for some bits to be set (which are all set), and clear the bits
-	on exit.  Again this should not block. */
-	xTimeOnEntering = xTaskGetTickCount();
-	uxReturned = xEventGroupWaitBits(	xEventBits,			/* The event flags being tested. */
-									ebCOMBINED_BITS,	/* The bits being tested, which are a subset of the bits now set. */
-									pdTRUE,				/* Clear the bits on exit. */
-									pdTRUE,				/* Wait for all the bits to be set (which they already are. */
-									ebSHORT_DELAY );	/* Block time. */
-	xTimeOnExiting = xTaskGetTickCount();
-
-	if( ( xTimeOnExiting - xTimeOnEntering ) >= ebSHORT_DELAY )
-	{
-		/* Blocked, but didn't expect to. */
-		xError = pdTRUE;
-	}
-
-	if( uxReturned != ebALL_BITS )
-	{
-		xError = pdTRUE;
-	}
-
-	/* Now the bits set by the ebCOMBINED_BITS constant should be clear, but
-	all the other bits should be set.  Call xEventGroupWaitBits() again, this time
-	waiting for any bit within ebALL_BITS, and clearing all bits on exit to
-	leave the event bits all clear again. */
-	xTimeOnEntering = xTaskGetTickCount();
-	uxReturned = xEventGroupWaitBits(	xEventBits,			/* The event flags being tested. */
-									ebALL_BITS,			/* The bits being tested, which are a subset of the bits now set. */
-									pdTRUE,				/* Clear the bits on exit. */
-									pdFALSE,			/* Wait for any bit to be set. */
-									ebSHORT_DELAY );	/* Block time. */
-	xTimeOnExiting = xTaskGetTickCount();
-
-	if( ( xTimeOnExiting - xTimeOnEntering ) >= ebSHORT_DELAY )
-	{
-		/* Blocked, but didn't expect to. */
-		xError = pdTRUE;
-	}
-
-	/* The bits defined in ebCOMBINED_BITS were already cleared, so this time
-	only the remaining bits should have been set. */
-	if( uxReturned != ( ebALL_BITS & ~ebCOMBINED_BITS ) )
-	{
-		xError = pdTRUE;
-	}
-
-
-
-	/* All the bits should be clear again as the last call to xEventGroupWaitBits()
-	had the "clear on exit" parameter set to pdTRUE. */
-	uxReturned = xEventGroupGetBits( xEventBits );
-
-	if( uxReturned != 0x00 )
-	{
-		/* Expected all bits to be clear. */
-		xError = pdTRUE;
-	}
-
-	/* Try the 'set from ISR' function, which will pend the set to the timer
-	daemon task. */
-	xHigherPriorityTaskWoken = pdFALSE;
-	if( xEventGroupSetBitsFromISR( xEventBits, ebBIT_3, &xHigherPriorityTaskWoken ) != pdPASS )
-	{
-		xError = pdTRUE;
-	}
-
-	if( xHigherPriorityTaskWoken == pdTRUE )
-	{
-		/* If the daemon task has a higher priority then a yield should be
-		performed to ensure it runs before the bits are tested. */
-		taskYIELD();
-	}
-
-	/* Is the bit set? */
-	uxReturned = xEventGroupGetBits( xEventBits );
-
-	if( uxReturned != ebBIT_3 )
-	{
-		/* Expected all bits to be clear. */
-		xError = pdTRUE;
-	}
-
-	/* Clear all bits again ready for infinite loop tests. */
-	xEventGroupClearBits( xEventBits, ebALL_BITS );
-
-	return xError;
 }
 /*-----------------------------------------------------------*/
 
@@ -556,16 +359,10 @@ xTaskHandle xWaitBitsTaskHandle = ( xTaskHandle ) pvParameters;
 	xEventBits = xEventGroupCreate();
 	configASSERT( xEventBits );
 
-	/* Perform the tests that only require a single task. */
-	xError = prvSingleTaskTests();
-
-	if( xError == pdFALSE )
-	{
-		/* Perform the tests that block two tasks on different combinations of
-		bits, then set each bit in turn and check the correct tasks unblock at
-		the correct times. */
-		xError = prvTestSelectiveBits();
-	}
+	/* Perform the tests that block two tasks on different combinations of bits, 
+	then set each bit in turn and check the correct tasks unblock at the correct 
+	times. */
+	xError = prvTestSelectiveBits();
 
 	for( ;; )
 	{

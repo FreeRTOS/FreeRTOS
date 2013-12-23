@@ -721,28 +721,25 @@ static portTickType uxTick = ( portTickType ) -1;
 function is called from the tick hook anyway.  However the API required it
 to be present. */
 signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-portTickType xMargin;
 
-	if( configTIMER_TASK_PRIORITY != ( configMAX_PRIORITIES - 1 ) )
-	{
-		/* The timer service task is not the highest priority task, so it cannot
-		be assumed that timings will be exact.  Timers should never call their
-		callback before their expiry time, but a margin is permissible for calling
-		their callback after their expiry time.  If exact timing is required then
-		configTIMER_TASK_PRIORITY must be set to ensure the timer service task
-		is the highest priority task in the system. */
-		xMargin = 5;
-	}
-	else
-	{
-		xMargin = 1;
-	}
+#if( configTIMER_TASK_PRIORITY != ( configMAX_PRIORITIES - 1 ) )
+	/* The timer service task is not the highest priority task, so it cannot
+	be assumed that timings will be exact.  Timers should never call their
+	callback before their expiry time, but a margin is permissible for calling
+	their callback after their expiry time.  If exact timing is required then
+	configTIMER_TASK_PRIORITY must be set to ensure the timer service task
+	is the highest priority task in the system. */
+	const portTickType xMargin = 5;
+#else
+
+	const portTickType xMargin = 1;
+#endif
 
 	/* This test is called from the tick ISR even when the scheduler is suspended.
 	Therefore, it is possible for the xTickCount to be temporarily less than the
 	uxTicks count maintained in this function.  That can result in calculated
 	unblock times being too short, as this function is not called as missed ticks
-	(ticks that occur while the scheduler is suspended) are unwound to re-instate
+	(ticks that occur while the scheduler is suspended) are unwound to reinstate
 	the real tick value.  Therefore, if this happens, just abandon the test
 	and start again. */
 	if( xTaskGetSchedulerState() != taskSCHEDULER_RUNNING )
@@ -754,14 +751,28 @@ portTickType xMargin;
 		uxTick++;
 	}
 
-	if( uxTick == 0 )
+	if( uxTick == ( xBasePeriod >> 1 ) )
 	{
 		/* The timers will have been created, but not started.  Start them
 		now by setting their period. */
 		ucISRAutoReloadTimerCounter = 0;
 		ucISROneShotTimerCounter = 0;
-		xTimerChangePeriodFromISR( xISRAutoReloadTimer, xBasePeriod, &xHigherPriorityTaskWoken );
-		xTimerChangePeriodFromISR( xISROneShotTimer, xBasePeriod, &xHigherPriorityTaskWoken );
+
+		/* It is possible that the timer task has not yet made room in the
+		timer queue.  If the timers cannot be started then reset uxTick so
+		another attempt is made later. */
+		uxTick = ( portTickType ) -1;
+		if( xTimerChangePeriodFromISR( xISRAutoReloadTimer, xBasePeriod, &xHigherPriorityTaskWoken ) == pdPASS )
+		{
+			if( xTimerChangePeriodFromISR( xISROneShotTimer, xBasePeriod, &xHigherPriorityTaskWoken ) == pdPASS )
+			{
+				uxTick = 0;
+			}
+			else
+			{
+				xTimerStopFromISR( xISRAutoReloadTimer, &xHigherPriorityTaskWoken );
+			}
+		}
 	}
 	else if( uxTick == xBasePeriod )
 	{

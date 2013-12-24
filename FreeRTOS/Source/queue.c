@@ -126,13 +126,12 @@ typedef struct QueueDefinition
 {
 	signed char *pcHead;					/*< Points to the beginning of the queue storage area. */
 	signed char *pcTail;					/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
-
 	signed char *pcWriteTo;					/*< Points to the free next place in the storage area. */
 
 	union									/* Use of a union is an exception to the coding standard to ensure two mutually exclusive structure members don't appear simultaneously (wasting RAM). */
 	{
 		signed char *pcReadFrom;			/*< Points to the last place that a queued item was read from when the structure is used as a queue. */
-		unsigned portBASE_TYPE uxRecursiveCallCount;/*< Maintains a count of the numebr of times a recursive mutex has been recursively 'taken' when the structure is used as a mutex. */
+		unsigned portBASE_TYPE uxRecursiveCallCount;/*< Maintains a count of the number of times a recursive mutex has been recursively 'taken' when the structure is used as a mutex. */
 	} u;
 
 	xList xTasksWaitingToSend;				/*< List of tasks that are blocked waiting to post onto this queue.  Stored in priority order. */
@@ -1544,7 +1543,10 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 		vQueueUnregisterQueue( pxQueue );
 	}
 	#endif
-	vPortFree( pxQueue->pcHead );
+	if( pxQueue->pcHead != NULL )
+	{
+		vPortFree( pxQueue->pcHead );
+	}
 	vPortFree( pxQueue );
 }
 /*-----------------------------------------------------------*/

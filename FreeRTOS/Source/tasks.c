@@ -391,7 +391,7 @@ to its original value when it is released. */
  * Utility to ready a TCB for a given task.  Mainly just copies the parameters
  * into the TCB structure.
  */
-static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
+static void prvInitialiseTCBVariables( tskTCB * const pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, const unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
@@ -436,13 +436,13 @@ static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
  * The currently executing task is entering the Blocked state.  Add the task to
  * either the current or the overflow delayed task list.
  */
-static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake ) PRIVILEGED_FUNCTION;
+static void prvAddCurrentTaskToDelayedList( const portTickType xTimeToWake ) PRIVILEGED_FUNCTION;
 
 /*
  * Allocates memory from the heap for a TCB and associated stack.  Checks the
  * allocation was successful.
  */
-static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer ) PRIVILEGED_FUNCTION;
+static tskTCB *prvAllocateTCBAndStack( const unsigned short usStackDepth, portSTACK_TYPE * const puxStackBuffer ) PRIVILEGED_FUNCTION;
 
 /*
  * Fills an xTaskStatusType structure with information on each task that is
@@ -492,7 +492,7 @@ static void prvResetNextTaskUnblockTime( void );
 
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, const unsigned short usStackDepth, void * const pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle * const pxCreatedTask, portSTACK_TYPE * const puxStackBuffer, const xMemoryRegion * const xRegions )
 {
 signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
@@ -1710,7 +1710,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime )
+	unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType * const pxTaskStatusArray, const unsigned portBASE_TYPE uxArraySize, unsigned long * const pulTotalRunTime )
 	{
 	unsigned portBASE_TYPE uxTask = 0, uxQueue = configMAX_PRIORITIES;
 
@@ -1801,7 +1801,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 1. */
 #if ( configUSE_TICKLESS_IDLE != 0 )
 
-	void vTaskStepTick( portTickType xTicksToJump )
+	void vTaskStepTick( const portTickType xTicksToJump )
 	{
 		/* Correct the tick count value after a period during which the tick
 		was suppressed.  Note this does *not* call the tick hook function for
@@ -2192,7 +2192,7 @@ portTickType xTimeToWake;
 }
 /*-----------------------------------------------------------*/
 
-void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, const portTickType xTicksToWait )
+void vTaskPlaceOnUnorderedEventList( xList * pxEventList, const portTickType xItemValue, const portTickType xTicksToWait )
 {
 portTickType xTimeToWake;
 
@@ -2252,7 +2252,7 @@ portTickType xTimeToWake;
 
 #if configUSE_TIMERS == 1
 
-	void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xTicksToWait )
+	void vTaskPlaceOnEventListRestricted( xList * const pxEventList, const portTickType xTicksToWait )
 	{
 	portTickType xTimeToWake;
 
@@ -2350,7 +2350,7 @@ portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xTaskRemoveFromUnorderedEventList( xListItem * pxEventListItem, portTickType xItemValue )
+signed portBASE_TYPE xTaskRemoveFromUnorderedEventList( xListItem * pxEventListItem, const portTickType xItemValue )
 {
 tskTCB *pxUnblockedTCB;
 portBASE_TYPE xReturn;
@@ -2488,7 +2488,7 @@ void vTaskMissedYield( void )
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle )
+	void vTaskSetTaskNumber( xTaskHandle xTask, const unsigned portBASE_TYPE uxHandle )
 	{
 	tskTCB *pxTCB;
 
@@ -2659,7 +2659,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 #endif /* configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseTCBVariables( tskTCB *pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, unsigned short usStackDepth )
+static void prvInitialiseTCBVariables( tskTCB * const pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, const unsigned short usStackDepth )
 {
 unsigned portBASE_TYPE x;
 
@@ -2838,7 +2838,7 @@ static void prvCheckTasksWaitingTermination( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
+static void prvAddCurrentTaskToDelayedList( const portTickType xTimeToWake )
 {
 	/* The list item will be inserted in wake time order. */
 	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
@@ -2868,7 +2868,7 @@ static void prvAddCurrentTaskToDelayedList( portTickType xTimeToWake )
 }
 /*-----------------------------------------------------------*/
 
-static tskTCB *prvAllocateTCBAndStack( unsigned short usStackDepth, portSTACK_TYPE *puxStackBuffer )
+static tskTCB *prvAllocateTCBAndStack( const unsigned short usStackDepth, portSTACK_TYPE * const puxStackBuffer )
 {
 tskTCB *pxNewTCB;
 
@@ -3280,7 +3280,7 @@ tskTCB *pxTCB;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
 
-	void vTaskList( signed char *pcWriteBuffer )
+	void vTaskList( signed char * pcWriteBuffer )
 	{
 	xTaskStatusType *pxTaskStatusArray;
 	volatile unsigned portBASE_TYPE uxArraySize, x;

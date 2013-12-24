@@ -585,7 +585,7 @@ typedef void * xQueueSetMemberHandle;
  * \defgroup xQueueSend xQueueSend
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, const portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -906,7 +906,7 @@ signed portBASE_TYPE xQueuePeekFromISR( xQueueHandle xQueue, void * const pvBuff
  * \defgroup xQueueReceive xQueueReceive
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, const portBASE_TYPE xJustPeek ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -1332,7 +1332,7 @@ unsigned long ulVarToSend, ulValReceived;
  * \defgroup xQueueSendFromISR xQueueSendFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void * const pvItemToQueue, signed portBASE_TYPE * const pxHigherPriorityTaskWoken, const portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h
@@ -1421,7 +1421,7 @@ signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void *
  * \defgroup xQueueReceiveFromISR xQueueReceiveFromISR
  * \ingroup QueueManagement
  */
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE * const pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
 /*
  * Utilities to query queues that are safe to use from an ISR.  These utilities
@@ -1472,8 +1472,8 @@ signed portBASE_TYPE xQueueCRReceive( xQueueHandle xQueue, void *pvBuffer, portT
  * xSemaphoreCreateCounting() or xSemaphoreGetMutexHolder() instead of calling
  * these functions directly.
  */
-xQueueHandle xQueueCreateMutex( unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
-xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxMaxCount, unsigned portBASE_TYPE uxInitialCount ) PRIVILEGED_FUNCTION;
+xQueueHandle xQueueCreateMutex( const unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
+xQueueHandle xQueueCreateCountingSemaphore( const unsigned portBASE_TYPE uxMaxCount, const unsigned portBASE_TYPE uxInitialCount ) PRIVILEGED_FUNCTION;
 void* xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;
 
 /*
@@ -1535,7 +1535,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  * Generic version of the queue creation function, which is in turn called by
  * any queue, semaphore or mutex creation function or macro.
  */
-xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
+xQueueHandle xQueueGenericCreate( const unsigned portBASE_TYPE uxQueueLength, const unsigned portBASE_TYPE uxItemSize, const unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
 
 /*
  * Queue sets provide a mechanism to allow a task to block (pend) on a read
@@ -1585,7 +1585,7 @@ xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned
  * @return If the queue set is created successfully then a handle to the created
  * queue set is returned.  Otherwise NULL is returned.
  */
-xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength ) PRIVILEGED_FUNCTION;
+xQueueSetHandle xQueueCreateSet( const unsigned portBASE_TYPE uxEventQueueLength ) PRIVILEGED_FUNCTION;
 
 /*
  * Adds a queue or semaphore to a queue set that was previously created by a
@@ -1664,7 +1664,7 @@ portBASE_TYPE xQueueRemoveFromSet( xQueueSetMemberHandle xQueueOrSemaphore, xQue
  * in the queue set that is available, or NULL if no such queue or semaphore
  * exists before before the specified block time expires.
  */
-xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
+xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, const portTickType xBlockTimeTicks ) PRIVILEGED_FUNCTION;
 
 /*
  * A version of xQueueSelectFromSet() that can be used from an ISR.

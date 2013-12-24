@@ -1257,7 +1257,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 	}
 	</pre>
  */
-unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray, unsigned portBASE_TYPE uxArraySize, unsigned long *pulTotalRunTime );
+unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType * const pxTaskStatusArray, const unsigned portBASE_TYPE uxArraySize, unsigned long * const pulTotalRunTime );
 
 /**
  * task. h
@@ -1304,7 +1304,7 @@ unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType *pxTaskStatusArray,
  * \defgroup vTaskList vTaskList
  * \ingroup TaskUtils
  */
-void vTaskList( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
+void vTaskList( signed char * pcWriteBuffer ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
@@ -1413,7 +1413,7 @@ portBASE_TYPE xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  * period.
  */
 void vTaskPlaceOnEventList( xList * const pxEventList, const portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
-void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValue, const portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnUnorderedEventList( xList * pxEventList, const portTickType xItemValue, const portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1426,7 +1426,7 @@ void vTaskPlaceOnUnorderedEventList( xList * pxEventList, portTickType xItemValu
  * indefinitely, whereas vTaskPlaceOnEventList() does.
  *
  */
-void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+void vTaskPlaceOnEventListRestricted( xList * const pxEventList, const portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS AN
@@ -1453,7 +1453,7 @@ void vTaskPlaceOnEventListRestricted( xList * const pxEventList, portTickType xT
  * making the call, otherwise pdFALSE.
  */
 signed portBASE_TYPE xTaskRemoveFromEventList( const xList * const pxEventList ) PRIVILEGED_FUNCTION;
-signed portBASE_TYPE xTaskRemoveFromUnorderedEventList( xListItem * pxEventListItem, portTickType xItemValue ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskRemoveFromUnorderedEventList( xListItem * pxEventListItem, const portTickType xItemValue ) PRIVILEGED_FUNCTION;
 
 /*
  * THIS FUNCTION MUST NOT BE USED FROM APPLICATION CODE.  IT IS ONLY
@@ -1515,7 +1515,7 @@ void vTaskPriorityDisinherit( xTaskHandle const pxMutexHolder ) PRIVILEGED_FUNCT
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, const unsigned short usStackDepth, void * const pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle * const pxCreatedTask, portSTACK_TYPE * const puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.
@@ -1526,7 +1526,7 @@ unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask ) PRIVILEGED_FUNCT
  * Set the uxTaskNumber of the task referenced by the xTask parameter to
  * uxHandle.
  */
-void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle ) PRIVILEGED_FUNCTION;
+void vTaskSetTaskNumber( xTaskHandle xTask, const unsigned portBASE_TYPE uxHandle ) PRIVILEGED_FUNCTION;
 
 /*
  * Only available when configUSE_TICKLESS_IDLE is set to 1.
@@ -1536,7 +1536,7 @@ void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle ) PR
  * to date with the actual execution time by being skipped forward by a time
  * equal to the idle period.
  */
-void vTaskStepTick( portTickType xTicksToJump ) PRIVILEGED_FUNCTION;
+void vTaskStepTick( const portTickType xTicksToJump ) PRIVILEGED_FUNCTION;
 
 /*
  * Only avilable when configUSE_TICKLESS_IDLE is set to 1.

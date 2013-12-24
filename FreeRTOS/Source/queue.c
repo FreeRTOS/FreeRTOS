@@ -186,7 +186,7 @@ typedef struct QueueDefinition
  * to indicate that a task may require unblocking.  When the queue in unlocked
  * these lock counts are inspected, and the appropriate action taken.
  */
-static void prvUnlockQueue( xQUEUE *pxQueue ) PRIVILEGED_FUNCTION;
+static void prvUnlockQueue( xQUEUE * const pxQueue ) PRIVILEGED_FUNCTION;
 
 /*
  * Uses a critical section to determine if there is any data in a queue.
@@ -206,7 +206,7 @@ static signed portBASE_TYPE prvIsQueueFull( const xQUEUE *pxQueue ) PRIVILEGED_F
  * Copies an item into the queue, either at the front of the queue or the
  * back of the queue.
  */
-static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, portBASE_TYPE xPosition ) PRIVILEGED_FUNCTION;
+static void prvCopyDataToQueue( xQUEUE * const pxQueue, const void *pvItemToQueue, const portBASE_TYPE xPosition ) PRIVILEGED_FUNCTION;
 
 /*
  * Copies an item out of a queue.
@@ -218,7 +218,7 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, void * const pvBuffer 
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
 	 * the queue set that the queue contains data.
 	 */
-	static portBASE_TYPE prvNotifyQueueSetContainer( const xQUEUE * const pxQueue, portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
+	static portBASE_TYPE prvNotifyQueueSetContainer( const xQUEUE * const pxQueue, const portBASE_TYPE xCopyPosition ) PRIVILEGED_FUNCTION;
 #endif
 
 /*-----------------------------------------------------------*/
@@ -295,7 +295,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxItemSize, unsigned char ucQueueType )
+xQueueHandle xQueueGenericCreate( const unsigned portBASE_TYPE uxQueueLength, const unsigned portBASE_TYPE uxItemSize, const unsigned char ucQueueType )
 {
 xQUEUE *pxNewQueue;
 size_t xQueueSizeInBytes;
@@ -363,7 +363,7 @@ xQueueHandle xReturn = NULL;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	xQueueHandle xQueueCreateMutex( unsigned char ucQueueType )
+	xQueueHandle xQueueCreateMutex( const unsigned char ucQueueType )
 	{
 	xQUEUE *pxNewQueue;
 
@@ -553,7 +553,7 @@ xQueueHandle xReturn = NULL;
 
 #if ( configUSE_COUNTING_SEMAPHORES == 1 )
 
-	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxMaxCount, unsigned portBASE_TYPE uxInitialCount )
+	xQueueHandle xQueueCreateCountingSemaphore( const unsigned portBASE_TYPE uxMaxCount, const unsigned portBASE_TYPE uxInitialCount )
 	{
 	xQueueHandle xHandle;
 
@@ -580,7 +580,7 @@ xQueueHandle xReturn = NULL;
 #endif /* configUSE_COUNTING_SEMAPHORES */
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition )
+signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, portTickType xTicksToWait, const portBASE_TYPE xCopyPosition )
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
@@ -1012,7 +1012,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 #endif /* configUSE_ALTERNATIVE_API */
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void * const pvItemToQueue, signed portBASE_TYPE *pxHigherPriorityTaskWoken, portBASE_TYPE xCopyPosition )
+signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle xQueue, const void * const pvItemToQueue, signed portBASE_TYPE * const pxHigherPriorityTaskWoken, const portBASE_TYPE xCopyPosition )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
@@ -1156,7 +1156,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking )
+signed portBASE_TYPE xQueueGenericReceive( xQueueHandle xQueue, void * const pvBuffer, portTickType xTicksToWait, const portBASE_TYPE xJustPeeking )
 {
 signed portBASE_TYPE xEntryTimeSet = pdFALSE;
 xTimeOutType xTimeOut;
@@ -1345,7 +1345,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE *pxHigherPriorityTaskWoken )
+signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle xQueue, void * const pvBuffer, signed portBASE_TYPE * const pxHigherPriorityTaskWoken )
 {
 signed portBASE_TYPE xReturn;
 unsigned portBASE_TYPE uxSavedInterruptStatus;
@@ -1581,7 +1581,7 @@ xQUEUE * const pxQueue = ( xQUEUE * ) xQueue;
 #endif /* configUSE_TRACE_FACILITY */
 /*-----------------------------------------------------------*/
 
-static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, portBASE_TYPE xPosition )
+static void prvCopyDataToQueue( xQUEUE * const pxQueue, const void *pvItemToQueue, const portBASE_TYPE xPosition )
 {
 	if( pxQueue->uxItemSize == ( unsigned portBASE_TYPE ) 0 )
 	{
@@ -1673,7 +1673,7 @@ static void prvCopyDataFromQueue( xQUEUE * const pxQueue, void * const pvBuffer 
 }
 /*-----------------------------------------------------------*/
 
-static void prvUnlockQueue( xQUEUE *pxQueue )
+static void prvUnlockQueue( xQUEUE * const pxQueue )
 {
 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
 
@@ -2233,7 +2233,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	xQueueSetHandle xQueueCreateSet( unsigned portBASE_TYPE uxEventQueueLength )
+	xQueueSetHandle xQueueCreateSet( const unsigned portBASE_TYPE uxEventQueueLength )
 	{
 	xQueueSetHandle pxQueue;
 
@@ -2316,7 +2316,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType xBlockTimeTicks )
+	xQueueSetMemberHandle xQueueSelectFromSet( xQueueSetHandle xQueueSet, portTickType const xBlockTimeTicks )
 	{
 	xQueueSetMemberHandle xReturn = NULL;
 
@@ -2342,7 +2342,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	static portBASE_TYPE prvNotifyQueueSetContainer( const xQUEUE * const pxQueue, portBASE_TYPE xCopyPosition )
+	static portBASE_TYPE prvNotifyQueueSetContainer( const xQUEUE * const pxQueue, const portBASE_TYPE xCopyPosition )
 	{
 	xQUEUE *pxQueueSetContainer = pxQueue->pxQueueSetContainer;
 	portBASE_TYPE xReturn = pdFALSE;

@@ -167,7 +167,7 @@ typedef struct QueueDefinition
 	more user friendly. */
 	typedef struct QUEUE_REGISTRY_ITEM
 	{
-		signed char *pcQueueName;
+		char *pcQueueName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 		xQueueHandle xHandle;
 	} xQueueRegistryItem;
 
@@ -2143,7 +2143,7 @@ signed portBASE_TYPE xReturn;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcQueueName )
+	void vQueueAddToRegistry( xQueueHandle xQueue, char *pcQueueName ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	unsigned portBASE_TYPE ux;
 

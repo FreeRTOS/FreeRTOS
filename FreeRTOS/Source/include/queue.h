@@ -1514,7 +1514,7 @@ portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex ) PRIVILEGED_FUNCTI
  * preferably in ROM/Flash), not on the stack.
  */
 #if configQUEUE_REGISTRY_SIZE > 0
-	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName ) PRIVILEGED_FUNCTION;
+	void vQueueAddToRegistry( xQueueHandle xQueue, char *pcName ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 #endif
 
 /*

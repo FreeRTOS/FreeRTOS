@@ -105,7 +105,7 @@ typedef void * xTimerHandle;
 typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
 
 /**
- * xTimerHandle xTimerCreate( 	const signed char * const pcTimerName,
+ * xTimerHandle xTimerCreate( 	const char * const pcTimerName,
  * 								portTickType xTimerPeriodInTicks,
  * 								unsigned portBASE_TYPE uxAutoReload,
  * 								void * pvTimerID,
@@ -232,7 +232,7 @@ typedef void (*tmrTIMER_CALLBACK)( xTimerHandle xTimer );
  * }
  * @endverbatim
  */
-xTimerHandle xTimerCreate( const signed char * const pcTimerName, const portTickType xTimerPeriodInTicks, const unsigned portBASE_TYPE uxAutoReload, void * const pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) PRIVILEGED_FUNCTION;
+xTimerHandle xTimerCreate( const char * const pcTimerName, const portTickType xTimerPeriodInTicks, const unsigned portBASE_TYPE uxAutoReload, void * const pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * void *pvTimerGetTimerID( xTimerHandle xTimer );

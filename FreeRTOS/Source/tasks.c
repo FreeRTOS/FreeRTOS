@@ -129,7 +129,7 @@ typedef struct tskTaskControlBlock
 	xListItem				xEventListItem;		/*< Used to reference a task from an event list. */
 	unsigned portBASE_TYPE	uxPriority;			/*< The priority of the task.  0 is the lowest priority. */
 	portSTACK_TYPE			*pxStack;			/*< Points to the start of the stack. */
-	signed char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */
+	char					pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 	#if ( portSTACK_GROWTH > 0 )
 		portSTACK_TYPE *pxEndOfStack;			/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
@@ -241,10 +241,10 @@ PRIVILEGED_DATA static volatile portTickType xNextTaskUnblockTime				= portMAX_D
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */
-#define tskBLOCKED_CHAR		( ( signed char ) 'B' )
-#define tskREADY_CHAR		( ( signed char ) 'R' )
-#define tskDELETED_CHAR		( ( signed char ) 'D' )
-#define tskSUSPENDED_CHAR	( ( signed char ) 'S' )
+#define tskBLOCKED_CHAR		( 'B' )
+#define tskREADY_CHAR		( 'R' )
+#define tskDELETED_CHAR		( 'D' )
+#define tskSUSPENDED_CHAR	( 'S' )
 
 /*-----------------------------------------------------------*/
 
@@ -378,7 +378,7 @@ to its original value when it is released. */
 
 /* Callback function prototypes. --------------------------*/
 #if configCHECK_FOR_STACK_OVERFLOW > 0
-	extern void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName );
+	extern void vApplicationStackOverflowHook( xTaskHandle xTask, char *pcTaskName );
 #endif
 
 #if configUSE_TICK_HOOK > 0
@@ -391,7 +391,7 @@ to its original value when it is released. */
  * Utility to ready a TCB for a given task.  Mainly just copies the parameters
  * into the TCB structure.
  */
-static void prvInitialiseTCBVariables( tskTCB * const pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, const unsigned short usStackDepth ) PRIVILEGED_FUNCTION;
+static void prvInitialiseTCBVariables( tskTCB * const pxTCB, const char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, const unsigned short usStackDepth ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
@@ -492,7 +492,7 @@ static void prvResetNextTaskUnblockTime( void );
 
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, const unsigned short usStackDepth, void * const pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle * const pxCreatedTask, portSTACK_TYPE * const puxStackBuffer, const xMemoryRegion * const xRegions )
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const char * const pcName, const unsigned short usStackDepth, void * const pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle * const pxCreatedTask, portSTACK_TYPE * const puxStackBuffer, const xMemoryRegion * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 signed portBASE_TYPE xReturn;
 tskTCB * pxNewTCB;
@@ -1111,7 +1111,7 @@ tskTCB * pxNewTCB;
 
 				/* Only reset the event list item value if the value is not
 				being used for anything else. */
-				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0 )
+				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
 				{
 					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( ( portTickType ) configMAX_PRIORITIES - ( portTickType ) uxNewPriority ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 				}
@@ -1430,12 +1430,12 @@ portBASE_TYPE xReturn;
 	{
 		/* Create the idle task, storing its handle in xIdleTaskHandle so it can
 		be returned by the xTaskGetIdleTaskHandle() function. */
-		xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+		xReturn = xTaskCreate( prvIdleTask, "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
 	}
 	#else
 	{
 		/* Create the idle task without storing its handle. */
-		xReturn = xTaskCreate( prvIdleTask, ( signed char * ) "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), NULL );  /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+		xReturn = xTaskCreate( prvIdleTask, "IDLE", tskIDLE_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), NULL );  /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
 	}
 	#endif /* INCLUDE_xTaskGetIdleTaskHandle */
 
@@ -1695,7 +1695,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void )
 
 #if ( INCLUDE_pcTaskGetTaskName == 1 )
 
-	signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery )
+	char *pcTaskGetTaskName( xTaskHandle xTaskToQuery )
 	{
 	tskTCB *pxTCB;
 
@@ -2659,7 +2659,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 #endif /* configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseTCBVariables( tskTCB * const pxTCB, const signed char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, const unsigned short usStackDepth )
+static void prvInitialiseTCBVariables( tskTCB * const pxTCB, const char * const pcName, unsigned portBASE_TYPE uxPriority, const xMemoryRegion * const xRegions, const unsigned short usStackDepth ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 unsigned portBASE_TYPE x;
 
@@ -2683,7 +2683,7 @@ unsigned portBASE_TYPE x;
 
 	/* Ensure the name string is terminated in the case that the string length
 	was greater or equal to configMAX_TASK_NAME_LEN. */
-	pxTCB->pcTaskName[ configMAX_TASK_NAME_LEN - 1 ] = ( signed char ) '\0';
+	pxTCB->pcTaskName[ configMAX_TASK_NAME_LEN - 1 ] = '\0';
 
 	/* This is used as an array index so must ensure it's not too large.  First
 	remove the privilege bit if one is present. */
@@ -2925,7 +2925,7 @@ tskTCB *pxNewTCB;
 				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
 
 				pxTaskStatusArray[ uxTask ].xHandle = ( xTaskHandle ) pxNextTCB;
-				pxTaskStatusArray[ uxTask ].pcTaskName = ( const signed char * ) &( pxNextTCB->pcTaskName [ 0 ] );
+				pxTaskStatusArray[ uxTask ].pcTaskName = ( const char * ) &( pxNextTCB->pcTaskName [ 0 ] );
 				pxTaskStatusArray[ uxTask ].xTaskNumber = pxNextTCB->uxTCBNumber;
 				pxTaskStatusArray[ uxTask ].eCurrentState = eState;
 				pxTaskStatusArray[ uxTask ].uxCurrentPriority = pxNextTCB->uxPriority;
@@ -3000,22 +3000,22 @@ tskTCB *pxNewTCB;
 	unsigned portBASE_TYPE uxTaskGetStackHighWaterMark( xTaskHandle xTask )
 	{
 	tskTCB *pxTCB;
-	unsigned char *pcEndOfStack;
+	unsigned char *pucEndOfStack;
 	unsigned portBASE_TYPE uxReturn;
 
 		pxTCB = prvGetTCBFromHandle( xTask );
 
 		#if portSTACK_GROWTH < 0
 		{
-			pcEndOfStack = ( unsigned char * ) pxTCB->pxStack;
+			pucEndOfStack = ( unsigned char * ) pxTCB->pxStack;
 		}
 		#else
 		{
-			pcEndOfStack = ( unsigned char * ) pxTCB->pxEndOfStack;
+			pucEndOfStack = ( unsigned char * ) pxTCB->pxEndOfStack;
 		}
 		#endif
 
-		uxReturn = ( unsigned portBASE_TYPE ) prvTaskCheckFreeStackSpace( pcEndOfStack );
+		uxReturn = ( unsigned portBASE_TYPE ) prvTaskCheckFreeStackSpace( pucEndOfStack );
 
 		return uxReturn;
 	}
@@ -3126,7 +3126,7 @@ tskTCB *pxTCB;
 				/* Adjust the mutex holder state to account for its new
 				priority.  Only reset the event list item value if the value is
 				not	being used for anything else. */
-				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0 )
+				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
 				{
 					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxCurrentTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 				}
@@ -3202,7 +3202,7 @@ tskTCB *pxTCB;
 
 				/* Only reset the event list item value if the value is not
 				being used for anything else. */
-				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0 )
+				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
 				{
 					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( portTickType ) configMAX_PRIORITIES - ( portTickType ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 				}
@@ -3280,11 +3280,11 @@ tskTCB *pxTCB;
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
 
-	void vTaskList( signed char * pcWriteBuffer )
+	void vTaskList( char * pcWriteBuffer )
 	{
 	xTaskStatusType *pxTaskStatusArray;
 	volatile unsigned portBASE_TYPE uxArraySize, x;
-	signed char cStatus;
+	char cStatus;
 
 		/*
 		 * PLEASE NOTE:
@@ -3349,8 +3349,8 @@ tskTCB *pxTCB;
 									break;
 				}
 
-				sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%c\t%u\t%u\t%u\r\n", pxTaskStatusArray[ x ].pcTaskName, ( char ) cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
-				pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
+				sprintf( pcWriteBuffer, "%s\t\t%c\t%u\t%u\t%u\r\n", pxTaskStatusArray[ x ].pcTaskName, cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
+				pcWriteBuffer += strlen( pcWriteBuffer );
 			}
 
 			/* Free the array again. */
@@ -3367,7 +3367,7 @@ tskTCB *pxTCB;
 
 #if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
 
-	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
+	void vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
 	xTaskStatusType *pxTaskStatusArray;
 	volatile unsigned portBASE_TYPE uxArraySize, x;
@@ -3431,13 +3431,13 @@ tskTCB *pxTCB;
 					{
 						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
 						{
-							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
+							sprintf( pcWriteBuffer, "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
 						}
 						#else
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%u\t\t%u%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+							sprintf( pcWriteBuffer, "%s\t\t%u\t\t%u%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
 						}
 						#endif
 					}
@@ -3447,18 +3447,18 @@ tskTCB *pxTCB;
 						consumed less than 1% of the total run time. */
 						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
 						{
-							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
+							sprintf( pcWriteBuffer, "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
 						}
 						#else
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%u\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+							sprintf( pcWriteBuffer, "%s\t\t%u\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
 						}
 						#endif
 					}
 
-					pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
+					pcWriteBuffer += strlen( pcWriteBuffer );
 				}
 			}
 			else

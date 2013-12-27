@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -80,13 +80,13 @@
 /*
  * Created as a high priority thread, this function uses a timer to simulate
  * a tick interrupt being generated on an embedded target.  In this Windows
- * environment the timer does not achieve anything approaching real time 
+ * environment the timer does not achieve anything approaching real time
  * performance though.
  */
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter );
 
-/* 
- * Process all the simulated interrupts - each represented by a bit in 
+/*
+ * Process all the simulated interrupts - each represented by a bit in
  * ulPendingInterrupts variable.
  */
 static void prvProcessSimulatedInterrupts( void );
@@ -109,7 +109,7 @@ static BOOL WINAPI prvEndProcess( DWORD dwCtrlType );
 /* The WIN32 simulator runs each task in a thread.  The context switching is
 managed by the threads, so the task stack does not have to be managed directly,
 although the task stack is still used to hold an xThreadState structure this is
-the only thing it will ever hold.  The structure indirectly maps the task handle 
+the only thing it will ever hold.  The structure indirectly maps the task handle
 to a thread handle. */
 typedef struct
 {
@@ -122,21 +122,21 @@ typedef struct
 bit represents one interrupt, so a maximum of 32 interrupts can be simulated. */
 static volatile unsigned long ulPendingInterrupts = 0UL;
 
-/* An event used to inform the simulated interrupt processing thread (a high 
+/* An event used to inform the simulated interrupt processing thread (a high
 priority thread that simulated interrupt processing) that an interrupt is
 pending. */
 static void *pvInterruptEvent = NULL;
 
-/* Mutex used to protect all the simulated interrupt variables that are accessed 
+/* Mutex used to protect all the simulated interrupt variables that are accessed
 by multiple threads. */
 static void *pvInterruptEventMutex = NULL;
 
-/* The critical nesting count for the currently executing task.  This is 
-initialised to a non-zero value so interrupts do not become enabled during 
-the initialisation phase.  As each task has its own critical nesting value 
-ulCriticalNesting will get set to zero when the first task runs.  This 
+/* The critical nesting count for the currently executing task.  This is
+initialised to a non-zero value so interrupts do not become enabled during
+the initialisation phase.  As each task has its own critical nesting value
+ulCriticalNesting will get set to zero when the first task runs.  This
 initialisation is probably not critical in this simulated environment as the
-simulated interrupt handlers do not get created until the FreeRTOS scheduler is 
+simulated interrupt handlers do not get created until the FreeRTOS scheduler is
 started anyway. */
 static unsigned long ulCriticalNesting = 9999UL;
 
@@ -178,11 +178,11 @@ TIMECAPS xTimeCaps;
 
 	for(;;)
 	{
-		/* Wait until the timer expires and we can access the simulated interrupt 
-		variables.  *NOTE* this is not a 'real time' way of generating tick 
-		events as the next wake time should be relative to the previous wake 
-		time, not the time that Sleep() is called.  It is done this way to 
-		prevent overruns in this very non real time simulated/emulated 
+		/* Wait until the timer expires and we can access the simulated interrupt
+		variables.  *NOTE* this is not a 'real time' way of generating tick
+		events as the next wake time should be relative to the previous wake
+		time, not the time that Sleep() is called.  It is done this way to
+		prevent overruns in this very non real time simulated/emulated
 		environment. */
 		if( portTICK_RATE_MS < xMinimumWindowsBlockTime )
 		{
@@ -200,14 +200,14 @@ TIMECAPS xTimeCaps;
 		/* The timer has expired, generate the simulated tick event. */
 		ulPendingInterrupts |= ( 1 << portINTERRUPT_TICK );
 
-		/* The interrupt is now pending - notify the simulated interrupt 
+		/* The interrupt is now pending - notify the simulated interrupt
 		handler thread. */
 		if( ulCriticalNesting == 0 )
 		{
 			SetEvent( pvInterruptEvent );
 		}
 
-		/* Give back the mutex so the simulated interrupt handler unblocks 
+		/* Give back the mutex so the simulated interrupt handler unblocks
 		and can	access the interrupt handler variables. */
 		ReleaseMutex( pvInterruptEventMutex );
 	}
@@ -240,7 +240,7 @@ TIMECAPS xTimeCaps;
 portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 xThreadState *pxThreadState = NULL;
-char *pcTopOfStack = ( char * ) pxTopOfStack;
+signed char *pcTopOfStack = ( char * ) pxTopOfStack;
 
 	/* In this simulated case a stack is not initialised, but instead a thread
 	is created that will execute the task being created.  The thread handles
@@ -256,7 +256,7 @@ char *pcTopOfStack = ( char * ) pxTopOfStack;
 	SetThreadAffinityMask( pxThreadState->pvThread, 0x01 );
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
-	
+
 	return ( portSTACK_TYPE * ) pxThreadState;
 }
 /*-----------------------------------------------------------*/
@@ -281,7 +281,7 @@ xThreadState *pxThreadState;
 		lSuccess = pdFAIL;
 	}
 
-	/* Set the priority of this thread such that it is above the priority of 
+	/* Set the priority of this thread such that it is above the priority of
 	the threads that run tasks.  This higher priority is required to ensure
 	simulated interrupts take priority over tasks. */
 	pvHandle = GetCurrentThread();
@@ -289,7 +289,7 @@ xThreadState *pxThreadState;
 	{
 		lSuccess = pdFAIL;
 	}
-	
+
 	if( lSuccess == pdPASS )
 	{
 		if( SetThreadPriority( pvHandle, THREAD_PRIORITY_NORMAL ) == 0 )
@@ -303,7 +303,7 @@ xThreadState *pxThreadState;
 	if( lSuccess == pdPASS )
 	{
 		/* Start the thread that simulates the timer peripheral to generate
-		tick interrupts.  The priority is set below that of the simulated 
+		tick interrupts.  The priority is set below that of the simulated
 		interrupt handler so the interrupt event mutex is used for the
 		handshake / overrun protection. */
 		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, 0, NULL );
@@ -313,8 +313,8 @@ xThreadState *pxThreadState;
 			SetThreadPriorityBoost( pvHandle, TRUE );
 			SetThreadAffinityMask( pvHandle, 0x01 );
 		}
-		
-		/* Start the highest priority task by obtaining its associated thread 
+
+		/* Start the highest priority task by obtaining its associated thread
 		state structure, in which is stored the thread handle. */
 		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
@@ -324,12 +324,12 @@ xThreadState *pxThreadState;
 		behave as an embedded engineer might expect. */
 		ResumeThread( pxThreadState->pvThread );
 
-		/* Handle all simulated interrupts - including yield requests and 
+		/* Handle all simulated interrupts - including yield requests and
 		simulated ticks. */
 		prvProcessSimulatedInterrupts();
-	}	
-	
-	/* Would not expect to return from prvProcessSimulatedInterrupts(), so should 
+	}
+
+	/* Would not expect to return from prvProcessSimulatedInterrupts(), so should
 	not get here. */
 	return 0;
 }
@@ -359,7 +359,7 @@ unsigned long ulSwitchRequired, i;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
 
-	/* Going to block on the mutex that ensured exclusive access to the simulated 
+	/* Going to block on the mutex that ensured exclusive access to the simulated
 	interrupt objects, and the event that signals that a simulated interrupt
 	should be processed. */
 	pvObjectList[ 0 ] = pvInterruptEventMutex;
@@ -419,7 +419,7 @@ void *pvObjectList[ 2 ];
 				pxThreadState = ( xThreadState *) *( ( unsigned long * ) pvOldCurrentTCB );
 				SuspendThread( pxThreadState->pvThread );
 
-				/* Obtain the state of the task now selected to enter the 
+				/* Obtain the state of the task now selected to enter the
 				Running state. */
 				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
 				ResumeThread( pxThreadState->pvThread );
@@ -484,7 +484,7 @@ unsigned long ulErrorCode;
 	ensure a context switch occurs away from this thread on the next tick. */
 	*pxPendYield = pdTRUE;
 
-	/* Mark the thread associated with this task as invalid so 
+	/* Mark the thread associated with this task as invalid so
 	vPortDeleteThread() does not try to terminate it. */
 	pxThreadState->pvThread = NULL;
 
@@ -518,7 +518,7 @@ void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber )
 		be in a critical section as calls to wait for mutexes are accumulative. */
 		if( ulCriticalNesting == 0 )
 		{
-			SetEvent( pvInterruptEvent );			
+			SetEvent( pvInterruptEvent );
 		}
 
 		ReleaseMutex( pvInterruptEventMutex );
@@ -556,7 +556,7 @@ void vPortEnterCritical( void )
 	else
 	{
 		ulCriticalNesting++;
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -575,7 +575,7 @@ long lMutexNeedsReleasing;
 		{
 			ulCriticalNesting--;
 
-			/* Were any interrupts set to pending while interrupts were 
+			/* Were any interrupts set to pending while interrupts were
 			(simulated) disabled? */
 			if( ulPendingInterrupts != 0UL )
 			{

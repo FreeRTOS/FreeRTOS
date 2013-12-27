@@ -99,7 +99,7 @@ configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 /* The definition of the timers themselves. */
 typedef struct tmrTimerControl
 {
-	const signed char		*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */
+	const char				*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	xListItem				xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
 	portTickType			xTimerPeriodInTicks;/*<< How quickly and often the timer expires. */
 	unsigned portBASE_TYPE	uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one-shot timer. */
@@ -242,12 +242,12 @@ portBASE_TYPE xReturn = pdFAIL;
 		{
 			/* Create the timer task, storing its handle in xTimerTaskHandle so
 			it can be returned by the xTimerGetTimerDaemonTaskHandle() function. */
-			xReturn = xTaskCreate( prvTimerTask, ( signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );
+			xReturn = xTaskCreate( prvTimerTask, "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );
 		}
 		#else
 		{
 			/* Create the timer task without storing its handle. */
-			xReturn = xTaskCreate( prvTimerTask, ( signed char * ) "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL);
+			xReturn = xTaskCreate( prvTimerTask, "Tmr Svc", ( unsigned short ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( unsigned portBASE_TYPE ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL);
 		}
 		#endif
 	}
@@ -261,7 +261,7 @@ portBASE_TYPE xReturn = pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
-xTimerHandle xTimerCreate( const signed char * const pcTimerName, const portTickType xTimerPeriodInTicks, const unsigned portBASE_TYPE uxAutoReload, void * const pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction )
+xTimerHandle xTimerCreate( const char * const pcTimerName, const portTickType xTimerPeriodInTicks, const unsigned portBASE_TYPE uxAutoReload, void * const pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 xTIMER *pxNewTimer;
 
@@ -758,7 +758,7 @@ static void prvCheckForValidListAndQueue( void )
 			{
 				if( xTimerQueue != NULL )
 				{
-					vQueueAddToRegistry( xTimerQueue, ( signed char * ) "TmrQ" );
+					vQueueAddToRegistry( xTimerQueue, "TmrQ" );
 				}
 				else
 				{

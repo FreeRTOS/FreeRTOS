@@ -170,7 +170,7 @@ static void prvSVCHandler( unsigned long *pulRegisters ) __attribute__(( noinlin
 /*
  * Prototypes for all the MPU wrappers.
  */
-signed portBASE_TYPE MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions );
+signed portBASE_TYPE MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions );
 void MPU_vTaskAllocateMPURegions( xTaskHandle xTask, const xMemoryRegion * const xRegions );
 void MPU_vTaskDelete( xTaskHandle pxTaskToDelete );
 void MPU_vTaskDelayUntil( portTickType * const pxPreviousWakeTime, portTickType xTimeIncrement );
@@ -185,8 +185,8 @@ void MPU_vTaskSuspendAll( void );
 signed portBASE_TYPE MPU_xTaskResumeAll( void );
 portTickType MPU_xTaskGetTickCount( void );
 unsigned portBASE_TYPE MPU_uxTaskGetNumberOfTasks( void );
-void MPU_vTaskList( signed char *pcWriteBuffer );
-void MPU_vTaskGetRunTimeStats( signed char *pcWriteBuffer );
+void MPU_vTaskList( char *pcWriteBuffer );
+void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer );
 void MPU_vTaskSetApplicationTaskTag( xTaskHandle xTask, pdTASK_HOOK_CODE pxTagValue );
 pdTASK_HOOK_CODE MPU_xTaskGetApplicationTaskTag( xTaskHandle xTask );
 portBASE_TYPE MPU_xTaskCallApplicationTaskHook( xTaskHandle xTask, void *pvParameter );
@@ -206,7 +206,7 @@ portBASE_TYPE MPU_xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xB
 portBASE_TYPE MPU_xQueueGiveMutexRecursive( xQueueHandle xMutex );
 signed portBASE_TYPE MPU_xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, portTickType xTicksToWait, portBASE_TYPE xCopyPosition );
 signed portBASE_TYPE MPU_xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickType xTicksToWait, portBASE_TYPE xJustPeeking );
-void MPU_vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName );
+void MPU_vQueueAddToRegistry( xQueueHandle xQueue, char *pcName );
 void MPU_vQueueDelete( xQueueHandle xQueue );
 void *MPU_pvPortMalloc( size_t xSize );
 void MPU_vPortFree( void *pv );
@@ -673,7 +673,7 @@ unsigned long ul;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const signed char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
+signed portBASE_TYPE MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const char * const pcName, unsigned short usStackDepth, void *pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle *pxCreatedTask, portSTACK_TYPE *puxStackBuffer, const xMemoryRegion * const xRegions )
 {
 signed portBASE_TYPE xReturn;
 portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
@@ -854,7 +854,7 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
-	void MPU_vTaskList( signed char *pcWriteBuffer )
+	void MPU_vTaskList( char *pcWriteBuffer )
 	{
 	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
@@ -865,7 +865,7 @@ portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
-	void MPU_vTaskGetRunTimeStats( signed char *pcWriteBuffer )
+	void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
     portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 
@@ -1161,7 +1161,7 @@ signed portBASE_TYPE xReturn;
 /*-----------------------------------------------------------*/
 
 #if configQUEUE_REGISTRY_SIZE > 0
-	void MPU_vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcName )
+	void MPU_vQueueAddToRegistry( xQueueHandle xQueue, char *pcName )
 	{
 	portBASE_TYPE xRunningPrivileged = prvRaisePrivilege();
 

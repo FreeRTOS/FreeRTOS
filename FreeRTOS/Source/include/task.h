@@ -130,7 +130,7 @@ typedef struct xMEMORY_REGION
 typedef struct xTASK_PARAMETERS
 {
 	pdTASK_CODE pvTaskCode;
-	const signed char * const pcName;
+	const char * const pcName;	/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	unsigned short usStackDepth;
 	void *pvParameters;
 	unsigned portBASE_TYPE uxPriority;
@@ -143,7 +143,7 @@ in the system. */
 typedef struct xTASK_STATUS
 {
 	xTaskHandle xHandle;						/* The handle of the task to which the rest of the information in the structure relates. */
-	const signed char *pcTaskName;				/* A pointer to the task's name.  This value will be invalid if the task was deleted since the structure was populated! */
+	const char *pcTaskName;						/* A pointer to the task's name.  This value will be invalid if the task was deleted since the structure was populated! */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	unsigned portBASE_TYPE xTaskNumber;			/* A number unique to the task. */
 	eTaskState eCurrentState;					/* The state in which the task existed when the structure was populated. */
 	unsigned portBASE_TYPE uxCurrentPriority;	/* The priority at which the task was running (may be inherited) when the structure was populated. */
@@ -243,7 +243,7 @@ is used in assert() statements. */
  *<pre>
  portBASE_TYPE xTaskCreate(
 							  pdTASK_CODE pvTaskCode,
-							  const signed char * const pcName,
+							  const char * const pcName,
 							  unsigned short usStackDepth,
 							  void *pvParameters,
 							  unsigned portBASE_TYPE uxPriority,
@@ -1077,7 +1077,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );</PRE>
+ * <PRE>char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );</PRE>
  *
  * @return The text (human readable) name of the task referenced by the handle
  * xTaskToQuery.  A task can query its own name by either passing in its own
@@ -1087,7 +1087,7 @@ unsigned portBASE_TYPE uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
  * \defgroup pcTaskGetTaskName pcTaskGetTaskName
  * \ingroup TaskUtils
  */
-signed char *pcTaskGetTaskName( xTaskHandle xTaskToQuery );
+char *pcTaskGetTaskName( xTaskHandle xTaskToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * task.h
@@ -1199,7 +1199,7 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
     // This example demonstrates how a human readable table of run time stats
 	// information is generated from raw data provided by uxTaskGetSystemState().
 	// The human readable table is written to pcWriteBuffer
-	void vTaskGetRunTimeStats( signed char *pcWriteBuffer )
+	void vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
 	xTaskStatusType *pxTaskStatusArray;
 	volatile unsigned portBASE_TYPE uxArraySize, x;
@@ -1238,13 +1238,13 @@ xTaskHandle xTaskGetIdleTaskHandle( void );
 
 					if( ulStatsAsPercentage > 0UL )
 					{
-						sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
+						sprintf( pcWriteBuffer, "%s\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
 					}
 					else
 					{
 						// If the percentage is zero here then the task has
 						// consumed less than 1% of the total run time.
-						sprintf( ( char * ) pcWriteBuffer, ( char * ) "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
+						sprintf( pcWriteBuffer, "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
 					}
 
 					pcWriteBuffer += strlen( ( char * ) pcWriteBuffer );
@@ -1304,7 +1304,7 @@ unsigned portBASE_TYPE uxTaskGetSystemState( xTaskStatusType * const pxTaskStatu
  * \defgroup vTaskList vTaskList
  * \ingroup TaskUtils
  */
-void vTaskList( signed char * pcWriteBuffer ) PRIVILEGED_FUNCTION;
+void vTaskList( char * pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * task. h
@@ -1358,7 +1358,7 @@ void vTaskList( signed char * pcWriteBuffer ) PRIVILEGED_FUNCTION;
  * \defgroup vTaskGetRunTimeStats vTaskGetRunTimeStats
  * \ingroup TaskUtils
  */
-void vTaskGetRunTimeStats( signed char *pcWriteBuffer ) PRIVILEGED_FUNCTION;
+void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES
@@ -1515,7 +1515,7 @@ void vTaskPriorityDisinherit( xTaskHandle const pxMutexHolder ) PRIVILEGED_FUNCT
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const signed char * const pcName, const unsigned short usStackDepth, void * const pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle * const pxCreatedTask, portSTACK_TYPE * const puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION;
+signed portBASE_TYPE xTaskGenericCreate( pdTASK_CODE pxTaskCode, const char * const pcName, const unsigned short usStackDepth, void * const pvParameters, unsigned portBASE_TYPE uxPriority, xTaskHandle * const pxCreatedTask, portSTACK_TYPE * const puxStackBuffer, const xMemoryRegion * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.

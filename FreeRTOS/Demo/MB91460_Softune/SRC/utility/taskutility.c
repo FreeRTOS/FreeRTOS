@@ -4,7 +4,7 @@
 /*				 (C) Fujitsu Microelectronics Europe GmbH					 */
 /*------------------------------------------------------------------------
   taskutility.C
-  - 
+  -
 -------------------------------------------------------------------------*/
 #include "mb91467d.h"
 #include "vectors.h"
@@ -133,7 +133,7 @@ void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 		vInitUart5();
 		portENTER_CRITICAL();
 
-		xTaskCreate( vUART5Task, (signed portCHAR *) "UART5", configMINIMAL_STACK_SIZE * 2, ( void * ) NULL, uxPriority, NULL );
+		xTaskCreate( vUART5Task, "UART5", configMINIMAL_STACK_SIZE * 2, ( void * ) NULL, uxPriority, NULL );
 	}
 }
 
@@ -163,7 +163,7 @@ static void vUART5Task( void *pvParameters )
 		switch( ch )
 		{
 			case '1':
-				vTaskList( (signed char *) buff );
+				vTaskList( buff );
 				Puts5( "\n\rThe current task list is as follows...." );
 				Puts5( "\n\r----------------------------------------------" );
 				Puts5( "\n\rName		  State  Priority  Stack   Number" );

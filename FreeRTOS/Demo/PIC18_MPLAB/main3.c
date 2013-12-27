@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,37 +67,37 @@
  * THIS DEMO APPLICATION REQUIRES A LOOPBACK CONNECTOR TO BE FITTED TO THE PIC
  * USART PORT - connect pin 2 to pin 3 on J2.
  *
- * Instead of the normal single demo application, the PIC18F demo is split 
- * into several smaller programs of which this is the third.  This enables the 
- * demo's to be executed on the RAM limited 40 pin devices.  The 64 and 80 pin 
- * devices require a more costly development platform and are not so readily 
+ * Instead of the normal single demo application, the PIC18F demo is split
+ * into several smaller programs of which this is the third.  This enables the
+ * demo's to be executed on the RAM limited 40 pin devices.  The 64 and 80 pin
+ * devices require a more costly development platform and are not so readily
  * available.
  *
  * The RTOSDemo3 project is configured for a PIC18F452 device.  Main3.c starts
  * 5 tasks (including the idle task).
- * 
+ *
  * The first task repeatedly transmits a string of characters on the PIC USART
  * port.  The second task receives the characters, checking that the correct
- * sequence is maintained (i.e. what is transmitted is identical to that 
- * received).  Each transmitted and each received character causes an LED to 
+ * sequence is maintained (i.e. what is transmitted is identical to that
+ * received).  Each transmitted and each received character causes an LED to
  * flash.  See demo/common/minimal/comtest. c for more information.
  *
  * The third task continuously performs a 32 bit calculation.  This is a good
- * test of the context switch mechanism as the 8 bit architecture requires 
+ * test of the context switch mechanism as the 8 bit architecture requires
  * the use of several file registers to perform the 32 bit operations.  See
  * demo/common/minimal/integer. c for more information.
  *
  * The third task is the check task.  This periodically checks that the other
  * tasks are still running and have not experienced any errors.  If no errors
  * have been reported by either the comms or integer tasks an LED is flashed
- * with a frequency mainNO_ERROR_CHECK_PERIOD.  If an error is discovered the 
+ * with a frequency mainNO_ERROR_CHECK_PERIOD.  If an error is discovered the
  * frequency is increased to mainERROR_FLASH_RATE.
  *
  * The check task also provides a visual indication of a system reset by
- * flashing the one remaining LED (mainRESET_LED) when it starts.  After 
+ * flashing the one remaining LED (mainRESET_LED) when it starts.  After
  * this initial flash mainRESET_LED should remain off.
  *
- * http://www.FreeRTOS.org contains important information on the use of the 
+ * http://www.FreeRTOS.org contains important information on the use of the
  * PIC18F port.
  */
 
@@ -136,7 +136,7 @@ more frequently - increasing the LED flash rate. */
 mainCOMM_TX_RX_LED + 1 will be toggled every time a character is received. */
 #define mainCOMM_TX_RX_LED				( ( unsigned portBASE_TYPE ) 2 )
 
-/* The LED that is flashed by the check task at a rate that indicates the 
+/* The LED that is flashed by the check task at a rate that indicates the
 error status. */
 #define mainCHECK_TASK_LED				( ( unsigned portBASE_TYPE ) 1 )
 
@@ -148,9 +148,9 @@ error status. */
 #define mainBAUD_RATE					( ( unsigned long ) 57600 )
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * Task function which periodically checks the other tasks for errors.  Flashes
- * an LED at a rate that indicates whether an error has ever been detected. 
+ * an LED at a rate that indicates whether an error has ever been detected.
  */
 static void vErrorChecks( void *pvParameters );
 
@@ -173,7 +173,7 @@ void main( void )
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 
 	/* Start the check task defined in this file. */
-	xTaskCreate( vErrorChecks, ( const char * const ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler.  This will never return. */
 	vTaskStartScheduler();
@@ -214,7 +214,7 @@ volatile unsigned long ulDummy = 3UL;
 			xDelayTime = mainERROR_CHECK_PERIOD;
 		}
 
-		/* Flash the LED for visual feedback.  The rate of the flash will 
+		/* Flash the LED for visual feedback.  The rate of the flash will
 		indicate the health of the system. */
 		vParTestToggleLED( mainCHECK_TASK_LED );
 	}

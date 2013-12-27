@@ -134,7 +134,7 @@ static void low_level_init(struct netif *netif)
   netif->flags |= NETIF_FLAG_LINK_UP;
 
   /* Create the task that handles the EMAC. */
-  xTaskCreate( ethernetif_input, ( signed portCHAR * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, (void *)netif, netifINTERFACE_TASK_PRIORITY, NULL );
+  xTaskCreate( ethernetif_input, "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, (void *)netif, netifINTERFACE_TASK_PRIORITY, NULL );
 }	
 
 

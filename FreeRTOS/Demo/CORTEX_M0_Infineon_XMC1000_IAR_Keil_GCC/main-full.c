@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -91,9 +91,9 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  *
- * "Interrupt semaphore take" task - This task does nothing but block on a 
- * semaphore that is 'given' from the tick hook function (which is defined in 
- * main.c).  It toggles the fourth LED each time it receives the semaphore.  The 
+ * "Interrupt semaphore take" task - This task does nothing but block on a
+ * semaphore that is 'given' from the tick hook function (which is defined in
+ * main.c).  It toggles the fourth LED each time it receives the semaphore.  The
  * Semahore is given every 50ms, so LED 4 toggles every 50ms.
  *
  * "Flash timers" - A software timer callback function is defined that does
@@ -227,7 +227,7 @@ const size_t xRegTestStackSize = 25U;
 	toggles an LED each time the semaphore is given. */
 	vSemaphoreCreateBinary( xLEDSemaphore );
 	xTaskCreate( 	prvSemaphoreTakeTask, 		/* Function that implements the task. */
-					( signed char * ) "Sem", 	/* Text name of the task. */
+					"Sem", 						/* Text name of the task. */
 					configMINIMAL_STACK_SIZE, 	/* Stack allocated to the task (in words). */
 					NULL, 						/* The task parameter is not used. */
 					configMAX_PRIORITIES - 2, 	/* The priority of the task. */
@@ -237,14 +237,14 @@ const size_t xRegTestStackSize = 25U;
 	These are naked functions that don't use any stack.  A stack still has
 	to be allocated to hold the task context. */
 	xTaskCreate( 	vRegTest1Task,			/* Function that implements the task. */
-					( signed char * ) "Reg1", /* Text name of the task. */
+					"Reg1", 				/* Text name of the task. */
 					xRegTestStackSize,		/* Stack allocated to the task. */
 					NULL, 					/* The task parameter is not used. */
 					tskIDLE_PRIORITY, 		/* The priority to assign to the task. */
 					NULL );					/* Don't receive a handle back, it is not needed. */
 
 	xTaskCreate( 	vRegTest2Task,			/* Function that implements the task. */
-					( signed char * ) "Reg2", /* Text name of the task. */
+					"Reg2", 				/* Text name of the task. */
 					xRegTestStackSize,		/* Stack allocated to the task. */
 					NULL, 					/* The task parameter is not used. */
 					tskIDLE_PRIORITY, 		/* The priority to assign to the task. */
@@ -253,7 +253,7 @@ const size_t xRegTestStackSize = 25U;
 	/* Create the three flash timers. */
 	for( ulTimer = 0UL; ulTimer < ulTimersToCreate; ulTimer++ )
 	{
-		xTimer = xTimerCreate( 	( const signed char * ) "FlashTimer",	/* A text name, purely to help debugging. */
+		xTimer = xTimerCreate( 	"FlashTimer",							/* A text name, purely to help debugging. */
 								( mainFLASH_TIMER_BASE_RATE * ( ulTimer + 1UL ) ),	/* The timer period, in this case 3000ms (3s). */
 								pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) ulTimer,						/* The ID is used to hold the number of the LED that will be flashed. */
@@ -268,11 +268,11 @@ const size_t xRegTestStackSize = 25U;
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,						/* The ID is not used, so can be set to anything. */
-							prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+	xTimer = xTimerCreate( 	"CheckTimer",					/* A text name, purely to help debugging. */
+							( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+							pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+							( void * ) 0,					/* The ID is not used, so can be set to anything. */
+							prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
 					  	);
 
 	/* If the software timer was created successfully, start it.  It won't

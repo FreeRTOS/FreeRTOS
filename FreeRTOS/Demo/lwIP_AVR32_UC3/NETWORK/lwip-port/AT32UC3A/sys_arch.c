@@ -64,7 +64,7 @@
 #define archMESG_QUEUE_LENGTH ( 6 )
 #define archPOST_BLOCK_TIME_MS  ( ( unsigned portLONG ) 10000 )
 
-struct timeoutlist 
+struct timeoutlist
 {
   struct sys_timeouts timeouts;
   xTaskHandle pid;
@@ -110,7 +110,7 @@ sys_mbox_free(sys_mbox_t mbox)
 //   Posts the "msg" to the mailbox.
 void
 sys_mbox_post(sys_mbox_t mbox, void *data)
-{   
+{
   xQueueSend( mbox, &data, ( portTickType ) ( archPOST_BLOCK_TIME_MS / portTICK_RATE_MS ) );
 }
 
@@ -129,7 +129,7 @@ sys_mbox_post(sys_mbox_t mbox, void *data)
   timeout.
 
   Note that a function with a similar name, sys_mbox_fetch(), is
-  implemented by lwIP. 
+  implemented by lwIP.
 */
 u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout)
 {
@@ -142,7 +142,7 @@ portTickType StartTime, EndTime, Elapsed;
   {
     msg = &dummyptr;
   }
-  
+
   if( timeout != 0 )
   {
     if(pdTRUE == xQueueReceive( mbox, &(*msg), timeout ) )
@@ -254,7 +254,7 @@ portTickType StartTime, EndTime, Elapsed;
     }
 
     return ( Elapsed ); // return time blocked
-  
+
   }
 }
 
@@ -300,7 +300,7 @@ sys_init(void)
   each thread has a list of timeouts which is represented as a linked
   list of sys_timeout structures. The sys_timeouts structure holds a
   pointer to a linked list of timeouts. This function is called by
-  the lwIP timeout scheduler and must not return a NULL value. 
+  the lwIP timeout scheduler and must not return a NULL value.
 
   In a single threaded sys_arch implementation, this function will
   simply return a pointer to a global sys_timeouts variable stored in
@@ -311,7 +311,7 @@ sys_arch_timeouts(void)
 {
 int i;
 xTaskHandle pid;
-struct timeoutlist *tl;  
+struct timeoutlist *tl;
 
   pid = xTaskGetCurrentTaskHandle( );
 
@@ -338,7 +338,7 @@ struct timeoutlist *tl;
 
 /*-----------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------*/
-// TBD 
+// TBD
 /*-----------------------------------------------------------------------------------*/
 /*
   Starts a new thread with priority "prio" that will begin its execution in the
@@ -354,30 +354,30 @@ static int iCall = 0;
 
   if( thread == ethernetif_input )
   {
-    result = xTaskCreate( thread, ( signed portCHAR * ) "ETHINT", netifINTERFACE_TASK_STACK_SIZE, arg, prio, &CreatedTask );
+    result = xTaskCreate( thread, "ETHINT", netifINTERFACE_TASK_STACK_SIZE, arg, prio, &CreatedTask );
   }
   else if( iCall == 0 )
   {
     /* The first time this is called we are creating the lwIP handler. */
-    result = xTaskCreate( thread, ( signed portCHAR * ) "lwIP", lwipINTERFACE_STACK_SIZE, arg, prio, &CreatedTask );
+    result = xTaskCreate( thread, "lwIP", lwipINTERFACE_STACK_SIZE, arg, prio, &CreatedTask );
     iCall++;
   }
 #if (HTTP_USED == 1)
   else if (thread == vBasicWEBServer)
   {
-    result = xTaskCreate( thread, ( signed portCHAR * ) "WEB", lwipBASIC_WEB_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
+    result = xTaskCreate( thread, "WEB", lwipBASIC_WEB_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
   }
 #endif
 #if (TFTP_USED == 1)
   else if (thread == vBasicTFTPServer)
   {
-    result = xTaskCreate( thread, ( signed portCHAR * ) "TFTP", lwipBASIC_TFTP_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
+    result = xTaskCreate( thread, "TFTP", lwipBASIC_TFTP_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
   }
 #endif
 #if (SMTP_USED == 1)
   else if (thread == vBasicSMTPClient)
   {
-    result = xTaskCreate( thread, ( signed portCHAR * ) "SMTP", lwipBASIC_SMTP_CLIENT_STACK_SIZE, arg, prio, &CreatedTask );
+    result = xTaskCreate( thread, "SMTP", lwipBASIC_SMTP_CLIENT_STACK_SIZE, arg, prio, &CreatedTask );
   }
 #endif
 
@@ -422,7 +422,7 @@ sys_prot_t sys_arch_protect(void)
   an operating system.
 */
 void sys_arch_unprotect(sys_prot_t pval)
-{ 
+{
   ( void ) pval;
   vPortExitCritical();
 }

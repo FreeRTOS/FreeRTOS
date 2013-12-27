@@ -494,11 +494,11 @@ static void prvOptionallyCreateComprehensveTestApplication( void )
 		vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 
 		/* Create the register test tasks, as described at the top of this file. */
-		xTaskCreate( prvRegisterCheckTask1, ( signed char * ) "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( prvRegisterCheckTask2, ( signed char * ) "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( prvRegisterCheckTask1, "Reg 1", configMINIMAL_STACK_SIZE, &ulRegisterTest1Count, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( prvRegisterCheckTask2, "Reg 2", configMINIMAL_STACK_SIZE, &ulRegisterTest2Count, tskIDLE_PRIORITY, NULL );
 
 		/* Start the check task - which is defined in this file. */
-		xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+		xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 		/* This task has to be created last as it keeps account of the number of tasks
 		it expects to see running. */

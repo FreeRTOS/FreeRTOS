@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -66,15 +66,15 @@
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- * 
- * Main. c also creates a task called "Check".  This only executes every three 
- * seconds but has the highest priority so is guaranteed to get processor time.  
- * Its main function is to check that all the other tasks are still operational.  
- * Each task that does not flash an LED maintains a unique count that is 
- * incremented each time the task successfully completes its function.  Should 
- * any error occur within such a task the count is permanently halted.  The 
+ *
+ * Main. c also creates a task called "Check".  This only executes every three
+ * seconds but has the highest priority so is guaranteed to get processor time.
+ * Its main function is to check that all the other tasks are still operational.
+ * Each task that does not flash an LED maintains a unique count that is
+ * incremented each time the task successfully completes its function.  Should
+ * any error occur within such a task the count is permanently halted.  The
  * check task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have 
+ * the last time the check task executed.  If all the count variables have
  * changed all the tasks are still executing error free, and the check task
  * toggles an LED.  Should any task contain an error at any time the LED toggle
  * will stop.
@@ -84,12 +84,12 @@
 
 /*
 Changes from V1.2.0
-	
+
 	+ Changed the baud rate for the serial test from 19200 to 57600.
 
 Changes from V1.2.3
 
-	+ The integer and comtest tasks are now used when the cooperative scheduler 
+	+ The integer and comtest tasks are now used when the cooperative scheduler
 	  is being used.  Previously they were only used with the preemptive
 	  scheduler.
 
@@ -118,7 +118,7 @@ Changes from V4.0.5
 
 #ifdef GCC_MEGA_AVR
 	/* EEPROM routines used only with the WinAVR compiler. */
-	#include <avr/eeprom.h> 
+	#include <avr/eeprom.h>
 #endif
 
 /* Scheduler include files. */
@@ -173,12 +173,12 @@ static void vErrorChecks( void *pvParameters );
 
 /*
  * Checks the unique counts of other tasks to ensure they are still operational.
- * Flashes an LED if everything is okay. 
+ * Flashes an LED if everything is okay.
  */
 static void prvCheckOtherTasksAreStillRunning( void );
 
 /*
- * Called on boot to increment a count stored in the EEPROM.  This is used to 
+ * Called on boot to increment a count stored in the EEPROM.  This is used to
  * ensure the CPU does not reset unexpectedly.
  */
 static void prvIncrementResetCount( void );
@@ -202,15 +202,15 @@ short main( void )
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartRegTestTasks();
-	
+
 	/* Create the tasks defined within this file. */
-	xTaskCreate( vErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the co-routines that flash the LED's. */
 	vStartFlashCoRoutines( mainNUM_FLASH_COROUTINES );
-	
-	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION 
-	as 1 in portmacro.h.  To use the cooperative scheduler define 
+
+	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION
+	as 1 in portmacro.h.  To use the cooperative scheduler define
 	configUSE_PREEMPTION as 0. */
 	vTaskStartScheduler();
 
@@ -231,11 +231,11 @@ static volatile unsigned long ulDummyVariable = 3UL;
 	{
 		vTaskDelay( mainCHECK_PERIOD );
 
-		/* Perform a bit of 32bit maths to ensure the registers used by the 
-		integer tasks get some exercise. The result here is not important - 
+		/* Perform a bit of 32bit maths to ensure the registers used by the
+		integer tasks get some exercise. The result here is not important -
 		see the demo application documentation for more info. */
 		ulDummyVariable *= 3;
-		
+
 		prvCheckOtherTasksAreStillRunning();
 	}
 }
@@ -264,7 +264,7 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
 	{
 		xErrorHasOccurred = pdTRUE;
 	}
-	
+
 	if( xErrorHasOccurred == pdFALSE )
 	{
 		/* Toggle the LED if everything is okay so we know if an error occurs even if not

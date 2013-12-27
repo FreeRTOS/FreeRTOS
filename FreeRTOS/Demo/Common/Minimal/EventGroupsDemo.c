@@ -167,10 +167,10 @@ xTaskHandle xWaitBitsTaskHandle;
 	 * event groups API.
 	 */
 
-	xTaskCreate( prvWaitBitsTask, ( signed char * ) "WaitO", configMINIMAL_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xWaitBitsTaskHandle );
-	xTaskCreate( prvSetBitsTask, ( signed char * ) "SetB", configMINIMAL_STACK_SIZE, ( void * ) xWaitBitsTaskHandle, ebSET_BIT_TASK_PRIORITY, NULL );
-	xTaskCreate( prvSyncTask, ( signed char * ) "Rndv", configMINIMAL_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_1_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask1 );
-	xTaskCreate( prvSyncTask, ( signed char * ) "Rndv", configMINIMAL_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_2_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask2 );
+	xTaskCreate( prvWaitBitsTask, "WaitO", configMINIMAL_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xWaitBitsTaskHandle );
+	xTaskCreate( prvSetBitsTask, "SetB", configMINIMAL_STACK_SIZE, ( void * ) xWaitBitsTaskHandle, ebSET_BIT_TASK_PRIORITY, NULL );
+	xTaskCreate( prvSyncTask, "Rndv", configMINIMAL_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_1_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask1 );
+	xTaskCreate( prvSyncTask, "Rndv", configMINIMAL_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_2_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask2 );
 
 	/* If the last task was created then the others will have been too. */
 	configASSERT( xSyncTask2 );

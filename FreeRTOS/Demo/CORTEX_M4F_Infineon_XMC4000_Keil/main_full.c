@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -76,8 +76,8 @@
  ******************************************************************************
  *
  * main_full() creates all the demo application tasks and a software timer, then
- * starts the scheduler.  The web documentation provides more details of the 
- * standard demo application tasks, which provide no particular functionality, 
+ * starts the scheduler.  The web documentation provides more details of the
+ * standard demo application tasks, which provide no particular functionality,
  * but do provide a good example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
@@ -180,21 +180,21 @@ xTimerHandle xCheckTimer = NULL;
 	vStartRecursiveMutexTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	
+
 	/* Create the register check tasks, as described at the top of this
 	file */
-	xTaskCreate( vRegTest1Task, ( signed char * ) "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, ( signed char * ) "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,						/* The ID is not used, so can be set to anything. */
-								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
-							  );	
-	
+	xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+								( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) 0,					/* The ID is not used, so can be set to anything. */
+								prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
+							  );
+
 	if( xCheckTimer != NULL )
 	{
 		xTimerStart( xCheckTimer, mainDONT_BLOCK );
@@ -202,13 +202,13 @@ xTimerHandle xCheckTimer = NULL;
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
-	
+
 	/* If all is well, the scheduler will now be running, and the following line
 	will never be reached.  If the following line does execute, then there was
 	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
 	to be created.  See the memory management section on the FreeRTOS web site
 	for more details. */
-	for( ;; );	
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -250,7 +250,7 @@ unsigned long ulErrorFound = pdFALSE;
 	{
 		ulErrorFound = pdTRUE;
 	}
-	
+
 	/* Check that the register test 1 task is still running. */
 	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 	{
@@ -268,8 +268,8 @@ unsigned long ulErrorFound = pdFALSE;
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
-	configTOGGLE_LED();	
-	
+	configTOGGLE_LED();
+
 	/* Have any errors been latch in ulErrorFound?  If so, shorten the
 	period of the check timer to mainERROR_CHECK_TIMER_PERIOD_MS milliseconds.
 	This will result in an increase in the rate at which mainCHECK_LED
@@ -279,7 +279,7 @@ unsigned long ulErrorFound = pdFALSE;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-			
+
 			/* This call to xTimerChangePeriod() uses a zero block time.
 			Functions called from inside of a timer callback function must
 			*never* attempt	to block. */

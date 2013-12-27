@@ -175,7 +175,7 @@ void vStartTimerDemoTask( portTickType xBasePeriodIn )
 	task, which will then preempt this task). */
 	if( xTestStatus != pdFAIL )
 	{
-		xTaskCreate( prvTimerTestTask, ( signed portCHAR * ) "Tmr Tst", configMINIMAL_STACK_SIZE, NULL, configTIMER_TASK_PRIORITY - 1, NULL );
+		xTaskCreate( prvTimerTestTask, "Tmr Tst", configMINIMAL_STACK_SIZE, NULL, configTIMER_TASK_PRIORITY - 1, NULL );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -185,11 +185,11 @@ static void prvTimerTestTask( void *pvParameters )
 	( void ) pvParameters;
 
 	/* Create a one-shot timer for use later on in this test. */
-	xOneShotTimer = xTimerCreate(	( const signed char * ) "Oneshot Timer",/* Text name to facilitate debugging.  The kernel does not use this itself. */
-									tmrdemoONE_SHOT_TIMER_PERIOD,			/* The period for the timer. */
-									pdFALSE,								/* Don't auto-reload - hence a one shot timer. */
-									( void * ) 0,							/* The timer identifier.  In this case this is not used as the timer has its own callback. */
-									prvOneShotTimerCallback );				/* The callback to be called when the timer expires. */
+	xOneShotTimer = xTimerCreate(	"Oneshot Timer",				/* Text name to facilitate debugging.  The kernel does not use this itself. */
+									tmrdemoONE_SHOT_TIMER_PERIOD,	/* The period for the timer. */
+									pdFALSE,						/* Don't auto-reload - hence a one shot timer. */
+									( void * ) 0,					/* The timer identifier.  In this case this is not used as the timer has its own callback. */
+									prvOneShotTimerCallback );		/* The callback to be called when the timer expires. */
 
 	if( xOneShotTimer == NULL )
 	{
@@ -285,7 +285,7 @@ unsigned portBASE_TYPE xTimer;
 		and start a timer.  These timers are being started before the scheduler has
 		been started, so their block times should get set to zero within the timer
 		API itself. */
-		xAutoReloadTimers[ xTimer ] = xTimerCreate( ( const signed char * )"FR Timer",	/* Text name to facilitate debugging.  The kernel does not use this itself. */
+		xAutoReloadTimers[ xTimer ] = xTimerCreate( "FR Timer",							/* Text name to facilitate debugging.  The kernel does not use this itself. */
 													( ( xTimer + ( portTickType ) 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
 													pdTRUE,								/* Auto-reload is set to true. */
 													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
@@ -313,11 +313,11 @@ unsigned portBASE_TYPE xTimer;
 	/* The timers queue should now be full, so it should be possible to create
 	another timer, but not possible to start it (the timer queue will not get
 	drained until the scheduler has been started. */
-	xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] = xTimerCreate( ( const signed char * ) "FR Timer",	/* Text name to facilitate debugging.  The kernel does not use this itself. */
-													( configTIMER_QUEUE_LENGTH * xBasePeriod ),			/* The period for the timer. */
-													pdTRUE,												/* Auto-reload is set to true. */
-													( void * ) xTimer,									/* An identifier for the timer as all the auto reload timers use the same callback. */
-													prvAutoReloadTimerCallback );						/* The callback executed when the timer expires. */
+	xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] = xTimerCreate( "FR Timer",					/* Text name to facilitate debugging.  The kernel does not use this itself. */
+													( configTIMER_QUEUE_LENGTH * xBasePeriod ),	/* The period for the timer. */
+													pdTRUE,										/* Auto-reload is set to true. */
+													( void * ) xTimer,							/* An identifier for the timer as all the auto reload timers use the same callback. */
+													prvAutoReloadTimerCallback );				/* The callback executed when the timer expires. */
 
 	if( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] == NULL )
 	{
@@ -337,13 +337,13 @@ unsigned portBASE_TYPE xTimer;
 	
 	/* Create the timers that are used from the tick interrupt to test the timer
 	API functions that can be called from an ISR. */
-	xISRAutoReloadTimer = xTimerCreate( ( const signed char * ) "ISR AR",	/* The text name given to the timer. */
+	xISRAutoReloadTimer = xTimerCreate( "ISR AR",							/* The text name given to the timer. */
 										0xffff,								/* The timer is not given a period yet - this will be done from the tick hook, but a period of 0 is invalid. */
 										pdTRUE,								/* This is an auto reload timer. */
 										( void * ) NULL,					/* The identifier is not required. */
 										prvISRAutoReloadTimerCallback );	/* The callback that is executed when the timer expires. */
 
-	xISROneShotTimer = xTimerCreate( 	( const signed char * ) "ISR OS",	/* The text name given to the timer. */
+	xISROneShotTimer = xTimerCreate( 	"ISR OS",							/* The text name given to the timer. */
 										0xffff,								/* The timer is not given a period yet - this will be done from the tick hook, but a period of 0 is invalid. */
 										pdFALSE,							/* This is a one shot timer. */
 										( void * ) NULL,					/* The identifier is not required. */

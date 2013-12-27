@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
@@ -199,7 +199,7 @@ void vRegisterSampleCLICommands( void )
 
 static portBASE_TYPE prvTaskStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stack	#\r\n************************************************\r\n";
+const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -209,8 +209,8 @@ const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stac
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
-	strcpy( ( char * ) pcWriteBuffer, ( char * ) pcHeader );
-	vTaskList( pcWriteBuffer + strlen( ( char * ) pcHeader ) );
+	strcpy( ( char * ) pcWriteBuffer, pcHeader );
+	vTaskList( ( char * ) pcWriteBuffer + strlen( ( char * ) pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */
@@ -220,7 +220,7 @@ const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stac
 
 static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
 {
-const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Time\r\n****************************************\r\n";
+const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -231,7 +231,7 @@ const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Ti
 
 	/* Generate a table of task stats. */
 	strcpy( ( char * ) pcWriteBuffer, ( char * ) pcHeader );
-	vTaskGetRunTimeStats( pcWriteBuffer + strlen( ( char * ) pcHeader ) );
+	vTaskGetRunTimeStats( ( char * ) pcWriteBuffer + strlen( ( char * ) pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */

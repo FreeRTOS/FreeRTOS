@@ -136,11 +136,11 @@ static xQueueHandle xPolledQueue;
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( xPolledQueue, ( signed char * ) "Poll_Test_Queue" );
+	vQueueAddToRegistry( xPolledQueue, "Poll_Test_Queue" );
 
 	/* Spawn the producer and consumer. */
-	xTaskCreate( vPolledQueueConsumer, ( signed char * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
-	xTaskCreate( vPolledQueueProducer, ( signed char * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vPolledQueueConsumer, "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vPolledQueueProducer, "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
 }
 /*-----------------------------------------------------------*/
 

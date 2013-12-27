@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -88,7 +88,7 @@ address are located at the bottom of FreeRTOSConfig.h. */
 #define LWIP_PORT_INIT_NETMASK(addr)  IP4_ADDR((addr), configNET_MASK0,configNET_MASK1,configNET_MASK2,configNET_MASK3)
 #define LWIP_MAC_ADDR_BASE            { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 }
 
-/* Definitions of the various SSI callback functions within the pccSSITags 
+/* Definitions of the various SSI callback functions within the pccSSITags
 array.  If pccSSITags is updated, then these definitions must also be updated. */
 #define ssiTASK_STATS_INDEX			0
 #define ssiRUN_TIME_STATS_INDEX		1
@@ -101,9 +101,9 @@ static unsigned short uslwIPAppsSSIHandler( int iIndex, char *pcBuffer, int iBuf
 /*-----------------------------------------------------------*/
 
 /* The SSI strings that are embedded in the served html files.  If this array
-is changed, then the index position defined by the #defines such as 
+is changed, then the index position defined by the #defines such as
 ssiTASK_STATS_INDEX above must also be updated. */
-static const char *pccSSITags[] = 
+static const char *pccSSITags[] =
 {
 	"rtos_stats",
 	"run_stats"
@@ -151,15 +151,15 @@ extern char *pcMainGetTaskStatusMessage( void );
 
 	/* The SSI handler function that generates text depending on the index of
 	the SSI tag encountered. */
-	
+
 	switch( iIndex )
 	{
 		case ssiTASK_STATS_INDEX :
-			vTaskList( ( signed char * ) pcBuffer );
+			vTaskList( pcBuffer );
 			break;
 
 		case ssiRUN_TIME_STATS_INDEX :
-			vTaskGetRunTimeStats( ( signed char * ) pcBuffer );
+			vTaskGetRunTimeStats( pcBuffer );
 			break;
 	}
 

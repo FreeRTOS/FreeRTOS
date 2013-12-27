@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,17 +67,17 @@
  * main-blinky.c is included when the "Blinky" build configuration is used.
  * main-full.c is included when the "Full" build configuration is used.
  *
- * main-full.c creates a lot of demo and test tasks and timers,  and is 
- * therefore very comprehensive but also complex.  If you would prefer a much 
- * simpler project to get started with, then select the 'Blinky' build 
+ * main-full.c creates a lot of demo and test tasks and timers,  and is
+ * therefore very comprehensive but also complex.  If you would prefer a much
+ * simpler project to get started with, then select the 'Blinky' build
  * configuration within the SDK Eclipse IDE.  See the documentation page for
  * this demo on the http://www.FreeRTOS.org web site for more information.
  * ****************************************************************************
  *
- * main() creates all the demo application tasks and timers, then starts the 
- * scheduler.  The web documentation provides more details of the standard demo 
- * application tasks, which provide no particular functionality, but do provide 
- * a good example of how to use the FreeRTOS API.  
+ * main() creates all the demo application tasks and timers, then starts the
+ * scheduler.  The web documentation provides more details of the standard demo
+ * application tasks, which provide no particular functionality, but do provide
+ * a good example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
@@ -89,13 +89,13 @@
  * http://www.FreeRTOS.org/Free-RTOS-for-Xilinx-MicroBlaze-on-Spartan-6-FPGA.html
  * for details on setting up and using the embedded web server.
  *
- * "Reg test" tasks - These test the task context switch mechanism by first 
+ * "Reg test" tasks - These test the task context switch mechanism by first
  * filling the MicroBlaze registers with known values, before checking that each
  * register maintains the value that was written to it as the tasks are switched
  * in and out.  The two register test tasks do not use the same values, and
  * execute at a very low priority, to ensure they are pre-empted regularly.
  *
- * "Check" timer - The check timer period is initially set to five seconds.  
+ * "Check" timer - The check timer period is initially set to five seconds.
  * The check timer callback function checks that all the standard demo tasks,
  * and the register check tasks, are not only still executing, but are executing
  * without reporting any errors.  If the check timer discovers that a task has
@@ -172,7 +172,7 @@ top of this file. */
 #define mainNO_ERROR_CHECK_TIMER_PERIOD		( 5000 / portTICK_RATE_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
-by at least one task.  See the description of the check timer in the comments at 
+by at least one task.  See the description of the check timer in the comments at
 the top of this file. */
 #define mainERROR_CHECK_TIMER_PERIOD		( 200 / portTICK_RATE_MS )
 
@@ -184,13 +184,13 @@ information.  In this case an invalid LED number is provided as all four
 available LEDs (LEDs 0 to 3) are already in use. */
 #define mainCOM_TEST_LED			( 4 )
 
-/* Baud rate used by the comtest tasks.  The baud rate used is actually fixed in 
-UARTLite IP when the hardware was built, but the standard serial init function 
-required a baud rate parameter to be provided - in this case it is just 
+/* Baud rate used by the comtest tasks.  The baud rate used is actually fixed in
+UARTLite IP when the hardware was built, but the standard serial init function
+required a baud rate parameter to be provided - in this case it is just
 ignored. */
 #define mainCOM_TEST_BAUD_RATE				( XPAR_RS232_UART_1_BAUDRATE )
 
-/* The timer test task generates a lot of timers that all use a different 
+/* The timer test task generates a lot of timers that all use a different
 period that is a multiple of the mainTIMER_TEST_PERIOD definition. */
 #define mainTIMER_TEST_PERIOD			( 20 )
 
@@ -205,13 +205,13 @@ extern void vRegisterTest1( void *pvParameters );
 extern void vRegisterTest2( void *pvParameters );
 
 /*
- * Defines the 'check' timer functionality as described at the top of this file.  
+ * Defines the 'check' timer functionality as described at the top of this file.
  * This function is the callback function associated with the 'check' timer.
  */
 static void vCheckTimerCallback( xTimerHandle xTimer );
 
-/* 
- * Configure the interrupt controller, LED outputs and button inputs. 
+/*
+ * Configure the interrupt controller, LED outputs and button inputs.
  */
 static void prvSetupHardware( void );
 
@@ -244,9 +244,9 @@ static const unsigned long ulCounterReloadValue = ( ( XPAR_AXI_TIMER_0_CLOCK_FRE
 int main( void )
 {
 	/***************************************************************************
-	This project includes a lot of demo and test tasks and timers,  and is 
-	therefore comprehensive, but complex.  If you would prefer a much simpler 
-	project to get started with, then select the 'Blinky' build configuration 
+	This project includes a lot of demo and test tasks and timers,  and is
+	therefore comprehensive, but complex.  If you would prefer a much simpler
+	project to get started with, then select the 'Blinky' build configuration
 	within the SDK Eclipse IDE.
 	***************************************************************************/
 
@@ -258,8 +258,8 @@ int main( void )
 
 	/* Start the reg test tasks, as described in the comments at the top of this
 	file. */
-	xTaskCreate( vRegisterTest1, ( const signed char * const ) "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegisterTest2, ( const signed char * const ) "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegisterTest1, "RegTst1", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegisterTest2, "RegTst2", configMINIMAL_STACK_SIZE, ( void * ) 0, tskIDLE_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -284,25 +284,25 @@ int main( void )
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation.  This then allows them to 
-	ascertain whether or not the correct/expected number of tasks are running at 
+	tasks were running prior to their creation.  This then allows them to
+	ascertain whether or not the correct/expected number of tasks are running at
 	any given time. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Create the 'check' timer - the timer that periodically calls the
-	check function as described in the comments at the top of this file.  Note 
+	check function as described in the comments at the top of this file.  Note
 	that, for reasons stated in the comments within vApplicationIdleHook()
-	(defined in this file), the check timer is not actually started	until after 
+	(defined in this file), the check timer is not actually started	until after
 	the scheduler has been started. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
+	xCheckTimer = xTimerCreate( "Check timer", mainNO_ERROR_CHECK_TIMER_PERIOD, pdTRUE, ( void * ) 0, vCheckTimerCallback );
 
-	/* Start the scheduler running.  From this point on, only tasks and 
+	/* Start the scheduler running.  From this point on, only tasks and
 	interrupts will be executing. */
 	vTaskStartScheduler();
 
 	/* If all is well then the following line will never be reached.  If
 	execution does reach here, then it is highly probably that the heap size
-	is too small for the idle and/or timer tasks to be created within 
+	is too small for the idle and/or timer tasks to be created within
 	vTaskStartScheduler(). */
 	taskDISABLE_INTERRUPTS();
 	for( ;; );
@@ -429,7 +429,7 @@ will run on lots of different MicroBlaze and FPGA configurations - not all of
 which will have the same timer peripherals defined or available.  This example
 uses the AXI Timer 0.  If that is available on your hardware platform then this
 example callback implementation should not require modification.   The name of
-the interrupt handler that should be installed is vPortTickISR(), which the 
+the interrupt handler that should be installed is vPortTickISR(), which the
 function below declares as an extern. */
 void vApplicationSetupTimerInterrupt( void )
 {
@@ -441,7 +441,7 @@ extern void vPortTickISR( void *pvUnused );
 
 	if( xStatus == XST_SUCCESS )
 	{
-		/* Install the tick interrupt handler as the timer ISR. 
+		/* Install the tick interrupt handler as the timer ISR.
 		*NOTE* The xPortInstallInterruptHandler() API function must be used for
 		this purpose. */
 		xStatus = xPortInstallInterruptHandler( XPAR_INTC_0_TMRCTR_0_VEC_ID, vPortTickISR, NULL );
@@ -477,11 +477,11 @@ extern void vPortTickISR( void *pvUnused );
 
 /* This is an application defined callback function used to clear whichever
 interrupt was installed by the the vApplicationSetupTimerInterrupt() callback
-function - in this case the interrupt generated by the AXI timer.  It is 
-provided as an application callback because the kernel will run on lots of 
-different MicroBlaze and FPGA configurations - not all of which will have the 
-same timer peripherals defined or available.  This example uses the AXI Timer 0.  
-If that is available on your hardware platform then this example callback 
+function - in this case the interrupt generated by the AXI timer.  It is
+provided as an application callback because the kernel will run on lots of
+different MicroBlaze and FPGA configurations - not all of which will have the
+same timer peripherals defined or available.  This example uses the AXI Timer 0.
+If that is available on your hardware platform then this example callback
 implementation should not require modification provided the example definition
 of vApplicationSetupTimerInterrupt() is also not modified. */
 void vApplicationClearTimerInterrupt( void )
@@ -498,7 +498,7 @@ void vApplicationMallocFailedHook( void )
 {
 	/* vApplicationMallocFailedHook() will only be called if
 	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails. 
+	function that will get called if a call to pvPortMalloc() fails.
 	pvPortMalloc() is called internally by the kernel whenever a task, queue or
 	semaphore is created.  It is also called by various parts of the demo
 	application.  If heap_1.c or heap_2.c are used, then the size of the heap
@@ -518,7 +518,7 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 
 	/* vApplicationStackOverflowHook() will only be called if
 	configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2.  The handle and name
-	of the offending task will be passed into the hook function via its 
+	of the offending task will be passed into the hook function via its
 	parameters.  However, when a stack has overflowed, it is possible that the
 	parameters will have been corrupted, in which case the pxCurrentTCB variable
 	can be inspected directly. */
@@ -531,14 +531,14 @@ void vApplicationIdleHook( void )
 {
 static long lCheckTimerStarted = pdFALSE;
 
-	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set 
-	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle 
-	task.  It is essential that code added to this hook function never attempts 
-	to block in any way (for example, call xQueueReceive() with a block time 
-	specified, or call vTaskDelay()).  If the application makes use of the 
-	vTaskDelete() API function (as this demo application does) then it is also 
-	important that vApplicationIdleHook() is permitted to return to its calling 
-	function, because it is the responsibility of the idle task to clean up 
+	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
+	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
+	task.  It is essential that code added to this hook function never attempts
+	to block in any way (for example, call xQueueReceive() with a block time
+	specified, or call vTaskDelay()).  If the application makes use of the
+	vTaskDelete() API function (as this demo application does) then it is also
+	important that vApplicationIdleHook() is permitted to return to its calling
+	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
 	/* If the check timer has not already been started, then start it now.
@@ -550,7 +550,7 @@ static long lCheckTimerStarted = pdFALSE;
 	queue will have been drained. */
 	if( lCheckTimerStarted == pdFALSE )
 	{
-		xTimerStart( xCheckTimer, mainDONT_BLOCK ); 
+		xTimerStart( xCheckTimer, mainDONT_BLOCK );
 		lCheckTimerStarted = pdTRUE;
 	}
 }
@@ -560,11 +560,11 @@ void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
 {
 	( void ) xRegisterDump;
 
-	/* If configINSTALL_EXCEPTION_HANDLERS is set to 1 in FreeRTOSConfig.h, then 
-	the kernel will	automatically install its own exception handlers before the 
-	kernel is started, if the application writer has not already caused them to 
-	be installed by calling either of the vPortExceptionsInstallHandlers() 
-	or xPortInstallInterruptHandler() API functions before that time.  The 
+	/* If configINSTALL_EXCEPTION_HANDLERS is set to 1 in FreeRTOSConfig.h, then
+	the kernel will	automatically install its own exception handlers before the
+	kernel is started, if the application writer has not already caused them to
+	be installed by calling either of the vPortExceptionsInstallHandlers()
+	or xPortInstallInterruptHandler() API functions before that time.  The
 	kernels exception handler populates an xPortRegisterDump structure with
 	the processor state at the point that the exception was triggered - and also
 	includes a strings that say what the exception cause was and which task was
@@ -584,7 +584,7 @@ void vApplicationExceptionRegisterDump( xPortRegisterDump *xRegisterDump )
 static void prvSetupHardware( void )
 {
 	taskDISABLE_INTERRUPTS();
-	
+
 	/* Configure the LED outputs. */
 	vParTestInitialise();
 

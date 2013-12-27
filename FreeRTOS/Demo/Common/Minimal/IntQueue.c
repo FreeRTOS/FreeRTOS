@@ -225,12 +225,12 @@ static void prvQueueAccessLogError( unsigned portBASE_TYPE uxLine );
 void vStartInterruptQueueTasks( void )
 {
 	/* Start the test tasks. */
-	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H1QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask1 );
-	xTaskCreate( prvHigherPriorityNormallyEmptyTask, ( signed portCHAR * ) "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
-	xTaskCreate( prvLowerPriorityNormallyEmptyTask, ( signed portCHAR * ) "L1QRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
-	xTaskCreate( prv1stHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
-	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, ( signed portCHAR * ) "H2QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
-	xTaskCreate( prvLowerPriorityNormallyFullTask, ( signed portCHAR * ) "L2QRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
+	xTaskCreate( prvHigherPriorityNormallyEmptyTask, "H1QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask1 );
+	xTaskCreate( prvHigherPriorityNormallyEmptyTask, "H2QRx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyEmptyTask2 );
+	xTaskCreate( prvLowerPriorityNormallyEmptyTask, "L1QRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
+	xTaskCreate( prv1stHigherPriorityNormallyFullTask, "H1QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK1, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask1 );
+	xTaskCreate( prv2ndHigherPriorityNormallyFullTask, "H2QTx", configMINIMAL_STACK_SIZE, ( void * ) intqHIGH_PRIORITY_TASK2, intqHIGHER_PRIORITY, &xHighPriorityNormallyFullTask2 );
+	xTaskCreate( prvLowerPriorityNormallyFullTask, "L2QRx", configMINIMAL_STACK_SIZE, NULL, intqLOWER_PRIORITY, NULL );
 
 	/* Create the queues that are accessed by multiple tasks and multiple
 	interrupts. */
@@ -243,8 +243,8 @@ void vStartInterruptQueueTasks( void )
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
-	vQueueAddToRegistry( xNormallyFullQueue, ( signed portCHAR * ) "NormallyFull" );
-	vQueueAddToRegistry( xNormallyEmptyQueue, ( signed portCHAR * ) "NormallyEmpty" );
+	vQueueAddToRegistry( xNormallyFullQueue, "NormallyFull" );
+	vQueueAddToRegistry( xNormallyEmptyQueue, "NormallyEmpty" );
 }
 /*-----------------------------------------------------------*/
 

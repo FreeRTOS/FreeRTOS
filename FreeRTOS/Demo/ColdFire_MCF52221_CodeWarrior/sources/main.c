@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -177,12 +177,12 @@ int main( void )
 	vStartFlashCoRoutines( mainNUM_FLASH_CO_ROUTINES );
 
 	/* Create the check task. */
-	xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 
 	/* Start the reg test tasks - defined in this file. */
-	xTaskCreate( vRegTest1Task, ( signed portCHAR * ) "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest1Counter, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, ( signed portCHAR * ) "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest2Counter, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest1Counter, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest2Counter, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -232,7 +232,7 @@ volatile unsigned portBASE_TYPE uxUnusedStack;
 	    {
 	    	ulError |= 0x20UL;
 	    }
-	    
+
 	    if( xAreComTestTasksStillRunning() != pdTRUE )
 	    {
 	    	ulError |= 0x40UL;
@@ -260,7 +260,7 @@ volatile unsigned portBASE_TYPE uxUnusedStack;
 
 		/* Toggle the LED each itteration. */
 		vParTestToggleLED( mainCHECK_LED );
-		
+
 		/* For demo only - how much unused stack does this task have? */
 		uxUnusedStack = uxTaskGetStackHighWaterMark( NULL );
 	}

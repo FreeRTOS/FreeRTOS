@@ -154,12 +154,12 @@ xSemaphoreHandle xMutex;
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( xQueue, ( signed portCHAR * ) "Alt_Gen_Test_Queue" );
+	vQueueAddToRegistry( xQueue, "Alt_Gen_Test_Queue" );
 
 	/* Create the demo task and pass it the queue just created.  We are
 	passing the queue handle by value so it does not matter that it is
 	declared on the stack here. */
-	xTaskCreate( prvSendFrontAndBackTest, ( signed portCHAR * ) "FGenQ", configMINIMAL_STACK_SIZE, ( void * ) xQueue, uxPriority, NULL );
+	xTaskCreate( prvSendFrontAndBackTest, "FGenQ", configMINIMAL_STACK_SIZE, ( void * ) xQueue, uxPriority, NULL );
 
 	/* Create the mutex used by the prvMutexTest task. */
 	xMutex = xSemaphoreCreateMutex();
@@ -170,14 +170,14 @@ xSemaphoreHandle xMutex;
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( ( xQueueHandle ) xMutex, ( signed portCHAR * ) "Alt_Q_Mutex" );
+	vQueueAddToRegistry( ( xQueueHandle ) xMutex, "Alt_Q_Mutex" );
 
 	/* Create the mutex demo tasks and pass it the mutex just created.  We are
 	passing the mutex handle by value so it does not matter that it is declared
 	on the stack here. */
-	xTaskCreate( prvLowPriorityMutexTask, ( signed portCHAR * ) "FMuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
-	xTaskCreate( prvMediumPriorityMutexTask, ( signed portCHAR * ) "FMuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
-	xTaskCreate( prvHighPriorityMutexTask, ( signed portCHAR * ) "FMuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
+	xTaskCreate( prvLowPriorityMutexTask, "FMuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
+	xTaskCreate( prvMediumPriorityMutexTask, "FMuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
+	xTaskCreate( prvHighPriorityMutexTask, "FMuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
 }
 /*-----------------------------------------------------------*/
 

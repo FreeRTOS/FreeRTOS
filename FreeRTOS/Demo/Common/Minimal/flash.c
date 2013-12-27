@@ -108,7 +108,7 @@ signed portBASE_TYPE xLEDTask;
 	for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
 	{
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
 	}
 }
 /*-----------------------------------------------------------*/

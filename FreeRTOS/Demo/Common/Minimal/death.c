@@ -143,7 +143,7 @@ unsigned portBASE_TYPE *puxPriority;
 	puxPriority = ( unsigned portBASE_TYPE * ) pvPortMalloc( sizeof( unsigned portBASE_TYPE ) );
 	*puxPriority = uxPriority;
 
-	xTaskCreate( vCreateTasks, ( signed char * ) "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
+	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
 
 	/* Record the number of tasks that are running now so we know if any of the
 	suicidal tasks have failed to be killed. */
@@ -221,8 +221,8 @@ unsigned portBASE_TYPE uxPriority;
 
 		xCreatedTask = NULL;
 
-		xTaskCreate( vSuicidalTask, ( signed char * ) "SUICID1", configMINIMAL_STACK_SIZE, NULL, uxPriority, &xCreatedTask );
-		xTaskCreate( vSuicidalTask, ( signed char * ) "SUICID2", configMINIMAL_STACK_SIZE, &xCreatedTask, uxPriority, NULL );
+		xTaskCreate( vSuicidalTask, "SUICID1", configMINIMAL_STACK_SIZE, NULL, uxPriority, &xCreatedTask );
+		xTaskCreate( vSuicidalTask, "SUICID2", configMINIMAL_STACK_SIZE, &xCreatedTask, uxPriority, NULL );
 
 		++usCreationCount;
 	}

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -64,7 +64,7 @@
 */
 
 /*-----------------------------------------------------------
- * Normally, a demo application would define ParTest (parallel port test) 
+ * Normally, a demo application would define ParTest (parallel port test)
  * functions to write to an LED.  In this case, four '*' symbols that are
  * output to the debug printf() port are used to simulate LED outputs.
  *-----------------------------------------------------------*/
@@ -107,7 +107,7 @@ gatekeeper task. */
  */
 static void prvI2CGateKeeperTask( void *pvParameters );
 
-/* The queue used to communicate toggle commands with the I2C gatekeeper 
+/* The queue used to communicate toggle commands with the I2C gatekeeper
 task. */
 static xQueueHandle xI2CCommandQueue = NULL;
 /*-----------------------------------------------------------*/
@@ -137,7 +137,7 @@ I2C_M_SETUP_Type xI2CMessage;
 	configASSERT( xI2CCommandQueue );
 
 	/* Create the I2C gatekeeper task itself. */
-	xTaskCreate( prvI2CGateKeeperTask, ( signed char * ) "I2C", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvI2CGateKeeperTask, "I2C", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -172,7 +172,7 @@ static I2C_M_SETUP_Type xI2CMessage; /* Static so it is not on the stack as this
 		{
 			/* Which bit is being manipulated? */
 			ucLED = 0x01 << ucLED;
-	
+
 			/* Is the bit currently set or clear? */
 			if( ( ucLEDState & ucLED ) == 0U )
 			{
@@ -182,10 +182,10 @@ static I2C_M_SETUP_Type xI2CMessage; /* Static so it is not on the stack as this
 			{
 				ucLEDState &= ~ucLED;
 			}
-	
+
 			ucBuffer[ 0 ] = partstIO_WRITE_COMMAND;
 			ucBuffer[ 1 ] = ucLEDState;
-	
+
 			xI2CMessage.sl_addr7bit = partstSLAVE_ADDRESS;
 			xI2CMessage.tx_data = ucBuffer ;
 			xI2CMessage.tx_length = sizeof( ucBuffer );

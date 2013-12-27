@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -105,7 +105,7 @@
  * software time maintains a pattern of spinning white LEDs.
  *
  * See the documentation page for this demo on the FreeRTOS.org web site for
- * full information, including hardware setup requirements. 
+ * full information, including hardware setup requirements.
  */
 
 /* Standard includes. */
@@ -203,19 +203,19 @@ xTimerHandle xTimer = NULL;
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 
 	/* Create the register test tasks, as described at the top of this file. */
-	xTaskCreate( vRegTestTask1, ( const signed char * ) "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTestTask2, ( const signed char * ) "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	
+	xTaskCreate( vRegTestTask1, "Reg1...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTestTask2, "Reg2...", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,						/* The ID is not used, so can be set to anything. */
-							prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+	xTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+							( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+							pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+							( void * ) 0,					/* The ID is not used, so can be set to anything. */
+							prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
 						 );
-	
+
 	if( xTimer != NULL )
 	{
 		xTimerStart( xTimer, mainDONT_BLOCK );
@@ -223,11 +223,11 @@ xTimerHandle xTimer = NULL;
 
 	/* Create the software timer that performs the 'LED spin' functionality,
 	as described at the top of this file. */
-	xTimer = xTimerCreate( ( const signed char * ) "LEDTimer",	/* A text name, purely to help debugging. */
-							( mainLED_TIMER_PERIOD_MS ),		/* The timer period, in this case 75ms. */
-							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,						/* The ID is not used, so can be set to anything. */
-							prvLEDTimerCallback					/* The callback function that toggles the white LEDs. */
+	xTimer = xTimerCreate( "LEDTimer",					/* A text name, purely to help debugging. */
+							( mainLED_TIMER_PERIOD_MS ),/* The timer period, in this case 75ms. */
+							pdTRUE,						/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+							( void * ) 0,				/* The ID is not used, so can be set to anything. */
+							prvLEDTimerCallback			/* The callback function that toggles the white LEDs. */
 						 );
 
 	if( xTimer != NULL )
@@ -235,20 +235,20 @@ xTimerHandle xTimer = NULL;
 		xTimerStart( xTimer, mainDONT_BLOCK );
 	}
 
-	/* The set of tasks created by the following function call have to be 
-	created last as they keep account of the number of tasks they expect to see 
+	/* The set of tasks created by the following function call have to be
+	created last as they keep account of the number of tasks they expect to see
 	running. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
-	
+
 	/* If all is well, the scheduler will now be running, and the following line
 	will never be reached.  If the following line does execute, then there was
 	insufficient FreeRTOS heap memory available for the idle and/or timer tasks
 	to be created.  See the memory management section on the FreeRTOS web site
 	for more details. */
-	for( ;; );	
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
@@ -340,7 +340,7 @@ const unsigned long ulRedLED1 = 6, ulRedLED2 = 9;
 	LEDs are toggling, then an error has been reported in at least one task. */
 	vParTestToggleLED( ulLED1 );
 	vParTestToggleLED( ulLED2 );
-	
+
 	/* Have any errors been latch in ulErrorFound?  If so, ensure the gree LEDs
 	are off, then switch to using the red LEDs. */
 	if( ulErrorFound != pdFALSE )
@@ -348,7 +348,7 @@ const unsigned long ulRedLED1 = 6, ulRedLED2 = 9;
 		if( lChangeToRedLEDsAlready == pdFALSE )
 		{
 			lChangeToRedLEDsAlready = pdTRUE;
-			
+
 			/* An error has been found.  Switch to use the red LEDs. */
 			vParTestSetLED( ulLED1, pdFALSE );
 			vParTestSetLED( ulLED2, pdFALSE );

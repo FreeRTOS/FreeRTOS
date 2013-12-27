@@ -168,8 +168,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 
 	/* Note the producer has a lower priority than the consumer when the tasks are
 	spawned. */
-	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
-	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
 
 
 
@@ -186,8 +186,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters4->xBlockTime = xBlockTime;
 	pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
 
-	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QConsB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QProdB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
 
 
 
@@ -203,8 +203,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters6->xBlockTime = xBlockTime;
 	pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );
 
-	xTaskCreate( vBlockingQueueProducer, ( signed char * ) "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueConsumer, ( signed char * ) "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 

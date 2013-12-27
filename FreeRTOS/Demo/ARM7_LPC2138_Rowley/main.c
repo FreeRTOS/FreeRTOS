@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -217,10 +217,10 @@ int main( void )
     vStartRecursiveMutexTasks();
 
 	/* Start the tasks defined within this file. */
-	xTaskCreate( vLEDTask, ( signed char * ) "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
-    xTaskCreate( vCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-    xTaskCreate( vPrintTask, ( signed char * ) "Print", configMINIMAL_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
-    xTaskCreate( vButtonHandlerTask, ( signed char * ) "Button", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vLEDTask, "LED", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
+    xTaskCreate( vCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+    xTaskCreate( vPrintTask, "Print", configMINIMAL_STACK_SIZE, NULL, mainPRINT_TASK_PRIORITY, NULL );
+    xTaskCreate( vButtonHandlerTask, "Button", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -357,8 +357,8 @@ char *pcMessage;
 
 static void vButtonHandlerTask( void *pvParameters )
 {
-static signed char cListBuffer[ mainLIST_BUFFER_SIZE ];
-const signed char *pcList = &( cListBuffer[ 0 ] );
+static char cListBuffer[ mainLIST_BUFFER_SIZE ];
+const char *pcList = &( cListBuffer[ 0 ] );
 const char * const pcHeader = "\nTask          State  Priority  Stack	#\n************************************************";
 extern void (vButtonISRWrapper) ( void );
 

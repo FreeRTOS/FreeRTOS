@@ -143,7 +143,7 @@ err_t xReturn;
 		xReturn = ERR_OK;
 	}
 	else
-	{		
+	{
 		/* The queue was already full. */
 		xReturn = ERR_MEM;
 		SYS_STATS_INC( mbox.err );
@@ -199,7 +199,7 @@ unsigned long ulReturn;
 
 			ulReturn = xElapsed;
 		}
-		else 
+		else
 		{
 			/* Timed out. */
 			*ppvBuffer = NULL;
@@ -359,22 +359,22 @@ unsigned long ulReturn;
 /** Create a new mutex
  * @param mutex pointer to the mutex to create
  * @return a new mutex */
-err_t sys_mutex_new( sys_mutex_t *pxMutex ) 
+err_t sys_mutex_new( sys_mutex_t *pxMutex )
 {
 err_t xReturn = ERR_MEM;
 
 	*pxMutex = xSemaphoreCreateMutex();
 
-	if( *pxMutex != NULL ) 
+	if( *pxMutex != NULL )
 	{
 		xReturn = ERR_OK;
 		SYS_STATS_INC_USED( mutex );
-	} 
-	else 
+	}
+	else
 	{
 		SYS_STATS_INC( mutex.err );
 	}
-	
+
 	return xReturn;
 }
 
@@ -468,7 +468,7 @@ xTaskHandle xCreatedTask;
 portBASE_TYPE xResult;
 sys_thread_t xReturn;
 
-	xResult = xTaskCreate( pxThread, ( signed char * ) pcName, iStackSize, pvArg, iPriority, &xCreatedTask );
+	xResult = xTaskCreate( pxThread, pcName, iStackSize, pvArg, iPriority, &xCreatedTask );
 
 	if( xResult == pdPASS )
 	{

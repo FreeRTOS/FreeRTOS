@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -70,27 +70,27 @@
  * application.  It is provided as a convenient development and demonstration
  * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
- * Windows will not be running the FreeRTOS simulator threads continuously, so 
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.  
- * See the documentation page for the Windows simulator for an explanation of 
+ * Windows will not be running the FreeRTOS simulator threads continuously, so
+ * the timing information in the FreeRTOS+Trace logs have no meaningful units.
+ * See the documentation page for the Windows simulator for an explanation of
  * the slow timing:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select 
- * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY 
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
+ * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
  * in main.c.  This file implements the comprehensive test and demo version.
  *
  * NOTE 3:  This file only contains the source code that is specific to the
- * basic demo.  Generic functions, such FreeRTOS hook functions, are defined in 
+ * basic demo.  Generic functions, such FreeRTOS hook functions, are defined in
  * main.c.
  *******************************************************************************
  *
- * main() creates all the demo application tasks, then starts the scheduler.  
- * The web documentation provides more details of the standard demo application 
- * tasks, which provide no particular functionality but do provide a good 
+ * main() creates all the demo application tasks, then starts the scheduler.
+ * The web documentation provides more details of the standard demo application
+ * tasks, which provide no particular functionality but do provide a good
  * example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
@@ -152,7 +152,7 @@
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
 
-/* A task that is created from the idle task to test the functionality of 
+/* A task that is created from the idle task to test the functionality of
 eTaskStateGet(). */
 static void prvTestTask( void *pvParameters );
 
@@ -181,7 +181,7 @@ static xSemaphoreHandle xMutexToDelete = NULL;
 int main_full( void )
 {
 	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -191,12 +191,12 @@ int main_full( void )
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	vStartRecursiveMutexTasks();	
+	vStartRecursiveMutexTasks();
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
-	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );	
-	xTaskCreate( prvDemoQueueSpaceFunctions, ( signed char * ) "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
+	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	vStartEventGroupTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
@@ -207,8 +207,8 @@ int main_full( void )
 	#endif
 
 	/* The suicide tasks must be created last as they need to know how many
-	tasks were running prior to their creation.  This then allows them to 
-	ascertain whether or not the correct/expected number of tasks are running at 
+	tasks were running prior to their creation.  This then allows them to
+	ascertain whether or not the correct/expected number of tasks are running at
 	any given time. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
@@ -219,7 +219,7 @@ int main_full( void )
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
-    /* Should never get here unless there was not enough heap space to create 
+    /* Should never get here unless there was not enough heap space to create
 	the idle and other system tasks. */
     return 0;
 }
@@ -259,9 +259,9 @@ const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
 	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
 	    {
 			pcStatusMessage = "Error: IntMath";
-	    }	
+	    }
 		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{			
+		{
 			pcStatusMessage = "Error: GenQueue";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
@@ -309,7 +309,7 @@ const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
 			pcStatusMessage = "Error: Queue overwrite";
 		}
 
-		/* This is the only task that uses stdout so its ok to call printf() 
+		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
 		printf( "%s - %d\r\n", pcStatusMessage, xTaskGetTickCount() );
 	}
@@ -358,7 +358,7 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 	prvDemonstrateTaskStateAndHandleGetFunctions();
 
 	/* If xMutexToDelete has not already been deleted, then delete it now.
-	This is done purely to demonstrate the use of, and test, the 
+	This is done purely to demonstrate the use of, and test, the
 	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
 	that has tasks blocked on it. */
 	if( xMutexToDelete != NULL )
@@ -377,7 +377,7 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 		xMutexToDelete = NULL;
 	}
 
-	/* Exercise heap_4 a bit.  The malloc failed hook will trap failed 
+	/* Exercise heap_4 a bit.  The malloc failed hook will trap failed
 	allocations so there is no need to test here. */
 	pvAllocated = pvPortMalloc( ( rand() % 100 ) + 1 );
 	vPortFree( pvAllocated );
@@ -399,7 +399,7 @@ void vFullDemoTickHookFunction( void )
 	/* Call the periodic queue overwrite from ISR demo. */
 	vQueueOverwritePeriodicISRDemo();
 
-	/* Write to a queue that is in use as part of the queue set demo to 
+	/* Write to a queue that is in use as part of the queue set demo to
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();
 }
@@ -413,7 +413,7 @@ signed char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 xTaskHandle xTestTask;
 
-	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and 
+	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
 	the task number. */
 	xIdleTaskHandle = xTaskGetIdleTaskHandle();
@@ -421,7 +421,7 @@ xTaskHandle xTestTask;
 	vTaskSetTaskNumber( xIdleTaskHandle, ( unsigned long ) ucConstTaskNumber );
 	configASSERT( uxTaskGetTaskNumber( xIdleTaskHandle ) == ucConstTaskNumber );
 
-	/* This is the idle hook, so the current task handle should equal the 
+	/* This is the idle hook, so the current task handle should equal the
 	returned idle task handle. */
 	if( xTaskGetCurrentTaskHandle() != xIdleTaskHandle )
 	{
@@ -502,7 +502,7 @@ unsigned portBASE_TYPE uxReturn, x;
 		{
 			/* Ask how many messages are available... */
 			uxReturn = uxQueueMessagesWaiting( xQueue );
-			
+
 			/* Check the number of messages being reported as being available
 			is as expected, and force an assert if not. */
 			if( uxReturn != x )
@@ -514,7 +514,7 @@ unsigned portBASE_TYPE uxReturn, x;
 
 			/* Ask how many spaces remain in the queue... */
 			uxReturn = uxQueueSpacesAvailable( xQueue );
-			
+
 			/* Check the number of spaces being reported as being available
 			is as expected, and force an assert if not. */
 			if( uxReturn != ( uxQueueLength - x ) )
@@ -536,7 +536,7 @@ unsigned portBASE_TYPE uxReturn, x;
 		}
 
 		uxReturn = uxQueueSpacesAvailable( xQueue );
-			
+
 		if( uxReturn != 0 )
 		{
 			configASSERT( xQueue == NULL );

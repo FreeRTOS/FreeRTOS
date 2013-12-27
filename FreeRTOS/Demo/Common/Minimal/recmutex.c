@@ -153,14 +153,14 @@ void vStartRecursiveMutexTasks( void )
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
-	vQueueAddToRegistry( ( xQueueHandle ) xMutex, ( signed portCHAR * ) "Recursive_Mutex" );
+	vQueueAddToRegistry( ( xQueueHandle ) xMutex, "Recursive_Mutex" );
 
 
 	if( xMutex != NULL )
 	{
-		xTaskCreate( prvRecursiveMutexControllingTask, ( signed portCHAR * ) "Rec1", configMINIMAL_STACK_SIZE, NULL, recmuCONTROLLING_TASK_PRIORITY, &xControllingTaskHandle );
-        xTaskCreate( prvRecursiveMutexBlockingTask, ( signed portCHAR * ) "Rec2", configMINIMAL_STACK_SIZE, NULL, recmuBLOCKING_TASK_PRIORITY, &xBlockingTaskHandle );
-        xTaskCreate( prvRecursiveMutexPollingTask, ( signed portCHAR * ) "Rec3", configMINIMAL_STACK_SIZE, NULL, recmuPOLLING_TASK_PRIORITY, NULL );
+		xTaskCreate( prvRecursiveMutexControllingTask, "Rec1", configMINIMAL_STACK_SIZE, NULL, recmuCONTROLLING_TASK_PRIORITY, &xControllingTaskHandle );
+        xTaskCreate( prvRecursiveMutexBlockingTask, "Rec2", configMINIMAL_STACK_SIZE, NULL, recmuBLOCKING_TASK_PRIORITY, &xBlockingTaskHandle );
+        xTaskCreate( prvRecursiveMutexPollingTask, "Rec3", configMINIMAL_STACK_SIZE, NULL, recmuPOLLING_TASK_PRIORITY, NULL );
 	}
 }
 /*-----------------------------------------------------------*/

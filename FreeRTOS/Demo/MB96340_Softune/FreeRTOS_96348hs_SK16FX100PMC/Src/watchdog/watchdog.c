@@ -58,7 +58,7 @@ static void prvWatchdogTask( void *pvParameters )
 #if WATCHDOG == WTC_IN_TASK
 void vStartWatchdogTask( unsigned portBASE_TYPE uxPriority )
 {
-	xTaskCreate( prvWatchdogTask, (signed portCHAR *) "KickWTC", portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( prvWatchdogTask, "KickWTC", portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( xTaskHandle * ) NULL );
 }
 
 #endif

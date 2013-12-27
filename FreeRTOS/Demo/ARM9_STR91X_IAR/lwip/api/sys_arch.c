@@ -123,7 +123,7 @@ portTickType StartTime, EndTime, Elapsed;
 	{
 		msg = &dummyptr;
 	}
-		
+
 	if(	timeout != 0 )
 	{
 		if(pdTRUE == xQueueReceive( mbox, &(*msg), timeout ) )
@@ -154,7 +154,7 @@ portTickType StartTime, EndTime, Elapsed;
 		{
 			Elapsed = 1;
 		}
-		return ( Elapsed ); // return time blocked TBD test	
+		return ( Elapsed ); // return time blocked TBD test
 	}
 }
 
@@ -217,7 +217,7 @@ portTickType StartTime, EndTime, Elapsed;
 			{
 				Elapsed = 1;
 			}
-			return (Elapsed); // return time blocked TBD test	
+			return (Elapsed); // return time blocked TBD test
 		}
 		else
 		{
@@ -237,8 +237,8 @@ portTickType StartTime, EndTime, Elapsed;
 			Elapsed = 1;
 		}
 
-		return ( Elapsed ); // return time blocked	
-		
+		return ( Elapsed ); // return time blocked
+
 	}
 }
 
@@ -275,7 +275,7 @@ sys_init(void)
 
 	// keep track of how many threads have been created
 	nextthread = 0;
-	
+
 	s_sys_arch_state.nTaskCount = 0;
 	sys_set_default_state();
 }
@@ -329,7 +329,7 @@ sys_thread_t sys_thread_new(void (* thread)(void *arg), void *arg, int prio)
 xTaskHandle CreatedTask;
 int result;
 
-	result = xTaskCreate(thread, ( signed char * ) s_sys_arch_state.cTaskName, s_sys_arch_state.nStackDepth, arg, prio, &CreatedTask );
+	result = xTaskCreate(thread, s_sys_arch_state.cTaskName, s_sys_arch_state.nStackDepth, arg, prio, &CreatedTask );
 
 	// For each task created, store the task handle (pid) in the timers array.
 	// This scheme doesn't allow for threads to be deleted
@@ -338,7 +338,7 @@ int result;
 	if(result == pdPASS)
 	{
 		++s_sys_arch_state.nTaskCount;
-		
+
 		return CreatedTask;
 	}
 	else

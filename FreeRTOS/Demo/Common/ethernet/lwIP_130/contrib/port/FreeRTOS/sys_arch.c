@@ -55,9 +55,9 @@ static u16_t s_nextthread = 0;
 sys_mbox_t sys_mbox_new(int size)
 {
 	xQueueHandle mbox;
-	
+
 	( void ) size;
-	
+
 	mbox = xQueueCreate( archMESG_QUEUE_LENGTH, sizeof( void * ) );
 
 #if SYS_STATS
@@ -85,7 +85,7 @@ void sys_mbox_free(sys_mbox_t mbox)
 #if SYS_STATS
 	    lwip_stats.sys.mbox.err++;
 #endif /* SYS_STATS */
-			
+
 		// TODO notify the user of failure.
 	}
 
@@ -117,11 +117,11 @@ err_t result;
    else {
       // could not post, queue must be full
       result = ERR_MEM;
-			
+
 #if SYS_STATS
       lwip_stats.sys.mbox.err++;
 #endif /* SYS_STATS */
-			
+
    }
 
    return result;
@@ -154,20 +154,20 @@ portTickType StartTime, EndTime, Elapsed;
 	{
 		msg = &dummyptr;
 	}
-		
+
 	if ( timeout != 0 )
 	{
 		if ( pdTRUE == xQueueReceive( mbox, &(*msg), timeout / portTICK_RATE_MS ) )
 		{
 			EndTime = xTaskGetTickCount();
 			Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
-			
+
 			return ( Elapsed );
 		}
 		else // timed out blocking for message
 		{
 			*msg = NULL;
-			
+
 			return SYS_ARCH_TIMEOUT;
 		}
 	}
@@ -176,8 +176,8 @@ portTickType StartTime, EndTime, Elapsed;
 		while( pdTRUE != xQueueReceive( mbox, &(*msg), portMAX_DELAY ) ){} // time is arbitrary
 		EndTime = xTaskGetTickCount();
 		Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
-		
-		return ( Elapsed ); // return time blocked TODO test	
+
+		return ( Elapsed ); // return time blocked TODO test
 	}
 }
 
@@ -213,17 +213,17 @@ sys_sem_t sys_sem_new(u8_t count)
 	xSemaphoreHandle  xSemaphore;
 
 	vSemaphoreCreateBinary( xSemaphore );
-	
+
 	if( xSemaphore == NULL )
 	{
-		
+
 #if SYS_STATS
       ++lwip_stats.sys.sem.err;
 #endif /* SYS_STATS */
-			
+
 		return SYS_SEM_NULL;	// TODO need assert
 	}
-	
+
 	if(count == 0)	// Means it can't be taken
 	{
 		xSemaphoreTake(xSemaphore,1);
@@ -235,7 +235,7 @@ sys_sem_t sys_sem_new(u8_t count)
 		lwip_stats.sys.sem.max = lwip_stats.sys.sem.used;
 	}
 #endif /* SYS_STATS */
-		
+
 	return xSemaphore;
 }
 
@@ -267,8 +267,8 @@ portTickType StartTime, EndTime, Elapsed;
 		{
 			EndTime = xTaskGetTickCount();
 			Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
-			
-			return (Elapsed); // return time blocked TODO test	
+
+			return (Elapsed); // return time blocked TODO test
 		}
 		else
 		{
@@ -281,8 +281,8 @@ portTickType StartTime, EndTime, Elapsed;
 		EndTime = xTaskGetTickCount();
 		Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
 
-		return ( Elapsed ); // return time blocked	
-		
+		return ( Elapsed ); // return time blocked
+
 	}
 }
 
@@ -300,7 +300,7 @@ void sys_sem_free(sys_sem_t sem)
 #if SYS_STATS
       --lwip_stats.sys.sem.used;
 #endif /* SYS_STATS */
-			
+
 	vQueueDelete( sem );
 }
 
@@ -372,7 +372,7 @@ int result;
 
    if ( s_nextthread < SYS_THREAD_MAX )
    {
-      result = xTaskCreate( thread, ( signed portCHAR * ) name, stacksize, arg, prio, &CreatedTask );
+      result = xTaskCreate( thread, name, stacksize, arg, prio, &CreatedTask );
 
 	   // For each task created, store the task handle (pid) in the timers array.
 	   // This scheme doesn't allow for threads to be deleted
@@ -428,7 +428,7 @@ void sys_arch_unprotect(sys_prot_t pval)
  * Prints an assertion messages and aborts execution.
  */
 void sys_assert( const char *msg )
-{	
+{
 	( void ) msg;
 	/*FSL:only needed for debugging
 	printf(msg);

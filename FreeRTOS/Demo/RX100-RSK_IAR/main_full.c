@@ -210,7 +210,7 @@ void main_full( void )
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+	xCheckTimer = xTimerCreate( "CheckTimer",/* A text name, purely to help debugging. */
 								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 5000ms (5s). */
 								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */

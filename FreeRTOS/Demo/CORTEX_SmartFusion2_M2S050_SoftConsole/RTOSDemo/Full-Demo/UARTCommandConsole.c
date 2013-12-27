@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -141,12 +141,12 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPr
 	prvConfigureUART();
 
 	/* Create that task that handles the console itself. */
-	xTaskCreate( 	prvUARTCommandConsoleTask,			/* The task that implements the command console. */
-					( const int8_t * const ) "CLI",		/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
-					usStackSize,						/* The size of the stack allocated to the task. */
-					NULL,								/* The parameter is not used, so NULL is passed. */
-					uxPriority,							/* The priority allocated to the task. */
-					NULL );								/* A handle is not required, so just pass NULL. */
+	xTaskCreate( 	prvUARTCommandConsoleTask,	/* The task that implements the command console. */
+					"CLI",						/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
+					usStackSize,				/* The size of the stack allocated to the task. */
+					NULL,						/* The parameter is not used, so NULL is passed. */
+					uxPriority,					/* The priority allocated to the task. */
+					NULL );						/* A handle is not required, so just pass NULL. */
 }
 /*-----------------------------------------------------------*/
 

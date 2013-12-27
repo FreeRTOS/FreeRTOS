@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -66,22 +66,22 @@
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- * 
+ *
  * In addition to the standard demo tasks, the follow demo specific tasks are
  * create:
  *
- * The "Check" task.  This only executes every three seconds but has the highest 
- * priority so is guaranteed to get processor time.  Its main function is to 
- * check that all the other tasks are still operational.  Most tasks maintain 
- * a unique count that is incremented each time the task successfully completes 
- * its function.  Should any error occur within such a task the count is 
- * permanently halted.  The check task inspects the count of each task to ensure 
- * it has changed since the last time the check task executed.  If all the count 
- * variables have changed all the tasks are still executing error free, and the 
- * check task toggles the onboard LED.  Should any task contain an error at any time 
+ * The "Check" task.  This only executes every three seconds but has the highest
+ * priority so is guaranteed to get processor time.  Its main function is to
+ * check that all the other tasks are still operational.  Most tasks maintain
+ * a unique count that is incremented each time the task successfully completes
+ * its function.  Should any error occur within such a task the count is
+ * permanently halted.  The check task inspects the count of each task to ensure
+ * it has changed since the last time the check task executed.  If all the count
+ * variables have changed all the tasks are still executing error free, and the
+ * check task toggles the onboard LED.  Should any task contain an error at any time
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
- * The "Trace Utility" task.  This can be used to obtain trace and debug 
+ * The "Trace Utility" task.  This can be used to obtain trace and debug
  * information via UART1.
  */
 
@@ -129,10 +129,10 @@
 /* Baud rate used by the COM test tasks. */
 #define mainCOM_TEST_BAUD_RATE	( ( unsigned long ) 19200 )
 
-/* The frequency at which the 'Check' tasks executes.  See the comments at the 
+/* The frequency at which the 'Check' tasks executes.  See the comments at the
 top of the page.  When the system is operating error free the 'Check' task
 toggles an LED every three seconds.  If an error is discovered in any task the
-rate is increased to 500 milliseconds.  [in this case the '*' characters on the 
+rate is increased to 500 milliseconds.  [in this case the '*' characters on the
 LCD represent LED's] */
 #define mainNO_ERROR_CHECK_DELAY	( (portTickType) 3000 / portTICK_RATE_MS )
 #define mainERROR_CHECK_DELAY		( (portTickType) 500 / portTICK_RATE_MS )
@@ -144,7 +144,7 @@ LCD represent LED's] */
 
 /*-----------------------------------------------------------*/
 
-/* 
+/*
  * The function that implements the Check task.  See the comments at the head
  * of the page for implementation details.
  */
@@ -176,7 +176,7 @@ void main( void )
 
 	/* Start the standard demo application tasks. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
-	vStartIntegerMathTasks( tskIDLE_PRIORITY );	
+	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartBlockingQueueTasks( mainQUEUE_BLOCK_PRIORITY );
@@ -193,7 +193,7 @@ void main( void )
 	#endif
 
 	/* Start the 'Check' task which is defined in this file. */
-	xTaskCreate( vErrorChecks, (signed char *) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* The suicide tasks must be started last as they record the number of other
 	tasks that exist within the system.  The value is then used to ensure at run
@@ -201,10 +201,10 @@ void main( void )
 	vCreateSuicidalTasks( mainDEATH_PRIORITY );
 
 	/* Now start the scheduler.  Following this call the created tasks should
-	be executing. */	
+	be executing. */
 	vTaskStartScheduler( );
-	
-	/* vTaskStartScheduler() will only return if an error occurs while the 
+
+	/* vTaskStartScheduler() will only return if an error occurs while the
 	idle task is being created. */
 	for( ;; );
 }
@@ -234,14 +234,14 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 	for( ;; )
 	{
 		/* Wait until it is time to check again.  The time we wait here depends
-		on whether an error has been detected or not.  When an error is 
+		on whether an error has been detected or not.  When an error is
 		detected the time is shortened resulting in a faster LED flash rate. */
 		vTaskDelay( xDelayPeriod );
 
 		/* See if the other tasks are all ok. */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
 		{
-			/* An error occurred in one of the tasks so shorten the delay 
+			/* An error occurred in one of the tasks so shorten the delay
 			period - which has the effect of increasing the frequency of the
 			LED toggle. */
 			xDelayPeriod = mainERROR_CHECK_DELAY;
@@ -258,7 +258,7 @@ static short prvCheckOtherTasksAreStillRunning( void )
 	static short	sNoErrorFound = pdTRUE;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
-	provided that the task has never encountered an error.  This function 
+	provided that the task has never encountered an error.  This function
 	checks the counts maintained by the tasks to ensure they are still being
 	incremented.  A count remaining at the same value between calls therefore
 	indicates that an error has been detected.  Only tasks that do not flash

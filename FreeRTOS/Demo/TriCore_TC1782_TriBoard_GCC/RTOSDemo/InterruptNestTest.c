@@ -144,7 +144,7 @@ unsigned long ulCompareMatchBits;
 	
 	/* Create the task that pends on the semaphore that is given by the
 	high frequency interrupt. */
-	xTaskCreate( prvHighFrequencyTimerTask, ( signed char * ) "HFTmr", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+	xTaskCreate( prvHighFrequencyTimerTask, "HFTmr", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 	
 	/* Setup the interrupt itself.	The STM module clock divider is setup when 
 	the tick interrupt is configured - which is when the scheduler is started - 

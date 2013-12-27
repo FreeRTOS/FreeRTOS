@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -70,21 +70,21 @@
  * main-full.c (this file) defines a comprehensive demo that creates many
  * tasks, queues, semaphores and timers.  It also demonstrates how Cortex-M3
  * interrupts can interact with FreeRTOS tasks/timers, a simple web server, and
- * run time statistics gathering functionality.  ***IF YOU ARE LOOKING FOR A 
+ * run time statistics gathering functionality.  ***IF YOU ARE LOOKING FOR A
  * SIMPLER STARTING POINT THEN USE THE "BLINKY" BUILD CONFIGURATION FIRST.***
  *
- * If the Ethernet functionality is excluded, then this demo will run 'stand 
- * alone' (without the rest of the tower system) on the TWR-K60N512 tower 
+ * If the Ethernet functionality is excluded, then this demo will run 'stand
+ * alone' (without the rest of the tower system) on the TWR-K60N512 tower
  * module.  If the Ethernet functionality is included, then the full Freescale
- * K60 tower kit, including both the TWR-K60N512 and TWR-SER modules, is 
- * required (as the Ethernet connector is on the TWR-SER).  The TWR-K60N512 is 
+ * K60 tower kit, including both the TWR-K60N512 and TWR-SER modules, is
+ * required (as the Ethernet connector is on the TWR-SER).  The TWR-K60N512 is
  * populated with a K60N512 Cortex-M4 microcontroller.
  *
  * The main() Function:
  * main() creates four demo specific software timers, and one demo specific
  * task (the web server task).  It also creates a whole host of 'standard
- * demo' tasks/queues/semaphores/timers, before starting the scheduler.  The 
- * demo specific tasks and timers are described in the comments here.  The 
+ * demo' tasks/queues/semaphores/timers, before starting the scheduler.  The
+ * demo specific tasks and timers are described in the comments here.  The
  * standard demo tasks are described on the FreeRTOS.org web site.
  *
  * The standard demo tasks provide no specific functionality.  They are
@@ -97,33 +97,33 @@
  *
  * The Demo Specific "LED" Timers and Callback Function:
  * Two very simple LED timers are created.  All they do is toggle an LED each
- * when the timer callback function is executed.  The two timers share a 
- * callback function, so the callback function parameter is used to determine 
- * which timer actually expired, and therefore, which LED to toggle.  Both 
- * timers use a different frequency, one toggles the blue LED and the other the 
+ * when the timer callback function is executed.  The two timers share a
+ * callback function, so the callback function parameter is used to determine
+ * which timer actually expired, and therefore, which LED to toggle.  Both
+ * timers use a different frequency, one toggles the blue LED and the other the
  * green LED.
  *
  * The LED/Button Software Timer and the Button Interrupt:
  * The user button SW2 is configured to generate an interrupt each time it is
- * pressed.  The interrupt service routine switches the orange/yellow LED on, 
- * and resets the LED software timer.  The LED timer has a 5000 millisecond (5 
- * second) period, and uses a callback function that is defined to just turn the 
- * LED off again.  Therefore, pressing the user button will turn the LED on, and 
- * the LED will remain on until a full five seconds pass without the button 
+ * pressed.  The interrupt service routine switches the orange/yellow LED on,
+ * and resets the LED software timer.  The LED timer has a 5000 millisecond (5
+ * second) period, and uses a callback function that is defined to just turn the
+ * LED off again.  Therefore, pressing the user button will turn the LED on, and
+ * the LED will remain on until a full five seconds pass without the button
  * being pressed.
  *
  * The Demo Specific "Check" Timer and Callback Function:
- * The check timer period is initially set to three seconds.  The check timer 
- * callback function checks that all the standard demo tasks are not only still 
- * executing, but are executing without reporting any errors.  If the check 
- * timer discovers that a task has either stalled, or reported an error, then it 
- * changes its own period from the initial three seconds, to just 200ms.  The 
- * check timer callback function also toggles the orange/red LED each time it is 
- * called.  This provides a visual indication of the system status:  If the LED 
- * toggles every three seconds, then no issues have been discovered.  If the LED 
- * toggles every 200ms, then an issue has been discovered with at least one 
- * task.  The last reported issue is latched into the pcStatusMessage variable, 
- * and displayed at the bottom of the "task stats" web page served by the 
+ * The check timer period is initially set to three seconds.  The check timer
+ * callback function checks that all the standard demo tasks are not only still
+ * executing, but are executing without reporting any errors.  If the check
+ * timer discovers that a task has either stalled, or reported an error, then it
+ * changes its own period from the initial three seconds, to just 200ms.  The
+ * check timer callback function also toggles the orange/red LED each time it is
+ * called.  This provides a visual indication of the system status:  If the LED
+ * toggles every three seconds, then no issues have been discovered.  If the LED
+ * toggles every 200ms, then an issue has been discovered with at least one
+ * task.  The last reported issue is latched into the pcStatusMessage variable,
+ * and displayed at the bottom of the "task stats" web page served by the
  * embedded web server task.
  *
  * The web server task:
@@ -142,7 +142,7 @@
  * The Demo Specific Tick Hook Function:
  * The tick hook function is used to test the interrupt safe software timer
  * functionality.
- * 
+ *
  */
 
 /* Kernel includes. */
@@ -204,7 +204,7 @@ reported in one of the standard demo tasks.  ms are converted to the equivalent
 in ticks using the portTICK_RATE_MS constant. */
 #define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
 
-/* The LED that is turned on by pressing SW2 remains on until the button has not 
+/* The LED that is turned on by pressing SW2 remains on until the button has not
 been pushed for a full 5000ms. */
 #define mainBUTTON_LED_TIMER_PERIOD_MS		( 5000UL / portTICK_RATE_MS )
 
@@ -234,7 +234,7 @@ static void prvSetupHardware( void );
 static void prvCreateDemoSpecificTimers( void );
 
 /*
- * The LED/button timer callback function.  This does nothing but switch an LED 
+ * The LED/button timer callback function.  This does nothing but switch an LED
  * off.
  */
 static void prvButtonLEDTimerCallback( xTimerHandle xTimer );
@@ -258,7 +258,7 @@ extern void vuIP_Task( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/* The LED/Button software timer.  This uses prvButtonLEDTimerCallback() as it's 
+/* The LED/Button software timer.  This uses prvButtonLEDTimerCallback() as it's
 callback function. */
 static xTimerHandle xLEDButtonTimer = NULL;
 
@@ -302,7 +302,7 @@ void main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
-	
+
 	/* The web server task. */
 	xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
 
@@ -381,12 +381,12 @@ static long lChangedTimerPeriodAlready = pdFALSE;
 	{
 		pcStatusMessage = "Error: CountSem\n";
 	}
-	
+
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: DynamicPriority\n";
 	}
-	
+
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
@@ -401,9 +401,9 @@ static long lChangedTimerPeriodAlready = pdFALSE;
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-			
-			/* This call to xTimerChangePeriod() uses a zero block time.  
-			Functions called from inside of a timer callback function must 
+
+			/* This call to xTimerChangePeriod() uses a zero block time.
+			Functions called from inside of a timer callback function must
 			*never* attempt	to block. */
 			xTimerChangePeriod( xCheckTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
 		}
@@ -464,11 +464,11 @@ static void prvSetupHardware( void )
 	taskDISABLE_INTERRUPTS();
 	PORTE_PCR26 = PORT_PCR_MUX( 1 ) | PORT_PCR_IRQC( 0xA ) | PORT_PCR_PE_MASK | PORT_PCR_PS_MASK;
 	enable_irq( mainGPIO_E_VECTOR );
-	
+
 	/* The interrupt calls an interrupt safe API function - so its priority must
 	be equal to or lower than configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
 	set_irq_priority( mainGPIO_E_VECTOR, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
-	
+
 	/* Configure the LED outputs. */
 	vParTestInitialise();
 }
@@ -477,48 +477,48 @@ static void prvSetupHardware( void )
 static void prvCreateDemoSpecificTimers( void )
 {
 	/* This function creates the timers, but does not start them.  This is
-	because the standard demo timer test is started from main(), after this 
-	function is	called.  The standard demo timer test will deliberately fill the 
-	timer command queue - and will fail the test if the command queue already 
-	holds start commands for the timers created here.  Instead, the timers 
-	created in this function are started from the idle task, at which time, the 
-	timer service/daemon task will be running, and will have drained the timer 
+	because the standard demo timer test is started from main(), after this
+	function is	called.  The standard demo timer test will deliberately fill the
+	timer command queue - and will fail the test if the command queue already
+	holds start commands for the timers created here.  Instead, the timers
+	created in this function are started from the idle task, at which time, the
+	timer service/daemon task will be running, and will have drained the timer
 	command	queue. */
-	
+
 	/* Create the software timer that is responsible for turning off the LED
 	if the button is not pushed within 5000ms, as described at the top of
 	this file. */
-	xLEDButtonTimer = xTimerCreate( 	( const signed char * ) "ButtonLEDTimer", 	/* A text name, purely to help debugging. */
-								( mainBUTTON_LED_TIMER_PERIOD_MS ),			/* The timer period, in this case 5000ms (5s). */
-								pdFALSE,									/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-								( void * ) 0,								/* The ID is not used, so can be set to anything. */
-								prvButtonLEDTimerCallback					/* The callback function that switches the LED off. */
+	xLEDButtonTimer = xTimerCreate( "ButtonLEDTimer", 					/* A text name, purely to help debugging. */
+									( mainBUTTON_LED_TIMER_PERIOD_MS ),	/* The timer period, in this case 5000ms (5s). */
+									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									( void * ) 0,						/* The ID is not used, so can be set to anything. */
+									prvButtonLEDTimerCallback			/* The callback function that switches the LED off. */
 							);
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+	xCheckTimer = xTimerCreate( "CheckTimer",						/* A text name, purely to help debugging. */
 								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
 								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */
 								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
 							  );
-	
+
 	/* Create the software timers used to simply flash LEDs.  These two timers
 	share a callback function, so the callback parameter is used to pass in the
 	LED that should be toggled. */
-	xLED1Timer = xTimerCreate( ( const signed char * ) "LED1Timer",/* A text name, purely to help debugging. */
-								( mainLED1_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) mainLED0,				/* The ID is used to pass in the number of the LED to be toggled. */
-								prvLEDTimerCallback					/* The callback function simply toggles the LED specified by its parameter. */
+	xLED1Timer = xTimerCreate( "LED1Timer",						/* A text name, purely to help debugging. */
+								( mainLED1_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) mainLED0,			/* The ID is used to pass in the number of the LED to be toggled. */
+								prvLEDTimerCallback				/* The callback function simply toggles the LED specified by its parameter. */
 							  );
 
-	xLED2Timer = xTimerCreate( ( const signed char * ) "LED2Timer",/* A text name, purely to help debugging. */
-								( mainLED2_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) mainLED1,				/* The ID is used to pass in the number of the LED to be toggled. */
-								prvLEDTimerCallback					/* The callback function simply toggles the LED specified by its parameter. */
+	xLED2Timer = xTimerCreate( "LED2Timer",						/* A text name, purely to help debugging. */
+								( mainLED2_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) mainLED1,			/* The ID is used to pass in the number of the LED to be toggled. */
+								prvLEDTimerCallback				/* The callback function simply toggles the LED specified by its parameter. */
 							  );
 }
 /*-----------------------------------------------------------*/
@@ -570,9 +570,9 @@ volatile size_t xFreeHeapSpace;
 		xTimerStart( xCheckTimer, portMAX_DELAY );
 		xTimerStart( xLED1Timer, portMAX_DELAY );
 		xTimerStart( xLED2Timer, portMAX_DELAY );
-		
+
 		xFreeHeapSpace = xPortGetFreeHeapSize();
-		
+
 		if( xFreeHeapSpace > 100 )
 		{
 			/* By now, the kernel has allocated everything it is going to, so
@@ -589,12 +589,12 @@ void vApplicationTickHook( void )
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
 	vTimerPeriodicISRTests();
-}	
+}
 /*-----------------------------------------------------------*/
 
 char *pcGetTaskStatusMessage( void )
 {
-	/* A simple GET function used by a CGI script so it can display the 
+	/* A simple GET function used by a CGI script so it can display the
 	execution status at the bottom of the task stats web page served by the
 	embedded web server. */
 	if( pcStatusMessage == NULL )
@@ -631,7 +631,7 @@ const unsigned long ulSysTickPendingBit = 0x04000000UL;
 	/* The SysTick is a down counter.  How many clocks have passed since it was
 	last reloaded? */
 	ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
-	
+
 	/* How many times has it overflowed? */
 	ulTickCount = xTaskGetTickCountFromISR();
 
@@ -640,28 +640,28 @@ const unsigned long ulSysTickPendingBit = 0x04000000UL;
 	section, and the ISR safe critical sections are not designed to nest,
 	so reset the critical section. */
 	portSET_INTERRUPT_MASK_FROM_ISR();
-	
+
 	/* Is there a SysTick interrupt pending? */
 	if( ( *pulInterruptCTRLState & ulSysTickPendingBit ) != 0UL )
 	{
 		/* There is a SysTick interrupt pending, so the SysTick has overflowed
 		but the tick count not yet incremented. */
 		ulTickCount++;
-		
+
 		/* Read the SysTick again, as the overflow might have occurred since
 		it was read last. */
 		ulSysTickCounts = ulSysTickReloadValue - *pulCurrentSysTickCount;
-	}	
-	
+	}
+
 	/* Convert the tick count into tenths of a millisecond.  THIS ASSUMES
 	configTICK_RATE_HZ is 1000! */
 	ulReturn = ( ulTickCount * 10UL ) ;
-		
+
 	/* Add on the number of tenths of a millisecond that have passed since the
 	tick count last got updated. */
 	ulReturn += ( ulSysTickCounts / ulClocksPer10thOfAMilliSecond );
-	
-	return ulReturn;	
+
+	return ulReturn;
 }
 /*-----------------------------------------------------------*/
 

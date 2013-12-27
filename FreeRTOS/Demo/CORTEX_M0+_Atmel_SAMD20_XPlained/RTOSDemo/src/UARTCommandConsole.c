@@ -149,7 +149,7 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPr
 	
 	/* Create that task that handles the console itself. */
 	xTaskCreate( 	prvUARTCommandConsoleTask,			/* The task that implements the command console. */
-					( const int8_t * const ) "CLI",		/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
+					"CLI",								/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
 					usStackSize,						/* The size of the stack allocated to the task. */
 					NULL,								/* The parameter is not used, so NULL is passed. */
 					uxPriority,							/* The priority allocated to the task. */

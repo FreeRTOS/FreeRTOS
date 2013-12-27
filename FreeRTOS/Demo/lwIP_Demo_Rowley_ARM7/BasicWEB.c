@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -75,7 +75,7 @@
 /*
 	Changes from V3.2.2
 
-	+ Changed the page returned by the lwIP WEB server demo to display the 
+	+ Changed the page returned by the lwIP WEB server demo to display the
 	  task status table rather than the TCP/IP statistics.
 */
 
@@ -94,9 +94,9 @@
 #include "SAM7_EMAC.h"
 
 /* lwIP includes. */
-#include "lwip/api.h" 
+#include "lwip/api.h"
 #include "lwip/tcpip.h"
-#include "lwip/memp.h" 
+#include "lwip/memp.h"
 #include "lwip/stats.h"
 #include "netif/loopif.h"
 
@@ -127,13 +127,13 @@
 
 /*------------------------------------------------------------*/
 
-/* 
+/*
  * Process an incoming connection on port 80.
  *
  * This simply checks to see if the incoming data contains a GET request, and
  * if so sends back a single dynamically created page.  The connection is then
- * closed.  A more complete implementation could create a task for each 
- * connection. 
+ * closed.  A more complete implementation could create a task for each
+ * connection.
  */
 static void vProcessConnection( struct netconn *pxNetCon );
 
@@ -153,8 +153,8 @@ static unsigned long ulPageHits = 0;
 	if( pxRxBuffer != NULL )
 	{
 		/* Where is the data? */
-		netbuf_data( pxRxBuffer, ( void * ) &pcRxString, &usLength );	   
-	
+		netbuf_data( pxRxBuffer, ( void * ) &pcRxString, &usLength );
+
 		/* Is this a GET?  We don't handle anything else. */
 		if( !strncmp( pcRxString, "GET", 3 ) )
 		{
@@ -175,14 +175,14 @@ static unsigned long ulPageHits = 0;
 			strcat( cDynamicPage, cPageHits );
 			strcat( cDynamicPage, "<p><pre>Task          State  Priority  Stack	#<br>************************************************<br>" );
 			/* ... Then the list of tasks and their status... */
-			vTaskList( ( signed char * ) cDynamicPage + strlen( cDynamicPage ) );	
+			vTaskList( cDynamicPage + strlen( cDynamicPage ) );
 			/* ... Finally the page footer. */
 			strcat( cDynamicPage, webHTML_END );
 
 			/* Write out the dynamically generated page. */
 			netconn_write(pxNetCon, cDynamicPage, (u16_t)strlen( cDynamicPage ), NETCONN_COPY );
 		}
- 
+
 		netbuf_delete( pxRxBuffer );
 	}
 
@@ -194,9 +194,9 @@ void vlwIPInit( void )
 {
     /* Initialize lwIP and its interface layer. */
 	sys_init();
-	mem_init();								
+	mem_init();
 	memp_init();
-	pbuf_init(); 
+	pbuf_init();
 	netif_init();
 	ip_init();
 	tcpip_init( NULL, NULL );
@@ -225,7 +225,7 @@ static struct netif EMAC_if;
 
 	/* bring it up */
     netif_set_up(&EMAC_if);
-	
+
 	/* Create a new tcp connection handle */
 
  	pxHTTPListener = netconn_new( NETCONN_TCP );

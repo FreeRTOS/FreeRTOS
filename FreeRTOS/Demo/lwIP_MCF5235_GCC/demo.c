@@ -41,13 +41,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -134,7 +134,7 @@ main( int argc, char *argv[] )
     ( void )sys_thread_new( vBasicWEBServer, NULL, mainWEB_TASK_PRIORITY );
 
     /* Start the check task - which is defined in this file. */
-    xTaskCreate( vErrorChecks, ( signed char * )"Check", 512, NULL,
+    xTaskCreate( vErrorChecks, "Check", 512, NULL,
                  mainCHECK_TASK_PRIORITY, NULL );
         /* Now all the tasks have been started - start the scheduler. */
     vTaskStartScheduler(  );
@@ -156,7 +156,7 @@ portTASK_FUNCTION( vErrorChecks, pvParameters )
     {
         ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
         xCreatedTask = mainNO_TASK;
-        if( xTaskCreate( vMemCheckTask, ( signed char * )"MEM",
+        if( xTaskCreate( vMemCheckTask, "MEM",
                          configMINIMAL_STACK_SIZE, ( void * )&ulMemCheckTaskRunningCount,
                          tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
         {

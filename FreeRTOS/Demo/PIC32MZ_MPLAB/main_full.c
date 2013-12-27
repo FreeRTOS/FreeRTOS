@@ -238,18 +238,18 @@ xTimerHandle xTimer = NULL;
 	vStartRecursiveMutexTasks();
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvRegTestTask1,						/* The function that implements the task. */
-				( const signed char * const ) "Reg1",	/* Text name for the task to assist debugger - not used by FreeRTOS itself. */
-				configMINIMAL_STACK_SIZE,				/* The stack size to allocate for the task - specified in words not bytes. */
-				NULL,									/* The parameter to pass into the task - not used in this case so set to NULL. */
-				tskIDLE_PRIORITY,						/* The priority to assign to the task. */
-				NULL );									/* Used to obtain a handle to the task being created - not used in this case so set to NULL. */
+	xTaskCreate( prvRegTestTask1,			/* The function that implements the task. */
+				"Reg1",						/* Text name for the task to assist debugger - not used by FreeRTOS itself. */
+				configMINIMAL_STACK_SIZE,	/* The stack size to allocate for the task - specified in words not bytes. */
+				NULL,						/* The parameter to pass into the task - not used in this case so set to NULL. */
+				tskIDLE_PRIORITY,			/* The priority to assign to the task. */
+				NULL );						/* Used to obtain a handle to the task being created - not used in this case so set to NULL. */
 
-	xTaskCreate( prvRegTestTask2, ( const signed char * const ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Create the software timer that performs the 'check' functionality, as
 	described at the top of this file. */
-	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+	xTimer = xTimerCreate( 	"CheckTimer",/* A text name, purely to help debugging. */
 							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
 							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 							( void * ) 0,						/* The ID is not used, so can be set to anything. */
@@ -263,7 +263,7 @@ xTimerHandle xTimer = NULL;
 	/* A software timer is also used to start the high frequency timer test.
 	This is to ensure the test does not start before the kernel.  This time a
 	one shot software timer is used. */
-	xTimer = xTimerCreate( ( const signed char * ) "HighHzTimerSetup", 1, pdFALSE, ( void * ) 0, prvSetupHighFrequencyTimerTest );
+	xTimer = xTimerCreate( "HighHzTimerSetup", 1, pdFALSE, ( void * ) 0, prvSetupHighFrequencyTimerTest );
 	if( xTimer != NULL )
 	{
 		xTimerStart( xTimer, mainDONT_BLOCK );

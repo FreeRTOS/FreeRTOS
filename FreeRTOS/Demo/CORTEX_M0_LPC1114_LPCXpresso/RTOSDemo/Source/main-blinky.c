@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -75,7 +75,7 @@
  * required to configure the hardware, are defined in main.c.
  ******************************************************************************
  *
- * main_blinky() creates one queue, and two tasks.  It then starts the 
+ * main_blinky() creates one queue, and two tasks.  It then starts the
  * scheduler.
  *
  * The Queue Send Task:
@@ -161,13 +161,13 @@ void main_blinky( void )
 		/* Start the two tasks as described in the comments at the top of this
 		file. */
 		xTaskCreate( prvQueueReceiveTask,					/* The function that implements the task. */
-					( signed char * ) "Rx", 				/* The text name assigned to the task - for debug only as it is not used by the kernel. */
+					"Rx", 									/* The text name assigned to the task - for debug only as it is not used by the kernel. */
 					configMINIMAL_STACK_SIZE, 				/* The size of the stack to allocate to the task. */
 					( void * ) mainQUEUE_RECEIVE_PARAMETER, /* The parameter passed to the task - just to check the functionality. */
 					mainQUEUE_RECEIVE_TASK_PRIORITY, 		/* The priority assigned to the task. */
 					NULL );									/* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, ( void * ) mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, ( void * ) mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();

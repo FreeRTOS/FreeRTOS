@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -96,13 +96,13 @@
  * along with the max jitter time to the LCD (again via the LCD task), as
  * described above.
  *
- * Tick Hook - A tick hook is provided just for demonstration purposes.  In 
+ * Tick Hook - A tick hook is provided just for demonstration purposes.  In
  * this case it is used to periodically send an instruction to updated the
  * MEMS input to the LCD task.
  *
  */
 
-/* CircleOS includes.  Some of the CircleOS peripheral functionality is 
+/* CircleOS includes.  Some of the CircleOS peripheral functionality is
 utilised, although CircleOS itself is not used. */
 #include "circle.h"
 
@@ -224,7 +224,7 @@ extern void vSetupTimerTest( void );
 
 /*
  * A cut down version of sprintf() used to percent the HUGE GCC library
- * equivalent from being included in the binary image. 
+ * equivalent from being included in the binary image.
  */
 extern int sprintf(char *out, const char *format, ...);
 
@@ -251,7 +251,7 @@ int main( void )
 	/* Create the queue used by the LCD task.  Messages for display on the LCD
 	are received via this queue. */
 	xLCDQueue = xQueueCreate( mainLCD_QUEUE_SIZE, sizeof( xLCDMessage ) );
-	
+
 	/* Start the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
     vCreateBlockTimeTasks();
@@ -260,16 +260,16 @@ int main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
 	/* Start the tasks defined within this file/specific to this demo. */
-    xTaskCreate( prvCheckTask, ( signed portCHAR * ) "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
-	xTaskCreate( prvLCDTask, ( signed portCHAR * ) "LCD", configLCD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvFlashTask, ( signed portCHAR * ) "Flash", configMINIMAL_STACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, NULL );
+    xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvLCDTask, "LCD", configLCD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvFlashTask, "Flash", configMINIMAL_STACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, NULL );
 
 	/* Configure the timers used by the fast interrupt timer test. */
 	vSetupTimerTest();
-	
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
-	
+
 	/* Will only get here if there was not enough heap space to create the
 	idle task. */
 	return 0;
@@ -314,11 +314,11 @@ const portCHAR * const pcBlankLine = "                  ";
 
 			cY -= mainLCD_CHAR_HEIGHT;
 			if( cY <= ( mainLCD_CHAR_HEIGHT - 1 ) )
-			{			
+			{
 				/* Wrap the line onto which we are going to write the text. */
 				cY = mainLCD_MAX_Y;
 			}
-			
+
 			/* Display the message. */
 			DRAW_DisplayString( 0, cY, xMessage.pcMessage, strlen( xMessage.pcMessage ) );
 		}
@@ -339,7 +339,7 @@ extern unsigned portSHORT usMaxJitter;
 	/* Setup the message we are going to send to the LCD task. */
 	xMessage.xMessageType = mainWRITE_STRING_MESSAGE;
 	xMessage.pcMessage = cPassMessage;
-	
+
     for( ;; )
 	{
 		/* Perform this check every mainCHECK_DELAY milliseconds. */
@@ -457,10 +457,10 @@ static void prvSetupHardware( void )
 	NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x0 );
 
 	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-	
+
 	/* Configure HCLK clock as SysTick clock source. */
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
-	
+
 	/* Misc initialisation, including some of the CircleOS features.  Note
 	that CircleOS itself is not used. */
 	vParTestInitialise();

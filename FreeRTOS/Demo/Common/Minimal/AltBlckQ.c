@@ -171,8 +171,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 
 	/* Note the producer has a lower priority than the consumer when the tasks are
 	spawned. */
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QConsB1", blckqSTACK_SIZE, ( void * ) pxQueueParameters1, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QProdB2", blckqSTACK_SIZE, ( void * ) pxQueueParameters2, tskIDLE_PRIORITY, NULL );
 
 	
 
@@ -189,8 +189,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters4->xBlockTime = xBlockTime;
 	pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
 
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
 
 
 
@@ -206,8 +206,8 @@ const portTickType xDontBlock = ( portTickType ) 0;
 	pxQueueParameters6->xBlockTime = xBlockTime;
 	pxQueueParameters6->psCheckVariable = &( sBlockingConsumerCount[ 2 ] );	
 
-	xTaskCreate( vBlockingQueueProducer, ( signed portCHAR * ) "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueConsumer, ( signed portCHAR * ) "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QProdB5", blckqSTACK_SIZE, ( void * ) pxQueueParameters5, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QConsB6", blckqSTACK_SIZE, ( void * ) pxQueueParameters6, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 

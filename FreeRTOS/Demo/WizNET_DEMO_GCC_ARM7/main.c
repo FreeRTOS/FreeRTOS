@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,9 +63,9 @@
     1 tab == 4 spaces!
 */
 
-/* 
+/*
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used.
@@ -74,7 +74,7 @@
 
 /*
  * Program entry point.
- * 
+ *
  * main() is responsible for setting up the microcontroller peripherals, then
  * starting the demo application tasks.  Once the tasks have been created the
  * scheduler is started and main() should never complete.
@@ -144,7 +144,7 @@
 
 /*
  * The Olimex demo board has a single built in LED.  This function simply
- * toggles its state. 
+ * toggles its state.
  */
 void prvToggleOnBoardLED( void );
 
@@ -159,7 +159,7 @@ static void prvSetupHardware( void );
 static void prvErrorChecks( void *pvParameters );
 
 /*
- * Return true if the demo tasks are executing without error - otherwise 
+ * Return true if the demo tasks are executing without error - otherwise
  * return false.
  */
 static void prvMainCheckOtherTasksAreStillRunning( void );
@@ -170,14 +170,14 @@ long lErrorInTask = pdFALSE;
 
 /*
  * Application entry point:
- * Starts all the other tasks, then starts the scheduler. 
+ * Starts all the other tasks, then starts the scheduler.
  */
 int main( void )
 {
 	/* Setup the hardware for use with the Olimex demo board. */
 	prvSetupHardware();
 
-	/* Start the standard flash tasks so the WEB server is not the only thing 
+	/* Start the standard flash tasks so the WEB server is not the only thing
 	running. */
 	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vStartSemaphoreTasks( tskIDLE_PRIORITY );
@@ -187,13 +187,13 @@ int main( void )
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 
 	/* Start the WEB server task and the error check task. */
-	xTaskCreate( vHTTPServerTask, ( signed char * ) "HTTP", configMINIMAL_STACK_SIZE, NULL, mainHTTP_TASK_PRIORITY, NULL );
-	xTaskCreate( prvErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainERROR_CHECK_PRIORITY, NULL );
-	
+	xTaskCreate( vHTTPServerTask, "HTTP", configMINIMAL_STACK_SIZE, NULL, mainHTTP_TASK_PRIORITY, NULL );
+	xTaskCreate( prvErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainERROR_CHECK_PRIORITY, NULL );
+
 	/* Now all the tasks have been started - start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used. */
@@ -211,8 +211,8 @@ static void prvSetupHardware( void )
 		SCB_MEMMAP = 2;
 	#endif
 
-	/* Set all GPIO to output other than the P0.14 (BSL), and the JTAG pins.  
-	The JTAG pins are left as input as I'm not sure what will happen if the 
+	/* Set all GPIO to output other than the P0.14 (BSL), and the JTAG pins.
+	The JTAG pins are left as input as I'm not sure what will happen if the
 	Wiggler is connected after powerup - not that it would be a good idea to
 	do that anyway. */
 	GPIO_IODIR = ~( mainJTAG_PORT );
@@ -297,7 +297,7 @@ unsigned long ulState;
 	else
 	{
 		GPIO_IOSET = mainON_BOARD_LED_BIT;
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -311,7 +311,7 @@ portTickType xDelay = mainNO_ERROR_DELAY;
 	for( ;; )
 	{
 		/* How long we delay depends on whether an error has been detected
-		or not.  Therefore the flash rate of the on board LED indicates 
+		or not.  Therefore the flash rate of the on board LED indicates
 		whether or not an error has occurred. */
 		vTaskDelay( xDelay );
 

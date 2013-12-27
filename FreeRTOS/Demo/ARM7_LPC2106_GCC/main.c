@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,9 +63,9 @@
     1 tab == 4 spaces!
 */
 
-/* 
+/*
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used.
@@ -75,36 +75,36 @@
 /*
  * Creates all the demo application tasks, then starts the scheduler.  The WEB
  * documentation provides more details of the demo application tasks.
- * 
- * Main.c also creates a task called "Check".  This only executes every three 
- * seconds but has the highest priority so is guaranteed to get processor time.  
+ *
+ * Main.c also creates a task called "Check".  This only executes every three
+ * seconds but has the highest priority so is guaranteed to get processor time.
  * Its main function is to check that all the other tasks are still operational.
- * Each task (other than the "flash" tasks) maintains a unique count that is 
- * incremented each time the task successfully completes its function.  Should 
- * any error occur within such a task the count is permanently halted.  The 
+ * Each task (other than the "flash" tasks) maintains a unique count that is
+ * incremented each time the task successfully completes its function.  Should
+ * any error occur within such a task the count is permanently halted.  The
  * check task inspects the count of each task to ensure it has changed since
- * the last time the check task executed.  If all the count variables have 
+ * the last time the check task executed.  If all the count variables have
  * changed all the tasks are still executing error free, and the check task
- * toggles the onboard LED.  Should any task contain an error at any time 
+ * toggles the onboard LED.  Should any task contain an error at any time
  * the LED toggle rate will change from 3 seconds to 500ms.
  *
- * To check the operation of the memory allocator the check task also 
- * dynamically creates a task before delaying, and deletes it again when it 
+ * To check the operation of the memory allocator the check task also
+ * dynamically creates a task before delaying, and deletes it again when it
  * wakes.  If memory cannot be allocated for the new task the call to xTaskCreate
  * will fail and an error is signalled.  The dynamically created task itself
  * allocates and frees memory just to give the allocator a bit more exercise.
  *
  */
 
-/* 
+/*
 	Changes from V2.4.2
 
 	+ The vErrorChecks() task now dynamically creates then deletes a task each
 	  cycle.  This tests the operation of the memory allocator.
 
 	Changes from V2.5.2
-		
-	+ vParTestInitialise() is called during initialisation to ensure all the 
+
+	+ vParTestInitialise() is called during initialisation to ensure all the
 	  LED's start off.
 */
 
@@ -165,7 +165,7 @@
 #define mainSEM_TEST_PRIORITY		( tskIDLE_PRIORITY + 0 )
 #define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
-/* The rate at which the on board LED will toggle when there is/is not an 
+/* The rate at which the on board LED will toggle when there is/is not an
 error. */
 #define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
 #define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
@@ -184,7 +184,7 @@ error. */
 
 /*
  * The Olimex demo board has a single built in LED.  This function simply
- * toggles its state. 
+ * toggles its state.
  */
 void prvToggleOnBoardLED( void );
 
@@ -195,7 +195,7 @@ void prvToggleOnBoardLED( void );
 static long prvCheckOtherTasksAreStillRunning( unsigned long ulMemCheckTaskCount );
 
 /*
- * The task that executes at the highest priority and calls 
+ * The task that executes at the highest priority and calls
  * prvCheckOtherTasksAreStillRunning().  See the description at the top
  * of the file.
  */
@@ -217,7 +217,7 @@ static void prvSetupHardware( void );
 /*-----------------------------------------------------------*/
 
 /*
- * Starts all the other tasks, then starts the scheduler. 
+ * Starts all the other tasks, then starts the scheduler.
  */
 int main( void )
 {
@@ -235,12 +235,12 @@ int main( void )
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
 	/* Start the check task - which is defined in this file. */
-	xTaskCreate( vErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Now all the tasks have been started - start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used here. */
@@ -263,22 +263,22 @@ xTaskHandle xCreatedTask;
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error.  If an error is detected then the delay period
 	is decreased from mainNO_ERROR_FLASH_PERIOD to mainERROR_FLASH_PERIOD so
-	the on board LED flash rate will increase. 
-	
+	the on board LED flash rate will increase.
+
 	In addition to the standard tests the memory allocator is tested through
-	the dynamic creation and deletion of a task each cycle.  Each time the 
+	the dynamic creation and deletion of a task each cycle.  Each time the
 	task is created memory must be allocated for its stack.  When the task is
-	deleted this memory is returned to the heap.  If the task cannot be created 
+	deleted this memory is returned to the heap.  If the task cannot be created
 	then it is likely that the memory allocation failed. */
 
 	for( ;; )
 	{
-		/* Dynamically create a task - passing ulMemCheckTaskRunningCount as a 
+		/* Dynamically create a task - passing ulMemCheckTaskRunningCount as a
 		parameter. */
 		ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
 		xCreatedTask = mainNO_TASK;
 
-		if( xTaskCreate( vMemCheckTask, ( signed char * ) "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
+		if( xTaskCreate( vMemCheckTask, "MEM_CHECK", configMINIMAL_STACK_SIZE, ( void * ) &ulMemCheckTaskRunningCount, tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )
 		{
 			/* Could not create the task - we have probably run out of heap. */
 			xDelayPeriod = mainERROR_FLASH_PERIOD;
@@ -286,14 +286,14 @@ xTaskHandle xCreatedTask;
 
 		/* Delay until it is time to execute again. */
 		vTaskDelay( xDelayPeriod );
-	
+
 		/* Delete the dynamically created task. */
 		if( xCreatedTask != mainNO_TASK )
 		{
 			vTaskDelete( xCreatedTask );
 		}
 
-		/* Check all the standard demo application tasks are executing without 
+		/* Check all the standard demo application tasks are executing without
 		error.  ulMemCheckTaskRunningCount is checked to ensure it was
 		modified by the task just deleted. */
 		if( prvCheckOtherTasksAreStillRunning( ulMemCheckTaskRunningCount ) != pdPASS )
@@ -318,8 +318,8 @@ static void prvSetupHardware( void )
 	PCB_PINSEL0 |= mainTX_ENABLE;
 	PCB_PINSEL0 |= mainRX_ENABLE;
 
-	/* Set all GPIO to output other than the P0.14 (BSL), and the JTAG pins.  
-	The JTAG pins are left as input as I'm not sure what will happen if the 
+	/* Set all GPIO to output other than the P0.14 (BSL), and the JTAG pins.
+	The JTAG pins are left as input as I'm not sure what will happen if the
 	Wiggler is connected after powerup - not that it would be a good idea to
 	do that anyway. */
 	GPIO_IODIR = ~( mainP0_14 + mainJTAG_PORT );
@@ -349,7 +349,7 @@ static void prvSetupHardware( void )
 
 	/* Setup the peripheral bus to be the same as the PLL output. */
 	SCB_VPBDIV = mainBUS_CLK_FULL;
-	
+
 	/* Initialise LED outputs. */
 	vParTestInitialise();
 }
@@ -367,7 +367,7 @@ unsigned long ulState;
 	else
 	{
 		GPIO_IOSET = mainON_BOARD_LED_BIT;
-	}	
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -435,10 +435,10 @@ static long lErrorOccurred = pdFALSE;
 	vErrorChecks task to check the operation of the memory allocator.  Each time
 	the task is created memory is allocated for the stack and TCB.  Each time
 	the task is deleted this memory is returned to the heap.  This task itself
-	exercises the allocator by allocating and freeing blocks. 
-	
-	The task executes at the idle priority so does not require a delay. 
-	
+	exercises the allocator by allocating and freeing blocks.
+
+	The task executes at the idle priority so does not require a delay.
+
 	pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
 	vErrorChecks() task that this task is still executing without error. */
 
@@ -452,7 +452,7 @@ static long lErrorOccurred = pdFALSE;
 			( *pulMemCheckTaskRunningCounter )++;
 		}
 
-		/* Allocate some memory - just to give the allocator some extra 
+		/* Allocate some memory - just to give the allocator some extra
 		exercise.  This has to be in a critical section to ensure the
 		task does not get deleted while it has memory allocated. */
 		vTaskSuspendAll();

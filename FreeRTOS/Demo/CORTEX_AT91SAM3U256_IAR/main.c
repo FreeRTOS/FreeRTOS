@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -194,17 +194,17 @@ int main( void )
 	port and provide some APU usage examples. */
     vStartIntegerMathTasks( mainINTEGER_TASK_PRIORITY );
     vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
-	vStartRecursiveMutexTasks();	
+	vStartRecursiveMutexTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
-	vStartQueuePeekTasks();	
-	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );	
+	vStartQueuePeekTasks();
+	vStartLEDFlashTasks( mainLED_TASK_PRIORITY );
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainBAUD_RATE, mainCOM_TEST_LED );
 
 	/* Start the tasks defined within this file/specific to this demo. */
-	xTaskCreate( prvLCDTask, ( signed char * ) "LCD", mainLCD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvLCDTask, "LCD", mainLCD_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -234,7 +234,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	if( ulTicksSinceLastDisplay >= mainCHECK_DELAY )
 	{
 		ulTicksSinceLastDisplay = 0;
-		
+
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
@@ -263,16 +263,16 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
 			xMessage.pcMessage = "ERROR IN PEEK Q";
-		}			
+		}
 		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
 			xMessage.pcMessage = "ERROR IN REC MUTEX";
-		}		
+		}
 		else if( xAreComTestTasksStillRunning() != pdTRUE )
 		{
 			xMessage.pcMessage = "ERROR IN COMTEST";
 		}
-		
+
 		/* Send the message to the LCD gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
 		xQueueSendFromISR( xLCDQueue, &xMessage, &xHigherPriorityTaskWoken );
@@ -300,10 +300,10 @@ const unsigned long ulMaxY = 250, ulYIncrement = 22, ulWidth = 250, ulHeight = 2
 
     /* Initialize LCD. */
     LCDD_Initialize();
-    LCDD_Start();	
+    LCDD_Start();
 	LCDD_Fill( ( void * ) BOARD_LCD_BASE, COLOR_WHITE );
 	LCDD_DrawString( ( void * ) BOARD_LCD_BASE, 1, ulY + 3, "  www.FreeRTOS.org", COLOR_BLACK );
-	
+
 	for( ;; )
 	{
 		/* Wait for a message from the check function (which is executed in
@@ -312,10 +312,10 @@ const unsigned long ulMaxY = 250, ulYIncrement = 22, ulWidth = 250, ulHeight = 2
 
 		/* Clear the space where the old message was. */
         LCDD_DrawRectangle( ( void * ) BOARD_LCD_BASE, 0, ulY, ulWidth, ulHeight, COLOR_WHITE );
-		
+
 		/* Increment to the next drawing position. */
 		ulY += ulYIncrement;
-		
+
 		/* Have the Y position moved past the end of the LCD? */
 		if( ulY >= ulMaxY )
 		{
@@ -324,7 +324,7 @@ const unsigned long ulMaxY = 250, ulYIncrement = 22, ulWidth = 250, ulHeight = 2
 
 		/* Draw a new rectangle, in which the message will be written. */
         LCDD_DrawRectangle( ( void * ) BOARD_LCD_BASE, 0, ulY, ulWidth, ulHeight, COLOR_GREEN );
-		
+
 		/* Write the message. */
         LCDD_DrawString( ( void * ) BOARD_LCD_BASE, ulX, ulY + 3, xMessage.pcMessage, COLOR_BLACK );
 	}

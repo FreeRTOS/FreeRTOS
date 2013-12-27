@@ -30,7 +30,7 @@
  *****************************************************************************/
 
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -223,7 +223,7 @@ int main( void )
 	task as described at the top of this file. */
 	xTaskCreate(
 		vErrorChecks
-		,  (const signed portCHAR *)"ErrCheck"
+		,  "ErrCheck"
 		,  configMINIMAL_STACK_SIZE
 		,  NULL
 		,  mainCHECK_TASK_PRIORITY
@@ -288,7 +288,7 @@ portBASE_TYPE bSuicidalTask = 0;
 		ulMemCheckTaskRunningCount = mainCOUNT_INITIAL_VALUE;
 
 		if( xTaskCreate( vMemCheckTask,
-			( signed portCHAR * ) "MEM_CHECK",
+			"MEM_CHECK",
 			configMINIMAL_STACK_SIZE,
 			( void * ) &ulMemCheckTaskRunningCount,
 			tskIDLE_PRIORITY, &xCreatedTask ) != pdPASS )

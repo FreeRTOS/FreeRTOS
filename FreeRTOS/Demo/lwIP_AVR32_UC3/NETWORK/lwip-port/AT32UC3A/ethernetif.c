@@ -101,7 +101,7 @@ low_level_init(struct netif *netif)
   vTaskPrioritySet( NULL, uxPriority );
 
   /* Create the task that handles the MACB. */
-  // xTaskCreate( ethernetif_input, ( signed portCHAR * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
+  // xTaskCreate( ethernetif_input, "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
   sys_thread_new( ethernetif_input, NULL, netifINTERFACE_TASK_PRIORITY );
 }
 

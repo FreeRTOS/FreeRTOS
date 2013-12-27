@@ -155,7 +155,7 @@ unsigned portBASE_TYPE x, y, z = flopSTART_VALUE;
 
 
 	/* Create the first task. */
-	xTaskCreate( vFlopTest1, ( signed portCHAR * ) "flop1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskJustCreated );
+	xTaskCreate( vFlopTest1, "flop1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskJustCreated );
 
 	/* The task	tag value is a value that can be associated with a task, but 
 	is not used by the scheduler itself.  Its use is down to the application so
@@ -165,7 +165,7 @@ unsigned portBASE_TYPE x, y, z = flopSTART_VALUE;
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 0 ][ 0 ] ) );
 
 	/* Do the same for the second task. */
-	xTaskCreate( vFlopTest2, ( signed portCHAR * ) "flop2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskJustCreated );
+	xTaskCreate( vFlopTest2, "flop2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTaskJustCreated );
 	vTaskSetApplicationTaskTag( xTaskJustCreated, ( void * ) &( ulFlopRegisters[ 1 ][ 0 ] ) );
 }
 /*-----------------------------------------------------------*/

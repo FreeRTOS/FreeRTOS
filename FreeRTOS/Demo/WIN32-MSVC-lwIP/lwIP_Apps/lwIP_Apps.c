@@ -175,7 +175,7 @@ static struct netif xNetIf;
 
 	/* Create the FreeRTOS defined basic command server.  This demonstrates use
 	of the lwIP sockets API. */
-	xTaskCreate( vBasicSocketsCommandInterpreterTask, ( signed char * ) "CmdInt", configMINIMAL_STACK_SIZE * 10, NULL, configMAX_PRIORITIES - 2, NULL );
+	xTaskCreate( vBasicSocketsCommandInterpreterTask, "CmdInt", configMINIMAL_STACK_SIZE * 10, NULL, configMAX_PRIORITIES - 2, NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -194,11 +194,11 @@ extern char *pcMainGetTaskStatusMessage( void );
 	switch( iIndex )
 	{
 		case ssiTASK_STATS_INDEX :
-			vTaskList( ( signed char * ) pcBuffer );
+			vTaskList( pcBuffer );
 			break;
 
 		case ssiRUN_TIME_STATS_INDEX :
-			vTaskGetRunTimeStats( ( signed char * ) pcBuffer );
+			vTaskGetRunTimeStats( pcBuffer );
 			break;
 	}
 

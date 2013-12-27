@@ -177,11 +177,11 @@ xTimerHandle xCheckTimer = NULL;
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,						/* The ID is not used, so can be set to anything. */
-								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+	xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+								( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) 0,					/* The ID is not used, so can be set to anything. */
+								prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
 							  );
 
 	if( xCheckTimer != NULL )

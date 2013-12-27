@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -111,7 +111,7 @@ constants are assigned to the timer IDs. */
 static void prvSetMACAddress( void );
 
 /*
- * Perform any uIP initialisation necessary. 
+ * Perform any uIP initialisation necessary.
  */
 static void prvInitialise_uIP( void );
 
@@ -146,7 +146,7 @@ unsigned long ulNewEvent = 0UL;
 unsigned long ulUIP_Events = 0UL;
 
 	( void ) pvParameters;
-	
+
 	/* Initialise the uIP stack. */
 	prvInitialise_uIP();
 
@@ -161,10 +161,10 @@ unsigned long ulUIP_Events = 0UL;
 	for( ;; )
 	{
 		if( ( ulUIP_Events & uipETHERNET_RX_EVENT ) != 0UL )
-		{		
+		{
 			/* Is there received data ready to be processed? */
 			uip_len = ( unsigned short ) ulEMACRead();
-			
+
 			if( ( uip_len > 0 ) && ( uip_buf != NULL ) )
 			{
 				/* Standard uIP loop taken from the uIP manual. */
@@ -200,11 +200,11 @@ unsigned long ulUIP_Events = 0UL;
 				ulUIP_Events &= ~uipETHERNET_RX_EVENT;
 			}
 		}
-		
+
 		if( ( ulUIP_Events & uipPERIODIC_TIMER_EVENT ) != 0UL )
 		{
 			ulUIP_Events &= ~uipPERIODIC_TIMER_EVENT;
-					
+
 			for( i = 0; i < UIP_CONNS; i++ )
 			{
 				uip_periodic( i );
@@ -219,14 +219,14 @@ unsigned long ulUIP_Events = 0UL;
 				}
 			}
 		}
-		
+
 		/* Call the ARP timer function every 10 seconds. */
 		if( ( ulUIP_Events & uipARP_TIMER_EVENT ) != 0 )
 		{
 			ulUIP_Events &= ~uipARP_TIMER_EVENT;
 			uip_arp_timer();
 		}
-			
+
 		if( ulUIP_Events == pdFALSE )
 		{
 			xQueueReceive( xEMACEventQueue, &ulNewEvent, portMAX_DELAY );
@@ -255,14 +255,14 @@ const unsigned long ul_uIPEventQueueLength = 10UL;
 	xEMACEventQueue = xQueueCreate( ul_uIPEventQueueLength, sizeof( unsigned long ) );
 
 	/* Create and start the uIP timers. */
-	xARPTimer = xTimerCreate( 	( const signed char * const ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
+	xARPTimer = xTimerCreate( 	"ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
 								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
 								pdTRUE, /* Autor-reload. */
 								( void * ) uipARP_TIMER,
 								prvUIPTimerCallback
 							);
 
-	xPeriodicTimer = xTimerCreate( 	( const signed char * const ) "PeriodicTimer",
+	xPeriodicTimer = xTimerCreate( 	"PeriodicTimer",
 									( 50 / portTICK_RATE_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,
@@ -319,7 +319,7 @@ char *c;
 
 	/* Only interested in processing form input if this is the IO page. */
 	c = strstr( pcInputString, "io.shtml" );
-	
+
 	if( c )
 	{
 		/* Is there a command in the string? */

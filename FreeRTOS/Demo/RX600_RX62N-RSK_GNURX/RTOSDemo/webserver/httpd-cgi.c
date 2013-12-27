@@ -104,7 +104,7 @@ static PT_THREAD( file_stats ( struct httpd_state *s, char *ptr ) )
 	PSOCK_BEGIN( &s->sout );
 
 	( void ) PT_YIELD_FLAG;
-	
+
 	PSOCK_GENERATOR_SEND( &s->sout, generate_file_stats, strchr(ptr, ' ') + 1 );
 
 	PSOCK_END( &s->sout );
@@ -177,7 +177,7 @@ static PT_THREAD( net_stats ( struct httpd_state *s, char *ptr ) )
 }
 
 /*---------------------------------------------------------------------------*/
-extern void vTaskList( signed char *pcWriteBuffer );
+extern void vTaskList( char *pcWriteBuffer );
 extern char *pcGetTaskStatusMessage( void );
 static char cCountBuf[128];
 long		lRefreshCount = 0;
@@ -186,7 +186,7 @@ static unsigned short generate_rtos_stats( void *arg )
 	( void ) arg;
 	lRefreshCount++;
 	sprintf( cCountBuf, "<p><br>Refresh count = %d<p><br>%s", ( int ) lRefreshCount, pcGetTaskStatusMessage() );
-	vTaskList( uip_appdata );
+	vTaskList( ( char * ) uip_appdata );
 	strcat( uip_appdata, cCountBuf );
 
 	return strlen( uip_appdata );
@@ -227,7 +227,7 @@ static unsigned short generate_io_state( void *arg )
 }
 
 /*---------------------------------------------------------------------------*/
-extern void vTaskGetRunTimeStats( signed char *pcWriteBuffer );
+extern void vTaskGetRunTimeStats( char *pcWriteBuffer );
 extern unsigned short usMaxJitter;
 static char cJitterBuffer[ 200 ];
 static unsigned short generate_runtime_stats( void *arg )
@@ -235,11 +235,11 @@ static unsigned short generate_runtime_stats( void *arg )
 	( void ) arg;
 	lRefreshCount++;
 	sprintf( cCountBuf, "<p><br>Refresh count = %d", ( int ) lRefreshCount );
-	
+
 	#ifdef INCLUDE_HIGH_FREQUENCY_TIMER_TEST
 	{
 		sprintf( cJitterBuffer, "<p><br>Max high frequency timer jitter = %d peripheral clock periods.<p><br>", ( int ) usMaxJitter );
-		vTaskGetRunTimeStats( uip_appdata );
+		vTaskGetRunTimeStats( ( char * ) uip_appdata );
 		strcat( uip_appdata, cJitterBuffer );
 	}
 	#else
@@ -247,7 +247,7 @@ static unsigned short generate_runtime_stats( void *arg )
 		( void ) cJitterBuffer;
 		strcpy( uip_appdata, "<p>Run time stats are only available in the debug_with_optimisation build configuration.<p>" );
 	}
-	#endif	
+	#endif
 
 	strcat( uip_appdata, cCountBuf );
 

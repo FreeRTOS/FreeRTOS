@@ -202,9 +202,9 @@ int main( void )
 	#endif
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvRegTestTask1, ( signed portCHAR * ) "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTestTask2, ( signed portCHAR * ) "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvErrorChecks, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask1, "Regtest1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask2, "Regtest2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* The suicide tasks must be started last as they record the number of other
 	tasks that exist within the system.  The value is then used to ensure at run

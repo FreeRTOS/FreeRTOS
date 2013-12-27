@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -176,7 +176,7 @@ int main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
 	/* Start the 'Check' task which is defined in this file. */
-	xTaskCreate( vErrorChecks, ( const signed portCHAR * const ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -255,7 +255,7 @@ static unsigned portLONG ulLastIdleLoopCount = 0UL;
     {
         ulLastIdleLoopCount = ulIdleLoops;
     }
-	
+
 	return sNoErrorFound;
 }
 /*-----------------------------------------------------------*/

@@ -112,31 +112,31 @@ void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 xTaskHandle xCreatedTask;
 
 	/* Create one of the floating point tasks... */
-	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask1, "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, &xCreatedTask );
 	
 	/* ... then enable floating point support for the created task so its flop
 	flop registers are maintained in a consistent state. */
 	xPortUsesFloatingPoint( xCreatedTask );
 
-	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask2, "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask3, "Math3", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 2 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask4, "Math4", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 3 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vCompetingMathTask1, ( signed char * ) "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask1, "Math5", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 4 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vCompetingMathTask2, ( signed char * ) "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask2, "Math6", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 5 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vCompetingMathTask3, ( signed char * ) "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask3, "Math7", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 6 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 	
-	xTaskCreate( vCompetingMathTask4, ( signed char * ) "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, &xCreatedTask );
+	xTaskCreate( vCompetingMathTask4, "Math8", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 7 ] ), uxPriority, &xCreatedTask );
 	xPortUsesFloatingPoint( xCreatedTask );
 }
 /*-----------------------------------------------------------*/

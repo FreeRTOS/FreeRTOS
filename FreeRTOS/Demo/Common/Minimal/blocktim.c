@@ -127,11 +127,11 @@ void vCreateBlockTimeTasks( void )
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
-	vQueueAddToRegistry( xTestQueue, ( signed char * ) "Block_Time_Queue" );
+	vQueueAddToRegistry( xTestQueue, "Block_Time_Queue" );
 
 	/* Create the two test tasks. */
-	xTaskCreate( vPrimaryBlockTimeTestTask, ( signed char * )"BTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
-	xTaskCreate( vSecondaryBlockTimeTestTask, ( signed char * )"BTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
+	xTaskCreate( vPrimaryBlockTimeTestTask, "BTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
+	xTaskCreate( vSecondaryBlockTimeTestTask, "BTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
 }
 /*-----------------------------------------------------------*/
 

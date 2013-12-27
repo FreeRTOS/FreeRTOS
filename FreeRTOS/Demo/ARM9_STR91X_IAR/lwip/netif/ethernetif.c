@@ -116,23 +116,23 @@ static void low_level_init(struct netif *netif)
   ENET_InitClocksGPIO();
   ENET_Init();
   ENET_Start();
-	
+
   portENTER_CRITICAL();
   {
       /*set MAC physical*/
       ENET_MAC->MAH = (MAC_ADDR5<<8) + MAC_ADDR4;
       ENET_MAC->MAL = (MAC_ADDR3<<24) + (MAC_ADDR2<<16) + (MAC_ADDR1<<8) + MAC_ADDR0;
-	
+
       VIC_Config( ENET_ITLine, VIC_IRQ, 1 );
-      VIC_ITCmd( ENET_ITLine, ENABLE );	
+      VIC_ITCmd( ENET_ITLine, ENABLE );
       ENET_DMA->ISR = DMI_RX_CURRENT_DONE;
       ENET_DMA->IER = DMI_RX_CURRENT_DONE;
   }
   portEXIT_CRITICAL();
 
   /* Create the task that handles the EMAC. */
-  xTaskCreate( ethernetif_input, ( signed char * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
-}	
+  xTaskCreate( ethernetif_input, "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
+}
 
 
 /*
@@ -303,17 +303,17 @@ static void ethernetif_input( void * pvParameters )
 		do
 		{
 			ethernetif = s_pxNetIf->state;
-			
+
 			/* move received packet into a new pbuf */
 			p = low_level_input( s_pxNetIf );
-			
+
 			if( p == NULL )
 			{
 				/* No packet could be read.  Wait a for an interrupt to tell us
 				there is more data available. */
 				vEMACWaitForInput();
 			}
-		
+
 		} while( p == NULL );
 
 		/* points to packet payload, which starts with an Ethernet header */
@@ -336,12 +336,12 @@ static void ethernetif_input( void * pvParameters )
 				/* pass to network layer */
 				s_pxNetIf->input(p, s_pxNetIf);
 				break;
-		
+
 			case ETHTYPE_ARP:
 				  /* pass p to ARP module  */
 				  etharp_arp_input(s_pxNetIf, ethernetif->ethaddr, p);
 				  break;
-				
+
 			default:
 				  pbuf_free(p);
 				  p = NULL;
@@ -394,7 +394,7 @@ ethernetif_init(struct netif *netif)
 	netif->ifoutnucastpkts = 0;
 	netif->ifoutdiscards = 0;
 #endif
-	
+
   netif->state = ethernetif;
   netif->name[0] = IFNAME0;
   netif->name[1] = IFNAME1;
@@ -419,11 +419,11 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Give the semaphore in case the lwIP task needs waking. */
 	xSemaphoreGiveFromISR( s_xSemaphore, &xHigherPriorityTaskWoken );
-	
+
 	/* Clear the interrupt. */
 	ENET_DMA->ISR = DMI_RX_CURRENT_DONE;
-	
-	/* Switch tasks if necessary. */	
+
+	/* Switch tasks if necessary. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
 /*-----------------------------------------------------------*/

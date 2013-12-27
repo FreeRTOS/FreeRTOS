@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -140,14 +140,14 @@ portBASE_TYPE xReturn;
 	{
 		ulRxLength[ ulTemp ] = 0;
 	}
-	
+
 	/* Create the queue and task used to defer the MAC processing to the
 	task level. */
 	vSemaphoreCreateBinary( xMACInterruptSemaphore );
 	xSemaphoreTake( xMACInterruptSemaphore, 0 );
-	xReturn = xTaskCreate( vMACHandleTask, ( signed portCHAR * ) "MAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+	xReturn = xTaskCreate( vMACHandleTask, "MAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 	vTaskDelay( macNEGOTIATE_DELAY );
-	
+
 	/* We are only interested in Rx interrupts. */
 	IntPrioritySet( INT_ETH, configKERNEL_INTERRUPT_PRIORITY );
     IntEnable( INT_ETH );
@@ -168,9 +168,9 @@ unsigned int iLen;
 	{
 		/* Leave room for the size at the start of the buffer. */
 		uip_buf = &( ucRxBuffers[ ulNextRxBuffer ][ 2 ] );
-		
+
 		ulRxLength[ ulNextRxBuffer ] = 0;
-		
+
 		ulNextRxBuffer++;
 		if( ulNextRxBuffer >= emacNUM_RX_BUFFERS )
 		{
@@ -214,9 +214,9 @@ unsigned portLONG ulNextWord;
     {
 		vTaskDelay( macWAIT_SEND_TIME );
     }
-	
-	pulSource = ( unsigned portLONG * ) pus;	
-	
+
+	pulSource = ( unsigned portLONG * ) pus;
+
 	for( ulNextWord = 0; ulNextWord < ulNextTxSpace; ulNextWord += sizeof( unsigned portLONG ) )
 	{
        	HWREG(ETH_BASE + MAC_O_DATA) = *pulSource;
@@ -236,14 +236,14 @@ unsigned portLONG ulTemp;
 	/* Clear the interrupt. */
 	ulTemp = EthernetIntStatus( ETH_BASE, pdFALSE );
 	EthernetIntClear( ETH_BASE, ulTemp );
-		
+
 	/* Was it an Rx interrupt? */
 	if( ulTemp & ETH_INT_RX )
 	{
 		xSemaphoreGiveFromISR( xMACInterruptSemaphore, &xHigherPriorityTaskWoken );
 		EthernetIntDisable( ETH_BASE, ETH_INT_RX );
 	}
-		
+
     /* Switch to the uIP task. */
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
 }
@@ -261,23 +261,23 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 	{
 		/* Wait for something to do. */
 		xSemaphoreTake( xMACInterruptSemaphore, portMAX_DELAY );
-		
+
 		while( ( ulInt = ( EthernetIntStatus( ETH_BASE, pdFALSE ) & ETH_INT_RX ) ) != 0 )
-		{		
+		{
 			ulLength = HWREG( ETH_BASE + MAC_O_DATA );
-			
+
 			/* Leave room at the start of the buffer for the size. */
-			pulBuffer = ( unsigned long * ) &( ucRxBuffers[ ulNextRxBuffer ][ 2 ] );			
+			pulBuffer = ( unsigned long * ) &( ucRxBuffers[ ulNextRxBuffer ][ 2 ] );
 			*pulBuffer = ( ulLength >> 16 );
 
-			/* Get the size of the data. */			
-			pulBuffer = ( unsigned long * ) &( ucRxBuffers[ ulNextRxBuffer ][ 4 ] );			
+			/* Get the size of the data. */
+			pulBuffer = ( unsigned long * ) &( ucRxBuffers[ ulNextRxBuffer ][ 4 ] );
 			ulLength &= 0xFFFF;
-			
+
 			if( ulLength > 4 )
 			{
 				ulLength -= 4;
-				
+
 				if( ulLength >= UIP_BUFSIZE )
 				{
 					/* The data won't fit in our buffer.  Ensure we don't
@@ -291,22 +291,22 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 					*pulBuffer = HWREG( ETH_BASE + MAC_O_DATA );
 					pulBuffer++;
 				}
-				
+
 				/* Store the length of the data into the separate array. */
 				ulRxLength[ ulNextRxBuffer ] = ulLength;
-				
+
 				/* Use the next buffer the next time through. */
 				ulNextRxBuffer++;
 				if( ulNextRxBuffer >= emacNUM_RX_BUFFERS )
 				{
 					ulNextRxBuffer = 0;
 				}
-		
+
 				/* Ensure the uIP task is not blocked as data has arrived. */
 				xSemaphoreGive( xEMACSemaphore );
 			}
 		}
-		
+
 		EthernetIntEnable( ETH_BASE, ETH_INT_RX );
 	}
 }

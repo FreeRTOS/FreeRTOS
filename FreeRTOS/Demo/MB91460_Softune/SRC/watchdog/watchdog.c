@@ -14,7 +14,7 @@
 
 /*---------------------------------------------------------------------------
  * Setup Watchdog
- *---------------------------------------------------------------------------*/ 
+ *---------------------------------------------------------------------------*/
 #if WATCHDOG != WTC_NONE
 void InitWatchdog(void)
 {
@@ -25,32 +25,32 @@ void InitWatchdog(void)
 /*---------------------------------------------------------------------------
  * The below task clears the watchdog and blocks itself for WTC_CLR_PER ticks.
  *---------------------------------------------------------------------------*/
-#if WATCHDOG == WTC_IN_TASK	
+#if WATCHDOG == WTC_IN_TASK
 static void prvWatchdogTask	( void *pvParameters )
 {
  	const portTickType xFrequency = WTC_CLR_PER;
 	portTickType xLastWakeTime;
 
-	/* Get currrent tick count */ 
+	/* Get currrent tick count */
 	xLastWakeTime = xTaskGetTickCount();
-	
+
 	for( ; ; )
 	{
 		Kick_Watchdog();
-			   
-		/* Block the task for WTC_CLR_PER ticks (300 ms) at watchdog overflow 
-		period of WTC_PER_2_16 CLKRC cycles (655.36 ms) */ 
+
+		/* Block the task for WTC_CLR_PER ticks (300 ms) at watchdog overflow
+		period of WTC_PER_2_16 CLKRC cycles (655.36 ms) */
 		vTaskDelayUntil( &xLastWakeTime, xFrequency );
-	} 
+	}
 }
 #endif
 
 /*---------------------------------------------------------------------------
  * The below function creates hardware watchdog task.
- *---------------------------------------------------------------------------*/ 
-#if WATCHDOG == WTC_IN_TASK	
+ *---------------------------------------------------------------------------*/
+#if WATCHDOG == WTC_IN_TASK
 void vStartWatchdogTask( unsigned portSHORT uxPriority )
 {
-	xTaskCreate( prvWatchdogTask , ( signed portCHAR * ) "KickWTC",   portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( xTaskHandle * ) NULL );	
+	xTaskCreate( prvWatchdogTask , "KickWTC",   portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( xTaskHandle * ) NULL );
 }
 #endif

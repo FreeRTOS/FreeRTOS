@@ -191,13 +191,13 @@ void vStartDynamicPriorityTasks( void )
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
-	vQueueAddToRegistry( xSuspendedTestQueue, ( signed char * ) "Suspended_Test_Queue" );
+	vQueueAddToRegistry( xSuspendedTestQueue, "Suspended_Test_Queue" );
 
-	xTaskCreate( vContinuousIncrementTask, ( signed char * ) "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinuousIncrementHandle );
-	xTaskCreate( vLimitedIncrementTask, ( signed char * ) "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
-	xTaskCreate( vCounterControlTask, ( signed char * ) "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vQueueSendWhenSuspendedTask, ( signed char * ) "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vQueueReceiveWhenSuspendedTask, ( signed char * ) "SUSP_RX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vContinuousIncrementTask, "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinuousIncrementHandle );
+	xTaskCreate( vLimitedIncrementTask, "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
+	xTaskCreate( vCounterControlTask, "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vQueueSendWhenSuspendedTask, "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 

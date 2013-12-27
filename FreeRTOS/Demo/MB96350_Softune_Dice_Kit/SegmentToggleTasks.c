@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -126,12 +126,12 @@ signed short sLEDTask;
 	for( sLEDTask = 0; sLEDTask < ledNUM_OF_LED_TASKS; ++sLEDTask )
 	{
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, ( signed char * ) "LEDt", configMINIMAL_STACK_SIZE, ( void * ) sLEDTask, ( tskIDLE_PRIORITY + 1 ), &( xFlashTaskHandles[ sLEDTask ] ) );
+		xTaskCreate( vLEDFlashTask, "LEDt", configMINIMAL_STACK_SIZE, ( void * ) sLEDTask, ( tskIDLE_PRIORITY + 1 ), &( xFlashTaskHandles[ sLEDTask ] ) );
 	}
 
 	/* Create the task in which the co-routines run.  The co-routines themselves
 	are created within the task. */
-	xTaskCreate( vLEDCoRoutineControlTask, ( signed char * ) "LEDc", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCoroutineTask );
+	xTaskCreate( vLEDCoRoutineControlTask, "LEDc", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xCoroutineTask );
 }
 /*-----------------------------------------------------------*/
 
@@ -190,7 +190,7 @@ unsigned short usLED;
 	delay is only half the total period. */
 	xFlashRate /= ( portTickType ) 2;
 
-	/* We need to initialise xLastFlashTime prior to the first call to 
+	/* We need to initialise xLastFlashTime prior to the first call to
 	vTaskDelayUntil(). */
 	xLastFlashTime = xTaskGetTickCount();
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -166,7 +166,7 @@ unsigned short usPacketLength;
 		if( ( usPacketLength > 0U ) && ( uip_buf != NULL ) )
 		{
 			uip_len = usPacketLength;
-			
+
 			if( xHeader->type == htons( UIP_ETHTYPE_IP ) )
 			{
 				uip_arp_ipin();
@@ -210,7 +210,7 @@ unsigned short usPacketLength;
 				for( i = 0; i < UIP_CONNS; i++ )
 				{
 					uip_periodic( i );
-	
+
 					/* If the above function invocation resulted in data that
 					should be sent out on the network, the global variable
 					uip_len is set to a value > 0. */
@@ -273,14 +273,14 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 	xEMACEventQueue = xQueueCreate( uipEVENT_QUEUE_LENGTH, sizeof( unsigned long ) );
 
 	/* Create and start the uIP timers. */
-	xARPTimer = xTimerCreate( 	( signed char * ) "ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
+	xARPTimer = xTimerCreate( 	"ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
 								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
 								pdTRUE, /* Autor-reload. */
 								( void * ) uipARP_TIMER,
 								prvUIPTimerCallback
 							);
 
-	xPeriodicTimer = xTimerCreate( 	( signed char * ) "PeriodicTimer",
+	xPeriodicTimer = xTimerCreate( 	"PeriodicTimer",
 									( 500UL / portTICK_RATE_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,
@@ -328,7 +328,7 @@ const unsigned long ulYellowLED = 2UL;
 
 	/* Only interested in processing form input if this is the IO page. */
 	c = strstr( pcInputString, "io.shtml" );
-	
+
 	if( c )
 	{
 		/* Is there a command in the string? */

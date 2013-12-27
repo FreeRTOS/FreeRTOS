@@ -105,7 +105,7 @@ mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
 The simply blinky demo is implemented and described in main_blinky.c.  The more 
 comprehensive test and demo application is implemented and described in 
 main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -257,6 +257,8 @@ void vApplicationTickHook( void )
 
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
+static portBASE_TYPE xPrinted = pdFALSE;
+
 	/* Parameters are not used. */
 	( void ) ulLine;
 	( void ) pcFileName;
@@ -264,12 +266,15 @@ void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 	taskDISABLE_INTERRUPTS();
 
 	/* Stop the trace recording. */
-	if( xTraceRunning == pdTRUE )
+	if( xPrinted == pdFALSE )
 	{
+		xPrinted = pdTRUE;
+		if( xTraceRunning == pdTRUE )
+		{
 		vTraceStop();
 		prvSaveTraceFile();
+		}
 	}
-		
 	for( ;; );
 }
 /*-----------------------------------------------------------*/

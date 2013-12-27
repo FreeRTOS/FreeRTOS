@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -122,7 +122,7 @@ extern void vSetupTimerTest( void );
 /*
  * The Check task periodical interrogates each of the running tests to
  * ensure that they are still executing correctly.
- * If all the tests pass, then the LCD is updated with Pass, the number of 
+ * If all the tests pass, then the LCD is updated with Pass, the number of
  * iterations and the Jitter time calculated but the Fast Interrupt Test.
  * If any one of the tests fail, it is indicated with an error code printed on
  * the display. This indicator won't disappear until the device is reset.
@@ -157,7 +157,7 @@ void main( void )
 	vStartInterruptQueueTasks();
 
 	/* Start the error checking task. */
-  	( void ) xTaskCreate( vCheckTask, ( signed portCHAR * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+  	( void ) xTaskCreate( vCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Configure the timers used by the fast interrupt timer test. */
 	vSetupTimerTest();
@@ -204,14 +204,14 @@ extern cyisraddress CyRamVectors[];
 
 	/* Start the UART. */
 	UART_1_Start();
-	
+
 	/* Initialise the LEDs. */
 	vParTestInitialise();
-	
+
 	/* Start the PWM modules that drive the IntQueue tests. */
 	High_Frequency_PWM_0_Start();
 	High_Frequency_PWM_1_Start();
-	
+
 	/* Start the timers for the Jitter test. */
 	Timer_20KHz_Start();
 	Timer_48MHz_Start();
@@ -228,73 +228,73 @@ extern unsigned portSHORT usMaxJitter;
 
 	/* Intialise the sleeper. */
 	xDelay = xTaskGetTickCount();
-	
+
 	for( ;; )
 	{
 		/* Perform this check every mainCHECK_DELAY milliseconds. */
 		vTaskDelayUntil( &xDelay, mainCHECK_DELAY );
-		
+
 		/* Check that all of the Demo tasks are still running. */
 		if( pdTRUE != xAreBlockingQueuesStillRunning() )
 		{
 			usErrorCode |= 0x1;
 		}
-		
+
 		if( pdTRUE != xAreBlockTimeTestTasksStillRunning() )
 		{
 			usErrorCode |= 0x2;
 		}
-		
+
 		if( pdTRUE != xAreCountingSemaphoreTasksStillRunning() )
 		{
 			usErrorCode |= 0x4;
 		}
-		
+
 		if( pdTRUE != xIsCreateTaskStillRunning() )
 		{
 			usErrorCode |= 0x8;
 		}
-		
+
 		if( pdTRUE != xAreDynamicPriorityTasksStillRunning() )
 		{
 			usErrorCode |= 0x10;
 		}
-		
+
 		if( pdTRUE != xAreMathsTaskStillRunning() )
 		{
 			usErrorCode |= 0x20;
 		}
-		
+
 		if( pdTRUE != xAreGenericQueueTasksStillRunning() )
 		{
 			usErrorCode |= 0x40;
 		}
-		
+
 		if( pdTRUE != xAreIntegerMathsTaskStillRunning() )
 		{
 			usErrorCode |= 0x80;
 		}
-		
+
 		if( pdTRUE != xArePollingQueuesStillRunning() )
 		{
 			usErrorCode |= 0x100;
 		}
-		
+
 		if( pdTRUE != xAreQueuePeekTasksStillRunning() )
 		{
 			usErrorCode |= 0x200;
 		}
-				
+
 		if( pdTRUE != xAreSemaphoreTasksStillRunning() )
 		{
 			usErrorCode |= 0x400;
 		}
-		
+
 		if( pdTRUE != xAreComTestTasksStillRunning() )
 		{
 			usErrorCode |= 0x800;
 		}
-		
+
 		if( pdTRUE != xAreIntQueueTasksStillRunning() )
 		{
 			usErrorCode |= 0x1000;

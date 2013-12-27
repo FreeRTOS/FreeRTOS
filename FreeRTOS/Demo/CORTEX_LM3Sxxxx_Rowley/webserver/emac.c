@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -145,7 +145,7 @@ portBASE_TYPE xReturn;
 	task level. */
 	vSemaphoreCreateBinary( xMACInterruptSemaphore );
 	xSemaphoreTake( xMACInterruptSemaphore, 0 );
-	xReturn = xTaskCreate( vMACHandleTask, ( signed char * ) "MAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+	xReturn = xTaskCreate( vMACHandleTask, "MAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 	vTaskDelay( macNEGOTIATE_DELAY );
 
 	/* We are only interested in Rx interrupts. */

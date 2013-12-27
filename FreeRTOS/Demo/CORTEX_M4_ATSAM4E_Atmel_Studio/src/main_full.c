@@ -296,11 +296,11 @@ xTimerHandle xTimer = NULL;
 
 	/* Create the software timer that performs the 'check' functionality, as
 	described at the top of this file. */
-	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,						/* The ID is not used, so can be set to anything. */
-							prvCheckTimerCallback );			/* The callback function that inspects the status of all the other tasks. */
+	xTimer = xTimerCreate( 	"CheckTimer",					/* A text name, purely to help debugging. */
+							( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+							pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+							( void * ) 0,					/* The ID is not used, so can be set to anything. */
+							prvCheckTimerCallback );		/* The callback function that inspects the status of all the other tasks. */
 
 	if( xTimer != NULL )
 	{
@@ -448,7 +448,7 @@ char cIPAddress[ 20 ];
 		for a new connection by lowering the priority of the IP task to that of
 		the Idle task. */
 		vTaskPrioritySet( NULL, tskIDLE_PRIORITY );
-		
+
 		/* Disconnected - so no IP address. */
 		ili93xx_draw_string( ulXCoord, ulYCoord, ( uint8_t * ) "IP:                  " );
 	}

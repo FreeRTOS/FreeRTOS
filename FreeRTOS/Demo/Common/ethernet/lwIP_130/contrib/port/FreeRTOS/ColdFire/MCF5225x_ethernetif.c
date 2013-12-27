@@ -501,7 +501,7 @@ const unsigned char ucMACAddress[6] =
 	#endif
 
 	/* Create the task that handles the EMAC. */
-	xTaskCreate( ethernetif_input, ( signed char * ) "ETH_INT", configETHERNET_INPUT_TASK_STACK_SIZE, (void *)netif, configETHERNET_INPUT_TASK_PRIORITY, &xEthIntTask );
+	xTaskCreate( ethernetif_input, "ETH_INT", configETHERNET_INPUT_TASK_STACK_SIZE, (void *)netif, configETHERNET_INPUT_TASK_PRIORITY, &xEthIntTask );
 	
 	fec_irq_enable();
 	MCF_FEC_ECR = MCF_FEC_ECR_ETHER_EN;

@@ -188,7 +188,7 @@ const unsigned long ulLongTime_ms = 1000UL;
 	tcpip_init( lwIPAppsInit, NULL );
 
 	/* Create and start the check timer, as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+	xCheckTimer = xTimerCreate( "CheckTimer",/* A text name, purely to help debugging. */
 								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
 								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */
@@ -373,7 +373,7 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 
 	/* Generate a table of task stats. */
 	strcpy( pcWriteBuffer, pcHeader );
-	vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
+	vTaskGetRunTimeStats( ( char * ) pcWriteBuffer + strlen( pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */

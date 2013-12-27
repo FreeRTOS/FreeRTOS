@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -318,37 +318,37 @@ int main(void)
 	{
 		/* Start the two application specific demo tasks, as described in the
 		comments at the top of this	file. */
-		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Create the software timer that is responsible for turning off the LED
 		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
-		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( mainLED_TIMER_PERIOD_MS ),		/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									prvLEDTimerCallback					/* The callback function that switches the LED off. */
+		xLEDTimer = xTimerCreate( 	"LEDTimer", 				/* A text name, purely to help debugging. */
+									( mainLED_TIMER_PERIOD_MS ),/* The timer period, in this case 5000ms (5s). */
+									pdFALSE,					/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									( void * ) 0,				/* The ID is not used, so can be set to anything. */
+									prvLEDTimerCallback			/* The callback function that switches the LED off. */
 								);
 
 		/* Create the software timer that performs the 'check' functionality,
 		as described at the top of this file. */
-		xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-									( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+		xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+									( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,					/* The ID is not used, so can be set to anything. */
+									prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
 								  );
 
 		/* Create the software timer that performs the 'digit counting'
 		functionality, as described at the top of this file. */
-		xDigitCounterTimer = xTimerCreate( ( const signed char * ) "DigitCounter",	/* A text name, purely to help debugging. */
-									( mainDIGIT_COUNTER_TIMER_PERIOD_MS ),			/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,											/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,									/* The ID is not used, so can be set to anything. */
-									prvDigitCounterTimerCallback					/* The callback function that inspects the status of all the other tasks. */
-								  );		
-		
+		xDigitCounterTimer = xTimerCreate( "DigitCounter",					/* A text name, purely to help debugging. */
+									( mainDIGIT_COUNTER_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,							/* The ID is not used, so can be set to anything. */
+									prvDigitCounterTimerCallback			/* The callback function that inspects the status of all the other tasks. */
+								  );
+
 		/* Create a lot of 'standard demo' tasks.  Over 40 tasks are created in
 		this demo.  For a much simpler demo, select the 'blinky' build
 		configuration. */
@@ -364,7 +364,7 @@ int main(void)
 		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 		vStartCountingSemaphoreTasks();
 		vStartDynamicPriorityTasks();
-		
+
 		/* The suicide tasks must be created last, as they need to know how many
 		tasks were running prior to their creation in order to ascertain whether
 		or not the correct/expected number of tasks are running at any given
@@ -427,7 +427,7 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 	{
 		pcStatusMessage = "Error: ComTest\r\n";
 	}
-	
+
 	if( xAreTimerDemoTasksStillRunning( ( mainCHECK_TIMER_PERIOD_MS ) ) != pdTRUE )
 	{
 		pcStatusMessage = "Error: TimerDemo";
@@ -442,12 +442,12 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 	{
 		pcStatusMessage = "Error: CountSem";
 	}
-	
+
 	if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 	{
 		pcStatusMessage = "Error: DynamicPriority";
 	}
-	
+
 	/* Toggle the check LED to give an indication of the system status.  If
 	the LED toggles every mainCHECK_TIMER_PERIOD_MS milliseconds then
 	everything is ok.  A faster toggle indicates an error. */
@@ -485,9 +485,9 @@ const long lNumberOfDigits = 10L;
 	/* Display the next number, counting up. */
 	FM3_GPIO->PDOR1 = usNumbersPatterns[ lCounter ];
 
-	/* Move onto the next digit. */	
+	/* Move onto the next digit. */
 	lCounter++;
-	
+
 	/* Ensure the counter does not go off the end of the array. */
 	if( lCounter >= lNumberOfDigits )
 	{
@@ -587,15 +587,15 @@ const unsigned short usButtonInputBit = 0x01U;
 	SystemCoreClockUpdate();
 
 	/* Initialise the IO used for the LEDs on the 7 segment displays. */
-	vParTestInitialise();	
-	
+	vParTestInitialise();
+
 	/* Set the switches to input (P18->P1F). */
 	FM3_GPIO->DDR5 = 0x0000;
 	FM3_GPIO->PFR5 = 0x0000;
 
 	/* Assign the button input as GPIO. */
 	FM3_GPIO->PFR1 |= usButtonInputBit;
-	
+
 	/* Button interrupt on falling edge. */
 	FM3_EXTI->ELVR  = 0x0003;
 
@@ -604,7 +604,7 @@ const unsigned short usButtonInputBit = 0x01U;
 
 	/* Enable the button interrupt. */
 	FM3_EXTI->ENIR |= usButtonInputBit;
-	
+
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( EXINT0_7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
     NVIC_EnableIRQ( EXINT0_7_IRQn );
@@ -659,6 +659,6 @@ void vApplicationTickHook( void )
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
 	vTimerPeriodicISRTests();
-}	
+}
 /*-----------------------------------------------------------*/
 

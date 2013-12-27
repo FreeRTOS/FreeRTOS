@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -239,7 +239,7 @@ structure passed to the xTaskCreateRestricted() function. */
 static const xTaskParameters xCheckTaskParameters =
 {
 	prvCheckTask,								/* pvTaskCode - the function that implements the task. */
-	( signed char * ) "Check",					/* pcName			*/
+	"Check",									/* pcName			*/
 	mainCHECK_TASK_STACK_SIZE_WORDS,			/* usStackDepth	- defined in words, not bytes. */
 	( void * ) 0x12121212,						/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
 	( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT,/* uxPriority - this is the highest priority task in the system.  The task is created in privileged mode to demonstrate accessing the privileged only data. */
@@ -280,7 +280,7 @@ static portSTACK_TYPE xRegTest2Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_
 static const xTaskParameters xRegTest1Parameters =
 {
 	prvRegTest1Task,						/* pvTaskCode - the function that implements the task. */
-	( signed char * ) "RegTest1",			/* pcName			*/
+	"RegTest1",								/* pcName			*/
 	mainREG_TEST_STACK_SIZE_WORDS,			/* usStackDepth		*/
 	( void * ) 0x12345678,					/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
 	tskIDLE_PRIORITY | portPRIVILEGE_BIT,	/* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
@@ -297,7 +297,7 @@ static const xTaskParameters xRegTest1Parameters =
 static xTaskParameters xRegTest2Parameters =
 {
 	prvRegTest2Task,				/* pvTaskCode - the function that implements the task. */
-	( signed char * ) "RegTest2",	/* pcName			*/
+	"RegTest2",						/* pcName			*/
 	mainREG_TEST_STACK_SIZE_WORDS,	/* usStackDepth		*/
 	( void * ) NULL,				/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
 	tskIDLE_PRIORITY,				/* uxPriority		*/
@@ -334,7 +334,7 @@ int main( void )
 	/* Create the tasks that are created using the original xTaskCreate() API
 	function. */
 	xTaskCreate(	prvOldStyleUserModeTask,	/* The function that implements the task. */
-					( signed char * ) "Task1",	/* Text name for the task. */
+					"Task1",					/* Text name for the task. */
 					100,						/* Stack depth in words. */
 					NULL,						/* Task parameters. */
 					3,							/* Priority and mode (user in this case). */
@@ -342,7 +342,7 @@ int main( void )
 				);
 
 	xTaskCreate(	prvOldStylePrivilegedModeTask,	/* The function that implements the task. */
-					( signed char * ) "Task2",		/* Text name for the task. */
+					"Task2",						/* Text name for the task. */
 					100,							/* Stack depth in words. */
 					NULL,							/* Task parameters. */
 					( 3 | portPRIVILEGE_BIT ),		/* Priority and mode. */

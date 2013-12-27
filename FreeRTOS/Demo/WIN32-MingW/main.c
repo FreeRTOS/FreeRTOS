@@ -105,7 +105,7 @@ mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
 The simply blinky demo is implemented and described in main_blinky.c.  The more 
 comprehensive test and demo application is implemented and described in 
 main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -143,19 +143,17 @@ static portBASE_TYPE xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
-
 int main( void )
 {
 	/* Initialise the trace recorder and create the label used to post user
 	events to the trace recording on each tick interrupt. */
 	vTraceInitTraceData();
-	printf( "Trace started.  Hit a key to dump trace file to disk.  Note stdin does not work when using the Eclipse console with MingW.\r\n" );
-	fflush( stdout );
-
 	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
 
 	/* Start the trace recording - the recording is written to a file if
 	configASSERT() is called. */
+	printf( "\r\nTrace started.  Hit a key to dump trace file to disk (does not work from Eclipse console).\r\n" );
+	fflush( stdout );
 	uiTraceStart();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
@@ -203,7 +201,7 @@ void vApplicationIdleHook( void )
 	memory allocated by the kernel to any task that has since been deleted. */
 
 	/* The trace can be stopped with any key press. */
-	if( kbhit() != pdFALSE )
+	if( _kbhit() != pdFALSE )
 	{
 		if( xTraceRunning == pdTRUE )
 		{
@@ -260,6 +258,8 @@ void vApplicationTickHook( void )
 
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
+static portBASE_TYPE xPrinted = pdFALSE;
+
 	/* Parameters are not used. */
 	( void ) ulLine;
 	( void ) pcFileName;
@@ -268,10 +268,14 @@ void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 	__asm volatile( "int $3" );
 
 	/* Stop the trace recording. */
-	if( xTraceRunning == pdTRUE )
+	if( xPrinted == pdFALSE )
 	{
+		xPrinted = pdTRUE;
+		if( xTraceRunning == pdTRUE )
+		{
 		vTraceStop();
 		prvSaveTraceFile();
+		}
 	}
 
 	taskENABLE_INTERRUPTS();
@@ -289,11 +293,9 @@ FILE* pxOutputFile;
 		fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
 		fclose( pxOutputFile );
 		printf( "\r\nTrace output saved to Trace.dump\r\n" );
-		fflush( stdout );
 	}
 	else
 	{
 		printf( "\r\nFailed to create trace dump file\r\n" );
-		fflush( stdout );
 	}
 }

@@ -126,11 +126,11 @@ static unsigned short generate_tcp_stats( void *arg )
 	struct httpd_state	*s = ( struct httpd_state * ) arg;
 
 	conn = &uip_conns[s->count];
-	return sprintf( ( char * ) uip_appdata, 
+	return sprintf( ( char * ) uip_appdata,
 					 "<tr><td>%d</td><td>%u.%u.%u.%u:%u</td><td>%s</td><td>%u</td><td>%u</td><td>%c %c</td></tr>\r\n", htons(conn->lport),
 					 htons(conn->ripaddr.u16[0]) >> 8, htons(conn->ripaddr.u16[0]) & 0xff, htons(conn->ripaddr.u16[1]) >> 8,
 					 htons(conn->ripaddr.u16[1]) & 0xff, htons(conn->rport), states[conn->tcpstateflags & UIP_TS_MASK], conn->nrtx, conn->timer,
-					 (uip_outstanding(conn)) ? '*' : ' ', (uip_stopped(conn)) ? '!' : ' ' ); 
+					 (uip_outstanding(conn)) ? '*' : ' ', (uip_stopped(conn)) ? '!' : ' ' );
 }
 
 /*---------------------------------------------------------------------------*/
@@ -172,7 +172,7 @@ static PT_THREAD( net_stats ( struct httpd_state *s, char *ptr ) )
 }
 
 /*---------------------------------------------------------------------------*/
-extern void vTaskList( signed char *pcWriteBuffer );
+extern void vTaskList( char *pcWriteBuffer );
 extern char *pcGetTaskStatusMessage( void );
 static char cCountBuf[128];
 long		lRefreshCount = 0;
@@ -181,7 +181,7 @@ static unsigned short generate_rtos_stats( void *arg )
 	( void ) arg;
 	lRefreshCount++;
 	sprintf( cCountBuf, "<p><br>Refresh count = %d<p><br>%s", ( int ) lRefreshCount, pcGetTaskStatusMessage() );
-	vTaskList( uip_appdata );
+	vTaskList( ( char * ) uip_appdata );
 	strcat( uip_appdata, cCountBuf );
 
 	return strlen( uip_appdata );
@@ -221,13 +221,13 @@ static unsigned short generate_io_state( void *arg )
 }
 
 /*---------------------------------------------------------------------------*/
-extern void vTaskGetRunTimeStats( signed char *pcWriteBuffer );
+extern void vTaskGetRunTimeStats( char *pcWriteBuffer );
 static unsigned short generate_runtime_stats( void *arg )
 {
 	( void ) arg;
 	lRefreshCount++;
 	sprintf( cCountBuf, "<p><br>Refresh count = %d", ( int ) lRefreshCount );
-	vTaskGetRunTimeStats( uip_appdata );
+	vTaskGetRunTimeStats( ( char * ) uip_appdata );
 	strcat( uip_appdata, cCountBuf );
 
 	return strlen( uip_appdata );

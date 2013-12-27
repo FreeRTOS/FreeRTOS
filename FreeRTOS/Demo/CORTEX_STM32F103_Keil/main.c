@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -220,7 +220,7 @@ int main( void )
 	/* Create the queue used by the LCD task.  Messages for display on the LCD
 	are received via this queue. */
 	xLCDQueue = xQueueCreate( mainLCD_QUEUE_SIZE, sizeof( xLCDMessage ) );
-	
+
 	/* Start the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
     vCreateBlockTimeTasks();
@@ -231,20 +231,20 @@ int main( void )
 	vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 
 	/* Start the tasks defined within this file/specific to this demo. */
-    xTaskCreate( vCheckTask, ( signed portCHAR * ) "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );	
-	xTaskCreate( vLCDTask, ( signed portCHAR * ) "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+    xTaskCreate( vCheckTask, "Check", mainCHECK_TASK_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
     vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	
+
 	/* Configure the timers used by the fast interrupt timer test. */
 	vSetupTimerTest();
-	
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
-	
+
 	/* Will only get here if there was not enough heap space to create the
 	idle task. */
 	return 0;
@@ -279,7 +279,7 @@ extern unsigned portSHORT usMaxJitter;
 
 	xLastExecutionTime = xTaskGetTickCount();
 	xMessage.pcMessage = cPassMessage;
-	
+
     for( ;; )
 	{
 		/* Perform this check every mainCHECK_DELAY milliseconds. */
@@ -314,7 +314,7 @@ extern unsigned portSHORT usMaxJitter;
 		else if( xAreComTestTasksStillRunning() != pdTRUE )
 		{
 			xMessage.pcMessage = "ERROR IN COM TEST\n";
-		}				
+		}
 		else
 		{
 			sprintf( ( portCHAR * ) cPassMessage, "PASS [%uns]\n", ( ( unsigned portLONG ) usMaxJitter ) * mainNS_PER_CLOCK );
@@ -382,10 +382,10 @@ static void prvSetupHardware( void )
 	NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x0 );
 
 	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-	
+
 	/* Configure HCLK clock as SysTick clock source. */
 	SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
-	
+
 	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
@@ -430,10 +430,10 @@ static unsigned portCHAR ucLine = 0;
 	{
 		/* Display one character on LCD */
 		LCD_DisplayChar( ucLine, usRefColumn, (u8) ch );
-		
+
 		/* Decrement the column position by 16 */
 		usRefColumn -= mainCOLUMN_INCREMENT;
-		
+
 		/* Increment the character counter */
 		usColumn++;
 		if( usColumn == mainMAX_COLUMN )
@@ -448,7 +448,7 @@ static unsigned portCHAR ucLine = 0;
 		/* Move back to the first column of the next line. */
 		ucLine += mainROW_INCREMENT;
 		usRefColumn = mainCOLUMN_START;
-		usColumn = 0;	
+		usColumn = 0;
 	}
 
 	/* Wrap back to the top of the display. */
@@ -456,7 +456,7 @@ static unsigned portCHAR ucLine = 0;
 	{
 		ucLine = 0;
 	}
-	
+
 	return ch;
 }
 /*-----------------------------------------------------------*/

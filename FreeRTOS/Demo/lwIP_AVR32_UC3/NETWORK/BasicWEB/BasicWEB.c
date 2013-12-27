@@ -186,7 +186,7 @@ static unsigned portLONG ulPageHits = 0;
 			strcat( cDynamicPage, "<p><pre>Task          State  Priority  Stack	#<br>************************************************<br>" );
 
 			/* ... Then the list of tasks and their status... */
-			vTaskList( ( signed portCHAR * ) cDynamicPage + strlen( cDynamicPage ) );
+			vTaskList( cDynamicPage + strlen( cDynamicPage ) );
 
 			/* ... Finally the page footer. */
 			strcat( cDynamicPage, webHTML_END );

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -85,8 +85,8 @@ static signed char seg7_digits[4];
 
 void vStart7SegTasks( unsigned portBASE_TYPE uxPriority )
 {
-	xTaskCreate( prvRefreshTask, ( signed char * ) "7SegRefresh", x7segSTACK_SIZE, NULL, uxPriority, ( xTaskHandle *) NULL );
-	xTaskCreate( prvCountTask,   ( signed char * ) "7SegCount",	x7segSTACK_SIZE, NULL, uxPriority, ( xTaskHandle *) NULL );
+	xTaskCreate( prvRefreshTask, "7SegRefresh", x7segSTACK_SIZE, NULL, uxPriority, ( xTaskHandle *) NULL );
+	xTaskCreate( prvCountTask, "7SegCount",	x7segSTACK_SIZE, NULL, uxPriority, ( xTaskHandle *) NULL );
 }
 /*-----------------------------------------------------------*/
 

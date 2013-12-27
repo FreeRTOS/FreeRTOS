@@ -146,7 +146,7 @@ xQueueHandle xStartLCDTask( void )
 
 	/* Start the task that will write to the LCD.  The LCD hardware is
 	initialised from within the task itself so delays can be used. */
-	xTaskCreate( vLCDTask, ( signed char * ) "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
+	xTaskCreate( vLCDTask, "LCD", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL );
 
 	return xLCDQueue;
 }

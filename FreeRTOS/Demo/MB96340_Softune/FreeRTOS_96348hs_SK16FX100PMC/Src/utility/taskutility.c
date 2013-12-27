@@ -8,7 +8,7 @@
 
 /*------------------------------------------------------------------------
   taskutility.C
-  - 
+  -
 -------------------------------------------------------------------------*/
 
 /*************************@INCLUDE_START************************/
@@ -138,7 +138,7 @@ void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 		portENTER_CRITICAL();
 		InitUart0();
 		portENTER_CRITICAL();
-		xTaskCreate( vUART0Task, (signed portCHAR *) "UART1", configMINIMAL_STACK_SIZE * 3, ( void * ) NULL, uxPriority, &UART_TaskHandle );
+		xTaskCreate( vUART0Task, "UART1", configMINIMAL_STACK_SIZE * 3, ( void * ) NULL, uxPriority, &UART_TaskHandle );
 	}
 }
 
@@ -171,7 +171,7 @@ static void vUART0Task( void *pvParameters )
 		switch( ch )
 		{
 			case '1':
-				vTaskList( (signed char *) buff );
+				vTaskList( buff );
 				Puts0( "\n\rThe current task list is as follows...." );
 				Puts0( "\n\r----------------------------------------------" );
 				Puts0( "\n\rName          State  Priority  Stack   Number" );

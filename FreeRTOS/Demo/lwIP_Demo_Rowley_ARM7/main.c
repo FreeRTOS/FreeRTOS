@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,9 +63,9 @@
     1 tab == 4 spaces!
 */
 
-/* 
+/*
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used.
@@ -75,10 +75,10 @@
 /*
  * Creates all the application tasks, then starts the scheduler.
  *
- * A task defined by the function vBasicWEBServer is created.  This executes 
+ * A task defined by the function vBasicWEBServer is created.  This executes
  * the lwIP stack and basic WEB server sample.  A task defined by the function
- * vUSBCDCTask.  This executes the USB to serial CDC example.  All the other 
- * tasks are from the set of standard demo tasks.  The WEB documentation 
+ * vUSBCDCTask.  This executes the USB to serial CDC example.  All the other
+ * tasks are from the set of standard demo tasks.  The WEB documentation
  * provides more details of the standard demo application tasks.
  *
  * Main.c also creates a task called "Check".  This only executes every three
@@ -96,7 +96,7 @@
 /*
 	Changes from V3.2.2
 
-	+ Modified the stack sizes used by some tasks to permit use of the 
+	+ Modified the stack sizes used by some tasks to permit use of the
 	  command line GCC tools.
 */
 
@@ -119,7 +119,7 @@
 #include "USB-CDC.h"
 
 /* lwIP includes. */
-#include "lwip/api.h" 
+#include "lwip/api.h"
 
 /* Hardware specific headers. */
 #include "Board.h"
@@ -194,7 +194,7 @@ int main( void )
     sys_thread_new( vBasicWEBServer, ( void * ) NULL, mainWEBSERVER_PRIORITY );
 
 	/* Create the demo USB CDC task. */
-	xTaskCreate( vUSBCDCTask, ( signed char * ) "USB", mainUSB_TASK_STACK, NULL, mainUSB_PRIORITY, NULL );
+	xTaskCreate( vUSBCDCTask, "USB", mainUSB_TASK_STACK, NULL, mainUSB_PRIORITY, NULL );
 
 	/* Create the standard demo application tasks. */
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -203,13 +203,13 @@ int main( void )
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
-	/* Start the check task - which is defined in this file. */	
-    xTaskCreate( vErrorChecks, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	/* Start the check task - which is defined in this file. */
+    xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
-	/* Finally, start the scheduler. 
+	/* Finally, start the scheduler.
 
 	NOTE : Tasks run in system mode and the scheduler runs in Supervisor mode.
-	The processor MUST be in supervisor mode when vTaskStartScheduler is 
+	The processor MUST be in supervisor mode when vTaskStartScheduler is
 	called.  The demo applications included in the FreeRTOS.org download switch
 	to supervisor mode prior to main being called.  If you are not using one of
 	these demo application projects then ensure Supervisor mode is used here. */
@@ -227,7 +227,7 @@ static void prvSetupHardware( void )
 	the correct default state.  This line just ensures that this does not
 	cause all interrupts to be masked at the start. */
 	AT91C_BASE_AIC->AIC_EOICR = 0;
-	
+
 	/* Most setup is performed by the low level init function called from the
 	startup asm file.
 
@@ -265,7 +265,7 @@ portTickType xLastWakeTime;
 		/* Delay until it is time to execute again.  The delay period is
 		shorter following an error. */
 		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
-	
+
 		/* Check all the standard demo application tasks are executing without
 		error.  */
 		if( prvCheckOtherTasksAreStillRunning() != pdPASS )
@@ -324,7 +324,7 @@ char cTxByte;
 		for( cTxByte = mainFIRST_TX_CHAR; cTxByte <= mainLAST_TX_CHAR; cTxByte++ )
 		{
 			vUSBSendByte( cTxByte );
-		}		
+		}
 	}
 }
 

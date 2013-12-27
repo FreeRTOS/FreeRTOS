@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -187,15 +187,15 @@ int main( void )
 
 	/* Start the two tasks as described in the comments at the top of this
 	file. */
-	xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-	xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+	xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+	xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 	/* Create the software timer */
-	xExampleSoftwareTimer = xTimerCreate( 	( const signed char * ) "SoftwareTimer", /* A text name, purely to help debugging. */
-											( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
-											pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-											( void * ) 0,						/* The ID is not used, so can be set to anything. */
-											vSoftwareTimerCallback				/* The callback function that switches the LED off. */
+	xExampleSoftwareTimer = xTimerCreate( 	"SoftwareTimer", 			/* A text name, purely to help debugging. */
+											( 5000 / portTICK_RATE_MS ),/* The timer period, in this case 5000ms (5s). */
+											pdTRUE,						/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+											( void * ) 0,				/* The ID is not used, so can be set to anything. */
+											vSoftwareTimerCallback		/* The callback function that switches the LED off. */
 										);
 
 	/* Start the software timer. */

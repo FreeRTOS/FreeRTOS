@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -75,9 +75,9 @@
  * required to configure the hardware, are defined in main.c.
  ******************************************************************************
  *
- * main_full() creates all the demo application tasks and software timers, then 
- * starts the scheduler.  The WEB documentation provides more details of the 
- * standard demo application tasks.  In addition to the standard demo tasks, the 
+ * main_full() creates all the demo application tasks and software timers, then
+ * starts the scheduler.  The WEB documentation provides more details of the
+ * standard demo application tasks.  In addition to the standard demo tasks, the
  * following tasks and tests are defined and/or created within this file:
  *
  * "LCD" task - the LCD task is a 'gatekeeper' task.  It is the only task that
@@ -93,34 +93,34 @@
  * the check software timer discovers that a task has either stalled, or
  * reported an error, then it changes its own execution period from the initial
  * three seconds, to just 200ms.  The check software timer callback function
- * also writes a status message to the LCD (via the LCD task).  If all the demo 
- * tasks are executing with their expected behaviour then the check task writes 
+ * also writes a status message to the LCD (via the LCD task).  If all the demo
+ * tasks are executing with their expected behaviour then the check task writes
  * a count of the number of times the high frequency interrupt has incremented
  * ulHighFrequencyTimerInterrupts - which is one in every 20,000 interrupts.
  *
  * "Register test" tasks - These tasks are used in part to test the kernel port.
- * They set each processor register to a known value, then check that the 
+ * They set each processor register to a known value, then check that the
  * register still contains that value.  Each of the tasks sets the registers
- * to different values, and will get swapping in and out between setting and 
+ * to different values, and will get swapping in and out between setting and
  * then subsequently checking the register values.  Discovery of an incorrect
  * value would be indicative of an error in the task switching mechanism.
  *
- * By way of demonstration, the demo application defines 
- * configMAX_SYSCALL_INTERRUPT_PRIORITY to be 3, configKERNEL_INTERRUPT_PRIORITY 
+ * By way of demonstration, the demo application defines
+ * configMAX_SYSCALL_INTERRUPT_PRIORITY to be 3, configKERNEL_INTERRUPT_PRIORITY
  * to be 1, and all other interrupts as follows:
  *
- *	+ The UART is allocated a priority of 2. This means it can interrupt the 
+ *	+ The UART is allocated a priority of 2. This means it can interrupt the
  *    RTOS tick, and can also safely use queues.
- *  + Two timers are configured to generate interrupts just to test the nesting 
- *    and queue access mechanisms. These timers are allocated priorities 2 and 3 
- *    respectively. Even though they both access the same two queues, the 
- *    priority 3 interrupt can safely interrupt the priority 2 interrupt. Both 
+ *  + Two timers are configured to generate interrupts just to test the nesting
+ *    and queue access mechanisms. These timers are allocated priorities 2 and 3
+ *    respectively. Even though they both access the same two queues, the
+ *    priority 3 interrupt can safely interrupt the priority 2 interrupt. Both
  *    can interrupt the RTOS tick.
- *  + Finally a high frequency timer interrupt is configured to use priority 4 - 
- *    therefore kernel activity will never prevent the high frequency timer from 
- *    executing immediately that the interrupt is raised (within the limitations 
- *    of the hardware itself). It would not be safe to access a queue from this 
- *    interrupt as it is above configMAX_SYSCALL_INTERRUPT_PRIORITY. 
+ *  + Finally a high frequency timer interrupt is configured to use priority 4 -
+ *    therefore kernel activity will never prevent the high frequency timer from
+ *    executing immediately that the interrupt is raised (within the limitations
+ *    of the hardware itself). It would not be safe to access a queue from this
+ *    interrupt as it is above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  *
  * See the online documentation for this demo for more information on interrupt
  * usage.
@@ -176,14 +176,14 @@ See the comtest.c file for more information. */
 /* Misc. */
 #define mainDONT_BLOCK						( 0 )
 
-/* Dimension the buffer used to hold the value of the high frequency timer 
+/* Dimension the buffer used to hold the value of the high frequency timer
 count when it is converted to a string. */
 #define mainMAX_STRING_LENGTH				( 20 )
 
 /* The frequency at which the "fast interrupt test" interrupt will occur. */
 #define mainTEST_INTERRUPT_FREQUENCY		( 20000 )
 
-/* The number of timer clocks expected to occur between each "fast interrupt 
+/* The number of timer clocks expected to occur between each "fast interrupt
 test" interrupt. */
 #define mainEXPECTED_CLOCKS_BETWEEN_INTERRUPTS ( ( configCPU_CLOCK_HZ >> 1 ) / mainTEST_INTERRUPT_FREQUENCY )
 
@@ -219,11 +219,11 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
 static void prvSetupHighFrequencyTimerTest( xTimerHandle xTimer );
 
 /*
- * Tasks that test the context switch mechanism by filling the processor 
+ * Tasks that test the context switch mechanism by filling the processor
  * registers with known values, then checking that the values contained
  * within the registers is as expected.  The tasks are likely to get swapped
  * in and out between setting the register values and checking the register
- * values. 
+ * values.
  */
 static void prvRegTestTask1( void *pvParameters );
 static void prvRegTestTask2( void *pvParameters );
@@ -233,7 +233,7 @@ static void prvRegTestTask2( void *pvParameters );
 /* The queue used to send messages to the LCD task. */
 static xQueueHandle xLCDQueue;
 
-/* Variables incremented by prvRegTestTask1() and prvRegTestTask2() respectively on 
+/* Variables incremented by prvRegTestTask1() and prvRegTestTask2() respectively on
 each iteration of their function.  This is used to detect either task stopping
 their execution.. */
 volatile unsigned long ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
@@ -247,7 +247,7 @@ int main_full( void )
 {
 xTimerHandle xTimer = NULL;
 
-	/* Create the LCD task - this returns the queue to use when writing 
+	/* Create the LCD task - this returns the queue to use when writing
 	messages to the LCD. */
 	xLCDQueue = xStartLCDTask();
 
@@ -260,34 +260,34 @@ xTimerHandle xTimer = NULL;
 	vStartInterruptQueueTasks();
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( prvRegTestTask1, ( const signed char * const ) "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegTestTask2, ( const signed char * const ) "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTask2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-    /* The PIC32MX795 uses an 8 deep fifo where TX interrupts are asserted 
-	whilst the TX buffer is empty.  This causes an issue with the test driver so 
+    /* The PIC32MX795 uses an 8 deep fifo where TX interrupts are asserted
+	whilst the TX buffer is empty.  This causes an issue with the test driver so
 	it is not used in this demo */
 	#if !defined(__32MX795F512L__)
 		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
-	#endif	
-	
-	/* Create the software timer that performs the 'check' functionality, as 
+	#endif
+
+	/* Create the software timer that performs the 'check' functionality, as
 	described at the top of this file. */
-	xTimer = xTimerCreate( 	( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
+	xTimer = xTimerCreate( 	"CheckTimer",/* A text name, purely to help debugging. */
 							( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
 							pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 							( void * ) 0,						/* The ID is not used, so can be set to anything. */
 							prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
-						);	
-	
+						);
+
 	if( xTimer != NULL )
 	{
 		xTimerStart( xTimer, mainDONT_BLOCK );
 	}
-	
+
 	/* A software timer is also used to start the high frequency timer test.
 	This is to ensure the test does not start before the kernel.  This time a
 	one shot software timer is used. */
-	xTimer = xTimerCreate( ( const signed char * ) "HighHzTimerSetup", 1, pdFALSE, ( void * ) 0, prvSetupHighFrequencyTimerTest );
+	xTimer = xTimerCreate( "HighHzTimerSetup", 1, pdFALSE, ( void * ) 0, prvSetupHighFrequencyTimerTest );
 	if( xTimer != NULL )
 	{
 		xTimerStart( xTimer, mainDONT_BLOCK );
@@ -356,16 +356,16 @@ static xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 	}
 	ulLastRegTest1Value = ulRegTest1Cycles;
 
-	
+
 	/* Check that the register test 2 task is still running. */
 	if( ulLastRegTest2Value == ulRegTest2Cycles )
 	{
 		xMessage.pcMessage = "Error: Reg test3";
 	}
 	ulLastRegTest2Value = ulRegTest2Cycles;
-	
 
-	/* Have any of the standard demo tasks detected an error in their 
+
+	/* Have any of the standard demo tasks detected an error in their
 	operation? */
 	if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 	{
@@ -403,25 +403,25 @@ static xLCDMessage xMessage = { ( 200 / portTICK_RATE_MS ), cStringBuffer };
 		if( lChangedTimerPeriodAlready == pdFALSE )
 		{
 			lChangedTimerPeriodAlready = pdTRUE;
-			
+
 			/* This call to xTimerChangePeriod() uses a zero block time.
 			Functions called from inside of a timer callback function must
 			*never* attempt	to block as to do so could impact other software
 			timers. */
 			xTimerChangePeriod( xTimer, ( mainERROR_CHECK_TIMER_PERIOD_MS ), mainDONT_BLOCK );
-		}		
+		}
 	}
 	else
 	{
-		/* Write the ulHighFrequencyTimerInterrupts value to the string 
+		/* Write the ulHighFrequencyTimerInterrupts value to the string
 		buffer.  It will only be displayed if no errors have been detected. */
 		sprintf( cStringBuffer, "Pass %u", ( unsigned int ) ulHighFrequencyTimerInterrupts );
 	}
 
-	/* Send the status message to the LCD task for display on the LCD.  This is 
+	/* Send the status message to the LCD task for display on the LCD.  This is
 	a timer callback function, so the queue send function *must not* block. */
 	xQueueSend( xLCDQueue, &xMessage, mainDONT_BLOCK );
-	vParTestToggleLED( mainCHECK_LED );	
+	vParTestToggleLED( mainCHECK_LED );
 }
 /*-----------------------------------------------------------*/
 
@@ -430,6 +430,6 @@ static void prvSetupHighFrequencyTimerTest( xTimerHandle xTimer )
 	/* Setup the high frequency, high priority, timer test.  It is setup in this
 	software timer callback to ensure it does not start before the kernel does.
 	This is a one shot timer - so the setup routine will only be executed once. */
-	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );	
+	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 }
 

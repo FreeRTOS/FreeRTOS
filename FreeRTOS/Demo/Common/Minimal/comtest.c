@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -158,14 +158,14 @@ void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulB
 	xSerialPortInitMinimal( ulBaudRate, comBUFFER_LEN );
 
 	/* The Tx task is spawned with a lower priority than the Rx task. */
-	xTaskCreate( vComTxTask, ( signed char * ) "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( xTaskHandle * ) NULL );
-	xTaskCreate( vComRxTask, ( signed char * ) "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( xTaskHandle * ) NULL );
+	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vComTxTask, pvParameters )
 {
-signed char cByteToSend;
+char cByteToSend;
 portTickType xTimeToWait;
 
 	/* Just to stop compiler warnings. */

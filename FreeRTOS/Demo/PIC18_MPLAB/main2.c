@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -64,32 +64,32 @@
 */
 
 /*
- * Instead of the normal single demo application, the PIC18F demo is split 
- * into several smaller programs of which this is the second.  This enables the 
- * demo's to be executed on the RAM limited 40 pin devices.  The 64 and 80 pin 
- * devices require a more costly development platform and are not so readily 
+ * Instead of the normal single demo application, the PIC18F demo is split
+ * into several smaller programs of which this is the second.  This enables the
+ * demo's to be executed on the RAM limited 40 pin devices.  The 64 and 80 pin
+ * devices require a more costly development platform and are not so readily
  * available.
  *
- * The RTOSDemo2 project is configured for a PIC18F452 device.  Main2.c starts  
+ * The RTOSDemo2 project is configured for a PIC18F452 device.  Main2.c starts
  * 5 tasks (including the idle task).
- * 
+ *
  * The first, second and third tasks do nothing but flash an LED.  This gives
  * visual feedback that everything is executing as expected.  One task flashes
  * an LED every 333ms (i.e. on and off every 333/2 ms), then next every 666ms
  * and the last every 999ms.
  *
- * The last task runs at the idle priority.  It repeatedly performs a 32bit 
- * calculation and checks it's result against the expected value.  This checks 
- * that the temporary storage utilised by the compiler to hold intermediate 
+ * The last task runs at the idle priority.  It repeatedly performs a 32bit
+ * calculation and checks it's result against the expected value.  This checks
+ * that the temporary storage utilised by the compiler to hold intermediate
  * results does not get corrupted when the task gets switched in and out.
  * should the calculation ever provide an incorrect result the final LED is
  * turned on.
  *
  * On entry to main() an 'X' is transmitted.  Monitoring the serial port using a
- * dumb terminal allows for verification that the device is not continuously 
+ * dumb terminal allows for verification that the device is not continuously
  * being reset (no more than one 'X' should be transmitted).
  *
- * http://www.FreeRTOS.org contains important information on the use of the 
+ * http://www.FreeRTOS.org contains important information on the use of the
  * PIC18F port.
  */
 
@@ -116,7 +116,7 @@ priority. */
 /* The LED that is lit when should the calculation fail. */
 #define mainCHECK_TASK_LED				( ( unsigned portBASE_TYPE ) 3 )
 
-/* Constants required for the communications.  Only one character is ever 
+/* Constants required for the communications.  Only one character is ever
 transmitted. */
 #define mainCOMMS_QUEUE_LENGTH			( ( unsigned portBASE_TYPE ) 5 )
 #define mainNO_BLOCK					( ( portTickType ) 0 )
@@ -144,7 +144,7 @@ void main( void )
 	vStartLEDFlashTasks( mainLED_FLASH_PRIORITY );
 
 	/* Start the check task defined in this file. */
-	xTaskCreate( vCalculationTask, ( const char * const ) "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vCalculationTask, "Check", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();

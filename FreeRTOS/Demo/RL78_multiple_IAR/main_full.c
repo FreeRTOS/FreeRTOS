@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -223,26 +223,26 @@ void main_full( void )
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( prvRegTest1Entry,				/* The function that implements the task. */
-				 ( const signed char * ) "Reg1",/* Text name for the task - to assist debugging only, not used by the kernel. */
+				 "Reg1",						/* Text name for the task - to assist debugging only, not used by the kernel. */
 				 configMINIMAL_STACK_SIZE, 		/* The size of the stack allocated to the task (in words, not bytes). */
 				 mainREG_TEST_1_PARAMETER,  	/* The parameter passed into the task. */
 				 tskIDLE_PRIORITY, 				/* The priority at which the task will execute. */
 				 NULL );						/* Used to pass the handle of the created task out to the function caller - not used in this case. */
 
-	xTaskCreate( prvRegTest2Entry, ( const signed char * ) "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest2Entry, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-								( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,						/* The ID is not used, so can be set to anything. */
-								prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+	xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+								( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+								( void * ) 0,					/* The ID is not used, so can be set to anything. */
+								prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
 							  );
 
 	/* Create the software timer that just increments a variable for demo
 	purposes. */
-	xDemoTimer = xTimerCreate( ( const signed char * ) "DemoTimer",/* A text name, purely to help debugging. */
+	xDemoTimer = xTimerCreate(  "DemoTimer",/* A text name, purely to help debugging. */
 								( mainDEMO_TIMER_PERIOD_MS ),		/* The timer period, in this case it is always calculated relative to the check timer period (see the definition of mainDEMO_TIMER_PERIOD_MS). */
 								pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) 0,						/* The ID is not used, so can be set to anything. */

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -184,17 +184,17 @@ int main(void)
 	{
 		/* Start the two tasks as described in the comments at the top of this
 		file. */
-		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Create the software timer that is responsible for turning off the LED
 		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
-		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									vLEDTimerCallback					/* The callback function that switches the LED off. */
+		xLEDTimer = xTimerCreate( 	"LEDTimer", 				/* A text name, purely to help debugging. */
+									( 5000 / portTICK_RATE_MS ),/* The timer period, in this case 5000ms (5s). */
+									pdFALSE,					/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									( void * ) 0,				/* The ID is not used, so can be set to anything. */
+									vLEDTimerCallback			/* The callback function that switches the LED off. */
 								);
 
 		/* Start the tasks and timer running. */
@@ -313,29 +313,29 @@ const unsigned short usGPIOState = 0xFF00U;
 
 	SystemInit();
 	SystemCoreClockUpdate();
-	
+
 	/* Analog inputs are not used on the LED outputs. */
 	FM3_GPIO->ADE  = 0x00FF;
-	
+
 	/* LED seg1 to GPIO output (P18->P1F). */
 	FM3_GPIO->DDR1 = 0xFF00;
 	FM3_GPIO->PFR1 = 0x0000;
-	
+
 	/* LED seg2 to GPIO output (P30->P3F). */
 	FM3_GPIO->DDR3 = 0xFF00;
 	FM3_GPIO->PFR3 = 0x0000;
-	
+
 	/* Start with all LEDs off. */
 	FM3_GPIO->PDOR3 = usGPIOState;
 	FM3_GPIO->PDOR1 = usGPIOState;
-	
+
 	/* Set the switches to input (P18->P1F). */
 	FM3_GPIO->DDR5 = 0x0000;
 	FM3_GPIO->PFR5 = 0x0000;
 
 	/* Assign the button input as GPIO. */
 	FM3_GPIO->PFR1 |= usButtonInputBit;
-	
+
 	/* Button interrupt on falling edge. */
 	FM3_EXTI->ELVR  = 0x0003;
 
@@ -344,7 +344,7 @@ const unsigned short usGPIOState = 0xFF00U;
 
 	/* Enable the button interrupt. */
 	FM3_EXTI->ENIR |= usButtonInputBit;
-	
+
 	/* Setup the GPIO and the NVIC for the switch used in this simple demo. */
 	NVIC_SetPriority( EXINT0_7_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
     NVIC_EnableIRQ( EXINT0_7_IRQn );

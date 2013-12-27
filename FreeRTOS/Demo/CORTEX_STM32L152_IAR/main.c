@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -238,11 +238,11 @@ void main( void )
 	/* Configure the peripherals used by this demo application.  This includes
 	configuring the joystick input select button to generate interrupts. */
 	prvSetupHardware();
-	
+
 	/* Create the queue used by tasks and interrupts to send strings to the LCD
 	task. */
 	xLCDQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( xQueueMessage ) );
-	
+
 	/* If the queue could not be created then don't create any tasks that might
 	attempt to use the queue. */
 	if( xLCDQueue != NULL )
@@ -250,22 +250,22 @@ void main( void )
 		/* Add the created queue to the queue registry so it can be viewed in
 		the IAR FreeRTOS state viewer plug-in. */
 		vQueueAddToRegistry( xLCDQueue, "LCDQueue" );
-		
+
 		/* Create the LCD and button poll tasks, as described at the top of this
 		file. */
-		xTaskCreate( prvLCDTask, ( signed char * ) "LCD", mainLCD_TASK_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
-		xTaskCreate( prvButtonPollTask, ( signed char * ) "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-		
+		xTaskCreate( prvLCDTask, "LCD", mainLCD_TASK_STACK_SIZE, NULL, mainLCD_TASK_PRIORITY, NULL );
+		xTaskCreate( prvButtonPollTask, "ButPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+
 		/* Create a subset of the standard demo tasks. */
 		vStartDynamicPriorityTasks();
 		vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 		vAltStartComTestTasks( mainCOM_TEST_PRIORITY, mainCOM_TEST_BAUD_RATE, mainCOM_TEST_LED );
 		vStartGenericQueueTasks( mainGENERIC_QUEUE_TEST_PRIORITY );
-		
+
 		/* Start the scheduler. */
 		vTaskStartScheduler();
 	}
-	
+
 	/* If all is well then this line will never be reached.  If it is reached
 	then it is likely that there was insufficient (FreeRTOS) heap memory space
 	to create the idle task.  This may have been trapped by the malloc() failed
@@ -289,9 +289,9 @@ static char cBuffer[ 512 ];
 	/* This function is the only function that uses printf().  If printf() is
 	used from any other function then some sort of mutual exclusion on stdout
 	will be necessary.
-	
+
 	This is also the only function that is permitted to access the LCD.
-	
+
 	First print out the number of bytes that remain in the FreeRTOS heap.  This
 	can be viewed in the terminal IO window within the IAR Embedded Workbench. */
 	printf( "%d bytes of heap space remain unallocated\n", xPortGetFreeHeapSize() );
@@ -311,7 +311,7 @@ static char cBuffer[ 512 ];
 			LCD_Clear( Blue );
 			lLine = 0;
 		}
-				
+
 		/* What is this message?  What does it contain? */
 		switch( xReceivedMessage.cMessageID )
 		{
@@ -330,9 +330,9 @@ static char cBuffer[ 512 ];
 												the terminal IO window in the IAR
 												embedded workbench. */
 												printf( "\nTask\t     Abs Time\t     %%Time\n*****************************************" );
-												vTaskGetRunTimeStats( ( signed char * ) cBuffer );
+												vTaskGetRunTimeStats( cBuffer );
 												printf( cBuffer );
-												
+
 												/* Also print out a message to
 												the LCD - in this case the
 												pointer to the string to print
@@ -343,7 +343,7 @@ static char cBuffer[ 512 ];
 												technique. */
 												sprintf( cBuffer, "%s", ( char * ) xReceivedMessage.lMessageValue );
 												break;
-												
+
 			case mainMESSAGE_STATUS			:	/* The tick interrupt hook
 												function has just informed this
 												task of the system status.
@@ -351,15 +351,15 @@ static char cBuffer[ 512 ];
 												with the status value. */
 												prvGenerateStatusMessage( cBuffer, xReceivedMessage.lMessageValue );
 												break;
-												
+
 			default							:	sprintf( cBuffer, "Unknown message" );
 												break;
 		}
-		
+
 		/* Output the message that was placed into the cBuffer array within the
 		switch statement above. */
 		LCD_DisplayStringLine( lLine, ( uint8_t * ) cBuffer );
-		
+
 		/* Move onto the next LCD line, ready for the next iteration of this
 		loop. */
 		lLine += lFontHeight;
@@ -377,7 +377,7 @@ static void prvGenerateStatusMessage( char *pcBuffer, long lStatusValue )
 											break;
 		case mainERROR_DYNAMIC_TASKS	:	sprintf( pcBuffer, "Error: Dynamic tasks" );
 											break;
-		case mainERROR_COM_TEST			:	sprintf( pcBuffer, "Err: loop connected?" ); /* Error in COM test - is the Loopback connector connected? */														
+		case mainERROR_COM_TEST			:	sprintf( pcBuffer, "Err: loop connected?" ); /* Error in COM test - is the Loopback connector connected? */
 											break;
 		case mainERROR_GEN_QUEUE_TEST 	:	sprintf( pcBuffer, "Error: Gen Q test" );
 											break;
@@ -396,9 +396,9 @@ long lHigherPriorityTaskWoken = pdFALSE;
 	/* This is the interrupt handler for the joystick select button input.
 	The button has been pushed, write a message to the LCD via the LCD task. */
 	xQueueSendFromISR( xLCDQueue, &xMessage, &lHigherPriorityTaskWoken );
-	
+
 	EXTI_ClearITPendingBit( SEL_BUTTON_EXTI_LINE );
-	
+
 	/* If writing to xLCDQueue caused a task to unblock, and the unblocked task
 	has a priority equal to or above the task that this interrupt interrupted,
 	then lHigherPriorityTaskWoken will have been set to pdTRUE internally within
@@ -432,17 +432,17 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 		{
 			xStatusMessage.lMessageValue = mainERROR_DYNAMIC_TASKS;
 		}
-		
+
 		if( xAreComTestTasksStillRunning() != pdPASS )
 		{
 			xStatusMessage.lMessageValue = mainERROR_COM_TEST;
 		}
-		
+
 		if( xAreGenericQueueTasksStillRunning() != pdPASS )
 		{
 			xStatusMessage.lMessageValue = mainERROR_GEN_QUEUE_TEST;
 		}
-		
+
 		/* As this is the tick hook the lHigherPriorityTaskWoken parameter is not
 		needed (a context switch is going to be performed anyway), but it must
 		still be provided. */
@@ -472,7 +472,7 @@ xQueueMessage xMessage;
 			lLastState = lState;
 			xQueueSend( xLCDQueue, &xMessage, portMAX_DELAY );
 		}
-		
+
 		/* Block for 10 milliseconds so this task does not utilise all the CPU
 		time and debouncing of the button is not necessary. */
 		vTaskDelay( 10 / portTICK_RATE_MS );
@@ -485,7 +485,7 @@ static void prvSetupHardware( void )
 	/* Ensure that all 4 interrupt priority bits are used as the pre-emption
 	priority. */
 	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
-	
+
 	/* Initialise the LEDs. */
 	vParTestInitialise();
 
@@ -494,7 +494,7 @@ static void prvSetupHardware( void )
 	STM_EVAL_PBInit( BUTTON_DOWN, BUTTON_MODE_GPIO );
 	STM_EVAL_PBInit( BUTTON_LEFT, BUTTON_MODE_GPIO );
 	STM_EVAL_PBInit( BUTTON_RIGHT, BUTTON_MODE_GPIO );
-	
+
 	/* The select button in the middle of the joystick is configured to generate
 	an interrupt.  The Eval board library will configure the interrupt
 	priority to be the lowest priority available so the priority need not be
@@ -504,7 +504,7 @@ static void prvSetupHardware( void )
 	STM_EVAL_PBInit( BUTTON_SEL, BUTTON_MODE_EXTI );
 
 	/* Initialize the LCD */
-	STM32L152_LCD_Init();	
+	STM32L152_LCD_Init();
 	LCD_Clear( Blue );
 	LCD_SetBackColor( Blue );
 	LCD_SetTextColor( White );
@@ -524,7 +524,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	significant two bytes are given by the current TIM6 counter value.  Care
 	must be taken with data	consistency when combining the two in case a timer
 	overflow occurs as the value is being read.
-	
+
 	The portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro (in FreeRTOSConfig.h) is
 	defined to call this function, so the kernel will call this function
 	automatically at the appropriate time. */
@@ -538,22 +538,22 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = 5000;
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	
+
 	TIM_TimeBaseInit( TIM6, &TIM_TimeBaseStructure );
-	
+
 	/* Only interrupt on overflow events. */
 	TIM6->CR1 |= TIM_CR1_URS;
-	
+
 	/* Enable the interrupt. */
 	TIM_ITConfig( TIM6, TIM_IT_Update, ENABLE );
-	
+
 	/* Enable the TIM6 global Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = configLIBRARY_LOWEST_INTERRUPT_PRIORITY;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x00; /* Not used as 4 bits are used for the pre-emption priority. */
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-	
+
 	TIM_ClearITPendingBit( TIM6, TIM_IT_Update );
 	TIM_Cmd( TIM6, ENABLE );
 }
@@ -562,7 +562,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 void TIM6_IRQHandler( void )
 {
 	/* Interrupt handler for TIM 6
-	
+
 	The time base for the run time stats is generated by the 16 bit timer 6.
 	Each time the timer overflows ulTIM6_OverflowCount is incremented.
 	Therefore, when converting the total run time to a 32 bit number, the most
@@ -582,7 +582,7 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName 
 {
 	( void ) pcTaskName;
 	( void ) pxTask;
-	
+
 	/* Run time stack overflow checking is performed if
 	configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */

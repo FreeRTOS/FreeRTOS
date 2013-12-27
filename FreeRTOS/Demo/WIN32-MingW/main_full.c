@@ -181,7 +181,7 @@ static xSemaphoreHandle xMutexToDelete = NULL;
 int main_full( void )
 {
 	/* Start the check task as described at the top of this file. */
-	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
@@ -196,7 +196,7 @@ int main_full( void )
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-	xTaskCreate( prvDemoQueueSpaceFunctions, ( signed char * ) "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	vStartEventGroupTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
@@ -410,7 +410,7 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
 {
 xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
 const unsigned char ucConstTaskNumber = 0x55U;
-signed char *pcTaskName;
+char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 xTaskHandle xTestTask;
 
@@ -457,7 +457,7 @@ xTaskHandle xTestTask;
 		xPerformedOneShotTests = pdTRUE;
 
 		/* Create a test task to use to test other eTaskStateGet() return values. */
-		if( xTaskCreate( prvTestTask, ( const signed char * const ) "Test", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTestTask ) == pdPASS )
+		if( xTaskCreate( prvTestTask, "Test", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, &xTestTask ) == pdPASS )
 		{
 			/* If this task is running, the test task must be in the ready state. */
 			if( eTaskStateGet( xTestTask ) != eReady )

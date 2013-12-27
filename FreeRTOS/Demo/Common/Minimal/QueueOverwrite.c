@@ -109,7 +109,7 @@ const unsigned portBASE_TYPE uxQueueLength = 1;
 
 	/* Create the test task.  The queue used by the test task is created inside
 	the task itself. */
-	xTaskCreate( prvQueueOverwriteTask, ( signed char * ) "QOver", configMINIMAL_STACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( prvQueueOverwriteTask, "QOver", configMINIMAL_STACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
 }
 /*-----------------------------------------------------------*/
 

@@ -150,8 +150,8 @@ const portTickType xBlockTime = ( portTickType ) 100;
 			pxFirstSemaphoreParameters->xBlockTime = ( portTickType ) 0;
 
 			/* Spawn the first two tasks.  As they poll they operate at the idle priority. */
-			xTaskCreate( prvSemaphoreTest, ( signed char * ) "PolSEM1", semtstSTACK_SIZE, ( void * ) pxFirstSemaphoreParameters, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
-			xTaskCreate( prvSemaphoreTest, ( signed char * ) "PolSEM2", semtstSTACK_SIZE, ( void * ) pxFirstSemaphoreParameters, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
+			xTaskCreate( prvSemaphoreTest, "PolSEM1", semtstSTACK_SIZE, ( void * ) pxFirstSemaphoreParameters, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
+			xTaskCreate( prvSemaphoreTest, "PolSEM2", semtstSTACK_SIZE, ( void * ) pxFirstSemaphoreParameters, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
 		}
 	}
 
@@ -169,8 +169,8 @@ const portTickType xBlockTime = ( portTickType ) 100;
 			*( pxSecondSemaphoreParameters->pulSharedVariable ) = semtstBLOCKING_EXPECTED_VALUE;
 			pxSecondSemaphoreParameters->xBlockTime = xBlockTime / portTICK_RATE_MS;
 
-			xTaskCreate( prvSemaphoreTest, ( signed char * ) "BlkSEM1", semtstSTACK_SIZE, ( void * ) pxSecondSemaphoreParameters, uxPriority, ( xTaskHandle * ) NULL );
-			xTaskCreate( prvSemaphoreTest, ( signed char * ) "BlkSEM2", semtstSTACK_SIZE, ( void * ) pxSecondSemaphoreParameters, uxPriority, ( xTaskHandle * ) NULL );
+			xTaskCreate( prvSemaphoreTest, "BlkSEM1", semtstSTACK_SIZE, ( void * ) pxSecondSemaphoreParameters, uxPriority, ( xTaskHandle * ) NULL );
+			xTaskCreate( prvSemaphoreTest, "BlkSEM2", semtstSTACK_SIZE, ( void * ) pxSecondSemaphoreParameters, uxPriority, ( xTaskHandle * ) NULL );
 		}
 	}
 
@@ -180,8 +180,8 @@ const portTickType xBlockTime = ( portTickType ) 100;
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( ( xQueueHandle ) pxFirstSemaphoreParameters->xSemaphore, ( signed char * ) "Counting_Sem_1" );
-	vQueueAddToRegistry( ( xQueueHandle ) pxSecondSemaphoreParameters->xSemaphore, ( signed char * ) "Counting_Sem_2" );
+	vQueueAddToRegistry( ( xQueueHandle ) pxFirstSemaphoreParameters->xSemaphore, "Counting_Sem_1" );
+	vQueueAddToRegistry( ( xQueueHandle ) pxSecondSemaphoreParameters->xSemaphore, "Counting_Sem_2" );
 }
 /*-----------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,7 +67,7 @@
  * Repeatedly toggles one or more LEDs using software timers - one timer per
  * LED.
  */
- 
+
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "timers.h"
@@ -102,13 +102,13 @@ xTimerHandle xTimer;
 	for( uxLEDTimer = 0; uxLEDTimer < uxNumberOfLEDs; ++uxLEDTimer )
 	{
 		/* Create the timer. */
-		xTimer = xTimerCreate( 	( const signed char * const ) "Flasher",/* A text name, purely to help debugging. */
-								ledFLASH_RATE_BASE * ( uxLEDTimer + 1 ),	/* The timer period, which is a multiple of ledFLASH_RATE_BASE. */
+		xTimer = xTimerCreate( 	"Flasher",								/* A text name, purely to help debugging. */
+								ledFLASH_RATE_BASE * ( uxLEDTimer + 1 ),/* The timer period, which is a multiple of ledFLASH_RATE_BASE. */
 								pdTRUE,									/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
 								( void * ) uxLEDTimer,					/* The ID is used to identify the timer within the timer callback function, as each timer uses the same callback. */
 								prvLEDTimerCallback						/* Each timer uses the same callback. */
 							  );
-				
+
 		/* If the timer was created successfully, attempt to start it.  If the
 		scheduler has not yet been started then the timer command queue must
 		be long enough to hold each command sent to it until such time that the
@@ -117,7 +117,7 @@ xTimerHandle xTimer;
 		if( xTimer != NULL )
 		{
 			xTimerStart( xTimer, ledDONT_BLOCK );
-		}							  
+		}
 	}
 }
 /*-----------------------------------------------------------*/

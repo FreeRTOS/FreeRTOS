@@ -124,12 +124,12 @@ void vCreateAltBlockTimeTasks( void )
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( xTestQueue, ( signed portCHAR * ) "AltBlockQueue" );
+	vQueueAddToRegistry( xTestQueue, "AltBlockQueue" );
 
 
 	/* Create the two test tasks. */
-	xTaskCreate( vPrimaryBlockTimeTestTask, ( signed portCHAR * )"FBTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
-	xTaskCreate( vSecondaryBlockTimeTestTask, ( signed portCHAR * )"FBTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
+	xTaskCreate( vPrimaryBlockTimeTestTask, "FBTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
+	xTaskCreate( vSecondaryBlockTimeTestTask, "FBTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
 }
 /*-----------------------------------------------------------*/
 

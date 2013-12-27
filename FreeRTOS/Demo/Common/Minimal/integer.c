@@ -110,7 +110,7 @@ short sTask;
 
 	for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
 	{
-		xTaskCreate( vCompeteingIntMathTask, ( signed char * ) "IntMath", intgSTACK_SIZE, ( void * ) &( xTaskCheck[ sTask ] ), uxPriority, ( xTaskHandle * ) NULL );
+		xTaskCreate( vCompeteingIntMathTask, "IntMath", intgSTACK_SIZE, ( void * ) &( xTaskCheck[ sTask ] ), uxPriority, ( xTaskHandle * ) NULL );
 	}
 }
 /*-----------------------------------------------------------*/

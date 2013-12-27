@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,26 +67,26 @@
 /*****
  *
  * See http://www.freertos.org/Documentation/FreeRTOS-documentation-and-book.html
- * for an introductory guide to using real time kernels, and FreeRTOS in 
- * particular. 
+ * for an introductory guide to using real time kernels, and FreeRTOS in
+ * particular.
  *
  *****
- *  
+ *
  * The DICE-KIT-16FX has two 7 segment displays and two buttons that can
  * generate interrupts.  This example uses this IO as follows:
  *
  *
- * - Left 7 segment display - 
+ * - Left 7 segment display -
  *
- * 7 'flash' tasks are created, each of which toggles a single segment of the 
- * left display.  Each task executes at a fixed frequency, with a different 
+ * 7 'flash' tasks are created, each of which toggles a single segment of the
+ * left display.  Each task executes at a fixed frequency, with a different
  * frequency being used by each task.
  *
  * When button SW2 is pressed an interrupt is generated that wakes up a 'dice'
  * task.  The dice task suspends the 7 tasks that are accessing the left display
  * before simulating a dice being thrown by generating a random number between
  * 1 and 6.  After the number has been generated the task sleeps for 5 seconds,
- * if SW2 is pressed again within the 5 seconds another random number is 
+ * if SW2 is pressed again within the 5 seconds another random number is
  * generated, if SW2 is not pressed within the 5 seconds then the 7 tasks are
  * un-suspended and will once again toggle the segments of the left hand display.
  *
@@ -103,12 +103,12 @@
  * Only one dice task is actually defined.  Two instances of this single
  * definition are created, the first to simulate a dice being thrown on the left
  * display, and the other to simulate a dice being thrown on the right display.
- * The task parameter is used to let the dice tasks know which display to 
+ * The task parameter is used to let the dice tasks know which display to
  * control.
  *
  * Both dice tasks and the flash tasks operate completely independently under
  * the control of FreeRTOS.  11 tasks and 7 co-routines are created in total,
- * including the idle task. 
+ * including the idle task.
  *
  * The co-routines all execute within a single low priority task.
  *
@@ -160,10 +160,10 @@ void main( void )
 	vCreateFlashTasksAndCoRoutines();
 
 	/* Create a 'dice' task to control the left hand display. */
-	xTaskCreate( vDiceTask, ( signed char * ) "Dice1", configMINIMAL_STACK_SIZE, ( void * ) configLEFT_DISPLAY, mainDICE_PRIORITY, NULL );
+	xTaskCreate( vDiceTask, "Dice1", configMINIMAL_STACK_SIZE, ( void * ) configLEFT_DISPLAY, mainDICE_PRIORITY, NULL );
 
 	/* Create a 'dice' task to control the right hand display. */
-	xTaskCreate( vDiceTask, ( signed char * ) "Dice2", configMINIMAL_STACK_SIZE, ( void * ) configRIGHT_DISPLAY, mainDICE_PRIORITY, NULL );
+	xTaskCreate( vDiceTask, "Dice2", configMINIMAL_STACK_SIZE, ( void * ) configRIGHT_DISPLAY, mainDICE_PRIORITY, NULL );
 
 	/* Start the scheduler running. */
 	vTaskStartScheduler();
@@ -181,7 +181,7 @@ static void prvSetupHardware( void )
 	scheduler has been started. */
 	InitIrqLevels();
 	portDISABLE_INTERRUPTS();
-	__set_il( 7 );	
+	__set_il( 7 );
 
 	/* Set Port3 as output (7Segment Display). */
 	DDR03  = 0xff;
@@ -210,7 +210,7 @@ static void prvSetupHardware( void )
 
 	/* Enable external interrupt 8. */
 	PIER00_IE0 = 1;
-	
+
 	/* LB0, LA0 = 11 -> falling edge. */
 	ELVRL1_LB8 = 1;
 	ELVRL1_LA8 = 1;
@@ -221,13 +221,13 @@ static void prvSetupHardware( void )
 
 	/* Enable external interrupt 9. */
 	PIER00_IE1 = 1;
-	
+
 	/* LB1, LA1 = 11 -> falling edge. */
 	ELVRL1_LB9 = 1;
 	ELVRL1_LA9 = 1;
 
 	/* Reset and enable the interrupt request. */
 	EIRR1_ER9 = 0;
-	ENIR1_EN9 = 1;	
+	ENIR1_EN9 = 1;
 }
 

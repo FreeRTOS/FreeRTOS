@@ -131,7 +131,7 @@ sys_arch_unprotect( sys_prot_t pval )
  */
 void
 sys_assert( const char *msg )
-{	
+{
 	/*FSL:only needed for debugging
 	printf(msg);
 	printf("\n\r");
@@ -204,7 +204,7 @@ sys_thread_new(char *name, void ( *thread ) ( void *arg ), void *arg, int /*size
         THREAD_INIT( p );
 
         /* Now q points to a free element in the list. */
-        if( xTaskCreate( thread, (const signed char *const)name, stacksize, arg, prio, &p->pid ) == pdPASS )
+        if( xTaskCreate( thread, name, stacksize, arg, prio, &p->pid ) == pdPASS )
         {
             thread_hdl = p;
         }
@@ -257,7 +257,7 @@ sys_arch_thread_remove( sys_thread_t hdl )
             vPortFree( toremove );
         }
     }
-    /* We are done with accessing the shared datastructure. Release the 
+    /* We are done with accessing the shared datastructure. Release the
      * resources.
      */
     vPortExitCritical(  );
@@ -489,7 +489,7 @@ sys_mbox_post( sys_mbox_t mbox, void *data )
 }
 
 /*FSL*/
-/*  
+/*
  *Try to post the "msg" to the mailbox. Returns ERR_MEM if this one
  *is full, else, ERR_OK if the "msg" is posted.
  */

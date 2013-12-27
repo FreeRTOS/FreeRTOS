@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2003 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -40,7 +40,7 @@
 #define archMESG_QUEUE_LENGTH	( 6 )
 #define archPOST_BLOCK_TIME_MS	( ( unsigned long ) 10000 )
 
-struct timeoutlist 
+struct timeoutlist
 {
 	struct sys_timeouts timeouts;
 	xTaskHandle pid;
@@ -84,14 +84,14 @@ sys_mbox_free(sys_mbox_t mbox)
 		__asm volatile ( "NOP" );
 	}
 
-	vQueueDelete( mbox ); 
+	vQueueDelete( mbox );
 }
 
 /*-----------------------------------------------------------------------------------*/
 //   Posts the "msg" to the mailbox.
 void
 sys_mbox_post(sys_mbox_t mbox, void *data)
-{   
+{
 	xQueueSend( mbox, &data, ( portTickType ) ( archPOST_BLOCK_TIME_MS / portTICK_RATE_MS ) );
 }
 
@@ -110,7 +110,7 @@ sys_mbox_post(sys_mbox_t mbox, void *data)
   timeout.
 
   Note that a function with a similar name, sys_mbox_fetch(), is
-  implemented by lwIP. 
+  implemented by lwIP.
 */
 u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout)
 {
@@ -123,7 +123,7 @@ portTickType StartTime, EndTime, Elapsed;
 	{
 		msg = &dummyptr;
 	}
-		
+
 	if(	timeout != 0 )
 	{
 		if(pdTRUE == xQueueReceive( mbox, &(*msg), timeout ) )
@@ -154,7 +154,7 @@ portTickType StartTime, EndTime, Elapsed;
 		{
 			Elapsed = 1;
 		}
-		return ( Elapsed ); // return time blocked TBD test	
+		return ( Elapsed ); // return time blocked TBD test
 	}
 }
 
@@ -217,7 +217,7 @@ portTickType StartTime, EndTime, Elapsed;
 			{
 				Elapsed = 1;
 			}
-			return (Elapsed); // return time blocked TBD test	
+			return (Elapsed); // return time blocked TBD test
 		}
 		else
 		{
@@ -237,8 +237,8 @@ portTickType StartTime, EndTime, Elapsed;
 			Elapsed = 1;
 		}
 
-		return ( Elapsed ); // return time blocked	
-		 
+		return ( Elapsed ); // return time blocked
+
 	}
 }
 
@@ -255,7 +255,7 @@ sys_sem_signal(sys_sem_t sem)
 void
 sys_sem_free(sys_sem_t sem)
 {
-	vQueueDelete( sem ); 
+	vQueueDelete( sem );
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -283,7 +283,7 @@ sys_init(void)
   each thread has a list of timeouts which is represented as a linked
   list of sys_timeout structures. The sys_timeouts structure holds a
   pointer to a linked list of timeouts. This function is called by
-  the lwIP timeout scheduler and must not return a NULL value. 
+  the lwIP timeout scheduler and must not return a NULL value.
 
   In a single threaded sys_arch implementation, this function will
   simply return a pointer to a global sys_timeouts variable stored in
@@ -294,14 +294,14 @@ sys_arch_timeouts(void)
 {
 int i;
 xTaskHandle pid;
-struct timeoutlist *tl;  
+struct timeoutlist *tl;
 
-	pid = xTaskGetCurrentTaskHandle( ); 
+	pid = xTaskGetCurrentTaskHandle( );
 
-	for(i = 0; i < nextthread; i++) 
+	for(i = 0; i < nextthread; i++)
 	{
 		tl = &timeoutlist[i];
-		if(tl->pid == pid) 
+		if(tl->pid == pid)
 		{
 			return &(tl->timeouts);
 		}
@@ -313,7 +313,7 @@ struct timeoutlist *tl;
 
 /*-----------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------*/
-// TBD 
+// TBD
 /*-----------------------------------------------------------------------------------*/
 /*
   Starts a new thread with priority "prio" that will begin its execution in the
@@ -330,12 +330,12 @@ static int iCall = 0;
 	if( iCall == 0 )
 	{
 		/* The first time this is called we are creating the lwIP handler. */
-		result = xTaskCreate( thread, ( signed char * ) "lwIP", lwipTCP_STACK_SIZE, arg, prio, &CreatedTask );
+		result = xTaskCreate( thread, "lwIP", lwipTCP_STACK_SIZE, arg, prio, &CreatedTask );
 		iCall++;
 	}
 	else
 	{
-		result = xTaskCreate( thread, ( signed char * ) "WEBSvr", lwipBASIC_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
+		result = xTaskCreate( thread, "WEBSvr", lwipBASIC_SERVER_STACK_SIZE, arg, prio, &CreatedTask );
 	}
 
 	// For each task created, store the task handle (pid) in the timers array.
@@ -378,7 +378,7 @@ sys_prot_t sys_arch_protect(void)
   an operating system.
 */
 void sys_arch_unprotect(sys_prot_t pval)
-{ 
+{
 	( void ) pval;
 	vPortExitCritical();
 }

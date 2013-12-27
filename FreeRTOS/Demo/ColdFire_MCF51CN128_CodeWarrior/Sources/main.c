@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -79,11 +79,11 @@
  * pages display some TCP/IP status information and permit LED3 to be turned on
  * and off using a check box.
  *
- * Tick hook function that implements a "Check" function -  This is executed 
- * every 5 seconds from the tick hook function.  It checks to ensure that all 
- * the standard demo tasks are still operational and running without error.  
- * The system status (pass/fail) is then displayed underneith the task table on 
- * the served WEB pages.  
+ * Tick hook function that implements a "Check" function -  This is executed
+ * every 5 seconds from the tick hook function.  It checks to ensure that all
+ * the standard demo tasks are still operational and running without error.
+ * The system status (pass/fail) is then displayed underneith the task table on
+ * the served WEB pages.
  *
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register still contains its expected value.  Each task uses
@@ -168,8 +168,8 @@ extern void vBasicWEBServer( void *pv );
 
 	/* Setup the hardware ready for this demo. */
 	prvSetupHardware();
-	
-	xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
+
+	xTaskCreate( vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
 
 	/* Start the standard demo tasks. */
 	vStartLEDFlashTasks( tskIDLE_PRIORITY );
@@ -179,8 +179,8 @@ extern void vBasicWEBServer( void *pv );
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 
 	/* Start the reg test tasks - defined in this file. */
-	xTaskCreate( vRegTest1Task, ( signed char * ) "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest1Counter, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vRegTest2Task, ( signed char * ) "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest2Counter, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest1Counter, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) &ulRegTest2Counter, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -197,17 +197,17 @@ void vApplicationTickHook( void )
 {
 static unsigned long ulExecutionCount = 0, ulLastRegTest1Count = 0, ulLastRegTest2Count = 0;
 const unsigned long ulExecutionRate = 5000 / portTICK_RATE_MS;
-	
+
     /* Increment the count of how many times the tick hook has been called. */
     ulExecutionCount++;
-    
+
     /* Is it time to perform the check again? */
 	if( ulExecutionCount >= ulExecutionRate )
 	{
 		/* Reset the execution count so this function is called again in 5
 		seconds time. */
 		ulExecutionCount = 0;
-	
+
 		/* Has an error been found in any task? */
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
@@ -245,13 +245,13 @@ const unsigned long ulExecutionRate = 5000 / portTICK_RATE_MS;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupHardware( void ) 
+static void prvSetupHardware( void )
 {
 	/* Disable the watchdog, STOP and WAIT modes. */
 	SOPT1 = 0;
 
 	/* --- Setup clock to use external 25MHz source. --- */
-	
+
 	/* Extal and xtal pin ON. */
 	PTDPF1_D4 = 0x03;
 	PTDPF1_D5 = 0x03;
@@ -261,12 +261,12 @@ static void prvSetupHardware( void )
 	MCGC2 = MCGC2_ERCLKEN_MASK  /* Activate external reference clock */
 	      | MCGC2_EREFS_MASK    /* Because crystal is being used */
 	      | MCGC2_RANGE_MASK;   /* High range */
-	        
+
 	/* Select clock mode and clear IREFs. */
 	MCGC1 = (0x02 << 6 )        /* CLKS = 10 -> external reference clock. */
 	      | (0x04 << 3 )        /* RDIV = 2^4 -> 25MHz/16 = 1.5625 MHz */
 	      | MCGC1_IRCLKEN_MASK; /* IRCLK to RTC enabled */
-	  
+
 	/* Wait for Reference and Clock status bits to update. */
 	while( MCGSC_IREFST | ( MCGSC_CLKST != 0x02 ) )
 	{
@@ -284,7 +284,7 @@ static void prvSetupHardware( void )
 	}
 
 
-	/* Now in PBE Mode, finally switch from PBE to PEE (PLL enabled external 
+	/* Now in PBE Mode, finally switch from PBE to PEE (PLL enabled external
 	mode). */
 	MCGC1_CLKS  = 0b00; /* PLL clock to system (MCGOUT) */
 
@@ -319,7 +319,7 @@ static void vRegTest1Task( void *pvParameters )
 {
   /* Just to remove compiler warnings. */
   ( void ) pvParameters;
-  
+
 	/* Set all the registers to known values, then check that each retains its
 	expected value - as described at the top of this file.  If an error is
 	found then the loop counter will no longer be incremented allowing the check
@@ -330,7 +330,7 @@ static void vRegTest1Task( void *pvParameters )
 						"	moveq		#3, d2					\n\t"
 						"	moveq		#4, d3					\n\t"
 						"	moveq		#5, d4					\n\t"
-						"	moveq		#6, d5					\n\t"						
+						"	moveq		#6, d5					\n\t"
 						"	moveq		#7, d6					\n\t"
 						"	moveq		#8, d7					\n\t"
 						"	move		#9, a0					\n\t"

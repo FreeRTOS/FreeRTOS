@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -65,20 +65,20 @@
 
 /*
 This simple demo project runs on the STM32 Discovery board, which is
-populated with an STM32F100RB Cortex-M3 microcontroller.  The discovery board 
+populated with an STM32F100RB Cortex-M3 microcontroller.  The discovery board
 makes an ideal low cost evaluation platform, but the 8K of RAM provided on the
-STM32F100RB does not allow the simple application to demonstrate all of all the 
-FreeRTOS kernel features.  Therefore, this simple demo only actively 
-demonstrates task, queue, timer and interrupt functionality.  In addition, the 
-demo is configured to include malloc failure, idle and stack overflow hook 
+STM32F100RB does not allow the simple application to demonstrate all of all the
+FreeRTOS kernel features.  Therefore, this simple demo only actively
+demonstrates task, queue, timer and interrupt functionality.  In addition, the
+demo is configured to include malloc failure, idle and stack overflow hook
 functions.
 
 The idle hook function:
 The idle hook function queries the amount of FreeRTOS heap space that is
-remaining (see vApplicationIdleHook() defined in this file).  The demo 
-application is configured to use 7K of the available 8K of RAM as the FreeRTOS 
-heap.  Memory is only allocated from this heap during initialisation, and this 
-demo only actually uses 1.6K bytes of the configured 7K available - leaving 5.4K 
+remaining (see vApplicationIdleHook() defined in this file).  The demo
+application is configured to use 7K of the available 8K of RAM as the FreeRTOS
+heap.  Memory is only allocated from this heap during initialisation, and this
+demo only actually uses 1.6K bytes of the configured 7K available - leaving 5.4K
 bytes of heap space unallocated.
 
 The main() Function:
@@ -86,31 +86,31 @@ main() creates one software timer, one queue, and two tasks.  It then starts the
 scheduler.
 
 The Queue Send Task:
-The queue send task is implemented by the prvQueueSendTask() function in this 
-file.  prvQueueSendTask() sits in a loop that causes it to repeatedly block for 
-200 milliseconds, before sending the value 100 to the queue that was created 
+The queue send task is implemented by the prvQueueSendTask() function in this
+file.  prvQueueSendTask() sits in a loop that causes it to repeatedly block for
+200 milliseconds, before sending the value 100 to the queue that was created
 within main().  Once the value is sent, the task loops back around to block for
 another 200 milliseconds.
 
 The Queue Receive Task:
 The queue receive task is implemented by the prvQueueReceiveTask() function
-in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly blocks 
-on attempts to read data from the queue that was created within main().  When 
-data is received, the task checks the value of the data, and if the value equals 
-the expected 100, toggles the green LED.  The 'block time' parameter passed to 
-the queue receive function specifies that the task should be held in the Blocked 
-state indefinitely to wait for data to be available on the queue.  The queue 
-receive task will only leave the Blocked state when the queue send task writes 
-to the queue.  As the queue send task writes to the queue every 200 
-milliseconds, the queue receive task leaves the Blocked state every 200 
+in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly blocks
+on attempts to read data from the queue that was created within main().  When
+data is received, the task checks the value of the data, and if the value equals
+the expected 100, toggles the green LED.  The 'block time' parameter passed to
+the queue receive function specifies that the task should be held in the Blocked
+state indefinitely to wait for data to be available on the queue.  The queue
+receive task will only leave the Blocked state when the queue send task writes
+to the queue.  As the queue send task writes to the queue every 200
+milliseconds, the queue receive task leaves the Blocked state every 200
 milliseconds, and therefore toggles the green LED every 200 milliseconds.
 
 The LED Software Timer and the Button Interrupt:
 The user button B1 is configured to generate an interrupt each time it is
-pressed.  The interrupt service routine switches the red LED on, and resets the 
+pressed.  The interrupt service routine switches the red LED on, and resets the
 LED software timer.  The LED timer has a 5000 millisecond (5 second) period, and
-uses a callback function that is defined to just turn the red LED off.  
-Therefore, pressing the user button will turn the red LED on, and the LED will 
+uses a callback function that is defined to just turn the red LED off.
+Therefore, pressing the user button will turn the red LED on, and the LED will
 remain on until a full five seconds pass without the button being pressed.
 */
 
@@ -152,7 +152,7 @@ static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
 /*
- * The LED timer callback function.  This does nothing but switch the red LED 
+ * The LED timer callback function.  This does nothing but switch the red LED
  * off.
  */
 static void vLEDTimerCallback( xTimerHandle xTimer );
@@ -163,7 +163,7 @@ static void vLEDTimerCallback( xTimerHandle xTimer );
 static xQueueHandle xQueue = NULL;
 
 /* The LED software timer.  This uses vLEDTimerCallback() as its callback
- * function. 
+ * function.
  */
 static xTimerHandle xLEDTimer = NULL;
 
@@ -181,17 +181,17 @@ int main(void)
 	{
 		/* Start the two tasks as described in the comments at the top of this
 		file. */
-		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-		/* Create the software timer that is responsible for turning off the LED 
-		if the button is not pushed within 5000ms, as described at the top of 
+		/* Create the software timer that is responsible for turning off the LED
+		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
-		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( 5000 / portTICK_RATE_MS ),		/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									vLEDTimerCallback					/* The callback function that switches the LED off. */
+		xLEDTimer = xTimerCreate( 	"LEDTimer", 				/* A text name, purely to help debugging. */
+									( 5000 / portTICK_RATE_MS ),/* The timer period, in this case 5000ms (5s). */
+									pdFALSE,					/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									( void * ) 0,				/* The ID is not used, so can be set to anything. */
+									vLEDTimerCallback			/* The callback function that switches the LED off. */
 								);
 
 		/* Start the tasks and timer running. */
@@ -286,8 +286,8 @@ unsigned long ulReceivedValue;
 		if( ulReceivedValue == 100UL )
 		{
 			/* NOTE - accessing the LED port should use a critical section
-			because it is accessed from multiple tasks, and the button interrupt 
-			- in this trivial case, for simplicity, the critical section is 
+			because it is accessed from multiple tasks, and the button interrupt
+			- in this trivial case, for simplicity, the critical section is
 			omitted. */
 			STM32vldiscovery_LEDToggle( LED3 );
 		}
@@ -305,7 +305,7 @@ static void prvSetupHardware( void )
 	STM32vldiscovery_LEDInit( LED3 );
 	STM32vldiscovery_LEDInit( LED4 );
 	STM32vldiscovery_PBInit( BUTTON_USER, BUTTON_MODE_EXTI );
-	
+
 	/* Start with the LEDs off. */
 	STM32vldiscovery_LEDOff( LED3 );
 	STM32vldiscovery_LEDOff( LED4 );
@@ -316,7 +316,7 @@ void vApplicationMallocFailedHook( void )
 {
 	/* Called if a call to pvPortMalloc() fails because there is insufficient
 	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-	internally by FreeRTOS API functions that create tasks, queues, software 
+	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
 	for( ;; );
@@ -340,7 +340,7 @@ void vApplicationIdleHook( void )
 volatile size_t xFreeStackSpace;
 
 	/* This function is called on each cycle of the idle task.  In this case it
-	does nothing useful, other than report the amout of FreeRTOS heap that 
+	does nothing useful, other than report the amout of FreeRTOS heap that
 	remains unallocated. */
 	xFreeStackSpace = xPortGetFreeHeapSize();
 

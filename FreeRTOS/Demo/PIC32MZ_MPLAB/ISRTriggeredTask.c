@@ -133,12 +133,12 @@ void vStartISRTriggeredTask( void )
 {
 	/* Create the task described at the top of this file.  The timer is
 	configured by the task itself. */
-	xTaskCreate( prvISRTriggeredTask, 					/* The function that implements the task. */
-				( const signed char * const ) "ISRt", 	/* Text name to help debugging - not used by the kernel. */
-				configMINIMAL_STACK_SIZE, 				/* The size of the stack to allocate to the task - defined in words, not bytes. */
-				NULL, 									/* The parameter to pass into the task.  Not used in this case. */
-				configMAX_PRIORITIES - 1, 				/* The priority at which the task is created. */
-				NULL );									/* Used to pass a handle to the created task out of the function.  Not used in this case. */
+	xTaskCreate( prvISRTriggeredTask, 		/* The function that implements the task. */
+				"ISRt", 					/* Text name to help debugging - not used by the kernel. */
+				configMINIMAL_STACK_SIZE, 	/* The size of the stack to allocate to the task - defined in words, not bytes. */
+				NULL, 						/* The parameter to pass into the task.  Not used in this case. */
+				configMAX_PRIORITIES - 1, 	/* The priority at which the task is created. */
+				NULL );						/* Used to pass a handle to the created task out of the function.  Not used in this case. */
 }
 /*-----------------------------------------------------------*/
 

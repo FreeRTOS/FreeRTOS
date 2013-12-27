@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -74,28 +74,28 @@
  * defined and/or created within this file:
  *
  * "Check" task - This only executes every five seconds but has the highest
- * priority so is guaranteed to get processor time.  Its main function is to 
+ * priority so is guaranteed to get processor time.  Its main function is to
  * check that all the standard demo tasks are still operational. The check task
  * will toggle LED 3 (PB11) every five seconds so long as no errors have been
- * detected.  The toggle rate will increase to half a second if an error has 
+ * detected.  The toggle rate will increase to half a second if an error has
  * been found in any task.
  *
- * "Echo" task - This is a very basic task that simply echoes any characters 
+ * "Echo" task - This is a very basic task that simply echoes any characters
  * received on COM0 (USART1).  This can be tested by transmitting a text file
  * from a dumb terminal to the STM32 USART then observing or capturing the text
- * that is echoed back.  Missing characters will be all the more obvious if the 
+ * that is echoed back.  Missing characters will be all the more obvious if the
  * file contains a simple repeating string of fixed width.
  *
- * Currently this demo does not include interrupt nesting examples.  High 
+ * Currently this demo does not include interrupt nesting examples.  High
  * frequency timer and simpler nesting examples can be found in most Cortex-M3
  * demo applications.
  *
- * The functions used to initialise, set and clear LED outputs are normally 
- * defined in partest.c.  This demo includes two partest files, one that is 
- * configured for use with the Keil MCBSTM32 evaluation board (called 
+ * The functions used to initialise, set and clear LED outputs are normally
+ * defined in partest.c.  This demo includes two partest files, one that is
+ * configured for use with the Keil MCBSTM32 evaluation board (called
  * ParTest_MCBSTM32.c) and one that is configured for use with the official
  * ST Eval board (called ParTest_ST_Eval.c).  One one of these files should be
- * included in the build at any one time, as appropriate for the hardware 
+ * included in the build at any one time, as appropriate for the hardware
  * actually being used.
  */
 
@@ -155,7 +155,7 @@ static void prvSetupHardware( void );
 /* The 'check' task as described at the top of this file. */
 static void prvCheckTask( void *pvParameters );
 
-/* A simple task that echoes all the characters that are received on COM0 
+/* A simple task that echoes all the characters that are received on COM0
 (USART1). */
 static void prvUSARTEchoTask( void *pvParameters );
 
@@ -181,10 +181,10 @@ int main( void )
     vStartRecursiveMutexTasks();
 
 	/* Create the 'echo' task, which is also defined within this file. */
-	xTaskCreate( prvUSARTEchoTask, ( signed char * ) "Echo", configMINIMAL_STACK_SIZE, NULL, mainECHO_TASK_PRIORITY, NULL );
+	xTaskCreate( prvUSARTEchoTask, "Echo", configMINIMAL_STACK_SIZE, NULL, mainECHO_TASK_PRIORITY, NULL );
 
 	/* Create the 'check' task, which is also defined within this file. */
-	xTaskCreate( prvCheckTask, ( signed char * ) "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
     /* Start the scheduler. */
 	vTaskStartScheduler();
@@ -254,7 +254,7 @@ signed char cChar;
 
 /* String declared static to ensure it does not end up on the stack, no matter
 what the optimisation level. */
-static const char *pcLongishString = 
+static const char *pcLongishString =
 "ABBA was a Swedish pop music group formed in Stockholm in 1972, consisting of Anni-Frid Frida Lyngstad, "
 "Björn Ulvaeus, Benny Andersson and Agnetha Fältskog. Throughout the band's existence, Fältskog and Ulvaeus "
 "were a married couple, as were Lyngstad and Andersson - although both couples later divorced. They became one "
@@ -293,41 +293,41 @@ static const char *pcLongishString =
 static void prvSetupHardware( void )
 {
 	/* RCC system reset(for debug purpose). */
-	RCC_DeInit ();                        
+	RCC_DeInit ();
 
     /* Enable HSE. */
-	RCC_HSEConfig( RCC_HSE_ON );           
-	
+	RCC_HSEConfig( RCC_HSE_ON );
+
 	/* Wait till HSE is ready. */
 	while (RCC_GetFlagStatus(RCC_FLAG_HSERDY) == RESET);
-	
+
     /* HCLK = SYSCLK. */
-	RCC_HCLKConfig( RCC_SYSCLK_Div1 );   
+	RCC_HCLKConfig( RCC_SYSCLK_Div1 );
 
     /* PCLK2  = HCLK. */
-	RCC_PCLK2Config( RCC_HCLK_Div1 );     
+	RCC_PCLK2Config( RCC_HCLK_Div1 );
 
     /* PCLK1  = HCLK/2. */
-	RCC_PCLK1Config( RCC_HCLK_Div2 );     
+	RCC_PCLK1Config( RCC_HCLK_Div2 );
 
 	/* ADCCLK = PCLK2/4. */
-	RCC_ADCCLKConfig( RCC_PCLK2_Div4 );    
-	
+	RCC_ADCCLKConfig( RCC_PCLK2_Div4 );
+
     /* Flash 2 wait state. */
-	*( volatile unsigned long  * )0x40022000 = 0x01;           
-	
+	*( volatile unsigned long  * )0x40022000 = 0x01;
+
 	/* PLLCLK = 8MHz * 9 = 72 MHz */
 	RCC_PLLConfig( RCC_PLLSource_HSE_Div1, RCC_PLLMul_9 );
-	
+
     /* Enable PLL. */
 	RCC_PLLCmd( ENABLE );
-	
+
 	/* Wait till PLL is ready. */
 	while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET);
-	
+
 	/* Select PLL as system clock source. */
 	RCC_SYSCLKConfig (RCC_SYSCLKSource_PLLCLK);
-	
+
 	/* Wait till PLL is used as system clock source. */
 	while (RCC_GetSYSCLKSource() != 0x08);
 

@@ -91,8 +91,8 @@ unsigned portBASE_TYPE uxPriority;
 
 	xNetIf = netif;
 
-	/* Initialise the EMAC.  This routine contains code that polls status bits.  
-	If the Ethernet cable is not plugged in then this can take a considerable 
+	/* Initialise the EMAC.  This routine contains code that polls status bits.
+	If the Ethernet cable is not plugged in then this can take a considerable
 	time.  To prevent this starving lower priority tasks of processing time we
 	lower our priority prior to the call, then raise it back again once the
 	initialisation is complete. */
@@ -105,13 +105,13 @@ unsigned portBASE_TYPE uxPriority;
 	vTaskPrioritySet( NULL, uxPriority );
 
 	/* Create the task that handles the EMAC. */
-	xTaskCreate( ethernetif_input, ( signed char * ) "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
+	xTaskCreate( ethernetif_input, "ETH_INT", netifINTERFACE_TASK_STACK_SIZE, NULL, netifINTERFACE_TASK_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 
 /*
- * low_level_output(): Should do the actual transmission of the packet. The 
- * packet is contained in the pbuf that is passed to the function. This pbuf 
+ * low_level_output(): Should do the actual transmission of the packet. The
+ * packet is contained in the pbuf that is passed to the function. This pbuf
  * might be chained.
  */
 static err_t low_level_output( struct netif *netif, struct pbuf *p )
@@ -137,8 +137,8 @@ err_t xReturn = ERR_OK;
 	{
 		for( q = p; q != NULL; q = q->next )
 		{
-			/* Send the data from the pbuf to the interface, one pbuf at a 
-			time. The size of the data in each pbuf is kept in the ->len 
+			/* Send the data from the pbuf to the interface, one pbuf at a
+			time. The size of the data in each pbuf is kept in the ->len
 			variable.  if q->next == NULL then this is the last pbuf in the
 			chain. */
 			if( !lEMACSend( q->payload, q->len, ( q->next == NULL ) ) )
@@ -149,7 +149,7 @@ err_t xReturn = ERR_OK;
 
         xSemaphoreGive( xTxSemaphore );
 	}
-	
+
 
 	#if ETH_PAD_SIZE
 		pbuf_header( p, ETH_PAD_SIZE );     /* reclaim the padding word */
@@ -164,8 +164,8 @@ err_t xReturn = ERR_OK;
 /*-----------------------------------------------------------*/
 
 /*
- * low_level_input(): Should allocate a pbuf and transfer the bytes of the 
- * incoming packet from the interface into the pbuf. 
+ * low_level_input(): Should allocate a pbuf and transfer the bytes of the
+ * incoming packet from the interface into the pbuf.
  */
 static struct pbuf *low_level_input( struct netif *netif )
 {
@@ -186,34 +186,34 @@ static xSemaphoreHandle xRxSemaphore = NULL;
 	{
 		/* Obtain the size of the packet. */
 		len = ulEMACInputLength();
-	
+
 		if( len )
 		{
 			#if ETH_PAD_SIZE
 				len += ETH_PAD_SIZE;    /* allow room for Ethernet padding */
 			#endif
-	
+
 			/* We allocate a pbuf chain of pbufs from the pool. */
 			p = pbuf_alloc( PBUF_RAW, len, PBUF_POOL );
-		
+
 			if( p != NULL )
 			{
 				#if ETH_PAD_SIZE
 					pbuf_header( p, -ETH_PAD_SIZE );    /* drop the padding word */
 				#endif
-		
+
 				/* Let the driver know we are going to read a new packet. */
 				vEMACRead( NULL, 0, len );
-					
+
 				/* We iterate over the pbuf chain until we have read the entire
-				packet into the pbuf. */				
+				packet into the pbuf. */
 				for( q = p; q != NULL; q = q->next )
 				{
-					/* Read enough bytes to fill this pbuf in the chain. The 
+					/* Read enough bytes to fill this pbuf in the chain. The
 					available data in the pbuf is given by the q->len variable. */
 					vEMACRead( q->payload, q->len, len );
 				}
-		
+
 				#if ETH_PAD_SIZE
 					pbuf_header( p, ETH_PAD_SIZE );     /* reclaim the padding word */
 				#endif
@@ -238,8 +238,8 @@ static xSemaphoreHandle xRxSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
 /*
- * ethernetif_output(): This function is called by the TCP/IP stack when an 
- * IP packet should be sent. It calls the function called low_level_output() 
+ * ethernetif_output(): This function is called by the TCP/IP stack when an
+ * IP packet should be sent. It calls the function called low_level_output()
  * to do the actual transmission of the packet.
  */
 static err_t ethernetif_output( struct netif *netif, struct pbuf *p, struct ip_addr *ipaddr )
@@ -250,8 +250,8 @@ static err_t ethernetif_output( struct netif *netif, struct pbuf *p, struct ip_a
 /*-----------------------------------------------------------*/
 
 /*
- * ethernetif_input(): This function should be called when a packet is ready to 
- * be read from the interface. It uses the function low_level_input() that 
+ * ethernetif_input(): This function should be called when a packet is ready to
+ * be read from the interface. It uses the function low_level_input() that
  * should handle the actual reception of bytes from the network interface.
  */
 static void ethernetif_input( void * pvParameters )
@@ -273,41 +273,41 @@ struct pbuf         *p;
 
 			if( p == NULL )
 			{
-				/* No packet could be read.  Wait a for an interrupt to tell us 
+				/* No packet could be read.  Wait a for an interrupt to tell us
 				there is more data available. */
 				vEMACWaitForInput();
 			}
 
 		} while( p == NULL );
-	
+
 		/* points to packet payload, which starts with an Ethernet header */
 		ethhdr = p->payload;
-	
+
 		#if LINK_STATS
 			lwip_stats.link.recv++;
 		#endif /* LINK_STATS */
-	
+
 		ethhdr = p->payload;
-	
+
 		switch( htons( ethhdr->type ) )
 		{
 			/* IP packet? */
 			case ETHTYPE_IP:
 				/* update ARP table */
 				etharp_ip_input( xNetIf, p );
-		
+
 				/* skip Ethernet header */
 				pbuf_header( p, (s16_t)-sizeof(struct eth_hdr) );
-		
+
 				/* pass to network layer */
 				xNetIf->input( p, xNetIf );
 				break;
-		
+
 			case ETHTYPE_ARP:
 				/* pass p to ARP module */
 				etharp_arp_input( xNetIf, ethernetif->ethaddr, p );
 				break;
-		
+
 			default:
 				pbuf_free( p );
 				p = NULL;

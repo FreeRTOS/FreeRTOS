@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -162,21 +162,21 @@ static void vProcessConnection( struct netconn *pxNetCon )
             ulPageHits++;
             sprintf( cPageHits, "%d", (int)ulPageHits );
 
-            /* Write out the HTTP OK header. */            
+            /* Write out the HTTP OK header. */
             netconn_write( pxNetCon, webHTTP_OK, ( u16_t ) strlen( webHTTP_OK ), NETCONN_COPY );
 
             /* Generate the dynamic page...
-            
+
                ... First the page header. */
             strcpy( cDynamicPage, webHTML_START );
             /* ... Then the hit count... */
             strcat( cDynamicPage, cPageHits );
-            
+
             strcat( cDynamicPage,
                     "<p><pre>Task          State  Priority  Stack      #<br>************************************************<br>" );
             /* ... Then the list of tasks and their status... */
-            vTaskList( ( signed portCHAR * )cDynamicPage + strlen( cDynamicPage ) );            
-            
+            vTaskList( cDynamicPage + strlen( cDynamicPage ) );
+
             /* ... Finally the page footer. */
             strcat( cDynamicPage, webHTML_END );
 
@@ -229,7 +229,7 @@ void vBasicWEBServer( void *pvParameters )
 
     /* Loop forever */
     for( ;; )
-    {	
+    {
         /* Wait for connection. */
         pxNewConnection = netconn_accept( pxHTTPListener );
 

@@ -648,6 +648,6 @@ unsigned long ulNetMask;
 	/* Create a task that simulates an interrupt in a real system.  This will
 	block waiting for packets, then send a message to the uIP task when data
 	is available. */
-	xTaskCreate( prvInterruptSimulator, ( signed char * ) "MAC_ISR", configMINIMAL_STACK_SIZE, NULL, configMAC_ISR_SIMULATOR_PRIORITY, NULL );
+	xTaskCreate( prvInterruptSimulator, "MAC_ISR", configMINIMAL_STACK_SIZE, NULL, configMAC_ISR_SIMULATOR_PRIORITY, NULL );
 }
 

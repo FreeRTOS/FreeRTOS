@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -302,27 +302,27 @@ int main(void)
 	{
 		/* Start the three application specific demo tasks, as described in the
 		comments at the top of this	file. */
-		xTaskCreate( prvQueueReceiveTask, ( signed char * ) "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
-		xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
-		xTaskCreate( prvOLEDTask, ( signed char * ) "OLED", configMINIMAL_STACK_SIZE, NULL, mainOLED_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueReceiveTask, "Rx", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_RECEIVE_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvOLEDTask, "OLED", configMINIMAL_STACK_SIZE, NULL, mainOLED_TASK_PRIORITY, NULL );
 
 		/* Create the software timer that is responsible for turning off the LED
 		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
-		xLEDTimer = xTimerCreate( 	( const signed char * ) "LEDTimer", /* A text name, purely to help debugging. */
-									( mainLED_TIMER_PERIOD_MS ),		/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,							/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									prvLEDTimerCallback					/* The callback function that switches the LED off. */
+		xLEDTimer = xTimerCreate( 	"LEDTimer", 					/* A text name, purely to help debugging. */
+									( mainLED_TIMER_PERIOD_MS ),	/* The timer period, in this case 5000ms (5s). */
+									pdFALSE,						/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									( void * ) 0,					/* The ID is not used, so can be set to anything. */
+									prvLEDTimerCallback				/* The callback function that switches the LED off. */
 								);
 
 		/* Create the software timer that performs the 'check' functionality,
 		as described at the top of this file. */
-		xCheckTimer = xTimerCreate( ( const signed char * ) "CheckTimer",/* A text name, purely to help debugging. */
-									( mainCHECK_TIMER_PERIOD_MS ),		/* The timer period, in this case 3000ms (3s). */
-									pdTRUE,								/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-									( void * ) 0,						/* The ID is not used, so can be set to anything. */
-									prvCheckTimerCallback				/* The callback function that inspects the status of all the other tasks. */
+		xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+									( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,					/* The ID is not used, so can be set to anything. */
+									prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
 								  );
 
 		/* Create a lot of 'standard demo' tasks. */
@@ -336,8 +336,8 @@ int main(void)
 		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
 		/* Create the web server task. */
-		xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
-		
+		xTaskCreate( vuIP_Task, "uIP", mainuIP_STACK_SIZE, NULL, mainuIP_TASK_PRIORITY, NULL );
+
 		/* The suicide tasks must be created last, as they need to know how many
 		tasks were running prior to their creation in order to ascertain whether
 		or not the correct/expected number of tasks are running at any given
@@ -462,8 +462,8 @@ const unsigned long ulValueToSend = 100UL;
 
 	/* The timer command queue will have been filled when the timer test tasks
 	were created in main() (this is part of the test they perform).  Therefore,
-	while the check timer can be created in main(), it cannot be started from 
-	main().  Once the scheduler has started, the timer service task will drain 
+	while the check timer can be created in main(), it cannot be started from
+	main().  Once the scheduler has started, the timer service task will drain
 	the command queue, and now the check timer can be started successfully. */
 	xTimerStart( xCheckTimer, portMAX_DELAY );
 
@@ -539,10 +539,10 @@ static portTickType xLastScrollTime = 0UL;
 	{
 		/* Wait until it is time to update the OLED again. */
 		vTaskDelayUntil( &xLastScrollTime, mainOLED_PERIOD_MS );
-		
+
 		xOLEDData.char_offset1   = ucOffset1++;
 		xOLEDData.char_offset2   = ucOffset2++;
-	
+
 		OLED_write_data( &xOLEDData, BOTH_LINES );
 	}
 }
@@ -551,13 +551,13 @@ static portTickType xLastScrollTime = 0UL;
 static void prvSetupHardware( void )
 {
 	SystemCoreClockUpdate();
-	
+
 	/* Disable the Watch Dog Timer */
 	MSS_WD_disable( );
 
 	/* Configure the GPIO for the LEDs. */
 	vParTestInitialise();
-	
+
 	/* ACE Initialization */
 	ACE_init();
 
@@ -646,12 +646,12 @@ unsigned long *pulHighWord, *pulLowWord;
 
 	pulHighWord = ( unsigned long * ) &ullCurrentValue;
 	pulLowWord = pulHighWord++;
-	
+
 	MSS_TIM64_get_current_value( ( uint32_t * ) pulHighWord, ( uint32_t * ) pulLowWord );
-	
+
 	/* Convert the down count into an upcount. */
 	ullCurrentValue = ulMax64BitValue - ullCurrentValue;
-	
+
 	/* Scale to a 32bit number of suitable frequency. */
 	ullCurrentValue >>= 13;
 

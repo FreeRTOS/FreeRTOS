@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -80,7 +80,7 @@
  *
  * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
  * processing is performed in this task.
- * 
+ *
  * "USB" task - Enumerates the USB device as a CDC class, then echoes back all
  * received characters with a configurable offset (for example, if the offset
  * is 1 and 'A' is received then 'B' will be sent back).  A dumb terminal such
@@ -187,15 +187,15 @@ char cIPAddress[ 16 ]; /* Enough space for "xxx.xxx.xxx.xxx\0". */
 	vStartLEDFlashTasks( mainFLASH_TASK_PRIORITY );
 
     /* Create the USB task. */
-    xTaskCreate( vUSBTask, ( signed char * ) "USB", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
-	
-	/* Display the IP address, then create the uIP task.  The WEB server runs 
+    xTaskCreate( vUSBTask, "USB", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+
+	/* Display the IP address, then create the uIP task.  The WEB server runs
 	in this task. */
 	LCDdriver_initialisation();
 	LCD_PrintString( 5, 10, "FreeRTOS.org", 14, COLOR_GREEN);
 	sprintf( cIPAddress, "%d.%d.%d.%d", configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
 	LCD_PrintString( 5, 30, cIPAddress, 14, COLOR_RED);
-    xTaskCreate( vuIP_Task, ( signed char * ) "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL );
+    xTaskCreate( vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL );
 
     /* Start the scheduler. */
 	vTaskStartScheduler();
@@ -284,48 +284,48 @@ void prvSetupHardware( void )
 		LPC_SC->PLL0FEED = PLLFEED_FEED1;
 		LPC_SC->PLL0FEED = PLLFEED_FEED2;
 	}
-	
+
 	/* Disable PLL, disconnected. */
 	LPC_SC->PLL0CON = 0;
 	LPC_SC->PLL0FEED = PLLFEED_FEED1;
 	LPC_SC->PLL0FEED = PLLFEED_FEED2;
-	    
+
 	/* Enable main OSC. */
 	LPC_SC->SCS |= 0x20;
 	while( !( LPC_SC->SCS & 0x40 ) );
-	
+
 	/* select main OSC, 12MHz, as the PLL clock source. */
 	LPC_SC->CLKSRCSEL = 0x1;
-	
+
 	LPC_SC->PLL0CFG = 0x20031;
 	LPC_SC->PLL0FEED = PLLFEED_FEED1;
 	LPC_SC->PLL0FEED = PLLFEED_FEED2;
-	      
+
 	/* Enable PLL, disconnected. */
 	LPC_SC->PLL0CON = 1;
 	LPC_SC->PLL0FEED = PLLFEED_FEED1;
 	LPC_SC->PLL0FEED = PLLFEED_FEED2;
-	
+
 	/* Set clock divider. */
 	LPC_SC->CCLKCFG = 0x03;
-	
+
 	/* Configure flash accelerator. */
 	LPC_SC->FLASHCFG = 0x403a;
-	
+
 	/* Check lock bit status. */
 	while( ( ( LPC_SC->PLL0STAT & ( 1 << 26 ) ) == 0 ) );
-	    
+
 	/* Enable and connect. */
 	LPC_SC->PLL0CON = 3;
 	LPC_SC->PLL0FEED = PLLFEED_FEED1;
 	LPC_SC->PLL0FEED = PLLFEED_FEED2;
 	while( ( ( LPC_SC->PLL0STAT & ( 1 << 25 ) ) == 0 ) );
 
-	
-	
-	
+
+
+
 	/* Configure the clock for the USB. */
-	  
+
 	if( LPC_SC->PLL1STAT & ( 1 << 9 ) )
 	{
 		/* Enable PLL, disconnected. */
@@ -333,22 +333,22 @@ void prvSetupHardware( void )
 		LPC_SC->PLL1FEED = PLLFEED_FEED1;
 		LPC_SC->PLL1FEED = PLLFEED_FEED2;
 	}
-	
+
 	/* Disable PLL, disconnected. */
 	LPC_SC->PLL1CON = 0;
 	LPC_SC->PLL1FEED = PLLFEED_FEED1;
 	LPC_SC->PLL1FEED = PLLFEED_FEED2;
-	
+
 	LPC_SC->PLL1CFG = 0x23;
 	LPC_SC->PLL1FEED = PLLFEED_FEED1;
 	LPC_SC->PLL1FEED = PLLFEED_FEED2;
-	      
+
 	/* Enable PLL, disconnected. */
 	LPC_SC->PLL1CON = 1;
 	LPC_SC->PLL1FEED = PLLFEED_FEED1;
 	LPC_SC->PLL1FEED = PLLFEED_FEED2;
 	while( ( ( LPC_SC->PLL1STAT & ( 1 << 10 ) ) == 0 ) );
-	
+
 	/* Enable and connect. */
 	LPC_SC->PLL1CON = 3;
 	LPC_SC->PLL1FEED = PLLFEED_FEED1;

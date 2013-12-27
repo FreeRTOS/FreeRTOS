@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -66,7 +66,7 @@
 
 /******************************************************************************
  *
- * See the following web page for essential TwoEchoClient.c usage and 
+ * See the following web page for essential TwoEchoClient.c usage and
  * configuration details:
  * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml
  *
@@ -135,20 +135,20 @@ because simulated time is slower than real time. */
 void vStartEchoClientTasks( uint16_t usTaskStackSize, unsigned portBASE_TYPE uxTaskPriority )
 {
 	/* Create the echo client task that does not use the zero copy interface. */
-	xTaskCreate( 	prvEchoClientTask,						/* The function that implements the task. */
-					( const signed char * const ) "Echo0",	/* Just a text name for the task to aid debugging. */
-					usTaskStackSize,						/* The stack size is defined in FreeRTOSIPConfig.h. */
-					NULL,									/* The task parameter, not used in this case. */
-					uxTaskPriority,							/* The priority assigned to the task is defined in FreeRTOSConfig.h. */
-					NULL );									/* The task handle is not used. */
+	xTaskCreate( 	prvEchoClientTask,	/* The function that implements the task. */
+					"Echo0",			/* Just a text name for the task to aid debugging. */
+					usTaskStackSize,	/* The stack size is defined in FreeRTOSIPConfig.h. */
+					NULL,				/* The task parameter, not used in this case. */
+					uxTaskPriority,		/* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+					NULL );				/* The task handle is not used. */
 
 	/* Create the echo client task that does use the zero copy interface. */
-	xTaskCreate( 	prvZeroCopyEchoClientTask,				/* The function that implements the task. */
-					( const signed char * const ) "Echo1",	/* Just a text name for the task to aid debugging. */
-					usTaskStackSize,						/* The stack size is defined in FreeRTOSIPConfig.h. */
-					NULL,									/* The task parameter, not used in this case. */
-					uxTaskPriority,							/* The priority assigned to the task is defined in FreeRTOSConfig.h. */
-					NULL );									/* The task handle is not used. */
+	xTaskCreate( 	prvZeroCopyEchoClientTask,	/* The function that implements the task. */
+					"Echo1",					/* Just a text name for the task to aid debugging. */
+					usTaskStackSize,			/* The stack size is defined in FreeRTOSIPConfig.h. */
+					NULL,						/* The task parameter, not used in this case. */
+					uxTaskPriority,				/* The priority assigned to the task is defined in FreeRTOSConfig.h. */
+					NULL );						/* The task handle is not used. */
 }
 /*-----------------------------------------------------------*/
 

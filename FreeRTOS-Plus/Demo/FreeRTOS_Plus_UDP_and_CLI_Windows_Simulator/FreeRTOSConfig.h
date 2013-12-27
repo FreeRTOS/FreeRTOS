@@ -184,10 +184,10 @@ used. */
 /* The address of an echo server that will be used by the two demo echo client
 tasks.
 http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Common_Echo_Clients.shtml */
-#define configECHO_SERVER_ADDR0	172
-#define configECHO_SERVER_ADDR1 25
-#define configECHO_SERVER_ADDR2 218
-#define configECHO_SERVER_ADDR3 200
+#define configECHO_SERVER_ADDR0	10
+#define configECHO_SERVER_ADDR1 134
+#define configECHO_SERVER_ADDR2 134
+#define configECHO_SERVER_ADDR3 71
 
 /* Default MAC address configuration.  The demo creates a virtual network
 connection that uses this MAC address by accessing the raw Ethernet/WiFi data

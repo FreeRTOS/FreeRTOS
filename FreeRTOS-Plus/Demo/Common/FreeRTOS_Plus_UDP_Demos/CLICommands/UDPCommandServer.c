@@ -104,7 +104,7 @@ static xSocket_t prvOpenUDPServerSocket( uint16_t usPort );
 
 void vStartUDPCommandInterpreterTask( uint16_t usStackSize, uint32_t ulPort, unsigned portBASE_TYPE uxPriority )
 {
-	xTaskCreate( vUDPCommandInterpreterTask, ( signed char * ) "CLI", usStackSize, ( void * ) ulPort, uxPriority, NULL );
+	xTaskCreate( vUDPCommandInterpreterTask, "CLI", usStackSize, ( void * ) ulPort, uxPriority, NULL );
 }
 /*-----------------------------------------------------------*/
 

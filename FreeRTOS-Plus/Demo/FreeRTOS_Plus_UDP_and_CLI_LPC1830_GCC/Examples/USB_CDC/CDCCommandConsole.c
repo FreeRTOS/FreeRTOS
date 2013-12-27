@@ -125,16 +125,16 @@ void vCDCCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPri
 
 	/* Add the semaphore and mutex to the queue registry for viewing in the
 	kernel aware state viewer. */
-	vQueueAddToRegistry( xCDCMutex, ( signed char * ) "CDCMu" );
-	vQueueAddToRegistry( xNewDataSemaphore, ( signed char * ) "CDCDat" );
+	vQueueAddToRegistry( xCDCMutex, "CDCMu" );
+	vQueueAddToRegistry( xNewDataSemaphore, "CDCDat" );
 
 	/* Create that task that handles the console itself. */
-	xTaskCreate( 	prvCDCCommandConsoleTask,			/* The task that implements the command console. */
-					( const int8_t * const ) "CDCCmd",	/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
-					usStackSize,						/* The size of the stack allocated to the task. */
-					NULL,								/* The parameter is not used, so NULL is passed. */
-					uxPriority,							/* The priority allocated to the task. */
-					NULL );								/* A handle is not required, so just pass NULL. */
+	xTaskCreate( 	prvCDCCommandConsoleTask,	/* The task that implements the command console. */
+					"CDCCmd",					/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
+					usStackSize,				/* The size of the stack allocated to the task. */
+					NULL,						/* The parameter is not used, so NULL is passed. */
+					uxPriority,					/* The priority allocated to the task. */
+					NULL );						/* A handle is not required, so just pass NULL. */
 }
 /*-----------------------------------------------------------*/
 

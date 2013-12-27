@@ -5,11 +5,11 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -299,7 +299,7 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 						/* Static configuration is being used, so the network is now up. */
 						#if ipconfigFREERTOS_PLUS_NABTO == 1
 						{
-							/* Return value is used in configASSERT() inside the 
+							/* Return value is used in configASSERT() inside the
 							function. */
 							( void ) xStartNabtoTask();
 						}
@@ -329,11 +329,11 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 				}
 				#endif
 
-				/* Static configuration is being used, so the network is now 
+				/* Static configuration is being used, so the network is now
 				up. */
 				#if ipconfigFREERTOS_PLUS_NABTO == 1
 				{
-					/* Return value is used in configASSERT() inside the 
+					/* Return value is used in configASSERT() inside the
 					function. */
 					( void ) xStartNabtoTask();
 				}
@@ -451,7 +451,7 @@ extern void vIPFunctionsTimerCallback( xTimerHandle xTimer );
 
 	if( xDHCPTimer == NULL )
 	{
-		xDHCPTimer = xTimerCreate( ( const signed char * const ) "DHCP", dhcpINITIAL_TIMER_PERIOD, pdTRUE, ( void * ) eDHCPEvent, vIPFunctionsTimerCallback );
+		xDHCPTimer = xTimerCreate( "DHCP", dhcpINITIAL_TIMER_PERIOD, pdTRUE, ( void * ) eDHCPEvent, vIPFunctionsTimerCallback );
 		configASSERT( xDHCPTimer );
 		xTimerStart( xDHCPTimer, portMAX_DELAY );
 	}

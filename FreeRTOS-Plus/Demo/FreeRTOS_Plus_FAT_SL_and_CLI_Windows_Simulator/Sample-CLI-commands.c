@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -200,7 +200,7 @@ const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stac
 
 	/* Generate a table of task stats. */
 	strcpy( ( char * ) pcWriteBuffer, ( char * ) pcHeader );
-	vTaskList( pcWriteBuffer + strlen( ( char * ) pcHeader ) );
+	vTaskList( ( char * ) pcWriteBuffer + strlen( ( char * ) pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */
@@ -221,7 +221,7 @@ const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Ti
 
 	/* Generate a table of task stats. */
 	strcpy( ( char * ) pcWriteBuffer, ( char * ) pcHeader );
-	vTaskGetRunTimeStats( pcWriteBuffer + strlen( ( char * ) pcHeader ) );
+	vTaskGetRunTimeStats( ( char * ) pcWriteBuffer + strlen( ( char * ) pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */

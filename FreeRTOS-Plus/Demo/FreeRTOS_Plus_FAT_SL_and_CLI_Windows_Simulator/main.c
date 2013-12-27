@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -148,7 +148,7 @@ const uint32_t ulLongTime_ms = 250UL;
 	/* Create the task that handles the CLI on a UDP port.  The port number
 	is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
 	xTaskCreate( vUDPCommandInterpreterTask, 	/* The function that implements the command interpreter IO handling. */
-				( signed char * ) "CLI", 		/* The name of the task - just to assist debugging. */
+				"CLI", 							/* The name of the task - just to assist debugging. */
 				configMINIMAL_STACK_SIZE, NULL, /* The size of the stack allocated to the task. */
 				mainUDP_CLI_TASK_PRIORITY, 		/* The priority at which the task will run. */
 				NULL );							/* A handle to the task is not required, so NULL is passed. */

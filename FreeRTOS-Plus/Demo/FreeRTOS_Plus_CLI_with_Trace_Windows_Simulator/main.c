@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -70,9 +70,9 @@
  * application.  It is provided as a convenient development and demonstration
  * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
- * Windows will not be running the FreeRTOS simulator threads continuously, so 
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.  
- * See the documentation page for the Windows simulator for an explanation of 
+ * Windows will not be running the FreeRTOS simulator threads continuously, so
+ * the timing information in the FreeRTOS+Trace logs have no meaningful units.
+ * See the documentation page for the Windows simulator for an explanation of
  * the slow timing:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
@@ -184,17 +184,17 @@ const uint32_t ulLongTime_ms = 250UL;
 	/* Start the two tasks as described in the comments at the top of this
 	file. */
 	xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
-				( signed char * ) "Rx", 			/* The text name assigned to the task - for debug only as it is not used by the kernel. */
+				"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
 				configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task.  Not actually used as a stack in the Win32 simulator port. */
 				NULL,								/* The parameter passed to the task - not used in this example. */
 				mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
 				NULL );								/* The task handle is not required, so NULL is passed. */
 
-	xTaskCreate( prvQueueSendTask, ( signed char * ) "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+	xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 	/* Create the task that handles the CLI on a UDP port.  The port number
 	is set using the configUDP_CLI_PORT_NUMBER setting in FreeRTOSConfig.h. */
-	xTaskCreate( vUDPCommandInterpreterTask, ( signed char * ) "CLI", configMINIMAL_STACK_SIZE, NULL, mainUDP_CLI_TASK_PRIORITY, NULL );
+	xTaskCreate( vUDPCommandInterpreterTask, "CLI", configMINIMAL_STACK_SIZE, NULL, mainUDP_CLI_TASK_PRIORITY, NULL );
 
 	/* Register commands with the FreeRTOS+CLI command interpreter. */
 	vRegisterCLICommands();
@@ -293,10 +293,10 @@ const unsigned long ulLongSleep = 1000UL;
 
 void vApplicationTickHook( void )
 {
-	/* Write a user event to the trace log.  
+	/* Write a user event to the trace log.
 	Note tick events will not appear in the trace recording with regular period
 	because this project runs in a Windows simulator, and does not therefore
 	exhibit deterministic behaviour. */
-	vTraceUserEvent( xTickTraceUserEvent );					
+	vTraceUserEvent( xTickTraceUserEvent );
 }
 

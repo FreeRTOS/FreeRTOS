@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -107,8 +107,8 @@ void vStartSelectUDPServerTasks( uint16_t usStackSize, uint32_t ulFirstPortNumbe
 	FreeRTOS_select() function to receive from multiple sockets.  The first
 	port number to use is passed into both tasks using the task's parameter.
 	Other port numbers are consecutive from the first. */
-	xTaskCreate( prvMultipleSocketTxTask, ( const signed char * const ) "MultiTx", usStackSize, ( void * ) ulFirstPortNumber, uxPriority, NULL );
-	xTaskCreate( prvMultipleSocketRxTask, ( const signed char * const ) "MultiRx", usStackSize, ( void * ) ulFirstPortNumber, uxPriority, NULL );
+	xTaskCreate( prvMultipleSocketTxTask, "MultiTx", usStackSize, ( void * ) ulFirstPortNumber, uxPriority, NULL );
+	xTaskCreate( prvMultipleSocketRxTask, "MultiRx", usStackSize, ( void * ) ulFirstPortNumber, uxPriority, NULL );
 }
 /*-----------------------------------------------------------*/
 

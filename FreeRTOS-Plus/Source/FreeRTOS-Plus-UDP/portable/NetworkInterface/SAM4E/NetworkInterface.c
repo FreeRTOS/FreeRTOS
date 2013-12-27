@@ -19,9 +19,9 @@
  *
  * - Commercial licensing -
  * Businesses and individuals that for commercial or other reasons cannot comply
- * with the terms of the GPL V2 license must obtain a commercial license before 
- * incorporating FreeRTOS+UDP into proprietary software for distribution in any 
- * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp 
+ * with the terms of the GPL V2 license must obtain a commercial license before
+ * incorporating FreeRTOS+UDP into proprietary software for distribution in any
+ * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp
  * and do not require any source files to be changed.
  *
  * FreeRTOS+UDP is distributed in the hope that it will be useful.  You cannot
@@ -98,7 +98,7 @@ const portTickType xPHYDelay_400ms = 400UL;
 portBASE_TYPE xReturn = pdFALSE;
 
 	/* Ensure PHY is ready. */
-	vTaskDelay( xPHYDelay_400ms / portTICK_RATE_MS );	
+	vTaskDelay( xPHYDelay_400ms / portTICK_RATE_MS );
 
 	/* Enable GMAC clock. */
 	pmc_enable_periph_clk( ID_GMAC );
@@ -117,13 +117,13 @@ portBASE_TYPE xReturn = pdFALSE;
 	if( ethernet_phy_init( GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz() ) == GMAC_OK )
 	{
 		/* Auto Negotiate, work in RMII mode. */
-		if( ethernet_phy_auto_negotiate( GMAC, BOARD_GMAC_PHY_ADDR ) == GMAC_OK ) 
+		if( ethernet_phy_auto_negotiate( GMAC, BOARD_GMAC_PHY_ADDR ) == GMAC_OK )
 		{
 			/* Establish Ethernet link. */
 			vTaskDelay( xPHYDelay_400ms * 2UL );
 			if( ethernet_phy_set_link( GMAC, BOARD_GMAC_PHY_ADDR, 1 ) == GMAC_OK )
 			{
-				/* Create the event semaphore if it has not already been 
+				/* Create the event semaphore if it has not already been
 				created. */
 				if( xGMACRxEventSemaphore == NULL )
 				{
@@ -136,23 +136,23 @@ portBASE_TYPE xReturn = pdFALSE;
 					}
 					#endif /*  ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 */
 				}
-				
+
 				/* Register the callbacks. */
 				gmac_dev_set_rx_callback( &xGMACStruct, prvGMACRxCallback );
-				
-				/* The Rx deferred interrupt handler task is created at the 
-				highest	possible priority to ensure the interrupt handler can 
-				return directly to it no matter which task was running when the 
+
+				/* The Rx deferred interrupt handler task is created at the
+				highest	possible priority to ensure the interrupt handler can
+				return directly to it no matter which task was running when the
 				interrupt occurred. */
 				xTaskCreate( 	prvGMACDeferredInterruptHandlerTask,/* The function that implements the task. */
-								( const signed char * const ) "MACTsk",
+								"MACTsk",
 								configMINIMAL_STACK_SIZE,	/* Stack allocated to the task (defined in words, not bytes). */
 								NULL, 						/* The task parameter is not used. */
 								configMAX_PRIORITIES - 1, 	/* The priority assigned to the task. */
 								NULL );						/* The handle is not required, so NULL is passed. */
-				
-				/* Enable the interrupt and set its priority as configured.  
-				THIS DRIVER REQUIRES configMAC_INTERRUPT_PRIORITY TO BE DEFINED, 
+
+				/* Enable the interrupt and set its priority as configured.
+				THIS DRIVER REQUIRES configMAC_INTERRUPT_PRIORITY TO BE DEFINED,
 				PREFERABLY IN FreeRTOSConfig.h. */
 				NVIC_SetPriority( GMAC_IRQn, configMAC_INTERRUPT_PRIORITY );
 				NVIC_EnableIRQ( GMAC_IRQn );
@@ -235,7 +235,7 @@ uint32_t ulReturned;
 
 		/* Allocate a buffer to hold the data. */
 		pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, xBufferWaitDelay );
-		
+
 		if( pxNetworkBuffer != NULL )
 		{
 			/* At least one packet has been received. */

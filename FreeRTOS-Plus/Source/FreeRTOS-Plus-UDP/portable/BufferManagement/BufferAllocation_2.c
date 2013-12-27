@@ -95,7 +95,7 @@ portBASE_TYPE xReturn, x;
 	{
 		xNetworkBufferSemaphore = xSemaphoreCreateCounting( ipconfigNUM_NETWORK_BUFFERS, ipconfigNUM_NETWORK_BUFFERS );
 		configASSERT( xNetworkBufferSemaphore );
-		vQueueAddToRegistry( xNetworkBufferSemaphore, ( signed char * ) "NetBufSem" );
+		vQueueAddToRegistry( xNetworkBufferSemaphore, "NetBufSem" );
 
 		/* If the trace recorder code is included name the semaphore for viewing
 		in FreeRTOS+Trace.  */

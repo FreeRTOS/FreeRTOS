@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -100,11 +100,11 @@ static xTimerHandle xLEDToggleTimer = NULL;
 	GPIO_SetDir( ledLED1_PORT, ledLED1_BIT, 1 );
 
     /* Create the timer used to toggle LED0. */
-	xLEDToggleTimer = xTimerCreate(	( const int8_t * ) "LEDTmr", 	/* Just a text name to associate with the timer, useful for debugging, but not used by the kernel. */
-								ledTOGGLE_RATE,						/* The period of the timer. */
-								pdTRUE,								/* This timer will autoreload, so uxAutoReload is set to pdTRUE. */
-								NULL,								/* The timer ID is not used, so can be set to NULL. */
-								prvLEDToggleTimerCallback );		/* The callback function executed each time the timer expires. */
+	xLEDToggleTimer = xTimerCreate(	"LEDTmr", 		/* Just a text name to associate with the timer, useful for debugging, but not used by the kernel. */
+									ledTOGGLE_RATE,	/* The period of the timer. */
+									pdTRUE,			/* This timer will autoreload, so uxAutoReload is set to pdTRUE. */
+									NULL,			/* The timer ID is not used, so can be set to NULL. */
+									prvLEDToggleTimerCallback );		/* The callback function executed each time the timer expires. */
 
     /* Sanity check that the timer was actually created. */
     configASSERT( xLEDToggleTimer );

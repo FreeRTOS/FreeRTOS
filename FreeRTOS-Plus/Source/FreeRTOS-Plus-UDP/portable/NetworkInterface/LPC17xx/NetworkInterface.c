@@ -122,7 +122,7 @@ extern uint8_t ucMACAddress[ 6 ];
 
 		/* The handler task is created at the highest possible priority to
 		ensure the interrupt handler can return directly to it. */
-		xTaskCreate( prvEMACHandlerTask, ( const signed char * const ) "EMAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+		xTaskCreate( prvEMACHandlerTask, "EMAC", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
 		/* Enable the interrupt and set its priority to the minimum
 		interrupt priority.  */

@@ -392,7 +392,7 @@ xIPStackEvent_t xReceivedEvent;
 
 	/* Create the ARP timer, but don't start it until the network has
 	connected. */
-	xARPTimer = xTimerCreate( 	( const signed char * const ) "ARPTimer", ( ipARP_TIMER_PERIOD_MS / portTICK_RATE_MS ), pdTRUE, ( void * ) eARPTimerEvent, vIPFunctionsTimerCallback );
+	xARPTimer = xTimerCreate( 	"ARPTimer", ( ipARP_TIMER_PERIOD_MS / portTICK_RATE_MS ), pdTRUE, ( void * ) eARPTimerEvent, vIPFunctionsTimerCallback );
 	configASSERT( xARPTimer );
 
 	/* Generate a dummy message to say that the network connection has gone
@@ -557,7 +557,7 @@ static portBASE_TYPE xReturn = pdFALSE;
 	{
 		xNetworkEventQueue = xQueueCreate( ipconfigEVENT_QUEUE_LENGTH, sizeof( xIPStackEvent_t ) );
 		configASSERT( xNetworkEventQueue );
-		vQueueAddToRegistry( xNetworkEventQueue, ( signed char * ) "NetEvnt" );
+		vQueueAddToRegistry( xNetworkEventQueue, "NetEvnt" );
 	}
 
 	if( xNetworkBuffersInitialise() == pdPASS )
@@ -597,7 +597,7 @@ static portBASE_TYPE xReturn = pdFALSE;
 				FreeRTOS_SocketsInit();
 
 				/* Create the task that processes Ethernet and stack events. */
-				xReturn = xTaskCreate( prvIPTask, ( const signed char * const ) "UDP/IP", ipconfigUDP_TASK_STACK_SIZE_WORDS, NULL, ipconfigUDP_TASK_PRIORITY, NULL );
+				xReturn = xTaskCreate( prvIPTask, "UDP/IP", ipconfigUDP_TASK_STACK_SIZE_WORDS, NULL, ipconfigUDP_TASK_PRIORITY, NULL );
 			}
 		}
 	}

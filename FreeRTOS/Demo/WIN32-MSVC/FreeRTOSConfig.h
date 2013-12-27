@@ -115,9 +115,14 @@ void vConfigureTimerForRunTimeStats( void );
 #define configUSE_CO_ROUTINES 		1
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
+/* This demo makes use of one or more example stats formatting functions.  These
+format the raw data provided by the uxTaskGetSystemState() function in to human
+readable ASCII form.  See the notes in the implementation of vTaskList() within 
+FreeRTOS/Source/tasks.c for limitations. */
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
-
 #define INCLUDE_vTaskPrioritySet				1
 #define INCLUDE_uxTaskPriorityGet				1
 #define INCLUDE_vTaskDelete						1

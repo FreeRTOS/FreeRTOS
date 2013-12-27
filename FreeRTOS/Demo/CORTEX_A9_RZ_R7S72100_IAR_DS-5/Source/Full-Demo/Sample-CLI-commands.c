@@ -216,7 +216,7 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 
 	/* Generate a table of task stats. */
 	strcpy( ( char * ) pcWriteBuffer, pcHeader );
-	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
+	vTaskList( ( char * ) pcWriteBuffer + strlen( pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */

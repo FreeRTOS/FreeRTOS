@@ -276,7 +276,7 @@ long lReturn = pdPASS;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	/* This function will be called if a task overflows its stack.  Inspect
 	pxCurrentTCB to find the offending task if the overflow was sever enough

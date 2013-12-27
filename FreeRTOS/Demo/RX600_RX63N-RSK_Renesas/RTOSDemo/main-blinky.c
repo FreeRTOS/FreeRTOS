@@ -269,7 +269,7 @@ void vApplicationMallocFailedHook( void )
 
 /* This function is explained by the comments above its prototype at the top
 of this file. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

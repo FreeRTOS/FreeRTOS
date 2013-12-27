@@ -229,7 +229,7 @@ void vApplicationMallocFailedHook( void )
 FreeRTOSConfig.h, then this function will be called if a task overflows its 
 stack space.  See 
 http://www.freertos.org/Stacks-and-stack-overflow-checking.html. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

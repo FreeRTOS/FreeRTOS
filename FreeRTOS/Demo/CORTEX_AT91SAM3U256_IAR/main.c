@@ -163,7 +163,7 @@ static void prvLCDTask( void *pvParameters );
  * Hook functions that can get called by the kernel.  The 'check' functionality
  * is implemented within the tick hook.
  */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
 
 /*
  * The tick hook function as described in the comments at the top of this file.
@@ -280,7 +280,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	( void ) pxTask;
 	( void ) pcTaskName;

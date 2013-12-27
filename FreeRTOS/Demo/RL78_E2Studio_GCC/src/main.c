@@ -118,7 +118,7 @@ extern void main_full( void );
 within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /* This variable is not actually used, but provided to allow an example of how
@@ -190,7 +190,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

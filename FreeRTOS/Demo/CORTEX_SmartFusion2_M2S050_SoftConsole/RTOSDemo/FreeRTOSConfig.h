@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -72,7 +72,7 @@
  * executed prior to this project being built.  Once it has been executed
  * remove the #error line below.
  */
-//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
 /*
  * Set configCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
@@ -152,7 +152,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 

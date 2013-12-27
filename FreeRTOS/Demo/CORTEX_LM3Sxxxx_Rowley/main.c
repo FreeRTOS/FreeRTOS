@@ -459,7 +459,7 @@ void ( *vOLEDClear )( void ) = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

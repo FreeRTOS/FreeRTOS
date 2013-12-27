@@ -325,7 +325,7 @@ extern unsigned portSHORT usMaxJitter;
 }
 /*---------------------------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 {
 	/* The stack space has been execeeded for a task, considering allocating more. */
 	taskDISABLE_INTERRUPTS();

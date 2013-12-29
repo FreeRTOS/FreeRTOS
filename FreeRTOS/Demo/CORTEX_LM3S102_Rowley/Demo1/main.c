@@ -199,7 +199,7 @@ static void vCommsRxTask( void * pvParameters );
  * The co-routine that periodically initiates the transmission of the string on
  * the UART.
  */
-static void vSerialTxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
+static void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
 
 /* 
  * Writes a string the the LCD.
@@ -429,7 +429,7 @@ static char cRxedChar, cExpectedChar;
 }
 /*-----------------------------------------------------------*/
 
-static void vSerialTxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 portTickType xDelayPeriod;
 static unsigned long *pulRandomBytes = mainFIRST_PROGRAM_BYTES;

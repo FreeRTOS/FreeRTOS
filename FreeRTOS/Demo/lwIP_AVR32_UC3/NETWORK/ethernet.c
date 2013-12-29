@@ -170,7 +170,7 @@ static void prvEthernetConfigureInterface(void * param)
 {
 struct ip_addr xIpAddr, xNetMask, xGateway;
 extern err_t ethernetif_init( struct netif *netif );
-portCHAR MacAddress[6];
+char MacAddress[6];
 
    /* Default MAC addr. */
    MacAddress[0] = ETHERNET_CONF_ETHADDR0;

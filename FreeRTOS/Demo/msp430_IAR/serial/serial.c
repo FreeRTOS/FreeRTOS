@@ -81,7 +81,7 @@
 #include "serial.h"
 
 /* Constants required to setup the hardware. */
-#define serTX_AND_RX			( ( unsigned portCHAR ) 0x03 )
+#define serTX_AND_RX			( ( unsigned char ) 0x03 )
 
 /* Misc. constants. */
 #define serNO_BLOCK				( ( portTickType ) 0 )
@@ -95,13 +95,13 @@ static xQueueHandle xRxedChars;
 /* The queue used to hold characters waiting transmission. */
 static xQueueHandle xCharsForTx;
 
-static volatile portSHORT sTHREEmpty;
+static volatile short sTHREEmpty;
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-unsigned portLONG ulBaudRateCount;
+unsigned long ulBaudRateCount;
 
 	/* Initialise the hardware. */
 
@@ -111,8 +111,8 @@ unsigned portLONG ulBaudRateCount;
 	portENTER_CRITICAL();
 	{
 		/* Create the queues used by the com test task. */
-		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 		/* Reset UART. */
 		UCTL1 |= SWRST;
@@ -126,11 +126,11 @@ unsigned portLONG ulBaudRateCount;
 		U1TCTL |= SSEL1;
 
 		/* Setup baud rate low byte. */
-		U1BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
+		U1BR0 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* Setup baud rate high byte. */
 		ulBaudRateCount >>= 8UL;
-		U1BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned portLONG ) 0xff );
+		U1BR1 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* Enable ports. */
 		ME2 |= UTXE1 + URXE1;
@@ -153,7 +153,7 @@ unsigned portLONG ulBaudRateCount;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -168,7 +168,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 
@@ -224,7 +224,7 @@ signed portBASE_TYPE xReturn;
 	#pragma vector=UART1RX_VECTOR
 	__interrupt void vRxISR( void )
 	{
-	signed portCHAR cChar;
+	signed char cChar;
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	
 		/* Get the character from the UART and post it on the queue of Rxed
@@ -252,7 +252,7 @@ signed portBASE_TYPE xReturn;
 	#pragma vector=UART1TX_VECTOR
 	__interrupt void vTxISR( void )
 	{
-	signed portCHAR cChar;
+	signed char cChar;
 	portBASE_TYPE xTaskWoken = pdFALSE;
 	
 		/* The previous character has been transmitted.  See if there are any
@@ -280,7 +280,7 @@ signed portBASE_TYPE xReturn;
     interrupt entry point. */
 	void vRxISR( void )
 	{
-	signed portCHAR cChar;
+	signed char cChar;
 	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	
 		/* Get the character from the UART and post it on the queue of Rxed
@@ -300,7 +300,7 @@ signed portBASE_TYPE xReturn;
     interrupt entry point. */
 	void vTxISR( void )
 	{
-	signed portCHAR cChar;
+	signed char cChar;
 	portBASE_TYPE xTaskWoken = pdFALSE;
 	
 		/* The previous character has been transmitted.  See if there are any

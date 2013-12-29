@@ -122,7 +122,7 @@ extern "C" {
 /*-----------------------------------------------------------*/
 
 /* Critical section control macros. */
-#define portNO_CRITICAL_SECTION_NESTING		( ( unsigned portSHORT ) 0 )
+#define portNO_CRITICAL_SECTION_NESTING		( ( unsigned short ) 0 )
 
 #define portENTER_CRITICAL()													\
 {																				\

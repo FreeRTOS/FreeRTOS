@@ -197,13 +197,13 @@ static void vLCDTask( void * pvParameters );
 /*
  * The task that receives the characters from UART 0.
  */
-static void vCommsRxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
+static void vCommsRxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
 
 /*
  * The co-routine that periodically initiates the transmission of the string on
  * the UART.
  */
-static void vSerialTxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
+static void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
 
 /* 
  * Writes a string the the LCD.
@@ -384,7 +384,7 @@ const char *pcStringsToDisplay[] = {
 }
 /*-----------------------------------------------------------*/
 
-static void vCommsRxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void vCommsRxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 static char cRxedChar, cExpectedChar = mainFIRST_TX_CHAR;
 portBASE_TYPE xResult;
@@ -437,7 +437,7 @@ portBASE_TYPE xResult;
 }
 /*-----------------------------------------------------------*/
 
-static void vSerialTxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 portTickType xDelayPeriod;
 static unsigned long *pulRandomBytes = mainFIRST_PROGRAM_BYTES;

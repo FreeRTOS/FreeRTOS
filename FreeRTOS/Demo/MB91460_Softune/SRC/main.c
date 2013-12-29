@@ -130,7 +130,7 @@
 #define mainGENERIC_QUEUE_PRIORITY		( tskIDLE_PRIORITY )
 
 /* Baud rate used by the COM test tasks. */
-#define mainCOM_TEST_BAUD_RATE			( ( unsigned portLONG ) 19200 )
+#define mainCOM_TEST_BAUD_RATE			( ( unsigned long ) 19200 )
 
 /* The frequency at which the 'Check' tasks executes.  See the comments at the
 top of the page.  When the system is operating error free the 'Check' task
@@ -167,7 +167,7 @@ static void prvErrorChecks( void *pvParameters );
  * Called by the Check task.  Returns pdPASS if all the other tasks are found
  * to be operating without error - otherwise returns pdFAIL.
  */
-static portSHORT prvCheckOtherTasksAreStillRunning( void );
+static short prvCheckOtherTasksAreStillRunning( void );
 
 /*
  * Setup the microcontroller as used by this demo.
@@ -187,7 +187,7 @@ static void vSecondRegisterTestTask( void *pvParameters );
 
 /* The variable that is set to true should an error be found in one of the
 register test tasks. */
-unsigned portLONG ulRegTestError = pdFALSE;
+unsigned long ulRegTestError = pdFALSE;
 
 /*---------------------------------------------------------------------------*/
 
@@ -274,7 +274,7 @@ portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY, xLastExecutionTime;
 }
 /*-----------------------------------------------------------*/
 
-static portSHORT prvCheckOtherTasksAreStillRunning( void )
+static short prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
 
@@ -405,7 +405,7 @@ static void prvSetupHardware( void )
 
 static void vFirstRegisterTestTask( void *pvParameters )
 {
-extern volatile unsigned portLONG ulCriticalNesting;
+extern volatile unsigned long ulCriticalNesting;
 
 	/* Fills the registers with known values (different to the values
 	used in vSecondRegisterTestTask()), then checks that the registers still
@@ -503,7 +503,7 @@ extern volatile unsigned portLONG ulCriticalNesting;
 
 static void vSecondRegisterTestTask( void *pvParameters )
 {
-extern volatile unsigned portLONG ulCriticalNesting;
+extern volatile unsigned long ulCriticalNesting;
 
 	/* Fills the registers with known values (different to the values
 	used in vFirstRegisterTestTask()), then checks that the registers still

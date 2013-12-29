@@ -81,7 +81,7 @@
 #define LED2_POS		0x01
 #define LED3_POS		0x04
 
-static const unsigned portCHAR ucLEDDefinitions[ partstNUM_LEDs ] = { LED0_POS, LED1_POS, LED2_POS, LED3_POS };
+static const unsigned char ucLEDDefinitions[ partstNUM_LEDs ] = { LED0_POS, LED1_POS, LED2_POS, LED3_POS };
 
 /*-----------------------------------------------------------
  * Simple parallel port IO routines.
@@ -140,7 +140,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 	{
 		taskENTER_CRITICAL();
 		{
-			if( ( MCF_GPIO_PORTTD & ucLEDDefinitions[ uxLED ] ) == ( unsigned portCHAR ) 0 )
+			if( ( MCF_GPIO_PORTTD & ucLEDDefinitions[ uxLED ] ) == ( unsigned char ) 0 )
 			{
 				MCF_GPIO_PORTTD |= ucLEDDefinitions[ uxLED ];
 			}
@@ -155,7 +155,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 	{
 		taskENTER_CRITICAL();
 		{
-			if( ( MCF_GPIO_PORTTC & ucLEDDefinitions[ uxLED ] ) == ( unsigned portCHAR ) 0 )
+			if( ( MCF_GPIO_PORTTC & ucLEDDefinitions[ uxLED ] ) == ( unsigned char ) 0 )
 			{
 				MCF_GPIO_PORTTC |= ucLEDDefinitions[ uxLED ];
 			}

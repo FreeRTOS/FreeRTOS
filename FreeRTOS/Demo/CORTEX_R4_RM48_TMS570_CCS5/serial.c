@@ -213,7 +213,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
 signed char *pxNext;
 

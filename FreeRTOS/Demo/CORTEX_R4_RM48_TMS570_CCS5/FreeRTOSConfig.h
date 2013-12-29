@@ -92,10 +92,10 @@
 #define configUSE_TICK_HOOK			  			1
 #define configUSE_TRACE_FACILITY	  			0
 #define configUSE_16_BIT_TICKS		  			0
-#define configCPU_CLOCK_HZ			  			( ( unsigned portLONG ) 50000000 ) /* Timer clock. */
+#define configCPU_CLOCK_HZ			  			( ( unsigned long ) 50000000 ) /* Timer clock. */
 #define configTICK_RATE_HZ			  			( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES		  			( 8 )
-#define configMINIMAL_STACK_SIZE	  			( ( unsigned portSHORT ) 128 )
+#define configMINIMAL_STACK_SIZE	  			( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE		  			( ( size_t ) 32768 )
 #define configMAX_TASK_NAME_LEN		  			( 16 )
 #define configIDLE_SHOULD_YIELD		  			1

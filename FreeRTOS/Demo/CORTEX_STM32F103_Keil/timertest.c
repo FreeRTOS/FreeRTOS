@@ -75,7 +75,7 @@
 
 /* The set frequency of the interrupt.  Deviations from this are measured as
 the jitter. */
-#define timerINTERRUPT_FREQUENCY		( ( unsigned portSHORT ) 20000 )
+#define timerINTERRUPT_FREQUENCY		( ( unsigned short ) 20000 )
 
 /* The expected time between each of the timer interrupts - if the jitter was
 zero. */
@@ -102,7 +102,7 @@ void vSetupTimerTest( void );
 void vTimer2IntHandler( void );
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned portSHORT usMaxJitter = 0;
+volatile unsigned short usMaxJitter = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -124,7 +124,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* Time base configuration for timer 2 - which generates the interrupts. */
 	ulFrequency = configCPU_CLOCK_HZ / timerINTERRUPT_FREQUENCY;	
-	TIM_TimeBaseStructure.TIM_Period = ( unsigned portSHORT ) ( ulFrequency & 0xffffUL );
+	TIM_TimeBaseStructure.TIM_Period = ( unsigned short ) ( ulFrequency & 0xffffUL );
 	TIM_TimeBaseStructure.TIM_Prescaler = 0x0;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -134,7 +134,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 	
 	/* Configuration for timer 3 which is used as a high resolution time
 	measurement. */
-	TIM_TimeBaseStructure.TIM_Period = ( unsigned portSHORT ) 0xffff;
+	TIM_TimeBaseStructure.TIM_Period = ( unsigned short ) 0xffff;
 	TIM_TimeBaseInit( TIM3, &TIM_TimeBaseStructure );
 	TIM_ARRPreloadConfig( TIM3, ENABLE );
 	
@@ -154,8 +154,8 @@ NVIC_InitTypeDef NVIC_InitStructure;
 
 void vTimer2IntHandler( void )
 {
-static unsigned portSHORT usLastCount = 0, usSettleCount = 0, usMaxDifference = 0;
-unsigned portSHORT usThisCount, usDifference;
+static unsigned short usLastCount = 0, usSettleCount = 0, usMaxDifference = 0;
+unsigned short usThisCount, usDifference;
 
 	/* Capture the free running timer 3 value as we enter the interrupt. */
 	usThisCount = TIM3->CNT;

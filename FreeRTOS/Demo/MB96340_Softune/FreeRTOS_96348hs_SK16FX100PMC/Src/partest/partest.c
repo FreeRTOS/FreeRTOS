@@ -70,8 +70,8 @@
 
 #define partstNUM_LEDs	8
 
-static unsigned portCHAR sState[ partstNUM_LEDs ] = { pdFALSE };
-static unsigned portCHAR sState1[ partstNUM_LEDs ] = { pdFALSE };
+static unsigned char sState[ partstNUM_LEDs ] = { pdFALSE };
+static unsigned char sState1[ partstNUM_LEDs ] = { pdFALSE };
 
 
 /*-----------------------------------------------------------*/

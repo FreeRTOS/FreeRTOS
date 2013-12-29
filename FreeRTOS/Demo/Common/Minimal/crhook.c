@@ -115,7 +115,7 @@ posted to the 'hook' co-routines. */
 /*
  * The co-routine function itself.
  */
-static void prvHookCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
+static void prvHookCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
 
 
 /*
@@ -217,7 +217,7 @@ signed portBASE_TYPE xIndex, xCoRoutineWoken;
 }
 /*-----------------------------------------------------------*/
 
-static void prvHookCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void prvHookCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 static unsigned portBASE_TYPE uxReceivedValue[ hookNUM_HOOK_CO_ROUTINES ];
 portBASE_TYPE xResult;

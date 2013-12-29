@@ -92,7 +92,7 @@
 
 //! Server address
 #error configure SMTP server address
-portCHAR cServer[] = "192.168.0.1";
+char cServer[] = "192.168.0.1";
 
 //! Fill here the mailfrom with your mail address
 #error configure SMTP mail sender
@@ -110,7 +110,7 @@ char cMailcontent[] ="Subject: *** SPAM ***\r\nFROM: \"Your Name here\" <sender@
 Bool bSendMail = pdFALSE;
 
 //! buffer for SMTP response
-portCHAR cTempBuffer[200];
+char cTempBuffer[200];
 
 
 //_____ D E C L A R A T I O N S ____________________________________________
@@ -134,8 +134,8 @@ static portBASE_TYPE prvpushb_ISR_NonNakedBehaviour( void );
 portTASK_FUNCTION( vBasicSMTPClient, pvParameters )
 {
   struct sockaddr_in stServeurSockAddr; 
-  portLONG lRetval;
-  portLONG lSocket = -1;
+  long lRetval;
+  long lSocket = -1;
   
   // configure push button 0 to produce IT on falling edge
   gpio_enable_pin_interrupt(GPIO_PUSH_BUTTON_0 , GPIO_FALLING_EDGE);

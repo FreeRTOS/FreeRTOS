@@ -161,8 +161,8 @@ static void vButtonHandlerTask( void *pvParameters );
 static void vPrintTask( void *pvParameter );
 
 /* String that is transmitted on the UART. */
-static portCHAR *cMessage = "Task woken by button interrupt! --- ";
-static volatile portCHAR *pcNextChar;
+static char *cMessage = "Task woken by button interrupt! --- ";
+static volatile char *pcNextChar;
 
 /* The semaphore used to wake the button handler task from within the GPIO
 interrupt handler. */
@@ -184,7 +184,7 @@ int main( void )
 	xSemaphoreTake( xButtonSemaphore, 0 );
 
 	/* Create the queue used to pass message to vPrintTask. */
-	xPrintQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( portCHAR * ) );
+	xPrintQueue = xQueueCreate( mainQUEUE_SIZE, sizeof( char * ) );
 
 	/* Start the standard demo tasks. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
@@ -211,8 +211,8 @@ static void vCheckTask( void *pvParameters )
 {
 portBASE_TYPE xErrorOccurred = pdFALSE;
 portTickType xLastExecutionTime;
-const portCHAR *pcPassMessage = "PASS";
-const portCHAR *pcFailMessage = "FAIL";
+const char *pcPassMessage = "PASS";
+const char *pcFailMessage = "FAIL";
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -305,7 +305,7 @@ static void prvSetupHardware( void )
 
 static void vButtonHandlerTask( void *pvParameters )
 {
-const portCHAR *pcInterruptMessage = "Int";
+const char *pcInterruptMessage = "Int";
 
 	for( ;; )
 	{
@@ -340,7 +340,7 @@ const portCHAR *pcInterruptMessage = "Int";
 
 void vUART_ISR(void)
 {
-unsigned portLONG ulStatus;
+unsigned long ulStatus;
 
 	/* What caused the interrupt. */
 	ulStatus = UARTIntStatus( UART0_BASE, pdTRUE );
@@ -380,7 +380,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void vPrintTask( void *pvParameters )
 {
-portCHAR *pcMessage;
+char *pcMessage;
 unsigned portBASE_TYPE uxLine = 0, uxRow = 0;
 
 	for( ;; )

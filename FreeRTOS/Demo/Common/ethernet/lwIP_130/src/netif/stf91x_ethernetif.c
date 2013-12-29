@@ -157,7 +157,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
   struct pbuf *q;
   u32_t l = 0;
-	unsigned portCHAR *pcTxData;
+	unsigned char *pcTxData;
 
 #if ETH_PAD_SIZE
   pbuf_header(p, -ETH_PAD_SIZE);			/* drop the padding word */

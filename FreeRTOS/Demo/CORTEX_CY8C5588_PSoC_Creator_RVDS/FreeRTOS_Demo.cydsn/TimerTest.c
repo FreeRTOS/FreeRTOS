@@ -71,7 +71,7 @@
 
 /* The set frequency of the interrupt.  Deviations from this are measured as
 the jitter. */
-#define timerINTERRUPT_FREQUENCY		( ( unsigned portSHORT ) 20000 )
+#define timerINTERRUPT_FREQUENCY		( ( unsigned short ) 20000 )
 
 /* The expected time between each of the timer interrupts - if the jitter was
 zero. */
@@ -90,7 +90,7 @@ void vSetupTimerTest( void );
 CY_ISR_PROTO(vTimer20KHzISR);
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned portSHORT usMaxJitter = 0;
+volatile unsigned short usMaxJitter = 0;
 /*---------------------------------------------------------------------------*/
 
 void vSetupTimerTest( void )

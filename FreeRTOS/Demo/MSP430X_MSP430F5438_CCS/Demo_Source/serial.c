@@ -95,9 +95,9 @@ static xQueueHandle xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-unsigned portLONG ulBaudRateCount;
+unsigned long ulBaudRateCount;
 
 	/* Initialise the hardware. */
 
@@ -117,11 +117,11 @@ unsigned portLONG ulBaudRateCount;
 		UCA1CTL1 = UCSSEL0 | UCSSEL1;
 		
 		/* Setup baud rate low byte. */
-		UCA1BR0 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned long ) 0xff );
+		UCA1BR0 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* Setup baud rate high byte. */
 		ulBaudRateCount >>= 8UL;
-		UCA1BR1 = ( unsigned portCHAR ) ( ulBaudRateCount & ( unsigned long ) 0xff );
+		UCA1BR1 = ( unsigned char ) ( ulBaudRateCount & ( unsigned long ) 0xff );
 
 		/* UCLISTEN sets loopback mode! */
 		UCA1STAT = UCLISTEN;
@@ -140,7 +140,7 @@ unsigned portLONG ulBaudRateCount;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -155,7 +155,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 

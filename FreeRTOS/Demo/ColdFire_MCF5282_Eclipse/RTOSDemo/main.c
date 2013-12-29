@@ -122,7 +122,7 @@ error have been detected. */
 #define mainCHECK_LED						( 3 )
 
 /* ComTest constants - there is no free LED for the comtest tasks. */
-#define mainCOM_TEST_BAUD_RATE				( ( unsigned portLONG ) 19200 )
+#define mainCOM_TEST_BAUD_RATE				( ( unsigned long ) 19200 )
 #define mainCOM_TEST_LED					( 5 )
 
 /* Task priorities. */
@@ -155,7 +155,7 @@ static void vRegTest2Task( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* Counters used to detect errors within the reg test tasks. */
-static volatile unsigned portLONG ulRegTest1Counter = 0x11111111, ulRegTest2Counter = 0x22222222;
+static volatile unsigned long ulRegTest1Counter = 0x11111111, ulRegTest2Counter = 0x22222222;
 
 /*-----------------------------------------------------------*/
 
@@ -292,7 +292,7 @@ portTickType xLastExecutionTime;
 
 void prvSetupHardware( void )
 {
-extern void mcf5xxx_wr_cacr( unsigned portLONG );
+extern void mcf5xxx_wr_cacr( unsigned long );
 
 	portDISABLE_INTERRUPTS();
 
@@ -314,7 +314,7 @@ extern void mcf5xxx_wr_cacr( unsigned portLONG );
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
 	/* This will get called if a stack overflow is detected during the context
 	switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack

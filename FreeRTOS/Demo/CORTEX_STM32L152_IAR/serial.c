@@ -104,15 +104,15 @@ static xQueueHandle xCharsForTx;
 /*
  * See the serial2.h header file.
  */
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 USART_InitTypeDef USART_InitStructure;
 xComPortHandle xReturn;
 NVIC_InitTypeDef NVIC_InitStructure;
 
 	/* Create the queues used to hold Rx/Tx characters. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 	
 	/* If the queues were created correctly then setup the serial port
 	hardware. */
@@ -147,7 +147,7 @@ NVIC_InitTypeDef NVIC_InitStructure;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -165,9 +165,9 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed portCHAR * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
-signed portCHAR *pxNext;
+signed char *pxNext;
 
 	/* A couple of parameters that this port does not use. */
 	( void ) usStringLength;
@@ -180,7 +180,7 @@ signed portCHAR *pxNext;
 	( void ) pxPort;
 
 	/* Send each character in the string, one at a time. */
-	pxNext = ( signed portCHAR * ) pcString;
+	pxNext = ( signed char * ) pcString;
 	while( *pxNext )
 	{
 		xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
@@ -189,7 +189,7 @@ signed portCHAR *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 
@@ -216,7 +216,7 @@ void vSerialClose( xComPortHandle xPort )
 void USART3_IRQHandler( void )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-portCHAR cChar;
+char cChar;
 
 	if( USART_GetITStatus( USART3, USART_IT_TXE ) == SET )
 	{

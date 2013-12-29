@@ -102,13 +102,13 @@ static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 
 /* These variables are used to check that all the tasks are still running.  If a 
 task gets a calculation wrong it will stop incrementing its check variable. */
-static volatile unsigned portSHORT usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned portSHORT ) 0 };
+static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 
 /* Buffers into which the flop registers will be saved.  There is a buffer for 
 each task created within this file.  Zeroing out this array is the normal and
 safe option as this will cause the task to start with all zeros in its flop
 context. */
-static unsigned portLONG ulFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
+static unsigned long ulFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
 
 /*-----------------------------------------------------------*/
 
@@ -172,9 +172,9 @@ portBASE_TYPE x, y;
 static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
 {
 volatile portFLOAT ff1, ff2, ff3, ff4;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 volatile portFLOAT fAnswer;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	ff1 = 123.4567F;
 	ff2 = 2345.6789F;
@@ -184,7 +184,7 @@ portSHORT sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
@@ -224,9 +224,9 @@ portSHORT sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
 {
 volatile portFLOAT ff1, ff2, ff3, ff4;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 volatile portFLOAT fAnswer;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	ff1 = -389.38F;
 	ff2 = 32498.2F;
@@ -237,7 +237,7 @@ portSHORT sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -277,14 +277,14 @@ portSHORT sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
 {
 volatile portFLOAT *pfArray, fTotal1, fTotal2, fDifference;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
@@ -334,14 +334,14 @@ portSHORT sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
 {
 volatile portFLOAT *pfArray, fTotal1, fTotal2, fDifference;
-volatile unsigned portSHORT *pusTaskCheckVariable;
+volatile unsigned short *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
-portSHORT sError = pdFALSE;
+short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned portSHORT * ) pvParameters;
+	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
 
 	pfArray = ( portFLOAT * ) pvPortMalloc( xArraySize * sizeof( portFLOAT ) );
 
@@ -393,7 +393,7 @@ portBASE_TYPE xAreMathsTaskStillRunning( void )
 {
 /* Keep a history of the check variables so we know if they have been incremented 
 since the last call. */
-static unsigned portSHORT usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned portSHORT ) 0 };
+static unsigned short usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
 portBASE_TYPE xReturn = pdTRUE, xTask;
 
 	/* Check the maths tasks are still running by ensuring their check variables 

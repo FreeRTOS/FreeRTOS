@@ -172,7 +172,7 @@ void vEMACInit( void )
 {
 int iData;
 extern int periph_clk_khz;
-const unsigned portCHAR ucMACAddress[] =
+const unsigned char ucMACAddress[] =
 {
 	configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5
 };
@@ -264,7 +264,7 @@ const unsigned portCHAR ucMACAddress[] =
 	{
 		/* Half duplex */
 		ENET_RCR |= ENET_RCR_DRT_MASK;
-		ENET_TCR &= (unsigned portLONG)~ENET_TCR_FDEN_MASK;
+		ENET_TCR &= (unsigned long)~ENET_TCR_FDEN_MASK;
 	}
 
 	if( iData & emacPHY_SPEED_STATUS )

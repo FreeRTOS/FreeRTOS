@@ -78,7 +78,7 @@
 #define partstMAX_OUTPUT_LED	( 4 )
 #define partstFIRST_LED			GPIO_Pin_6
 
-static unsigned portSHORT usOutputValue = 0;
+static unsigned short usOutputValue = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -96,7 +96,7 @@ GPIO_InitTypeDef GPIO_InitStructure;
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-unsigned portSHORT usBit;
+unsigned short usBit;
 
 	vTaskSuspendAll();
 	{
@@ -106,7 +106,7 @@ unsigned portSHORT usBit;
 
 			if( xValue == pdFALSE )
 			{
-				usBit ^= ( unsigned portSHORT ) 0xffff;
+				usBit ^= ( unsigned short ) 0xffff;
 				usOutputValue &= usBit;
 			}
 			else
@@ -123,7 +123,7 @@ unsigned portSHORT usBit;
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-unsigned portSHORT usBit;
+unsigned short usBit;
 
 	vTaskSuspendAll();
 	{

@@ -73,8 +73,8 @@
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-const unsigned portSHORT usCompareMatchValue1 = ( unsigned portSHORT ) ( ( configCPU_CLOCK_HZ / timerPRESCALE_VALUE ) / timerINTERRUPT1_FREQUENCY );
-const unsigned portSHORT usCompareMatchValue2 = ( unsigned portSHORT ) ( ( configCPU_CLOCK_HZ / timerPRESCALE_VALUE ) / timerINTERRUPT2_FREQUENCY );
+const unsigned short usCompareMatchValue1 = ( unsigned short ) ( ( configCPU_CLOCK_HZ / timerPRESCALE_VALUE ) / timerINTERRUPT1_FREQUENCY );
+const unsigned short usCompareMatchValue2 = ( unsigned short ) ( ( configCPU_CLOCK_HZ / timerPRESCALE_VALUE ) / timerINTERRUPT2_FREQUENCY );
 
 	/* Configure interrupt priority and level and unmask interrupt. */
 	MCF_INTC0_ICR56 = ( ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 1 ) << 3 );

@@ -174,7 +174,7 @@ time. */
 
 /* The period of the system clock in nano seconds.  This is used to calculate
 the jitter time in nano seconds. */
-#define mainNS_PER_CLOCK					( ( unsigned portLONG ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* Constants used when writing strings to the display. */
 #define mainCHARACTER_HEIGHT				( 9 )
@@ -222,10 +222,10 @@ void vApplicationIdleHook( void ) __attribute__((naked));
 xQueueHandle xOLEDQueue;
 
 /* The welcome text. */
-const portCHAR * const pcWelcomeMessage = "   www.FreeRTOS.org";
+const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
 
 /* Variables used to detect the test in the idle hook failing. */
-unsigned portLONG ulIdleError = pdFALSE;
+unsigned long ulIdleError = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -308,7 +308,7 @@ void prvSetupHardware( void )
 void vApplicationTickHook( void )
 {
 static xOLEDMessage xMessage = { "PASS" };
-static unsigned portLONG ulTicksSinceLastDisplay = 0;
+static unsigned long ulTicksSinceLastDisplay = 0;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it
@@ -375,17 +375,17 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 void vOLEDTask( void *pvParameters )
 {
 xOLEDMessage xMessage;
-unsigned portLONG ulY, ulMaxY;
-static portCHAR cMessage[ mainMAX_MSG_LEN ];
-extern volatile unsigned portLONG ulMaxJitter;
+unsigned long ulY, ulMaxY;
+static char cMessage[ mainMAX_MSG_LEN ];
+extern volatile unsigned long ulMaxJitter;
 unsigned portBASE_TYPE uxUnusedStackOnEntry, uxUnusedStackNow;
-const unsigned portCHAR *pucImage;
+const unsigned char *pucImage;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
-void ( *vOLEDInit )( unsigned portLONG ) = NULL;
-void ( *vOLEDStringDraw )( const portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portCHAR ) = NULL;
-void ( *vOLEDImageDraw )( const unsigned portCHAR *, unsigned portLONG, unsigned portLONG, unsigned portLONG, unsigned portLONG ) = NULL;
+void ( *vOLEDInit )( unsigned long ) = NULL;
+void ( *vOLEDStringDraw )( const char *, unsigned long, unsigned long, unsigned char ) = NULL;
+void ( *vOLEDImageDraw )( const unsigned char *, unsigned long, unsigned long, unsigned long, unsigned long ) = NULL;
 void ( *vOLEDClear )( void ) = NULL;
 
 	/* Just for demo purposes. */
@@ -451,7 +451,7 @@ void ( *vOLEDClear )( void ) = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
 	for( ;; );
 }

@@ -90,7 +90,7 @@ zero. */
 
 /* Misc defines. */
 #define timerMAX_32BIT_VALUE			( 0xffffffffUL )
-#define timerTIMER_1_COUNT_VALUE		( * ( ( volatile unsigned long * ) ( ( unsigned portLONG ) TIMER1_BASE + 0x48UL ) ) )
+#define timerTIMER_1_COUNT_VALUE		( * ( ( volatile unsigned long * ) ( ( unsigned long ) TIMER1_BASE + 0x48UL ) ) )
 
 /*-----------------------------------------------------------*/
 
@@ -98,7 +98,7 @@ zero. */
 void Timer0IntHandler( void );
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned portLONG ulMaxJitter = 0;
+volatile unsigned long ulMaxJitter = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -136,9 +136,9 @@ unsigned long ulFrequency;
 
 void Timer0IntHandler( void )
 {
-unsigned portLONG ulDifference;
-volatile unsigned portLONG ulCurrentCount;
-static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
+unsigned long ulDifference;
+volatile unsigned long ulCurrentCount;
+static unsigned long ulMaxDifference = 0, ulLastCount = 0;
 
 	/* We use the timer 1 counter value to measure the clock cycles between
 	the timer 0 interrupts. */

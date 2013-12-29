@@ -87,12 +87,12 @@ static void prvSetupLCD( void );
 /*
  * Move to the first (0) or second (1) row of the LCD.
  */
-static void prvLCDGotoRow( unsigned portSHORT usRow );
+static void prvLCDGotoRow( unsigned short usRow );
 
 /*
  * Write a string of text to the LCD.
  */
-static void prvLCDPutString( portCHAR *pcString );
+static void prvLCDPutString( char *pcString );
 
 /*
  * Clear the LCD.
@@ -142,8 +142,8 @@ static void prvLCDClear( void );
 /* The queue used to send messages to the LCD task. */
 xQueueHandle xLCDQueue;
 
-static void prvLCDCommand( portCHAR cCommand );
-static void prvLCDData( portCHAR cChar );
+static void prvLCDCommand( char cCommand );
+static void prvLCDData( char cChar );
 
 /*-----------------------------------------------------------*/
 
@@ -161,7 +161,7 @@ xQueueHandle xStartLCDTask( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvLCDGotoRow( unsigned portSHORT usRow )
+static void prvLCDGotoRow( unsigned short usRow )
 {
 	if( usRow == 0 )
 	{
@@ -174,7 +174,7 @@ static void prvLCDGotoRow( unsigned portSHORT usRow )
 }
 /*-----------------------------------------------------------*/
 
-static void prvLCDCommand( portCHAR cCommand )
+static void prvLCDCommand( char cCommand )
 {
 	/* Prepare RD0 - RD7. */
 	lcdDATA &= 0xFF00;
@@ -195,7 +195,7 @@ static void prvLCDCommand( portCHAR cCommand )
 }
 /*-----------------------------------------------------------*/
 
-static void prvLCDData( portCHAR cChar )
+static void prvLCDData( char cChar )
 {
 	/* ensure lcdRW is 0. */
 	lcdRW = 0;
@@ -223,7 +223,7 @@ static void prvLCDData( portCHAR cChar )
 }
 /*-----------------------------------------------------------*/
 
-static void prvLCDPutString( portCHAR *pcString )
+static void prvLCDPutString( char *pcString )
 {
 	/* Write out each character with appropriate delay between each. */
 	while( *pcString )
@@ -328,7 +328,7 @@ static void prvSetupLCD( void )
 static void vLCDTask( void *pvParameters )
 {
 xLCDMessage xMessage;
-unsigned portSHORT usRow = 0;
+unsigned short usRow = 0;
 
 	/* Initialise the hardware.  This uses delays so must not be called prior
 	to the scheduler being started. */

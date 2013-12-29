@@ -128,7 +128,7 @@ tftpd_send_error(int s, struct tftphdr * reply, int err,
     }
 }
 
-portCHAR cRamBuffer[2048];
+char cRamBuffer[2048];
 int lCurrentBlock = 0;
 int lTotalLength = 0;
 
@@ -145,7 +145,7 @@ int tftpd_open_data_file(int fd, int mode)
   return (5);
 }
 
-int tftpd_read_data_file(int fd, portCHAR * buffer, int length)
+int tftpd_read_data_file(int fd, char * buffer, int length)
 {
 int lReturnValue;
 
@@ -165,7 +165,7 @@ int lReturnValue;
 //
 // callback to store data to the RAM buffer
 //
-int tftpd_write_data_file(int fd, portCHAR * buffer, int length)
+int tftpd_write_data_file(int fd, char * buffer, int length)
 {
   lTotalLength += length;
   memcpy(&cRamBuffer[lCurrentBlock * SEGSIZE], buffer, length);
@@ -407,7 +407,7 @@ portTASK_FUNCTION( vBasicTFTPServer, pvParameters )
     int lSocket;
     int lDataLen, lRecvLen, lFromLen;
     struct sockaddr_in sLocalAddr, sFromAddr;
-    portCHAR cData[SEGSIZE+sizeof(struct tftphdr)];
+    char cData[SEGSIZE+sizeof(struct tftphdr)];
     struct tftphdr *sHdr = (struct tftphdr *)cData;
 
     // Set up port

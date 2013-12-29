@@ -91,11 +91,11 @@ static void prvCalculateAndStoreJitter( void );
 
 /* The maximum time (in processor clocks) between two consecutive timer
 interrupts so far. */
-unsigned portSHORT usMaxJitter = 0;
+unsigned short usMaxJitter = 0;
 
 /*-----------------------------------------------------------*/
 
-void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
+void vSetupTimerTest( unsigned short usFrequencyHz )
 {
 	/* T2 is used to generate interrupts.  T4 is used to provide an accurate
 	time measurement. */
@@ -105,10 +105,10 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 	TMR4 = 0;
 
 	/* Timer 2 is going to interrupt at usFrequencyHz Hz. */
-	PR2 = ( unsigned portSHORT ) ( configCPU_CLOCK_HZ / ( unsigned portLONG ) usFrequencyHz );
+	PR2 = ( unsigned short ) ( configCPU_CLOCK_HZ / ( unsigned long ) usFrequencyHz );
 
 	/* Timer 4 is going to free run from minimum to maximum value. */
-	PR4 = ( unsigned portSHORT ) timerMAX_COUNT;
+	PR4 = ( unsigned short ) timerMAX_COUNT;
 
 	/* Setup timer 2 interrupt priority to be above the kernel priority so 
 	the timer jitter is not effected by the kernel activity. */
@@ -128,8 +128,8 @@ void vSetupTimerTest( unsigned portSHORT usFrequencyHz )
 
 static void prvCalculateAndStoreJitter( void )
 {
-static unsigned portSHORT usLastCount = 0, usSettleCount = 0;
-unsigned portSHORT usThisCount, usDifference;
+static unsigned short usLastCount = 0, usSettleCount = 0;
+unsigned short usThisCount, usDifference;
 
 	/* Capture the timer value as we enter the interrupt. */
 	usThisCount = TMR4;

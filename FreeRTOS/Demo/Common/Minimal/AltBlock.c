@@ -140,9 +140,9 @@ portTickType xTimeWhenBlocking;
 portTickType xTimeToBlock, xBlockedTime;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Alt primary block time test started.\r\n";
+		const char * const pcTaskStartMsg = "Alt primary block time test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );
@@ -419,9 +419,9 @@ portTickType xTimeWhenBlocking, xBlockedTime;
 portBASE_TYPE xData;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Alt secondary block time test started.\r\n";
+		const char * const pcTaskStartMsg = "Alt secondary block time test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );

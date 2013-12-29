@@ -202,8 +202,8 @@ xTaskHandle xHighPriorityNormallyEmptyTask1, xHighPriorityNormallyEmptyTask2, xH
 the array position of the value is set to a the identifier of the task or
 interrupt that accessed the queue.  This way missing or duplicate values can be
 detected. */
-static unsigned portCHAR ucNormallyEmptyReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
-static unsigned portCHAR ucNormallyFullReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
+static unsigned char ucNormallyEmptyReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
+static unsigned char ucNormallyFullReceivedValues[ intqNUM_VALUES_TO_LOG ] = { 0 };
 
 /* The test tasks themselves. */
 static void prvLowerPriorityNormallyEmptyTask( void *pvParameters );

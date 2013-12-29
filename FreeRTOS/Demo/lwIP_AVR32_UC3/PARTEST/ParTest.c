@@ -50,10 +50,10 @@
  * Simple parallel port IO routines.
  *-----------------------------------------------------------*/
 
-#define partstALL_OUTPUTS_OFF     ( ( unsigned portCHAR ) 0x00 )
-#define partstMAX_OUTPUT_LED      ( ( unsigned portCHAR ) 8 )
+#define partstALL_OUTPUTS_OFF     ( ( unsigned char ) 0x00 )
+#define partstMAX_OUTPUT_LED      ( ( unsigned char ) 8 )
 
-static volatile unsigned portCHAR ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*lint !e956 File scope parameters okay here. */
+static volatile unsigned char ucCurrentOutputValue = partstALL_OUTPUTS_OFF; /*lint !e956 File scope parameters okay here. */
 
 /*-----------------------------------------------------------*/
 
@@ -65,14 +65,14 @@ void vParTestInitialise( void )
 
 void vParTestSetLED( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE xValue )
 {
-unsigned portCHAR ucBit;
+unsigned char ucBit;
 
 	if( uxLED >= partstMAX_OUTPUT_LED )
 	{
 		return;
 	}
 
-	ucBit = ( ( unsigned portCHAR ) 1 ) << uxLED;
+	ucBit = ( ( unsigned char ) 1 ) << uxLED;
 
 	vTaskSuspendAll();
 	{
@@ -93,14 +93,14 @@ unsigned portCHAR ucBit;
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
-	unsigned portCHAR ucBit;
+	unsigned char ucBit;
 
 	if( uxLED >= partstMAX_OUTPUT_LED )
 	{
 		return;
 	}
 
-	ucBit = ( ( unsigned portCHAR ) 1 ) << uxLED;
+	ucBit = ( ( unsigned char ) 1 ) << uxLED;
 
 	vTaskSuspendAll();
 	{

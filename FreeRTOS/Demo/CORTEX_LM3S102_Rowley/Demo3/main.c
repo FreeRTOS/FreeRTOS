@@ -142,8 +142,8 @@ static xQueueHandle xDelayQueue;
 static void prvSetupHardware( void );
 
 /* The co-routines as described at the top of the file. */
-static void vI2CCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
-static void vFlashCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
+static void vI2CCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
+static void vFlashCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
 
 /*-----------------------------------------------------------*/
 
@@ -205,7 +205,7 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-static void vI2CCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void vI2CCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 portTickType xADCResult;
 static portBASE_TYPE xResult = 0, xMilliSecs, xLED;
@@ -247,7 +247,7 @@ static portBASE_TYPE xResult = 0, xMilliSecs, xLED;
 }
 /*-----------------------------------------------------------*/
 
-static void vFlashCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void vFlashCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 portBASE_TYPE xResult, xNothing;
 

@@ -171,7 +171,7 @@ extern void ( vEMAC_ISR_Wrapper )( void );
 	{
 		MAC_INTENABLE = INT_RX_DONE;
         VICIntEnable |= 0x00200000;
-        VICVectAddr21 = ( portLONG ) vEMAC_ISR_Wrapper;
+        VICVectAddr21 = ( long ) vEMAC_ISR_Wrapper;
 		prvSetMACAddress();
 	}
 	portEXIT_CRITICAL();
@@ -281,10 +281,10 @@ struct uip_eth_addr xAddr;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationProcessFormInput( portCHAR *pcInputString, portBASE_TYPE xInputLength )
+void vApplicationProcessFormInput( char *pcInputString, portBASE_TYPE xInputLength )
 {
 char *c, *pcText;
-static portCHAR cMessageForDisplay[ 32 ];
+static char cMessageForDisplay[ 32 ];
 extern xQueueHandle xLCDQueue;
 xLCDMessage xLCDMessage;
 

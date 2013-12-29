@@ -97,12 +97,12 @@ zero. */
 void Timer0IntHandler( void );
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned portLONG ulMaxJitter = 0UL;
+volatile unsigned long ulMaxJitter = 0UL;
 
 /* Counts the total number of times that the high frequency timer has 'ticked'.
 This value is used by the run time stats function to work out what percentage
 of CPU time each task is taking. */
-volatile unsigned portLONG ulHighFrequencyTimerTicks = 0UL;
+volatile unsigned long ulHighFrequencyTimerTicks = 0UL;
 /*-----------------------------------------------------------*/
 
 void vSetupHighFrequencyTimer( void )
@@ -139,9 +139,9 @@ unsigned long ulFrequency;
 
 void Timer0IntHandler( void )
 {
-unsigned portLONG ulDifference;
-volatile unsigned portLONG ulCurrentCount;
-static unsigned portLONG ulMaxDifference = 0, ulLastCount = 0;
+unsigned long ulDifference;
+volatile unsigned long ulCurrentCount;
+static unsigned long ulMaxDifference = 0, ulLastCount = 0;
 
 	/* We use the timer 1 counter value to measure the clock cycles between
 	the timer 0 interrupts. */

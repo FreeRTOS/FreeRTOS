@@ -88,10 +88,10 @@ extern "C" {
 /* Used to hide the implementation of the co-routine control block.  The
 control block structure however has to be included in the header due to
 the macro implementation of the co-routine functionality. */
-typedef void * xCoRoutineHandle;
+typedef void * CoRoutineHandle_t;
 
 /* Defines the prototype to which co-routine functions must conform. */
-typedef void (*crCOROUTINE_CODE)( xCoRoutineHandle, unsigned portBASE_TYPE );
+typedef void (*crCOROUTINE_CODE)( CoRoutineHandle_t, unsigned portBASE_TYPE );
 
 typedef struct corCoRoutineControlBlock
 {
@@ -101,7 +101,7 @@ typedef struct corCoRoutineControlBlock
 	unsigned portBASE_TYPE 	uxPriority;			/*< The priority of the co-routine in relation to other co-routines. */
 	unsigned portBASE_TYPE 	uxIndex;			/*< Used to distinguish between co-routines when multiple co-routines use the same co-routine function. */
 	unsigned short 		uxState;			/*< Used internally by the co-routine implementation. */
-} corCRCB; /* Co-routine control block.  Note must be identical in size down to uxPriority with tskTCB. */
+} CRCB_t; /* Co-routine control block.  Note must be identical in size down to uxPriority with tskTCB. */
 
 /**
  * croutine. h
@@ -132,7 +132,7 @@ typedef struct corCoRoutineControlBlock
  * Example usage:
    <pre>
  // Co-routine to be created.
- void vFlashCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ void vFlashCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  // This may not be necessary for const variables.
@@ -222,14 +222,14 @@ void vCoRoutineSchedule( void );
 /**
  * croutine. h
  * <pre>
- crSTART( xCoRoutineHandle xHandle );</pre>
+ crSTART( CoRoutineHandle_t xHandle );</pre>
  *
  * This macro MUST always be called at the start of a co-routine function.
  *
  * Example usage:
    <pre>
  // Co-routine to be created.
- void vACoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ void vACoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  static long ulAVariable;
@@ -248,7 +248,7 @@ void vCoRoutineSchedule( void );
  * \defgroup crSTART crSTART
  * \ingroup Tasks
  */
-#define crSTART( pxCRCB ) switch( ( ( corCRCB * )( pxCRCB ) )->uxState ) { case 0:
+#define crSTART( pxCRCB ) switch( ( ( CRCB_t * )( pxCRCB ) )->uxState ) { case 0:
 
 /**
  * croutine. h
@@ -260,7 +260,7 @@ void vCoRoutineSchedule( void );
  * Example usage:
    <pre>
  // Co-routine to be created.
- void vACoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ void vACoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  static long ulAVariable;
@@ -285,13 +285,13 @@ void vCoRoutineSchedule( void );
  * These macros are intended for internal use by the co-routine implementation
  * only.  The macros should not be used directly by application writers.
  */
-#define crSET_STATE0( xHandle ) ( ( corCRCB * )( xHandle ) )->uxState = (__LINE__ * 2); return; case (__LINE__ * 2):
-#define crSET_STATE1( xHandle ) ( ( corCRCB * )( xHandle ) )->uxState = ((__LINE__ * 2)+1); return; case ((__LINE__ * 2)+1):
+#define crSET_STATE0( xHandle ) ( ( CRCB_t * )( xHandle ) )->uxState = (__LINE__ * 2); return; case (__LINE__ * 2):
+#define crSET_STATE1( xHandle ) ( ( CRCB_t * )( xHandle ) )->uxState = ((__LINE__ * 2)+1); return; case ((__LINE__ * 2)+1):
 
 /**
  * croutine. h
  *<pre>
- crDELAY( xCoRoutineHandle xHandle, portTickType xTicksToDelay );</pre>
+ crDELAY( CoRoutineHandle_t xHandle, portTickType xTicksToDelay );</pre>
  *
  * Delay a co-routine for a fixed period of time.
  *
@@ -310,7 +310,7 @@ void vCoRoutineSchedule( void );
  * Example usage:
    <pre>
  // Co-routine to be created.
- void vACoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ void vACoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  // This may not be necessary for const variables.
@@ -344,7 +344,7 @@ void vCoRoutineSchedule( void );
 /**
  * <pre>
  crQUEUE_SEND(
-                  xCoRoutineHandle xHandle,
+                  CoRoutineHandle_t xHandle,
                   xQueueHandle pxQueue,
                   void *pvItemToQueue,
                   portTickType xTicksToWait,
@@ -392,7 +392,7 @@ void vCoRoutineSchedule( void );
    <pre>
  // Co-routine function that blocks for a fixed period then posts a number onto
  // a queue.
- static void prvCoRoutineFlashTask( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ static void prvCoRoutineFlashTask( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  static portBASE_TYPE xNumberToPost = 0;
@@ -443,7 +443,7 @@ void vCoRoutineSchedule( void );
  * croutine. h
  * <pre>
   crQUEUE_RECEIVE(
-                     xCoRoutineHandle xHandle,
+                     CoRoutineHandle_t xHandle,
                      xQueueHandle pxQueue,
                      void *pvBuffer,
                      portTickType xTicksToWait,
@@ -490,7 +490,7 @@ void vCoRoutineSchedule( void );
  <pre>
  // A co-routine receives the number of an LED to flash from a queue.  It
  // blocks on the queue until the number is received.
- static void prvCoRoutineFlashWorkTask( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ static void prvCoRoutineFlashWorkTask( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  static portBASE_TYPE xResult;
@@ -575,7 +575,7 @@ void vCoRoutineSchedule( void );
  * Example usage:
  <pre>
  // A co-routine that blocks on a queue waiting for characters to be received.
- static void vReceivingCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ static void vReceivingCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  char cRxedChar;
  portBASE_TYPE xResult;
@@ -673,7 +673,7 @@ void vCoRoutineSchedule( void );
  <pre>
  // A co-routine that posts a character to a queue then blocks for a fixed
  // period.  The character is incremented each time.
- static void vSendingCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+ static void vSendingCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
  {
  // cChar holds its value while this co-routine is blocked and must therefore
  // be declared static.

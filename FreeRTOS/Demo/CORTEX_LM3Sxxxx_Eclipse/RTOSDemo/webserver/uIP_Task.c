@@ -258,7 +258,7 @@ static void prvENET_Send(void)
 
 static void prvSetMACAddress( void )
 {
-unsigned portLONG ulUser0, ulUser1;
+unsigned long ulUser0, ulUser1;
 unsigned char pucMACArray[8];
 struct uip_eth_addr xAddr;
 
@@ -286,10 +286,10 @@ struct uip_eth_addr xAddr;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationProcessFormInput( portCHAR *pcInputString, portBASE_TYPE xInputLength )
+void vApplicationProcessFormInput( char *pcInputString, portBASE_TYPE xInputLength )
 {
 char *c, *pcText;
-static portCHAR cMessageForDisplay[ 32 ];
+static char cMessageForDisplay[ 32 ];
 extern xQueueHandle xOLEDQueue;
 xOLEDMessage xOLEDMessage;
 

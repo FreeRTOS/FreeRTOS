@@ -163,13 +163,13 @@ static short sRegTestStatus = pdPASS;
 
 /* 78K0R Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
 enabled. */
-__root __far const unsigned portCHAR OptionByte[] @ 0x00C0 =
+__root __far const unsigned char OptionByte[] @ 0x00C0 =
 {
 	WATCHDOG_DISABLED, LVI_ENABLED, RESERVED_FF, OCD_ENABLED
 };
 
 /* Security byte definition */
-__root __far const unsigned portCHAR SecuIDCode[]  @ 0x00C4 =
+__root __far const unsigned char SecuIDCode[]  @ 0x00C4 =
 {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 };
@@ -283,7 +283,7 @@ portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 
 int __low_level_init(void)
 {
-unsigned portCHAR ucResetFlag = RESF;
+unsigned char ucResetFlag = RESF;
 
 	portDISABLE_INTERRUPTS();
 
@@ -310,7 +310,7 @@ unsigned portCHAR ucResetFlag = RESF;
 
 		/* Set clock speed. */
 		CSS = 0;
-		CKC &= (unsigned portCHAR)~0x07;
+		CKC &= (unsigned char)~0x07;
 		CKC |= 0x00;
 	}
 	#else

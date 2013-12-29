@@ -188,7 +188,7 @@ static void prvLCDMessageTask( void * pvParameters );
  * The co-routine that reads the ADC and sends messages for display on the
  * bottom row of the LCD.
  */
-static void prvADCCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex );
+static void prvADCCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
 
 /*
  * Function to simply set a known value into the general purpose registers
@@ -378,7 +378,7 @@ const unsigned char ucCFGData[] = {
 }
 /*-----------------------------------------------------------*/
 
-static void prvADCCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+static void prvADCCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 static unsigned long ulADCValue;
 static char cMessageBuffer[ mainMAX_ADC_STRING_LEN ];

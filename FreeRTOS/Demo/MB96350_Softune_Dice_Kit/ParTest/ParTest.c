@@ -77,7 +77,7 @@
 #define partstTOTAL_NUM_LEDs		16
 #define partstNUM_LEDs_PER_DISPLAY	8
 
-volatile unsigned char *pucDisplayOutput[ 2 ] = { ( unsigned portCHAR * ) 3, ( unsigned portCHAR * ) 5 };
+volatile unsigned char *pucDisplayOutput[ 2 ] = { ( unsigned char * ) 3, ( unsigned char * ) 5 };
 
 void vParTestInitialise( void )
 {

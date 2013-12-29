@@ -49,7 +49,7 @@ static void prvWatchdogTask	( void *pvParameters )
  * The below function creates hardware watchdog task.
  *---------------------------------------------------------------------------*/
 #if WATCHDOG == WTC_IN_TASK
-void vStartWatchdogTask( unsigned portSHORT uxPriority )
+void vStartWatchdogTask( unsigned short uxPriority )
 {
 	xTaskCreate( prvWatchdogTask , "KickWTC",   portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( xTaskHandle * ) NULL );
 }

@@ -150,7 +150,7 @@ time. */
 #define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
 
 /* The number of nano seconds between each processor clock. */
-#define mainNS_PER_CLOCK ( ( unsigned portLONG ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* Baud rate used by the comtest tasks. */
 #define mainCOM_TEST_BAUD_RATE		( 115200 )
@@ -257,7 +257,7 @@ xLCDMessage xMessage;
 
 	/* Initialise the LCD and display a startup message. */
 	prvConfigureLCD();
-	LCD_DrawMonoPict( ( unsigned portLONG * ) pcBitmap );
+	LCD_DrawMonoPict( ( unsigned long * ) pcBitmap );
 
 	for( ;; )
 	{
@@ -265,7 +265,7 @@ xLCDMessage xMessage;
 		while( xQueueReceive( xLCDQueue, &xMessage, portMAX_DELAY ) != pdPASS );
 
 		/* Display the message.  Print each message to a different position. */
-		printf( ( portCHAR const * ) xMessage.pcMessage );
+		printf( ( char const * ) xMessage.pcMessage );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -274,8 +274,8 @@ static void vCheckTask( void *pvParameters )
 {
 portTickType xLastExecutionTime;
 xLCDMessage xMessage;
-static signed portCHAR cPassMessage[ mainMAX_MSG_LEN ];
-extern unsigned portSHORT usMaxJitter;
+static signed char cPassMessage[ mainMAX_MSG_LEN ];
+extern unsigned short usMaxJitter;
 
 	xLastExecutionTime = xTaskGetTickCount();
 	xMessage.pcMessage = cPassMessage;
@@ -317,7 +317,7 @@ extern unsigned portSHORT usMaxJitter;
 		}
 		else
 		{
-			sprintf( ( portCHAR * ) cPassMessage, "PASS [%uns]\n", ( ( unsigned portLONG ) usMaxJitter ) * mainNS_PER_CLOCK );
+			sprintf( ( char * ) cPassMessage, "PASS [%uns]\n", ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK );
 		}
 
 		/* Send the message to the LCD gatekeeper for display. */
@@ -340,7 +340,7 @@ static void prvSetupHardware( void )
 	}
 
 	/* 2 wait states required on the flash. */
-	*( ( unsigned portLONG * ) 0x40022000 ) = 0x02;
+	*( ( unsigned long * ) 0x40022000 ) = 0x02;
 
 	/* HCLK = SYSCLK */
 	RCC_HCLKConfig( RCC_SYSCLK_Div1 );
@@ -418,8 +418,8 @@ GPIO_InitTypeDef GPIO_InitStructure;
 
 int fputc( int ch, FILE *f )
 {
-static unsigned portSHORT usColumn = 0, usRefColumn = mainCOLUMN_START;
-static unsigned portCHAR ucLine = 0;
+static unsigned short usColumn = 0, usRefColumn = mainCOLUMN_START;
+static unsigned char ucLine = 0;
 
 	if( ( usColumn == 0 ) && ( ucLine == 0 ) )
 	{
@@ -463,7 +463,7 @@ static unsigned portCHAR ucLine = 0;
 
 #ifdef  DEBUG
 /* Keep the linker happy. */
-void assert_failed( unsigned portCHAR* pcFile, unsigned portLONG ulLine )
+void assert_failed( unsigned char* pcFile, unsigned long ulLine )
 {
 	for( ;; )
 	{

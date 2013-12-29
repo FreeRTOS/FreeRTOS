@@ -91,28 +91,28 @@
 
 /* Constants required to access the "LED's".  The LED segments are turned on
 and off to generate '*' characters. */
-#define partstNUM_LEDS			( ( unsigned portCHAR ) 6 )
-#define partstSEGMENTS_ON		( ( unsigned portCHAR ) 0x0f )
-#define partstSEGMENTS_OFF		( ( unsigned portCHAR ) 0x00 )
+#define partstNUM_LEDS			( ( unsigned char ) 6 )
+#define partstSEGMENTS_ON		( ( unsigned char ) 0x0f )
+#define partstSEGMENTS_OFF		( ( unsigned char ) 0x00 )
 
 /* The LED number of the real on board LED, rather than a simulated LED. */
 #define partstON_BOARD_LED		( ( unsigned portBASE_TYPE ) 10 )
-#define mainON_BOARD_LED_BIT	( ( unsigned portCHAR ) 0x01 )
+#define mainON_BOARD_LED_BIT	( ( unsigned char ) 0x01 )
 
 /* The LCD segments used to generate the '*' characters for LED's 0 to 5. */
-unsigned portCHAR * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned portCHAR * )0xa4, 
-																( unsigned portCHAR * )0xa2, 
-																( unsigned portCHAR * )0xa0, 
-																( unsigned portCHAR * )0x9e,
-																( unsigned portCHAR * )0x9c,
-																( unsigned portCHAR * )0x9a };
+unsigned char * const ucRHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa4, 
+																( unsigned char * )0xa2, 
+																( unsigned char * )0xa0, 
+																( unsigned char * )0x9e,
+																( unsigned char * )0x9c,
+																( unsigned char * )0x9a };
 
-unsigned portCHAR * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned portCHAR * )0xa3, 
-																( unsigned portCHAR * )0xa1, 
-																( unsigned portCHAR * )0x9f, 
-																( unsigned portCHAR * )0x9d,
-																( unsigned portCHAR * )0x9b,
-																( unsigned portCHAR * )0x99 };
+unsigned char * const ucLHSSegments[ partstNUM_LEDS ] = {	( unsigned char * )0xa3, 
+																( unsigned char * )0xa1, 
+																( unsigned char * )0x9f, 
+																( unsigned char * )0x9d,
+																( unsigned char * )0x9b,
+																( unsigned char * )0x99 };
 
 /*
  * Toggle the single genuine built in LED.
@@ -224,7 +224,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 
 static void prvToggleOnBoardLED( void )
 {
-static unsigned portSHORT sState = pdFALSE;
+static unsigned short sState = pdFALSE;
 
 	/* Toggle the state of the single genuine on board LED. */
 	if( sState )	

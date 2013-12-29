@@ -105,16 +105,16 @@ xSemaphoreHandle xMACInterruptSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers. */
-unsigned portCHAR *uip_buf;
+unsigned char *uip_buf;
 
 /* Buffers into which Rx data is placed. */
-static unsigned portCHAR ucRxBuffers[ emacNUM_RX_BUFFERS ][ UIP_BUFSIZE + ( 4 * emacFRAM_SIZE_BYTES ) ];
+static unsigned char ucRxBuffers[ emacNUM_RX_BUFFERS ][ UIP_BUFSIZE + ( 4 * emacFRAM_SIZE_BYTES ) ];
 
 /* The length of the data within each of the Rx buffers. */
-static unsigned portLONG ulRxLength[ emacNUM_RX_BUFFERS ];
+static unsigned long ulRxLength[ emacNUM_RX_BUFFERS ];
 
 /* Used to keep a track of the number of bytes to transmit. */
-static unsigned portLONG ulNextTxSpace;
+static unsigned long ulNextTxSpace;
 
 /*-----------------------------------------------------------*/
 
@@ -190,7 +190,7 @@ void vInitialiseSend( void )
 }
 /*-----------------------------------------------------------*/
 
-void vIncrementTxLength( unsigned portLONG ulLength )
+void vIncrementTxLength( unsigned long ulLength )
 {
 	ulNextTxSpace += ulLength;
 }
@@ -199,11 +199,11 @@ void vIncrementTxLength( unsigned portLONG ulLength )
 void vSendBufferToMAC( void )
 {
 unsigned long *pulSource;
-unsigned portSHORT * pus;
-unsigned portLONG ulNextWord;
+unsigned short * pus;
+unsigned long ulNextWord;
 
 	/* Locate the data to be send. */
-	pus = ( unsigned portSHORT * ) uip_buf;
+	pus = ( unsigned short * ) uip_buf;
 
 	/* Add in the size of the data. */
 	pus--;
@@ -215,9 +215,9 @@ unsigned portLONG ulNextWord;
 		vTaskDelay( macWAIT_SEND_TIME );
     }
 
-	pulSource = ( unsigned portLONG * ) pus;
+	pulSource = ( unsigned long * ) pus;
 
-	for( ulNextWord = 0; ulNextWord < ulNextTxSpace; ulNextWord += sizeof( unsigned portLONG ) )
+	for( ulNextWord = 0; ulNextWord < ulNextTxSpace; ulNextWord += sizeof( unsigned long ) )
 	{
        	HWREG(ETH_BASE + MAC_O_DATA) = *pulSource;
 		pulSource++;
@@ -231,7 +231,7 @@ unsigned portLONG ulNextWord;
 void vEMAC_ISR( void )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-unsigned portLONG ulTemp;
+unsigned long ulTemp;
 
 	/* Clear the interrupt. */
 	ulTemp = EthernetIntStatus( ETH_BASE, pdFALSE );
@@ -252,9 +252,9 @@ unsigned portLONG ulTemp;
 void vMACHandleTask( void *pvParameters )
 {
 unsigned long ulLen = 0, i;
-unsigned portLONG ulLength, ulInt;
+unsigned long ulLength, ulInt;
 unsigned long *pulBuffer;
-static unsigned portLONG ulNextRxBuffer = 0;
+static unsigned long ulNextRxBuffer = 0;
 portBASE_TYPE xSwitchRequired = pdFALSE;
 
 	for( ;; )
@@ -286,7 +286,7 @@ portBASE_TYPE xSwitchRequired = pdFALSE;
 				}
 
 				/* Read out the data into our buffer. */
-				for( i = 0; i < ulLength; i += sizeof( unsigned portLONG ) )
+				for( i = 0; i < ulLength; i += sizeof( unsigned long ) )
 				{
 					*pulBuffer = HWREG( ETH_BASE + MAC_O_DATA );
 					pulBuffer++;

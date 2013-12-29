@@ -153,11 +153,11 @@ static void vRegTest2Task( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* Counters used to detect errors within the reg test tasks. */
-static volatile unsigned portLONG ulRegTest1Counter = 0x11111111, ulRegTest2Counter = 0x22222222;
+static volatile unsigned long ulRegTest1Counter = 0x11111111, ulRegTest2Counter = 0x22222222;
 
 /* Any errors that the check task finds in any tasks are latched into
 ulErrorCode, and then displayed via the WEB server. */
-static unsigned portLONG ulErrorCode = 0UL;
+static unsigned long ulErrorCode = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -266,7 +266,7 @@ portTickType xLastExecutionTime;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portLONG ulGetErrorCode( void )
+unsigned long ulGetErrorCode( void )
 {
 	/* Returns the error code for display via the WEB server. */
 	return ulErrorCode;
@@ -323,7 +323,7 @@ static const unsigned long _cfm[6] = {
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed portCHAR *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
 {
 	/* This will get called if a stack overflow is detected during the context
 	switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack

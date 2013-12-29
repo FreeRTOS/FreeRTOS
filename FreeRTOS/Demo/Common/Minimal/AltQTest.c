@@ -127,11 +127,11 @@ static portBASE_TYPE xErrorDetected = pdFALSE;
 
 /* Counters that are incremented on each cycle of a test.  This is used to
 detect a stalled task - a test that is no longer running. */
-static volatile unsigned portLONG ulLoopCounter = 0;
-static volatile unsigned portLONG ulLoopCounter2 = 0;
+static volatile unsigned long ulLoopCounter = 0;
+static volatile unsigned long ulLoopCounter2 = 0;
 
 /* The variable that is guarded by the mutex in the mutex demo tasks. */
-static volatile unsigned portLONG ulGuardedVariable = 0;
+static volatile unsigned long ulGuardedVariable = 0;
 
 /* Handles used in the mutext test to suspend and resume the high and medium
 priority mutex test tasks. */
@@ -146,7 +146,7 @@ xSemaphoreHandle xMutex;
 
 	/* Create the queue that we are going to use for the
 	prvSendFrontAndBackTest demo. */
-	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( unsigned portLONG ) );
+	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( unsigned long ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware 
@@ -183,13 +183,13 @@ xSemaphoreHandle xMutex;
 
 static void prvSendFrontAndBackTest( void *pvParameters )
 {
-unsigned portLONG ulData, ulData2;
+unsigned long ulData, ulData2;
 xQueueHandle xQueue;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Alt queue SendToFront/SendToBack/Peek test started.\r\n";
+		const char * const pcTaskStartMsg = "Alt queue SendToFront/SendToBack/Peek test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );
@@ -414,9 +414,9 @@ static void prvLowPriorityMutexTask( void *pvParameters )
 xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Fast mutex with priority inheritance test started.\r\n";
+		const char * const pcTaskStartMsg = "Fast mutex with priority inheritance test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );
@@ -561,7 +561,7 @@ xSemaphoreHandle xMutex = ( xSemaphoreHandle ) pvParameters;
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreAltGenericQueueTasksStillRunning( void )
 {
-static unsigned portLONG ulLastLoopCounter = 0, ulLastLoopCounter2 = 0;
+static unsigned long ulLastLoopCounter = 0, ulLastLoopCounter2 = 0;
 
 	/* If the demo task is still running then we expect the loopcounters to
 	have incremented since this function was last called. */

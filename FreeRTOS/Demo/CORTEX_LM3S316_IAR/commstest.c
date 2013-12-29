@@ -156,7 +156,7 @@ void vSerialInit( void )
 }
 /*-----------------------------------------------------------*/
 
-void vSerialTxCoRoutine( xCoRoutineHandle xHandle, unsigned portBASE_TYPE uxIndex )
+void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
 portTickType xDelayPeriod;
 static unsigned long *pulRandomBytes = commsFIRST_PROGRAM_BYTES;

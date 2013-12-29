@@ -100,16 +100,16 @@ xSemaphoreHandle xFECSemaphore = NULL, xTxSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers to effect a zero copy policy. */
-unsigned portCHAR *uip_buf;
+unsigned char *uip_buf;
 
 /* The DMA descriptors.  This is a char array to allow us to align it correctly. */
-static unsigned portCHAR xFECTxDescriptors_unaligned[ ( fecNUM_FEC_TX_BUFFERS * sizeof( FECBD ) ) + 16 ];
-static unsigned portCHAR xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_BUFFERS * sizeof( FECBD ) ) + 16 ];
+static unsigned char xFECTxDescriptors_unaligned[ ( fecNUM_FEC_TX_BUFFERS * sizeof( FECBD ) ) + 16 ];
+static unsigned char xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_BUFFERS * sizeof( FECBD ) ) + 16 ];
 static FECBD *xFECTxDescriptors;
 static FECBD *xFECRxDescriptors;
 
 /* The DMA buffers.  These are char arrays to allow them to be aligned correctly. */
-static unsigned portCHAR ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
+static unsigned char ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFFER_SIZE ) + 16 ];
 static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxIndexToBufferOwner = 0;
 
 /*-----------------------------------------------------------*/
@@ -214,7 +214,7 @@ uint32 eimr;
  * If after a suitable amount of time the event isn't triggered, a
  * value of 0 is returned.
  */
-static int fec_mii_read( int phy_addr, int reg_addr, unsigned portSHORT* data )
+static int fec_mii_read( int phy_addr, int reg_addr, unsigned short* data )
 {
 int timeout, iReturn;
 uint32 eimr;
@@ -274,10 +274,10 @@ uint32 eimr;
  * Return Value:
  *  The 6 most significant bits of the 32-bit CRC result
  */
-static unsigned portCHAR fec_hash_address( const unsigned portCHAR* addr )
+static unsigned char fec_hash_address( const unsigned char* addr )
 {
-unsigned portLONG crc;
-unsigned portCHAR byte;
+unsigned long crc;
+unsigned char byte;
 int i, j;
 
 	crc = 0xFFFFFFFF;
@@ -300,7 +300,7 @@ int i, j;
 		}
 	}
 
-	return (unsigned portCHAR)(crc >> 26);
+	return (unsigned char)(crc >> 26);
 }
 
 /********************************************************************/
@@ -314,9 +314,9 @@ int i, j;
  *  ch  FEC channel
  *  pa  Physical (Hardware) Address for the selected FEC
  */
-static void fec_set_address( const unsigned portCHAR *pa )
+static void fec_set_address( const unsigned char *pa )
 {
-	unsigned portCHAR crc;
+	unsigned char crc;
 
 	/*
 	* Set the Physical Address
@@ -332,11 +332,11 @@ static void fec_set_address( const unsigned portCHAR *pa )
 	crc = fec_hash_address( pa );
 	if( crc >= 32 )
 	{
-		MCF_FEC_IAUR |= (unsigned portLONG)(1 << (crc - 32));
+		MCF_FEC_IAUR |= (unsigned long)(1 << (crc - 32));
 	}
 	else
 	{
-		MCF_FEC_IALR |= (unsigned portLONG)(1 << crc);
+		MCF_FEC_IALR |= (unsigned long)(1 << crc);
 	}
 }
 /*-----------------------------------------------------------*/
@@ -344,11 +344,11 @@ static void fec_set_address( const unsigned portCHAR *pa )
 static void prvInitialiseFECBuffers( void )
 {
 unsigned portBASE_TYPE ux;
-unsigned portCHAR *pcBufPointer;
+unsigned char *pcBufPointer;
 
 	/* Correctly align the Tx descriptor pointer. */
 	pcBufPointer = &( xFECTxDescriptors_unaligned[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -357,7 +357,7 @@ unsigned portCHAR *pcBufPointer;
 
 	/* Likewise the Rx descriptor pointer. */
 	pcBufPointer = &( xFECRxDescriptors_unaligned[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -378,7 +378,7 @@ unsigned portCHAR *pcBufPointer;
 	/* Setup the Rx buffers and descriptors, having first ensured correct
 	alignment. */
 	pcBufPointer = &( ucFECRxBuffers[ 0 ] );
-	while( ( ( unsigned portLONG ) pcBufPointer & 0x0fUL ) != 0 )
+	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
@@ -401,12 +401,12 @@ unsigned portCHAR *pcBufPointer;
 
 void vFECInit( void )
 {
-unsigned portSHORT usData;
+unsigned short usData;
 struct uip_eth_addr xAddr;
 unsigned portBASE_TYPE ux;
 
 /* The MAC address is set at the foot of FreeRTOSConfig.h. */
-const unsigned portCHAR ucMACAddress[6] =
+const unsigned char ucMACAddress[6] =
 {
 	configMAC_0, configMAC_1,configMAC_2, configMAC_3, configMAC_4, configMAC_5
 };
@@ -518,13 +518,13 @@ const unsigned portCHAR ucMACAddress[6] =
 
 	if( ( usData & PHY_ANLPAR_100BTX_FDX ) || ( usData & PHY_ANLPAR_10BTX_FDX ) )
 	{
-		MCF_FEC_RCR &= (unsigned portLONG)~MCF_FEC_RCR_DRT;
+		MCF_FEC_RCR &= (unsigned long)~MCF_FEC_RCR_DRT;
 		MCF_FEC_TCR |= MCF_FEC_TCR_FDEN;
 	}
 	else
 	{
 		MCF_FEC_RCR |= MCF_FEC_RCR_DRT;
-		MCF_FEC_TCR &= (unsigned portLONG)~MCF_FEC_TCR_FDEN;
+		MCF_FEC_TCR &= (unsigned long)~MCF_FEC_TCR_FDEN;
 	}
 
 	/* Clear the Individual and Group Address Hash registers */
@@ -537,19 +537,19 @@ const unsigned portCHAR ucMACAddress[6] =
 	fec_set_address( ucMACAddress );
 
 	/* Set Rx Buffer Size */
-	MCF_FEC_EMRBR = (unsigned portSHORT)configFEC_BUFFER_SIZE;
+	MCF_FEC_EMRBR = (unsigned short)configFEC_BUFFER_SIZE;
 
 	/* Point to the start of the circular Rx buffer descriptor queue */
-	MCF_FEC_ERDSR = ( volatile unsigned portLONG ) &( xFECRxDescriptors[ 0 ] );
+	MCF_FEC_ERDSR = ( volatile unsigned long ) &( xFECRxDescriptors[ 0 ] );
 
 	/* Point to the start of the circular Tx buffer descriptor queue */
-	MCF_FEC_ETSDR = ( volatile unsigned portLONG ) &( xFECTxDescriptors[ 0 ] );
+	MCF_FEC_ETSDR = ( volatile unsigned long ) &( xFECTxDescriptors[ 0 ] );
 
 	/* Mask all FEC interrupts */
-	MCF_FEC_EIMR = ( unsigned portLONG ) -1;
+	MCF_FEC_EIMR = ( unsigned long ) -1;
 
 	/* Clear all FEC interrupt events */
-	MCF_FEC_EIR = ( unsigned portLONG ) -1;
+	MCF_FEC_EIR = ( unsigned long ) -1;
 
 	/* Initialize the Receive Control Register */
 	MCF_FEC_RCR = MCF_FEC_RCR_MAX_FL(ETH_MAX_FRM) | MCF_FEC_RCR_FCE;
@@ -638,7 +638,7 @@ portBASE_TYPE x;
 
 unsigned short usFECGetRxedData( void )
 {
-unsigned portSHORT usLen;
+unsigned short usLen;
 
 	/* Obtain the size of the packet and put it into the "len" variable. */
 	usLen = xFECRxDescriptors[ uxNextRxBuffer ].length;
@@ -717,7 +717,7 @@ void vFECSendData( void )
 
 void vFEC_ISR( void )
 {
-unsigned portLONG ulEvent;
+unsigned long ulEvent;
 portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
 
 	/* This handler is called in response to any of the many separate FEC

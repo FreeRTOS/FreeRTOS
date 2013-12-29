@@ -63,7 +63,7 @@ char Getch5( void ) /* waits for and returns incomming char */
 
 void Puts5( const char *Name5 ) /* Puts a String to UART */
 {
-	volatile portSHORT	i, len;
+	volatile short	i, len;
 	len = strlen( Name5 );
 
 	for( i = 0; i < len; i++ )	/* go through string */
@@ -79,7 +79,7 @@ void Puts5( const char *Name5 ) /* Puts a String to UART */
 
 void Puthex5( unsigned long n, unsigned char digits )
 {
-	unsigned portCHAR	digit = 0, div = 0, i;
+	unsigned char	digit = 0, div = 0, i;
 
 	div = ( 4 * (digits - 1) );				/* init shift divisor */
 	for( i = 0; i < digits; i++ )
@@ -92,8 +92,8 @@ void Puthex5( unsigned long n, unsigned char digits )
 
 void Putdec5( unsigned long x, int digits )
 {
-	portSHORT	i;
-	portCHAR	buf[10], sign = 1;
+	short	i;
+	char	buf[10], sign = 1;
 
 	if( digits < 0 )
 	{					/* should be print of zero? */
@@ -139,10 +139,10 @@ void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 
 static void vUART5Task( void *pvParameters )
 {
-	static portCHAR	buff[ 900 ] = { 0 };
-	unsigned portLONG	trace_len, j;
+	static char	buff[ 900 ] = { 0 };
+	unsigned long	trace_len, j;
 
-	unsigned portCHAR	ch;
+	unsigned char	ch;
 
 	SSR05_RIE = 1;
 	Puts5( "\n -------------MB91467D FreeRTOS DEMO Task List and Trace Utility----------- \n" );
@@ -210,7 +210,7 @@ static void vUART5Task( void *pvParameters )
 
 __interrupt void UART5_RxISR( void )
 {
-unsigned portCHAR ch;
+unsigned char ch;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	ch = RDR05;

@@ -62,7 +62,7 @@
 
 /* Message queue constants. */
 #define archMESG_QUEUE_LENGTH ( 6 )
-#define archPOST_BLOCK_TIME_MS  ( ( unsigned portLONG ) 10000 )
+#define archPOST_BLOCK_TIME_MS  ( ( unsigned long ) 10000 )
 
 struct timeoutlist
 {

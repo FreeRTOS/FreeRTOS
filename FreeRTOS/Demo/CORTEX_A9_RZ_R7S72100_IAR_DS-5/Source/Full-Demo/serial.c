@@ -115,7 +115,7 @@ static xQueueHandle xCharsForTx;
 /*
  * See the serial2.h header file.
  */
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 	/* Baud is set in IoInitScif2(), called in prvSetupHardware() in main.c. */
 	( void ) ulWantedBaud;
@@ -175,7 +175,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*-----------------------------------------------------------*/
 
-void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned portSHORT usStringLength )
+void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
 signed char *pxNext;
 

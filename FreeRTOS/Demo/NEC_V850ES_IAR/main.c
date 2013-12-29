@@ -148,7 +148,7 @@ extern void vRegTest2( void *pvParameters );
 
 /* A variable that will get set to fail if a RegTest task finds an error.  The
 variable is inspected by the 'Check' task. */
-static volatile portLONG lRegTestStatus = pdPASS;
+static volatile long lRegTestStatus = pdPASS;
 
 /*-----------------------------------------------------------*/
 

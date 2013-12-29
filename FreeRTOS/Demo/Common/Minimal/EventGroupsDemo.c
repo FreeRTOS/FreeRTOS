@@ -150,7 +150,7 @@ have been found.  Used to detect an error or stall in the test cycling. */
 static volatile unsigned long ulSetBitCycles = 0, ulWaitBitCycles = 0;
 
 /* The event group used by all the tests. */
-static xEventGroupHandle xEventBits = NULL;
+static EventGroupHandle_t xEventBits = NULL;
 
 /* Handles to the tasks that only take part in the synchronisation calls. */
 static xTaskHandle xSyncTask1 = NULL, xSyncTask2 = NULL;
@@ -179,11 +179,11 @@ xTaskHandle xWaitBitsTaskHandle;
 
 static void prvSyncTask( void *pvParameters )
 {
-xEventBitsType uxSynchronisationBit, uxReturned;
+EventBits_t uxSynchronisationBit, uxReturned;
 
 	/* The bit to use to indicate this task is at the synchronisation point is
 	passed in as the task parameter. */
-	uxSynchronisationBit = ( xEventBitsType ) pvParameters;
+	uxSynchronisationBit = ( EventBits_t ) pvParameters;
 
 	/* A few tests are performed before entering the main demo loop. */
 	prvPreSyncSelectiveWakeTest();
@@ -218,7 +218,7 @@ xEventBitsType uxSynchronisationBit, uxReturned;
 
 static void prvWaitBitsTask( void *pvParameters )
 {
-xEventBitsType uxReturned;
+EventBits_t uxReturned;
 portBASE_TYPE xError = pdFALSE;
 
 	/* Avoid compiler warnings. */
@@ -346,7 +346,7 @@ portBASE_TYPE xError = pdFALSE;
 
 static void prvSetBitsTask( void *pvParameters )
 {
-xEventBitsType uxBits;
+EventBits_t uxBits;
 portBASE_TYPE xError;
 
 /* The handle to the other task is passed in as the task parameter. */
@@ -669,7 +669,7 @@ xTaskHandle xWaitBitsTaskHandle = ( xTaskHandle ) pvParameters;
 
 static void prvPreSyncSelectiveWakeTest( void )
 {
-xEventBitsType uxPendBits, uxReturned;
+EventBits_t uxPendBits, uxReturned;
 
 	if( xTaskGetCurrentTaskHandle() == xSyncTask1 )
 	{
@@ -685,7 +685,7 @@ xEventBitsType uxPendBits, uxReturned;
 		vTaskSuspend( NULL );
 		uxReturned = xEventGroupWaitBits( xEventBits, uxPendBits, pdTRUE, pdFALSE, portMAX_DELAY );
 
-		if( uxReturned == ( xEventBitsType ) 0 )
+		if( uxReturned == ( EventBits_t ) 0 )
 		{
 			break;
 		}
@@ -696,7 +696,7 @@ xEventBitsType uxPendBits, uxReturned;
 static portBASE_TYPE prvTestSelectiveBits( void )
 {
 portBASE_TYPE xError = pdFALSE;
-xEventBitsType uxBit;
+EventBits_t uxBit;
 
 	/* Both tasks should start in the suspended state. */
 	if( eTaskGetState( xSyncTask1 ) != eSuspended )

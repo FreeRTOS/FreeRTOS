@@ -252,9 +252,9 @@ static void prvCountingSemaphoreTask( void *pvParameters )
 xCountSemStruct *pxParameter;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Counting semaphore demo started.\r\n";
+		const char * const pcTaskStartMsg = "Counting semaphore demo started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );

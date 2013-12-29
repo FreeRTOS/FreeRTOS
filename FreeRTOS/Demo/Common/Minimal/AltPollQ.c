@@ -88,7 +88,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned portLONG.
+	  portTickType rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -126,7 +126,7 @@ void vStartAltPolledQueueTasks( unsigned portBASE_TYPE uxPriority )
 static xQueueHandle xPolledQueue;
 
 	/* Create the queue used by the producer and consumer. */
-	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned portSHORT ) );
+	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware 
@@ -145,13 +145,13 @@ static xQueueHandle xPolledQueue;
 
 static portTASK_FUNCTION( vPolledQueueProducer, pvParameters )
 {
-unsigned portSHORT usValue = ( unsigned portSHORT ) 0;
+unsigned short usValue = ( unsigned short ) 0;
 signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Alt polling queue producer task started.\r\n";
+		const char * const pcTaskStartMsg = "Alt polling queue producer task started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );
@@ -193,13 +193,13 @@ signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 static portTASK_FUNCTION( vPolledQueueConsumer, pvParameters )
 {
-unsigned portSHORT usData, usExpectedValue = ( unsigned portSHORT ) 0;
+unsigned short usData, usExpectedValue = ( unsigned short ) 0;
 signed portBASE_TYPE xError = pdFALSE;
 
 	#ifdef USE_STDIO
-	void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 	
-		const portCHAR * const pcTaskStartMsg = "Alt blocking queue consumer task started.\r\n";
+		const char * const pcTaskStartMsg = "Alt blocking queue consumer task started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );

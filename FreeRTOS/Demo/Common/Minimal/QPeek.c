@@ -110,7 +110,7 @@ static volatile portBASE_TYPE xErrorDetected = pdFALSE;
 
 /* Counter that is incremented on each cycle of a test.  This is used to
 detect a stalled task - a test that is no longer running. */
-static volatile unsigned portLONG ulLoopCounter = 0;
+static volatile unsigned long ulLoopCounter = 0;
 
 /* Handles to the test tasks. */
 xTaskHandle xMediumPriorityTask, xHighPriorityTask, xHighestPriorityTask;
@@ -121,7 +121,7 @@ void vStartQueuePeekTasks( void )
 xQueueHandle xQueue;
 
 	/* Create the queue that we are going to use for the test/demo. */
-	xQueue = xQueueCreate( qpeekQUEUE_LENGTH, sizeof( unsigned portLONG ) );
+	xQueue = xQueueCreate( qpeekQUEUE_LENGTH, sizeof( unsigned long ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware
@@ -144,13 +144,13 @@ xQueueHandle xQueue;
 static void prvHighestPriorityPeekTask( void *pvParameters )
 {
 xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
-unsigned portLONG ulValue;
+unsigned long ulValue;
 
 	#ifdef USE_STDIO
 	{
-		void vPrintDisplayMessage( const portCHAR * const * ppcMessageToSend );
+		void vPrintDisplayMessage( const char * const * ppcMessageToSend );
 
-		const portCHAR * const pcTaskStartMsg = "Queue peek test started.\r\n";
+		const char * const pcTaskStartMsg = "Queue peek test started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */
 		vPrintDisplayMessage( &pcTaskStartMsg );
@@ -253,7 +253,7 @@ unsigned portLONG ulValue;
 static void prvHighPriorityPeekTask( void *pvParameters )
 {
 xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
-unsigned portLONG ulValue;
+unsigned long ulValue;
 
 	for( ;; )
 	{
@@ -308,7 +308,7 @@ unsigned portLONG ulValue;
 static void prvMediumPriorityPeekTask( void *pvParameters )
 {
 xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
-unsigned portLONG ulValue;
+unsigned long ulValue;
 
 	for( ;; )
 	{
@@ -349,7 +349,7 @@ unsigned portLONG ulValue;
 static void prvLowPriorityPeekTask( void *pvParameters )
 {
 xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
-unsigned portLONG ulValue;
+unsigned long ulValue;
 
 	for( ;; )
 	{
@@ -455,7 +455,7 @@ unsigned portLONG ulValue;
 /* This is called to check that all the created tasks are still running. */
 portBASE_TYPE xAreQueuePeekTasksStillRunning( void )
 {
-static unsigned portLONG ulLastLoopCounter = 0;
+static unsigned long ulLastLoopCounter = 0;
 
 	/* If the demo task is still running then we expect the loopcounter to
 	have incremented since this function was last called. */

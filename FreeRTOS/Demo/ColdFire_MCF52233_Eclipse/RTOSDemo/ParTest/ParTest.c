@@ -112,7 +112,7 @@ void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 	{
 		taskENTER_CRITICAL();
 		{
-			if( ( MCF_GPIO_PORTTC & ( 1 << uxLED ) ) == ( unsigned portCHAR ) 0 )
+			if( ( MCF_GPIO_PORTTC & ( 1 << uxLED ) ) == ( unsigned char ) 0 )
 			{
 				MCF_GPIO_PORTTC |= ( 1 << uxLED );
 			}

@@ -133,7 +133,7 @@
 //! @}
 
 //! Baud rate used by the serial port tasks.
-#define mainCOM_TEST_BAUD_RATE    ( ( unsigned portLONG ) 57600 )
+#define mainCOM_TEST_BAUD_RATE    ( ( unsigned long ) 57600 )
 
 //! LED used by the serial port tasks.  This is toggled on each character Tx,
 //! and mainCOM_TEST_LED + 1 is toggled on each character Rx.
@@ -157,7 +157,7 @@
 /*! \name Constants used by the vMemCheckTask() task.
  */
 //! @{
-#define mainCOUNT_INITIAL_VALUE   ( ( unsigned portLONG ) 0 )
+#define mainCOUNT_INITIAL_VALUE   ( ( unsigned long ) 0 )
 #define mainNO_TASK               ( 0 )
 //! @}
 
@@ -244,8 +244,8 @@ int main( void )
  */
 static void vErrorChecks( void *pvParameters )
 {
-static volatile unsigned portLONG ulDummyVariable = 3UL;
-unsigned portLONG ulMemCheckTaskRunningCount;
+static volatile unsigned long ulDummyVariable = 3UL;
+unsigned long ulMemCheckTaskRunningCount;
 xTaskHandle xCreatedTask;
 portBASE_TYPE bSuicidalTask = 0;
 
@@ -394,9 +394,9 @@ static portBASE_TYPE xErrorHasOccurred = pdFALSE;
  */
 static void vMemCheckTask( void *pvParameters )
 {
-unsigned portLONG *pulMemCheckTaskRunningCounter;
+unsigned long *pulMemCheckTaskRunningCounter;
 void *pvMem1, *pvMem2, *pvMem3;
-static portLONG lErrorOccurred = pdFALSE;
+static long lErrorOccurred = pdFALSE;
 
 	/* This task is dynamically created then deleted during each cycle of the
 	vErrorChecks task to check the operation of the memory allocator.  Each time
@@ -409,7 +409,7 @@ static portLONG lErrorOccurred = pdFALSE;
 	pulMemCheckTaskRunningCounter is incremented each cycle to indicate to the
 	vErrorChecks() task that this task is still executing without error. */
 
-	pulMemCheckTaskRunningCounter = ( unsigned portLONG * ) pvParameters;
+	pulMemCheckTaskRunningCounter = ( unsigned long * ) pvParameters;
 
 	for( ;; )
 	{

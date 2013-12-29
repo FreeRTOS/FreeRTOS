@@ -110,7 +110,7 @@
  */
 void vApplicationSetupInterrupts( void )
 {
-const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
+const unsigned short usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRESCALE_VALUE ) / configTICK_RATE_HZ );
 
     /* Configure interrupt priority and level and unmask interrupt for PIT0. */
     MCF_INTC0_ICR55 = ( 1 | ( configKERNEL_INTERRUPT_PRIORITY << 3 ) );
@@ -131,7 +131,7 @@ const unsigned portSHORT usCompareMatchValue = ( ( configCPU_CLOCK_HZ / portPRES
 
 void __attribute__ ((interrupt)) __cs3_isr_interrupt_119( void )
 {
-unsigned portLONG ulSavedInterruptMask;
+unsigned long ulSavedInterruptMask;
 
 	/* Clear the PIT0 interrupt. */
 	MCF_PIT0_PCSR |= MCF_PIT_PCSR_PIF;

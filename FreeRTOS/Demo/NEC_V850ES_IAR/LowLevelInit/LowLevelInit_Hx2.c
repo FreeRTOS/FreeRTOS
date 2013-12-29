@@ -68,13 +68,13 @@
 /*-----------------------------------------------------------*/
 
 /* Called by the startup code to initialise the run time system. */
-unsigned portCHAR __low_level_init( void );
+unsigned char __low_level_init( void );
 
 /*-----------------------------------------------------------*/
 
-unsigned portCHAR __low_level_init( void )
+unsigned char __low_level_init( void )
 {
-unsigned portCHAR resetflag = RESF;
+unsigned char resetflag = RESF;
 unsigned portBASE_TYPE i = 0;         
 
 	portDISABLE_INTERRUPTS();         /* disable global interrupts */                      

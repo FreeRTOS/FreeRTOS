@@ -117,22 +117,22 @@
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 
 /* Constants to setup the PLL. */
-#define mainPLL_MUL			( ( unsigned portLONG ) ( 8 - 1 ) )
-#define mainPLL_DIV			( ( unsigned portLONG ) 0x0000 )
-#define mainCPU_CLK_DIV		( ( unsigned portLONG ) 0x0003 )
-#define mainPLL_ENABLE		( ( unsigned portLONG ) 0x0001 )
-#define mainPLL_CONNECT		( ( ( unsigned portLONG ) 0x0002 ) | mainPLL_ENABLE )
-#define mainPLL_FEED_BYTE1	( ( unsigned portLONG ) 0xaa )
-#define mainPLL_FEED_BYTE2	( ( unsigned portLONG ) 0x55 )
-#define mainPLL_LOCK		( ( unsigned portLONG ) 0x4000000 )
-#define mainPLL_CONNECTED	( ( unsigned portLONG ) 0x2000000 )
-#define mainOSC_ENABLE		( ( unsigned portLONG ) 0x20 )
-#define mainOSC_STAT		( ( unsigned portLONG ) 0x40 )
-#define mainOSC_SELECT		( ( unsigned portLONG ) 0x01 )
+#define mainPLL_MUL			( ( unsigned long ) ( 8 - 1 ) )
+#define mainPLL_DIV			( ( unsigned long ) 0x0000 )
+#define mainCPU_CLK_DIV		( ( unsigned long ) 0x0003 )
+#define mainPLL_ENABLE		( ( unsigned long ) 0x0001 )
+#define mainPLL_CONNECT		( ( ( unsigned long ) 0x0002 ) | mainPLL_ENABLE )
+#define mainPLL_FEED_BYTE1	( ( unsigned long ) 0xaa )
+#define mainPLL_FEED_BYTE2	( ( unsigned long ) 0x55 )
+#define mainPLL_LOCK		( ( unsigned long ) 0x4000000 )
+#define mainPLL_CONNECTED	( ( unsigned long ) 0x2000000 )
+#define mainOSC_ENABLE		( ( unsigned long ) 0x20 )
+#define mainOSC_STAT		( ( unsigned long ) 0x40 )
+#define mainOSC_SELECT		( ( unsigned long ) 0x01 )
 
 /* Constants to setup the MAM. */
-#define mainMAM_TIM_3		( ( unsigned portCHAR ) 0x03 )
-#define mainMAM_MODE_FULL	( ( unsigned portCHAR ) 0x02 )
+#define mainMAM_TIM_3		( ( unsigned char ) 0x03 )
+#define mainMAM_MODE_FULL	( ( unsigned char ) 0x02 )
 
 /*
  * The task that handles the uIP stack.  All TCP/IP processing is performed in
@@ -191,7 +191,7 @@ void vApplicationTickHook( void )
 {
 unsigned portBASE_TYPE uxColumn = 0;
 static xLCDMessage xMessage = { 0, "PASS" };
-static unsigned portLONG ulTicksSinceLastDisplay = 0;
+static unsigned long ulTicksSinceLastDisplay = 0;
 static portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it

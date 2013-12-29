@@ -82,14 +82,14 @@ an example of an efficient driver. */
 #include "serial.h"
 
 /* Hardware definitions. */
-#define serNO_PARITY		( ( unsigned portCHAR ) 0x02 << 3 )
-#define ser8DATA_BITS		( ( unsigned portCHAR ) 0x03 )
-#define ser1STOP_BIT		( ( unsigned portCHAR ) 0x07 )
-#define serSYSTEM_CLOCK		( ( unsigned portCHAR ) 0xdd )
-#define serTX_ENABLE		( ( unsigned portCHAR ) 0x04 )
-#define serRX_ENABLE		( ( unsigned portCHAR ) 0x01 )
-#define serTX_INT			( ( unsigned portCHAR ) 0x01 )
-#define serRX_INT			( ( unsigned portCHAR ) 0x02 )
+#define serNO_PARITY		( ( unsigned char ) 0x02 << 3 )
+#define ser8DATA_BITS		( ( unsigned char ) 0x03 )
+#define ser1STOP_BIT		( ( unsigned char ) 0x07 )
+#define serSYSTEM_CLOCK		( ( unsigned char ) 0xdd )
+#define serTX_ENABLE		( ( unsigned char ) 0x04 )
+#define serRX_ENABLE		( ( unsigned char ) 0x01 )
+#define serTX_INT			( ( unsigned char ) 0x01 )
+#define serRX_INT			( ( unsigned char ) 0x02 )
 
 
 /* The queues used to communicate between tasks and ISR's. */
@@ -101,13 +101,13 @@ static portBASE_TYPE xTxHasEnded = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned portLONG ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32UL * ulWantedBaud ) );
+const unsigned long ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32UL * ulWantedBaud ) );
 
 	/* Create the queues used by the com test task. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
-	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed portCHAR ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
 	xTxHasEnded = pdTRUE;
 
@@ -127,8 +127,8 @@ const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32UL * ulWa
 	MCF_UART0_UMR2 = ser1STOP_BIT;
 	MCF_UART0_UCSR = serSYSTEM_CLOCK;
 
-	MCF_UART0_UBG1 = ( unsigned portCHAR ) ( ( ulBaudRateDivisor >> 8UL ) & 0xffUL );
-	MCF_UART0_UBG2 = ( unsigned portCHAR ) ( ulBaudRateDivisor & 0xffUL );
+	MCF_UART0_UBG1 = ( unsigned char ) ( ( ulBaudRateDivisor >> 8UL ) & 0xffUL );
+	MCF_UART0_UBG2 = ( unsigned char ) ( ulBaudRateDivisor & 0xffUL );
 
 	/* Turn it on. */
 	MCF_UART0_UCR = serTX_ENABLE | serRX_ENABLE;
@@ -146,7 +146,7 @@ const unsigned portLONG ulBaudRateDivisor = ( configCPU_CLOCK_HZ / ( 32UL * ulWa
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;
@@ -164,7 +164,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed portCHAR *pcR
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed portCHAR cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;
@@ -195,7 +195,7 @@ void vSerialClose( xComPortHandle xPort )
 
 __declspec(interrupt:0) void vUART0InterruptHandler( void )
 {
-unsigned portCHAR ucChar;
+unsigned char ucChar;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, xDoneSomething = pdTRUE;
 
 	while( xDoneSomething != pdFALSE )

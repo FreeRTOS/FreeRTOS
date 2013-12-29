@@ -337,7 +337,7 @@ static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS
 
 int __low_level_init(void)
 {
-unsigned portCHAR ucResetFlag = RESF;
+unsigned char ucResetFlag = RESF;
 
 	portDISABLE_INTERRUPTS();
 

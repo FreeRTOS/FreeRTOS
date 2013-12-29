@@ -68,14 +68,14 @@
 /*-----------------------------------------------------------*/
 
 /* Called by the startup code to initialise the run time system. */
-unsigned portCHAR __low_level_init(void);
+unsigned char __low_level_init(void);
 
 /*-----------------------------------------------------------*/
 
-unsigned portCHAR __low_level_init(void)
+unsigned char __low_level_init(void)
 {
-unsigned portCHAR resetflag = RESF;
-unsigned portCHAR psval = 0;
+unsigned char resetflag = RESF;
+unsigned char psval = 0;
 
 	/* Setup provided by NEC. */
 

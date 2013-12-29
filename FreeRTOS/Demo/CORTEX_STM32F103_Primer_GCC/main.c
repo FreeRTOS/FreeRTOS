@@ -173,7 +173,7 @@ these can require a larger stack. */
 #define mainFLASH_DELAY						( ( portTickType ) 1000 / portTICK_RATE_MS )
 
 /* The number of nano seconds between each processor clock. */
-#define mainNS_PER_CLOCK ( ( unsigned portLONG ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* The two types of message that can be sent to the LCD task. */
 #define mainUPDATE_BALL_MESSAGE				( 0 )
@@ -279,9 +279,9 @@ int main( void )
 void prvLCDTask( void *pvParameters )
 {
 xLCDMessage xMessage;
-portCHAR cY = mainLCD_CHAR_HEIGHT;
-const portCHAR * const pcString = "www.FreeRTOS.org";
-const portCHAR * const pcBlankLine = "                  ";
+char cY = mainLCD_CHAR_HEIGHT;
+const char * const pcString = "www.FreeRTOS.org";
+const char * const pcBlankLine = "                  ";
 
 	DRAW_Init();
 
@@ -330,8 +330,8 @@ static void prvCheckTask( void *pvParameters )
 {
 portTickType xLastExecutionTime;
 xLCDMessage xMessage;
-static signed portCHAR cPassMessage[ mainMAX_MSG_LEN ];
-extern unsigned portSHORT usMaxJitter;
+static signed char cPassMessage[ mainMAX_MSG_LEN ];
+extern unsigned short usMaxJitter;
 
 	/* Initialise the xLastExecutionTime variable on task entry. */
 	xLastExecutionTime = xTaskGetTickCount();
@@ -374,7 +374,7 @@ extern unsigned portSHORT usMaxJitter;
 			with the max measured jitter time also included (as per the
 			fast interrupt test described at the top of this file and on
 			the online documentation page for this demo application). */
-			sprintf( ( portCHAR * ) cPassMessage, "PASS [%uns]", ( ( unsigned portLONG ) usMaxJitter ) * mainNS_PER_CLOCK );
+			sprintf( ( char * ) cPassMessage, "PASS [%uns]", ( ( unsigned long ) usMaxJitter ) * mainNS_PER_CLOCK );
 		}
 
 		/* Send the message to the LCD gatekeeper for display. */
@@ -385,7 +385,7 @@ extern unsigned portSHORT usMaxJitter;
 
 void vApplicationTickHook( void )
 {
-static unsigned portLONG ulCallCount;
+static unsigned long ulCallCount;
 static const xLCDMessage xMemsMessage = { mainUPDATE_BALL_MESSAGE, NULL };
 static portBASE_TYPE xHigherPriorityTaskWoken;
 
@@ -415,7 +415,7 @@ static void prvSetupHardware( void )
 	}
 
 	/* 2 wait states required on the flash. */
-	*( ( unsigned portLONG * ) 0x40022000 ) = 0x02;
+	*( ( unsigned long * ) 0x40022000 ) = 0x02;
 
 	/* HCLK = SYSCLK */
 	RCC_HCLKConfig( RCC_SYSCLK_Div1 );

@@ -125,11 +125,11 @@ static void vFlopTest2( void *pvParameters );
 
 /* Buffers into which the flop registers will be saved.  There is a buffer for 
 both tasks. */
-static volatile unsigned portLONG ulFlopRegisters[ flopNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
+static volatile unsigned long ulFlopRegisters[ flopNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_TO_SAVE ];
 
 /* Variables that are incremented by the tasks to indicate that they are still
 running. */
-static volatile unsigned portLONG ulFlop1CycleCount = 0, ulFlop2CycleCount = 0;
+static volatile unsigned long ulFlop1CycleCount = 0, ulFlop2CycleCount = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -219,7 +219,7 @@ portBASE_TYPE xAreFlopRegisterTestsStillRunning( void )
 {
 portBASE_TYPE xReturn = pdPASS;
 unsigned portBASE_TYPE x, y, z = flopSTART_VALUE;
-static unsigned portLONG ulLastFlop1CycleCount = 0, ulLastFlop2CycleCount = 0;
+static unsigned long ulLastFlop1CycleCount = 0, ulLastFlop2CycleCount = 0;
 
 	/* Called from the 'check' task.
 	

@@ -98,7 +98,7 @@ tick hook. */
 #define mainCOM_LED							( 3 )
 
 /* The number of nano seconds between each processor clock. */
-#define mainNS_PER_CLOCK ( ( unsigned portLONG ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -224,7 +224,7 @@ unsigned long ulRow = 0;
 portTickType xDelay = 0;
 unsigned short usErrorCode = 0;
 unsigned long ulIteration = 0;
-extern unsigned portSHORT usMaxJitter;
+extern unsigned short usMaxJitter;
 
 	/* Intialise the sleeper. */
 	xDelay = xTaskGetTickCount();

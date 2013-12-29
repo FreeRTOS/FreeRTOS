@@ -167,7 +167,7 @@ discover an unexpected value. */
 static volatile unsigned portBASE_TYPE xRegTestStatus = pdPASS;
 
 /* Counters used to ensure the regtest tasks are still running. */
-static volatile unsigned portLONG ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
+static volatile unsigned long ulRegTest1Counter = 0UL, ulRegTest2Counter = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -232,7 +232,7 @@ int main( void )
 static portBASE_TYPE prvCheckOtherTasksAreStillRunning( void )
 {
 portBASE_TYPE lReturn = pdPASS;
-static unsigned portLONG ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
+static unsigned long ulLastRegTest1Counter= 0UL, ulLastRegTest2Counter = 0UL;
 
 	/* The demo tasks maintain a count that increments every cycle of the task
 	provided that the task has never encountered an error.  This function 
@@ -697,12 +697,12 @@ static void prvRegTestTask2( void *pvParameters )
 /* This hook function will get called if there is a suspected stack overflow.
 An overflow can cause the task name to be corrupted, in which case the task
 handle needs to be used to determine the offending task. */
-void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName );
-void vApplicationStackOverflowHook( xTaskHandle xTask, signed portCHAR *pcTaskName )
+void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( xTaskHandle xTask, signed char *pcTaskName )
 {
 /* To prevent the optimiser removing the variables. */
 volatile xTaskHandle xTaskIn = xTask;
-volatile signed portCHAR *pcTaskNameIn = pcTaskName;
+volatile signed char *pcTaskNameIn = pcTaskName;
 
 	/* Remove compiler warnings. */
 	( void ) xTaskIn;

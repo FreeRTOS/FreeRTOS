@@ -62,8 +62,8 @@
 #define mainETH_TASK_PRIORITY     ( tskIDLE_PRIORITY + 1 )
 
 /* Baud rate used by the serial port tasks. */
-#define mainCOM_BAUD_RATE      ( ( unsigned portLONG ) 57600 )
-#define mainCOM_BUFFER_LEN     ( ( unsigned portLONG ) 70 )
+#define mainCOM_BAUD_RATE      ( ( unsigned long ) 57600 )
+#define mainCOM_BUFFER_LEN     ( ( unsigned long ) 70 )
 
 /* An address in the internal Flash used to count resets.  This is used to check that
 the demo application is not unexpectedly resetting. */

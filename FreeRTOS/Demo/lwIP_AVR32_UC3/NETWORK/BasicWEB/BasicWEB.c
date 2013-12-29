@@ -104,8 +104,8 @@
 \r\n</font></BODY>\
 </html>"
 
-portCHAR cDynamicPage[ webMAX_PAGE_SIZE ];
-portCHAR cPageHits[ 11 ];
+char cDynamicPage[ webMAX_PAGE_SIZE ];
+char cPageHits[ 11 ];
 
 
 /*! Function to process the current connection */
@@ -154,9 +154,9 @@ struct netconn *pxHTTPListener, *pxNewConnection;
 static void prvweb_ParseHTMLRequest( struct netconn *pxNetCon )
 {
 struct netbuf *pxRxBuffer;
-portCHAR *pcRxString;
-unsigned portSHORT usLength;
-static unsigned portLONG ulPageHits = 0;
+char *pcRxString;
+unsigned short usLength;
+static unsigned long ulPageHits = 0;
 
 	/* We expect to immediately get data. */
 	pxRxBuffer = netconn_recv( pxNetCon );

@@ -345,7 +345,7 @@ void *pvAllocated;
 direct use from application code, hence their prototypes are not in queue.h. */
 extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned portBASE_TYPE uxQueueNumber );
 extern unsigned portBASE_TYPE uxQueueGetQueueNumber( xQueueHandle pxQueue );
-extern unsigned char ucQueueGetQueueType( xQueueHandle pxQueue );
+extern uint8_t ucQueueGetQueueType( xQueueHandle pxQueue );
 extern void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
 extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 

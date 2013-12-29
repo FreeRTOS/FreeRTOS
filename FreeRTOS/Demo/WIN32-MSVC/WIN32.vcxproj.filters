@@ -171,14 +171,14 @@
     <ClInclude Include="..\..\Source\include\timers.h">
       <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\include\timer_test.h">
-      <Filter>FreeRTOS Source\Include</Filter>
-    </ClInclude>
     <ClInclude Include="Trace_Recorder_Configuration\trcHardwarePort.h">
       <Filter>Configuration Files</Filter>
     </ClInclude>
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h">
       <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\event_groups.h">
+      <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -75,7 +75,7 @@
 /*
  * This reference is required by the Save/Restore Context Macros.
  */
-extern volatile unsigned long *pxCurrentTCB;
+extern volatile uint32_t *pxCurrentTCB;
 /*-----------------------------------------------------------*/
 
 /*

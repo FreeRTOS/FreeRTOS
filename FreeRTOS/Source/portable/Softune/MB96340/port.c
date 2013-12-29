@@ -73,12 +73,12 @@
 /* 
  * Get current value of DPR and ADB registers 
  */
-portSTACK_TYPE xGet_DPR_ADB_bank( void ); 
+StackType_t xGet_DPR_ADB_bank( void ); 
 
 /* 
  * Get current value of DTB and PCB registers 
  */
-portSTACK_TYPE xGet_DTB_PCB_bank( void );
+StackType_t xGet_DTB_PCB_bank( void );
 
 /*
  * Sets up the periodic ISR used for the RTOS tick.  This uses RLT0, but
@@ -92,8 +92,8 @@ static void prvSetupRLT0Interrupt( void );
  * We require the address of the pxCurrentTCB variable, but don't want to know
  * any details of its type. 
  */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /*-----------------------------------------------------------*/
 
@@ -298,7 +298,7 @@ _xGet_DTB_PCB_bank:
  * 
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
@@ -316,12 +316,12 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	bits. */ 
 	#if( ( configMEMMODEL == portCOMPACT ) || ( configMEMMODEL == portLARGE ) )
 	{
-		*pxTopOfStack = ( portSTACK_TYPE ) ( ( unsigned long ) ( pvParameters ) >> 16 );
+		*pxTopOfStack = ( StackType_t ) ( ( uint32_t ) ( pvParameters ) >> 16 );
 		pxTopOfStack--;         
 	}
 	#endif
 
-    *pxTopOfStack = ( portSTACK_TYPE ) ( pvParameters );
+    *pxTopOfStack = ( StackType_t ) ( pvParameters );
     pxTopOfStack--;                  
     
     /* This is redundant push to the stack. This is required in order to introduce 
@@ -329,14 +329,14 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
     the task stack. */
 	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
 	{
-		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( long ) ( pxCode ) >> 16 ) & 0xff );      
+		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( int32_t ) ( pxCode ) >> 16 ) & 0xff );      
 		pxTopOfStack--;       
 	}
 	#endif
 
     /* This is redundant push to the stack. This is required in order to introduce 
     an offset so the task correctly accesses the parameter passed on the task stack. */
-    *pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );
+    *pxTopOfStack = ( StackType_t ) ( pxCode );
     pxTopOfStack--;       
 
     /* PS - User Mode, ILM=7, RB=0, Interrupts enabled,USP */
@@ -344,7 +344,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--; 
 
 	/* PC */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( pxCode );     
+	*pxTopOfStack = ( StackType_t ) ( pxCode );     
     pxTopOfStack--;      
     
     /* DTB | PCB */
@@ -359,7 +359,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	along with PC to indicate the start address of the function. */
 	#if( ( configMEMMODEL == portMEDIUM ) || ( configMEMMODEL == portLARGE ) )
 	{
-		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( long ) ( pxCode ) >> 16 ) & 0xff );
+		*pxTopOfStack = ( xGet_DTB_PCB_bank() & 0xff00 ) | ( ( ( int32_t ) ( pxCode ) >> 16 ) & 0xff );
 		pxTopOfStack--;       
 	}
 	#endif
@@ -369,29 +369,29 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
     
 	/* AL */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x9999;		
+	*pxTopOfStack = ( StackType_t ) 0x9999;		
 	pxTopOfStack--;
 
 	/* AH */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xAAAA;		
+	*pxTopOfStack = ( StackType_t ) 0xAAAA;		
 	pxTopOfStack--;
 	
 	/* Next the general purpose registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x7777;	/* RW7 */
+	*pxTopOfStack = ( StackType_t ) 0x7777;	/* RW7 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x6666;	/* RW6 */
+	*pxTopOfStack = ( StackType_t ) 0x6666;	/* RW6 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x5555;	/* RW5 */
+	*pxTopOfStack = ( StackType_t ) 0x5555;	/* RW5 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x4444;	/* RW4 */
+	*pxTopOfStack = ( StackType_t ) 0x4444;	/* RW4 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x3333;	/* RW3 */
+	*pxTopOfStack = ( StackType_t ) 0x3333;	/* RW3 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;	/* RW2 */
+	*pxTopOfStack = ( StackType_t ) 0x2222;	/* RW2 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;	/* RW1 */
+	*pxTopOfStack = ( StackType_t ) 0x1111;	/* RW1 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x8888;	/* RW0 */
+	*pxTopOfStack = ( StackType_t ) 0x8888;	/* RW0 */
 		
 	return pxTopOfStack;
 }
@@ -400,7 +400,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 static void prvSetupRLT0Interrupt( void )
 {
 /* The peripheral clock divided by 16 is used by the timer. */
-const unsigned short usReloadValue = ( unsigned short ) ( ( ( configCLKP1_CLOCK_HZ / configTICK_RATE_HZ ) / 16UL ) - 1UL );
+const uint16_t usReloadValue = ( uint16_t ) ( ( ( configCLKP1_CLOCK_HZ / configTICK_RATE_HZ ) / 16UL ) - 1UL );
 
 	/* set reload value = 34999+1, TICK Interrupt after 10 ms @ 56MHz of CLKP1 */
 	TMRLR0 = usReloadValue;    
@@ -410,7 +410,7 @@ const unsigned short usReloadValue = ( unsigned short ) ( ( ( configCLKP1_CLOCK_
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick. */
 	prvSetupRLT0Interrupt();

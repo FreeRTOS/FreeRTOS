@@ -104,7 +104,7 @@ Changes from V3.2.0
  *----------------------------------------------------------*/
 
 /* Hardware setup for tick. */
-#define portTIMER_FOSC_SCALE			( ( unsigned long ) 4 )
+#define portTIMER_FOSC_SCALE			( ( uint32_t ) 4 )
 
 /* Initial interrupt enable state for newly created tasks.  This value is
 copied into INTCON when a task switches in for the first time. */
@@ -121,16 +121,16 @@ enable state to be unchanged when the interrupted task is switched back in. */
 area's get used by the compiler for temporary storage, especially when 
 performing mathematical operations, or when using 32bit data types.  This
 constant defines the size of memory area which must be saved. */
-#define portCOMPILER_MANAGED_MEMORY_SIZE	( ( unsigned char ) 0x13 )
+#define portCOMPILER_MANAGED_MEMORY_SIZE	( ( uint8_t ) 0x13 )
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /* IO port constants. */
-#define portBIT_SET		( ( unsigned char ) 1 )
-#define portBIT_CLEAR	( ( unsigned char ) 0 )
+#define portBIT_SET		( ( uint8_t ) 1 )
+#define portBIT_CLEAR	( ( uint8_t ) 0 )
 
 /*
  * The serial port ISR's are defined in serial.c, but are called from portable
@@ -243,7 +243,7 @@ static void prvLowInterrupt( void );
 	_endasm																		\
 																				\
 		/* Store each address from the hardware stack. */						\
-		while( STKPTR > ( unsigned char ) 0 )								\
+		while( STKPTR > ( uint8_t ) 0 )								\
 		{																		\
 			_asm																\
 				MOVFF	TOSL, PREINC1											\
@@ -380,10 +380,10 @@ static void prvLowInterrupt( void );
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned long ulAddress;
-unsigned char ucBlock;
+uint32_t ulAddress;
+uint8_t ucBlock;
 
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
@@ -401,12 +401,12 @@ unsigned char ucBlock;
 
 	First store the function parameters.  This is where the task will expect to
 	find them when it starts running. */
-	ulAddress = ( unsigned long ) pvParameters;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	ulAddress = ( uint32_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 
 	ulAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 
 	/* Next we just leave a space.  When a context is saved the stack pointer
@@ -418,97 +418,97 @@ unsigned char ucBlock;
 
 	/* Next are all the registers that form part of the task context. */
 	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x66; /* WREG. */
+	*pxTopOfStack = ( StackType_t ) 0x66; /* WREG. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xcc; /* Status. */
+	*pxTopOfStack = ( StackType_t ) 0xcc; /* Status. */
 	pxTopOfStack++;
 
 	/* INTCON is saved with interrupts enabled. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portINITAL_INTERRUPT_STATE; /* INTCON */
+	*pxTopOfStack = ( StackType_t ) portINITAL_INTERRUPT_STATE; /* INTCON */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11; /* BSR. */
+	*pxTopOfStack = ( StackType_t ) 0x11; /* BSR. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x22; /* FSR2L. */
+	*pxTopOfStack = ( StackType_t ) 0x22; /* FSR2L. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x33; /* FSR2H. */
+	*pxTopOfStack = ( StackType_t ) 0x33; /* FSR2H. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x44; /* FSR0L. */
+	*pxTopOfStack = ( StackType_t ) 0x44; /* FSR0L. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x55; /* FSR0H. */
+	*pxTopOfStack = ( StackType_t ) 0x55; /* FSR0H. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x66; /* TABLAT. */
+	*pxTopOfStack = ( StackType_t ) 0x66; /* TABLAT. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* TBLPTRU. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* TBLPTRU. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x88; /* TBLPTRUH. */
+	*pxTopOfStack = ( StackType_t ) 0x88; /* TBLPTRUH. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x99; /* TBLPTRUL. */
+	*pxTopOfStack = ( StackType_t ) 0x99; /* TBLPTRUL. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaa; /* PRODH. */
+	*pxTopOfStack = ( StackType_t ) 0xaa; /* PRODH. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xbb; /* PRODL. */
+	*pxTopOfStack = ( StackType_t ) 0xbb; /* PRODL. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* PCLATU. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* PCLATU. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* PCLATH. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* PCLATH. */
 	pxTopOfStack++;
 
 	/* Next the .tmpdata and MATH_DATA sections. */
 	for( ucBlock = 0; ucBlock <= portCOMPILER_MANAGED_MEMORY_SIZE; ucBlock++ )
 	{
-		*pxTopOfStack = ( portSTACK_TYPE ) ucBlock;
+		*pxTopOfStack = ( StackType_t ) ucBlock;
 		*pxTopOfStack++;
 	}
 
 	/* Store the top of the global data section. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portCOMPILER_MANAGED_MEMORY_SIZE; /* Low. */
+	*pxTopOfStack = ( StackType_t ) portCOMPILER_MANAGED_MEMORY_SIZE; /* Low. */
 	pxTopOfStack++;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00; /* High. */
+	*pxTopOfStack = ( StackType_t ) 0x00; /* High. */
 	pxTopOfStack++;
 
 	/* The only function return address so far is the address of the 
 	task. */
-	ulAddress = ( unsigned long ) pxCode;
+	ulAddress = ( uint32_t ) pxCode;
 
 	/* TOS low. */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 	ulAddress >>= 8;
 
 	/* TOS high. */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 	ulAddress >>= 8;
 
 	/* TOS even higher. */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress & ( unsigned long ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress & ( uint32_t ) 0x00ff );
 	pxTopOfStack++;
 
 	/* Store the number of return addresses on the hardware stack - so far only
 	the address of the task entry point. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 1;
+	*pxTopOfStack = ( StackType_t ) 1;
 	pxTopOfStack++;
 
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup a timer for the tick ISR is using the preemptive scheduler. */
 	prvSetupTimerInterrupt(); 
@@ -617,9 +617,9 @@ static void prvTickISR( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned long ulConstCompareValue = ( ( configCPU_CLOCK_HZ / portTIMER_FOSC_SCALE ) / configTICK_RATE_HZ );
-unsigned long ulCompareValue;
-unsigned char ucByte;
+const uint32_t ulConstCompareValue = ( ( configCPU_CLOCK_HZ / portTIMER_FOSC_SCALE ) / configTICK_RATE_HZ );
+uint32_t ulCompareValue;
+uint8_t ucByte;
 
 	/* Interrupts are disabled when this function is called.
 
@@ -627,14 +627,14 @@ unsigned char ucByte;
 	1.
 
 	Clear the time count then setup timer. */
-	TMR1H = ( unsigned char ) 0x00;
-	TMR1L = ( unsigned char ) 0x00;
+	TMR1H = ( uint8_t ) 0x00;
+	TMR1L = ( uint8_t ) 0x00;
 
 	/* Set the compare match value. */
 	ulCompareValue = ulConstCompareValue;
-	CCPR1L = ( unsigned char ) ( ulCompareValue & ( unsigned long ) 0xff );
-	ulCompareValue >>= ( unsigned long ) 8;
-	CCPR1H = ( unsigned char ) ( ulCompareValue & ( unsigned long ) 0xff );	
+	CCPR1L = ( uint8_t ) ( ulCompareValue & ( uint32_t ) 0xff );
+	ulCompareValue >>= ( uint32_t ) 8;
+	CCPR1H = ( uint8_t ) ( ulCompareValue & ( uint32_t ) 0xff );	
 
 	CCP1CONbits.CCP1M0 = portBIT_SET;	/*< Compare match mode. */
 	CCP1CONbits.CCP1M1 = portBIT_SET;	/*< Compare match mode. */

@@ -68,7 +68,7 @@
  * heavily for the schedulers needs, it is also available for use by
  * application code.
  *
- * xLists can only store pointers to xListItems.  Each xListItem contains a
+ * list_ts can only store pointers to list_item_ts.  Each ListItem_t contains a
  * numeric value (xItemValue).  Most of the time the lists are sorted in
  * descending item value order.
  *
@@ -135,31 +135,31 @@ extern "C" {
  */
 struct xLIST_ITEM
 {
-	configLIST_VOLATILE portTickType xItemValue;	/*< The value being listed.  In most cases this is used to sort the list in descending order. */
-	struct xLIST_ITEM * configLIST_VOLATILE pxNext;	/*< Pointer to the next xListItem in the list. */
-	struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;/*< Pointer to the previous xListItem in the list. */
-	void * pvOwner;									/*< Pointer to the object (normally a TCB) that contains the list item.  There is therefore a two way link between the object containing the list item and the list item itself. */
-	void * configLIST_VOLATILE pvContainer;			/*< Pointer to the list in which this list item is placed (if any). */
+	configLIST_VOLATILE TickType_t xItemValue;			/*< The value being listed.  In most cases this is used to sort the list in descending order. */
+	struct xLIST_ITEM * configLIST_VOLATILE pxNext;		/*< Pointer to the next ListItem_t in the list. */
+	struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;	/*< Pointer to the previous ListItem_t in the list. */
+	void * pvOwner;										/*< Pointer to the object (normally a TCB) that contains the list item.  There is therefore a two way link between the object containing the list item and the list item itself. */
+	void * configLIST_VOLATILE pvContainer;				/*< Pointer to the list in which this list item is placed (if any). */
 };
-typedef struct xLIST_ITEM xListItem;				/* For some reason lint wants this as two separate definitions. */
+typedef struct xLIST_ITEM ListItem_t;					/* For some reason lint wants this as two separate definitions. */
 
 struct xMINI_LIST_ITEM
 {
-	configLIST_VOLATILE portTickType xItemValue;
+	configLIST_VOLATILE TickType_t xItemValue;
 	struct xLIST_ITEM * configLIST_VOLATILE pxNext;
 	struct xLIST_ITEM * configLIST_VOLATILE pxPrevious;
 };
-typedef struct xMINI_LIST_ITEM xMiniListItem;
+typedef struct xMINI_LIST_ITEM MiniListItem_t;
 
 /*
  * Definition of the type of queue used by the scheduler.
  */
 typedef struct xLIST
 {
-	configLIST_VOLATILE unsigned portBASE_TYPE uxNumberOfItems;
-	xListItem * configLIST_VOLATILE pxIndex;		/*< Used to walk through the list.  Points to the last item returned by a call to listGET_OWNER_OF_NEXT_ENTRY (). */
-	xMiniListItem xListEnd;							/*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
-} xList;
+	configLIST_VOLATILE UBaseType_t uxNumberOfItems;
+	ListItem_t * configLIST_VOLATILE pxIndex;		/*< Used to walk through the list.  Points to the last item returned by a call to listGET_OWNER_OF_NEXT_ENTRY (). */
+	MiniListItem_t xListEnd;						/*< List item that contains the maximum possible item value meaning it is always at the end of the list and is therefore used as a marker. */
+} List_t;
 
 /*
  * Access macro to set the owner of a list item.  The owner of a list item
@@ -177,7 +177,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
  * \ingroup LinkedList
  */
-#define listGET_LIST_ITEM_OWNER( pxListItem )		( ( pxListItem )->pvOwner )
+#define listGET_LIST_ITEM_OWNER( pxListItem )	( ( pxListItem )->pvOwner )
 
 /*
  * Access macro to set the value of the list item.  In most cases the value is
@@ -186,7 +186,7 @@ typedef struct xLIST
  * \page listSET_LIST_ITEM_VALUE listSET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )		( ( pxListItem )->xItemValue = ( xValue ) )
+#define listSET_LIST_ITEM_VALUE( pxListItem, xValue )	( ( pxListItem )->xItemValue = ( xValue ) )
 
 /*
  * Access macro to retrieve the value of the list item.  The value can
@@ -196,7 +196,7 @@ typedef struct xLIST
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listGET_LIST_ITEM_VALUE( pxListItem )				( ( pxListItem )->xItemValue )
+#define listGET_LIST_ITEM_VALUE( pxListItem )	( ( pxListItem )->xItemValue )
 
 /*
  * Access macro to retrieve the value of the list item at the head of a given
@@ -205,7 +205,7 @@ typedef struct xLIST
  * \page listGET_LIST_ITEM_VALUE listGET_LIST_ITEM_VALUE
  * \ingroup LinkedList
  */
-#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )			( ( ( pxList )->xListEnd ).pxNext->xItemValue )
+#define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext->xItemValue )
 
 /*
  * Return the list item at the head of the list.
@@ -213,7 +213,7 @@ typedef struct xLIST
  * \page listGET_HEAD_ENTRY listGET_HEAD_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_HEAD_ENTRY( pxList )						( ( ( pxList )->xListEnd ).pxNext )
+#define listGET_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext )
 
 /*
  * Return the list item at the head of the list.
@@ -221,7 +221,7 @@ typedef struct xLIST
  * \page listGET_HEAD_ENTRY listGET_HEAD_ENTRY
  * \ingroup LinkedList
  */
-#define listGET_NEXT( pxListItem )							( ( pxListItem )->pxNext )
+#define listGET_NEXT( pxListItem )	( ( pxListItem )->pxNext )
 
 /*
  * Return the list item that marks the end of the list
@@ -229,7 +229,7 @@ typedef struct xLIST
  * \page listGET_END_MARKER listGET_END_MARKER
  * \ingroup LinkedList
  */
-#define listGET_END_MARKER( pxList )						( ( xListItem const * ) ( &( ( pxList )->xListEnd ) ) )
+#define listGET_END_MARKER( pxList )	( ( ListItem_t const * ) ( &( ( pxList )->xListEnd ) ) )
 
 /*
  * Access macro to determine if a list contains any items.  The macro will
@@ -238,12 +238,12 @@ typedef struct xLIST
  * \page listLIST_IS_EMPTY listLIST_IS_EMPTY
  * \ingroup LinkedList
  */
-#define listLIST_IS_EMPTY( pxList )				( ( portBASE_TYPE ) ( ( pxList )->uxNumberOfItems == ( unsigned portBASE_TYPE ) 0 ) )
+#define listLIST_IS_EMPTY( pxList )	( ( BaseType_t ) ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) )
 
 /*
  * Access macro to return the number of items in the list.
  */
-#define listCURRENT_LIST_LENGTH( pxList )		( ( pxList )->uxNumberOfItems )
+#define listCURRENT_LIST_LENGTH( pxList )	( ( pxList )->uxNumberOfItems )
 
 /*
  * Access function to obtain the owner of the next entry in a list.
@@ -267,7 +267,7 @@ typedef struct xLIST
  */
 #define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )										\
 {																							\
-xList * const pxConstList = ( pxList );														\
+List_t * const pxConstList = ( pxList );													\
 	/* Increment the index to the next item and return the item, ensuring */				\
 	/* we don't return the marker used at the end of the list.  */							\
 	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;							\
@@ -306,13 +306,13 @@ xList * const pxConstList = ( pxList );														\
  * @param pxListItem The list item we want to know if is in the list.
  * @return pdTRUE if the list item is in the list, otherwise pdFALSE.
  */
-#define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( portBASE_TYPE ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) ) )
+#define listIS_CONTAINED_WITHIN( pxList, pxListItem ) ( ( BaseType_t ) ( ( pxListItem )->pvContainer == ( void * ) ( pxList ) ) )
 
 /*
  * Return the list a list item is contained within (referenced from).
  *
  * @param pxListItem The list item being queried.
- * @return A pointer to the xList object that references the pxListItem
+ * @return A pointer to the List_t object that references the pxListItem
  */
 #define listLIST_ITEM_CONTAINER( pxListItem ) ( ( pxListItem )->pvContainer )
 
@@ -333,7 +333,7 @@ xList * const pxConstList = ( pxList );														\
  * \page vListInitialise vListInitialise
  * \ingroup LinkedList
  */
-void vListInitialise( xList * const pxList );
+void vListInitialise( List_t * const pxList );
 
 /*
  * Must be called before a list item is used.  This sets the list container to
@@ -344,7 +344,7 @@ void vListInitialise( xList * const pxList );
  * \page vListInitialiseItem vListInitialiseItem
  * \ingroup LinkedList
  */
-void vListInitialiseItem( xListItem * const pxItem );
+void vListInitialiseItem( ListItem_t * const pxItem );
 
 /*
  * Insert a list item into a list.  The item will be inserted into the list in
@@ -357,7 +357,7 @@ void vListInitialiseItem( xListItem * const pxItem );
  * \page vListInsert vListInsert
  * \ingroup LinkedList
  */
-void vListInsert( xList * const pxList, xListItem * const pxNewListItem );
+void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem );
 
 /*
  * Insert a list item into a list.  The item will be inserted in a position
@@ -378,7 +378,7 @@ void vListInsert( xList * const pxList, xListItem * const pxNewListItem );
  * \page vListInsertEnd vListInsertEnd
  * \ingroup LinkedList
  */
-void vListInsertEnd( xList * const pxList, xListItem * const pxNewListItem );
+void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem );
 
 /*
  * Remove an item from a list.  The list item has a pointer to the list that
@@ -393,7 +393,7 @@ void vListInsertEnd( xList * const pxList, xListItem * const pxNewListItem );
  * \page uxListRemove uxListRemove
  * \ingroup LinkedList
  */
-unsigned portBASE_TYPE uxListRemove( xListItem * const pxItemToRemove );
+UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove );
 
 #ifdef __cplusplus
 }

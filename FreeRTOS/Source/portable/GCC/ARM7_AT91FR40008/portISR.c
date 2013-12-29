@@ -83,11 +83,11 @@
 #include "task.h"
 
 /* Constants required to handle interrupts. */
-#define portCLEAR_AIC_INTERRUPT		( ( unsigned long ) 0 )
+#define portCLEAR_AIC_INTERRUPT		( ( uint32_t ) 0 )
 
 /* Constants required to handle critical sections. */
-#define portNO_CRITICAL_NESTING		( ( unsigned long ) 0 )
-volatile unsigned long ulCriticalNesting = 9999UL;
+#define portNO_CRITICAL_NESTING		( ( uint32_t ) 0 )
+volatile uint32_t ulCriticalNesting = 9999UL;
 
 /*-----------------------------------------------------------*/
 
@@ -147,7 +147,7 @@ void vPortYieldProcessor( void )
 	void vNonPreemptiveTick( void ) __attribute__ ((interrupt ("IRQ")));
 	void vNonPreemptiveTick( void )
 	{		
-	static volatile unsigned long ulDummy;
+	static volatile uint32_t ulDummy;
 
 		/* Clear tick timer interrupt indication. */
 		ulDummy = portTIMER_REG_BASE_PTR->TC_SR;  
@@ -170,7 +170,7 @@ void vPortYieldProcessor( void )
 
 		/* WARNING - Do not use local (stack) variables here.  Use globals
 					 if you must! */
-		static volatile unsigned long ulDummy;
+		static volatile uint32_t ulDummy;
 
 		/* Clear tick timer interrupt indication. */
 		ulDummy = portTIMER_REG_BASE_PTR->TC_SR;  

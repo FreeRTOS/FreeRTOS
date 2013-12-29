@@ -98,7 +98,7 @@ not provided their own. */
 #define portUNUSED_PR_BITS	0x7f
 
 /* Records the nesting depth of calls to portENTER_CRITICAL(). */
-unsigned portBASE_TYPE uxCriticalNesting = 0xef;
+UBaseType_t uxCriticalNesting = 0xef;
 
 #if configKERNEL_INTERRUPT_PRIORITY != 1
 	#error If configKERNEL_INTERRUPT_PRIORITY is not 1 then the #32 in the following macros needs changing to equal the portINTERRUPT_BITS value, which is ( configKERNEL_INTERRUPT_PRIORITY << 5 )
@@ -194,12 +194,12 @@ void vApplicationSetupTickTimerInterrupt( void );
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned short usCode;
-unsigned portBASE_TYPE i;
+uint16_t usCode;
+UBaseType_t i;
 
-const portSTACK_TYPE xInitialStack[] =
+const StackType_t xInitialStack[] =
 {
 	0x1111,	/* W1 */
 	0x2222, /* W2 */
@@ -237,14 +237,14 @@ const portSTACK_TYPE xInitialStack[] =
 	/* Setup the stack as if a yield had occurred.
 
 	Save the low bytes of the program counter. */
-	usCode = ( unsigned short ) pxCode;
-	*pxTopOfStack = ( portSTACK_TYPE ) usCode;
+	usCode = ( uint16_t ) pxCode;
+	*pxTopOfStack = ( StackType_t ) usCode;
 	pxTopOfStack++;
 
 	/* Save the high byte of the program counter.  This will always be zero
 	here as it is passed in a 16bit pointer.  If the address is greater than
 	16 bits then the pointer will point to a jump table. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0;
+	*pxTopOfStack = ( StackType_t ) 0;
 	pxTopOfStack++;
 
 	/* Status register with interrupts enabled. */
@@ -252,10 +252,10 @@ const portSTACK_TYPE xInitialStack[] =
 	pxTopOfStack++;
 
 	/* Parameters are passed in W0. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) pvParameters;
 	pxTopOfStack++;
 
-	for( i = 0; i < ( sizeof( xInitialStack ) / sizeof( portSTACK_TYPE ) ); i++ )
+	for( i = 0; i < ( sizeof( xInitialStack ) / sizeof( StackType_t ) ); i++ )
 	{
 		*pxTopOfStack = xInitialStack[ i ];
 		pxTopOfStack++;
@@ -282,7 +282,7 @@ const portSTACK_TYPE xInitialStack[] =
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup a timer for the tick ISR. */
 	vApplicationSetupTickTimerInterrupt();
@@ -311,13 +311,13 @@ void vPortEndScheduler( void )
  */
 __attribute__(( weak )) void vApplicationSetupTickTimerInterrupt( void )
 {
-const unsigned long ulCompareMatch = ( ( configCPU_CLOCK_HZ / portTIMER_PRESCALE ) / configTICK_RATE_HZ ) - 1;
+const uint32_t ulCompareMatch = ( ( configCPU_CLOCK_HZ / portTIMER_PRESCALE ) / configTICK_RATE_HZ ) - 1;
 
 	/* Prescale of 8. */
 	T1CON = 0;
 	TMR1 = 0;
 
-	PR1 = ( unsigned short ) ulCompareMatch;
+	PR1 = ( uint16_t ) ulCompareMatch;
 
 	/* Setup timer 1 interrupt priority. */
 	IPC0bits.T1IP = configKERNEL_INTERRUPT_PRIORITY;

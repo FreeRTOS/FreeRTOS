@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -66,7 +66,7 @@
 /*
 Changes from V1.2.3
 
-	+ portCPU_CLOSK_HZ definition changed to 8MHz base 10, previously it 
+	+ portCPU_CLOSK_HZ definition changed to 8MHz base 10, previously it
 	  base 16.
 */
 
@@ -78,7 +78,7 @@ extern "C" {
 #endif
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -93,17 +93,21 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		int
-#define portSTACK_TYPE	unsigned portCHAR
+#define portSTACK_TYPE	uint8_t
 #define portBASE_TYPE	char
 
+typedef portSTACK_TYPE StackType_t;
+typedef signed char BaseType_t;
+typedef unsigned char UBaseType_t;
+
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* Critical section management. */
 #define portENTER_CRITICAL()		asm volatile ( "in		__tmp_reg__, __SREG__" :: );	\
@@ -119,7 +123,7 @@ extern "C" {
 
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT			1
 #define portNOP()					asm volatile ( "nop" );
 /*-----------------------------------------------------------*/

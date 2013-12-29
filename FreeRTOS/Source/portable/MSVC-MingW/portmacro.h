@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -77,25 +77,30 @@
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned portLONG
-#define portBASE_TYPE	portLONG
+#define portSTACK_TYPE	uint32_t
+#define portBASE_TYPE	long
+
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 
 #if( configUSE_16_BIT_TICKS == 1 )
-    typedef unsigned portSHORT portTickType;
-    #define portMAX_DELAY ( portTickType ) 0xffff
+    typedef uint16_t TickType_t;
+    #define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-    typedef unsigned portLONG portTickType;
-    #define portMAX_DELAY ( portTickType ) 0xffffffffUL
+    typedef uint32_t TickType_t;
+    #define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 
 /* Hardware specifics. */
 #define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )	
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT			4
 
 #define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
-void vPortCloseRunningThread( void *pvTaskToDelete, volatile portBASE_TYPE *pxPendYield );
+void vPortCloseRunningThread( void *pvTaskToDelete, volatile BaseType_t *pxPendYield );
 void vPortDeleteThread( void *pvThreadToDelete );
 #define portCLEAN_UP_TCB( pxTCB )	vPortDeleteThread( pxTCB )
 #define portPRE_TASK_DELETE_HOOK( pvTaskToDelete, pxPendYield ) vPortCloseRunningThread( ( pvTaskToDelete ), ( pxPendYield ) )
@@ -153,7 +158,7 @@ void vPortExitCritical( void );
  * Each bit can be used to represent an individual interrupt - with the first
  * two bits being used for the Yield and Tick interrupts respectively.
 */
-void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber );
+void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber );
 
 /*
  * Install an interrupt handler to be called by the simulated interrupt handler
@@ -164,6 +169,6 @@ void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber );
  * Interrupt handler functions must return a non-zero value if executing the
  * handler resulted in a task switch being required.
  */
-void vPortSetInterruptHandler( unsigned long ulInterruptNumber, unsigned long (*pvHandler)( void ) );
+void vPortSetInterruptHandler( uint32_t ulInterruptNumber, uint32_t (*pvHandler)( void ) );
 
 #endif

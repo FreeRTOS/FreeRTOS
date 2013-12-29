@@ -84,7 +84,7 @@
 
 /* Tasks should start with interrupts enabled and in Supervisor mode, therefore
 PSW is set with U and I set, and PM and IPL clear. */
-#define portINITIAL_PSW     ( ( portSTACK_TYPE ) 0x00030000 )
+#define portINITIAL_PSW     ( ( StackType_t ) 0x00030000 )
 
 /* The peripheral clock is divided by this value before being supplying the
 CMT. */
@@ -112,8 +112,8 @@ respectively. */
 /* The following lines are to ensure vSoftwareInterruptEntry can be referenced,
  and therefore installed in the vector table, when the FreeRTOS code is built
 as a library. */
-extern portBASE_TYPE vSoftwareInterruptEntry;
-const portBASE_TYPE * p_vSoftwareInterruptEntry = &vSoftwareInterruptEntry;
+extern BaseType_t vSoftwareInterruptEntry;
+const BaseType_t * p_vSoftwareInterruptEntry = &vSoftwareInterruptEntry;
 
 /*-----------------------------------------------------------*/
 
@@ -157,7 +157,7 @@ static void prvSetupTimerInterrupt( void );
  * instruction.
  */
 #if configUSE_TICKLESS_IDLE == 1
-	static void prvSleep( portTickType xExpectedIdleTime );
+	static void prvSleep( TickType_t xExpectedIdleTime );
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*-----------------------------------------------------------*/
@@ -169,7 +169,7 @@ extern void vTaskSwitchContext( void );
 /*-----------------------------------------------------------*/
 
 /* Calculate how many clock increments make up a single tick period. */
-static const unsigned long ulMatchValueForOneTick = ( ( configPERIPHERAL_CLOCK_HZ / portCLOCK_DIVISOR ) / configTICK_RATE_HZ );
+static const uint32_t ulMatchValueForOneTick = ( ( configPERIPHERAL_CLOCK_HZ / portCLOCK_DIVISOR ) / configTICK_RATE_HZ );
 
 #if configUSE_TICKLESS_IDLE == 1
 
@@ -177,7 +177,7 @@ static const unsigned long ulMatchValueForOneTick = ( ( configPERIPHERAL_CLOCK_H
 	basically how far into the future an interrupt can be generated. Set
 	during initialisation.  This is the maximum possible value that the
 	compare match register can hold divided by ulMatchValueForOneTick. */
-	static const portTickType xMaximumPossibleSuppressedTicks = USHRT_MAX / ( ( configPERIPHERAL_CLOCK_HZ / portCLOCK_DIVISOR ) / configTICK_RATE_HZ );
+	static const TickType_t xMaximumPossibleSuppressedTicks = USHRT_MAX / ( ( configPERIPHERAL_CLOCK_HZ / portCLOCK_DIVISOR ) / configTICK_RATE_HZ );
 
 	/* Flag set from the tick interrupt to allow the sleep processing to know if
 	sleep mode was exited because of a tick interrupt, or an interrupt
@@ -190,7 +190,7 @@ static const unsigned long ulMatchValueForOneTick = ( ( configPERIPHERAL_CLOCK_H
 	compensate for the lost time.  The large difference between the divided CMT
 	clock and the CPU clock means it is likely ulStoppedTimerCompensation will
 	equal zero - and be optimised away. */
-	static const unsigned long ulStoppedTimerCompensation = 100UL / ( configCPU_CLOCK_HZ / ( configPERIPHERAL_CLOCK_HZ / portCLOCK_DIVISOR ) );
+	static const uint32_t ulStoppedTimerCompensation = 100UL / ( configCPU_CLOCK_HZ / ( configPERIPHERAL_CLOCK_HZ / portCLOCK_DIVISOR ) );
 
 #endif
 
@@ -199,7 +199,7 @@ static const unsigned long ulMatchValueForOneTick = ( ( configPERIPHERAL_CLOCK_H
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Offset to end up on 8 byte boundary. */
 	pxTopOfStack--;
@@ -211,7 +211,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	*pxTopOfStack = ( StackType_t ) pxCode;
 
 	/* When debugging it can be useful if every register is set to a known
 	value.  Otherwise code space can be saved by just setting the registers
@@ -256,7 +256,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	}
 	#endif
 
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R1 */
+	*pxTopOfStack = ( StackType_t ) pvParameters; /* R1 */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x12345678; /* Accumulator. */
 	pxTopOfStack--;
@@ -266,7 +266,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Use pxCurrentTCB just so it does not get optimised away. */
 	if( pxCurrentTCB != NULL )
@@ -355,7 +355,7 @@ void prvTickISR( void )
 
 		/* If this is the first tick since exiting tickless mode then the CMT
 		compare match value needs resetting. */
-		CMT0.CMCOR = ( unsigned short ) ulMatchValueForOneTick;
+		CMT0.CMCOR = ( uint16_t ) ulMatchValueForOneTick;
 	}
 	#endif
 }
@@ -468,7 +468,7 @@ static void prvSetupTimerInterrupt( void )
 	CMT0.CMCR.BIT.CMIE = 1;
 
 	/* Set the compare match value. */
-	CMT0.CMCOR = ( unsigned short ) ulMatchValueForOneTick;
+	CMT0.CMCOR = ( uint16_t ) ulMatchValueForOneTick;
 
 	/* Divide the PCLK. */
 	#if portCLOCK_DIVISOR == 512
@@ -507,7 +507,7 @@ static void prvSetupTimerInterrupt( void )
 
 #if configUSE_TICKLESS_IDLE == 1
 
-	static void prvSleep( portTickType xExpectedIdleTime )
+	static void prvSleep( TickType_t xExpectedIdleTime )
 	{
 		/* Allow the application to define some pre-sleep processing. */
 		configPRE_SLEEP_PROCESSING( xExpectedIdleTime );
@@ -529,9 +529,9 @@ static void prvSetupTimerInterrupt( void )
 
 #if configUSE_TICKLESS_IDLE == 1
 
-	void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
+	void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 	{
-	unsigned long ulMatchValue, ulCompleteTickPeriods, ulCurrentCount;
+	uint32_t ulMatchValue, ulCompleteTickPeriods, ulCurrentCount;
 	eSleepModeStatus eSleepAction;
 
 		/* THIS FUNCTION IS CALLED WITH THE SCHEDULER SUSPENDED. */
@@ -614,8 +614,8 @@ static void prvSetupTimerInterrupt( void )
 
 		    /* Adjust the match value to take into account that the current
 			time slice is already partially complete. */
-			ulMatchValue -= ( unsigned long ) CMT0.CMCNT;
-			CMT0.CMCOR = ( unsigned short ) ulMatchValue;
+			ulMatchValue -= ( uint32_t ) CMT0.CMCNT;
+			CMT0.CMCOR = ( uint16_t ) ulMatchValue;
 
 			/* Restart the CMT to count up to the new match value. */
 			CMT0.CMCNT = 0;
@@ -635,7 +635,7 @@ static void prvSetupTimerInterrupt( void )
 				/* Nothing to do here. */
 			}
 
-			ulCurrentCount = ( unsigned long ) CMT0.CMCNT;
+			ulCurrentCount = ( uint32_t ) CMT0.CMCNT;
 
 			if( ulTickFlag != pdFALSE )
 			{
@@ -645,7 +645,7 @@ static void prvSetupTimerInterrupt( void )
 				exited.  Reset the match value with whatever remains of this
 				tick period. */
 				ulMatchValue = ulMatchValueForOneTick - ulCurrentCount;
-				CMT0.CMCOR = ( unsigned short ) ulMatchValue;
+				CMT0.CMCOR = ( uint16_t ) ulMatchValue;
 
 				/* The tick interrupt handler will already have pended the tick
 				processing in the kernel.  As the pending tick will be
@@ -665,7 +665,7 @@ static void prvSetupTimerInterrupt( void )
 				/* The match value is set to whatever fraction of a single tick
 				period remains. */
 				ulMatchValue = ulCurrentCount - ( ulCompleteTickPeriods * ulMatchValueForOneTick );
-				CMT0.CMCOR = ( unsigned short ) ulMatchValue;
+				CMT0.CMCOR = ( uint16_t ) ulMatchValue;
 			}
 
 			/* Restart the CMT so it runs up to the match value.  The match value

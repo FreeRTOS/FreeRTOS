@@ -75,36 +75,36 @@
 #include "task.h"
 
 /* Constants required to setup timer 2 to produce the RTOS tick. */
-#define portCLOCK_DIVISOR				( ( unsigned long ) 12 )
-#define portMAX_TIMER_VALUE				( ( unsigned long ) 0xffff )
-#define portENABLE_TIMER				( ( unsigned char ) 0x04 )
-#define portTIMER_2_INTERRUPT_ENABLE	( ( unsigned char ) 0x20 )
+#define portCLOCK_DIVISOR				( ( uint32_t ) 12 )
+#define portMAX_TIMER_VALUE				( ( uint32_t ) 0xffff )
+#define portENABLE_TIMER				( ( uint8_t ) 0x04 )
+#define portTIMER_2_INTERRUPT_ENABLE	( ( uint8_t ) 0x20 )
 
 /* The value used in the IE register when a task first starts. */
-#define portGLOBAL_INTERRUPT_BIT	( ( portSTACK_TYPE ) 0x80 )
+#define portGLOBAL_INTERRUPT_BIT	( ( StackType_t ) 0x80 )
 
 /* The value used in the PSW register when a task first starts. */
-#define portINITIAL_PSW				( ( portSTACK_TYPE ) 0x00 )
+#define portINITIAL_PSW				( ( StackType_t ) 0x00 )
 
 /* Macro to clear the timer 2 interrupt flag. */
 #define portCLEAR_INTERRUPT_FLAG()	TMR2CN &= ~0x80;
 
 /* Used during a context switch to store the size of the stack being copied
 to or from XRAM. */
-data static unsigned char ucStackBytes;
+data static uint8_t ucStackBytes;
 
 /* Used during a context switch to point to the next byte in XRAM from/to which
 a RAM byte is to be copied. */
-xdata static portSTACK_TYPE * data pxXRAMStack;
+xdata static StackType_t * data pxXRAMStack;
 
 /* Used during a context switch to point to the next byte in RAM from/to which
 an XRAM byte is to be copied. */
-data static portSTACK_TYPE * data pxRAMStack;
+data static StackType_t * data pxRAMStack;
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /*
  * Setup the hardware to generate an interrupt off timer 2 at the required 
@@ -123,10 +123,10 @@ static void prvSetupTimerInterrupt( void );
 	/* pxCurrentTCB points to a TCB which itself points to the location into					\
 	which the first	stack byte should be copied.  Set pxXRAMStack to point						\
 	to the location into which the first stack byte is to be copied. */							\
-	pxXRAMStack = ( xdata portSTACK_TYPE * ) *( ( xdata portSTACK_TYPE ** ) pxCurrentTCB );		\
+	pxXRAMStack = ( xdata StackType_t * ) *( ( xdata StackType_t ** ) pxCurrentTCB );		\
 																								\
 	/* Set pxRAMStack to point to the first byte to be coped from the stack. */					\
-	pxRAMStack = ( data portSTACK_TYPE * data ) configSTACK_START;								\
+	pxRAMStack = ( data StackType_t * data ) configSTACK_START;								\
 																								\
 	/* Calculate the size of the stack we are about to copy from the current					\
 	stack pointer value. */																		\
@@ -156,8 +156,8 @@ static void prvSetupTimerInterrupt( void );
 {																								\
 	/* Setup the pointers as per portCOPY_STACK_TO_XRAM(), but this time to						\
 	copy the data back out of XRAM and into the stack. */										\
-	pxXRAMStack = ( xdata portSTACK_TYPE * ) *( ( xdata portSTACK_TYPE ** ) pxCurrentTCB );		\
-	pxRAMStack = ( data portSTACK_TYPE * data ) ( configSTACK_START - 1 );						\
+	pxXRAMStack = ( xdata StackType_t * ) *( ( xdata StackType_t ** ) pxCurrentTCB );		\
+	pxRAMStack = ( data StackType_t * data ) ( configSTACK_START - 1 );						\
 																								\
 	/* The first value stored in XRAM was the size of the stack - i.e. the						\
 	number of bytes we need to copy back. */													\
@@ -173,7 +173,7 @@ static void prvSetupTimerInterrupt( void );
 	} while( ucStackBytes );																	\
 																								\
 	/* Restore the stack pointer ready to use the restored stack. */							\
-	SP = ( unsigned char ) pxRAMStack;														\
+	SP = ( uint8_t ) pxRAMStack;														\
 }
 /*-----------------------------------------------------------*/
 
@@ -250,10 +250,10 @@ static void prvSetupTimerInterrupt( void );
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned long ulAddress;
-portSTACK_TYPE *pxStartOfStack;
+uint32_t ulAddress;
+StackType_t *pxStartOfStack;
 
 	/* Leave space to write the size of the stack as the first byte. */
 	pxStartOfStack = pxTopOfStack;
@@ -273,11 +273,11 @@ portSTACK_TYPE *pxStartOfStack;
 	ISR. 
 
 	The return address that would have been pushed by the MCU. */
-	ulAddress = ( unsigned long ) pxCode;
-	*pxTopOfStack = ( portSTACK_TYPE ) ulAddress;
+	ulAddress = ( uint32_t ) pxCode;
+	*pxTopOfStack = ( StackType_t ) ulAddress;
 	ulAddress >>= 8;
 	pxTopOfStack++;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulAddress );
+	*pxTopOfStack = ( StackType_t ) ( ulAddress );
 	pxTopOfStack++;
 
 	/* Next all the registers will have been pushed by portSAVE_CONTEXT(). */
@@ -290,14 +290,14 @@ portSTACK_TYPE *pxStartOfStack;
 
 	/* The function parameters will be passed in the DPTR and B register as
 	a three byte generic pointer is used. */
-	ulAddress = ( unsigned long ) pvParameters;
-	*pxTopOfStack = ( portSTACK_TYPE ) ulAddress;	/* DPL */
+	ulAddress = ( uint32_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ulAddress;	/* DPL */
 	ulAddress >>= 8;
 	*pxTopOfStack++;
-	*pxTopOfStack = ( portSTACK_TYPE ) ulAddress;	/* DPH */
+	*pxTopOfStack = ( StackType_t ) ulAddress;	/* DPH */
 	ulAddress >>= 8;
 	pxTopOfStack++;
-	*pxTopOfStack = ( portSTACK_TYPE ) ulAddress;	/* b */
+	*pxTopOfStack = ( StackType_t ) ulAddress;	/* b */
 	pxTopOfStack++;
 
 	/* The remaining registers are straight forward. */
@@ -325,7 +325,7 @@ portSTACK_TYPE *pxStartOfStack;
 	the stack size byte as part of the stack size count.
 
 	Finally we place the stack size at the beginning. */
-	*pxStartOfStack = ( portSTACK_TYPE ) ( pxTopOfStack - pxStartOfStack );
+	*pxStartOfStack = ( StackType_t ) ( pxTopOfStack - pxStartOfStack );
 
 	/* Unlike most ports, we return the start of the stack as this is where the
 	size of the stack is stored. */
@@ -336,7 +336,7 @@ portSTACK_TYPE *pxStartOfStack;
 /* 
  * See header file for description. 
  */
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup timer 2 to generate the RTOS tick. */
 	prvSetupTimerInterrupt();	
@@ -419,14 +419,14 @@ void vPortYield( void ) _naked
 
 static void prvSetupTimerInterrupt( void )
 {
-unsigned char ucOriginalSFRPage;
+uint8_t ucOriginalSFRPage;
 
 /* Constants calculated to give the required timer capture values. */
-const unsigned long ulTicksPerSecond = configCPU_CLOCK_HZ / portCLOCK_DIVISOR;
-const unsigned long ulCaptureTime = ulTicksPerSecond / configTICK_RATE_HZ;
-const unsigned long ulCaptureValue = portMAX_TIMER_VALUE - ulCaptureTime;
-const unsigned char ucLowCaptureByte = ( unsigned char ) ( ulCaptureValue & ( unsigned long ) 0xff );
-const unsigned char ucHighCaptureByte = ( unsigned char ) ( ulCaptureValue >> ( unsigned long ) 8 );
+const uint32_t ulTicksPerSecond = configCPU_CLOCK_HZ / portCLOCK_DIVISOR;
+const uint32_t ulCaptureTime = ulTicksPerSecond / configTICK_RATE_HZ;
+const uint32_t ulCaptureValue = portMAX_TIMER_VALUE - ulCaptureTime;
+const uint8_t ucLowCaptureByte = ( uint8_t ) ( ulCaptureValue & ( uint32_t ) 0xff );
+const uint8_t ucHighCaptureByte = ( uint8_t ) ( ulCaptureValue >> ( uint32_t ) 8 );
 
 	/* NOTE:  This uses a timer only present on 8052 architecture. */
 
@@ -436,7 +436,7 @@ const unsigned char ucHighCaptureByte = ( unsigned char ) ( ulCaptureValue >> ( 
 	SFRPAGE = 0;
 
 	/* TMR2CF can be left in its default state. */	
-	TMR2CF = ( unsigned char ) 0;
+	TMR2CF = ( uint8_t ) 0;
 
 	/* Setup the overflow reload value. */
 	RCAP2L = ucLowCaptureByte;

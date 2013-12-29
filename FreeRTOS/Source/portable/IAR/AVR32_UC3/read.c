@@ -65,7 +65,7 @@ extern volatile avr32_usart_t *volatile stdio_usart_base;
  * \return The number of bytes read, \c 0 at the end of the file, or
  *         \c _LLIO_ERROR on failure.
  */
-size_t __read(int handle, unsigned char *buffer, size_t size)
+size_t __read(int handle, uint8_t *buffer, size_t size)
 {
   int nChars = 0;
 

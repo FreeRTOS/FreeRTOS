@@ -58,9 +58,9 @@
 #include "task.h"
 
 /* ------------------------ Types ----------------------------------------- */
-typedef volatile unsigned long vuint32;
-typedef volatile unsigned short vuint16;
-typedef volatile unsigned char vuint8;
+typedef volatile uint32_t vuint32;
+typedef volatile uint16_t vuint16;
+typedef volatile uint8_t vuint8;
 
 /* ------------------------ Defines --------------------------------------- */
 #define portVECTOR_TABLE                __RAMVEC
@@ -86,11 +86,11 @@ typedef volatile unsigned char vuint8;
 #define MCF_INTC0_ICRn_IP(x)            ( ( ( x ) & 0x07 ) << 0 )
 #define MCF_INTC0_ICRn_IL(x)            ( ( ( x ) & 0x07 ) << 3 )
 
-#define portNO_CRITICAL_NESTING         ( ( unsigned long ) 0 )
-#define portINITIAL_CRITICAL_NESTING    ( ( unsigned long ) 10 )
+#define portNO_CRITICAL_NESTING         ( ( uint32_t ) 0 )
+#define portINITIAL_CRITICAL_NESTING    ( ( uint32_t ) 10 )
 
 /* ------------------------ Static variables ------------------------------ */
-volatile unsigned long              ulCriticalNesting = portINITIAL_CRITICAL_NESTING;
+volatile uint32_t              ulCriticalNesting = portINITIAL_CRITICAL_NESTING;
 
 /* ------------------------ Static functions ------------------------------ */
 #if configUSE_PREEMPTION == 0
@@ -101,22 +101,22 @@ static void prvPortPreemptiveTick ( void );
 
 /* ------------------------ Start implementation -------------------------- */
 
-portSTACK_TYPE *
-pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode,
+StackType_t *
+pxPortInitialiseStack( StackType_t * pxTopOfStack, pdTASK_CODE pxCode,
                        void *pvParameters )
 {
     /* Place the parameter on the stack in the expected location. */
-    *pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+    *pxTopOfStack = ( StackType_t ) pvParameters;
     pxTopOfStack--;
 
     /* Place dummy return address on stack. Tasks should never terminate so
      * we can set this to anything. */
-    *pxTopOfStack = ( portSTACK_TYPE ) 0;
+    *pxTopOfStack = ( StackType_t ) 0;
     pxTopOfStack--;
 
     /* Create a Motorola Coldfire exception stack frame. First comes the return
      * address. */
-    *pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+    *pxTopOfStack = ( StackType_t ) pxCode;
     pxTopOfStack--;
 
     /* Format, fault-status, vector number for exception stack frame. Task
@@ -129,35 +129,35 @@ pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode,
     *pxTopOfStack = 0;
     *pxTopOfStack--;
 
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA6;    /* A6 / FP */
+    *pxTopOfStack = ( StackType_t ) 0xA6;    /* A6 / FP */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA5;    /* A5 */
+    *pxTopOfStack = ( StackType_t ) 0xA5;    /* A5 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA4;    /* A4 */
+    *pxTopOfStack = ( StackType_t ) 0xA4;    /* A4 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA3;    /* A3 */
+    *pxTopOfStack = ( StackType_t ) 0xA3;    /* A3 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA2;    /* A2 */
+    *pxTopOfStack = ( StackType_t ) 0xA2;    /* A2 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA1;    /* A1 */
+    *pxTopOfStack = ( StackType_t ) 0xA1;    /* A1 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xA0;    /* A0 */
+    *pxTopOfStack = ( StackType_t ) 0xA0;    /* A0 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD7;    /* D7 */
+    *pxTopOfStack = ( StackType_t ) 0xD7;    /* D7 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD6;    /* D6 */
+    *pxTopOfStack = ( StackType_t ) 0xD6;    /* D6 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD5;    /* D5 */
+    *pxTopOfStack = ( StackType_t ) 0xD5;    /* D5 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD4;    /* D4 */
+    *pxTopOfStack = ( StackType_t ) 0xD4;    /* D4 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD3;    /* D3 */
+    *pxTopOfStack = ( StackType_t ) 0xD3;    /* D3 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD2;    /* D2 */
+    *pxTopOfStack = ( StackType_t ) 0xD2;    /* D2 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD1;    /* D1 */
+    *pxTopOfStack = ( StackType_t ) 0xD1;    /* D1 */
     pxTopOfStack--;
-    *pxTopOfStack = ( portSTACK_TYPE ) 0xD0;    /* D0 */
+    *pxTopOfStack = ( StackType_t ) 0xD0;    /* D0 */
 
     return pxTopOfStack;
 }
@@ -248,7 +248,7 @@ vPortExitCritical()
     }
 }
 
-portBASE_TYPE
+BaseType_t
 xPortStartScheduler( void )
 {
     extern void     ( *portVECTOR_TABLE[  ] ) (  );

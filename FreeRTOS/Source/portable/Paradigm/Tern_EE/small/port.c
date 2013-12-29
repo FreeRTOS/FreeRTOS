@@ -83,8 +83,8 @@
 #define portTIMER_COMPARE ( configCPU_CLOCK_HZ  / ( configTICK_RATE_HZ * 4UL ) )
 
 /* From the RDC data sheet. */
-#define portENABLE_TIMER_AND_INTERRUPT 	( unsigned short ) 0xe00b
-#define portENABLE_TIMER				( unsigned short ) 0xC001
+#define portENABLE_TIMER_AND_INTERRUPT 	( uint16_t ) 0xe00b
+#define portENABLE_TIMER				( uint16_t ) 0xC001
 
 /* Interrupt control. */
 #define portEIO_REGISTER 0xff22
@@ -110,9 +110,9 @@ static void __interrupt __far prvYieldProcessor( void );
 
 /*-----------------------------------------------------------*/
 /* See header file for description. */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-portSTACK_TYPE DS_Reg = 0;
+StackType_t DS_Reg = 0;
 
 	/* We need the true data segment. */
 	__asm{	MOV DS_Reg, DS };
@@ -147,30 +147,30 @@ portSTACK_TYPE DS_Reg = 0;
 	/* The remaining registers would be pushed on the stack by our context
 	switch function.  These are loaded with values simply to make debugging
 	easier. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xAAAA;	/* AX */
+	*pxTopOfStack = ( StackType_t ) 0xAAAA;	/* AX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBBBB;	/* BX */
+	*pxTopOfStack = ( StackType_t ) 0xBBBB;	/* BX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xCCCC;	/* CX */
+	*pxTopOfStack = ( StackType_t ) 0xCCCC;	/* CX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDDDD;	/* DX */
+	*pxTopOfStack = ( StackType_t ) 0xDDDD;	/* DX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xEEEE;	/* ES */
+	*pxTopOfStack = ( StackType_t ) 0xEEEE;	/* ES */
 	pxTopOfStack--;
 
 	*pxTopOfStack = DS_Reg;						/* DS */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0123;	/* SI */
+	*pxTopOfStack = ( StackType_t ) 0x0123;	/* SI */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDDDD;	/* DI */
+	*pxTopOfStack = ( StackType_t ) 0xDDDD;	/* DI */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBBBB;	/* BP */
+	*pxTopOfStack = ( StackType_t ) 0xBBBB;	/* BP */
 
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* This is called with interrupts already disabled. */
 
@@ -232,10 +232,10 @@ void vPortEndScheduler( void )
 
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned long ulCompareValue = portTIMER_COMPARE;
-unsigned short usTimerCompare;
+const uint32_t ulCompareValue = portTIMER_COMPARE;
+uint16_t usTimerCompare;
 
-	usTimerCompare = ( unsigned short ) ( ulCompareValue >> 4 );
+	usTimerCompare = ( uint16_t ) ( ulCompareValue >> 4 );
     t2_init( portENABLE_TIMER, portPRESCALE_VALUE, NULL );
 
 	#if( configUSE_PREEMPTION == 1 )

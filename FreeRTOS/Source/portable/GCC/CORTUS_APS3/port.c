@@ -86,7 +86,7 @@
 static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Make space on the stack for the context - this leaves a couple of spaces
 	empty.  */
@@ -95,7 +95,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 	/* Fill the registers with known values to assist debugging. */
 	pxTopOfStack[ 16 ] = 0;
 	pxTopOfStack[ 15 ] = portINITIAL_PSR;
-	pxTopOfStack[ 14 ] = ( unsigned long ) pxCode;
+	pxTopOfStack[ 14 ] = ( uint32_t ) pxCode;
 	pxTopOfStack[ 13 ] = 0x00000000UL; /* R15. */
 	pxTopOfStack[ 12 ] = 0x00000000UL; /* R14. */
 	pxTopOfStack[ 11 ] = 0x0d0d0d0dUL;
@@ -109,13 +109,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_COD
 	pxTopOfStack[ 3 ] = 0x05050505UL;
 	pxTopOfStack[ 2 ] = 0x04040404UL;
 	pxTopOfStack[ 1 ] = 0x03030303UL;
-	pxTopOfStack[ 0 ] = ( unsigned long ) pvParameters;
+	pxTopOfStack[ 0 ] = ( uint32_t ) pvParameters;
 
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Set-up the timer interrupt. */
 	prvSetupTimerInterrupt();

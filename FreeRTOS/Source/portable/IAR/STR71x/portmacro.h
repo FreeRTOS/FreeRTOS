@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -90,25 +90,30 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned portLONG
-#define portBASE_TYPE	portLONG
+#define portSTACK_TYPE	uint32_t
+#define portBASE_TYPE	long
+
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
 #define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT			8
 #define portYIELD()					asm ( "SWI 0" )
 #define portNOP()					asm ( "NOP" )
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* Critical section handling. */
 __arm __interwork void vPortDisableInterruptsFromThumb( void );
@@ -120,7 +125,7 @@ __arm __interwork void vPortExitCritical( void );
 #define portENABLE_INTERRUPTS()		__enable_interrupt()
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* Task utilities. */
 #define portEND_SWITCHING_ISR( xSwitchRequired ) 	\
@@ -132,14 +137,14 @@ extern void vTaskSwitchContext( void );				\
 		vTaskSwitchContext();						\
 	}												\
 }
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* EIC utilities. */
-#define portEIC_CICR_ADDR		*( ( unsigned portLONG * ) 0xFFFFF804 )
-#define portEIC_IPR_ADDR		*( ( unsigned portLONG * ) 0xFFFFF840 )
+#define portEIC_CICR_ADDR		*( ( uint32_t * ) 0xFFFFF804 )
+#define portEIC_IPR_ADDR		*( ( uint32_t * ) 0xFFFFF840 )
 #define portCLEAR_EIC()			portEIC_IPR_ADDR = 0x01 << portEIC_CICR_ADDR
 
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void * pvParameters )

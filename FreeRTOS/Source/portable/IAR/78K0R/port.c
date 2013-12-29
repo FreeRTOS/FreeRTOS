@@ -72,7 +72,7 @@
 
 /* The critical nesting value is initialised to a non zero value to ensure
 interrupts don't accidentally become enabled before the scheduler is started. */
-#define portINITIAL_CRITICAL_NESTING  (( unsigned short ) 10)
+#define portINITIAL_CRITICAL_NESTING  (( uint16_t ) 10)
 
 /* Initial PSW value allocated to a newly created task.
  *   1100011000000000
@@ -89,8 +89,8 @@ interrupts don't accidentally become enabled before the scheduler is started. */
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /* Most ports implement critical sections by placing the interrupt flags on
 the stack before disabling interrupts.  Exiting the critical section is then
@@ -104,7 +104,7 @@ with interrupts only being re-enabled if the count is zero.
 usCriticalNesting will get set to zero when the scheduler starts, but must
 not be initialised to zero as this will cause problems during the startup
 sequence. */
-volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
+volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
 
 /*
@@ -119,9 +119,9 @@ static void prvSetupTimerInterrupt( void );
  *
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned long *pulLocal;
+uint32_t *pulLocal;
 
 	#if configMEMORY_MODE == 1
 	{
@@ -130,15 +130,15 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 
 		/* Write in the parameter value. */
-		pulLocal =  ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( unsigned long ) pvParameters;
+		pulLocal =  ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( uint32_t ) pvParameters;
 		pxTopOfStack--;
 
 		/* These values are just spacers.  The return address of the function
 		would normally be written here. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
+		*pxTopOfStack = ( StackType_t ) 0xcdcd;
 		pxTopOfStack--;
-		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
+		*pxTopOfStack = ( StackType_t ) 0xcdcd;
 		pxTopOfStack--;
 
 		/* The start address / PSW value is also written in as a 32bit value,
@@ -146,12 +146,12 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 	
 		/* Task function start address combined with the PSW. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
+		pulLocal = ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( ( ( uint32_t ) pxCode ) | ( portPSW << 24UL ) );
 		pxTopOfStack--;
 
 		/* An initial value for the AX register. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
+		*pxTopOfStack = ( StackType_t ) 0x1111;
 		pxTopOfStack--;
 	}
 	#else
@@ -162,33 +162,33 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 
 		/* Task function start address combined with the PSW. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
+		pulLocal = ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( ( ( uint32_t ) pxCode ) | ( portPSW << 24UL ) );
 		pxTopOfStack--;
 
 		/* The parameter is passed in AX. */
-		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+		*pxTopOfStack = ( StackType_t ) pvParameters;
 		pxTopOfStack--;
 	}
 	#endif
 
 	/* An initial value for the HL register. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
+	*pxTopOfStack = ( StackType_t ) 0x2222;
 	pxTopOfStack--;
 
 	/* CS and ES registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0F00;
+	*pxTopOfStack = ( StackType_t ) 0x0F00;
 	pxTopOfStack--;
 
 	/* Finally the remaining general purpose registers DE and BC */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDEDE;
+	*pxTopOfStack = ( StackType_t ) 0xDEDE;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBCBC;
+	*pxTopOfStack = ( StackType_t ) 0xBCBC;
 	pxTopOfStack--;
 
 	/* Finally the critical section nesting count is set to zero when the task
 	first starts. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
+	*pxTopOfStack = ( StackType_t ) portNO_CRITICAL_SECTION_NESTING;	
 
 	/* Return a pointer to the top of the stack we have generated so this can
 	be stored in the task control block for the task. */
@@ -196,7 +196,7 @@ unsigned long *pulLocal;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
@@ -242,7 +242,7 @@ static void prvSetupTimerInterrupt( void )
 	TMR05 = 0x0000;
 
 	/* Set the compare match value according to the tick rate we want. */
-	TDR05 = ( portTickType ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
+	TDR05 = ( TickType_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
 
 	/* Set Timer Array Unit Channel 5 output mode */
 	TOM0 &= ~0x0020;

@@ -83,20 +83,20 @@ Changes from V2.6.0
  *----------------------------------------------------------*/
 
 /* Start tasks with interrupts enables. */
-#define portFLAGS_INT_ENABLED					( ( portSTACK_TYPE ) 0x80 )
+#define portFLAGS_INT_ENABLED					( ( StackType_t ) 0x80 )
 
 /* Hardware constants for timer 1. */
-#define portCLEAR_COUNTER_ON_MATCH				( ( unsigned char ) 0x08 )
-#define portPRESCALE_64							( ( unsigned char ) 0x03 )
-#define portCLOCK_PRESCALER						( ( unsigned long ) 64 )
-#define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( unsigned char ) 0x10 )
+#define portCLEAR_COUNTER_ON_MATCH				( ( uint8_t ) 0x08 )
+#define portPRESCALE_64							( ( uint8_t ) 0x03 )
+#define portCLOCK_PRESCALER						( ( uint32_t ) 64 )
+#define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( uint8_t ) 0x10 )
 
 /*-----------------------------------------------------------*/
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /*-----------------------------------------------------------*/
 
@@ -220,9 +220,9 @@ static void prvSetupTimerInterrupt( void );
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned short usAddress;
+uint16_t usAddress;
 
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
@@ -241,92 +241,92 @@ unsigned short usAddress;
 
 	/* The start of the task code will be popped off the stack last, so place
 	it on first. */
-	usAddress = ( unsigned short ) pxCode;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	usAddress = ( uint16_t ) pxCode;
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 	/* Next simulate the stack as if after a call to portSAVE_CONTEXT().  
 	portSAVE_CONTEXT places the flags on the stack immediately after r0
 	to ensure the interrupts get disabled as soon as possible, and so ensuring
 	the stack use is minimal should a context switch interrupt occur. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R0 */
+	*pxTopOfStack = ( StackType_t ) 0x00;	/* R0 */
 	pxTopOfStack--;
 	*pxTopOfStack = portFLAGS_INT_ENABLED;
 	pxTopOfStack--;
 
 
 	/* Now the remaining registers.   The compiler expects R1 to be 0. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R1 */
+	*pxTopOfStack = ( StackType_t ) 0x00;	/* R1 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x02;	/* R2 */
+	*pxTopOfStack = ( StackType_t ) 0x02;	/* R2 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x03;	/* R3 */
+	*pxTopOfStack = ( StackType_t ) 0x03;	/* R3 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x04;	/* R4 */
+	*pxTopOfStack = ( StackType_t ) 0x04;	/* R4 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x05;	/* R5 */
+	*pxTopOfStack = ( StackType_t ) 0x05;	/* R5 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 */
+	*pxTopOfStack = ( StackType_t ) 0x06;	/* R6 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7 */
+	*pxTopOfStack = ( StackType_t ) 0x07;	/* R7 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x08;	/* R8 */
+	*pxTopOfStack = ( StackType_t ) 0x08;	/* R8 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x09;	/* R9 */
+	*pxTopOfStack = ( StackType_t ) 0x09;	/* R9 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R10 */
+	*pxTopOfStack = ( StackType_t ) 0x10;	/* R10 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11;	/* R11 */
+	*pxTopOfStack = ( StackType_t ) 0x11;	/* R11 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R12 */
+	*pxTopOfStack = ( StackType_t ) 0x12;	/* R12 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x13;	/* R13 */
+	*pxTopOfStack = ( StackType_t ) 0x13;	/* R13 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R14 */
+	*pxTopOfStack = ( StackType_t ) 0x14;	/* R14 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x15;	/* R15 */
+	*pxTopOfStack = ( StackType_t ) 0x15;	/* R15 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x16;	/* R16 */
+	*pxTopOfStack = ( StackType_t ) 0x16;	/* R16 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x17;	/* R17 */
+	*pxTopOfStack = ( StackType_t ) 0x17;	/* R17 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x18;	/* R18 */
+	*pxTopOfStack = ( StackType_t ) 0x18;	/* R18 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x19;	/* R19 */
+	*pxTopOfStack = ( StackType_t ) 0x19;	/* R19 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x20;	/* R20 */
+	*pxTopOfStack = ( StackType_t ) 0x20;	/* R20 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x21;	/* R21 */
+	*pxTopOfStack = ( StackType_t ) 0x21;	/* R21 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x22;	/* R22 */
+	*pxTopOfStack = ( StackType_t ) 0x22;	/* R22 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x23;	/* R23 */
+	*pxTopOfStack = ( StackType_t ) 0x23;	/* R23 */
 	pxTopOfStack--;
 
 	/* Place the parameter on the stack in the expected location. */
-	usAddress = ( unsigned short ) pvParameters;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	usAddress = ( uint16_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x26;	/* R26 X */
+	*pxTopOfStack = ( StackType_t ) 0x26;	/* R26 X */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x27;	/* R27 */
+	*pxTopOfStack = ( StackType_t ) 0x27;	/* R27 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x28;	/* R28 Y */
+	*pxTopOfStack = ( StackType_t ) 0x28;	/* R28 Y */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x29;	/* R29 */
+	*pxTopOfStack = ( StackType_t ) 0x29;	/* R29 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x30;	/* R30 Z */
+	*pxTopOfStack = ( StackType_t ) 0x30;	/* R30 Z */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x031;	/* R31 */
+	*pxTopOfStack = ( StackType_t ) 0x031;	/* R31 */
 	pxTopOfStack--;
 
 	/*lint +e950 +e611 +e923 */
@@ -335,7 +335,7 @@ unsigned short usAddress;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick. */
 	prvSetupTimerInterrupt();
@@ -399,8 +399,8 @@ void vPortYieldFromTick( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-unsigned long ulCompareMatch;
-unsigned char ucHighByte, ucLowByte;
+uint32_t ulCompareMatch;
+uint8_t ucHighByte, ucLowByte;
 
 	/* Using 16bit timer 1 to generate the tick.  Correct fuses must be
 	selected for the configCPU_CLOCK_HZ clock. */
@@ -411,13 +411,13 @@ unsigned char ucHighByte, ucLowByte;
 	ulCompareMatch /= portCLOCK_PRESCALER;
 
 	/* Adjust for correct value. */
-	ulCompareMatch -= ( unsigned long ) 1;
+	ulCompareMatch -= ( uint32_t ) 1;
 
 	/* Setup compare match value for compare match A.  Interrupts are disabled 
 	before this is called so we need not worry here. */
-	ucLowByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
+	ucLowByte = ( uint8_t ) ( ulCompareMatch & ( uint32_t ) 0xff );
 	ulCompareMatch >>= 8;
-	ucHighByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
+	ucHighByte = ( uint8_t ) ( ulCompareMatch & ( uint32_t ) 0xff );
 	OCR1AH = ucHighByte;
 	OCR1AL = ucLowByte;
 

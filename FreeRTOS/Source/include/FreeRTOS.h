@@ -71,6 +71,7 @@
  * Include the generic headers required for the FreeRTOS port being used.
  */
 #include <stddef.h>
+#include <stdint.h>
 
 /* Basic FreeRTOS definitions. */
 #include "projdefs.h"
@@ -90,12 +91,12 @@ is included as it is used by the port layer. */
 
 /* Defines the prototype to which the application task hook function must
 conform. */
-typedef portBASE_TYPE (*pdTASK_HOOK_CODE)( void * );
+typedef BaseType_t (*pdTASK_HOOK_CODE)( void * );
 
-/* The type that holds event bits always matches portTickType - therefore the
+/* The type that holds event bits always matches TickType_t - therefore the
 number of bits it holds is set by configUSE_16_BIT_TICKS (16 bits if set to 1,
 32 bits if set to 0. */
-typedef portTickType xEventBitsType;
+typedef TickType_t EventBits_t;
 
 /*
  * Check all the required application specific macros have been defined.
@@ -312,7 +313,7 @@ typedef portTickType xEventBitsType;
 #endif
 
 #ifndef portPOINTER_SIZE_TYPE
-	#define portPOINTER_SIZE_TYPE unsigned long
+	#define portPOINTER_SIZE_TYPE uint32_t
 #endif
 
 /* Remove any unused trace macros. */
@@ -618,7 +619,7 @@ typedef portTickType xEventBitsType;
 #endif
 
 #ifndef portPRIVILEGE_BIT
-	#define portPRIVILEGE_BIT ( ( unsigned portBASE_TYPE ) 0x00 )
+	#define portPRIVILEGE_BIT ( ( UBaseType_t ) 0x00 )
 #endif
 
 #ifndef portYIELD_WITHIN_API
@@ -693,8 +694,20 @@ typedef portTickType xEventBitsType;
 	#define mtCOVERAGE_TEST_MARKER()
 #endif
 
-/* For backward compatability. */
+/* For backward compatibility. */
 #define eTaskStateGet eTaskGetState
+#define portTickType TickType_t
+#define xTaskHandle TaskHandle_t
+#define xQueueHandle QueueHandle_t
+#define xSemaphoreHandle SemaphoreHandle_t
+#define xQueueSetHandle QueueSetHandle_t
+#define xQueueSetMemberHandle QueueSetMember_t
+#define xTimeoutType TimeOut_t
+#define xMemoryRegion MemoryRegion_t
+#define xTaskParameters TaskParameters_t
+#define xTaskStatusType	TaskStatus_t
+#define xTimerHandle TimerHandle_t
+#define xCoRoutineHandle CoRoutineHandle_t
 
 #endif /* INC_FREERTOS_H */
 

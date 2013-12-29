@@ -106,18 +106,11 @@ taskEVENT_LIST_ITEM_VALUE_IN_USE definition. */
 	#define eventEVENT_BITS_CONTROL_BYTES	0xff000000UL
 #endif
 
-typedef struct EventBitsDefinition
+typedef struct EVENT_GROUP_DEFINITION
 {
-	xEventBitsType uxEventBits;
-	xList xTasksWaitingForBits;		/*< List of tasks waiting for a bit to be set. */
-} xEVENT_BITS;
-
-/* Used internally only. */
-typedef struct EVENT_GROUP_CALLBACK_PARAMTERS
-{
-	xEventGroupHandle xTargetEventGroup;
-	xEventBitsType xBitsToSet;
-} xEventGroupCallbackParameters;
+	EventBits_t uxEventBits;
+	List_t xTasksWaitingForBits;		/*< List of tasks waiting for a bit to be set. */
+} EventGroup_t;
 
 /*-----------------------------------------------------------*/
 
@@ -129,15 +122,15 @@ typedef struct EVENT_GROUP_CALLBACK_PARAMTERS
  * wait condition is met if any of the bits set in uxBitsToWait for are also set
  * in uxCurrentEventBits.
  */
-static portBASE_TYPE prvTestWaitCondition( const xEventBitsType uxCurrentEventBits, const xEventBitsType uxBitsToWaitFor, const portBASE_TYPE xWaitForAllBits );
+static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits );
 
 /*-----------------------------------------------------------*/
 
-xEventGroupHandle xEventGroupCreate( void )
+EventGroupHandle_t xEventGroupCreate( void )
 {
-xEVENT_BITS *pxEventBits;
+EventGroup_t *pxEventBits;
 
-	pxEventBits = pvPortMalloc( sizeof( xEVENT_BITS ) );
+	pxEventBits = pvPortMalloc( sizeof( EventGroup_t ) );
 	if( pxEventBits != NULL )
 	{
 		pxEventBits->uxEventBits = 0;
@@ -149,15 +142,15 @@ xEVENT_BITS *pxEventBits;
 		traceEVENT_GROUP_CREATE_FAILED();
 	}
 
-	return ( xEventGroupHandle ) pxEventBits;
+	return ( EventGroupHandle_t ) pxEventBits;
 }
 /*-----------------------------------------------------------*/
 
-xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet, const xEventBitsType uxBitsToWaitFor, portTickType xTicksToWait )
+EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
 {
-xEventBitsType uxOriginalBitValue, uxReturn;
-xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
-portBASE_TYPE xAlreadyYielded;
+EventBits_t uxOriginalBitValue, uxReturn;
+EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+BaseType_t xAlreadyYielded;
 
 	configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 	configASSERT( uxBitsToWaitFor != 0 );
@@ -188,7 +181,7 @@ portBASE_TYPE xAlreadyYielded;
 		}
 		else
 		{
-			if( xTicksToWait != ( portTickType ) 0 )
+			if( xTicksToWait != ( TickType_t ) 0 )
 			{
 				/* Store the bits that the calling task is waiting for in the
 				task's event list item so the kernel knows when a match is
@@ -211,7 +204,7 @@ portBASE_TYPE xAlreadyYielded;
 	}
 	xAlreadyYielded = xTaskResumeAll();
 
-	if( xTicksToWait != ( portTickType ) 0 )
+	if( xTicksToWait != ( TickType_t ) 0 )
 	{
 		if( xAlreadyYielded == pdFALSE )
 		{
@@ -228,7 +221,7 @@ portBASE_TYPE xAlreadyYielded;
 		event list item, and they should now be retrieved then cleared. */
 		uxReturn = uxTaskResetEventItemValue();
 
-		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( xEventBitsType ) 0 )
+		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
 		{
 			/* The task timed out, just return the current event bit value. */
 			taskENTER_CRITICAL();
@@ -263,11 +256,11 @@ portBASE_TYPE xAlreadyYielded;
 }
 /*-----------------------------------------------------------*/
 
-xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToWaitFor, const portBASE_TYPE xClearOnExit, const portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait )
+EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
 {
-xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
-xEventBitsType uxReturn, uxControlBits = 0;
-portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
+EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+EventBits_t uxReturn, uxControlBits = 0;
+BaseType_t xWaitConditionMet, xAlreadyYielded;
 
 	/* Check the user is not attempting to wait on the bits used by the kernel
 	itself, and that at least one bit is being requested. */
@@ -281,7 +274,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 
 	vTaskSuspendAll();
 	{
-		const xEventBitsType uxCurrentEventBits = pxEventBits->uxEventBits;
+		const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
 
 		traceEVENT_GROUP_WAIT_BITS_START( xEventGroup, uxBitsToWaitFor );
 
@@ -293,7 +286,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 			/* The wait condition has already been met so there is no need to
 			block. */
 			uxReturn = uxCurrentEventBits;
-			xTicksToWait = ( portTickType ) 0;
+			xTicksToWait = ( TickType_t ) 0;
 
 			/* Clear the wait bits if requested to do so. */
 			if( xClearOnExit != pdFALSE )
@@ -305,7 +298,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
-		else if( xTicksToWait == ( portTickType ) 0 )
+		else if( xTicksToWait == ( TickType_t ) 0 )
 		{
 			/* The wait condition has not been met, but no block time was
 			specified, so just return the current value. */
@@ -348,7 +341,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 	}
 	xAlreadyYielded = xTaskResumeAll();
 
-	if( xTicksToWait != ( portTickType ) 0 )
+	if( xTicksToWait != ( TickType_t ) 0 )
 	{
 		if( xAlreadyYielded == pdFALSE )
 		{
@@ -365,7 +358,7 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 		event list item, and they should now be retrieved then cleared. */
 		uxReturn = uxTaskResetEventItemValue();
 
-		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( xEventBitsType ) 0 )
+		if( ( uxReturn & eventUNBLOCKED_DUE_TO_BIT_SET ) == ( EventBits_t ) 0 )
 		{
 			taskENTER_CRITICAL();
 			{
@@ -405,10 +398,10 @@ portBASE_TYPE xWaitConditionMet, xAlreadyYielded;
 }
 /*-----------------------------------------------------------*/
 
-xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToClear )
+EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
 {
-xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
-xEventBitsType uxReturn;
+EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+EventBits_t uxReturn;
 
 	/* Check the user is not attempting to clear the bits used by the kernel
 	itself. */
@@ -431,14 +424,14 @@ xEventBitsType uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet )
+EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
 {
-xListItem *pxListItem, *pxNext;
-xListItem const *pxListEnd;
-xList *pxList;
-xEventBitsType uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits;
-xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
-portBASE_TYPE xMatchFound = pdFALSE;
+ListItem_t *pxListItem, *pxNext;
+ListItem_t const *pxListEnd;
+List_t *pxList;
+EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits;
+EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+BaseType_t xMatchFound = pdFALSE;
 
 	/* Check the user is not attempting to set the bits used by the kernel
 	itself. */
@@ -466,10 +459,10 @@ portBASE_TYPE xMatchFound = pdFALSE;
 			uxControlBits = uxBitsWaitedFor & eventEVENT_BITS_CONTROL_BYTES;
 			uxBitsWaitedFor &= ~eventEVENT_BITS_CONTROL_BYTES;
 
-			if( ( uxControlBits & eventWAIT_FOR_ALL_BITS ) == ( xEventBitsType ) 0 )
+			if( ( uxControlBits & eventWAIT_FOR_ALL_BITS ) == ( EventBits_t ) 0 )
 			{
 				/* Just looking for single bit being set. */
-				if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( xEventBitsType ) 0 )
+				if( ( uxBitsWaitedFor & pxEventBits->uxEventBits ) != ( EventBits_t ) 0 )
 				{
 					xMatchFound = pdTRUE;
 				}
@@ -491,7 +484,7 @@ portBASE_TYPE xMatchFound = pdFALSE;
 			if( xMatchFound != pdFALSE )
 			{
 				/* The bits match.  Should the bits be cleared on exit? */
-				if( ( uxControlBits & eventCLEAR_EVENTS_ON_EXIT_BIT ) != ( xEventBitsType ) 0 )
+				if( ( uxControlBits & eventCLEAR_EVENTS_ON_EXIT_BIT ) != ( EventBits_t ) 0 )
 				{
 					uxBitsToClear |= uxBitsWaitedFor;
 				}
@@ -524,21 +517,21 @@ portBASE_TYPE xMatchFound = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void vEventGroupDelete( xEventGroupHandle xEventGroup )
+void vEventGroupDelete( EventGroupHandle_t xEventGroup )
 {
-xEVENT_BITS *pxEventBits = ( xEVENT_BITS * ) xEventGroup;
-const xList *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
+EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
 	vTaskSuspendAll();
 	{
 		traceEVENT_GROUP_DELETE( xEventGroup );
 
-		while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( unsigned portBASE_TYPE ) 0 )
+		while( listCURRENT_LIST_LENGTH( pxTasksWaitingForBits ) > ( UBaseType_t ) 0 )
 		{
 			/* Unblock the task, returning 0 as the event list is being deleted
 			and	cannot therefore have any bits set. */
-			configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( xListItem * ) &( pxTasksWaitingForBits->xListEnd ) );
-			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, ( portTickType ) eventUNBLOCKED_DUE_TO_BIT_SET );
+			configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( ListItem_t * ) &( pxTasksWaitingForBits->xListEnd ) );
+			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, ( TickType_t ) eventUNBLOCKED_DUE_TO_BIT_SET );
 		}
 
 		vPortFree( pxEventBits );
@@ -549,21 +542,21 @@ const xList *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
 /* For internal use only - execute a 'set bits' command that was pended from
 an interrupt. */
-void vEventGroupSetBitsCallback( void *pvEventGroup, const unsigned long ulBitsToSet )
+void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet )
 {
-	( void ) xEventGroupSetBits( pvEventGroup, ( xEventBitsType ) ulBitsToSet );
+	( void ) xEventGroupSetBits( pvEventGroup, ( EventBits_t ) ulBitsToSet );
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTestWaitCondition( const xEventBitsType uxCurrentEventBits, const xEventBitsType uxBitsToWaitFor, const portBASE_TYPE xWaitForAllBits )
+static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits )
 {
-portBASE_TYPE xWaitConditionMet = pdFALSE;
+BaseType_t xWaitConditionMet = pdFALSE;
 
 	if( xWaitForAllBits == pdFALSE )
 	{
 		/* Task only has to wait for one bit within uxBitsToWaitFor to be
 		set.  Is one already set? */
-		if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( xEventBitsType ) 0 )
+		if( ( uxCurrentEventBits & uxBitsToWaitFor ) != ( EventBits_t ) 0 )
 		{
 			xWaitConditionMet = pdTRUE;
 		}

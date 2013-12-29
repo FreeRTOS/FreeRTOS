@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -86,25 +86,30 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned long
+#define portSTACK_TYPE	uint32_t
 #define portBASE_TYPE	long
 
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
+
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			4
 #define portSTACK_GROWTH			-1
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
-unsigned portLONG ulPortSetIPL( unsigned portLONG );
+uint32_t ulPortSetIPL( uint32_t );
 #define portDISABLE_INTERRUPTS()	ulPortSetIPL( configMAX_SYSCALL_INTERRUPT_PRIORITY )
 #define portENABLE_INTERRUPTS()		ulPortSetIPL( 0 )
 
@@ -114,8 +119,8 @@ extern void vPortExitCritical( void );
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 
-extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR( void );
-extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
+extern UBaseType_t uxPortSetInterruptMaskFromISR( void );
+extern void vPortClearInterruptMaskFromISR( UBaseType_t );
 #define portSET_INTERRUPT_MASK_FROM_ISR()	ulPortSetIPL( configMAX_SYSCALL_INTERRUPT_PRIORITY )
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) ulPortSetIPL( uxSavedStatusRegister )
 

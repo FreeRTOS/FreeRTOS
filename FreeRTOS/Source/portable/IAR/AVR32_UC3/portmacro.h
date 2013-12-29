@@ -13,7 +13,7 @@
  *****************************************************************************/
 
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -106,8 +106,13 @@ extern "C" {
 #define portDOUBLE      double
 #define portLONG        long
 #define portSHORT       short
-#define portSTACK_TYPE  unsigned portLONG
-#define portBASE_TYPE   portLONG
+#define portSTACK_TYPE  uint32_t
+#define portBASE_TYPE   long
+
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 
 #define TASK_DELAY_MS(x)   ( (x)        /portTICK_RATE_MS )
 #define TASK_DELAY_S(x)    ( (x)*1000   /portTICK_RATE_MS )
@@ -116,17 +121,17 @@ extern "C" {
 #define configTICK_TC_IRQ             ATPASTE2(AVR32_TC_IRQ, configTICK_TC_CHANNEL)
 
 #if( configUSE_16_BIT_TICKS == 1 )
-  typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+  typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-  typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+  typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 
 /* Architecture specifics. */
 #define portSTACK_GROWTH      ( -1 )
-#define portTICK_RATE_MS      ( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS      ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT       4
 #define portNOP()             {__asm__ __volatile__ ("nop");}
 /*-----------------------------------------------------------*/
@@ -194,7 +199,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portRESTORE_CONTEXT()																\
 {																							\
-  extern volatile unsigned portLONG ulCriticalNesting;										\
+  extern volatile uint32_t ulCriticalNesting;										\
   extern volatile void *volatile pxCurrentTCB;												\
 																							\
   __asm__ __volatile__ (																	\
@@ -300,7 +305,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portSAVE_CONTEXT_OS_INT()																	\
 {																									\
-  extern volatile unsigned portLONG ulCriticalNesting;												\
+  extern volatile uint32_t ulCriticalNesting;												\
   extern volatile void *volatile pxCurrentTCB;														\
 																									\
   /* When we come here */																			\
@@ -348,7 +353,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portRESTORE_CONTEXT_OS_INT()																\
 {																									\
-  extern volatile unsigned portLONG ulCriticalNesting;												\
+  extern volatile uint32_t ulCriticalNesting;												\
   extern volatile void *volatile pxCurrentTCB;														\
 																									\
   /* Check if INT0 or higher were being handled (case where the OS tick interrupted another */		\
@@ -412,7 +417,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portSAVE_CONTEXT_SCALL()																	\
 {																									\
-  extern volatile unsigned portLONG ulCriticalNesting;												\
+  extern volatile uint32_t ulCriticalNesting;												\
   extern volatile void *volatile pxCurrentTCB;														\
 																									\
   /* Warning: the stack layout after SCALL doesn't match the one after an interrupt. */				\
@@ -475,7 +480,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portRESTORE_CONTEXT_SCALL()																	\
 {																									\
-  extern volatile unsigned portLONG ulCriticalNesting;												\
+  extern volatile uint32_t ulCriticalNesting;												\
   extern volatile void *volatile pxCurrentTCB;														\
 																									\
   /* Restore all registers */																		\
@@ -567,7 +572,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portENTER_SWITCHING_ISR()																	\
 {																									\
-  extern volatile unsigned portLONG ulCriticalNesting;												\
+  extern volatile uint32_t ulCriticalNesting;												\
   extern volatile void *volatile pxCurrentTCB;														\
 																									\
   /* When we come here */																			\
@@ -612,7 +617,7 @@ extern void *pvPortRealloc( void *pv, size_t xSize );
  */
 #define portEXIT_SWITCHING_ISR()																	\
 {																									\
-  extern volatile unsigned portLONG ulCriticalNesting;												\
+  extern volatile uint32_t ulCriticalNesting;												\
   extern volatile void *volatile pxCurrentTCB;														\
 																									\
   __asm__ __volatile__ (																			\

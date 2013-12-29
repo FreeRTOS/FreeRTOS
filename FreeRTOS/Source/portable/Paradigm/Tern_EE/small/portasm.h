@@ -66,8 +66,8 @@
 #ifndef PORT_ASM_H
 #define PORT_ASM_H
 
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 extern void vTaskSwitchContext( void );
 
 /*

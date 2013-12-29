@@ -81,7 +81,7 @@
 #include "task.h"
 
 /* Interrupts are enabled. */
-#define portINITIAL_ESTATUS     ( portSTACK_TYPE ) 0x01 
+#define portINITIAL_ESTATUS     ( StackType_t ) 0x01 
 
 /*-----------------------------------------------------------*/
 
@@ -97,7 +97,7 @@ void vPortSysTickHandler( void * context, alt_u32 id );
 
 /*-----------------------------------------------------------*/
 
-static void prvReadGp( unsigned long *ulValue )
+static void prvReadGp( uint32_t *ulValue )
 {
 	asm( "stw gp, (%0)" :: "r"(ulValue) );
 }
@@ -106,10 +106,10 @@ static void prvReadGp( unsigned long *ulValue )
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {    
-portSTACK_TYPE *pxFramePointer = pxTopOfStack - 1;
-portSTACK_TYPE xGlobalPointer;
+StackType_t *pxFramePointer = pxTopOfStack - 1;
+StackType_t xGlobalPointer;
 
     prvReadGp( &xGlobalPointer ); 
 
@@ -117,7 +117,7 @@ portSTACK_TYPE xGlobalPointer;
     *pxTopOfStack = 0xdeadbeef;
     pxTopOfStack--;
     
-    *pxTopOfStack = ( portSTACK_TYPE ) pxFramePointer; 
+    *pxTopOfStack = ( StackType_t ) pxFramePointer; 
     pxTopOfStack--;
     
     *pxTopOfStack = xGlobalPointer; 
@@ -125,7 +125,7 @@ portSTACK_TYPE xGlobalPointer;
     /* Space for R23 to R16. */
     pxTopOfStack -= 9;
 
-    *pxTopOfStack = ( portSTACK_TYPE ) pxCode; 
+    *pxTopOfStack = ( StackType_t ) pxCode; 
     pxTopOfStack--;
 
     *pxTopOfStack = portINITIAL_ESTATUS; 
@@ -133,7 +133,7 @@ portSTACK_TYPE xGlobalPointer;
     /* Space for R15 to R5. */    
     pxTopOfStack -= 12;
     
-    *pxTopOfStack = ( portSTACK_TYPE ) pvParameters; 
+    *pxTopOfStack = ( StackType_t ) pvParameters; 
 
     /* Space for R3 to R1, muldiv and RA. */
     pxTopOfStack -= 5;
@@ -145,7 +145,7 @@ portSTACK_TYPE xGlobalPointer;
 /* 
  * See header file for description. 
  */
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */

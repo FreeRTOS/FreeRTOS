@@ -81,8 +81,8 @@
 
 /* Tasks should start with interrupts enabled and in Supervisor mode, therefore
 PSW is set with U and I set, and PM and IPL clear. */
-#define portINITIAL_PSW	 ( ( portSTACK_TYPE ) 0x00030000 )
-#define portINITIAL_FPSW	( ( portSTACK_TYPE ) 0x00000100 )
+#define portINITIAL_PSW	 ( ( StackType_t ) 0x00030000 )
+#define portINITIAL_FPSW	( ( StackType_t ) 0x00000100 )
 
 /*-----------------------------------------------------------*/
 
@@ -107,7 +107,7 @@ extern void *pxCurrentTCB;
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* R0 is not included as it is the stack pointer. */
 
@@ -115,7 +115,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	*pxTopOfStack = ( StackType_t ) pxCode;
 
 	/* When debugging it can be useful if every register is set to a known
 	value.  Otherwise code space can be saved by just setting the registers
@@ -158,7 +158,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	}
 	#endif
 
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R1 */
+	*pxTopOfStack = ( StackType_t ) pvParameters; /* R1 */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_FPSW;
 	pxTopOfStack--;
@@ -170,7 +170,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 extern void vApplicationSetupTimerInterrupt( void );
 

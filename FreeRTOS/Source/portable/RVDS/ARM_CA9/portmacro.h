@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -86,21 +86,26 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned long
-#define portBASE_TYPE	portLONG
+#define portSTACK_TYPE	uint32_t
+#define portBASE_TYPE	long
+
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned short portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned long portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
 #define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT			8
 
 /*-----------------------------------------------------------*/
@@ -110,7 +115,7 @@ extern "C" {
 /* Called at the end of an ISR that can cause a context switch. */
 #define portEND_SWITCHING_ISR( xSwitchRequired )\
 {												\
-extern unsigned long ulPortYieldRequired;		\
+extern uint32_t ulPortYieldRequired;		\
 												\
 	if( xSwitchRequired != pdFALSE )			\
 	{											\
@@ -128,8 +133,8 @@ extern unsigned long ulPortYieldRequired;		\
 
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
-extern unsigned long ulPortSetInterruptMask( void );
-extern void vPortClearInterruptMask( unsigned long ulNewMaskValue );
+extern uint32_t ulPortSetInterruptMask( void );
+extern void vPortClearInterruptMask( uint32_t ulNewMaskValue );
 
 /* These macros do not globally disable/enable interrupts.  They do mask off
 interrupts that have a priority below configMAX_API_CALL_INTERRUPT_PRIORITY. */
@@ -157,7 +162,7 @@ before any floating point instructions are executed. */
 void vPortTaskUsesFPU( void );
 #define portTASK_USES_FLOATING_POINT() vPortTaskUsesFPU()
 
-#define portLOWEST_INTERRUPT_PRIORITY ( ( ( unsigned long ) configUNIQUE_INTERRUPT_PRIORITIES ) - 1UL )
+#define portLOWEST_INTERRUPT_PRIORITY ( ( ( uint32_t ) configUNIQUE_INTERRUPT_PRIORITIES ) - 1UL )
 #define portLOWEST_USABLE_INTERRUPT_PRIORITY ( portLOWEST_INTERRUPT_PRIORITY - 1UL )
 
 /* Architecture specific optimisations. */

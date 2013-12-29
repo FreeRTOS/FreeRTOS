@@ -69,7 +69,7 @@ __no_init volatile avr32_usart_t *volatile stdio_usart_base;
  *
  * \return The number of bytes written, or \c _LLIO_ERROR on failure.
  */
-size_t __write(int handle, const unsigned char *buffer, size_t size)
+size_t __write(int handle, const uint8_t *buffer, size_t size)
 {
   size_t nChars = 0;
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -82,21 +82,25 @@
 #define portDOUBLE      double
 #define portLONG        long
 #define portSHORT       short
-#define portSTACK_TYPE  unsigned long
+#define portSTACK_TYPE  uint32_t
 #define portBASE_TYPE   long
 
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 #if (configUSE_16_BIT_TICKS == 1)
-    typedef unsigned portSHORT portTickType;
-    #define portMAX_DELAY (portTickType) 0xFFFF
+    typedef uint16_t TickType_t;
+    #define portMAX_DELAY (TickType_t) 0xFFFF
 #else
-    typedef unsigned portLONG portTickType;
-    #define portMAX_DELAY (portTickType) 0xFFFFFFFFF
+    typedef uint32_t TickType_t;
+    #define portMAX_DELAY (TickType_t) 0xFFFFFFFFF
 #endif
 
 
 /* Architecture specifics. */
 #define portSTACK_GROWTH    (-1)
-#define portTICK_RATE_MS    ((portTickType) 1000 / configTICK_RATE_HZ)
+#define portTICK_RATE_MS    ((TickType_t) 1000 / configTICK_RATE_HZ)
 #define portBYTE_ALIGNMENT  8
 
 /* Critical section handling. */
@@ -111,7 +115,7 @@ extern void vPortExitCritical(void);
 #pragma SWI_ALIAS( vPortYield, 0 )
 extern void vPortYield( void );
 #define portYIELD()             	vPortYield()
-#define portSYS_SSIR1_REG			( * ( ( volatile unsigned long * ) 0xFFFFFFB0 ) )
+#define portSYS_SSIR1_REG			( * ( ( volatile uint32_t * ) 0xFFFFFFB0 ) )
 #define portSYS_SSIR1_SSKEY			( 0x7500UL )
 #define portYIELD_WITHIN_API()		{ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  asm( " DSB " ); asm( " ISB " ); }
 #define portYIELD_FROM_ISR( x )		if( x != pdFALSE ){ portSYS_SSIR1_REG = portSYS_SSIR1_SSKEY;  ( void ) portSYS_SSIR1_REG; }

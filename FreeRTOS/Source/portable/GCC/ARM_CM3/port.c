@@ -89,10 +89,10 @@ FreeRTOS.org versions prior to V4.4.0 did not include this definition. */
 #endif
 
 /* Constants required to manipulate the core.  Registers first... */
-#define portNVIC_SYSTICK_CTRL_REG			( * ( ( volatile unsigned long * ) 0xe000e010 ) )
-#define portNVIC_SYSTICK_LOAD_REG			( * ( ( volatile unsigned long * ) 0xe000e014 ) )
-#define portNVIC_SYSTICK_CURRENT_VALUE_REG	( * ( ( volatile unsigned long * ) 0xe000e018 ) )
-#define portNVIC_SYSPRI2_REG				( * ( ( volatile unsigned long * ) 0xe000ed20 ) )
+#define portNVIC_SYSTICK_CTRL_REG			( * ( ( volatile uint32_t * ) 0xe000e010 ) )
+#define portNVIC_SYSTICK_LOAD_REG			( * ( ( volatile uint32_t * ) 0xe000e014 ) )
+#define portNVIC_SYSTICK_CURRENT_VALUE_REG	( * ( ( volatile uint32_t * ) 0xe000e018 ) )
+#define portNVIC_SYSPRI2_REG				( * ( ( volatile uint32_t * ) 0xe000ed20 ) )
 /* ...then bits in the registers. */
 #define portNVIC_SYSTICK_INT_BIT			( 1UL << 1UL )
 #define portNVIC_SYSTICK_ENABLE_BIT			( 1UL << 0UL )
@@ -100,16 +100,16 @@ FreeRTOS.org versions prior to V4.4.0 did not include this definition. */
 #define portNVIC_PENDSVCLEAR_BIT 			( 1UL << 27UL )
 #define portNVIC_PEND_SYSTICK_CLEAR_BIT		( 1UL << 25UL )
 
-#define portNVIC_PENDSV_PRI					( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
-#define portNVIC_SYSTICK_PRI				( ( ( unsigned long ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
+#define portNVIC_PENDSV_PRI					( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
+#define portNVIC_SYSTICK_PRI				( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 
 /* Constants required to check the validity of an interrupt priority. */
 #define portFIRST_USER_INTERRUPT_NUMBER		( 16 )
 #define portNVIC_IP_REGISTERS_OFFSET_16 	( 0xE000E3F0 )
-#define portAIRCR_REG						( * ( ( volatile unsigned long * ) 0xE000ED0C ) )
-#define portMAX_8_BIT_VALUE					( ( unsigned char ) 0xff )
-#define portTOP_BIT_OF_BYTE					( ( unsigned char ) 0x80 )
-#define portMAX_PRIGROUP_BITS				( ( unsigned char ) 7 )
+#define portAIRCR_REG						( * ( ( volatile uint32_t * ) 0xE000ED0C ) )
+#define portMAX_8_BIT_VALUE					( ( uint8_t ) 0xff )
+#define portTOP_BIT_OF_BYTE					( ( uint8_t ) 0x80 )
+#define portMAX_PRIGROUP_BITS				( ( uint8_t ) 7 )
 #define portPRIORITY_GROUP_MASK				( 0x07UL << 8UL )
 #define portPRIGROUP_SHIFT					( 8UL )
 
@@ -135,7 +135,7 @@ debugger. */
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
-static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
+static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 
 /*
  * Setup the timer to generate the tick interrupts.  The implementation in this
@@ -167,7 +167,7 @@ static void prvTaskExitError( void );
  * The number of SysTick increments that make up one tick period.
  */
 #if configUSE_TICKLESS_IDLE == 1
-	static unsigned long ulTimerCountsForOneTick = 0;
+	static uint32_t ulTimerCountsForOneTick = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*
@@ -175,7 +175,7 @@ static void prvTaskExitError( void );
  * 24 bit resolution of the SysTick timer.
  */
 #if configUSE_TICKLESS_IDLE == 1
-	static unsigned long xMaximumPossibleSuppressedTicks = 0;
+	static uint32_t xMaximumPossibleSuppressedTicks = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*
@@ -183,7 +183,7 @@ static void prvTaskExitError( void );
  * power functionality only.
  */
 #if configUSE_TICKLESS_IDLE == 1
-	static unsigned long ulStoppedTimerCompensation = 0;
+	static uint32_t ulStoppedTimerCompensation = 0;
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*
@@ -192,9 +192,9 @@ static void prvTaskExitError( void );
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  */
 #if ( configASSERT_DEFINED == 1 )
-	 static unsigned char ucMaxSysCallPriority = 0;
-	 static unsigned long ulMaxPRIGROUPValue = 0;
-	 static const volatile unsigned char * const pcInterruptPriorityRegisters = ( const volatile unsigned char * const ) portNVIC_IP_REGISTERS_OFFSET_16;
+	 static uint8_t ucMaxSysCallPriority = 0;
+	 static uint32_t ulMaxPRIGROUPValue = 0;
+	 static const volatile uint8_t * const pcInterruptPriorityRegisters = ( const volatile uint8_t * const ) portNVIC_IP_REGISTERS_OFFSET_16;
 #endif /* configASSERT_DEFINED */
 
 /*-----------------------------------------------------------*/
@@ -202,18 +202,18 @@ static void prvTaskExitError( void );
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
 	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
+	*pxTopOfStack = ( StackType_t ) pxCode;	/* PC */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) portTASK_RETURN_ADDRESS;	/* LR */
+	*pxTopOfStack = ( StackType_t ) portTASK_RETURN_ADDRESS;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
+	*pxTopOfStack = ( StackType_t ) pvParameters;	/* R0 */
 	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	return pxTopOfStack;
@@ -273,7 +273,7 @@ static void prvPortStartFirstTask( void )
 /*
  * See header file for description.
  */
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.
 	See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
@@ -281,9 +281,9 @@ portBASE_TYPE xPortStartScheduler( void )
 
 	#if( configASSERT_DEFINED == 1 )
 	{
-		volatile unsigned long ulOriginalPriority;
-		volatile char * const pcFirstUserPriorityRegister = ( volatile char * const ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
-		volatile unsigned char ucMaxPriorityValue;
+		volatile uint32_t ulOriginalPriority;
+		volatile int8_t * const pcFirstUserPriorityRegister = ( volatile int8_t * const ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
+		volatile uint8_t ucMaxPriorityValue;
 
 		/* Determine the maximum priority from which ISR safe FreeRTOS API
 		functions can be called.  ISR safe functions are those that end in
@@ -309,7 +309,7 @@ portBASE_TYPE xPortStartScheduler( void )
 		while( ( ucMaxPriorityValue & portTOP_BIT_OF_BYTE ) == portTOP_BIT_OF_BYTE )
 		{
 			ulMaxPRIGROUPValue--;
-			ucMaxPriorityValue <<= ( unsigned char ) 0x01;
+			ucMaxPriorityValue <<= ( uint8_t ) 0x01;
 		}
 
 		/* Shift the priority group value back to its position within the AIRCR
@@ -388,7 +388,7 @@ void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-__attribute__(( naked )) unsigned long ulPortSetInterruptMask( void )
+__attribute__(( naked )) uint32_t ulPortSetInterruptMask( void )
 {
 	__asm volatile														\
 	(																	\
@@ -405,7 +405,7 @@ __attribute__(( naked )) unsigned long ulPortSetInterruptMask( void )
 }
 /*-----------------------------------------------------------*/
 
-__attribute__(( naked )) void vPortClearInterruptMask( unsigned long ulNewMaskValue )
+__attribute__(( naked )) void vPortClearInterruptMask( uint32_t ulNewMaskValue )
 {
 	__asm volatile													\
 	(																\
@@ -478,10 +478,10 @@ void xPortSysTickHandler( void )
 
 #if configUSE_TICKLESS_IDLE == 1
 
-	__attribute__((weak)) void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
+	__attribute__((weak)) void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 	{
-	unsigned long ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements, ulSysTickCTRL;
-	portTickType xModifiableIdleTime;
+	uint32_t ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements, ulSysTickCTRL;
+	TickType_t xModifiableIdleTime;
 
 		/* Make sure the SysTick reload value does not overflow the counter. */
 		if( xExpectedIdleTime > xMaximumPossibleSuppressedTicks )
@@ -567,7 +567,7 @@ void xPortSysTickHandler( void )
 
 			if( ( ulSysTickCTRL & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
-				unsigned long ulCalculatedLoadValue;
+				uint32_t ulCalculatedLoadValue;
 
 				/* The tick interrupt has already executed, and the SysTick
 				count reloaded with ulReloadValue.  Reset the
@@ -653,8 +653,8 @@ __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 
 	void vPortValidateInterruptPriority( void )
 	{
-	unsigned long ulCurrentInterrupt;
-	unsigned char ucCurrentPriority;
+	uint32_t ulCurrentInterrupt;
+	uint8_t ucCurrentPriority;
 
 		/* Obtain the number of the currently executing interrupt. */
 		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );

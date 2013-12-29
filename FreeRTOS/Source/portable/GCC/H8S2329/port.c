@@ -76,15 +76,15 @@
 /*-----------------------------------------------------------*/
 
 /* When the task starts interrupts should be enabled. */
-#define portINITIAL_CCR			( ( portSTACK_TYPE ) 0x00 )
+#define portINITIAL_CCR			( ( StackType_t ) 0x00 )
 
 /* Hardware specific constants used to generate the RTOS tick from the TPU. */
-#define portCLEAR_ON_TGRA_COMPARE_MATCH ( ( unsigned char ) 0x20 )
-#define portCLOCK_DIV_64				( ( unsigned char ) 0x03 )
-#define portCLOCK_DIV					( ( unsigned long ) 64 )
-#define portTGRA_INTERRUPT_ENABLE		( ( unsigned char ) 0x01 )
-#define portTIMER_CHANNEL				( ( unsigned char ) 0x02 )
-#define portMSTP13						( ( unsigned short ) 0x2000 )
+#define portCLEAR_ON_TGRA_COMPARE_MATCH ( ( uint8_t ) 0x20 )
+#define portCLOCK_DIV_64				( ( uint8_t ) 0x03 )
+#define portCLOCK_DIV					( ( uint32_t ) 64 )
+#define portTGRA_INTERRUPT_ENABLE		( ( uint8_t ) 0x01 )
+#define portTIMER_CHANNEL				( ( uint8_t ) 0x02 )
+#define portMSTP13						( ( uint16_t ) 0x2000 )
 
 /*
  * Setup TPU channel one for the RTOS tick at the requested frequency.
@@ -101,12 +101,12 @@ void vPortYield( void ) __attribute__ ( ( saveall, interrupt_handler ) );
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned long ulValue;
+uint32_t ulValue;
 
 	/* This requires an even address. */
-	ulValue = ( unsigned long ) pxTopOfStack;
+	ulValue = ( uint32_t ) pxTopOfStack;
 	if( ulValue & 1UL )
 	{
 		pxTopOfStack = pxTopOfStack - 1;
@@ -125,16 +125,16 @@ unsigned long ulValue;
 
 	/* The initial stack mimics an interrupt stack.  First there is the program
 	counter (24 bits). */
-	ulValue = ( unsigned long ) pxCode;
+	ulValue = ( uint32_t ) pxCode;
 
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 	pxTopOfStack--;
 	ulValue >>= 8UL;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 	pxTopOfStack--;
 	ulValue >>= 8UL;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 
 	/* Followed by the CCR. */	
 	pxTopOfStack--;
@@ -155,19 +155,19 @@ unsigned long ulValue;
 	*pxTopOfStack = 0x66;
 	
 	/* ER0 */
-	ulValue = ( unsigned long ) pvParameters;
+	ulValue = ( uint32_t ) pvParameters;
 
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 	pxTopOfStack--;
 	ulValue >>= 8UL;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 	pxTopOfStack--;
 	ulValue >>= 8UL;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 	pxTopOfStack--;
 	ulValue >>= 8UL;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( ulValue & 0xff );
+	*pxTopOfStack = ( StackType_t ) ( ulValue & 0xff );
 	
 	/* ER1 */
 	pxTopOfStack--;
@@ -223,7 +223,7 @@ unsigned long ulValue;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 extern void * pxCurrentTCB;
 
@@ -319,7 +319,7 @@ void vPortYield( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned long ulCompareMatch = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) / portCLOCK_DIV;
+const uint32_t ulCompareMatch = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) / portCLOCK_DIV;
 
 	/* Turn the module on. */
 	MSTPCR &= ~portMSTP13;

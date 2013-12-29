@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -87,13 +87,13 @@ task.h is included from an application file. */
 /* A few bytes might be lost to byte aligning the heap start address. */
 #define configADJUSTED_HEAP_SIZE	( configTOTAL_HEAP_SIZE - portBYTE_ALIGNMENT )
 
-/* 
+/*
  * Initialises the heap structures before their first use.
  */
 static void prvHeapInit( void );
 
 /* Allocate the memory for the heap. */
-static unsigned char ucHeap[ configTOTAL_HEAP_SIZE ];
+static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 
 /* Define the linked list structure.  This is used to link free blocks in order
 of their size. */
@@ -101,14 +101,14 @@ typedef struct A_BLOCK_LINK
 {
 	struct A_BLOCK_LINK *pxNextFreeBlock;	/*<< The next free block in the list. */
 	size_t xBlockSize;						/*<< The size of the free block. */
-} xBlockLink;
+} BlockLink_t;
 
 
-static const unsigned short heapSTRUCT_SIZE	= ( ( sizeof ( xBlockLink ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~portBYTE_ALIGNMENT_MASK );
+static const uint16_t heapSTRUCT_SIZE	= ( ( sizeof ( BlockLink_t ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~portBYTE_ALIGNMENT_MASK );
 #define heapMINIMUM_BLOCK_SIZE	( ( size_t ) ( heapSTRUCT_SIZE * 2 ) )
 
 /* Create a couple of list links to mark the start and end of the list. */
-static xBlockLink xStart, xEnd;
+static BlockLink_t xStart, xEnd;
 
 /* Keeps track of the number of free bytes remaining, but says nothing about
 fragmentation. */
@@ -123,7 +123,7 @@ static size_t xFreeBytesRemaining = configADJUSTED_HEAP_SIZE;
  */
 #define prvInsertBlockIntoFreeList( pxBlockToInsert )								\
 {																					\
-xBlockLink *pxIterator;																\
+BlockLink_t *pxIterator;																\
 size_t xBlockSize;																	\
 																					\
 	xBlockSize = pxBlockToInsert->xBlockSize;										\
@@ -144,8 +144,8 @@ size_t xBlockSize;																	\
 
 void *pvPortMalloc( size_t xWantedSize )
 {
-xBlockLink *pxBlock, *pxPreviousBlock, *pxNewBlockLink;
-static portBASE_TYPE xHeapHasBeenInitialised = pdFALSE;
+BlockLink_t *pxBlock, *pxPreviousBlock, *pxNewBlockLink;
+static BaseType_t xHeapHasBeenInitialised = pdFALSE;
 void *pvReturn = NULL;
 
 	vTaskSuspendAll();
@@ -158,7 +158,7 @@ void *pvReturn = NULL;
 			xHeapHasBeenInitialised = pdTRUE;
 		}
 
-		/* The wanted size is increased so it can contain a xBlockLink
+		/* The wanted size is increased so it can contain a BlockLink_t
 		structure in addition to the requested amount of bytes. */
 		if( xWantedSize > 0 )
 		{
@@ -187,9 +187,9 @@ void *pvReturn = NULL;
 			/* If we found the end marker then a block of adequate size was not found. */
 			if( pxBlock != &xEnd )
 			{
-				/* Return the memory space - jumping over the xBlockLink structure
+				/* Return the memory space - jumping over the BlockLink_t structure
 				at its start. */
-				pvReturn = ( void * ) ( ( ( unsigned char * ) pxPreviousBlock->pxNextFreeBlock ) + heapSTRUCT_SIZE );
+				pvReturn = ( void * ) ( ( ( uint8_t * ) pxPreviousBlock->pxNextFreeBlock ) + heapSTRUCT_SIZE );
 
 				/* This block is being returned for use so must be taken out of the
 				list of free blocks. */
@@ -201,7 +201,7 @@ void *pvReturn = NULL;
 					/* This block is to be split into two.  Create a new block
 					following the number of bytes requested. The void cast is
 					used to prevent byte alignment warnings from the compiler. */
-					pxNewBlockLink = ( void * ) ( ( ( unsigned char * ) pxBlock ) + xWantedSize );
+					pxNewBlockLink = ( void * ) ( ( ( uint8_t * ) pxBlock ) + xWantedSize );
 
 					/* Calculate the sizes of two blocks split from the single
 					block. */
@@ -215,7 +215,7 @@ void *pvReturn = NULL;
 				xFreeBytesRemaining -= pxBlock->xBlockSize;
 			}
 		}
-		
+
 		traceMALLOC( pvReturn, xWantedSize );
 	}
 	xTaskResumeAll();
@@ -236,23 +236,23 @@ void *pvReturn = NULL;
 
 void vPortFree( void *pv )
 {
-unsigned char *puc = ( unsigned char * ) pv;
-xBlockLink *pxLink;
+uint8_t *puc = ( uint8_t * ) pv;
+BlockLink_t *pxLink;
 
 	if( pv != NULL )
 	{
-		/* The memory being freed will have an xBlockLink structure immediately
+		/* The memory being freed will have an BlockLink_t structure immediately
 		before it. */
 		puc -= heapSTRUCT_SIZE;
 
-		/* This unexpected casting is to keep some compilers from issuing 
+		/* This unexpected casting is to keep some compilers from issuing
 		byte alignment warnings. */
 		pxLink = ( void * ) puc;
 
 		vTaskSuspendAll();
 		{
 			/* Add this block to the list of free blocks. */
-			prvInsertBlockIntoFreeList( ( ( xBlockLink * ) pxLink ) );
+			prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
 			xFreeBytesRemaining += pxLink->xBlockSize;
 			traceFREE( pv, pxLink->xBlockSize );
 		}
@@ -275,11 +275,11 @@ void vPortInitialiseBlocks( void )
 
 static void prvHeapInit( void )
 {
-xBlockLink *pxFirstFreeBlock;
-unsigned char *pucAlignedHeap;
+BlockLink_t *pxFirstFreeBlock;
+uint8_t *pucAlignedHeap;
 
 	/* Ensure the heap starts on a correctly aligned boundary. */
-	pucAlignedHeap = ( unsigned char * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
+	pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) &ucHeap[ portBYTE_ALIGNMENT ] ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK ) );
 
 	/* xStart is used to hold a pointer to the first item in the list of free
 	blocks.  The void cast is used to prevent compiler warnings. */

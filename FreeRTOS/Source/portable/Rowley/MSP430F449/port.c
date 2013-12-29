@@ -73,14 +73,14 @@
 
 /* Constants required for hardware setup.  The tick ISR runs off the ACLK, 
 not the MCLK. */
-#define portACLK_FREQUENCY_HZ			( ( portTickType ) 32768 )
-#define portINITIAL_CRITICAL_NESTING	( ( unsigned short ) 10 )
-#define portFLAGS_INT_ENABLED			( ( portSTACK_TYPE ) 0x08 )
+#define portACLK_FREQUENCY_HZ			( ( TickType_t ) 32768 )
+#define portINITIAL_CRITICAL_NESTING	( ( uint16_t ) 10 )
+#define portFLAGS_INT_ENABLED			( ( StackType_t ) 0x08 )
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /* Each task maintains a count of the critical section nesting depth.  Each 
 time a critical section is entered the count is incremented.  Each time a 
@@ -90,7 +90,7 @@ being re-enabled if the count is zero.
 usCriticalNesting will get set to zero when the scheduler starts, but must
 not be initialised to zero as this will cause problems during the startup
 sequence. */
-volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
+volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 /*-----------------------------------------------------------*/
 
 
@@ -107,17 +107,17 @@ void prvSetupTimerInterrupt( void );
  * 
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* 
 		Place a few bytes of known values on the bottom of the stack. 
 		This is just useful for debugging and can be included if required.
 
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
+		*pxTopOfStack = ( StackType_t ) 0x1111;
 		pxTopOfStack--;
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
+		*pxTopOfStack = ( StackType_t ) 0x2222;
 		pxTopOfStack--;
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x3333;
+		*pxTopOfStack = ( StackType_t ) 0x3333;
 		pxTopOfStack--; 
 	*/
 
@@ -125,44 +125,44 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	executing an ISR.  We want the stack to look just as if this has happened
 	so place a pointer to the start of the task on the stack first - followed
 	by the flags we want the task to use when it starts up. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	*pxTopOfStack = ( StackType_t ) pxCode;
 	pxTopOfStack--;
 	*pxTopOfStack = portFLAGS_INT_ENABLED;
 	pxTopOfStack--;
 
 	/* Next the general purpose registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x4444;
+	*pxTopOfStack = ( StackType_t ) 0x4444;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x5555;
+	*pxTopOfStack = ( StackType_t ) 0x5555;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x6666;
+	*pxTopOfStack = ( StackType_t ) 0x6666;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x7777;
+	*pxTopOfStack = ( StackType_t ) 0x7777;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x8888;
+	*pxTopOfStack = ( StackType_t ) 0x8888;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x9999;
+	*pxTopOfStack = ( StackType_t ) 0x9999;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaa;
+	*pxTopOfStack = ( StackType_t ) 0xaaaa;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xbbbb;
+	*pxTopOfStack = ( StackType_t ) 0xbbbb;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xcccc;
+	*pxTopOfStack = ( StackType_t ) 0xcccc;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xdddd;
+	*pxTopOfStack = ( StackType_t ) 0xdddd;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xeeee;
+	*pxTopOfStack = ( StackType_t ) 0xeeee;
 	pxTopOfStack--;
 
 	/* When the task starts is will expect to find the function parameter in
 	R15. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) pvParameters;
 	pxTopOfStack--;
 
 	/* A variable is used to keep track of the critical section nesting.  
 	This variable has to be stored as part of the task context and is 
 	initially set to zero. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;	
+	*pxTopOfStack = ( StackType_t ) portNO_CRITICAL_SECTION_NESTING;	
 
 	/* Return a pointer to the top of the stack we have generated so this can
 	be stored in the task control block for the task. */

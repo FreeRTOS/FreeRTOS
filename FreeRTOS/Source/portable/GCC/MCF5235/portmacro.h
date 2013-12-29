@@ -41,13 +41,13 @@
 	Please ensure to read the configuration and relevant port sections of the
 	online documentation.
 
-	http://www.FreeRTOS.org - Documentation, latest information, license and 
+	http://www.FreeRTOS.org - Documentation, latest information, license and
 	contact details.
 
-	http://www.SafeRTOS.com - A version that is certified for use in safety 
+	http://www.SafeRTOS.com - A version that is certified for use in safety
 	critical systems.
 
-	http://www.OpenRTOS.com - Commercial support, development, porting, 
+	http://www.OpenRTOS.com - Commercial support, development, porting,
 	licensing and training services.
 */
 
@@ -67,17 +67,21 @@ extern "C" {
 #define portSTACK_TYPE  unsigned int
 #define portBASE_TYPE   int
 
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 #if( configUSE_16_BIT_TICKS == 1 )
-    typedef unsigned portSHORT portTickType;
-    #define portMAX_DELAY ( portTickType ) 0xffff
+    typedef uint16_t TickType_t;
+    #define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-    typedef unsigned portLONG portTickType;
-    #define portMAX_DELAY ( portTickType ) 0xffffffffUL
+    typedef uint32_t TickType_t;
+    #define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 
 /* ------------------------ Architecture specifics ------------------------ */
 #define portSTACK_GROWTH                ( -1 )
-#define portTICK_RATE_MS                ( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS                ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT              4
 
 #define portTRAP_YIELD                  0   /* Trap 0 */
@@ -160,7 +164,7 @@ extern "C" {
 /* ------------------------ Function prototypes --------------------------- */
 void vPortEnterCritical( void );
 void vPortExitCritical( void );
-int asm_set_ipl( unsigned long int uiNewIPL );
+int asm_set_ipl( uint32_t int uiNewIPL );
 
 /* ------------------------ Compiler specifics ---------------------------- */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters )                   \

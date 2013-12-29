@@ -102,14 +102,14 @@ extern void vPortStartFirstTask( void );
 /*
  * Obtains the current GBR value - defined in portasm.src.
  */
-extern unsigned long ulPortGetGBR( void );
+extern uint32_t ulPortGetGBR( void );
 
 /*-----------------------------------------------------------*/
 
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Mark the end of the stack - used for debugging only and can be removed. */
 	*pxTopOfStack = 0x11111111UL;
@@ -124,7 +124,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	
 	/* PC. */
-	*pxTopOfStack = ( unsigned long ) pxCode;
+	*pxTopOfStack = ( uint32_t ) pxCode;
 	pxTopOfStack--;
 	
 	/* PR. */
@@ -172,7 +172,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 
 	/* R4. */
-	*pxTopOfStack = ( unsigned long ) pvParameters;
+	*pxTopOfStack = ( uint32_t ) pvParameters;
 	pxTopOfStack--;
 
 	/* R3. */
@@ -211,7 +211,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 extern void vApplicationSetupTimerInterrupt( void );
 
@@ -240,7 +240,7 @@ void vPortEndScheduler( void )
 
 void vPortYield( void )
 {
-long lInterruptMask;
+int32_t lInterruptMask;
 
 	/* Ensure the yield trap runs at the same priority as the other interrupts
 	that can cause a context switch. */
@@ -259,10 +259,10 @@ long lInterruptMask;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortUsesFloatingPoint( xTaskHandle xTask )
+BaseType_t xPortUsesFloatingPoint( TaskHandle_t xTask )
 {
-unsigned long *pulFlopBuffer;
-portBASE_TYPE xReturn;
+uint32_t *pulFlopBuffer;
+BaseType_t xReturn;
 extern void * volatile pxCurrentTCB;
 
 	/* This function tells the kernel that the task referenced by xTask is
@@ -273,11 +273,11 @@ extern void * volatile pxCurrentTCB;
 	subject task - so pxCurrentTCB is the task handle. */
 	if( xTask == NULL )
 	{
-		xTask = ( xTaskHandle ) pxCurrentTCB;
+		xTask = ( TaskHandle_t ) pxCurrentTCB;
 	}
 
 	/* Allocate a buffer large enough to hold all the flop registers. */
-	pulFlopBuffer = ( unsigned long * ) pvPortMalloc( portFLOP_STORAGE_SIZE );
+	pulFlopBuffer = ( uint32_t * ) pvPortMalloc( portFLOP_STORAGE_SIZE );
 	
 	if( pulFlopBuffer != NULL )
 	{

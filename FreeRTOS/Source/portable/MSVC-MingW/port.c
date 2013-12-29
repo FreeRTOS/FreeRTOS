@@ -74,8 +74,8 @@
 	#pragma comment(lib, "winmm.lib")
 #endif
 
-#define portMAX_INTERRUPTS				( ( unsigned long ) sizeof( unsigned long ) * 8UL ) /* The number of bits in an unsigned long. */
-#define portNO_CRITICAL_NESTING 		( ( unsigned long ) 0 )
+#define portMAX_INTERRUPTS				( ( uint32_t ) sizeof( uint32_t ) * 8UL ) /* The number of bits in an uint32_t. */
+#define portNO_CRITICAL_NESTING 		( ( uint32_t ) 0 )
 
 /*
  * Created as a high priority thread, this function uses a timer to simulate
@@ -95,8 +95,8 @@ static void prvProcessSimulatedInterrupts( void );
  * Interrupt handlers used by the kernel itself.  These are executed from the
  * simulated interrupt handler thread.
  */
-static unsigned long prvProcessYieldInterrupt( void );
-static unsigned long prvProcessTickInterrupt( void );
+static uint32_t prvProcessYieldInterrupt( void );
+static uint32_t prvProcessTickInterrupt( void );
 
 /*
  * Called when the process exits to let Windows know the high timer resolution
@@ -120,7 +120,7 @@ typedef struct
 
 /* Simulated interrupts waiting to be processed.  This is a bit mask where each
 bit represents one interrupt, so a maximum of 32 interrupts can be simulated. */
-static volatile unsigned long ulPendingInterrupts = 0UL;
+static volatile uint32_t ulPendingInterrupts = 0UL;
 
 /* An event used to inform the simulated interrupt processing thread (a high
 priority thread that simulated interrupt processing) that an interrupt is
@@ -138,30 +138,30 @@ ulCriticalNesting will get set to zero when the first task runs.  This
 initialisation is probably not critical in this simulated environment as the
 simulated interrupt handlers do not get created until the FreeRTOS scheduler is
 started anyway. */
-static unsigned long ulCriticalNesting = 9999UL;
+static uint32_t ulCriticalNesting = 9999UL;
 
 /* Handlers for all the simulated software interrupts.  The first two positions
 are used for the Yield and Tick interrupts so are handled slightly differently,
 all the other interrupts can be user defined. */
-static unsigned long (*ulIsrHandler[ portMAX_INTERRUPTS ])( void ) = { 0 };
+static uint32_t (*ulIsrHandler[ portMAX_INTERRUPTS ])( void ) = { 0 };
 
 /* Pointer to the TCB of the currently executing task. */
 extern void *pxCurrentTCB;
 
 /* Used to ensure nothing is processed during the startup sequence. */
-static portBASE_TYPE xPortRunning = pdFALSE;
+static BaseType_t xPortRunning = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
 static DWORD WINAPI prvSimulatedPeripheralTimer( LPVOID lpParameter )
 {
-portTickType xMinimumWindowsBlockTime;
+TickType_t xMinimumWindowsBlockTime;
 TIMECAPS xTimeCaps;
 
 	/* Set the timer resolution to the maximum possible. */
 	if( timeGetDevCaps( &xTimeCaps, sizeof( xTimeCaps ) ) == MMSYSERR_NOERROR )
 	{
-		xMinimumWindowsBlockTime = ( portTickType ) xTimeCaps.wPeriodMin;
+		xMinimumWindowsBlockTime = ( TickType_t ) xTimeCaps.wPeriodMin;
 		timeBeginPeriod( xTimeCaps.wPeriodMin );
 
 		/* Register an exit handler so the timeBeginPeriod() function can be
@@ -170,7 +170,7 @@ TIMECAPS xTimeCaps;
 	}
 	else
 	{
-		xMinimumWindowsBlockTime = ( portTickType ) 20;
+		xMinimumWindowsBlockTime = ( TickType_t ) 20;
 	}
 
 	/* Just to prevent compiler warnings. */
@@ -237,10 +237,10 @@ TIMECAPS xTimeCaps;
 }
 /*-----------------------------------------------------------*/
 
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 xThreadState *pxThreadState = NULL;
-signed char *pcTopOfStack = ( char * ) pxTopOfStack;
+int8_t *pcTopOfStack = ( int8_t * ) pxTopOfStack;
 
 	/* In this simulated case a stack is not initialised, but instead a thread
 	is created that will execute the task being created.  The thread handles
@@ -257,14 +257,14 @@ signed char *pcTopOfStack = ( char * ) pxTopOfStack;
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 	SetThreadPriority( pxThreadState->pvThread, THREAD_PRIORITY_IDLE );
 
-	return ( portSTACK_TYPE * ) pxThreadState;
+	return ( StackType_t * ) pxThreadState;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 void *pvHandle;
-long lSuccess = pdPASS;
+int32_t lSuccess = pdPASS;
 xThreadState *pxThreadState;
 
 	/* Install the interrupt handlers used by the scheduler itself. */
@@ -316,7 +316,7 @@ xThreadState *pxThreadState;
 
 		/* Start the highest priority task by obtaining its associated thread
 		state structure, in which is stored the thread handle. */
-		pxThreadState = ( xThreadState * ) *( ( unsigned long * ) pxCurrentTCB );
+		pxThreadState = ( xThreadState * ) *( ( uint32_t * ) pxCurrentTCB );
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
 		/* Bump up the priority of the thread that is going to run, in the
@@ -335,19 +335,19 @@ xThreadState *pxThreadState;
 }
 /*-----------------------------------------------------------*/
 
-static unsigned long prvProcessYieldInterrupt( void )
+static uint32_t prvProcessYieldInterrupt( void )
 {
 	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
-static unsigned long prvProcessTickInterrupt( void )
+static uint32_t prvProcessTickInterrupt( void )
 {
-unsigned long ulSwitchRequired;
+uint32_t ulSwitchRequired;
 
 	/* Process the tick itself. */
 	configASSERT( xPortRunning );
-	ulSwitchRequired = ( unsigned long ) xTaskIncrementTick();
+	ulSwitchRequired = ( uint32_t ) xTaskIncrementTick();
 
 	return ulSwitchRequired;
 }
@@ -355,7 +355,7 @@ unsigned long ulSwitchRequired;
 
 static void prvProcessSimulatedInterrupts( void )
 {
-unsigned long ulSwitchRequired, i;
+uint32_t ulSwitchRequired, i;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
 
@@ -416,12 +416,12 @@ void *pvObjectList[ 2 ];
 			if( pvOldCurrentTCB != pxCurrentTCB )
 			{
 				/* Suspend the old thread. */
-				pxThreadState = ( xThreadState *) *( ( unsigned long * ) pvOldCurrentTCB );
+				pxThreadState = ( xThreadState *) *( ( uint32_t * ) pvOldCurrentTCB );
 				SuspendThread( pxThreadState->pvThread );
 
 				/* Obtain the state of the task now selected to enter the
 				Running state. */
-				pxThreadState = ( xThreadState * ) ( *( unsigned long *) pxCurrentTCB );
+				pxThreadState = ( xThreadState * ) ( *( uint32_t *) pxCurrentTCB );
 				ResumeThread( pxThreadState->pvThread );
 			}
 		}
@@ -434,13 +434,13 @@ void *pvObjectList[ 2 ];
 void vPortDeleteThread( void *pvTaskToDelete )
 {
 xThreadState *pxThreadState;
-unsigned long ulErrorCode;
+uint32_t ulErrorCode;
 
 	/* Remove compiler warnings if configASSERT() is not defined. */
 	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
-	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
+	pxThreadState = ( xThreadState * ) ( *( uint32_t *) pvTaskToDelete );
 
 	/* Check that the thread is still valid, it might have been closed by
 	vPortCloseRunningThread() - which will be the case if the task associated
@@ -461,17 +461,17 @@ unsigned long ulErrorCode;
 }
 /*-----------------------------------------------------------*/
 
-void vPortCloseRunningThread( void *pvTaskToDelete, volatile portBASE_TYPE *pxPendYield )
+void vPortCloseRunningThread( void *pvTaskToDelete, volatile BaseType_t *pxPendYield )
 {
 xThreadState *pxThreadState;
 void *pvThread;
-unsigned long ulErrorCode;
+uint32_t ulErrorCode;
 
 	/* Remove compiler warnings if configASSERT() is not defined. */
 	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
-	pxThreadState = ( xThreadState * ) ( *( unsigned long *) pvTaskToDelete );
+	pxThreadState = ( xThreadState * ) ( *( uint32_t *) pvTaskToDelete );
 	pvThread = pxThreadState->pvThread;
 
 	/* Raise the Windows priority of the thread to ensure the FreeRTOS scheduler
@@ -503,7 +503,7 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber )
+void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber )
 {
 	configASSERT( xPortRunning );
 
@@ -526,7 +526,7 @@ void vPortGenerateSimulatedInterrupt( unsigned long ulInterruptNumber )
 }
 /*-----------------------------------------------------------*/
 
-void vPortSetInterruptHandler( unsigned long ulInterruptNumber, unsigned long (*pvHandler)( void ) )
+void vPortSetInterruptHandler( uint32_t ulInterruptNumber, uint32_t (*pvHandler)( void ) )
 {
 	if( ulInterruptNumber < portMAX_INTERRUPTS )
 	{
@@ -562,7 +562,7 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
-long lMutexNeedsReleasing;
+int32_t lMutexNeedsReleasing;
 
 	/* The interrupt event mutex should already be held by this thread as it was
 	obtained on entry to the critical section. */

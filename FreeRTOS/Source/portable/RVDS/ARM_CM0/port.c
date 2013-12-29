@@ -72,10 +72,10 @@
 #include "task.h"
 
 /* Constants required to manipulate the NVIC. */
-#define portNVIC_SYSTICK_CTRL		( ( volatile unsigned long *) 0xe000e010 )
-#define portNVIC_SYSTICK_LOAD		( ( volatile unsigned long *) 0xe000e014 )
-#define portNVIC_INT_CTRL			( ( volatile unsigned long *) 0xe000ed04 )
-#define portNVIC_SYSPRI2			( ( volatile unsigned long *) 0xe000ed20 )
+#define portNVIC_SYSTICK_CTRL		( ( volatile uint32_t *) 0xe000e010 )
+#define portNVIC_SYSTICK_LOAD		( ( volatile uint32_t *) 0xe000e014 )
+#define portNVIC_INT_CTRL			( ( volatile uint32_t *) 0xe000ed04 )
+#define portNVIC_SYSPRI2			( ( volatile uint32_t *) 0xe000ed20 )
 #define portNVIC_SYSTICK_CLK		0x00000004
 #define portNVIC_SYSTICK_INT		0x00000002
 #define portNVIC_SYSTICK_ENABLE		0x00000001
@@ -92,7 +92,7 @@
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
-static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
+static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 
 /*
  * Setup the timer to generate the tick interrupts.
@@ -121,18 +121,18 @@ static void prvTaskExitError( void );
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
 	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
+	*pxTopOfStack = ( StackType_t ) pxCode;	/* PC */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) prvTaskExitError;	/* LR */
+	*pxTopOfStack = ( StackType_t ) prvTaskExitError;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;	/* R0 */
+	*pxTopOfStack = ( StackType_t ) pvParameters;	/* R0 */
 	pxTopOfStack -= 8; /* R11..R4. */
 
 	return pxTopOfStack;
@@ -189,7 +189,7 @@ __asm void prvPortStartFirstTask( void )
 /*
  * See header file for description.
  */
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Make PendSV, CallSV and SysTick the same priroity as the kernel. */
 	*(portNVIC_SYSPRI2) |= portNVIC_PENDSV_PRI;
@@ -250,7 +250,7 @@ void vPortExitCritical( void )
 }
 /*-----------------------------------------------------------*/
 
-__asm unsigned long ulSetInterruptMaskFromISR( void )
+__asm uint32_t ulSetInterruptMaskFromISR( void )
 {
 	mrs r0, PRIMASK
 	cpsid i
@@ -258,7 +258,7 @@ __asm unsigned long ulSetInterruptMaskFromISR( void )
 }
 /*-----------------------------------------------------------*/
 
-__asm void vClearInterruptMaskFromISR( unsigned long ulMask )
+__asm void vClearInterruptMaskFromISR( uint32_t ulMask )
 {
 	msr PRIMASK, r0
 	bx lr
@@ -313,7 +313,7 @@ __asm void xPortPendSVHandler( void )
 
 void xPortSysTickHandler( void )
 {
-unsigned long ulPreviousMask;
+uint32_t ulPreviousMask;
 
 	ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{

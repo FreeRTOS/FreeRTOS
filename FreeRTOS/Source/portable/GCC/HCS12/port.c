@@ -96,7 +96,7 @@ void ATTR_NEAR vPortYield( void );
 void ATTR_NEAR vPortTickInterrupt( void );
 
 /* Function in non-banked memory which actually switches to first task. */
-portBASE_TYPE ATTR_NEAR xStartSchedulerNear( void );
+BaseType_t ATTR_NEAR xStartSchedulerNear( void );
 
 /* Calls to portENTER_CRITICAL() can be nested.  When they are nested the 
 critical section should not be left (i.e. interrupts should not be re-enabled)
@@ -104,14 +104,14 @@ until the nesting depth reaches 0.  This variable simply tracks the nesting
 depth.  Each task maintains it's own critical nesting depth variable so 
 uxCriticalNesting is saved and restored from the task stack during a context
 switch. */
-volatile unsigned portBASE_TYPE uxCriticalNesting = 0x80;  // un-initialized
+volatile UBaseType_t uxCriticalNesting = 0x80;  // un-initialized
 
 /*-----------------------------------------------------------*/
 
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 
 
@@ -121,28 +121,28 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 
 
 	/* The address of the task function is placed in the stack byte at a time. */
-	*pxTopOfStack   = ( portSTACK_TYPE ) *( ((portSTACK_TYPE *) (&pxCode) ) + 1 );
-	*--pxTopOfStack = ( portSTACK_TYPE ) *( ((portSTACK_TYPE *) (&pxCode) ) + 0 );
+	*pxTopOfStack   = ( StackType_t ) *( ((StackType_t *) (&pxCode) ) + 1 );
+	*--pxTopOfStack = ( StackType_t ) *( ((StackType_t *) (&pxCode) ) + 0 );
 
 	/* Next are all the registers that form part of the task context. */
 
 	/* Y register */
-	*--pxTopOfStack = ( portSTACK_TYPE ) 0xff;
-	*--pxTopOfStack = ( portSTACK_TYPE ) 0xee;
+	*--pxTopOfStack = ( StackType_t ) 0xff;
+	*--pxTopOfStack = ( StackType_t ) 0xee;
 
 	/* X register */
-	*--pxTopOfStack = ( portSTACK_TYPE ) 0xdd;
-	*--pxTopOfStack = ( portSTACK_TYPE ) 0xcc;
+	*--pxTopOfStack = ( StackType_t ) 0xdd;
+	*--pxTopOfStack = ( StackType_t ) 0xcc;
  
 	/* A register contains parameter high byte. */
-	*--pxTopOfStack = ( portSTACK_TYPE ) *( ((portSTACK_TYPE *) (&pvParameters) ) + 0 );
+	*--pxTopOfStack = ( StackType_t ) *( ((StackType_t *) (&pvParameters) ) + 0 );
 
 	/* B register contains parameter low byte. */
-	*--pxTopOfStack = ( portSTACK_TYPE ) *( ((portSTACK_TYPE *) (&pvParameters) ) + 1 );
+	*--pxTopOfStack = ( StackType_t ) *( ((StackType_t *) (&pvParameters) ) + 1 );
 
 	/* CCR: Note that when the task starts interrupts will be enabled since
 	"I" bit of CCR is cleared */
-	*--pxTopOfStack = ( portSTACK_TYPE ) 0x80;		// keeps Stop disabled (MCU default)
+	*--pxTopOfStack = ( StackType_t ) 0x80;		// keeps Stop disabled (MCU default)
 	
 	/* tmp softregs used by GCC. Values right now don't	matter. */
 	__asm("\n\
@@ -161,7 +161,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	
 	/* The critical nesting depth is initialised with 0 (meaning not in
 	a critical section). */
-	*--pxTopOfStack = ( portSTACK_TYPE ) 0x00;
+	*--pxTopOfStack = ( StackType_t ) 0x00;
 
 
 	return pxTopOfStack;
@@ -183,7 +183,7 @@ static void prvSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* xPortStartScheduler() does not start the scheduler directly because 
 	the header file containing the xPortStartScheduler() prototype is part 
@@ -191,13 +191,13 @@ portBASE_TYPE xPortStartScheduler( void )
 	Instead it simply calls the locally defined xNearStartScheduler() - 
 	which does use the CODE_SEG pragma. */
 
-	short register d;
+	int16_t register d;
 	__asm ("jmp  xStartSchedulerNear		; will never return": "=d"(d));
 	return d;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xStartSchedulerNear( void )
+BaseType_t xStartSchedulerNear( void )
 {
 	/* Configure the timer that will generate the RTOS tick.  Interrupts are
 	disabled when this function is called. */

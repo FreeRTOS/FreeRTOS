@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -85,24 +85,28 @@
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		int
-#define portBASE_TYPE	portSHORT
+#define portBASE_TYPE	short
 
 /* The stack type changes depending on the data model. */
 #if( __DATA_MODEL__ == __DATA_MODEL_SMALL__ )
-	#define portSTACK_TYPE unsigned short
+	#define portSTACK_TYPE uint16_t
 #else
-	#define portSTACK_TYPE unsigned long
+	#define portSTACK_TYPE uint32_t
 #endif
+
+typedef portSTACK_TYPE StackType_t;
+typedef short BaseType_t;
+typedef unsigned short UBaseType_t;
 
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /* Interrupt control macros. */
 #define portDISABLE_INTERRUPTS()	_DINT();_NOP()
@@ -110,11 +114,11 @@
 /*-----------------------------------------------------------*/
 
 /* Critical section control macros. */
-#define portNO_CRITICAL_SECTION_NESTING		( ( unsigned portSHORT ) 0 )
+#define portNO_CRITICAL_SECTION_NESTING		( ( uint16_t ) 0 )
 
 #define portENTER_CRITICAL()													\
 {																				\
-extern volatile unsigned short usCriticalNesting;								\
+extern volatile uint16_t usCriticalNesting;								\
 																				\
 	portDISABLE_INTERRUPTS();													\
 																				\
@@ -126,7 +130,7 @@ extern volatile unsigned short usCriticalNesting;								\
 
 #define portEXIT_CRITICAL()														\
 {																				\
-extern volatile unsigned short usCriticalNesting;							\
+extern volatile uint16_t usCriticalNesting;							\
 																				\
 	if( usCriticalNesting > portNO_CRITICAL_SECTION_NESTING )					\
 	{																			\
@@ -155,7 +159,7 @@ extern void vPortYield( void );
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			2
 #define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )	
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portNOP()					__no_operation()
 /*-----------------------------------------------------------*/
 
@@ -165,7 +169,7 @@ extern void vPortYield( void );
 
 extern void vTaskSwitchContext( void );
 #define portYIELD_FROM_ISR( x ) if( x ) vPortYield()
-	
+
 void vApplicationSetupTimerInterrupt( void );
 
 /* sizeof( int ) != sizeof( long ) so a full printf() library is required if

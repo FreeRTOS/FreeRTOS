@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -72,7 +72,7 @@ extern "C" {
 #endif
 
 /*-----------------------------------------------------------
- * Port specific definitions.  
+ * Port specific definitions.
  *
  * The settings in this file configure FreeRTOS correctly for the
  * given hardware and compiler.
@@ -87,27 +87,32 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned portCHAR
+#define portSTACK_TYPE	uint8_t
 #define portBASE_TYPE	char
 
+typedef portSTACK_TYPE StackType_t;
+typedef signed char BaseType_t;
+typedef unsigned char UBaseType_t;
+
+
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			1
 #define portSTACK_GROWTH			( -1 )
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portYIELD()					__asm( "swi" );
 /*-----------------------------------------------------------*/
 
 /* Critical section handling. */
-#define portENABLE_INTERRUPTS()				__asm( "cli" )	
+#define portENABLE_INTERRUPTS()				__asm( "cli" )
 #define portDISABLE_INTERRUPTS()			__asm( "sei" )
 
 /*
@@ -118,7 +123,7 @@ extern "C" {
  */
 #define portENTER_CRITICAL()  									\
 {																\
-	extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
+	extern volatile UBaseType_t uxCriticalNesting;	\
 																\
 	portDISABLE_INTERRUPTS();									\
 	uxCriticalNesting++;										\
@@ -126,12 +131,12 @@ extern "C" {
 
 /*
  * Interrupts are disabled so we can access the nesting count directly.  If the
- * nesting is found to be 0 (no nesting) then we are leaving the critical 
+ * nesting is found to be 0 (no nesting) then we are leaving the critical
  * section and interrupts can be re-enabled.
  */
 #define  portEXIT_CRITICAL()									\
 {																\
-	extern volatile unsigned portBASE_TYPE uxCriticalNesting;	\
+	extern volatile UBaseType_t uxCriticalNesting;	\
 																\
 	uxCriticalNesting--;										\
 	if( uxCriticalNesting == 0 )								\
@@ -143,10 +148,10 @@ extern "C" {
 
 /* Task utilities. */
 
-/* 
- * These macros are very simple as the processor automatically saves and 
+/*
+ * These macros are very simple as the processor automatically saves and
  * restores its registers as interrupts are entered and exited.  In
- * addition to the (automatically stacked) registers we also stack the 
+ * addition to the (automatically stacked) registers we also stack the
  * critical nesting count.  Each task maintains its own critical nesting
  * count as it is legitimate for a task to yield from within a critical
  * section.  If the banked memory model is being used then the PPAGE
@@ -154,9 +159,9 @@ extern "C" {
  */
 
 #ifdef BANKED_MODEL
-	/* 
+	/*
 	 * Load the stack pointer for the task, then pull the critical nesting
-	 * count and PPAGE register from the stack.  The remains of the 
+	 * count and PPAGE register from the stack.  The remains of the
 	 * context are restored by the RTI instruction.
 	 */
 	#define portRESTORE_CONTEXT()							\
@@ -173,9 +178,9 @@ extern "C" {
 		" );									\
 	}
 
-	/* 
+	/*
 	 * By the time this macro is called the processor has already stacked the
-	 * registers.  Simply stack the nesting count and PPAGE value, then save 
+	 * registers.  Simply stack the nesting count and PPAGE value, then save
 	 * the task stack pointer.
 	 */
 	#define portSAVE_CONTEXT()							\
@@ -193,7 +198,7 @@ extern "C" {
 	}
 #else
 
-	/* 
+	/*
 	 * These macros are as per the BANKED versions above, but without saving
 	 * and restoring the PPAGE register.
 	 */

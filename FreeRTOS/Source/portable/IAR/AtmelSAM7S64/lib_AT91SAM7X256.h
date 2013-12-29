@@ -2262,7 +2262,7 @@ __inline unsigned int AT91F_US_ReceiveFrame (
 //*----------------------------------------------------------------------------
 __inline void AT91F_US_SetIrdaFilter (
 	AT91PS_USART pUSART,
-	unsigned char value
+	uint8_t value
 )
 {
 	pUSART->US_IF = value;
@@ -2704,7 +2704,7 @@ __inline void AT91F_UDP_DisableIt (
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_SetAddress (
 	AT91PS_UDP pUDP,     // \arg pointer to a UDP controller
-	unsigned char address)   // \arg new UDP address
+	uint8_t address)   // \arg new UDP address
 {
 	pUDP->UDP_FADDR = (AT91C_UDP_FEN | address);
 }
@@ -2715,7 +2715,7 @@ __inline void AT91F_UDP_SetAddress (
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EnableEp (
 	AT91PS_UDP pUDP,     // \arg pointer to a UDP controller
-	unsigned char endpoint)   // \arg endpoint number
+	uint8_t endpoint)   // \arg endpoint number
 {
 	pUDP->UDP_CSR[endpoint] |= AT91C_UDP_EPEDS;
 }
@@ -2726,7 +2726,7 @@ __inline void AT91F_UDP_EnableEp (
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_DisableEp (
 	AT91PS_UDP pUDP,     // \arg pointer to a UDP controller
-	unsigned char endpoint)   // \arg endpoint number
+	uint8_t endpoint)   // \arg endpoint number
 {
 	pUDP->UDP_CSR[endpoint] &= ~AT91C_UDP_EPEDS;
 }
@@ -2771,7 +2771,7 @@ __inline void AT91F_UDP_ResetEp ( // \return the UDP device state
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpStall(
 	AT91PS_UDP pUDP,     // \arg pointer to a UDP controller
-	unsigned char endpoint)   // \arg endpoint number
+	uint8_t endpoint)   // \arg endpoint number
 {
 	pUDP->UDP_CSR[endpoint] |= AT91C_UDP_FORCESTALL;
 }
@@ -2782,8 +2782,8 @@ __inline void AT91F_UDP_EpStall(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpWrite(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint,  // \arg endpoint number
-	unsigned char value)     // \arg value to be written in the DPR
+	uint8_t endpoint,  // \arg endpoint number
+	uint8_t value)     // \arg value to be written in the DPR
 {
 	pUDP->UDP_FDR[endpoint] = value;
 }
@@ -2794,7 +2794,7 @@ __inline void AT91F_UDP_EpWrite(
 //*----------------------------------------------------------------------------
 __inline unsigned int AT91F_UDP_EpRead(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint)  // \arg endpoint number
+	uint8_t endpoint)  // \arg endpoint number
 {
 	return pUDP->UDP_FDR[endpoint];
 }
@@ -2805,7 +2805,7 @@ __inline unsigned int AT91F_UDP_EpRead(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpEndOfWr(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint)  // \arg endpoint number
+	uint8_t endpoint)  // \arg endpoint number
 {
 	pUDP->UDP_CSR[endpoint] |= AT91C_UDP_TXPKTRDY;
 }
@@ -2816,7 +2816,7 @@ __inline void AT91F_UDP_EpEndOfWr(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpClear(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint,  // \arg endpoint number
+	uint8_t endpoint,  // \arg endpoint number
 	unsigned int flag)       // \arg flag to be cleared
 {
 	pUDP->UDP_CSR[endpoint] &= ~(flag);
@@ -2828,7 +2828,7 @@ __inline void AT91F_UDP_EpClear(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpSet(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint,  // \arg endpoint number
+	uint8_t endpoint,  // \arg endpoint number
 	unsigned int flag)       // \arg flag to be cleared
 {
 	pUDP->UDP_CSR[endpoint] |= flag;
@@ -2840,7 +2840,7 @@ __inline void AT91F_UDP_EpSet(
 //*----------------------------------------------------------------------------
 __inline unsigned int AT91F_UDP_EpStatus(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint)  // \arg endpoint number
+	uint8_t endpoint)  // \arg endpoint number
 {
 	return pUDP->UDP_CSR[endpoint];
 }
@@ -3158,7 +3158,7 @@ __inline unsigned int AT91F_CAN_GetMessageModeReg (
 __inline void AT91F_CAN_CfgMessageIDReg (
 	AT91PS_CAN_MB	CAN_Mailbox, // pointer to a CAN Mailbox
     unsigned int id,
-    unsigned char version)
+    uint8_t version)
 {
 	if(version==0)	// IDvA Standard Format
 		CAN_Mailbox->CAN_MB_MID = id<<18;
@@ -3680,7 +3680,7 @@ __inline void AT91F_AES_LoadNewSeed (
 //*----------------------------------------------------------------------------
 __inline void AT91F_AES_SetCryptoKey (
 	AT91PS_AES pAES, // pointer to a AES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int keyword
 	)
 {
@@ -3693,7 +3693,7 @@ __inline void AT91F_AES_SetCryptoKey (
 //*----------------------------------------------------------------------------
 __inline void AT91F_AES_InputData (
 	AT91PS_AES pAES, // pointer to a AES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int indata
 	)
 {
@@ -3706,7 +3706,7 @@ __inline void AT91F_AES_InputData (
 //*----------------------------------------------------------------------------
 __inline unsigned int AT91F_AES_GetOutputData (
 	AT91PS_AES pAES, // pointer to a AES controller
-	unsigned char index
+	uint8_t index
 	)
 {
 	return pAES->AES_ODATAxR[index];	
@@ -3718,7 +3718,7 @@ __inline unsigned int AT91F_AES_GetOutputData (
 //*----------------------------------------------------------------------------
 __inline void AT91F_AES_SetInitializationVector (
 	AT91PS_AES pAES, // pointer to a AES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int initvector
 	)
 {
@@ -3845,7 +3845,7 @@ __inline void AT91F_TDES_SoftReset (
 //*----------------------------------------------------------------------------
 __inline void AT91F_TDES_SetCryptoKey1 (
 	AT91PS_TDES pTDES, // pointer to a TDES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int keyword
 	)
 {
@@ -3858,7 +3858,7 @@ __inline void AT91F_TDES_SetCryptoKey1 (
 //*----------------------------------------------------------------------------
 __inline void AT91F_TDES_SetCryptoKey2 (
 	AT91PS_TDES pTDES, // pointer to a TDES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int keyword
 	)
 {
@@ -3871,7 +3871,7 @@ __inline void AT91F_TDES_SetCryptoKey2 (
 //*----------------------------------------------------------------------------
 __inline void AT91F_TDES_SetCryptoKey3 (
 	AT91PS_TDES pTDES, // pointer to a TDES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int keyword
 	)
 {
@@ -3884,7 +3884,7 @@ __inline void AT91F_TDES_SetCryptoKey3 (
 //*----------------------------------------------------------------------------
 __inline void AT91F_TDES_InputData (
 	AT91PS_TDES pTDES, // pointer to a TDES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int indata
 	)
 {
@@ -3897,7 +3897,7 @@ __inline void AT91F_TDES_InputData (
 //*----------------------------------------------------------------------------
 __inline unsigned int AT91F_TDES_GetOutputData (
 	AT91PS_TDES pTDES, // pointer to a TDES controller
-	unsigned char index
+	uint8_t index
 	)
 {
 	return pTDES->TDES_ODATAxR[index];	
@@ -3909,7 +3909,7 @@ __inline unsigned int AT91F_TDES_GetOutputData (
 //*----------------------------------------------------------------------------
 __inline void AT91F_TDES_SetInitializationVector (
 	AT91PS_TDES pTDES, // pointer to a TDES controller
-	unsigned char index,
+	uint8_t index,
 	unsigned int initvector
 	)
 {

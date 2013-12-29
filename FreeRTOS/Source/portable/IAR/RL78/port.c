@@ -69,7 +69,7 @@
 
 /* The critical nesting value is initialised to a non zero value to ensure
 interrupts don't accidentally become enabled before the scheduler is started. */
-#define portINITIAL_CRITICAL_NESTING  ( ( unsigned short ) 10 )
+#define portINITIAL_CRITICAL_NESTING  ( ( uint16_t ) 10 )
 
 /* Initial PSW value allocated to a newly created task.
  *   1100011000000000
@@ -86,8 +86,8 @@ interrupts don't accidentally become enabled before the scheduler is started. */
 
 /* The address of the pxCurrentTCB variable, but don't know or need to know its
 type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /* Each task maintains a count of the critical section nesting depth.  Each time
 a critical section is entered the count is incremented.  Each time a critical
@@ -97,7 +97,7 @@ re-enabled if the count is zero.
 usCriticalNesting will get set to zero when the scheduler starts, but must
 not be initialised to zero as that could cause problems during the startup
 sequence. */
-volatile unsigned short usCriticalNesting = portINITIAL_CRITICAL_NESTING;
+volatile uint16_t usCriticalNesting = portINITIAL_CRITICAL_NESTING;
 
 /*-----------------------------------------------------------*/
 
@@ -128,9 +128,9 @@ extern void vPortStartFirstTask( void );
  *
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned long *pulLocal;
+uint32_t *pulLocal;
 
 	#if __DATA_MODEL__ == __DATA_MODEL_FAR__
 	{
@@ -139,15 +139,15 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 
 		/* Write in the parameter value. */
-		pulLocal =  ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( unsigned long ) pvParameters;
+		pulLocal =  ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( uint32_t ) pvParameters;
 		pxTopOfStack--;
 
 		/* These values are just spacers.  The return address of the function
 		would normally be written here. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
+		*pxTopOfStack = ( StackType_t ) 0xcdcd;
 		pxTopOfStack--;
-		*pxTopOfStack = ( portSTACK_TYPE ) 0xcdcd;
+		*pxTopOfStack = ( StackType_t ) 0xcdcd;
 		pxTopOfStack--;
 
 		/* The start address / PSW value is also written in as a 32bit value,
@@ -155,12 +155,12 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 
 		/* Task function start address combined with the PSW. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
+		pulLocal = ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( ( ( uint32_t ) pxCode ) | ( portPSW << 24UL ) );
 		pxTopOfStack--;
 
 		/* An initial value for the AX register. */
-		*pxTopOfStack = ( portSTACK_TYPE ) 0x1111;
+		*pxTopOfStack = ( StackType_t ) 0x1111;
 		pxTopOfStack--;
 	}
 	#else
@@ -171,33 +171,33 @@ unsigned long *pulLocal;
 		pxTopOfStack--;
 
 		/* Task function start address combined with the PSW. */
-		pulLocal = ( unsigned long * ) pxTopOfStack;
-		*pulLocal = ( ( ( unsigned long ) pxCode ) | ( portPSW << 24UL ) );
+		pulLocal = ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( ( ( uint32_t ) pxCode ) | ( portPSW << 24UL ) );
 		pxTopOfStack--;
 
 		/* The parameter is passed in AX. */
-		*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+		*pxTopOfStack = ( StackType_t ) pvParameters;
 		pxTopOfStack--;
 	}
 	#endif
 
 	/* An initial value for the HL register. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x2222;
+	*pxTopOfStack = ( StackType_t ) 0x2222;
 	pxTopOfStack--;
 
 	/* CS and ES registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0F00;
+	*pxTopOfStack = ( StackType_t ) 0x0F00;
 	pxTopOfStack--;
 
 	/* The remaining general purpose registers DE and BC */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDEDE;
+	*pxTopOfStack = ( StackType_t ) 0xDEDE;
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBCBC;
+	*pxTopOfStack = ( StackType_t ) 0xBCBC;
 	pxTopOfStack--;
 
 	/* Finally the critical section nesting count is set to zero when the task
 	first starts. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_SECTION_NESTING;
+	*pxTopOfStack = ( StackType_t ) portNO_CRITICAL_SECTION_NESTING;
 
 	/* Return a pointer to the top of the stack that has been generated so it
 	can	be stored in the task control block for the task. */
@@ -205,7 +205,7 @@ unsigned long *pulLocal;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick.  Interrupts are disabled when
 	this function is called. */
@@ -233,53 +233,53 @@ void vPortEndScheduler( void )
 
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned short usClockHz = 15000UL; /* Internal clock. */
-const unsigned short usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
+const uint16_t usClockHz = 15000UL; /* Internal clock. */
+const uint16_t usCompareMatch = ( usClockHz / configTICK_RATE_HZ ) + 1UL;
 
 	/* Use the internal 15K clock. */
-	OSMC = ( unsigned char ) 0x16;
+	OSMC = ( uint8_t ) 0x16;
 
 	#ifdef RTCEN
 	{
 		/* Supply the interval timer clock. */
-		RTCEN = ( unsigned char ) 1U;
+		RTCEN = ( uint8_t ) 1U;
 
 		/* Disable INTIT interrupt. */
-		ITMK = ( unsigned char ) 1;
+		ITMK = ( uint8_t ) 1;
 
 		/* Disable ITMC operation. */
-		ITMC = ( unsigned char ) 0x0000;
+		ITMC = ( uint8_t ) 0x0000;
 
 		/* Clear INIT interrupt. */
-		ITIF = ( unsigned char ) 0;
+		ITIF = ( uint8_t ) 0;
 
 		/* Set interval and enable interrupt operation. */
 		ITMC = usCompareMatch | 0x8000U;
 
 		/* Enable INTIT interrupt. */
-		ITMK = ( unsigned char ) 0;
+		ITMK = ( uint8_t ) 0;
 	}
 	#endif
 
 	#ifdef TMKAEN
 	{
 		/* Supply the interval timer clock. */
-		TMKAEN = ( unsigned char ) 1U;
+		TMKAEN = ( uint8_t ) 1U;
 
 		/* Disable INTIT interrupt. */
-		TMKAMK = ( unsigned char ) 1;
+		TMKAMK = ( uint8_t ) 1;
 
 		/* Disable ITMC operation. */
-		ITMC = ( unsigned char ) 0x0000;
+		ITMC = ( uint8_t ) 0x0000;
 
 		/* Clear INIT interrupt. */
-		TMKAIF = ( unsigned char ) 0;
+		TMKAIF = ( uint8_t ) 0;
 
 		/* Set interval and enable interrupt operation. */
 		ITMC = usCompareMatch | 0x8000U;
 
 		/* Enable INTIT interrupt. */
-		TMKAMK = ( unsigned char ) 0;
+		TMKAMK = ( uint8_t ) 0;
 	}
 	#endif
 }

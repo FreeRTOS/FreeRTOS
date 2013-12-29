@@ -72,25 +72,25 @@
 #include "task.h"
 
 /* Constants required to setup the initial task context. */
-#define portINITIAL_SPSR				( ( portSTACK_TYPE ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
-#define portTHUMB_MODE_BIT				( ( portSTACK_TYPE ) 0x20 )
-#define portINSTRUCTION_SIZE			( ( portSTACK_TYPE ) 4 )
-#define portNO_CRITICAL_SECTION_NESTING	( ( portSTACK_TYPE ) 0 )
+#define portINITIAL_SPSR				( ( StackType_t ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
+#define portTHUMB_MODE_BIT				( ( StackType_t ) 0x20 )
+#define portINSTRUCTION_SIZE			( ( StackType_t ) 4 )
+#define portNO_CRITICAL_SECTION_NESTING	( ( StackType_t ) 0 )
 
 /* Constants required to setup the tick ISR. */
-#define portENABLE_TIMER			( ( unsigned portCHAR ) 0x01 )
+#define portENABLE_TIMER			( ( uint8_t ) 0x01 )
 #define portPRESCALE_VALUE			0x00
-#define portINTERRUPT_ON_MATCH		( ( unsigned portLONG ) 0x01 )
-#define portRESET_COUNT_ON_MATCH	( ( unsigned portLONG ) 0x02 )
+#define portINTERRUPT_ON_MATCH		( ( uint32_t ) 0x01 )
+#define portRESET_COUNT_ON_MATCH	( ( uint32_t ) 0x02 )
 
 /* Constants required to setup the VIC for the tick ISR. */
-#define portTIMER_VIC_CHANNEL		( ( unsigned portLONG ) 0x0004 )
-#define portTIMER_VIC_CHANNEL_BIT	( ( unsigned portLONG ) 0x0010 )
-#define portTIMER_VIC_ENABLE		( ( unsigned portLONG ) 0x0020 )
+#define portTIMER_VIC_CHANNEL		( ( uint32_t ) 0x0004 )
+#define portTIMER_VIC_CHANNEL_BIT	( ( uint32_t ) 0x0010 )
+#define portTIMER_VIC_ENABLE		( ( uint32_t ) 0x0020 )
 
 /* Constants required to handle interrupts. */
-#define portTIMER_MATCH_ISR_BIT		( ( unsigned portCHAR ) 0x01 )
-#define portCLEAR_VIC_INTERRUPT		( ( unsigned portLONG ) 0 )
+#define portTIMER_MATCH_ISR_BIT		( ( uint8_t ) 0x01 )
+#define portCLEAR_VIC_INTERRUPT		( ( uint32_t ) 0 )
 
 /*-----------------------------------------------------------*/
 
@@ -100,8 +100,8 @@ use the stack as per other ports.  Instead a variable is used to keep
 track of the critical section nesting.  This variable has to be stored
 as part of the task context and must be initialised to a non zero value. */
 
-#define portNO_CRITICAL_NESTING		( ( unsigned portLONG ) 0 )
-volatile unsigned portLONG ulCriticalNesting = 9999UL;
+#define portNO_CRITICAL_NESTING		( ( uint32_t ) 0 )
+volatile uint32_t ulCriticalNesting = 9999UL;
 
 /*-----------------------------------------------------------*/
 
@@ -119,9 +119,9 @@ extern __asm void vPortStartFirstTask( void );
 /* 
  * See header file for description. 
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-portSTACK_TYPE *pxOriginalTOS;
+StackType_t *pxOriginalTOS;
 
 	/* Setup the initial stack of the task.  The stack is set exactly as 
 	expected by the portRESTORE_CONTEXT() macro.
@@ -137,45 +137,45 @@ portSTACK_TYPE *pxOriginalTOS;
 	/* First on the stack is the return address - which in this case is the
 	start of the task.  The offset is added to make the return address appear
 	as it would within an IRQ ISR. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode + portINSTRUCTION_SIZE;		
+	*pxTopOfStack = ( StackType_t ) pxCode + portINSTRUCTION_SIZE;		
 	pxTopOfStack--;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xaaaaaaaa;	/* R14 */
+	*pxTopOfStack = ( StackType_t ) 0xaaaaaaaa;	/* R14 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) pxOriginalTOS; /* Stack used when task starts goes in R13. */
+	*pxTopOfStack = ( StackType_t ) pxOriginalTOS; /* Stack used when task starts goes in R13. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x12121212;	/* R12 */
+	*pxTopOfStack = ( StackType_t ) 0x12121212;	/* R12 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11111111;	/* R11 */
+	*pxTopOfStack = ( StackType_t ) 0x11111111;	/* R11 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x10101010;	/* R10 */
+	*pxTopOfStack = ( StackType_t ) 0x10101010;	/* R10 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x09090909;	/* R9 */
+	*pxTopOfStack = ( StackType_t ) 0x09090909;	/* R9 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x08080808;	/* R8 */
+	*pxTopOfStack = ( StackType_t ) 0x08080808;	/* R8 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x07070707;	/* R7 */
+	*pxTopOfStack = ( StackType_t ) 0x07070707;	/* R7 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x06060606;	/* R6 */
+	*pxTopOfStack = ( StackType_t ) 0x06060606;	/* R6 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x05050505;	/* R5 */
+	*pxTopOfStack = ( StackType_t ) 0x05050505;	/* R5 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x04040404;	/* R4 */
+	*pxTopOfStack = ( StackType_t ) 0x04040404;	/* R4 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x03030303;	/* R3 */
+	*pxTopOfStack = ( StackType_t ) 0x03030303;	/* R3 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x02020202;	/* R2 */
+	*pxTopOfStack = ( StackType_t ) 0x02020202;	/* R2 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x01010101;	/* R1 */
+	*pxTopOfStack = ( StackType_t ) 0x01010101;	/* R1 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters; /* R0 */
+	*pxTopOfStack = ( StackType_t ) pvParameters; /* R0 */
 	pxTopOfStack--;
 
 	/* The last thing onto the stack is the status register, which is set for
 	system mode, with interrupts enabled. */
-	*pxTopOfStack = ( portSTACK_TYPE ) portINITIAL_SPSR;
+	*pxTopOfStack = ( StackType_t ) portINITIAL_SPSR;
 
-	if( ( ( unsigned long ) pxCode & 0x01UL ) != 0x00UL )
+	if( ( ( uint32_t ) pxCode & 0x01UL ) != 0x00UL )
 	{
 		/* We want the task to start in thumb mode. */
 		*pxTopOfStack |= portTHUMB_MODE_BIT;
@@ -194,7 +194,7 @@ portSTACK_TYPE *pxOriginalTOS;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Start the timer that generates the tick ISR. */
 	prvSetupTimerInterrupt();
@@ -250,7 +250,7 @@ void vPortEndScheduler( void )
 
 static void prvSetupTimerInterrupt( void )
 {
-unsigned portLONG ulCompareMatch;
+uint32_t ulCompareMatch;
 
 	/* A 1ms tick does not require the use of the timer prescale.  This is
 	defaulted to zero but can be used if necessary. */
@@ -280,11 +280,11 @@ unsigned portLONG ulCompareMatch;
 	scheduler is being used. */
 	#if configUSE_PREEMPTION == 1
 	{	
-		VICVectAddr0 = ( unsigned portLONG ) vPreemptiveTick;
+		VICVectAddr0 = ( uint32_t ) vPreemptiveTick;
 	}
 	#else
 	{
-		VICVectAddr0 = ( unsigned portLONG ) vNonPreemptiveTick;
+		VICVectAddr0 = ( uint32_t ) vNonPreemptiveTick;
 	}
 	#endif
 

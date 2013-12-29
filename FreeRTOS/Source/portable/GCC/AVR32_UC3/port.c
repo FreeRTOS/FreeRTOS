@@ -96,12 +96,12 @@
 
 
 /* Constants required to setup the task context. */
-#define portINITIAL_SR            ( ( portSTACK_TYPE ) 0x00400000 ) /* AVR32 : [M2:M0]=001 I1M=0 I0M=0, GM=0 */
-#define portINSTRUCTION_SIZE      ( ( portSTACK_TYPE ) 0 )
+#define portINITIAL_SR            ( ( StackType_t ) 0x00400000 ) /* AVR32 : [M2:M0]=001 I1M=0 I0M=0, GM=0 */
+#define portINSTRUCTION_SIZE      ( ( StackType_t ) 0 )
 
 /* Each task maintains its own critical nesting variable. */
-#define portNO_CRITICAL_NESTING   ( ( unsigned long ) 0 )
-volatile unsigned long ulCriticalNesting = 9999UL;
+#define portNO_CRITICAL_NESTING   ( ( uint32_t ) 0 )
+volatile uint32_t ulCriticalNesting = 9999UL;
 
 #if( configTICK_USE_TC==0 )
 	static void prvScheduleNextTick( void );
@@ -130,7 +130,7 @@ void _init_startup(void)
 	#if configHEAP_INIT
 		extern void __heap_start__;
 		extern void __heap_end__;
-		portBASE_TYPE *pxMem;
+		BaseType_t *pxMem;
 	#endif
 
 	/* Load the Exception Vector Base Address in the corresponding system register. */
@@ -145,7 +145,7 @@ void _init_startup(void)
 	#if configHEAP_INIT
 
 		/* Initialize the heap used by malloc. */
-		for( pxMem = &__heap_start__; pxMem < ( portBASE_TYPE * )&__heap_end__; )
+		for( pxMem = &__heap_start__; pxMem < ( BaseType_t * )&__heap_end__; )
 		{
 			*pxMem++ = 0xA5A5A5A5;
 		}
@@ -298,36 +298,36 @@ __attribute__((__noinline__)) void vPortExitCritical( void )
  *
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Setup the initial stack of the task.  The stack is set exactly as
 	expected by the portRESTORE_CONTEXT() macro. */
 
 	/* When the task starts, it will expect to find the function parameter in R12. */
 	pxTopOfStack--;
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x08080808;					/* R8 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x09090909;					/* R9 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x0A0A0A0A;					/* R10 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x0B0B0B0B;					/* R11 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) pvParameters;					/* R12 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0xDEADBEEF;					/* R14/LR */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) pxCode + portINSTRUCTION_SIZE; /* R15/PC */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) portINITIAL_SR;				/* SR */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0xFF0000FF;					/* R0 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x01010101;					/* R1 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x02020202;					/* R2 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x03030303;					/* R3 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x04040404;					/* R4 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x05050505;					/* R5 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x06060606;					/* R6 */
-	*pxTopOfStack-- = ( portSTACK_TYPE ) 0x07070707;					/* R7 */
-	*pxTopOfStack = ( portSTACK_TYPE ) portNO_CRITICAL_NESTING;			/* ulCriticalNesting */
+	*pxTopOfStack-- = ( StackType_t ) 0x08080808;					/* R8 */
+	*pxTopOfStack-- = ( StackType_t ) 0x09090909;					/* R9 */
+	*pxTopOfStack-- = ( StackType_t ) 0x0A0A0A0A;					/* R10 */
+	*pxTopOfStack-- = ( StackType_t ) 0x0B0B0B0B;					/* R11 */
+	*pxTopOfStack-- = ( StackType_t ) pvParameters;					/* R12 */
+	*pxTopOfStack-- = ( StackType_t ) 0xDEADBEEF;					/* R14/LR */
+	*pxTopOfStack-- = ( StackType_t ) pxCode + portINSTRUCTION_SIZE; /* R15/PC */
+	*pxTopOfStack-- = ( StackType_t ) portINITIAL_SR;				/* SR */
+	*pxTopOfStack-- = ( StackType_t ) 0xFF0000FF;					/* R0 */
+	*pxTopOfStack-- = ( StackType_t ) 0x01010101;					/* R1 */
+	*pxTopOfStack-- = ( StackType_t ) 0x02020202;					/* R2 */
+	*pxTopOfStack-- = ( StackType_t ) 0x03030303;					/* R3 */
+	*pxTopOfStack-- = ( StackType_t ) 0x04040404;					/* R4 */
+	*pxTopOfStack-- = ( StackType_t ) 0x05050505;					/* R5 */
+	*pxTopOfStack-- = ( StackType_t ) 0x06060606;					/* R6 */
+	*pxTopOfStack-- = ( StackType_t ) 0x07070707;					/* R7 */
+	*pxTopOfStack = ( StackType_t ) portNO_CRITICAL_NESTING;			/* ulCriticalNesting */
 
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */
@@ -353,7 +353,7 @@ clock cycles from now. */
 #if( configTICK_USE_TC==0 )
 	static void prvScheduleFirstTick(void)
 	{
-		unsigned long lCycles;
+		uint32_t lCycles;
 
 		lCycles = Get_system_register(AVR32_COUNT);
 		lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);
@@ -368,7 +368,7 @@ clock cycles from now. */
 	
 	__attribute__((__noinline__)) static void prvScheduleNextTick(void)
 	{
-		unsigned long lCycles, lCount;
+		uint32_t lCycles, lCount;
 
 		lCycles = Get_system_register(AVR32_COMPARE);
 		lCycles += (configCPU_CLOCK_HZ/configTICK_RATE_HZ);

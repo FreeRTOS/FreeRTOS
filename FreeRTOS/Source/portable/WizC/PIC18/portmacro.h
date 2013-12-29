@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,7 +63,7 @@
     1 tab == 4 spaces!
 */
 
-/* 
+/*
 Changes from V3.0.0
 
 Changes from V3.0.1
@@ -87,15 +87,20 @@ Changes from V3.0.1
 #define portDOUBLE		portFLOAT
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned char
+#define portSTACK_TYPE	uint8_t
 #define portBASE_TYPE	char
 
+typedef portSTACK_TYPE StackType_t;
+typedef signed char BaseType_t;
+typedef unsigned char UBaseType_t;
+
+
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType )	( 0xFFFF )
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t )	( 0xFFFF )
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType )	( 0xFFFFFFFF )
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t )	( 0xFFFFFFFF )
 #endif
 
 #define portBYTE_ALIGNMENT			1
@@ -103,13 +108,13 @@ Changes from V3.0.1
 /*-----------------------------------------------------------*/
 
 /*
- * Constant used for context switch macro when we require the interrupt 
+ * Constant used for context switch macro when we require the interrupt
  * enable state to be forced when the interrupted task is switched back in.
  */
 #define portINTERRUPTS_FORCED				(0x01)
 
 /*
- * Constant used for context switch macro when we require the interrupt 
+ * Constant used for context switch macro when we require the interrupt
  * enable state to be unchanged when the interrupted task is switched back in.
  */
 #define portINTERRUPTS_UNCHANGED			(0x00)
@@ -127,21 +132,21 @@ Changes from V3.0.1
 	{								\
 		bGIE=0;						\
 	} while(bGIE)	// MicroChip recommends this check!
-	
+
 #define portENABLE_INTERRUPTS()		\
 	do								\
 	{								\
 		bGIE=1;						\
 	} while(0)
 
-/*-----------------------------------------------------------*/	
+/*-----------------------------------------------------------*/
 
 /*
  * Critical section macros.
  */
-extern unsigned portCHAR ucCriticalNesting;
+extern uint8_t ucCriticalNesting;
 
-#define portNO_CRITICAL_SECTION_NESTING		( ( unsigned portCHAR ) 0 )
+#define portNO_CRITICAL_SECTION_NESTING		( ( uint8_t ) 0 )
 
 #define portENTER_CRITICAL()										\
 	do																\
@@ -186,8 +191,8 @@ extern unsigned portCHAR ucCriticalNesting;
  * portMINIMAL_STACK_SIZE. Some input to this calculation is
  * compiletime determined, other input is port-defined (see port.c)
  */
-extern unsigned portSHORT usPortCALCULATE_MINIMAL_STACK_SIZE( void );
-extern unsigned portSHORT usCalcMinStackSize;
+extern uint16_t usPortCALCULATE_MINIMAL_STACK_SIZE( void );
+extern uint16_t usCalcMinStackSize;
 
 #define portMINIMAL_STACK_SIZE					\
 	((usCalcMinStackSize == 0)					\
@@ -205,15 +210,15 @@ extern unsigned portSHORT usCalcMinStackSize;
  * Macro's that pushes all the registers that make up the context of a task onto
  * the stack, then saves the new top of stack into the TCB. TOSU and TBLPTRU
  * are only saved/restored on devices with more than 64kB (32k Words) ROM.
- * 
+ *
  * The stackpointer is helt by WizC in FSR2 and points to the first free byte.
  * WizC uses a "downgrowing" stack. There is no framepointer.
  *
  * We keep track of the interruptstatus using ucCriticalNesting. When this
  * value equals zero, interrupts have to be enabled upon exit from the
  * portRESTORE_CONTEXT macro.
- * 
- * If this is called from an ISR then the interrupt enable bits must have been 
+ *
+ * If this is called from an ISR then the interrupt enable bits must have been
  * set for the ISR to ever get called.  Therefore we want to save
  * ucCriticalNesting with value zero. This means the interrupts will again be
  * re-enabled when the interrupted task is switched back in.
@@ -428,7 +433,7 @@ extern unsigned portSHORT usCalcMinStackSize;
 
 /*-----------------------------------------------------------*/
 
-#define portTICK_RATE_MS	( ( portTickType ) 1000 / configTICK_RATE_HZ )		
+#define portTICK_RATE_MS	( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 
 /*-----------------------------------------------------------*/
 

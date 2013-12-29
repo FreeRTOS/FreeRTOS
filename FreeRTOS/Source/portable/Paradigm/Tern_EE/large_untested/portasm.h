@@ -63,8 +63,8 @@
     1 tab == 4 spaces!
 */
 
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 extern void vTaskSwitchContext( void );
 
 /*

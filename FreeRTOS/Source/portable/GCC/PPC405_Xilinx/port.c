@@ -134,7 +134,7 @@ static XIntc xInterruptController;
  * 
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Place a known value at the bottom of the stack for debugging. */
 	*pxTopOfStack = 0xDEADBEEF;
@@ -144,15 +144,15 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack -= 20;	/* Previous backchain and LR, R31 to R4 inclusive. */
 
 	/* Parameters in R13. */
-	*pxTopOfStack = ( portSTACK_TYPE ) &_SDA_BASE_; /* address of the first small data area */
+	*pxTopOfStack = ( StackType_t ) &_SDA_BASE_; /* address of the first small data area */
 	pxTopOfStack -= 10;
 
 	/* Parameters in R3. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) pvParameters;
 	pxTopOfStack--;
 
 	/* Parameters in R2. */
-	*pxTopOfStack = ( portSTACK_TYPE ) &_SDA2_BASE_;	/* address of the second small data area */
+	*pxTopOfStack = ( StackType_t ) &_SDA2_BASE_;	/* address of the second small data area */
 	pxTopOfStack--;
 
 	/* R1 is the stack pointer so is omitted. */
@@ -167,13 +167,13 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;	/* CTR. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) vPortEndScheduler;	/* LR. */
+	*pxTopOfStack = ( StackType_t ) vPortEndScheduler;	/* LR. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode; /* SRR0. */
+	*pxTopOfStack = ( StackType_t ) pxCode; /* SRR0. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_MSR;/* SRR1. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) vPortEndScheduler;/* Next LR. */
+	*pxTopOfStack = ( StackType_t ) vPortEndScheduler;/* Next LR. */
 	pxTopOfStack--;
 	*pxTopOfStack = 0x00000000UL;/* Backchain. */
 
@@ -181,7 +181,7 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	prvSetupTimerInterrupt();
 	XExc_RegisterHandler( XEXC_ID_SYSTEM_CALL, ( XExceptionHandler ) vPortYield, ( void * ) 0 );
@@ -204,7 +204,7 @@ void vPortEndScheduler( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-const unsigned long ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
+const uint32_t ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL );
 
 	XTime_PITClearInterrupt();
 	XTime_FITClearInterrupt();
@@ -222,8 +222,8 @@ const unsigned long ulInterval = ( ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) -
 
 void vPortISRHandler( void *pvNullDoNotUse )
 {
-unsigned long ulInterruptStatus, ulInterruptMask = 1UL;
-portBASE_TYPE xInterruptNumber;
+uint32_t ulInterruptStatus, ulInterruptMask = 1UL;
+BaseType_t xInterruptNumber;
 XIntc_Config *pxInterruptController;
 XIntc_VectorTableEntry *pxTable;
 
@@ -281,9 +281,9 @@ extern void vPortISRWrapper( void );
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortInstallInterruptHandler( unsigned char ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef )
+BaseType_t xPortInstallInterruptHandler( uint8_t ucInterruptID, XInterruptHandler pxHandler, void *pvCallBackRef )
 {
-portBASE_TYPE xReturn = pdFAIL;
+BaseType_t xReturn = pdFAIL;
 
 	/* This function is defined here so the scope of xInterruptController can
 	remain within this file. */

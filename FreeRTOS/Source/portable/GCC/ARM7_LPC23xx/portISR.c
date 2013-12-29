@@ -75,12 +75,12 @@
 #include "task.h"
 
 /* Constants required to handle interrupts. */
-#define portTIMER_MATCH_ISR_BIT		( ( unsigned portCHAR ) 0x01 )
-#define portCLEAR_VIC_INTERRUPT		( ( unsigned portLONG ) 0 )
+#define portTIMER_MATCH_ISR_BIT		( ( uint8_t ) 0x01 )
+#define portCLEAR_VIC_INTERRUPT		( ( uint32_t ) 0 )
 
 /* Constants required to handle critical sections. */
-#define portNO_CRITICAL_NESTING		( ( unsigned portLONG ) 0 )
-volatile unsigned portLONG ulCriticalNesting = 9999UL;
+#define portNO_CRITICAL_NESTING		( ( uint32_t ) 0 )
+volatile uint32_t ulCriticalNesting = 9999UL;
 
 /*-----------------------------------------------------------*/
 

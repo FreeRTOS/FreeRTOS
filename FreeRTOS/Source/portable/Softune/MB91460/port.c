@@ -71,8 +71,8 @@
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
 any details of its type. */
-typedef void tskTCB;
-extern volatile tskTCB * volatile pxCurrentTCB;
+typedef void TCB_t;
+extern volatile TCB_t * volatile pxCurrentTCB;
 
 /*-----------------------------------------------------------*/
  
@@ -143,7 +143,7 @@ static void prvSetupTimerInterrupt( void );
  * 
  * See the header file portable.h.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 	/* Place a few bytes of known values on the bottom of the stack. 
 	This is just useful for debugging. */
@@ -158,63 +158,63 @@ portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE
 	/* This is a redundant push to the stack, it may be required if 
 	in some implementations of the compiler the parameter to the task 
 	is passed on to the stack rather than in R4 register. */
-	*pxTopOfStack = (portSTACK_TYPE)(pvParameters);
+	*pxTopOfStack = (StackType_t)(pvParameters);
 	pxTopOfStack--;                  
     
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000000;	/* RP */
+	*pxTopOfStack = ( StackType_t ) 0x00000000;	/* RP */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00007777;	/* R7 */
+	*pxTopOfStack = ( StackType_t ) 0x00007777;	/* R7 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00006666;	/* R6 */
+	*pxTopOfStack = ( StackType_t ) 0x00006666;	/* R6 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00005555;	/* R5 */
+	*pxTopOfStack = ( StackType_t ) 0x00005555;	/* R5 */
 	pxTopOfStack--;
 	
 	/* In the current implementation of the compiler the first 
 	parameter to the task (or function) is passed via R4 parameter 
 	to the task, hence the pvParameters pointer is copied into the R4 
 	register. See compiler manual section 4.6.2 for more information. */
-	*pxTopOfStack = ( portSTACK_TYPE ) (pvParameters);	/* R4 */
+	*pxTopOfStack = ( StackType_t ) (pvParameters);	/* R4 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00003333;	/* R3 */
+	*pxTopOfStack = ( StackType_t ) 0x00003333;	/* R3 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00002222;	/* R2 */
+	*pxTopOfStack = ( StackType_t ) 0x00002222;	/* R2 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00001111;	/* R1 */
+	*pxTopOfStack = ( StackType_t ) 0x00001111;	/* R1 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00000001;	/* R0 */
+	*pxTopOfStack = ( StackType_t ) 0x00000001;	/* R0 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0000EEEE;	/* R14 */
+	*pxTopOfStack = ( StackType_t ) 0x0000EEEE;	/* R14 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0000DDDD;	/* R13 */
+	*pxTopOfStack = ( StackType_t ) 0x0000DDDD;	/* R13 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0000CCCC;	/* R12 */
+	*pxTopOfStack = ( StackType_t ) 0x0000CCCC;	/* R12 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0000BBBB;	/* R11 */
+	*pxTopOfStack = ( StackType_t ) 0x0000BBBB;	/* R11 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0000AAAA;	/* R10 */
+	*pxTopOfStack = ( StackType_t ) 0x0000AAAA;	/* R10 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00009999;	/* R9 */
+	*pxTopOfStack = ( StackType_t ) 0x00009999;	/* R9 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00008888;	/* R8 */
+	*pxTopOfStack = ( StackType_t ) 0x00008888;	/* R8 */
 	pxTopOfStack--;	
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11110000;	/* MDH */
+	*pxTopOfStack = ( StackType_t ) 0x11110000;	/* MDH */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x22220000;	/* MDL */
+	*pxTopOfStack = ( StackType_t ) 0x22220000;	/* MDL */
 	pxTopOfStack--;
 
 	/* The start of the task code. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;	/* PC */
+	*pxTopOfStack = ( StackType_t ) pxCode;	/* PC */
 	pxTopOfStack--;
 	 
     /* PS - User Mode, USP, ILM=31, Interrupts enabled */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x001F0030;	/* PS */
+	*pxTopOfStack = ( StackType_t ) 0x001F0030;	/* PS */
 
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick. */
 	prvSetupTimerInterrupt();
@@ -243,7 +243,7 @@ void vPortEndScheduler( void )
 static void prvSetupTimerInterrupt( void )
 {
 /* The peripheral clock divided by 32 is used by the timer. */
-const unsigned short usReloadValue = ( unsigned short ) ( ( ( configPER_CLOCK_HZ / configTICK_RATE_HZ ) / 32UL ) - 1UL );
+const uint16_t usReloadValue = ( uint16_t ) ( ( ( configPER_CLOCK_HZ / configTICK_RATE_HZ ) / 32UL ) - 1UL );
 
 	/* Setup RLT0 to generate a tick interrupt. */
 

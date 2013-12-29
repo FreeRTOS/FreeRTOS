@@ -109,18 +109,18 @@ extern "C" {
  * event_groups.h
  *
  * Type by which event groups are referenced.  For example, a call to
- * xEventGroupCreate() returns an xEventGroupHandle variable that can then
+ * xEventGroupCreate() returns an EventGroupHandle_t variable that can then
  * be used as a parameter to other event group functions.
  *
- * \defgroup xEventGroupHandle xEventGroupHandle
+ * \defgroup EventGroupHandle_t EventGroupHandle_t
  * \ingroup EventGroup
  */
-typedef void * xEventGroupHandle;
+typedef void * EventGroupHandle_t;
 
 /**
  * event_groups.h
  *<pre>
- xEventGroupHandle xEventGroupCreate( void );
+ EventGroupHandle_t xEventGroupCreate( void );
  </pre>
  *
  * Create a new event group.  This function cannot be called from an interrupt.
@@ -130,7 +130,7 @@ typedef void * xEventGroupHandle;
  * on the configUSE_16_BIT_TICKS setting in FreeRTOSConfig.h.  If
  * configUSE_16_BIT_TICKS is 1 then each event group contains 8 usable bits (bit
  * 0 to bit 7).  If configUSE_16_BIT_TICKS is set to 0 then each event group has
- * 24 usable bits (bit 0 to bit 23).  The xEventBitsType type is used to store
+ * 24 usable bits (bit 0 to bit 23).  The EventBits_t type is used to store
  * event bits within an event group.
  *
  * @return If the event group was created then a handle to the event group is
@@ -140,7 +140,7 @@ typedef void * xEventGroupHandle;
  * Example usage:
    <pre>
 	// Declare a variable to hold the created event group.
-	xEventGroupHandle xCreatedEventGroup;
+	EventGroupHandle_t xCreatedEventGroup;
 
 	// Attempt to create the event group.
 	xCreatedEventGroup = xEventGroupCreate();
@@ -159,16 +159,16 @@ typedef void * xEventGroupHandle;
  * \defgroup xEventGroupCreate xEventGroupCreate
  * \ingroup EventGroup
  */
-xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
+EventGroupHandle_t xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup,
-										const xEventBitsType uxBitsToWaitFor,
-										const portBASE_TYPE xClearOnExit,
-										const portBASE_TYPE xWaitForAllBits,
-										const portTickType xTicksToWait );
+	EventBits_t xEventGroupWaitBits( 	EventGroupHandle_t xEventGroup,
+										const EventBits_t uxBitsToWaitFor,
+										const BaseType_t xClearOnExit,
+										const BaseType_t xWaitForAllBits,
+										const TickType_t xTicksToWait );
  </pre>
  *
  * [Potentially] block to wait for one or more bits to be set within a
@@ -217,10 +217,10 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
    #define BIT_0	( 1 << 0 )
    #define BIT_4	( 1 << 4 )
 
-   void aFunction( xEventGroupHandle xEventGroup )
+   void aFunction( EventGroupHandle_t xEventGroup )
    {
-   xEventBitsType uxBits;
-   const portTickType xTicksToWait = 100 / portTICK_RATE_MS;
+   EventBits_t uxBits;
+   const TickType_t xTicksToWait = 100 / portTICK_RATE_MS;
 
 		// Wait a maximum of 100ms for either bit 0 or bit 4 to be set within
 		// the event group.  Clear the bits before exiting.
@@ -253,12 +253,12 @@ xEventGroupHandle xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
  * \defgroup xEventGroupWaitBits xEventGroupWaitBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToWaitFor, const portBASE_TYPE xClearOnExit, const portBASE_TYPE xWaitForAllBits, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToClear );
+	EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear );
  </pre>
  *
  * Clear bits within an event group.  This function cannot be called from an
@@ -277,9 +277,9 @@ xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, const xEventB
    #define BIT_0	( 1 << 0 )
    #define BIT_4	( 1 << 4 )
 
-   void aFunction( xEventGroupHandle xEventGroup )
+   void aFunction( EventGroupHandle_t xEventGroup )
    {
-   xEventBitsType uxBits;
+   EventBits_t uxBits;
 
 		// Clear bit 0 and bit 4 in xEventGroup.
 		uxBits = xEventGroupClearBits(
@@ -310,12 +310,12 @@ xEventBitsType xEventGroupWaitBits( xEventGroupHandle xEventGroup, const xEventB
  * \defgroup xEventGroupClearBits xEventGroupClearBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToClear ) PRIVILEGED_FUNCTION;
+EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet );
+	EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet );
  </pre>
  *
  * Set bits within an event group.
@@ -346,9 +346,9 @@ xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEvent
    #define BIT_0	( 1 << 0 )
    #define BIT_4	( 1 << 4 )
 
-   void aFunction( xEventGroupHandle xEventGroup )
+   void aFunction( EventGroupHandle_t xEventGroup )
    {
-   xEventBitsType uxBits;
+   EventBits_t uxBits;
 
 		// Set bit 0 and bit 4 in xEventGroup.
 		uxBits = xEventGroupSetBits(
@@ -384,12 +384,12 @@ xEventBitsType xEventGroupClearBits( xEventGroupHandle xEventGroup, const xEvent
  * \defgroup xEventGroupSetBits xEventGroupSetBits
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet ) PRIVILEGED_FUNCTION;
+EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet ) PRIVILEGED_FUNCTION;
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupSetBitsFromISR( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet, portBASE_TYPE *pxHigherPriorityTaskWoken );
+	EventBits_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken );
  </pre>
  *
  * A version of xEventGroupSetBits() that can be called from an interrupt.
@@ -429,11 +429,11 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBi
 
    // An event group which it is assumed has already been created by a call to
    // xEventGroupCreate().
-   xEventGroupHandle xEventGroup;
+   EventGroupHandle_t xEventGroup;
 
    void anInterruptHandler( void )
    {
-   portBASE_TYPE xHigherPriorityTaskWoken;
+   BaseType_t xHigherPriorityTaskWoken;
 
 		// xHigherPriorityTaskWoken must be initialised to pdFALSE.
 		xHigherPriorityTaskWoken = pdFALSE;
@@ -454,15 +454,15 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBi
  * \defgroup xEventGroupSetBitsFromISR xEventGroupSetBitsFromISR
  * \ingroup EventGroup
  */
-#define xEventGroupSetBitsFromISR( xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken ) xTimerPendCallbackFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( unsigned long ) uxBitsToSet, pxHigherPriorityTaskWoken )
+#define xEventGroupSetBitsFromISR( xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken ) xTimerPendCallbackFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken )
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupSync(	xEventGroupHandle xEventGroup,
-									const xEventBitsType uxBitsToSet,
-									const xEventBitsType uxBitsToWaitFor,
-									portTickType xTicksToWait );
+	EventBits_t xEventGroupSync(	EventGroupHandle_t xEventGroup,
+									const EventBits_t uxBitsToSet,
+									const EventBits_t uxBitsToWaitFor,
+									TickType_t xTicksToWait );
  </pre>
  *
  * Atomically set bits within an event group, then wait for a combination of
@@ -512,12 +512,12 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBi
 
  // Use an event group to synchronise three tasks.  It is assumed this event
  // group has already been created elsewhere.
- xEventGroupHandle xEventBits;
+ EventGroupHandle_t xEventBits;
 
  void vTask0( void *pvParameters )
  {
- xEventBitsType uxReturn;
- portTickType xTicksToWait = 100 / portTICK_RATE_MS;
+ EventBits_t uxReturn;
+ TickType_t xTicksToWait = 100 / portTICK_RATE_MS;
 
 	 for( ;; )
 	 {
@@ -580,13 +580,13 @@ xEventBitsType xEventGroupSetBits( xEventGroupHandle xEventGroup, const xEventBi
  * \defgroup xEventGroupSync xEventGroupSync
  * \ingroup EventGroup
  */
-xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, const xEventBitsType uxBitsToSet, const xEventBitsType uxBitsToWaitFor, portTickType xTicksToWait ) PRIVILEGED_FUNCTION;
+EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 
 /**
  * event_groups.h
  *<pre>
-	xEventBitsType xEventGroupGetBits( xEventGroupHandle xEventGroup );
+	EventBits_t xEventGroupGetBits( EventGroupHandle_t xEventGroup );
  </pre>
  *
  * Returns the current value of the bits in an event group.  This function
@@ -604,7 +604,7 @@ xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, const xEventBitsT
 /**
  * event_groups.h
  *<pre>
-	void xEventGroupDelete( xEventGroupHandle xEventGroup );
+	void xEventGroupDelete( EventGroupHandle_t xEventGroup );
  </pre>
  *
  * Delete an event group that was previously created by a call to
@@ -613,10 +613,10 @@ xEventBitsType xEventGroupSync( xEventGroupHandle xEventGroup, const xEventBitsT
  *
  * @param xEventGroup The event group being deleted.
  */
-void vEventGroupDelete( xEventGroupHandle xEventGroup );
+void vEventGroupDelete( EventGroupHandle_t xEventGroup );
 
 /* For internal use only. */
-void vEventGroupSetBitsCallback( void *pvEventGroup, const unsigned long ulBitsToSet );
+void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet );
 
 
 #ifdef __cplusplus

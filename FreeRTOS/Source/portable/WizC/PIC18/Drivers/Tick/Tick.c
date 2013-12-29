@@ -128,8 +128,8 @@ void portSetupTick( void )
 	/*
 	 * Set the compare match value.
 	 */
-	CCPR1H = ( unsigned char ) ( ( portTIMER_COMPARE_VALUE >> 8 ) & 0xff );
-	CCPR1L = ( unsigned char )   ( portTIMER_COMPARE_VALUE & 0xff );
+	CCPR1H = ( uint8_t ) ( ( portTIMER_COMPARE_VALUE >> 8 ) & 0xff );
+	CCPR1L = ( uint8_t )   ( portTIMER_COMPARE_VALUE & 0xff );
 
 	/*
 	 * Set Compare Special Event Trigger Mode
@@ -159,8 +159,8 @@ void portSetupTick( void )
 	/*
 	 * Clear the time count
 	 */
-	TMR1H = ( unsigned char ) 0x00;
-	TMR1L = ( unsigned char ) 0x00;
+	TMR1H = ( uint8_t ) 0x00;
+	TMR1L = ( uint8_t ) 0x00;
 
 	/*
 	 * Setup the timer

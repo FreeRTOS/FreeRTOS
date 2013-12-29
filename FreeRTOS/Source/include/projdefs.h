@@ -71,15 +71,15 @@ typedef void (*pdTASK_CODE)( void * );
 
 /* Defines the prototype to which callback functions called from the RTOS/timer
 daemon task must conform. */
-typedef void (*pdAPPLICATION_CALLBACK_CODE)( void *, unsigned long );
+typedef void (*pdAPPLICATION_CALLBACK_CODE)( void *, uint32_t );
 
-#define pdFALSE		( ( portBASE_TYPE ) 0 )
-#define pdTRUE		( ( portBASE_TYPE ) 1 )
+#define pdFALSE			( ( BaseType_t ) 0 )
+#define pdTRUE			( ( BaseType_t ) 1 )
 
-#define pdPASS									( pdTRUE )
-#define pdFAIL									( pdFALSE )
-#define errQUEUE_EMPTY							( ( portBASE_TYPE ) 0 )
-#define errQUEUE_FULL							( ( portBASE_TYPE ) 0 )
+#define pdPASS			( pdTRUE )
+#define pdFAIL			( pdFALSE )
+#define errQUEUE_EMPTY	( ( BaseType_t ) 0 )
+#define errQUEUE_FULL	( ( BaseType_t ) 0 )
 
 /* Error definitions. */
 #define errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY	( -1 )

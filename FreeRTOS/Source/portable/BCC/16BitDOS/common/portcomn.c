@@ -83,9 +83,9 @@ Changes from V2.6.1
 /*-----------------------------------------------------------*/
 
 /* See header file for description. */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-portSTACK_TYPE DS_Reg = 0;
+StackType_t DS_Reg = 0;
 
 	/* Place a few bytes of known values on the bottom of the stack.
 	This is just useful for debugging. */
@@ -128,15 +128,15 @@ portSTACK_TYPE DS_Reg = 0;
 	/* The remaining registers would be pushed on the stack by our context
 	switch function.  These are loaded with values simply to make debugging
 	easier. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xAAAA;	/* AX */
+	*pxTopOfStack = ( StackType_t ) 0xAAAA;	/* AX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBBBB;	/* BX */
+	*pxTopOfStack = ( StackType_t ) 0xBBBB;	/* BX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xCCCC;	/* CX */
+	*pxTopOfStack = ( StackType_t ) 0xCCCC;	/* CX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDDDD;	/* DX */
+	*pxTopOfStack = ( StackType_t ) 0xDDDD;	/* DX */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xEEEE;	/* ES */
+	*pxTopOfStack = ( StackType_t ) 0xEEEE;	/* ES */
 	pxTopOfStack--;
 
 	/* We need the true data segment. */
@@ -144,11 +144,11 @@ portSTACK_TYPE DS_Reg = 0;
 
 	*pxTopOfStack = DS_Reg;						/* DS */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0123;	/* SI */
+	*pxTopOfStack = ( StackType_t ) 0x0123;	/* SI */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xDDDD;	/* DI */
+	*pxTopOfStack = ( StackType_t ) 0xDDDD;	/* DI */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0xBBBB;	/* BP */
+	*pxTopOfStack = ( StackType_t ) 0xBBBB;	/* BP */
 
 	/*lint +e950 +e611 +e923 */
 

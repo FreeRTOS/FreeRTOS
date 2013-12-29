@@ -89,27 +89,31 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned long
+#define portSTACK_TYPE	uint32_t
 #define portBASE_TYPE	long
 
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned long portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 /*-----------------------------------------------------------*/
 
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			8
 #define portSTACK_GROWTH			-1
-#define portTICK_RATE_MS			( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
 #define portIPL_SHIFT				( 10UL )
-/* Don't straddle the CEE bit.  Interrupts calling FreeRTOS functions should 
+/* Don't straddle the CEE bit.  Interrupts calling FreeRTOS functions should
 never have higher IPL bits set anyway. */
 #define portALL_IPL_BITS			( 0x7FUL << portIPL_SHIFT )
 #define portSW0_BIT					( 0x01 << 8 )
@@ -125,7 +129,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 #ifdef configASSERT
 	#define portDISABLE_INTERRUPTS()											\
 	{																			\
-	unsigned long ulStatus;														\
+	uint32_t ulStatus;														\
 																				\
 		/* Mask interrupts at and below the kernel interrupt priority. */		\
 		ulStatus = _CP0_GET_STATUS();											\
@@ -140,7 +144,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 #else /* configASSERT */
 	#define portDISABLE_INTERRUPTS()										\
 	{																		\
-	unsigned long ulStatus;													\
+	uint32_t ulStatus;													\
 																			\
 		/* Mask interrupts at and below the kernel interrupt priority. */	\
 		ulStatus = _CP0_GET_STATUS();										\
@@ -151,7 +155,7 @@ ensure API function and interrupt entry is as fast and as simple as possible. */
 
 #define portENABLE_INTERRUPTS()											\
 {																		\
-unsigned long ulStatus;													\
+uint32_t ulStatus;													\
 																		\
 	/* Unmask all interrupts. */										\
 	ulStatus = _CP0_GET_STATUS();										\
@@ -166,8 +170,8 @@ extern void vTaskExitCritical( void );
 #define portENTER_CRITICAL()		vTaskEnterCritical()
 #define portEXIT_CRITICAL()			vTaskExitCritical()
 
-extern unsigned portBASE_TYPE uxPortSetInterruptMaskFromISR();
-extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
+extern UBaseType_t uxPortSetInterruptMaskFromISR();
+extern void vPortClearInterruptMaskFromISR( UBaseType_t );
 #define portSET_INTERRUPT_MASK_FROM_ISR() uxPortSetInterruptMaskFromISR()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) vPortClearInterruptMaskFromISR( uxSavedStatusRegister )
 
@@ -194,7 +198,7 @@ extern void vPortClearInterruptMaskFromISR( unsigned portBASE_TYPE );
 
 #define portYIELD()								\
 {												\
-unsigned long ulCause;							\
+uint32_t ulCause;							\
 												\
 	/* Trigger software interrupt. */			\
 	ulCause = _CP0_GET_CAUSE();					\

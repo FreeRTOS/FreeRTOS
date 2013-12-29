@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -90,21 +90,25 @@ extern "C" {
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	unsigned long
+#define portSTACK_TYPE	uint32_t
 #define portBASE_TYPE	long
 
+typedef portSTACK_TYPE StackType_t;
+typedef long BaseType_t;
+typedef unsigned long UBaseType_t;
+
 #if( configUSE_16_BIT_TICKS == 1 )
-	typedef unsigned portSHORT portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffff
+	typedef uint16_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffff
 #else
-	typedef unsigned portLONG portTickType;
-	#define portMAX_DELAY ( portTickType ) 0xffffffffUL
+	typedef uint32_t TickType_t;
+	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #endif
 /*---------------------------------------------------------------------------*/
 
 /* Architecture specifics. */
 #define portSTACK_GROWTH							( -1 )
-#define portTICK_RATE_MS							( ( portTickType ) 1000 / configTICK_RATE_HZ )
+#define portTICK_RATE_MS							( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT							4
 #define portNOP()									__asm volatile( " nop " )
 #define portCRITICAL_NESTING_IN_TCB					1
@@ -113,7 +117,7 @@ extern "C" {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct MPU_SETTINGS { unsigned long ulNotUsed; } xMPU_SETTINGS;
+typedef struct MPU_SETTINGS { uint32_t ulNotUsed; } xMPU_SETTINGS;
 
 /* Define away the instruction from the Restore Context Macro. */
 #define portPRIVILEGE_BIT							0x0UL
@@ -127,8 +131,8 @@ extern void vTaskExitCritical( void );
 /*---------------------------------------------------------------------------*/
 
 /* CSA Manipulation. */
-#define portCSA_TO_ADDRESS( pCSA )			( ( unsigned long * )( ( ( ( pCSA ) & 0x000F0000 ) << 12 ) | ( ( ( pCSA ) & 0x0000FFFF ) << 6 ) ) )
-#define portADDRESS_TO_CSA( pAddress )		( ( unsigned long )( ( ( ( (unsigned long)( pAddress ) ) & 0xF0000000 ) >> 12 ) | ( ( ( unsigned long )( pAddress ) & 0x003FFFC0 ) >> 6 ) ) )
+#define portCSA_TO_ADDRESS( pCSA )			( ( uint32_t * )( ( ( ( pCSA ) & 0x000F0000 ) << 12 ) | ( ( ( pCSA ) & 0x0000FFFF ) << 6 ) ) )
+#define portADDRESS_TO_CSA( pAddress )		( ( uint32_t )( ( ( ( (uint32_t)( pAddress ) ) & 0xF0000000 ) >> 12 ) | ( ( ( uint32_t )( pAddress ) & 0x003FFFC0 ) >> 6 ) ) )
 /*---------------------------------------------------------------------------*/
 
 #define portYIELD()								_syscall( 0 )
@@ -141,7 +145,7 @@ extern void vTaskExitCritical( void );
 
 /* Set ICR.CCPN to configMAX_SYSCALL_INTERRUPT_PRIORITY. */
 #define portDISABLE_INTERRUPTS()	{																									\
-										unsigned long ulICR;																			\
+										uint32_t ulICR;																			\
 										_disable();																						\
 										ulICR = _mfcr( $ICR ); 		/* Get current ICR value. */										\
 										ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */											\
@@ -153,7 +157,7 @@ extern void vTaskExitCritical( void );
 
 /* Clear ICR.CCPN to allow all interrupt priorities. */
 #define portENABLE_INTERRUPTS()		{																	\
-										unsigned long ulICR;											\
+										uint32_t ulICR;											\
 										_disable();														\
 										ulICR = _mfcr( $ICR );		/* Get current ICR value. */		\
 										ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */			\
@@ -164,7 +168,7 @@ extern void vTaskExitCritical( void );
 
 /* Set ICR.CCPN to uxSavedMaskValue. */
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedMaskValue ) 	{																						\
-																	unsigned long ulICR;																\
+																	uint32_t ulICR;																\
 																	_disable();																			\
 																	ulICR = _mfcr( $ICR );		/* Get current ICR value. */							\
 																	ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */								\
@@ -176,7 +180,7 @@ extern void vTaskExitCritical( void );
 
 
 /* Set ICR.CCPN to configMAX_SYSCALL_INTERRUPT_PRIORITY */
-extern unsigned long uxPortSetInterruptMaskFromISR( void );
+extern uint32_t uxPortSetInterruptMaskFromISR( void );
 #define portSET_INTERRUPT_MASK_FROM_ISR() 	uxPortSetInterruptMaskFromISR()
 
 /* Pend a priority 1 interrupt, which will take care of the context switch. */
@@ -193,8 +197,8 @@ extern unsigned long uxPortSetInterruptMaskFromISR( void );
  * Port specific clean up macro required to free the CSAs that were consumed by
  * a task that has since been deleted.
  */
-void vPortReclaimCSA( unsigned long *pxTCB );
-#define portCLEAN_UP_TCB( pxTCB )		vPortReclaimCSA( ( unsigned long * ) ( pxTCB ) )
+void vPortReclaimCSA( uint32_t *pxTCB );
+#define portCLEAN_UP_TCB( pxTCB )		vPortReclaimCSA( ( uint32_t * ) ( pxTCB ) )
 
 #ifdef __cplusplus
 }

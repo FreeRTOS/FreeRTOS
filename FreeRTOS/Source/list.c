@@ -72,12 +72,12 @@
  * PUBLIC LIST API documented in list.h
  *----------------------------------------------------------*/
 
-void vListInitialise( xList * const pxList )
+void vListInitialise( List_t * const pxList )
 {
 	/* The list structure contains a list item which is used to mark the
 	end of the list.  To initialise the list the list end is inserted
 	as the only list entry. */
-	pxList->pxIndex = ( xListItem * ) &( pxList->xListEnd );			/*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
+	pxList->pxIndex = ( ListItem_t * ) &( pxList->xListEnd );			/*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 
 	/* The list end value is the highest possible value in the list to
 	ensure it remains at the end of the list. */
@@ -85,23 +85,23 @@ void vListInitialise( xList * const pxList )
 
 	/* The list end next and previous pointers point to itself so we know
 	when the list is empty. */
-	pxList->xListEnd.pxNext = ( xListItem * ) &( pxList->xListEnd );	/*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
-	pxList->xListEnd.pxPrevious = ( xListItem * ) &( pxList->xListEnd );/*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
+	pxList->xListEnd.pxNext = ( ListItem_t * ) &( pxList->xListEnd );	/*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
+	pxList->xListEnd.pxPrevious = ( ListItem_t * ) &( pxList->xListEnd );/*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 
-	pxList->uxNumberOfItems = ( unsigned portBASE_TYPE ) 0U;
+	pxList->uxNumberOfItems = ( UBaseType_t ) 0U;
 }
 /*-----------------------------------------------------------*/
 
-void vListInitialiseItem( xListItem * const pxItem )
+void vListInitialiseItem( ListItem_t * const pxItem )
 {
 	/* Make sure the list item is not recorded as being on a list. */
 	pxItem->pvContainer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vListInsertEnd( xList * const pxList, xListItem * const pxNewListItem )
+void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
-xListItem * const pxIndex = pxList->pxIndex;
+ListItem_t * const pxIndex = pxList->pxIndex;
 
 	/* Insert a new list item into pxList, but rather than sort the list,
 	makes the new list item the last item to be removed by a call to
@@ -118,10 +118,10 @@ xListItem * const pxIndex = pxList->pxIndex;
 }
 /*-----------------------------------------------------------*/
 
-void vListInsert( xList * const pxList, xListItem * const pxNewListItem )
+void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
-xListItem *pxIterator;
-const portTickType xValueOfInsertion = pxNewListItem->xItemValue;
+ListItem_t *pxIterator;
+const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 
 	/* Insert the new list item into the list, sorted in xItemValue order.
 
@@ -152,10 +152,11 @@ const portTickType xValueOfInsertion = pxNewListItem->xItemValue;
 			4) Using a queue or semaphore before it has been initialised or
 			   before the scheduler has been started (are interrupts firing
 			   before vTaskStartScheduler() has been called?).
-		See http://www.freertos.org/FAQHelp.html for more tips.
+		See http://www.freertos.org/FAQHelp.html for more tips, and ensure
+		configASSERT() is defined!  http://www.freertos.org/a00110.html#configASSERT
 		**********************************************************************/
 
-		for( pxIterator = ( xListItem * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue <= xValueOfInsertion; pxIterator = pxIterator->pxNext ) /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
+		for( pxIterator = ( ListItem_t * ) &( pxList->xListEnd ); pxIterator->pxNext->xItemValue <= xValueOfInsertion; pxIterator = pxIterator->pxNext ) /*lint !e826 !e740 The mini list structure is used as the list end to save RAM.  This is checked and valid. */
 		{
 			/* There is nothing to do here, we are just iterating to the
 			wanted insertion position. */
@@ -175,11 +176,11 @@ const portTickType xValueOfInsertion = pxNewListItem->xItemValue;
 }
 /*-----------------------------------------------------------*/
 
-unsigned portBASE_TYPE uxListRemove( xListItem * const pxItemToRemove )
+UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
 {
 /* The list item knows which list it is in.  Obtain the list from the list
 item. */
-xList * const pxList = ( xList * ) pxItemToRemove->pvContainer;
+List_t * const pxList = ( List_t * ) pxItemToRemove->pvContainer;
 
 	pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
 	pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;

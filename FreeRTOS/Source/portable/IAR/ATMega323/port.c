@@ -73,13 +73,13 @@
  *----------------------------------------------------------*/
 
 /* Start tasks with interrupts enables. */
-#define portFLAGS_INT_ENABLED					( ( portSTACK_TYPE ) 0x80 )
+#define portFLAGS_INT_ENABLED					( ( StackType_t ) 0x80 )
 
 /* Hardware constants for timer 1. */
-#define portCLEAR_COUNTER_ON_MATCH				( ( unsigned char ) 0x08 )
-#define portPRESCALE_64							( ( unsigned char ) 0x03 )
-#define portCLOCK_PRESCALER						( ( unsigned long ) 64 )
-#define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( unsigned char ) 0x10 )
+#define portCLEAR_COUNTER_ON_MATCH				( ( uint8_t ) 0x08 )
+#define portPRESCALE_64							( ( uint8_t ) 0x03 )
+#define portCLOCK_PRESCALER						( ( uint32_t ) 64 )
+#define portCOMPARE_MATCH_A_INTERRUPT_ENABLE	( ( uint8_t ) 0x10 )
 
 /* The number of bytes used on the hardware stack by the task start address. */
 #define portBYTES_USED_BY_RETURN_ADDRESS		( 2 )
@@ -87,8 +87,8 @@
 
 /* Stores the critical section nesting.  This must not be initialised to 0.
 It will be initialised when a task starts. */
-#define portNO_CRITICAL_NESTING					( ( unsigned portBASE_TYPE ) 0 )
-unsigned portBASE_TYPE uxCriticalNesting = 0x50;
+#define portNO_CRITICAL_NESTING					( ( UBaseType_t ) 0 )
+UBaseType_t uxCriticalNesting = 0x50;
 
 
 /*
@@ -108,10 +108,10 @@ extern void vPortStart( void );
 /*
  * See header file for description.
  */
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
-unsigned short usAddress;
-portSTACK_TYPE *pxTopOfHardwareStack;
+uint16_t usAddress;
+StackType_t *pxTopOfHardwareStack;
 
 	/* Place a few bytes of known values on the bottom of the stack.
 	This is just useful for debugging. */
@@ -149,12 +149,12 @@ portSTACK_TYPE *pxTopOfHardwareStack;
 
 	The first part of the stack is the hardware stack.  Place the start
 	address of the task on the hardware stack. */
-	usAddress = ( unsigned short ) pxCode;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	usAddress = ( uint16_t ) pxCode;
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 
@@ -169,7 +169,7 @@ portSTACK_TYPE *pxTopOfHardwareStack;
 	portSAVE_CONTEXT places the flags on the stack immediately after r0
 	to ensure the interrupts get disabled as soon as possible, and so ensuring
 	the stack use is minimal should a context switch interrupt occur. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x00;	/* R0 */
+	*pxTopOfStack = ( StackType_t ) 0x00;	/* R0 */
 	pxTopOfStack--;
 	*pxTopOfStack = portFLAGS_INT_ENABLED;
 	pxTopOfStack--;
@@ -177,88 +177,88 @@ portSTACK_TYPE *pxTopOfHardwareStack;
 	/* Next place the address of the hardware stack.  This is required so
 	the AVR stack pointer can be restored to point to the hardware stack. */
 	pxTopOfHardwareStack -= portBYTES_USED_BY_RETURN_ADDRESS;
-	usAddress = ( unsigned short ) pxTopOfHardwareStack;
+	usAddress = ( uint16_t ) pxTopOfHardwareStack;
 
 	/* SPL */
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 	/* SPH */
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 
 
 
 	/* Now the remaining registers. */
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x01;	/* R1 */
+	*pxTopOfStack = ( StackType_t ) 0x01;	/* R1 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x02;	/* R2 */
+	*pxTopOfStack = ( StackType_t ) 0x02;	/* R2 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x03;	/* R3 */
+	*pxTopOfStack = ( StackType_t ) 0x03;	/* R3 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x04;	/* R4 */
+	*pxTopOfStack = ( StackType_t ) 0x04;	/* R4 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x05;	/* R5 */
+	*pxTopOfStack = ( StackType_t ) 0x05;	/* R5 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x06;	/* R6 */
+	*pxTopOfStack = ( StackType_t ) 0x06;	/* R6 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x07;	/* R7 */
+	*pxTopOfStack = ( StackType_t ) 0x07;	/* R7 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x08;	/* R8 */
+	*pxTopOfStack = ( StackType_t ) 0x08;	/* R8 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x09;	/* R9 */
+	*pxTopOfStack = ( StackType_t ) 0x09;	/* R9 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x10;	/* R10 */
+	*pxTopOfStack = ( StackType_t ) 0x10;	/* R10 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x11;	/* R11 */
+	*pxTopOfStack = ( StackType_t ) 0x11;	/* R11 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x12;	/* R12 */
+	*pxTopOfStack = ( StackType_t ) 0x12;	/* R12 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x13;	/* R13 */
+	*pxTopOfStack = ( StackType_t ) 0x13;	/* R13 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x14;	/* R14 */
+	*pxTopOfStack = ( StackType_t ) 0x14;	/* R14 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x15;	/* R15 */
+	*pxTopOfStack = ( StackType_t ) 0x15;	/* R15 */
 	pxTopOfStack--;
 
 	/* Place the parameter on the stack in the expected location. */
-	usAddress = ( unsigned short ) pvParameters;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	usAddress = ( uint16_t ) pvParameters;
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
 	usAddress >>= 8;
-	*pxTopOfStack = ( portSTACK_TYPE ) ( usAddress & ( unsigned short ) 0x00ff );
+	*pxTopOfStack = ( StackType_t ) ( usAddress & ( uint16_t ) 0x00ff );
 	pxTopOfStack--;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x18;	/* R18 */
+	*pxTopOfStack = ( StackType_t ) 0x18;	/* R18 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x19;	/* R19 */
+	*pxTopOfStack = ( StackType_t ) 0x19;	/* R19 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x20;	/* R20 */
+	*pxTopOfStack = ( StackType_t ) 0x20;	/* R20 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x21;	/* R21 */
+	*pxTopOfStack = ( StackType_t ) 0x21;	/* R21 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x22;	/* R22 */
+	*pxTopOfStack = ( StackType_t ) 0x22;	/* R22 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x23;	/* R23 */
+	*pxTopOfStack = ( StackType_t ) 0x23;	/* R23 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x24;	/* R24 */
+	*pxTopOfStack = ( StackType_t ) 0x24;	/* R24 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x25;	/* R25 */
+	*pxTopOfStack = ( StackType_t ) 0x25;	/* R25 */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x26;	/* R26 X */
+	*pxTopOfStack = ( StackType_t ) 0x26;	/* R26 X */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x27;	/* R27 */
+	*pxTopOfStack = ( StackType_t ) 0x27;	/* R27 */
 	pxTopOfStack--;
 
 	/* The Y register is not stored as it is used as the software stack and
 	gets saved into the task control block. */
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x30;	/* R30 Z */
+	*pxTopOfStack = ( StackType_t ) 0x30;	/* R30 Z */
 	pxTopOfStack--;
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x031;	/* R31 */
+	*pxTopOfStack = ( StackType_t ) 0x031;	/* R31 */
 
 	pxTopOfStack--;
 	*pxTopOfStack = portNO_CRITICAL_NESTING;	/* Critical nesting is zero when the task starts. */
@@ -269,7 +269,7 @@ portSTACK_TYPE *pxTopOfHardwareStack;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 	/* Setup the hardware to generate the tick. */
 	prvSetupTimerInterrupt();
@@ -296,8 +296,8 @@ void vPortEndScheduler( void )
  */
 static void prvSetupTimerInterrupt( void )
 {
-unsigned long ulCompareMatch;
-unsigned char ucHighByte, ucLowByte;
+uint32_t ulCompareMatch;
+uint8_t ucHighByte, ucLowByte;
 
 	/* Using 16bit timer 1 to generate the tick.  Correct fuses must be
 	selected for the configCPU_CLOCK_HZ clock. */
@@ -308,13 +308,13 @@ unsigned char ucHighByte, ucLowByte;
 	ulCompareMatch /= portCLOCK_PRESCALER;
 
 	/* Adjust for correct value. */
-	ulCompareMatch -= ( unsigned long ) 1;
+	ulCompareMatch -= ( uint32_t ) 1;
 
 	/* Setup compare match value for compare match A.  Interrupts are disabled
 	before this is called so we need not worry here. */
-	ucLowByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
+	ucLowByte = ( uint8_t ) ( ulCompareMatch & ( uint32_t ) 0xff );
 	ulCompareMatch >>= 8;
-	ucHighByte = ( unsigned char ) ( ulCompareMatch & ( unsigned long ) 0xff );
+	ucHighByte = ( uint8_t ) ( ulCompareMatch & ( uint32_t ) 0xff );
 	OCR1AH = ucHighByte;
 	OCR1AL = ucLowByte;
 

@@ -2472,7 +2472,7 @@ __inline unsigned int AT91F_US_ReceiveFrame (
 //*----------------------------------------------------------------------------
 __inline void AT91F_US_SetIrdaFilter (
 	AT91PS_USART pUSART,
-	unsigned char value
+	uint8_t value
 )
 {
 	pUSART->US_IF = value;
@@ -2511,7 +2511,7 @@ __inline void AT91F_UDP_DisableIt (
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_SetAddress (
 	AT91PS_UDP pUDP,     // \arg pointer to a UDP controller
-	unsigned char address)   // \arg new UDP address
+	uint8_t address)   // \arg new UDP address
 {
 	pUDP->UDP_FADDR = (AT91C_UDP_FEN | address);
 }
@@ -2577,7 +2577,7 @@ __inline void AT91F_UDP_ResetEp ( // \return the UDP device state
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpStall(
 	AT91PS_UDP pUDP,     // \arg pointer to a UDP controller
-	unsigned char endpoint)   // \arg endpoint number
+	uint8_t endpoint)   // \arg endpoint number
 {
 	pUDP->UDP_CSR[endpoint] |= AT91C_UDP_FORCESTALL;
 }
@@ -2588,8 +2588,8 @@ __inline void AT91F_UDP_EpStall(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpWrite(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint,  // \arg endpoint number
-	unsigned char value)     // \arg value to be written in the DPR
+	uint8_t endpoint,  // \arg endpoint number
+	uint8_t value)     // \arg value to be written in the DPR
 {
 	pUDP->UDP_FDR[endpoint] = value;
 }
@@ -2600,7 +2600,7 @@ __inline void AT91F_UDP_EpWrite(
 //*----------------------------------------------------------------------------
 __inline unsigned int AT91F_UDP_EpRead(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint)  // \arg endpoint number
+	uint8_t endpoint)  // \arg endpoint number
 {
 	return pUDP->UDP_FDR[endpoint];
 }
@@ -2611,7 +2611,7 @@ __inline unsigned int AT91F_UDP_EpRead(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpEndOfWr(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint)  // \arg endpoint number
+	uint8_t endpoint)  // \arg endpoint number
 {
 	pUDP->UDP_CSR[endpoint] |= AT91C_UDP_TXPKTRDY;
 }
@@ -2622,7 +2622,7 @@ __inline void AT91F_UDP_EpEndOfWr(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpClear(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint,  // \arg endpoint number
+	uint8_t endpoint,  // \arg endpoint number
 	unsigned int flag)       // \arg flag to be cleared
 {
 	pUDP->UDP_CSR[endpoint] &= ~(flag);
@@ -2634,7 +2634,7 @@ __inline void AT91F_UDP_EpClear(
 //*----------------------------------------------------------------------------
 __inline void AT91F_UDP_EpSet(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint,  // \arg endpoint number
+	uint8_t endpoint,  // \arg endpoint number
 	unsigned int flag)       // \arg flag to be cleared
 {
 	pUDP->UDP_CSR[endpoint] |= flag;
@@ -2646,7 +2646,7 @@ __inline void AT91F_UDP_EpSet(
 //*----------------------------------------------------------------------------
 __inline unsigned int AT91F_UDP_EpStatus(
 	AT91PS_UDP pUDP,         // \arg pointer to a UDP controller
-	unsigned char endpoint)  // \arg endpoint number
+	uint8_t endpoint)  // \arg endpoint number
 {
 	return pUDP->UDP_CSR[endpoint];
 }

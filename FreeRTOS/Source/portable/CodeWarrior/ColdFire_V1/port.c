@@ -68,49 +68,49 @@
 #include "task.h"
 
 
-#define portINITIAL_FORMAT_VECTOR		( ( portSTACK_TYPE ) 0x4000 )
+#define portINITIAL_FORMAT_VECTOR		( ( StackType_t ) 0x4000 )
 
 /* Supervisor mode set. */
-#define portINITIAL_STATUS_REGISTER		( ( portSTACK_TYPE ) 0x2000)
+#define portINITIAL_STATUS_REGISTER		( ( StackType_t ) 0x2000)
 
 /* The clock prescale into the timer peripheral. */
-#define portPRESCALE_VALUE				( ( unsigned char ) 10 )
+#define portPRESCALE_VALUE				( ( uint8_t ) 10 )
 
 /* The clock frequency into the RTC. */
-#define portRTC_CLOCK_HZ				( ( unsigned long ) 1000 )
+#define portRTC_CLOCK_HZ				( ( uint32_t ) 1000 )
 
 asm void interrupt VectorNumber_VL1swi vPortYieldISR( void );
 static void prvSetupTimerInterrupt( void );
 
 /* Used to keep track of the number of nested calls to taskENTER_CRITICAL().  This
 will be set to 0 prior to the first task being started. */
-static unsigned long ulCriticalNesting = 0x9999UL;
+static uint32_t ulCriticalNesting = 0x9999UL;
 
 /*-----------------------------------------------------------*/
 
-portSTACK_TYPE *pxPortInitialiseStack( portSTACK_TYPE * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
 {
 
-unsigned long ulOriginalA5;
+uint32_t ulOriginalA5;
 
 	__asm{ MOVE.L A5, ulOriginalA5 };
 
 
-	*pxTopOfStack = (portSTACK_TYPE) 0xDEADBEEF;
+	*pxTopOfStack = (StackType_t) 0xDEADBEEF;
 	pxTopOfStack--;
 
 	/* Exception stack frame starts with the return address. */
-	*pxTopOfStack = ( portSTACK_TYPE ) pxCode;
+	*pxTopOfStack = ( StackType_t ) pxCode;
 	pxTopOfStack--;
 
 	*pxTopOfStack = ( portINITIAL_FORMAT_VECTOR << 16UL ) | ( portINITIAL_STATUS_REGISTER );
 	pxTopOfStack--;
 
-	*pxTopOfStack = ( portSTACK_TYPE ) 0x0; /*FP*/
+	*pxTopOfStack = ( StackType_t ) 0x0; /*FP*/
 	pxTopOfStack -= 14; /* A5 to D0. */
 
 	/* Parameter in A0. */
-	*( pxTopOfStack + 8 ) = ( portSTACK_TYPE ) pvParameters;
+	*( pxTopOfStack + 8 ) = ( StackType_t ) pvParameters;
 
 	/* A5 must be maintained as it is resurved by the compiler. */
 	*( pxTopOfStack + 13 ) = ulOriginalA5;
@@ -119,7 +119,7 @@ unsigned long ulOriginalA5;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xPortStartScheduler( void )
+BaseType_t xPortStartScheduler( void )
 {
 extern void vPortStartFirstTask( void );
 
@@ -189,7 +189,7 @@ void vPortExitCritical( void )
 
 void vPortYieldHandler( void )
 {
-unsigned long ulSavedInterruptMask;
+uint32_t ulSavedInterruptMask;
 
 	ulSavedInterruptMask = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
@@ -203,7 +203,7 @@ unsigned long ulSavedInterruptMask;
 
 void interrupt VectorNumber_Vrtc vPortTickISR( void )
 {
-unsigned long ulSavedInterruptMask;
+uint32_t ulSavedInterruptMask;
 
 	/* Clear the interrupt. */
 	RTCSC |= RTCSC_RTIF_MASK;

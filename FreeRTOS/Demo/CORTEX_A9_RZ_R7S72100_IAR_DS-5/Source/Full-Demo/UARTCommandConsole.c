@@ -84,9 +84,9 @@ static void prvUARTCommandConsoleTask( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* Const messages output by the command console. */
-static const signed char * const pcWelcomeMessage = "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
-static const signed char * const pcEndOfOutputMessage = "\r\n[Press ENTER to execute the previous command again]\r\n>";
-static const signed char * const pcNewLine = "\r\n";
+static const char * const pcWelcomeMessage = "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
+static const char * const pcEndOfOutputMessage = "\r\n[Press ENTER to execute the previous command again]\r\n>";
+static const char * const pcNewLine = "\r\n";
 
 /*-----------------------------------------------------------*/
 
@@ -104,8 +104,8 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPr
 
 static void prvUARTCommandConsoleTask( void *pvParameters )
 {
-int8_t cRxedChar, cInputIndex = 0, *pcOutputString;
-static int8_t cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
+char cRxedChar, cInputIndex = 0, *pcOutputString;
+static char cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
 portBASE_TYPE xReturned;
 
 	( void ) pvParameters;
@@ -116,12 +116,12 @@ portBASE_TYPE xReturned;
 	pcOutputString = FreeRTOS_CLIGetOutputBuffer();
 
 	/* Send the welcome message. */
-	vSerialPutString( NULL, pcWelcomeMessage, strlen( ( char * ) pcWelcomeMessage ) );
+	vSerialPutString( NULL, ( const signed char * ) pcWelcomeMessage, strlen( ( char * ) pcWelcomeMessage ) );
 
 	for( ;; )
 	{
 		/* Only interested in reading one character at a time. */
-		while( xSerialGetChar( NULL, &cRxedChar, portMAX_DELAY ) == pdFALSE );
+		while( xSerialGetChar( NULL, ( signed char * ) &cRxedChar, portMAX_DELAY ) == pdFALSE );
 
 		/* Echo the character back. */
 		xSerialPutChar( NULL, cRxedChar, portMAX_DELAY );
@@ -130,7 +130,7 @@ portBASE_TYPE xReturned;
 		if( cRxedChar == '\n' || cRxedChar == '\r' )
 		{
 			/* Just to space the output from the input. */
-			vSerialPutString( NULL, pcNewLine, strlen( ( char * ) pcNewLine ) );
+			vSerialPutString( NULL, ( const signed char * ) pcNewLine, strlen( ( char * ) pcNewLine ) );
 
 			/* See if the command is empty, indicating that the last command is
 			to be executed again. */
@@ -150,7 +150,7 @@ portBASE_TYPE xReturned;
 				xReturned = FreeRTOS_CLIProcessCommand( cInputString, pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
 
 				/* Write the generated string to the UART. */
-				vSerialPutString( NULL, pcOutputString, strlen( ( char * ) pcOutputString ) );
+				vSerialPutString( NULL, ( const signed char * ) pcOutputString, strlen( ( char * ) pcOutputString ) );
 
 			} while( xReturned != pdFALSE );
 
@@ -161,7 +161,7 @@ portBASE_TYPE xReturned;
 			strcpy( ( char * ) cLastInputString, ( char * ) cInputString );
 			cInputIndex = 0;
 			memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
-			vSerialPutString( NULL, pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
+			vSerialPutString( NULL, ( const signed char * ) pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
 		}
 		else
 		{

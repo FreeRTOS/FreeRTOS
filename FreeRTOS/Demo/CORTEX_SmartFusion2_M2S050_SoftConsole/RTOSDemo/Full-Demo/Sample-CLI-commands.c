@@ -101,36 +101,36 @@
 /*
  * Implements the run-time-stats command.
  */
-static portBASE_TYPE prvTaskStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the task-stats command.
  */
-static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the echo-three-parameters command.
  */
-static portBASE_TYPE prvThreeParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the echo-parameters command.
  */
-static portBASE_TYPE prvParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the "trace start" and "trace stop" commands;
  */
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
-	static portBASE_TYPE prvStartStopTraceCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 #endif
 
 /* Structure that defines the "run-time-stats" command line command.   This
 generates a table that shows how much run time each task has */
 static const CLI_Command_Definition_t xRunTimeStats =
 {
-	( const int8_t * const ) "run-time-stats", /* The command string to type. */
-	( const int8_t * const ) "\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n",
+	"run-time-stats", /* The command string to type. */
+	"\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n",
 	prvRunTimeStatsCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -139,8 +139,8 @@ static const CLI_Command_Definition_t xRunTimeStats =
 a table that gives information on each task in the system. */
 static const CLI_Command_Definition_t xTaskStats =
 {
-	( const int8_t * const ) "task-stats", /* The command string to type. */
-	( const int8_t * const ) "\r\ntask-stats:\r\n Displays a table showing the state of each FreeRTOS task\r\n",
+	"task-stats", /* The command string to type. */
+	"\r\ntask-stats:\r\n Displays a table showing the state of each FreeRTOS task\r\n",
 	prvTaskStatsCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -150,8 +150,8 @@ takes exactly three parameters that the command simply echos back one at a
 time. */
 static const CLI_Command_Definition_t xThreeParameterEcho =
 {
-	( const int8_t * const ) "echo-3-parameters",
-	( const int8_t * const ) "\r\necho-3-parameters <param1> <param2> <param3>:\r\n Expects three parameters, echos each in turn\r\n",
+	"echo-3-parameters",
+	"\r\necho-3-parameters <param1> <param2> <param3>:\r\n Expects three parameters, echos each in turn\r\n",
 	prvThreeParameterEchoCommand, /* The function to run. */
 	3 /* Three parameters are expected, which can take any value. */
 };
@@ -161,8 +161,8 @@ takes a variable number of parameters that the command simply echos back one at
 a time. */
 static const CLI_Command_Definition_t xParameterEcho =
 {
-	( const int8_t * const ) "echo-parameters",
-	( const int8_t * const ) "\r\necho-parameters <...>:\r\n Take variable number of parameters, echos each in turn\r\n",
+	"echo-parameters",
+	"\r\necho-parameters <...>:\r\n Take variable number of parameters, echos each in turn\r\n",
 	prvParameterEchoCommand, /* The function to run. */
 	-1 /* The user can enter any number of commands. */
 };
@@ -172,8 +172,8 @@ static const CLI_Command_Definition_t xParameterEcho =
 	parameter, which can be either "start" or "stop". */
 	static const CLI_Command_Definition_t xStartStopTrace =
 	{
-		( const int8_t * const ) "trace",
-		( const int8_t * const ) "\r\ntrace [start | stop]:\r\n Starts or stops a trace recording for viewing in FreeRTOS+Trace\r\n",
+		"trace",
+		"\r\ntrace [start | stop]:\r\n Starts or stops a trace recording for viewing in FreeRTOS+Trace\r\n",
 		prvStartStopTraceCommand, /* The function to run. */
 		1 /* One parameter is expected.  Valid values are "start" and "stop". */
 	};
@@ -197,7 +197,7 @@ void vRegisterSampleCLICommands( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTaskStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
@@ -218,7 +218,7 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
@@ -239,7 +239,7 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvThreeParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 int8_t *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn;
@@ -306,7 +306,7 @@ static portBASE_TYPE lParameterNumber = 0;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 int8_t *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn;
@@ -375,7 +375,7 @@ static portBASE_TYPE lParameterNumber = 0;
 
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
 
-	static portBASE_TYPE prvStartStopTraceCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
 	int8_t *pcParameter;
 	portBASE_TYPE lParameterStringLength;

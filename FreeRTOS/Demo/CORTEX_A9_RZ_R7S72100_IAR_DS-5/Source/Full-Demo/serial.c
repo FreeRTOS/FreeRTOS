@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -122,8 +122,8 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 
 	/* Create the queues used to hold Rx/Tx characters.  Note the comments at
 	the top of this file regarding the use of queues in this manner. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( char ) );
+	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( char ) );
 
 	/* If the queues were created correctly then setup the serial port
 	hardware. */
@@ -177,14 +177,14 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
-signed char *pxNext;
+char *pxNext;
 
 	/* A couple of parameters that this port does not use. */
 	( void ) usStringLength;
 	( void ) pxPort;
 
 	/* Send each character in the string, one at a time. */
-	pxNext = ( signed char * ) pcString;
+	pxNext = ( char * ) pcString;
 	while( *pxNext )
 	{
 		xSerialPutChar( pxPort, *pxNext, portMAX_DELAY );

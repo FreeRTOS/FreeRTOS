@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
@@ -104,48 +104,48 @@
 /*
  * Print out information on a single file.
  */
-static void prvCreateFileInfoString( int8_t *pcBuffer, F_FIND *pxFindStruct );
+static void prvCreateFileInfoString( char *pcBuffer, F_FIND *pxFindStruct );
 
 /*
  * Copies an existing file into a newly created file.
  */
-static portBASE_TYPE prvPerformCopy( int8_t *pcSourceFile,
-							int32_t lSourceFileLength,
-							int8_t *pcDestinationFile,
-							int8_t *pxWriteBuffer,
-							size_t xWriteBufferLen );
+static portBASE_TYPE prvPerformCopy( const char *pcSourceFile,
+									int32_t lSourceFileLength,
+									const char *pcDestinationFile,
+									char *pxWriteBuffer,
+									size_t xWriteBufferLen );
 
 /*
  * Implements the DIR command.
  */
-static portBASE_TYPE prvDIRCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvDIRCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the CD command.
  */
-static portBASE_TYPE prvCDCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvCDCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the DEL command.
  */
-static portBASE_TYPE prvDELCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvDELCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the TYPE command.
  */
-static portBASE_TYPE prvTYPECommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvTYPECommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the COPY command.
  */
-static portBASE_TYPE prvCOPYCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvCOPYCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /* Structure that defines the DIR command line command, which lists all the
 files in the current directory. */
 static const CLI_Command_Definition_t xDIR =
 {
-	( const int8_t * const ) "dir", /* The command string to type. */
-	( const int8_t * const ) "\r\ndir:\r\n Lists the files in the current directory\r\n",
+	"dir", /* The command string to type. */
+	"\r\ndir:\r\n Lists the files in the current directory\r\n",
 	prvDIRCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -154,8 +154,8 @@ static const CLI_Command_Definition_t xDIR =
 working directory. */
 static const CLI_Command_Definition_t xCD =
 {
-	( const int8_t * const ) "cd", /* The command string to type. */
-	( const int8_t * const ) "\r\ncd <dir name>:\r\n Changes the working directory\r\n",
+	"cd", /* The command string to type. */
+	"\r\ncd <dir name>:\r\n Changes the working directory\r\n",
 	prvCDCommand, /* The function to run. */
 	1 /* One parameter is expected. */
 };
@@ -164,8 +164,8 @@ static const CLI_Command_Definition_t xCD =
 contents of a file to the console. */
 static const CLI_Command_Definition_t xTYPE =
 {
-	( const int8_t * const ) "type", /* The command string to type. */
-	( const int8_t * const ) "\r\ntype <filename>:\r\n Prints file contents to the terminal\r\n",
+	"type", /* The command string to type. */
+	"\r\ntype <filename>:\r\n Prints file contents to the terminal\r\n",
 	prvTYPECommand, /* The function to run. */
 	1 /* One parameter is expected. */
 };
@@ -173,8 +173,8 @@ static const CLI_Command_Definition_t xTYPE =
 /* Structure that defines the DEL command line command, which deletes a file. */
 static const CLI_Command_Definition_t xDEL =
 {
-	( const int8_t * const ) "del", /* The command string to type. */
-	( const int8_t * const ) "\r\ndel <filename>:\r\n deletes a file or directory\r\n",
+	"del", /* The command string to type. */
+	"\r\ndel <filename>:\r\n deletes a file or directory\r\n",
 	prvDELCommand, /* The function to run. */
 	1 /* One parameter is expected. */
 };
@@ -182,8 +182,8 @@ static const CLI_Command_Definition_t xDEL =
 /* Structure that defines the COPY command line command, which deletes a file. */
 static const CLI_Command_Definition_t xCOPY =
 {
-	( const int8_t * const ) "copy", /* The command string to type. */
-	( const int8_t * const ) "\r\ncopy <source file> <dest file>:\r\n Copies <source file> to <dest file>\r\n",
+	"copy", /* The command string to type. */
+	"\r\ncopy <source file> <dest file>:\r\n Copies <source file> to <dest file>\r\n",
 	prvCOPYCommand, /* The function to run. */
 	2 /* Two parameters are expected. */
 };
@@ -201,9 +201,9 @@ void vRegisterFileSystemCLICommands( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTYPECommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvTYPECommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn = pdTRUE;
 static F_FILE *pxFile = NULL;
 int iChar;
@@ -227,12 +227,12 @@ size_t xColumns = 50U;
 	if( pxFile == NULL )
 	{
 		/* The file has not been opened yet.  Find the file name. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										1,						/* Return the first parameter. */
-										&xParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+							(
+								pcCommandString,		/* The command string itself. */
+								1,						/* Return the first parameter. */
+								&xParameterStringLength	/* Store the parameter string length. */
+							);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
@@ -257,7 +257,7 @@ size_t xColumns = 50U;
 			}
 			else
 			{
-				pcWriteBuffer[ xByte ] = ( int8_t ) iChar;
+				pcWriteBuffer[ xByte ] = ( char ) iChar;
 			}
 		}
 	}
@@ -269,51 +269,51 @@ size_t xColumns = 50U;
 		xReturn = pdFALSE;
 	}
 
-	strcat( ( char * ) pcWriteBuffer, cliNEW_LINE );
+	strcat( pcWriteBuffer, cliNEW_LINE );
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvCDCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvCDCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength;
 unsigned char ucReturned;
 size_t xStringLength;
 
 	/* Obtain the parameter string. */
-	pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-								(
-									pcCommandString,		/* The command string itself. */
-									1,						/* Return the first parameter. */
-									&xParameterStringLength	/* Store the parameter string length. */
-								);
+	pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							1,						/* Return the first parameter. */
+							&xParameterStringLength	/* Store the parameter string length. */
+						);
 
 	/* Sanity check something was returned. */
 	configASSERT( pcParameter );
 
 	/* Attempt to move to the requested directory. */
-	ucReturned = f_chdir( ( char * ) pcParameter );
+	ucReturned = f_chdir( pcParameter );
 
 	if( ucReturned == F_NO_ERROR )
 	{
-		sprintf( ( char * ) pcWriteBuffer, "In: " );
-		xStringLength = strlen( ( const char * ) pcWriteBuffer );
-		f_getcwd( ( char * ) &( pcWriteBuffer[ xStringLength ] ), ( unsigned char ) ( xWriteBufferLen - xStringLength ) );
+		sprintf( pcWriteBuffer, "In: " );
+		xStringLength = strlen( pcWriteBuffer );
+		f_getcwd( &( pcWriteBuffer[ xStringLength ] ), ( unsigned char ) ( xWriteBufferLen - xStringLength ) );
 	}
 	else
 	{
-		sprintf( ( char * ) pcWriteBuffer, "Error" );
+		sprintf( pcWriteBuffer, "Error" );
 	}
 
-	strcat( ( char * ) pcWriteBuffer, cliNEW_LINE );
+	strcat( pcWriteBuffer, cliNEW_LINE );
 
 	return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvDIRCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvDIRCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 static F_FIND *pxFindStruct = NULL;
 unsigned char ucReturned;
@@ -343,12 +343,12 @@ portBASE_TYPE xReturn = pdFALSE;
 			}
 			else
 			{
-				snprintf( ( char * ) pcWriteBuffer, xWriteBufferLen, "Error: f_findfirst() failed." );
+				snprintf( pcWriteBuffer, xWriteBufferLen, "Error: f_findfirst() failed." );
 			}
 		}
 		else
 		{
-			snprintf( ( char * ) pcWriteBuffer, xWriteBufferLen, "Failed to allocate RAM (using heap_4.c will prevent fragmentation)." );
+			snprintf( pcWriteBuffer, xWriteBufferLen, "Failed to allocate RAM (using heap_4.c will prevent fragmentation)." );
 		}
 	}
 	else
@@ -373,15 +373,15 @@ portBASE_TYPE xReturn = pdFALSE;
 		}
 	}
 
-	strcat( ( char * ) pcWriteBuffer, cliNEW_LINE );
+	strcat( pcWriteBuffer, cliNEW_LINE );
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvDELCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvDELCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength;
 unsigned char ucReturned;
 
@@ -389,12 +389,12 @@ unsigned char ucReturned;
 	( void ) xWriteBufferLen;
 
 	/* Obtain the parameter string. */
-	pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-								(
-									pcCommandString,		/* The command string itself. */
-									1,						/* Return the first parameter. */
-									&xParameterStringLength	/* Store the parameter string length. */
-								);
+	pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							1,						/* Return the first parameter. */
+							&xParameterStringLength	/* Store the parameter string length. */
+						);
 
 	/* Sanity check something was returned. */
 	configASSERT( pcParameter );
@@ -404,43 +404,44 @@ unsigned char ucReturned;
 
 	if( ucReturned == F_NO_ERROR )
 	{
-		sprintf( ( char * ) pcWriteBuffer, "%s was deleted", pcParameter );
+		sprintf( pcWriteBuffer, "%s was deleted", pcParameter );
 	}
 	else
 	{
-		sprintf( ( char * ) pcWriteBuffer, "Error" );
+		sprintf( pcWriteBuffer, "Error" );
 	}
 
-	strcat( ( char * ) pcWriteBuffer, cliNEW_LINE );
+	strcat( pcWriteBuffer, cliNEW_LINE );
 
 	return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvCOPYCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvCOPYCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcSourceFile, *pcDestinationFile;
+const char *pcDestinationFile;
+char *pcSourceFile;
 portBASE_TYPE xParameterStringLength;
 long lSourceLength, lDestinationLength = 0;
 
 	/* Obtain the name of the destination file. */
-	pcDestinationFile = ( int8_t * ) FreeRTOS_CLIGetParameter
-								(
-									pcCommandString,		/* The command string itself. */
-									2,						/* Return the second parameter. */
-									&xParameterStringLength	/* Store the parameter string length. */
-								);
+	pcDestinationFile = FreeRTOS_CLIGetParameter
+							(
+								pcCommandString,		/* The command string itself. */
+								2,						/* Return the second parameter. */
+								&xParameterStringLength	/* Store the parameter string length. */
+							);
 
 	/* Sanity check something was returned. */
 	configASSERT( pcDestinationFile );
 
 	/* Obtain the name of the source file. */
-	pcSourceFile = ( int8_t * ) FreeRTOS_CLIGetParameter
-								(
-									pcCommandString,		/* The command string itself. */
-									1,						/* Return the first parameter. */
-									&xParameterStringLength	/* Store the parameter string length. */
-								);
+	pcSourceFile = FreeRTOS_CLIGetParameter
+							(
+								pcCommandString,		/* The command string itself. */
+								1,						/* Return the first parameter. */
+								&xParameterStringLength	/* Store the parameter string length. */
+							);
 
 	/* Sanity check something was returned. */
 	configASSERT( pcSourceFile );
@@ -449,20 +450,20 @@ long lSourceLength, lDestinationLength = 0;
 	pcSourceFile[ xParameterStringLength ] = 0x00;
 
 	/* See if the source file exists, obtain its length if it does. */
-	lSourceLength = f_filelength( ( const char * ) pcSourceFile );
+	lSourceLength = f_filelength( pcSourceFile );
 
 	if( lSourceLength == 0 )
 	{
-		sprintf( ( char * ) pcWriteBuffer, "Source file does not exist" );
+		sprintf( pcWriteBuffer, "Source file does not exist" );
 	}
 	else
 	{
 		/* See if the destination file exists. */
-		lDestinationLength = f_filelength( ( const char * ) pcDestinationFile );
+		lDestinationLength = f_filelength( pcDestinationFile );
 
 		if( lDestinationLength != 0 )
 		{
-			sprintf( ( char * ) pcWriteBuffer, "Error: Destination file already exists" );
+			sprintf( pcWriteBuffer, "Error: Destination file already exists" );
 		}
 	}
 
@@ -472,25 +473,25 @@ long lSourceLength, lDestinationLength = 0;
 	{
 		if( prvPerformCopy( pcSourceFile, lSourceLength, pcDestinationFile, pcWriteBuffer, xWriteBufferLen ) == pdPASS )
 		{
-			sprintf( ( char * ) pcWriteBuffer, "Copy made" );
+			sprintf( pcWriteBuffer, "Copy made" );
 		}
 		else
 		{
-			sprintf( ( char * ) pcWriteBuffer, "Error during copy" );
+			sprintf( pcWriteBuffer, "Error during copy" );
 		}
 	}
 
-	strcat( ( char * ) pcWriteBuffer, cliNEW_LINE );
+	strcat( pcWriteBuffer, cliNEW_LINE );
 
 	return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvPerformCopy( int8_t *pcSourceFile,
-							int32_t lSourceFileLength,
-							int8_t *pcDestinationFile,
-							int8_t *pxWriteBuffer,
-							size_t xWriteBufferLen )
+static portBASE_TYPE prvPerformCopy( const char *pcSourceFile,
+									int32_t lSourceFileLength,
+									const char *pcDestinationFile,
+									char *pxWriteBuffer,
+									size_t xWriteBufferLen )
 {
 int32_t lBytesRead = 0, lBytesToRead, lBytesRemaining;
 F_FILE *pxFile;
@@ -551,7 +552,7 @@ portBASE_TYPE xReturn = pdPASS;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCreateFileInfoString( int8_t *pcBuffer, F_FIND *pxFindStruct )
+static void prvCreateFileInfoString( char *pcBuffer, F_FIND *pxFindStruct )
 {
 const char *pcWritableFile = "writable file", *pcReadOnlyFile = "read only file", *pcDirectory = "directory";
 const char * pcAttrib;
@@ -572,5 +573,5 @@ const char * pcAttrib;
 
 	/* Create a string that includes the file name, the file size and the
 	attributes string. */
-	sprintf( ( char * ) pcBuffer, "%s [%s] [size=%d]", pxFindStruct->filename, pcAttrib, ( int ) pxFindStruct->filesize );
+	sprintf( pcBuffer, "%s [%s] [size=%d]", pxFindStruct->filename, pcAttrib, ( int ) pxFindStruct->filesize );
 }

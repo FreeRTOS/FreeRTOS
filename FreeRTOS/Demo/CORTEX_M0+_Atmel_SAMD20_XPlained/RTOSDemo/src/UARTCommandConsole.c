@@ -105,7 +105,7 @@ static void prvUARTCommandConsoleTask( void *pvParameters );
  * Ensure a previous interrupt driven Tx has completed before sending the next
  * data block to the UART.
  */
-static void prvSendBuffer( struct usart_module *pxCDCUsart, uint8_t * pcBuffer, size_t xBufferLength );
+static void prvSendBuffer( struct usart_module *pxCDCUsart, const char * pcBuffer, size_t xBufferLength );
 
 /*
  * Register the 'standard' sample CLI commands with FreeRTOS+CLI.
@@ -129,9 +129,9 @@ static void prvUARTRxNotificationHandler( const struct usart_module *const pxUSA
 /*-----------------------------------------------------------*/
 
 /* Const messages output by the command console. */
-static uint8_t * const pcWelcomeMessage = ( uint8_t * ) "\r\n\r\nFreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
-static const uint8_t * const pcEndOfOutputMessage = ( uint8_t * ) "\r\n[Press ENTER to execute the previous command again]\r\n>";
-static const uint8_t * const pcNewLine = ( uint8_t * ) "\r\n";
+static char * const pcWelcomeMessage = "\r\n\r\nFreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
+static const char * const pcEndOfOutputMessage = "\r\n[Press ENTER to execute the previous command again]\r\n>";
+static const char * const pcNewLine = "\r\n";
 
 /* This semaphore is used to allow the task to wait for a Tx to complete
 without wasting any CPU time. */
@@ -159,8 +159,9 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPr
 
 static void prvUARTCommandConsoleTask( void *pvParameters )
 {
-uint8_t ucRxedChar, ucInputIndex = 0, *pucOutputString;
-static int8_t cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
+char cRxedChar, *pcOutputString;
+uint8_t ucInputIndex = 0;
+static char cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
 portBASE_TYPE xReturned;
 static struct usart_module xCDCUsart; /* Static so it doesn't take up too much stack. */
 
@@ -174,7 +175,7 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 	/* Obtain the address of the output buffer.  Note there is no mutual
 	exclusion on this buffer as it is assumed only one command console
 	interface will be used at any one time. */
-	pucOutputString = ( uint8_t * ) FreeRTOS_CLIGetOutputBuffer();
+	pcOutputString = FreeRTOS_CLIGetOutputBuffer();
 
 	/* Send the welcome message. */
 	prvSendBuffer( &xCDCUsart, pcWelcomeMessage, strlen( ( char * ) pcWelcomeMessage ) );
@@ -183,17 +184,17 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 	{
 		/* Wait for the next character to arrive.  A semaphore is used to
 		ensure no CPU time is used until data has arrived. */
-		usart_read_buffer_job( &xCDCUsart, &ucRxedChar, sizeof( ucRxedChar ) );		
+		usart_read_buffer_job( &xCDCUsart, ( uint8_t * ) &cRxedChar, sizeof( cRxedChar ) );		
 		if( xSemaphoreTake( xRxCompleteSemaphore, portMAX_DELAY ) == pdPASS )
 		{
 			/* Echo the character back. */
-			prvSendBuffer( &xCDCUsart, ( uint8_t * ) &ucRxedChar, sizeof( ucRxedChar ) );
+			prvSendBuffer( &xCDCUsart, &cRxedChar, sizeof( cRxedChar ) );
 
 			/* Was it the end of the line? */
-			if( ucRxedChar == '\n' || ucRxedChar == '\r' )
+			if( cRxedChar == '\n' || cRxedChar == '\r' )
 			{
 				/* Just to space the output from the input. */
-				prvSendBuffer( &xCDCUsart, ( uint8_t * ) pcNewLine, strlen( ( char * ) pcNewLine ) );
+				prvSendBuffer( &xCDCUsart, pcNewLine, strlen( pcNewLine ) );
 
 				/* See if the command is empty, indicating that the last command is
 				to be executed again. */
@@ -210,10 +211,10 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 				do
 				{
 					/* Get the next output string from the command interpreter. */
-					xReturned = FreeRTOS_CLIProcessCommand( cInputString, ( int8_t * ) pucOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
+					xReturned = FreeRTOS_CLIProcessCommand( cInputString, pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
 
 					/* Write the generated string to the UART. */
-					prvSendBuffer( &xCDCUsart, ( uint8_t * ) pucOutputString, strlen( ( char * ) pucOutputString ) );
+					prvSendBuffer( &xCDCUsart, pcOutputString, strlen( pcOutputString ) );
 
 				} while( xReturned != pdFALSE );
 
@@ -225,15 +226,15 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 				ucInputIndex = 0;
 				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
-				prvSendBuffer( &xCDCUsart, ( uint8_t * ) pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
+				prvSendBuffer( &xCDCUsart, pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
 			}
 			else
 			{
-				if( ucRxedChar == '\r' )
+				if( cRxedChar == '\r' )
 				{
 					/* Ignore the character. */
 				}
-				else if( ( ucRxedChar == '\b' ) || ( ucRxedChar == cmdASCII_DEL ) )
+				else if( ( cRxedChar == '\b' ) || ( cRxedChar == cmdASCII_DEL ) )
 				{
 					/* Backspace was pressed.  Erase the last character in the
 					string - if any. */
@@ -248,11 +249,11 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 					/* A character was entered.  Add it to the string
 					entered so far.  When a \n is entered the complete
 					string will be passed to the command interpreter. */
-					if( ( ucRxedChar >= ' ' ) && ( ucRxedChar <= '~' ) )
+					if( ( cRxedChar >= ' ' ) && ( cRxedChar <= '~' ) )
 					{
 						if( ucInputIndex < cmdMAX_INPUT_SIZE )
 						{
-							cInputString[ ucInputIndex ] = ucRxedChar;
+							cInputString[ ucInputIndex ] = cRxedChar;
 							ucInputIndex++;
 						}
 					}
@@ -263,13 +264,13 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 }
 /*-----------------------------------------------------------*/
 
-static void prvSendBuffer( struct usart_module *pxCDCUsart, uint8_t * pcBuffer, size_t xBufferLength )
+static void prvSendBuffer( struct usart_module *pxCDCUsart, const char * pcBuffer, size_t xBufferLength )
 {
 const portTickType xBlockMax100ms = 100UL / portTICK_RATE_MS;
 
 	if( xBufferLength > 0 )
 	{		
-		usart_write_buffer_job( pxCDCUsart, pcBuffer, xBufferLength );
+		usart_write_buffer_job( pxCDCUsart, ( uint8_t * ) pcBuffer, xBufferLength );
 		
 		/* Wait for the Tx to complete so the buffer can be reused without
 		corrupting the data that is being sent. */

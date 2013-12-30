@@ -88,7 +88,6 @@
 /* Constants required to pend a PendSV interrupt from the tick ISR if the
 preemptive scheduler is being used.  These are just standard bits and registers
 within the Cortex-M core itself. */
-#define portNVIC_INT_CTRL_REG	( * ( ( volatile unsigned long * ) 0xe000ed04 ) )
 #define portNVIC_PENDSVSET_BIT	( 1UL << 28UL )
 
 /* The alarm used to generate interrupts in the asynchronous timer. */

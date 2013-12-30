@@ -33,6 +33,7 @@
 Includes <System Includes> , "Project Includes"
 ******************************************************************************/
 #include <stddef.h>
+#include <stdint.h>
 
 /******************************************************************************
 Macro definitions
@@ -45,20 +46,23 @@ Macro definitions
 /******************************************************************************
 Typedef definitions
 ******************************************************************************/
-typedef char                char_t;
-typedef unsigned int        bool_t;
-typedef int                 int_t;
-typedef signed char         int8_t;
-typedef signed short        int16_t;
-typedef signed long         int32_t;
-typedef signed long long    int64_t;
-typedef unsigned char       uint8_t;
-typedef unsigned short      uint16_t;
-typedef unsigned long       uint32_t;
-typedef unsigned long long  uint64_t;
-typedef float               float32_t;
-typedef double              float64_t;
-typedef long double         float128_t;
 
+typedef char                char_t;
+typedef int                 int_t;
+
+#ifdef TYPES_ALREADY_DEFINED_IN_STDINT
+	typedef unsigned int        bool_t;
+	typedef signed char         int8_t;
+	typedef signed short        int16_t;
+	typedef signed long         int32_t;
+	typedef signed long long    int64_t;
+	typedef unsigned char       uint8_t;
+	typedef unsigned short      uint16_t;
+	typedef unsigned long       uint32_t;
+	typedef unsigned long long  uint64_t;
+	typedef float               float32_t;
+	typedef double              float64_t;
+	typedef long double         float128_t;
+#endif
 #endif /* R_TYPEDEFS_H */
 

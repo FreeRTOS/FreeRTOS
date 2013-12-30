@@ -91,36 +91,36 @@
 /*
  * Implements the run-time-stats command.
  */
-static portBASE_TYPE prvTaskStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the task-stats command.
  */
-static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the echo-three-parameters command.
  */
-static portBASE_TYPE prvThreeParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the echo-parameters command.
  */
-static portBASE_TYPE prvParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the "trace start" and "trace stop" commands;
  */
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
-	static portBASE_TYPE prvStartStopTraceCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 #endif
 
 /* Structure that defines the "run-time-stats" command line command.   This
 generates a table that shows how much run time each task has */
 static const CLI_Command_Definition_t xRunTimeStats =
 {
-	( const int8_t * const ) "run-time-stats", /* The command string to type. */
-	( const int8_t * const ) "\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n",
+	"run-time-stats", /* The command string to type. */
+	"\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n",
 	prvRunTimeStatsCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -129,8 +129,8 @@ static const CLI_Command_Definition_t xRunTimeStats =
 a table that gives information on each task in the system. */
 static const CLI_Command_Definition_t xTaskStats =
 {
-	( const int8_t * const ) "task-stats", /* The command string to type. */
-	( const int8_t * const ) "\r\ntask-stats:\r\n Displays a table showing the state of each FreeRTOS task\r\n",
+	"task-stats", /* The command string to type. */
+	"\r\ntask-stats:\r\n Displays a table showing the state of each FreeRTOS task\r\n",
 	prvTaskStatsCommand, /* The function to run. */
 	0 /* No parameters are expected. */
 };
@@ -140,8 +140,8 @@ takes exactly three parameters that the command simply echos back one at a
 time. */
 static const CLI_Command_Definition_t xThreeParameterEcho =
 {
-	( const int8_t * const ) "echo-3-parameters",
-	( const int8_t * const ) "\r\necho-3-parameters <param1> <param2> <param3>:\r\n Expects three parameters, echos each in turn\r\n",
+	"echo-3-parameters",
+	"\r\necho-3-parameters <param1> <param2> <param3>:\r\n Expects three parameters, echos each in turn\r\n",
 	prvThreeParameterEchoCommand, /* The function to run. */
 	3 /* Three parameters are expected, which can take any value. */
 };
@@ -151,8 +151,8 @@ takes a variable number of parameters that the command simply echos back one at
 a time. */
 static const CLI_Command_Definition_t xParameterEcho =
 {
-	( const int8_t * const ) "echo-parameters",
-	( const int8_t * const ) "\r\necho-parameters <...>:\r\n Take variable number of parameters, echos each in turn\r\n",
+	"echo-parameters",
+	"\r\necho-parameters <...>:\r\n Take variable number of parameters, echos each in turn\r\n",
 	prvParameterEchoCommand, /* The function to run. */
 	-1 /* The user can enter any number of commands. */
 };
@@ -162,8 +162,8 @@ static const CLI_Command_Definition_t xParameterEcho =
 	parameter, which can be either "start" or "stop". */
 	static const CLI_Command_Definition_t xStartStopTrace =
 	{
-		( const int8_t * const ) "trace",
-		( const int8_t * const ) "\r\ntrace [start | stop]:\r\n Starts or stops a trace recording for viewing in FreeRTOS+Trace\r\n",
+		"trace",
+		"\r\ntrace [start | stop]:\r\n Starts or stops a trace recording for viewing in FreeRTOS+Trace\r\n",
 		prvStartStopTraceCommand, /* The function to run. */
 		1 /* One parameter is expected.  Valid values are "start" and "stop". */
 	};
@@ -187,9 +187,9 @@ void vRegisterSampleCLICommands( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTaskStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stack	#\r\n************************************************\r\n";
+const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -199,8 +199,8 @@ const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stac
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
-	strcpy( ( char * ) pcWriteBuffer, ( char * ) pcHeader );
-	vTaskList( ( char * ) pcWriteBuffer + strlen( ( char * ) pcHeader ) );
+	strcpy( pcWriteBuffer, pcHeader );
+	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */
@@ -208,9 +208,9 @@ const int8_t *const pcHeader = ( int8_t * ) "Task          State  Priority  Stac
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvRunTimeStatsCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Time\r\n****************************************\r\n";
+const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -220,8 +220,8 @@ const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Ti
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
-	strcpy( ( char * ) pcWriteBuffer, ( char * ) pcHeader );
-	vTaskGetRunTimeStats( ( char * ) pcWriteBuffer + strlen( ( char * ) pcHeader ) );
+	strcpy( pcWriteBuffer, pcHeader );
+	vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */
@@ -229,9 +229,9 @@ const int8_t * const pcHeader = ( int8_t * ) "Task            Abs Time      % Ti
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvThreeParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn;
 static portBASE_TYPE lParameterNumber = 0;
 
@@ -246,7 +246,7 @@ static portBASE_TYPE lParameterNumber = 0;
 	{
 		/* The first time the function is called after the command has been
 		entered just a header string is returned. */
-		sprintf( ( char * ) pcWriteBuffer, "The three parameters were:\r\n" );
+		sprintf( pcWriteBuffer, "The three parameters were:\r\n" );
 
 		/* Next time the function is called the first parameter will be echoed
 		back. */
@@ -259,21 +259,21 @@ static portBASE_TYPE lParameterNumber = 0;
 	else
 	{
 		/* Obtain the parameter string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										lParameterNumber,		/* Return the next parameter. */
-										&xParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							lParameterNumber,		/* Return the next parameter. */
+							&xParameterStringLength	/* Store the parameter string length. */
+						);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
 
 		/* Return the parameter string. */
 		memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-		sprintf( ( char * ) pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-		strncat( ( char * ) pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
-		strncat( ( char * ) pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
+		sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
+		strncat( pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
+		strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 		/* If this is the last of the three parameters then there are no more
 		strings to return after this one. */
@@ -296,9 +296,9 @@ static portBASE_TYPE lParameterNumber = 0;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvParameterEchoCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn;
 static portBASE_TYPE lParameterNumber = 0;
 
@@ -313,7 +313,7 @@ static portBASE_TYPE lParameterNumber = 0;
 	{
 		/* The first time the function is called after the command has been
 		entered just a header string is returned. */
-		sprintf( ( char * ) pcWriteBuffer, "The parameters were:\r\n" );
+		sprintf( pcWriteBuffer, "The parameters were:\r\n" );
 
 		/* Next time the function is called the first parameter will be echoed
 		back. */
@@ -326,20 +326,20 @@ static portBASE_TYPE lParameterNumber = 0;
 	else
 	{
 		/* Obtain the parameter string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										lParameterNumber,		/* Return the next parameter. */
-										&xParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							lParameterNumber,		/* Return the next parameter. */
+							&xParameterStringLength	/* Store the parameter string length. */
+						);
 
 		if( pcParameter != NULL )
 		{
 			/* Return the parameter string. */
 			memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-			sprintf( ( char * ) pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-			strncat( ( char * ) pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
-			strncat( ( char * ) pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
+			sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
+			strncat( pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
+			strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 			/* There might be more parameters to return after this one. */
 			xReturn = pdTRUE;
@@ -365,9 +365,9 @@ static portBASE_TYPE lParameterNumber = 0;
 
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
 
-	static portBASE_TYPE prvStartStopTraceCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-	int8_t *pcParameter;
+	const char *pcParameter;
 	portBASE_TYPE lParameterStringLength;
 
 		/* Remove compile time warnings about unused parameters, and check the
@@ -378,12 +378,12 @@ static portBASE_TYPE lParameterNumber = 0;
 		configASSERT( pcWriteBuffer );
 
 		/* Obtain the parameter string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										1,						/* Return the first parameter. */
-										&lParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							1,						/* Return the first parameter. */
+							&lParameterStringLength	/* Store the parameter string length. */
+						);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
@@ -396,17 +396,17 @@ static portBASE_TYPE lParameterNumber = 0;
 			vTraceClear();
 			vTraceStart();
 
-			sprintf( ( char * ) pcWriteBuffer, "Trace recording (re)started.\r\n" );
+			sprintf( pcWriteBuffer, "Trace recording (re)started.\r\n" );
 		}
-		else if( strncmp( ( const char * ) pcParameter, "stop", strlen( "stop" ) ) == 0 )
+		else if( strncmp( pcParameter, "stop", strlen( "stop" ) ) == 0 )
 		{
 			/* End the trace, if one is running. */
 			vTraceStop();
-			sprintf( ( char * ) pcWriteBuffer, "Stopping trace recording.\r\n" );
+			sprintf( pcWriteBuffer, "Stopping trace recording.\r\n" );
 		}
 		else
 		{
-			sprintf( ( char * ) pcWriteBuffer, "Valid parameters are 'start' and 'stop'.\r\n" );
+			sprintf( pcWriteBuffer, "Valid parameters are 'start' and 'stop'.\r\n" );
 		}
 
 		/* There is no more data to return after this single string, so return

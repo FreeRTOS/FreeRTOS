@@ -91,23 +91,23 @@ commands. */
 /*
  * Defines a command that prints out IP address information.
  */
-static portBASE_TYPE prvDisplayIPConfig( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that prints out the gathered demo debug stats.
  */
-static portBASE_TYPE prvDisplayIPDebugStats( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that sends an ICMP ping request to an IP address.
  */
-static portBASE_TYPE prvPingCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /* Structure that defines the "ip-config" command line command. */
 static const CLI_Command_Definition_t xIPConfig =
 {
-	( const int8_t * const ) "ip-config",
-	( const int8_t * const ) "ip-config:\r\n Displays IP address configuration\r\n\r\n",
+	"ip-config",
+	"ip-config:\r\n Displays IP address configuration\r\n\r\n",
 	prvDisplayIPConfig,
 	0
 };
@@ -116,8 +116,8 @@ static const CLI_Command_Definition_t xIPConfig =
 	/* Structure that defines the "ip-debug-stats" command line command. */
 	static const CLI_Command_Definition_t xIPDebugStats =
 	{
-		( const int8_t * const ) "ip-debug-stats", /* The command string to type. */
-		( const int8_t * const ) "ip-debug-stats:\r\n Shows some IP stack stats useful for debug - an example only.\r\n\r\n",
+		"ip-debug-stats", /* The command string to type. */
+		"ip-debug-stats:\r\n Shows some IP stack stats useful for debug - an example only.\r\n\r\n",
 		prvDisplayIPDebugStats, /* The function to run. */
 		0 /* No parameters are expected. */
 	};
@@ -130,8 +130,8 @@ static const CLI_Command_Definition_t xIPConfig =
 	parameters. */
 	static const CLI_Command_Definition_t xPing =
 	{
-		( const int8_t * const ) "ping",
-		( const int8_t * const ) "ping <ipaddress> <optional:bytes to send>:\r\n for example, ping 192.168.0.3 8, or ping www.example.com\r\n\r\n",
+		"ping",
+		"ping <ipaddress> <optional:bytes to send>:\r\n for example, ping 192.168.0.3 8, or ping www.example.com\r\n\r\n",
 		prvPingCommand, /* The function to run. */
 		-1 /* Ping can take either one or two parameter, so the number of parameters has to be determined by the ping command implementation. */
 	};
@@ -162,13 +162,13 @@ void vRegisterUDPCLICommands( void )
 
 #if ipconfigSUPPORT_OUTGOING_PINGS == 1
 
-	static portBASE_TYPE prvPingCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+	static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-	int8_t * pcParameter;
+	const char * pcParameter;
 	portBASE_TYPE lParameterStringLength, xReturn;
 	uint32_t ulIPAddress, ulBytesToPing;
 	const uint32_t ulDefaultBytesToPing = 8UL;
-	int8_t cBuffer[ 16 ];
+	char cBuffer[ 16 ];
 
 		/* Remove compile time warnings about unused parameters, and check the
 		write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -181,12 +181,12 @@ void vRegisterUDPCLICommands( void )
 		pcWriteBuffer[ 0 ] = 0x00;
 
 		/* Obtain the number of bytes to ping. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										2,						/* Return the second parameter. */
-										&lParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							2,						/* Return the second parameter. */
+							&lParameterStringLength	/* Store the parameter string length. */
+						);
 
 		if( pcParameter == NULL )
 		{
@@ -199,12 +199,12 @@ void vRegisterUDPCLICommands( void )
 		}
 
 		/* Obtain the IP address string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										1,						/* Return the first parameter. */
-										&lParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							1,						/* Return the first parameter. */
+							&lParameterStringLength	/* Store the parameter string length. */
+						);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
@@ -225,7 +225,7 @@ void vRegisterUDPCLICommands( void )
 		}
 
 		/* Convert IP address, which may have come from a DNS lookup, to string. */
-		FreeRTOS_inet_ntoa( ulIPAddress, ( char * ) cBuffer );
+		FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
 
 		if( ulIPAddress != 0 )
 		{
@@ -238,11 +238,11 @@ void vRegisterUDPCLICommands( void )
 
 		if( xReturn == pdFALSE )
 		{
-			sprintf( ( char * ) pcWriteBuffer, "%s", "Could not send ping request\r\n" );
+			sprintf( pcWriteBuffer, "%s", "Could not send ping request\r\n" );
 		}
 		else
 		{
-			sprintf( ( char * ) pcWriteBuffer, "Ping sent to %s with identifier %d\r\n", cBuffer, ( int ) xReturn );
+			sprintf( pcWriteBuffer, "Ping sent to %s with identifier %d\r\n", cBuffer, ( int ) xReturn );
 		}
 
 		return pdFALSE;
@@ -253,7 +253,7 @@ void vRegisterUDPCLICommands( void )
 
 #if configINCLUDE_DEMO_DEBUG_STATS != 0
 
-	static portBASE_TYPE prvDisplayIPDebugStats( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+	static portBASE_TYPE prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
 	static portBASE_TYPE xIndex = -1;
 	extern xExampleDebugStatEntry_t xIPTraceValues[];
@@ -270,7 +270,7 @@ void vRegisterUDPCLICommands( void )
 
 		if( xIndex < xExampleDebugStatEntries() )
 		{
-			sprintf( ( char * ) pcWriteBuffer, "%s %d\r\n", ( char * ) xIPTraceValues[ xIndex ].pucDescription, ( int ) xIPTraceValues[ xIndex ].ulData );
+			sprintf( pcWriteBuffer, "%s %d\r\n", ( char * ) xIPTraceValues[ xIndex ].pucDescription, ( int ) xIPTraceValues[ xIndex ].ulData );
 			xReturn = pdPASS;
 		}
 		else
@@ -289,7 +289,7 @@ void vRegisterUDPCLICommands( void )
 
 #endif /* configINCLUDE_DEMO_DEBUG_STATS */
 
-static portBASE_TYPE prvDisplayIPConfig( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 static portBASE_TYPE xIndex = 0;
 portBASE_TYPE xReturn;
@@ -306,35 +306,35 @@ uint32_t ulAddress;
 	{
 		case 0 :
 			FreeRTOS_GetAddressConfiguration( &ulAddress, NULL, NULL, NULL );
-			sprintf( ( char * ) pcWriteBuffer, "\r\nIP address " );
+			sprintf( pcWriteBuffer, "\r\nIP address " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		case 1 :
 			FreeRTOS_GetAddressConfiguration( NULL, &ulAddress, NULL, NULL );
-			sprintf( ( char * ) pcWriteBuffer, "\r\nNet mask " );
+			sprintf( pcWriteBuffer, "\r\nNet mask " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		case 2 :
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, &ulAddress, NULL );
-			sprintf( ( char * ) pcWriteBuffer, "\r\nGateway address " );
+			sprintf( pcWriteBuffer, "\r\nGateway address " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		case 3 :
 			FreeRTOS_GetAddressConfiguration( NULL, NULL, NULL, &ulAddress );
-			sprintf( ( char * ) pcWriteBuffer, "\r\nDNS server address " );
+			sprintf( pcWriteBuffer, "\r\nDNS server address " );
 			xReturn = pdTRUE;
 			xIndex++;
 			break;
 
 		default :
 			ulAddress = 0;
-			sprintf( ( char * ) pcWriteBuffer, "\r\n\r\n" );
+			sprintf( pcWriteBuffer, "\r\n\r\n" );
 			xReturn = pdFALSE;
 			xIndex = 0;
 			break;
@@ -342,7 +342,7 @@ uint32_t ulAddress;
 
 	if( ulAddress != 0 )
 	{
-		FreeRTOS_inet_ntoa( ulAddress, ( ( char * ) &( pcWriteBuffer[ strlen( ( char * ) pcWriteBuffer ) ] ) ) );
+		FreeRTOS_inet_ntoa( ulAddress, ( &( pcWriteBuffer[ strlen( pcWriteBuffer ) ] ) ) );
 	}
 
 	return xReturn;

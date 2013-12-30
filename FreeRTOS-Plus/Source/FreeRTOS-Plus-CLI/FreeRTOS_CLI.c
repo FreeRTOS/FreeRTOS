@@ -1,14 +1,14 @@
 /*
  * FreeRTOS+CLI V1.0.2 (C) 2013 Real Time Engineers ltd.  All rights reserved.
  *
- * This file is part of the FreeRTOS+CLI distribution.  The FreeRTOS+CLI license 
+ * This file is part of the FreeRTOS+CLI distribution.  The FreeRTOS+CLI license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+CLI uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+CLI is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+CLI uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+CLI is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -61,19 +61,19 @@ typedef struct xCOMMAND_INPUT_LIST
  * The callback function that is executed when "help" is entered.  This is the
  * only default command that is always present.
  */
-static portBASE_TYPE prvHelpCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString );
+static portBASE_TYPE prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Return the number of parameters that follow the command name.
  */
-static int8_t prvGetNumberOfParameters( const int8_t * pcCommandString );
+static int8_t prvGetNumberOfParameters( const char *pcCommandString );
 
 /* The definition of the "help" command.  This command is always at the front
 of the list of registered commands. */
 static const CLI_Command_Definition_t xHelpCommand =
 {
-	( const int8_t * const ) "help",
-	( const int8_t * const ) "\r\nhelp:\r\n Lists all the registered commands\r\n\r\n",
+	"help",
+	"\r\nhelp:\r\n Lists all the registered commands\r\n\r\n",
 	prvHelpCommand,
 	0
 };
@@ -94,7 +94,7 @@ to save RAM.  Note, however, that the command console itself is not re-entrant,
 so only one command interpreter interface can be used at any one time.  For that
 reason, no attempt at providing mutual exclusion to the cOutputBuffer array is
 attempted. */
-static int8_t cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+static char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
 
 /*-----------------------------------------------------------*/
 
@@ -139,11 +139,11 @@ portBASE_TYPE xReturn = pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_CLIProcessCommand( const int8_t * const pcCommandInput, int8_t * pcWriteBuffer, size_t xWriteBufferLen  )
+portBASE_TYPE FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char * pcWriteBuffer, size_t xWriteBufferLen  )
 {
 static const CLI_Definition_List_Item_t *pxCommand = NULL;
 portBASE_TYPE xReturn = pdTRUE;
-const int8_t *pcRegisteredCommandString;
+const char *pcRegisteredCommandString;
 size_t xCommandStringLength;
 
 	/* Note:  This function is not re-entrant.  It must not be called from more
@@ -155,7 +155,7 @@ size_t xCommandStringLength;
 		for( pxCommand = &xRegisteredCommands; pxCommand != NULL; pxCommand = pxCommand->pxNext )
 		{
 			pcRegisteredCommandString = pxCommand->pxCommandLineDefinition->pcCommand;
-			xCommandStringLength = strlen( ( const char * ) pcRegisteredCommandString );
+			xCommandStringLength = strlen( pcRegisteredCommandString );
 
 			/* To ensure the string lengths match exactly, so as not to pick up
 			a sub-string of a longer command, check the byte after the expected
@@ -163,7 +163,7 @@ size_t xCommandStringLength;
 			a parameter. */
 			if( ( pcCommandInput[ xCommandStringLength ] == ' ' ) || ( pcCommandInput[ xCommandStringLength ] == 0x00 ) )
 			{
-				if( strncmp( ( const char * ) pcCommandInput, ( const char * ) pcRegisteredCommandString, xCommandStringLength ) == 0 )
+				if( strncmp( pcCommandInput, pcRegisteredCommandString, xCommandStringLength ) == 0 )
 				{
 					/* The command has been found.  Check it has the expected
 					number of parameters.  If cExpectedNumberOfParameters is -1,
@@ -187,7 +187,7 @@ size_t xCommandStringLength;
 	{
 		/* The command was found, but the number of parameters with the command
 		was incorrect. */
-		strncpy( ( char * ) pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.\r\n\r\n", xWriteBufferLen );
+		strncpy( pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.\r\n\r\n", xWriteBufferLen );
 		pxCommand = NULL;
 	}
 	else if( pxCommand != NULL )
@@ -206,7 +206,7 @@ size_t xCommandStringLength;
 	else
 	{
 		/* pxCommand was NULL, the command was not found. */
-		strncpy( ( char * ) pcWriteBuffer, ( const char * const ) "Command not recognised.  Enter 'help' to view a list of available commands.\r\n\r\n", xWriteBufferLen );
+		strncpy( pcWriteBuffer, "Command not recognised.  Enter 'help' to view a list of available commands.\r\n\r\n", xWriteBufferLen );
 		xReturn = pdFALSE;
 	}
 
@@ -214,16 +214,16 @@ size_t xCommandStringLength;
 }
 /*-----------------------------------------------------------*/
 
-int8_t *FreeRTOS_CLIGetOutputBuffer( void )
+char *FreeRTOS_CLIGetOutputBuffer( void )
 {
 	return cOutputBuffer;
 }
 /*-----------------------------------------------------------*/
 
-const int8_t *FreeRTOS_CLIGetParameter( const int8_t *pcCommandString, unsigned portBASE_TYPE uxWantedParameter, portBASE_TYPE *pxParameterStringLength )
+const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, unsigned portBASE_TYPE uxWantedParameter, portBASE_TYPE *pxParameterStringLength )
 {
 unsigned portBASE_TYPE uxParametersFound = 0;
-const int8_t *pcReturn = NULL;
+const char *pcReturn = NULL;
 
 	*pxParameterStringLength = 0;
 
@@ -276,7 +276,7 @@ const int8_t *pcReturn = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvHelpCommand( int8_t *pcWriteBuffer, size_t xWriteBufferLen, const int8_t *pcCommandString )
+static portBASE_TYPE prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 static const CLI_Definition_List_Item_t * pxCommand = NULL;
 signed portBASE_TYPE xReturn;
@@ -291,7 +291,7 @@ signed portBASE_TYPE xReturn;
 
 	/* Return the next command help string, before moving the pointer on to
 	the next command in the list. */
-	strncpy( ( char * ) pcWriteBuffer, ( const char * ) pxCommand->pxCommandLineDefinition->pcHelpString, xWriteBufferLen );
+	strncpy( pcWriteBuffer, pxCommand->pxCommandLineDefinition->pcHelpString, xWriteBufferLen );
 	pxCommand = pxCommand->pxNext;
 
 	if( pxCommand == NULL )
@@ -309,7 +309,7 @@ signed portBASE_TYPE xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static int8_t prvGetNumberOfParameters( const int8_t * pcCommandString )
+static int8_t prvGetNumberOfParameters( const char *pcCommandString )
 {
 int8_t cParameters = 0;
 portBASE_TYPE xLastCharacterWasSpace = pdFALSE;

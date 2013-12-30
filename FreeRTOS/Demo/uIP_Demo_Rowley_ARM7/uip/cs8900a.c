@@ -13,7 +13,7 @@
 // based on linux-header by Russel Nelson
 
 #define PP_ChipID            0x0000          // offset 0h -> Corp-ID
-                     
+
 											 // offset 2h -> Model/Product Number
 #define LED_RED (1<<8)
 #define LED_GREEN (1<<10)
@@ -274,15 +274,15 @@ cs8900a_write(unsigned addr, unsigned int data)
 
   GPIO_IOCLR = 0xf << 4;                              // Put address on bus
   GPIO_IOSET = addr << 4;
-  
+
   GPIO_IOCLR = 0xff << 16;                            // Write low order byte to data bus
   GPIO_IOSET = data << 16;
 
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOSET = IOW;
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
 
   GPIO_IOCLR = 0xf << 4;
   GPIO_IOSET = ((addr | 1) << 4);                     // And put next address on bus
@@ -290,11 +290,11 @@ cs8900a_write(unsigned addr, unsigned int data)
   GPIO_IOCLR = 0xff << 16;                            // Write high order byte to data bus
   GPIO_IOSET = data >> 8 << 16;
 
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOSET = IOW;
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
 }
 
 // Reads a word in little-endian byte order from a specified port-address
@@ -308,20 +308,20 @@ cs8900a_read(unsigned addr)
   GPIO_IOCLR = 0xf << 4;                              // Put address on bus
   GPIO_IOSET = addr << 4;
 
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOCLR = IOR;                                   // IOR-signal low
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   value = (GPIO_IOPIN >> 16) & 0xff;                  // get low order byte from data bus
   GPIO_IOSET = IOR;
 
   GPIO_IOSET = 1 << 4;                                // IOR high and put next address on bus
 
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOCLR = IOR;                                   // IOR-signal low
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   value |= ((GPIO_IOPIN >> 8) & 0xff00);              // get high order byte from data bus
   GPIO_IOSET = IOR;                                   // IOR-signal low
-  
+
   return value;
 }
 
@@ -336,17 +336,17 @@ cs8900a_read_addr_high_first(unsigned addr)
   GPIO_IOCLR = 0xf << 4;                              // Put address on bus
   GPIO_IOSET = (addr+1) << 4;
 
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOCLR = IOR;                                   // IOR-signal low
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   value = ((GPIO_IOPIN >> 8) & 0xff00);               // get high order byte from data bus
   GPIO_IOSET = IOR;                                   // IOR-signal high
 
   GPIO_IOCLR = 1 << 4;                                // Put low address on bus
 
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   GPIO_IOCLR = IOR;                                   // IOR-signal low
-  asm volatile ( "NOP" );
+  __asm volatile ( "NOP" );
   value |= (GPIO_IOPIN >> 16) & 0xff;                 // get low order byte from data bus
   GPIO_IOSET = IOR;
 
@@ -427,9 +427,9 @@ cs8900a_send(void)
       GPIO_IOCLR = 0xff << 16;                            // Write low order byte to data bus
       GPIO_IOSET = uip_buf[u] << 16;                      // write low order byte to data bus
 
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       GPIO_IOSET = IOW;
 
       GPIO_IOCLR = 0xf << 4;                              // Put address on bus
@@ -438,9 +438,9 @@ cs8900a_send(void)
       GPIO_IOCLR = 0xff << 16;                            // Write low order byte to data bus
       GPIO_IOSET = uip_buf[u+1] << 16;                    // write low order byte to data bus
 
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
 	  GPIO_IOCLR = IOW;                                   // Toggle IOW-signal
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       GPIO_IOSET = IOW;
     }
 
@@ -461,9 +461,9 @@ cs8900a_send(void)
       GPIO_IOCLR = 0xff << 16;                        // Write low order byte to data bus
       GPIO_IOSET = uip_appdata[u] << 16;              // write low order byte to data bus
 
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
 	  GPIO_IOCLR = IOW;                               // Toggle IOW-signal
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       GPIO_IOSET = IOW;
 
       GPIO_IOCLR = 0xf << 4;                          // Put address on bus
@@ -472,9 +472,9 @@ cs8900a_send(void)
       GPIO_IOCLR = 0xff << 16;                        // Write low order byte to data bus
       GPIO_IOSET = uip_appdata[u+1] << 16;            // write low order byte to data bus
 
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
 	  GPIO_IOCLR = IOW;                               // Toggle IOW-signal
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       GPIO_IOSET = IOW;
     }
 
@@ -518,7 +518,7 @@ cs8900a_poll(void)
   GPIO_IODIR &= ~(0xff << 16);
 
   GPIO_IOCLR = 0xf << 4;                          // put address on bus
-  GPIO_IOSET = RX_FRAME_PORT << 4; 
+  GPIO_IOSET = RX_FRAME_PORT << 4;
 
   // Read bytes into uip_buf
   u = 0;
@@ -528,13 +528,13 @@ cs8900a_poll(void)
 
       GPIO_IOCLR = IOR;                               // IOR-signal low
       uip_buf[u] = GPIO_IOPIN >> 16;                // get high order byte from data bus
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       GPIO_IOSET = IOR;                               // IOR-signal high
 
       GPIO_IOSET = 1 << 4;                            // put address on bus
 
       GPIO_IOCLR = IOR;                               // IOR-signal low
-      asm volatile ( "NOP" );
+      __asm volatile ( "NOP" );
       uip_buf[u+1] = GPIO_IOPIN >> 16;                  // get high order byte from data bus
       GPIO_IOSET = IOR;                               // IOR-signal high
       u += 2;

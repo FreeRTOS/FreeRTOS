@@ -40,6 +40,7 @@
 #ifndef _TYPE_DEFINE_H_
 #define _TYPE_DEFINE_H_
 
+#include <stdint.h>
 
 typedef unsigned char Bool;
 
@@ -47,12 +48,8 @@ typedef unsigned char Bool;
 
 typedef signed char char8_t;
 typedef unsigned char uchar8_t;
-typedef signed char int8_t;
-typedef unsigned char uint8_t;
 typedef signed short short16_t;
 typedef unsigned short ushort16_t;
-typedef signed long  int32_t;
-typedef unsigned long  uint32_t;
 typedef signed long long32_t;
 typedef unsigned long ulong32_t;
 

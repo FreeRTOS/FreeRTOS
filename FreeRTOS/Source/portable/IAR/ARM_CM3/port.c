@@ -238,7 +238,7 @@ BaseType_t xPortStartScheduler( void )
 	#if( configASSERT_DEFINED == 1 )
 	{
 		volatile uint32_t ulOriginalPriority;
-		volatile int8_t * const pcFirstUserPriorityRegister = ( volatile int8_t * const ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
+		volatile uint8_t * const pucFirstUserPriorityRegister = ( volatile uint8_t * const ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
 		volatile uint8_t ucMaxPriorityValue;
 
 		/* Determine the maximum priority from which ISR safe FreeRTOS API
@@ -247,14 +247,14 @@ BaseType_t xPortStartScheduler( void )
 		ensure interrupt entry is as fast and simple as possible.
 
 		Save the interrupt priority value that is about to be clobbered. */
-		ulOriginalPriority = *pcFirstUserPriorityRegister;
+		ulOriginalPriority = *pucFirstUserPriorityRegister;
 
 		/* Determine the number of priority bits available.  First write to all
 		possible bits. */
-		*pcFirstUserPriorityRegister = portMAX_8_BIT_VALUE;
+		*pucFirstUserPriorityRegister = portMAX_8_BIT_VALUE;
 
 		/* Read the value back to see how many bits stuck. */
-		ucMaxPriorityValue = *pcFirstUserPriorityRegister;
+		ucMaxPriorityValue = *pucFirstUserPriorityRegister;
 
 		/* Use the same mask on the maximum system call priority. */
 		ucMaxSysCallPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY & ucMaxPriorityValue;
@@ -275,7 +275,7 @@ BaseType_t xPortStartScheduler( void )
 
 		/* Restore the clobbered interrupt priority register to its original
 		value. */
-		*pcFirstUserPriorityRegister = ulOriginalPriority;
+		*pucFirstUserPriorityRegister = ulOriginalPriority;
 	}
 	#endif /* conifgASSERT_DEFINED */
 

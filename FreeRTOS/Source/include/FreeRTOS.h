@@ -708,6 +708,9 @@ typedef TickType_t EventBits_t;
 #define xTaskStatusType	TaskStatus_t
 #define xTimerHandle TimerHandle_t
 #define xCoRoutineHandle CoRoutineHandle_t
+#define xListItem ListItem_t
+#define xList List_t
+#define xTimeOutType TimeOut_t
 
 #endif /* INC_FREERTOS_H */
 

@@ -274,7 +274,7 @@ static portBASE_TYPE lParameterNumber = 0;
 		/* Return the parameter string. */
 		memset( pcWriteBuffer, 0x00, xWriteBufferLen );
 		sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-		strncat( pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
+		strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
 		strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 		/* If this is the last of the three parameters then there are no more
@@ -340,7 +340,7 @@ static portBASE_TYPE lParameterNumber = 0;
 			/* Return the parameter string. */
 			memset( pcWriteBuffer, 0x00, xWriteBufferLen );
 			sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-			strncat( pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
+			strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
 			strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 			/* There might be more parameters to return after this one. */
@@ -391,7 +391,7 @@ static portBASE_TYPE lParameterNumber = 0;
 		configASSERT( pcParameter );
 
 		/* There are only two valid parameter values. */
-		if( strncmp( ( const char * ) pcParameter, "start", strlen( "start" ) ) == 0 )
+		if( strncmp( pcParameter, "start", strlen( "start" ) ) == 0 )
 		{
 			/* Start or restart the trace. */
 			vTraceStop();
@@ -400,7 +400,7 @@ static portBASE_TYPE lParameterNumber = 0;
 
 			sprintf( pcWriteBuffer, "Trace recording (re)started.\r\n" );
 		}
-		else if( strncmp( ( const char * ) pcParameter, "stop", strlen( "stop" ) ) == 0 )
+		else if( strncmp( pcParameter, "stop", strlen( "stop" ) ) == 0 )
 		{
 			/* End the trace, if one is running. */
 			vTraceStop();

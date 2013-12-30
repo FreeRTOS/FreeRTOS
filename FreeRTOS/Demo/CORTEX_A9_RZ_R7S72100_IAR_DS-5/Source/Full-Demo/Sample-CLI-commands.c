@@ -405,7 +405,7 @@ static portBASE_TYPE lParameterNumber = 0;
 		configASSERT( pcParameter );
 
 		/* There are only two valid parameter values. */
-		if( strncmp( ( const char * ) pcParameter, "start", strlen( "start" ) ) == 0 )
+		if( strncmp( pcParameter, "start", strlen( "start" ) ) == 0 )
 		{
 			/* Start or restart the trace. */
 			vTraceStop();
@@ -414,7 +414,7 @@ static portBASE_TYPE lParameterNumber = 0;
 
 			sprintf( pcWriteBuffer, "Trace recording (re)started.\r\n" );
 		}
-		else if( strncmp( ( const char * ) pcParameter, "stop", strlen( "stop" ) ) == 0 )
+		else if( strncmp( pcParameter, "stop", strlen( "stop" ) ) == 0 )
 		{
 			/* End the trace, if one is running. */
 			vTraceStop();

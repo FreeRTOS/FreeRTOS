@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -94,7 +94,7 @@ struct sockaddr_in xConnection;
 CYASSL* xCyaSSL_Object;
 WORD wVersionRequested;
 WSADATA xWSAData;
-uint8_t cString[ 50 ];
+char cString[ 50 ];
 portBASE_TYPE lReturned;
 uint32_t ulCount = 0UL;
 
@@ -128,13 +128,13 @@ uint32_t ulCount = 0UL;
 		/* Connect to the secure server. */
 		if( connect( xClientSocket, ( SOCKADDR * ) &xConnection, sizeof( xConnection ) ) == 0 )
 		{
-			/* The connect was successful.  Create a CyaSSL object to associate 
+			/* The connect was successful.  Create a CyaSSL object to associate
 			with this connection. */
 			xCyaSSL_Object = CyaSSL_new( xCyaSSL_ClientContext );
-        
+
 			if( xCyaSSL_Object != NULL )
 			{
-				/* Associate the created CyaSSL object with the connected 
+				/* Associate the created CyaSSL object with the connected
 				socket. */
 				lReturned = CyaSSL_set_fd( xCyaSSL_Object, xClientSocket );
 				configASSERT( lReturned == SSL_SUCCESS );
@@ -146,14 +146,14 @@ uint32_t ulCount = 0UL;
 				do
 				{
 					/* Create the string that is sent to the secure server. */
-					sprintf( ( char * ) cString, "Message number %lu\r\n", ulCount );
+					sprintf( cString, "Message number %lu\r\n", ulCount );
 
-					/* The next line is the secure equivalent of the standard 
+					/* The next line is the secure equivalent of the standard
 					sockets call:
 					lReturned = send( xClientSocket, cString, strlen( cString ) + 1, 0 ); */
-					lReturned = CyaSSL_write( xCyaSSL_Object, ( const char * ) cString, strlen( ( const char * ) cString ) + 1 );
-					
-					
+					lReturned = CyaSSL_write( xCyaSSL_Object, cString, strlen( cString ) + 1 );
+
+
 					/* Short delay to prevent the messages streaming up the
 					console too quickly. */
 					vTaskDelay( 50 );
@@ -161,7 +161,7 @@ uint32_t ulCount = 0UL;
 
 				} while( ( lReturned != SOCKET_ERROR ) && ( ulCount < 10UL ) );
 			}
-						
+
 			CyaSSL_free( xCyaSSL_Object );
 			closesocket( xClientSocket );
 

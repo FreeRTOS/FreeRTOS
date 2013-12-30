@@ -91,7 +91,7 @@ static void prvCDCCommandConsoleTask( void *pvParameters );
  * Obtain a character from the CDC input.  The calling task will be held in the
  * Blocked state (so other tasks can execute) until a character is avilable.
  */
-int8_t cGetCDCChar( void );
+char cGetCDCChar( void );
 
 /*
  * Initialise the third party virtual comport files driver
@@ -109,9 +109,9 @@ task. */
 static xSemaphoreHandle xCDCMutex = NULL;
 
 /* Const messages output by the command console. */
-static const uint8_t * const pcWelcomeMessage = ( uint8_t * ) "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
-static const uint8_t * const pcEndOfOutputMessage = ( uint8_t * ) "\r\n[Press ENTER to execute the previous command again]\r\n>";
-static const uint8_t * const pcNewLine = ( uint8_t * ) "\r\n";
+static const char * const pcWelcomeMessage = "FreeRTOS command server.\r\nType Help to view a list of registered commands.\r\n\r\n>";
+static const char * const pcEndOfOutputMessage = "\r\n[Press ENTER to execute the previous command again]\r\n>";
+static const char * const pcNewLine = "\r\n";
 
 /*-----------------------------------------------------------*/
 
@@ -140,8 +140,10 @@ void vCDCCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPri
 
 static void prvCDCCommandConsoleTask( void *pvParameters )
 {
-int8_t cRxedChar, cInputIndex = 0, *pcOutputString;
-static int8_t cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
+char cRxedChar;
+uint8_t ucInputIndex = 0;
+char *pcOutputString;
+static char cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
 portBASE_TYPE xReturned;
 
 	( void ) pvParameters;
@@ -156,7 +158,7 @@ portBASE_TYPE xReturned;
 
 	/* Send the welcome message.  This probably won't be seen as the console
 	will not have been connected yet. */
-	USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcWelcomeMessage, strlen( ( const char * ) pcWelcomeMessage ) );
+	USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcWelcomeMessage, strlen( pcWelcomeMessage ) );
 
 	for( ;; )
 	{
@@ -175,14 +177,14 @@ portBASE_TYPE xReturned;
 			if( cRxedChar == '\n' || cRxedChar == '\r' )
 			{
 				/* Just to space the output from the input. */
-				USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcNewLine, strlen( ( const char * ) pcNewLine ) );
+				USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcNewLine, strlen( pcNewLine ) );
 
 				/* See if the command is empty, indicating that the last command is
 				to be executed again. */
-				if( cInputIndex == 0 )
+				if( ucInputIndex == 0 )
 				{
 					/* Copy the last command back into the input string. */
-					strcpy( ( char * ) cInputString, ( char * ) cLastInputString );
+					strcpy( cInputString, cLastInputString );
 				}
 
 				/* Pass the received command to the command interpreter.  The
@@ -195,7 +197,7 @@ portBASE_TYPE xReturned;
 					xReturned = FreeRTOS_CLIProcessCommand( cInputString, pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
 
 					/* Write the generated string to the CDC. */
-					USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcOutputString, strlen( ( const char * ) pcOutputString ) );
+					USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcOutputString, strlen( pcOutputString ) );
 					vTaskDelay( 1 );
 
 				} while( xReturned != pdFALSE );
@@ -204,11 +206,11 @@ portBASE_TYPE xReturned;
 				Clear the input	string ready to receive the next command.  Remember
 				the command that was just processed first in case it is to be
 				processed again. */
-				strcpy( ( char * ) cLastInputString, ( char * ) cInputString );
-				cInputIndex = 0;
+				strcpy( cLastInputString, cInputString );
+				ucInputIndex = 0;
 				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
-				USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcEndOfOutputMessage, strlen( ( const char * ) pcEndOfOutputMessage ) );
+				USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcEndOfOutputMessage, strlen( pcEndOfOutputMessage ) );
 			}
 			else
 			{
@@ -220,10 +222,10 @@ portBASE_TYPE xReturned;
 				{
 					/* Backspace was pressed.  Erase the last character in the
 					string - if any. */
-					if( cInputIndex > 0 )
+					if( ucInputIndex > 0 )
 					{
-						cInputIndex--;
-						cInputString[ cInputIndex ] = '\0';
+						ucInputIndex--;
+						cInputString[ ucInputIndex ] = '\0';
 					}
 				}
 				else
@@ -233,10 +235,10 @@ portBASE_TYPE xReturned;
 					string will be passed to the command interpreter. */
 					if( ( cRxedChar >= ' ' ) && ( cRxedChar <= '~' ) )
 					{
-						if( cInputIndex < cmdMAX_INPUT_SIZE )
+						if( ucInputIndex < cmdMAX_INPUT_SIZE )
 						{
-							cInputString[ cInputIndex ] = cRxedChar;
-							cInputIndex++;
+							cInputString[ ucInputIndex ] = cRxedChar;
+							ucInputIndex++;
 						}
 					}
 				}
@@ -249,20 +251,20 @@ portBASE_TYPE xReturned;
 }
 /*-----------------------------------------------------------*/
 
-void vOutputString( const uint8_t * const pucMessage )
+void vOutputString( const char * const pcMessage )
 {
 	if( xSemaphoreTake( xCDCMutex, cmdMAX_MUTEX_WAIT ) == pdPASS )
 	{
-		USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pucMessage, strlen( ( const char * ) pucMessage ) );
+		USB_WriteEP( CDC_DEP_IN, ( uint8_t * ) pcMessage, strlen( pcMessage ) );
 		xSemaphoreGive( xCDCMutex );
 	}
 }
 /*-----------------------------------------------------------*/
 
-int8_t cGetCDCChar( void )
+char cGetCDCChar( void )
 {
 int32_t lAvailableBytes, xBytes = 0;
-int8_t cInputChar;
+char cInputChar;
 
 	do
 	{
@@ -274,7 +276,7 @@ int8_t cInputChar;
 			{
 				/* Attempt to read one character. */
 				xBytes = 1;
-				xBytes = CDC_RdOutBuf( ( char * ) &cInputChar, &xBytes );
+				xBytes = CDC_RdOutBuf( &cInputChar, &xBytes );
 
 				xSemaphoreGive( xCDCMutex );
 			}

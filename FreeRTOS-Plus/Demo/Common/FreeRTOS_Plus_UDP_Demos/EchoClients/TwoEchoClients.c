@@ -156,7 +156,7 @@ static void prvEchoClientTask( void *pvParameters )
 {
 xSocket_t xSocket;
 struct freertos_sockaddr xEchoServerAddress;
-int8_t cTxString[ 25 ], cRxString[ 25 ]; /* Make sure the stack is large enough to hold these.  Turn on stack overflow checking during debug to be sure. */
+char cTxString[ 25 ], cRxString[ 25 ]; /* Make sure the stack is large enough to hold these.  Turn on stack overflow checking during debug to be sure. */
 int32_t lLoopCount = 0UL;
 const int32_t lMaxLoopCount = 50;
 volatile uint32_t ulRxCount = 0UL, ulTxCount = 0UL;
@@ -188,7 +188,7 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 		for( lLoopCount = 0; lLoopCount < lMaxLoopCount; lLoopCount++ )
 		{
 			/* Create the string that is sent to the echo server. */
-			sprintf( ( char * ) cTxString, "Message number %u\r\n", ( unsigned int ) ulTxCount );
+			sprintf( cTxString, "Message number %u\r\n", ( unsigned int ) ulTxCount );
 
 			/* Send the string to the socket.  ulFlags is set to 0, so the zero
 			copy interface is not used.  That means the data from cTxString is
@@ -197,7 +197,7 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 			to ensure the NULL string terminator is sent as part of the message. */
 			FreeRTOS_sendto( xSocket,				/* The socket being sent to. */
 							( void * ) cTxString,	/* The data being sent. */
-							strlen( ( const char * ) cTxString ) + 1, /* The length of the data being sent. */
+							strlen( cTxString ) + 1,/* The length of the data being sent. */
 							0,						/* ulFlags with the FREERTOS_ZERO_COPY bit clear. */
 							&xEchoServerAddress,	/* The destination address. */
 							sizeof( xEchoServerAddress ) );
@@ -223,7 +223,7 @@ uint32_t xAddressLength = sizeof( xEchoServerAddress );
 								&xAddressLength );
 
 			/* Compare the transmitted string to the received string. */
-			if( strcmp( ( char * ) cRxString, ( char * ) cTxString ) == 0 )
+			if( strcmp( cRxString, cTxString ) == 0 )
 			{
 				/* The echo reply was received without error. */
 				ulRxCount++;
@@ -244,7 +244,7 @@ static void prvZeroCopyEchoClientTask( void *pvParameters )
 {
 xSocket_t xSocket;
 struct freertos_sockaddr xEchoServerAddress;
-static int8_t cTxString[ 40 ];
+static char cTxString[ 40 ];
 int32_t lLoopCount = 0UL;
 volatile uint32_t ulRxCount = 0UL, ulTxCount = 0UL;
 uint32_t xAddressLength = sizeof( xEchoServerAddress );
@@ -252,9 +252,9 @@ int32_t lReturned;
 uint8_t *pucUDPPayloadBuffer;
 
 const int32_t lMaxLoopCount = 50;
-const uint8_t * const pucStringToSend = ( const uint8_t * const ) "Zero copy message number";
+const char * const pcStringToSend = "Zero copy message number";
 /* The buffer is large enough to hold the string, a number, and the string terminator. */
-const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
+const size_t xBufferLength = strlen( pcStringToSend ) + 15;
 
 	#if ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1
 	{
@@ -309,11 +309,11 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 				/* A buffer was successfully obtained.  Create the string that is
 				sent to the echo server.  Note the string is written directly
 				into the buffer obtained from the IP stack. */
-				sprintf( ( char * ) pucUDPPayloadBuffer, "%s %u\r\n", ( const char * ) "Zero copy message number", ( unsigned int ) ulTxCount );
+				sprintf( ( char * ) pucUDPPayloadBuffer, "%s %u\r\n", "Zero copy message number", ( unsigned int ) ulTxCount );
 
 				/* Also copy the string into a local buffer so it can be compared
 				with the string that is later received back from the echo server. */
-				strcpy( ( char * ) cTxString, ( char * ) pucUDPPayloadBuffer );
+				strcpy( cTxString, ( char * ) pucUDPPayloadBuffer );
 
 				/* Pass the buffer into the send function.  ulFlags has the
 				FREERTOS_ZERO_COPY bit set so the IP stack will take control of
@@ -321,7 +321,7 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 				echoMARK_SEND_IN_TRACE_BUFFER( xZeroCopySendEvent );
 				lReturned = FreeRTOS_sendto( 	xSocket,					/* The socket being sent to. */
 												( void * ) pucUDPPayloadBuffer,	/* The buffer being passed into the IP stack. */
-												strlen( ( const char * ) cTxString ) + 1, /* The length of the data being sent.  Plus 1 to ensure the null terminator is part of the data. */
+												strlen( cTxString ) + 1, 	/* The length of the data being sent.  Plus 1 to ensure the null terminator is part of the data. */
 												FREERTOS_ZERO_COPY,			/* ulFlags with the zero copy bit is set. */
 												&xEchoServerAddress,		/* Where the data is being sent. */
 												sizeof( xEchoServerAddress ) );
@@ -372,7 +372,7 @@ const size_t xBufferLength = strlen( ( char * ) pucStringToSend ) + 15;
 				{
 					/* Compare the string sent to the echo server with the string
 					received back from the echo server. */
-					if( strcmp( ( char * ) pucUDPPayloadBuffer, ( char * ) cTxString ) == 0 )
+					if( strcmp( ( char * ) pucUDPPayloadBuffer, cTxString ) == 0 )
 					{
 						/* The strings matched. */
 						ulRxCount++;

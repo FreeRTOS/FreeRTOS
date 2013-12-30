@@ -209,8 +209,8 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
-	strcpy( ( char * ) pcWriteBuffer, pcHeader );
-	vTaskList( ( char * ) pcWriteBuffer + strlen( pcHeader ) );
+	strcpy( pcWriteBuffer, pcHeader );
+	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
 	pdFALSE. */
@@ -230,7 +230,7 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
-	strcpy( ( char * ) pcWriteBuffer, pcHeader );
+	strcpy( pcWriteBuffer, pcHeader );
 	vTaskGetRunTimeStats( ( char * ) pcWriteBuffer + strlen( pcHeader ) );
 
 	/* There is no more data to return after this single string, so return
@@ -241,7 +241,7 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 
 static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn;
 static portBASE_TYPE lParameterNumber = 0;
 
@@ -256,7 +256,7 @@ static portBASE_TYPE lParameterNumber = 0;
 	{
 		/* The first time the function is called after the command has been
 		entered just a header string is returned. */
-		sprintf( ( char * ) pcWriteBuffer, "The three parameters were:\r\n" );
+		sprintf( pcWriteBuffer, "The three parameters were:\r\n" );
 
 		/* Next time the function is called the first parameter will be echoed
 		back. */
@@ -269,21 +269,21 @@ static portBASE_TYPE lParameterNumber = 0;
 	else
 	{
 		/* Obtain the parameter string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										lParameterNumber,		/* Return the next parameter. */
-										&xParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							lParameterNumber,		/* Return the next parameter. */
+							&xParameterStringLength	/* Store the parameter string length. */
+						);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
 
 		/* Return the parameter string. */
 		memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-		sprintf( ( char * ) pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-		strncat( ( char * ) pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
-		strncat( ( char * ) pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
+		sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
+		strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
+		strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 		/* If this is the last of the three parameters then there are no more
 		strings to return after this one. */
@@ -308,7 +308,7 @@ static portBASE_TYPE lParameterNumber = 0;
 
 static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-int8_t *pcParameter;
+const char *pcParameter;
 portBASE_TYPE xParameterStringLength, xReturn;
 static portBASE_TYPE lParameterNumber = 0;
 
@@ -323,7 +323,7 @@ static portBASE_TYPE lParameterNumber = 0;
 	{
 		/* The first time the function is called after the command has been
 		entered just a header string is returned. */
-		sprintf( ( char * ) pcWriteBuffer, "The parameters were:\r\n" );
+		sprintf( pcWriteBuffer, "The parameters were:\r\n" );
 
 		/* Next time the function is called the first parameter will be echoed
 		back. */
@@ -336,20 +336,20 @@ static portBASE_TYPE lParameterNumber = 0;
 	else
 	{
 		/* Obtain the parameter string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										lParameterNumber,		/* Return the next parameter. */
-										&xParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							lParameterNumber,		/* Return the next parameter. */
+							&xParameterStringLength	/* Store the parameter string length. */
+						);
 
 		if( pcParameter != NULL )
 		{
 			/* Return the parameter string. */
 			memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-			sprintf( ( char * ) pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-			strncat( ( char * ) pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
-			strncat( ( char * ) pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
+			sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
+			strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
+			strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 			/* There might be more parameters to return after this one. */
 			xReturn = pdTRUE;
@@ -377,7 +377,7 @@ static portBASE_TYPE lParameterNumber = 0;
 
 	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-	int8_t *pcParameter;
+	const char *pcParameter;
 	portBASE_TYPE lParameterStringLength;
 
 		/* Remove compile time warnings about unused parameters, and check the
@@ -388,35 +388,35 @@ static portBASE_TYPE lParameterNumber = 0;
 		configASSERT( pcWriteBuffer );
 
 		/* Obtain the parameter string. */
-		pcParameter = ( int8_t * ) FreeRTOS_CLIGetParameter
-									(
-										pcCommandString,		/* The command string itself. */
-										1,						/* Return the first parameter. */
-										&lParameterStringLength	/* Store the parameter string length. */
-									);
+		pcParameter = FreeRTOS_CLIGetParameter
+						(
+							pcCommandString,		/* The command string itself. */
+							1,						/* Return the first parameter. */
+							&lParameterStringLength	/* Store the parameter string length. */
+						);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
 
 		/* There are only two valid parameter values. */
-		if( strncmp( ( const char * ) pcParameter, "start", strlen( "start" ) ) == 0 )
+		if( strncmp( pcParameter, "start", strlen( "start" ) ) == 0 )
 		{
 			/* Start or restart the trace. */
 			vTraceStop();
 			vTraceClear();
 			vTraceStart();
 
-			sprintf( ( char * ) pcWriteBuffer, "Trace recording (re)started.\r\n" );
+			sprintf( pcWriteBuffer, "Trace recording (re)started.\r\n" );
 		}
-		else if( strncmp( ( const char * ) pcParameter, "stop", strlen( "stop" ) ) == 0 )
+		else if( strncmp( pcParameter, "stop", strlen( "stop" ) ) == 0 )
 		{
 			/* End the trace, if one is running. */
 			vTraceStop();
-			sprintf( ( char * ) pcWriteBuffer, "Stopping trace recording.\r\n" );
+			sprintf( pcWriteBuffer, "Stopping trace recording.\r\n" );
 		}
 		else
 		{
-			sprintf( ( char * ) pcWriteBuffer, "Valid parameters are 'start' and 'stop'.\r\n" );
+			sprintf( pcWriteBuffer, "Valid parameters are 'start' and 'stop'.\r\n" );
 		}
 
 		/* There is no more data to return after this single string, so return

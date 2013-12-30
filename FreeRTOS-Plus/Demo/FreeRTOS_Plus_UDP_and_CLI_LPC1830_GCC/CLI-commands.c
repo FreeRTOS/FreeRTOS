@@ -333,7 +333,7 @@ static portBASE_TYPE lParameterNumber = 0;
 		/* Return the parameter string. */
 		memset( pcWriteBuffer, 0x00, xWriteBufferLen );
 		sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-		strncat( pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
+		strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
 		strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 		/* If this is the last of the three parameters then there are no more
@@ -399,7 +399,7 @@ static portBASE_TYPE lParameterNumber = 0;
 			/* Return the parameter string. */
 			memset( pcWriteBuffer, 0x00, xWriteBufferLen );
 			sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-			strncat( pcWriteBuffer, ( const char * ) pcParameter, xParameterStringLength );
+			strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
 			strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 			/* There might be more parameters to return after this one. */
@@ -477,7 +477,7 @@ static portBASE_TYPE lParameterNumber = 0;
 		digit, assume the host name has been passed in. */
 		if( ( *pcParameter >= '0' ) && ( *pcParameter <= '9' ) )
 		{
-			ulIPAddress = FreeRTOS_inet_addr( ( const uint8_t * ) pcParameter );
+			ulIPAddress = FreeRTOS_inet_addr( pcParameter );
 		}
 		else
 		{
@@ -485,7 +485,7 @@ static portBASE_TYPE lParameterNumber = 0;
 			pcParameter[ lParameterStringLength ] = 0x00;
 
 			/* Attempt to resolve host. */
-			ulIPAddress = FreeRTOS_gethostbyname( ( uint8_t * ) pcParameter );
+			ulIPAddress = FreeRTOS_gethostbyname( pcParameter );
 		}
 
 		/* Convert IP address, which may have come from a DNS lookup, to string. */
@@ -639,7 +639,7 @@ uint32_t ulAddress;
 		configASSERT( pcParameter );
 
 		/* There are only two valid parameter values. */
-		if( strncmp( ( const char * ) pcParameter, "start", strlen( "start" ) ) == 0 )
+		if( strncmp( pcParameter, "start", strlen( "start" ) ) == 0 )
 		{
 			/* Start or restart the trace. */
 			vTraceStop();

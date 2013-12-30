@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -113,14 +113,14 @@ static void prvSendBuffer( struct usart_module *pxCDCUsart, const char * pcBuffe
 extern void vRegisterSampleCLICommands( void );
 
 /*
- * Configure the UART used for IO.and register prvUARTRxNotificationHandler() 
+ * Configure the UART used for IO.and register prvUARTRxNotificationHandler()
  * to handle UART Rx events.
  */
 static void prvConfigureUART( struct usart_module *pxCDCUsart );
 
 /*
- * Callback functions registered with the Atmel UART driver.  Both functions 
- * just 'give' a semaphore to unblock a task that may be waiting for a 
+ * Callback functions registered with the Atmel UART driver.  Both functions
+ * just 'give' a semaphore to unblock a task that may be waiting for a
  * character to be received, or a transmission to complete.
  */
 static void prvUARTTxNotificationHandler( const struct usart_module *const pxUSART );
@@ -146,7 +146,7 @@ static xSemaphoreHandle xRxCompleteSemaphore = NULL;
 void vUARTCommandConsoleStart( uint16_t usStackSize, unsigned portBASE_TYPE uxPriority )
 {
 	vRegisterSampleCLICommands();
-	
+
 	/* Create that task that handles the console itself. */
 	xTaskCreate( 	prvUARTCommandConsoleTask,			/* The task that implements the command console. */
 					"CLI",								/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
@@ -178,13 +178,13 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 	pcOutputString = FreeRTOS_CLIGetOutputBuffer();
 
 	/* Send the welcome message. */
-	prvSendBuffer( &xCDCUsart, pcWelcomeMessage, strlen( ( char * ) pcWelcomeMessage ) );
+	prvSendBuffer( &xCDCUsart, pcWelcomeMessage, strlen( pcWelcomeMessage ) );
 
 	for( ;; )
 	{
 		/* Wait for the next character to arrive.  A semaphore is used to
 		ensure no CPU time is used until data has arrived. */
-		usart_read_buffer_job( &xCDCUsart, ( uint8_t * ) &cRxedChar, sizeof( cRxedChar ) );		
+		usart_read_buffer_job( &xCDCUsart, ( uint8_t * ) &cRxedChar, sizeof( cRxedChar ) );
 		if( xSemaphoreTake( xRxCompleteSemaphore, portMAX_DELAY ) == pdPASS )
 		{
 			/* Echo the character back. */
@@ -201,7 +201,7 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 				if( ucInputIndex == 0 )
 				{
 					/* Copy the last command back into the input string. */
-					strcpy( ( char * ) cInputString, ( char * ) cLastInputString );
+					strcpy( cInputString, cLastInputString );
 				}
 
 				/* Pass the received command to the command interpreter.  The
@@ -222,11 +222,11 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 				Clear the input	string ready to receive the next command.  Remember
 				the command that was just processed first in case it is to be
 				processed again. */
-				strcpy( ( char * ) cLastInputString, ( char * ) cInputString );
+				strcpy( cLastInputString, cInputString );
 				ucInputIndex = 0;
 				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
-				prvSendBuffer( &xCDCUsart, pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
+				prvSendBuffer( &xCDCUsart, pcEndOfOutputMessage, strlen( pcEndOfOutputMessage ) );
 			}
 			else
 			{
@@ -269,9 +269,9 @@ static void prvSendBuffer( struct usart_module *pxCDCUsart, const char * pcBuffe
 const portTickType xBlockMax100ms = 100UL / portTICK_RATE_MS;
 
 	if( xBufferLength > 0 )
-	{		
+	{
 		usart_write_buffer_job( pxCDCUsart, ( uint8_t * ) pcBuffer, xBufferLength );
-		
+
 		/* Wait for the Tx to complete so the buffer can be reused without
 		corrupting the data that is being sent. */
 		xSemaphoreTake( xTxCompleteSemaphore, xBlockMax100ms );
@@ -287,7 +287,7 @@ struct usart_config xUARTConfig;
 	without wasting any CPU time. */
 	vSemaphoreCreateBinary( xTxCompleteSemaphore );
 	configASSERT( xTxCompleteSemaphore );
-	
+
 	/* This semaphore is used to allow the task to block for an Rx to complete
 	without wasting any CPU time. */
 	vSemaphoreCreateBinary( xRxCompleteSemaphore );
@@ -307,13 +307,13 @@ struct usart_config xUARTConfig;
 	xUARTConfig.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	xUARTConfig.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
 	xUARTConfig.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	while( usart_init( pxCDCUsart, EDBG_CDC_MODULE, &xUARTConfig ) != STATUS_OK ) 
+	while( usart_init( pxCDCUsart, EDBG_CDC_MODULE, &xUARTConfig ) != STATUS_OK )
 	{
 		/* Nothing to do here.  Should include a timeout really but this is
 		init code only. */
 	}
 	usart_enable( pxCDCUsart );
-	
+
 	/* Register the driver callbacks. */
 	usart_register_callback( pxCDCUsart, prvUARTTxNotificationHandler, USART_CALLBACK_BUFFER_TRANSMITTED );
 	usart_register_callback( pxCDCUsart, prvUARTRxNotificationHandler, USART_CALLBACK_BUFFER_RECEIVED );

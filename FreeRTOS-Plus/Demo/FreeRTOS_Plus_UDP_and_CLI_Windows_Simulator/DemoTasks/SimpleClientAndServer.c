@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -63,7 +63,7 @@
     1 tab == 4 spaces!
 */
 
-/* 
+/*
  * Creates two transmitting tasks and two receiving tasks.  The transmitting
  * tasks send values that are received by the receiving tasks.  One set of tasks
  * uses the standard API.  The other set of tasks uses the zero copy API.
@@ -126,7 +126,7 @@ static void prvSimpleClientTask( void *pvParameters )
 {
 xSocket_t xClientSocket;
 struct freertos_sockaddr xDestinationAddress;
-uint8_t cString[ 50 ];
+char cString[ 50 ];
 portBASE_TYPE lReturned;
 uint32_t ulCount = 0UL, ulIPAddress;
 const uint32_t ulLoopsPerSocket = 10UL;
@@ -162,13 +162,13 @@ const portTickType x150ms = 150UL / portTICK_RATE_MS;
 		do
 		{
 			/* Create the string that is sent to the server. */
-			sprintf( ( char * ) cString, "Server received (not zero copy): Message number %lu\r\n", ulCount );
+			sprintf( cString, "Server received (not zero copy): Message number %lu\r\n", ulCount );
 
 			/* Send the string to the socket.  ulFlags is set to 0, so the zero
 			copy option is not selected.  That means the data from cString[] is
 			copied into a network buffer inside FreeRTOS_sendto(), and cString[]
 			can be reused as soon as FreeRTOS_sendto() has returned. */
-			lReturned = FreeRTOS_sendto( xClientSocket, ( void * ) cString, strlen( ( const char * ) cString ), 0, &xDestinationAddress, sizeof( xDestinationAddress ) );
+			lReturned = FreeRTOS_sendto( xClientSocket, ( void * ) cString, strlen( cString ), 0, &xDestinationAddress, sizeof( xDestinationAddress ) );
 
 			ulCount++;
 
@@ -187,7 +187,7 @@ const portTickType x150ms = 150UL / portTICK_RATE_MS;
 static void prvSimpleServerTask( void *pvParameters )
 {
 long lBytes;
-uint8_t cReceivedString[ 60 ];
+char cReceivedString[ 60 ];
 struct freertos_sockaddr xClient, xBindAddress;
 uint32_t xClientLength = sizeof( xClient );
 xSocket_t xListeningSocket;
@@ -226,11 +226,11 @@ xSocket_t xListeningSocket;
 		/* Print the received characters. */
 		if( lBytes > 0 )
 		{
-			vOutputString( ( char * ) cReceivedString );
+			vOutputString( cReceivedString );
 		}
 
 		/* Error check. */
-		configASSERT( lBytes == ( portBASE_TYPE ) strlen( ( const char * ) cReceivedString ) );
+		configASSERT( lBytes == ( portBASE_TYPE ) strlen( cReceivedString ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -243,10 +243,10 @@ struct freertos_sockaddr xDestinationAddress;
 portBASE_TYPE lReturned;
 uint32_t ulCount = 0UL, ulIPAddress;
 const uint32_t ulLoopsPerSocket = 10UL;
-const uint8_t *pucStringToSend = ( const uint8_t * ) "Server received (using zero copy): Message number ";
+const char *pcStringToSend = "Server received (using zero copy): Message number ";
 const portTickType x150ms = 150UL / portTICK_RATE_MS;
 /* 15 is added to ensure the number, \r\n and terminating zero fit. */
-const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
+const size_t xStringLength = strlen( pcStringToSend ) + 15;
 
 	/* Remove compiler warning about unused parameters. */
 	( void ) pvParameters;
@@ -296,7 +296,7 @@ const size_t xStringLength = strlen( ( char * ) pucStringToSend ) + 15;
 			end.  Note that the string is being written directly into the buffer
 			obtained from the IP stack above. */
 			memset( ( void * ) pucUDPPayloadBuffer, 0x00, xStringLength );
-			sprintf( ( char * ) pucUDPPayloadBuffer, "%s%lu\r\n", ( char * ) pucStringToSend, ulCount );
+			sprintf( ( char * ) pucUDPPayloadBuffer, "%s%lu\r\n", pcStringToSend, ulCount );
 
 			/* Pass the buffer into the send function.  ulFlags has the
 			FREERTOS_ZERO_COPY bit set so the IP stack will take control of the

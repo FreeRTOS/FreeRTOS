@@ -5,11 +5,11 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -21,9 +21,9 @@
  *
  * - Commercial licensing -
  * Businesses and individuals that for commercial or other reasons cannot comply
- * with the terms of the GPL V2 license must obtain a commercial license before 
- * incorporating FreeRTOS+UDP into proprietary software for distribution in any 
- * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp 
+ * with the terms of the GPL V2 license must obtain a commercial license before
+ * incorporating FreeRTOS+UDP into proprietary software for distribution in any
+ * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp
  * and do not require any source files to be changed.
  *
  * FreeRTOS+UDP is distributed in the hope that it will be useful.  You cannot
@@ -230,7 +230,7 @@ xFreeRTOS_Socket_t *pxSocket;
 
 #if ipconfigSUPPORT_SELECT_FUNCTION == 1
 
-	portBASE_TYPE FreeRTOS_FD_CLR( xSocket_t xSocket, xSocketSet_t xSocketSet ) 
+	portBASE_TYPE FreeRTOS_FD_CLR( xSocket_t xSocket, xSocketSet_t xSocketSet )
 	{
 	xFreeRTOS_Socket_t *pxSocket = ( xFreeRTOS_Socket_t * ) xSocket;
 	portBASE_TYPE xReturn;
@@ -881,29 +881,29 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 				/* Is the socket a member of a select() group? */
 				if( pxSocket->xSelectQueue != NULL )
 				{
-					/* Can the select group be notified that the socket is 
+					/* Can the select group be notified that the socket is
 					ready to be read? */
 					if( xQueueSendFromISR( pxSocket->xSelectQueue, &pxSocket, &xHigherPriorityTaskWoken ) != pdPASS )
 					{
 						/* Could not notify the select group. */
 						xReturn = pdFAIL;
 						iptraceFAILED_TO_NOTIFY_SELECT_GROUP( pxSocket );
-					}				
+					}
 				}
 			}
-			#endif 
+			#endif
 
 			if( xReturn == pdPASS )
 			{
 				taskENTER_CRITICAL();
 				{
-					/* Add the network packet to the list of packets to be 
+					/* Add the network packet to the list of packets to be
 					processed by the socket. */
 					vListInsertEnd( &( pxSocket->xWaitingPacketsList ), &( pxNetworkBuffer->xBufferListItem ) );
 				}
 				taskEXIT_CRITICAL();
 
-				/* The socket's counting semaphore records how many packets are 
+				/* The socket's counting semaphore records how many packets are
 				waiting	to be processed by the socket. */
 				xSemaphoreGiveFromISR( pxSocket->xWaitingPacketSemaphore, &xHigherPriorityTaskWoken );
 			}
@@ -972,34 +972,34 @@ xListItem *pxIterator, *pxReturn;
 
 #if ipconfigINCLUDE_FULL_INET_ADDR == 1
 
-	uint32_t FreeRTOS_inet_addr( const uint8_t * pucIPAddress )
+	uint32_t FreeRTOS_inet_addr( const char *pcIPAddress )
 	{
 	const uint8_t ucDecimalBase = 10;
 	uint8_t ucOctet[ socketMAX_IP_ADDRESS_OCTETS ];
-	const uint8_t *pucPointerOnEntering;
+	const char *pcPointerOnEntering;
 	uint32_t ulReturn = 0UL, ulOctetNumber, ulValue;
 	portBASE_TYPE xResult = pdPASS;
 
 		for( ulOctetNumber = 0; ulOctetNumber < socketMAX_IP_ADDRESS_OCTETS; ulOctetNumber++ )
 		{
 			ulValue = 0;
-			pucPointerOnEntering = pucIPAddress;
+			pcPointerOnEntering = pcIPAddress;
 
-			while( ( *pucIPAddress >= ( uint8_t ) '0' ) && ( *pucIPAddress <= ( uint8_t ) '9' ) )
+			while( ( *pcIPAddress >= ( uint8_t ) '0' ) && ( *pcIPAddress <= ( uint8_t ) '9' ) )
 			{
 				/* Move previous read characters into the next decimal
 				position. */
 				ulValue *= ucDecimalBase;
 
 				/* Add the binary value of the ascii character. */
-				ulValue += ( *pucIPAddress - ( uint8_t ) '0' );
+				ulValue += ( *pcIPAddress - ( uint8_t ) '0' );
 
 				/* Move to next character in the string. */
-				pucIPAddress++;
+				pcIPAddress++;
 			}
 
 			/* Check characters were read. */
-			if( pucIPAddress == pucPointerOnEntering )
+			if( pcIPAddress == pcPointerOnEntering )
 			{
 				xResult = pdFAIL;
 			}
@@ -1016,14 +1016,14 @@ xListItem *pxIterator, *pxReturn;
 				/* Check the next character is as expected. */
 				if( ulOctetNumber < ( socketMAX_IP_ADDRESS_OCTETS - 1 ) )
 				{
-					if( *pucIPAddress != ( uint8_t ) '.' )
+					if( *pcIPAddress != ( uint8_t ) '.' )
 					{
 						xResult = pdFAIL;
 					}
 					else
 					{
 						/* Move past the dot. */
-						pucIPAddress++;
+						pcIPAddress++;
 					}
 				}
 			}
@@ -1035,7 +1035,7 @@ xListItem *pxIterator, *pxReturn;
 			}
 		}
 
-		if( *pucIPAddress != ( uint8_t ) 0x00 )
+		if( *pcIPAddress != ( uint8_t ) 0x00 )
 		{
 			/* Expected the end of the string. */
 			xResult = pdFAIL;

@@ -5,11 +5,11 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -21,9 +21,9 @@
  *
  * - Commercial licensing -
  * Businesses and individuals that for commercial or other reasons cannot comply
- * with the terms of the GPL V2 license must obtain a commercial license before 
- * incorporating FreeRTOS+UDP into proprietary software for distribution in any 
- * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp 
+ * with the terms of the GPL V2 license must obtain a commercial license before
+ * incorporating FreeRTOS+UDP into proprietary software for distribution in any
+ * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp
  * and do not require any source files to be changed.
  *
  * FreeRTOS+UDP is distributed in the hope that it will be useful.  You cannot
@@ -99,7 +99,7 @@ static xSocket_t prvCreateDNSSocket( void );
 /*
  * Create the DNS message in the zero copy buffer passed in the first parameter.
  */
-static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer, const uint8_t *pcHostName, uint16_t usIdentifier );
+static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer, const char *pcHostName, uint16_t usIdentifier );
 
 /*
  * Simple routine that jumps over the NAME field of a resource record.
@@ -128,7 +128,7 @@ typedef struct xDNSMessage xDNSMessage_t;
 
 /*-----------------------------------------------------------*/
 
-uint32_t FreeRTOS_gethostbyname( const uint8_t *pcHostName )
+uint32_t FreeRTOS_gethostbyname( const char *pcHostName )
 {
 static uint16_t usIdentifier = 0;
 struct freertos_sockaddr xAddress;
@@ -139,7 +139,7 @@ static uint32_t ulAddressLength;
 portBASE_TYPE xAttempt;
 int32_t lBytes;
 size_t xPayloadLength;
-const size_t xExpectedPayloadLength = sizeof( xDNSMessage_t ) + strlen( ( const char * const ) pcHostName ) + sizeof( uint16_t ) + sizeof( uint16_t ) + 2; /* Two for the count of characters in the first subdomain part, and the string end byte */
+const size_t xExpectedPayloadLength = sizeof( xDNSMessage_t ) + strlen( pcHostName ) + sizeof( uint16_t ) + sizeof( uint16_t ) + 2; /* Two for the count of characters in the first subdomain part, and the string end byte */
 
 	if( xDNSSocket == NULL )
 	{
@@ -207,7 +207,7 @@ const size_t xExpectedPayloadLength = sizeof( xDNSMessage_t ) + strlen( ( const 
 }
 /*-----------------------------------------------------------*/
 
-static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer, const uint8_t *pcHostName, uint16_t usIdentifier )
+static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer, const char *pcHostName, uint16_t usIdentifier )
 {
 xDNSMessage_t *pxDNSMessageHeader;
 uint8_t *pucStart, *pucByte;
@@ -237,10 +237,10 @@ static const xDNSMessage_t xDefaultPartDNSHeader =
 	pucByte = pucStart + 1;
 
 	/* Copy in the host name. */
-	strcpy( ( char * ) pucByte, ( const char * ) pcHostName );
+	strcpy( ( char * ) pucByte, pcHostName );
 
 	/* Mark the end of the string. */
-	pucByte += strlen( ( const char * ) pcHostName );
+	pucByte += strlen( pcHostName );
 	*pucByte = 0x00;
 
 	/* Walk the string to replace the '.' characters with byte counts.

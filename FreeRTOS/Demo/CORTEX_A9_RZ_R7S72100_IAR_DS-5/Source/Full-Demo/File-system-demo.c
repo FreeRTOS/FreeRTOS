@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT
@@ -302,7 +302,7 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
 	printf( "In directory %s\r\n", cRAMBuffer );
-	configASSERT( strcmp( ( const char * ) cRAMBuffer, pcFullPath ) == 0 );
+	configASSERT( strcmp( cRAMBuffer, pcFullPath ) == 0 );
 
 	/* Generate the file name. */
 	sprintf( cFileName, "%s.txt", pcDirectory2 );
@@ -331,7 +331,7 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
 	printf( "Back in root directory %s\r\n", cRAMBuffer );
-	configASSERT( strcmp( ( const char * ) cRAMBuffer, pcRoot ) == 0 );
+	configASSERT( strcmp( cRAMBuffer, pcRoot ) == 0 );
 }
 /*-----------------------------------------------------------*/
 
@@ -349,7 +349,7 @@ char cFileName[ fsMAX_FILE_NAME_LEN ];
 	/* Obtain and print out the working directory. */
 	f_getcwd( cRAMBuffer, fsRAM_BUFFER_SIZE );
 	printf( "Back in directory %s\r\n", cRAMBuffer );
-	configASSERT( strcmp( ( const char * ) cRAMBuffer, pcFullPath ) == 0 );
+	configASSERT( strcmp( cRAMBuffer, pcFullPath ) == 0 );
 
 	/* Generate the file name. */
 	sprintf( cFileName, "%s.txt", pcDirectory2 );

@@ -244,7 +244,7 @@ size_t xColumns = 50U;
 		configASSERT( pcParameter );
 
 		/* Attempt to open the requested file. */
-		pxFile = f_open( ( const char * ) pcParameter, "r" );
+		pxFile = f_open( pcParameter, "r" );
 	}
 
 	if( pxFile != NULL )
@@ -305,7 +305,7 @@ size_t xStringLength;
 	if( ucReturned == F_NO_ERROR )
 	{
 		sprintf( pcWriteBuffer, "In: " );
-		xStringLength = strlen( ( const char * ) pcWriteBuffer );
+		xStringLength = strlen( pcWriteBuffer );
 		f_getcwd( &( pcWriteBuffer[ xStringLength ] ), ( unsigned char ) ( xWriteBufferLen - xStringLength ) );
 	}
 	else
@@ -406,7 +406,7 @@ unsigned char ucReturned;
 	configASSERT( pcParameter );
 
 	/* Attempt to delete the file. */
-	ucReturned = f_delete( ( const char * ) pcParameter );
+	ucReturned = f_delete( pcParameter );
 
 	if( ucReturned == F_NO_ERROR )
 	{
@@ -483,7 +483,7 @@ long lSourceLength, lDestinationLength = 0;
 	pcSourceFile[ xParameterStringLength ] = 0x00;
 
 	/* See if the source file exists, obtain its length if it does. */
-	lSourceLength = f_filelength( ( const char * ) pcSourceFile );
+	lSourceLength = f_filelength( pcSourceFile );
 
 	if( lSourceLength == 0 )
 	{
@@ -492,7 +492,7 @@ long lSourceLength, lDestinationLength = 0;
 	else
 	{
 		/* See if the destination file exists. */
-		lDestinationLength = f_filelength( ( const char * ) pcDestinationFile );
+		lDestinationLength = f_filelength( pcDestinationFile );
 
 		if( lDestinationLength != 0 )
 		{
@@ -551,7 +551,7 @@ portBASE_TYPE xReturn = pdPASS;
 		/* Open the source file, seek past the data that has already been
 		read from the file, read the next block of data, then close the
 		file again so the destination file can be opened. */
-		pxFile = f_open( ( const char * ) pcSourceFile, "r" );
+		pxFile = f_open( pcSourceFile, "r" );
 		if( pxFile != NULL )
 		{
 			f_seek( pxFile, lBytesRead, F_SEEK_SET );
@@ -566,7 +566,7 @@ portBASE_TYPE xReturn = pdPASS;
 
 		/* Open the destination file and write the block of data to the end of
 		the file. */
-		pxFile = f_open( ( const char * ) pcDestinationFile, "a" );
+		pxFile = f_open( pcDestinationFile, "a" );
 		if( pxFile != NULL )
 		{
 			f_write( pxWriteBuffer, lBytesToRead, 1, pxFile );

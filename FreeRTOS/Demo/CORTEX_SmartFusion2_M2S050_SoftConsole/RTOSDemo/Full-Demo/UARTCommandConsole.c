@@ -165,7 +165,7 @@ portBASE_TYPE xReturned;
 	pcOutputString = FreeRTOS_CLIGetOutputBuffer();
 
 	/* Send the welcome message. */
-	prvSendBuffer( pcWelcomeMessage, strlen( ( char * ) pcWelcomeMessage ) );
+	prvSendBuffer( pcWelcomeMessage, strlen( pcWelcomeMessage ) );
 
 	for( ;; )
 	{
@@ -179,14 +179,14 @@ portBASE_TYPE xReturned;
 			if( cRxedChar == '\n' || cRxedChar == '\r' )
 			{
 				/* Just to space the output from the input. */
-				prvSendBuffer( pcNewLine, strlen( ( char * ) pcNewLine ) );
+				prvSendBuffer( pcNewLine, strlen( pcNewLine ) );
 
 				/* See if the command is empty, indicating that the last command is
 				to be executed again. */
 				if( cInputIndex == 0 )
 				{
 					/* Copy the last command back into the input string. */
-					strcpy( ( char * ) cInputString, ( char * ) cLastInputString );
+					strcpy( cInputString, cLastInputString );
 				}
 
 				/* Pass the received command to the command interpreter.  The
@@ -207,11 +207,11 @@ portBASE_TYPE xReturned;
 				Clear the input	string ready to receive the next command.  Remember
 				the command that was just processed first in case it is to be
 				processed again. */
-				strcpy( ( char * ) cLastInputString, ( char * ) cInputString );
+				strcpy( cLastInputString, cInputString );
 				cInputIndex = 0;
 				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
-				prvSendBuffer( pcEndOfOutputMessage, strlen( ( char * ) pcEndOfOutputMessage ) );
+				prvSendBuffer( pcEndOfOutputMessage, strlen( pcEndOfOutputMessage ) );
 			}
 			else
 			{

@@ -164,7 +164,7 @@ void vRegisterUDPCLICommands( void )
 
 	static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-	const char * pcParameter;
+	char * pcParameter;
 	portBASE_TYPE lParameterStringLength, xReturn;
 	uint32_t ulIPAddress, ulBytesToPing;
 	const uint32_t ulDefaultBytesToPing = 8UL;
@@ -181,12 +181,12 @@ void vRegisterUDPCLICommands( void )
 		pcWriteBuffer[ 0 ] = 0x00;
 
 		/* Obtain the number of bytes to ping. */
-		pcParameter = FreeRTOS_CLIGetParameter
-						(
-							pcCommandString,		/* The command string itself. */
-							2,						/* Return the second parameter. */
-							&lParameterStringLength	/* Store the parameter string length. */
-						);
+		pcParameter = ( char * ) FreeRTOS_CLIGetParameter
+								(
+									pcCommandString,		/* The command string itself. */
+									2,						/* Return the second parameter. */
+									&lParameterStringLength	/* Store the parameter string length. */
+								);
 
 		if( pcParameter == NULL )
 		{
@@ -195,16 +195,16 @@ void vRegisterUDPCLICommands( void )
 		}
 		else
 		{
-			ulBytesToPing = atol( ( const char * ) pcParameter );
+			ulBytesToPing = atol( pcParameter );
 		}
 
 		/* Obtain the IP address string. */
-		pcParameter = FreeRTOS_CLIGetParameter
-						(
-							pcCommandString,		/* The command string itself. */
-							1,						/* Return the first parameter. */
-							&lParameterStringLength	/* Store the parameter string length. */
-						);
+		pcParameter = ( char * ) FreeRTOS_CLIGetParameter
+								(
+									pcCommandString,		/* The command string itself. */
+									1,						/* Return the first parameter. */
+									&lParameterStringLength	/* Store the parameter string length. */
+								);
 
 		/* Sanity check something was returned. */
 		configASSERT( pcParameter );
@@ -213,7 +213,7 @@ void vRegisterUDPCLICommands( void )
 		digit, assume the host name has been passed in. */
 		if( ( *pcParameter >= '0' ) && ( *pcParameter <= '9' ) )
 		{
-			ulIPAddress = FreeRTOS_inet_addr( ( const uint8_t * ) pcParameter );
+			ulIPAddress = FreeRTOS_inet_addr( pcParameter );
 		}
 		else
 		{
@@ -221,7 +221,7 @@ void vRegisterUDPCLICommands( void )
 			pcParameter[ lParameterStringLength ] = 0x00;
 
 			/* Attempt to resolve host. */
-			ulIPAddress = FreeRTOS_gethostbyname( ( uint8_t * ) pcParameter );
+			ulIPAddress = FreeRTOS_gethostbyname( pcParameter );
 		}
 
 		/* Convert IP address, which may have come from a DNS lookup, to string. */

@@ -91,7 +91,7 @@ assembly files that include this header file. */
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( 5 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 30 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )

@@ -113,7 +113,7 @@
 #define configUSE_MALLOC_FAILED_HOOK	0
 #define configUSE_APPLICATION_TASK_TAG	0
 
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
+#define configMAX_PRIORITIES			( 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions - only included when the demo is configured to

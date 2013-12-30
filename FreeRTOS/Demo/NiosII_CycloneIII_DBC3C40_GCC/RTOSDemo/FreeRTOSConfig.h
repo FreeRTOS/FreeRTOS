@@ -91,7 +91,7 @@
 #define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( ( portTickType ) 1000 )
 #define configCPU_CLOCK_HZ				( ( unsigned long ) SYS_CLK_FREQ )  
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES			( 5 )
 #define configMINIMAL_STACK_SIZE		( 1024 )
 #define configISR_STACK_SIZE			configMINIMAL_STACK_SIZE
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 8388608 )

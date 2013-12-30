@@ -64,7 +64,7 @@
 #define configCPU_CLOCK_HZ        ( 48000000 ) /* Hz clk gen */
 #define configPBA_CLOCK_HZ        ( 24000000 )
 #define configTICK_RATE_HZ        ( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES      ( ( unsigned portBASE_TYPE ) 8 )
+#define configMAX_PRIORITIES      ( 8 )
 #define configMINIMAL_STACK_SIZE  ( ( unsigned short ) 256 )
 /* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
 #define configTOTAL_HEAP_SIZE     ( ( size_t ) ( 1024*25 ) )

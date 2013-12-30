@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -66,10 +66,10 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/* 
+/*
  * The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within the IDE!  Once it has been executed, re-open or refresh 
+ * executed prior to this project being built.  The batch file *cannot* be
+ * executed from within the IDE!  Once it has been executed, re-open or refresh
  * the Eclipse project and remove the #error line below.
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
@@ -95,7 +95,7 @@ peripheral clock. */
 #define configCPU_CLOCK_HZ					( ( unsigned long ) 150000000UL )
 #define configPERIPHERAL_CLOCK_HZ			( ( unsigned long ) configCPU_CLOCK_HZ / 2UL )
 #define configTICK_RATE_HZ					( ( portTickType ) 1000UL )
-#define configMAX_PRIORITIES				( ( unsigned portBASE_TYPE ) 6 )
+#define configMAX_PRIORITIES				( 6 )
 #define configMINIMAL_STACK_SIZE			( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE				( ( size_t ) ( 35U * 1024U ) )
 #define configMAX_TASK_NAME_LEN				( 16 )

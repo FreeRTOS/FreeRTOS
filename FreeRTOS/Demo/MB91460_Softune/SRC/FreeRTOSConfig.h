@@ -84,7 +84,7 @@
 #define configTICK_RATE_HZ			( ( portTickType ) 1000 )
 #define configCPU_CLOCK_HZ			( ( unsigned long ) 64000000 )  /* Clock setup from start91460.asm in the demo application. */
 #define configPER_CLOCK_HZ			( ( unsigned long ) 16000000 )  /* Clock setup from start91460.asm in the demo application. */
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 6 )
+#define configMAX_PRIORITIES		( 6 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 100 )
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 32768 - 4192 ) )
 #define configMAX_TASK_NAME_LEN		( 20 )

@@ -94,7 +94,7 @@
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES		( 5 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 #define configQUEUE_REGISTRY_SIZE			10
 

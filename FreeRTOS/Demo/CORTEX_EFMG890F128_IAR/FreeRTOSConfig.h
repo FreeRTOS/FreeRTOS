@@ -92,7 +92,7 @@
 #define configUSE_CO_ROUTINES 			1
 #define configUSE_MUTEXES				1
 
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
+#define configMAX_PRIORITIES			( 4 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 #define configUSE_COUNTING_SEMAPHORES 	0

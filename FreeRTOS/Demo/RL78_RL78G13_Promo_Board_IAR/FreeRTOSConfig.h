@@ -105,7 +105,7 @@ asm file.  It is valid in a C file, but not valid in an asm file. */
 
 #define configUSE_PREEMPTION			1
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 4 )
+#define configMAX_PRIORITIES			( 4 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0

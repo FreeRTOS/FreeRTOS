@@ -103,7 +103,7 @@ the ComTest tasks will be included in place of the trace task. */
 #define configCPU_CLOCK_HZ			( ( unsigned long ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configCLKP1_CLOCK_HZ		( ( unsigned long ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configTICK_RATE_HZ			( (portTickType) 1000 )
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 6 )
+#define configMAX_PRIORITIES		( 6 )
 #define configTOTAL_HEAP_SIZE		( (size_t) (20000) )
 #define configMAX_TASK_NAME_LEN		( 20 )
 #define configUSE_16_BIT_TICKS		1

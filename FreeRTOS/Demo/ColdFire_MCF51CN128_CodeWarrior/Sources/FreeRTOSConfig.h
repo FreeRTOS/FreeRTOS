@@ -112,7 +112,7 @@ before compiling. */
 #define configQUEUE_REGISTRY_SIZE		0
 #define configUSE_COUNTING_SEMAPHORES	0
 
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 6 )
+#define configMAX_PRIORITIES		( 6 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero

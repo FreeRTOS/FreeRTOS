@@ -96,7 +96,7 @@
 #define configQUEUE_REGISTRY_SIZE		10
 #define configGENERATE_RUN_TIME_STATS	1
 
-#define configMAX_PRIORITIES		( ( unsigned portBASE_TYPE ) 5 )
+#define configMAX_PRIORITIES		( 5 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -81,7 +81,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V7.6.0"
+#define tskKERNEL_VERSION_NUMBER "V8.0.0 release candidate 1"
 
 /**
  * task. h
@@ -95,9 +95,9 @@ extern "C" {
  */
 typedef void * TaskHandle_t;
 
-/* 
+/*
  * Defines the prototype to which the application task hook function must
- * conform. 
+ * conform.
  */
 typedef BaseType_t (*TaskHookFunction_t)( void * );
 

@@ -76,6 +76,7 @@
 
 void vStartEventGroupTasks( void );
 portBASE_TYPE xAreEventGroupTasksStillRunning( void );
+void vPeriodicEventGroupsProcessing( void );
 
 #endif /* EVENT_GROUPS_DEMO_H */
 

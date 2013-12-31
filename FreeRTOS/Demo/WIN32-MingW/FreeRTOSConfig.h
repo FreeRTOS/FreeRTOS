@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd. 
+    FreeRTOS V7.6.0 - Copyright (C) 2013 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -134,13 +134,13 @@ to exclude the API function. */
 #define INCLUDE_pcTaskGetTaskName				1
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
-#define INCLUDE_xTimerPendCallbackFromISR		1
+#define INCLUDE_xTimerPendFunctionCallFromISR	1
 
 /* Standard assert semantics. */
 extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
-/* configUSE_PORT_OPTIMISED_TASK_SELECTION is only available in the MSVC 
+/* configUSE_PORT_OPTIMISED_TASK_SELECTION is only available in the MSVC
 version of the Win32 simulator projects.  It will be ignored in the GCC
 version. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1

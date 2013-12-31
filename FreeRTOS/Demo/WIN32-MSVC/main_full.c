@@ -402,6 +402,9 @@ void vFullDemoTickHookFunction( void )
 	/* Write to a queue that is in use as part of the queue set demo to
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();
+
+	/* Exercise event groups from interrupts. */
+	vPeriodicEventGroupsProcessing();
 }
 /*-----------------------------------------------------------*/
 

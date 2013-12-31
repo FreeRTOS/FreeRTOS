@@ -696,7 +696,7 @@ is included as it is used by the port layer. */
 #define xSemaphoreHandle SemaphoreHandle_t
 #define xQueueSetHandle QueueSetHandle_t
 #define xQueueSetMemberHandle QueueSetMemberHandle_t
-#define xTimeoutType TimeOut_t
+#define xTimeOutType TimeOut_t
 #define xMemoryRegion MemoryRegion_t
 #define xTaskParameters TaskParameters_t
 #define xTaskStatusType	TaskStatus_t

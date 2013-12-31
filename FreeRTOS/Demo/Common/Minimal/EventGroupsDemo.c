@@ -364,7 +364,7 @@ BaseType_t xError = pdFALSE;
 		* test master task.
 		***********************************************************************
 
-		/* This task is controller by the 'test master' task (which is 
+		This task is controller by the 'test master' task (which is
 		implemented by prvTestMasterTask()).  Suspend until resumed by the 
 		'test master' task. */
 		vTaskSuspend( NULL );
@@ -435,7 +435,7 @@ BaseType_t xError = pdFALSE;
 		***********************************************************************
 
 
-		/* Once again wait for the 'test master' task to unsuspend this task 
+		Once again wait for the 'test master' task to unsuspend this task
 		when it is time for the next test. */
 		vTaskSuspend( NULL );
 

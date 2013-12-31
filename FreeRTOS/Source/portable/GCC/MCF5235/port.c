@@ -102,7 +102,7 @@ static void prvPortPreemptiveTick ( void );
 /* ------------------------ Start implementation -------------------------- */
 
 StackType_t *
-pxPortInitialiseStack( StackType_t * pxTopOfStack, pdTASK_CODE pxCode,
+pxPortInitialiseStack( StackType_t * pxTopOfStack, TaskFunction_t pxCode,
                        void *pvParameters )
 {
     /* Place the parameter on the stack in the expected location. */

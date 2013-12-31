@@ -119,7 +119,7 @@ extern __asm void vPortStartFirstTask( void );
 /* 
  * See header file for description. 
  */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 StackType_t *pxOriginalTOS;
 

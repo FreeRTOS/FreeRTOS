@@ -95,6 +95,12 @@ extern "C" {
  */
 typedef void * TaskHandle_t;
 
+/* 
+ * Defines the prototype to which the application task hook function must
+ * conform. 
+ */
+typedef BaseType_t (*TaskHookFunction_t)( void * );
+
 /* Task states returned by eTaskGetState. */
 typedef enum
 {
@@ -129,7 +135,7 @@ typedef struct xMEMORY_REGION
  */
 typedef struct xTASK_PARAMETERS
 {
-	pdTASK_CODE pvTaskCode;
+	TaskFunction_t pvTaskCode;
 	const char * const pcName;	/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	uint16_t usStackDepth;
 	void *pvParameters;
@@ -242,7 +248,7 @@ is used in assert() statements. */
  * task. h
  *<pre>
  BaseType_t xTaskCreate(
-							  pdTASK_CODE pvTaskCode,
+							  TaskFunction_t pvTaskCode,
 							  const char * const pcName,
 							  uint16_t usStackDepth,
 							  void *pvParameters,
@@ -1111,7 +1117,7 @@ char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery ) PRIVILEGED_FUNCTION; /*lint
 UBaseType_t uxTaskGetStackHighWaterMark( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
 /* When using trace macros it is sometimes necessary to include task.h before
-FreeRTOS.h.  When this is done pdTASK_HOOK_CODE will not yet have been defined,
+FreeRTOS.h.  When this is done TaskHookFunction_t will not yet have been defined,
 so the following two prototypes will cause a compilation error.  This can be
 fixed by simply guarding against the inclusion of these two prototypes unless
 they are explicitly required by the configUSE_APPLICATION_TASK_TAG configuration
@@ -1120,13 +1126,13 @@ constant. */
 	#if configUSE_APPLICATION_TASK_TAG == 1
 		/**
 		 * task.h
-		 * <pre>void vTaskSetApplicationTaskTag( TaskHandle_t xTask, pdTASK_HOOK_CODE pxHookFunction );</pre>
+		 * <pre>void vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction );</pre>
 		 *
 		 * Sets pxHookFunction to be the task hook function used by the task xTask.
 		 * Passing xTask as NULL has the effect of setting the calling tasks hook
 		 * function.
 		 */
-		void vTaskSetApplicationTaskTag( TaskHandle_t xTask, pdTASK_HOOK_CODE pxHookFunction ) PRIVILEGED_FUNCTION;
+		void vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction ) PRIVILEGED_FUNCTION;
 
 		/**
 		 * task.h
@@ -1134,7 +1140,7 @@ constant. */
 		 *
 		 * Returns the pxHookFunction value assigned to the task xTask.
 		 */
-		pdTASK_HOOK_CODE xTaskGetApplicationTaskTag( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+		TaskHookFunction_t xTaskGetApplicationTaskTag( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 	#endif /* configUSE_APPLICATION_TASK_TAG ==1 */
 #endif /* ifdef configUSE_APPLICATION_TASK_TAG */
 
@@ -1515,7 +1521,7 @@ void vTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNC
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-BaseType_t xTaskGenericCreate( pdTASK_CODE pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.

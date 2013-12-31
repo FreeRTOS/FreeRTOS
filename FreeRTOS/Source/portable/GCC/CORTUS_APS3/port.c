@@ -86,7 +86,7 @@
 static void prvSetupTimerInterrupt( void );
 /*-----------------------------------------------------------*/
 
-StackType_t *pxPortInitialiseStack( StackType_t * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t * pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 	/* Make space on the stack for the context - this leaves a couple of spaces
 	empty.  */

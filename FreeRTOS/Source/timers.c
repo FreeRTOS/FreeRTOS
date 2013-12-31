@@ -76,8 +76,8 @@ task.h is included from an application file. */
 #include "queue.h"
 #include "timers.h"
 
-#if ( INCLUDE_xTimerPendCallbackFromISR == 1 ) && ( configUSE_TIMERS == 0 )
-	#error configUSE_TIMERS must be set to 1 to make the INCLUDE_xTimerPendCallbackFromISR() function available.
+#if ( INCLUDE_xTimerPendFunctionCallFromISR == 1 ) && ( configUSE_TIMERS == 0 )
+	#error configUSE_TIMERS must be set to 1 to make the INCLUDE_xTimerPendFunctionCallFromISR() function available.
 #endif
 
 /* Lint e961 and e750 are suppressed as a MISRA exception justified because the
@@ -99,12 +99,12 @@ configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 /* The definition of the timers themselves. */
 typedef struct tmrTimerControl
 {
-	const char			*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-	ListItem_t			xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
-	TickType_t			xTimerPeriodInTicks;/*<< How quickly and often the timer expires. */
-	UBaseType_t			uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one-shot timer. */
-	void 				*pvTimerID;			/*<< An ID to identify the timer.  This allows the timer to be identified when the same callback is used for multiple timers. */
-	tmrTIMER_CALLBACK	pxCallbackFunction;	/*<< The function that will be called when the timer expires. */
+	const char				*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	ListItem_t				xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
+	TickType_t				xTimerPeriodInTicks;/*<< How quickly and often the timer expires. */
+	UBaseType_t				uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one-shot timer. */
+	void 					*pvTimerID;			/*<< An ID to identify the timer.  This allows the timer to be identified when the same callback is used for multiple timers. */
+	TimerCallbackFunction_t	pxCallbackFunction;	/*<< The function that will be called when the timer expires. */
 } Timer_t;
 
 /* The definition of messages that can be sent and received on the timer queue.
@@ -121,9 +121,9 @@ typedef struct tmrTimerParameters
 
 typedef struct tmrCallbackParameters
 {
-	pdAPPLICATION_CALLBACK_CODE	pxCallbackFunction; /* << The callback function to execute. */
-	void *pvParameter1;								/* << The value that will be used as the callback functions first parameter. */
-	uint32_t ulParameter2;							/* << The value that will be used as the callback functions second parameter. */
+	PendedFunction_t	pxCallbackFunction;	/* << The callback function to execute. */
+	void *pvParameter1;						/* << The value that will be used as the callback functions first parameter. */
+	uint32_t ulParameter2;					/* << The value that will be used as the callback functions second parameter. */
 } CallbackParameters_t;
 
 /* The structure that contains the two message types, along with an identifier
@@ -137,9 +137,9 @@ typedef struct tmrTimerQueueMessage
 
 		/* Don't include xCallbackParameters if it is not going to be used as
 		it makes the structure (and therefore the timer queue) larger. */
-		#if ( INCLUDE_xTimerPendCallbackFromISR == 1 )
+		#if ( INCLUDE_xTimerPendFunctionCallFromISR == 1 )
 			CallbackParameters_t xCallbackParameters;
-		#endif /* INCLUDE_xTimerPendCallbackFromISR */
+		#endif /* INCLUDE_xTimerPendFunctionCallFromISR */
 	} u;
 } DaemonTaskMessage_t;
 
@@ -261,7 +261,7 @@ BaseType_t xReturn = pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
-TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxNewTimer;
 
@@ -572,7 +572,7 @@ TickType_t xTimeNow;
 
 	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL ) /*lint !e603 xMessage does not have to be initialised as it is passed out, not in, and it is not used unless xQueueReceive() returns pdTRUE. */
 	{
-		#if ( INCLUDE_xTimerPendCallbackFromISR == 1 )
+		#if ( INCLUDE_xTimerPendFunctionCallFromISR == 1 )
 		{
 			if( xMessage.xMessageID == tmrCOMMAND_EXECUTE_CALLBACK )
 			{
@@ -590,7 +590,7 @@ TickType_t xTimeNow;
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
-		#endif /* INCLUDE_xTimerPendCallbackFromISR */
+		#endif /* INCLUDE_xTimerPendFunctionCallFromISR */
 
 		if( xMessage.xMessageID != tmrCOMMAND_EXECUTE_CALLBACK )
 		{
@@ -803,9 +803,9 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 }
 /*-----------------------------------------------------------*/
 
-#if( INCLUDE_xTimerPendCallbackFromISR == 1 )
+#if( INCLUDE_xTimerPendFunctionCallFromISR == 1 )
 
-	BaseType_t xTimerPendCallbackFromISR( pdAPPLICATION_CALLBACK_CODE pvCallbackFunction, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken )
+	BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	DaemonTaskMessage_t xMessage;
 	BaseType_t xReturn;
@@ -813,7 +813,7 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 		/* Complete the message with the function parameters and post it to the
 		daemon task. */
 		xMessage.xMessageID = tmrCOMMAND_EXECUTE_CALLBACK;
-		xMessage.u.xCallbackParameters.pxCallbackFunction = pvCallbackFunction;
+		xMessage.u.xCallbackParameters.pxCallbackFunction = xFunctionToPend;
 		xMessage.u.xCallbackParameters.pvParameter1 = pvParameter1;
 		xMessage.u.xCallbackParameters.ulParameter2 = ulParameter2;
 
@@ -822,7 +822,7 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 		return xReturn;
 	}
 
-#endif /* INCLUDE_xTimerPendCallbackFromISR */
+#endif /* INCLUDE_xTimerPendFunctionCallFromISR */
 /*-----------------------------------------------------------*/
 
 /* This entire source file will be skipped if the application is not configured

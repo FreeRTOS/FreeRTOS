@@ -134,7 +134,7 @@ static XIntc xInterruptController;
  *
  * See the header file portable.h.
  */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 	/* Place a known value at the bottom of the stack for debugging. */
 	*pxTopOfStack = 0xDEADBEEF;

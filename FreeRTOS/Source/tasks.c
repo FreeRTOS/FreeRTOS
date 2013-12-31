@@ -149,7 +149,7 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-		pdTASK_HOOK_CODE pxTaskTag;
+		TaskHookFunction_t pxTaskTag;
 	#endif
 
 	#if ( configGENERATE_RUN_TIME_STATS == 1 )
@@ -492,7 +492,7 @@ static void prvResetNextTaskUnblockTime( void );
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xTaskGenericCreate( pdTASK_CODE pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 BaseType_t xReturn;
 TCB_t * pxNewTCB;
@@ -1990,7 +1990,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	void vTaskSetApplicationTaskTag( TaskHandle_t xTask, pdTASK_HOOK_CODE pxHookFunction )
+	void vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction )
 	{
 	TCB_t *xTCB;
 
@@ -2017,10 +2017,10 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 
-	pdTASK_HOOK_CODE xTaskGetApplicationTaskTag( TaskHandle_t xTask )
+	TaskHookFunction_t xTaskGetApplicationTaskTag( TaskHandle_t xTask )
 	{
 	TCB_t *xTCB;
-	pdTASK_HOOK_CODE xReturn;
+	TaskHookFunction_t xReturn;
 
 		/* If xTask is NULL then we are setting our own task hook. */
 		if( xTask == NULL )

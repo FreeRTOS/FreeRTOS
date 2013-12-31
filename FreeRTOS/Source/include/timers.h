@@ -101,15 +101,23 @@ as defined below. */
  */
 typedef void * TimerHandle_t;
 
-/* Define the prototype to which timer callback functions must conform. */
-typedef void (*tmrTIMER_CALLBACK)( TimerHandle_t xTimer );
+/* 
+ * Defines the prototype to which timer callback functions must conform. 
+ */
+typedef void (*TimerCallbackFunction_t)( TimerHandle_t xTimer );
+
+/* 
+ * Defines the prototype to which functions used with the 
+ * xTimerPendFunctionCallFromISR() function must conform.
+ */
+typedef void (*PendedFunction_t)( void *, uint32_t );
 
 /**
  * TimerHandle_t xTimerCreate( 	const char * const pcTimerName,
  * 								TickType_t xTimerPeriodInTicks,
  * 								UBaseType_t uxAutoReload,
  * 								void * pvTimerID,
- * 								tmrTIMER_CALLBACK pxCallbackFunction );
+ * 								TimerCallbackFunction_t pxCallbackFunction );
  *
  * Creates a new software timer instance.  This allocates the storage required
  * by the new timer, initialises the new timers internal state, and returns a
@@ -143,7 +151,7 @@ typedef void (*tmrTIMER_CALLBACK)( TimerHandle_t xTimer );
  * timer.
  *
  * @param pxCallbackFunction The function to call when the timer expires.
- * Callback functions must have the prototype defined by tmrTIMER_CALLBACK,
+ * Callback functions must have the prototype defined by TimerCallbackFunction_t,
  * which is	"void vCallbackFunction( TimerHandle_t xTimer );".
  *
  * @return If the timer is successfully created then a handle to the newly
@@ -233,7 +241,7 @@ typedef void (*tmrTIMER_CALLBACK)( TimerHandle_t xTimer );
  * }
  * @endverbatim
  */
-TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, tmrTIMER_CALLBACK pxCallbackFunction ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * void *pvTimerGetTimerID( TimerHandle_t xTimer );
@@ -951,30 +959,29 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 
 
 /**
- * BaseType_t xTimerPendCallbackFromISR( pdAPPLICATION_CALLBACK_CODE pvCallbackFunction,
+ * BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend,
  *                                          void *pvParameter1,
  *                                          uint32_t ulParameter2,
  *                                          BaseType_t *pxHigherPriorityTaskWoken );
  *
  *
- * Can be used by interrupt service routines to request that a function (the
- * callback function) is executed from a task context.
+ * Used from application interrupt service routines to defer the execution of a
+ * function to the RTOS daemon task (the timer service task, hence this function 
+ * is implemented in timers.c and is prefixed with 'Timer').
  *
  * Ideally an interrupt service routine (ISR) is kept as short as possible, but
  * sometimes an ISR either has a lot of processing to do, or needs to perform
- * processing that is not deterministic.  In these cases the processing can be
- * deferred to be performed in a task - allowing the ISR to exit.  The timer
- * daemon service/daemon task is already responsible for executing software
- * timer callback functions, so is also used to executed callback functions that
- * are pended from interrupts.
+ * processing that is not deterministic.  In these cases 
+ * xTimerPendFunctionCallFromISR() can be used to defer processing of a function 
+ * to the RTOS daemon task.
  *
  * A mechanism is provided that allows the interrupt to return directly to the
  * task that will subsequently execute the pended callback function.  This
  * allows the callback function to execute contiguously in time with the
  * interrupt - just as if the callback had executed in the interrupt itself.
  *
- * @param pvCallbackFunction The function to execute from the timer service/
- * daemon task.  The function must conform to the pdAPPLICATION_CALLBACK_CODE
+ * @param xFunctionToPend The function to execute from the timer service/
+ * daemon task.  The function must conform to the PendedFunction_t
  * prototype.
  *
  * @param pvParameter1 The value of the callback function's first parameter.
@@ -990,7 +997,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * configTIMER_TASK_PRIORITY in FreeRTOSConfig.h) is higher than the priority of
  * the currently running task (the task the interrupt interrupted) then
  * *pxHigherPriorityTaskWoken will be set to pdTRUE within
- * xTimerPendCallbackFromISR(), indicating that a context switch should be
+ * xTimerPendFunctionCallFromISR(), indicating that a context switch should be
  * requested before the interrupt exits.  For that reason
  * *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
  * example code below.
@@ -1028,7 +1035,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *		// service is passed in the second parameter.  The first parameter is
  *		// not used in this case.
  *		xHigherPriorityTaskWoken = pdFALSE;
- *		xTimerPendCallbackFromISR( vProcessInterface, NULL, ( uint32_t ) xInterfaceToService, &xHigherPriorityTaskWoken );
+ *		xTimerPendFunctionCallFromISR( vProcessInterface, NULL, ( uint32_t ) xInterfaceToService, &xHigherPriorityTaskWoken );
  *
  *		// If xHigherPriorityTaskWoken is now set to pdTRUE then a context
  *		// switch should be requested.  The macro used is port specific and will
@@ -1039,7 +1046,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *	}
  * @endverbatim
  */
-BaseType_t xTimerPendCallbackFromISR( pdAPPLICATION_CALLBACK_CODE pvCallbackFunction, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken );
+BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken );
 
 /*
  * Functions beyond this part are not part of the public API and are intended

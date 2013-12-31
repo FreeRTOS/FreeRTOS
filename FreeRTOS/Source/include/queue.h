@@ -92,10 +92,10 @@ typedef void * QueueSetHandle_t;
 
 /**
  * Queue sets can contain both queues and semaphores, so the
- * QueueSetMember_t is defined as a type to be used where a parameter or
+ * QueueSetMemberHandle_t is defined as a type to be used where a parameter or
  * return value can be either an QueueHandle_t or an SemaphoreHandle_t.
  */
-typedef void * QueueSetMember_t;
+typedef void * QueueSetMemberHandle_t;
 
 /* For internal use only. */
 #define	queueSEND_TO_BACK		( ( BaseType_t ) 0 )
@@ -1599,7 +1599,7 @@ QueueSetHandle_t xQueueCreateSet( const UBaseType_t uxEventQueueLength ) PRIVILE
  * a call to xQueueSelectFromSet() has first returned a handle to that set member.
  *
  * @param xQueueOrSemaphore The handle of the queue or semaphore being added to
- * the queue set (cast to an QueueSetMember_t type).
+ * the queue set (cast to an QueueSetMemberHandle_t type).
  *
  * @param xQueueSet The handle of the queue set to which the queue or semaphore
  * is being added.
@@ -1609,7 +1609,7 @@ QueueSetHandle_t xQueueCreateSet( const UBaseType_t uxEventQueueLength ) PRIVILE
  * queue set because it is already a member of a different queue set then pdFAIL
  * is returned.
  */
-BaseType_t xQueueAddToSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet ) PRIVILEGED_FUNCTION;
+BaseType_t xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet ) PRIVILEGED_FUNCTION;
 
 /*
  * Removes a queue or semaphore from a queue set.  A queue or semaphore can only
@@ -1619,7 +1619,7 @@ BaseType_t xQueueAddToSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t 
  * function.
  *
  * @param xQueueOrSemaphore The handle of the queue or semaphore being removed
- * from the queue set (cast to an QueueSetMember_t type).
+ * from the queue set (cast to an QueueSetMemberHandle_t type).
  *
  * @param xQueueSet The handle of the queue set in which the queue or semaphore
  * is included.
@@ -1628,7 +1628,7 @@ BaseType_t xQueueAddToSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t 
  * then pdPASS is returned.  If the queue was not in the queue set, or the
  * queue (or semaphore) was not empty, then pdFAIL is returned.
  */
-BaseType_t xQueueRemoveFromSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet ) PRIVILEGED_FUNCTION;
+BaseType_t xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet ) PRIVILEGED_FUNCTION;
 
 /*
  * xQueueSelectFromSet() selects from the members of a queue set a queue or
@@ -1659,17 +1659,17 @@ BaseType_t xQueueRemoveFromSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHand
  * operation.
  *
  * @return xQueueSelectFromSet() will return the handle of a queue (cast to
- * a QueueSetMember_t type) contained in the queue set that contains data,
- * or the handle of a semaphore (cast to a QueueSetMember_t type) contained
+ * a QueueSetMemberHandle_t type) contained in the queue set that contains data,
+ * or the handle of a semaphore (cast to a QueueSetMemberHandle_t type) contained
  * in the queue set that is available, or NULL if no such queue or semaphore
  * exists before before the specified block time expires.
  */
-QueueSetMember_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, const TickType_t xBlockTimeTicks ) PRIVILEGED_FUNCTION;
+QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, const TickType_t xBlockTimeTicks ) PRIVILEGED_FUNCTION;
 
 /*
  * A version of xQueueSelectFromSet() that can be used from an ISR.
  */
-QueueSetMember_t xQueueSelectFromSetFromISR( QueueSetHandle_t xQueueSet ) PRIVILEGED_FUNCTION;
+QueueSetMemberHandle_t xQueueSelectFromSetFromISR( QueueSetHandle_t xQueueSet ) PRIVILEGED_FUNCTION;
 
 /* Not public API functions. */
 void vQueueWaitForMessageRestricted( QueueHandle_t xQueue, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;

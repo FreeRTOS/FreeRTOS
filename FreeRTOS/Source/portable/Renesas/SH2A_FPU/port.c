@@ -109,7 +109,7 @@ extern uint32_t ulPortGetGBR( void );
 /* 
  * See header file for description. 
  */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 	/* Mark the end of the stack - used for debugging only and can be removed. */
 	*pxTopOfStack = 0x11111111UL;

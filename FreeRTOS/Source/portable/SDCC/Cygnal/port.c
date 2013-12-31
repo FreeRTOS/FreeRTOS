@@ -250,7 +250,7 @@ static void prvSetupTimerInterrupt( void );
 /* 
  * See header file for description. 
  */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 uint32_t ulAddress;
 StackType_t *pxStartOfStack;

@@ -88,16 +88,6 @@ is included as it is used by the port layer. */
 /* Definitions specific to the port being used. */
 #include "portable.h"
 
-
-/* Defines the prototype to which the application task hook function must
-conform. */
-typedef BaseType_t (*pdTASK_HOOK_CODE)( void * );
-
-/* The type that holds event bits always matches TickType_t - therefore the
-number of bits it holds is set by configUSE_16_BIT_TICKS (16 bits if set to 1,
-32 bits if set to 0. */
-typedef TickType_t EventBits_t;
-
 /*
  * Check all the required application specific macros have been defined.
  * These macros are application specific and (as downloaded) are defined
@@ -246,8 +236,8 @@ typedef TickType_t EventBits_t;
 	#define INCLUDE_xEventGroupSetBitFromISR 0
 #endif
 
-#ifndef INCLUDE_xTimerPendCallbackFromISR
-	#define INCLUDE_xTimerPendCallbackFromISR 0
+#ifndef INCLUDE_xTimerPendFunctionCallFromISR
+	#define INCLUDE_xTimerPendFunctionCallFromISR 0
 #endif
 
 #ifndef configASSERT
@@ -584,6 +574,10 @@ typedef TickType_t EventBits_t;
 	#define traceEVENT_GROUP_CLEAR_BITS( xEventGroup, uxBitsToClear )
 #endif
 
+#ifndef traceEVENT_GROUP_CLEAR_BITS_FROM_ISR
+	#define traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear )
+#endif
+
 #ifndef traceEVENT_GROUP_SET_BITS
 	#define traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet )
 #endif
@@ -701,16 +695,21 @@ typedef TickType_t EventBits_t;
 #define xQueueHandle QueueHandle_t
 #define xSemaphoreHandle SemaphoreHandle_t
 #define xQueueSetHandle QueueSetHandle_t
-#define xQueueSetMemberHandle QueueSetMember_t
+#define xQueueSetMemberHandle QueueSetMemberHandle_t
 #define xTimeoutType TimeOut_t
 #define xMemoryRegion MemoryRegion_t
 #define xTaskParameters TaskParameters_t
 #define xTaskStatusType	TaskStatus_t
 #define xTimerHandle TimerHandle_t
 #define xCoRoutineHandle CoRoutineHandle_t
+#define pdTASK_HOOK_CODE TaskHookFunction_t
+
+/* Backward compatibility within the scheduler code only - these definitions
+are not really required but are included for completeness. */
+#define trmTIMER_CALLBACK TimerCallbackFunction_t
+#define pdTASK_CODE TaskFunction_t
 #define xListItem ListItem_t
 #define xList List_t
-#define xTimeOutType TimeOut_t
 
 #endif /* INC_FREERTOS_H */
 

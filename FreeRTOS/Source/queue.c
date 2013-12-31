@@ -2247,7 +2247,7 @@ BaseType_t xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	BaseType_t xQueueAddToSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
+	BaseType_t xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
 	{
 	BaseType_t xReturn;
 
@@ -2280,7 +2280,7 @@ BaseType_t xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	BaseType_t xQueueRemoveFromSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
+	BaseType_t xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxQueueOrSemaphore = ( Queue_t * ) xQueueOrSemaphore;
@@ -2316,9 +2316,9 @@ BaseType_t xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	QueueSetMember_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t const xBlockTimeTicks )
+	QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t const xBlockTimeTicks )
 	{
-	QueueSetMember_t xReturn = NULL;
+	QueueSetMemberHandle_t xReturn = NULL;
 
 		( void ) xQueueGenericReceive( ( QueueHandle_t ) xQueueSet, &xReturn, xBlockTimeTicks, pdFALSE ); /*lint !e961 Casting from one typedef to another is not redundant. */
 		return xReturn;
@@ -2329,9 +2329,9 @@ BaseType_t xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	QueueSetMember_t xQueueSelectFromSetFromISR( QueueSetHandle_t xQueueSet )
+	QueueSetMemberHandle_t xQueueSelectFromSetFromISR( QueueSetHandle_t xQueueSet )
 	{
-	QueueSetMember_t xReturn = NULL;
+	QueueSetMemberHandle_t xReturn = NULL;
 
 		( void ) xQueueReceiveFromISR( ( QueueHandle_t ) xQueueSet, &xReturn, NULL ); /*lint !e961 Casting from one typedef to another is not redundant. */
 		return xReturn;

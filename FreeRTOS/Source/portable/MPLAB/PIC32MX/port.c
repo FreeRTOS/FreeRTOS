@@ -195,7 +195,7 @@ const StackType_t * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 
 /*
  * See header file for description.
  */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 	/* Ensure byte alignment is maintained when leaving this function. */
 	pxTopOfStack--;

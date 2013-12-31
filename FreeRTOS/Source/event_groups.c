@@ -87,8 +87,8 @@ privileged Vs unprivileged linkage and placement. */
 	#error configUSE_TIMERS must be set to 1 to make the xEventGroupSetBitFromISR() function available.
 #endif
 
-#if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( INCLUDE_xTimerPendCallbackFromISR == 0 )
-	#error INCLUDE_xTimerPendCallbackFromISR must also be set to one to make the xEventGroupSetBitFromISR() function available.
+#if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( INCLUDE_xTimerPendFunctionCallFromISR == 0 )
+	#error INCLUDE_xTimerPendFunctionCallFromISR must also be set to one to make the xEventGroupSetBitFromISR() function available.
 #endif
 
 /* The following bit fields convey control information in a task's event list
@@ -419,6 +419,33 @@ EventBits_t uxReturn;
 		pxEventBits->uxEventBits &= ~uxBitsToClear;
 	}
 	taskEXIT_CRITICAL();
+
+	return uxReturn;
+}
+/*-----------------------------------------------------------*/
+
+EventBits_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
+{
+UBaseType_t uxSavedInterruptStatus;
+EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+EventBits_t uxReturn;
+
+	/* Check the user is not attempting to clear the bits used by the kernel
+	itself. */
+	configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
+
+	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+	{
+		traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
+
+		/* The value returned is the event group value prior to the bits being
+		cleared. */
+		uxReturn = pxEventBits->uxEventBits;
+
+		/* Clear the bits. */
+		pxEventBits->uxEventBits &= ~uxBitsToClear;
+	}
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 	return uxReturn;
 }

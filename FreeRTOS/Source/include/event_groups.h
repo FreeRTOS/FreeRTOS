@@ -117,6 +117,16 @@ extern "C" {
  */
 typedef void * EventGroupHandle_t;
 
+/* 
+ * The type that holds event bits always matches TickType_t - therefore the
+ * number of bits it holds is set by configUSE_16_BIT_TICKS (16 bits if set to 1,
+ * 32 bits if set to 0. 
+ *
+ * \defgroup EventBits_t EventBits_t
+ * \ingroup EventGroup
+ */
+typedef TickType_t EventBits_t;
+
 /**
  * event_groups.h
  *<pre>
@@ -315,6 +325,20 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
 /**
  * event_groups.h
  *<pre>
+	EventBits_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear );
+ </pre>
+ *
+ * A version of xEventGroupClearBits() that can be called from an interrupt
+ * service routine.  See the xEventGroupClearBits() documentation.
+ *
+ * \defgroup xEventGroupClearBitsFromISR xEventGroupClearBitsFromISR
+ * \ingroup EventGroup
+ */
+EventBits_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear ) PRIVILEGED_FUNCTION;
+
+/**
+ * event_groups.h
+ *<pre>
 	EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet );
  </pre>
  *
@@ -389,7 +413,7 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 /**
  * event_groups.h
  *<pre>
-	EventBits_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken );
+	BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken );
  </pre>
  *
  * A version of xEventGroupSetBits() that can be called from an interrupt.
@@ -418,9 +442,9 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  * *pxHigherPriorityTaskWoken must be initialised to pdFALSE.  See the
  * example code below.
  *
- * @return If the callback request was registered successfully then pdPASS is
- * returned, otherwise pdFALSE is returned.  pdFALSE will be returned if the
- * timer service queue was full.
+ * @return If the request to execute the function was posted successfully then 
+ * pdPASS is returned, otherwise pdFALSE is returned.  pdFALSE will be returned 
+ * if the timer service queue was full.
  *
  * Example usage:
    <pre>
@@ -433,28 +457,32 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
 
    void anInterruptHandler( void )
    {
-   BaseType_t xHigherPriorityTaskWoken;
+   BaseType_t xHigherPriorityTaskWoken, xResult;
 
 		// xHigherPriorityTaskWoken must be initialised to pdFALSE.
 		xHigherPriorityTaskWoken = pdFALSE;
 
 		// Set bit 0 and bit 4 in xEventGroup.
-		uxBits = xEventGroupSetBitsFromISR(
+		xResult = xEventGroupSetBitsFromISR(
 							xEventGroup,	// The event group being updated.
 							BIT_0 | BIT_4   // The bits being set.
 							&xHigherPriorityTaskWoken );
 
-		// If xHigherPriorityTaskWoken is now set to pdTRUE then a context
-		// switch should be requested.  The macro used is port specific and will
-		// be either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - refer to
-		// the documentation page for the port being used.
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-   }
+		// Was the message posted successfully?
+		if( xResult == pdPASS )
+		{
+			// If xHigherPriorityTaskWoken is now set to pdTRUE then a context
+			// switch should be requested.  The macro used is port specific and 
+			// will be either portYIELD_FROM_ISR() or portEND_SWITCHING_ISR() - 
+			// refer to the documentation page for the port being used.
+			portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+		}
+  }
    </pre>
  * \defgroup xEventGroupSetBitsFromISR xEventGroupSetBitsFromISR
  * \ingroup EventGroup
  */
-#define xEventGroupSetBitsFromISR( xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken ) xTimerPendCallbackFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken )
+#define xEventGroupSetBitsFromISR( xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken ) xTimerPendFunctionCallFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken )
 
 /**
  * event_groups.h
@@ -600,6 +628,23 @@ EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t u
  * \ingroup EventGroup
  */
 #define xEventGroupGetBits( xEventGroup ) xEventGroupClearBits( xEventGroup, 0 )
+
+/**
+ * event_groups.h
+ *<pre>
+	EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup );
+ </pre>
+ *
+ * A version of xEventGroupGetBits() that can be called from an ISR.
+ *
+ * @param xEventGroup The event group being queried.
+ *
+ * @return The event group bits at the time xEventGroupGetBitsFromISR() was called.
+ *
+ * \defgroup xEventGroupGetBitsFromISR xEventGroupGetBitsFromISR
+ * \ingroup EventGroup
+ */
+#define xEventGroupGetBitsFromISR( xEventGroup ) xEventGroupClearBitsFromISR( xEventGroup, 0 )
 
 /**
  * event_groups.h

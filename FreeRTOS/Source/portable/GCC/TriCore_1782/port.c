@@ -133,7 +133,7 @@ static const uint32_t ulCompareMatchValue = ( configPERIPHERAL_CLOCK_HZ / config
 
 /*-----------------------------------------------------------*/
 
-StackType_t *pxPortInitialiseStack( StackType_t * pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters )
+StackType_t *pxPortInitialiseStack( StackType_t * pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
 uint32_t *pulUpperCSA = NULL;
 uint32_t *pulLowerCSA = NULL;

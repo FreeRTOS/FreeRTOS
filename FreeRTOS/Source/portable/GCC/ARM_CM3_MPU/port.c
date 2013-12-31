@@ -170,7 +170,7 @@ static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) 
 /*
  * Prototypes for all the MPU wrappers.
  */
-BaseType_t MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask, StackType_t *puxStackBuffer, const MemoryRegion_t * const xRegions );
+BaseType_t MPU_xTaskGenericCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask, StackType_t *puxStackBuffer, const MemoryRegion_t * const xRegions );
 void MPU_vTaskAllocateMPURegions( TaskHandle_t xTask, const MemoryRegion_t * const xRegions );
 void MPU_vTaskDelete( TaskHandle_t pxTaskToDelete );
 void MPU_vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, TickType_t xTimeIncrement );
@@ -187,8 +187,8 @@ TickType_t MPU_xTaskGetTickCount( void );
 UBaseType_t MPU_uxTaskGetNumberOfTasks( void );
 void MPU_vTaskList( char *pcWriteBuffer );
 void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer );
-void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, pdTASK_HOOK_CODE pxTagValue );
-pdTASK_HOOK_CODE MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask );
+void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxTagValue );
+TaskHookFunction_t MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask );
 BaseType_t MPU_xTaskCallApplicationTaskHook( TaskHandle_t xTask, void *pvParameter );
 UBaseType_t MPU_uxTaskGetStackHighWaterMark( TaskHandle_t xTask );
 TaskHandle_t MPU_xTaskGetCurrentTaskHandle( void );
@@ -213,9 +213,9 @@ void MPU_vPortFree( void *pv );
 void MPU_vPortInitialiseBlocks( void );
 size_t MPU_xPortGetFreeHeapSize( void );
 QueueSetHandle_t MPU_xQueueCreateSet( UBaseType_t uxEventQueueLength );
-QueueSetMember_t MPU_xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t xBlockTimeTicks );
-BaseType_t MPU_xQueueAddToSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet );
-BaseType_t MPU_xQueueRemoveFromSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet );
+QueueSetMemberHandle_t MPU_xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t xBlockTimeTicks );
+BaseType_t MPU_xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet );
+BaseType_t MPU_xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet );
 BaseType_t MPU_xQueuePeekFromISR( QueueHandle_t xQueue, void * const pvBuffer );
 
 /*-----------------------------------------------------------*/
@@ -223,7 +223,7 @@ BaseType_t MPU_xQueuePeekFromISR( QueueHandle_t xQueue, void * const pvBuffer );
 /*
  * See header file for description.
  */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters, BaseType_t xRunPrivileged )
+StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged )
 {
 	/* Simulate the stack frame as it would be created by a context switch
 	interrupt. */
@@ -673,7 +673,7 @@ uint32_t ul;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t MPU_xTaskGenericCreate( pdTASK_CODE pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask, StackType_t *puxStackBuffer, const MemoryRegion_t * const xRegions )
+BaseType_t MPU_xTaskGenericCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask, StackType_t *puxStackBuffer, const MemoryRegion_t * const xRegions )
 {
 BaseType_t xReturn;
 BaseType_t xRunningPrivileged = prvRaisePrivilege();
@@ -876,7 +876,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, pdTASK_HOOK_CODE pxTagValue )
+	void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxTagValue )
 	{
     BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
@@ -887,9 +887,9 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	pdTASK_HOOK_CODE MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask )
+	TaskHookFunction_t MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask )
 	{
-	pdTASK_HOOK_CODE xReturn;
+	TaskHookFunction_t xReturn;
     BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		xReturn = xTaskGetApplicationTaskTag( xTask );
@@ -1096,9 +1096,9 @@ BaseType_t xReturn;
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_QUEUE_SETS == 1 )
-	QueueSetMember_t MPU_xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t xBlockTimeTicks )
+	QueueSetMemberHandle_t MPU_xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t xBlockTimeTicks )
 	{
-	QueueSetMember_t xReturn;
+	QueueSetMemberHandle_t xReturn;
 	BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		xReturn = xQueueSelectFromSet( xQueueSet, xBlockTimeTicks );
@@ -1109,7 +1109,7 @@ BaseType_t xReturn;
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_QUEUE_SETS == 1 )
-	BaseType_t MPU_xQueueAddToSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
+	BaseType_t MPU_xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
 	{
 	BaseType_t xReturn;
 	BaseType_t xRunningPrivileged = prvRaisePrivilege();
@@ -1122,7 +1122,7 @@ BaseType_t xReturn;
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_QUEUE_SETS == 1 )
-	BaseType_t MPU_xQueueRemoveFromSet( QueueSetMember_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
+	BaseType_t MPU_xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
 	{
 	BaseType_t xReturn;
 	BaseType_t xRunningPrivileged = prvRaisePrivilege();

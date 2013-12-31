@@ -66,12 +66,11 @@
 #ifndef PROJDEFS_H
 #define PROJDEFS_H
 
-/* Defines the prototype to which task functions must conform. */
-typedef void (*pdTASK_CODE)( void * );
-
-/* Defines the prototype to which callback functions called from the RTOS/timer
-daemon task must conform. */
-typedef void (*pdAPPLICATION_CALLBACK_CODE)( void *, uint32_t );
+/* 
+ * Defines the prototype to which task functions must conform.  Defined in this
+ * file to ensure the type is known before portable.h is included.
+ */
+typedef void (*TaskFunction_t)( void * );
 
 #define pdFALSE			( ( BaseType_t ) 0 )
 #define pdTRUE			( ( BaseType_t ) 1 )

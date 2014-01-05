@@ -494,7 +494,7 @@ void vTaskDelete( TaskHandle_t xTaskToDelete ) PRIVILEGED_FUNCTION;
  *
  * Delay a task for a given number of ticks.  The actual time that the
  * task remains blocked depends on the tick rate.  The constant
- * portTICK_RATE_MS can be used to calculate real time from the tick
+ * portTICK_PERIOD_MS can be used to calculate real time from the tick
  * rate - with the resolution of one tick period.
  *
  * INCLUDE_vTaskDelay must be defined as 1 for this function to be available.
@@ -521,7 +521,7 @@ void vTaskDelete( TaskHandle_t xTaskToDelete ) PRIVILEGED_FUNCTION;
  void vTaskFunction( void * pvParameters )
  {
  // Block for 500ms.
- const TickType_t xDelay = 500 / portTICK_RATE_MS;
+ const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
 
 	 for( ;; )
 	 {
@@ -558,7 +558,7 @@ void vTaskDelay( const TickType_t xTicksToDelay ) PRIVILEGED_FUNCTION;
  * is called, vTaskDelayUntil () specifies the absolute (exact) time at which it wishes to
  * unblock.
  *
- * The constant portTICK_RATE_MS can be used to calculate real time from the tick
+ * The constant portTICK_PERIOD_MS can be used to calculate real time from the tick
  * rate - with the resolution of one tick period.
  *
  * @param pxPreviousWakeTime Pointer to a variable that holds the time at which the
@@ -1415,7 +1415,7 @@ BaseType_t xTaskIncrementTick( void ) PRIVILEGED_FUNCTION;
  *
  * @param xTicksToWait The maximum amount of time that the task should wait
  * for the event to occur.  This is specified in kernel ticks,the constant
- * portTICK_RATE_MS can be used to convert kernel ticks into a real time
+ * portTICK_PERIOD_MS can be used to convert kernel ticks into a real time
  * period.
  */
 void vTaskPlaceOnEventList( List_t * const pxEventList, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;

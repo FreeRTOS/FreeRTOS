@@ -195,7 +195,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * the semaphore was created.
  *
  * @param xBlockTime The time in ticks to wait for the semaphore to become
- * available.  The macro portTICK_RATE_MS can be used to convert this to a
+ * available.  The macro portTICK_PERIOD_MS can be used to convert this to a
  * real time.  A block time of zero can be used to poll the semaphore.  A block
  * time of portMAX_DELAY can be used to block indefinitely (provided
  * INCLUDE_vTaskSuspend is set to 1 in FreeRTOSConfig.h).
@@ -274,7 +274,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * handle returned by xSemaphoreCreateRecursiveMutex();
  *
  * @param xBlockTime The time in ticks to wait for the semaphore to become
- * available.  The macro portTICK_RATE_MS can be used to convert this to a
+ * available.  The macro portTICK_PERIOD_MS can be used to convert this to a
  * real time.  A block time of zero can be used to poll the semaphore.  If
  * the task already owns the semaphore then xSemaphoreTakeRecursive() will
  * return immediately no matter what the value of xBlockTime.

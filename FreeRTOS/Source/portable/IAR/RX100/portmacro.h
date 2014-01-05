@@ -113,7 +113,7 @@ typedef unsigned long UBaseType_t;
 /* Hardware specifics. */
 #define portBYTE_ALIGNMENT			8	/* Could make four, according to manual. */
 #define portSTACK_GROWTH			-1
-#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portNOP()					__no_operation()
 
 #define portYIELD()							\

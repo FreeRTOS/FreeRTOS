@@ -196,7 +196,7 @@ typedef void * QueueSetMemberHandle_t;
  * waiting for space to become available on the queue, should it already
  * be full.  The call will return immediately if this is set to 0 and the
  * queue is full.  The time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * portTICK_PERIOD_MS should be used to convert to real time if this is required.
  *
  * @return pdTRUE if the item was successfully posted, otherwise errQUEUE_FULL.
  *
@@ -278,7 +278,7 @@ typedef void * QueueSetMemberHandle_t;
  * waiting for space to become available on the queue, should it already
  * be full.  The call will return immediately if this is set to 0 and the queue
  * is full.  The  time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * portTICK_PERIOD_MS should be used to convert to real time if this is required.
  *
  * @return pdTRUE if the item was successfully posted, otherwise errQUEUE_FULL.
  *
@@ -362,7 +362,7 @@ typedef void * QueueSetMemberHandle_t;
  * waiting for space to become available on the queue, should it already
  * be full.  The call will return immediately if this is set to 0 and the
  * queue is full.  The time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * portTICK_PERIOD_MS should be used to convert to real time if this is required.
  *
  * @return pdTRUE if the item was successfully posted, otherwise errQUEUE_FULL.
  *
@@ -529,7 +529,7 @@ typedef void * QueueSetMemberHandle_t;
  * waiting for space to become available on the queue, should it already
  * be full.  The call will return immediately if this is set to 0 and the
  * queue is full.  The time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * portTICK_PERIOD_MS should be used to convert to real time if this is required.
  *
  * @param xCopyPosition Can take the value queueSEND_TO_BACK to place the
  * item at the back of the queue, or queueSEND_TO_FRONT to place the item
@@ -619,7 +619,7 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQ
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for an item to receive should the queue be empty at the time
  * of the call.	 The time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * portTICK_PERIOD_MS should be used to convert to real time if this is required.
  * xQueuePeek() will return immediately if xTicksToWait is 0 and the queue
  * is empty.
  *
@@ -746,7 +746,7 @@ BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue, void * const pvBuffer ) PRIV
  * waiting for an item to receive should the queue be empty at the time
  * of the call.	 xQueueReceive() will return immediately if xTicksToWait
  * is zero and the queue is empty.  The time is defined in tick periods so the
- * constant portTICK_RATE_MS should be used to convert to real time if this is
+ * constant portTICK_PERIOD_MS should be used to convert to real time if this is
  * required.
  *
  * @return pdTRUE if an item was successfully received from the queue,
@@ -839,7 +839,7 @@ BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue, void * const pvBuffer ) PRIV
  * @param xTicksToWait The maximum amount of time the task should block
  * waiting for an item to receive should the queue be empty at the time
  * of the call.	 The time is defined in tick periods so the constant
- * portTICK_RATE_MS should be used to convert to real time if this is required.
+ * portTICK_PERIOD_MS should be used to convert to real time if this is required.
  * xQueueGenericReceive() will return immediately if the queue is empty and
  * xTicksToWait is 0.
  *

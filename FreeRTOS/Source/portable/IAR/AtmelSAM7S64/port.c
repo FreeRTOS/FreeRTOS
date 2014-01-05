@@ -82,7 +82,7 @@
 
 /* Constants required to setup the PIT. */
 #define portPIT_CLOCK_DIVISOR			( ( uint32_t ) 16 )
-#define portPIT_COUNTER_VALUE			( ( ( configCPU_CLOCK_HZ / portPIT_CLOCK_DIVISOR ) / 1000UL ) * portTICK_RATE_MS )
+#define portPIT_COUNTER_VALUE			( ( ( configCPU_CLOCK_HZ / portPIT_CLOCK_DIVISOR ) / 1000UL ) * portTICK_PERIOD_MS )
 
 /* Constants required to handle critical sections. */
 #define portNO_CRITICAL_NESTING 		( ( uint32_t ) 0 )

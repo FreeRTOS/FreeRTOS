@@ -108,7 +108,7 @@ typedef unsigned long UBaseType_t;
 
 /* Architecture specifics. */
 #define portSTACK_GROWTH							( -1 )
-#define portTICK_RATE_MS							( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portTICK_PERIOD_MS							( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT							4
 #define portNOP()									__asm volatile( " nop " )
 #define portCRITICAL_NESTING_IN_TCB					1

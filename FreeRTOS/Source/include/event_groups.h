@@ -230,7 +230,7 @@ EventGroupHandle_t xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
    void aFunction( EventGroupHandle_t xEventGroup )
    {
    EventBits_t uxBits;
-   const TickType_t xTicksToWait = 100 / portTICK_RATE_MS;
+   const TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
 
 		// Wait a maximum of 100ms for either bit 0 or bit 4 to be set within
 		// the event group.  Clear the bits before exiting.
@@ -545,7 +545,7 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  void vTask0( void *pvParameters )
  {
  EventBits_t uxReturn;
- TickType_t xTicksToWait = 100 / portTICK_RATE_MS;
+ TickType_t xTicksToWait = 100 / portTICK_PERIOD_MS;
 
 	 for( ;; )
 	 {

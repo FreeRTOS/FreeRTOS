@@ -133,11 +133,11 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * by its handle, and never by its name.
  *
  * @param xTimerPeriodInTicks The timer period.  The time is defined in tick
- * periods so the constant portTICK_RATE_MS can be used to convert a time that
+ * periods so the constant portTICK_PERIOD_MS can be used to convert a time that
  * has been specified in milliseconds.  For example, if the timer must expire
  * after 100 ticks, then xTimerPeriodInTicks should be set to 100.
  * Alternatively, if the timer must expire after 500ms, then xPeriod can be set
- * to ( 500 / portTICK_RATE_MS ) provided configTICK_RATE_HZ is less than or
+ * to ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than or
  * equal to 1000.
  *
  * @param uxAutoReload If uxAutoReload is set to pdTRUE then the timer will
@@ -431,11 +431,11 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * @param xTimer The handle of the timer that is having its period changed.
  *
  * @param xNewPeriod The new period for xTimer. Timer periods are specified in
- * tick periods, so the constant portTICK_RATE_MS can be used to convert a time
+ * tick periods, so the constant portTICK_PERIOD_MS can be used to convert a time
  * that has been specified in milliseconds.  For example, if the timer must
  * expire after 100 ticks, then xNewPeriod should be set to 100.  Alternatively,
  * if the timer must expire after 500ms, then xNewPeriod can be set to
- * ( 500 / portTICK_RATE_MS ) provided configTICK_RATE_HZ is less than
+ * ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than
  * or equal to 1000.
  *
  * @param xBlockTime Specifies the time, in ticks, that the calling task should
@@ -472,7 +472,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *         // cause the timer to start.  Block for a maximum of 100 ticks if the
  *         // change period command cannot immediately be sent to the timer
  *         // command queue.
- *         if( xTimerChangePeriod( xTimer, 500 / portTICK_RATE_MS, 100 ) == pdPASS )
+ *         if( xTimerChangePeriod( xTimer, 500 / portTICK_PERIOD_MS, 100 ) == pdPASS )
  *         {
  *             // The command was successfully sent.
  *         }
@@ -613,7 +613,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *     // Create then start the one-shot timer that is responsible for turning
  *     // the back-light off if no keys are pressed within a 5 second period.
  *     xBacklightTimer = xTimerCreate( "BacklightTimer",           // Just a text name, not used by the kernel.
- *                                     ( 5000 / portTICK_RATE_MS), // The timer period in ticks.
+ *                                     ( 5000 / portTICK_PERIOD_MS), // The timer period in ticks.
  *                                     pdFALSE,                    // The timer is a one-shot timer.
  *                                     0,                          // The id is not used by the callback so can take any value.
  *                                     vBacklightTimerCallback     // The callback function that switches the LCD back-light off.
@@ -809,11 +809,11 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * @param xTimer The handle of the timer that is having its period changed.
  *
  * @param xNewPeriod The new period for xTimer. Timer periods are specified in
- * tick periods, so the constant portTICK_RATE_MS can be used to convert a time
+ * tick periods, so the constant portTICK_PERIOD_MS can be used to convert a time
  * that has been specified in milliseconds.  For example, if the timer must
  * expire after 100 ticks, then xNewPeriod should be set to 100.  Alternatively,
  * if the timer must expire after 500ms, then xNewPeriod can be set to
- * ( 500 / portTICK_RATE_MS ) provided configTICK_RATE_HZ is less than
+ * ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than
  * or equal to 1000.
  *
  * @param pxHigherPriorityTaskWoken The timer service/daemon task spends most

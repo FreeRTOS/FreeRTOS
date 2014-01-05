@@ -114,9 +114,9 @@ typedef long BaseType_t;
 typedef unsigned long UBaseType_t;
 
 
-#define TASK_DELAY_MS(x)   ( (x)        /portTICK_RATE_MS )
-#define TASK_DELAY_S(x)    ( (x)*1000   /portTICK_RATE_MS )
-#define TASK_DELAY_MIN(x)  ( (x)*60*1000/portTICK_RATE_MS )
+#define TASK_DELAY_MS(x)   ( (x)        /portTICK_PERIOD_MS )
+#define TASK_DELAY_S(x)    ( (x)*1000   /portTICK_PERIOD_MS )
+#define TASK_DELAY_MIN(x)  ( (x)*60*1000/portTICK_PERIOD_MS )
 
 #define configTICK_TC_IRQ             ATPASTE2(AVR32_TC_IRQ, configTICK_TC_CHANNEL)
 
@@ -131,7 +131,7 @@ typedef unsigned long UBaseType_t;
 
 /* Architecture specifics. */
 #define portSTACK_GROWTH      ( -1 )
-#define portTICK_RATE_MS      ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portTICK_PERIOD_MS      ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT       4
 #define portNOP()             {__asm__ __volatile__ ("nop");}
 /*-----------------------------------------------------------*/

@@ -115,7 +115,7 @@ typedef unsigned short UBaseType_t;
 #define portSWITCH_INT_NUMBER 	0x80
 #define portYIELD()				__asm{ int portSWITCH_INT_NUMBER }
 #define portDOS_TICK_RATE		( 18.20648 )
-#define portTICK_RATE_MS		( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portTICK_PERIOD_MS		( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portTICKS_PER_DOS_TICK	( ( uint16_t ) ( ( ( portDOUBLE ) configTICK_RATE_HZ / portDOS_TICK_RATE ) + 0.5 ) )
 #define portINITIAL_SW			( ( portSTACK_TYPE ) 0x0202 )	/* Start the tasks with interrupts enabled. */
 #define portBYTE_ALIGNMENT		( 2 )

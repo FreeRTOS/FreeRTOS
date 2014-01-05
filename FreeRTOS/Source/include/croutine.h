@@ -295,7 +295,7 @@ void vCoRoutineSchedule( void );
  *
  * @param xTickToDelay The number of ticks that the co-routine should delay
  * for.  The actual amount of time this equates to is defined by
- * configTICK_RATE_HZ (set in FreeRTOSConfig.h).  The constant portTICK_RATE_MS
+ * configTICK_RATE_HZ (set in FreeRTOSConfig.h).  The constant portTICK_PERIOD_MS
  * can be used to convert ticks to milliseconds.
  *
  * Example usage:
@@ -306,7 +306,7 @@ void vCoRoutineSchedule( void );
  // Variables in co-routines must be declared static if they must maintain value across a blocking call.
  // This may not be necessary for const variables.
  // We are to delay for 200ms.
- static const xTickType xDelayTime = 200 / portTICK_RATE_MS;
+ static const xTickType xDelayTime = 200 / portTICK_PERIOD_MS;
 
      // Must start every co-routine with a call to crSTART();
      crSTART( xHandle );
@@ -372,7 +372,7 @@ void vCoRoutineSchedule( void );
  * to wait for space to become available on the queue, should space not be
  * available immediately. The actual amount of time this equates to is defined
  * by configTICK_RATE_HZ (set in FreeRTOSConfig.h).  The constant
- * portTICK_RATE_MS can be used to convert ticks to milliseconds (see example
+ * portTICK_PERIOD_MS can be used to convert ticks to milliseconds (see example
  * below).
  *
  * @param pxResult The variable pointed to by pxResult will be set to pdPASS if
@@ -470,7 +470,7 @@ void vCoRoutineSchedule( void );
  * to wait for data to become available from the queue, should data not be
  * available immediately. The actual amount of time this equates to is defined
  * by configTICK_RATE_HZ (set in FreeRTOSConfig.h).  The constant
- * portTICK_RATE_MS can be used to convert ticks to milliseconds (see the
+ * portTICK_PERIOD_MS can be used to convert ticks to milliseconds (see the
  * crQUEUE_SEND example).
  *
  * @param pxResult The variable pointed to by pxResult will be set to pdPASS if

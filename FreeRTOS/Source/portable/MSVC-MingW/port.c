@@ -184,13 +184,13 @@ TIMECAPS xTimeCaps;
 		time, not the time that Sleep() is called.  It is done this way to
 		prevent overruns in this very non real time simulated/emulated
 		environment. */
-		if( portTICK_RATE_MS < xMinimumWindowsBlockTime )
+		if( portTICK_PERIOD_MS < xMinimumWindowsBlockTime )
 		{
 			Sleep( xMinimumWindowsBlockTime );
 		}
 		else
 		{
-			Sleep( portTICK_RATE_MS );
+			Sleep( portTICK_PERIOD_MS );
 		}
 
 		configASSERT( xPortRunning );

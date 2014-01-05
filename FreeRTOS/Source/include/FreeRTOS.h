@@ -699,6 +699,7 @@ is included as it is used by the port layer. */
 #define xTimerHandle TimerHandle_t
 #define xCoRoutineHandle CoRoutineHandle_t
 #define pdTASK_HOOK_CODE TaskHookFunction_t
+#define portTICK_RATE_MS portTICK_PERIOD_MS
 
 /* Backward compatibility within the scheduler code only - these definitions
 are not really required but are included for completeness. */

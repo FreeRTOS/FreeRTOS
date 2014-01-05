@@ -157,7 +157,7 @@ extern void vTaskSwitchContext( void );
 /* Hardwware specifics. */
 #define portBYTE_ALIGNMENT	4
 #define portSTACK_GROWTH	( -1 )
-#define portTICK_RATE_MS	( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portTICK_PERIOD_MS	( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

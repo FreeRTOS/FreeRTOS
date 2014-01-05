@@ -96,7 +96,7 @@
 
 /* Constants required to setup the PIT. */
 #define portPIT_CLOCK_DIVISOR			( ( uint32_t ) 16 )
-#define portPIT_COUNTER_VALUE			( ( ( configCPU_CLOCK_HZ / portPIT_CLOCK_DIVISOR ) / 1000UL ) * portTICK_RATE_MS )
+#define portPIT_COUNTER_VALUE			( ( ( configCPU_CLOCK_HZ / portPIT_CLOCK_DIVISOR ) / 1000UL ) * portTICK_PERIOD_MS )
 
 /* Constants required to handle interrupts. */
 #define portTIMER_MATCH_ISR_BIT		( ( uint8_t ) 0x01 )

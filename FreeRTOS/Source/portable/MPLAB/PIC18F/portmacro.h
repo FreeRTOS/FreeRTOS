@@ -102,7 +102,7 @@ typedef unsigned char UBaseType_t;
 #define portBYTE_ALIGNMENT			1
 #define portGLOBAL_INT_ENABLE_BIT	0x80
 #define portSTACK_GROWTH			1
-#define portTICK_RATE_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+#define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */

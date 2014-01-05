@@ -200,10 +200,6 @@ is included as it is used by the port layer. */
 	#define configUSE_TIMERS 0
 #endif
 
-#ifndef configUSE_EVENT_GROUPS
-	#define configUSE_EVENT_GROUPS 0
-#endif
-
 #ifndef configUSE_COUNTING_SEMAPHORES
 	#define configUSE_COUNTING_SEMAPHORES 0
 #endif
@@ -706,7 +702,7 @@ is included as it is used by the port layer. */
 
 /* Backward compatibility within the scheduler code only - these definitions
 are not really required but are included for completeness. */
-#define trmTIMER_CALLBACK TimerCallbackFunction_t
+#define tmrTIMER_CALLBACK TimerCallbackFunction_t
 #define pdTASK_CODE TaskFunction_t
 #define xListItem ListItem_t
 #define xList List_t

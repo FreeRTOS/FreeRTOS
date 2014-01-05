@@ -2324,12 +2324,12 @@ BaseType_t xReturn;
 	}
 	else
 	{
-		/* We cannot access the delayed or ready lists, so will hold this
-		task pending until the scheduler is resumed. */
+		/* The delayed and ready lists cannot be accessed, so hold this task
+		pending until the scheduler is resumed. */
 		vListInsertEnd( &( xPendingReadyList ), &( pxUnblockedTCB->xEventListItem ) );
 	}
 
-	if( pxUnblockedTCB->uxPriority >= pxCurrentTCB->uxPriority )
+	if( pxUnblockedTCB->uxPriority > pxCurrentTCB->uxPriority )
 	{
 		/* Return true if the task removed from the event list has
 		a higher priority than the calling task.  This allows
@@ -2379,7 +2379,7 @@ BaseType_t xReturn;
 		vListInsertEnd( &( xPendingReadyList ), pxEventListItem );
 	}
 
-	if( pxUnblockedTCB->uxPriority >= pxCurrentTCB->uxPriority )
+	if( pxUnblockedTCB->uxPriority > pxCurrentTCB->uxPriority )
 	{
 		/* Return true if the task removed from the event list has
 		a higher priority than the calling task.  This allows

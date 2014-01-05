@@ -1,6 +1,0 @@
-OpenOCD is open source software that is covered by the GNU General Public 
-License (GPL).  
-
-Instructions on obtaining/downloading the source code along with the relevant
-Copyright information can be obtained from: http://openocd.berlios.de/web/
-

@@ -104,7 +104,7 @@ typedef unsigned short UBaseType_t;
 
 /* Interrupt control macros. */
 #define portDISABLE_INTERRUPTS()	asm volatile ( "DINT" ); asm volatile ( "NOP" )
-#define portENABLE_INTERRUPTS()		asm volatile ( "EINT" )
+#define portENABLE_INTERRUPTS()		asm volatile ( "EINT" ); asm volatile ( "NOP" )
 /*-----------------------------------------------------------*/
 
 /* Critical section control macros. */

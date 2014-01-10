@@ -110,7 +110,7 @@ typedef unsigned short UBaseType_t;
 
 /* Interrupt control macros. */
 #define portDISABLE_INTERRUPTS()	_disable_interrupt(); _nop()
-#define portENABLE_INTERRUPTS()		_enable_interrupt()
+#define portENABLE_INTERRUPTS()		_enable_interrupt(); _nop()
 /*-----------------------------------------------------------*/
 
 /* Critical section control macros. */
@@ -118,7 +118,7 @@ typedef unsigned short UBaseType_t;
 
 #define portENTER_CRITICAL()													\
 {																				\
-extern volatile uint16_t usCriticalNesting;								\
+extern volatile uint16_t usCriticalNesting;										\
 																				\
 	portDISABLE_INTERRUPTS();													\
 																				\
@@ -130,7 +130,7 @@ extern volatile uint16_t usCriticalNesting;								\
 
 #define portEXIT_CRITICAL()														\
 {																				\
-extern volatile uint16_t usCriticalNesting;								\
+extern volatile uint16_t usCriticalNesting;										\
 																				\
 	if( usCriticalNesting > portNO_CRITICAL_SECTION_NESTING )					\
 	{																			\

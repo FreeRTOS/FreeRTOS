@@ -94,9 +94,9 @@
 	#define portSTACK_TYPE	uint32_t
 	#define portBASE_TYPE	long
 
-typedef portSTACK_TYPE StackType_t;
-typedef long BaseType_t;
-typedef unsigned long UBaseType_t;
+	typedef portSTACK_TYPE StackType_t;
+	typedef long BaseType_t;
+	typedef unsigned long UBaseType_t;
 
 	typedef uint32_t TickType_t;
 	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
@@ -115,7 +115,7 @@ typedef unsigned long UBaseType_t;
 	/* Called at the end of an ISR that can cause a context switch. */
 	#define portEND_SWITCHING_ISR( xSwitchRequired )\
 	{												\
-	extern uint32_t ulPortYieldRequired;		\
+	extern uint32_t ulPortYieldRequired;			\
 													\
 		if( xSwitchRequired != pdFALSE )			\
 		{											\

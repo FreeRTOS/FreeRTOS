@@ -73,6 +73,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/* Check stdint.h was included. */
+#ifndef UINT32_MAX
+	/* Check if the FreeRTOS stdint subset has been included. */
+	#ifndef FREERTOS_STDINT
+		#error Read the instructions in FreeRTOS/source/stdint.readme if stdint.h is not provided with your compiler.
+	#endif /* FREERTOS_STDINT */
+#endif /* UINT32_MAX */
+
 /* Basic FreeRTOS definitions. */
 #include "projdefs.h"
 
@@ -684,29 +692,36 @@ is included as it is used by the port layer. */
 	#define mtCOVERAGE_TEST_MARKER()
 #endif
 
-/* For backward compatibility. */
-#define eTaskStateGet eTaskGetState
-#define portTickType TickType_t
-#define xTaskHandle TaskHandle_t
-#define xQueueHandle QueueHandle_t
-#define xSemaphoreHandle SemaphoreHandle_t
-#define xQueueSetHandle QueueSetHandle_t
-#define xQueueSetMemberHandle QueueSetMemberHandle_t
-#define xTimeOutType TimeOut_t
-#define xMemoryRegion MemoryRegion_t
-#define xTaskParameters TaskParameters_t
-#define xTaskStatusType	TaskStatus_t
-#define xTimerHandle TimerHandle_t
-#define xCoRoutineHandle CoRoutineHandle_t
-#define pdTASK_HOOK_CODE TaskHookFunction_t
-#define portTICK_RATE_MS portTICK_PERIOD_MS
+/* Definitions to allow backward compatibility with FreeRTOS versions prior to
+V8 if desired. */
+#ifndef configENABLE_BACKWARD_COMPATIBILITY
+	#define configENABLE_BACKWARD_COMPATIBILITY 1
+#endif
 
-/* Backward compatibility within the scheduler code only - these definitions
-are not really required but are included for completeness. */
-#define tmrTIMER_CALLBACK TimerCallbackFunction_t
-#define pdTASK_CODE TaskFunction_t
-#define xListItem ListItem_t
-#define xList List_t
+#if configENABLE_BACKWARD_COMPATIBILITY == 1
+	#define eTaskStateGet eTaskGetState
+	#define portTickType TickType_t
+	#define xTaskHandle TaskHandle_t
+	#define xQueueHandle QueueHandle_t
+	#define xSemaphoreHandle SemaphoreHandle_t
+	#define xQueueSetHandle QueueSetHandle_t
+	#define xQueueSetMemberHandle QueueSetMemberHandle_t
+	#define xTimeOutType TimeOut_t
+	#define xMemoryRegion MemoryRegion_t
+	#define xTaskParameters TaskParameters_t
+	#define xTaskStatusType	TaskStatus_t
+	#define xTimerHandle TimerHandle_t
+	#define xCoRoutineHandle CoRoutineHandle_t
+	#define pdTASK_HOOK_CODE TaskHookFunction_t
+	#define portTICK_RATE_MS portTICK_PERIOD_MS
+
+	/* Backward compatibility within the scheduler code only - these definitions
+	are not really required but are included for completeness. */
+	#define tmrTIMER_CALLBACK TimerCallbackFunction_t
+	#define pdTASK_CODE TaskFunction_t
+	#define xListItem ListItem_t
+	#define xList List_t
+#endif /* configENABLE_BACKWARD_COMPATIBILITY */
 
 #endif /* INC_FREERTOS_H */
 

@@ -66,18 +66,21 @@
 #ifndef INC_FREERTOS_H
 #define INC_FREERTOS_H
 
-
 /*
  * Include the generic headers required for the FreeRTOS port being used.
  */
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Check stdint.h was included. */
 #ifndef UINT32_MAX
 	/* Check if the FreeRTOS stdint subset has been included. */
 	#ifndef FREERTOS_STDINT
-		#error Read the instructions in FreeRTOS/source/stdint.readme if stdint.h is not provided with your compiler.
+		#error Read the instructions in FreeRTOS/source/stdint.readme if stdint.h is not provided with your compiler or you are building with standard libraries excluded (for example, with -nostdint in GCC).
 	#endif /* FREERTOS_STDINT */
 #endif /* UINT32_MAX */
 
@@ -722,6 +725,10 @@ V8 if desired. */
 	#define xListItem ListItem_t
 	#define xList List_t
 #endif /* configENABLE_BACKWARD_COMPATIBILITY */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_FREERTOS_H */
 

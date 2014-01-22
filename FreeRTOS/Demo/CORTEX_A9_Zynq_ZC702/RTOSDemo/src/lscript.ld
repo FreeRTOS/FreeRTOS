@@ -30,13 +30,14 @@ MEMORY
 
 /* Specify the default entry point to the program */
 
-ENTRY(_vector_table)
+ENTRY(_freertos_vector_table)
 
 /* Define the sections, and where they are mapped in memory */
 
 SECTIONS
 {
 .text : {
+   *(.freertos_vectors)
    *(.vectors)
    *(.boot)
    *(.text)

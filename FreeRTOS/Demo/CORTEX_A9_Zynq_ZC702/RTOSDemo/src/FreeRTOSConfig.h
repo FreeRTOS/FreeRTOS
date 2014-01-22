@@ -66,6 +66,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include "xparameters.h"
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -98,11 +100,11 @@
  * "FromISR".  FreeRTOS maintains a separate interrupt safe API to enable
  * interrupt entry to be shorter, faster, simpler and smaller.
  *
- * The Zynq implements 32 unique interrupt priorities.  For the purpose of
- * setting configMAX_API_CALL_INTERRUPT_PRIORITY 31 represents the lowest
+ * The Zynq implements 256 unique interrupt priorities.  For the purpose of
+ * setting configMAX_API_CALL_INTERRUPT_PRIORITY 255 represents the lowest
  * priority.
  */
-#define configMAX_API_CALL_INTERRUPT_PRIORITY	25
+#define configMAX_API_CALL_INTERRUPT_PRIORITY	18
 
 
 #define configCPU_CLOCK_HZ						100000000UL
@@ -157,11 +159,11 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
-/* The following constants describe the hardware, and are correct for the
+/* The following constant describe the hardware, and are correct for the
 Zynq MPU. */
-#define configINTERRUPT_CONTROLLER_BASE_ADDRESS	0xE8201000
-#define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET 0x1000
-#define configUNIQUE_INTERRUPT_PRIORITIES		32
+#define configINTERRUPT_CONTROLLER_BASE_ADDRESS 		( XPAR_PS7_SCUGIC_0_DIST_BASEADDR )
+#define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ( -0xf00 )
+#define configUNIQUE_INTERRUPT_PRIORITIES				32
 
 /* Run time stats gathering definitions. */
 unsigned long ulGetRunTimeCounterValue( void );
@@ -196,6 +198,8 @@ void vAssertCalled( const char * pcFile, unsigned long ulLine );
  */
 void vConfigureTickInterrupt( void );
 #define configSETUP_TICK_INTERRUPT() vConfigureTickInterrupt()
+
+#define configINSTALL_FREERTOS_VECTOR_TABLE 1
 
 #endif /* FREERTOS_CONFIG_H */
 

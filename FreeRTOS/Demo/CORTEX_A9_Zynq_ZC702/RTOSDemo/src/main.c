@@ -100,29 +100,91 @@
 #include "xscugic.h"
 #include "xil_exception.h"
 
-int main()
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+
+/*-----------------------------------------------------------*/
+
+/*
+ * Configure the hardware as necessary to run this demo.
+ */
+static void prvSetupHardware( void );
+
+/*
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ */
+#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	extern void main_blinky( void );
+#else
+	extern void main_full( void );
+#endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
+
+/* Prototypes for the standard FreeRTOS callback/hook functions implemented
+within this file. */
+void vApplicationMallocFailedHook( void );
+void vApplicationIdleHook( void );
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationTickHook( void );
+
+/*
+ * Creates and verifies different files on the volume, demonstrating the use of
+ * various different API functions.
+ */
+extern void vCreateAndVerifySampleFiles( void );
+
+/*-----------------------------------------------------------*/
+
+int main( void )
 {
-    init_platform();
+	/* Configure the hardware ready to run the demo. */
+	prvSetupHardware();
 
-    print("Hello World\n\r");
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	{
+		main_blinky();
+	}
+	#else
+	{
+		main_full();
+	}
+	#endif
 
-    return 0;
+	return 0;
 }
-
-void vAssertCalled( const char * pcFile, unsigned long ulLine )
-{
-	( void ) pcFile;
-	( void ) ulLine;
-}
-
-
-void vConfigureTickInterrupt( void )
-{
-}
+/*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
+int Status;
+static XScuGic InterruptController; 	/* Interrupt controller instance */
+extern void FreeRTOS_IRQ_Handler( void );
+extern void FreeRTOS_SWI_Handler( void );
+
+	__asm volatile ( "cpsid i" );
 	Xil_ExceptionInit();
+
+	XScuGic_Config *IntcConfig; /* The configuration parameters of the
+									interrupt controller */
+	/*
+	 * Initialize the interrupt controller driver
+	 */
+	IntcConfig = XScuGic_LookupConfig(XPAR_SCUGIC_SINGLE_DEVICE_ID);
+	configASSERT( IntcConfig );
+	configASSERT( IntcConfig->CpuBaseAddress == ( configINTERRUPT_CONTROLLER_BASE_ADDRESS + configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ) );
+	configASSERT( IntcConfig->DistBaseAddress == configINTERRUPT_CONTROLLER_BASE_ADDRESS );
+
+	Status = XScuGic_CfgInitialize(&InterruptController, IntcConfig, IntcConfig->CpuBaseAddress );
+	configASSERT( Status == XST_SUCCESS );
+
+	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_IRQ_INT,	(Xil_ExceptionHandler)FreeRTOS_IRQ_Handler,	&InterruptController);
+	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_SWI_INT,	(Xil_ExceptionHandler)FreeRTOS_SWI_Handler,	&InterruptController);
+
+//	Xil_ExceptionEnableMask( XIL_EXCEPTION_ALL );
+//	Xil_ExceptionEnable();
 
 	/*
 	 * Connect the interrupt controller interrupt handler to the hardware
@@ -142,19 +204,111 @@ static void prvSetupHardware( void )
 	                (void *)8);
 #endif
 }
+/*-----------------------------------------------------------*/
 
+void vApplicationMallocFailedHook( void )
+{
+	/* Called if a call to pvPortMalloc() fails because there is insufficient
+	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+	internally by FreeRTOS API functions that create tasks, queues, software
+	timers, and semaphores.  The size of the FreeRTOS heap is set by the
+	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
+
+	/* Run time stack overflow checking is performed if
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	function is called if a stack overflow is detected. */
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-}
+volatile size_t xFreeHeapSpace;
 
-void vApplicationStackOverflowHook( TaskHandle_t xTask, const char * pcTaskName )
-{
+	/* This is just a trivial example of an idle hook.  It is called on each
+	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+	idle task just queries the amount of FreeRTOS heap that remains.  See the
+	memory management section on the http://www.FreeRTOS.org web site for memory
+	management options.  If there is a lot of heap memory free then the
+	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+	RAM. */
+	xFreeHeapSpace = xPortGetFreeHeapSize();
+
+	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
+	( void ) xFreeHeapSpace;
+
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1
+	{
+		/* If the file system is only going to be accessed from one task then
+		F_FS_THREAD_AWARE can be set to 0 and the set of example files is
+		created before the RTOS scheduler is started.  If the file system is
+		going to be	access from more than one task then F_FS_THREAD_AWARE must
+		be set to 1 and the set of sample files are created from the idle task
+		hook function. */
+		#if F_FS_THREAD_AWARE == 1
+		{
+			static portBASE_TYPE xCreatedSampleFiles = pdFALSE;
+
+			/* Initialise the drive and file system, then create a few example
+			files.  The output from this function just goes to the stdout window,
+			allowing the output to be viewed when the UDP command console is not
+			connected. */
+			if( xCreatedSampleFiles == pdFALSE )
+			{
+				vCreateAndVerifySampleFiles();
+				xCreatedSampleFiles = pdTRUE;
+			}
+		}
+		#endif
+	}
+	#endif
 }
+/*-----------------------------------------------------------*/
+
+void vAssertCalled( const char * pcFile, unsigned long ulLine )
+{
+volatile unsigned long ul = 0;
+
+	( void ) pcFile;
+	( void ) ulLine;
+
+	taskENTER_CRITICAL();
+	{
+		/* Set ul to a non-zero value using the debugger to step out of this
+		function. */
+		while( ul == 0 )
+		{
+			portNOP();
+		}
+	}
+	taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
 
 void vApplicationTickHook( void )
 {
+	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
+	{
+		/* The full demo includes a software timer demo/test that requires
+		prodding periodically from the tick interrupt. */
+		vTimerPeriodicISRTests();
+
+		/* Call the periodic queue overwrite from ISR demo. */
+		vQueueOverwritePeriodicISRDemo();
+	}
+	#endif
 }
+/*-----------------------------------------------------------*/
 
 void vApplicationIRQHandler( uint32_t ulICCIAR )
 {

@@ -60,7 +60,7 @@
 * None.
 *
 ******************************************************************************/
-#if 0
+
 #include "xil_errata.h"
 
 #define __ARM_NEON__ 1
@@ -69,64 +69,37 @@
 .text
 
 .globl _boot
-.globl _vector_table
+.globl _freertos_vector_table
 
 .globl FIQInterrupt
-.globl IRQInterrupt
-.globl SWInterrupt
-.globl DataAbortInterrupt
-.globl PrefetchAbortInterrupt
+//.globl IRQInterrupt
+//.global SWInterrupt
+.global DataAbortInterrupt
+.global PrefetchAbortInterrupt
 
-.globl IRQHandler
-.globl prof_pc
+.extern FreeRTOS_IRQ_Handler
+.extern FreeRTOS_SWI_Handler
 
-.section .vectors
-_vector_table:
-	B	_boot
-	B	Undefined
-	B	SVCHandler
-	B	PrefetchAbortHandler
-	B	DataAbortHandler
-	NOP	/* Placeholder for address exception vector*/
-	B	IRQHandler
-	B	FIQHandler
+//.globl IRQHandler
+//.globl prof_pc
 
+.section .freertos_vectors
+_freertos_vector_table:
+	B	  _boot
+	B	  FreeRTOS_Undefined
+	ldr   pc, _swi
+	B	  FreeRTOS_PrefetchAbortHandler
+	B	  FreeRTOS_DataAbortHandler
+	NOP	  /* Placeholder for address exception vector*/
+	LDR   PC, _irq
+	B	  FreeRTOS_FIQHandler
 
-IRQHandler:					/* IRQ vector handler */
-	
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code*/
-#ifdef __ARM_NEON__
-	vpush {d0-d7}
-	vpush {d16-d31}
-	vmrs r1, FPSCR
-	push {r1}
-	vmrs r1, FPEXC
-	push {r1}
-#endif
-
-#ifdef PROFILING
-	ldr	r2, =prof_pc
-	subs	r3, lr, #0
-	str	r3, [r2]
-#endif
-
-	bl	IRQInterrupt			/* IRQ vector */
-	
-#ifdef __ARM_NEON__
-	pop 	{r1}
-	vmsr    FPEXC, r1
-	pop 	{r1}
-	vmsr    FPSCR, r1
-	vpop    {d16-d31}
-	vpop    {d0-d7}
-#endif
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-	
-
-	subs	pc, lr, #4			/* adjust return */
+_irq:   .word FreeRTOS_IRQ_Handler
+_swi:   .word FreeRTOS_SWI_Handler
 
 
-FIQHandler:					/* FIQ vector handler */
+
+FreeRTOS_FIQHandler:					/* FIQ vector handler */
 	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
 #ifdef __ARM_NEON__
 	vpush {d0-d7}
@@ -152,7 +125,7 @@ FIQLoop:
 	subs	pc, lr, #4			/* adjust return */
 
 
-Undefined:					/* Undefined handler */
+FreeRTOS_Undefined:					/* Undefined handler */
 	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
 
 	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
@@ -162,23 +135,7 @@ Undefined:					/* Undefined handler */
 	movs	pc, lr
 
 
-SVCHandler:					/* SWI handler */
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
-
-	tst	r0, #0x20			/* check the T bit */
-	ldrneh	r0, [lr,#-2]			/* Thumb mode */
-	bicne	r0, r0, #0xff00			/* Thumb mode */
-	ldreq	r0, [lr,#-4]			/* ARM mode */
-	biceq	r0, r0, #0xff000000		/* ARM mode */
-
-	bl	SWInterrupt			/* SWInterrupt: call C function here */
-
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-
-	subs	pc, lr, #4			/* adjust return */
-
-
-DataAbortHandler:				/* Data Abort handler */
+FreeRTOS_DataAbortHandler:				/* Data Abort handler */
 #ifdef CONFIG_ARM_ERRATA_775420
 	dsb
 #endif
@@ -190,7 +147,7 @@ DataAbortHandler:				/* Data Abort handler */
 
 	subs	pc, lr, #4			/* adjust return */
 
-PrefetchAbortHandler:				/* Prefetch Abort handler */
+FreeRTOS_PrefetchAbortHandler:				/* Prefetch Abort handler */
 #ifdef CONFIG_ARM_ERRATA_775420
 	dsb
 #endif
@@ -205,6 +162,6 @@ PrefetchAbortHandler:				/* Prefetch Abort handler */
 
 .end
 
-#endif
+
 
 

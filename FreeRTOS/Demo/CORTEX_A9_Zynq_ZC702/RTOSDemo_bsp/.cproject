@@ -13,7 +13,7 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
-		<pathentry excluding="ps7_cortexa9_0/libsrc/standalone_v3_12_a/src/asm_vectors.S" kind="src" path=""/>
+		<pathentry kind="src" path=""/>
 		<pathentry kind="out" path=""/>
 	</storageModule>
 </cproject>

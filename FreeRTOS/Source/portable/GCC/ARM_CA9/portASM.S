@@ -53,40 +53,124 @@
 */
 
 
-	.org 0
 	.text
 
 	.set SYS_MODE,	0x1f
 	.set SVC_MODE,	0x13
 	.set IRQ_MODE,	0x12
 
-	.extern _boot
-	.extern vTaskSwitchContext
 	.extern ulICCIAR
 	.extern ulICCEOIR
+	.extern ulMaxAPIPriorityMask
+	.extern ulICCPMR
+	.extern _freertos_vector_table
 
-	.global _vector_table
+	.global FreeRTOS_vector_table
 	.global FIQInterrupt
 	.global Undefined
 	.global PrefetchAbortHandler
 	.global DataAbortInterrupt
+
+	.extern pxCurrentTCB
+	.extern XIntc_DeviceInterruptHandler
+	.extern vTaskSwitchContext
+	.extern uxCriticalNesting
+	.extern pulISRStack
+	.extern ulTaskSwitchRequested
+	.extern vPortExceptionHandler
+	.extern pulStackPointerOnFunctionEntry
+
 	.global FreeRTOS_IRQ_Handler
 	.global FreeRTOS_SWI_Handler
+	.global vPortRestoreTaskContext
+	.global vPortInstallFreeRTOSVectorTable
 
-	.section .vectors
 
-_vector_table:
-	B	  _boot
-	B	  Undefined
-	ldr   pc, _swi
-	B	  PrefetchAbortHandler
-	B	  DataAbortHandler
-	NOP	  /* Placeholder for address exception vector*/
-	LDR   PC, _irq
-	B	  FIQHandler
 
-_irq:   .word FreeRTOS_IRQ_Handler
-_swi:   .word FreeRTOS_SWI_Handler
+
+.macro portSAVE_CONTEXT
+
+	/* Save the LR and SPSR onto the system mode stack before switching to
+	system mode to save the remaining system mode registers. */
+	SRSDB	sp!, #SYS_MODE
+	CPS		#SYS_MODE
+	PUSH	{R0-R12, R14}
+
+	/* Push the critical nesting count. */
+	LDR		R2, =ulCriticalNesting
+	LDR		R1, [R2]
+	PUSH	{R1}
+
+	/* Does the task have a floating point context that needs saving?  If
+	ulPortTaskHasFPUContext is 0 then no. */
+	LDR		R2, =ulPortTaskHasFPUContext
+	LDR		R3, [R2]
+	CMP		R3, #0
+
+	/* Save the floating point context, if any. */
+	FMRXNE  R1,  FPSCR
+	VPUSHNE {D0-D15}
+	VPUSHNE	{D16-D31}
+	PUSHNE	{R1}
+
+	/* Save ulPortTaskHasFPUContext itself. */
+	PUSH	{R3}
+
+	/* Save the stack pointer in the TCB. */
+	LDR		R0, =pxCurrentTCB
+	LDR		R1, [R0]
+	STR		SP, [R1]
+
+	.endm
+
+; /**********************************************************************/
+
+.macro portRESTORE_CONTEXT
+
+	/* Switch to system mode. */
+	CPS		#SYS_MODE
+
+	/* Set the SP to point to the stack of the task being restored. */
+	LDR		R0, =pxCurrentTCB
+	LDR		R1, [R0]
+	LDR		SP, [R1]
+
+	/* Is there a floating point context to restore?  If the restored
+	ulPortTaskHasFPUContext is zero then no. */
+	LDR		R0, =ulPortTaskHasFPUContext
+	POP		{R1}
+	STR		R1, [R0]
+	CMP		R1, #0
+
+	/* Restore the floating point context, if any. */
+	POPNE 	{R0}
+	VPOPNE	{D16-D31}
+	VPOPNE	{D0-D15}
+	VMSRNE  FPSCR, R0
+
+	/* Restore the critical section nesting depth. */
+	LDR		R0, =ulCriticalNesting
+	POP		{R1}
+	STR		R1, [R0]
+
+	/* Ensure the priority mask is correct for the critical nesting depth. */
+	LDR		R2, =ulICCPMR
+	CMP		R1, #0
+	MOVEQ	R4, #255
+	LDRNE	R4, =ulMaxAPIPriorityMask
+	STR		R4, [r2]
+
+	/* Restore all system mode registers other than the SP (which is already
+	being used). */
+	POP		{R0-R12, R14}
+
+	/* Return to the task code, loading CPSR on the way. */
+	RFEIA	sp!
+
+	.endm
+
+
+
 
 /******************************************************************************
  * SVC handler is used to start the scheduler and yield a task.
@@ -94,12 +178,42 @@ _swi:   .word FreeRTOS_SWI_Handler
 FreeRTOS_SWI_Handler:
 
 	/* Save the context of the current task and select a new task to run. */
-//	portSAVE_CONTEXT
+	/* Save the LR and SPSR onto the system mode stack before switching to
+	system mode to save the remaining system mode registers. */
+	SRSDB	sp!, #SYS_MODE
+	CPS		#SYS_MODE
+	PUSH	{R0-R12, R14}
+
+	/* Push the critical nesting count. */
+	LDR		R2, =ulCriticalNesting
+	LDR		R1, [R2]
+	PUSH	{R1}
+
+	/* Does the task have a floating point context that needs saving?  If
+	ulPortTaskHasFPUContext is 0 then no. */
+	LDR		R2, =ulPortTaskHasFPUContext
+	LDR		R3, [R2]
+	CMP		R3, #0
+
+	/* Save the floating point context, if any. */
+	FMRXNE  R1,  FPSCR
+	VPUSHNE {D0-D15}
+	VPUSHNE	{D16-D31}
+	PUSHNE	{R1}
+
+	/* Save ulPortTaskHasFPUContext itself. */
+	PUSH	{R3}
+
+	/* Save the stack pointer in the TCB. */
+	LDR		R0, =pxCurrentTCB
+	LDR		R1, [R0]
+	STR		SP, [R1]
+
 	LDR R0, =vTaskSwitchContext
 	BLX	R0
 
 vPortRestoreTaskContext:
-//	portRESTORE_CONTEXT
+	portRESTORE_CONTEXT
 
 FreeRTOS_IRQ_Handler:
 	/* Return to the interrupted instruction. */
@@ -185,7 +299,7 @@ switch_before_exit:
 	POP		{LR}
 	MSR		SPSR_cxsf, LR
 	POP		{LR}
-//	portSAVE_CONTEXT
+	portSAVE_CONTEXT
 
 	/* Call the function that selects the new task to execute.
 	vTaskSwitchContext() if vTaskSwitchContext() uses LDRD or STRD
@@ -195,23 +309,19 @@ switch_before_exit:
 
 	/* Restore the context of, and branch to, the task selected to execute
 	next. */
-//	portRESTORE_CONTEXT
+	portRESTORE_CONTEXT
 
 ulICCIARConst:	.word ulICCIAR
 ulICCEOIRConst:	.word ulICCEOIR
 
+vPortInstallFreeRTOSVectorTable:
+	/* Set VBAR to the vector table that contains the FreeRTOS handlers. */
+	ldr	r0, =_freertos_vector_table
+	mcr	p15, 0, r0, c12, c0, 0
+	dsb
+	isb
+	bx lr
 
-Undefined:
-	B		.
-
-PrefetchAbortHandler:
-	B		.
-
-FIQHandler:
-	B		.
-
-DataAbortHandler:
-	B		.
 
 .end
 

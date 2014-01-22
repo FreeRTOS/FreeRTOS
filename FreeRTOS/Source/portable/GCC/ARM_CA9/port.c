@@ -110,6 +110,10 @@
 	#error configMAX_API_CALL_INTERRUPT_PRIORITY must be greater than ( configUNIQUE_INTERRUPT_PRIORITIES / 2 )
 #endif
 
+#ifndef configINSTALL_FREERTOS_VECTOR_TABLE
+	#warning configINSTALL_FREERTOS_VECTOR_TABLE was undefined.  Defaulting configINSTALL_FREERTOS_VECTOR_TABLE to 0.
+#endif
+
 /* A critical section is exited when the critical section nesting count reaches
 this value. */
 #define portNO_CRITICAL_NESTING			( ( uint32_t ) 0 )
@@ -126,7 +130,8 @@ context. */
 #define portNO_FLOATING_POINT_CONTEXT	( ( StackType_t ) 0 )
 
 /* Constants required to setup the initial task context. */
-#define portINITIAL_SPSR				( ( StackType_t ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
+#warning FIQ is disabled
+#define portINITIAL_SPSR				( ( StackType_t ) 0x5f ) /* System mode, ARM mode, IRQ enabled FIQ disabled.  1f is required to enable FIQ. */
 #define portTHUMB_MODE_BIT				( ( StackType_t ) 0x20 )
 #define portINTERRUPT_ENABLE_BIT		( 0x80UL )
 #define portTHUMB_MODE_ADDRESS			( 0x01UL )
@@ -146,11 +151,19 @@ mode. */
 #define portCLEAR_INTERRUPT_MASK()											\
 {																			\
 	__asm volatile ( "cpsid i" );											\
+	__asm volatile ( "dsb" );												\
+	__asm volatile ( "isb" );												\
 	portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;					\
 	__asm(	"DSB		\n"													\
 			"ISB		\n" );												\
 	__asm volatile( "cpsie i" );											\
+	__asm volatile ( "dsb" );												\
+	__asm volatile ( "isb" );												\
 }
+
+#define portINTERRUPT_PRIORITY_REGISTER_OFFSET		0x400UL
+#define portMAX_8_BIT_VALUE							( ( uint8_t ) 0xff )
+#define portBIT_0_SET								( ( uint8_t ) 0x01 )
 
 /*-----------------------------------------------------------*/
 
@@ -182,6 +195,8 @@ uint32_t ulPortInterruptNesting = 0UL;
 
 __attribute__(( used )) const uint32_t ulICCIAR = portICCIAR_INTERRUPT_ACKNOWLEDGE_REGISTER_ADDRESS;
 __attribute__(( used )) const uint32_t ulICCEOIR = portICCEOIR_END_OF_INTERRUPT_REGISTER_ADDRESS;
+__attribute__(( used )) const uint32_t ulICCPMR	= portICCPMR_PRIORITY_MASK_REGISTER_ADDRESS;
+__attribute__(( used )) const uint32_t ulMaxAPIPriorityMask = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 
 /*-----------------------------------------------------------*/
 
@@ -264,11 +279,53 @@ BaseType_t xPortStartScheduler( void )
 {
 uint32_t ulAPSR;
 
+	#if( configASSERT_DEFINED == 1 )
+	{
+		volatile uint32_t ulOriginalPriority;
+		volatile uint8_t * const pucFirstUserPriorityRegister = ( volatile uint8_t * const ) ( configINTERRUPT_CONTROLLER_BASE_ADDRESS + portINTERRUPT_PRIORITY_REGISTER_OFFSET );
+		volatile uint8_t ucMaxPriorityValue;
+
+		/* Determine how many priority bits are implemented in the GIC.
+
+		Save the interrupt priority value that is about to be clobbered. */
+		ulOriginalPriority = *pucFirstUserPriorityRegister;
+
+		/* Determine the number of priority bits available.  First write to
+		all possible bits. */
+		*pucFirstUserPriorityRegister = portMAX_8_BIT_VALUE;
+
+		/* Read the value back to see how many bits stuck. */
+		ucMaxPriorityValue = *pucFirstUserPriorityRegister;
+
+		/* Shift to the least significant bits. */
+		while( ( ucMaxPriorityValue & portBIT_0_SET ) != portBIT_0_SET )
+		{
+			ucMaxPriorityValue >>= ( uint8_t ) 0x01;
+		}
+
+		/* Sanity check configUNIQUE_INTERRUPT_PRIORITIES matches the read
+		value. */
+		configASSERT( ucMaxPriorityValue == portLOWEST_INTERRUPT_PRIORITY );
+
+		/* Restore the clobbered interrupt priority register to its original
+		value. */
+		*pucFirstUserPriorityRegister = ulOriginalPriority;
+	}
+	#endif /* conifgASSERT_DEFINED */
+
+
 	/* Only continue if the CPU is not in User mode.  The CPU must be in a
 	Privileged mode for the scheduler to start. */
 	__asm volatile ( "MRS %0, APSR" : "=r" ( ulAPSR ) );
 	ulAPSR &= portAPSR_MODE_BITS_MASK;
 	configASSERT( ulAPSR != portAPSR_USER_MODE );
+
+	#if configINSTALL_FREERTOS_VECTOR_TABLE == 1
+	{
+		vPortInstallFreeRTOSVectorTable();
+	}
+	#endif
+
 
 	if( ulAPSR != portAPSR_USER_MODE )
 	{
@@ -282,7 +339,7 @@ uint32_t ulAPSR;
 			/* Start the timer that generates the tick ISR. */
 			configSETUP_TICK_INTERRUPT();
 
-			__asm volatile( "cpsie i" );
+//			__asm volatile( "cpsie i" );
 			vPortRestoreTaskContext();
 		}
 	}
@@ -340,10 +397,14 @@ void FreeRTOS_Tick_Handler( void )
 	handler runs at the lowest priority, so interrupts cannot already be masked,
 	so there is no need to save and restore the current mask value. */
 	__asm volatile( "cpsid i" );
+	__asm volatile ( "dsb" );
+	__asm volatile ( "isb" );
 	portICCPMR_PRIORITY_MASK_REGISTER = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 	__asm(	"dsb		\n"
 			"isb		\n"
-			"cpsie i	  ");
+			"cpsie i	\n"
+			"dsb		\n"
+			"isb" );
 
 	/* Increment the RTOS tick. */
 	if( xTaskIncrementTick() != pdFALSE )
@@ -383,6 +444,8 @@ uint32_t ulPortSetInterruptMask( void )
 uint32_t ulReturn;
 
 	__asm volatile ( "cpsid i" );
+	__asm volatile ( "dsb" );
+	__asm volatile ( "isb" );
 	if( portICCPMR_PRIORITY_MASK_REGISTER == ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) )
 	{
 		/* Interrupts were already masked. */
@@ -396,6 +459,8 @@ uint32_t ulReturn;
 				"isb		\n" );
 	}
 	__asm volatile ( "cpsie i" );
+	__asm volatile ( "dsb" );
+	__asm volatile ( "isb" );
 
 	return ulReturn;
 }
@@ -440,14 +505,4 @@ uint32_t ulReturn;
 
 #endif /* configASSERT_DEFINED */
 /*-----------------------------------------------------------*/
-
-void vPortRestoreTaskContext( void )
-{
-}
-
-void vPortRestoreContext( void )
-{
-}
-/*-----------------------------------------------------------*/
-
 

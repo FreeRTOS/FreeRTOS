@@ -67,6 +67,14 @@
 #include "FreeRTOS.h"
 #include "Task.h"
 
+/* Xilinx includes. */
+#include "xscutimer.h"
+#include "xscugic.h"
+
+#define XSCUTIMER_CLOCK_HZ XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ/2
+
+static XScuTimer Timer;						/* A9 timer counter */
+
 /*
  * The application must provide a function that configures a peripheral to
  * create the FreeRTOS tick interrupt, then define configSETUP_TICK_INTERRUPT()
@@ -75,6 +83,61 @@
  */
 void vConfigureTickInterrupt( void )
 {
+static XScuGic InterruptController; 	/* Interrupt controller instance */
+int Status;
+extern void FreeRTOS_Tick_Handler( void );
+XScuTimer_Config *ScuConfig;
+XScuGic_Config *IntcConfig;
+
+	IntcConfig = XScuGic_LookupConfig(XPAR_SCUGIC_SINGLE_DEVICE_ID);
+	Status = XScuGic_CfgInitialize(&InterruptController, IntcConfig, IntcConfig->CpuBaseAddress );
+	configASSERT( Status == XST_SUCCESS );
+
+	/*
+	 * Connect to the interrupt controller
+	 */
+	Status = XScuGic_Connect(&InterruptController, XPAR_SCUTIMER_INTR, (Xil_ExceptionHandler) FreeRTOS_Tick_Handler, (void *)&Timer);
+	configASSERT( Status == XST_SUCCESS );
+
+	/*
+	 * Initialize the A9Timer driver.
+	 */
+	ScuConfig = XScuTimer_LookupConfig(XPAR_SCUTIMER_DEVICE_ID);
+
+	Status = XScuTimer_CfgInitialize(&Timer, ScuConfig, ScuConfig->BaseAddr);
+
+	configASSERT( Status == XST_SUCCESS );
+
+	/*
+	 * Enable Auto reload mode.
+	 */
+	XScuTimer_EnableAutoReload(&Timer);
+
+	/*
+	 * Load the timer counter register.
+	 */
+	XScuTimer_LoadTimer(&Timer, XSCUTIMER_CLOCK_HZ / configTICK_RATE_HZ);
+
+	/*
+	 * Start the timer counter and then wait for it
+	 * to timeout a number of times.
+	 */
+	XScuTimer_Start(&Timer);
+
+	/*
+	 * Enable the interrupt for the Timer in the interrupt controller
+	 */
+	XScuGic_Enable(&InterruptController, XPAR_SCUTIMER_INTR);
+
+	/*
+	 * Enable the timer interrupts for timer mode.
+	 */
+	XScuTimer_EnableInterrupt(&Timer);
+
+	/*
+	 * Do NOT enable interrupts in the ARM processor here.
+	 * This happens when the scheduler is started.
+	 */
 }
 /*-----------------------------------------------------------*/
 
@@ -90,6 +153,33 @@ unsigned long ulGetRunTimeCounterValue( void )
 
 void vInitialiseRunTimeStats( void )
 {
+}
+/*-----------------------------------------------------------*/
+
+extern XScuGic_Config XScuGic_ConfigTable[];
+static const XScuGic_Config *CfgPtr = &XScuGic_ConfigTable[ XPAR_SCUGIC_SINGLE_DEVICE_ID ];
+void vApplicationIRQHandler( uint32_t ulICCIAR )
+{
+uint32_t ulInterruptID;
+XScuGic_VectorTableEntry *TablePtr;
+//XScuGic_Config *CfgPtr;
+//extern XScuGic_Config XScuGic_ConfigTable[];
+
+//	CfgPtr = &XScuGic_ConfigTable[ XPAR_SCUGIC_SINGLE_DEVICE_ID ];
+
+	/* Re-enable interrupts. */
+    __asm ( "cpsie i" );
+
+	/* The ID of the interrupt can be obtained by bitwise anding the ICCIAR value
+	with 0x3FF. */
+	ulInterruptID = ulICCIAR & 0x3FFUL;
+
+	configASSERT( ulInterruptID < XSCUGIC_MAX_NUM_INTR_INPUTS );
+	/* Call the function installed in the array of installed handler functions. */
+	TablePtr = &(CfgPtr->HandlerTable[ ulInterruptID ]);
+	TablePtr->Handler(TablePtr->CallBackRef);
+
+//	intc_func_table[ ulInterruptID ]( 0 );
 }
 
 

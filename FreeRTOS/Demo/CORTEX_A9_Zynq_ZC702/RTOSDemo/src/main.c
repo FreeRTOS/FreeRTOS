@@ -160,7 +160,7 @@ int main( void )
 static void prvSetupHardware( void )
 {
 int Status;
-static XScuGic InterruptController; 	/* Interrupt controller instance */
+XScuGic InterruptController; 	/* Interrupt controller instance */
 extern void FreeRTOS_IRQ_Handler( void );
 extern void FreeRTOS_SWI_Handler( void );
 
@@ -180,8 +180,8 @@ extern void FreeRTOS_SWI_Handler( void );
 	Status = XScuGic_CfgInitialize(&InterruptController, IntcConfig, IntcConfig->CpuBaseAddress );
 	configASSERT( Status == XST_SUCCESS );
 
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_IRQ_INT,	(Xil_ExceptionHandler)FreeRTOS_IRQ_Handler,	&InterruptController);
-	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_SWI_INT,	(Xil_ExceptionHandler)FreeRTOS_SWI_Handler,	&InterruptController);
+//	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_IRQ_INT,	(Xil_ExceptionHandler)FreeRTOS_IRQ_Handler,	&InterruptController);
+//	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_SWI_INT,	(Xil_ExceptionHandler)FreeRTOS_SWI_Handler,	&InterruptController);
 
 //	Xil_ExceptionEnableMask( XIL_EXCEPTION_ALL );
 //	Xil_ExceptionEnable();
@@ -307,20 +307,4 @@ void vApplicationTickHook( void )
 		vQueueOverwritePeriodicISRDemo();
 	}
 	#endif
-}
-/*-----------------------------------------------------------*/
-
-void vApplicationIRQHandler( uint32_t ulICCIAR )
-{
-uint32_t ulInterruptID;
-
-	/* Re-enable interrupts. */
-    __asm ( "cpsie i" );
-
-	/* The ID of the interrupt can be obtained by bitwise anding the ICCIAR value
-	with 0x3FF. */
-	ulInterruptID = ulICCIAR & 0x3FFUL;
-
-	/* Call the function installed in the array of installed handler functions. */
-//	intc_func_table[ ulInterruptID ]( 0 );
 }

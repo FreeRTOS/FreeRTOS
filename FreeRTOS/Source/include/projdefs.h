@@ -66,7 +66,7 @@
 #ifndef PROJDEFS_H
 #define PROJDEFS_H
 
-/* 
+/*
  * Defines the prototype to which task functions must conform.  Defined in this
  * file to ensure the type is known before portable.h is included.
  */

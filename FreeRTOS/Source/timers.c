@@ -105,6 +105,9 @@ typedef struct tmrTimerControl
 	UBaseType_t				uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one-shot timer. */
 	void 					*pvTimerID;			/*<< An ID to identify the timer.  This allows the timer to be identified when the same callback is used for multiple timers. */
 	TimerCallbackFunction_t	pxCallbackFunction;	/*<< The function that will be called when the timer expires. */
+	#if( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t			uxTimerNumber;		/*<< An ID assigned by trace tools such as FreeRTOS+Trace */
+	#endif
 } Timer_t;
 
 /* The definition of messages that can be sent and received on the timer queue.
@@ -316,7 +319,7 @@ DaemonTaskMessage_t xMessage;
 		xMessage.u.xTimerParameters.xMessageValue = xOptionalValue;
 		xMessage.u.xTimerParameters.pxTimer = ( Timer_t * ) xTimer;
 
-		if( pxHigherPriorityTaskWoken == NULL )
+		if( xCommandID < tmrFIRST_FROM_ISR_COMMAND )
 		{
 			if( xTaskGetSchedulerState() == taskSCHEDULER_RUNNING )
 			{
@@ -377,7 +380,7 @@ Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTi
 		{
 			/* The timer expired before it was added to the active timer
 			list.  Reload it now.  */
-			xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+			xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xNextExpireTime, NULL, tmrNO_DELAY );
 			configASSERT( xResult );
 			( void ) xResult;
 		}
@@ -621,6 +624,10 @@ TickType_t xTimeNow;
 			switch( xMessage.xMessageID )
 			{
 				case tmrCOMMAND_START :
+			    case tmrCOMMAND_START_FROM_ISR :
+			    case tmrCOMMAND_RESET :
+			    case tmrCOMMAND_RESET_FROM_ISR :
+				case tmrCOMMAND_START_DONT_TRACE :
 					/* Start or restart a timer. */
 					if( prvInsertTimerInActiveList( pxTimer,  xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, xTimeNow, xMessage.u.xTimerParameters.xMessageValue ) == pdTRUE )
 					{
@@ -631,7 +638,7 @@ TickType_t xTimeNow;
 
 						if( pxTimer->uxAutoReload == ( UBaseType_t ) pdTRUE )
 						{
-							xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
+							xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xMessage.u.xTimerParameters.xMessageValue + pxTimer->xTimerPeriodInTicks, NULL, tmrNO_DELAY );
 							configASSERT( xResult );
 							( void ) xResult;
 						}
@@ -647,6 +654,7 @@ TickType_t xTimeNow;
 					break;
 
 				case tmrCOMMAND_STOP :
+				case tmrCOMMAND_STOP_FROM_ISR :
 					/* The timer has already been removed from the active list.
 					There is nothing to do here. */
 					break;
@@ -721,7 +729,7 @@ BaseType_t xResult;
 			}
 			else
 			{
-				xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START, xNextExpireTime, NULL, tmrNO_DELAY );
+				xResult = xTimerGenericCommand( pxTimer, tmrCOMMAND_START_DONT_TRACE, xNextExpireTime, NULL, tmrNO_DELAY );
 				configASSERT( xResult );
 				( void ) xResult;
 			}

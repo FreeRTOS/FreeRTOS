@@ -86,12 +86,22 @@ extern "C" {
 
 /* IDs for commands that can be sent/received on the timer queue.  These are to
 be used solely through the macros that make up the public software timer API,
-as defined below. */
+as defined below.  The commands that are sent from interrupts must use the
+highest numbers as tmrFIRST_FROM_ISR_COMMAND is used to determine if the task
+or interrupt version of the queue send function should be used. */
 #define tmrCOMMAND_EXECUTE_CALLBACK			( ( BaseType_t ) -1 )
 #define tmrCOMMAND_START					( ( BaseType_t ) 0 )
-#define tmrCOMMAND_STOP						( ( BaseType_t ) 1 )
-#define tmrCOMMAND_CHANGE_PERIOD			( ( BaseType_t ) 2 )
-#define tmrCOMMAND_DELETE					( ( BaseType_t ) 3 )
+#define tmrCOMMAND_START_DONT_TRACE			( ( BaseType_t ) 1 )
+#define tmrCOMMAND_RESET					( ( BaseType_t ) 2 )
+#define tmrCOMMAND_STOP						( ( BaseType_t ) 3 )
+#define tmrCOMMAND_CHANGE_PERIOD			( ( BaseType_t ) 4 )
+#define tmrCOMMAND_DELETE					( ( BaseType_t ) 5 )
+
+#define tmrFIRST_FROM_ISR_COMMAND			( ( BaseType_t ) 6 )
+#define tmrCOMMAND_START_FROM_ISR			( ( BaseType_t ) 7 )
+#define tmrCOMMAND_RESET_FROM_ISR			( ( BaseType_t ) 8 )
+#define tmrCOMMAND_STOP_FROM_ISR			( ( BaseType_t ) 9 )
+
 
 /**
  * Type by which software timers are referenced.  For example, a call to
@@ -647,7 +657,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCount() ), NULL, ( xBlockTime ) )
+#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET, ( xTaskGetTickCount() ), NULL, ( xBlockTime ) )
 
 /**
  * BaseType_t xTimerStartFromISR( 	TimerHandle_t xTimer,
@@ -733,7 +743,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerStartFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
  * BaseType_t xTimerStopFromISR( 	TimerHandle_t xTimer,
@@ -796,7 +806,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0, ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerStopFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP_FROM_ISR, 0, ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
  * BaseType_t xTimerChangePeriodFromISR( TimerHandle_t xTimer,
@@ -955,7 +965,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerResetFromISR( xTimer, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET_FROM_ISR, ( xTaskGetTickCountFromISR() ), ( pxHigherPriorityTaskWoken ), 0U )
 
 
 /**

@@ -337,6 +337,7 @@ uint32_t ulAPSR;
 		if( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE )
 		{
 			/* Start the timer that generates the tick ISR. */
+			__asm volatile( "cpsid i" );
 			configSETUP_TICK_INTERRUPT();
 
 //			__asm volatile( "cpsie i" );

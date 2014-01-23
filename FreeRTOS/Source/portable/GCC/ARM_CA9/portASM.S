@@ -52,7 +52,6 @@
     licensing and training services.
 */
 
-
 	.text
 
 	.set SYS_MODE,	0x1f
@@ -241,6 +240,7 @@ FreeRTOS_IRQ_Handler:
 	/* Read value from the interrupt acknowledge register, which is stored in r0
 	for future parameter and interrupt clearing use. */
 	LDR 	r2, ulICCIARConst
+	LDR		r2, [r2]
 	LDR		r0, [r2]
 
 	/* Ensure bit 2 of the stack pointer is clear.  r2 holds the bit 2 value for
@@ -259,6 +259,7 @@ FreeRTOS_IRQ_Handler:
 
 	/* Write the value read from ICCIAR to ICCEOIR. */
 	LDR 	r4, ulICCEOIRConst
+	LDR		r4, [r4]
 	STR		r0, [r4]
 
 	/* Restore the old nesting count. */

@@ -114,6 +114,10 @@
 	#warning configINSTALL_FREERTOS_VECTOR_TABLE was undefined.  Defaulting configINSTALL_FREERTOS_VECTOR_TABLE to 0.
 #endif
 
+#ifndef configCLEAR_TICK_INTERRUPT
+	#define configCLEAR_TICK_INTERRUPT()
+#endif
+
 /* A critical section is exited when the critical section nesting count reaches
 this value. */
 #define portNO_CRITICAL_NESTING			( ( uint32_t ) 0 )
@@ -151,23 +155,23 @@ mode. */
 determined priority level.  Sometimes it is necessary to turn interrupt off in
 the CPU itself before modifying certain hardware registers. */
 #define portCPU_IRQ_DISABLE()										\
-	__asm volatile ( "CPSID i" );											\
-	__asm volatile ( "DSB" );												\
+	__asm volatile ( "CPSID i" );									\
+	__asm volatile ( "DSB" );										\
 	__asm volatile ( "ISB" );
 
 #define portCPU_IRQ_ENABLE()										\
-	__asm volatile ( "CPSIE i" );											\
-	__asm volatile ( "DSB" );												\
+	__asm volatile ( "CPSIE i" );									\
+	__asm volatile ( "DSB" );										\
 	__asm volatile ( "ISB" );
 
 
 /* Macro to unmask all interrupt priorities. */
-#define portCLEAR_INTERRUPT_MASK()											\
-{																			\
+#define portCLEAR_INTERRUPT_MASK()									\
+{																	\
 	portCPU_IRQ_DISABLE();											\
-	portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;					\
-	__asm(	"DSB		\n"													\
-			"ISB		\n" );												\
+	portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;			\
+	__asm(	"DSB		\n"											\
+			"ISB		\n" );										\
 	portCPU_IRQ_ENABLE();											\
 }
 
@@ -426,6 +430,7 @@ void FreeRTOS_Tick_Handler( void )
 
 	/* Ensure all interrupt priorities are active again. */
 	portCLEAR_INTERRUPT_MASK();
+	configCLEAR_TICK_INTERRUPT();
 }
 /*-----------------------------------------------------------*/
 

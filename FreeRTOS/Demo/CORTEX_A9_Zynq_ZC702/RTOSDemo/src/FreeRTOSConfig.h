@@ -126,7 +126,7 @@
 #define configQUEUE_REGISTRY_SIZE				8
 #define configCHECK_FOR_STACK_OVERFLOW			2
 #define configUSE_RECURSIVE_MUTEXES				1
-#define configUSE_MALLOC_FAILED_HOOK			0
+#define configUSE_MALLOC_FAILED_HOOK			1
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configUSE_QUEUE_SETS					1
@@ -200,6 +200,9 @@ void vConfigureTickInterrupt( void );
 #define configSETUP_TICK_INTERRUPT() vConfigureTickInterrupt()
 
 #define configINSTALL_FREERTOS_VECTOR_TABLE 1
+
+void vClearTickInterrupt( void );
+#define configCLEAR_TICK_INTERRUPT() vClearTickInterrupt()
 
 #endif /* FREERTOS_CONFIG_H */
 

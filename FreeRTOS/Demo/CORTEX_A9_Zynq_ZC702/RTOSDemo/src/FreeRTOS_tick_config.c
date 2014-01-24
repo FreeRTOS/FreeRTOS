@@ -73,6 +73,8 @@
 
 #define XSCUTIMER_CLOCK_HZ ( XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2UL )
 
+static XScuTimer xTimer;
+
 /*
  * The application must provide a function that configures a peripheral to
  * create the FreeRTOS tick interrupt, then define configSETUP_TICK_INTERRUPT()
@@ -86,7 +88,6 @@ BaseType_t xStatus;
 extern void FreeRTOS_Tick_Handler( void );
 XScuTimer_Config *pxTimerConfig;
 XScuGic_Config *pxGICConfig;
-XScuTimer xTimer;
 
 	/* This function is called with the IRQ interrupt disabled, and the IRQ
 	interrupt should be left disabled.  It is enabled automatically when the
@@ -121,6 +122,7 @@ XScuTimer xTimer;
 	XScuGic_Enable( &xInterruptController, XPAR_SCUTIMER_INTR );
 
 	/* Enable the interrupt in the xTimer itself. */
+	vClearTickInterrupt();
 	XScuTimer_EnableInterrupt( &xTimer );
 }
 /*-----------------------------------------------------------*/
@@ -137,6 +139,12 @@ unsigned long ulGetRunTimeCounterValue( void )
 
 void vInitialiseRunTimeStats( void )
 {
+}
+/*-----------------------------------------------------------*/
+
+void vClearTickInterrupt( void )
+{
+	XScuTimer_ClearInterruptStatus( &xTimer );
 }
 /*-----------------------------------------------------------*/
 

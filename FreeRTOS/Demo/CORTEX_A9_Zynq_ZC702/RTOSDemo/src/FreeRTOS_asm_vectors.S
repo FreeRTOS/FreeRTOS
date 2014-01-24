@@ -68,20 +68,15 @@
 .org 0
 .text
 
-.globl _boot
-.globl _freertos_vector_table
+.global _boot
+.global _freertos_vector_table
 
-.globl FIQInterrupt
-//.globl IRQInterrupt
-//.global SWInterrupt
+.global FIQInterrupt
 .global DataAbortInterrupt
 .global PrefetchAbortInterrupt
 
 .extern FreeRTOS_IRQ_Handler
 .extern FreeRTOS_SWI_Handler
-
-//.globl IRQHandler
-//.globl prof_pc
 
 .section .freertos_vectors
 _freertos_vector_table:

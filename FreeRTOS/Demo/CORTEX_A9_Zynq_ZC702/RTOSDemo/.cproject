@@ -36,7 +36,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/portable/GCC/ARM_CA9}&quot;"/>
 								</option>
-								<option id="xilinx.gnu.compiler.misc.other.591008063" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0" valueType="string"/>
+								<option id="xilinx.gnu.compiler.misc.other.591008063" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -Wextra" valueType="string"/>
 								<inputType id="xilinx.gnu.arm.c.compiler.input.1279195555" name="C source files" superClass="xilinx.gnu.arm.c.compiler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.arm.cxx.toolchain.compiler.debug.309485210" name="ARM g++ compiler" superClass="xilinx.gnu.arm.cxx.toolchain.compiler.debug">
@@ -55,8 +55,8 @@
 									<listOptionValue builtIn="false" value="-Wl,--start-group,-lxil,-lgcc,-lc,--end-group"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.609053533" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.ldflags.1670905029" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.other.1460714584" superClass="xilinx.gnu.c.link.option.other" valueType="stringList">
+								<option id="xilinx.gnu.c.link.option.ldflags.1670905029" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" value="" valueType="string"/>
+								<option id="xilinx.gnu.c.link.option.other.1460714584" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other" valueType="stringList">
 									<listOptionValue builtIn="false" value="-Map=rtosdemo.map"/>
 								</option>
 								<inputType id="xilinx.gnu.linker.input.1414431390" superClass="xilinx.gnu.linker.input">

@@ -128,12 +128,6 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/*
- * Creates and verifies different files on the volume, demonstrating the use of
- * various different API functions.
- */
-extern void vCreateAndVerifySampleFiles( void );
-
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -159,50 +153,30 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-int Status;
-XScuGic InterruptController; 	/* Interrupt controller instance */
-extern void FreeRTOS_IRQ_Handler( void );
-extern void FreeRTOS_SWI_Handler( void );
+BaseType_t xStatus;
+XScuGic_Config *pxGICConfig;
+XScuGic xInterruptController;
 
-	__asm volatile ( "cpsid i" );
-	Xil_ExceptionInit();
+	/* Ensure no interrupts execute while the scheduler is in an inconsistent
+	state.  Interrupts are automatically enabled when the scheduler is
+	started. */
+	portDISABLE_INTERRUPTS();
 
-	XScuGic_Config *IntcConfig; /* The configuration parameters of the
-									interrupt controller */
-	/*
-	 * Initialize the interrupt controller driver
-	 */
-	IntcConfig = XScuGic_LookupConfig(XPAR_SCUGIC_SINGLE_DEVICE_ID);
-	configASSERT( IntcConfig );
-	configASSERT( IntcConfig->CpuBaseAddress == ( configINTERRUPT_CONTROLLER_BASE_ADDRESS + configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ) );
-	configASSERT( IntcConfig->DistBaseAddress == configINTERRUPT_CONTROLLER_BASE_ADDRESS );
+	/* Obtain the configuration of the GIC. */
+	pxGICConfig = XScuGic_LookupConfig( XPAR_SCUGIC_SINGLE_DEVICE_ID );
 
-	Status = XScuGic_CfgInitialize(&InterruptController, IntcConfig, IntcConfig->CpuBaseAddress );
-	configASSERT( Status == XST_SUCCESS );
+	/* Sanity check the FreeRTOSConfig.h settings are correct for the
+	hardware. */
+	configASSERT( pxGICConfig );
+	configASSERT( pxGICConfig->CpuBaseAddress == ( configINTERRUPT_CONTROLLER_BASE_ADDRESS + configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ) );
+	configASSERT( pxGICConfig->DistBaseAddress == configINTERRUPT_CONTROLLER_BASE_ADDRESS );
 
-//	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_IRQ_INT,	(Xil_ExceptionHandler)FreeRTOS_IRQ_Handler,	&InterruptController);
-//	Xil_ExceptionRegisterHandler( XIL_EXCEPTION_ID_SWI_INT,	(Xil_ExceptionHandler)FreeRTOS_SWI_Handler,	&InterruptController);
+	/* Install a default handler for each GIC interrupt. */
+	xStatus = XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
+	configASSERT( xStatus == XST_SUCCESS );
 
-//	Xil_ExceptionEnableMask( XIL_EXCEPTION_ALL );
-//	Xil_ExceptionEnable();
-
-	/*
-	 * Connect the interrupt controller interrupt handler to the hardware
-	 * interrupt handling logic in the ARM processor.
-	 */
-#if 0
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_UNDEFINED_INT,
-	                (Xil_ExceptionHandler)FreeRTOS_ExHandler,
-	                (void *)4);
-
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_PREFETCH_ABORT_INT,
-	                (Xil_ExceptionHandler)FreeRTOS_ExHandler,
-	                (void *)4);
-
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_DATA_ABORT_INT,
-	                (Xil_ExceptionHandler)FreeRTOS_ExHandler,
-	                (void *)8);
-#endif
+	/* Initialise the LED port. */
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 

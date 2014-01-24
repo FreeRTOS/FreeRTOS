@@ -148,7 +148,7 @@ static xQueueHandle xQueue = NULL;
 void main_blinky( void )
 {
 	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
 	if( xQueue != NULL )
 	{

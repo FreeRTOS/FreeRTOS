@@ -147,18 +147,28 @@ point is zero. */
 mode. */
 #define portAPSR_USER_MODE				( 0x10 )
 
+/* The critical section macros only mask interrupts up to an application
+determined priority level.  Sometimes it is necessary to turn interrupt off in
+the CPU itself before modifying certain hardware registers. */
+#define portCPU_IRQ_DISABLE()										\
+	__asm volatile ( "CPSID i" );											\
+	__asm volatile ( "DSB" );												\
+	__asm volatile ( "ISB" );
+
+#define portCPU_IRQ_ENABLE()										\
+	__asm volatile ( "CPSIE i" );											\
+	__asm volatile ( "DSB" );												\
+	__asm volatile ( "ISB" );
+
+
 /* Macro to unmask all interrupt priorities. */
 #define portCLEAR_INTERRUPT_MASK()											\
 {																			\
-	__asm volatile ( "cpsid i" );											\
-	__asm volatile ( "dsb" );												\
-	__asm volatile ( "isb" );												\
+	portCPU_IRQ_DISABLE();											\
 	portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;					\
 	__asm(	"DSB		\n"													\
 			"ISB		\n" );												\
-	__asm volatile( "cpsie i" );											\
-	__asm volatile ( "dsb" );												\
-	__asm volatile ( "isb" );												\
+	portCPU_IRQ_ENABLE();											\
 }
 
 #define portINTERRUPT_PRIORITY_REGISTER_OFFSET		0x400UL
@@ -322,6 +332,8 @@ uint32_t ulAPSR;
 
 	#if configINSTALL_FREERTOS_VECTOR_TABLE == 1
 	{
+		extern void vPortInstallFreeRTOSVectorTable( void );
+
 		vPortInstallFreeRTOSVectorTable();
 	}
 	#endif
@@ -336,11 +348,12 @@ uint32_t ulAPSR;
 
 		if( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE )
 		{
-			/* Start the timer that generates the tick ISR. */
-			__asm volatile( "cpsid i" );
+			/* Start the timer that generates the tick ISR.  Interrupts are
+			turned off in the CPU itself to ensure the tick does not execute
+			while the scheduler is being started.  Interrupts are automatically
+			turned back on in the CPU when the first task starts executing. */
+			portCPU_IRQ_DISABLE();
 			configSETUP_TICK_INTERRUPT();
-
-//			__asm volatile( "cpsie i" );
 			vPortRestoreTaskContext();
 		}
 	}
@@ -362,7 +375,7 @@ void vPortEndScheduler( void )
 
 void vPortEnterCritical( void )
 {
-	/* Disable interrupts as per portDISABLE_INTERRUPTS(); 	*/
+	/* Mask interrupts up to the max syscall interrupt priority. */
 	ulPortSetInterruptMask();
 
 	/* Now interrupts are disabled ulCriticalNesting can be accessed
@@ -396,16 +409,14 @@ void FreeRTOS_Tick_Handler( void )
 {
 	/* Set interrupt mask before altering scheduler structures.   The tick
 	handler runs at the lowest priority, so interrupts cannot already be masked,
-	so there is no need to save and restore the current mask value. */
-	__asm volatile( "cpsid i" );
-	__asm volatile ( "dsb" );
-	__asm volatile ( "isb" );
+	so there is no need to save and restore the current mask value.  It is
+	necessary to turn off interrupts in the CPU itself while the ICCPMR is being
+	updated. */
+	portCPU_IRQ_DISABLE();
 	portICCPMR_PRIORITY_MASK_REGISTER = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 	__asm(	"dsb		\n"
-			"isb		\n"
-			"cpsie i	\n"
-			"dsb		\n"
-			"isb" );
+			"isb		\n" );
+	portCPU_IRQ_ENABLE();
 
 	/* Increment the RTOS tick. */
 	if( xTaskIncrementTick() != pdFALSE )
@@ -444,9 +455,9 @@ uint32_t ulPortSetInterruptMask( void )
 {
 uint32_t ulReturn;
 
-	__asm volatile ( "cpsid i" );
-	__asm volatile ( "dsb" );
-	__asm volatile ( "isb" );
+	/* Interrupt in the CPU must be turned off while the ICCPMR is being
+	updated. */
+	portCPU_IRQ_DISABLE();
 	if( portICCPMR_PRIORITY_MASK_REGISTER == ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) )
 	{
 		/* Interrupts were already masked. */
@@ -459,9 +470,7 @@ uint32_t ulReturn;
 		__asm(	"dsb		\n"
 				"isb		\n" );
 	}
-	__asm volatile ( "cpsie i" );
-	__asm volatile ( "dsb" );
-	__asm volatile ( "isb" );
+	portCPU_IRQ_ENABLE();
 
 	return ulReturn;
 }

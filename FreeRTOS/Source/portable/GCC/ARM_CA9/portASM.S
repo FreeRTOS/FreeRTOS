@@ -256,6 +256,8 @@ FreeRTOS_IRQ_Handler:
 	ADD		sp, sp, r2
 
 	CPSID	i
+	DSB
+	ISB
 
 	/* Write the value read from ICCIAR to ICCEOIR. */
 	LDR 	r4, ulICCEOIRConst

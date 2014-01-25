@@ -663,6 +663,9 @@ void vEventGroupDelete( EventGroupHandle_t xEventGroup );
 /* For internal use only. */
 void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet );
 
+#if (configUSE_TRACE_FACILITY == 1)
+	UBaseType_t uxEventGroupGetNumber( void* xEventGroup );
+#endif
 
 #ifdef __cplusplus
 }

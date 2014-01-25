@@ -512,7 +512,7 @@ QueueHandle_t xReturn = NULL;
 
 #if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
-	BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xBlockTime )
+	BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
 	Queue_t * const pxMutex = ( Queue_t * ) xMutex;
@@ -531,7 +531,7 @@ QueueHandle_t xReturn = NULL;
 		}
 		else
 		{
-			xReturn = xQueueGenericReceive( pxMutex, NULL, xBlockTime, pdFALSE );
+			xReturn = xQueueGenericReceive( pxMutex, NULL, xTicksToWait, pdFALSE );
 
 			/* pdPASS will only be returned if we successfully obtained the mutex,
 			we may have blocked to reach here. */
@@ -2156,6 +2156,8 @@ BaseType_t xReturn;
 				/* Store the information on this queue. */
 				xQueueRegistry[ ux ].pcQueueName = pcQueueName;
 				xQueueRegistry[ ux ].xHandle = xQueue;
+
+				traceQUEUE_REGISTRY_ADD( xQueue, pcQueueName );
 				break;
 			}
 			else
@@ -2251,26 +2253,26 @@ BaseType_t xReturn;
 	{
 	BaseType_t xReturn;
 
-		if( ( ( Queue_t * ) xQueueOrSemaphore )->pxQueueSetContainer != NULL )
+		taskENTER_CRITICAL();
 		{
-			/* Cannot add a queue/semaphore to more than one queue set. */
-			xReturn = pdFAIL;
-		}
-		else if( ( ( Queue_t * ) xQueueOrSemaphore )->uxMessagesWaiting != ( UBaseType_t ) 0 )
-		{
-			/* Cannot add a queue/semaphore to a queue set if there are already
-			items in the queue/semaphore. */
-			xReturn = pdFAIL;
-		}
-		else
-		{
-			taskENTER_CRITICAL();
+			if( ( ( Queue_t * ) xQueueOrSemaphore )->pxQueueSetContainer != NULL )
+			{
+				/* Cannot add a queue/semaphore to more than one queue set. */
+				xReturn = pdFAIL;
+			}
+			else if( ( ( Queue_t * ) xQueueOrSemaphore )->uxMessagesWaiting != ( UBaseType_t ) 0 )
+			{
+				/* Cannot add a queue/semaphore to a queue set if there are already
+				items in the queue/semaphore. */
+				xReturn = pdFAIL;
+			}
+			else
 			{
 				( ( Queue_t * ) xQueueOrSemaphore )->pxQueueSetContainer = xQueueSet;
+				xReturn = pdPASS;
 			}
-			taskEXIT_CRITICAL();
-			xReturn = pdPASS;
 		}
+		taskEXIT_CRITICAL();
 
 		return xReturn;
 	}
@@ -2316,11 +2318,11 @@ BaseType_t xReturn;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t const xBlockTimeTicks )
+	QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t const xTicksToWait )
 	{
 	QueueSetMemberHandle_t xReturn = NULL;
 
-		( void ) xQueueGenericReceive( ( QueueHandle_t ) xQueueSet, &xReturn, xBlockTimeTicks, pdFALSE ); /*lint !e961 Casting from one typedef to another is not redundant. */
+		( void ) xQueueGenericReceive( ( QueueHandle_t ) xQueueSet, &xReturn, xTicksToWait, pdFALSE ); /*lint !e961 Casting from one typedef to another is not redundant. */
 		return xReturn;
 	}
 

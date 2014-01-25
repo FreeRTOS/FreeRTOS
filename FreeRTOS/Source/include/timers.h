@@ -89,18 +89,19 @@ be used solely through the macros that make up the public software timer API,
 as defined below.  The commands that are sent from interrupts must use the
 highest numbers as tmrFIRST_FROM_ISR_COMMAND is used to determine if the task
 or interrupt version of the queue send function should be used. */
-#define tmrCOMMAND_EXECUTE_CALLBACK			( ( BaseType_t ) -1 )
-#define tmrCOMMAND_START					( ( BaseType_t ) 0 )
-#define tmrCOMMAND_START_DONT_TRACE			( ( BaseType_t ) 1 )
-#define tmrCOMMAND_RESET					( ( BaseType_t ) 2 )
-#define tmrCOMMAND_STOP						( ( BaseType_t ) 3 )
-#define tmrCOMMAND_CHANGE_PERIOD			( ( BaseType_t ) 4 )
-#define tmrCOMMAND_DELETE					( ( BaseType_t ) 5 )
+#define tmrCOMMAND_EXECUTE_CALLBACK_FROM_ISR 	( ( BaseType_t ) -2 )
+#define tmrCOMMAND_EXECUTE_CALLBACK				( ( BaseType_t ) -1 )
+#define tmrCOMMAND_START_DONT_TRACE				( ( BaseType_t ) 0 )
+#define tmrCOMMAND_START					    ( ( BaseType_t ) 1 )
+#define tmrCOMMAND_RESET						( ( BaseType_t ) 2 )
+#define tmrCOMMAND_STOP							( ( BaseType_t ) 3 )
+#define tmrCOMMAND_CHANGE_PERIOD				( ( BaseType_t ) 4 )
+#define tmrCOMMAND_DELETE						( ( BaseType_t ) 5 )
 
-#define tmrFIRST_FROM_ISR_COMMAND			( ( BaseType_t ) 6 )
-#define tmrCOMMAND_START_FROM_ISR			( ( BaseType_t ) 7 )
-#define tmrCOMMAND_RESET_FROM_ISR			( ( BaseType_t ) 8 )
-#define tmrCOMMAND_STOP_FROM_ISR			( ( BaseType_t ) 9 )
+#define tmrFIRST_FROM_ISR_COMMAND				( ( BaseType_t ) 6 )
+#define tmrCOMMAND_START_FROM_ISR				( ( BaseType_t ) 6 )
+#define tmrCOMMAND_RESET_FROM_ISR				( ( BaseType_t ) 7 )
+#define tmrCOMMAND_STOP_FROM_ISR				( ( BaseType_t ) 8 )
 
 
 /**
@@ -111,13 +112,13 @@ or interrupt version of the queue send function should be used. */
  */
 typedef void * TimerHandle_t;
 
-/* 
- * Defines the prototype to which timer callback functions must conform. 
+/*
+ * Defines the prototype to which timer callback functions must conform.
  */
 typedef void (*TimerCallbackFunction_t)( TimerHandle_t xTimer );
 
-/* 
- * Defines the prototype to which functions used with the 
+/*
+ * Defines the prototype to which functions used with the
  * xTimerPendFunctionCallFromISR() function must conform.
  */
 typedef void (*PendedFunction_t)( void *, uint32_t );
@@ -324,7 +325,7 @@ BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
 TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 
 /**
- * BaseType_t xTimerStart( TimerHandle_t xTimer, TickType_t xBlockTime );
+ * BaseType_t xTimerStart( TimerHandle_t xTimer, TickType_t xTicksToWait );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
@@ -353,14 +354,14 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  * @param xTimer The handle of the timer being started/restarted.
  *
- * @param xBlockTime Specifies the time, in ticks, that the calling task should
+ * @param xTicksToWait Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the start command to be successfully
  * sent to the timer command queue, should the queue already be full when
- * xTimerStart() was called.  xBlockTime is ignored if xTimerStart() is called
+ * xTimerStart() was called.  xTicksToWait is ignored if xTimerStart() is called
  * before the scheduler is started.
  *
  * @return pdFAIL will be returned if the start command could not be sent to
- * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
+ * the timer command queue even after xTicksToWait ticks had passed.  pdPASS will
  * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system, although the
@@ -373,10 +374,10 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * See the xTimerCreate() API function example usage scenario.
  *
  */
-#define xTimerStart( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCount() ), NULL, ( xBlockTime ) )
+#define xTimerStart( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_START, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
 
 /**
- * BaseType_t xTimerStop( TimerHandle_t xTimer, TickType_t xBlockTime );
+ * BaseType_t xTimerStop( TimerHandle_t xTimer, TickType_t xTicksToWait );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
@@ -396,14 +397,14 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  * @param xTimer The handle of the timer being stopped.
  *
- * @param xBlockTime Specifies the time, in ticks, that the calling task should
+ * @param xTicksToWait Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the stop command to be successfully
  * sent to the timer command queue, should the queue already be full when
- * xTimerStop() was called.  xBlockTime is ignored if xTimerStop() is called
+ * xTimerStop() was called.  xTicksToWait is ignored if xTimerStop() is called
  * before the scheduler is started.
  *
  * @return pdFAIL will be returned if the stop command could not be sent to
- * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
+ * the timer command queue even after xTicksToWait ticks had passed.  pdPASS will
  * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system.  The timer
@@ -415,12 +416,12 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * See the xTimerCreate() API function example usage scenario.
  *
  */
-#define xTimerStop( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0U, NULL, ( xBlockTime ) )
+#define xTimerStop( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_STOP, 0U, NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerChangePeriod( 	TimerHandle_t xTimer,
  *										TickType_t xNewPeriod,
- *										TickType_t xBlockTime );
+ *										TickType_t xTicksToWait );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
@@ -448,14 +449,14 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than
  * or equal to 1000.
  *
- * @param xBlockTime Specifies the time, in ticks, that the calling task should
+ * @param xTicksToWait Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the change period command to be
  * successfully sent to the timer command queue, should the queue already be
- * full when xTimerChangePeriod() was called.  xBlockTime is ignored if
+ * full when xTimerChangePeriod() was called.  xTicksToWait is ignored if
  * xTimerChangePeriod() is called before the scheduler is started.
  *
  * @return pdFAIL will be returned if the change period command could not be
- * sent to the timer command queue even after xBlockTime ticks had passed.
+ * sent to the timer command queue even after xTicksToWait ticks had passed.
  * pdPASS will be returned if the command was successfully sent to the timer
  * command queue.  When the command is actually processed will depend on the
  * priority of the timer service/daemon task relative to other tasks in the
@@ -495,10 +496,10 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
- #define xTimerChangePeriod( xTimer, xNewPeriod, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xBlockTime ) )
+ #define xTimerChangePeriod( xTimer, xNewPeriod, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), NULL, ( xTicksToWait ) )
 
 /**
- * BaseType_t xTimerDelete( TimerHandle_t xTimer, TickType_t xBlockTime );
+ * BaseType_t xTimerDelete( TimerHandle_t xTimer, TickType_t xTicksToWait );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
@@ -515,14 +516,14 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  * @param xTimer The handle of the timer being deleted.
  *
- * @param xBlockTime Specifies the time, in ticks, that the calling task should
+ * @param xTicksToWait Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the delete command to be
  * successfully sent to the timer command queue, should the queue already be
- * full when xTimerDelete() was called.  xBlockTime is ignored if xTimerDelete()
+ * full when xTimerDelete() was called.  xTicksToWait is ignored if xTimerDelete()
  * is called before the scheduler is started.
  *
  * @return pdFAIL will be returned if the delete command could not be sent to
- * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
+ * the timer command queue even after xTicksToWait ticks had passed.  pdPASS will
  * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system.  The timer
@@ -533,10 +534,10 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  * See the xTimerChangePeriod() API function example usage scenario.
  */
-#define xTimerDelete( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_DELETE, 0U, NULL, ( xBlockTime ) )
+#define xTimerDelete( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_DELETE, 0U, NULL, ( xTicksToWait ) )
 
 /**
- * BaseType_t xTimerReset( TimerHandle_t xTimer, TickType_t xBlockTime );
+ * BaseType_t xTimerReset( TimerHandle_t xTimer, TickType_t xTicksToWait );
  *
  * Timer functionality is provided by a timer service/daemon task.  Many of the
  * public FreeRTOS timer API functions send commands to the timer service task
@@ -567,14 +568,14 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  * @param xTimer The handle of the timer being reset/started/restarted.
  *
- * @param xBlockTime Specifies the time, in ticks, that the calling task should
+ * @param xTicksToWait Specifies the time, in ticks, that the calling task should
  * be held in the Blocked state to wait for the reset command to be successfully
  * sent to the timer command queue, should the queue already be full when
- * xTimerReset() was called.  xBlockTime is ignored if xTimerReset() is called
+ * xTimerReset() was called.  xTicksToWait is ignored if xTimerReset() is called
  * before the scheduler is started.
  *
  * @return pdFAIL will be returned if the reset command could not be sent to
- * the timer command queue even after xBlockTime ticks had passed.  pdPASS will
+ * the timer command queue even after xTicksToWait ticks had passed.  pdPASS will
  * be returned if the command was successfully sent to the timer command queue.
  * When the command is actually processed will depend on the priority of the
  * timer service/daemon task relative to other tasks in the system, although the
@@ -657,7 +658,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerReset( xTimer, xBlockTime ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET, ( xTaskGetTickCount() ), NULL, ( xBlockTime ) )
+#define xTimerReset( xTimer, xTicksToWait ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_RESET, ( xTaskGetTickCount() ), NULL, ( xTicksToWait ) )
 
 /**
  * BaseType_t xTimerStartFromISR( 	TimerHandle_t xTimer,
@@ -976,13 +977,13 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  *
  *
  * Used from application interrupt service routines to defer the execution of a
- * function to the RTOS daemon task (the timer service task, hence this function 
+ * function to the RTOS daemon task (the timer service task, hence this function
  * is implemented in timers.c and is prefixed with 'Timer').
  *
  * Ideally an interrupt service routine (ISR) is kept as short as possible, but
  * sometimes an ISR either has a lot of processing to do, or needs to perform
- * processing that is not deterministic.  In these cases 
- * xTimerPendFunctionCallFromISR() can be used to defer processing of a function 
+ * processing that is not deterministic.  In these cases
+ * xTimerPendFunctionCallFromISR() can be used to defer processing of a function
  * to the RTOS daemon task.
  *
  * A mechanism is provided that allows the interrupt to return directly to the
@@ -1058,12 +1059,46 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  */
 BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, BaseType_t *pxHigherPriorityTaskWoken );
 
+ /**
+  * BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend,
+  *                                    void *pvParameter1,
+  *                                    uint32_t ulParameter2,
+  *                                    TickType_t xTicksToWait );
+  *
+  *
+  * Used to defer the execution of a function to the RTOS daemon task (the timer
+  * service task, hence this function is implemented in timers.c and is prefixed
+  * with 'Timer').
+  *
+  * @param xFunctionToPend The function to execute from the timer service/
+  * daemon task.  The function must conform to the PendedFunction_t
+  * prototype.
+  *
+  * @param pvParameter1 The value of the callback function's first parameter.
+  * The parameter has a void * type to allow it to be used to pass any type.
+  * For example, unsigned longs can be cast to a void *, or the void * can be
+  * used to point to a structure.
+  *
+  * @param ulParameter2 The value of the callback function's second parameter.
+  *
+  * @param xTicksToWait Calling this function will result in a message being
+  * sent to the timer daemon task on a queue.  xTicksToWait is the amount of
+  * time the calling task should remain in the Blocked state (so not using any
+  * processing time) for space to become available on the timer queue if the
+  * queue is found to be full.
+  *
+  * @return pdPASS is returned if the message was successfully sent to the
+  * timer daemon task, otherwise pdFALSE is returned.
+  *
+  */
+BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait );
+
 /*
  * Functions beyond this part are not part of the public API and are intended
  * for use by the kernel only.
  */
 BaseType_t xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
-BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xBlockTime ) PRIVILEGED_FUNCTION;
+BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 #ifdef __cplusplus
 }

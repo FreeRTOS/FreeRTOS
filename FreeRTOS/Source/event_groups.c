@@ -87,8 +87,8 @@ privileged Vs unprivileged linkage and placement. */
 	#error configUSE_TIMERS must be set to 1 to make the xEventGroupSetBitFromISR() function available.
 #endif
 
-#if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( INCLUDE_xTimerPendFunctionCallFromISR == 0 )
-	#error INCLUDE_xTimerPendFunctionCallFromISR must also be set to one to make the xEventGroupSetBitFromISR() function available.
+#if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 0 )
+	#error INCLUDE_xTimerPendFunctionCall must also be set to one to make the xEventGroupSetBitFromISR() function available.
 #endif
 
 /* The following bit fields convey control information in a task's event list
@@ -110,6 +110,11 @@ typedef struct EVENT_GROUP_DEFINITION
 {
 	EventBits_t uxEventBits;
 	List_t xTasksWaitingForBits;		/*< List of tasks waiting for a bit to be set. */
+
+	#if( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t uxEventGroupNumber;
+	#endif
+
 } EventGroup_t;
 
 /*-----------------------------------------------------------*/
@@ -151,6 +156,7 @@ EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t u
 EventBits_t uxOriginalBitValue, uxReturn;
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 BaseType_t xAlreadyYielded;
+BaseType_t xTimeoutOccurred = pdFALSE;
 
 	configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
 	configASSERT( uxBitsToWaitFor != 0 );
@@ -162,8 +168,6 @@ BaseType_t xAlreadyYielded;
 
 	vTaskSuspendAll();
 	{
-		traceEVENT_GROUP_SYNC_START( xEventGroup, uxBitsToSet );
-
 		uxOriginalBitValue = pxEventBits->uxEventBits;
 
 		( void ) xEventGroupSetBits( xEventGroup, uxBitsToSet );
@@ -183,6 +187,8 @@ BaseType_t xAlreadyYielded;
 		{
 			if( xTicksToWait != ( TickType_t ) 0 )
 			{
+				traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor );
+
 				/* Store the bits that the calling task is waiting for in the
 				task's event list item so the kernel knows when a match is
 				found.  Then enter the blocked state. */
@@ -242,6 +248,8 @@ BaseType_t xAlreadyYielded;
 				}
 			}
 			taskEXIT_CRITICAL();
+
+			xTimeoutOccurred = pdTRUE;
 		}
 		else
 		{
@@ -251,7 +259,7 @@ BaseType_t xAlreadyYielded;
 		}
 	}
 
-	traceEVENT_GROUP_SYNC_END( xEventGroup, uxReturn );
+	traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
@@ -261,6 +269,7 @@ EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 EventBits_t uxReturn, uxControlBits = 0;
 BaseType_t xWaitConditionMet, xAlreadyYielded;
+BaseType_t xTimeoutOccurred = pdFALSE;
 
 	/* Check the user is not attempting to wait on the bits used by the kernel
 	itself, and that at least one bit is being requested. */
@@ -275,8 +284,6 @@ BaseType_t xWaitConditionMet, xAlreadyYielded;
 	vTaskSuspendAll();
 	{
 		const EventBits_t uxCurrentEventBits = pxEventBits->uxEventBits;
-
-		traceEVENT_GROUP_WAIT_BITS_START( xEventGroup, uxBitsToWaitFor );
 
 		/* Check to see if the wait condition is already met or not. */
 		xWaitConditionMet = prvTestWaitCondition( uxCurrentEventBits, uxBitsToWaitFor, xWaitForAllBits );
@@ -337,6 +344,8 @@ BaseType_t xWaitConditionMet, xAlreadyYielded;
 			some compilers mistakenly generate a warning about the variable
 			being returned without being set if it is not done. */
 			uxReturn = 0;
+
+			traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor );
 		}
 	}
 	xAlreadyYielded = xTaskResumeAll();
@@ -384,6 +393,8 @@ BaseType_t xWaitConditionMet, xAlreadyYielded;
 				}
 			}
 			taskEXIT_CRITICAL();
+
+			xTimeoutOccurred = pdFALSE;
 		}
 		else
 		{
@@ -392,8 +403,7 @@ BaseType_t xWaitConditionMet, xAlreadyYielded;
 			uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
 		}
 	}
-
-	traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxReturn );
+	traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
@@ -608,5 +618,24 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 	return xWaitConditionMet;
 }
+/*-----------------------------------------------------------*/
 
+#if (configUSE_TRACE_FACILITY == 1)
+	UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
+	{
+	UBaseType_t xReturn;
+	EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
+
+		if( xEventGroup == NULL )
+		{
+			xReturn = 0;
+		}
+		else
+		{
+			xReturn = pxEventBits->uxEventGroupNumber;
+		}
+
+		return xReturn;
+	}
+#endif
 

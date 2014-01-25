@@ -249,8 +249,8 @@ is included as it is used by the port layer. */
 	#define INCLUDE_xEventGroupSetBitFromISR 0
 #endif
 
-#ifndef INCLUDE_xTimerPendFunctionCallFromISR
-	#define INCLUDE_xTimerPendFunctionCallFromISR 0
+#ifndef INCLUDE_xTimerPendFunctionCall
+	#define INCLUDE_xTimerPendFunctionCall 0
 #endif
 
 #ifndef configASSERT
@@ -567,20 +567,20 @@ is included as it is used by the port layer. */
 	#define traceEVENT_GROUP_CREATE_FAILED()
 #endif
 
-#ifndef traceEVENT_GROUP_SYNC_START
-	#define traceEVENT_GROUP_SYNC_START( xEventGroup, uxBitsToSet )
+#ifndef traceEVENT_GROUP_SYNC_BLOCK
+	#define traceEVENT_GROUP_SYNC_BLOCK( xEventGroup, uxBitsToSet, uxBitsToWaitFor )
 #endif
 
 #ifndef traceEVENT_GROUP_SYNC_END
-	#define traceEVENT_GROUP_SYNC_END( xEventGroup, uxReturn )
+	#define traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred ) ( void ) xTimeoutOccurred
 #endif
 
-#ifndef traceEVENT_GROUP_WAIT_BITS_START
-	#define traceEVENT_GROUP_WAIT_BITS_START( xEventGroup, uxBitsToWaitFor )
+#ifndef traceEVENT_GROUP_WAIT_BITS_BLOCK
+	#define traceEVENT_GROUP_WAIT_BITS_BLOCK( xEventGroup, uxBitsToWaitFor )
 #endif
 
 #ifndef traceEVENT_GROUP_WAIT_BITS_END
-	#define traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxReturn )
+	#define traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred ) ( void ) xTimeoutOccurred
 #endif
 
 #ifndef traceEVENT_GROUP_CLEAR_BITS
@@ -595,8 +595,24 @@ is included as it is used by the port layer. */
 	#define traceEVENT_GROUP_SET_BITS( xEventGroup, uxBitsToSet )
 #endif
 
+#ifndef traceEVENT_GROUP_SET_BITS_FROM_ISR
+	#define traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet )
+#endif
+
 #ifndef traceEVENT_GROUP_DELETE
 	#define traceEVENT_GROUP_DELETE( xEventGroup )
+#endif
+
+#ifndef tracePEND_FUNC_CALL
+	#define tracePEND_FUNC_CALL(xFunctionToPend, pvParameter1, ulParameter2, ret)
+#endif
+
+#ifndef tracePEND_FUNC_CALL_FROM_ISR
+	#define tracePEND_FUNC_CALL_FROM_ISR(xFunctionToPend, pvParameter1, ulParameter2, ret)
+#endif 
+
+#ifndef traceQUEUE_REGISTRY_ADD
+	#define traceQUEUE_REGISTRY_ADD(xQueue, pcQueueName)
 #endif
 
 #ifndef configGENERATE_RUN_TIME_STATS

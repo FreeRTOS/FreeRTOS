@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -120,6 +120,11 @@ static void prvSetupTimerInterrupt( void );
  */
 extern void vPortStartFirstTask( void );
 
+/*
+ * Used to catch tasks that attempt to return from their implementing function.
+ */
+static void prvTaskExitError( void );
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -132,9 +137,13 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 {
 uint32_t *pulLocal;
 
+	/* With large code and large data sizeof( StackType_t ) == 2, and
+	sizeof( StackType_t * ) == 4.  With small code and small data
+	sizeof( StackType_t ) == 2 and sizeof( StackType_t * ) == 2. */
+
 	#if __DATA_MODEL__ == __DATA_MODEL_FAR__
 	{
-		/* Parameters are passed in on the stack, and written using a 32bit value
+		/* Parameters are passed in on the stack, and written using a 32-bit value
 		hence a space is left for the second two bytes. */
 		pxTopOfStack--;
 
@@ -143,14 +152,15 @@ uint32_t *pulLocal;
 		*pulLocal = ( uint32_t ) pvParameters;
 		pxTopOfStack--;
 
-		/* These values are just spacers.  The return address of the function
-		would normally be written here. */
-		*pxTopOfStack = ( StackType_t ) 0xcdcd;
+		/* The return address, leaving space for the first two bytes of	the
+		32-bit value.  See the comments above the prvTaskExitError() prototype
+		at the top of this file. */
 		pxTopOfStack--;
-		*pxTopOfStack = ( StackType_t ) 0xcdcd;
+		pulLocal = ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( uint32_t ) prvTaskExitError;
 		pxTopOfStack--;
 
-		/* The start address / PSW value is also written in as a 32bit value,
+		/* The start address / PSW value is also written in as a 32-bit value,
 		so leave a space for the second two bytes. */
 		pxTopOfStack--;
 
@@ -165,9 +175,16 @@ uint32_t *pulLocal;
 	}
 	#else
 	{
-		/* Task function address is written to the stack first.  As it is
-		written as a 32bit value a space is left on the stack for the second
-		two bytes. */
+		/* The return address, leaving space for the first two bytes of	the
+		32-bit value.  See the comments above the prvTaskExitError() prototype
+		at the top of this file. */
+		pxTopOfStack--;
+		pulLocal = ( uint32_t * ) pxTopOfStack;
+		*pulLocal = ( uint32_t ) prvTaskExitError;
+		pxTopOfStack--;
+
+		/* Task function.  Again as it is written as a 32-bit value a space is
+		left on the stack for the second two bytes. */
 		pxTopOfStack--;
 
 		/* Task function start address combined with the PSW. */
@@ -202,6 +219,20 @@ uint32_t *pulLocal;
 	/* Return a pointer to the top of the stack that has been generated so it
 	can	be stored in the task control block for the task. */
 	return pxTopOfStack;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTaskExitError( void )
+{
+	/* A function that implements a task must not exit or attempt to return to
+	its caller as there is nothing to return to.  If a task wants to exit it
+	should instead call vTaskDelete( NULL ).
+
+	Artificially force an assert() to be triggered if configASSERT() is
+	defined, then stop here so application writers can catch the error. */
+	configASSERT( usCriticalNesting == ~0U );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
 }
 /*-----------------------------------------------------------*/
 

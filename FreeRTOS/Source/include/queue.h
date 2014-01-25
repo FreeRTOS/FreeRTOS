@@ -1370,7 +1370,7 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pv
  void vAFunction( void *pvParameters )
  {
  char cValueToPost;
- const TickType_t xBlockTime = ( TickType_t )0xff;
+ const TickType_t xTicksToWait = ( TickType_t )0xff;
 
 	// Create a queue capable of containing 10 characters.
 	xQueue = xQueueCreate( 10, sizeof( char ) );
@@ -1382,17 +1382,17 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pv
 	// ...
 
 	// Post some characters that will be used within an ISR.  If the queue
-	// is full then this task will block for xBlockTime ticks.
+	// is full then this task will block for xTicksToWait ticks.
 	cValueToPost = 'a';
-	xQueueSend( xQueue, ( void * ) &cValueToPost, xBlockTime );
+	xQueueSend( xQueue, ( void * ) &cValueToPost, xTicksToWait );
 	cValueToPost = 'b';
-	xQueueSend( xQueue, ( void * ) &cValueToPost, xBlockTime );
+	xQueueSend( xQueue, ( void * ) &cValueToPost, xTicksToWait );
 
 	// ... keep posting characters ... this task may block when the queue
 	// becomes full.
 
 	cValueToPost = 'c';
-	xQueueSend( xQueue, ( void * ) &cValueToPost, xBlockTime );
+	xQueueSend( xQueue, ( void * ) &cValueToPost, xTicksToWait );
  }
 
  // ISR that outputs all the characters received on the queue.
@@ -1480,7 +1480,7 @@ void* xQueueGetMutexHolder( QueueHandle_t xSemaphore ) PRIVILEGED_FUNCTION;
  * For internal use only.  Use xSemaphoreTakeMutexRecursive() or
  * xSemaphoreGiveMutexRecursive() instead of calling these functions directly.
  */
-BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xBlockTime ) PRIVILEGED_FUNCTION;
+BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION;
 
 /*
@@ -1653,7 +1653,7 @@ BaseType_t xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueS
  *
  * @param xQueueSet The queue set on which the task will (potentially) block.
  *
- * @param xBlockTimeTicks The maximum time, in ticks, that the calling task will
+ * @param xTicksToWait The maximum time, in ticks, that the calling task will
  * remain in the Blocked state (with other tasks executing) to wait for a member
  * of the queue set to be ready for a successful queue read or semaphore take
  * operation.
@@ -1664,7 +1664,7 @@ BaseType_t xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueS
  * in the queue set that is available, or NULL if no such queue or semaphore
  * exists before before the specified block time expires.
  */
-QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, const TickType_t xBlockTimeTicks ) PRIVILEGED_FUNCTION;
+QueueSetMemberHandle_t xQueueSelectFromSet( QueueSetHandle_t xQueueSet, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * A version of xQueueSelectFromSet() that can be used from an ISR.
